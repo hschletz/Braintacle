@@ -1,0 +1,78 @@
+<?php
+/**
+ * Display form for network device identification
+ *
+ * $Id$
+ *
+ * Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
+$device = $this->device;
+
+print $this->htmlTag('h1', $this->translate('Edit network device'));
+
+print "<dl>\n";
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('MAC address')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escape($device->getMacAddress())
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('Vendor')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escape($device->getMacAddress()->getVendor())
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('IP address')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escape($device->getIpAddress())
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('Hostname')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escape($device->getHostname())
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('Date')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escape($device->getDiscoveryDate())
+);
+
+print "</dl>\n";
+
+print $this->form;

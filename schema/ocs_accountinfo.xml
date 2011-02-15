@@ -1,0 +1,64 @@
+<!--
+Schema fragment for table accountinfo
+
+$Id$
+
+Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+ <table>
+
+  <name>accountinfo</name>
+
+  <description>
+    The structure of this table is not static.
+    It may contain extra user-defined columns with additional information for a machine.
+  </description>
+
+  <declaration>
+
+   <field>
+    <name>hardware_id</name>
+    <type>integer</type>
+    <length>4</length>
+    <notnull>true</notnull>
+   </field>
+
+   <field>
+    <name>tag</name>
+    <type>text</type>
+    <length>255</length>
+    <default>NA</default>
+   </field>
+
+   <index>
+    <name>accountinfo_primary</name>
+    <primary>true</primary>
+    <field>
+     <name>hardware_id</name>
+    </field>
+   </index>
+
+   <index>
+    <name>accountinfo_tag</name>
+    <field>
+     <name>tag</name>
+    </field>
+   </index>
+
+  </declaration>
+
+ </table>

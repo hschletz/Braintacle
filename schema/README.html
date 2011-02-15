@@ -1,0 +1,170 @@
+<!--
+Schema documentation
+
+$Id$
+
+Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Changes to the database schema</title>
+</head>
+<body>
+<h1>Changes to the database schema</h1>
+<p>
+The schema is slightly different from the original OCS schema for two reasons:
+</p>
+<ul>
+<li>Compatibility with non-MySQL databases</li>
+<li>Constraints enforced by MDB2_Schema</li>
+</ul>
+<p>
+This document lists the differences.
+Compatibility with OCSInventory should not be affected unless otherwise noticed.
+</p>
+
+<h2>Multicolumn primary keys</h2>
+
+<p>
+<em>Affected tables:
+accesslog,
+drives,
+inputs,
+journallog,
+memories,
+modems,
+monitors,
+networks,
+ports,
+printers,
+registry,
+slots,
+softwares,
+sounds,
+storages,
+videos,
+virtualmachines
+</em>
+</p>
+<p>
+MDB2_Schema won't accept multicolumn primary keys if one of the columns is an autoincrement field.
+Since an autoincrement field is sufficient as a primary key anyway (and the extra columns dont have any effect at all), the additional columns are no longer used as primary key.
+A separate non-unique index is created over the additional columns.
+</p>
+
+<h2>Autoincrement fields forced to be primary key</h2>
+
+<p>
+<em>Affected tables:
+blacklist_macaddresses,
+blacklist_serials
+</em>
+</p>
+
+<p>
+MDB2_Schema allows at most 1 autoincrement field per table and forces it to be the primary key.
+This is the typical usage for an autoincrement field and anything else rarely makes sense.
+Some tables however have an autoincrement field but a different field as primary key.
+This is not supported by MDB2_Schema.
+</p>
+<p>
+The autoincrement field is now turned into the primary key and a separate unique index and not null constraint is created over the other column.
+</p>
+
+<h2>TIMESTAMP data type</h2>
+
+<p>
+<em>Affected tables:
+conntrack,
+deleted_equiv,
+drives,
+locks,
+netmap
+</em>
+</p>
+<p>
+The special behavior of the TIMESTAMP data type is a feature of MySQL only.
+The affected columns are created as ordinary fields without MySQL magic.
+The INSERT/UPDATE queries have to be modified to explicitly set their value to CURRENT_TIMESTAMP where necessary.
+</p>
+
+<h2>Changed datatypes</h2>
+
+<p>
+The field <em>hardware.etime</em> was changed to INTEGER because it gets fed with integer values.
+MySQL seems to tolerate this on DATETIME fields, too, but SQL standard doesn't.
+</p>
+<p>
+MDB2 only knows about the abstract CLOB type without further differentiation.
+MySQL provides datatypes which differ in the maximum allowed length.
+As a result, the field <em>accesslog.processes</em> can get longer than intended (MySQL TEXT vs. LONGTEXT).
+This should not cause any problems.
+</p>
+
+<h2>Additional indexes</h2>
+
+<p>
+<em>Affected tables:
+registry
+</em>
+</p>
+<p>
+OCS Inventory 1.02 introduced caching of certain columns.
+This is not supported by Braintacle.
+I made sure that the affected columns are indexed and added an index where it was missing in the original schema.
+</p>
+
+<h2>Bogus default values removed</h2>
+
+<p>
+<em>Affected tables:
+blacklist_macaddresses,
+blacklist_serials,
+conntrack,
+download_history,
+groups
+</em>
+</p>
+<p>
+Empty strings as default values cause a lot of trouble with MDB2_Schema and don't make much sense anyway.
+They have been removed (i.e. implicitly set to NULL).
+</p>
+<p>
+Some other valid defaults (like 0 for integers) have been removed because they don't make sense in that particular context.
+For example, if the application always explicitly sets a value for a particular column, we don't need a meaningless default.
+</p>
+
+<h2>Other changes</h2>
+
+<p>
+The NOT NULL constraint is removed from <em>download_servers.add_port</em> and <em>softwares.from</em>.
+These columns are never used, so that insertions would always fail.
+</p>
+<p>
+The indexes have different, automatically assigned names.
+This should not be a problem since they are never referenced by name.
+</p>
+<p>
+The blacklist tables are not initialized with a shipped set of values.
+Only a small fraction of these will ever show up, and they can easily be added manually.
+Having a lot of unnecessary values around might hurt performance on huge databases.
+</p>
+
+</body>
+</html>

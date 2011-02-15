@@ -1,0 +1,157 @@
+<?php
+/**
+ * Display RAM, controllers and slots
+ *
+ * $Id$
+ *
+ * Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
+$computer = $this->computer;
+
+print $this->inventoryHeader($computer);
+
+
+// Display memory slots
+
+$headers = array(
+    'SlotNumber' => $this->translate('Slot number'),
+    'Size' => $this->translate('Size'),
+    'Type' => $this->translate('Type'),
+    'Clock' => $this->translate('Clock'),
+    'Serial' => $this->translate('Serial number'),
+    'Caption' => $this->translate('Caption'),
+    'Description' => $this->translate('Description'),
+    'Purpose' => $this->translate('Purpose'),
+);
+
+$renderCallbacks = array (
+    'Size' => 'renderSize',
+    'Clock' => 'renderClock',
+);
+
+function renderSize($view, $memorySlot)
+{
+    $size = $memorySlot->getSize();
+    if ($size) {
+        $size .= '&nbsp;MB';
+    } else {
+        $size = '&ndash;';
+    }
+    return $size;
+}
+
+function renderClock($view, $memorySlot)
+{
+    $clock = $view->escape($memorySlot->getClock());
+    if (is_numeric($clock)) {
+        $clock .= '&nbsp;MHz';
+    }
+    return $clock;
+}
+
+$memSlots = $this->getHelper('table')->table(
+    $computer->getChildObjects('MemorySlot'),
+    null,
+    $headers,
+    array(),
+    'Model_MemorySlot',
+    null,
+    $renderCallbacks,
+    $numMemSlots
+);
+
+if ($numMemSlots) {
+    print $this->htmlTag(
+        'h2',
+        $this->translate('Memory slots')
+    );
+    print $memSlots;
+}
+
+
+// Display controllers
+
+$headers = array(
+    'Type' => $this->translate('Type'),
+    'Manufacturer' => $this->translate('Manufacturer'),
+    'Name' => $this->translate('Name'),
+);
+
+$renderCallbacks = array (
+    'Name' => 'renderName',
+);
+
+function renderName($view, $controller)
+{
+    $name = $view->escape($controller->getName());
+    $comment = $view->escape($controller->getComment());
+    if ($name == $comment) {
+        return $name;
+    } else {
+        return $view->htmlTag('span', $name, array('title' => $comment));
+    }
+}
+
+$controllers = $this->getHelper('table')->table(
+    $computer->getChildObjects('Controller'),
+    null,
+    $headers,
+    array(),
+    'Model_Controller',
+    null,
+    $renderCallbacks,
+    $numControllers
+);
+
+if ($numControllers) {
+    print $this->htmlTag(
+        'h2',
+        $this->translate('Controllers')
+    );
+    print $controllers;
+}
+
+
+// Display extension slots
+
+$headers = array(
+    'Name' => $this->translate('Name'),
+);
+
+$renderCallbacks = array (
+);
+
+$extSlots = $this->getHelper('table')->table(
+    $computer->getChildObjects('ExtensionSlot'),
+    null,
+    $headers,
+    array(),
+    'Model_ExtensionSlot',
+    null,
+    array(),
+    $numExtSlots
+);
+
+if ($numExtSlots) {
+    print $this->htmlTag(
+        'h2',
+        $this->translate('Extension slots')
+    );
+    print $extSlots;
+}

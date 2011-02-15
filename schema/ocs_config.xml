@@ -1,0 +1,918 @@
+<!--
+Schema fragment for table config
+
+$Id$
+
+Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+ <table>
+
+  <name>config</name>
+
+  <description>
+    The application's global configuration.
+  </description>
+
+  <declaration>
+
+   <field>
+    <name>name</name>
+    <type>text</type>
+    <length>50</length>
+    <notnull>true</notnull>
+   </field>
+
+   <field>
+    <name>ivalue</name>
+    <type>integer</type>
+    <length>4</length>
+   </field>
+
+   <field>
+    <name>tvalue</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>comments</name>
+    <type>clob</type>
+   </field>
+
+   <index>
+    <name>cfg_primary</name>
+    <primary>true</primary>
+    <field>
+     <name>name</name>
+    </field>
+   </index>
+
+  </declaration>
+
+  <initialization>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>FREQUENCY</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Specify the frequency (days) of inventories. (0: inventory at each login. -1: no inventory)</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>PROLOG_FREQ</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>24</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Specify the frequency (hours) of prolog, on agents</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>IPDISCOVER</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>2</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Max number of computers per gateway retrieving IP on the network</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>IPDISCOVER_LATENCY</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>100</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Default latency between two arp requests</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>REGISTRY</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Activates or not the registry query function</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>IPDISCOVER_MAX_ALIVE</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>7</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Max number of days before an IP Discover computer is replaced</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>DEPLOY</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Activates or not the automatic deployment option</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>UPDATE</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Activates or not the update feature</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>TRACE_DELETED</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Trace deleted/duplicated computers (Activated by GLPI)</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>LOGLEVEL</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>ocs engine loglevel</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>AUTO_DUPLICATE_LVL</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>7</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Duplicates bitmap</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>DOWNLOAD</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Activate softwares auto deployment feature</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>DOWNLOAD_CYCLE_LATENCY</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>60</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Time between two cycles (seconds)</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>DOWNLOAD_PERIOD_LENGTH</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>10</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Number of cycles in a period</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>DOWNLOAD_FRAG_LATENCY</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>10</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Time between two downloads (seconds)</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>DOWNLOAD_PERIOD_LATENCY</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Time between two periods (seconds)</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>DOWNLOAD_TIMEOUT</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>30</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Validity of a package (in days)</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>LOCAL_SERVER</value>
+    </field>
+    <field>
+     <name>tvalue</name>
+     <value>localhost</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Server address used for local import</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>LOCAL_PORT</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>80</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Server port used for local import</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>DOWNLOAD_PACK_DIR</value>
+    </field>
+    <field>
+     <name>tvalue</name>
+     <value>/var/lib/ocsinventory-reports</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Directory for download files</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>IPDISCOVER_IPD_DIR</value>
+    </field>
+    <field>
+     <name>tvalue</name>
+     <value>/var/lib/ocsinventory-reports</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Directory for Ipdiscover files</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>GUI_VERSION</value>
+    </field>
+    <field>
+     <name>tvalue</name>
+     <value>5005</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Version of the installed GUI and database</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>DOWNLOAD_SERVER_URI</value>
+    </field>
+    <field>
+     <name>tvalue</name>
+     <value>$IP$/local</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Server url used for group of server</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>DOWNLOAD_SERVER_DOCROOT</value>
+    </field>
+    <field>
+     <name>tvalue</name>
+     <value>/var/lib/ocsinventory-reports/download</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Server directory used for group of server</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>LOCK_REUSE_TIME</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>600</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Validity of a computer's lock</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>INVENTORY_DIFF</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Configure engine to update inventory regarding to CHECKSUM agent value (lower DB backend load)</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>INVENTORY_TRANSACTION</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Make engine consider an inventory as a transaction (lower concurency, better disk usage)</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>INVENTORY_WRITE_DIFF</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Configure engine to make a differential update of inventory sections (row level). Lower DB backend load, higher frontend load</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>INVENTORY_CACHE_ENABLED</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>UNTESTED AND DISCOURAGED: Enable some stuff to improve DB queries, especially for GUI multicriteria searching system</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>DOWNLOAD_GROUPS_TRACE_EVENTS</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Specify if you want to track packages affected to a group on computer's level</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>ENABLE_GROUPS</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Enable the computer's groups feature</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>GROUPS_CACHE_OFFSET</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>600</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Random number computed in the defined range. Designed to avoid computing many groups in the same process</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>GROUPS_CACHE_REVALIDATE</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>600</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Specify the validity of computer's groups (default: compute it once a day - see offset)</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>IPDISCOVER_BETTER_THRESHOLD</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Specify the minimal difference to replace an ipdiscover agent</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>IPDISCOVER_NO_POSTPONE</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Disable the time before a first election (not recommended)</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>IPDISCOVER_USE_GROUPS</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Enable groups for ipdiscover (for example, you might want to prevent some groups)</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>GENERATE_OCS_FILES</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Use with ocsinventory-injector, enable the multi entities feature</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>OCS_FILES_FORMAT</value>
+    </field>
+    <field>
+     <name>tvalue</name>
+     <value>OCS</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Generate either compressed file or clear XML text</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>OCS_FILES_OVERWRITE</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Specify if you want to keep trace of all inventory between to synchronisation with the higher level server</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>OCS_FILES_PATH</value>
+    </field>
+    <field>
+     <name>tvalue</name>
+     <value>/tmp</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Path to ocs files directory (must be writeable)</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>PROLOG_FILTER_ON</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Enable prolog filter stack</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>INVENTORY_FILTER_ENABLED</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Enable core filter system to modify some things "on the fly"</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>INVENTORY_FILTER_FLOOD_IP</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Enable inventory flooding filter. A dedicated ipaddress is allowed to send a new computer only once in this period</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>INVENTORY_FILTER_FLOOD_IP_CACHE_TIME</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>300</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Period definition for INVENTORY_FILTER_FLOOD_IP</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>INVENTORY_FILTER_ON</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Enable inventory filter stack</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>GUI_REPORT_RAM_MAX</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>512</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Filter on RAM for console page</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>GUI_REPORT_RAM_MINI</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>128</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Filter on RAM for console page</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>GUI_REPORT_NOT_VIEW</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>3</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Filter on DAY for console page</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>GUI_REPORT_PROC_MINI</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>1000</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Filter on PROCESSOR for console page</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>GUI_REPORT_DD_MAX</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>4000</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Filter on Hard Drive for console page</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>GUI_REPORT_PROC_MAX</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>3000</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Filter on PROCESSOR for console page</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>GUI_REPORT_DD_MINI</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>500</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Filter on Hard Drive for console page</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>GUI_REPORT_AGIN_MACH</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>30</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Filter on lastdate for console page</value>
+    </field>
+   </insert>
+
+   <update>
+    <field>
+     <name>tvalue</name>
+     <value>5005</value>
+    </field>
+    <where>
+     <expression>
+      <column>name</column>
+      <operator>EQUAL</operator>
+      <value>GUI_VERSION</value>
+     </expression>
+    </where>
+   </update>
+
+   <update>
+    <field>
+     <name>comments</name>
+     <value>Configure engine to update inventory regarding to CHECKSUM agent value (lower DB backend load)</value>
+    </field>
+    <where>
+     <expression>
+      <column>name</column>
+      <operator>EQUAL</operator>
+      <value>INVENTORY_DIFF</value>
+     </expression>
+    </where>
+   </update>
+
+   <update>
+    <field>
+     <name>comments</name>
+     <value>Make engine consider an inventory as a transaction (lower concurency, better disk usage)</value>
+    </field>
+    <where>
+     <expression>
+      <column>name</column>
+      <operator>EQUAL</operator>
+      <value>INVENTORY_TRANSACTION</value>
+     </expression>
+    </where>
+   </update>
+
+   <delete>
+    <where>
+     <expression>
+      <column>name</column>
+      <operator>EQUAL</operator>
+      <value>IP_MIN_QUALITY</value>
+     </expression>
+    </where>
+   </delete>
+
+  </initialization>
+
+ </table>
+

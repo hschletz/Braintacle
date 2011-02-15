@@ -1,0 +1,265 @@
+<?php
+/**
+ * Display package listing
+ *
+ * $Id$
+ *
+ * Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
+// render messages from package builder, if present
+$session = new Zend_Session_Namespace('PackageBuilder');
+if (isset($session->success)) {
+    if ($session->success == true) {
+        print $this->htmlTag(
+            'p',
+            $this->escape($session->message),
+            array('class' => 'green textcenter')
+        );
+        if (!empty($session->errors)) {
+            print $this->htmlTag(
+                'p',
+                $this->translate('Warnings:'),
+                array('class' => 'red textcenter')
+            );
+        }
+    } else {
+        print $this->htmlTag(
+            'p',
+            $this->escape($session->message),
+            array('class' => 'red textcenter')
+        );
+    }
+
+    if (!empty($session->errors)) {
+        print $this->htmlList(
+            $session->errors,
+            false,
+            array('class' => 'red textcenter'),
+            false
+        );
+    }
+}
+
+// Column headers
+$headers = array(
+    'Name' => $this->translate('Name'),
+    'Timestamp' => $this->translate('Date'),
+    'Size' => $this->translate('Size'),
+    'Platform' => $this->translate('Platform'),
+    'NumNonnotified' => $this->translate('Not notified'),
+    'NumSuccess' => $this->translate('Success'),
+    'NumNotified' => $this->translate('Running'),
+    'NumError' => $this->translate('Error'),
+    'Delete' => '',
+);
+
+// Column datatypes, evaluated for formatting
+$formats = array(
+    'Name' => 'text',
+    'Timestamp' => 'timestamp',
+    'Size' => 'decimal',
+    'Platform' => 'text',
+    'NumNonnotified' => 'integer',
+    'NumSuccess' => 'integer',
+    'NumNotified' => 'integer',
+    'NumError' => 'integer',
+    'Delete' => 'text'
+);
+
+$renderCallbacks = array(
+    'Name' => 'renderName',
+    'Timestamp' => 'renderTimestamp',
+    'Size' => 'renderSize',
+    'Platform' => 'renderPlatform',
+    'NumNonnotified' => 'renderNumNonnotified',
+    'NumSuccess' => 'renderNumSuccess',
+    'NumNotified' => 'renderNumNotified',
+    'NumError' => 'renderNumError',
+    'Delete' => 'renderDelete'
+);
+
+function renderName($view, $package)
+{
+    $title = $package->getComment();
+    if (!$title) {
+        $title = $package->getName();
+    }
+    return $view->htmlTag(
+        'a',
+        $view->escape($package->getName()),
+        array(
+            'href' => $view->BaseUrl()
+                     . '/package/edit/name/'
+                     . urlencode($package->getName()),
+            'title' => $view->escape($title),
+        ),
+        true
+    );
+}
+
+function renderTimestamp($view, $package)
+{
+    // Use date helper because timestamp property is a UNIX timestamp, not a
+    // Zend_Date.
+    return $view->escape(
+        $view->date(
+            $package->getTimestamp(),
+            Zend_Date::DATE_MEDIUM,
+            Zend_Date::TIMESTAMP
+        )
+    );
+}
+
+function renderSize($view, $package)
+{
+    $size = new Zend_Measure_Binary(
+        $package->getSize() / 1048576,
+        'MEGABYTE'
+    );
+    return str_replace(
+        ' ',
+        '&nbsp;',
+        $view->escape(
+            $size->convertTo('MEGABYTE', 1)
+        )
+    );
+}
+
+function renderPlatform($view, $package)
+{
+    return $view->escape(ucfirst($package->getPlatform()));
+}
+
+function renderNumNonnotified($view, $package)
+{
+    $num = $package->getNumNonnotified();
+    if ($num) {
+        return $view->htmlTag(
+            'a',
+            $num,
+            array(
+                'href' => $view->BaseUrl()
+                     . '/computer/index/columns/Name,UserName,LastContactDate,InventoryDate'
+                     . '/jumpto/software/filter/PackageNonnotified/search/'
+                     . urlencode($package->getName()),
+                 'class' => 'blue'
+            ),
+            true
+        );
+    } else {
+        return $num;
+    }
+}
+
+function renderNumSuccess($view, $package)
+{
+    $num = $package->getNumSuccess();
+    if ($num) {
+        return $view->htmlTag(
+            'a',
+            $num,
+            array(
+                'href' => $view->BaseUrl()
+                     . '/computer/index/columns/Name,UserName,LastContactDate,InventoryDate'
+                     . '/jumpto/software/filter/PackageSuccess/search/'
+                     . urlencode($package->getName()),
+                 'class' => 'green'
+            ),
+            true
+        );
+    } else {
+        return $num;
+    }
+}
+
+function renderNumnotified($view, $package)
+{
+    $num = $package->getNumNotified();
+    if ($num) {
+        return $view->htmlTag(
+            'a',
+            $num,
+            array(
+                'href' => $view->BaseUrl()
+                     . '/computer/index/columns/Name,UserName,LastContactDate,InventoryDate'
+                     . '/jumpto/software/filter/PackageNotified/search/'
+                     . urlencode($package->getName()),
+                 'class' => 'red'
+            ),
+            true
+        );
+    } else {
+        return $num;
+    }
+}
+
+function renderNumError($view, $package)
+{
+    $num = $package->getNumError();
+    if ($num) {
+        return $view->htmlTag(
+            'a',
+            $num,
+            array(
+                'href' => $view->BaseUrl()
+                     . '/computer/index/columns/Name,UserName,LastContactDate,InventoryDate,Package.Status'
+                     . '/jumpto/software/filter/PackageError/search/'
+                     . urlencode($package->getName()),
+                 'class' => 'red'
+            ),
+            true
+        );
+    } else {
+        return $num;
+    }
+}
+
+function renderDelete($view, $package)
+{
+    return $view->htmlTag(
+        'a',
+        $view->translate('Delete'),
+        array(
+            'href' => $view->BaseUrl()
+                     . '/package/delete/name/'
+                     . urlencode($package->getName())
+        ),
+        true
+    );
+}
+
+function rowFormatCallback($package, $view)
+{
+    $session = new Zend_Session_Namespace('PackageBuilder');
+    if ($package and $package->getName() == $session->packageName) {
+        return 'highlight';
+    } else {
+        return '';
+    }
+}
+
+print $this->getHelper('table')->table(
+    $this->packages,
+    null,
+    $headers,
+    $formats,
+    'Model_Package',
+    'rowFormatCallback',
+    $renderCallbacks
+);

@@ -1,0 +1,90 @@
+<?php
+/**
+ * Display all subnets
+ *
+ * $Id$
+ *
+ * Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
+// Column headers
+$headers = array(
+    'Name' => $this->translate('Name'),
+    'AddressWithMask' => $this->translate('Address'),
+    'NumInventoried' => $this->translate('inventoried'),
+    'NumIdentified' => $this->translate('identified'),
+    'NumUnknown' => $this->translate('unknown'),
+);
+
+$renderCallbacks = array(
+    'NumInventoried' => 'renderNumInventoried',
+    'NumIdentified' => 'renderNumUninventoried',
+    'NumUnknown' => 'renderNumUninventoried',
+);
+
+function renderNumInventoried($view, $subnet, $property)
+{
+    // The number is always >= 1. There is no need to check for 0.
+    return $view->htmlTag(
+        'a',
+        $view->escape($subnet->getNumInventoried()),
+        array('href' =>
+            $view->baseUrl() . '/computer/index' .
+            '/filter1/NetworkInterface.Subnet/exact1/1/search1/' .
+            urlencode($subnet->getAddress()) .
+            '/filter2/NetworkInterface.Netmask/exaxt2/1/search2/' .
+            urlencode($subnet->getMask()) .
+            '/columns/Name,UserName,Type,InventoryDate' .
+            '/jumpto/network'
+        ),
+        true
+    );
+}
+
+function renderNumUninventoried($view, $subnet, $property)
+{
+    $count = $subnet->getProperty($property);
+    if ($count) {
+        if ($property == 'NumIdentified') {
+            $controller = 'showidentified';
+        } else {
+            $controller = 'showunknown';
+        }
+        return $view->htmlTag(
+            'a',
+            $count,
+            array('href' =>
+                $view->baseUrl() . '/network/' . $controller .
+                '/subnet/' . urlencode($subnet->getAddress()) .
+                '/mask/' . urlencode($subnet->getMask())
+            )
+        );
+    } else {
+        return '0';
+    }
+}
+
+print $this->getHelper('table')->table(
+    $this->subnets,
+    null,
+    $headers,
+    array(),
+    'Model_Subnet',
+    null,
+    $renderCallbacks
+);

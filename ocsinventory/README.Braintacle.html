@@ -1,0 +1,390 @@
+<!--
+Documentation for Braintacle's patched version of OCS Inventory NG
+
+$Id$
+
+Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Braintacle's patched version of OCS Inventory NG</title>
+</head>
+<body>
+<h1>Braintacle's patched version of OCS Inventory NG</h1>
+
+<h2>About this version of OCS inventory NG</h2>
+
+<p>
+This is a patched version of <a href="http://ocsinventory-ng.org">OCS inventory NG</a> 1.3.3 that uses a database abstraction layer for all database access, allowing to work with databases other than MySQL.
+</p>
+<p>
+<strong>
+This project is not provided by the OCSInventory team.
+Do not bother them with any issues you encounter with this version.
+<a href="mailto:holger.schletz@web.de">Contact me</a> directly instead.
+</strong>
+</p>
+<p>
+This version comes bundled with Braintacle.
+It is not a requirement for using Braintacle if you use MySQL &ndash; Braintacle works with the database of an unmodified Installation of OCS Inventory, too.
+This version can be used standalone as well (i.e. you don't have to use Braintacle) &ndash; however, some directories from the Braintacle project (<em>schema</em> and <em>libraries/PEAR</em>) are required in their expected position (one level above this directory).
+<p>The perl portion of the code uses the DBI module for database access. Only minor changes to the original code were necessary to make the DBD backend configurable and work around some portability issues.</p>
+<p>
+The PHP part now uses the <a href="http://pear.php.net/package/MDB2">PEAR::MDB2</a> abstraction layer.
+The database schema is managed through <a href="http://pear.php.net/package/MDB2_Schema">MDB2_Schema</a>.
+</p>
+<p>The modified installer is currently available for UNIXoid OSes only. The scripts themselves are OS-independent, so with some tricks it should be installable on Windows too.</p>
+<p>
+The agent that runs on the clients does not make any direct database connections.
+All interaction runs through the communication server via HTTP/HTTPS.
+No special version of the agent is required for the modified server.
+</p>
+
+<h3>Supported databases</h3>
+
+<p>
+The following table lists all available MDB2 drivers.
+Just because a driver is available, this doesn't mean it is fully supported.
+</p>
+<p>
+Green means that the database is well supported and tested.
+Yellow means that it is basically supported, but not extensively tested.
+Be prepared for bugs.
+Red means that it is unsupported for various reasons.
+In some cases support could be added once the issues are solved.
+</p>
+
+<table border="1">
+
+<tr>
+<th align="center">DBMS</th>
+<th align="center">DBD driver</th>
+<th align="center">MDB2 driver</th>
+<th>status</th>
+</tr>
+
+<tr style="background-color: #80ff80;">
+<td align="center"><a href="http://postgresql.org">PostgreSQL</a></td>
+<td align="center"><a href="http://search.cpan.org/dist/DBD-Pg/">Pg</a></td>
+<td align="center"><a href="http://pear.php.net/package/MDB2_Driver_pgsql">pgsql</a></td>
+<td>Well tested with 8.1 through 8.4. Running in a production environment for a long time.</td>
+</tr>
+
+<tr style="background-color: #ffff80;">
+<td align="center"><a href="http://mysql.com">MySQL</a></td>
+<td align="center"><a href="http://search.cpan.org/dist/DBD-mysql/">mysql</a></td>
+<td align="center"><a href="http://pear.php.net/package/MDB2_Driver_mysql">mysql</a></td>
+<td>Briefly tested with 5.0.x. Installation, adding machines and quick browsing appear to work. A mysqli driver for MDB2 exists too, which has not been tested.</td>
+</tr>
+
+<tr style="background-color: #ffff80;">
+<td align="center"><a href="http://oracle.com">Oracle</a></td>
+<td align="center"><a href="http://search.cpan.org/dist/DBD-Oracle/">Oracle</a></td>
+<td align="center"><a href="http://pear.php.net/package/MDB2_Driver_oci8">oci8</a></td>
+<td>Untested.</td>
+</tr>
+
+<tr style="background-color: #ff8080;">
+<td align="center"><a href="http://www.microsoft.com/sqlserver/2008/en/us/default.aspx">MS SQL Server</a></td>
+<td align="center">?</td>
+<td align="center"><a href="http://pear.php.net/package/MDB2_Driver_mssql">mssql</a></td>
+<td>Could be supported if I could find a DBD module.</td>
+</tr>
+
+<tr style="background-color: #ff8080;">
+<td align="center"><a href="http://firebirdsql.org">Firebird</a></td>
+<td align="center"><a href="http://search.cpan.org/dist/DBD-InterBase/">Interbase</a></td>
+<td align="center"><a href="http://pear.php.net/package/MDB2_Driver_ibase">ibase</a></td>
+<td>MDB2 driver lacks unixtimestamp() implementation.</td>
+</tr>
+
+<tr style="background-color: #ff8080;">
+<td align="center"><a href="http://sqlite.org">SQLite</a></td>
+<td align="center"><a href="http://search.cpan.org/dist/DBD-SQLite/">SQLite</a></td>
+<td align="center"><a href="http://pear.php.net/package/MDB2_Driver_sqlite">sqlite</a></td>
+<td>MDB2 driver only supports SQLite2.</td>
+</tr>
+
+<tr style="background-color: #ff8080;">
+<td align="center"><a href="http://www.frontbase.com">FrontBase</a></td>
+<td align="center">?</td>
+<td align="center"><a href="http://pear.php.net/package/MDB2_Driver_fbsql">fbsql</a></td>
+<td>Could not find a DBD module. MDB2 driver is unmaintained and out of date.</td>
+</tr>
+
+</table>
+
+<h3>Status</h3>
+
+<p>The following features are known to work:</p>
+<ul>
+<li>inventory</li>
+<li>searching</li>
+<li>software listing</li>
+<li>package management and deployment</li>
+<li>IP discovery, network and device management</li>
+<li>managing groups</li>
+<li>managing registry keys</li>
+<li>managing administrative data</li>
+<li>managing duplicates</li>
+<li>managing blacklists</li>
+<li>managing users</li>
+<li>import of locally generated inventory</li>
+<li>software dictionaries</li>
+</ul>
+
+<p>The following features are not extensively tested because I have no idea how this stuff is supposed to work:</p>
+<ul>
+<li>managing download servers (not supported by Braintacle)</li>
+<li>agent upload</li>
+</ul>
+
+<h3>Known issues</h3>
+<ul>
+<li>Some date values are not formatted nicely in the administration console because the relevant portion of code was impossible to port to the MDB2 API without inadequate effort. This is merely cosmetic.</li>
+<li>I edited some error messages to use the term "Database" instead of "MySQL", but only in the english and german language file. Contributions are welcome.</li>
+</ul>
+
+
+<h3>Differences to the original version</h3>
+
+<p>Beside the different database access methods, I made some further changes to the code:</p>
+<ul>
+<li>
+Some <a href="#schema-changes">"changes to the database schema"</a> were necessary for portability.
+</li>
+<li>
+The default installation path for the administration console is /usr/local/share/ocsreports instead of /usr/share/ocsinventory-reports/ocsreports.
+</li>
+<li>
+The default language is hardcoded to english.
+The autodetection has been disabled because some translations (like german, and possibly others) are unusable.
+Missing english translations have been added.
+</li>
+<li>
+The workaround for <a href="https://bugs.launchpad.net/ocsinventory-windows-agent/+bug/530881">bug #530881</a> is included.
+</li>
+<li>
+OCS Inventory NG introduced a caching feature in version 1.02.
+This would duplicate a lot of data within the database and require a big bunch of code to manage this stuff.
+This looks like a very bad idea to me, so I decided to have this feature disabled by default.
+The code has been ported, but is entirely untested.
+Enable it at your own risk.
+If you experience slow performance with search operations, finetuning your database server would be a better approach.
+</li>
+<li>
+The original PHP code disabled logging of E_NOTICE messages.
+I turned them on because they are very helpful for finding errors introduced with the API switch.
+Unfortunately, tons of (mostly harmless) messages started to flood my logfile.
+Most of them are caused by bad pieces of code which was already present before the patch.
+I fixed most of these to keep clear sight for the real problems.
+</li>
+<li>
+All non-ASCII characters have been removed from the code.
+This prevents charset issues with text editors.
+Most of these characters belonged to comments in french which have been either translated to english or removed.
+</li>
+<li>
+Most text files were converted to UNIX line endings.
+This was necessary to make the "patch" utility work.
+</li>
+<li>
+A lot of changes were made to make the code more robust against SQL injection and XSS attacks.
+This doesn't necessarily mean that the original code is vulnerable.
+Protecting generated SQL and HTML code from untrusted user input is just generally a good idea.
+</li>
+<li>
+Other minor fixes and enhancements
+</li>
+</ul>
+
+
+<h2>Installing</h2>
+
+<p>
+You must create the database and user before using the installer.
+Log in to your database as superuser and do this:
+</p>
+
+<p>
+<code>
+CREATE USER ocs WITH PASSWORD 'ocs';
+CREATE DATABASE ocsweb WITH OWNER ocs;
+</code>
+</p>
+
+<p>
+This syntax is valid for PostgreSQL; other databases may have a different syntax.
+</p>
+<p>
+Next, follow the <a href="http://wiki.ocsinventory-ng.org/index.php/Documentation:Server#Under_Linux_Operating_System.">instructions in the manual</a> with the following changes:
+</p>
+
+
+<h3>Changes for installation of communication server</h3>
+
+<p>
+Instead of the <em>DBD::mysql</em> module, install the appropriate driver for your database like <em>DBD::Pg</em> for PostgreSQL.
+Most GNU/Linux distributions have this package available as <em>libdbd-pg-perl</em> (Debian, Ubuntu) or <em>perl-DBD-Pg</em> (Fedora, RedHat, SUSE).
+The installer script will prompt for the name of the driver (<em>Pg</em> or <em>mysql</em>).
+</p>
+
+<h3>Changes for installation of administration server</h3>
+
+<p>
+You need the PHP extension for your database.
+Most GNU/Linux distributions have this package available as <em>php5-pgsql</em> (Debian, Ubuntu, SUSE) or <em>php-pgsql</em> (Fedora, RedHat).
+</p>
+
+<p>
+This distribution contains patched versions of some PEAR packages.
+You still need some additional PEAR packages.
+On most GNU/Linux distributions, it is available as a package called <em>php-pear</em> (Debian, Ubuntu, Fedora, RedHat) or <em>php5-pear</em> (SUSE).
+</p>
+<p>
+This gives you the 'pear' command which allows you to easily install other PEAR packages:
+</p>
+<p>
+<code>pear install XML_Parser</code>
+</p>
+
+<p>
+If this method does not work for some reason, see the <a href="http://pear.php.net/manual/en/installation.php">PEAR installation manual</a> and <a href="../library/PEAR/Readme.txt">library/PEAR/Readme.txt</a> for other installation methods.
+</p>
+
+<p>
+When using the web interface for the first time, you will see the login screen as documented.
+In addition to database host, user and password, you need to specify the name of the MDB2 driver, like 'pgsql' or 'mysql'.
+</p>
+
+
+<h3>Migrating from previous MySQL-based installations (untested!):</h3>
+
+<ol>
+<li>Upgrade original OCS Inventory-NG to at least version 1.01. Migration from older versions might work, but I haven't checked the database schema for these versions.</li>
+<li>Follow the installation instructions in this document.</li>
+</ol>
+
+
+<h2><a name="schema-changes">Changes to the database schema</a></h2>
+<p>
+The database schema is provided as a set of XML files in the <em>schema</em> directory.
+This is slightly different from the original schema.
+See the <a href="../schema/README.html">schema documentation</a> in the same directory for details.
+The ocsbase.sql file is no longer used.
+</p>
+
+<h2>Technical details</h2>
+
+<p>The following information may be helpful if you try to hack the code yourself. If you just want to use it you can skip the rest of this document.</p>
+
+<h3>Database Abstraction layers</h3>
+
+<p>
+The perl code uses the DBI class as an abstraction layer.
+Making the driver configurable instead of hardcoding to "mysql" does most of the trick.
+</p>
+<p>
+The PHP part is much trickier.
+It uses native MySQL library functions which have to be changed one by one.
+Since the MDB2 API is much different from the MySQL API, direct use would be a painful and error prone procedure.
+So I wrote some wrapper functions <em>mdb2_foo()</em> to mimic the behaior of the corresponding <em>mysql_foo()</em> functions.
+This way a simple search-and-replace operation brings us halfway to our goal.
+See <em>ocsreports/require/function_mdb2.php</em> for supported functions and caveats.
+</p>
+<p>
+There are some limitations:
+</p>
+<ul>
+<li>Some functions are not strictly compatible with their mysql counterparts and require adjustments to the calling code. See the comments for details.</li>
+<li><em>mdb2_query()</em> only supports SELECT, INSERT, UPDATE and DELETE operations. There were occasional uses of SHOW and ALTER TABLE, which are not portable. MDB2 provides abstraction for these operations. This required rewriting the code portion. The same operations replace <em>mysql_field_type()</em> and <em>mysql_fetch_field()</em>.</li>
+<li>There is no <em>mdb2_fetch_array()</em> function. I could have implemented one, but using either <em>mdb2_fetch_assoc()</em> or <em>mdb2_fetch_row()</em> is cleaner and sufficient in most cases. There were a few cases where both associative and numeric indices werde needed. These are special cases where only the first entry is needed, so I wrote a workaround directly in the code.</li>
+</ul>
+
+<p>
+Some functions have extra optional arguments for enhanced functionality.
+For example, <em>mdb2_query()</em> supports prepared statements via 2 extra arguments.
+Since these arguments are optional, it is still suitable as a drop-in replacement for <em>mysql_query()</em>.
+</p>
+
+<h3>SQL compatibility</h3>
+
+<p>
+Unfortunately, the API switch does only half of the job.
+There were many MySQL-specific expressions present in the code.
+This started with inconsistent quoting (MySQL allows single and double quotes for string literals, while standard SQL requires single quotes) and other obvious stuff like "LIMIT a,b" instead of standard "LIMIT b OFFSET a".
+There were some less obvious issues like columns in GROUP BY clauses which are not present in the FROM clause (this is allowed by MySQL, but not standard SQL).
+It even turned out that some of these grouping statements were completely unnecessary.
+</p>
+<p>
+I converted the statements to all standard SQL, assuming this will be understood by all databases. MDB2's Function module helps increasing portability. Since the provided database backend can be queried at runtime, DBMS-specific extensions like PostgreSQLs ILIKE operator can be used without breaking compatibility with other DBMS.
+</p>
+
+<h3>Spelling of column identifiers</h3>
+
+<p>
+Another problem is case-sensitiveness of array/hash keys.
+Whenever a database function returns an array (PHP) or hash (Perl) with column identifiers as keys, it's up to the API whether these are uppercase or lowercase.
+PostgreSQL seems to return all lowercase identifiers, while MySQL seems to adapt the spelling from the query string (or table creation statement in case of <code>"SELECT * FROM...")</code>.
+Unfortunately, <code>$foo['bar']</code> is not the same as <code>$foo['BAR']</code>.
+The same applies to object members returned by <em>mdb2_fetch_object()</em>.
+</p>
+<p>
+Since this behavior would make database applications effectively unportable, both DBI and MDB2 provide an option to convert identifiers to all uppercase or all lowercase.
+It's then up to the application to use all uppercase or all lowercase throughout the code.
+</p>
+<p>
+The perl code consistently uses uppercase spelling.
+The only necessary step was turning on uppercase conversion globally.
+</p>
+<p>
+The PHP code was not that friendly.
+While the majority of the code uses lowercase spelling, there was a significant amount of uppercase use.
+MDB2 converts the identifiers to lowercase.
+Logging E_NOTICE messages helps spotting non-lowercase identifiers even for complex, dynamically generated queries.
+Speaking of which...
+
+<h3>Getting rid of E_NOTICE messages</h3>
+
+<p>
+Unfortunately, this code was developed with E_NOTICE logging turned off.
+Turning it on initially resulted in tons of messages flooding the logfile, making it nearly impossible to find the real errors between all those mostly harmless ones.
+Most of these result from situations like this:
+</p>
+<pre>
+if ($_GET['foo'] == 'bar')...
+</pre>
+<p>
+which drops an E_NOTICE if the parameter 'foo' is not present.
+This is not an error &ndash; the code behaves just as expected.
+I wrote a helper function called check_param() to handle this.
+This workaround is quite clumsy and not a substitute for a more sophisticated parameter handling, but this would require a LOT more changes to the code, making it nearly impossible to merge future upstream changes.
+</p>
+
+<h3>Tracking down problems</h3>
+
+<p>
+If you observe erratic behavior, check your logfiles. The answer is probably out there. Many of the issues introduced by my patches result from code expecting uppercase indices (remember, they all get converted to lowercase). A less frequent class of bugs results from substituting <em>mysql_fetch_array()</em> and <em>MYSQL_FETCHMODE_BOTH</em> (the default) with either <em>mdb2_fetch_assoc()</em> (associative indices, sufficient in most cases) or <em>mdb2_fetch_row()</em> (numeric indices, not so often) in rare cases where both associative and numeric indices are actually needed. All these bugs are accompanied by an "undefined index" message. Thanks to the logged filename and line number, the source of the error is easily spotted and fixed.
+</p>
+<p>
+Another problem with case-changed indices are case-sensitive string comparisions. These are harder to track down because they fail silently without an error message. Similarly, string comparisions at SQL level behave differently: in MySQL they are case insensitive while in PostgreSQL they are case sensitive.
+</p>
+
+</body>
+</html>

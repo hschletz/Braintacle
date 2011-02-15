@@ -1,0 +1,110 @@
+<!--
+Schema fragment for table operators
+
+$Id$
+
+Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+ <table>
+
+  <name>operators</name>
+
+  <description>
+    User accounts for the administration console.
+  </description>
+
+  <declaration>
+
+   <field>
+    <name>id</name>
+    <type>text</type>
+    <length>255</length>
+    <notnull>true</notnull>
+    <default></default>
+   </field>
+
+   <field>
+    <name>firstname</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>lastname</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>passwd</name>
+    <type>text</type>
+    <length>50</length>
+   </field>
+
+   <field>
+    <name>accesslvl</name>
+    <type>integer</type>
+    <length>4</length>
+   </field>
+
+   <field>
+    <name>comments</name>
+    <type>clob</type>
+   </field>
+
+   <index>
+    <name>operators_primary</name>
+    <primary>true</primary>
+    <field>
+     <name>id</name>
+    </field>
+   </index>
+
+  </declaration>
+
+  <initialization>
+
+   <insert>
+    <field>
+     <name>id</name>
+     <value>admin</value>
+    </field>
+    <field>
+     <name>firstname</name>
+     <value>admin</value>
+    </field>
+    <field>
+    <name>lastname</name>
+     <value>admin</value>
+    </field>
+    <field>
+     <name>passwd</name>
+     <value>admin</value>
+    </field>
+    <field>
+     <name>accesslvl</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Default administrator account</value>
+    </field>
+   </insert>
+
+  </initialization>
+
+ </table>

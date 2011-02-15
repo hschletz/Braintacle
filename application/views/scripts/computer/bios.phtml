@@ -1,0 +1,64 @@
+<?php
+/**
+ * Display BIOS information
+ *
+ * $Id$
+ *
+ * Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
+$computer = $this->computer;
+
+print $this->inventoryHeader($computer);
+
+print "<dl>\n";
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('Manufacturer')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escape($computer->getBiosManufacturer())
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('Date')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escape($computer->getBiosDate())
+);
+
+// Split version strings into multiple lines
+$parts = explode(';', $computer->getBiosVersion());
+$version = array();
+foreach ($parts as $part) {
+    $version[] = $this->escape($part);
+}
+print $this->htmlTag(
+    'dt',
+    $this->translate('Version')
+);
+print $this->htmlTag(
+    'dd',
+    implode('<br>', $version)
+);
+
+print "</dl>\n";

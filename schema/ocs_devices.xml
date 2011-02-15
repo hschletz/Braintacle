@@ -1,0 +1,94 @@
+<!--
+Schema fragment for table devices
+
+$Id$
+
+Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+ <table>
+
+  <name>devices</name>
+
+  <description>
+    Machine specific configuration: deployed packages, IP discovery...
+  </description>
+
+  <declaration>
+
+   <field>
+    <name>hardware_id</name>
+    <type>integer</type>
+    <length>4</length>
+    <notnull>true</notnull>
+   </field>
+
+   <field>
+    <name>name</name>
+    <type>text</type>
+    <length>50</length>
+    <notnull>true</notnull>
+   </field>
+
+   <field>
+    <name>ivalue</name>
+    <type>integer</type>
+    <length>4</length>
+   </field>
+
+   <field>
+    <name>tvalue</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>comments</name>
+    <type>clob</type>
+   </field>
+
+   <index>
+    <name>devices_hardware_id</name>
+    <field>
+     <name>hardware_id</name>
+    </field>
+   </index>
+
+   <index>
+    <name>devices_tvalue</name>
+    <field>
+     <name>tvalue</name>
+    </field>
+   </index>
+
+   <index>
+    <name>devices_ivalue</name>
+    <field>
+     <name>ivalue</name>
+    </field>
+   </index>
+
+   <index>
+    <name>devices_name</name>
+    <field>
+     <name>name</name>
+    </field>
+   </index>
+
+  </declaration>
+
+ </table>
+

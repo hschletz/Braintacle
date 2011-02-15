@@ -1,0 +1,113 @@
+<?php
+/**
+ * Controller for all login-related actions.
+ *
+ * $Id$
+ *
+ * Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+class LoginController extends Zend_Controller_Action
+{
+
+    public function init()
+    {
+        $this->view->form = $this->getForm();
+    }
+
+    public function indexAction()
+    {
+    }
+
+    public function getForm()
+    {
+        return new Form_Login(array(
+        'action' => 'login/login',
+        'method' => 'post',
+        ));
+    }
+
+    public function getAuthAdapter($credentials)
+    {
+        $adapter = new Zend_Auth_Adapter_DbTable(
+            Zend_Registry::get('db'),
+            'operators',
+            'id',
+            'passwd',
+            '? AND accesslvl=1' // Only administrators can log in.
+        );
+        $adapter
+            ->setIdentity($credentials['userid'])
+            ->setCredential(md5($credentials['password']));
+        return $adapter;
+    }
+
+    public function preDispatch()
+    {
+        if (Zend_Auth::getInstance()->hasIdentity()) {
+            // Don't show the login form if the user is already logged in
+            if ($this->getRequest()->getActionName() != 'logout') {
+                $this->_helper->redirector('index', 'index');
+            }
+        } else {
+            // Logout action is only available to logged in users.
+            // Redirect to the login form otherwise.
+            if ($this->getRequest()->getActionName() == 'logout') {
+                $this->_helper->redirector('index');
+            }
+        }
+    }
+
+    public function loginAction()
+    {
+        $request = $this->getRequest();
+        // Login via GET is not supported
+        if (!$request->isPost()) {
+            return $this->_helper->redirector('index');
+        }
+
+        // Validate form
+        $form = $this->getForm();
+        if (!$form->isValid($request->getPost())) {
+            // Invalid entries
+            $this->view->form = $form;
+            return $this->render('index'); // re-render login form
+        }
+
+        // Check credentials
+        $adapter = $this->getAuthAdapter($form->getValues());
+        $auth    = Zend_Auth::getInstance();
+        $result  = $auth->authenticate($adapter);
+
+        if (!$result->isValid()) {
+            $form->setDescription('Invalid username or password');
+            $this->view->form = $form;
+            return $this->render('index'); // re-render login form
+        }
+
+        // Authentication successful.
+        // Redirect to computer listing as long there is nothing interesting for a start page.
+        $this->_helper->redirector('index', 'computer');
+    }
+
+    public function logoutAction()
+    {
+        Zend_Auth::getInstance()->clearIdentity();
+        $this->_helper->redirector('index');
+    }
+
+}

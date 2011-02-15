@@ -1,0 +1,223 @@
+<?php
+/**
+ * Display general information about a computer
+ *
+ * $Id$
+ *
+ * Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
+$computer = $this->computer;
+
+print $this->inventoryHeader($computer);
+
+print "<dl>\n";
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('ID')
+);
+print $this->htmlTag(
+    'dd',
+    $computer->getId()
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('Full ID')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escape($computer->getFullId())
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('Inventory date')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escape($computer->getInventoryDate())
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('Last contact')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escape($computer->getLastContactDate())
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('OCS Inventory Agent')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escape($computer->getOcsAgent())
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('Model')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escape($computer->getManufacturer() . ' ' . $computer->getModel())
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('Serial number')
+);
+if ($computer->isBlacklisted('Serial')) {
+    print $this->htmlTag(
+        'dd',
+        $this->escape($computer->getSerial()),
+        array('class' => 'gray')
+    );
+} else {
+    print $this->htmlTag(
+        'dd',
+        $this->escape($computer->getSerial())
+    );
+}
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('Asset tag')
+);
+if ($computer->isBlacklisted('AssetTag')) {
+    print $this->htmlTag(
+        'dd',
+        $this->escape($computer->getAssetTag()),
+        array('class' => 'gray')
+    );
+} else {
+    print $this->htmlTag(
+        'dd',
+        $this->escape($computer->getAssetTag())
+    );
+}
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('Type')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escape($computer->getType())
+);
+
+$os = $computer->getOsName();
+if ($computer->getOsVersionString()) {
+    $os .= ' ' . $computer->getOsVersionString();
+}
+$os .= ' (' . $computer->getOsVersionNumber() . ')';
+print $this->htmlTag(
+    'dt',
+    $this->translate('Operating System')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escape($os)
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('Comment')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escape($computer->getOsComment())
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('CPU type')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escape($computer->getCpuType())
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('CPU clock')
+);
+print $this->htmlTag(
+    'dd',
+    $computer->getCpuClock() . '&nbsp;MHz'
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('Number of CPU cores')
+);
+print $this->htmlTag(
+    'dd',
+    $computer->getCpuCores()
+);
+
+$physicalRam = 0;
+$slots = $computer->getChildObjects('MemorySlot');
+while ($slot = $slots->fetchObject('Model_MemorySlot')) {
+    $physicalRam += $slot->getSize();
+}
+print $this->htmlTag(
+    'dt',
+    $this->translate('RAM detected by agent')
+);
+print $this->htmlTag(
+    'dd',
+    $physicalRam . '&nbsp;MB'
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('RAM reported by OS')
+);
+print $this->htmlTag(
+    'dd',
+    $computer->getPhysicalMemory() . '&nbsp;MB'
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('Swap memory')
+);
+print $this->htmlTag(
+    'dd',
+    $computer->getSwapMemory() . '&nbsp;MB'
+);
+
+$user = $computer->getUserName();
+if ($computer->getUserDomain()) {
+    $user .= ' @ ' . $computer->getUserDomain();
+}
+print $this->htmlTag(
+    'dt',
+    $this->translate('Last user logged in')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escape($user)
+);
+
+print "</dl>\n";

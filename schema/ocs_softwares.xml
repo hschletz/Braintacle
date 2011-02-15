@@ -1,0 +1,131 @@
+<!--
+Schema fragment for table softwares
+
+$Id$
+
+Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+ <table>
+
+  <name>softwares</name>
+
+  <description>
+    A machine's software inventory.
+  </description>
+
+  <declaration>
+
+   <field>
+    <name>id</name>
+    <type>integer</type>
+    <length>4</length>
+    <notnull>true</notnull>
+    <autoincrement>1</autoincrement>
+   </field>
+
+   <field>
+    <name>hardware_id</name>
+    <type>integer</type>
+    <length>4</length>
+    <notnull>true</notnull>
+   </field>
+
+   <field>
+    <name>publisher</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>name</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>version</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>folder</name>
+    <type>clob</type>
+   </field>
+
+   <field>
+    <name>comments</name>
+    <type>clob</type>
+   </field>
+
+   <field>
+    <name>filename</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>filesize</name>
+    <type>integer</type>
+    <length>4</length>
+    <default>0</default>
+   </field>
+
+   <field>
+    <name>source</name>
+    <type>integer</type>
+    <length>4</length>
+   </field>
+
+   <field>
+    <name>from</name>
+    <type>text</type>
+    <length>64</length>
+   </field>
+
+   <index>
+    <name>softwares_primary</name>
+    <primary>true</primary>
+    <field>
+     <name>id</name>
+    </field>
+   </index>
+
+   <index>
+    <name>softwares_hardware_id</name>
+    <field>
+     <name>hardware_id</name>
+    </field>
+   </index>
+
+   <index>
+    <name>softwares_name</name>
+    <field>
+     <name>name</name>
+    </field>
+   </index>
+
+   <index>
+    <name>softwares_version</name>
+    <field>
+     <name>version</name>
+    </field>
+   </index>
+
+  </declaration>
+
+ </table>

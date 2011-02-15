@@ -1,0 +1,53 @@
+<?php
+/**
+ * Display list of groups
+ *
+ * $Id$
+ *
+ * Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
+$headers = array(
+    'Name' => $this->translate('Name'),
+    'CreationDate' => $this->translate('Creation date'),
+    'Description' => $this->translate('Description'),
+);
+
+$renderCallbacks = array(
+    'Name' => 'renderName',
+);
+
+function renderName($view, $group)
+{
+    return $view->htmlTag(
+        'a',
+        $view->escape($group->getName()),
+        array('href' => $view->BaseUrl() . "/group/general/id/" . $group->getId()),
+        true
+    );
+}
+
+print $this->getHelper('table')->table(
+    $this->groups,
+    null,
+    $headers,
+    array(),
+    'Model_Group',
+    null,
+    $renderCallbacks
+);
