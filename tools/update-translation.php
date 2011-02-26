@@ -28,7 +28,7 @@
  * files. After translating new strings in these files, run this script again
  * to compile the .mo files which will be used by the application.
  *
- * If you pass the --noextraxt option to this script, xgettext will not be invoked
+ * If you pass the --noextract option to this script, xgettext will not be invoked
  * and braintacle.pot will not be updated.
  *
  * Note that zend.pot and braintacle-library.pot are maintained manually. If the
