@@ -27,6 +27,7 @@ Quick start to get Braintacle running:
 
 6. Copy doc/database.ini to application/configs and adjust the settings.
    The sample configuration is set to OCSinventory's defaults.
+   This file should not be world-readable, only for your webserver.
 
 7. Braintacle requires MD5-hashed passwords. This is the default when creating an
    account or changing the password with OCSinventory console. If you are still
