@@ -35,8 +35,7 @@ fi
 # Evaluate Savannah username
 SAVANNAH_USER=$2
 if [ -z $SAVANNAH_USER ]; then
-    echo ERROR: No Savannah username specified!
-    exit 1
+    echo WARNING: No Savannah username specified. Running in test mode.
 fi
 
 # Get the absolute path of the "development" directory
@@ -66,6 +65,9 @@ fi
 # Export the tree
 svn export "$BASEDIR" "$EXPORT"
 
+# Remove developer stuff from release.
+rm -r "$EXPORT/development"
+
 # The .mo files are not part of the repository.
 # They must be generated for the release.
 php "$EXPORT/tools/update-translation.php" --noextract
@@ -90,16 +92,18 @@ zip -r -9 -q "$ZIPFILE" braintacle
 # Delete temporary export tree
 rm -r "$EXPORT"
 
-# Delete old versions from download area
-echo 'rm *' | sftp hschletz@dl.sv.nongnu.org:/releases/braintacle
+# If a Savannah username was specified, perform changes upstream.
+if [ $SAVANNAH_USER ]; then
+    # Delete old versions from download area
+    echo 'rm *' | sftp $SAVANNAH_USER@dl.sv.nongnu.org:/releases/braintacle
+    # Upload the archives
+    scp "$TARFILE" $SAVANNAH_USER@dl.sv.nongnu.org:/releases/braintacle
+    scp "$ZIPFILE" $SAVANNAH_USER@dl.sv.nongnu.org:/releases/braintacle
 
-# Upload the archives
-scp "$TARFILE" $SAVANNAH_USER@dl.sv.nongnu.org:/releases/braintacle
-scp "$ZIPFILE" $SAVANNAH_USER@dl.sv.nongnu.org:/releases/braintacle
+    # Delete local archives
+    rm "$TARFILE"
+    rm "$ZIPFILE"
 
-# Delete local archives
-rm "$TARFILE"
-rm "$ZIPFILE"
-
-# Tag the release in the repository.
-svn copy $REPOSITORY/trunk $REPOSITORY/tags/release-$VERSION -m "Tagged release $VERSION"
+    # Tag the release in the repository.
+    svn copy $REPOSITORY/trunk $REPOSITORY/tags/release-$VERSION -m "Tagged release $VERSION"
+fi
