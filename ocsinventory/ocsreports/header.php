@@ -128,8 +128,7 @@ if($_SESSION["debug"]==1)
 		{
                      // DL 25/08/2005
 			// Support new MD5 encrypted password or old clear password for login only						
-			if (($row->passwd != md5( $_POST["pass"])) and
-			    ($row->passwd != $_POST["pass"])) {
+			if (($row->passwd != md5( $_POST["pass"]))) {
 				$err = "</tr></table><br><center><font color=red><b>".$l->g(216)."</b></font></center>";
 				unset($_SESSION["loggeduser"],$_SESSION["lvluser"]);				
 			}
