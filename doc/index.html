@@ -129,13 +129,13 @@ As a side-effect of the MVC architecture, the model classes provide an abstract 
 <h3>Login restrictions</h3>
 
 <p>
-Braintacle requires an account with an MD5 encrypted password.
-This is the default when creating an account or changing the password with OCSInventory console.
-If you are still using the default admin account (which comes with a cleartext password), you have to change the password to get an MD5 password.
-</p>
-<p>
 Braintacle does not implement different access privileges.
 To prevent unprivileged users from unauthorized access, only administrators can log in.
+</p>
+<p>
+Braintacle requires an account with an MD5 hashed password.
+This is the default when creating an account or changing the password with OCSInventory console.
+If the database is populated with the bundled OCSInventory console or schema-manager.php, the default account will already have a hashed password.
 </p>
 
 <h3><a name="packagebuilder">Package builder</a></h3>

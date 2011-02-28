@@ -93,7 +93,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
     </field>
     <field>
      <name>passwd</name>
-     <value>admin</value>
+     <value>21232f297a57a5a743894a0e4a801fc3</value>
+     <comments>Default password: admin</comments>
     </field>
     <field>
      <name>accesslvl</name>

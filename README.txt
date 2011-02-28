@@ -29,14 +29,12 @@ Quick start to get Braintacle running:
    The sample configuration is set to OCSinventory's defaults.
    This file should not be world-readable, only for your webserver.
 
-7. Braintacle requires MD5-hashed passwords. This is the default when creating an
-   account or changing the password with OCSinventory console. If you are still
-   using the default admin account (which comes with a cleartext password), you
-   have to change the password to get an MD5 password.
+7. Point your browser to Braintacle's URL. Log in with an OCSinventory
+   administrator account (default username: 'admin', password 'admin') and have
+   fun.
 
-8. Point your browser to Braintacle's URL. Log in with an OCSinventory administrator
-   account and have fun.
-
+8. It is strongly recommended to change the default password. Braintacle does not
+   offer a user interface for this yet. Use the ocsreports console for this task.
 
 More information can be found in the doc/ directory.
 
