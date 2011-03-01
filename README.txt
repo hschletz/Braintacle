@@ -36,7 +36,8 @@ Quick start to get Braintacle running:
 8. It is strongly recommended to change the default password. Braintacle does not
    offer a user interface for this yet. Use the ocsreports console for this task.
 
-More information can be found in the doc/ directory.
+More information can be found in the doc/ directory and on the project site at:
+http://savannah.nongnu.org/projects/braintacle
 
 
 ====================================================================
