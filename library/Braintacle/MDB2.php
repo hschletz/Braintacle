@@ -76,7 +76,7 @@ class Braintacle_MDB2
     {
         // Get DSN information from application's database config.
         $config = new Zend_Config_Ini(
-            APPLICATION_PATH . '/configs/database.ini',
+            realpath(APPLICATION_PATH . '/../config/database.ini'),
             APPLICATION_ENV
         );
         // Map Zend DB adapter to MDB2 driver
