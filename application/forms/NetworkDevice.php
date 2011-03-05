@@ -39,9 +39,15 @@ class Form_NetworkDevice extends Zend_Form
      */
     public function init()
     {
+        $translate = Zend_Registry::get('Zend_Translate');
+
+        // Translation must be turned off for this element to prevent the
+        // application from trying to translate the values from the database.
+        // The label will be translated manually.
         $categories = Model_NetworkDevice::getCategories();
         $type = new Zend_Form_Element_Select('Type');
-        $type->setLabel('Type')
+        $type->setLabel($translate->_('Type'))
+             ->setDisableTranslator(true)
              ->setMultiOptions(array_combine($categories, $categories));
         $this->addElement($type);
 

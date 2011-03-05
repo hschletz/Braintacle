@@ -27,13 +27,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-11-09 14:35+0100\n"
+"POT-Creation-Date: 2011-03-05 18:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: Filter/Input.php:137
+msgid "You must give a non-empty value for field '%field%'"
+msgstr ""
 
 #: Validate/Db/Abstract.php:49
 msgid "A record matching %value% was found"
