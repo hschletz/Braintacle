@@ -29,14 +29,14 @@
 
   <h3>Exception information:</h3>
   <p>
-      <b>Message:</b> <?php print $this->exception->getMessage() ?>
+      <b>Message:</b> <?php print $this->escape($this->exception->getMessage()) ?>
   </p>
 
   <h3>Stack trace:</h3>
-  <pre><?php print $this->exception->getTraceAsString() ?>
+  <pre><?php print $this->escape($this->exception->getTraceAsString()) ?>
   </pre>
 
   <h3>Request Parameters:</h3>
-  <pre><?php var_dump($this->request->getParams()) ?>
+  <pre><?php print $this->escape(var_export($this->request->getParams(), true)) ?>
   </pre>
   <?php endif;
