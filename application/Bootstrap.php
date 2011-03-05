@@ -98,12 +98,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         try {
             $config = new Zend_Config_Ini(
-                APPLICATION_PATH . '/configs/database.ini',
+                realpath(APPLICATION_PATH . '/../config/database.ini'),
                 APPLICATION_ENV,
                 true
             );
         } catch (Zend_Exception $exception) {
-            print 'Please create a database.ini in application/configs.<br />';
+            print 'Please create a file "database.ini" in the config/ directory.<br />';
             print 'A sample file can be found in the doc/ directory.';
             exit;
         }

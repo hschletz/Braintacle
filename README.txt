@@ -25,7 +25,7 @@ Quick start to get Braintacle running:
 
 5. Have Apache reload its configuration.
 
-6. Copy doc/database.ini to application/configs and adjust the settings.
+6. Copy doc/database.ini to config/ and adjust the settings.
    The sample configuration is set to OCSinventory's defaults.
    This file should not be world-readable, only for your webserver.
 
