@@ -64,11 +64,13 @@ This project contains some third party code:
   They are licensed under the BSD license, see
   http://www.opensource.org/licenses/bsd-license.php
 
-  - MDB2_Schema (http://pear.php.net/package/MDB2_Schema)
+  - PEAR (http://pear.php.net/package/PEAR)
+  - MDB2 (http://pear.php.net/package/MDB2/)
+  - MDB2_Driver_pgsql (http://pear.php.net/package/MDB2_Driver_pgsql)
+  - MDB2_Driver_mysql (http://pear.php.net/package/MDB2_Driver_mysql)
   - MDB2_Driver_oci8 (http://pear.php.net/package/MDB2_Driver_oci8)
-  - MDB2, patched (http://pear.php.net/package/MDB2/)
-  - MDB2_Driver_pgsql, patched (http://pear.php.net/package/MDB2_Driver_pgsql)
-  - MDB2_Driver_mysql, patched (http://pear.php.net/package/MDB2_Driver_mysql).
+  - MDB2_Schema (http://pear.php.net/package/MDB2_Schema)
+  - XML_Parser (http://pear.php.net/package/XML_Parser/)
 
 - The file application/configs/macaddresses-vendors.txt is taken from the
   wireshark project (http://wireshark.org) under a different name. GPLv2
