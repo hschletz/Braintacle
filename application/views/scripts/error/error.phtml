@@ -37,6 +37,23 @@
   </pre>
 
   <h3>Request Parameters:</h3>
-  <pre><?php print $this->escape(var_export($this->request->getParams(), true)) ?>
+  <pre>
+  <?php
+  $params = $this->request->getParams();
+  // If the Xdebug extension is loaded, var_dump() is overloaded with Xdebug's
+  // version that formats and escapes the output. Starting with Xdebug 2.1, this
+  // feature can be disabled, so this needs to be checked too. For Xdebug 2.1+,
+  // ini_get() returns '0' (disabled) or a nonempty string (enabled), while
+  // older versions always return '' (always enabled).
+  $prettyprint = ini_get('xdebug.overload_var_dump');
+  if (extension_loaded('xdebug') and
+      ($prettyprint === '' or !empty($prettyprint))) {
+      // Xdebug extension formats and escapes the output.
+      var_dump($params);
+  } else {
+      // Standard output
+      print $this->escape(var_export($params, true));
+  }
+  ?>
   </pre>
   <?php endif;
