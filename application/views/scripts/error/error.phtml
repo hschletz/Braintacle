@@ -32,6 +32,14 @@
       <b>Message:</b> <?php print $this->escape($this->exception->getMessage()) ?>
   </p>
 
+  <?php
+  // The additional debug information below might contain sensitive data.
+  if ($this->request->getParam('controller') == 'login') {
+      print 'Details hidden for security reasons.';
+      return;
+  }
+  ?>
+
   <h3>Stack trace:</h3>
   <pre><?php print $this->escape($this->exception->getTraceAsString()) ?>
   </pre>
