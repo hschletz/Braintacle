@@ -99,7 +99,6 @@ class Model_UserDefinedInfo
         if (empty(Model_UserDefinedInfo::$_allTypesStatic)) { // Query database only once
             Braintacle_MDB2::setErrorReporting();
             $mdb2 = Braintacle_MDB2::factory();
-            $mdb2->loadModule('Reverse');
             $columns = $mdb2->reverse->tableInfo('accountinfo');
             Braintacle_MDB2::resetErrorReporting();
 

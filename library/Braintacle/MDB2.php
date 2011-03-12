@@ -42,6 +42,9 @@ require_once 'Zend/Config/Ini.php';
  * - The returned object is set up to throw exceptions on error which get
  *   caught by the application's default exception handler unless caught
  *   manually.
+ * - The 'Reverse' module will be loaded automatically for this instance.
+ *   This functionality is the main reason for using MDB2 over Zend_Db_Adapter,
+ *   so it is convenient to not have to load it explicitly.
  *
  *
  * WARNING: MDB2 generates a lot of E_STRICT and E_DEPRECATED messages.
@@ -136,6 +139,9 @@ class Braintacle_MDB2
             throw new PEAR_Exception('MDB2 connection failed.');
         }
         $mdb2->setErrorHandling(PEAR_ERROR_EXCEPTION);
+
+        // Load MDB2 modules
+        $mdb2->loadModule('Reverse');
 
         return $mdb2;
     }
