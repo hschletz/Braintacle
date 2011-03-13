@@ -173,6 +173,7 @@ class Zend_View_Helper_Table extends Zend_View_Helper_Abstract
                 case 'date':
                 case 'time':
                 case 'timestamp':
+                case 'enum':
                     $classes[] = 'textcenter';
                     break;
                 case 'blob':

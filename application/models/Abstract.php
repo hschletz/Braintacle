@@ -261,7 +261,7 @@ abstract class Model_Abstract implements Iterator
      * The default implementation retrieves the datatype from the result of
      * {@link getPropertyTypes()}.
      * @param string $property Property name
-     * @return string One of (text|boolean|integer|decimal|float|date|time|timestamp|blob|clob)
+     * @return string One of (text|boolean|integer|decimal|float|date|time|timestamp|blob|clob|enum)
      */
     public function getPropertyType($property)
     {
@@ -277,7 +277,13 @@ abstract class Model_Abstract implements Iterator
      * Return the datatypes of all properties
      *
      * The default implementation returns 'text' for each property unless
-     * overridden in $_types. The datatypes are abstract types as ued by MDB2.
+     * overridden in {@link $_types}. The datatypes are abstract types as used
+     * by MDB2.
+     * Additionally, the type 'enum' is available. It does not map to a
+     * particular datatype, and the database may store it as a different type
+     * (integer or string), even if the database supports the enum datatype.
+     * It's up to the application how to handle it - typically as a symbolic
+     * string.
      * @link http://pear.php.net/manual/en/package.database.mdb2.datatypes.php
      * @return array Associative array with property as key and type as value.
      */
