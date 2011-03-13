@@ -60,7 +60,7 @@ class Model_GroupMembership extends Model_Abstract
     );
 
     protected $_types = array(
-        'Membership' => 'integer',
+        'Membership' => 'enum',
     );
 
     /**
