@@ -77,10 +77,6 @@
 class Model_Group extends Model_ComputerOrGroup
 {
 
-    const MEMBERSHIP_DYNAMIC = 0;
-    const MEMBERSHIP_STATIC = 1;
-    const MEMBERSHIP_EXCLUDED = 2;
-
     /**
      * Property Map
      * @var array

@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-30 15:48+0100\n"
+"POT-Creation-Date: 2011-03-13 11:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -54,7 +54,8 @@ msgstr ""
 msgid "Duplicates"
 msgstr ""
 
-#: Bootstrap.php:63
+#: Bootstrap.php:63 views/helpers/InventoryHeader.php:139
+#: views/scripts/computer/groups.phtml:35
 msgid "Groups"
 msgstr ""
 
@@ -75,12 +76,12 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: controllers/ComputerController.php:182
+#: controllers/ComputerController.php:187
 #, php-format
 msgid "Computer '%s' was successfully deleted."
 msgstr ""
 
-#: controllers/ComputerController.php:187
+#: controllers/ComputerController.php:192
 #, php-format
 msgid "Computer '%s' could not be deleted."
 msgstr ""
@@ -140,7 +141,7 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
-#: forms/NetworkDevice.php:44 views/scripts/computer/display.phtml:85
+#: forms/NetworkDevice.php:49 views/scripts/computer/display.phtml:85
 #: views/scripts/computer/general.phtml:121
 #: views/scripts/computer/index.phtml:72 views/scripts/computer/misc.phtml:64
 #: views/scripts/computer/misc.phtml:112
@@ -153,7 +154,7 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
-#: forms/NetworkDevice.php:52 views/scripts/computer/display.phtml:82
+#: forms/NetworkDevice.php:58 views/scripts/computer/display.phtml:82
 #: views/scripts/computer/misc.phtml:35 views/scripts/computer/misc.phtml:66
 #: views/scripts/computer/network.phtml:58
 #: views/scripts/computer/printers.phtml:33
@@ -163,7 +164,7 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: forms/NetworkDevice.php:56
+#: forms/NetworkDevice.php:62
 msgid "OK"
 msgstr ""
 
@@ -722,7 +723,7 @@ msgstr ""
 msgid "User defined"
 msgstr ""
 
-#: views/helpers/InventoryHeader.php:139
+#: views/helpers/InventoryHeader.php:146
 #: views/scripts/network/showidentified.phtml:65
 #: views/scripts/network/showunknown.phtml:64
 #: views/scripts/package/index.phtml:237
@@ -824,6 +825,22 @@ msgstr ""
 
 #: views/scripts/computer/general.phtml:216
 msgid "Last user logged in"
+msgstr ""
+
+#: views/scripts/computer/groups.phtml:31
+msgid "Group memberships"
+msgstr ""
+
+#: views/scripts/computer/groups.phtml:36
+msgid "Membership"
+msgstr ""
+
+#: views/scripts/computer/groups.phtml:48
+msgid "dynamic"
+msgstr ""
+
+#: views/scripts/computer/groups.phtml:51
+msgid "static"
 msgstr ""
 
 #: views/scripts/computer/index.phtml:50

@@ -1,0 +1,75 @@
+<?php
+/**
+ * Display and manage a computer's group memberships'
+ *
+ * $Id$
+ *
+ * Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
+$computer = $this->computer;
+
+print $this->inventoryHeader($computer);
+
+print $this->htmlTag(
+    'h2',
+    $this->translate('Group memberships')
+);
+
+// List groups this computer is a member of.
+
+$headers = array(
+    'Group' => $this->translate('Groups'),
+    'Membership' => $this->translate('Membership'),
+);
+
+$renderCallbacks = array(
+    'Membership' => 'renderMembership',
+);
+
+function renderMembership($view, $membership)
+{
+    $type = $membership->getMembership();
+    switch ($type) {
+        case Model_GroupMembership::TYPE_DYNAMIC:
+            $content = $view->translate('dynamic');
+            break;
+        case Model_GroupMembership::TYPE_STATIC:
+            $content = $view->translate('static');
+            break;
+        default:
+            throw new UnexpectedValueException(
+                "Invalid group membership type: $type"
+            );
+    }
+    return $content;
+}
+
+print $this->table(
+    $computer->getGroups(
+        Model_GroupMembership::TYPE_INCLUDED,
+        $this->order,
+        $this->direction
+    ),
+    null,
+    $headers,
+    array(),
+    'Model_GroupMembership',
+    null,
+    $renderCallbacks
+);

@@ -1047,4 +1047,25 @@ class Model_Computer extends Model_ComputerOrGroup
         }
     }
 
+    /**
+     * Retrieve group membership information for this computer
+     * @param integer $membership Membership type to retrieve
+     * @param string $order Property to sort by
+     * @param string $direction Direction to sort by
+     * @return Zend_Db_Statement
+     */
+    public function getGroups(
+        $membership=Model_GroupMembership::TYPE_INCLUDED,
+        $order='Name',
+        $direction='asc'
+    )
+    {
+        return Model_GroupMembership::createStatementStatic(
+            $this->getId(),
+            $membership,
+            $order,
+            $direction
+        );
+    }
+
 }

@@ -165,6 +165,11 @@ class ComputerController extends Zend_Controller_Action
         $this->_helper->ordering('Name');
     }
 
+    public function groupsAction()
+    {
+        $this->_helper->ordering('Group');
+    }
+
     public function deleteAction()
     {
         $form = new Form_YesNo;

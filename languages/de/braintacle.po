@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-30 15:48+0100\n"
-"PO-Revision-Date: 2011-01-30 15:49+0100\n"
+"POT-Creation-Date: 2011-03-13 11:13+0100\n"
+"PO-Revision-Date: 2011-03-13 11:13+0100\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <holger.schletz@web.de>\n"
 "Language: de\n"
@@ -55,7 +55,8 @@ msgstr "Netzwerk"
 msgid "Duplicates"
 msgstr "Duplikate"
 
-#: Bootstrap.php:63
+#: Bootstrap.php:63 views/helpers/InventoryHeader.php:139
+#: views/scripts/computer/groups.phtml:35
 msgid "Groups"
 msgstr "Gruppen"
 
@@ -76,12 +77,12 @@ msgstr "Erstellen"
 msgid "Search"
 msgstr "Suchen"
 
-#: controllers/ComputerController.php:182
+#: controllers/ComputerController.php:187
 #, php-format
 msgid "Computer '%s' was successfully deleted."
 msgstr "Computer '%s' wurde erfolgreich gelöscht."
 
-#: controllers/ComputerController.php:187
+#: controllers/ComputerController.php:192
 #, php-format
 msgid "Computer '%s' could not be deleted."
 msgstr "Computer '%s' konnte nicht gelöscht werden."
@@ -141,7 +142,7 @@ msgstr "Passwort"
 msgid "Login"
 msgstr "Anmelden"
 
-#: forms/NetworkDevice.php:44 views/scripts/computer/display.phtml:85
+#: forms/NetworkDevice.php:49 views/scripts/computer/display.phtml:85
 #: views/scripts/computer/general.phtml:121
 #: views/scripts/computer/index.phtml:72 views/scripts/computer/misc.phtml:64
 #: views/scripts/computer/misc.phtml:112
@@ -154,7 +155,7 @@ msgstr "Anmelden"
 msgid "Type"
 msgstr "Typ"
 
-#: forms/NetworkDevice.php:52 views/scripts/computer/display.phtml:82
+#: forms/NetworkDevice.php:58 views/scripts/computer/display.phtml:82
 #: views/scripts/computer/misc.phtml:35 views/scripts/computer/misc.phtml:66
 #: views/scripts/computer/network.phtml:58
 #: views/scripts/computer/printers.phtml:33
@@ -164,7 +165,7 @@ msgstr "Typ"
 msgid "Description"
 msgstr "Beschreibung"
 
-#: forms/NetworkDevice.php:56
+#: forms/NetworkDevice.php:62
 msgid "OK"
 msgstr "OK"
 
@@ -726,7 +727,7 @@ msgstr "Verschiedenes"
 msgid "User defined"
 msgstr "Benutzerdefiniert"
 
-#: views/helpers/InventoryHeader.php:139
+#: views/helpers/InventoryHeader.php:146
 #: views/scripts/network/showidentified.phtml:65
 #: views/scripts/network/showunknown.phtml:64
 #: views/scripts/package/index.phtml:237
@@ -829,6 +830,22 @@ msgstr "Auslagerungsspeicher"
 #: views/scripts/computer/general.phtml:216
 msgid "Last user logged in"
 msgstr "Letzer angemeldeter Benutzer"
+
+#: views/scripts/computer/groups.phtml:31
+msgid "Group memberships"
+msgstr "Gruppenmitgliedschaften"
+
+#: views/scripts/computer/groups.phtml:36
+msgid "Membership"
+msgstr "Mitgliedschaft"
+
+#: views/scripts/computer/groups.phtml:48
+msgid "dynamic"
+msgstr "dynamisch"
+
+#: views/scripts/computer/groups.phtml:51
+msgid "static"
+msgstr "statisch"
 
 #: views/scripts/computer/index.phtml:50
 msgid "CPU cores"
