@@ -167,7 +167,7 @@ class ComputerController extends Zend_Controller_Action
 
     public function groupsAction()
     {
-        $this->_helper->ordering('Group');
+        $this->_helper->ordering('GroupName');
     }
 
     public function deleteAction()

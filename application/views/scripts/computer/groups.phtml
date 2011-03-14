@@ -34,13 +34,28 @@ print $this->htmlTag(
 // List groups this computer is a member of.
 
 $headers = array(
-    'Group' => $this->translate('Groups'),
+    'GroupName' => $this->translate('Groups'),
     'Membership' => $this->translate('Membership'),
 );
 
 $renderCallbacks = array(
+    'GroupName' => 'renderGroupName',
     'Membership' => 'renderMembership',
 );
+
+function renderGroupName($view, $membership)
+{
+    return $view->htmlTag(
+        'a',
+        $view->escape($membership->getGroupName()),
+        array(
+            'href' => $view->BaseUrl()
+                     . '/group/general/id/'
+                     . urlencode($membership->getGroupId())
+        ),
+        true
+    );
+}
 
 function renderMembership($view, $membership)
 {

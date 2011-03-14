@@ -27,7 +27,8 @@
  * Group membership
  *
  * Properties:
- * - <b>Group</b> Group name
+ * - <b>GroupId</b> Group ID
+ * - <b>GroupName</b> Group name
  * - <b>Membership</b> Membership type - one of {@link TYPE_DYNAMIC},
  * {@link TYPE_STATIC} or {@link TYPE_EXCLUDED}.
  *
@@ -55,7 +56,8 @@ class Model_GroupMembership extends Model_Abstract
 
     protected $_propertyMap = array(
         // Values from query result
-        'Group' => 'name',
+        'GroupId' => 'group_id',
+        'GroupName' => 'name',
         'Membership' => 'static',
     );
 
@@ -89,7 +91,7 @@ class Model_GroupMembership extends Model_Abstract
         $order = self::getOrder($order, $direction, $map);
 
         $select = $db->select()
-            ->from('groups_cache', array('static'))
+            ->from('groups_cache', array('group_id', 'static'))
             ->join(
                 'hardware',
                 'groups_cache.group_id=hardware.id',
