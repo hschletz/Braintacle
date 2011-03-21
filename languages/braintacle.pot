@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-21 15:59+0100\n"
+"POT-Creation-Date: 2011-03-21 17:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -55,7 +55,6 @@ msgid "Duplicates"
 msgstr ""
 
 #: Bootstrap.php:63 views/helpers/InventoryHeader.php:139
-#: views/scripts/computer/groups.phtml:37
 msgid "Groups"
 msgstr ""
 
@@ -141,7 +140,7 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
-#: forms/ManageGroupMemberships.php:62 views/scripts/computer/groups.phtml:65
+#: forms/ManageGroupMemberships.php:62 views/helpers/MembershipType.php:41
 msgid "automatic"
 msgstr ""
 
@@ -192,9 +191,9 @@ msgstr ""
 #: views/scripts/computer/system.phtml:134
 #: views/scripts/duplicates/index.phtml:26
 #: views/scripts/duplicates/show.phtml:28 views/scripts/group/general.phtml:32
-#: views/scripts/group/index.phtml:26 views/scripts/group/packages.phtml:35
-#: views/scripts/network/index.phtml:27 views/scripts/package/index.phtml:61
-#: views/scripts/software/index.phtml:27
+#: views/scripts/group/index.phtml:26 views/scripts/group/members.phtml:30
+#: views/scripts/group/packages.phtml:35 views/scripts/network/index.phtml:27
+#: views/scripts/package/index.phtml:61 views/scripts/software/index.phtml:27
 msgid "Name"
 msgstr ""
 
@@ -560,32 +559,32 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: models/Computer.php:558
+#: models/Computer.php:581
 #, php-format
 msgid "%1$d computers with an interface in network '%2$s'"
 msgstr ""
 
-#: models/Computer.php:575
+#: models/Computer.php:598
 #, php-format
 msgid "%1$d computers waiting for notification of package '%2$s'"
 msgstr ""
 
-#: models/Computer.php:580
+#: models/Computer.php:603
 #, php-format
 msgid "%1$d computers with package '%2$s' successfully deployed"
 msgstr ""
 
-#: models/Computer.php:585
+#: models/Computer.php:608
 #, php-format
 msgid "%1$d computers with deployment of package '%2$s' in progress"
 msgstr ""
 
-#: models/Computer.php:590
+#: models/Computer.php:613
 #, php-format
 msgid "%1$d computers where deployment of package '%2$s' failed"
 msgstr ""
 
-#: models/Computer.php:595
+#: models/Computer.php:618
 #, php-format
 msgid "%1$d computers where software '%2$s' is installed"
 msgstr ""
@@ -746,6 +745,10 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
+#: views/helpers/MembershipType.php:44
+msgid "manual"
+msgstr ""
+
 #: views/helpers/ValidationMessages.php:45
 msgid "Invalid parameter: "
 msgstr ""
@@ -847,15 +850,15 @@ msgstr ""
 msgid "Group memberships"
 msgstr ""
 
-#: views/scripts/computer/groups.phtml:38
+#: views/scripts/computer/groups.phtml:37
+msgid "Group"
+msgstr ""
+
+#: views/scripts/computer/groups.phtml:38 views/scripts/group/members.phtml:33
 msgid "Membership"
 msgstr ""
 
-#: views/scripts/computer/groups.phtml:68
-msgid "manual"
-msgstr ""
-
-#: views/scripts/computer/groups.phtml:100
+#: views/scripts/computer/groups.phtml:87
 msgid "Manage memberships"
 msgstr ""
 
@@ -863,7 +866,7 @@ msgstr ""
 msgid "CPU cores"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:52
+#: views/scripts/computer/index.phtml:52 views/scripts/group/members.phtml:32
 msgid "Last inventory"
 msgstr ""
 
@@ -875,7 +878,7 @@ msgstr ""
 msgid "Operating system"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:65
+#: views/scripts/computer/index.phtml:65 views/scripts/group/members.phtml:31
 msgid "User"
 msgstr ""
 
@@ -913,7 +916,7 @@ msgstr ""
 msgid "Edit filter"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:160
+#: views/scripts/computer/index.phtml:160 views/scripts/group/members.phtml:70
 #, php-format
 msgid "Number of computers: %d"
 msgstr ""
