@@ -62,10 +62,10 @@ function renderMembership($view, $membership)
     $type = $membership->getMembership();
     switch ($type) {
         case Model_GroupMembership::TYPE_DYNAMIC:
-            $content = $view->translate('dynamic');
+            $content = $view->translate('automatic');
             break;
         case Model_GroupMembership::TYPE_STATIC:
-            $content = $view->translate('static');
+            $content = $view->translate('manual');
             break;
         default:
             throw new UnexpectedValueException(

@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-15 19:25+0100\n"
-"PO-Revision-Date: 2011-03-15 19:25+0100\n"
+"POT-Creation-Date: 2011-03-21 14:02+0100\n"
+"PO-Revision-Date: 2011-03-21 14:02+0100\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <holger.schletz@web.de>\n"
 "Language: de\n"
@@ -142,19 +142,19 @@ msgstr "Passwort"
 msgid "Login"
 msgstr "Anmelden"
 
-#: forms/ManageGroupMemberships.php:61
+#: forms/ManageGroupMemberships.php:62 views/scripts/computer/groups.phtml:65
 msgid "automatic"
 msgstr "automatisch"
 
-#: forms/ManageGroupMemberships.php:62
+#: forms/ManageGroupMemberships.php:63
 msgid "always"
 msgstr "immer"
 
-#: forms/ManageGroupMemberships.php:63
+#: forms/ManageGroupMemberships.php:64
 msgid "never"
 msgstr "nie"
 
-#: forms/ManageGroupMemberships.php:92 forms/NetworkDevice.php:62
+#: forms/ManageGroupMemberships.php:121 forms/NetworkDevice.php:62
 msgid "OK"
 msgstr "OK"
 
@@ -851,13 +851,9 @@ msgstr "Gruppenmitgliedschaften"
 msgid "Membership"
 msgstr "Mitgliedschaft"
 
-#: views/scripts/computer/groups.phtml:65
-msgid "dynamic"
-msgstr "dynamisch"
-
 #: views/scripts/computer/groups.phtml:68
-msgid "static"
-msgstr "statisch"
+msgid "manual"
+msgstr "manuell"
 
 #: views/scripts/computer/groups.phtml:100
 msgid "Manage memberships"
