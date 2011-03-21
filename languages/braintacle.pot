@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-13 11:13+0100\n"
+"POT-Creation-Date: 2011-03-15 19:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -55,7 +55,7 @@ msgid "Duplicates"
 msgstr ""
 
 #: Bootstrap.php:63 views/helpers/InventoryHeader.php:139
-#: views/scripts/computer/groups.phtml:35
+#: views/scripts/computer/groups.phtml:37
 msgid "Groups"
 msgstr ""
 
@@ -141,6 +141,22 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
+#: forms/ManageGroupMemberships.php:61
+msgid "automatic"
+msgstr ""
+
+#: forms/ManageGroupMemberships.php:62
+msgid "always"
+msgstr ""
+
+#: forms/ManageGroupMemberships.php:63
+msgid "never"
+msgstr ""
+
+#: forms/ManageGroupMemberships.php:92 forms/NetworkDevice.php:62
+msgid "OK"
+msgstr ""
+
 #: forms/NetworkDevice.php:49 views/scripts/computer/display.phtml:85
 #: views/scripts/computer/general.phtml:121
 #: views/scripts/computer/index.phtml:72 views/scripts/computer/misc.phtml:64
@@ -162,10 +178,6 @@ msgstr ""
 #: views/scripts/group/index.phtml:28
 #: views/scripts/network/showidentified.phtml:31
 msgid "Description"
-msgstr ""
-
-#: forms/NetworkDevice.php:62
-msgid "OK"
 msgstr ""
 
 #: forms/Package.php:80 views/scripts/computer/display.phtml:33
@@ -831,16 +843,20 @@ msgstr ""
 msgid "Group memberships"
 msgstr ""
 
-#: views/scripts/computer/groups.phtml:36
+#: views/scripts/computer/groups.phtml:38
 msgid "Membership"
 msgstr ""
 
-#: views/scripts/computer/groups.phtml:48
+#: views/scripts/computer/groups.phtml:65
 msgid "dynamic"
 msgstr ""
 
-#: views/scripts/computer/groups.phtml:51
+#: views/scripts/computer/groups.phtml:68
 msgid "static"
+msgstr ""
+
+#: views/scripts/computer/groups.phtml:100
+msgid "Manage memberships"
 msgstr ""
 
 #: views/scripts/computer/index.phtml:50

@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-13 11:13+0100\n"
-"PO-Revision-Date: 2011-03-13 11:13+0100\n"
+"POT-Creation-Date: 2011-03-15 19:25+0100\n"
+"PO-Revision-Date: 2011-03-15 19:25+0100\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <holger.schletz@web.de>\n"
 "Language: de\n"
@@ -56,7 +56,7 @@ msgid "Duplicates"
 msgstr "Duplikate"
 
 #: Bootstrap.php:63 views/helpers/InventoryHeader.php:139
-#: views/scripts/computer/groups.phtml:35
+#: views/scripts/computer/groups.phtml:37
 msgid "Groups"
 msgstr "Gruppen"
 
@@ -142,6 +142,22 @@ msgstr "Passwort"
 msgid "Login"
 msgstr "Anmelden"
 
+#: forms/ManageGroupMemberships.php:61
+msgid "automatic"
+msgstr "automatisch"
+
+#: forms/ManageGroupMemberships.php:62
+msgid "always"
+msgstr "immer"
+
+#: forms/ManageGroupMemberships.php:63
+msgid "never"
+msgstr "nie"
+
+#: forms/ManageGroupMemberships.php:92 forms/NetworkDevice.php:62
+msgid "OK"
+msgstr "OK"
+
 #: forms/NetworkDevice.php:49 views/scripts/computer/display.phtml:85
 #: views/scripts/computer/general.phtml:121
 #: views/scripts/computer/index.phtml:72 views/scripts/computer/misc.phtml:64
@@ -164,10 +180,6 @@ msgstr "Typ"
 #: views/scripts/network/showidentified.phtml:31
 msgid "Description"
 msgstr "Beschreibung"
-
-#: forms/NetworkDevice.php:62
-msgid "OK"
-msgstr "OK"
 
 #: forms/Package.php:80 views/scripts/computer/display.phtml:33
 #: views/scripts/computer/index.phtml:47 views/scripts/computer/misc.phtml:34
@@ -835,17 +847,21 @@ msgstr "Letzer angemeldeter Benutzer"
 msgid "Group memberships"
 msgstr "Gruppenmitgliedschaften"
 
-#: views/scripts/computer/groups.phtml:36
+#: views/scripts/computer/groups.phtml:38
 msgid "Membership"
 msgstr "Mitgliedschaft"
 
-#: views/scripts/computer/groups.phtml:48
+#: views/scripts/computer/groups.phtml:65
 msgid "dynamic"
 msgstr "dynamisch"
 
-#: views/scripts/computer/groups.phtml:51
+#: views/scripts/computer/groups.phtml:68
 msgid "static"
 msgstr "statisch"
+
+#: views/scripts/computer/groups.phtml:100
+msgid "Manage memberships"
+msgstr "Mitgliedschaften verwalten"
 
 #: views/scripts/computer/index.phtml:50
 msgid "CPU cores"
