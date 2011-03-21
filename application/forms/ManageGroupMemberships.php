@@ -86,7 +86,7 @@ class Form_ManageGroupMemberships extends Zend_Form
             $element = new Zend_Form_Element_Radio('group' . $groupId);
             $element->setDisableTranslator(true);
             $element->setLabel($group->getName());
-            $element->setSeparator('&nbsp;&nbsp;'); // display inline
+            $element->setSeparator("&nbsp;&nbsp;\n"); // display inline
             $element->setMultiOptions($buttons);
 
             // Set default state for radio button. It tells how this particular
