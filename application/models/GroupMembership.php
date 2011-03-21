@@ -53,6 +53,9 @@ class Model_GroupMembership extends Model_Abstract
     // The next one is not present in groups_cache.static.
     // It refers to both dynamically or statically included.
     const TYPE_INCLUDED = -1;
+    // The next one is not present in groups_cache.static.
+    // It refers to all membership types.
+    const TYPE_ALL = -2;
 
     protected $_propertyMap = array(
         // Values from query result
@@ -75,8 +78,8 @@ class Model_GroupMembership extends Model_Abstract
      */
     static function createStatementStatic(
         $computer,
-        $membership=null,
-        $order=null,
+        $membership=self::TYPE_ALL,
+        $order='GroupName',
         $direction='asc'
     )
     {
@@ -84,10 +87,6 @@ class Model_GroupMembership extends Model_Abstract
 
         $dummy = new Model_GroupMembership;
         $map = $dummy->getPropertyMap();
-
-        if (is_null($order)) {
-            $order = 'Group';
-        }
         $order = self::getOrder($order, $direction, $map);
 
         $select = $db->select()
@@ -102,6 +101,8 @@ class Model_GroupMembership extends Model_Abstract
 
         if (!is_null($membership)) {
             switch ($membership) {
+                case self::TYPE_ALL:
+                    break;
                 case self::TYPE_INCLUDED:
                     $select->where(
                         'static IN(?)',

@@ -1056,7 +1056,7 @@ class Model_Computer extends Model_ComputerOrGroup
      */
     public function getGroups(
         $membership=Model_GroupMembership::TYPE_INCLUDED,
-        $order='Name',
+        $order='GroupName',
         $direction='asc'
     )
     {
