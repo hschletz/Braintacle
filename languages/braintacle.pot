@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-21 14:02+0100\n"
+"POT-Creation-Date: 2011-03-21 15:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -59,7 +59,7 @@ msgstr ""
 msgid "Groups"
 msgstr ""
 
-#: Bootstrap.php:70 views/helpers/GroupHeader.php:58
+#: Bootstrap.php:70 views/helpers/GroupHeader.php:65
 #: views/helpers/InventoryHeader.php:132
 msgid "Packages"
 msgstr ""
@@ -696,6 +696,10 @@ msgstr ""
 
 #: views/helpers/GroupHeader.php:51 views/helpers/InventoryHeader.php:51
 msgid "General"
+msgstr ""
+
+#: views/helpers/GroupHeader.php:58
+msgid "Members"
 msgstr ""
 
 #: views/helpers/InventoryHeader.php:42

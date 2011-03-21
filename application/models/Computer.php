@@ -72,6 +72,9 @@
  * This would make the property 'StorageDevice.Size' available to this class.
  * Note that only properties defined by the model class will work.
  * The model prefix ensures that ambiguous properties/columns will not clash.
+ *
+ * If the 'MemberOf' filter is applied, the <b>Membership</b> property is
+ * available which contains one of the {@link Model_GroupMembership} constants.
  * @package Models
  */
 class Model_Computer extends Model_ComputerOrGroup
@@ -113,6 +116,8 @@ class Model_Computer extends Model_ComputerOrGroup
         'AssetTag' => 'assettag',
         // Values from assigned packages
         'Package.Status' => 'package_status',
+        // Values from group memberships
+        'Membership' => 'static'
     );
 
     protected $_types = array(
@@ -123,6 +128,7 @@ class Model_Computer extends Model_ComputerOrGroup
         'LastContactDate' => 'timestamp',
         'PhysicalMemory' => 'integer',
         'SwapMemory' => 'integer',
+        'Membership' => 'enum',
     );
 
     /**
@@ -194,6 +200,7 @@ class Model_Computer extends Model_ComputerOrGroup
                     $fromBios[] = $map[$column];
                     break;
                 case 'Package.Status':
+                case 'Membership':
                     break; // columns are added later
                 default:
                     if (array_key_exists($column, $map)) { // ignore nonexistent columns
@@ -270,6 +277,22 @@ class Model_Computer extends Model_ComputerOrGroup
                                 $search
                             ),
                             array ('software_version' => 'version')
+                        );
+                    break;
+                case 'MemberOf':
+                    $select
+                        ->join(
+                            'groups_cache',
+                            'hardware.id = groups_cache.hardware_id',
+                            array('static')
+                        )
+                        ->where('groups_cache.group_id = ?', $search)
+                        ->where(
+                            'groups_cache.static IN (?)',
+                            array(
+                                Model_GroupMembership::TYPE_DYNAMIC,
+                                Model_GroupMembership::TYPE_STATIC
+                            )
                         );
                     break;
                 default:

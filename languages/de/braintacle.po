@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-21 14:02+0100\n"
-"PO-Revision-Date: 2011-03-21 14:02+0100\n"
+"POT-Creation-Date: 2011-03-21 15:59+0100\n"
+"PO-Revision-Date: 2011-03-21 15:59+0100\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <holger.schletz@web.de>\n"
 "Language: de\n"
@@ -60,7 +60,7 @@ msgstr "Duplikate"
 msgid "Groups"
 msgstr "Gruppen"
 
-#: Bootstrap.php:70 views/helpers/GroupHeader.php:58
+#: Bootstrap.php:70 views/helpers/GroupHeader.php:65
 #: views/helpers/InventoryHeader.php:132
 msgid "Packages"
 msgstr "Pakete"
@@ -701,6 +701,10 @@ msgstr "Einzelheiten für Gruppe '%s'"
 #: views/helpers/GroupHeader.php:51 views/helpers/InventoryHeader.php:51
 msgid "General"
 msgstr "Allgemein"
+
+#: views/helpers/GroupHeader.php:58
+msgid "Members"
+msgstr "Mitglieder"
 
 #: views/helpers/InventoryHeader.php:42
 #, php-format

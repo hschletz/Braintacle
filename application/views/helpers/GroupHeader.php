@@ -55,6 +55,13 @@ class Zend_View_Helper_GroupHeader extends Zend_View_Helper_Abstract
         $navigation->addPage($page);
 
         $page = new Zend_Navigation_Page_Mvc;
+        $page->setLabel('Members')
+             ->setController('group')
+             ->setAction('members')
+             ->setParams($id);
+        $navigation->addPage($page);
+
+        $page = new Zend_Navigation_Page_Mvc;
         $page->setLabel('Packages')
              ->setController('group')
              ->setAction('packages')

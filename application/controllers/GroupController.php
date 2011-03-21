@@ -57,6 +57,24 @@ class GroupController extends Zend_Controller_Action
     {
     }
 
+    public function membersAction()
+    {
+        $this->_helper->ordering('InventoryDate', 'desc');
+        $this->view->columns = array(
+            'Name',
+            'UserName',
+            'InventoryDate',
+            'Membership',
+        );
+        $this->view->computers = Model_Computer::createStatementStatic(
+            $this->view->columns,
+            $this->view->order,
+            $this->view->direction,
+            'MemberOf',
+            $this->group->getId()
+        );
+    }
+
     public function packagesAction()
     {
         $this->_helper->ordering('Name');

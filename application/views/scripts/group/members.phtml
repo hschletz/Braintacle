@@ -1,0 +1,76 @@
+<?php
+/**
+ * Display all group members
+ *
+ * $Id$
+ *
+ * Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
+$group = $this->group;
+
+print $this->groupHeader($group);
+
+$headers = array(
+    'Name' => $this->translate('Name'),
+    'UserName' => $this->translate('User'),
+    'InventoryDate' => $this->translate('Last inventory'),
+    'Membership' => $this->translate('Membership'),
+);
+
+$renderCallbacks = array(
+    'Name' => 'renderName',
+    'Membership' => 'renderMembership',
+);
+
+function renderName($view, $computer)
+{
+    return $view->htmlTag(
+        'a',
+        $view->escape($computer->getName()),
+        array('href' => $view->BaseUrl() . "/computer/groups/id/" . $computer->getId()),
+        true
+    );
+}
+
+function renderMembership($view, $computer)
+{
+    return $view->membershipType($computer->getMembership());
+}
+
+$table = $this->getHelper('table')->table(
+    $this->computers,
+    $this->columns,
+    $headers,
+    array(),
+    'Model_Computer',
+    null,
+    $renderCallbacks,
+    $count
+);
+
+print $this->htmlTag(
+    'p',
+    sprintf(
+        $this->translate('Number of computers: %d'),
+        $count
+    ),
+    array('class' => 'textcenter')
+);
+
+print $table;
