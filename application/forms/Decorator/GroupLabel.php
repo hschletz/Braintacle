@@ -1,0 +1,98 @@
+<?php
+/**
+ * Form decorator that renders the label as a hyperlink to the group page
+ *
+ * $Id$
+ *
+ * Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * @package Forms
+ * @filesource
+ */
+/**
+ * Form decorator that renders the label as a hyperlink to the group page
+ *
+ * How to link the label of element $element to group $groupId:
+ * <code>
+ * $element->setName('group' . $groupId);
+ * $element->addPrefixPath(
+ *     'Form_Decorator',
+ *      realpath(dirname(__FILE__) . '/Decorator'),
+ *      'decorator'
+ * );
+ * $element->removeDecorator('Label');
+ * $element->addDecorator('GroupLabel');
+ * </code>
+ * @package Forms
+ */
+class Form_Decorator_GroupLabel extends Zend_Form_Decorator_Label
+{
+
+    function __construct($options = null)
+    {
+        parent::__construct($options);
+
+        // Set options that are normally set for Zend_Form_Decorator_Label
+        $this->setOption('tag', 'dt');
+        $this->setOption('disableFor', true);
+    }
+
+    public function render($content)
+    {
+        $element = $this->getElement();
+
+        // The group ID is derived from the element's name, which must follow
+        // a given schema for this to work.
+        if (!preg_match('/^group([0-9]+)$/', $element->getName(), $matches)) {
+            throw new UnexpectedValueException(
+                'Invalid naming schema for element ' . $element->getName()
+            );
+        }
+        $groupId = $matches[1];
+
+        $view = $element->getView();
+
+        // Preserve values
+        $escape = $this->getOption('escape');
+        $label = $element->getLabel();
+
+        // Change the label to a hyperlink. This would normally get escaped,
+        // so escaping must be turned off and the content gets escaped manually.
+        $this->setOption('escape', false);
+        $element->setLabel(
+            $view->htmlTag(
+                'a',
+                $view->escape($label),
+                array(
+                    'href' => $view->BaseUrl() .
+                              '/group/general/id/' .
+                              urlencode($groupId)
+                )
+            )
+        );
+
+        // Let the parent class do the rendering
+        $content = parent::render($content);
+
+        // Restore to previous state
+        $this->setOption('escape', $escape);
+        $element->setLabel($label);
+
+        return $content;
+    }
+
+}

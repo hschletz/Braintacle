@@ -25,15 +25,10 @@
  */
 /**
  * Form for managing group memberships of a computer
- * Form for installing packages on a computer
  *
  * This form does not create its elements automatically. This only happens when
- * calling the {@link addPackages()} method. Note that this must also be done
+ * calling the {@link addGroups()} method. Note that this must also be done
  * before validating or retrieving data.
- *
- * It is advisable to use {@link getValues()} because it deals with the
- * encoding of package names in form elements. It only delivers checked items;
- * the computer ID must be retrieved via getValue() or directly from $_POST.
  * @package Forms
  */
 class Form_ManageGroupMemberships extends Zend_Form
@@ -64,6 +59,9 @@ class Form_ManageGroupMemberships extends Zend_Form
             Model_GroupMembership::TYPE_EXCLUDED => $translate->_('never'),
         );
 
+        // Path to custom decorator
+        $path = realpath(dirname(__FILE__) . '/Decorator');
+
         // Get a list of all groups
         $groups = Model_Group::createStatementStatic(
             array('Id', 'Name'),
@@ -88,6 +86,10 @@ class Form_ManageGroupMemberships extends Zend_Form
             $element->setLabel($group->getName());
             $element->setSeparator("&nbsp;&nbsp;\n"); // display inline
             $element->setMultiOptions($buttons);
+            // Replace Label decorator with GroupLabel
+            $element->addPrefixPath('Form_Decorator', $path, 'decorator');
+            $element->removeDecorator('Label');
+            $element->addDecorator('GroupLabel');
 
             // Set default state for radio button. It tells how this particular
             // computer/group combination is to be treated for membership
