@@ -60,6 +60,10 @@ class GroupController extends Zend_Controller_Action
     public function membersAction()
     {
         $this->_helper->ordering('InventoryDate', 'desc');
+
+        // Rebuild cache if necessary
+        $this->group->update();
+
         $this->view->columns = array(
             'Name',
             'UserName',
