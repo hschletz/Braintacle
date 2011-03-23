@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-21 17:07+0100\n"
-"PO-Revision-Date: 2011-03-21 17:08+0100\n"
+"POT-Creation-Date: 2011-03-23 12:31+0100\n"
+"PO-Revision-Date: 2011-03-23 12:32+0100\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <holger.schletz@web.de>\n"
 "Language: de\n"
@@ -141,19 +141,19 @@ msgstr "Passwort"
 msgid "Login"
 msgstr "Anmelden"
 
-#: forms/ManageGroupMemberships.php:62 views/helpers/MembershipType.php:41
+#: forms/ManageGroupMemberships.php:57 views/helpers/MembershipType.php:41
 msgid "automatic"
 msgstr "automatisch"
 
-#: forms/ManageGroupMemberships.php:63
+#: forms/ManageGroupMemberships.php:58
 msgid "always"
 msgstr "immer"
 
-#: forms/ManageGroupMemberships.php:64
+#: forms/ManageGroupMemberships.php:59
 msgid "never"
 msgstr "nie"
 
-#: forms/ManageGroupMemberships.php:121 forms/NetworkDevice.php:62
+#: forms/ManageGroupMemberships.php:123 forms/NetworkDevice.php:62
 msgid "OK"
 msgstr "OK"
 
@@ -1170,6 +1170,16 @@ msgstr "Ausgewählte Computer zusammenführen"
 #: views/scripts/group/general.phtml:68
 msgid "SQL query"
 msgstr "SQL-Abfrage"
+
+#: views/scripts/group/members.phtml:77
+#, php-format
+msgid "Last update: %s"
+msgstr "Letztes Update: %s"
+
+#: views/scripts/group/members.phtml:82
+#, php-format
+msgid "Next update: %s"
+msgstr "Nächstes Update: %s"
 
 #: views/scripts/group/removepackage.phtml:31
 #, php-format

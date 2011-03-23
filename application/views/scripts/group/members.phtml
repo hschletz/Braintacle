@@ -73,4 +73,20 @@ print $this->htmlTag(
     array('class' => 'textcenter')
 );
 
+$update = sprintf(
+    $this->translate('Last update: %s'),
+    $group->getCacheCreationDate()->get(Zend_Date::DATETIME_MEDIUM)
+);
+$update .= "<br>\n";
+$update .= sprintf(
+    $this->translate('Next update: %s'),
+    $group->getCacheExpirationDate()->get(Zend_Date::DATETIME_MEDIUM)
+);
+
+print $this->htmlTag(
+    'p',
+    $update,
+    array('class' => 'textcenter')
+);
+
 print $table;
