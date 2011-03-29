@@ -131,7 +131,7 @@ abstract class Model_Abstract implements Iterator
      *
      * @var array
      */
-    private $_data;
+    private $_data = array();
 
     /**
      * Internal state of iterator
