@@ -83,6 +83,8 @@ class Model_GroupMembership extends Model_Abstract
         $direction='asc'
     )
     {
+        Model_Group::updateAll();
+
         $db = Zend_Registry::get('db');
 
         $dummy = new Model_GroupMembership;

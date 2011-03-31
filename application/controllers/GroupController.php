@@ -48,6 +48,7 @@ class GroupController extends Zend_Controller_Action
         $this->view->groups = Model_Group::createStatementStatic(
             $columns,
             null,
+            null,
             $this->view->order,
             $this->view->direction
         );
@@ -61,9 +62,6 @@ class GroupController extends Zend_Controller_Action
     {
         $this->_helper->ordering('InventoryDate', 'desc');
 
-        // Rebuild cache if necessary
-        $this->group->update();
-
         $this->view->columns = array(
             'Name',
             'UserName',
@@ -75,7 +73,7 @@ class GroupController extends Zend_Controller_Action
             $this->view->order,
             $this->view->direction,
             'MemberOf',
-            $this->group->getId()
+            $this->group
         );
     }
 

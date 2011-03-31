@@ -66,6 +66,7 @@ class Form_ManageGroupMemberships extends Zend_Form
         $groups = Model_Group::createStatementStatic(
             array('Id', 'Name'),
             null,
+            null,
             'Name'
         );
 

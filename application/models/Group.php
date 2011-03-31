@@ -58,7 +58,7 @@
  * - request: SQL query delivering 1 column with hardware IDs of group members.
  * - xmldef: alternate query definition. Not supported yet.
  * - create_time: UNIX timestamp of last cache computation, see below.
- * - revalidate_from: create_time + random offset (up to GROUPS_CACHE_OFFSET)
+ * - revalidate_from: create_time + random offset, see below
  *
  *
  * The 'groups_cache' table contains membership information:
@@ -69,9 +69,14 @@
  *
  *
  * Dynamic membership is determined exclusively from the cache, so the
- * information might be out of date. It's up to the application to call
- * {@link update()} to update the cache. The communication server will also
- * rebuild the cache upon next agent contact.
+ * information might be out of date. Any method that accesses the groups_cache
+ * table directly should call {@link update()} before doing that.
+ *
+ * Two config variables control how often the cache gets rebuilt.
+ * <i>GroupCacheExpirationInterval</i> is the minimum number of seconds between
+ * rebuilds for a particular group. To prevent recomputation of all groups at
+ * once (which may be a resource-intensive process), a random number of seconds
+ * between 0 and <i>GroupCacheExpirationFuzz</i> is added.
  * @package Models
  */
 class Model_Group extends Model_ComputerOrGroup
@@ -109,14 +114,16 @@ class Model_Group extends Model_ComputerOrGroup
     /**
      * Return a statement object with all groups
      * @param array $columns Properties which should be returned. Default: all properties
-     * @param integer $id If non-null, return only the group with the given ID. Default: all groups
+     * @param string $filter Optional filter to apply (Id|Expired), default: return all groups
+     * @param mixed $filterArg Value to filter by
      * @param string $order Logical property to sort by. Default: null
      * @param string $direction one of [asc|desc]. Default: asc
      * @return Zend_Db_Statement Query result
      */
     static function createStatementStatic(
         $columns=null,
-        $id = null,
+        $filter = null,
+        $filterArg = null,
         $order=null,
         $direction='asc'
     )
@@ -130,7 +137,7 @@ class Model_Group extends Model_ComputerOrGroup
             $columns = array_keys($map); // Select all properties
         }
 
-        $joinGroupsTable = false;
+        $fromGroups = array();
         foreach ($columns as $column) {
             switch ($column) {
                 case 'DynamicMembersSql':
@@ -156,7 +163,32 @@ class Model_Group extends Model_ComputerOrGroup
             ->from('hardware', $fromHardware)
             ->order(self::getOrder($order, $direction, $map));
 
-        if (isset($fromGroups)) {
+        switch ($filter) {
+            case '':
+                break;
+            case 'Id':
+                $select->where('id=?', (integer) $filterArg);
+                break;
+            case 'Expired':
+                $column = $map['CacheExpirationDate'];
+                if (!in_array($column, $fromGroups)) {
+                    $fromGroups[] = $column;
+                }
+
+                $now = Zend_Date::now()->get(Zend_Date::TIMESTAMP);
+                $select->where(
+                    'revalidate_from <= ?',
+                    $now - Model_Config::getOption('GroupCacheExpirationInterval')
+                );
+                break;
+            default:
+                throw new UnexpectedValueException(
+                    'Invalid group filter: ' . $filter
+                );
+                break;
+        }
+
+        if (!empty($fromGroups)) {
             $select->join(
                 'groups',
                 'hardware.id = groups.hardware_id',
@@ -167,10 +199,6 @@ class Model_Group extends Model_ComputerOrGroup
             // table has been joined since the join condition only matches
             // groups.
             $select->where("deviceid = '_SYSTEMGROUP_'");
-        }
-
-        if (!is_null($id)) {
-            $select->where('id=?', $id);
         }
 
         return $select->query();
@@ -234,7 +262,7 @@ class Model_Group extends Model_ComputerOrGroup
      */
     static function fetchById($id)
     {
-        return self::createStatementStatic(null, $id)->fetchObject('Model_Group');
+        return self::createStatementStatic(null, 'Id', $id)->fetchObject('Model_Group');
     }
 
     /**
@@ -351,6 +379,33 @@ class Model_Group extends Model_ComputerOrGroup
         $this->setProperty('CacheCreationDate', $currentTime);
         // Do not use setProperty() here to avoid unnecessary calculations.
         $this->__set('revalidate_from', $minExpires->get(Zend_Date::TIMESTAMP));
+    }
+
+    /**
+     * Update the cache for dynamic members for all groups
+     *
+     * Dynamic members are always determined from the cache. This method updates
+     * the cache for all groups. By default, the cache is only updated for
+     * groups whose expiration time has been reached. Set $force to TRUE to
+     * rebuild the cache for all groups in any case.
+     * @param bool $force Always rebuild cache, regardless of expiration time.
+     */
+    static function updateAll($force = false)
+    {
+        if ($force) {
+            $filter = null;
+        } else {
+            $filter = 'Expired';
+        }
+
+        $groups = self::createStatementStatic(
+            null,
+            $filter
+        );
+
+        while ($group = $groups->fetchObject('Model_Group')) {
+            $group->update(true);
+        }
     }
 
 }

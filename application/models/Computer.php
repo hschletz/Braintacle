@@ -280,13 +280,16 @@ class Model_Computer extends Model_ComputerOrGroup
                         );
                     break;
                 case 'MemberOf':
+                    // $search is expected to be a Model_Group object.
+                    $arg->update();
+
                     $select
                         ->join(
                             'groups_cache',
                             'hardware.id = groups_cache.hardware_id',
                             array('static')
                         )
-                        ->where('groups_cache.group_id = ?', $search)
+                        ->where('groups_cache.group_id = ?', $arg->getId())
                         ->where(
                             'groups_cache.static IN (?)',
                             array(
