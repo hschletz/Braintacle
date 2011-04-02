@@ -1094,4 +1094,104 @@ class Model_Computer extends Model_ComputerOrGroup
         );
     }
 
+    /**
+     * Set group membership information for this computer
+     *
+     * The $newgroups argument is an array with group ID as key and the new
+     * membership type as value. Groups which are not present in this array will
+     * remain unchanged.
+     * @param array $newGroups New group memberships
+     */
+    public function setGroups($newGroups)
+    {
+        $id = $this->getId();
+        $db = Zend_Registry::get('db');
+
+        // Create array with group ID as key and existing membership type as
+        // value.
+        $oldGroups = $db->fetchPairs(
+            'SELECT group_id, static FROM groups_cache WHERE hardware_id = ?',
+            $id
+        );
+
+        foreach ($newGroups as $group => $newMembership) {
+            // If this computer does not match the group's query and has no
+            // manual group assignment, the group will not be listed in
+            // $oldGroups. In this case, $oldMembership is set to NULL.
+            if (isset($oldGroups[$group])) {
+                $oldMembership = (int) $oldGroups[$group];
+            } else {
+                $oldMembership = null;
+            }
+
+            // Determine action to be taken depending on old and new membership.
+            $action = ''; // default: no action
+            switch ($newMembership) {
+                case Model_GroupMembership::TYPE_DYNAMIC:
+                    if ($oldMembership === Model_GroupMembership::TYPE_STATIC or
+                        $oldMembership === Model_GroupMembership::TYPE_EXCLUDED
+                    ) {
+                        $action = 'delete';
+                    }
+                    break;
+                case Model_GroupMembership::TYPE_STATIC:
+                    if ($oldMembership === Model_GroupMembership::TYPE_DYNAMIC or
+                        $oldMembership === Model_GroupMembership::TYPE_EXCLUDED
+                    ) {
+                        $action = 'update';
+                    } elseif ($oldMembership === null) {
+                        $action = 'insert';
+                    }
+                    break;
+                case Model_GroupMembership::TYPE_EXCLUDED:
+                    if ($oldMembership === Model_GroupMembership::TYPE_DYNAMIC or
+                        $oldMembership === Model_GroupMembership::TYPE_STATIC
+                    ) {
+                        $action = 'update';
+                    } elseif ($oldMembership === null) {
+                        $action = 'insert';
+                    }
+                    break;
+            }
+
+            switch ($action) {
+                case 'insert':
+                    $db->insert(
+                        'groups_cache',
+                        array(
+                            'hardware_id' => $id,
+                            'group_id' => $group,
+                            'static' => $newMembership
+                        )
+                    );
+                    break;
+                case 'update':
+                    $db->update(
+                        'groups_cache',
+                        array(
+                            'static' => $newMembership
+                        ),
+                        array(
+                            'hardware_id = ?' => $id,
+                            'group_id = ?' => $group
+                        )
+                    );
+                    break;
+                case 'delete':
+                    // Delete manual assignment. The group cache will be updated
+                    // because this computer may be a candidate for automatic
+                    // assignment.
+                    $db->delete(
+                        'groups_cache',
+                        array(
+                            'hardware_id = ?' => $id,
+                            'group_id = ?' => $group
+                        )
+                    );
+                    Model_Group::fetchById($group)->update(true);
+                    break;
+            }
+        }
+    }
+
 }

@@ -128,4 +128,36 @@ class Form_ManageGroupMemberships extends Zend_Form
         return $numGroups;
     }
 
+    /**
+     * Return plain group IDs instead of raw element names
+     */
+    public function getValues($suppressArrayNotation = false)
+    {
+        $values = array();
+        foreach (parent::getValues($suppressArrayNotation) as $name => $value) {
+            $name = self::extractGroupId($name);
+            $values[$name] = $value;
+        }
+        return $values;
+    }
+
+    /**
+     * Extract numeric group ID from element name
+     *
+     * Element names can't consist of only digits. For this reason, the names
+     * of the radio buttons are prefixed with 'group'. This method removes the
+     * prefix and returns the plain numeric ID.
+     * @param string $name Element name, like 'group42'
+     * @return integer The numeric part of $name
+     */
+    static function extractGroupId($name)
+    {
+        if (!preg_match('/^group([0-9]+)$/', $name, $matches)) {
+            throw new UnexpectedValueException(
+                'Invalid naming schema for element ' . $name
+            );
+        }
+        return (int) $matches[1];
+    }
+
 }

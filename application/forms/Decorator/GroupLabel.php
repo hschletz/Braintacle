@@ -54,16 +54,7 @@ class Form_Decorator_GroupLabel extends Zend_Form_Decorator_Label
     public function render($content)
     {
         $element = $this->getElement();
-
-        // The group ID is derived from the element's name, which must follow
-        // a given schema for this to work.
-        if (!preg_match('/^group([0-9]+)$/', $element->getName(), $matches)) {
-            throw new UnexpectedValueException(
-                'Invalid naming schema for element ' . $element->getName()
-            );
-        }
-        $groupId = $matches[1];
-
+        $groupId = Form_ManageGroupMemberships::extractGroupId($element->getName());
         $view = $element->getView();
 
         // Preserve values
