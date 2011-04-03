@@ -958,9 +958,10 @@ class Model_Computer extends Model_ComputerOrGroup
      *
      * @param array $computers IDs of computers to merge
      * @param bool $mergeUserdefined Preserve user supplied information from old computer
+     * @param bool $mergeGroups Preserve manual group assignments from old computers
      * @param bool $mergePackages Preserve package assignments from old computers missing on new computer
      */
-    static function mergeComputers($computers, $mergeUserdefined, $mergePackages)
+    static function mergeComputers($computers, $mergeUserdefined, $mergeGroups, $mergePackages)
     {
         if (is_null($computers)) { // Can happen if no items have been checked
             return;
@@ -1001,6 +1002,22 @@ class Model_Computer extends Model_ComputerOrGroup
                 $oldest = $computers[0];
                 $newest->setUserDefinedInfo($oldest->getUserDefinedInfo());
             }
+
+            if ($mergeGroups) {
+                // Build list with all manual group assignments from old computers.
+                // If more than 1 old computer is to be merged and the computers
+                // have different assignments for the same group, the result may
+                // me somewhat unpredictable.
+                $groupList = array();
+                foreach ($computers as $computer) {
+                    $groups = $computer->getGroups(Model_GroupMembership::TYPE_MANUAL, null);
+                    while ($group = $groups->fetchObject('Model_GroupMembership')) {
+                        $groupList[$group->getGroupId()] = $group->getMembership();
+                    }
+                }
+                $newest->setGroups($groupList);
+            }
+
             if ($mergePackages) {
                 // The simplest way to merge package assignments is to update
                 // the hardware ID directly. If more than 2 computers are to be

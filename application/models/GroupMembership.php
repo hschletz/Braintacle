@@ -54,8 +54,11 @@ class Model_GroupMembership extends Model_Abstract
     // It refers to both dynamically or statically included.
     const TYPE_INCLUDED = -1;
     // The next one is not present in groups_cache.static.
+    // It refers to both statically included or excluded.
+    const TYPE_MANUAL = -2;
+    // The next one is not present in groups_cache.static.
     // It refers to all membership types.
-    const TYPE_ALL = -2;
+    const TYPE_ALL = -3;
 
     protected $_propertyMap = array(
         // Values from query result
@@ -109,6 +112,12 @@ class Model_GroupMembership extends Model_Abstract
                     $select->where(
                         'static IN(?)',
                         array(self::TYPE_DYNAMIC, self::TYPE_STATIC)
+                    );
+                    break;
+                case self::TYPE_MANUAL:
+                    $select->where(
+                        'static IN(?)',
+                        array(self::TYPE_STATIC, self::TYPE_EXCLUDED)
                     );
                     break;
                 case self::TYPE_DYNAMIC:

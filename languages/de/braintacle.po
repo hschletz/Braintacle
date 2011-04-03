@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-03 12:15+0200\n"
-"PO-Revision-Date: 2011-04-03 12:15+0200\n"
+"POT-Creation-Date: 2011-04-03 13:14+0200\n"
+"PO-Revision-Date: 2011-04-03 13:15+0200\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <holger.schletz@web.de>\n"
 "Language: de\n"
@@ -864,15 +864,19 @@ msgstr "Letzer angemeldeter Benutzer"
 msgid "Group memberships"
 msgstr "Gruppenmitgliedschaften"
 
-#: views/scripts/computer/groups.phtml:37
+#: views/scripts/computer/groups.phtml:36
 msgid "Group"
 msgstr "Gruppe"
 
-#: views/scripts/computer/groups.phtml:38 views/scripts/group/members.phtml:33
+#: views/scripts/computer/groups.phtml:37 views/scripts/group/members.phtml:33
 msgid "Membership"
 msgstr "Mitgliedschaft"
 
-#: views/scripts/computer/groups.phtml:87
+#: views/scripts/computer/groups.phtml:85 views/scripts/group/index.phtml:79
+msgid "No groups defined."
+msgstr "Keine Gruppen definiert."
+
+#: views/scripts/computer/groups.phtml:96
 msgid "Manage memberships"
 msgstr "Mitgliedschaften verwalten"
 
@@ -1170,10 +1174,14 @@ msgid "Merge user supplied information"
 msgstr "Benutzerdefinierte Informationen übernehmen"
 
 #: views/scripts/duplicates/show.phtml:113
+msgid "Merge manual group assignments"
+msgstr "Manuelle Gruppenzuweisungen übernehmen"
+
+#: views/scripts/duplicates/show.phtml:122
 msgid "Merge missing package assignments"
 msgstr "Fehlende Paketzuweisungen übernehmen"
 
-#: views/scripts/duplicates/show.phtml:119
+#: views/scripts/duplicates/show.phtml:128
 msgid "Merge selected computers"
 msgstr "Ausgewählte Computer zusammenführen"
 
@@ -1185,10 +1193,6 @@ msgstr "Gruppe '%s' wird dauerhaft gelöscht. Fortfahren?"
 #: views/scripts/group/general.phtml:68
 msgid "SQL query"
 msgstr "SQL-Abfrage"
-
-#: views/scripts/group/index.phtml:79
-msgid "No groups defined."
-msgstr "Keine Gruppen definiert."
 
 #: views/scripts/group/members.phtml:77
 #, php-format

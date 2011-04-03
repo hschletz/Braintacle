@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-03 12:15+0200\n"
+"POT-Creation-Date: 2011-04-03 13:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -860,15 +860,19 @@ msgstr ""
 msgid "Group memberships"
 msgstr ""
 
-#: views/scripts/computer/groups.phtml:37
+#: views/scripts/computer/groups.phtml:36
 msgid "Group"
 msgstr ""
 
-#: views/scripts/computer/groups.phtml:38 views/scripts/group/members.phtml:33
+#: views/scripts/computer/groups.phtml:37 views/scripts/group/members.phtml:33
 msgid "Membership"
 msgstr ""
 
-#: views/scripts/computer/groups.phtml:87
+#: views/scripts/computer/groups.phtml:85 views/scripts/group/index.phtml:79
+msgid "No groups defined."
+msgstr ""
+
+#: views/scripts/computer/groups.phtml:96
 msgid "Manage memberships"
 msgstr ""
 
@@ -1165,10 +1169,14 @@ msgid "Merge user supplied information"
 msgstr ""
 
 #: views/scripts/duplicates/show.phtml:113
+msgid "Merge manual group assignments"
+msgstr ""
+
+#: views/scripts/duplicates/show.phtml:122
 msgid "Merge missing package assignments"
 msgstr ""
 
-#: views/scripts/duplicates/show.phtml:119
+#: views/scripts/duplicates/show.phtml:128
 msgid "Merge selected computers"
 msgstr ""
 
@@ -1179,10 +1187,6 @@ msgstr ""
 
 #: views/scripts/group/general.phtml:68
 msgid "SQL query"
-msgstr ""
-
-#: views/scripts/group/index.phtml:79
-msgid "No groups defined."
 msgstr ""
 
 #: views/scripts/group/members.phtml:77
