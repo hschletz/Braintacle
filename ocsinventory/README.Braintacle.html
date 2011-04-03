@@ -37,13 +37,20 @@ This is a patched version of <a href="http://ocsinventory-ng.org">OCS inventory 
 <strong>
 This project is not provided by the OCSInventory team.
 Do not bother them with any issues you encounter with this version.
-<a href="mailto:holger.schletz@web.de">Contact me</a> directly instead.
+Use Braintacle's support tracker or mailing list instead.
 </strong>
 </p>
 <p>
-This version comes bundled with Braintacle.
+This version comes bundled with <a href="http://savannah.nongnu.org/projects/braintacle/">Braintacle</a>.
 It is not a requirement for using Braintacle if you use MySQL &ndash; Braintacle works with the database of an unmodified Installation of OCS Inventory, too.
 This version can be used standalone as well (i.e. you don't have to use Braintacle) &ndash; however, some directories from the Braintacle project (<em>schema</em> and <em>libraries/PEAR</em>) are required in their expected position (one level above this directory).
+<p>
+<strong>This version of the ocsreports console is deprecated.
+It will be maintained for important bugfixes, but no longer receive any major upgrades.</strong>
+Most notably, it will stick at version 1.3.x.
+Version 2.0 will not be ported.
+New features will be implemented in the Braintacle console only.
+</p>
 <p>The perl portion of the code uses the DBI module for database access. Only minor changes to the original code were necessary to make the DBD backend configurable and work around some portability issues.</p>
 <p>
 The PHP part now uses the <a href="http://pear.php.net/package/MDB2">PEAR::MDB2</a> abstraction layer.
@@ -253,22 +260,6 @@ Most GNU/Linux distributions have this package available as <em>php5-pgsql</em> 
 </p>
 
 <p>
-This distribution contains patched versions of some PEAR packages.
-You still need some additional PEAR packages.
-On most GNU/Linux distributions, it is available as a package called <em>php-pear</em> (Debian, Ubuntu, Fedora, RedHat) or <em>php5-pear</em> (SUSE).
-</p>
-<p>
-This gives you the 'pear' command which allows you to easily install other PEAR packages:
-</p>
-<p>
-<code>pear install XML_Parser</code>
-</p>
-
-<p>
-If this method does not work for some reason, see the <a href="http://pear.php.net/manual/en/installation.php">PEAR installation manual</a> and <a href="../library/PEAR/Readme.txt">library/PEAR/Readme.txt</a> for other installation methods.
-</p>
-
-<p>
 When using the web interface for the first time, you will see the login screen as documented.
 In addition to database host, user and password, you need to specify the name of the MDB2 driver, like 'pgsql' or 'mysql'.
 </p>
@@ -286,7 +277,9 @@ In addition to database host, user and password, you need to specify the name of
 <p>
 The database schema is provided as a set of XML files in the <em>schema</em> directory.
 This is slightly different from the original schema.
-See the <a href="../schema/README.html">schema documentation</a> in the same directory for details.
+See the
+<a href="http://svn.savannah.nongnu.org/viewvc/*checkout*/trunk/schema/README.html?root=braintacle">schema documentation</a>
+in the same directory for details.
 The ocsbase.sql file is no longer used.
 </p>
 
