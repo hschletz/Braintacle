@@ -115,5 +115,37 @@ class GroupController extends Zend_Controller_Action
         $this->_redirect('group/packages/id/' . $group->getId());
     }
 
+    public function deleteAction()
+    {
+        $form = new Form_YesNo;
+
+        if ($this->getRequest()->isPost()) {
+            if ($form->isValid($_POST)) {
+                if ($this->_getParam('yes')) {
+                    $session = new Zend_Session_Namespace('GroupMessages');
+                    $session->setExpirationHops(1);
+                    $session->groupName = $this->group->getName();
+
+                    if ($this->group->delete()) {
+                        $session->success = true;
+                        $session->message = $this->view->translate(
+                            'Group \'%s\' was successfully deleted.'
+                        );
+                    } else {
+                        $session->success = false;
+                        $session->message = $this->view->translate(
+                            'Group \'%s\' could not be deleted.'
+                        );
+                    }
+                    $this->_redirect('group');
+                } else {
+                    $this->_redirect('group/general/id/' . $this->group->getId());
+                }
+            }
+        } else {
+            $this->view->form = $form;
+        }
+    }
+
 }
 

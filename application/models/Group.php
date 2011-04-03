@@ -408,4 +408,51 @@ class Model_Group extends Model_ComputerOrGroup
         }
     }
 
+    /**
+     * Delete this group from the database
+     * @param bool $reuseLock If this instance already has a lock, reuse it.
+     * @return bool Success
+     */
+    public function delete($reuseLock=false)
+    {
+        // A lock is required
+        if ((!$reuseLock or !$this->isLocked()) and !$this->lock()) {
+            return false;
+        }
+
+        $db = Zend_Registry::get('db');
+        $id = $this->getId();
+
+        // Start transaction to keep database consistent in case of errors
+        // If a transaction is already in progress, an exception will be thrown
+        // by PDO which has to be caught. The commit() and rollBack() methods
+        // can only be called if the transaction has been started here.
+        try{
+            $db->beginTransaction();
+            $transaction = true;
+        } catch (Exception $exception) {
+            $transaction = false;
+        }
+
+        try {
+            // Delete rows
+            $db->delete('groups_cache', array('group_id = ?' => $id));
+            $db->delete('devices', array('hardware_id = ?' => $id));
+            $db->delete('groups', array('hardware_id = ?' => $id));
+            $db->delete('hardware', array('id = ?' => $id));
+        } catch (Exception $exception) {
+            if ($transaction) {
+                $db->rollBack();
+            }
+            throw $exception;
+        }
+
+        if ($transaction) {
+            $db->commit();
+        }
+
+        $this->unlock();
+        return true;
+    }
+
 }

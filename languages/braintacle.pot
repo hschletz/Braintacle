@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-23 12:31+0100\n"
+"POT-Creation-Date: 2011-04-03 11:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -83,6 +83,16 @@ msgstr ""
 #: controllers/ComputerController.php:192
 #, php-format
 msgid "Computer '%s' could not be deleted."
+msgstr ""
+
+#: controllers/GroupController.php:132
+#, php-format
+msgid "Group '%s' was successfully deleted."
+msgstr ""
+
+#: controllers/GroupController.php:137
+#, php-format
+msgid "Group '%s' could not be deleted."
 msgstr ""
 
 #: controllers/LoginController.php:97
@@ -152,7 +162,7 @@ msgstr ""
 msgid "never"
 msgstr ""
 
-#: forms/ManageGroupMemberships.php:123 forms/NetworkDevice.php:62
+#: forms/ManageGroupMemberships.php:124 forms/NetworkDevice.php:62
 msgid "OK"
 msgstr ""
 
@@ -559,32 +569,32 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: models/Computer.php:581
+#: models/Computer.php:584
 #, php-format
 msgid "%1$d computers with an interface in network '%2$s'"
 msgstr ""
 
-#: models/Computer.php:598
+#: models/Computer.php:601
 #, php-format
 msgid "%1$d computers waiting for notification of package '%2$s'"
 msgstr ""
 
-#: models/Computer.php:603
+#: models/Computer.php:606
 #, php-format
 msgid "%1$d computers with package '%2$s' successfully deployed"
 msgstr ""
 
-#: models/Computer.php:608
+#: models/Computer.php:611
 #, php-format
 msgid "%1$d computers with deployment of package '%2$s' in progress"
 msgstr ""
 
-#: models/Computer.php:613
+#: models/Computer.php:616
 #, php-format
 msgid "%1$d computers where deployment of package '%2$s' failed"
 msgstr ""
 
-#: models/Computer.php:618
+#: models/Computer.php:621
 #, php-format
 msgid "%1$d computers where software '%2$s' is installed"
 msgstr ""
@@ -701,6 +711,13 @@ msgstr ""
 msgid "Members"
 msgstr ""
 
+#: views/helpers/GroupHeader.php:72 views/helpers/InventoryHeader.php:146
+#: views/scripts/network/showidentified.phtml:65
+#: views/scripts/network/showunknown.phtml:64
+#: views/scripts/package/index.phtml:237
+msgid "Delete"
+msgstr ""
+
 #: views/helpers/InventoryHeader.php:42
 #, php-format
 msgid "Inventory of '%s'"
@@ -736,13 +753,6 @@ msgstr ""
 
 #: views/helpers/InventoryHeader.php:125
 msgid "User defined"
-msgstr ""
-
-#: views/helpers/InventoryHeader.php:146
-#: views/scripts/network/showidentified.phtml:65
-#: views/scripts/network/showunknown.phtml:64
-#: views/scripts/package/index.phtml:237
-msgid "Delete"
 msgstr ""
 
 #: views/helpers/MembershipType.php:44
@@ -1160,6 +1170,11 @@ msgstr ""
 
 #: views/scripts/duplicates/show.phtml:119
 msgid "Merge selected computers"
+msgstr ""
+
+#: views/scripts/group/delete.phtml:29
+#, php-format
+msgid "Group '%s' will be permanently deleted. Continue?"
 msgstr ""
 
 #: views/scripts/group/general.phtml:68
