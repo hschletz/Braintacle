@@ -60,12 +60,23 @@ function renderName($view, $group)
     );
 }
 
-print $this->getHelper('table')->table(
+$table = $this->getHelper('table')->table(
     $this->groups,
     null,
     $headers,
     array(),
     'Model_Group',
     null,
-    $renderCallbacks
+    $renderCallbacks,
+    $count
 );
+
+if ($count) {
+    print $table;
+} else {
+    print $this->htmlTag(
+        'p',
+        $this->translate('No groups defined.'),
+        array('class' => 'textcenter')
+    );
+}

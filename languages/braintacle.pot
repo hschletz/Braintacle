@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-03 11:41+0200\n"
+"POT-Creation-Date: 2011-04-03 12:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -184,7 +184,7 @@ msgstr ""
 #: views/scripts/computer/network.phtml:58
 #: views/scripts/computer/printers.phtml:33
 #: views/scripts/computer/system.phtml:39 views/scripts/group/general.phtml:50
-#: views/scripts/group/index.phtml:28
+#: views/scripts/group/index.phtml:46
 #: views/scripts/network/showidentified.phtml:31
 msgid "Description"
 msgstr ""
@@ -201,7 +201,7 @@ msgstr ""
 #: views/scripts/computer/system.phtml:134
 #: views/scripts/duplicates/index.phtml:26
 #: views/scripts/duplicates/show.phtml:28 views/scripts/group/general.phtml:32
-#: views/scripts/group/index.phtml:26 views/scripts/group/members.phtml:30
+#: views/scripts/group/index.phtml:44 views/scripts/group/members.phtml:30
 #: views/scripts/group/packages.phtml:35 views/scripts/network/index.phtml:27
 #: views/scripts/package/index.phtml:61 views/scripts/software/index.phtml:27
 msgid "Name"
@@ -1089,7 +1089,7 @@ msgid "Mountpoint"
 msgstr ""
 
 #: views/scripts/computer/storage.phtml:100
-#: views/scripts/group/general.phtml:59 views/scripts/group/index.phtml:27
+#: views/scripts/group/general.phtml:59 views/scripts/group/index.phtml:45
 msgid "Creation date"
 msgstr ""
 
@@ -1179,6 +1179,10 @@ msgstr ""
 
 #: views/scripts/group/general.phtml:68
 msgid "SQL query"
+msgstr ""
+
+#: views/scripts/group/index.phtml:79
+msgid "No groups defined."
 msgstr ""
 
 #: views/scripts/group/members.phtml:77

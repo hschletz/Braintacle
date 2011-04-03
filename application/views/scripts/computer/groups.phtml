@@ -31,7 +31,6 @@ print $this->htmlTag(
     $this->translate('Group memberships')
 );
 
-// List groups this computer is a member of.
 
 $headers = array(
     'GroupName' => $this->translate('Group'),
@@ -62,7 +61,7 @@ function renderMembership($view, $membership)
     return $view->membershipType($membership->getMembership());
 }
 
-print $this->table(
+$table = $this->getHelper('table')->table(
     $computer->getGroups(
         Model_GroupMembership::TYPE_INCLUDED,
         $this->order,
@@ -73,12 +72,22 @@ print $this->table(
     array(),
     'Model_GroupMembership',
     null,
-    $renderCallbacks
+    $renderCallbacks,
+    $count
 );
 
+if ($count) {
+    // Print effective memberships
+    print $table;
+} else {
+    print $this->htmlTag(
+        'p',
+        $this->translate('No groups defined.'),
+        array('class' => 'textcenter')
+    );
+}
 
 // Print and manage static memberships
-
 $form = new Form_ManageGroupMemberships();
 if ($form->addGroups($computer)) {
     $form->setAction($this->baseUrl() . '/computer/managegroups');
