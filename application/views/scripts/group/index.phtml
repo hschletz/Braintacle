@@ -22,6 +22,24 @@
  *
  */
 
+// render messages if present
+$session = new Zend_Session_Namespace('GroupMessages');
+if (isset($session->success)) {
+    if ($session->success == true) {
+        $class = 'green textcenter';
+    } else {
+        $class = 'red textcenter';
+    }
+    print $this->htmlTag(
+        'p',
+        sprintf(
+            $session->message,
+            $this->escape($session->groupName)
+        ),
+        array('class' => $class)
+    );
+}
+
 $headers = array(
     'Name' => $this->translate('Name'),
     'CreationDate' => $this->translate('Creation date'),
@@ -42,12 +60,23 @@ function renderName($view, $group)
     );
 }
 
-print $this->getHelper('table')->table(
+$table = $this->getHelper('table')->table(
     $this->groups,
     null,
     $headers,
     array(),
     'Model_Group',
     null,
-    $renderCallbacks
+    $renderCallbacks,
+    $count
 );
+
+if ($count) {
+    print $table;
+} else {
+    print $this->htmlTag(
+        'p',
+        $this->translate('No groups defined.'),
+        array('class' => 'textcenter')
+    );
+}

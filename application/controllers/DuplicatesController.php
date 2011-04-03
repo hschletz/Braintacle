@@ -55,6 +55,7 @@ class DuplicatesController extends Zend_Controller_Action
         Model_Computer::mergeComputers(
             $this->_getParam('computers'),
             $this->_getParam('mergeUserdefined'),
+            $this->_getParam('mergeGroups'),
             $this->_getParam('mergePackages')
         );
         $this->_redirect('duplicates');

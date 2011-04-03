@@ -24,15 +24,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-30 15:48+0100\n"
-"PO-Revision-Date: 2011-01-30 15:49+0100\n"
+"POT-Creation-Date: 2011-04-03 13:14+0200\n"
+"PO-Revision-Date: 2011-04-03 13:15+0200\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <holger.schletz@web.de>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.1\n"
+"X-Generator: Lokalize 1.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: Bootstrap.php:32
@@ -55,11 +55,11 @@ msgstr "Netzwerk"
 msgid "Duplicates"
 msgstr "Duplikate"
 
-#: Bootstrap.php:63
+#: Bootstrap.php:63 views/helpers/InventoryHeader.php:139
 msgid "Groups"
 msgstr "Gruppen"
 
-#: Bootstrap.php:70 views/helpers/GroupHeader.php:58
+#: Bootstrap.php:70 views/helpers/GroupHeader.php:65
 #: views/helpers/InventoryHeader.php:132
 msgid "Packages"
 msgstr "Pakete"
@@ -76,15 +76,25 @@ msgstr "Erstellen"
 msgid "Search"
 msgstr "Suchen"
 
-#: controllers/ComputerController.php:182
+#: controllers/ComputerController.php:187
 #, php-format
 msgid "Computer '%s' was successfully deleted."
 msgstr "Computer '%s' wurde erfolgreich gelöscht."
 
-#: controllers/ComputerController.php:187
+#: controllers/ComputerController.php:192
 #, php-format
 msgid "Computer '%s' could not be deleted."
 msgstr "Computer '%s' konnte nicht gelöscht werden."
+
+#: controllers/GroupController.php:132
+#, php-format
+msgid "Group '%s' was successfully deleted."
+msgstr "Gruppe '%s' wurde erfolgreich gelöscht."
+
+#: controllers/GroupController.php:137
+#, php-format
+msgid "Group '%s' could not be deleted."
+msgstr "Gruppe '%s' konnte nicht gelöscht werden."
 
 #: controllers/LoginController.php:97
 msgid "Invalid username or password"
@@ -141,7 +151,23 @@ msgstr "Passwort"
 msgid "Login"
 msgstr "Anmelden"
 
-#: forms/NetworkDevice.php:44 views/scripts/computer/display.phtml:85
+#: forms/ManageGroupMemberships.php:57 views/helpers/MembershipType.php:41
+msgid "automatic"
+msgstr "automatisch"
+
+#: forms/ManageGroupMemberships.php:58
+msgid "always"
+msgstr "immer"
+
+#: forms/ManageGroupMemberships.php:59
+msgid "never"
+msgstr "nie"
+
+#: forms/ManageGroupMemberships.php:124 forms/NetworkDevice.php:62
+msgid "OK"
+msgstr "OK"
+
+#: forms/NetworkDevice.php:49 views/scripts/computer/display.phtml:85
 #: views/scripts/computer/general.phtml:121
 #: views/scripts/computer/index.phtml:72 views/scripts/computer/misc.phtml:64
 #: views/scripts/computer/misc.phtml:112
@@ -154,19 +180,15 @@ msgstr "Anmelden"
 msgid "Type"
 msgstr "Typ"
 
-#: forms/NetworkDevice.php:52 views/scripts/computer/display.phtml:82
+#: forms/NetworkDevice.php:58 views/scripts/computer/display.phtml:82
 #: views/scripts/computer/misc.phtml:35 views/scripts/computer/misc.phtml:66
 #: views/scripts/computer/network.phtml:58
 #: views/scripts/computer/printers.phtml:33
 #: views/scripts/computer/system.phtml:39 views/scripts/group/general.phtml:50
-#: views/scripts/group/index.phtml:28
+#: views/scripts/group/index.phtml:46
 #: views/scripts/network/showidentified.phtml:31
 msgid "Description"
 msgstr "Beschreibung"
-
-#: forms/NetworkDevice.php:56
-msgid "OK"
-msgstr "OK"
 
 #: forms/Package.php:80 views/scripts/computer/display.phtml:33
 #: views/scripts/computer/index.phtml:47 views/scripts/computer/misc.phtml:34
@@ -180,9 +202,9 @@ msgstr "OK"
 #: views/scripts/computer/system.phtml:134
 #: views/scripts/duplicates/index.phtml:26
 #: views/scripts/duplicates/show.phtml:28 views/scripts/group/general.phtml:32
-#: views/scripts/group/index.phtml:26 views/scripts/group/packages.phtml:35
-#: views/scripts/network/index.phtml:27 views/scripts/package/index.phtml:61
-#: views/scripts/software/index.phtml:27
+#: views/scripts/group/index.phtml:44 views/scripts/group/members.phtml:30
+#: views/scripts/group/packages.phtml:35 views/scripts/network/index.phtml:27
+#: views/scripts/package/index.phtml:61 views/scripts/software/index.phtml:27
 msgid "Name"
 msgstr "Name"
 
@@ -548,33 +570,33 @@ msgstr "Nein"
 msgid "Logout"
 msgstr "Abmelden"
 
-#: models/Computer.php:558
+#: models/Computer.php:584
 #, php-format
 msgid "%1$d computers with an interface in network '%2$s'"
 msgstr "%1$d Computer mit Interface in Netzwerk %2$s"
 
-#: models/Computer.php:575
+#: models/Computer.php:601
 #, php-format
 msgid "%1$d computers waiting for notification of package '%2$s'"
 msgstr "%1$d Computer, die auf Installation von Paket '%2$s' warten"
 
-#: models/Computer.php:580
+#: models/Computer.php:606
 #, php-format
 msgid "%1$d computers with package '%2$s' successfully deployed"
 msgstr "%1$d Computer mit erfolgreich installiertem Paket '%2$s'"
 
-#: models/Computer.php:585
+#: models/Computer.php:611
 #, php-format
 msgid "%1$d computers with deployment of package '%2$s' in progress"
 msgstr "%1$d Computer mit laufender Installation von Paket '%2$s'"
 
-#: models/Computer.php:590
+#: models/Computer.php:616
 #, php-format
 msgid "%1$d computers where deployment of package '%2$s' failed"
 msgstr ""
 "%1$d Computer, bei denen die Installation von Paket '%2$s' fehlgeschlagen ist"
 
-#: models/Computer.php:595
+#: models/Computer.php:621
 #, php-format
 msgid "%1$d computers where software '%2$s' is installed"
 msgstr "%1$d Computer, auf denen die Software '%2$s' installiert ist"
@@ -689,6 +711,17 @@ msgstr "Einzelheiten für Gruppe '%s'"
 msgid "General"
 msgstr "Allgemein"
 
+#: views/helpers/GroupHeader.php:58
+msgid "Members"
+msgstr "Mitglieder"
+
+#: views/helpers/GroupHeader.php:72 views/helpers/InventoryHeader.php:146
+#: views/scripts/network/showidentified.phtml:65
+#: views/scripts/network/showunknown.phtml:64
+#: views/scripts/package/index.phtml:237
+msgid "Delete"
+msgstr "Löschen"
+
 #: views/helpers/InventoryHeader.php:42
 #, php-format
 msgid "Inventory of '%s'"
@@ -726,12 +759,9 @@ msgstr "Verschiedenes"
 msgid "User defined"
 msgstr "Benutzerdefiniert"
 
-#: views/helpers/InventoryHeader.php:139
-#: views/scripts/network/showidentified.phtml:65
-#: views/scripts/network/showunknown.phtml:64
-#: views/scripts/package/index.phtml:237
-msgid "Delete"
-msgstr "Löschen"
+#: views/helpers/MembershipType.php:44
+msgid "manual"
+msgstr "manuell"
 
 #: views/helpers/ValidationMessages.php:45
 msgid "Invalid parameter: "
@@ -830,11 +860,31 @@ msgstr "Auslagerungsspeicher"
 msgid "Last user logged in"
 msgstr "Letzer angemeldeter Benutzer"
 
+#: views/scripts/computer/groups.phtml:31
+msgid "Group memberships"
+msgstr "Gruppenmitgliedschaften"
+
+#: views/scripts/computer/groups.phtml:36
+msgid "Group"
+msgstr "Gruppe"
+
+#: views/scripts/computer/groups.phtml:37 views/scripts/group/members.phtml:33
+msgid "Membership"
+msgstr "Mitgliedschaft"
+
+#: views/scripts/computer/groups.phtml:85 views/scripts/group/index.phtml:79
+msgid "No groups defined."
+msgstr "Keine Gruppen definiert."
+
+#: views/scripts/computer/groups.phtml:96
+msgid "Manage memberships"
+msgstr "Mitgliedschaften verwalten"
+
 #: views/scripts/computer/index.phtml:50
 msgid "CPU cores"
 msgstr "CPU-Takt"
 
-#: views/scripts/computer/index.phtml:52
+#: views/scripts/computer/index.phtml:52 views/scripts/group/members.phtml:32
 msgid "Last inventory"
 msgstr "Letzte Inventarisierung"
 
@@ -846,7 +896,7 @@ msgstr "Swap"
 msgid "Operating system"
 msgstr "Betriebssystem"
 
-#: views/scripts/computer/index.phtml:65
+#: views/scripts/computer/index.phtml:65 views/scripts/group/members.phtml:31
 msgid "User"
 msgstr "Benutzer"
 
@@ -884,7 +934,7 @@ msgstr "%d Treffer"
 msgid "Edit filter"
 msgstr "Filter bearbeiten"
 
-#: views/scripts/computer/index.phtml:160
+#: views/scripts/computer/index.phtml:160 views/scripts/group/members.phtml:70
 #, php-format
 msgid "Number of computers: %d"
 msgstr "Anzahl Computer: %d"
@@ -1048,7 +1098,7 @@ msgid "Mountpoint"
 msgstr "Mountpoint"
 
 #: views/scripts/computer/storage.phtml:100
-#: views/scripts/group/general.phtml:59 views/scripts/group/index.phtml:27
+#: views/scripts/group/general.phtml:59 views/scripts/group/index.phtml:45
 msgid "Creation date"
 msgstr "Erstellungsdatum"
 
@@ -1124,16 +1174,35 @@ msgid "Merge user supplied information"
 msgstr "Benutzerdefinierte Informationen übernehmen"
 
 #: views/scripts/duplicates/show.phtml:113
+msgid "Merge manual group assignments"
+msgstr "Manuelle Gruppenzuweisungen übernehmen"
+
+#: views/scripts/duplicates/show.phtml:122
 msgid "Merge missing package assignments"
 msgstr "Fehlende Paketzuweisungen übernehmen"
 
-#: views/scripts/duplicates/show.phtml:119
+#: views/scripts/duplicates/show.phtml:128
 msgid "Merge selected computers"
 msgstr "Ausgewählte Computer zusammenführen"
+
+#: views/scripts/group/delete.phtml:29
+#, php-format
+msgid "Group '%s' will be permanently deleted. Continue?"
+msgstr "Gruppe '%s' wird dauerhaft gelöscht. Fortfahren?"
 
 #: views/scripts/group/general.phtml:68
 msgid "SQL query"
 msgstr "SQL-Abfrage"
+
+#: views/scripts/group/members.phtml:77
+#, php-format
+msgid "Last update: %s"
+msgstr "Letztes Update: %s"
+
+#: views/scripts/group/members.phtml:82
+#, php-format
+msgid "Next update: %s"
+msgstr "Nächstes Update: %s"
 
 #: views/scripts/group/removepackage.phtml:31
 #, php-format

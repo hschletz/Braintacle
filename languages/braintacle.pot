@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-30 15:48+0100\n"
+"POT-Creation-Date: 2011-04-03 13:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -54,11 +54,11 @@ msgstr ""
 msgid "Duplicates"
 msgstr ""
 
-#: Bootstrap.php:63
+#: Bootstrap.php:63 views/helpers/InventoryHeader.php:139
 msgid "Groups"
 msgstr ""
 
-#: Bootstrap.php:70 views/helpers/GroupHeader.php:58
+#: Bootstrap.php:70 views/helpers/GroupHeader.php:65
 #: views/helpers/InventoryHeader.php:132
 msgid "Packages"
 msgstr ""
@@ -75,14 +75,24 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: controllers/ComputerController.php:182
+#: controllers/ComputerController.php:187
 #, php-format
 msgid "Computer '%s' was successfully deleted."
 msgstr ""
 
-#: controllers/ComputerController.php:187
+#: controllers/ComputerController.php:192
 #, php-format
 msgid "Computer '%s' could not be deleted."
+msgstr ""
+
+#: controllers/GroupController.php:132
+#, php-format
+msgid "Group '%s' was successfully deleted."
+msgstr ""
+
+#: controllers/GroupController.php:137
+#, php-format
+msgid "Group '%s' could not be deleted."
 msgstr ""
 
 #: controllers/LoginController.php:97
@@ -140,7 +150,23 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
-#: forms/NetworkDevice.php:44 views/scripts/computer/display.phtml:85
+#: forms/ManageGroupMemberships.php:57 views/helpers/MembershipType.php:41
+msgid "automatic"
+msgstr ""
+
+#: forms/ManageGroupMemberships.php:58
+msgid "always"
+msgstr ""
+
+#: forms/ManageGroupMemberships.php:59
+msgid "never"
+msgstr ""
+
+#: forms/ManageGroupMemberships.php:124 forms/NetworkDevice.php:62
+msgid "OK"
+msgstr ""
+
+#: forms/NetworkDevice.php:49 views/scripts/computer/display.phtml:85
 #: views/scripts/computer/general.phtml:121
 #: views/scripts/computer/index.phtml:72 views/scripts/computer/misc.phtml:64
 #: views/scripts/computer/misc.phtml:112
@@ -153,18 +179,14 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
-#: forms/NetworkDevice.php:52 views/scripts/computer/display.phtml:82
+#: forms/NetworkDevice.php:58 views/scripts/computer/display.phtml:82
 #: views/scripts/computer/misc.phtml:35 views/scripts/computer/misc.phtml:66
 #: views/scripts/computer/network.phtml:58
 #: views/scripts/computer/printers.phtml:33
 #: views/scripts/computer/system.phtml:39 views/scripts/group/general.phtml:50
-#: views/scripts/group/index.phtml:28
+#: views/scripts/group/index.phtml:46
 #: views/scripts/network/showidentified.phtml:31
 msgid "Description"
-msgstr ""
-
-#: forms/NetworkDevice.php:56
-msgid "OK"
 msgstr ""
 
 #: forms/Package.php:80 views/scripts/computer/display.phtml:33
@@ -179,9 +201,9 @@ msgstr ""
 #: views/scripts/computer/system.phtml:134
 #: views/scripts/duplicates/index.phtml:26
 #: views/scripts/duplicates/show.phtml:28 views/scripts/group/general.phtml:32
-#: views/scripts/group/index.phtml:26 views/scripts/group/packages.phtml:35
-#: views/scripts/network/index.phtml:27 views/scripts/package/index.phtml:61
-#: views/scripts/software/index.phtml:27
+#: views/scripts/group/index.phtml:44 views/scripts/group/members.phtml:30
+#: views/scripts/group/packages.phtml:35 views/scripts/network/index.phtml:27
+#: views/scripts/package/index.phtml:61 views/scripts/software/index.phtml:27
 msgid "Name"
 msgstr ""
 
@@ -547,32 +569,32 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: models/Computer.php:558
+#: models/Computer.php:584
 #, php-format
 msgid "%1$d computers with an interface in network '%2$s'"
 msgstr ""
 
-#: models/Computer.php:575
+#: models/Computer.php:601
 #, php-format
 msgid "%1$d computers waiting for notification of package '%2$s'"
 msgstr ""
 
-#: models/Computer.php:580
+#: models/Computer.php:606
 #, php-format
 msgid "%1$d computers with package '%2$s' successfully deployed"
 msgstr ""
 
-#: models/Computer.php:585
+#: models/Computer.php:611
 #, php-format
 msgid "%1$d computers with deployment of package '%2$s' in progress"
 msgstr ""
 
-#: models/Computer.php:590
+#: models/Computer.php:616
 #, php-format
 msgid "%1$d computers where deployment of package '%2$s' failed"
 msgstr ""
 
-#: models/Computer.php:595
+#: models/Computer.php:621
 #, php-format
 msgid "%1$d computers where software '%2$s' is installed"
 msgstr ""
@@ -685,6 +707,17 @@ msgstr ""
 msgid "General"
 msgstr ""
 
+#: views/helpers/GroupHeader.php:58
+msgid "Members"
+msgstr ""
+
+#: views/helpers/GroupHeader.php:72 views/helpers/InventoryHeader.php:146
+#: views/scripts/network/showidentified.phtml:65
+#: views/scripts/network/showunknown.phtml:64
+#: views/scripts/package/index.phtml:237
+msgid "Delete"
+msgstr ""
+
 #: views/helpers/InventoryHeader.php:42
 #, php-format
 msgid "Inventory of '%s'"
@@ -722,11 +755,8 @@ msgstr ""
 msgid "User defined"
 msgstr ""
 
-#: views/helpers/InventoryHeader.php:139
-#: views/scripts/network/showidentified.phtml:65
-#: views/scripts/network/showunknown.phtml:64
-#: views/scripts/package/index.phtml:237
-msgid "Delete"
+#: views/helpers/MembershipType.php:44
+msgid "manual"
 msgstr ""
 
 #: views/helpers/ValidationMessages.php:45
@@ -826,11 +856,31 @@ msgstr ""
 msgid "Last user logged in"
 msgstr ""
 
+#: views/scripts/computer/groups.phtml:31
+msgid "Group memberships"
+msgstr ""
+
+#: views/scripts/computer/groups.phtml:36
+msgid "Group"
+msgstr ""
+
+#: views/scripts/computer/groups.phtml:37 views/scripts/group/members.phtml:33
+msgid "Membership"
+msgstr ""
+
+#: views/scripts/computer/groups.phtml:85 views/scripts/group/index.phtml:79
+msgid "No groups defined."
+msgstr ""
+
+#: views/scripts/computer/groups.phtml:96
+msgid "Manage memberships"
+msgstr ""
+
 #: views/scripts/computer/index.phtml:50
 msgid "CPU cores"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:52
+#: views/scripts/computer/index.phtml:52 views/scripts/group/members.phtml:32
 msgid "Last inventory"
 msgstr ""
 
@@ -842,7 +892,7 @@ msgstr ""
 msgid "Operating system"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:65
+#: views/scripts/computer/index.phtml:65 views/scripts/group/members.phtml:31
 msgid "User"
 msgstr ""
 
@@ -880,7 +930,7 @@ msgstr ""
 msgid "Edit filter"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:160
+#: views/scripts/computer/index.phtml:160 views/scripts/group/members.phtml:70
 #, php-format
 msgid "Number of computers: %d"
 msgstr ""
@@ -1043,7 +1093,7 @@ msgid "Mountpoint"
 msgstr ""
 
 #: views/scripts/computer/storage.phtml:100
-#: views/scripts/group/general.phtml:59 views/scripts/group/index.phtml:27
+#: views/scripts/group/general.phtml:59 views/scripts/group/index.phtml:45
 msgid "Creation date"
 msgstr ""
 
@@ -1119,15 +1169,34 @@ msgid "Merge user supplied information"
 msgstr ""
 
 #: views/scripts/duplicates/show.phtml:113
+msgid "Merge manual group assignments"
+msgstr ""
+
+#: views/scripts/duplicates/show.phtml:122
 msgid "Merge missing package assignments"
 msgstr ""
 
-#: views/scripts/duplicates/show.phtml:119
+#: views/scripts/duplicates/show.phtml:128
 msgid "Merge selected computers"
+msgstr ""
+
+#: views/scripts/group/delete.phtml:29
+#, php-format
+msgid "Group '%s' will be permanently deleted. Continue?"
 msgstr ""
 
 #: views/scripts/group/general.phtml:68
 msgid "SQL query"
+msgstr ""
+
+#: views/scripts/group/members.phtml:77
+#, php-format
+msgid "Last update: %s"
+msgstr ""
+
+#: views/scripts/group/members.phtml:82
+#, php-format
+msgid "Next update: %s"
 msgstr ""
 
 #: views/scripts/group/removepackage.phtml:31

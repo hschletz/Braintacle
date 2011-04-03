@@ -136,6 +136,13 @@ class Zend_View_Helper_InventoryHeader extends Zend_View_Helper_Abstract
         $navigation->addPage($page);
 
         $page = new Zend_Navigation_Page_Mvc;
+        $page->setLabel('Groups')
+             ->setController('computer')
+             ->setAction('groups')
+             ->setParams($id);
+        $navigation->addPage($page);
+
+        $page = new Zend_Navigation_Page_Mvc;
         $page->setLabel('Delete')
              ->setController('computer')
              ->setAction('delete')

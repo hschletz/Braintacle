@@ -68,6 +68,7 @@ class Model_Config
         'DefaultDeployError' => 'BRAINTACLE_DEFAULT_DEPLOY_ERROR',
         // Defaults for merging duplicates
         'DefaultMergeUserdefined' => 'BRAINTACLE_DEFAULT_MERGE_USERDEFINED',
+        'DefaultMergeGroups' => 'BRAINTACLE_DEFAULT_MERGE_GROUPS',
         'DefaultMergePackages' => 'BRAINTACLE_DEFAULT_MERGE_PACKAGES',
         // Should blacklisted software be displayed in computer and software inventory?
         'DisplayBlacklistedSoftware' => 'BRAINTACLE_DISPLAY_BLACKLISTED_SOFTWARE',
@@ -75,6 +76,8 @@ class Model_Config
         'PackagePath' => 'DOWNLOAD_PACK_DIR', // getOption() will append '/download/'
         'LockValidity' => 'LOCK_REUSE_TIME', // Seconds before a computer's lock expires
         'TraceDeleted' => 'TRACE_DELETED', // Use deleted_equiv table
+        'GroupCacheExpirationInterval' => 'GROUPS_CACHE_REVALIDATE', // Seconds between cache rebuilds
+        'GroupCacheExpirationFuzz' => 'GROUPS_CACHE_OFFSET', // Random range added to interval
     );
 
     /**
@@ -94,9 +97,12 @@ class Model_Config
         'DefaultDeployNotified' => '1',
         'DefaultDeployError' => '1',
         'DefaultMergeUserdefined' => '1',
+        'DefaultMergeGroups' => '1',
         // Default for PackagePath is provided by getOption()
         'LockValidity' => 600,
         'TraceDeleted' => false,
+        'GroupCacheExpirationInterval' => 600,
+        'GroupCacheExpirationFuzz' => 600,
     );
 
     /**

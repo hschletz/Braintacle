@@ -72,6 +72,9 @@
  * This would make the property 'StorageDevice.Size' available to this class.
  * Note that only properties defined by the model class will work.
  * The model prefix ensures that ambiguous properties/columns will not clash.
+ *
+ * If the 'MemberOf' filter is applied, the <b>Membership</b> property is
+ * available which contains one of the {@link Model_GroupMembership} constants.
  * @package Models
  */
 class Model_Computer extends Model_ComputerOrGroup
@@ -113,6 +116,8 @@ class Model_Computer extends Model_ComputerOrGroup
         'AssetTag' => 'assettag',
         // Values from assigned packages
         'Package.Status' => 'package_status',
+        // Values from group memberships
+        'Membership' => 'static'
     );
 
     protected $_types = array(
@@ -123,6 +128,7 @@ class Model_Computer extends Model_ComputerOrGroup
         'LastContactDate' => 'timestamp',
         'PhysicalMemory' => 'integer',
         'SwapMemory' => 'integer',
+        'Membership' => 'enum',
     );
 
     /**
@@ -194,6 +200,7 @@ class Model_Computer extends Model_ComputerOrGroup
                     $fromBios[] = $map[$column];
                     break;
                 case 'Package.Status':
+                case 'Membership':
                     break; // columns are added later
                 default:
                     if (array_key_exists($column, $map)) { // ignore nonexistent columns
@@ -270,6 +277,25 @@ class Model_Computer extends Model_ComputerOrGroup
                                 $search
                             ),
                             array ('software_version' => 'version')
+                        );
+                    break;
+                case 'MemberOf':
+                    // $search is expected to be a Model_Group object.
+                    $arg->update();
+
+                    $select
+                        ->join(
+                            'groups_cache',
+                            'hardware.id = groups_cache.hardware_id',
+                            array('static')
+                        )
+                        ->where('groups_cache.group_id = ?', $arg->getId())
+                        ->where(
+                            'groups_cache.static IN (?)',
+                            array(
+                                Model_GroupMembership::TYPE_DYNAMIC,
+                                Model_GroupMembership::TYPE_STATIC
+                            )
                         );
                     break;
                 default:
@@ -932,9 +958,10 @@ class Model_Computer extends Model_ComputerOrGroup
      *
      * @param array $computers IDs of computers to merge
      * @param bool $mergeUserdefined Preserve user supplied information from old computer
+     * @param bool $mergeGroups Preserve manual group assignments from old computers
      * @param bool $mergePackages Preserve package assignments from old computers missing on new computer
      */
-    static function mergeComputers($computers, $mergeUserdefined, $mergePackages)
+    static function mergeComputers($computers, $mergeUserdefined, $mergeGroups, $mergePackages)
     {
         if (is_null($computers)) { // Can happen if no items have been checked
             return;
@@ -975,6 +1002,22 @@ class Model_Computer extends Model_ComputerOrGroup
                 $oldest = $computers[0];
                 $newest->setUserDefinedInfo($oldest->getUserDefinedInfo());
             }
+
+            if ($mergeGroups) {
+                // Build list with all manual group assignments from old computers.
+                // If more than 1 old computer is to be merged and the computers
+                // have different assignments for the same group, the result may
+                // me somewhat unpredictable.
+                $groupList = array();
+                foreach ($computers as $computer) {
+                    $groups = $computer->getGroups(Model_GroupMembership::TYPE_MANUAL, null);
+                    while ($group = $groups->fetchObject('Model_GroupMembership')) {
+                        $groupList[$group->getGroupId()] = $group->getMembership();
+                    }
+                }
+                $newest->setGroups($groupList);
+            }
+
             if ($mergePackages) {
                 // The simplest way to merge package assignments is to update
                 // the hardware ID directly. If more than 2 computers are to be
@@ -1044,6 +1087,127 @@ class Model_Computer extends Model_ComputerOrGroup
         // Check for existing record to avoid constraint violation
         if (!$db->fetchRow("SELECT $column FROM $table WHERE $column=?", $value)) {
             $db->insert($table, array($column => $value));
+        }
+    }
+
+    /**
+     * Retrieve group membership information for this computer
+     * @param integer $membership Membership type to retrieve
+     * @param string $order Property to sort by
+     * @param string $direction Direction to sort by
+     * @return Zend_Db_Statement
+     */
+    public function getGroups(
+        $membership=Model_GroupMembership::TYPE_INCLUDED,
+        $order='GroupName',
+        $direction='asc'
+    )
+    {
+        return Model_GroupMembership::createStatementStatic(
+            $this->getId(),
+            $membership,
+            $order,
+            $direction
+        );
+    }
+
+    /**
+     * Set group membership information for this computer
+     *
+     * The $newgroups argument is an array with group ID as key and the new
+     * membership type as value. Groups which are not present in this array will
+     * remain unchanged.
+     * @param array $newGroups New group memberships
+     */
+    public function setGroups($newGroups)
+    {
+        $id = $this->getId();
+        $db = Zend_Registry::get('db');
+
+        // Create array with group ID as key and existing membership type as
+        // value.
+        $oldGroups = $db->fetchPairs(
+            'SELECT group_id, static FROM groups_cache WHERE hardware_id = ?',
+            $id
+        );
+
+        foreach ($newGroups as $group => $newMembership) {
+            // If this computer does not match the group's query and has no
+            // manual group assignment, the group will not be listed in
+            // $oldGroups. In this case, $oldMembership is set to NULL.
+            if (isset($oldGroups[$group])) {
+                $oldMembership = (int) $oldGroups[$group];
+            } else {
+                $oldMembership = null;
+            }
+
+            // Determine action to be taken depending on old and new membership.
+            $action = ''; // default: no action
+            switch ($newMembership) {
+                case Model_GroupMembership::TYPE_DYNAMIC:
+                    if ($oldMembership === Model_GroupMembership::TYPE_STATIC or
+                        $oldMembership === Model_GroupMembership::TYPE_EXCLUDED
+                    ) {
+                        $action = 'delete';
+                    }
+                    break;
+                case Model_GroupMembership::TYPE_STATIC:
+                    if ($oldMembership === Model_GroupMembership::TYPE_DYNAMIC or
+                        $oldMembership === Model_GroupMembership::TYPE_EXCLUDED
+                    ) {
+                        $action = 'update';
+                    } elseif ($oldMembership === null) {
+                        $action = 'insert';
+                    }
+                    break;
+                case Model_GroupMembership::TYPE_EXCLUDED:
+                    if ($oldMembership === Model_GroupMembership::TYPE_DYNAMIC or
+                        $oldMembership === Model_GroupMembership::TYPE_STATIC
+                    ) {
+                        $action = 'update';
+                    } elseif ($oldMembership === null) {
+                        $action = 'insert';
+                    }
+                    break;
+            }
+
+            switch ($action) {
+                case 'insert':
+                    $db->insert(
+                        'groups_cache',
+                        array(
+                            'hardware_id' => $id,
+                            'group_id' => $group,
+                            'static' => $newMembership
+                        )
+                    );
+                    break;
+                case 'update':
+                    $db->update(
+                        'groups_cache',
+                        array(
+                            'static' => $newMembership
+                        ),
+                        array(
+                            'hardware_id = ?' => $id,
+                            'group_id = ?' => $group
+                        )
+                    );
+                    break;
+                case 'delete':
+                    // Delete manual assignment. The group cache will be updated
+                    // because this computer may be a candidate for automatic
+                    // assignment.
+                    $db->delete(
+                        'groups_cache',
+                        array(
+                            'hardware_id = ?' => $id,
+                            'group_id = ?' => $group
+                        )
+                    );
+                    Model_Group::fetchById($group)->update(true);
+                    break;
+            }
         }
     }
 

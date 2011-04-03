@@ -1,0 +1,99 @@
+<?php
+/**
+ * Display and manage a computer's group memberships
+ *
+ * $Id$
+ *
+ * Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
+$computer = $this->computer;
+
+print $this->inventoryHeader($computer);
+
+print $this->htmlTag(
+    'h2',
+    $this->translate('Group memberships')
+);
+
+
+$headers = array(
+    'GroupName' => $this->translate('Group'),
+    'Membership' => $this->translate('Membership'),
+);
+
+$renderCallbacks = array(
+    'GroupName' => 'renderGroupName',
+    'Membership' => 'renderMembership',
+);
+
+function renderGroupName($view, $membership)
+{
+    return $view->htmlTag(
+        'a',
+        $view->escape($membership->getGroupName()),
+        array(
+            'href' => $view->BaseUrl()
+                     . '/group/general/id/'
+                     . urlencode($membership->getGroupId())
+        ),
+        true
+    );
+}
+
+function renderMembership($view, $membership)
+{
+    return $view->membershipType($membership->getMembership());
+}
+
+$table = $this->getHelper('table')->table(
+    $computer->getGroups(
+        Model_GroupMembership::TYPE_INCLUDED,
+        $this->order,
+        $this->direction
+    ),
+    null,
+    $headers,
+    array(),
+    'Model_GroupMembership',
+    null,
+    $renderCallbacks,
+    $count
+);
+
+if ($count) {
+    // Print effective memberships
+    print $table;
+} else {
+    print $this->htmlTag(
+        'p',
+        $this->translate('No groups defined.'),
+        array('class' => 'textcenter')
+    );
+}
+
+// Print and manage static memberships
+$form = new Form_ManageGroupMemberships();
+if ($form->addGroups($computer)) {
+    $form->setAction($this->baseUrl() . '/computer/managegroups');
+    print $this->htmlTag(
+        'h2',
+        $this->translate('Manage memberships')
+    );
+    print $form;
+}

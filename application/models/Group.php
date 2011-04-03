@@ -39,7 +39,13 @@
  * - <b>Description:</b> description
  * - <b>CreationDate:</b> timestamp of group creation
  * - <b>DynamicMembersSql:</b> SQL query for dynamic members, may be empty
+ * - <b>DynamicMembersXml:</b> XML definition for dynamic members (not supported yet), may be empty
+ * - <b>CacheCreationDate:</b> Timestamp of last cache computation
+ * - <b>CacheExpirationDate:</b> Timestamp when cache will expire and be rebuilt
  *
+ *
+ * To set CacheCreationDate and CacheExpirationDate manually, {@link setProperty()}
+ * should always be used.
  *
  * The representation of groups in the database is a bit odd. Each group has a
  * row in the 'hardware' table with the 'deviceid' column set to
@@ -52,7 +58,7 @@
  * - request: SQL query delivering 1 column with hardware IDs of group members.
  * - xmldef: alternate query definition. Not supported yet.
  * - create_time: UNIX timestamp of last cache computation, see below.
- * - revalidate_from: UNIX timestamp of next cache computation, see below.
+ * - revalidate_from: create_time + random offset, see below
  *
  *
  * The 'groups_cache' table contains membership information:
@@ -62,24 +68,19 @@
  * - static: 0 for cached dynamic membership, 1 for statically included, 2 for excluded
  *
  *
- * Class constants are defined for the 'static' value which should always be
- * used instead of literal integers. For future compatibility, always use the
- * '=' operator for comparision, not '!='.
+ * Dynamic membership is determined exclusively from the cache, so the
+ * information might be out of date. Any method that accesses the groups_cache
+ * table directly should call {@link update()} before doing that.
  *
- * This class determines dynamic membership exclusively from the cache, so the
- * information might be out of date. This behavior is consistent with the
- * communication server. This class does not automatically rebuild the cache
- * when the expiration time has been reached as this would result in even more
- * database activity especially for short rebuild intervals. The communication
- * server will rebuild the cache upon next agent contact.
+ * Two config variables control how often the cache gets rebuilt.
+ * <i>GroupCacheExpirationInterval</i> is the minimum number of seconds between
+ * rebuilds for a particular group. To prevent recomputation of all groups at
+ * once (which may be a resource-intensive process), a random number of seconds
+ * between 0 and <i>GroupCacheExpirationFuzz</i> is added.
  * @package Models
  */
 class Model_Group extends Model_ComputerOrGroup
 {
-
-    const MEMBERSHIP_DYNAMIC = 0;
-    const MEMBERSHIP_STATIC = 1;
-    const MEMBERSHIP_EXCLUDED = 2;
 
     /**
      * Property Map
@@ -93,6 +94,9 @@ class Model_Group extends Model_ComputerOrGroup
         'Description' => 'description',
         // Values from 'groups' table
         'DynamicMembersSql' => 'request',
+        'DynamicMembersXml' => 'xmldef',
+        'CacheExpirationDate' => 'revalidate_from', // Will be mangled by {@link getProperty()}
+        'CacheCreationDate' => 'create_time',
     );
 
     /**
@@ -102,20 +106,24 @@ class Model_Group extends Model_ComputerOrGroup
     protected $_types = array(
         'Id' => 'integer',
         'CreationDate' => 'timestamp',
+        'CacheExpirationDate' => 'timestamp',
+        'CacheCreationDate' => 'timestamp',
     );
 
 
     /**
      * Return a statement object with all groups
      * @param array $columns Properties which should be returned. Default: all properties
-     * @param integer $id If non-null, return only the group with the given ID. Default: all groups
+     * @param string $filter Optional filter to apply (Id|Expired), default: return all groups
+     * @param mixed $filterArg Value to filter by
      * @param string $order Logical property to sort by. Default: null
      * @param string $direction one of [asc|desc]. Default: asc
      * @return Zend_Db_Statement Query result
      */
     static function createStatementStatic(
         $columns=null,
-        $id = null,
+        $filter = null,
+        $filterArg = null,
         $order=null,
         $direction='asc'
     )
@@ -129,14 +137,20 @@ class Model_Group extends Model_ComputerOrGroup
             $columns = array_keys($map); // Select all properties
         }
 
-        $joinGroupsTable = false;
+        $fromGroups = array();
         foreach ($columns as $column) {
-            if ($column == 'DynamicMembersSql') {
-                $joinGroupsTable = true;
-            } else {
-                if (isset($map[$column])) { // ignore nonexistent columns
-                    $fromHardware[] = $map[$column];
-                }
+            switch ($column) {
+                case 'DynamicMembersSql':
+                case 'DynamicMembersXml':
+                case 'CacheExpirationDate':
+                case 'CacheCreationDate':
+                    $fromGroups[] = $map[$column];
+                    break;
+                default:
+                    if (isset($map[$column])) { // ignore nonexistent columns
+                        $fromHardware[] = $map[$column];
+                    }
+                    break;
             }
         }
 
@@ -149,8 +163,37 @@ class Model_Group extends Model_ComputerOrGroup
             ->from('hardware', $fromHardware)
             ->order(self::getOrder($order, $direction, $map));
 
-        if ($joinGroupsTable) {
-            $select->join('groups', 'hardware.id = groups.hardware_id', 'request');
+        switch ($filter) {
+            case '':
+                break;
+            case 'Id':
+                $select->where('id=?', (integer) $filterArg);
+                break;
+            case 'Expired':
+                $column = $map['CacheExpirationDate'];
+                if (!in_array($column, $fromGroups)) {
+                    $fromGroups[] = $column;
+                }
+
+                $now = Zend_Date::now()->get(Zend_Date::TIMESTAMP);
+                $select->where(
+                    'revalidate_from <= ?',
+                    $now - Model_Config::getOption('GroupCacheExpirationInterval')
+                );
+                break;
+            default:
+                throw new UnexpectedValueException(
+                    'Invalid group filter: ' . $filter
+                );
+                break;
+        }
+
+        if (!empty($fromGroups)) {
+            $select->join(
+                'groups',
+                'hardware.id = groups.hardware_id',
+                $fromGroups
+            );
         } else {
             // Only return groups, not computers. Not necessary if the 'groups'
             // table has been joined since the join condition only matches
@@ -158,11 +201,58 @@ class Model_Group extends Model_ComputerOrGroup
             $select->where("deviceid = '_SYSTEMGROUP_'");
         }
 
-        if (!is_null($id)) {
-            $select->where('id=?', $id);
+        return $select->query();
+    }
+
+    /**
+     * Retrieve a property by its logical name
+     *
+     * CacheExpirationDate and CacheCreationDate are automatically converted to
+     * a Zend_Date object unless $rawValue is true. Additionally, the value of
+     * the global GroupCacheExpirationInterval Option is added to
+     * CacheExpirationDate, so that the real expiration date is returned instead
+     * of the value in the database (which is CacheCreationDate + random offset)
+     */
+    public function getProperty($property, $rawValue=false)
+    {
+        if (!$rawValue and ($property == 'CacheExpirationDate' or $property == 'CacheCreationDate')) {
+            $value = new Zend_Date(
+                parent::getProperty($property, true),
+                Zend_Date::TIMESTAMP
+            );
+            if ($property == 'CacheExpirationDate') {
+                $value->addSecond(Model_Config::getOption('GroupCacheExpirationInterval'));
+            }
+        } else {
+            $value = parent::getProperty($property, $rawValue);
         }
 
-        return $select->query();
+        return $value;
+    }
+
+    /**
+     * Set a property by its logical name.
+     *
+     * For CacheCreationDate and CacheExpirationDate, a Zend_Date object is
+     * expected, which will be processed to match the internal representation.
+     * This is strongly recommended over calling setCacheCreationDate() and
+     * setCacheExpirationDate(), which would require knowledge of the inner
+     * logic.
+     */
+    public function setProperty($property, $value)
+    {
+        $columnName = $this->getColumnName($property);
+
+        if ($property == 'CacheExpirationDate') {
+            // Create new object to leave original object untouched
+            $value = new Zend_Date($value);
+            $value->subSecond(Model_Config::getOption('GroupCacheExpirationInterval'));
+            $this->__set($columnName, $value->get(Zend_Date::TIMESTAMP));
+        } elseif ($property == 'CacheCreationDate') {
+            $this->__set($columnName, $value->get(Zend_Date::TIMESTAMP));
+        } else {
+            parent::setProperty($property, $value);
+        }
     }
 
     /**
@@ -172,7 +262,7 @@ class Model_Group extends Model_ComputerOrGroup
      */
     static function fetchById($id)
     {
-        return self::createStatementStatic(null, $id)->fetchObject('Model_Group');
+        return self::createStatementStatic(null, 'Id', $id)->fetchObject('Model_Group');
     }
 
     /**
@@ -201,6 +291,168 @@ class Model_Group extends Model_ComputerOrGroup
             ->order(self::getOrder('Name', $direction, $this->_propertyMap));
 
         return $select->query();
+    }
+
+    /**
+     * Update the cache for dynamic members
+     *
+     * Dynamic members are always determined from the cache. This method updates
+     * the cache for this particular group. By default, the cache is not updated
+     * before its expiration time has been reached. This method will do nothing
+     * in that case. Set $force to TRUE to rebuild the cache in any case.
+     * @param bool $force Always rebuild cache, regardless of expiration time.
+     */
+    public function update($force = false)
+    {
+        $criteria = $this->getDynamicMembersSql();
+        if (!$criteria) {
+            return; // Nothing to do if no SQL query defined for this group
+        }
+
+        $expires = $this->getCacheExpirationDate();
+        $currentTime = Zend_Date::now();
+
+        // Do nothing if expiration time has not been reached and $force is false.
+        if (!$force and ($expires->compare($currentTime) == 1)) {
+            return;
+        }
+
+        if ($this->getDynamicMembersXml()) {
+            throw new RuntimeException('XML group definition not supported yet');
+        }
+
+        if (!$this->lock()) {
+            return; // Another process is currently updating this group.
+        }
+
+        $db = Zend_Registry::get('db');
+
+        // Delete computers from the cache which no longer meet the criteria
+        $db->delete(
+            'groups_cache',
+            array(
+                'group_id = ?' => $this->getId(),
+                'static = ?' => Model_GroupMembership::TYPE_DYNAMIC,
+                "hardware_id NOT IN ($criteria)" => null
+            )
+        );
+
+        // Insert computers which meet the criteria and don't already have an
+        // entry in the cache (which might be dynamic, static or excluded).
+        $newIds = $db
+            ->select()
+            ->from('hardware', array('id'))
+            ->where("id IN ($criteria)")
+            ->where(
+                'id NOT IN (SELECT hardware_id FROM groups_cache WHERE group_id=?)',
+                $this->getId()
+            )
+            ->query();
+        while ($computer = $newIds->fetchColumn()) {
+            $db->insert(
+                'groups_cache',
+                array(
+                    'group_id' => $this->getId(),
+                    'hardware_id' => $computer,
+                    'static' => Model_GroupMembership::TYPE_DYNAMIC
+                )
+            );
+        }
+
+        // Update CacheCreationDate and CacheExpirationDate in the database
+        $fuzz = mt_rand(0, Model_Config::getOption('GroupCacheExpirationFuzz'));
+        $minExpires = new Zend_Date($currentTime);
+        $minExpires->addSecond($fuzz);
+
+        $db->update(
+            'groups',
+            array(
+                'create_time' => $currentTime->get(Zend_Date::TIMESTAMP),
+                'revalidate_from' => $minExpires->get(Zend_Date::TIMESTAMP)
+            ),
+            array('hardware_id = ?' => $this->getId())
+        );
+
+        $this->unlock();
+
+        // Update CacheCreationDate and CacheExpirationDate properties
+        $this->setProperty('CacheCreationDate', $currentTime);
+        // Do not use setProperty() here to avoid unnecessary calculations.
+        $this->__set('revalidate_from', $minExpires->get(Zend_Date::TIMESTAMP));
+    }
+
+    /**
+     * Update the cache for dynamic members for all groups
+     *
+     * Dynamic members are always determined from the cache. This method updates
+     * the cache for all groups. By default, the cache is only updated for
+     * groups whose expiration time has been reached. Set $force to TRUE to
+     * rebuild the cache for all groups in any case.
+     * @param bool $force Always rebuild cache, regardless of expiration time.
+     */
+    static function updateAll($force = false)
+    {
+        if ($force) {
+            $filter = null;
+        } else {
+            $filter = 'Expired';
+        }
+
+        $groups = self::createStatementStatic(
+            null,
+            $filter
+        );
+
+        while ($group = $groups->fetchObject('Model_Group')) {
+            $group->update(true);
+        }
+    }
+
+    /**
+     * Delete this group from the database
+     * @param bool $reuseLock If this instance already has a lock, reuse it.
+     * @return bool Success
+     */
+    public function delete($reuseLock=false)
+    {
+        // A lock is required
+        if ((!$reuseLock or !$this->isLocked()) and !$this->lock()) {
+            return false;
+        }
+
+        $db = Zend_Registry::get('db');
+        $id = $this->getId();
+
+        // Start transaction to keep database consistent in case of errors
+        // If a transaction is already in progress, an exception will be thrown
+        // by PDO which has to be caught. The commit() and rollBack() methods
+        // can only be called if the transaction has been started here.
+        try{
+            $db->beginTransaction();
+            $transaction = true;
+        } catch (Exception $exception) {
+            $transaction = false;
+        }
+
+        try {
+            // Delete rows
+            $db->delete('groups_cache', array('group_id = ?' => $id));
+            $db->delete('devices', array('hardware_id = ?' => $id));
+            $db->delete('groups', array('hardware_id = ?' => $id));
+            $db->delete('hardware', array('id = ?' => $id));
+        } catch (Exception $exception) {
+            if ($transaction) {
+                $db->rollBack();
+            }
+            throw $exception;
+        }
+
+        if ($transaction) {
+            $db->commit();
+        }
+
+        $this->unlock();
+        return true;
     }
 
 }

@@ -165,6 +165,11 @@ class ComputerController extends Zend_Controller_Action
         $this->_helper->ordering('Name');
     }
 
+    public function groupsAction()
+    {
+        $this->_helper->ordering('GroupName');
+    }
+
     public function deleteAction()
     {
         $form = new Form_YesNo;
@@ -228,6 +233,18 @@ class ComputerController extends Zend_Controller_Action
             }
         }
         $this->_redirect('computer/packages/id/' . $computer->getId());
+    }
+
+    public function managegroupsAction()
+    {
+        $computer = $this->computer;
+
+        $form = new Form_ManageGroupMemberships;
+        $form->addGroups($computer);
+        if ($form->isValid($_POST)) {
+            $computer->setGroups($form->getValues());
+        }
+        $this->_redirect('computer/groups/id/' . $computer->getId());
     }
 
     public function searchAction()
