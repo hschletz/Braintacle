@@ -786,7 +786,7 @@ class Model_Computer extends Model_ComputerOrGroup
      * Delete this computer and all associated child objects from the database
      * @param bool $reuseLock If this instance already has a lock, reuse it.
      * @param string $equivalent Inserted into deleted_equiv table if TraceDeleted is set.
-     * @return Success
+     * @return bool Success
      */
     public function delete($reuseLock=false, $equivalent=null)
     {
