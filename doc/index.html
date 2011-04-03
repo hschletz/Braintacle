@@ -46,7 +46,7 @@ I wrote it for 2 reasons:
 <li>
 <p>
 I already had a PostgreSQL server in use, and I didn't like the idea of setting up a MySQL server just for OCS Inventory.
-While the communication server component could be easily adapted due to the DBI abstraction layer, but
+While the communication server component could be easily adapted due to the DBI abstraction layer,
 the administration console uses MySQL functions directly.
 </p>
 <p>
@@ -60,7 +60,8 @@ As a result, the patch is very intrusive, making it difficult to keep up with fu
 </li>
 <li>
 <p>
-While the patched version works well, I got more and more frustrated by the user interface.
+While the patched version works well from a technical point of view, I got more and more frustrated
+by the user interface.
 In particular, the process of building and deploying packages involves repeating a lot of steps over and over again everytime a new software release is to be deployed.
 This is not only annoying, but also error-prone.
 </p>
@@ -78,8 +79,8 @@ It is far from complete yet, but already usable for most tasks.
 <p>
 The mentioned patched version of OCS Inventory NG comes bundled with Braintacle
 in the <em>ocsinventory</em> directory. See the
-<a href="../ocsinventory/README.Braintacle.html">README.Braintacle.html</a> file
-in the same directory for details.
+<a href="http://svn.savannah.nongnu.org/viewvc/*checkout*/trunk/ocsinventory/README.Braintacle.html?root=braintacle">README.Braintacle.html</a>
+file in the same directory for details.
 Use of this modified version is recommended.
 </p>
 
@@ -126,7 +127,8 @@ Other translations can easily be added and maintained using your favorite gettex
 <li>
 I tried to keep the code as readable and understandable as possible.
 It follows the recommended structure and coding standards for Zend Framework projects.
-As a side-effect of the MVC architecture, the model classes provide an abstract <a href="./api/index.html">API</a> to all logical objects (computers, packages etc.).
+As a side-effect of the MVC architecture, the model classes provide an abstract API to all logical
+objects (computers, packages etc.).
 </li>
 </ul>
 
@@ -167,7 +169,8 @@ If anything goes wrong with building the new package, the old package will not b
 <p>
 You can specify a comment and a certificate path.
 Both fields are already present in the database and the certificate path is really evaluated, but the original GUI always submits hardcoded defaults (empty comment and 'INSTALL_PATH/cacert.pem').
-INSTALL_PATH will be expanded to the agent's installation directory (like '$PROGRAMFILES\Ocs Inventory Agent').
+INSTALL_PATH will be expanded to the agent's installation directory
+(like '%PROGRAMFILES%\Ocs Inventory Agent').
 You can set any path and filename you like.
 The Windows agent also accepts UNC paths (which will probably only work if all clients reside on a local network and the share allows guest access).
 This allows some cool stuff like changing the HTTPS server's certificate without breaking deployment.
@@ -298,19 +301,31 @@ Braintacle supports a blacklist for asset tags, in addition to serials and MAC a
 </p>
 <p>
 The implementation for merging duplicates is more robust &ndash; no more database errors on weird combinations.
-The package associatons and history are intentionally not preserved.
-The typical origin of duplicates is a reinstall, where this is often unwanted.
 </p>
 <p>
-Group membership is currently not preserved, which is only a problem for static groups.
-This will be implemented in the future along with general group management functions.
+The information to be merged can be specified in detail:
 </p>
+<ul>
+<li>
+User defined information, if selected, will be preserved from the oldest entry.
+</li>
+<li>
+Manual group assignments, if selected, will be combined from all older entries.
+</li>
+<li>
+Package assignments, if selected, will be combined from all older entries.
+The package history is intentionally not preserved.
+The typical origin of duplicates is a reinstall, where this would just get in the way.
+</li>
+</ul>
 
 <h3><a name="extraoptions">Extra options</a></h3>
 
 <p>
 Braintacle makes use of extra options in the config table, like defaults for the package builder.
-See <a href="./api/__filesource/fsource_Models__applicationmodelsConfig.php.html">application/models/config.php</a> for supported options and their default values.
+See
+<a href="http://svn.savannah.nongnu.org/viewvc/*checkout*/trunk/application/models/Config.php?root=braintacle&amp;content-type=text%2Fplain">application/models/config.php</a>
+for supported options and their default values.
 There is currently no GUI to change them.
 You have to set them manually in the database, like:
 </p>
@@ -336,32 +351,19 @@ Actual mistranslations should be very rare, but in development mode, a notice ge
 To stop this apply this patch to library/Zend:
 </p>
 <pre>
---- Form/Decorator/Label.php    (Revision 21161)
-+++ Form/Decorator/Label.php    (Arbeitskopie)
-@@ -257,10 +257,6 @@
-             return '';
-         }
-
--        if (null !== ($translator = $element->getTranslator())) {
--            $label = $translator->translate($label);
+--- library/Zend/Form/Decorator/Label.php    (Revision 23828)
++++ library/Zend/Form/Decorator/Label.php    (Arbeitskopie)
+@@ -623,11 +623,6 @@
+      */
+     public function getLabel()
+     {
+-        $translator = $this->getTranslator();
+-        if (null !== $translator) {
+-            return $translator->translate($this->_label);
 -        }
 -
-         $optPrefix = $this->getOptPrefix();
-         $optSuffix = $this->getOptSuffix();
-         $reqPrefix = $this->getReqPrefix();
---- Form/Element/Submit.php     (Revision 21161)
-+++ Form/Element/Submit.php     (Arbeitskopie)
-@@ -77,10 +77,6 @@
-             $value = $this->getName();
-         }
-
--        if (null !== ($translator = $this->getTranslator())) {
--            return $translator->translate($value);
--        }
--
-         return $value;
+         return $this->_label;
      }
-
 </pre>
 
 <h3>Bad number formatting or PHP notices in package listing</h3>
@@ -404,11 +406,6 @@ If you are using Braintacle in addition to an unmodified version of OCS Inventor
 <p>
 In addition, the schema can be created and updated with the script tools/schema-manager.php.
 It uses <a href="http://pear.php.net/package/MDB2_Schema/">MDB2_Schema</a> for this task.
-Patched versions of MDB2_Schema, <a href="http://pear.php.net/package/MDB2/">MDB2</a> and some <a href="http://pear.php.net/search.php?q=MDB2_driver&amp;in=packages&amp;x=0&amp;y=0">MDB2 drivers</a> are included in this distribution.
-You will have to install some additional PEAR classes through the "pear" command:
-</p>
-<p>
-<code>pear install XML_Parser</code>
 </p>
 <p>
 The schema is stored in a set of XML fragments in the schema/ directory, one file per table.
@@ -520,7 +517,7 @@ Run this script everytime you have added translatable stings to the source code 
 <h3>generate-documentation.php</h3>
 
 <p>
-This script generates/updates the <a href="./api/index.html">API documentation</a>.
+This script generates/updates the API documentation.
 It requires the phpdoc command in your search path.
 The easiest way to install it is through the "pear" command:
 </p>
