@@ -80,9 +80,9 @@ msgid "Maximum allowed size for file '%value%' is '%max%' but '%size%' detected"
 msgstr ""
 
 #: Validate/File/Upload.php:56
-msgid "The file '%value%' exceeds the defined ini size"
+msgid "File '%value%' exceeds the defined ini size"
 msgstr ""
 
 #: Validate/File/Upload.php:59
-msgid "The file '%value%' was not uploaded"
+msgid "File '%value%' was not uploaded"
 msgstr ""

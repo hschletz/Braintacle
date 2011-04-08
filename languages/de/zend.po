@@ -28,10 +28,10 @@ msgstr ""
 "PO-Revision-Date: 2011-03-05 19:28+0100\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <holger.schletz@web.de>\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: de\n"
 "X-Generator: Lokalize 1.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
@@ -55,12 +55,12 @@ msgstr ""
 "übermittelt"
 
 #: Validate/File/Upload.php:56
-msgid "The file '%value%' exceeds the defined ini size"
-msgstr "Die Datei '%value%' überschreitet die definierte Größe."
+msgid "File '%value%' exceeds the defined ini size"
+msgstr "Datei '%value%' überschreitet die definierte Größe."
 
 #: Validate/File/Upload.php:59
-msgid "The file '%value%' was not uploaded"
-msgstr "Die Datei '%value%' wurde nicht hochgeladen."
+msgid "File '%value%' was not uploaded"
+msgstr "Datei '%value%' wurde nicht hochgeladen."
 
 #: Validate/Hostname.php:66
 msgid ""
@@ -95,4 +95,3 @@ msgstr "'%value%' passt nicht zu Muster '%pattern%'"
 #: Validate/StringLength.php:45
 msgid "'%value%' is greater than %max% characters long"
 msgstr "'%value%' ist länger als %max% Zeichen"
-
