@@ -353,4 +353,15 @@ if ($schema->db->getOption('use_transactions')) {
     $schema->db->completeNestedTransaction();
 }
 print "Schema successfully updated.\n";
+
+
+// Braintacle does not support cleartext passwords.
+// Old databases for which the password for the default 'admin' account has
+// never been changed may contain a cleartext password so that logging in would
+// be impossible. It will be converted to its MD5 hash.
+if ($mdb2->exec("UPDATE operators SET passwd='21232f297a57a5a743894a0e4a801fc3' WHERE passwd='admin'")) {
+    print "\nWARNING: Account with default password detected.\n";
+    print "It has been hashed, but should be changed!\n";
+}
+
 $schema->disconnect();
