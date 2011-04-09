@@ -170,8 +170,8 @@ $result = mdb2_query( $sql, $_SESSION["readServer"]);
 	while($item = mdb2_fetch_object($result)){
 		$deb="<a href='index.php?multi=29&popup=1&systemid=".$item ->id."' target='_blank'>";
 		$fin="</a>";
-		$data[$i][$entete[0]]=$deb.$item ->name.$fin;
-		$data[$i][$entete[1]]=$item ->description;
+		$data[$i][$entete[0]]=$deb . htmlspecialchars($item->name) . $fin;
+		$data[$i][$entete[1]]=htmlspecialchars($item->description);
 		$data[$i][$entete[2]]=$item ->creat;
 		if ($_SESSION["lvluser"] == ADMIN){
 			$sql_count_my = "SELECT COUNT(hardware_id) AS c FROM groups_cache WHERE group_id=" . $item->id . " AND hardware_id ".$mesmachines; 

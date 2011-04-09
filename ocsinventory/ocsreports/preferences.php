@@ -1033,7 +1033,7 @@ function ShowResults($req,$sortable=true,$modeCu=false,$modeRedon=false,$deletab
 					$groupList = "";
 					while( $valGroups = mdb2_fetch_assoc( $resGroups ) ) {
 						if ($_SESSION["lvluser"] == SADMIN or $valGroups["workgroup"] == "GROUP_4_ALL")
-						$groupList .= "<option>".$valGroups["name"]."</option>";
+						$groupList .= "<option>".htmlspecialchars($valGroups["name"])."</option>";
 					}
 					if ( $_SESSION["lvluser"]==SADMIN ){
 						//find all server

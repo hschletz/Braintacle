@@ -433,7 +433,7 @@ function print_perso($systemid) {
 			echo "<td bgcolor='white' align='center' valign='center'>&nbsp;</td>";
 			echo $td3.$l->g(607)." ";		
 			if( $_SESSION["lvluser"] == SADMIN || $_SESSION["lvluser"] == LADMIN || $valGroups["workgroup"]=="GROUP_4_ALL")
-				echo "<a href='index.php?multi=29&popup=1&systemid=".$valGroups["group_id"]."' target='_blank'>".$valGroups["name"]."</td>";
+				echo "<a href='index.php?multi=29&popup=1&systemid=".$valGroups["group_id"]."' target='_blank'>".htmlspecialchars($valGroups["name"])."</td>";
 			else
 				echo "<b>".$valGroups["name"]."</b></td>";			
 				
@@ -498,7 +498,7 @@ function print_perso($systemid) {
 				echo " <select id='groupcombo'>";
 				$first = false;
 			}
-			echo "<option value='".$valGroups["id"]."'>".$valGroups["name"]."</option>";
+			echo "<option value='".$valGroups["id"]."'>".htmlspecialchars($valGroups["name"])."</option>";
 		}
 		
 		if( ! $first )

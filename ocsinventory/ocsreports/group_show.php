@@ -160,19 +160,19 @@ else{ //only show the botton for modify
 //form for modify values of group's
 echo "<form name='CHANGE' action='' method='POST'>";
 echo "<br><br><table align='center' width='65%' border='0' cellspacing=20 bgcolor='#C7D9F5' style='border: solid thin; border-color:#A1B1F9'>";
-echo "<tr>".$tdhd.$l->g(577).$tdhf.$tdhdpb.$name.$tdhfpb;
+echo "<tr>".$tdhd.$l->g(577).$tdhf.$tdhdpb.htmlspecialchars($name).$tdhfpb;
 echo $tdhd.$l->g(593).$tdhf.$tdhdpb.dateTimeFromMysql(textDecode($item->LASTDATE)).$tdhfpb;
 if( ! $pureStat  )
 	echo "</tr><tr>".$tdhd.$l->g(594).$tdhf.$tdhdpb.date("F j, Y, g:i a",$item->CREATE_TIME ).$tdhfpb;
 echo "</tr><tr><td>&nbsp;</td></tr>";
 echo $tdhd.$l->g(615).$tdhf."<td  align='left' width='20%' colspan='3'>";
 if( ! $pureStat  )
-	echo textDecode($item->REQUEST);
+	echo htmlspecialchars(textDecode($item->REQUEST));
 else {
 	echo $l->g(595);
 }
 
-echo "</tr><tr>".$tdhd.$l->g(53).$tdhf.$tdhdpb.$description.$tdhfpb;
+echo "</tr><tr>".$tdhd.$l->g(53).$tdhf.$tdhdpb.htmlspecialchars($description).$tdhfpb;
 if ($_SESSION["lvluser"]!=ADMIN)
 echo "<tr><td align='left' colspan=4>".$button_valid."&nbsp&nbsp".$button_reset."&nbsp&nbsp".$img_modif."</td></tr>";
 echo "$tdhfpb</table>";
