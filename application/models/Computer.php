@@ -810,6 +810,7 @@ class Model_Computer extends Model_ComputerOrGroup
         $tables[] = 'bios';
         $tables[] = 'devices';
         $tables[] = 'download_history';
+        $tables[] = 'groups_cache';
         $tables[] = 'registry'; // No model class defined yet
 
         // Start transaction to keep database consistent in case of errors
