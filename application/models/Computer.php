@@ -274,13 +274,13 @@ class Model_Computer extends Model_ComputerOrGroup
                             'softwares',
                             $select->getAdapter()->quoteInto(
                                 'hardware.id = softwares.hardware_id AND softwares.name = ?',
-                                $search
+                                $arg
                             ),
                             array ('software_version' => 'version')
                         );
                     break;
                 case 'MemberOf':
-                    // $search is expected to be a Model_Group object.
+                    // $arg is expected to be a Model_Group object.
                     $arg->update();
 
                     $select
