@@ -99,8 +99,10 @@ class Model_AssociatedPackage extends Model_ChildObject
      */
     public function getTableName()
     {
-        throw (new ErrorException(
-            'getTableName() can not be called on Model_AssociatedPackage')
+        throw (
+            new ErrorException(
+                'getTableName() can not be called on Model_AssociatedPackage'
+            )
         );
     }
 

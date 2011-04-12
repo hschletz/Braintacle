@@ -35,10 +35,12 @@ class LoginController extends Zend_Controller_Action
 
     public function getForm()
     {
-        return new Form_Login(array(
-        'action' => 'login/login',
-        'method' => 'post',
-        ));
+        return new Form_Login(
+            array(
+                'action' => 'login/login',
+                'method' => 'post',
+            )
+        );
     }
 
     public function getAuthAdapter($credentials)

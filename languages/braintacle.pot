@@ -25,11 +25,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-03 13:14+0200\n"
+"POT-Creation-Date: 2011-04-12 10:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -95,7 +94,7 @@ msgstr ""
 msgid "Group '%s' could not be deleted."
 msgstr ""
 
-#: controllers/LoginController.php:97
+#: controllers/LoginController.php:99
 msgid "Invalid username or password"
 msgstr ""
 
