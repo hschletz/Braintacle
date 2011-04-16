@@ -102,11 +102,33 @@ sub _build_group_cache{
   my $row = $get_request->fetchrow_hashref();
   # legacy: one request per group
   if($row->{'REQUEST'} ne '' and $row->{'REQUEST'} ne 'NULL' ){
-    my $group_request = $dbh_sl->prepare( $row->{'REQUEST'} );
-    if($group_request->execute()){
-      # Deleting the current cache
-      $dbh->do($delete_cache, {}, $group_id);
-      # Build the cache
+    # This implementation is specific to the Braintacle port. It has 2
+    # advantages over the original implementation:
+    # - Only differences to the previous memberships are written to the
+    #   database, instead of deleting and rebuilding all memberships
+    #   unconditionally. This reduces write activity on the database and can
+    #   significantly improve performance, especially in conjunction with
+    #   optimized requests.
+    # - The original implementation ignores constraint violations which happen
+    #   when trying to insert a hardware_id/group_id combination ID for which
+    #   static inclusions or exclusions are defined. MySQL seems to tolerate
+    #   this, but PostgreSQL aborts the entire transaction in this case.
+
+    my $criteria = $row->{'REQUEST'};
+
+    # Delete computers from the cache which no longer meet the criteria
+    $dbh->do(
+        "DELETE FROM groups_cache WHERE GROUP_ID=? AND STATIC=0 AND HARDWARE_ID NOT IN ($criteria)",
+        {},
+        $group_id
+    );
+
+    # Insert computers which meet the criteria and don't already have an
+    # entry in the cache.
+    my $group_request = $dbh_sl->prepare(
+      "SELECT ID FROM hardware WHERE ID IN ($criteria) AND ID NOT IN (SELECT HARDWARE_ID FROM groups_cache WHERE GROUP_ID=?)"
+    );
+    if($group_request->execute($group_id)){
       while( my @cache = $group_request->fetchrow_array() ){
         $build_cache->execute($group_id, $cache[0]);
         push @ids, $cache[0] ;
@@ -118,6 +140,8 @@ sub _build_group_cache{
   }
   # New behaviour : multiple requests for one group xml encoded
   elsif( $row->{'XMLDEF'} ne '' and $row->{'XMLDEF'} ne 'NULL' ){
+    # This implementation has not been changed yet. It may fail on certain
+    # circumstances, see comment above.
     my $xml = XML::Simple::XMLin($row->{'XMLDEF'}, ForceArray => ['REQUEST'] );
 
     for my $request (@{$xml->{REQUEST}}){
