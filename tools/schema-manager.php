@@ -355,6 +355,82 @@ if ($schema->db->getOption('use_transactions')) {
 print "Schema successfully updated.\n";
 
 
+// MDB2_Schema is not aware of MySQL's table engines and always uses the
+// configured default engine. The tables need to be converted manually.
+if ($mdb2->phptype == 'mysql') {
+    foreach ($mdb2->manager->listTables() as $table) {
+        switch ($table) {
+            case 'blacklist_macaddresses':
+            case 'blacklist_serials':
+            case 'braintacle_blacklist_assettags':
+            case 'config':
+            case 'deleted_equiv':
+            case 'deploy':
+            case 'devicetype':
+            case 'dico_ignored':
+            case 'dico_soft':
+            case 'download_affect_rules':
+            case 'download_servers':
+            case 'engine_persistent':
+            case 'files':
+            case 'groups':
+            case 'groups_cache':
+            case 'hardware_osname_cache':
+            case 'itmgmt_comments':
+            case 'network_devices':
+            case 'operators':
+            case 'regconfig':
+            case 'registry_name_cache':
+            case 'registry_regvalue_cache':
+            case 'softwares_name_cache':
+            case 'subnet':
+            case 'tags':
+                $engine = 'MyISAM';
+                break;
+            case 'accesslog':
+            case 'accountinfo':
+            case 'bios':
+            case 'controllers':
+            case 'devices':
+            case 'download_available':
+            case 'download_enable':
+            case 'download_history':
+            case 'drives':
+            case 'hardware':
+            case 'inputs':
+            case 'javainfo':
+            case 'memories':
+            case 'modems':
+            case 'monitors':
+            case 'netmap':
+            case 'networks':
+            case 'ports':
+            case 'printers':
+            case 'registry':
+            case 'slots':
+            case 'softwares':
+            case 'sounds':
+            case 'storages':
+            case 'videos':
+            case 'virtualmachines':
+                $engine = 'InnoDB';
+                break;
+            case 'conntrack':
+            case 'engine_mutex':
+            case 'locks':
+            case 'prolog_conntrack';
+                $engine = 'MEMORY';
+                break;
+            default:
+                $engine = null;
+                print "WARNING: No engine defined for table '$table'. Engine will not be changed.\n";
+        }
+        if ($engine) {
+            $mdb2->exec("ALTER TABLE $table ENGINE = $engine");
+        }
+    }
+}
+
 // Braintacle does not support cleartext passwords.
 // Old databases for which the password for the default 'admin' account has
 // never been changed may contain a cleartext password so that logging in would
