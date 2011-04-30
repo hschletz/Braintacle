@@ -112,7 +112,13 @@ class Model_Config
      */
     static function getOcsOptionName($option)
     {
-        return Model_Config::$optionMap[$option];
+        if (isset(self::$optionMap[$option])) {
+            return self::$optionMap[$option];
+        } else {
+            throw new UnexpectedValueException(
+                'Unknown option: ' . $option
+            );
+        }
     }
 
     /**
