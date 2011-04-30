@@ -161,10 +161,12 @@ if ($mdb2->phptype == 'mysql') {
             'accesslog',
             'blacklist_macaddresses',
             'blacklist_serials',
+            'blacklist_subnet',
             'controllers',
             'drives',
             'hardware',
             'inputs',
+            'journallog',
             'memories',
             'modems',
             'monitors',
@@ -173,6 +175,24 @@ if ($mdb2->phptype == 'mysql') {
             'printers',
             'registry',
             'slots',
+            'snmp_cards',
+            'snmp_cartridges',
+            'snmp_cpus',
+            'snmp_drives',
+            'snmp_fans',
+            'snmp_inputs',
+            'snmp_localprinters',
+            'snmp_memories',
+            'snmp_modems',
+            'snmp_networks',
+            'snmp_ports',
+            'snmp_powersupplies',
+            'snmp_softwares',
+            'snmp_sounds',
+            'snmp_storages',
+            'snmp_switchs',
+            'snmp_trays',
+            'snmp_videos',
             'softwares',
             'sounds',
             'storages',
@@ -202,10 +222,30 @@ if ($mdb2->phptype == 'mysql') {
         if (count($fields) > 1 or !isset($fields['id'])) {
             print 'Fixing primary key for table ' . $table . '...';
 
-            // The definition for 'virtualmachines' requires an extra constraint
+            // The definitions for some tables require an extra constraint
             // before the PK can be dropped.
-            if ($table == 'virtualmachines') {
-                $mdb2->manager->createConstraint($table, 'primary', $templateUnique);
+            switch ($table) {
+                case 'journallog':
+                case 'snmp_cards':
+                case 'snmp_cartridges':
+                case 'snmp_cpus':
+                case 'snmp_drives':
+                case 'snmp_fans':
+                case 'snmp_inputs':
+                case 'snmp_localprinters':
+                case 'snmp_memories':
+                case 'snmp_modems':
+                case 'snmp_networks':
+                case 'snmp_ports':
+                case 'snmp_powersupplies':
+                case 'snmp_softwares':
+                case 'snmp_sounds':
+                case 'snmp_storages':
+                case 'snmp_switchs':
+                case 'snmp_trays':
+                case 'snmp_videos':
+                case 'virtualmachines':
+                    $mdb2->manager->createConstraint($table, 'primary', $templateUnique);
             }
 
             // Drop the bad PK and create a new one.
