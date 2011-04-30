@@ -759,15 +759,18 @@ class Model_Package extends Model_Abstract
      * @param bool $deploySuccess Deploy to computers with status 'success'
      * @param bool $deployNotified Deploy to computers with status 'notified'
      * @param bool $deployError Deploy to computers with status 'error'
+     * @param bool $deployGroups Deploy to groups
      */
     public function updateComputers(
         Model_Package $oldPackage,
         $deployNonnotified,
         $deploySuccess,
         $deployNotified,
-        $deployError)
+        $deployError,
+        $deployGroups
+    )
     {
-        if (!($deployNonnotified or $deploySuccess or $deployNotified or $deployError)) {
+        if (!($deployNonnotified or $deploySuccess or $deployNotified or $deployError or $deployGroups)) {
             return; // nothing to do
         }
 
@@ -777,9 +780,9 @@ class Model_Package extends Model_Abstract
         );
 
         // Additional filters are only necessary if not all conditions are set
-        if (!($deployNonnotified and $deploySuccess and $deployNotified and $deployError)) {
+        if (!($deployNonnotified and $deploySuccess and $deployNotified and $deployError and $deployGroups)) {
             if ($deployNonnotified) {
-                $whereOr[] = 'tvalue IS NULL';
+                $whereOr[] = '(tvalue IS NULL AND hardware_id NOT IN (SELECT hardware_id FROM groups))';
             }
             if ($deploySuccess) {
                 $whereOr[] = 'tvalue=\'SUCCESS\'';
@@ -789,6 +792,9 @@ class Model_Package extends Model_Abstract
             }
             if ($deployError) {
                 $whereOr[] = 'tvalue LIKE \'ERR%\'';
+            }
+            if ($deployGroups) {
+                $whereOr[] = 'hardware_id IN (SELECT hardware_id FROM groups)';
             }
             $where['(' . implode(' OR ', $whereOr) . ')'] = null;
         }

@@ -25,10 +25,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-12 10:33+0200\n"
+"POT-Creation-Date: 2011-04-30 12:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -53,7 +54,8 @@ msgstr ""
 msgid "Duplicates"
 msgstr ""
 
-#: Bootstrap.php:63 views/helpers/InventoryHeader.php:139
+#: Bootstrap.php:63 forms/Package/Edit.php:66
+#: views/helpers/InventoryHeader.php:139
 msgid "Groups"
 msgstr ""
 
@@ -103,32 +105,32 @@ msgstr ""
 msgid "Could not retrieve data from package '%s'."
 msgstr ""
 
-#: controllers/PackageController.php:113
+#: controllers/PackageController.php:114
 #, php-format
 msgid "Package '%s' was successfully changed to '%s'."
 msgstr ""
 
-#: controllers/PackageController.php:121
+#: controllers/PackageController.php:122
 #, php-format
 msgid "Error changing Package '%s' to '%s':"
 msgstr ""
 
-#: controllers/PackageController.php:146
+#: controllers/PackageController.php:147
 #, php-format
 msgid "Package '%s' was successfully created."
 msgstr ""
 
-#: controllers/PackageController.php:153
+#: controllers/PackageController.php:154
 #, php-format
 msgid "Error creating Package '%s':"
 msgstr ""
 
-#: controllers/PackageController.php:181
+#: controllers/PackageController.php:182
 #, php-format
 msgid "Package '%s' was succesfully deleted."
 msgstr ""
 
-#: controllers/PackageController.php:186
+#: controllers/PackageController.php:187
 #, php-format
 msgid "Package '%s' could not be deleted."
 msgstr ""
@@ -316,7 +318,7 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: forms/Package/Edit.php:75
+#: forms/Package/Edit.php:81
 msgid "Deploy to computers which have existing package assigned"
 msgstr ""
 
@@ -668,22 +670,22 @@ msgstr ""
 msgid "Could not insert row into table '%1$s'. Message: %2$s"
 msgstr ""
 
-#: models/Package.php:832
+#: models/Package.php:837
 #, php-format
 msgid "Directory '%s' could not be deleted."
 msgstr ""
 
-#: models/Package.php:839
+#: models/Package.php:844
 #, php-format
 msgid "Directory '%s' does not exist."
 msgstr ""
 
-#: models/Package.php:971
+#: models/Package.php:976
 #, php-format
 msgid "Connection to <a href=\"%1$s\">%1$s</a> failed with Message: '%2$s'"
 msgstr ""
 
-#: models/Package.php:979
+#: models/Package.php:984
 #, php-format
 msgid ""
 "Connection to <a href=\"%1$s\">%1$s</a> failed with HTTP status code %2$d"

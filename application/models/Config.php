@@ -66,6 +66,7 @@ class Model_Config
         'DefaultDeploySuccess' => 'BRAINTACLE_DEFAULT_DEPLOY_SUCCESS',
         'DefaultDeployNotified' => 'BRAINTACLE_DEFAULT_DEPLOY_NOTIFIED',
         'DefaultDeployError' => 'BRAINTACLE_DEFAULT_DEPLOY_ERROR',
+        'DefaultDeployGroups' => 'BRAINTACLE_DEFAULT_DEPLOY_GROUPS',
         // Defaults for merging duplicates
         'DefaultMergeUserdefined' => 'BRAINTACLE_DEFAULT_MERGE_USERDEFINED',
         'DefaultMergeGroups' => 'BRAINTACLE_DEFAULT_MERGE_GROUPS',
@@ -98,6 +99,7 @@ class Model_Config
         'DefaultDeployError' => '1',
         'DefaultMergeUserdefined' => '1',
         'DefaultMergeGroups' => '1',
+        'DefaultDeployGroups' => '1',
         // Default for PackagePath is provided by getOption()
         'LockValidity' => 600,
         'TraceDeleted' => false,

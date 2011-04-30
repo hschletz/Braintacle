@@ -105,7 +105,8 @@ class PackageController extends Zend_Controller_Action
                     $form->getValue('DeployNonnotified'),
                     $form->getValue('DeploySuccess'),
                     $form->getValue('DeployNotified'),
-                    $form->getValue('DeployError')
+                    $form->getValue('DeployError'),
+                    $form->getValue('DeployGroups')
                 );
                 $this->_deletePackage($oldPackage);
                 $message = sprintf(

@@ -62,12 +62,18 @@ class Form_Package_Edit extends Form_Package
             ->setChecked(Model_Config::getOption('DefaultDeployError'));
         $this->addElement($deployError);
 
+        $deployGroups = new Zend_Form_Element_Checkbox('DeployGroups');
+        $deployGroups->setLabel('Groups')
+            ->setChecked(Model_Config::getOption('DefaultDeployGroups'));
+        $this->addElement($deployGroups);
+
         $this->addDisplayGroup(
             array(
                 'DeployNonnotified',
                 'DeploySuccess',
                 'DeployNotified',
                 'DeployError',
+                'DeployGroups',
             ),
             'Deploy'
         );
