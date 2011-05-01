@@ -932,6 +932,11 @@ class MDB2_Driver_Datatype_Common extends MDB2_Module_Common
     function _compareIntegerDefinition($current, $previous)
     {
         $change = array();
+        $previous_length = !empty($previous['length']) ? $previous['length'] : 4;
+        $length = !empty($current['length']) ? $current['length'] : 4;
+        if ($previous_length != $length) {
+            $change['length'] = $length;
+        }
         $previous_unsigned = !empty($previous['unsigned']) ? $previous['unsigned'] : false;
         $unsigned = !empty($current['unsigned']) ? $current['unsigned'] : false;
         if ($previous_unsigned != $unsigned) {

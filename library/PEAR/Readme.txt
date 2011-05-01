@@ -13,7 +13,7 @@ This directory contains all PEAR classes needed by Braintacle:
 - PEAR 1.9.2
 - MDB2_Schema 0.8.4
 - SVN snapshot (Rev. 303766) of
-  - MDB2 + patch for PEAR bug #16280
+  - MDB2 + patch for PEAR bugs #16280,#18494
   - MDB2_driver_pgsql
   - MDB2_driver_mysql + patches for PEAR bugs #16557,#18057
   - MDB2_driver_oci8
