@@ -127,7 +127,7 @@ function renderDate($view, $volume)
 {
     $date = $volume->getCreationDate();
     if ($date) {
-        return $view->escape($date);
+        return $view->escape($date->get(Zend_Date::DATE_MEDIUM));
     } else {
         return '&ndash;';
     }
