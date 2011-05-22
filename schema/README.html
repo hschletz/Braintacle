@@ -187,25 +187,6 @@ Some other valid defaults (like 0 for integers) have been removed because they d
 For example, if the application always explicitly sets a value for a particular column, we don't need a meaningless default.
 </p>
 
-<h2>Length constraints on multicolumn indexes and primary keys</h2>
-
-<p>
-<em>Affected tables:
-tags
-</em>
-</p>
-<p>
-MySQL has a limitation on index lengths which becomes relevant when they are managed by MDB2_Schema.
-As a workaround, only the first 166 characters are indexed for the affected columns to get around the 1000 byte limit.
-This should be more than enough in practice and only cause trouble if excessively long user names or tags are used.
-</p>
-<p>
-The maximum column length is left at its old value (typically 255) for compatibility.
-</p>
-<p>
-Other DBMS are not affected by this problem.
-</p>
-
 <h2>Other changes</h2>
 
 <p>
