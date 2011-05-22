@@ -1,5 +1,5 @@
 <!--
-Schema fragment for table files
+Schema fragment for table language
 
 $Id$
 
@@ -19,53 +19,35 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
+
  <table>
 
-  <name>files</name>
-
-  <description>
-  </description>
+  <name>languages</name>
 
   <declaration>
 
    <field>
     <name>name</name>
     <type>text</type>
-    <length>100</length>
     <notnull>true</notnull>
+    <length>60</length>
    </field>
 
    <field>
-    <name>version</name>
-    <type>text</type>
-    <length>50</length>
-    <notnull>true</notnull>
-   </field>
-
-   <field>
-    <name>os</name>
-    <type>text</type>
-    <length>70</length>
-    <notnull>true</notnull>
-   </field>
-
-   <field>
-    <name>content</name>
+    <name>img</name>
     <type>blob</type>
-    <notnull>true</notnull>
+   </field>
+
+   <field>
+    <name>json_value</name>
+    <type>clob</type>
    </field>
 
    <index>
-    <name>files_primary</name>
+    <name>languages_primary</name>
     <primary>true</primary>
     <field>
      <name>name</name>
-    </field>
-    <field>
-     <name>os</name>
-    </field>
-    <field>
-     <name>version</name>
     </field>
    </index>
 

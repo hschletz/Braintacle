@@ -1,0 +1,491 @@
+<!--
+Schema fragment for table downloadwk_fields
+
+$Id$
+
+Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+ <table>
+
+  <name>downloadwk_fields</name>
+
+  <declaration>
+
+   <field>
+    <name>tab</name>
+    <type>text</type>
+    <length>100</length>
+   </field>
+
+   <field>
+    <name>field</name>
+    <type>text</type>
+    <length>100</length>
+   </field>
+
+   <field>
+    <name>type</name>
+    <type>integer</type>
+    <length>4</length>
+   </field>
+
+   <field>
+    <name>lbl</name>
+    <type>text</type>
+    <length>100</length>
+   </field>
+
+   <field>
+    <name>must_completed</name>
+    <type>integer</type>
+    <length>4</length>
+   </field>
+
+   <field>
+    <name>id</name>
+    <type>integer</type>
+    <notnull>true</notnull>
+    <autoincrement>1</autoincrement>
+    <length>4</length>
+   </field>
+
+   <field>
+    <name>value</name>
+    <type>text</type>
+    <default></default>
+    <notnull>false</notnull>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>default_field</name>
+    <type>integer</type>
+    <default></default>
+    <notnull>false</notnull>
+    <length>4</length>
+   </field>
+
+   <field>
+    <name>restricted</name>
+    <type>integer</type>
+    <length>4</length>
+   </field>
+
+   <field>
+    <name>link_status</name>
+    <type>integer</type>
+    <length>4</length>
+   </field>
+
+  </declaration>
+
+  <initialization>
+
+   <insert>
+    <field>
+     <name>tab</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>field</name>
+     <value>USER</value>
+    </field>
+    <field>
+     <name>type</name>
+     <value>3</value>
+    </field>
+    <field>
+     <name>lbl</name>
+     <value>1038</value>
+    </field>
+    <field>
+     <name>must_completed</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>value</name>
+     <value>loggeduser</value>
+    </field>
+    <field>
+     <name>default_field</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>restricted</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>link_status</name>
+     <value>0</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>tab</name>
+     <value>2</value>
+    </field>
+    <field>
+     <name>field</name>
+     <value>NAME_TELEDEPLOY</value>
+    </field>
+    <field>
+     <name>type</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>lbl</name>
+     <value>1037</value>
+    </field>
+    <field>
+     <name>must_completed</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>value</name>
+     <value></value>
+    </field>
+    <field>
+     <name>default_field</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>restricted</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>link_status</name>
+     <value>0</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>tab</name>
+     <value>2</value>
+    </field>
+    <field>
+     <name>field</name>
+     <value>INFO_PACK</value>
+    </field>
+    <field>
+     <name>type</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>lbl</name>
+     <value>53</value>
+    </field>
+    <field>
+     <name>must_completed</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>value</name>
+     <value></value>
+    </field>
+    <field>
+     <name>default_field</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>restricted</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>link_status</name>
+     <value>0</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>tab</name>
+     <value>3</value>
+    </field>
+    <field>
+     <name>field</name>
+     <value>PRIORITY</value>
+    </field>
+    <field>
+     <name>type</name>
+     <value>2</value>
+    </field>
+    <field>
+     <name>lbl</name>
+     <value>1039</value>
+    </field>
+    <field>
+     <name>must_completed</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>value</name>
+     <value></value>
+    </field>
+    <field>
+     <name>default_field</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>restricted</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>link_status</name>
+     <value>0</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>tab</name>
+     <value>3</value>
+    </field>
+    <field>
+     <name>field</name>
+     <value>NOTIF_USER</value>
+    </field>
+    <field>
+     <name>type</name>
+     <value>2</value>
+    </field>
+    <field>
+     <name>lbl</name>
+     <value>1040</value>
+    </field>
+    <field>
+     <name>must_completed</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>value</name>
+     <value></value>
+    </field>
+    <field>
+     <name>default_field</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>restricted</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>link_status</name>
+     <value>0</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>tab</name>
+     <value>3</value>
+    </field>
+    <field>
+     <name>field</name>
+     <value>REPORT_USER</value>
+    </field>
+    <field>
+     <name>type</name>
+     <value>2</value>
+    </field>
+    <field>
+     <name>lbl</name>
+     <value>1041</value>
+    </field>
+    <field>
+     <name>must_completed</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>value</name>
+     <value></value>
+    </field>
+    <field>
+     <name>default_field</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>restricted</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>link_status</name>
+     <value>0</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>tab</name>
+     <value>3</value>
+    </field>
+    <field>
+     <name>field</name>
+     <value>REBOOT</value>
+    </field>
+    <field>
+     <name>type</name>
+     <value>2</value>
+    </field>
+    <field>
+     <name>lbl</name>
+     <value>1042</value>
+    </field>
+    <field>
+     <name>must_completed</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>value</name>
+     <value></value>
+    </field>
+    <field>
+     <name>default_field</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>restricted</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>link_status</name>
+     <value>0</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>tab</name>
+     <value>4</value>
+    </field>
+    <field>
+     <name>field</name>
+     <value>VALID_INSTALL</value>
+    </field>
+    <field>
+     <name>type</name>
+     <value>6</value>
+    </field>
+    <field>
+     <name>lbl</name>
+     <value>1043</value>
+    </field>
+    <field>
+     <name>must_completed</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>value</name>
+     <value></value>
+    </field>
+    <field>
+     <name>default_field</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>restricted</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>link_status</name>
+     <value>0</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>tab</name>
+     <value>4</value>
+    </field>
+    <field>
+     <name>field</name>
+     <value>STATUS</value>
+    </field>
+    <field>
+     <name>type</name>
+     <value>2</value>
+    </field>
+    <field>
+     <name>lbl</name>
+     <value>1046</value>
+    </field>
+    <field>
+     <name>must_completed</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>value</name>
+     <value>2</value>
+    </field>
+    <field>
+     <name>default_field</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>restricted</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>link_status</name>
+     <value>0</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>tab</name>
+     <value>5</value>
+    </field>
+    <field>
+     <name>field</name>
+     <value>LIST_HISTO</value>
+    </field>
+    <field>
+     <name>type</name>
+     <value>10</value>
+    </field>
+    <field>
+     <name>lbl</name>
+     <value>1052</value>
+    </field>
+    <field>
+     <name>must_completed</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>value</name>
+     <value>select AUTHOR,DATE,ACTION from downloadwk_history where id_dde=%s$$$$OLD_MODIF</value>
+    </field>
+    <field>
+     <name>default_field</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>restricted</name>
+     <value>0</value>
+    </field>
+    <field>
+     <name>link_status</name>
+     <value>0</value>
+    </field>
+   </insert>
+
+  </initialization>
+
+ </table>

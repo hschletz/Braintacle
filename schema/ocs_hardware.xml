@@ -209,7 +209,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
    <field>
     <name>checksum</name>
     <type>integer</type>
-    <length>4</length>
+    <length>8</length>
     <unsigned>true</unsigned>
     <default>262143</default>
    </field>
@@ -224,7 +224,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
    <field>
     <name>ipsrc</name>
     <type>text</type>
-    <length>15</length>
+    <length>255</length>
    </field>
 
    <field>

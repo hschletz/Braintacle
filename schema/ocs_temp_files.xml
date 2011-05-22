@@ -1,5 +1,5 @@
 <!--
-Schema fragment for table drives
+Schema fragment for table temp_files
 
 $Id$
 
@@ -21,88 +21,75 @@ this program; if not, write to the Free Software Foundation, Inc.,
 -->
  <table>
 
-  <name>drives</name>
-
-  <description>
-    A Machine's disk partitions, mapped network shares etc.
-  </description>
+  <name>temp_files</name>
 
   <declaration>
 
    <field>
     <name>id</name>
     <type>integer</type>
-    <length>4</length>
     <notnull>true</notnull>
     <autoincrement>1</autoincrement>
-   </field>
-
-   <field>
-    <name>hardware_id</name>
-    <type>integer</type>
     <length>4</length>
-    <notnull>true</notnull>
    </field>
 
    <field>
-    <name>letter</name>
+    <name>table_name</name>
     <type>text</type>
     <length>255</length>
    </field>
 
    <field>
-    <name>type</name>
+    <name>fields_name</name>
     <type>text</type>
     <length>255</length>
    </field>
 
    <field>
-    <name>filesystem</name>
+    <name>file</name>
+    <type>blob</type>
+   </field>
+
+   <field>
+    <name>comment</name>
+    <type>clob</type>
+   </field>
+
+   <field>
+    <name>author</name>
     <type>text</type>
     <length>255</length>
    </field>
 
    <field>
-    <name>total</name>
-    <type>integer</type>
-    <length>4</length>
-   </field>
-
-   <field>
-    <name>free</name>
-    <type>integer</type>
-    <length>4</length>
-   </field>
-
-   <field>
-    <name>numfiles</name>
-    <type>integer</type>
-    <length>4</length>
-   </field>
-
-   <field>
-    <name>volumn</name>
+    <name>file_name</name>
     <type>text</type>
     <length>255</length>
    </field>
 
    <field>
-    <name>createdate</name>
-    <type>date</type>
+    <name>file_type</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>file_size</name>
+    <type>integer</type>
+    <length>4</length>
+   </field>
+
+   <field>
+    <name>id_dde</name>
+    <type>integer</type>
+    <length>4</length>
    </field>
 
    <index>
-    <name>drives_primary</name>
+    <name>temp_files_primary</name>
     <primary>true</primary>
     <field>
      <name>id</name>
-    </field>
-   </index>
-
-   <index>
-    <name>drives_hardware_id</name>
-    <field>
-     <name>hardware_id</name>
     </field>
    </index>
 

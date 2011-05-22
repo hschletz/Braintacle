@@ -1,5 +1,5 @@
 <!--
-Schema fragment for table files
+Schema fragment for table snmp_switchinfos
 
 $Id$
 
@@ -19,53 +19,31 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
+
  <table>
 
-  <name>files</name>
-
-  <description>
-  </description>
+  <name>snmp_switchinfos</name>
 
   <declaration>
 
    <field>
-    <name>name</name>
-    <type>text</type>
-    <length>100</length>
+    <name>snmp_id</name>
+    <type>integer</type>
     <notnull>true</notnull>
+    <length>4</length>
    </field>
 
    <field>
-    <name>version</name>
+    <name>type</name>
     <type>text</type>
-    <length>50</length>
-    <notnull>true</notnull>
-   </field>
-
-   <field>
-    <name>os</name>
-    <type>text</type>
-    <length>70</length>
-    <notnull>true</notnull>
-   </field>
-
-   <field>
-    <name>content</name>
-    <type>blob</type>
-    <notnull>true</notnull>
+    <length>255</length>
    </field>
 
    <index>
-    <name>files_primary</name>
+    <name>snmp_switchinfos_primary</name>
     <primary>true</primary>
     <field>
-     <name>name</name>
-    </field>
-    <field>
-     <name>os</name>
-    </field>
-    <field>
-     <name>version</name>
+     <name>snmp_id</name>
     </field>
    </index>
 

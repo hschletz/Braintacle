@@ -31,17 +31,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
    <field>
     <name>tag</name>
     <type>text</type>
-    <length>255</length>
+    <length>100</length>
     <notnull>true</notnull>
-    <default></default>
    </field>
 
    <field>
     <name>login</name>
     <type>text</type>
-    <length>255</length>
+    <length>100</length>
     <notnull>true</notnull>
-    <default></default>
    </field>
 
    <index>

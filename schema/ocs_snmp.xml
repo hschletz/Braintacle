@@ -1,5 +1,5 @@
 <!--
-Schema fragment for table drives
+Schema fragment for table snmp
 
 $Id$
 
@@ -19,33 +19,73 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
+
  <table>
 
-  <name>drives</name>
-
-  <description>
-    A Machine's disk partitions, mapped network shares etc.
-  </description>
+  <name>snmp</name>
 
   <declaration>
 
    <field>
     <name>id</name>
     <type>integer</type>
-    <length>4</length>
     <notnull>true</notnull>
     <autoincrement>1</autoincrement>
-   </field>
-
-   <field>
-    <name>hardware_id</name>
-    <type>integer</type>
     <length>4</length>
-    <notnull>true</notnull>
    </field>
 
    <field>
-    <name>letter</name>
+    <name>ipaddr</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>macaddr</name>
+    <type>text</type>
+    <notnull>true</notnull>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>snmpdeviceid</name>
+    <type>text</type>
+    <notnull>true</notnull>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>name</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>description</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>contact</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>location</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>uptime</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>domain</name>
     <type>text</type>
     <length>255</length>
    </field>
@@ -57,54 +97,17 @@ this program; if not, write to the Free Software Foundation, Inc.,
    </field>
 
    <field>
-    <name>filesystem</name>
-    <type>text</type>
-    <length>255</length>
+    <name>lastdate</name>
+    <type>timestamp</type>
    </field>
 
    <field>
-    <name>total</name>
+    <name>checksum</name>
     <type>integer</type>
-    <length>4</length>
+    <default>0</default>
+    <unsigned>true</unsigned>
+    <length>8</length>
    </field>
-
-   <field>
-    <name>free</name>
-    <type>integer</type>
-    <length>4</length>
-   </field>
-
-   <field>
-    <name>numfiles</name>
-    <type>integer</type>
-    <length>4</length>
-   </field>
-
-   <field>
-    <name>volumn</name>
-    <type>text</type>
-    <length>255</length>
-   </field>
-
-   <field>
-    <name>createdate</name>
-    <type>date</type>
-   </field>
-
-   <index>
-    <name>drives_primary</name>
-    <primary>true</primary>
-    <field>
-     <name>id</name>
-    </field>
-   </index>
-
-   <index>
-    <name>drives_hardware_id</name>
-    <field>
-     <name>hardware_id</name>
-    </field>
-   </index>
 
   </declaration>
 

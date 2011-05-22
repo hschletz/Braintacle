@@ -1,5 +1,5 @@
 <!--
-Schema fragment for table drives
+Schema fragment for table snmp_videos
 
 $Id$
 
@@ -19,90 +19,38 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
+
  <table>
 
-  <name>drives</name>
-
-  <description>
-    A Machine's disk partitions, mapped network shares etc.
-  </description>
+  <name>snmp_videos</name>
 
   <declaration>
 
    <field>
     <name>id</name>
     <type>integer</type>
-    <length>4</length>
     <notnull>true</notnull>
     <autoincrement>1</autoincrement>
+    <length>4</length>
    </field>
 
    <field>
-    <name>hardware_id</name>
+    <name>snmp_id</name>
     <type>integer</type>
-    <length>4</length>
     <notnull>true</notnull>
-   </field>
-
-   <field>
-    <name>letter</name>
-    <type>text</type>
-    <length>255</length>
-   </field>
-
-   <field>
-    <name>type</name>
-    <type>text</type>
-    <length>255</length>
-   </field>
-
-   <field>
-    <name>filesystem</name>
-    <type>text</type>
-    <length>255</length>
-   </field>
-
-   <field>
-    <name>total</name>
-    <type>integer</type>
     <length>4</length>
    </field>
 
    <field>
-    <name>free</name>
-    <type>integer</type>
-    <length>4</length>
-   </field>
-
-   <field>
-    <name>numfiles</name>
-    <type>integer</type>
-    <length>4</length>
-   </field>
-
-   <field>
-    <name>volumn</name>
+    <name>name</name>
     <type>text</type>
     <length>255</length>
-   </field>
-
-   <field>
-    <name>createdate</name>
-    <type>date</type>
    </field>
 
    <index>
-    <name>drives_primary</name>
-    <primary>true</primary>
+    <name>snmp_videos_snmp_id</name>
     <field>
-     <name>id</name>
-    </field>
-   </index>
-
-   <index>
-    <name>drives_hardware_id</name>
-    <field>
-     <name>hardware_id</name>
+     <name>snmp_id</name>
     </field>
    </index>
 

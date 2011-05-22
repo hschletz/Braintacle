@@ -1,5 +1,5 @@
 <!--
-Schema fragment for table drives
+Schema fragment for table journallog
 
 $Id$
 
@@ -19,80 +19,61 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
- <table>
+  <table>
 
-  <name>drives</name>
-
-  <description>
-    A Machine's disk partitions, mapped network shares etc.
-  </description>
+  <name>journallog</name>
 
   <declaration>
 
    <field>
     <name>id</name>
     <type>integer</type>
-    <length>4</length>
     <notnull>true</notnull>
     <autoincrement>1</autoincrement>
+    <length>4</length>
    </field>
 
    <field>
     <name>hardware_id</name>
     <type>integer</type>
-    <length>4</length>
     <notnull>true</notnull>
-   </field>
-
-   <field>
-    <name>letter</name>
-    <type>text</type>
-    <length>255</length>
-   </field>
-
-   <field>
-    <name>type</name>
-    <type>text</type>
-    <length>255</length>
-   </field>
-
-   <field>
-    <name>filesystem</name>
-    <type>text</type>
-    <length>255</length>
-   </field>
-
-   <field>
-    <name>total</name>
-    <type>integer</type>
     <length>4</length>
    </field>
 
    <field>
-    <name>free</name>
-    <type>integer</type>
-    <length>4</length>
+    <name>journallog</name>
+    <type>clob</type>
    </field>
 
    <field>
-    <name>numfiles</name>
-    <type>integer</type>
-    <length>4</length>
+    <name>listenername</name>
+    <type>text</type>
+    <default>NONAME</default>
+    <length>255</length>
    </field>
 
    <field>
-    <name>volumn</name>
+    <name>date</name>
     <type>text</type>
     <length>255</length>
    </field>
 
    <field>
-    <name>createdate</name>
-    <type>date</type>
+    <name>status</name>
+    <type>integer</type>
+    <default>0</default>
+    <length>4</length>
+   </field>
+
+   <field>
+    <name>errorcode</name>
+    <type>integer</type>
+    <default>0</default>
+    <length>4</length>
    </field>
 
    <index>
-    <name>drives_primary</name>
+    <name>journallog_primary</name>
     <primary>true</primary>
     <field>
      <name>id</name>
@@ -100,7 +81,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
    </index>
 
    <index>
-    <name>drives_hardware_id</name>
+    <name>journallog_hardware_id</name>
     <field>
      <name>hardware_id</name>
     </field>

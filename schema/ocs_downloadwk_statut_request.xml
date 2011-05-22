@@ -1,0 +1,196 @@
+<!--
+Schema fragment for table downloadwk_statut_request
+
+$Id$
+
+Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+ <table>
+
+  <name>downloadwk_statut_request</name>
+
+  <declaration>
+
+   <field>
+    <name>id</name>
+    <type>integer</type>
+    <notnull>true</notnull>
+    <autoincrement>1</autoincrement>
+    <length>4</length>
+   </field>
+
+   <field>
+    <name>name</name>
+    <type>text</type>
+    <length>20</length>
+   </field>
+
+   <field>
+    <name>lbl</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>actif</name>
+    <type>integer</type>
+    <length>4</length>
+   </field>
+
+  </declaration>
+
+  <initialization>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>NIV0</value>
+    </field>
+    <field>
+     <name>lbl</name>
+     <value>DELETE</value>
+    </field>
+    <field>
+     <name>actif</name>
+     <value>0</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>NIV1</value>
+    </field>
+    <field>
+     <name>lbl</name>
+     <value>WAITING FOR INCLUSION</value>
+    </field>
+    <field>
+     <name>actif</name>
+     <value>0</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>NIV2</value>
+    </field>
+    <field>
+     <name>lbl</name>
+     <value>ACKNOWLEDGEMENT</value>
+    </field>
+    <field>
+     <name>actif</name>
+     <value>0</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>NIV3</value>
+    </field>
+    <field>
+     <name>lbl</name>
+     <value>REFUSAL</value>
+    </field>
+    <field>
+     <name>actif</name>
+     <value>0</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>NIV4</value>
+    </field>
+    <field>
+     <name>lbl</name>
+     <value>NEED TO CHANGE</value>
+    </field>
+    <field>
+     <name>actif</name>
+     <value>0</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>NIV5</value>
+    </field>
+    <field>
+     <name>lbl</name>
+     <value>CREATE PACKAGE</value>
+    </field>
+    <field>
+     <name>actif</name>
+     <value>0</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>NIV6</value>
+    </field>
+    <field>
+     <name>lbl</name>
+     <value>LOCAL TEST</value>
+    </field>
+    <field>
+     <name>actif</name>
+     <value>0</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>NIV7</value>
+    </field>
+    <field>
+     <name>lbl</name>
+     <value>PERIMETER LIMITED DEPLOYMENT</value>
+    </field>
+    <field>
+     <name>actif</name>
+     <value>0</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>NIV8</value>
+    </field>
+    <field>
+     <name>lbl</name>
+     <value>DURING DEPLOYMENT</value>
+    </field>
+    <field>
+     <name>actif</name>
+     <value>0</value>
+    </field>
+   </insert>
+
+  </initialization>
+
+ </table>
