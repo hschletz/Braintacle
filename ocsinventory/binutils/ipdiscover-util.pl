@@ -50,6 +50,8 @@ my $dbpwd = 'ocs';
 my $db = 'ocsweb';
 my $dbp = '5432';
 my $dbtype = 'OCS_DB_TYPE';
+my $dbsocket = '';
+
 #
 my %xml;
 my $ipdiscover;
@@ -85,6 +87,8 @@ for $option (@ARGV){
     $dbp = $1;
   }elsif($option=~/-list$/){
       $list = 1;
+  }elsif($option=~/-s=(\S+)/){
+    $dbsocket = $1;
   }elsif($option=~/-net=(\S+)/){
     die "Invalid subnet. Abort...\n" unless $1=~/^(\d{1,3}(?:\.\d{1,3}){3})$/;
     $net = 1;
@@ -107,7 +111,8 @@ Usage :
 -P=xxxx port (default 3306)
 -d=xxxx database name (default ocsweb)
 -u=xxxx user (default ocs)
--h=xxxx (default localhost)
+-h=xxxx host (default localhost)
+-s=xxxx socket (default from default mysql configuration)
 
 EOF
     die "Invalid options. Abort..\n";
@@ -132,7 +137,13 @@ my $date = localtime();
 #
 my $request;
 my $row;
-my $dbh = DBI->connect("DBI:$dbtype:database=$db;host=$dbhost;port=$dbp", $dbuser, $dbpwd, { 'AutoCommit' => 1, 'FetchHashKeyName' => 'NAME_uc' })
+my $dbparams = {};
+
+$dbparams->{'mysql_socket'} = $dbsocket if $dbsocket;
+$dbparams->{'AutoCommit'} = 1;
+$dbparams->{'FetchHashKeyName'} = 'NAME_uc';
+
+my $dbh = DBI->connect("DBI:$dbtype:database=$db;host=$dbhost;port=$dbp", $dbuser, $dbpwd, $dbparams)
  or die $!;
 
 #############################
