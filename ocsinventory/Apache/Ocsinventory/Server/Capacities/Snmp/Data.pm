@@ -7,7 +7,7 @@
 ## code is always made freely available.
 ## Please refer to the General Public Licence http://www.gnu.org/ or Licence.txt
 ################################################################################
-package Apache::Ocsinventory::Server::Inventory::Data;
+package Apache::Ocsinventory::Server::Capacities::Snmp::Data;
 
 use strict;
 
@@ -16,33 +16,34 @@ require Exporter;
 our @ISA = qw /Exporter/;
 
 our @EXPORT = qw / 
-  _init_map 
-  _get_bind_values 
-  _has_changed 
-  _get_parser_ForceArray 
+  _init_snmp_map 
+  _get_snmp_bind_values 
+  _get_snmp_parser_ForceArray 
+  _snmp_has_changed
 /;
 
+use Digest::MD5 qw(md5_base64);
 use Apache::Ocsinventory::Map;
 use Apache::Ocsinventory::Server::System qw / :server /;
 
-sub _init_map{
+#TODO: see if we can use a comman Data.pm for standard inventory and snmp inventory. Maybe a var for HARDWARE_ID and SNMp_ID and a common grep to select tables ?
+sub _init_snmp_map{
   my ($sectionsMeta, $sectionsList) = @_;
   my $section;
   my @bind_num;
   my $field;
   my $fields_string;
   my $field_index;
-
-  # Parse every section
+  
+  # Parse snmp sections only
   for $section (keys(%DATA_MAP)){
+    if ($DATA_MAP{$section}->{capacities} =~ /^snmp$/ ) {
     $field_index = 0;
     # Field array (from data_map field hash keys), filtered fields and cached fields
     $sectionsMeta->{$section}->{field_arrayref} = [];
     $sectionsMeta->{$section}->{field_filtered} = [];
     $sectionsMeta->{$section}->{field_cached} = {};
     ##############################################
-    #Don't process the sections that are use for capacities special inventory
-    next if $DATA_MAP{$section}->{capacities};
     # Don't process the non-auto-generated sections
     next if !$DATA_MAP{$section}->{auto};
     $sectionsMeta->{$section}->{multi} = 1 if $DATA_MAP{$section}->{multi};
@@ -51,7 +52,6 @@ sub _init_map{
     $sectionsMeta->{$section}->{writeDiff} = 1 if $DATA_MAP{$section}->{writeDiff};
     $sectionsMeta->{$section}->{cache} = 1 if $DATA_MAP{$section}->{cache};
     $sectionsMeta->{$section}->{mandatory} = 1 if $DATA_MAP{$section}->{mandatory};
-    $sectionsMeta->{$section}->{auto} = 1 if $DATA_MAP{$section}->{auto};
     $sectionsMeta->{$section}->{name} = $section;
     # $sectionsMeta->{$section}->{hasChanged} is set while inventory update
      
@@ -74,15 +74,14 @@ sub _init_map{
       if(defined $DATA_MAP{$section}->{fields}->{$field}->{fallback}){
         $sectionsMeta->{$section}->{fields}->{$field}->{fallback} = $DATA_MAP{$section}->{fields}->{$field}->{fallback};
       }
-
+      
       if(defined $DATA_MAP{$section}->{fields}->{$field}->{type}){
         $sectionsMeta->{$section}->{fields}->{$field}->{type} = $DATA_MAP{$section}->{fields}->{$field}->{type};
-      }     
- 
+      }
       $field_index++;      
     }
     # Build the "DBI->prepare" sql insert string 
-    $fields_string = join ',', ('HARDWARE_ID', @{$sectionsMeta->{$section}->{field_arrayref}});
+    $fields_string = join ',', ('SNMP_ID', @{$sectionsMeta->{$section}->{field_arrayref}});
     $sectionsMeta->{$section}->{sql_insert_string} = "INSERT INTO $section($fields_string) VALUES(";
     for(0..@{$sectionsMeta->{$section}->{field_arrayref}}){
       push @bind_num, '?';
@@ -92,26 +91,22 @@ sub _init_map{
     @bind_num = ();
     # Build the "DBI->prepare" sql select string 
     $sectionsMeta->{$section}->{sql_select_string} = "SELECT ID,$fields_string FROM $section 
-      WHERE HARDWARE_ID=? ORDER BY ".$DATA_MAP{$section}->{sortBy};
+      WHERE SNMP_ID=? ORDER BY ".$DATA_MAP{$section}->{sortBy};
     # Build the "DBI->prepare" sql deletion string 
-    $sectionsMeta->{$section}->{sql_delete_string} = "DELETE FROM $section WHERE HARDWARE_ID=? AND ID=?";
+    $sectionsMeta->{$section}->{sql_delete_string} = "DELETE FROM $section WHERE SNMP_ID=? AND ID=?";
     # to avoid many "keys"
     push @$sectionsList, $section;
   }
-
-  #Special treatment for hardware section
-  $sectionsMeta->{'hardware'} = &_get_hardware_fields; 
-  push @$sectionsList, 'hardware';
-
+  }
 }
 
-sub _get_bind_values{
+sub _get_snmp_bind_values{
   my ($refXml, $sectionMeta, $arrayToFeed) = @_;
-  
-  my ($bind_value, $xmlvalue, $xmlfield);
+
+  my $bind_value;
 
   for my $field ( @{ $sectionMeta->{field_arrayref} } ) {
-    if(defined($refXml->{$field}) && !defined($sectionMeta->{fields}->{$field}->{type}) && $refXml->{$field} ne '' && $refXml->{$field} ne '??' && $refXml->{$field}!~/^N\/?A$/) {
+    if(defined($refXml->{$field}) && $refXml->{$field} ne '' && $refXml->{$field} ne '??' && $refXml->{$field}!~/^N\/?A$/){
       $bind_value = $refXml->{$field}
     }
     else{
@@ -121,120 +116,56 @@ sub _get_bind_values{
        }
        else{
          &_log( 000, 'generic-fallback', "$field:".$sectionMeta->{fields}->{$field}->{fallback}) if $ENV{'OCS_OPT_LOGLEVEL'}>1;
-         $bind_value = undef;
+         $bind_value = '';
        }
     }
-
     # We have to substitute the value with the ID matching "type_section_field.name" if the field is tagged "type".
     # It allows to support different DB structures
-    if(defined $sectionMeta->{fields}->{$field}->{type}) {
-      $xmlfield = $field;
-      $xmlfield =~ s/_ID//g;    #We delete the _ID pattern to be in concordance with XML 
-
-      if(defined $sectionMeta->{fields}->{$field}->{fallback}) {
-        $bind_value = _get_type_id($sectionMeta->{name}, $xmlfield, $sectionMeta->{fields}->{$field}->{fallback} );
-        &_log( 000, 'fallback', "$field:".$sectionMeta->{fields}->{$field}->{fallback}) if $ENV{'OCS_OPT_LOGLEVEL'}>1;
-
-       } else {  #No fallback for this field
-        $xmlvalue = $refXml->{$xmlfield};
-        $bind_value = _get_type_id($sectionMeta->{name}, $xmlfield, $xmlvalue);
-      }
+    if( defined $sectionMeta->{fields}->{$field}->{type} ){
+      $bind_value = _get_type_id($sectionMeta->{name}, $field, $bind_value);
     }
-    push @$arrayToFeed, $bind_value;
-  }
-}
 
-sub _get_parser_ForceArray{
-  my $arrayRef = shift;
-  for my $section (keys(%DATA_MAP)){
-    unless ($DATA_MAP{$section}->{capacities}) {
-     # Feed the multilines section array in order to parse xml correctly
-     push @{ $arrayRef }, uc $section if $DATA_MAP{$section}->{multi};
+    if($ENV{'OCS_OPT_UNICODE_SUPPORT'}) {
+      my $utf8 = $bind_value;
+      utf8::decode($utf8);
+      push @$arrayToFeed, $utf8;
+    }
+    else {
+      push @$arrayToFeed, $bind_value;
     }
   }
 }
 
-sub _has_changed{
-  my $section = shift;
-  my $result = $Apache::Ocsinventory::CURRENT_CONTEXT{'XML_ENTRY'};
-  
+sub _snmp_has_changed{
+  my ($refXml,$XmlSection,$section,$snmpContext) = @_;
+
   # Don't use inventory diff if section mask is
   return 1 if $DATA_MAP{$section}->{mask}==0;
-   
-  # Check checksum to know if section has changed
-  if( defined($result->{CONTENT}->{HARDWARE}->{CHECKSUM}) ){
-    return $DATA_MAP{$section}->{mask} & $result->{CONTENT}->{HARDWARE}->{CHECKSUM};
+
+  my $md5_hash = md5_base64(XML::Simple::XMLout($refXml));
+
+  # Check laststate for this section from previous snmp inventory
+  my $laststate = $snmpContext->{'LASTSTATE'}->{$XmlSection};
+
+  if ( $laststate ne $md5_hash ) {
+        return(1);  #section has changed
   }
-  else{
-    &_log( 524, 'inventory', "$section (no checksum)") if $ENV{'OCS_OPT_LOGLEVEL'};
-    return 1;
-  }
+  return 0;
 }
 
-sub _get_type_id {
-#TODO: create it if needed
-# Type table structure
-# CREATE TABLE type_${section}_$field (
-#   ID INTEGER NOT NULL auto_increment,
-#   NAME VARCHAR(255))
-# ENGINE=INNODB, DEFAULT CHARSET=UTF8 ;
-# For migration, add the following line :
-# ALTER TABLE $section CHANGE COLUMN $field $field_ID INTEGER NOT NULL ;
+sub _get_snmp_parser_ForceArray{
+  my $arrayRef = shift ;
 
-  my ($section, $field, $value) = @_ ;
-  
-  my $dbh = $Apache::Ocsinventory::CURRENT_CONTEXT{'DBI_HANDLE'} ;
-  
-  my ($id, $existsReq, $createSql);
-
-  my $table_name = 'type_'.lc $section.'_'.lc $field ;
-
-  if ($value eq '') {  #Value from XML is empty 
-    $existsReq = $dbh->prepare("SELECT ID FROM $table_name WHERE NAME IS NULL") ;
-    $createSql = "INSERT INTO $table_name(NAME) VALUES(NULL)" ;
-    $existsReq->execute() ;
-  } else {
-    $existsReq = $dbh->prepare("SELECT ID FROM $table_name WHERE NAME=?") ;
-    $createSql = "INSERT INTO $table_name(NAME) VALUES(?)" ;
-    $existsReq->execute($value) ;
-  }
-
-  # It exists
-  if($existsReq->rows){
-    my $row = $existsReq->fetchrow_hashref() ;
-    $id = $row->{ID} ;
-  }
-  # It does not exist
-  else{
-
-    if ($value eq '') {
-      $dbh->do($createSql) && $existsReq->execute();
-    } else { 
-      $dbh->do($createSql, {}, $value) && $existsReq->execute($value);
-    }
-
-    my $row = $existsReq->fetchrow_hashref() ;
-    $id = $row->{ID} ;
-  }
-
-  return $id ;
-}
-
-sub _get_hardware_fields {
-  my $sectionMeta = {};
-  my $field;
-  my $field_index=0;  #Variable for feeding in _cache function
-
-  #We only get cache fields 
-  for $field ( keys(%{$DATA_MAP{'hardware'}->{fields}} ) ){
-
-    if($DATA_MAP{'hardware'}->{fields}->{$field}->{cache}){
-      next unless $ENV{OCS_OPT_INVENTORY_CACHE_ENABLED};
-      $sectionMeta->{field_cached}->{$field}=$field_index;
-      $field_index++;
+  for my $section (keys(%DATA_MAP)){
+    if ($DATA_MAP{$section}->{capacities} =~ /^snmp$/ ) {
+    # Feed the multilines section array in order to parse xml correctly
+      if ($DATA_MAP{$section}->{multi}) {
+        #We delete the snmp_ pattern to be in concordance with XML
+        $section =~ s/snmp_//g;    
+        push @$arrayRef, uc $section;
+      }
     }
   }
-  return $sectionMeta;
 }
 
 1;

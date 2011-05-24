@@ -26,6 +26,8 @@ use Apache::Ocsinventory::Server::Communication;
 use Apache::Ocsinventory::Server::System;
 use Apache::Ocsinventory::Server::Constants;
 
+use Apache::Ocsinventory::Server::Useragent qw / _get_useragent /;
+
 use constant IPD_NEVER => 0;
 use constant IPD_ON => 1;
 use constant IPD_MAN => 2;
@@ -141,12 +143,18 @@ sub _ipdiscover_main{
   my $lanToDiscover = $current_context->{'PARAMS'}{'IPDISCOVER'}->{'TVALUE'};
   my $behaviour     = $current_context->{'PARAMS'}{'IPDISCOVER'}->{'IVALUE'};
   my $groupsParams  = $current_context->{'PARAMS_G'};
-  
+
+  #Special array to define agents that could be automatic ipdscover elected
+  my @ipdiscover_agents = (
+    'OCS-NG_unified_unix_agent',
+    'OCS-NG_windows_client',
+    'OCS-NG_WINDOWS_AGENT',
+  );
+
   #IVALUE = 0 means that computer will not ever be elected
   if( defined($behaviour) && $behaviour == IPD_NEVER ){
     return 0;
   }
-  
   
   # We can use groups to prevent some computers to be elected
   if( $ENV{'OCS_OPT_ENABLE_GROUPS'} && $ENV{'OCS_OPT_IPDISCOVER_USE_GROUPS'} ){
@@ -167,7 +175,9 @@ sub _ipdiscover_main{
       return 1;
     }
   }else{
-    if($result->{CONTENT}->{HARDWARE}->{OSNAME}!~/xp|2000|linux|2003|vista/i){
+    my $useragent = &_get_useragent();
+
+    unless (grep /^($useragent->{'NAME'})$/, @ipdiscover_agents){
       return 0;
     }
     
@@ -270,7 +280,7 @@ sub _ipdiscover_find_iface{
   for(@$base){
     if($_->{DESCRIPTION}!~/ppp/i){
       if($_->{STATUS}=~/up/i){
-        if($_->{IPMASK}=~/^(?:255\.){2}/){
+        if($_->{IPMASK}=~/^(?:255\.){2}|^0x(?:ff){2}/){
           if($_->{IPSUBNET}=~/^(\d{1,3}(?:\.\d{1,3}){3})$/){
   
     # Looking for a need of ipdiscover
