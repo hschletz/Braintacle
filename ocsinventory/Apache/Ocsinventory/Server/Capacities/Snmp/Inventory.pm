@@ -214,7 +214,7 @@ sub _snmp_common{
  $dbh->do("UPDATE snmp SET IPADDR=".$dbh->quote($base->{IPADDR}).", 
   LASTDATE=CURRENT_TIMESTAMP,
   CHECKSUM=(".$base->{CHECKSUM}."|CHECKSUM|1),
-  MACADDR=".$dbh->quote(uc($base->{MACADDR}).",
+  MACADDR=".$dbh->quote(uc($base->{MACADDR})).",
   SNMPDEVICEID=".$dbh->quote($base->{SNMPDEVICEID}).",
   NAME=".$dbh->quote($base->{NAME}).",
   DESCRIPTION=".$dbh->quote($base->{DESCRIPTION}).",
