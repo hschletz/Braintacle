@@ -406,7 +406,31 @@ our %CONFIG = (
     description => 'Configure engine to try other compress algorythm than raw zlib',
     level => CANSKIP,
     filter => qr '^(1|0)$'
-  }
+  },
+  SNMP => {
+    type => 'IVALUE',
+    default => 1,
+    unit => 'NA',
+    description => 'Activate SNMP scans feature',
+    level => IMPORTANT,
+    filter => qr '^(1|0)$'
+  },
+  SNMP_INVENTORY_DIFF => { 
+    type => 'IVALUE',
+    default => 1,
+    unit => 'NA',
+    description => 'Configure engine to update snmp inventory regarding to snmp_laststate table (lower DB backend load)',
+    level => IMPORTANT,
+    filter => qr '^(1|0)$'
+  },
+  SUPPORT => { 
+    type => 'IVALUE',
+    default => 1,
+    unit => 'NA',
+    description => 'Support activation',
+    level => CANSKIP,
+    filter => qr '^(1|0)$'
+  },
 );
 
 sub get_settings{

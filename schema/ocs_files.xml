@@ -31,21 +31,21 @@ this program; if not, write to the Free Software Foundation, Inc.,
    <field>
     <name>name</name>
     <type>text</type>
-    <length>255</length>
+    <length>100</length>
     <notnull>true</notnull>
    </field>
 
    <field>
     <name>version</name>
     <type>text</type>
-    <length>255</length>
+    <length>50</length>
     <notnull>true</notnull>
    </field>
 
    <field>
     <name>os</name>
     <type>text</type>
-    <length>255</length>
+    <length>70</length>
     <notnull>true</notnull>
    </field>
 

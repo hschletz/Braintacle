@@ -387,7 +387,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
     </field>
     <field>
      <name>tvalue</name>
-     <value>5005</value>
+     <value>6004</value>
     </field>
     <field>
      <name>comments</name>
@@ -860,10 +860,108 @@ this program; if not, write to the Free Software Foundation, Inc.,
     </field>
    </insert>
 
+   <insert>
+    <field>
+     <name>name</name>
+     <value>TAB_ACCOUNTAG_1</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>tvalue</name>
+     <value>TAG</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Default TAB on computers accountinfo</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>TAB_ACCOUNTSNMP_1</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>tvalue</name>
+     <value>TAG</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Default TAB on snmp accountinfo</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>SNMP_INVENTORY_DIFF</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>1</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Configure engine to update snmp inventory regarding to snmp_laststate table (lower DB backend load)</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>SNMP_DIR</value>
+    </field>
+    <field>
+     <name>tvalue</name>
+     <value>/var/lib/ocsinventory-reports/snmp</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Directory for download files</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>INVENTORY_CACHE_REVALIDATE</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>7</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>the engine will clean the inventory cache structures</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>SESSION_VALIDITY_TIME</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>600</value>
+    </field>
+    <field>
+     <name>comments</name>
+     <value>Validity of a session (prolog=>postinventory)</value>
+    </field>
+   </insert>
+
    <update>
     <field>
      <name>tvalue</name>
-     <value>5005</value>
+     <value>6004</value>
     </field>
     <where>
      <expression>

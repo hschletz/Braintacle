@@ -32,7 +32,7 @@ sub _init_map{
   my $field;
   my $fields_string;
   my $field_index;
-  
+
   # Parse every section
   for $section (keys(%DATA_MAP)){
     $field_index = 0;
@@ -41,6 +41,8 @@ sub _init_map{
     $sectionsMeta->{$section}->{field_filtered} = [];
     $sectionsMeta->{$section}->{field_cached} = {};
     ##############################################
+    #Don't process the sections that are use for capacities special inventory
+    next if $DATA_MAP{$section}->{capacities};
     # Don't process the non-auto-generated sections
     next if !$DATA_MAP{$section}->{auto};
     $sectionsMeta->{$section}->{multi} = 1 if $DATA_MAP{$section}->{multi};
@@ -48,6 +50,8 @@ sub _init_map{
     $sectionsMeta->{$section}->{delOnReplace} = 1 if $DATA_MAP{$section}->{delOnReplace};
     $sectionsMeta->{$section}->{writeDiff} = 1 if $DATA_MAP{$section}->{writeDiff};
     $sectionsMeta->{$section}->{cache} = 1 if $DATA_MAP{$section}->{cache};
+    $sectionsMeta->{$section}->{mandatory} = 1 if $DATA_MAP{$section}->{mandatory};
+    $sectionsMeta->{$section}->{auto} = 1 if $DATA_MAP{$section}->{auto};
     $sectionsMeta->{$section}->{name} = $section;
     # $sectionsMeta->{$section}->{hasChanged} is set while inventory update
      
@@ -70,22 +74,15 @@ sub _init_map{
       if(defined $DATA_MAP{$section}->{fields}->{$field}->{fallback}){
         $sectionsMeta->{$section}->{fields}->{$field}->{fallback} = $DATA_MAP{$section}->{fields}->{$field}->{fallback};
       }
-      
+
       if(defined $DATA_MAP{$section}->{fields}->{$field}->{type}){
         $sectionsMeta->{$section}->{fields}->{$field}->{type} = $DATA_MAP{$section}->{fields}->{$field}->{type};
-      }
+      }     
+ 
       $field_index++;      
     }
     # Build the "DBI->prepare" sql insert string 
-    # We cannot use DBI::quote_identifier() because no connection has been made at this point.
-    # We have to fall back to this lame emulation.
-    my $quote;
-    if($ENV{'OCS_DB_TYPE'} eq 'mysql') {
-        $quote = '`';
-    } else {
-        $quote = '"';
-    }
-    $fields_string = lc($quote.(join "$quote,$quote", ('HARDWARE_ID', @{$sectionsMeta->{$section}->{field_arrayref}})).$quote);
+    $fields_string = join ',', ('HARDWARE_ID', @{$sectionsMeta->{$section}->{field_arrayref}});
     $sectionsMeta->{$section}->{sql_insert_string} = "INSERT INTO $section($fields_string) VALUES(";
     for(0..@{$sectionsMeta->{$section}->{field_arrayref}}){
       push @bind_num, '?';
@@ -101,15 +98,20 @@ sub _init_map{
     # to avoid many "keys"
     push @$sectionsList, $section;
   }
+
+  #Special treatment for hardware section
+  $sectionsMeta->{'hardware'} = &_get_hardware_fields; 
+  push @$sectionsList, 'hardware';
+
 }
 
 sub _get_bind_values{
   my ($refXml, $sectionMeta, $arrayToFeed) = @_;
   
-  my $bind_value;
+  my ($bind_value, $xmlvalue, $xmlfield);
 
   for my $field ( @{ $sectionMeta->{field_arrayref} } ) {
-    if(defined($refXml->{$field}) && $refXml->{$field} ne '' && $refXml->{$field} ne '??' && $refXml->{$field}!~/^N\/?A$/){
+    if(defined($refXml->{$field}) && !defined($sectionMeta->{fields}->{$field}->{type}) && $refXml->{$field} ne '' && $refXml->{$field} ne '??' && $refXml->{$field}!~/^N\/?A$/) {
       $bind_value = $refXml->{$field}
     }
     else{
@@ -122,28 +124,33 @@ sub _get_bind_values{
          $bind_value = undef;
        }
     }
+
     # We have to substitute the value with the ID matching "type_section_field.name" if the field is tagged "type".
     # It allows to support different DB structures
-    if( defined $sectionMeta->{fields}->{$field}->{type} ){
-      $bind_value = _get_type_id($sectionMeta->{name}, $field, $bind_value);
-    }
+    if(defined $sectionMeta->{fields}->{$field}->{type}) {
+      $xmlfield = $field;
+      $xmlfield =~ s/_ID//g;    #We delete the _ID pattern to be in concordance with XML 
 
-    if($ENV{'OCS_UNICODE_SUPPORT'}) {
-      my $utf8 = $bind_value;
-      utf8::decode($utf8);
-      push @$arrayToFeed, $utf8;
-       }
-    else {
-      push @$arrayToFeed, $bind_value;
+      if(defined $sectionMeta->{fields}->{$field}->{fallback}) {
+        $bind_value = _get_type_id($sectionMeta->{name}, $xmlfield, $sectionMeta->{fields}->{$field}->{fallback} );
+        &_log( 000, 'fallback', "$field:".$sectionMeta->{fields}->{$field}->{fallback}) if $ENV{'OCS_OPT_LOGLEVEL'}>1;
+
+       } else {  #No fallback for this field
+        $xmlvalue = $refXml->{$xmlfield};
+        $bind_value = _get_type_id($sectionMeta->{name}, $xmlfield, $xmlvalue);
+      }
     }
+    push @$arrayToFeed, $bind_value;
   }
 }
 
 sub _get_parser_ForceArray{
   my $arrayRef = shift;
   for my $section (keys(%DATA_MAP)){
-    # Feed the multilines section array in order to parse xml correctly
-    push @{ $arrayRef }, uc $section if $DATA_MAP{$section}->{multi};
+    unless ($DATA_MAP{$section}->{capacities}) {
+     # Feed the multilines section array in order to parse xml correctly
+     push @{ $arrayRef }, uc $section if $DATA_MAP{$section}->{multi};
+    }
   }
 }
 
@@ -170,22 +177,28 @@ sub _get_type_id {
 # CREATE TABLE type_${section}_$field (
 #   ID INTEGER NOT NULL auto_increment,
 #   NAME VARCHAR(255))
-# ENGINE=MyIsam, DEFAULT CHARSET=UTF8 ;
+# ENGINE=INNODB, DEFAULT CHARSET=UTF8 ;
 # For migration, add the following line :
-# ALTER TABLE $section CHANGE COLUMN $field $field ID INTEGER NOT NULL ;
+# ALTER TABLE $section CHANGE COLUMN $field $field_ID INTEGER NOT NULL ;
 
   my ($section, $field, $value) = @_ ;
   
   my $dbh = $Apache::Ocsinventory::CURRENT_CONTEXT{'DBI_HANDLE'} ;
   
-  my $id ;
+  my ($id, $existsReq, $createSql);
 
   my $table_name = 'type_'.lc $section.'_'.lc $field ;
 
-  my $existsReq = $dbh->prepare("SELECT ID FROM $table_name WHERE NAME=?") ;
-  my $createSql = "INSERT INTO $table_name(ID,NAME) VALUES(NULL,?)" ;
-  
-  $existsReq->execute($value) ;
+  if ($value eq '') {  #Value from XML is empty 
+    $existsReq = $dbh->prepare("SELECT ID FROM $table_name WHERE NAME IS NULL") ;
+    $createSql = "INSERT INTO $table_name(NAME) VALUES(NULL)" ;
+    $existsReq->execute() ;
+  } else {
+    $existsReq = $dbh->prepare("SELECT ID FROM $table_name WHERE NAME=?") ;
+    $createSql = "INSERT INTO $table_name(NAME) VALUES(?)" ;
+    $existsReq->execute($value) ;
+  }
+
   # It exists
   if($existsReq->rows){
     my $row = $existsReq->fetchrow_hashref() ;
@@ -193,12 +206,37 @@ sub _get_type_id {
   }
   # It does not exist
   else{
-    $dbh->do($createSql, {}, $value) && $existsReq->execute($value) ;
+
+    if ($value eq '') {
+      $dbh->do($createSql) && $existsReq->execute();
+    } else { 
+      $dbh->do($createSql, {}, $value) && $existsReq->execute($value);
+    }
+
     my $row = $existsReq->fetchrow_hashref() ;
     $id = $row->{ID} ;
   }
+
   return $id ;
 }
+
+sub _get_hardware_fields {
+  my $sectionMeta = {};
+  my $field;
+  my $field_index=0;  #Variable for feeding in _cache function
+
+  #We only get cache fields 
+  for $field ( keys(%{$DATA_MAP{'hardware'}->{fields}} ) ){
+
+    if($DATA_MAP{'hardware'}->{fields}->{$field}->{cache}){
+      next unless $ENV{OCS_OPT_INVENTORY_CACHE_ENABLED};
+      $sectionMeta->{field_cached}->{$field}=$field_index;
+      $field_index++;
+    }
+  }
+  return $sectionMeta;
+}
+
 1;
 
 

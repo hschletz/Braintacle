@@ -1,0 +1,169 @@
+<!--
+Schema fragment for table snmp_networks
+
+$Id$
+
+Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+ <table>
+
+  <name>snmp_networks</name>
+
+  <declaration>
+
+   <field>
+    <name>id</name>
+    <type>integer</type>
+    <notnull>true</notnull>
+    <autoincrement>1</autoincrement>
+    <length>4</length>
+   </field>
+
+   <field>
+    <name>snmp_id</name>
+    <type>integer</type>
+    <notnull>true</notnull>
+    <length>4</length>
+   </field>
+
+   <field>
+    <name>description</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>macaddr</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>devicemacaddr</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>slot</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>status</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>speed</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>type</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>deviceaddress</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>devicename</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>deviceport</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>devicetype</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>typemib</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>ipaddr</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>ipmask</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>ipgateway</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>ipsubnet</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>ipdhcp</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>driver</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>virtualdev</name>
+    <type>integer</type>
+    <default>0</default>
+    <notnull>true</notnull>
+    <length>4</length>
+   </field>
+
+   <index>
+    <name>snmp_networks_snmp_id</name>
+    <field>
+     <name>snmp_id</name>
+    </field>
+   </index>
+
+  </declaration>
+
+ </table>

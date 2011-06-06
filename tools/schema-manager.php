@@ -161,10 +161,12 @@ if ($mdb2->phptype == 'mysql') {
             'accesslog',
             'blacklist_macaddresses',
             'blacklist_serials',
+            'blacklist_subnet',
             'controllers',
             'drives',
             'hardware',
             'inputs',
+            'journallog',
             'memories',
             'modems',
             'monitors',
@@ -173,6 +175,24 @@ if ($mdb2->phptype == 'mysql') {
             'printers',
             'registry',
             'slots',
+            'snmp_cards',
+            'snmp_cartridges',
+            'snmp_cpus',
+            'snmp_drives',
+            'snmp_fans',
+            'snmp_inputs',
+            'snmp_localprinters',
+            'snmp_memories',
+            'snmp_modems',
+            'snmp_networks',
+            'snmp_ports',
+            'snmp_powersupplies',
+            'snmp_softwares',
+            'snmp_sounds',
+            'snmp_storages',
+            'snmp_switchs',
+            'snmp_trays',
+            'snmp_videos',
             'softwares',
             'sounds',
             'storages',
@@ -202,10 +222,30 @@ if ($mdb2->phptype == 'mysql') {
         if (count($fields) > 1 or !isset($fields['id'])) {
             print 'Fixing primary key for table ' . $table . '...';
 
-            // The definition for 'virtualmachines' requires an extra constraint
+            // The definitions for some tables require an extra constraint
             // before the PK can be dropped.
-            if ($table == 'virtualmachines') {
-                $mdb2->manager->createConstraint($table, 'primary', $templateUnique);
+            switch ($table) {
+                case 'journallog':
+                case 'snmp_cards':
+                case 'snmp_cartridges':
+                case 'snmp_cpus':
+                case 'snmp_drives':
+                case 'snmp_fans':
+                case 'snmp_inputs':
+                case 'snmp_localprinters':
+                case 'snmp_memories':
+                case 'snmp_modems':
+                case 'snmp_networks':
+                case 'snmp_ports':
+                case 'snmp_powersupplies':
+                case 'snmp_softwares':
+                case 'snmp_sounds':
+                case 'snmp_storages':
+                case 'snmp_switchs':
+                case 'snmp_trays':
+                case 'snmp_videos':
+                case 'virtualmachines':
+                    $mdb2->manager->createConstraint($table, 'primary', $templateUnique);
             }
 
             // Drop the bad PK and create a new one.
@@ -226,14 +266,16 @@ if (PEAR::isError($previousSchema)) {
 print " done\n";
 
 
-// The accountinfo table has a dynamic structure.
+// The accountinfo and snmp_accountinfo tables have a dynamic structure.
 // Only the static part is defined in the XML file.
 // The additional fields have to be preserved here.
-if (array_key_exists('accountinfo', $previousSchema['tables'])) {
-    $newSchema['tables']['accountinfo']['fields'] = array_merge(
-        $previousSchema['tables']['accountinfo']['fields'],
-        $newSchema['tables']['accountinfo']['fields']
-    );
+foreach (array('accountinfo', 'snmp_accountinfo') as $table) {
+    if (array_key_exists($table, $previousSchema['tables'])) {
+        $newSchema['tables'][$table]['fields'] = array_merge(
+            $previousSchema['tables'][$table]['fields'],
+            $newSchema['tables'][$table]['fields']
+        );
+    }
 }
 
 
@@ -278,6 +320,25 @@ foreach ($newSchema['tables'] as $name => $table) {
     // primary keys and single-column unique constraints. Furthermore we assume
     // only simple inserts. Complex inserts like insert/select will produce
     // unpredictable results!
+
+    // Some tables with autoincrement fields are initialized with static data.
+    // Autoincrement fields should not be set manually because this would clash
+    // with the internal increment counter. However, without a distinct value in
+    // the initialization data, there is no way to reliably identify a row.
+    // These tables will just be skipped here, i.e. they only get initialized
+    // upon creation. This also prevents possible problems when the automatically
+    // generated value is referenced inside the static initialization of a
+    // foreign table. The foreign key might be incorrect then if a referenced
+    // row has been inserted later.
+    if (
+        $name == 'accountinfo_config'
+        or $name == 'downloadwk_fields'
+        or $name == 'downloadwk_tab_values'
+        or $name == 'downloadwk_statut_request'
+    ) {
+        continue;
+    }
+
     $constraints = array();
     foreach ($schema->db->reverse->tableInfo($name) as $column) {
         if (strpos($column['flags'], 'primary_key') !== false
@@ -360,8 +421,10 @@ print "Schema successfully updated.\n";
 if ($mdb2->phptype == 'mysql') {
     foreach ($mdb2->manager->listTables() as $table) {
         switch ($table) {
+            case 'accountinfo_config':
             case 'blacklist_macaddresses':
             case 'blacklist_serials':
+            case 'blacklist_subnet':
             case 'braintacle_blacklist_assettags':
             case 'config':
             case 'deleted_equiv':
@@ -371,20 +434,55 @@ if ($mdb2->phptype == 'mysql') {
             case 'dico_soft':
             case 'download_affect_rules':
             case 'download_servers':
+            case 'downloadwk_conf_values':
+            case 'downloadwk_fields':
+            case 'downloadwk_history':
+            case 'downloadwk_pack':
+            case 'downloadwk_statut_request':
+            case 'downloadwk_tab_values':
             case 'engine_persistent':
             case 'files':
             case 'groups':
             case 'groups_cache':
             case 'hardware_osname_cache':
             case 'itmgmt_comments':
+            case 'languages':
             case 'network_devices':
             case 'operators':
             case 'regconfig':
             case 'registry_name_cache':
             case 'registry_regvalue_cache':
+            case 'snmp':
+            case 'snmp_blades':
+            case 'snmp_cards':
+            case 'snmp_cartridges':
+            case 'snmp_computers':
+            case 'snmp_cpus':
+            case 'snmp_drives':
+            case 'snmp_fans':
+            case 'snmp_firewalls':
+            case 'snmp_inputs':
+            case 'snmp_laststate':
+            case 'snmp_loadbalancers':
+            case 'snmp_localprinters':
+            case 'snmp_memories':
+            case 'snmp_modems':
+            case 'snmp_networks':
+            case 'snmp_ports':
+            case 'snmp_powersupplies':
+            case 'snmp_printers':
+            case 'snmp_softwares':
+            case 'snmp_sounds':
+            case 'snmp_storages':
+            case 'snmp_switchs':
+            case 'snmp_switchinfos':
+            case 'snmp_trays':
+            case 'snmp_videos':
             case 'softwares_name_cache':
+            case 'ssl_store':
             case 'subnet':
             case 'tags':
+            case 'temp_files':
                 $engine = 'MyISAM';
                 break;
             case 'accesslog':
@@ -399,6 +497,7 @@ if ($mdb2->phptype == 'mysql') {
             case 'hardware':
             case 'inputs':
             case 'javainfo':
+            case 'journallog':
             case 'memories':
             case 'modems':
             case 'monitors':
@@ -408,6 +507,7 @@ if ($mdb2->phptype == 'mysql') {
             case 'printers':
             case 'registry':
             case 'slots':
+            case 'snmp_accountinfo':
             case 'softwares':
             case 'sounds':
             case 'storages':

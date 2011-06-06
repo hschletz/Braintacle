@@ -92,9 +92,26 @@ this program; if not, write to the Free Software Foundation, Inc.,
    </field>
 
    <field>
-    <name>from</name>
+    <name>guid</name>
     <type>text</type>
-    <length>64</length>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>language</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>installdate</name>
+    <type>timestamp</type>
+   </field>
+
+   <field>
+    <name>bitswidth</name>
+    <type>integer</type>
+    <length>4</length>
    </field>
 
    <index>

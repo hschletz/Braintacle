@@ -27,7 +27,8 @@ BEGIN{
   }
 }
 
-$Apache::Ocsinventory::VERSION = '1.3';
+$Apache::Ocsinventory::VERSION = '2.0';
+$Apache::Ocsinventory::BUILD_VERSION = '675';
 $XML::Simple::PREFERRED_PARSER = 'XML::Parser';
 
 # Ocs modules
@@ -36,6 +37,7 @@ use Apache::Ocsinventory::Server::System qw /:server _modules_get_request_handle
 use Apache::Ocsinventory::Server::Communication;
 use Apache::Ocsinventory::Server::Inventory;
 use Apache::Ocsinventory::Server::Groups;
+use Apache::Ocsinventory::Server::Useragent;
 use Apache::Ocsinventory::Interface::Database;
 
 # To compress the tx and read the rx

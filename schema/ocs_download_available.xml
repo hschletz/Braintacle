@@ -76,6 +76,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
     <type>clob</type>
    </field>
 
+   <field>
+    <name>id_wk</name>
+    <type>integer</type>
+    <length>4</length>
+   </field>
+
    <index>
     <name>download_available_primary</name>
     <primary>true</primary>

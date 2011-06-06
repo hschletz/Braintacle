@@ -36,6 +36,7 @@ use Apache::Ocsinventory::Server::System(qw/
 /);
 
 use Apache::Ocsinventory::Server::Communication::Session;
+use Apache::Ocsinventory::Server::Support qw/_verify_certificate /;
 
 # Subroutine wich answer to client prolog
 sub _prolog{
@@ -50,11 +51,16 @@ sub _prolog{
   my $DeviceID = $Apache::Ocsinventory::CURRENT_CONTEXT{'DEVICEID'};
   my $dbh = $Apache::Ocsinventory::CURRENT_CONTEXT{'DBI_HANDLE'};
   my $info = $Apache::Ocsinventory::CURRENT_CONTEXT{'DETAILS'};
+
+  my $read = &_prolog_read();
    
-  if( &_prolog_read() == PROLOG_STOP ){
+  if( $read == PROLOG_STOP ){
     &_log(106,'prolog','stopped by module') if $ENV{'OCS_OPT_LOGLEVEL'};
     &_prolog_resp(PROLOG_RESP_BREAK);
     return APACHE_OK;
+  } elsif( $read == BAD_USERAGENT ) { 					#If we detect a wrong useragent
+    &_log(106,'prolog','stopped by module') if $ENV{'OCS_OPT_LOGLEVEL'};
+    return APACHE_BAD_REQUEST;
   }
 
   $frequency = $ENV{'OCS_OPT_FREQUENCY'};
@@ -154,7 +160,7 @@ sub _send_response{
 
   # Generate the response
   # Generation of xml message
-  $message = XML::Simple::XMLout( $response, RootName => 'REPLY', XMLDecl => "<?xml version='1.0' encoding='ISO-8859-1'?>",
+  $message = XML::Simple::XMLout( $response, RootName => 'REPLY', XMLDecl => "<?xml version='1.0' encoding='UTF-8'?>",
                    NoSort => 1, SuppressEmpty => undef);
   # send
   unless($inflated = &{$Apache::Ocsinventory::CURRENT_CONTEXT{'DEFLATE_SUB'}}( $message )){
@@ -224,16 +230,31 @@ sub _prolog_build_resp{
     last if $_ == 0;
     &$_(\%Apache::Ocsinventory::CURRENT_CONTEXT, $resp);
   }
+
+  if ($ENV{'OCS_OPT_SUPPORT'}) {
+    #We sent the OCS support log message to the agen
+    my $support_log = &_verify_certificate;
+    $resp->{'SUPPORT_LOG'} = [ $support_log ] if $support_log;  
+  }
+
   return 0;
 }
 
 sub _prolog_read{
   for(&_modules_get_prolog_readers()){
     last if $_==0;
-    if(&$_(\%Apache::Ocsinventory::CURRENT_CONTEXT)==PROLOG_STOP){
+    my $resp=&$_(\%Apache::Ocsinventory::CURRENT_CONTEXT);
+
+    if($resp==PROLOG_STOP){
       return PROLOG_STOP;
+    }
+
+    if($resp==BAD_USERAGENT){
+      return BAD_USERAGENT;
     }
   }
   return PROLOG_CONTINUE;
 }
 1;
+
+

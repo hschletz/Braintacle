@@ -45,6 +45,8 @@ PERL_BIN=`which perl 2>/dev/null`
 MAKE=`which make 2>/dev/null`
 # Where is located logrotate configuration directory
 LOGROTATE_CONF_DIR="/etc/logrotate.d"
+# Where is located newsyslog.conf 
+NEWSYSLOG_CONF_FILE="/etc/newsyslog.conf"
 # Where to store setup logs
 SETUP_LOG=`pwd`/ocs_server_setup.log
 # Communication Server Apache configuration file
@@ -62,8 +64,14 @@ ADM_SERVER_VAR_DIR="/var/lib/ocsinventory-reports"
 # Administration default packages directory and Apache alias
 ADM_SERVER_VAR_PACKAGES_DIR="download"
 ADM_SERVER_PACKAGES_ALIAS="/download"
+# Administration default snmp directory, Apache alias and SNMP communities file
+ADM_SERVER_VAR_SNMP_DIR="snmp"
+ADM_SERVER_SNMP_ALIAS="/snmp"
+ADM_SERVER_SNMPCOM_FILE="snmp_com.txt"
 # Administration console default ipdsicover-util.pl cache dir
 ADM_SERVER_VAR_IPD_DIR="ipd"
+# OS or linux distribution from automatic detection
+UNIX_DISTRIBUTION=""
 
 ###################### DO NOT MODIFY BELOW #######################
 
@@ -73,6 +81,24 @@ echo "+----------------------------------------------------------+"
 echo "|                                                          |"
 echo "| Welcome to OCS Inventory NG Management server setup !    |"
 echo "|                                                          |"
+echo "+----------------------------------------------------------+"
+echo
+# Check for OS or linux distribution
+echo "Trying to determine whitch OS or Linux distribution you use"
+
+if [ -f /etc/redhat-release ]
+then
+    UNIX_DISTRIBUTION="redhat"
+else
+    if [ -f /etc/debian_version ]
+    then
+	UNIX_DISTRIBUTION="debian"
+    fi
+fi
+
+# Check for Apache web server binaries
+echo "+----------------------------------------------------------+"
+echo "| Checking for Apache web server binaries !                |"
 echo "+----------------------------------------------------------+"
 echo
 echo "CAUTION: If upgrading Communication server from OCS Inventory NG 1.0 RC2 and"
@@ -650,6 +676,12 @@ then
     echo "+----------------------------------------------------------+"
     echo
     REQUIRED_PERL_MODULE_MISSING=0
+    DBI=0
+    APACHE_DBI=0
+    DBD_MYSQL=0
+    COMPRESS_ZLIB=0
+    XML_SIMPLE=0
+    NET_IP=0
     echo "Checking for DBI PERL module..."
     echo "Checking for DBI PERL module" >> $SETUP_LOG
     $PERL_BIN -mDBI -e 'print "PERL module DBI is available\n"' >> $SETUP_LOG 2>&1
@@ -657,6 +689,7 @@ then
     then
         echo "*** ERROR: PERL module DBI is not installed !"
         REQUIRED_PERL_MODULE_MISSING=1
+        DBI=1
     else
         echo "Found that PERL module DBI is available."
     fi
@@ -667,6 +700,7 @@ then
     then
         echo "*** ERROR: PERL module Apache::DBI is not installed !"
         REQUIRED_PERL_MODULE_MISSING=1
+        APACHE_DBI=1
     else
         echo "Found that PERL module Apache::DBI is available."
     fi
@@ -677,6 +711,7 @@ then
     then
         echo "*** ERROR: PERL module DBD::$DB_SERVER_TYPE is not installed !"
         REQUIRED_PERL_MODULE_MISSING=1
+        DBD_MYSQL=1
     else
         echo "Found that PERL module DBD::$DB_SERVER_TYPE is available."
     fi
@@ -687,6 +722,7 @@ then
     then
         echo "*** ERROR: PERL module Compress::Zlib is not installed !"
         REQUIRED_PERL_MODULE_MISSING=1
+        COMPRESS_ZLIB=1
     else
         echo "Found that PERL module Compress::Zlib is available."
     fi
@@ -697,6 +733,7 @@ then
     then
         echo "*** ERROR: PERL module XML::Simple is not installed !"
         REQUIRED_PERL_MODULE_MISSING=1
+        XML_SIMPLE=1
     else
         echo "Found that PERL module XML::Simple is available."
     fi
@@ -707,6 +744,7 @@ then
     then
         echo "*** ERROR: PERL module Net::IP is not installed !"
         REQUIRED_PERL_MODULE_MISSING=1
+        NET_IP=1
     else
         echo "Found that PERL module Net::IP is available."
     fi
@@ -714,10 +752,116 @@ then
     then
         echo "*** ERROR: There is one or more required PERL modules missing on your computer !"
         echo "Please, install missing PERL modules first."
-        echo "Installation aborted !"
-        echo "One or more required PERL modules missing !" >> $SETUP_LOG
-        echo "Installation aborted" >> $SETUP_LOG
-        exit 1
+        echo " "
+	echo "OCS setup.sh can install perl module from packages for you"
+	echo "The script will use the native package from your operating system like apt or rpm"
+	echo -n "Do you wish to continue (y/[n])?"
+	read ligne
+	if [ "$ligne" = "y" ] || [ "$ligne" = "Y" ]
+	then
+            case $UNIX_DISTRIBUTION in
+                 "redhat")
+                     echo "RedHat based automatic installation"
+                     if [ $DBI=1 ]
+                     then
+                         PACKAGE="$PACKAGE 'perl(DBI)'"
+                     fi
+                     if [ $APACHE_DBI=1 ]
+                     then
+                         PACKAGE="$PACKAGE 'perl(Apache-DBI)'"
+                     fi
+                     if [ $DBD_MYSQL=1 ]
+                     then
+                         PACKAGE="$PACKAGE 'perl(DBD-MySQL)'"
+                     fi
+                     if [ $COMPRESS_ZLIB=1 ]
+                     then
+                         PACKAGE="$PACKAGE 'perl(Compress-Zlib)'"
+                     fi
+                     if [ $XML_SIMPLE=1 ]
+                     then
+                         PACKAGE="$PACKAGE 'perl(XML-Simple)'"
+                     fi
+                     if [ $NET_IP=1 ]
+                     then
+                         PACKAGE="$PACKAGE 'perl(Net-IP)'"
+                     fi
+                     yum update
+                     yum install $PACKAGE
+                     if [ $? != 0 ]
+                     then
+                         echo "Installation aborted !"
+			 echo "Installation script encounter problems to install packages !"
+                         echo "One or more required PERL modules missing !" >> $SETUP_LOG
+                         echo "Installation aborted" >> $SETUP_LOG
+                         exit 1
+		     fi
+                     echo "All packages have been installed on this computer"
+                     ;;
+
+	         "debian") 
+		     if [ -f /usr/bin/apt-get ]
+    	             then
+	 	         echo "Debian based automatic installation"
+		         if [ $DBI=1 ]
+		         then
+ 			     PACKAGE="$PACKAGE libdbi-perl"
+		         fi
+		         if [ $APACHE_DBI=1 ]
+		         then
+			     PACKAGE="$PACKAGE libapache-dbi-perl"
+		         fi
+		         if [ $DBD_MYSQL=1 ]
+		         then
+			     PACKAGE="$PACKAGE libdbd-mysql-perl"
+		         fi
+		         if [ $COMPRESS_ZLIB=1 ]
+		         then
+                	     PACKAGE="$PACKAGE libcompress-zlib-perl"
+		         fi
+		         if [ $XML_SIMPLE=1 ]
+		         then
+                	     PACKAGE="$PACKAGE libxml-simple-perl"
+		         fi
+                         if [ $NET_IP=1 ]
+                         then
+                	     PACKAGE="$PACKAGE libnet-ip-perl"
+		         fi
+		         apt-get update
+		         apt-get install $PACKAGE
+		         if [ $? != 0 ]
+		         then
+			     echo "Installation aborted !"
+			     echo "Installation script encounter problems to install packages !"
+			     echo "One or more required PERL modules missing !" >> $SETUP_LOG
+            		     echo "Installation aborted" >> $SETUP_LOG
+            		     exit 1
+		        fi
+                        echo "All packages have been installed on this computer"
+                     else
+			 echo "Installation aborted !"
+			 echo "Installation script cannot run apt-get utility !"
+			 echo "One or more required PERL modules missing !" >> $SETUP_LOG
+            		 echo "Installation aborted" >> $SETUP_LOG
+            		 exit 1
+                     fi
+                 ;;
+
+                 *) 
+                     echo "Installation aborted !"
+                     echo "Installation script cannot find missing packages for your distribution"
+                     echo "One or more required PERL modules missing !" >> $SETUP_LOG
+                     echo "Installation aborted" >> $SETUP_LOG
+            	     exit 1
+                 ;; 
+            esac 
+        else
+            echo "Installation aborted !"
+            echo "Please, install missing PERL modules first."
+            echo "One or more required PERL modules missing !" >> $SETUP_LOG
+            echo "Installation aborted" >> $SETUP_LOG
+            exit 1
+        fi
     fi
 
     # Check for optional Perl Modules
@@ -876,26 +1020,35 @@ then
         echo "Installation aborted !"
         exit 1
     fi
-    echo "Configuring logrotate for Communication server."
-    echo "Configuring logrotate (ed logrotate.ocsinventory-NG)" >> $SETUP_LOG
-pwd
-    cp etc/logrotate.d/$COM_SERVER_LOGROTATE_CONF_FILE logrotate.$COM_SERVER_LOGROTATE_CONF_FILE.local
-    $PERL_BIN -pi -e "s#PATH_TO_LOG_DIRECTORY#$OCS_COM_SRV_LOG#g" logrotate.$COM_SERVER_LOGROTATE_CONF_FILE.local
-    echo "******** Begin updated logrotate.$COM_SERVER_LOGROTATE_CONF_FILE.local ***********" >> $SETUP_LOG
-    cat logrotate.$COM_SERVER_LOGROTATE_CONF_FILE.local >> $SETUP_LOG
-    echo "******** End updated logrotate.COM_SERVER_LOGROTATE_CONF_FILE.local ***********" >> $SETUP_LOG
-    echo "Removing old communication server logrotate file $LOGROTATE_CONF_DIR/ocsinventory-NG"
-    echo "Removing old communication server logrotate file $LOGROTATE_CONF_DIR/ocsinventory-NG" >> $SETUP_LOG
-    rm -f "$LOGROTATE_CONF_DIR/ocsinventory-NG"
-    echo "Writing communication server logrotate to file $LOGROTATE_CONF_DIR/$COM_SERVER_LOGROTATE_CONF_FILE"
-    echo "Writing communication server logrotate to file $LOGROTATE_CONF_DIR/$COM_SERVER_LOGROTATE_CONF_FILE" >> $SETUP_LOG
-    cp -f logrotate.$COM_SERVER_LOGROTATE_CONF_FILE.local $LOGROTATE_CONF_DIR/$COM_SERVER_LOGROTATE_CONF_FILE >> $SETUP_LOG 2>&1
-    if [ $? -ne 0 ]
+    # Log rotation, BSD style
+    if [ -f $NEWSYSLOG_CONF_FILE ]
     then
-        echo "*** ERROR: Unable to configure log rotation, please look at error in $SETUP_LOG and fix !"
-        echo
-        echo "Installation aborted !"
-        exit 1
+        echo "*** WARNING Please configure log rotation for files in $OCS_COM_SRV_LOG"
+    fi
+
+    # Log rotation, Linux flavor
+    if [ -d $LOGROTATE_CONF_DIR ]
+    then
+        echo "Configuring logrotate for Communication server."
+        echo "Configuring logrotate (ed logrotate.ocsinventory-NG)" >> $SETUP_LOG
+        cp etc/logrotate.d/$COM_SERVER_LOGROTATE_CONF_FILE logrotate.$COM_SERVER_LOGROTATE_CONF_FILE.local
+        $PERL_BIN -pi -e "s#PATH_TO_LOG_DIRECTORY#$OCS_COM_SRV_LOG#g" logrotate.$COM_SERVER_LOGROTATE_CONF_FILE.local
+        echo "******** Begin updated logrotate.$COM_SERVER_LOGROTATE_CONF_FILE.local ***********" >> $SETUP_LOG
+        cat logrotate.$COM_SERVER_LOGROTATE_CONF_FILE.local >> $SETUP_LOG
+        echo "******** End updated logrotate.COM_SERVER_LOGROTATE_CONF_FILE.local ***********" >> $SETUP_LOG
+        echo "Removing old communication server logrotate file $LOGROTATE_CONF_DIR/ocsinventory-NG"
+        echo "Removing old communication server logrotate file $LOGROTATE_CONF_DIR/ocsinventory-NG" >> $SETUP_LOG
+        rm -f "$LOGROTATE_CONF_DIR/ocsinventory-NG"
+        echo "Writing communication server logrotate to file $LOGROTATE_CONF_DIR/$COM_SERVER_LOGROTATE_CONF_FILE"
+        echo "Writing communication server logrotate to file $LOGROTATE_CONF_DIR/$COM_SERVER_LOGROTATE_CONF_FILE" >> $SETUP_LOG
+        cp -f logrotate.$COM_SERVER_LOGROTATE_CONF_FILE.local $LOGROTATE_CONF_DIR/$COM_SERVER_LOGROTATE_CONF_FILE >> $SETUP_LOG 2>&1
+        if [ $? -ne 0 ]
+        then
+            echo "*** ERROR: Unable to configure log rotation, please look at error in $SETUP_LOG and fix !"
+            echo
+            echo "Installation aborted !"
+            exit 1
+        fi
     fi
     echo
     
@@ -1021,8 +1174,8 @@ then
     echo "OK, using directory $ADM_SERVER_STATIC_DIR to install static files ;-)"
     echo "Using directory $ADM_SERVER_STATIC_DIR for static files" >> $SETUP_LOG
 
-    echo "Where to create writable/cache directories for deployement packages and"
-    echo -n "IPDiscover [$ADM_SERVER_VAR_DIR] ?"
+    echo "Where to create writable/cache directories for deployement packages,"
+    echo -n "IPDiscover and SNMP [$ADM_SERVER_VAR_DIR] ?"
     read ligne
     if test -z $ligne
     then
@@ -1247,8 +1400,8 @@ then
         echo "Installation aborted !"
         exit 1
     fi
-    # Set package area writable by root only
-    chmod -R go-w $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_PACKAGES_DIR >> $SETUP_LOG 2>&1
+    # Set package area writable by root and Apache group only
+    chmod -R g+w,o-w $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_PACKAGES_DIR >> $SETUP_LOG 2>&1
     if [ $? -ne 0 ]
     then
         echo "*** ERROR: Unable to set permissions on $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_PACKAGES_DIR, please look at error in $SETUP_LOG and fix !"
@@ -1256,16 +1409,73 @@ then
         echo "Installation aborted !"
         exit 1
     fi
-    # Set package area writable by Apache group
-    chmod g+w $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_PACKAGES_DIR >> $SETUP_LOG 2>&1
-    if [ $? -ne 0 ]
+    #Create directory for the snmp communities reference file 
+    echo "Creating packages directory $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_SNMP_DIR."
+    echo "Creating packages directory $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_SNMP_DIR" >> $SETUP_LOG
+    mkdir -p $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_SNMP_DIR >> $SETUP_LOG 2>&1
+    if [ $? != 0 ]
     then
-        echo "*** ERROR: Unable to set permissions on $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_PACKAGES_DIR, please look at error in $SETUP_LOG and fix !"
+        echo "*** ERROR: Unable to create ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_SNMP_DIR, please look at error in $SETUP_LOG and fix !"
         echo
         echo "Installation aborted !"
         exit 1
     fi
-    
+    echo "Fixing permissions on directory $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_SNMP_DIR."
+    echo "Fixing permissions on directory $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_SNMP_DIR" >> $SETUP_LOG
+    # Set snmp area owned by root, group Apache
+    chown -R root:$APACHE_GROUP $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_SNMP_DIR >> $SETUP_LOG 2>&1
+    if [ $? -ne 0 ]
+    then
+        echo "*** ERROR: Unable to set permissions on $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_SNMP_DIR, please look at error in $SETUP_LOG and fix !"
+        echo
+        echo "Installation aborted !"
+        exit 1
+    fi
+    # Set snmp area writable by root and Apache group only
+    chmod -R g+w,o-w $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_SNMP_DIR >> $SETUP_LOG 2>&1
+    if [ $? -ne 0 ]
+    then
+        echo "*** ERROR: Unable to set permissions on $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_SNMP_DIR, please look at error in $SETUP_LOG and fix !"
+        echo
+        echo "Installation aborted !"
+        exit 1
+    fi
+  
+    #Copying SNMP communities file if does not exists
+    if [ -d "$ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_SNMP_DIR" ]
+    then
+       if [ ! -f "$ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_SNMP_DIR/$ADM_SERVER_SNMPCOM_FILE" ]
+       then
+            echo "Configuring $ADM_SERVER_SNMPCOM_FILE file"
+            cp etc/ocsinventory/$ADM_SERVER_SNMPCOM_FILE $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_SNMP_DIR/$ADM_SERVER_SNMPCOM_FILE >> $SETUP_LOG 2>&1
+            if [ $? -ne 0 ]
+            then
+                 echo "*** ERROR: Unable to copy $ADM_SERVER_SNMPCOM_FILE into $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_SNMP_DIR/$ADM_SERVER_SNMPCOM_FILE directory"
+                 echo
+                 echo "Instalaltion aborted"
+                 exit 1
+            fi
+            #Setting owner and group for SNMP communities file 
+            chown -R root:$APACHE_GROUP $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_SNMP_DIR/$ADM_SERVER_SNMPCOM_FILE >> $SETUP_LOG 2>&1
+            if [ $? -ne 0 ]
+            then
+                 echo "*** ERROR: Unable to set permissions on $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_SNMP_DIR/$ADM_SERVER_SNMPCOM_FILE file, please look at error in $SETUP_LOG and fix !"
+                 echo
+                 echo "Installation aborted !"
+                 exit 1
+            fi
+            # Set SNMP communnities file writable by root and Apache group only
+            chmod -R g+w,o-w $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_SNMP_DIR/$ADM_SERVER_SNMPCOM_FILE >> $SETUP_LOG 2>&1
+            if [ $? -ne 0 ]
+            then
+                 echo "*** ERROR: Unable to set permissions on $ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_SNMP_DIR/$ADM_SERVER_SNMPCOM_FILE file , please look at error in $SETUP_LOG and fix !"
+                 echo
+                 echo "Installation aborted !"
+                 exit 1
+            fi 
+       fi
+    fi
+
     echo "Configuring IPDISCOVER-UTIL Perl script."
     echo "Configuring IPDISCOVER-UTIL Perl script (ed ipdiscover-util.pl)" >> $SETUP_LOG
     cp binutils/ipdiscover-util.pl ipdiscover-util.pl.local >> $SETUP_LOG 2>&1
@@ -1312,6 +1522,8 @@ then
     $PERL_BIN -pi -e "s#PATH_TO_IPD_DIR#$ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_IPD_DIR#g" $ADM_SERVER_APACHE_CONF_FILE.local
     $PERL_BIN -pi -e "s#PACKAGES_ALIAS#$ADM_SERVER_PACKAGES_ALIAS#g" $ADM_SERVER_APACHE_CONF_FILE.local
     $PERL_BIN -pi -e "s#PATH_TO_PACKAGES_DIR#$ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_PACKAGES_DIR#g" $ADM_SERVER_APACHE_CONF_FILE.local
+    $PERL_BIN -pi -e "s#SNMP_ALIAS#$ADM_SERVER_SNMP_ALIAS#g" $ADM_SERVER_APACHE_CONF_FILE.local
+    $PERL_BIN -pi -e "s#PATH_TO_SNMP_DIR#$ADM_SERVER_VAR_DIR/$ADM_SERVER_VAR_SNMP_DIR#g" $ADM_SERVER_APACHE_CONF_FILE.local
     echo "******** Begin updated $ADM_SERVER_APACHE_CONF_FILE.local ***********" >> $SETUP_LOG
     cat $ADM_SERVER_APACHE_CONF_FILE.local >> $SETUP_LOG
     echo "******** End updated $ADM_SERVER_APACHE_CONF_FILE.local ***********" >> $SETUP_LOG

@@ -166,7 +166,7 @@ if($_SESSION["debug"]==1)
 		echo "</a>";
 	}
 	echo "</td></tr>";
-	if( $fconf=@fopen("install.php","r") and $_SESSION["lvluser"] == 1)
+	if( $fconf=@fopen("install.php","r") and check_param($_SESSION, "lvluser") == 1)
 		echo "<tr><td colspan=200><center><font color=red><b>WARNING: <br>YOUR INSTALL.PHP EXIST IN OCS REPOSITORY</b></center></font></td></tr>";
 	
 	echo "</table>";
