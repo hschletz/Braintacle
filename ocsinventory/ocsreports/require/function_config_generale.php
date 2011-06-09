@@ -364,6 +364,7 @@ function update_default_value($POST){
 }
 
 function auto_duplicate_lvl_poids($value,$entree_sortie){
+        $check = null;
  	$poids['HOSTNAME']=1;
  	$poids['SERIAL']=2;
  	$poids['MACADRESSE']=4;
