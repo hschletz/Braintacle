@@ -339,6 +339,8 @@ class Model_Group extends Model_ComputerOrGroup
 
         // Insert computers which meet the criteria and don't already have an
         // entry in the cache (which might be dynamic, static or excluded).
+        // Also filter group IDs from criteria, i.e. only computers will show up
+        // in the cache.
         $newIds = $db
             ->select()
             ->from('hardware', array('id'))
@@ -347,6 +349,7 @@ class Model_Group extends Model_ComputerOrGroup
                 'id NOT IN (SELECT hardware_id FROM groups_cache WHERE group_id=?)',
                 $this->getId()
             )
+            ->where('id NOT IN (SELECT hardware_id FROM groups)')
             ->query();
         while ($computer = $newIds->fetchColumn()) {
             $db->insert(
