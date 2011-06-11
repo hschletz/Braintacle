@@ -416,10 +416,14 @@ if ($schema->db->getOption('use_transactions')) {
 print "Schema successfully updated.\n";
 
 
-// MDB2_Schema is not aware of MySQL's table engines and always uses the
-// configured default engine. The tables need to be converted manually.
+// Some extra tweaks for MySQL
 if ($mdb2->phptype == 'mysql') {
     foreach ($mdb2->manager->listTables() as $table) {
+        // Force UTF-8 for all tables to prevent charset conversion issues.
+        $mdb2->exec("ALTER TABLE $table CHARACTER SET utf8");
+
+        // MDB2_Schema is not aware of MySQL's table engines and always uses the
+        // configured default engine. The tables need to be converted manually.
         switch ($table) {
             case 'accountinfo_config':
             case 'blacklist_macaddresses':
