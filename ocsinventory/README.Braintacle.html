@@ -232,12 +232,14 @@ Log in to your database as superuser and do this:
 <p>
 <code>
 CREATE USER ocs WITH PASSWORD 'ocs';
-CREATE DATABASE ocsweb WITH OWNER ocs;
+CREATE DATABASE ocsweb OWNER ocs ENCODING 'UTF8';
 </code>
 </p>
 
 <p>
 This syntax is valid for PostgreSQL; other databases may have a different syntax.
+Using Unicode for the database is strongly recommended.
+Other encodings may work for the most part, but cause trouble under certain circumstances.
 </p>
 <p>
 Next, follow the <a href="http://wiki.ocsinventory-ng.org/index.php/Documentation:Server#Under_Linux_Operating_System.">instructions in the manual</a> with the following changes:
