@@ -376,11 +376,19 @@ For this reason, I have not implemented any and the only way to solve this probl
 <h2>Managing the database schema</h2>
 
 <p>
-Braintacle accesses the OCS Inventory database directly.
-If you are using Braintacle in addition to an unmodified version of OCS Inventory, you won't have to deal with its schema &ndash; OCS Inventory does all the necessary work.
+There are 2 use cases that require different methods for database management.
 </p>
+
+<h3>Using Braintacle in addition to an unmodified OCS Inventory installation</h3>
+
+<p>Use the OCS Inventory installer to manage the database.
+<strong>Do not use braintacle's schema manager.</strong>
+</p>
+
+<h3>Using Braintacle with its bundled OCS Inventory version</h3>
+
 <p>
-In addition, the schema can be created and updated with the script tools/schema-manager.php.
+Braintacle manages the database with the script tools/schema-manager.php.
 It uses <a href="http://pear.php.net/package/MDB2_Schema/">MDB2_Schema</a> for this task.
 </p>
 <p>
@@ -396,12 +404,14 @@ This schema is not fully compatible with the original version of OCS Inventory.
 Do not use Braintacle's schema-manager.php if you use an unmodified server.
 Manage the schema through the original console application instead.
 </strong>
+</p>
+<p>
 The modified version of OCS Inventory that comes bundled with Braintacle works with both schema types.
-Its installer uses the same schema as the schema manager script, so it's your choice which method to use.
+Its installer uses the same schema as the schema manager script, but does not do some extra tweaks that the schema manager does.
+Avoid using it. If you accidentally did so, run the schema manager to fix the database.
 </p>
 
-
-<h3>Creating the database</h3>
+<h4>Creating the database</h4>
 
 <p>
 Creation of the database itself and the database user and setting privileges does not happen automatically.
@@ -411,8 +421,12 @@ For example, the following commands would work for PostgreSQL:
 <p>
 <code>
 CREATE USER ocs WITH PASSWORD 'ocs';<br>
-CREATE DATABASE ocsweb WITH OWNER ocs;
+CREATE DATABASE ocsweb OWNER ocs ENCODING 'UTF8';
 </code>
+</p>
+<p>
+Using Unicode for the database is strongly recommended.
+Other encodings may work for the most part, but cause trouble under certain circumstances.
 </p>
 <p>
 Now run the schema manager to create and initialize the tables.
@@ -423,7 +437,7 @@ If unsure, use "production":
 <code>php tools/schema-manager.php production</code>
 </p>
 
-<h3>Updating the database</h3>
+<h4>Updating the database</h4>
 
 <p>
 When the schema has changed, just run the schema-manager again.
