@@ -527,7 +527,7 @@ class Model_Computer extends Model_ComputerOrGroup
      */
     public function isWindows()
     {
-        return (strpos($this->getOsName(), 'Windows') === 0);
+        return (stripos($this->getOcsAgent(), 'windows') !== false);
     }
 
     /**
