@@ -172,7 +172,7 @@ class ComputerController extends Zend_Controller_Action
 
     public function deleteAction()
     {
-        $form = new Form_YesNo;
+        $form = new Form_YesNo_DeleteComputer;
 
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($_POST)) {
@@ -181,7 +181,13 @@ class ComputerController extends Zend_Controller_Action
                     $session->setExpirationHops(1);
                     $session->computerName = $this->computer->getName();
 
-                    if ($this->computer->delete()) {
+                    if (
+                        $this->computer->delete(
+                            false,
+                            null,
+                            $form->getValue('DeleteInterfaces')
+                        )
+                    ) {
                         $session->success = true;
                         $session->message = $this->view->translate(
                             'Computer \'%s\' was successfully deleted.'

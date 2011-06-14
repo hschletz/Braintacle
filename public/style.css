@@ -286,6 +286,10 @@ input#WarnCountdown
 {
     display: none;
 }
+.yesbutton_not_inline #yes-label
+{
+    display: block;
+}
 .hint {
     text-align: right;
     color: red;

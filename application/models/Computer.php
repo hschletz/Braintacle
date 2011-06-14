@@ -786,9 +786,10 @@ class Model_Computer extends Model_ComputerOrGroup
      * Delete this computer and all associated child objects from the database
      * @param bool $reuseLock If this instance already has a lock, reuse it.
      * @param string $equivalent Inserted into deleted_equiv table if TraceDeleted is set.
+     * @param bool $deleteInterfaces Delete interfaces from network listing
      * @return bool Success
      */
-    public function delete($reuseLock=false, $equivalent=null)
+    public function delete($reuseLock=false, $equivalent=null, $deleteInterfaces=false)
     {
         // A lock is required
         if ((!$reuseLock or !$this->isLocked()) and !$this->lock()) {
@@ -825,6 +826,24 @@ class Model_Computer extends Model_ComputerOrGroup
         }
 
         try {
+            // If requested, delete this computer's network interfaces from the
+            // list of discovered interfaces. Also delete any manually entered
+            // description for these interfaces, if present.
+            if ($deleteInterfaces) {
+                $db->delete(
+                    'netmap',
+                    array(
+                        'mac IN (SELECT macaddr FROM networks WHERE hardware_id = ?)' => $id
+                    )
+                );
+                $db->delete(
+                    'network_devices',
+                    array(
+                        'macaddr IN (SELECT macaddr FROM networks WHERE hardware_id = ?)' => $id
+                    )
+                );
+            }
+
             // Delete rows from child tables
             foreach ($tables as $table) {
                 $db->delete($table, array('hardware_id=?' => $id));

@@ -71,6 +71,8 @@ class Model_Config
         'DefaultMergeUserdefined' => 'BRAINTACLE_DEFAULT_MERGE_USERDEFINED',
         'DefaultMergeGroups' => 'BRAINTACLE_DEFAULT_MERGE_GROUPS',
         'DefaultMergePackages' => 'BRAINTACLE_DEFAULT_MERGE_PACKAGES',
+        // Default for deleting interfaces together with a computer
+        'DefaultDeleteInterfaces' => 'BRAINTACLE_DEFAULT_DELETE_INTERFACES',
         // Should blacklisted software be displayed in computer and software inventory?
         'DisplayBlacklistedSoftware' => 'BRAINTACLE_DISPLAY_BLACKLISTED_SOFTWARE',
         // OCS options. The list is incomplete; only options used by Braintacle are listed.
@@ -100,6 +102,7 @@ class Model_Config
         'DefaultMergeUserdefined' => '1',
         'DefaultMergeGroups' => '1',
         'DefaultDeployGroups' => '1',
+        'DefaultDeleteInterfaces' => '1',
         // Default for PackagePath is provided by getOption()
         'LockValidity' => 600,
         'TraceDeleted' => false,

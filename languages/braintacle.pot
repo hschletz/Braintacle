@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-30 12:29+0200\n"
+"POT-Creation-Date: 2011-06-14 17:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -566,6 +566,10 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+#: forms/YesNo/DeleteComputer.php:41
+msgid "Delete interfaces from network listing"
+msgstr ""
+
 #: layouts/layout.phtml:87
 msgid "Logout"
 msgstr ""
@@ -670,22 +674,22 @@ msgstr ""
 msgid "Could not insert row into table '%1$s'. Message: %2$s"
 msgstr ""
 
-#: models/Package.php:837
+#: models/Package.php:838
 #, php-format
 msgid "Directory '%s' could not be deleted."
 msgstr ""
 
-#: models/Package.php:844
+#: models/Package.php:845
 #, php-format
 msgid "Directory '%s' does not exist."
 msgstr ""
 
-#: models/Package.php:976
+#: models/Package.php:977
 #, php-format
 msgid "Connection to <a href=\"%1$s\">%1$s</a> failed with Message: '%2$s'"
 msgstr ""
 
-#: models/Package.php:984
+#: models/Package.php:985
 #, php-format
 msgid ""
 "Connection to <a href=\"%1$s\">%1$s</a> failed with HTTP status code %2$d"
