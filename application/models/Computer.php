@@ -219,7 +219,8 @@ class Model_Computer extends Model_ComputerOrGroup
             ->where("deviceid != '_DOWNLOADGROUP_'")
             ->order(self::getOrder($order, $direction, $map));
         if (isset($fromBios)) {
-            $select->join('bios', 'hardware.id = bios.hardware_id', $fromBios);
+            // Use left join because there might be no matching row in the 'bios' table.
+            $select->joinLeft('bios', 'hardware.id = bios.hardware_id', $fromBios);
         }
 
         // apply filters
