@@ -155,7 +155,6 @@ if (in_array('--noextract', $_SERVER['argv'])) {
             unset($diff[$index]);
         }
     }
-//     print_r($diff);
     if (count($diff)) {
         $potFile = fopen($potFileName, 'w');
         if (!$potFile) {
