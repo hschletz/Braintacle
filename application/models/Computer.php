@@ -524,11 +524,26 @@ class Model_Computer extends Model_ComputerOrGroup
 
     /**
      * Check if this computer runs any version of Windows
+     *
+     * The OS type is not stored directly in the database. This method tries to
+     * determine it from different criteria (user agent, OS name).
      * @return bool
      */
     public function isWindows()
     {
-        return (stripos($this->getOcsAgent(), 'windows') !== false);
+        $agent = $this->getOcsAgent();
+
+        // Check for suitable user agent identifier.
+        if (stripos($agent, 'local') === false) {
+            // Inventory was submitted directly by agent.
+            // The agent identifier gives a reliable hint about OS type.
+            return (stripos($agent, 'windows') !== false);
+        } else {
+            // Inventory was created locally and then uploaded manually.
+            // The agent identifier ('OCS_local_nnnn') gives no clue about OS type.
+            // Guess the type from OS name and hope for the best.
+            return (strpos($this->getOsName(), 'Windows') === 0);
+        }
     }
 
     /**
