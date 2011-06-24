@@ -213,6 +213,17 @@ sub handler{
             $i++;
         }
     }
+    # Fix bad date strings for software entries
+    if ($query->{'CONTENT'}->{'SOFTWARES'}) {
+         my $i = 0;
+         while ($query->{'CONTENT'}->{'SOFTWARES'}[$i]) {
+             if ($query->{'CONTENT'}->{'SOFTWARES'}[$i]->{'INSTALLDATE'} !~ /^\d{4}\/\d{2}\/\d{2}$/) {
+		 $query->{'CONTENT'}->{'SOFTWARES'}[$i]->{'INSTALLDATE'} = undef;
+             }
+             $i++;
+         }
+    }
+    
     $CURRENT_CONTEXT{'XML_ENTRY'} = $query;
 
     # Get the request type
