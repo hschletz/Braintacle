@@ -973,7 +973,7 @@ class Model_Computer extends Model_ComputerOrGroup
                     'networks.hardware_id=hardware.id',
                     array('NetworkInterface_MacAddress' => 'macaddr')
                 )
-                ->join(
+                ->joinLeft(
                     'bios',
                     'bios.hardware_id=hardware.id',
                     array('ssn, assettag')
