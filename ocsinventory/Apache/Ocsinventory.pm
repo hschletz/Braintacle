@@ -44,6 +44,9 @@ use Apache::Ocsinventory::Interface::Database;
 use Compress::Zlib;
 use Encode;
 
+# For date input validation
+use Date::Calc qw(check_date);
+
 # Globale structure
 our %CURRENT_CONTEXT;
 our @XMLParseOptForceArray;# Obsolete, for 1.01 modules only
@@ -215,13 +218,24 @@ sub handler{
     }
     # Fix bad date strings for software entries
     if ($query->{'CONTENT'}->{'SOFTWARES'}) {
-         my $i = 0;
-         while ($query->{'CONTENT'}->{'SOFTWARES'}[$i]) {
-             if ($query->{'CONTENT'}->{'SOFTWARES'}[$i]->{'INSTALLDATE'} !~ /^\d{4}\/\d{2}\/\d{2}$/) {
-		 $query->{'CONTENT'}->{'SOFTWARES'}[$i]->{'INSTALLDATE'} = undef;
-             }
-             $i++;
-         }
+        my $i = 0;
+        while ($query->{'CONTENT'}->{'SOFTWARES'}[$i]) {
+            # Valid date strings must be YYYY/MM/DD
+            if ($query->{'CONTENT'}->{'SOFTWARES'}[$i]->{'INSTALLDATE'} =~ /^(\d\d\d\d)\/(\d\d)}\/(\d\d)}$/) {
+                # Since input can be a random string, additionally check if it realy constitutes a valid date.
+                if (check_date($1, $2, $3)) {
+                    # Convert to ISO format for maximum portability.
+                    $query->{'CONTENT'}->{'SOFTWARES'}[$i]->{'INSTALLDATE'} = "$1-$2-$3";
+                } else {
+                    # Syntax correct, but values out of range
+                    $query->{'CONTENT'}->{'SOFTWARES'}[$i]->{'INSTALLDATE'} = undef;
+                }
+            } else {
+                # Bad syntax.
+                $query->{'CONTENT'}->{'SOFTWARES'}[$i]->{'INSTALLDATE'} = undef;
+            }
+            $i++;
+        }
     }
     
     $CURRENT_CONTEXT{'XML_ENTRY'} = $query;

@@ -42,6 +42,7 @@ OCS Inventory NG Management Server needs the following components:
 - Perl module DBD::Mysql version 2.9004 or higher, or any other DBD module suitable for your database
 - Perl module Apache::DBI version 0.93 or higher
 - Perl module Net::IP version 1.21 or higher
+- Perl module Date::Calc
 - Perl module SOAP::Lite version 0.66 or higher, not required, used only with
   SOAP web service
 - Perl module XML::Entities version 0.02 or higher, not required, used only with
