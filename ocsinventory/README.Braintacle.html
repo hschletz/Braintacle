@@ -31,7 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 <h2>About this version of OCS inventory NG</h2>
 
 <p>
-This is a patched version of <a href="http://ocsinventory-ng.org">OCS inventory NG</a> 1.3.3 that uses a database abstraction layer for all database access, allowing to work with databases other than MySQL.
+This is a patched version of <a href="http://ocsinventory-ng.org">OCS inventory NG</a> 2.0/1.3.3 that uses a database abstraction layer for all database access, allowing to work with databases other than MySQL.
 </p>
 <p>
 <strong>
@@ -47,7 +47,7 @@ This version can be used standalone as well (i.e. you don't have to use Braintac
 <p>
 <strong>This version of the ocsreports console is deprecated.
 It will be maintained for important bugfixes, but no longer receive any major upgrades.</strong>
-Most notably, it will stick at version 1.3.x.
+Most notably, it will stick at version 1.3.3.
 Version 2.0 will not be ported.
 New features will be implemented in the Braintacle console only.
 </p>
@@ -174,7 +174,7 @@ In some cases support could be added once the issues are solved.
 <p>Beside the different database access methods, I made some further changes to the code:</p>
 <ul>
 <li>
-Some <a href="#schema-changes">"changes to the database schema"</a> were necessary for portability.
+Some <a href="#schema-changes">changes to the database schema</a> were necessary for portability.
 </li>
 <li>
 The default installation path for the administration console is /usr/local/share/ocsreports instead of /usr/share/ocsinventory-reports/ocsreports.
@@ -186,6 +186,10 @@ Missing english translations have been added.
 </li>
 <li>
 The workaround for <a href="https://bugs.launchpad.net/ocsinventory-windows-agent/+bug/530881">bug #530881</a> is included.
+</li>
+<li>
+The communication server uses a different method to calculate group memberships which helped around some serious performance and concurrency issues with PostgreSQL 8.1.
+Other versions and DBMS might benefit too.
 </li>
 <li>
 OCS Inventory NG introduced a caching feature in version 1.02.
