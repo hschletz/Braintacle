@@ -425,7 +425,7 @@ our %CONFIG = (
   },
   SUPPORT => { 
     type => 'IVALUE',
-    default => 1,
+    default => 0,
     unit => 'NA',
     description => 'Support activation',
     level => CANSKIP,
