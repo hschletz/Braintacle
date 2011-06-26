@@ -59,7 +59,7 @@ echo "<font color=red><b>".$l->g(767)."</b></font>";
 //transfert soft
 if(check_param ($_POST, 'TRANS') == "TRANS"){	
 	if (check_param($_POST, 'all_item') != ''){
-		$list_check=search_all_item($_POST['onglet'],$_POST['onglet_soft']);
+		$list_check=search_all_item($_POST['onglet'], check_param($_POST, 'onglet_soft'));
 	}else{
 		
 		foreach ($_POST as $key=>$value){
