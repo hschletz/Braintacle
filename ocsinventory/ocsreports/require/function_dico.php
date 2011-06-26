@@ -18,7 +18,7 @@ function del_soft($onglet,$list_soft){
 	$table="softwares";
 		
 	foreach ($list_soft as $softID) {
-		if (!ereg ("^[0-9]+$", $softID))
+		if (!preg_match("/^[0-9]+$/", $softID))
 			die ("Invalid input for \$list_soft");
 	}
 	$sql_soft_name="select distinct NAME from ".$table." where ID in (".implode(",",$list_soft).")";
@@ -34,7 +34,7 @@ function trans($onglet,$list_soft,$affect_type,$new_cat,$exist_cat){
 	global $l;
 
 	foreach ($list_soft as $softID) {
-		if (!ereg ("^[0-9]+$", $softID))
+		if (!preg_match("/^[0-9]+$/", $softID))
 			die ("Invalid input for \$list_soft");
 	}
 

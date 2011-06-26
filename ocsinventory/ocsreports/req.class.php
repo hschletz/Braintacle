@@ -190,7 +190,7 @@ class Req
 	}
 
 	function quote ($str) {
-		if (eregi ("^ *COUNT *\((.*)\) *$", $str, $results))
+		if (preg_match("/^ *COUNT *\((.*)\) *$/i", $str, $results))
 			return " COUNT(" . mdb2_quote_identifier ($results[1], $_SESSION["readServer"]) . ") ";
 		else
 			return mdb2_quote_identifier ($str, $_SESSION["readServer"]);

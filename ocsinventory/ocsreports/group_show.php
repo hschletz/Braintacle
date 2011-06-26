@@ -22,7 +22,7 @@ require('require/function_opt_param.php');
 require_once("preferences.php");
 if (isset($_GET['systemid'])) {
 	$systemid = $_GET['systemid'];
-	if (!ereg ("^[0-9]+$", $systemid))
+	if (!preg_match("/^[0-9]+$/", $systemid))
 	{
 		echo "Please Supply A System ID";
 		die();

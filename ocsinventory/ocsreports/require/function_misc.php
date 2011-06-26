@@ -39,6 +39,9 @@ function array_case_search($needle, $haystack)
 // If $re_forbidden is given, the value must not match.
 // $case_sensitive (default: true) determines whether these checks should be case sensitive.
 // If the value does not pass these checks, an error message is logged and the script dies. 
+// The regular expressions are evaluated by preg_match(), but the encapsulating
+// slashes are added by this function and must NOT be provided explicitly.
+// Slashes within the regular expression MUST be escaped.
 function check_param ($array, $name, $re_required=NULL, $re_forbidden=NULL, $case_sensitive = true)
 {
 	if (array_key_exists ($name, $array)) {
@@ -46,16 +49,11 @@ function check_param ($array, $name, $re_required=NULL, $re_forbidden=NULL, $cas
 	} else {
 		$value = NULL;
 	}
-	if ($case_sensitive) {
-		$ereg = "ereg";
-	} else {
-		$ereg = "eregi";
-	}
-	if ($re_required != NULL and !$ereg ($re_required, $value)) {
+	if ($re_required != NULL and !preg_match("/$re_required/" . ($case_sensitive ? '' : 'i'), $value)) {
 		error_log ("Invalid parameter '$name': does not match regular expression '$re_required', value is: $value");
 		die ("Invalid input. See Apache logs for details.");
 	}
-	if ($re_forbidden != NULL and $ereg ($re_forbidden, $value)) {
+	if ($re_forbidden != NULL and preg_match("/$re_forbidden/" . ($case_sensitive ? '' : 'i'), $value)) {
 		error_log ("Invalid parameter '$name': matches regular expression '$re_forbidden', value is: $value");
 		die ("Invalid input. See Apache logs for details.");
 	}
