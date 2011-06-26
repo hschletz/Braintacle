@@ -285,22 +285,4 @@ function mdb2_quote_identifier ($str, $mdb2 = NULL, $escape_delimiters = false)
 	else
 		return $mdb2->quoteIdentifier (strtolower ($str));
 }
-
-// reverse MDB2 quoteIdentifier() method
-function mdb2_unquote_identifier ($str, $mdb2 = NULL)
-{
-	$mdb2 =& mdb2_getConnection ($mdb2);
-	$quoteStart = $mdb2->identifier_quoting["start"];
-	$quoteEnd = $mdb2->identifier_quoting["end"];
-	$quoteEscape = $mdb2->identifier_quoting["escape"];
-
-	$parts = explode (".", $str);
-	foreach (array_keys($parts) as $k) {
-		$extracted = array();
-		if (ereg (quotemeta ($quoteStart) . "(.*)" . quotemeta ($quoteEnd), $parts[$k], $extracted)) {
-			$parts[$k] = str_replace($quoteEscape.$quoteEnd, $quoteEnd, $extracted[1]); // the content without surrounding quotes and unescaped
-		}
-	}
-	return implode (".", $parts);
-}
 ?>
