@@ -172,7 +172,7 @@ if ($_POST['onglet'] == 'NEW'){
 			WHERE name $LIKE " . $_SESSION["readServer"]->quote ($_SESSION['ONGLET_SOFT'][$_POST['onglet_soft']] . "%", "text") . "
 			and name not in (".$search_dico_soft.")
 			and name not in (".$search_ignored_soft.") ".$search_cache;
-	$result_search_soft = mdb2_query( $search_soft, $_SESSION["readServer"]);
+	$result_search_soft = mdb2_query( $search_soft, $_SESSION["readServer"]) or die(mdb2_error($_SESSION["readServer"]));
 	$list_soft="";
  	while($item_search_soft = mdb2_fetch_object($result_search_soft)){
 		 		$list_soft .= $_SESSION["readServer"]->quote ($item_search_soft->name, "text") . ", ";
