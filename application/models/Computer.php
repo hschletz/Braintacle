@@ -179,6 +179,13 @@ class Model_Computer extends Model_ComputerOrGroup
         $invert=null
     )
     {
+        // The 'hardware' table also contains rows that describe groups which
+        // need to be filtered out. Some filters already prevent these rows from
+        // showing up in the result, so the extra filter would be unnecessary.
+        // The group filter is enabled by default and will be disabled later
+        // where possible.
+        $filterGroups = true;
+
         $db = Zend_Registry::get('db');
 
         $dummy = new Model_Computer;
@@ -215,8 +222,6 @@ class Model_Computer extends Model_ComputerOrGroup
 
         $select = $db->select()
             ->from('hardware', $fromHardware)
-            ->where("deviceid != '_SYSTEMGROUP_'")
-            ->where("deviceid != '_DOWNLOADGROUP_'")
             ->order(self::getOrder($order, $direction, $map));
         if (isset($fromBios)) {
             // Use left join because there might be no matching row in the 'bios' table.
@@ -279,6 +284,7 @@ class Model_Computer extends Model_ComputerOrGroup
                             ),
                             array ('software_version' => 'version')
                         );
+                    $filterGroups = false;
                     break;
                 case 'MemberOf':
                     // $arg is expected to be a Model_Group object.
@@ -298,6 +304,7 @@ class Model_Computer extends Model_ComputerOrGroup
                                 Model_GroupMembership::TYPE_STATIC
                             )
                         );
+                    $filterGroups = false;
                     break;
                 default:
                     // If the filter is of the form 'Model.Property', apply a generic string filter.
@@ -313,7 +320,13 @@ class Model_Computer extends Model_ComputerOrGroup
                         $matchExact,
                         $invertResult
                     );
+                    $filterGroups = false;
             }
+        }
+
+        if ($filterGroups) {
+            $select->where("deviceid != '_SYSTEMGROUP_'")
+                   ->where("deviceid != '_DOWNLOADGROUP_'");
         }
 
         return $select->query();
