@@ -740,7 +740,7 @@ else  if( $_GET["mode"] == 8 ) { // insertion network device
 	ShowResults($requete);
 }
 
-if((!isset($filePresent) or !$filePresent) &&$_GET["mode"]==2) echo "<br><font color=red><center><b>".$l->g(338)."</b></font><br>".$l->g(339)."</center>";
+if((!isset($filePresent) or !$filePresent) && check_param($_GET, "mode") ==2) echo "<br><font color=red><center><b>".$l->g(338)."</b></font><br>".$l->g(339)."</center>";
 
 function trieTab($t,$colTri,$types) {
 
