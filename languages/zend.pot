@@ -43,8 +43,8 @@ msgstr ""
 msgid "A record matching %value% was found"
 msgstr ""
 
-#: Validate/Digits.php:55
-msgid "'%value%' contains not only digit characters"
+#: Validate/Digits.php:52
+msgid "'%value%' must contain only digits"
 msgstr ""
 
 #: Validate/Hostname.php:66
