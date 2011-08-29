@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-29 13:18+0200\n"
-"PO-Revision-Date: 2011-08-29 12:50+0200\n"
+"POT-Creation-Date: 2011-08-29 19:33+0200\n"
+"PO-Revision-Date: 2011-08-29 19:33+0200\n"
 "Last-Translator: \n"
 "Language-Team: German <holger.schletz@web.de>\n"
 "Language: de\n"
@@ -919,7 +919,7 @@ msgstr "Letzte Inventarisierung"
 
 #: views/scripts/computer/index.phtml:55
 msgid "Swap"
-msgstr "Swap"
+msgstr "Auslagerungsspeicher"
 
 #: views/scripts/computer/index.phtml:60
 msgid "Operating system"
@@ -954,16 +954,20 @@ msgstr "Fehlercode"
 msgid "Netmask"
 msgstr "Netzmaske"
 
-#: views/scripts/computer/index.phtml:139
+#: views/scripts/computer/index.phtml:101
+msgid "Volume size"
+msgstr "Laufwerk: Größe"
+
+#: views/scripts/computer/index.phtml:140
 #, php-format
 msgid "%d matches"
 msgstr "%d Treffer"
 
-#: views/scripts/computer/index.phtml:143
+#: views/scripts/computer/index.phtml:144
 msgid "Edit filter"
 msgstr "Filter bearbeiten"
 
-#: views/scripts/computer/index.phtml:160 views/scripts/group/members.phtml:70
+#: views/scripts/computer/index.phtml:161 views/scripts/group/members.phtml:70
 #, php-format
 msgid "Number of computers: %d"
 msgstr "Anzahl Computer: %d"
@@ -1325,3 +1329,4 @@ msgstr "Akzeptieren"
 #: views/scripts/software/index.phtml:63
 msgid "Ignore"
 msgstr "Ignorieren"
+

@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-29 13:18+0200\n"
+"POT-Creation-Date: 2011-08-29 19:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -950,16 +950,20 @@ msgstr ""
 msgid "Netmask"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:139
+#: views/scripts/computer/index.phtml:101
+msgid "Volume size"
+msgstr ""
+
+#: views/scripts/computer/index.phtml:140
 #, php-format
 msgid "%d matches"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:143
+#: views/scripts/computer/index.phtml:144
 msgid "Edit filter"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:160 views/scripts/group/members.phtml:70
+#: views/scripts/computer/index.phtml:161 views/scripts/group/members.phtml:70
 #, php-format
 msgid "Number of computers: %d"
 msgstr ""
