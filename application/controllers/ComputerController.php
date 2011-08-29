@@ -51,6 +51,7 @@ class ComputerController extends Zend_Controller_Action
         $search = $this->_getParam('search');
         $exact = $this->_getParam('exact');
         $invert = $this->_getParam('invert');
+        $operator = $this->_getParam('operator');
 
         if (!$filter) {
             $index = 1;
@@ -59,6 +60,7 @@ class ComputerController extends Zend_Controller_Action
                 $search[] = $this->_getParam('search' . $index);
                 $exact[] = $this->_getParam('exact' . $index);
                 $invert[] = $this->_getParam('invert' . $index);
+                $operator[] = $this->_getParam('operator' . $index);
                 $index++;
             }
         }
@@ -80,7 +82,8 @@ class ComputerController extends Zend_Controller_Action
             $filter,
             $search,
             $exact,
-            $invert
+            $invert,
+            $operator
         );
 
         $jumpto = $this->_getParam('jumpto');
@@ -93,6 +96,7 @@ class ComputerController extends Zend_Controller_Action
         $this->view->search = $search;
         $this->view->exact = $exact;
         $this->view->invert = $invert;
+        $this->view->operator = $operator;
         if ($this->_getParam('customFilter')) {
             $this->view->filterUriPart = $this->getFilterUriPart();
         }
@@ -301,6 +305,10 @@ class ComputerController extends Zend_Controller_Action
 
         if ($this->_getParam('invert')) {
             $part .= '/invert/1';
+        }
+
+        if ($this->_getParam('operator')) {
+            $part .= '/operator/' . urlencode($this->_getParam('operator'));
         }
 
         return $part;

@@ -165,8 +165,9 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string $direction One of [asc|desc]
      * @param string|array $filter Name or array of names of a pre-defined filter routine
      * @param string|array $search Search parameter(s) passed to the filter. May be case sensitive depending on DBMS.
-     * @param bool|array $exact Force exact match on search parameter(s) (no wildcards, no substrings)
-     * @param bool|array $invert Invert query results (return all computers NOT matching criteria)
+     * @param bool|array $exact Force exact match on search parameter(s) (no wildcards, no substrings) (strings only)
+     * @param bool|array $invert Invert query results (return all computers NOT matching criteria) (strings only)
+     * @param string|array $operator Comparision operator (integer search only)
      * @return Zend_Db_Statement Query result
      */
     static function createStatementStatic(
@@ -176,7 +177,8 @@ class Model_Computer extends Model_ComputerOrGroup
         $filter=null,
         $search=null,
         $exact=null,
-        $invert=null
+        $invert=null,
+        $operator=null
     )
     {
         // The 'hardware' table also contains rows that describe groups which
@@ -267,6 +269,12 @@ class Model_Computer extends Model_ComputerOrGroup
                 case 'BiosDate':
                     $select = self::_findString($select, 'Computer', $type, $arg, $matchExact, $invertResult);
                     break;
+                case 'CpuClock':
+                case 'CpuCores':
+                case 'PhysicalMemory':
+                case 'SwapMemory':
+                    $select = self::_findInteger($select, 'Computer', $type, $arg, $operator);
+                    break;
                 case 'PackageNonnotified':
                 case 'PackageSuccess':
                 case 'PackageNotified':
@@ -304,6 +312,19 @@ class Model_Computer extends Model_ComputerOrGroup
                                 Model_GroupMembership::TYPE_STATIC
                             )
                         );
+                    $filterGroups = false;
+                    break;
+                case 'Volume.Size':
+                case 'Volume.FreeSpace':
+                    // Generic integer filter
+                    list($model, $property) = explode('.', $type);
+                    $select = self::_findInteger(
+                        $select,
+                        $model,
+                        $property,
+                        $arg,
+                        $operator
+                    );
                     $filterGroups = false;
                     break;
                 default:
@@ -702,19 +723,19 @@ class Model_Computer extends Model_ComputerOrGroup
     }
 
     /**
-     * Apply a filter for a string value.
+     * Common operations for all search types (string, integer...)
      *
+     * This method determines the table and column name and adds them to $select
+     * if necessary. The only part left is the WHERE clause as this depends on
+     * the column datatype.
      * @param Zend_Db_Select Object to apply the filter to
      * @param string $model Name of model class (without 'Model_' prefix) where property can be found.
      * This must be either 'Computer' or a valid child object class. Every
      * other value will trigger an exception.
      * @param string $property Property to search in. Properties unknown to the model will trigger an exception.
-     * @param string $arg String to search for
-     * @param bool $matchExact Disable wildcards ('*', '?', '%', '_') and substring search.
-     * @param bool $invertResult Return computers NOT matching criteria
-     * @return Zend_Db_Select Object with filter applied
+     * @return array Table and column of search criteria
      */
-    protected static function _findString($select, $model, $property, $arg, $matchExact, $invertResult)
+    protected static function _findCommon($select, $model, $property)
     {
         if ($model != 'Computer' and !in_array($model, self::$_childObjectTypes)) {
             throw new UnexpectedValueException('Invalid model: ' . $model);
@@ -765,6 +786,26 @@ class Model_Computer extends Model_ComputerOrGroup
             $select->columns(array($columnAlias => $column), $table);
         }
 
+        return array($table, $column);
+    }
+
+    /**
+     * Apply a filter for a string value.
+     *
+     * @param Zend_Db_Select Object to apply the filter to
+     * @param string $model Name of model class (without 'Model_' prefix) where property can be found.
+     * This must be either 'Computer' or a valid child object class. Every
+     * other value will trigger an exception.
+     * @param string $property Property to search in. Properties unknown to the model will trigger an exception.
+     * @param string $arg String to search for
+     * @param bool $matchExact Disable wildcards ('*', '?', '%', '_') and substring search.
+     * @param bool $invertResult Return computers NOT matching criteria
+     * @return Zend_Db_Select Object with filter applied
+     */
+    protected static function _findString($select, $model, $property, $arg, $matchExact, $invertResult)
+    {
+        list($table, $column) = self::_findCommon($select, $model, $property);
+
         // Determine comparision operator and prepare search argument
         if ($matchExact) {
             $operator = '=';
@@ -807,6 +848,66 @@ class Model_Computer extends Model_ComputerOrGroup
                 $select->where("$table.$column $operator ?", $arg);
             }
         }
+
+        return $select;
+    }
+
+    /**
+     * Apply a filter for an integer value.
+     *
+     * @param Zend_Db_Select Object to apply the filter to
+     * @param string $model Name of model class (without 'Model_' prefix) where property can be found.
+     * This must be either 'Computer' or a valid child object class. Every
+     * other value will trigger an exception.
+     * @param string $property Property to search in. Properties unknown to the model will trigger an exception.
+     * @param string $arg Integer operand
+     * @param string $operator Comparision operator (= == != <> < <= > >= eq ne lt le gt ge)
+     * @param bool $invertResult Return computers NOT matching criteria
+     * @return Zend_Db_Select Object with filter applied
+     */
+    protected static function _findInteger($select, $model, $property, $arg, $operator)
+    {
+        // Sanitize input
+        if (!ctype_digit((string) $arg)) {
+            throw new UnexpectedValueException('Non-integer value given: ' . $arg);
+        }
+        $arg = (integer) $arg;
+
+        // Convert abstract operator into SQL operator
+        switch ($operator) {
+            case '=':
+            case '==':
+            case 'eq':
+                $operator = '=';
+                break;
+            case '!=':
+            case '<>':
+            case 'ne':
+                $operator = '!=';
+                break;
+            case '<':
+            case 'lt':
+                $operator = '<';
+                break;
+            case '<=':
+            case 'le':
+                $operator = '<=';
+                break;
+            case '>':
+            case 'gt':
+                $operator = '>';
+                break;
+            case '>=':
+            case 'ge':
+                $operator = '>=';
+                break;
+            default:
+                throw new UnexpectedValueException('Invalid integer comparision operator: ' . $operator);
+        }
+
+        list($table, $column) = self::_findCommon($select, $model, $property);
+
+        $select->where("$table.$column $operator ?", $arg);
 
         return $select;
     }
