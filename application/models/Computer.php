@@ -866,7 +866,6 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string $property Property to search in. Properties unknown to the model will trigger an exception.
      * @param string $arg Integer operand
      * @param string $operator Comparision operator (= == != <> < <= > >= eq ne lt le gt ge)
-     * @param bool $invertResult Return computers NOT matching criteria
      * @return Zend_Db_Select Object with filter applied
      */
     protected static function _findInteger($select, $model, $property, $arg, $operator)
