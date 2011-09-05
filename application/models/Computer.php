@@ -275,6 +275,10 @@ class Model_Computer extends Model_ComputerOrGroup
                 case 'SwapMemory':
                     $select = self::_findInteger($select, 'Computer', $type, $arg, $operator);
                     break;
+                case 'InventoryDate':
+                case 'LastContactDate':
+                    $select = self::_findDate($select, 'Computer', $type, $arg, $operator);
+                    break;
                 case 'PackageNonnotified':
                 case 'PackageSuccess':
                 case 'PackageNotified':
@@ -908,6 +912,89 @@ class Model_Computer extends Model_ComputerOrGroup
         list($table, $column) = self::_findCommon($select, $model, $property);
 
         $select->where("$table.$column $operator ?", $arg);
+
+        return $select;
+    }
+
+    /**
+     * Apply a filter for a date value.
+     *
+     * @param Zend_Db_Select Object to apply the filter to
+     * @param string $model Name of model class (without 'Model_' prefix) where property can be found.
+     * This must be either 'Computer' or a valid child object class. Every
+     * other value will trigger an exception.
+     * @param string $property Timestamp property to search in. Unknown properties will trigger an exception.
+     * @param mixed $arg date operand (Zend_Date object or amy valid Zend_Date input). Time of day is ignored.
+     * @param string $operator Comparision operator (= == != <> < <= > >= eq ne lt le gt ge)
+     * @return Zend_Db_Select Object with filter applied
+     */
+    protected static function _findDate($select, $model, $property, $arg, $operator)
+    {
+        // This method compares date values (ignoring time part) to timestamp
+        // columns. The comparision can not be made directly because the date
+        // operand would be cast to a timestamp with time part set to midnight.
+        // Timestamps with the same day but different time of day would be
+        // considered not equal, giving surprising results.
+        // Instead, values are expected equal if they have the same date,
+        // regardless of time. Specifically, the column's value is considered
+        // equal to the argument if it is >= 00:00:00 of the argument's day and
+        // < 00:00:00 of the next day.
+        // Other operations (<, >) are defined accordingly.
+
+        // Get beginning of day.
+        $dayStart = new Zend_Date($arg, Zend_Date::DATE_SHORT);
+        $dayStart->setTime('00:00:00', 'HH:mm:ss');
+        // Get beginning of next day
+        $dayNext = clone $dayStart;
+        $dayNext->addDay(1);
+
+        // For MySQL the timestamp is composed without timezone specification
+        // because it throws a warning on full ISO 8601 formatted date strings.
+        $db = Zend_Registry::get('db');
+        if ($db instanceof Zend_Db_Adapter_Pdo_Mysql or $db instanceof Zend_Db_Adapter_Mysqli) {
+            $dayStart = $dayStart->get('yyyy-MM-dd HH:mm:ss');
+            $dayNext = $dayNext->get('yyyy-MM-dd HH:mm:ss');
+        } else {
+            $dayStart = $dayStart->get(Zend_Date::ISO_8601);
+            $dayNext = $dayNext->get(Zend_Date::ISO_8601);
+        }
+
+        list($table, $column) = self::_findCommon($select, $model, $property);
+        $operand = "$table.$column";
+
+        switch ($operator) {
+            case '=':
+            case '==':
+            case 'eq':
+                $select->where("$operand >= ?", $dayStart);
+                $select->where("$operand < ?", $dayNext);
+                break;
+            case '!=':
+            case '<>':
+            case 'ne':
+                $expression1 = $db->quoteInto("$operand < ?", $dayStart);
+                $expression2 = $db->quoteInto("$operand >= ?", $dayNext);
+                $select->where("$expression1 OR $expression2");
+                break;
+            case '<':
+            case 'lt':
+                $select->where("$operand < ?", $dayStart);
+                break;
+            case '<=':
+            case 'le':
+                $select->where("$operand < ?", $dayNext);
+                break;
+            case '>':
+            case 'gt':
+                $select->where("$operand >= ?", $dayNext);
+                break;
+            case '>=':
+            case 'ge':
+                $select->where("$operand >= ?", $dayStart);
+                break;
+            default:
+                throw new UnexpectedValueException('Invalid date comparision operator: ' . $operator);
+        }
 
         return $select;
     }

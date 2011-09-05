@@ -23,6 +23,9 @@
  * @package Forms
  * @filesource
  */
+
+require_once ('Braintacle/Validate/Date.php');
+
 /**
  * Search form.
  *
@@ -56,6 +59,15 @@ class Form_Search extends Zend_Form
     );
 
     /**
+     * Properties for which to perform a timestamp search
+     * @var array
+     */
+    protected $_typeDate = array(
+        'InventoryDate',
+        'LastContactDate',
+    );
+
+    /**
      * Build form elements
      */
     public function init()
@@ -77,6 +89,8 @@ class Form_Search extends Zend_Form
             'Software.Publisher' => $translate->_('Software: Publisher'),
             'Software.Comment' => $translate->_('Software: Comment'),
             'Software.InstallLocation' => $translate->_('Software: Install location'),
+            'InventoryDate' => $translate->_('Last inventory'),
+            'LastContactDate' => $translate->_('Last contact'),
             'CpuType' => $translate->_('CPU type'),
             'CpuClock' => $translate->_('CPU clock (MHz)'),
             'CpuCores' => $translate->_('CPU cores'),
@@ -122,7 +136,7 @@ class Form_Search extends Zend_Form
                ->setMultiOptions($this->_filters);
         $this->addElement($filter);
 
-        // Only displayed for integer searches
+        // Only displayed for ordinal searches
         $operator = new Zend_Form_Element_Select('operator');
         $operator->setDisableTranslator(true) // don't translate values
                  ->setMultiOptions(
@@ -182,6 +196,10 @@ class Form_Search extends Zend_Form
             // expecting an integer
                 $search->setRequired(true);
                 $search->addValidator('Digits');
+        } elseif (in_array($filter, $this->_typeDate)) {
+            // expecting a date
+                $search->setRequired(true);
+                $search->addValidator(new Braintacle_Validate_Date);
         } else {
             // arbitrary string, just check length
                 $search->setRequired(false);
@@ -241,8 +259,9 @@ class Form_Search extends Zend_Form
         $view->headScript()->captureStart();
         ?>
 
-        // Properties for which to perform an integer search
+        // Properties for which to perform non-text search
         var typeInteger = "<?php print $this->_getPropertiesString($this->_typeInteger); ?>";
+        var typeDate = "<?php print $this->_getPropertiesString($this->_typeDate); ?>";
 
         /**
          * Event handler for Filter combobox.
@@ -255,6 +274,11 @@ class Form_Search extends Zend_Form
 
             if (typeInteger.search(filter) != -1) {
                 // Integer search
+                display("operator", true);
+                display("exact", false);
+                display("invert", false);
+            } else if (typeDate.search(filter) != -1) {
+                // Date search
                 display("operator", true);
                 display("exact", false);
                 display("invert", false);

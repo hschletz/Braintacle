@@ -86,3 +86,7 @@ msgstr ""
 #: Validate/File/Upload.php:59
 msgid "File '%value%' was not uploaded"
 msgstr ""
+
+#: Validate/Date.php:47
+msgid "'%value%' does not fit the date format '%format%'"
+msgstr ""
