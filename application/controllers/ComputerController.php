@@ -266,7 +266,7 @@ class ComputerController extends Zend_Controller_Action
                 // Request minimal column list and add columns for pattern or inverted searches
                 $columns = array('Name', 'UserName', 'InventoryDate');
                 if ($form->getValue('invert') or !$form->getValue('exact')) {
-                    if ($form->getValue('filter') != 'Name') { // Always present; no column to add
+                    if (!in_array($form->getValue('filter'), $columns)) {
                         $columns[] = $form->getValue('filter');
                     }
                 }
