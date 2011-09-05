@@ -251,10 +251,6 @@ class Form_Search extends Zend_Form
         // value to show and hide the appropriate form elements.
         // If the datatype is not listed here, 'text' is assumed.
 
-        // Don't let missing translations screw up the JS code
-        $displayErrors = ini_get('display_errors');
-        ini_set('display_errors', false);
-
         // Generate JavaScript to make this form fully functional.
         $view->headScript()->captureStart();
         ?>
@@ -317,7 +313,6 @@ class Form_Search extends Zend_Form
 
         <?php
         $view->headScript()->captureEnd();
-        ini_set('display_errors', $displayErrors);
 
         return parent::render($view);
     }
