@@ -1,6 +1,6 @@
 Index: library/Zend/Form/Element.php
 ===================================================================
---- library/Zend/Form/Element.php	(Revision 23861)
+--- library/Zend/Form/Element.php	(Revision 24451)
 +++ library/Zend/Form/Element.php	(Arbeitskopie)
 @@ -623,11 +623,6 @@
       */
@@ -14,3 +14,21 @@ Index: library/Zend/Form/Element.php
          return $this->_label;
      }
  
+Index: library/Zend/Form/Element/Submit.php
+===================================================================
+--- library/Zend/Form/Element/Submit.php	(Revision 24451)
++++ library/Zend/Form/Element/Submit.php	(Arbeitskopie)
+@@ -75,10 +75,10 @@
+ 
+         if (null === $value) {
+             $value = $this->getName();
++        }
+ 
+-            if (null !== ($translator = $this->getTranslator())) {
+-                return $translator->translate($value);
+-            }
++        if (null !== ($translator = $this->getTranslator())) {
++            $value = $translator->translate($value);
+         }
+ 
+         return $value;
