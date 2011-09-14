@@ -46,6 +46,18 @@ this program; if not, write to the Free Software Foundation, Inc.,
     <length>255</length>
    </field>
 
+   <field>
+    <name>manufacturer</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>type</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
   </declaration>
 
  </table>
