@@ -1,6 +1,6 @@
 <?php
 /**
- * Wrapper for MDB2::factory()
+ * MDB2 connector
  *
  * $Id$
  *
