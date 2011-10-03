@@ -34,7 +34,7 @@ require_once 'Zend/Config/Ini.php';
  * MDB2 connector
  *
  * This class implements a static {@link factory()} method that returns an
- * MDB2_Driver_Common object on success, just like MDB2::factory() would.
+ * MDB2_Driver_Common object on success, just like the MDB2 connection methods.
  * Braintacle_MDB2::factory() however integrates into the application:
  * - It does not take any arguments. The DSN and options are determined from
  *   the application's configuration and some hardcoded defaults that are
@@ -47,7 +47,12 @@ require_once 'Zend/Config/Ini.php';
  *   so it is convenient to not have to load it explicitly.
  *
  *
- * WARNING: MDB2 generates a lot of E_STRICT and E_DEPRECATED messages.
+ * The MDB2 connection is made via MDB2::singleton(), so that only one actual
+ * connection will be made to the database even when it's called multiple times.
+ * It's safe and recommended to call {@link factory()} every time an MDB2
+ * connection is needed, instead of preserving the object globally.
+ *
+ * <b>WARNING:</b> MDB2 generates a lot of E_STRICT and E_DEPRECATED messages.
  * It is therefore necessary to suppress these. {@link setErrorReporting()}
  * can be used for this. {@link resetErrorReporting()} will revert the error
  * reporting level to its previous state.
@@ -61,68 +66,79 @@ class Braintacle_MDB2
 {
 
     /**
+     * The DSN array is created once by {@link factory()} and cached here.
+     * @var array
+     */
+    protected static $_dsn;
+
+    /**
      * Error reporting level before last invocation of {@link setErrorReporting()}
      * @var integer
      */
     protected static $_oldLevel;
 
     /**
-     * Return an MDB2_Driver_Common object that connects to the database
-     * according to the database.ini file
+     * Retrieve a ready to use MDB2 handle (see class description for details)
      *
      * The global APPLICATION_PATH and APPLICATION_ENV constants must be set to
-     * locate the file and determinedthe desired configuration.
+     * locate the file and determine the desired configuration.
      * This method should be called encapsulated within
      * {@link setErrorReporting()}/{@link resetErrorReporting()}.
+     * @return MDB2_Driver_Common
      */
     static function factory()
     {
-        // Get DSN information from application's database config.
-        $config = new Zend_Config_Ini(
-            realpath(APPLICATION_PATH . '/../config/database.ini'),
-            APPLICATION_ENV
-        );
-        // Map Zend DB adapter to MDB2 driver
-        $adapter = $config->adapter;
-        switch (strtolower($adapter))
-        {
-            case 'pdo_pgsql':
-                $driver = 'pgsql';
-                break;
-            case 'mysqli':
-            case 'pdo_mysql':
-                $driver = 'mysql';
-                break;
-            case 'oracle':
-            case 'pdo_oci':
-                $driver = 'oci8';
-                break;
-            case 'sqlsrv':
-            case 'pdo_mssql':
-                $driver = 'mssql';
-                break;
-            default:
-                throw new InvalidArgumentException(
-                    "Cannot map Zend DB adapter '$adapter' to a known MDB2 driver."
-                );
-        }
-        // Build DSN array.
-        $dsn['phptype'] = $driver;
-        $dsn['charset'] = 'utf8';
-        $dsn['database'] = $config->params->dbname;
-        $dsn['username'] = $config->params->username;
-        $dsn['password'] = $config->params->password;
-        $dsn['port'] = $config->params->port;
-        $server = $config->params->host;
-        if (substr($server, 0, 1) == '/') {
-            $dsn['protocol'] = 'unix';
-            $dsn['socket'] = $server;
+        // Compute DSN array only once
+        if (empty(self::$_dsn)) {
+            // Get DSN information from application's database config.
+            $config = new Zend_Config_Ini(
+                realpath(APPLICATION_PATH . '/../config/database.ini'),
+                APPLICATION_ENV
+            );
+            // Map Zend DB adapter to MDB2 driver
+            $adapter = $config->adapter;
+            switch (strtolower($adapter))
+            {
+                case 'pdo_pgsql':
+                    $driver = 'pgsql';
+                    break;
+                case 'mysqli':
+                case 'pdo_mysql':
+                    $driver = 'mysql';
+                    break;
+                case 'oracle':
+                case 'pdo_oci':
+                    $driver = 'oci8';
+                    break;
+                case 'sqlsrv':
+                case 'pdo_mssql':
+                    $driver = 'mssql';
+                    break;
+                default:
+                    throw new InvalidArgumentException(
+                        "Cannot map Zend DB adapter '$adapter' to a known MDB2 driver."
+                    );
+            }
+            // Build DSN array.
+            $dsn['phptype'] = $driver;
+            $dsn['charset'] = 'utf8';
+            $dsn['database'] = $config->params->dbname;
+            $dsn['username'] = $config->params->username;
+            $dsn['password'] = $config->params->password;
+            $dsn['port'] = $config->params->port;
+            $server = $config->params->host;
+            if (substr($server, 0, 1) == '/') {
+                $dsn['protocol'] = 'unix';
+                $dsn['socket'] = $server;
+            } else {
+                $dsn['protocol'] = 'tcp';
+                $dsn['hostspec'] = $server;
+            }
         } else {
-            $dsn['protocol'] = 'tcp';
-            $dsn['hostspec'] = $server;
+            $dsn = self::$_dsn; // reuse existing DSN
         }
 
-        // Create MDB2 object.
+        // Get MDB2 object via singleton() to prevent multiple connections.
         $options = array (
             'quote_identifier' => true,
             'portability' => MDB2_PORTABILITY_ALL ^ MDB2_PORTABILITY_EMPTY_TO_NULL,
@@ -132,16 +148,18 @@ class Braintacle_MDB2
         if ($dsn['phptype'] == 'mysql') {
             $options['use_transactions'] = false;
         }
-
-        // Create MDB2 object and integrate it with the application's exception handling.
-        $mdb2 = MDB2::factory($dsn, $options);
+        $mdb2 = MDB2::singleton($dsn, $options);
         if (PEAR::isError($mdb2)) {
             throw new PEAR_Exception('MDB2 connection failed.');
         }
-        $mdb2->setErrorHandling(PEAR_ERROR_EXCEPTION);
 
-        // Load MDB2 modules
-        $mdb2->loadModule('Reverse');
+        // If this is the first invocation, cache the DSN and set up the MDB2
+        // object.
+        if (empty(self::$_dsn)) {
+            self::$_dsn = $dsn;
+            $mdb2->setErrorHandling(PEAR_ERROR_EXCEPTION);
+            $mdb2->loadModule('Reverse');
+        }
 
         return $mdb2;
     }
