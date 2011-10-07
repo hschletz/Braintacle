@@ -221,8 +221,8 @@ abstract class Model_Abstract implements Iterator
      * Retrieve a property by its logical name
      *
      * Properties of type 'timestamp' and 'date' are automatically converted to
-     * a Zend_Date object unless $rawValue is true. A derived class may process
-     * any value.
+     * a Zend_Date object unless $rawValue is true or the value is NULL.
+     * A derived class may process any value.
      *
      * @param string $property Logical property name
      * @param bool $rawValue If TRUE, do not process the value. Default: FALSE
@@ -234,7 +234,7 @@ abstract class Model_Abstract implements Iterator
         $value = $this->__get($columnName);
         $type = $this->getPropertyType($property);
 
-        if (!$rawValue and  ($type == 'timestamp' or $type == 'date')) {
+        if (!$rawValue and !is_null($value) and ($type == 'timestamp' or $type == 'date')) {
             $value = new Zend_Date($value, Zend_Date::ISO_8601);
         }
 
