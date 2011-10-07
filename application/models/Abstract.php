@@ -141,6 +141,17 @@ abstract class Model_Abstract implements Iterator
     private $_iteratorValid;
 
     /**
+     * Constructor
+     */
+    function __construct()
+    {
+        // Constructor is empty. It exists only to allow derived classes to call
+        // parent::__construct() from their own constructor, regardless of the
+        // parent's implementation which a derived class does not have to know
+        // about. See https://bugs.php.net/bug.php?id=55864
+    }
+
+    /**
      * Generic accessor method
      *
      * It provides the getLogicalIdentifier() and setLogicalIdentifier()

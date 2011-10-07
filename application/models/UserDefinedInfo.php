@@ -34,7 +34,7 @@ require_once 'Braintacle/MDB2.php';
  * administrator. Their names are always returned lowercase.
  * @package Models
  */
-class Model_UserDefinedInfo
+class Model_UserDefinedInfo extends Model_Abstract
 {
 
     /**
@@ -47,32 +47,78 @@ class Model_UserDefinedInfo
     static protected $_allTypesStatic = array();
 
     /**
-     * Return the values of all user defined fields for a given computer
-     * @param integer $id ID of computer for which the user defined fields should be retrieved.
-     * @return array Associative array with the values. The field names are used as keys.
+     * Computer this instance is linked to
+     *
+     * This is set if a computer was passed to the constructor
+     * @var Model_Computer
      */
-    static function getValues($id)
-    {
-        $db = Zend_Registry::get('db');
+    protected $_computer;
 
-        $result = $db->fetchRow(
-            'SELECT * FROM accountinfo WHERE hardware_id = ?',
-            (int) $id,
-            Zend_Db::FETCH_ASSOC
-        );
-        unset($result['hardware_id']);
-        return $result;
+    /**
+     * Constructor
+     *
+     * If a {@link Model_Computer} object is passed, it will be linked to this
+     * instance and the data for this computer will be available as properties
+     * and for setting via {@link setValues()}.
+     * @param Model_Computer $computer
+     */
+    function __construct(Model_Computer $computer=null)
+    {
+        parent::__construct();
+
+        // Construct array of datatypes
+        $this->_types = self::getTypes();
+
+        // Construct property map. Key and value are identical.
+        foreach ($this->_types as $name => $type) {
+            $this->_propertyMap[$name] = $name;
+        }
+
+        // Load values if a computer ID is given
+        if (!is_null($computer)) {
+            $db = Zend_Registry::get('db');
+
+            $data = $db->fetchRow(
+                'SELECT * FROM accountinfo WHERE hardware_id = ?',
+                $computer->getId()
+            );
+            foreach ($data as $property => $value) {
+                if ($property != 'hardware_id') { // Not a property, ignore
+                    $this->setProperty($property, $value);
+                }
+            }
+
+            // Keep track of computer for later updates
+            $this->_computer = $computer;
+        }
     }
 
     /**
-     * Set the values of all user defined fields for a given computer
-     * @param integer $id ID of computer for which the user defined fields should be retrieved.
+     * Set the values of user defined fields and store them in the database
+     *
+     * This method only works if a computer was passed to the constructor.
+     * Values not specified in $values will remain unchanged.
      * @param array $values Associative array with the values.
      */
-    static function setValues($id, $values)
+    public function setValues($values)
     {
+        if (!$this->_computer) {
+            throw new RuntimeException('No Computer was associated with this object');
+        }
+
+        // Have input processed by setProperty() to ensure valid data and to
+        // update the object's internal state
+        foreach ($values as $property => $value) {
+            $this->setProperty($property, $value);
+        }
+
         $db = Zend_Registry::get('db');
-        $db->update('accountinfo', $values, $db->quoteInto('hardware_id = ?', (int) $id));
+
+        $db->update(
+            'accountinfo',
+            $values,
+            $db->quoteInto('hardware_id = ?', $this->_computer->getId())
+        );
     }
 
     /**
@@ -96,7 +142,7 @@ class Model_UserDefinedInfo
      */
     static function getTypes()
     {
-        if (empty(Model_UserDefinedInfo::$_allTypesStatic)) { // Query database only once
+        if (empty(self::$_allTypesStatic)) { // Query database only once
             Braintacle_MDB2::setErrorReporting();
             $mdb2 = Braintacle_MDB2::factory();
             $columns = $mdb2->reverse->tableInfo('accountinfo');
@@ -105,11 +151,11 @@ class Model_UserDefinedInfo
             foreach ($columns as $column) {
                 $name = $column['name'];
                 if ($name != 'hardware_id') {
-                    Model_UserDefinedInfo::$_allTypesStatic[$name] = $column['mdb2type'];
+                    self::$_allTypesStatic[$name] = $column['mdb2type'];
                 }
             }
         }
-        return Model_UserDefinedInfo::$_allTypesStatic;
+        return self::$_allTypesStatic;
     }
 
 }

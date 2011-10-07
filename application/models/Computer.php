@@ -158,6 +158,15 @@ class Model_Computer extends Model_ComputerOrGroup
      */
     private $_childProperties = array();
 
+    /**
+     * User defined information for this computer
+     *
+     * This is populated on demand by {@link getUserDefinedInfo()} once.
+     * Do not use directly.
+     * @var Model_UserDefinedInfo
+     */
+    private $_userDefinedInfo;
+
 
     /** Return a statement object with all computers matching criteria
      * @param array $columns Logical properties to be returned. If empty or null, return all properties.
@@ -544,11 +553,14 @@ class Model_Computer extends Model_ComputerOrGroup
 
     /**
      * Retrieve the user defined fields for this computer.
-     * @return array Associative array with field names as keys.
+     * @return Model_UserDefinedInfo
      */
     public function getUserDefinedInfo()
     {
-        return Model_UserDefinedInfo::getValues($this->getId());
+        if (!$this->_userDefinedInfo) {
+            $this->_userDefinedInfo = new Model_UserDefinedInfo($this);
+        }
+        return $this->_userDefinedInfo;
     }
 
     /**
@@ -557,7 +569,7 @@ class Model_Computer extends Model_ComputerOrGroup
      */
     public function setUserDefinedInfo($values)
     {
-        Model_UserDefinedInfo::setValues($this->getId(), $values);
+        $this->getUserDefinedInfo()->setValues($values);
     }
 
     /**

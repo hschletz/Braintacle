@@ -159,7 +159,9 @@ class ComputerController extends Zend_Controller_Action
                 return;
             }
         } else {
-            $form->setDefaults($this->computer->getUserDefinedInfo());
+            foreach ($this->computer->getUserDefinedInfo() as $name => $value) {
+                $form->setDefault($name, $value);
+            }
         }
         $this->view->form = $form;
     }
