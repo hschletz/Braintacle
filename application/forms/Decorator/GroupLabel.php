@@ -42,6 +42,9 @@
 class Form_Decorator_GroupLabel extends Zend_Form_Decorator_Label
 {
 
+    /**
+     * Constructor
+     */
     function __construct($options = null)
     {
         parent::__construct($options);
@@ -51,6 +54,9 @@ class Form_Decorator_GroupLabel extends Zend_Form_Decorator_Label
         $this->setOption('disableFor', true);
     }
 
+    /**
+     * Render label as hyperlink
+     */
     public function render($content)
     {
         $element = $this->getElement();

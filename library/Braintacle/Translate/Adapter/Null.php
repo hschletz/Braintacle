@@ -33,6 +33,9 @@
 class Braintacle_Translate_Adapter_Null extends Zend_Translate_Adapter
 {
 
+    /**
+     * Constructor
+     */
     function __construct($data = null, $locale = null, array $options = array())
     {
         // Never complain about anything.
@@ -41,11 +44,17 @@ class Braintacle_Translate_Adapter_Null extends Zend_Translate_Adapter
         parent::__construct($data, $locale, $options);
     }
 
-    // Stub for abstract methods
+    /**
+     * Stub for abstract method
+     */
     protected function _loadTranslationData($data, $locale, array $options = array())
     {
     }
 
+
+    /**
+     * Implementation for abstract method
+     */
     public function toString()
     {
         return 'Null';
