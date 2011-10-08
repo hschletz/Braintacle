@@ -72,6 +72,8 @@ class Form_Search extends Zend_Form
      */
     public function init()
     {
+        $this->setMethod('post');
+
         $translate = Zend_Registry::get('Zend_Translate');
 
         $this->_filters = array(
@@ -127,7 +129,26 @@ class Form_Search extends Zend_Form
             'ExtensionSlot.Name' => $translate->_('Extension slot'),
         );
 
-        $this->setMethod('post');
+        // Append filters and labels for user defined info
+        $template = $translate->_('User defined: %s');
+        $types = Model_UserDefinedInfo::getTypes();
+        foreach ($types as $name => $type) {
+            switch ($type) {
+                case 'text':
+                    break;
+                case 'integer':
+                case 'float':
+                case 'date':
+                default:
+                    throw new UnexpectedValueException ('Unsupported datatype: ' . $type);
+            }
+            if ($name == 'tag') {
+                $label = $translate->_('Category');
+            } else {
+                $label = ucfirst($name);
+            }
+            $this->_filters["UserDefinedInfo.$name"] = sprintf($template, $label);
+        }
 
         $filter = new Zend_Form_Element_Select('filter');
         $filter->setLabel($translate->_('Search for'))

@@ -161,9 +161,15 @@ class Model_Computer extends Model_ComputerOrGroup
     /**
      * User defined information for this computer
      *
-     * This is populated on demand by {@link getUserDefinedInfo()} once.
-     * Do not use directly.
-     * @var Model_UserDefinedInfo
+     * It can be 1 of 3 types:
+     * 1. A fully populated Model_UserDefinedInfo object
+     * 2. An associative array with a subset of available fields
+     * 3. NULL if no value has been set yet.
+     *
+     * It is populated on demand internally. This allows caching the information,
+     * efficiently feeding partial information from a query result and making an
+     * extra query only if really needed.
+     * @var mixed
      */
     private $_userDefinedInfo;
 
@@ -341,19 +347,40 @@ class Model_Computer extends Model_ComputerOrGroup
                     $filterGroups = false;
                     break;
                 default:
-                    // If the filter is of the form 'Model.Property', apply a generic string filter.
+                    // Filter must be of the form 'Model.Property'.
                     if (!preg_match('/^[a-zA-Z]+\.[a-zA-Z]+$/', $type)) {
                         throw new UnexpectedValueException('Invalid filter: ' . $type);
                     }
                     list($model, $property) = explode('.', $type);
-                    $select = self::_findString(
-                        $select,
-                        $model,
-                        $property,
-                        $arg,
-                        $matchExact,
-                        $invertResult
-                    );
+                    if ($model == 'UserDefinedInfo') {
+                        $dummy = new Model_UserDefinedInfo;
+                        switch ($dummy->getPropertyType($property)) {
+                            case 'text':
+                                $select = self::_findString(
+                                    $select,
+                                    'UserDefinedInfo',
+                                    $property,
+                                    $arg,
+                                    $matchExact,
+                                    $invertResult
+                                );
+                                break;
+                            default:
+                                throw new UnexpectedValueException(
+                                    'Unexpected datatype for user defined information'
+                                );
+                        }
+                    } else {
+                        // apply a generic string filter.
+                        $select = self::_findString(
+                            $select,
+                            $model,
+                            $property,
+                            $arg,
+                            $matchExact,
+                            $invertResult
+                        );
+                    }
                     $filterGroups = false;
             }
         }
@@ -386,16 +413,22 @@ class Model_Computer extends Model_ComputerOrGroup
      */
     function getProperty($property, $rawValue=false)
     {
-        if (array_key_exists($property, $this->_childProperties)) {
-            // Call setProperty()/getProperty() on child object to enable processing of the value
-            list($model, $property) = explode('.', $property);
-            $childClass = "Model_$model";
-            $childObject = new $childClass;
-            $childObject->setProperty($property, $this->_childProperties["$model.$property"]);
-            return $childObject->getProperty($property, $rawValue);
+        try {
+            $value = parent::getProperty($property, $rawValue);
+        } catch (Exception $e) {
+            if (array_key_exists($property, $this->_childProperties)) {
+                // Call setProperty()/getProperty() on child object to enable processing of the value
+                list($model, $property) = explode('.', $property);
+                $childClass = "Model_$model";
+                $childObject = new $childClass;
+                $childObject->setProperty($property, $this->_childProperties["$model.$property"]);
+                return $childObject->getProperty($property, $rawValue);
+            } elseif (preg_match('/^UserDefinedInfo\.(\w+)$/', $property, $matches)) {
+                return $this->getUserDefinedInfo($matches[1]);
+            } else {
+                throw $e;
+            }
         }
-
-        $value = parent::getProperty($property, $rawValue);
 
         if ($rawValue) {
             return $value;
@@ -452,6 +485,16 @@ class Model_Computer extends Model_ComputerOrGroup
 
             list($model, $property) = explode('_', $property);
 
+            if ($model == 'userdefinedinfo') {
+                // If _userDefinedInfo is already an object, do nothing - the
+                // information is already there. Otherwise, _userDefinedInfo
+                // will be an array with the given key/value pair.
+                if (!($this->_userDefinedInfo instanceof Model_UserDefinedInfo)) {
+                    $this->_userDefinedInfo[$property] = $value;
+                }
+                return;
+            }
+
             // Since the column identifier is all lowercase, a case insensitive
             // search for a valid child object is necessary. The real class name
             // is determined from $_childObjectTypes.
@@ -499,6 +542,24 @@ class Model_Computer extends Model_ComputerOrGroup
             $type = $model->getPropertyType($property);
         }
         return $type;
+    }
+
+    /**
+     * Get the real column name for a property
+     * @param string $property Logical property name
+     * @return string Column name to be used in SQL queries
+     */
+    public function getColumnName($property)
+    {
+        try {
+            return parent::getColumnName($property);
+        } catch(Exception $e) {
+            if (preg_match('/^UserDefinedInfo\.(\w+)$/', $property, $matches)) {
+                return 'userdefinedinfo_' . $matches[1];
+            } else {
+                throw $e;
+            }
+        }
     }
 
     /**
@@ -552,15 +613,42 @@ class Model_Computer extends Model_ComputerOrGroup
     }
 
     /**
-     * Retrieve the user defined fields for this computer.
-     * @return Model_UserDefinedInfo
+     * Retrieve the user defined fields for this computer
+     *
+     * If the $name argument is given, the value for the specific field is
+     * returned. If $name is null (the default), a fully populated
+     * Model_UserDefinedInfo object is returned.
+     * @param string $name Field to retrieve (default: all fields)
+     * @return mixed
      */
-    public function getUserDefinedInfo()
+    public function getUserDefinedInfo($name=null)
     {
+        // If _userDefinedInfo is undefined yet, retrieve all fields.
         if (!$this->_userDefinedInfo) {
             $this->_userDefinedInfo = new Model_UserDefinedInfo($this);
         }
-        return $this->_userDefinedInfo;
+        // From this point on, _userDefinedInfo is either an array or an object.
+
+        // Always have an object if all fields are requested.
+        if (is_null($name)) {
+            if (is_array($this->_userDefinedInfo)) {
+                $this->_userDefinedInfo = new Model_UserDefinedInfo($this);
+            }
+            return $this->_userDefinedInfo;
+        }
+
+        // isset() would not work here!
+        if (is_array($this->_userDefinedInfo) and array_key_exists($name, $this->_userDefinedInfo)) {
+            // Requested field is available in the array.
+            return $this->_userDefinedInfo[$name];
+        } else {
+            // Requested field is not available in the array. Create object
+            // instead.
+            $this->_userDefinedInfo = new Model_UserDefinedInfo($this);
+        }
+
+        // At this point _userDefinedInfo is always an object.
+        return $this->_userDefinedInfo->getProperty($name);
     }
 
     /**
@@ -753,14 +841,6 @@ class Model_Computer extends Model_ComputerOrGroup
      */
     protected static function _findCommon($select, $model, $property)
     {
-        if ($model != 'Computer' and !in_array($model, self::$_childObjectTypes)) {
-            throw new UnexpectedValueException('Invalid model: ' . $model);
-        }
-        // Instantiate a dummy object to retrieve column name from property map
-        $className = "Model_$model";
-        $class = new $className;
-        $column = $class->getColumnName($property);
-
         // Determine table name and column alias
         if ($model == 'Computer') {
             switch ($property) {
@@ -775,16 +855,29 @@ class Model_Computer extends Model_ComputerOrGroup
                 default:
                     $table = 'hardware';
             }
+            $class = new Model_Computer;
+            $column = $class->getColumnName($property);
             $columnAlias = $column; // Zend_Db_Select will ignore this alias because the strings are identical
-        } else {
+        } elseif ($model == 'UserDefinedInfo') {
+            $table = 'accountinfo';
+            $column = $property;
+            $columnAlias = 'userdefinedinfo_' . $column;
+        } elseif (in_array($model, self::$_childObjectTypes)) {
+            $className = "Model_$model";
+            $class = new $className;
+
             $table = $class->getTableName();
+            $column = $class->getColumnName($property);
             // Compose a column alias to avoid ambiguous identifiers (like
             // 'name' which is present in more than 1 table). This allows
             // identification of the column in a query result.
             // Properties not handled by Model_Computer will be passed to the
             // model class determined from the alias.
             $columnAlias = strtolower($model) . '_' . strtolower($property);
+        } else {
+            throw new UnexpectedValueException('Invalid model: ' . $model);
         }
+
 
         // Join table if not already present
         if ($table != 'hardware' and !array_key_exists($table, $select->getPart('from'))) {

@@ -102,6 +102,15 @@ $headers = array(
     'Volume.Size' => $this->translate('Volume size'),
     'Volume.FreeSpace' => $this->translate('Free space'),
 );
+// Append headers for user defined information
+foreach (Model_UserDefinedInfo::getTypes() as $name => $type) {
+    if ($name == 'tag') {
+        $header = $this->translate('Category');
+    } else {
+        $header = ucfirst($name);
+    }
+    $headers['UserDefinedInfo.' . $name] = $header;
+}
 
 $renderCallbacks = array(
     'Name' => 'renderName',
