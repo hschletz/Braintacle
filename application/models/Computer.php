@@ -1341,7 +1341,7 @@ class Model_Computer extends Model_ComputerOrGroup
             if ($mergeUserdefined) {
                 // Oldest computer will be the source for merged information
                 $oldest = $computers[0];
-                $newest->setUserDefinedInfo($oldest->getUserDefinedInfo());
+                $newest->setUserDefinedInfo($oldest->getUserDefinedInfo()->getProperties());
             }
 
             if ($mergeGroups) {

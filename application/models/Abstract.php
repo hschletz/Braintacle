@@ -242,6 +242,23 @@ abstract class Model_Abstract implements Iterator
     }
 
     /**
+     * Retrieve all properties as an array
+     *
+     * This calls {@link getProperty()} internally, so the same rules for data
+     * mangling apply and there is typically no need for overriding this method.
+     * @param bool $rawValue If TRUE, do not process the values. Default: FALSE
+     * @return array Associative array with property names as key
+     */
+    public function getProperties($rawValues=false)
+    {
+        $result = array();
+        foreach ($this->_propertyMap as $property => $column) {
+            $result[$property] = $this->getProperty($property, $rawValues);
+        }
+        return $result;
+    }
+
+    /**
      * Set a property by its logical name.
      *
      * If the given value is a Zend_Date object, it will be converted to a
