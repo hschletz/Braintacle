@@ -39,12 +39,13 @@ class Zend_View_Helper_Table extends Zend_View_Helper_Abstract
      *
      * $headers must contain translated strings.
      *
-     * $formats contains the datatype (one of 'integer', 'decimal', 'text' or
-     * 'timestamp') for each property. This affects how the value is rendered
-     * (i.e. aligned). If no datatype is specified, 'text' is assumed. If the
-     * default style is not sufficient, any value different from the ones
-     * listed will be interpreted as the name of a callback function. This
-     * function will be called with 3 parameters:
+     * $formats contains the datatype ('integer', 'text', 'timestamp' etc.) for
+     * each property. This affects how the value is rendered (i.e. aligned and
+     * formatted). If no datatype is specified for a particular property, it is
+     * determined automatically from the model class. If the default style is
+     * not sufficient, any value different from the standard datatypes will be
+     * interpreted as the name of a callback function. This function will be
+     * called with 3 parameters:
      * 1. A model object with row data, or NULL if the header is to be formatted
      * 2. The name of the property.
      * 3. The view object
@@ -131,10 +132,20 @@ class Zend_View_Helper_Table extends Zend_View_Helper_Abstract
                     $row[] = $renderCallbacks[$column]($this->view, $object, $column);
                 } else {
                     $value = $object->getProperty($column);
-                    if ($formats[$column] == 'timestamp') {
-                        // Always use date helper because output style is
-                        // determined by $formats, not by property type.
-                        $value = $this->view->date($value);
+                    switch ($formats[$column]) {
+                        case 'integer':
+                        case 'decimal':
+                        case 'float':
+                            // Use localized number format
+                            $value = Zend_Locale_Format::toNumber($value);
+                            break;
+                        case 'date':
+                        case 'time':
+                        case 'timestamp':
+                            // Always use date helper because output style is
+                            // determined by $formats, not by property type.
+                            $value = $this->view->date($value);
+                            break;
                     }
                     $row[] = $this->view->escape($value);
                 }
