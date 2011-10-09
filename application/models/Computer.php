@@ -365,6 +365,33 @@ class Model_Computer extends Model_ComputerOrGroup
                                     $invertResult
                                 );
                                 break;
+                            case 'integer':
+                                $select = self::_findInteger(
+                                    $select,
+                                    'UserDefinedInfo',
+                                    $property,
+                                    $arg,
+                                    $operator
+                                );
+                                break;
+                            case 'float':
+                                $select = self::_findFloat(
+                                    $select,
+                                    'UserDefinedInfo',
+                                    $property,
+                                    $arg,
+                                    $operator
+                                );
+                                break;
+                            case 'date':
+                                $select = self::_findDate(
+                                    $select,
+                                    'UserDefinedInfo',
+                                    $property,
+                                    $arg,
+                                    $operator
+                                );
+                                break;
                             default:
                                 throw new UnexpectedValueException(
                                     'Unexpected datatype for user defined information'
@@ -962,25 +989,22 @@ class Model_Computer extends Model_ComputerOrGroup
     }
 
     /**
-     * Apply a filter for an integer value.
+     * Apply a filter for a numeric (integer/float) value
+     *
+     * Input is not validated. It's better to call {@link _findInteger()} or
+     * {@link _findFloat()} instead that perform proper input validation.
      *
      * @param Zend_Db_Select Object to apply the filter to
      * @param string $model Name of model class (without 'Model_' prefix) where property can be found.
      * This must be either 'Computer' or a valid child object class. Every
      * other value will trigger an exception.
      * @param string $property Property to search in. Properties unknown to the model will trigger an exception.
-     * @param string $arg Integer operand
+     * @param string $arg Numeric operand
      * @param string $operator Comparision operator (= == != <> < <= > >= eq ne lt le gt ge)
      * @return Zend_Db_Select Object with filter applied
      */
-    protected static function _findInteger($select, $model, $property, $arg, $operator)
+    protected static function _findNumber($select, $model, $property, $arg, $operator)
     {
-        // Sanitize input
-        if (!ctype_digit((string) $arg)) {
-            throw new UnexpectedValueException('Non-integer value given: ' . $arg);
-        }
-        $arg = (integer) $arg;
-
         // Convert abstract operator into SQL operator
         switch ($operator) {
             case '=':
@@ -1010,7 +1034,7 @@ class Model_Computer extends Model_ComputerOrGroup
                 $operator = '>=';
                 break;
             default:
-                throw new UnexpectedValueException('Invalid integer comparision operator: ' . $operator);
+                throw new UnexpectedValueException('Invalid numeric comparision operator: ' . $operator);
         }
 
         list($table, $column) = self::_findCommon($select, $model, $property);
@@ -1021,6 +1045,52 @@ class Model_Computer extends Model_ComputerOrGroup
     }
 
     /**
+     * Apply a filter for an integer value.
+     *
+     * @param Zend_Db_Select Object to apply the filter to
+     * @param string $model Name of model class (without 'Model_' prefix) where property can be found.
+     * This must be either 'Computer' or a valid child object class. Every
+     * other value will trigger an exception.
+     * @param string $property Property to search in. Properties unknown to the model will trigger an exception.
+     * @param string $arg Integer operand (will be validated)
+     * @param string $operator Comparision operator (= == != <> < <= > >= eq ne lt le gt ge)
+     * @return Zend_Db_Select Object with filter applied
+     */
+    protected static function _findInteger($select, $model, $property, $arg, $operator)
+    {
+        // Sanitize input
+        if (!ctype_digit((string) $arg)) {
+            throw new UnexpectedValueException('Non-integer value given: ' . $arg);
+        }
+        $arg = (integer) $arg;
+
+        return self::_findNumber($select, $model, $property, $arg, $operator);
+    }
+
+    /**
+     * Apply a filter for a float value.
+     *
+     * @param Zend_Db_Select Object to apply the filter to
+     * @param string $model Name of model class (without 'Model_' prefix) where property can be found.
+     * This must be either 'Computer' or a valid child object class. Every
+     * other value will trigger an exception.
+     * @param string $property Property to search in. Properties unknown to the model will trigger an exception.
+     * @param string $arg Float operand (will be validated)
+     * @param string $operator Comparision operator (= == != <> < <= > >= eq ne lt le gt ge)
+     * @return Zend_Db_Select Object with filter applied
+     */
+    protected static function _findFloat($select, $model, $property, $arg, $operator)
+    {
+        // Sanitize input
+        if (!is_numeric($arg)) {
+            throw new UnexpectedValueException('Non-numeric value given: ' . $arg);
+        }
+        $arg = (float) $arg;
+
+        return self::_findNumber($select, $model, $property, $arg, $operator);
+    }
+
+    /**
      * Apply a filter for a date value.
      *
      * @param Zend_Db_Select Object to apply the filter to
@@ -1028,7 +1098,7 @@ class Model_Computer extends Model_ComputerOrGroup
      * This must be either 'Computer' or a valid child object class. Every
      * other value will trigger an exception.
      * @param string $property Timestamp property to search in. Unknown properties will trigger an exception.
-     * @param mixed $arg date operand (Zend_Date object or amy valid Zend_Date input). Time of day is ignored.
+     * @param mixed $arg date operand (Zend_Date object or 'yyyy-MM-dd' string). Time of day is ignored.
      * @param string $operator Comparision operator (= == != <> < <= > >= eq ne lt le gt ge)
      * @return Zend_Db_Select Object with filter applied
      */
@@ -1046,8 +1116,13 @@ class Model_Computer extends Model_ComputerOrGroup
         // Other operations (<, >) are defined accordingly.
 
         // Get beginning of day.
-        $dayStart = new Zend_Date($arg, Zend_Date::DATE_SHORT);
+        if ($arg instanceof Zend_Date) {
+            $dayStart = new Zend_Date($arg, Zend_Date::DATE_SHORT);
+        } else {
+            $dayStart = new Zend_Date($arg, 'yyyy-MM-dd');
+        }
         $dayStart->setTime('00:00:00', 'HH:mm:ss');
+
         // Get beginning of next day
         $dayNext = clone $dayStart;
         $dayNext->addDay(1);

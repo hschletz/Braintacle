@@ -37,7 +37,7 @@ require_once ('Braintacle/Validate/Date.php');
  * {@link isValid()} which already does this.
  * @package Forms
  */
-class Form_Search extends Zend_Form
+class Form_Search extends Form_Normalized
 {
 
     /**
@@ -60,6 +60,12 @@ class Form_Search extends Zend_Form
     );
 
     /**
+     * Properties for which to perform a float search
+     * @var array
+     */
+    protected $_typeFloat = array(); // May be populated with user defined fields
+
+    /**
      * Properties for which to perform a timestamp search
      * @var array
      */
@@ -67,6 +73,29 @@ class Form_Search extends Zend_Form
         'InventoryDate',
         'LastContactDate',
     );
+
+    /**
+     * Retrieve the datatype of an element
+     */
+    public function getType($name)
+    {
+        if ($name != 'search') {
+            return 'text';
+        }
+
+        $filter = $this->getValue('filter');
+
+        if (in_array($filter, $this->_typeInteger)) {
+             return 'integer';
+        }
+        if (in_array($filter, $this->_typeFloat)) {
+            return 'float';
+        }
+        if (in_array($filter, $this->_typeDate)) {
+            return 'date';
+        }
+        return 'text';
+    }
 
     /**
      * Build form elements
@@ -134,12 +163,19 @@ class Form_Search extends Zend_Form
         $template = $translate->_('User defined: %s');
         $types = Model_UserDefinedInfo::getTypes();
         foreach ($types as $name => $type) {
+            $key = "UserDefinedInfo.$name";
             switch ($type) {
                 case 'text':
                     break;
                 case 'integer':
+                    $this->_typeInteger[] = $key;
+                    break;
                 case 'float':
+                    $this->_typeFloat[] = $key;
+                    break;
                 case 'date':
+                    $this->_typeDate[] = $key;
+                    break;
                 default:
                     throw new UnexpectedValueException ('Unsupported datatype: ' . $type);
             }
@@ -148,7 +184,7 @@ class Form_Search extends Zend_Form
             } else {
                 $label = ucfirst($name);
             }
-            $this->_filters["UserDefinedInfo.$name"] = sprintf($template, $label);
+            $this->_filters[$key] = sprintf($template, $label);
         }
 
         $filter = new Zend_Form_Element_Select('filter');
@@ -214,16 +250,21 @@ class Form_Search extends Zend_Form
         }
 
         $search->clearValidators();
-        if (in_array($filter, $this->_typeInteger)) {
-            // expecting an integer
+        switch ($this->getType($filter)) {
+            case 'integer':
                 $search->setRequired(true);
                 $search->addValidator('Digits');
-        } elseif (in_array($filter, $this->_typeDate)) {
-            // expecting a date
+                break;
+            case 'float':
+                $search->setRequired(true);
+                $search->addValidator('Float');
+                break;
+            case 'date':
                 $search->setRequired(true);
                 $search->addValidator(new Braintacle_Validate_Date);
-        } else {
-            // arbitrary string, just check length
+                break;
+            default:
+                // arbitrary string, just check length
                 $search->setRequired(false);
                 $search->addValidator('StringLength', false, array(0, 255));
         }
@@ -279,6 +320,7 @@ class Form_Search extends Zend_Form
 
         // Properties for which to perform non-text search
         var typeInteger = "<?php print $this->_getPropertiesString($this->_typeInteger); ?>";
+        var typeFloat = "<?php print $this->_getPropertiesString($this->_typeFloat); ?>";
         var typeDate = "<?php print $this->_getPropertiesString($this->_typeDate); ?>";
 
         /**
@@ -292,6 +334,11 @@ class Form_Search extends Zend_Form
 
             if (typeInteger.search(filter) != -1) {
                 // Integer search
+                display("operator", true);
+                display("exact", false);
+                display("invert", false);
+            } else if (typeFloat.search(filter) != -1) {
+                // Date search
                 display("operator", true);
                 display("exact", false);
                 display("invert", false);

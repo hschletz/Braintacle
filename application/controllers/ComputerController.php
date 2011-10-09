@@ -272,6 +272,15 @@ class ComputerController extends Zend_Controller_Action
                         $columns[] = $form->getValue('filter');
                     }
                 }
+
+                // Normalize search argument
+                $search = $form->getValue('search'); // Will process integers, floats and dates
+                if ($form->getType('search') == 'date') {
+                    // Convert Zend_Date to short date string
+                    $search = $search->get('yyyy-MM-dd');
+                }
+                $this->_setParam('search', $search);
+
                 // Redirect to index page with all search parameters
                 $this->_redirect(
                     'computer/index' . $this->getFilterUriPart() . '/customFilter/1/columns/' . implode(',', $columns)

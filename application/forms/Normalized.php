@@ -97,7 +97,7 @@ abstract class Form_Normalized extends Zend_Form
             switch ($this->getType($name)) {
                 case 'integer':
                 case 'float':
-                    $value = Zend_Locale_Format::getNumber($value);
+                    $value = Zend_Locale_Format::getNumber((string) $value);
                     break;
                 case 'date':
                     $value = new Zend_Date($value);
