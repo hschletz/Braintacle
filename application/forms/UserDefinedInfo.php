@@ -24,16 +24,20 @@
  * @filesource
  */
 /**
+ * Includes
+ */
+require_once ('Braintacle/Validate/Date.php');
+/**
  * Form for display/setting of user defined fields for a computer.
  *
  * The field names are automatically retrieved from the database. Integer,
  * float and date values are formatted with the default locale upon display and
  * must be entered localized. The methods for interaction with the application
  * (setDefault[s](), getValue[s]()) however accept/return only canonicalized
- * values (standard integers/floats and ISO-style date strings).
+ * values (standard integers/floats and Zend_Date objects).
  * @package Forms
  */
-class Form_UserDefinedInfo extends Zend_Form
+class Form_UserDefinedInfo extends Form_Normalized
 {
 
     /**
@@ -78,7 +82,7 @@ class Form_UserDefinedInfo extends Zend_Form
                     $element->addValidator('Float', false, array('options' =>'locale'));
                     break;
                 case 'date':
-                    $element->addValidator('Date', false, array('options' =>'locale'));
+                    $element->addValidator(new Braintacle_Validate_Date);
                     break;
             }
             $this->addElement($element);
@@ -90,72 +94,11 @@ class Form_UserDefinedInfo extends Zend_Form
     }
 
     /**
-     * Convert non-text values to their localized form
+     * Get the datatype for an element
      */
-    public function setDefault($name, $value)
+    public function getType($name)
     {
-        switch ($this->_types[$name]) {
-            case 'integer':
-            case 'float':
-                $value = Zend_Locale_Format::toNumber($value);
-                break;
-            case 'date':
-                if (!is_null($value)) {
-                    $value = $this->getView()->date($value, Zend_Date::DATE_MEDIUM);
-                }
-                break;
-        }
-        return parent::setDefault($name, $value);
-    }
-
-    /**
-     * Run {@link _normalize()} on retrieved value.
-     */
-    public function getValue($name)
-    {
-        return $this->_normalize($name, parent::getValue($name));
-    }
-
-    /**
-     * Run {@link _normalize()} on retrieved values.
-     */
-    public function getValues($suppressArrayNotation=false)
-    {
-        $values = parent::getValues($suppressArrayNotation);
-
-        foreach ($values as $name => $value) {
-            $values[$name] = $this->_normalize($name, $value);
-        }
-
-        return $values;
-    }
-
-    /**
-     * Normalize a retrieved value.
-     * - Non-text values are converted into a non-localized form
-     * - Empty strings are converted to NULL. This makes the values suitable
-     *   for direct insertion into the database.
-     * @param string $name Field name, needed to determine datatype
-     * @param string $value Raw value
-     * @return mixed Normalized value
-     */
-    protected function _normalize($name, $value)
-    {
-        if ($value === '') {
-            $value = null;
-        } else {
-            switch ($this->_types[$name]) {
-                case 'integer':
-                case 'float':
-                    $value = Zend_Locale_Format::getNumber($value);
-                    break;
-                case 'date':
-                        $date = new Zend_Date($value);
-                        $value = $date->toString('yyyy-MM-dd');
-                    break;
-            }
-        }
-        return $value;
+        return $this->_types[$name];
     }
 
 }

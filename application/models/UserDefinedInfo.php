@@ -106,10 +106,14 @@ class Model_UserDefinedInfo extends Model_Abstract
             throw new RuntimeException('No Computer was associated with this object');
         }
 
-        // Have input processed by setProperty() to ensure valid data and to
-        // update the object's internal state
         foreach ($values as $property => $value) {
+            // Have input processed by setProperty() to ensure valid data and to
+            // update the object's internal state
             $this->setProperty($property, $value);
+            // Convert dates
+            if ($value instanceof Zend_Date) {
+                $values[$property] = $value->get(Zend_Date::ISO_8601);
+            }
         }
 
         $db = Zend_Registry::get('db');
