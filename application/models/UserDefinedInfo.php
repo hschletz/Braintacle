@@ -162,4 +162,19 @@ class Model_UserDefinedInfo extends Model_Abstract
         return self::$_allTypesStatic;
     }
 
+    /**
+     * Static variant of {@link getPropertyType()}
+     * @param string $property Property whose datatype to retrieve
+     * @return string Datatype (text, integer, float, date)
+     */
+    static function getType($property)
+    {
+        $types = self::getTypes();
+        if (isset($types[$property])) {
+            return $types[$property];
+        } else {
+            throw new UnexpectedValueException('Unknown property: ' . $property);
+        }
+    }
+
 }

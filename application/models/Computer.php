@@ -353,8 +353,7 @@ class Model_Computer extends Model_ComputerOrGroup
                     }
                     list($model, $property) = explode('.', $type);
                     if ($model == 'UserDefinedInfo') {
-                        $dummy = new Model_UserDefinedInfo;
-                        switch ($dummy->getPropertyType($property)) {
+                        switch (Model_UserDefinedInfo::getType($property)) {
                             case 'text':
                                 $select = self::_findString(
                                     $select,
