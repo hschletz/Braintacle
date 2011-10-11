@@ -216,9 +216,10 @@ sub handler{
             $i++;
         }
     }
+    my $i;
     # Fix bad date strings for software entries
     if ($query->{'CONTENT'}->{'SOFTWARES'}) {
-        my $i = 0;
+        $i = 0;
         while ($query->{'CONTENT'}->{'SOFTWARES'}[$i]) {
             # Valid date strings must be YYYY/MM/DD
             if ($query->{'CONTENT'}->{'SOFTWARES'}[$i]->{'INSTALLDATE'} =~ /^(\d\d\d\d)\/(\d\d)}\/(\d\d)}$/) {
@@ -233,6 +234,27 @@ sub handler{
             } else {
                 # Bad syntax.
                 $query->{'CONTENT'}->{'SOFTWARES'}[$i]->{'INSTALLDATE'} = undef;
+            }
+            $i++;
+        }
+    }
+    # Fix bad date strings for 'DRIVES' entries
+    if ($query->{'CONTENT'}->{'DRIVES'}) {
+        $i = 0;
+        while ($query->{'CONTENT'}->{'DRIVES'}[$i]) {
+            # Valid timestamp strings must be 'YYYY/[M]M/[D]D'. Time part will be truncated.
+            if ($query->{'CONTENT'}->{'DRIVES'}[$i]->{'CREATEDATE'} =~ /^(\d\d\d\d)\/(\d{1,2})\/(\d{1,2})( |$)/) {
+                # Since input can be a random string, additionally check if it realy constitutes a valid date.
+                if (check_date($1, $2, $3)) {
+                    # Convert to ISO format for maximum portability.
+                    $query->{'CONTENT'}->{'DRIVES'}[$i]->{'CREATEDATE'} = "$1-$2-$3";
+                } else {
+                    # Syntax correct, but values out of range
+                    $query->{'CONTENT'}->{'DRIVES'}[$i]->{'CREATEDATE'} = undef;
+                }
+            } else {
+                # Bad syntax.
+                $query->{'CONTENT'}->{'DRIVES'}[$i]->{'CREATEDATE'} = undef;
             }
             $i++;
         }
