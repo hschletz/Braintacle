@@ -520,7 +520,10 @@ class Model_Computer extends Model_ComputerOrGroup
                 // information is already there. Otherwise, _userDefinedInfo
                 // will be an array with the given key/value pair.
                 if (!($this->_userDefinedInfo instanceof Model_UserDefinedInfo)) {
-                    if (Model_UserDefinedInfo::getType($property) == 'date') {
+                    if (
+                        !is_null($value) and
+                        Model_UserDefinedInfo::getType($property) == 'date'
+                    ) {
                         $value = new Zend_Date($value);
                     }
                     $this->_userDefinedInfo[$property] = $value;
