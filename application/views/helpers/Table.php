@@ -131,23 +131,25 @@ class Zend_View_Helper_Table extends Zend_View_Helper_Abstract
                 if (array_key_exists($column, $renderCallbacks)) {
                     $row[] = $renderCallbacks[$column]($this->view, $object, $column);
                 } else {
-                    // use localized output format
                     $value = $object->getProperty($column);
-                    switch ($formats[$column]) {
-                        case 'integer':
-                        case 'decimal':
-                        case 'float':
-                            $value = Zend_Locale_Format::toNumber($value);
-                            break;
-                        case 'date':
-                            $value = $this->view->date($value, Zend_Date::DATE_MEDIUM);
-                            break;
-                        case 'time':
-                            $value = $this->view->date($value, Zend_Date::TIME_MEDIUM);
-                            break;
-                        case 'timestamp':
-                            $value = $this->view->date($value, Zend_Date::DATETIME_SHORT);
-                            break;
+                    if (!is_null($value)) {
+                        // use localized output format
+                        switch ($formats[$column]) {
+                            case 'integer':
+                            case 'decimal':
+                            case 'float':
+                                $value = Zend_Locale_Format::toNumber($value);
+                                break;
+                            case 'date':
+                                $value = $this->view->date($value, Zend_Date::DATE_MEDIUM);
+                                break;
+                            case 'time':
+                                $value = $this->view->date($value, Zend_Date::TIME_MEDIUM);
+                                break;
+                            case 'timestamp':
+                                $value = $this->view->date($value, Zend_Date::DATETIME_SHORT);
+                                break;
+                        }
                     }
                     $row[] = $this->view->escape($value);
                 }
