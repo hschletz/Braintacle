@@ -181,8 +181,8 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string|array $filter Name or array of names of a pre-defined filter routine
      * @param string|array $search Search parameter(s) passed to the filter. May be case sensitive depending on DBMS.
      * @param bool|array $exact Force exact match on search parameter(s) (no wildcards, no substrings) (strings only)
-     * @param bool|array $invert Invert query results (return all computers NOT matching criteria) (strings only)
-     * @param string|array $operator Comparision operator (integer search only)
+     * @param bool|array $invert Invert query results (return all computers NOT matching criteria)
+     * @param string|array $operator Comparision operator (numeric/date search only)
      * @return Zend_Db_Statement Query result
      */
     static function createStatementStatic(
@@ -288,11 +288,11 @@ class Model_Computer extends Model_ComputerOrGroup
                 case 'CpuCores':
                 case 'PhysicalMemory':
                 case 'SwapMemory':
-                    $select = self::_findInteger($select, 'Computer', $type, $arg, $operator);
+                    $select = self::_findInteger($select, 'Computer', $type, $arg, $operator, $invertResult);
                     break;
                 case 'InventoryDate':
                 case 'LastContactDate':
-                    $select = self::_findDate($select, 'Computer', $type, $arg, $operator);
+                    $select = self::_findDate($select, 'Computer', $type, $arg, $operator, $invertResult);
                     break;
                 case 'PackageNonnotified':
                 case 'PackageSuccess':
@@ -342,7 +342,8 @@ class Model_Computer extends Model_ComputerOrGroup
                         $model,
                         $property,
                         $arg,
-                        $operator
+                        $operator,
+                        $invertResult
                     );
                     $filterGroups = false;
                     break;
@@ -370,7 +371,8 @@ class Model_Computer extends Model_ComputerOrGroup
                                     'UserDefinedInfo',
                                     $property,
                                     $arg,
-                                    $operator
+                                    $operator,
+                                    $invertResult
                                 );
                                 break;
                             case 'float':
@@ -379,7 +381,8 @@ class Model_Computer extends Model_ComputerOrGroup
                                     'UserDefinedInfo',
                                     $property,
                                     $arg,
-                                    $operator
+                                    $operator,
+                                    $invertResult
                                 );
                                 break;
                             case 'date':
@@ -388,7 +391,8 @@ class Model_Computer extends Model_ComputerOrGroup
                                     'UserDefinedInfo',
                                     $property,
                                     $arg,
-                                    $operator
+                                    $operator,
+                                    $invertResult
                                 );
                                 break;
                             default:
@@ -1003,9 +1007,10 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string $property Property to search in. Properties unknown to the model will trigger an exception.
      * @param string $arg Numeric operand
      * @param string $operator Comparision operator (= == != <> < <= > >= eq ne lt le gt ge)
+     * @param bool $invertResult Return computers NOT matching criteria
      * @return Zend_Db_Select Object with filter applied
      */
-    protected static function _findNumber($select, $model, $property, $arg, $operator)
+    protected static function _findNumber($select, $model, $property, $arg, $operator, $invertResult)
     {
         // Convert abstract operator into SQL operator
         switch ($operator) {
@@ -1041,7 +1046,11 @@ class Model_Computer extends Model_ComputerOrGroup
 
         list($table, $column) = self::_findCommon($select, $model, $property);
 
-        $select->where("$table.$column $operator ?", $arg);
+        $where = "$table.$column $operator ?";
+        if ($invertResult) {
+            $where = "($where) IS NOT TRUE"; // include NULL values
+        }
+        $select->where($where, $arg);
 
         return $select;
     }
@@ -1056,9 +1065,10 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string $property Property to search in. Properties unknown to the model will trigger an exception.
      * @param string $arg Integer operand (will be validated)
      * @param string $operator Comparision operator (= == != <> < <= > >= eq ne lt le gt ge)
+     * @param bool $invertResult Return computers NOT matching criteria
      * @return Zend_Db_Select Object with filter applied
      */
-    protected static function _findInteger($select, $model, $property, $arg, $operator)
+    protected static function _findInteger($select, $model, $property, $arg, $operator, $invertResult)
     {
         // Sanitize input
         if (!ctype_digit((string) $arg)) {
@@ -1066,7 +1076,7 @@ class Model_Computer extends Model_ComputerOrGroup
         }
         $arg = (integer) $arg;
 
-        return self::_findNumber($select, $model, $property, $arg, $operator);
+        return self::_findNumber($select, $model, $property, $arg, $operator, $invertResult);
     }
 
     /**
@@ -1079,9 +1089,10 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string $property Property to search in. Properties unknown to the model will trigger an exception.
      * @param string $arg Float operand (will be validated)
      * @param string $operator Comparision operator (= == != <> < <= > >= eq ne lt le gt ge)
+     * @param bool $invertResult Return computers NOT matching criteria
      * @return Zend_Db_Select Object with filter applied
      */
-    protected static function _findFloat($select, $model, $property, $arg, $operator)
+    protected static function _findFloat($select, $model, $property, $arg, $operator, $invertResult)
     {
         // Sanitize input
         if (!is_numeric($arg)) {
@@ -1089,7 +1100,7 @@ class Model_Computer extends Model_ComputerOrGroup
         }
         $arg = (float) $arg;
 
-        return self::_findNumber($select, $model, $property, $arg, $operator);
+        return self::_findNumber($select, $model, $property, $arg, $operator, $invertResult);
     }
 
     /**
@@ -1102,9 +1113,10 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string $property Timestamp property to search in. Unknown properties will trigger an exception.
      * @param mixed $arg date operand (Zend_Date object or 'yyyy-MM-dd' string). Time of day is ignored.
      * @param string $operator Comparision operator (= == != <> < <= > >= eq ne lt le gt ge)
+     * @param bool $invertResult Return computers NOT matching criteria
      * @return Zend_Db_Select Object with filter applied
      */
-    protected static function _findDate($select, $model, $property, $arg, $operator)
+    protected static function _findDate($select, $model, $property, $arg, $operator, $invertResult)
     {
         // This method compares date values (ignoring time part) to timestamp
         // columns. The comparision can not be made directly because the date
@@ -1147,35 +1159,40 @@ class Model_Computer extends Model_ComputerOrGroup
             case '=':
             case '==':
             case 'eq':
-                $select->where("$operand >= ?", $dayStart);
-                $select->where("$operand < ?", $dayNext);
+                $where[] = $db->quoteInto("$operand >= ?", $dayStart);
+                $where[] = $db->quoteInto("$operand < ?", $dayNext);
                 break;
             case '!=':
             case '<>':
             case 'ne':
                 $expression1 = $db->quoteInto("$operand < ?", $dayStart);
                 $expression2 = $db->quoteInto("$operand >= ?", $dayNext);
-                $select->where("$expression1 OR $expression2");
+                $where[] = "$expression1 OR $expression2";
                 break;
             case '<':
             case 'lt':
-                $select->where("$operand < ?", $dayStart);
+                $where[] = $db->quoteInto("$operand < ?", $dayStart);
                 break;
             case '<=':
             case 'le':
-                $select->where("$operand < ?", $dayNext);
+                $where[] = $db->quoteInto("$operand < ?", $dayNext);
                 break;
             case '>':
             case 'gt':
-                $select->where("$operand >= ?", $dayNext);
+                $where[] = $db->quoteInto("$operand >= ?", $dayNext);
                 break;
             case '>=':
             case 'ge':
-                $select->where("$operand >= ?", $dayStart);
+                $where[] = $db->quoteInto("$operand >= ?", $dayStart);
                 break;
             default:
                 throw new UnexpectedValueException('Invalid date comparision operator: ' . $operator);
         }
+        $where = implode(' AND ', $where);
+        if ($invertResult) {
+            $where = "($where) IS NOT TRUE"; // include NULL values
+        }
+        $select->where($where);
 
         return $select;
     }

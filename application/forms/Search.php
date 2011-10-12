@@ -220,7 +220,6 @@ class Form_Search extends Form_Normalized
         $exact->setLabel('Exact match');
         $this->addElement($exact);
 
-        // Only displayed for text searches
         $invert = new Zend_Form_Element_Checkbox('invert');
         $invert->setLabel('Invert results');
         $this->addElement($invert);
@@ -336,22 +335,18 @@ class Form_Search extends Form_Normalized
                 // Integer search
                 display("operator", true);
                 display("exact", false);
-                display("invert", false);
             } else if (typeFloat.search(filter) != -1) {
                 // Date search
                 display("operator", true);
                 display("exact", false);
-                display("invert", false);
             } else if (typeDate.search(filter) != -1) {
                 // Date search
                 display("operator", true);
                 display("exact", false);
-                display("invert", false);
             } else {
                 // Text search
                 display("operator", false);
                 display("exact", true);
-                display("invert", true);
             }
         }
 
