@@ -134,7 +134,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         } else {
             $translate = new Zend_Translate(
                 'gettext',
-                '../languages',
+                realpath(dirname(APPLICATION_PATH) . DIRECTORY_SEPARATOR . 'languages'),
                 $language,
                 array(
                     'scan' => Zend_Translate::LOCALE_DIRECTORY,
