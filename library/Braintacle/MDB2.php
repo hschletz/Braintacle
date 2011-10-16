@@ -157,7 +157,7 @@ class Braintacle_MDB2
         // object.
         if (empty(self::$_dsn)) {
             self::$_dsn = $dsn;
-            $mdb2->setErrorHandling(PEAR_ERROR_EXCEPTION);
+            $mdb2->setErrorHandling(PEAR_ERROR_TRIGGER, E_USER_ERROR);
             $mdb2->loadModule('Reverse');
         }
 
