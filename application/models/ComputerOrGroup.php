@@ -67,7 +67,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
     {
         $db = Zend_Registry::get('db');
         $id = $this->getId();
-        $expire = Model_Config::getOption('LockValidity');
+        $expire = Model_Config::get('LockValidity');
 
         // Check if a lock already exists. CURRENT_TIMESTAMP is fetched from the
         // database to ensure that the same timezone is used for comparisions.

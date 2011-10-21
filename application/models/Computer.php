@@ -635,7 +635,7 @@ class Model_Computer extends Model_ComputerOrGroup
     {
         $filters['Computer'] = $this->getId();
         // Apply extra filters.
-        if ($type == 'Software' and !Model_Config::getOption('DisplayBlacklistedSoftware')) {
+        if ($type == 'Software' and !Model_Config::get('DisplayBlacklistedSoftware')) {
             $filters['Status'] = 'notIgnored';
         }
         $className = "Model_$type";
@@ -1269,7 +1269,7 @@ class Model_Computer extends Model_ComputerOrGroup
             // Delete row in hardware table itself
             $db->delete('hardware', array('id=?' => $id));
             // Insert row into deleted_equiv if configured
-            if (Model_Config::getOption('TraceDeleted')) {
+            if (Model_Config::get('TraceDeleted')) {
                 $db->insert(
                     'deleted_equiv',
                     array(

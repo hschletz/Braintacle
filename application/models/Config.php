@@ -29,7 +29,7 @@
  * accessor methods. {@link $optionMap} defines mappings from logical option
  * names to the names actually stored in the table. These internal names are
  * sometimes not very meaningful. Only the logical names should be used
- * instead through {@link getOption()}.
+ * instead through {@link get()}.
  *
  * This class can optionally provide default values for options not present
  * in the table. These defaults are defined in {@link $_defaults}.
@@ -76,7 +76,7 @@ class Model_Config
         // Should blacklisted software be displayed in computer and software inventory?
         'DisplayBlacklistedSoftware' => 'BRAINTACLE_DISPLAY_BLACKLISTED_SOFTWARE',
         // OCS options. The list is incomplete; only options used by Braintacle are listed.
-        'PackagePath' => 'DOWNLOAD_PACK_DIR', // getOption() will append '/download/'
+        'PackagePath' => 'DOWNLOAD_PACK_DIR', // get() will append '/download/'
         'LockValidity' => 'LOCK_REUSE_TIME', // Seconds before a computer's lock expires
         'TraceDeleted' => 'TRACE_DELETED', // Use deleted_equiv table
         'GroupCacheExpirationInterval' => 'GROUPS_CACHE_REVALIDATE', // Seconds between cache rebuilds
@@ -103,7 +103,7 @@ class Model_Config
         'DefaultMergeGroups' => '1',
         'DefaultDeployGroups' => '1',
         'DefaultDeleteInterfaces' => '1',
-        // Default for PackagePath is provided by getOption()
+        // Default for PackagePath is provided by get()
         'LockValidity' => 600,
         'TraceDeleted' => false,
         'GroupCacheExpirationInterval' => 600,
@@ -143,7 +143,7 @@ class Model_Config
      * @param string $option Logical option name
      * @return string Option value
      */
-    static function getOption($option)
+    static function get($option)
     {
         $db = Zend_Registry::get('db');
 

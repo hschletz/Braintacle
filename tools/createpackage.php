@@ -64,27 +64,27 @@ $package->fromArray(
         'FileName' => basename($file),
         'FileType' => $type,
         'FileLocation' => $file,
-        'Priority' => Model_Config::getOption('DefaultPackagePriority'),
-        'Platform' => Model_Config::getOption('DefaultPlatform'),
-        'DeployAction' => Model_Config::getOption('DefaultAction'),
-        'ActionParam' => Model_Config::getOption('DefaultActionParam'),
-        'Warn' => Model_Config::getOption('DefaultWarn'),
-        'WarnMessage' => Model_Config::getOption('DefaultWarnMessage'),
-        'WarnCountdown' => Model_Config::getOption('DefaultWarnCountdown'),
-        'WarnAllowAbort' => Model_Config::getOption('DefaultWarnAllowAbort'),
-        'WarnAllowDelay' => Model_Config::getOption('DefaultWarnAllowDelay'),
-        'UserActionRequired' => Model_Config::getOption('DefaultUserActionRequired'),
-        'UserActionMessage' => Model_Config::getOption('DefaultUserActionMessage'),
-        'MaxFragmentSize' => Model_Config::getOption('DefaultMaxFragmentSize'),
-        'InfoFileUrlPath' => Model_Config::getOption('DefaultInfoFileLocation'),
-        'DownloadUrlPath' => Model_Config::getOption('DefaultDownloadLocation'),
-        'CertFile' => Model_Config::getOption('DefaultCertificate'),
+        'Priority' => Model_Config::get('DefaultPackagePriority'),
+        'Platform' => Model_Config::get('DefaultPlatform'),
+        'DeployAction' => Model_Config::get('DefaultAction'),
+        'ActionParam' => Model_Config::get('DefaultActionParam'),
+        'Warn' => Model_Config::get('DefaultWarn'),
+        'WarnMessage' => Model_Config::get('DefaultWarnMessage'),
+        'WarnCountdown' => Model_Config::get('DefaultWarnCountdown'),
+        'WarnAllowAbort' => Model_Config::get('DefaultWarnAllowAbort'),
+        'WarnAllowDelay' => Model_Config::get('DefaultWarnAllowDelay'),
+        'UserActionRequired' => Model_Config::get('DefaultUserActionRequired'),
+        'UserActionMessage' => Model_Config::get('DefaultUserActionMessage'),
+        'MaxFragmentSize' => Model_Config::get('DefaultMaxFragmentSize'),
+        'InfoFileUrlPath' => Model_Config::get('DefaultInfoFileLocation'),
+        'DownloadUrlPath' => Model_Config::get('DefaultDownloadLocation'),
+        'CertFile' => Model_Config::get('DefaultCertificate'),
     )
 );
 if ($package->build(false)) {
     $errType = 'WARNING: ';
     $message = "Package successfully built.\n";
-    $path = realpath(Model_Config::getOption('PackagePath') . '/' . $package->getTimestamp());
+    $path = realpath(Model_Config::get('PackagePath') . '/' . $package->getTimestamp());
 } else {
     $errType = 'ERROR: ';
     $message = "The package has not been built.\n";

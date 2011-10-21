@@ -41,7 +41,7 @@ class Form_YesNo_DeleteComputer extends Form_YesNo
 
         $deleteInterfaces = new Zend_Form_Element_Checkbox('DeleteInterfaces');
         $deleteInterfaces->setLabel('Delete interfaces from network listing');
-        $deleteInterfaces->setChecked(Model_Config::getOption('DefaultDeleteInterfaces'));
+        $deleteInterfaces->setChecked(Model_Config::get('DefaultDeleteInterfaces'));
         $this->addElement($deleteInterfaces);
 
         parent::init();

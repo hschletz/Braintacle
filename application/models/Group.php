@@ -178,7 +178,7 @@ class Model_Group extends Model_ComputerOrGroup
                 $now = Zend_Date::now()->get(Zend_Date::TIMESTAMP);
                 $select->where(
                     'revalidate_from <= ?',
-                    $now - Model_Config::getOption('GroupCacheExpirationInterval')
+                    $now - Model_Config::get('GroupCacheExpirationInterval')
                 );
                 break;
             default:
@@ -221,7 +221,7 @@ class Model_Group extends Model_ComputerOrGroup
                 Zend_Date::TIMESTAMP
             );
             if ($property == 'CacheExpirationDate') {
-                $value->addSecond(Model_Config::getOption('GroupCacheExpirationInterval'));
+                $value->addSecond(Model_Config::get('GroupCacheExpirationInterval'));
             }
         } else {
             $value = parent::getProperty($property, $rawValue);
@@ -246,7 +246,7 @@ class Model_Group extends Model_ComputerOrGroup
         if ($property == 'CacheExpirationDate') {
             // Create new object to leave original object untouched
             $value = new Zend_Date($value);
-            $value->subSecond(Model_Config::getOption('GroupCacheExpirationInterval'));
+            $value->subSecond(Model_Config::get('GroupCacheExpirationInterval'));
             $this->__set($columnName, $value->get(Zend_Date::TIMESTAMP));
         } elseif ($property == 'CacheCreationDate') {
             $this->__set($columnName, $value->get(Zend_Date::TIMESTAMP));
@@ -363,7 +363,7 @@ class Model_Group extends Model_ComputerOrGroup
         }
 
         // Update CacheCreationDate and CacheExpirationDate in the database
-        $fuzz = mt_rand(0, Model_Config::getOption('GroupCacheExpirationFuzz'));
+        $fuzz = mt_rand(0, Model_Config::get('GroupCacheExpirationFuzz'));
         $minExpires = new Zend_Date($currentTime);
         $minExpires->addSecond($fuzz);
 

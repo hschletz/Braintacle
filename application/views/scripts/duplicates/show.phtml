@@ -100,7 +100,7 @@ $formContent .= $this->htmlTag(
     'p',
     sprintf(
         '<input type="checkbox" name="mergeUserdefined"%s>%s',
-        Model_Config::getOption('DefaultMergeUserdefined') ? ' checked' : '',
+        Model_Config::get('DefaultMergeUserdefined') ? ' checked' : '',
         $this->translate('Merge user supplied information')
     ),
     array('class' => 'textcenter')
@@ -109,7 +109,7 @@ $formContent .= $this->htmlTag(
     'p',
     sprintf(
         '<input type="checkbox" name="mergeGroups"%s>%s',
-        Model_Config::getOption('DefaultMergeGroups') ? ' checked' : '',
+        Model_Config::get('DefaultMergeGroups') ? ' checked' : '',
         $this->translate('Merge manual group assignments')
     ),
     array('class' => 'textcenter')
@@ -118,7 +118,7 @@ $formContent .= $this->htmlTag(
     'p',
     sprintf(
         '<input type="checkbox" name="mergePackages"%s>%s',
-        Model_Config::getOption('DefaultMergePackages') ? ' checked' : '',
+        Model_Config::get('DefaultMergePackages') ? ' checked' : '',
         $this->translate('Merge missing package assignments')
     ),
     array('class' => 'textcenter')

@@ -407,7 +407,7 @@ class Model_Package extends Model_Abstract
     public function getPath()
     {
         return Zend_Filter::filterStatic(
-            Model_Config::getOption('PackagePath')
+            Model_Config::get('PackagePath')
             . DIRECTORY_SEPARATOR
             . $this->getTimestamp(),
             'RealPath',
