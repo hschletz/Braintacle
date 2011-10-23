@@ -111,6 +111,17 @@ class Model_Config
     );
 
     /**
+     * Options stored in the 'ivalue' column (everything else goes to 'tvalue')
+     * @var array
+     */
+    protected static $_iValues = array(
+        'LockValidity',
+        'TraceDeleted',
+        'GroupCacheExpirationInterval',
+        'GroupCacheExpirationFuzz',
+    );
+
+    /**
      * Return internal name matching the given logical name
      * @param string $option logical option name
      * @return string internal option name
@@ -129,47 +140,42 @@ class Model_Config
     /**
      * Retrieve the value for a given option
      *
-     * The config table stores 2 values in each row: ivalue (integer) and
-     * tvalue (text). Only one of them is used; the other one is usually NULL.
-     * There are a few rows where tvalue is relevant and ivalue is 0, in which
-     * case ivalue is ignored. This is an unnecessary complication since the
-     * datatype is ignored by the application. This function performs following
-     * logic to determine the result:
-     *
-     * 1. If the option is present in the table and its tvalue is not null,
-     *    tvalue is returned, otherwise ivalue is returned.
-     * 2. If the option is not present in the table and a default is defined in
-     *    $_defaults, the default is returned, otherwise NULL is returned.
      * @param string $option Logical option name
-     * @return string Option value
+     * @return mixed Option value (if set), default value (if defined) or NULL
      */
     static function get($option)
     {
         $db = Zend_Registry::get('db');
 
-        $row = $db->fetchRow(
-            'SELECT ivalue,tvalue FROM config WHERE name=?',
+        if (in_array($option, self::$_iValues)) {
+            $column = 'ivalue';
+        } else {
+            $column = 'tvalue';
+        }
+
+        $value = $db->fetchOne(
+            "SELECT $column FROM config WHERE name=?",
             Model_Config::getOcsOptionName($option)
         );
-        if ($row) {
-            if (!is_null($row->tvalue)) {
-                $value = $row->tvalue;
-            } else {
-                $value = $row->ivalue;
-            }
-        } else {
-            if (array_key_exists($option, Model_Config::$_defaults)) {
-                $value = Model_Config::$_defaults[$option];
-            } else {
-                $value = null;
-            }
-        }
 
         if ($option == 'PackagePath') {
             if (!$value) {
+                // Default can only be applied at runtime, not in static declaration
                 $value = $_SERVER['DOCUMENT_ROOT'];
             }
+            // Only base directory is stored in config. Always append real directory.
             $value .= '/download/';
+        }
+
+        if ($value === false) {
+            // No entry present in database
+            if (isset(self::$_defaults[$option])) {
+                // Apply default
+                $value = self::$_defaults[$option];
+            } else {
+                // No default
+                $value = null;
+            }
         }
 
         return $value;
