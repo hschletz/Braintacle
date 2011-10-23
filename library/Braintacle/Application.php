@@ -68,6 +68,7 @@ class Braintacle_Application
             APPLICATION_ENV,
             APPLICATION_PATH . '/configs/application.ini'
         );
+        $application->setBootstrap(APPLICATION_PATH . '/Bootstrap.php');
         $application->bootstrap()
                     ->run();
     }

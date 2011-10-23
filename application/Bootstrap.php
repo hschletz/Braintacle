@@ -155,9 +155,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initViewHelpers()
     {
-        $this->bootstrap('layout');
-        $layout = $this->getResource('layout');
+        $layout = Zend_Layout::startMvc();
+        $layout->setLayoutPath(APPLICATION_PATH . '/layouts');
         $view = $layout->getView();
+        $view->strictVars(true);
 
         $view->doctype('HTML4_STRICT');
 
@@ -176,6 +177,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         // Create objects (they are not yet initialized at this time)
         $controller = Zend_Controller_Front::getInstance();
+        $controller->setControllerDirectory(APPLICATION_PATH . '/controllers');
         $request = new Zend_Controller_Request_Http;
         $response = new Zend_Controller_Response_Http;
 

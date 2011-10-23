@@ -55,7 +55,10 @@ $menu = $this->navigation()->menu();
 // Top level menu
 echo $menu->renderMenu(
     null,
-    array('maxDepth' => 0)
+    array(
+        'maxDepth' => 0,
+        'ulClass' => 'navigation'
+    )
 );
 
 if (Zend_Registry::isRegistered('subNavigation')) {
