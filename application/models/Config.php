@@ -181,4 +181,52 @@ class Model_Config
         return $value;
     }
 
+    /**
+     * Set the value for a given option
+     *
+     * @param string $option Logical option name
+     * @param mixed $value Option value
+     */
+    static function set($option, $value)
+    {
+        $db = Zend_Registry::get('db');
+
+        if (in_array($option, self::$_iValues)) {
+            // Validate and cast $value
+            if ($value === false or ctype_digit((string) $value)) {
+                $value = (integer) $value;
+            } else {
+                throw new UnexpectedValueException(
+                    'Tried to set non-integer value to integer option'
+                );
+            }
+            $column = 'ivalue';
+        } else {
+            $value = (string) $value;
+            $column = 'tvalue';
+        }
+
+        $ocsOptionName = self::getOcsOptionName($option);
+        $oldValue = $db->fetchOne(
+            "SELECT $column FROM config WHERE name=?",
+            $ocsOptionName
+        );
+
+        if ($oldValue === false) { // No row yet
+            $db->insert(
+                'config',
+                array(
+                    'name' => $ocsOptionName,
+                    $column => $value
+                )
+            );
+        } elseif ($value != $oldValue) { // Update row only if necessary
+            $db->update(
+                'config',
+                array($column => $value),
+                array('name=?' => $ocsOptionName)
+            );
+        }
+    }
+
 }
