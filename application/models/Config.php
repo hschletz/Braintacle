@@ -155,7 +155,7 @@ class Model_Config
 
         $value = $db->fetchOne(
             "SELECT $column FROM config WHERE name=?",
-            Model_Config::getOcsOptionName($option)
+            self::getOcsOptionName($option)
         );
 
         if ($option == 'PackagePath') {
