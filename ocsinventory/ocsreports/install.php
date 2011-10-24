@@ -14,6 +14,7 @@
 error_reporting(E_ALL);
 require_once ('require/function_mdb2.php');
 require_once ('require/function_misc.php');
+set_include_path(get_include_path() . PATH_SEPARATOR . '../../library');
 ?>
 <html>
 <head>
@@ -197,143 +198,31 @@ $keepuser=false;
 	echo "<br><center><font color=black><b>Please wait, database update may take up to 30 minutes...";
 	flush();
 
-require_once 'MDB2/Schema.php';
+// Set up logger
+define('APPLICATION_PATH', realpath('../../application'));
+require_once 'Zend/Log.php';
+require_once 'Zend/Log/Formatter/Simple.php';
+require_once 'Zend/Log/Writer/Mock.php';
+$writer = new Zend_Log_Writer_Mock;
+$logger = new Zend_Log($writer);
 
-function schema_errorCallback ($err) {
-	unlink("dbconfig.inc.php");
-	print "<p>ERROR: Could not update the Database.</p>\n<p>MDB2_Schema error was: ";
-	print htmlspecialchars ($err->getMessage());
-	print "</p>\n<p>";
-	print htmlspecialchars ($err->getUserInfo());
-	print "</p>";
-	die();
+// Create Schema manager object
+require_once 'Braintacle/MDB2.php';
+Braintacle_MDB2::setErrorReporting();
+require_once 'Braintacle/SchemaManager.php';
+$manager = new Braintacle_SchemaManager($logger, $link);
+
+// Update the database automatically
+$manager->updateAll();
+Braintacle_MDB2::resetErrorReporting();
+
+// Print status
+echo '<p>';
+foreach($writer->events as $event) {
+    echo htmlspecialchars("$event[priorityName]: $event[message]");
+    echo "<br>\n";
 }
-
-$schema =& MDB2_Schema::factory($link, array ('force_defaults' => false));
-if (PEAR::isError($schema)) {
-	unlink("dbconfig.inc.php");
-	die ("<p>ERROR: Could not create MDB2_Schema Object</p>");
-}
-$schema->setErrorHandling (PEAR_ERROR_CALLBACK, 'schema_errorCallback');
-
-$previous_schema = $schema->getDefinitionFromDatabase();
-
-// The schema XML is split into multiple files which MDB2_Schema cannot handle.
-// We have to concatenate them into a single file first.
-$temp = tmpfile();
-if (!$temp)
-	die ("Could not create temporary file");
-
-if (!fwrite ($temp, <<<END
-<?xml version="1.0" encoding="UTF-8" ?>
-<database>
- <name>ocsweb</name>
- <create>true</create>
- <overwrite>false</overwrite>
-
-END
-))
-	die ("Error writing to temporary file");
-
-$dir = opendir ("../../schema");
-if (!$dir)
-	die ("Can't get a handle for schema dir");
-
-while (($file = readdir ($dir)) !== false ) {
-	if (substr($file, -4) != '.xml')
-		continue;
-	$content = file_get_contents ("schema/$file");
-	if ($content == false)
-		die ("Error reading $file");
-	if (!fwrite ($temp, $content))
-		die ("Error writing to temporary file");
-}
-
-if (!fwrite ($temp, "</database>\n"))
-	die ("Error writing to temporary file");
-
-$meta = stream_get_meta_data ($temp);
-$new_schema = $schema->parseDatabaseDefinitionFile($meta["uri"]);
-fclose ($temp);
-
-// The accountinfo table has a dynamic structure.
-// Only the static part is defined in the XML file.
-// The additional fields have to be preserved here.
-if (array_key_exists('accountinfo', $previous_schema['tables']))
-	$new_schema['tables']['accountinfo']['fields'] = array_merge ($previous_schema['tables']['accountinfo']['fields'], $new_schema['tables']['accountinfo']['fields']);
-
-if ($schema->db->getOption ('use_transactions'))
-        $schema->db->beginNestedTransaction();
-
-$schema->updateDatabase($new_schema, $previous_schema);
-
-// Table initialization is only done when the table is created for the first time.
-// In case of an upgrade we have to update the table content manually.
-foreach ($new_schema['tables'] as $name => $table) {
-	if (!array_key_exists ($name, $previous_schema['tables']) or empty ($table['initialization']))
-		continue;
-
-	// We have to avoid duplicate entries that would violate primary keys or unique constraints.
-	// Therefore we have to find a way to identify existing rows and determine whether the
-	// row to be inserted would violate a constraint.
-	// This is far from perfect yet because we will only detect single-column primary keys
-	// and single-column unique constraints. Furthermore we assume only simple inserts.
-	// Complex inserts like insert/select will produce unpredictable results!
-	$constraints = array();
-	foreach ($schema->db->reverse->tableInfo($name) as $column) {
-		if (strpos ($column['flags'], 'primary_key') !== false or strpos ($column['flags'], 'unique_key') !== false)
-			$constraints[$column['name']] = $column['mdb2type'];
-	}
-	if (empty ($constraints)) {
-		// Without any constraint we would produce more and more entries on every upgrade. Abort.
-		die ("<p>FATAL: Cannot reliably initialize table $name because the table has no constraints.</p>");
-	}
-
-	$skip_rows = array();
-	foreach ($table['initialization'] as $command_index => $command) {
-		if ($command['type'] != 'insert')
-			continue;
-
-		// Build the list of fields we have to check for existent values
-		$fieldlist = array();
-		foreach ($command['data']['field'] as $field) {
-			if (array_key_exists ($field['name'], $constraints)) {
-				$fieldlist[$field['name']] = $field['group']['data'];
-		    }
-		}
-
-		$count = count ($fieldlist);
-		if ($count == 0) {
-			die ("<p>FATAL: Cannot reliably initialize table $name with unconstrained data.</p>");
-		}
-		// Check for existing rows that would prevent successful insertion.
-		$query = "SELECT COUNT(*) FROM " . $schema->db->quoteIdentifier ($name) . " WHERE ";
-		$i = 1;
-		foreach ($fieldlist as $fieldname => $value) {
-			$query .= $schema->db->quoteIdentifier ("$fieldname") . "=" . $schema->db->quote($value, $constraints[$fieldname]);
-			if ($i < $count)
-				$query .= " OR ";
-			$i++;
-		}
-		$result = $schema->db->query ($query);
-
-		if ($result->fetchOne()) {
-			// Found existing row.
-			$skip_rows[] = $command_index;
-		}
-	}
-	// Sort results in reverse order to prevent index shifting while removing them.
-	rsort ($skip_rows, SORT_NUMERIC);
-	foreach ($skip_rows as $index) {
-		unset ($table['initialization'][$index]);
-	}
-	$schema->initializeTable ($name, $table);
-}
-
-if ($schema->db->getOption ('use_transactions'))
-        $schema->db->completeNestedTransaction();
-
-$schema->disconnect();
+echo "</p>\n";
 
 echo "<br><center><font color=green><b>Database successfully generated/updated</b></font></center>";
 
@@ -353,82 +242,6 @@ if( (!$link=@mdb2_connect($_POST["driver"],$_POST["host"],$_POST["name"],$_POST[
 		Error connecting to database server. Check your log files for further information.</b></font></center>";
 }
 
-$nberr=0;
-
-if ($_POST["driver"] == "mysql") {
-echo "<br><center><font color=black><b>Database engine checking...";
-flush();
-//TODO: dernieres tables
-$tableEngines = array("hardware"=>"InnoDB","accesslog"=>"InnoDB","bios"=>"InnoDB","memories"=>"InnoDB","slots"=>"InnoDB",
-"controllers"=>"InnoDB","download_available"=>"InnoDB","download_enable"=>"InnoDB","download_history"=>"InnoDB",
-"engine_mutex"=>"MEMORY","prolog_conntrack"=>"MEMORY",
-"registry"=>"InnoDB","monitors"=>"InnoDB","ports"=>"InnoDB","storages"=>"InnoDB","drives"=>"InnoDB","inputs"=>"InnoDB",
-"modems"=>"InnoDB","networks"=>"InnoDB","printers"=>"InnoDB","sounds"=>"InnoDB","videos"=>"InnoDB","softwares"=>"InnoDB",
-"accountinfo"=>"InnoDB","netmap"=>"InnoDB","devices"=>"InnoDB", "locks"=>"HEAP", "conntrack"=>"HEAP");
-
-$mysql = $link->getConnection();
-
-$nbconv = 0;
-$erralter = false;
-foreach( $tableEngines as $tbl=>$eng ) {
-	if( $res = mysql_query("show table status like '$tbl'", $mysql) ) {
-		$val = mysql_fetch_array( $res );
-		if( $val["Engine"] == $eng ) {
-			echo ".";
-			flush();
-		}
-		else {
-			$nbconv++;
-			echo ".";
-			flush();
-			if( ! $resAlter = mysql_query("ALTER TABLE $tbl engine='$eng'", $mysql) ) {
-				$nberr++;
-				$erralter = true;
-				echo "</b></font></center><br><center><font color=red><b>ERROR: Alter query failed</b><br>";
-				echo "<b>mysql error: ".mysql_error($mysql)." (err:".mysql_errno($mysql).")</b></font></center>";
-			}
-		}
-	}
-	else {
-		echo "</b></font></center><br><center><font color=red><b>ERROR: Show table status query failed</b><br>";
-		echo "<b>mysql error: ".mysql_error($mysql)." (err:".mysql_errno($mysql).")</b></font></center>";
-		$nberr++;
-		$erralter = true;
-	}
-}
-$oneInnoFailed = false;
-$oneHeapFailed = false;
-foreach( $tableEngines as $tbl=>$eng ) {
-	if( $res = mysql_query("show table status like '$tbl'", $mysql) ) {
-		$val = mysql_fetch_array( $res );
-		if( (strcasecmp($val["Engine"],$eng) != 0) && (strcasecmp($eng,"InnoDB") == 0) && $oneInnoFailed == false ) {
-			echo "<br><br><center><font color=red><b>ERROR: InnoDB conversion failed, install InnoDB  mysql engine support on your server<br>or you will experience severe performance issues.<br>
-			(Try to uncomment \"#skip-innodb\" in your mysql config file.)<br>Reinstall when corrected.</b></font><br>";
-			$oneInnoFailed = true;
-		}
-		if ( (strcasecmp($val["Engine"],$eng)!=0) && (strcasecmp($eng,"HEAP")) && (strcasecmp($val["Engine"],"MEMORY")!=0) && $oneHeapFailed == false  ) {
-			echo "<br><br><center><font color=red><b>ERROR: HEAP conversion failed, install HEAP mysql engine support on your server<br>or you will experience severe performance issues.</b></font><br>";
-			$oneHeapFailed = true;
-		}
-	}
-	else {
-		echo "</b></font></center><br><center><font color=red><b>ERROR: Show table status query failed</b><br>";
-		echo "<b>mysql error: ".mysql_error($mysql)." (err:".mysql_errno($mysql).")</b></font></center>";
-		$nberr++;
-		$erralter = true;
-	}
-}
-
-if( ! $erralter ) {
-	echo "</b></font></center><br><center><font color=green><b>Database engine successfully updated ($nbconv table(s) altered)</b></font></center>";
-}
-}
-
-if($nberr) {
-	echo "<br><center><font color=red><b>ERROR: The installer ended unsuccessfully, rerun install.php once problems are corrected</b></font></center>";
-	unlink("dbconfig.inc.php");
-	die();
-}
 $nberr=0;
 $dir = "files";
 $filenames = Array("ocsagent.exe");
@@ -561,7 +374,7 @@ while ($valNet = mdb2_fetch_assoc($resNet) ) {
 		$errNet++;
 	}
 	else {
-		mdb2_query("UPDATE networks SET ipsubnet=? WHERE hardware_id=? AND id=?", array("text", "integer", "integer"), array ($netid, $valNet["hardware_id"], $valNet["id"]));
+		mdb2_query("UPDATE networks SET ipsubnet=? WHERE hardware_id=? AND id=?", null, array("text", "integer", "integer"), array ($netid, $valNet["hardware_id"], $valNet["id"]));
 		if( mdb2_errno() != MDB2_OK) {
 			$errNet++;
 			echo "<br><center><font color=red><b>ERROR: Could not update netid to $netid, error ".mdb2_errno().": ".mdb2_error()."</b></font></center>";

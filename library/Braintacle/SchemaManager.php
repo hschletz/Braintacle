@@ -72,11 +72,15 @@ class Braintacle_SchemaManager
     /**
      * Constructor
      * @param Zend_Log Logger object
+     * @param MDB2_Driver_Common Database connection (default: connect automatically)
      */
-    function __construct(Zend_Log $logger)
+    function __construct(Zend_Log $logger, MDB2_Driver_Common $mdb2=null)
     {
+        if (is_null($mdb2)) {
+            $mdb2 =  Braintacle_MDB2::factory();
+        }
         $this->_schema = MDB2_Schema::factory(
-            Braintacle_MDB2::factory(),
+            $mdb2,
             array (
                 'quote_identifier' => true,
                 'force_defaults' => false,
