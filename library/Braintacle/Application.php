@@ -30,47 +30,66 @@
 class Braintacle_Application
 {
     /**
+     * Indicator for include path set
+     * @var bool
+     */
+    static protected $_includePathSet;
+
+    /**
      * Bootstrap the application
      *
      * Call this instead of Zend_Application::bootstrap().
      */
     static function init()
     {
-        // Define path to application directory
+        // Set up PHP environment.
+        ini_set('session.auto_start', false); // conflicts with Zend_Session
+        self::setIncludePath();
+
+        // Create application, bootstrap, and run
+        require_once 'Zend/Application.php';
+        $application = new Zend_Application(
+            self::getEnvironment(),
+            self::getApplicationPath() . '/configs/application.ini'
+        );
+        $application->setBootstrap(APPLICATION_PATH . '/Bootstrap.php');
+        $application->bootstrap()
+                    ->run();
+    }
+
+    /**
+     * Set include path
+     */
+    static function setIncludePath()
+    {
+        if (!self::$_includePathSet) {
+            set_include_path(
+                implode(
+                    PATH_SEPARATOR,
+                    array(
+                        realpath(self::getApplicationPath() . '/../library'),
+                        realpath(self::getApplicationPath() . '/../library/PEAR'),
+                        get_include_path(),
+                    )
+                )
+            );
+            self::$_includePathSet = true;
+        }
+    }
+
+    /**
+     * Determine and set application path
+     * @return string Value the APPLICATION_PATH constant
+     */
+    static function getApplicationPath()
+    {
         if (!defined('APPLICATION_PATH')) {
             define(
                 'APPLICATION_PATH',
                 realpath(dirname(__FILE__) . '/../../application')
             );
         }
-
-        // Define application environment
-        self::getEnvironment();
-
-        // Set up PHP environment.
-        ini_set('session.auto_start', false); // conflicts with Zend_Session
-
-        // Ensure library/ is on include_path
-        set_include_path(
-            implode(
-                PATH_SEPARATOR,
-                array(
-                    realpath(APPLICATION_PATH . '/../library'),
-                    realpath(APPLICATION_PATH . '/../library/PEAR'),
-                    get_include_path(),
-                )
-            )
-        );
-
-        // Create application, bootstrap, and run
-        require_once 'Zend/Application.php';
-        $application = new Zend_Application(
-            APPLICATION_ENV,
-            APPLICATION_PATH . '/configs/application.ini'
-        );
-        $application->setBootstrap(APPLICATION_PATH . '/Bootstrap.php');
-        $application->bootstrap()
-                    ->run();
+        return APPLICATION_PATH;
     }
 
     /**

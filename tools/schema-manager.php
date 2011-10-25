@@ -34,23 +34,36 @@
 // All paths are relative to this script's parent directory
 $basepath = realpath(dirname(dirname(__FILE__)));
 
-// Force argument to be specified
-if (count($_SERVER['argv']) != 2) {
-    print <<<EOT
+// Set include path
+require_once "$basepath/library/Braintacle/Application.php";
+Braintacle_Application::setIncludePath();
 
-    USAGE:
-
-    schema-manager.php production|staging|testing|development
-
-    If unsure, choose 'production'.
-
-EOT;
+// Parse command line. This needs to be done before initializing the application
+// because that would set APPLICATION_ENV, but that could be overridden in the
+// command line.
+require_once 'Zend/Console/Getopt.php';
+require_once 'Zend/Console/Getopt/Exception.php';
+$cmdLine = new Zend_Console_Getopt(
+    array(
+        'environment|e=w' => 'Application environment (default: production)',
+    )
+);
+try {
+    $cmdLine->parse();
+    if ($cmdLine->getRemainingArgs()) {
+        throw new Zend_Console_Getopt_Exception('', $cmdLine->getUsageMessage());
+    }
+} catch(Zend_Console_Getopt_Exception $exception) {
+    print $exception->getUsageMessage();
     exit(1);
 }
 
 // Set up application environment
-require_once "$basepath/library/Braintacle/Application.php";
-define('APPLICATION_ENV', $_SERVER['argv'][1]);
+$environment = $cmdLine->environment;
+if (!$environment) {
+    $environment = 'production';
+}
+define('APPLICATION_ENV', $environment);
 Braintacle_Application::init();
 
 // Set up logger
