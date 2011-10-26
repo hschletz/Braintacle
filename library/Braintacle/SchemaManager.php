@@ -46,6 +46,11 @@ require_once('MDB2/Schema.php');
 class Braintacle_SchemaManager
 {
     /**
+     * Latest version of the database schema
+     */
+    const SCHEMA_VERSION = 1;
+
+    /**
      * MDB2_Schema object
      * @var MDB2_Schema
      */
@@ -105,6 +110,7 @@ class Braintacle_SchemaManager
         $newSchema = $this->getSchemaFromXml($previousSchema);
         $this->updateSchema($previousSchema, $newSchema);
         $this->updateData($previousSchema, $newSchema);
+        Model_Config::set('SchemaVersion', self::SCHEMA_VERSION);
     }
 
     /**
@@ -549,6 +555,29 @@ class Braintacle_SchemaManager
             $this->_logger->warn(
                 'Account with default password detected. It has been hashed, but should be changed!'
             );
+        }
+    }
+
+    /**
+     * Check for database update requirement
+     *
+     * This method evaluates the SchemaVersion option. If it is not present or
+     * less than {@link SCHEMA_VERSION}, a database update is required.
+     * @return bool TRUE if update is required.
+     */
+    public function isUpdateRequired()
+    {
+        // Check for presence of 'config' table first
+        if (in_array('config', $this->_allTables)) {
+            $oldSchemaVersion = Model_Config::get('SchemaVersion');
+            if (is_null($oldSchemaVersion) or $oldSchemaVersion < self::SCHEMA_VERSION) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            // Database is empty
+            return true;
         }
     }
 

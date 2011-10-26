@@ -45,6 +45,8 @@ class Model_Config
      * @var array
      */
     static $optionMap = array(
+        // Database schema version (latest version in Braintacle_SchemaManager::SCHEMA_VERSION)
+        'SchemaVersion' => 'BRAINTACLE_SCHEMA_VERSION',
         // Defaults for package builder
         'DefaultPackagePriority' => 'BRAINTACLE_DEFAULT_PACKAGE_PRIORITY',
         'DefaultMaxFragmentSize' => 'BRAINTACLE_DEFAULT_MAX_FRAGMENT_SIZE',

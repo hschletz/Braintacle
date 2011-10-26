@@ -46,6 +46,7 @@ require_once 'Zend/Console/Getopt/Exception.php';
 $cmdLine = new Zend_Console_Getopt(
     array(
         'environment|e=w' => 'Application environment (default: production)',
+        'force|f' => 'force update',
     )
 );
 try {
@@ -78,6 +79,10 @@ Braintacle_MDB2::setErrorReporting();
 require_once 'Braintacle/SchemaManager.php';
 $manager = new Braintacle_SchemaManager($logger);
 
-// Update the database automatically
-$manager->updateAll();
-$logger->info('Database successfully updated.');
+if ($cmdLine->force or $manager->isUpdateRequired()) {
+    // Update the database automatically
+    $manager->updateAll();
+    $logger->info('Database successfully updated.');
+} else {
+    $logger->info('Database is already up to date. Use --force to update anyway.');
+}
