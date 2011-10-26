@@ -581,4 +581,36 @@ class Braintacle_SchemaManager
         }
     }
 
+    /**
+     * Check for compatibility with unmodified OCS Inventory NG
+     *
+     * Braintacle's database schema is not compatible with unmodified
+     * installations of OCS Inventory NG. Braintacle works with the OCS schema
+     * too, but a database update would destroy compatibility. This method
+     * checks the current database for compatibility - compatible databases
+     * should be managed via ocsreports instead unless the loss of compatibility
+     * is OK.
+     * @return bool TRUE if database is compatible
+     */
+    public function isOcsCompatible()
+    {
+        // Only MySQL databases can be compatible
+        if ($this->_schema->db->dbsyntax != 'mysql') {
+            return false;
+        }
+        // Empty database (i.e. without 'config' table) is considered compatible
+        // because it might as well get populated via ocsreports.
+        if (!in_array('config', $this->_allTables)) {
+            return true;
+        }
+        // The SchemaVersion option will be NULL for databases not managed by
+        // Braintacle.
+        if (is_null(Model_Config::get('SchemaVersion'))) {
+            return true;
+        }
+        // SchemaVersion present => database has previously been managed by
+        // Braintacle.
+        return false;
+    }
+
 }

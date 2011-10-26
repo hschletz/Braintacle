@@ -79,10 +79,28 @@ Braintacle_MDB2::setErrorReporting();
 require_once 'Braintacle/SchemaManager.php';
 $manager = new Braintacle_SchemaManager($logger);
 
-if ($cmdLine->force or $manager->isUpdateRequired()) {
+$isCompatible = $manager->isOcsCompatible();
+if ($cmdLine->force or (!$isCompatible and $manager->isUpdateRequired())) {
+    if ($isCompatible) {
+        $logger->warn(
+            'Schema update forced. Database will no longer be compatible with OCS Inventory NG.'
+        );
+        $logger->warn(
+            'The version that comes bundled with Braintacle will continue to work.'
+        );
+    }
     // Update the database automatically
     $manager->updateAll();
     $logger->info('Database successfully updated.');
 } else {
-    $logger->info('Database is already up to date. Use --force to update anyway.');
+    if ($isCompatible) {
+        $logger->notice(
+            'The current database is still compatible with OCS Inventory NG.'
+        );
+        $logger->notice(
+            'Use --force to update anyway, but you will lose compatibility.'
+        );
+    } else {
+        $logger->info('Database is already up to date. Use --force to update anyway.');
+    }
 }

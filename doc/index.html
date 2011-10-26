@@ -406,9 +406,14 @@ Manage the schema through the original console application instead.
 </strong>
 </p>
 <p>
+The schema manager checks for compatibility with the original version and refuses to update the database in that case.
+This can be overridden with the --force option, but compatibility will be lost.
+</p>
+<p>
 The modified version of OCS Inventory that comes bundled with Braintacle works with both schema types.
 Its installer uses the same schema as the schema manager script, so the above warning applies too.
-However, it is deprecated and not thorougly tested.
+It does not check for database compatibility fist.
+It is deprecated and not thorougly tested.
 Avoid using it.
 Use schema-manager.php if possible.
 </p>
