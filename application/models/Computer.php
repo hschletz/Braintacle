@@ -1337,9 +1337,11 @@ class Model_Computer extends Model_ComputerOrGroup
             case 'AssetTag':
                 $table = 'bios';
                 $column = 'assettag';
-                $select->where(
-                    'assettag NOT IN(SELECT assettag FROM braintacle_blacklist_assettags)'
-                );
+                if (Model_Database::supportsAssetTagBlacklist()) {
+                    $select->where(
+                        'assettag NOT IN(SELECT assettag FROM braintacle_blacklist_assettags)'
+                    );
+                }
                 break;
             default:
                 throw new UnexpectedValueException('Invalid criteria: ' . $criteria);

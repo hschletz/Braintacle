@@ -72,6 +72,9 @@ function renderCriteria($view, $computer, $property)
     }
     // Hyperlink to blacklist form if the column matches the criteria for the table
     if ($property == $view->criteria) {
+        if ($property == 'AssetTag' and !Model_Database::supportsAssetTagBlacklist()) {
+            return $view->escape($value);
+        }
         return $view->htmlTag(
             'a',
             $view->escape($value),
