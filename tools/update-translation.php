@@ -155,7 +155,7 @@ if (in_array('--noextract', $_SERVER['argv'])) {
             unset($diff[$index]);
         }
     }
-    if (count($diff)) {
+    if (count($diff) or in_array('--force', $_SERVER['argv'])) {
         $potFile = fopen($potFileName, 'w');
         if (!$potFile) {
             print "ERROR: could not open $potFileName for writing.\n";

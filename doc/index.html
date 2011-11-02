@@ -503,7 +503,11 @@ It does 3 things:
 <ol>
 <li>
 It extracts all translatable strings from the PHP source files and updates languages/braintacle.pot.
-This operation can be skipped by passing the <code>--noextract</code> option.
+This operation can be skipped by passing the <code>--noextract</code> option.<br>
+By default, the update is done only if changes to the strings are detected.
+If only line numbers have changed, nothing is done in this stage.
+An update can be forced with the <code>--force</code> option.
+This is useful for developers to keep the line numbers in sync with the source files.
 </li>
 <li>It updates all .po files in languages/&lt;language&gt;/.</li>
 <li>It compiles the .po files to .mo files in languages/&lt;language&gt;/LC_MESSAGES/ which are used by the application.</li>
