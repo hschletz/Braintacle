@@ -108,4 +108,13 @@ class Braintacle_Application
         return APPLICATION_ENV;
     }
 
+    /**
+     * Check for CLI SAPI
+     * @return bool
+     */
+    static function isCli()
+    {
+        return PHP_SAPI == 'cli';
+    }
+
 }

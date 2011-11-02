@@ -25,6 +25,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
     protected function _initNavigation()
     {
+        if (Braintacle_Application::isCli()) {
+            return;
+        }
+
         $navigation = new Zend_Navigation;
 
         // "Inventory" menu
@@ -155,6 +159,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initViewHelpers()
     {
+        if (Braintacle_Application::isCli()) {
+            return;
+        }
+
         $layout = Zend_Layout::startMvc();
         $layout->setLayoutPath(APPLICATION_PATH . '/layouts');
         $view = $layout->getView();
@@ -170,14 +178,20 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headTitle('Braintacle');
     }
 
+    protected function _initController()
+    {
+        Zend_Controller_Front::getInstance()->setControllerDirectory(APPLICATION_PATH . '/controllers');
+    }
+
     protected function _initHeaders()
     {
+        if (Braintacle_Application::isCli()) {
+            return;
+        }
         // Ensure correct session settings before Zend_Auth invokes session
         $this->bootstrap('session');
 
         // Create objects (they are not yet initialized at this time)
-        $controller = Zend_Controller_Front::getInstance();
-        $controller->setControllerDirectory(APPLICATION_PATH . '/controllers');
         $request = new Zend_Controller_Request_Http;
         $response = new Zend_Controller_Response_Http;
 
@@ -196,6 +210,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
 
         // Initialize controller
+        $this->bootstrap('controller');
+        $controller = Zend_Controller_Front::getInstance();
         $controller->setRequest($request);
         $controller->setResponse($response);
     }
