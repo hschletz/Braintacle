@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-02 09:12+0100\n"
-"PO-Revision-Date: 2011-10-08 18:34+0200\n"
+"POT-Creation-Date: 2011-11-02 11:13+0100\n"
+"PO-Revision-Date: 2011-11-02 10:53+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <holger.schletz@web.de>\n"
 "Language: de\n"
@@ -56,12 +56,12 @@ msgid "Duplicates"
 msgstr "Duplikate"
 
 #: Bootstrap.php:67 forms/Package/Edit.php:66
-#: views/helpers/InventoryHeader.php:139
+#: views/helpers/InventoryHeader.php:148
 msgid "Groups"
 msgstr "Gruppen"
 
 #: Bootstrap.php:74 views/helpers/GroupHeader.php:65
-#: views/helpers/InventoryHeader.php:132
+#: views/helpers/InventoryHeader.php:141
 msgid "Packages"
 msgstr "Pakete"
 
@@ -77,12 +77,12 @@ msgstr "Erstellen"
 msgid "Search"
 msgstr "Suchen"
 
-#: controllers/ComputerController.php:199
+#: controllers/ComputerController.php:204
 #, php-format
 msgid "Computer '%s' was successfully deleted."
 msgstr "Computer '%s' wurde erfolgreich gelöscht."
 
-#: controllers/ComputerController.php:204
+#: controllers/ComputerController.php:209
 #, php-format
 msgid "Computer '%s' could not be deleted."
 msgstr "Computer '%s' konnte nicht gelöscht werden."
@@ -197,6 +197,7 @@ msgstr "Beschreibung"
 #: views/scripts/computer/network.phtml:106
 #: views/scripts/computer/packages.phtml:35
 #: views/scripts/computer/printers.phtml:30
+#: views/scripts/computer/registry.phtml:31
 #: views/scripts/computer/software.phtml:30
 #: views/scripts/computer/storage.phtml:34
 #: views/scripts/computer/system.phtml:93
@@ -568,7 +569,7 @@ msgstr "Suche nach"
 msgid "Operator"
 msgstr "Operator"
 
-#: forms/Search.php:214
+#: forms/Search.php:214 views/scripts/computer/registry.phtml:32
 msgid "Value"
 msgstr "Wert"
 
@@ -624,33 +625,33 @@ msgstr "Interfaces aus Netzwerkliste löschen"
 msgid "Logout"
 msgstr "Abmelden"
 
-#: models/Computer.php:774
+#: models/Computer.php:775
 #, php-format
 msgid "%1$d computers with an interface in network '%2$s'"
 msgstr "%1$d Computer mit Interface in Netzwerk %2$s"
 
-#: models/Computer.php:791
+#: models/Computer.php:792
 #, php-format
 msgid "%1$d computers waiting for notification of package '%2$s'"
 msgstr "%1$d Computer, die auf Installation von Paket '%2$s' warten"
 
-#: models/Computer.php:796
+#: models/Computer.php:797
 #, php-format
 msgid "%1$d computers with package '%2$s' successfully deployed"
 msgstr "%1$d Computer mit erfolgreich installiertem Paket '%2$s'"
 
-#: models/Computer.php:801
+#: models/Computer.php:802
 #, php-format
 msgid "%1$d computers with deployment of package '%2$s' in progress"
 msgstr "%1$d Computer mit laufender Installation von Paket '%2$s'"
 
-#: models/Computer.php:806
+#: models/Computer.php:807
 #, php-format
 msgid "%1$d computers where deployment of package '%2$s' failed"
 msgstr ""
 "%1$d Computer, bei denen die Installation von Paket '%2$s' fehlgeschlagen ist"
 
-#: models/Computer.php:811
+#: models/Computer.php:812
 #, php-format
 msgid "%1$d computers where software '%2$s' is installed"
 msgstr "%1$d Computer, auf denen die Software '%2$s' installiert ist"
@@ -769,7 +770,7 @@ msgstr "Allgemein"
 msgid "Members"
 msgstr "Mitglieder"
 
-#: views/helpers/GroupHeader.php:72 views/helpers/InventoryHeader.php:146
+#: views/helpers/GroupHeader.php:72 views/helpers/InventoryHeader.php:155
 #: views/scripts/network/showidentified.phtml:65
 #: views/scripts/network/showunknown.phtml:64
 #: views/scripts/package/index.phtml:237
@@ -805,11 +806,15 @@ msgstr "System"
 msgid "Printers"
 msgstr "Drucker"
 
-#: views/helpers/InventoryHeader.php:118
+#: views/helpers/InventoryHeader.php:119
+msgid "Registry"
+msgstr "Registry"
+
+#: views/helpers/InventoryHeader.php:127
 msgid "Misc"
 msgstr "Verschiedenes"
 
-#: views/helpers/InventoryHeader.php:125
+#: views/helpers/InventoryHeader.php:134
 msgid "User defined"
 msgstr "Benutzerdefiniert"
 
@@ -1076,6 +1081,10 @@ msgstr "Treiber"
 #: views/scripts/computer/printers.phtml:32
 msgid "Port"
 msgstr "Port"
+
+#: views/scripts/computer/registry.phtml:49
+msgid "Registry Keys"
+msgstr "Registry-Schlüssel"
 
 #: views/scripts/computer/removepackage.phtml:31
 #, php-format

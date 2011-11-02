@@ -114,6 +114,15 @@ class Zend_View_Helper_InventoryHeader extends Zend_View_Helper_Abstract
              ->setParams($id);
         $navigation->addPage($page);
 
+        if ($computer->isWindows()) {
+            $page = new Zend_Navigation_Page_Mvc;
+            $page->setLabel('Registry')
+                 ->setController('computer')
+                 ->setAction('registry')
+                 ->setParams($id);
+            $navigation->addPage($page);
+        }
+
         $page = new Zend_Navigation_Page_Mvc;
         $page->setLabel('Misc')
              ->setController('computer')

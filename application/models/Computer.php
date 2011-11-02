@@ -147,6 +147,7 @@ class Model_Computer extends Model_ComputerOrGroup
         'Modem',
         'NetworkInterface',
         'Printer',
+        'Registry',
         'Software',
         'StorageDevice',
         'Volume',

@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-02 09:24+0100\n"
+"POT-Creation-Date: 2011-11-02 11:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -55,12 +55,12 @@ msgid "Duplicates"
 msgstr ""
 
 #: Bootstrap.php:67 forms/Package/Edit.php:66
-#: views/helpers/InventoryHeader.php:139
+#: views/helpers/InventoryHeader.php:148
 msgid "Groups"
 msgstr ""
 
 #: Bootstrap.php:74 views/helpers/GroupHeader.php:65
-#: views/helpers/InventoryHeader.php:132
+#: views/helpers/InventoryHeader.php:141
 msgid "Packages"
 msgstr ""
 
@@ -76,12 +76,12 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: controllers/ComputerController.php:199
+#: controllers/ComputerController.php:204
 #, php-format
 msgid "Computer '%s' was successfully deleted."
 msgstr ""
 
-#: controllers/ComputerController.php:204
+#: controllers/ComputerController.php:209
 #, php-format
 msgid "Computer '%s' could not be deleted."
 msgstr ""
@@ -196,6 +196,7 @@ msgstr ""
 #: views/scripts/computer/network.phtml:106
 #: views/scripts/computer/packages.phtml:35
 #: views/scripts/computer/printers.phtml:30
+#: views/scripts/computer/registry.phtml:31
 #: views/scripts/computer/software.phtml:30
 #: views/scripts/computer/storage.phtml:34
 #: views/scripts/computer/system.phtml:93
@@ -567,7 +568,7 @@ msgstr ""
 msgid "Operator"
 msgstr ""
 
-#: forms/Search.php:214
+#: forms/Search.php:214 views/scripts/computer/registry.phtml:32
 msgid "Value"
 msgstr ""
 
@@ -623,32 +624,32 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: models/Computer.php:774
+#: models/Computer.php:775
 #, php-format
 msgid "%1$d computers with an interface in network '%2$s'"
 msgstr ""
 
-#: models/Computer.php:791
+#: models/Computer.php:792
 #, php-format
 msgid "%1$d computers waiting for notification of package '%2$s'"
 msgstr ""
 
-#: models/Computer.php:796
+#: models/Computer.php:797
 #, php-format
 msgid "%1$d computers with package '%2$s' successfully deployed"
 msgstr ""
 
-#: models/Computer.php:801
+#: models/Computer.php:802
 #, php-format
 msgid "%1$d computers with deployment of package '%2$s' in progress"
 msgstr ""
 
-#: models/Computer.php:806
+#: models/Computer.php:807
 #, php-format
 msgid "%1$d computers where deployment of package '%2$s' failed"
 msgstr ""
 
-#: models/Computer.php:811
+#: models/Computer.php:812
 #, php-format
 msgid "%1$d computers where software '%2$s' is installed"
 msgstr ""
@@ -765,7 +766,7 @@ msgstr ""
 msgid "Members"
 msgstr ""
 
-#: views/helpers/GroupHeader.php:72 views/helpers/InventoryHeader.php:146
+#: views/helpers/GroupHeader.php:72 views/helpers/InventoryHeader.php:155
 #: views/scripts/network/showidentified.phtml:65
 #: views/scripts/network/showunknown.phtml:64
 #: views/scripts/package/index.phtml:237
@@ -801,11 +802,15 @@ msgstr ""
 msgid "Printers"
 msgstr ""
 
-#: views/helpers/InventoryHeader.php:118
+#: views/helpers/InventoryHeader.php:119
+msgid "Registry"
+msgstr ""
+
+#: views/helpers/InventoryHeader.php:127
 msgid "Misc"
 msgstr ""
 
-#: views/helpers/InventoryHeader.php:125
+#: views/helpers/InventoryHeader.php:134
 msgid "User defined"
 msgstr ""
 
@@ -1071,6 +1076,10 @@ msgstr ""
 
 #: views/scripts/computer/printers.phtml:32
 msgid "Port"
+msgstr ""
+
+#: views/scripts/computer/registry.phtml:49
+msgid "Registry Keys"
 msgstr ""
 
 #: views/scripts/computer/removepackage.phtml:31
