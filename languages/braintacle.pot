@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-08 18:33+0200\n"
+"POT-Creation-Date: 2011-11-02 09:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -34,45 +34,45 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: Bootstrap.php:32
+#: Bootstrap.php:36
 msgid "Inventory"
 msgstr ""
 
-#: Bootstrap.php:38
+#: Bootstrap.php:42
 msgid "Computers"
 msgstr ""
 
-#: Bootstrap.php:44 views/helpers/InventoryHeader.php:111
+#: Bootstrap.php:48 views/helpers/InventoryHeader.php:111
 msgid "Software"
 msgstr ""
 
-#: Bootstrap.php:50 views/helpers/InventoryHeader.php:67
+#: Bootstrap.php:54 views/helpers/InventoryHeader.php:67
 msgid "Network"
 msgstr ""
 
-#: Bootstrap.php:56
+#: Bootstrap.php:60
 msgid "Duplicates"
 msgstr ""
 
-#: Bootstrap.php:63 forms/Package/Edit.php:66
+#: Bootstrap.php:67 forms/Package/Edit.php:66
 #: views/helpers/InventoryHeader.php:139
 msgid "Groups"
 msgstr ""
 
-#: Bootstrap.php:70 views/helpers/GroupHeader.php:65
+#: Bootstrap.php:74 views/helpers/GroupHeader.php:65
 #: views/helpers/InventoryHeader.php:132
 msgid "Packages"
 msgstr ""
 
-#: Bootstrap.php:76
+#: Bootstrap.php:80
 msgid "Overview"
 msgstr ""
 
-#: Bootstrap.php:82 forms/Package.php:297
+#: Bootstrap.php:86 forms/Package.php:297
 msgid "Build"
 msgstr ""
 
-#: Bootstrap.php:89 forms/Search.php:192
+#: Bootstrap.php:93 forms/Search.php:228
 msgid "Search"
 msgstr ""
 
@@ -322,107 +322,107 @@ msgstr ""
 msgid "Deploy to computers which have existing package assigned"
 msgstr ""
 
-#: forms/Search.php:80
+#: forms/Search.php:110
 msgid "Computer name"
 msgstr ""
 
-#: forms/Search.php:81
+#: forms/Search.php:111
 msgid "User name"
 msgstr ""
 
-#: forms/Search.php:82 views/scripts/computer/index.phtml:64
+#: forms/Search.php:112 views/scripts/computer/index.phtml:64
 msgid "User domain"
 msgstr ""
 
-#: forms/Search.php:83 views/scripts/computer/index.phtml:48
+#: forms/Search.php:113 views/scripts/computer/index.phtml:48
 msgid "Workgroup"
 msgstr ""
 
-#: forms/Search.php:84
+#: forms/Search.php:114
 msgid "OS name"
 msgstr ""
 
-#: forms/Search.php:85 views/scripts/computer/index.phtml:61
+#: forms/Search.php:115 views/scripts/computer/index.phtml:61
 msgid "OS version number"
 msgstr ""
 
-#: forms/Search.php:86 views/scripts/computer/index.phtml:62
+#: forms/Search.php:116 views/scripts/computer/index.phtml:62
 msgid "OS version string"
 msgstr ""
 
-#: forms/Search.php:87 views/scripts/computer/index.phtml:63
+#: forms/Search.php:117 views/scripts/computer/index.phtml:63
 msgid "OS comment"
 msgstr ""
 
-#: forms/Search.php:88 views/scripts/computer/windows.phtml:51
+#: forms/Search.php:118 views/scripts/computer/windows.phtml:51
 msgid "Product key"
 msgstr ""
 
-#: forms/Search.php:89 views/scripts/computer/index.phtml:97
+#: forms/Search.php:119 views/scripts/computer/index.phtml:97
 msgid "Software: Name"
 msgstr ""
 
-#: forms/Search.php:90 views/scripts/computer/index.phtml:98
+#: forms/Search.php:120 views/scripts/computer/index.phtml:98
 msgid "Software: Version"
 msgstr ""
 
-#: forms/Search.php:91 views/scripts/computer/index.phtml:99
+#: forms/Search.php:121 views/scripts/computer/index.phtml:99
 msgid "Software: Publisher"
 msgstr ""
 
-#: forms/Search.php:92 views/scripts/computer/index.phtml:100
+#: forms/Search.php:122 views/scripts/computer/index.phtml:100
 msgid "Software: Comment"
 msgstr ""
 
-#: forms/Search.php:93 views/scripts/computer/index.phtml:101
+#: forms/Search.php:123 views/scripts/computer/index.phtml:101
 msgid "Software: Install location"
 msgstr ""
 
-#: forms/Search.php:94 views/scripts/computer/index.phtml:52
+#: forms/Search.php:124 views/scripts/computer/index.phtml:52
 #: views/scripts/group/members.phtml:32
 msgid "Last inventory"
 msgstr ""
 
-#: forms/Search.php:95 views/scripts/computer/general.phtml:60
+#: forms/Search.php:125 views/scripts/computer/general.phtml:60
 #: views/scripts/computer/index.phtml:53
 #: views/scripts/duplicates/show.phtml:32
 msgid "Last contact"
 msgstr ""
 
-#: forms/Search.php:96 views/scripts/computer/general.phtml:153
+#: forms/Search.php:126 views/scripts/computer/general.phtml:153
 #: views/scripts/computer/index.phtml:51
 msgid "CPU type"
 msgstr ""
 
-#: forms/Search.php:97
+#: forms/Search.php:127
 msgid "CPU clock (MHz)"
 msgstr ""
 
-#: forms/Search.php:98 views/scripts/computer/index.phtml:50
+#: forms/Search.php:128 views/scripts/computer/index.phtml:50
 msgid "CPU cores"
 msgstr ""
 
-#: forms/Search.php:99
+#: forms/Search.php:129
 msgid "Physical memory"
 msgstr ""
 
-#: forms/Search.php:100 views/scripts/computer/general.phtml:203
+#: forms/Search.php:130 views/scripts/computer/general.phtml:203
 msgid "Swap memory"
 msgstr ""
 
-#: forms/Search.php:101 views/scripts/computer/bios.phtml:33
+#: forms/Search.php:131 views/scripts/computer/bios.phtml:33
 #: views/scripts/computer/display.phtml:81
 #: views/scripts/computer/index.phtml:69 views/scripts/computer/misc.phtml:33
 #: views/scripts/computer/misc.phtml:65 views/scripts/computer/system.phtml:92
 msgid "Manufacturer"
 msgstr ""
 
-#: forms/Search.php:102 views/scripts/computer/general.phtml:78
+#: forms/Search.php:132 views/scripts/computer/general.phtml:78
 #: views/scripts/computer/index.phtml:70
 msgid "Model"
 msgstr ""
 
-#: forms/Search.php:103 views/scripts/computer/display.phtml:83
+#: forms/Search.php:133 views/scripts/computer/display.phtml:83
 #: views/scripts/computer/general.phtml:87
 #: views/scripts/computer/index.phtml:71
 #: views/scripts/computer/storage.phtml:40
@@ -432,40 +432,40 @@ msgstr ""
 msgid "Serial number"
 msgstr ""
 
-#: forms/Search.php:104 views/scripts/computer/general.phtml:104
+#: forms/Search.php:134 views/scripts/computer/general.phtml:104
 #: views/scripts/computer/index.phtml:76
 #: views/scripts/duplicates/index.phtml:29
 #: views/scripts/duplicates/show.phtml:31
 msgid "Asset tag"
 msgstr ""
 
-#: forms/Search.php:105 views/scripts/computer/index.phtml:74
+#: forms/Search.php:135 views/scripts/computer/index.phtml:74
 msgid "BIOS version"
 msgstr ""
 
-#: forms/Search.php:106 views/scripts/computer/index.phtml:75
+#: forms/Search.php:136 views/scripts/computer/index.phtml:75
 msgid "BIOS date"
 msgstr ""
 
-#: forms/Search.php:107
+#: forms/Search.php:137
 msgid "Volume size (MB)"
 msgstr ""
 
-#: forms/Search.php:108
+#: forms/Search.php:138
 msgid "Volume free space (MB)"
 msgstr ""
 
-#: forms/Search.php:109 views/scripts/computer/index.phtml:57
+#: forms/Search.php:139 views/scripts/computer/index.phtml:57
 #: views/scripts/computer/network.phtml:36
 msgid "DNS server"
 msgstr ""
 
-#: forms/Search.php:110 views/scripts/computer/index.phtml:58
+#: forms/Search.php:140 views/scripts/computer/index.phtml:58
 #: views/scripts/computer/network.phtml:45
 msgid "Default gateway"
 msgstr ""
 
-#: forms/Search.php:111 views/scripts/computer/index.phtml:56
+#: forms/Search.php:141 views/scripts/computer/index.phtml:56
 #: views/scripts/computer/index.phtml:90
 #: views/scripts/computer/network.phtml:61 views/scripts/network/edit.phtml:51
 #: views/scripts/network/showidentified.phtml:28
@@ -473,7 +473,7 @@ msgstr ""
 msgid "IP address"
 msgstr ""
 
-#: forms/Search.php:112 views/scripts/computer/index.phtml:89
+#: forms/Search.php:142 views/scripts/computer/index.phtml:89
 #: views/scripts/computer/network.phtml:60
 #: views/scripts/duplicates/show.phtml:29 views/scripts/network/edit.phtml:33
 #: views/scripts/network/showidentified.phtml:27
@@ -481,101 +481,101 @@ msgstr ""
 msgid "MAC address"
 msgstr ""
 
-#: forms/Search.php:113 views/scripts/computer/index.phtml:91
+#: forms/Search.php:143 views/scripts/computer/index.phtml:91
 msgid "Network address"
 msgstr ""
 
-#: forms/Search.php:114
+#: forms/Search.php:144
 msgid "Network Mask"
 msgstr ""
 
-#: forms/Search.php:115 views/scripts/computer/index.phtml:94
+#: forms/Search.php:145 views/scripts/computer/index.phtml:94
 msgid "Printer name"
 msgstr ""
 
-#: forms/Search.php:116 views/scripts/computer/index.phtml:95
+#: forms/Search.php:146 views/scripts/computer/index.phtml:95
 msgid "Printer port"
 msgstr ""
 
-#: forms/Search.php:117 views/scripts/computer/index.phtml:96
+#: forms/Search.php:147 views/scripts/computer/index.phtml:96
 msgid "Printer driver"
 msgstr ""
 
-#: forms/Search.php:118 views/scripts/computer/index.phtml:59
+#: forms/Search.php:148 views/scripts/computer/index.phtml:59
 msgid "OCS agent"
 msgstr ""
 
-#: forms/Search.php:119 views/scripts/computer/index.phtml:81
+#: forms/Search.php:149 views/scripts/computer/index.phtml:81
 msgid "Monitor: manufacturer"
 msgstr ""
 
-#: forms/Search.php:120 views/scripts/computer/index.phtml:82
+#: forms/Search.php:150 views/scripts/computer/index.phtml:82
 msgid "Monitor: description"
 msgstr ""
 
-#: forms/Search.php:121 views/scripts/computer/index.phtml:83
+#: forms/Search.php:151 views/scripts/computer/index.phtml:83
 msgid "Monitor: serial"
 msgstr ""
 
-#: forms/Search.php:122 views/scripts/computer/index.phtml:84
+#: forms/Search.php:152 views/scripts/computer/index.phtml:84
 msgid "Monitor: production date"
 msgstr ""
 
-#: forms/Search.php:123 views/scripts/computer/index.phtml:85
+#: forms/Search.php:153 views/scripts/computer/index.phtml:85
 msgid "Display controller"
 msgstr ""
 
-#: forms/Search.php:124 views/scripts/computer/index.phtml:86
+#: forms/Search.php:154 views/scripts/computer/index.phtml:86
 msgid "GPU memory"
 msgstr ""
 
-#: forms/Search.php:125 views/scripts/computer/index.phtml:88
+#: forms/Search.php:155 views/scripts/computer/index.phtml:88
 msgid "Modem"
 msgstr ""
 
-#: forms/Search.php:126 views/scripts/computer/index.phtml:79
+#: forms/Search.php:156 views/scripts/computer/index.phtml:79
 msgid "Audio device"
 msgstr ""
 
-#: forms/Search.php:127 views/scripts/computer/index.phtml:80
+#: forms/Search.php:157 views/scripts/computer/index.phtml:80
 msgid "Controller"
 msgstr ""
 
-#: forms/Search.php:128 views/scripts/computer/index.phtml:93
+#: forms/Search.php:158 views/scripts/computer/index.phtml:93
 msgid "Port name"
 msgstr ""
 
-#: forms/Search.php:129 views/scripts/computer/index.phtml:87
+#: forms/Search.php:159 views/scripts/computer/index.phtml:87
 msgid "Extension slot"
 msgstr ""
 
-#: forms/Search.php:133
+#: forms/Search.php:163
 #, php-format
 msgid "User defined: %s"
 msgstr ""
 
-#: forms/Search.php:146 forms/UserDefinedInfo.php:58
+#: forms/Search.php:183 forms/UserDefinedInfo.php:62
 #: views/scripts/computer/index.phtml:108
 msgid "Category"
 msgstr ""
 
-#: forms/Search.php:154
+#: forms/Search.php:191
 msgid "Search for"
 msgstr ""
 
-#: forms/Search.php:173
+#: forms/Search.php:210
 msgid "Operator"
 msgstr ""
 
-#: forms/Search.php:177
+#: forms/Search.php:214
 msgid "Value"
 msgstr ""
 
-#: forms/Search.php:183
+#: forms/Search.php:220
 msgid "Exact match"
 msgstr ""
 
-#: forms/Search.php:188
+#: forms/Search.php:224
 msgid "Invert results"
 msgstr ""
 
@@ -603,7 +603,7 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-#: forms/UserDefinedInfo.php:88
+#: forms/UserDefinedInfo.php:92
 msgid "Change"
 msgstr ""
 
@@ -619,36 +619,36 @@ msgstr ""
 msgid "Delete interfaces from network listing"
 msgstr ""
 
-#: layouts/layout.phtml:87
+#: layouts/layout.phtml:90
 msgid "Logout"
 msgstr ""
 
-#: models/Computer.php:738
+#: models/Computer.php:774
 #, php-format
 msgid "%1$d computers with an interface in network '%2$s'"
 msgstr ""
 
-#: models/Computer.php:755
+#: models/Computer.php:791
 #, php-format
 msgid "%1$d computers waiting for notification of package '%2$s'"
 msgstr ""
 
-#: models/Computer.php:760
+#: models/Computer.php:796
 #, php-format
 msgid "%1$d computers with package '%2$s' successfully deployed"
 msgstr ""
 
-#: models/Computer.php:765
+#: models/Computer.php:801
 #, php-format
 msgid "%1$d computers with deployment of package '%2$s' in progress"
 msgstr ""
 
-#: models/Computer.php:770
+#: models/Computer.php:806
 #, php-format
 msgid "%1$d computers where deployment of package '%2$s' failed"
 msgstr ""
 
-#: models/Computer.php:775
+#: models/Computer.php:811
 #, php-format
 msgid "%1$d computers where software '%2$s' is installed"
 msgstr ""
@@ -1205,19 +1205,19 @@ msgstr ""
 msgid "No duplicates present."
 msgstr ""
 
-#: views/scripts/duplicates/show.phtml:104
+#: views/scripts/duplicates/show.phtml:107
 msgid "Merge user supplied information"
 msgstr ""
 
-#: views/scripts/duplicates/show.phtml:113
+#: views/scripts/duplicates/show.phtml:116
 msgid "Merge manual group assignments"
 msgstr ""
 
-#: views/scripts/duplicates/show.phtml:122
+#: views/scripts/duplicates/show.phtml:125
 msgid "Merge missing package assignments"
 msgstr ""
 
-#: views/scripts/duplicates/show.phtml:128
+#: views/scripts/duplicates/show.phtml:131
 msgid "Merge selected computers"
 msgstr ""
 
