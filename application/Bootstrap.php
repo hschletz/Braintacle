@@ -62,6 +62,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             ->setAction('index');
         $page->addPage($sub);
 
+        $sub = new Zend_Navigation_Page_Mvc;
+        $sub->setLabel('Import')
+            ->setController('computer')
+            ->setAction('import');
+        $page->addPage($sub);
+
         // "Groups" menu
         $page = new Zend_Navigation_Page_Mvc;
         $page->setLabel('Groups')

@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-02 11:13+0100\n"
+"POT-Creation-Date: 2011-11-04 13:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -54,34 +54,38 @@ msgstr ""
 msgid "Duplicates"
 msgstr ""
 
-#: Bootstrap.php:67 forms/Package/Edit.php:66
+#: Bootstrap.php:66 forms/Import.php:52
+msgid "Import"
+msgstr ""
+
+#: Bootstrap.php:73 forms/Package/Edit.php:66
 #: views/helpers/InventoryHeader.php:148
 msgid "Groups"
 msgstr ""
 
-#: Bootstrap.php:74 views/helpers/GroupHeader.php:65
+#: Bootstrap.php:80 views/helpers/GroupHeader.php:65
 #: views/helpers/InventoryHeader.php:141
 msgid "Packages"
 msgstr ""
 
-#: Bootstrap.php:80
+#: Bootstrap.php:86
 msgid "Overview"
 msgstr ""
 
-#: Bootstrap.php:86 forms/Package.php:297
+#: Bootstrap.php:92 forms/Package.php:297
 msgid "Build"
 msgstr ""
 
-#: Bootstrap.php:93 forms/Search.php:228
+#: Bootstrap.php:99 forms/Search.php:228
 msgid "Search"
 msgstr ""
 
-#: controllers/ComputerController.php:204
+#: controllers/ComputerController.php:205
 #, php-format
 msgid "Computer '%s' was successfully deleted."
 msgstr ""
 
-#: controllers/ComputerController.php:209
+#: controllers/ComputerController.php:210
 #, php-format
 msgid "Computer '%s' could not be deleted."
 msgstr ""
@@ -137,6 +141,10 @@ msgstr ""
 
 #: forms/AffectPackages.php:84
 msgid "Install"
+msgstr ""
+
+#: forms/Import.php:45
+msgid "File (*.ocs, *.xml)"
 msgstr ""
 
 #: forms/Login.php:42
@@ -923,6 +931,15 @@ msgstr ""
 
 #: views/scripts/computer/groups.phtml:96
 msgid "Manage memberships"
+msgstr ""
+
+#: views/scripts/computer/import.phtml:30
+#, php-format
+msgid "Upload error. Server %1$s responded with error %2$d: %3$s"
+msgstr ""
+
+#: views/scripts/computer/import.phtml:42
+msgid "Import locally generated inventory data"
 msgstr ""
 
 #: views/scripts/computer/index.phtml:55

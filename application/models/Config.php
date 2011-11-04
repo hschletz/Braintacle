@@ -83,6 +83,8 @@ class Model_Config
         'TraceDeleted' => 'TRACE_DELETED', // Use deleted_equiv table
         'GroupCacheExpirationInterval' => 'GROUPS_CACHE_REVALIDATE', // Seconds between cache rebuilds
         'GroupCacheExpirationFuzz' => 'GROUPS_CACHE_OFFSET', // Random range added to interval
+        'CommunicationServerAddress' => 'LOCAL_SERVER', // Hostname/address of communication server
+        'CommunicationServerPort' => 'LOCAL_PORT', // Port number of communication server
     );
 
     /**
@@ -110,6 +112,8 @@ class Model_Config
         'TraceDeleted' => false,
         'GroupCacheExpirationInterval' => 600,
         'GroupCacheExpirationFuzz' => 600,
+        'CommunicationServerAddress' => 'localhost',
+        'CommunicationServerPort' => 80,
     );
 
     /**
@@ -121,6 +125,7 @@ class Model_Config
         'TraceDeleted',
         'GroupCacheExpirationInterval',
         'GroupCacheExpirationFuzz',
+        'CommunicationServerPort',
     );
 
     /**

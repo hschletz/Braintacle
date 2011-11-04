@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-02 11:13+0100\n"
-"PO-Revision-Date: 2011-11-02 10:53+0100\n"
+"POT-Creation-Date: 2011-11-04 13:04+0100\n"
+"PO-Revision-Date: 2011-11-04 13:05+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <holger.schletz@web.de>\n"
 "Language: de\n"
@@ -55,34 +55,38 @@ msgstr "Netzwerk"
 msgid "Duplicates"
 msgstr "Duplikate"
 
-#: Bootstrap.php:67 forms/Package/Edit.php:66
+#: Bootstrap.php:66 forms/Import.php:52
+msgid "Import"
+msgstr "Import"
+
+#: Bootstrap.php:73 forms/Package/Edit.php:66
 #: views/helpers/InventoryHeader.php:148
 msgid "Groups"
 msgstr "Gruppen"
 
-#: Bootstrap.php:74 views/helpers/GroupHeader.php:65
+#: Bootstrap.php:80 views/helpers/GroupHeader.php:65
 #: views/helpers/InventoryHeader.php:141
 msgid "Packages"
 msgstr "Pakete"
 
-#: Bootstrap.php:80
+#: Bootstrap.php:86
 msgid "Overview"
 msgstr "Übersicht"
 
-#: Bootstrap.php:86 forms/Package.php:297
+#: Bootstrap.php:92 forms/Package.php:297
 msgid "Build"
 msgstr "Erstellen"
 
-#: Bootstrap.php:93 forms/Search.php:228
+#: Bootstrap.php:99 forms/Search.php:228
 msgid "Search"
 msgstr "Suchen"
 
-#: controllers/ComputerController.php:204
+#: controllers/ComputerController.php:205
 #, php-format
 msgid "Computer '%s' was successfully deleted."
 msgstr "Computer '%s' wurde erfolgreich gelöscht."
 
-#: controllers/ComputerController.php:209
+#: controllers/ComputerController.php:210
 #, php-format
 msgid "Computer '%s' could not be deleted."
 msgstr "Computer '%s' konnte nicht gelöscht werden."
@@ -139,6 +143,10 @@ msgstr "Paket '%s' konnte nicht gelöscht werden."
 #: forms/AffectPackages.php:84
 msgid "Install"
 msgstr "Installieren"
+
+#: forms/Import.php:45
+msgid "File (*.ocs, *.xml)"
+msgstr "Datei (*.ocs, *.xml)"
 
 #: forms/Login.php:42
 msgid "Username"
@@ -929,6 +937,15 @@ msgstr "Keine Gruppen definiert."
 msgid "Manage memberships"
 msgstr "Mitgliedschaften verwalten"
 
+#: views/scripts/computer/import.phtml:30
+#, php-format
+msgid "Upload error. Server %1$s responded with error %2$d: %3$s"
+msgstr "Fehler beim Hochladen. Server %1$s antwortete mit Fehler %2$d: %3$s"
+
+#: views/scripts/computer/import.phtml:42
+msgid "Import locally generated inventory data"
+msgstr "Import lokal erzeugter Inventardaten"
+
 #: views/scripts/computer/index.phtml:55
 msgid "Swap"
 msgstr "Auslagerungsspeicher"
@@ -1346,3 +1363,4 @@ msgstr "Akzeptieren"
 #: views/scripts/software/index.phtml:63
 msgid "Ignore"
 msgstr "Ignorieren"
+

@@ -30,6 +30,7 @@ class ComputerController extends Zend_Controller_Action
         switch ($this->_getParam('action')) {
             case 'index':
             case 'search':
+            case 'import':
                 return; // no specific computer for these actions
         }
 
@@ -297,6 +298,43 @@ class ComputerController extends Zend_Controller_Action
         $form->setDefaults($this->_getAllParams());
         // Set form action explicitly to prevent GET parameters leaking into submitted form data
         $form->setAction($this->_helper->url('search'));
+        $this->view->form = $form;
+    }
+
+    public function importAction()
+    {
+        $form = new Form_Import;
+        if ($this->getRequest()->isPost() and $form->isValid($_POST)) {
+            // Read content of uploaded file
+            $file = $form->getElement('File');
+            $file->receive();
+            $file = $file->getFileName();
+            $data = file_get_contents($file);
+            if ($data === false) {
+                throw new RuntimeException('Could not read uploaded file ' . $file);
+            }
+
+            // Post content to communication server
+            $host = Model_Config::get('CommunicationServerAddress');
+            $port = Model_Config::get('CommunicationServerPort');
+            $request = new Zend_Http_Client(
+                "http://$host:$port/ocsinventory",
+                array(
+                    'strictredirects' => 'true', // required for POST requests
+                    'useragent' => 'Braintacle_local_upload', // Substring 'local' required for correct server operation
+                )
+            );
+            $request->setRawData($data, 'application/x-compress');
+            $response = $request->request('POST');
+
+            if ($response->isSuccessful()) {
+                $this->_redirect('computer');
+            } else {
+                $this->view->response = $response; // View script can display message
+            }
+        }
+
+        // Display form
         $this->view->form = $form;
     }
 
