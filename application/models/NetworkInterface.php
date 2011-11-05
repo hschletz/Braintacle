@@ -70,7 +70,9 @@ class Model_NetworkInterface extends Model_ChildObject
         'MACADDR' => 'MacAddress',
         'PCISLOT' => null,
         'STATUS' => 'Status',
+        'SPEED' => 'Rate',
         'TYPE' => null,
+        'TYPEMIB' => null,
         'VIRTUALDEV' => 'Virtual',
     );
     protected $_tableName = 'networks';

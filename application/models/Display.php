@@ -51,7 +51,6 @@ class Model_Display extends Model_ChildObject
         'MANUFACTURER' => 'Manufacturer',
         'TYPE' => 'Type',
         'SERIAL' => 'Serial',
-        'TYPE' => 'Type',
     );
     protected $_tableName = 'monitors';
     protected $_preferredOrder = 'Manufacturer';

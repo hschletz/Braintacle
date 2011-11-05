@@ -62,6 +62,7 @@ class Model_Software extends Model_ChildObject
         'FILENAME' => null,
         'FILESIZE' => 'Size',
         'FOLDER' => 'InstallLocation',
+        'FROM' => null,
         'GUID' => null,
         'INSTALLDATE' => null,
         'LANGUAGE' => null,

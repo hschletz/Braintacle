@@ -49,6 +49,8 @@ class Model_Controller extends Model_ChildObject
         'DRIVER' => null,
         'MANUFACTURER' => 'Manufacturer',
         'NAME' => 'Name',
+        'PCIID' => null,
+        'PCISLOT' => null,
         'TYPE' => 'Type',
         'VERSION' => null,
     );
