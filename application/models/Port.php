@@ -40,6 +40,13 @@ class Model_Port extends Model_ChildObject
         'Type' => 'type',
         'Connector' => 'caption',
     );
+    protected $_xmlElementName = 'PORTS';
+    protected $_xmlElementMap = array(
+        'CAPTION' => 'Connector',
+        'DESCRIPTION' => null,
+        'NAME' => 'Name',
+        'TYPE' => 'Type',
+    );
     protected $_tableName = 'ports';
     protected $_preferredOrder = 'Name';
 

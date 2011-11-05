@@ -58,6 +58,21 @@ class Model_NetworkInterface extends Model_ChildObject
         'Status' => 'status',
         'Virtual' => 'virtualdev',
     );
+    protected $_xmlElementName = 'NETWORKS';
+    protected $_xmlElementMap = array(
+        'DESCRIPTION' => 'Description',
+        'DRIVER' => null,
+        'IPADDRESS' => 'IpAddress',
+        'IPDHCP' => 'DhcpServer',
+        'IPGATEWAY' => 'Gateway',
+        'IPMASK' => 'Netmask',
+        'IPSUBNET' => 'Subnet',
+        'MACADDR' => 'MacAddress',
+        'PCISLOT' => null,
+        'STATUS' => 'Status',
+        'TYPE' => null,
+        'VIRTUALDEV' => 'Virtual',
+    );
     protected $_tableName = 'networks';
     protected $_preferredOrder = 'Description';
 

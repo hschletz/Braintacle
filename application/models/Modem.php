@@ -38,6 +38,13 @@ class Model_Modem extends Model_ChildObject
         'Type' => 'type',
         'Name' => 'name',
     );
+    protected $_xmlElementName = 'MODEMS';
+    protected $_xmlElementMap = array(
+        'DESCRIPTION' => null,
+        'MODEL' => null,
+        'NAME' => 'Name',
+        'TYPE' => 'Type',
+    );
     protected $_tableName = 'modems';
     protected $_preferredOrder = 'Type';
 

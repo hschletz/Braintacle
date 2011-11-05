@@ -29,6 +29,22 @@
  */
 abstract class Model_ChildObject extends Model_Abstract
 {
+    /**
+     * Name of corresponding XML element
+     * @var string
+     */
+    protected $_xmlElementName;
+
+    /**
+     * Map of XML child elements
+     *
+     * All valid elements should be defined here. Values should be set to NULL
+     * if no property is defined for a particular element.
+     * The keys should be sorted lexically, just like the agents do, to simplify
+     * comparision of generated files.
+     * @var array
+     */
+    protected $_xmlElementMap = array();
 
     /** Return a statement|select object with all objects matching criteria.
      *
@@ -96,6 +112,48 @@ abstract class Model_ChildObject extends Model_Abstract
     public function getTableName()
     {
         return $this->_tableName;
+    }
+
+    /**
+     * Generate a DOMElement object from current data
+     *
+     * @param DOMDocument $document DOMDocument from which to create elements.
+     * @return DOMElement DOM object ready to be appended to the document.
+     */
+    public function toDomElement(DOMDocument $document)
+    {
+        // $_xmlElementName must be defined by a subclass
+        if (empty($this->_xmlElementName)) {
+            throw new Exception('No XML element defined for class ' . get_class($this));
+        }
+
+        // Create base element
+        $element = $document->createElement($this->_xmlElementName);
+
+        // Create child elements, 1 per property
+        foreach ($this->_xmlElementMap as $name => $property) {
+            if (!$property) {
+                continue; // Don't generate elements for undefined properties
+            }
+            $value = $this->getProperty($property, true); // Export raw value
+            if (!empty($value)) { // Don't generate empty elements
+                $child = $document->createElement($name);
+                $element->appendChild($child);
+                $text = $document->createTextNode($value);
+                $child->appendChild($text);
+            }
+        }
+
+        return $element;
+    }
+
+    /**
+     * Get the name of the corresponding XML element
+     * @return string XML element name or NULL if no element is defined
+     */
+    public function getXmlElementName()
+    {
+        return $this->_xmlElementName;
     }
 
 }

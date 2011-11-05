@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-04 13:04+0100\n"
+"POT-Creation-Date: 2011-11-05 19:30+0100\n"
 "PO-Revision-Date: 2011-11-04 13:05+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <holger.schletz@web.de>\n"
@@ -633,33 +633,33 @@ msgstr "Interfaces aus Netzwerkliste löschen"
 msgid "Logout"
 msgstr "Abmelden"
 
-#: models/Computer.php:775
+#: models/Computer.php:817
 #, php-format
 msgid "%1$d computers with an interface in network '%2$s'"
 msgstr "%1$d Computer mit Interface in Netzwerk %2$s"
 
-#: models/Computer.php:792
+#: models/Computer.php:834
 #, php-format
 msgid "%1$d computers waiting for notification of package '%2$s'"
 msgstr "%1$d Computer, die auf Installation von Paket '%2$s' warten"
 
-#: models/Computer.php:797
+#: models/Computer.php:839
 #, php-format
 msgid "%1$d computers with package '%2$s' successfully deployed"
 msgstr "%1$d Computer mit erfolgreich installiertem Paket '%2$s'"
 
-#: models/Computer.php:802
+#: models/Computer.php:844
 #, php-format
 msgid "%1$d computers with deployment of package '%2$s' in progress"
 msgstr "%1$d Computer mit laufender Installation von Paket '%2$s'"
 
-#: models/Computer.php:807
+#: models/Computer.php:849
 #, php-format
 msgid "%1$d computers where deployment of package '%2$s' failed"
 msgstr ""
 "%1$d Computer, bei denen die Installation von Paket '%2$s' fehlgeschlagen ist"
 
-#: models/Computer.php:812
+#: models/Computer.php:854
 #, php-format
 msgid "%1$d computers where software '%2$s' is installed"
 msgstr "%1$d Computer, auf denen die Software '%2$s' installiert ist"
@@ -757,11 +757,11 @@ msgid ""
 msgstr ""
 "Verbindung zu <a href=\"%1$s\">%1$s</a> fehlgeschlagen mit Statuscode %2$d"
 
-#: models/StorageDevice.php:91
+#: models/StorageDevice.php:103
 msgid "Hard disk"
 msgstr "Festplatte"
 
-#: models/StorageDevice.php:94
+#: models/StorageDevice.php:106
 msgid "Removable media"
 msgstr "Wechselmedium"
 
@@ -1363,4 +1363,3 @@ msgstr "Akzeptieren"
 #: views/scripts/software/index.phtml:63
 msgid "Ignore"
 msgstr "Ignorieren"
-

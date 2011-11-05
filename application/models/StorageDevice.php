@@ -56,6 +56,18 @@ class Model_StorageDevice extends Model_ChildObject
         'Size' => 'integer',
     );
 
+    protected $_xmlElementName = 'STORAGES';
+    protected $_xmlElementMap = array(
+        'DESCRIPTION' => 'RawDescription',
+        'DISKSIZE' => 'Size',
+        'FIRMWARE' => 'Firmware',
+        'MANUFACTURER' => 'RawManufacturer',
+        'MODEL' => 'RawModel',
+        'NAME' => 'RawName',
+        'SERIALNUMBER' => 'Serial',
+        'TYPE' => 'RawType',
+    );
+
     protected $_tableName = 'storages';
     protected $_preferredOrder = 'RawType';
 

@@ -132,6 +132,48 @@ class Model_Computer extends Model_ComputerOrGroup
     );
 
     /**
+     * Map of valid XML elements to properties
+     * @var array
+     */
+    protected $_xmlElementMap = array(
+        'HARDWARE' => array(
+            'NAME' => 'Name',
+            'WORKGROUP' => 'Workgroup',
+            'USERDOMAIN' => 'UserDomain',
+            'OSNAME' => 'OsName',
+            'OSVERSION' => 'OsVersionNumber',
+            'OSCOMMENTS' => 'OsVersionString',
+            'PROCESSORT' => 'CpuType',
+            'PROCESSORS' => 'CpuClock',
+            'PROCESSORN' => 'CpuCores',
+            'MEMORY' => 'PhysicalMemory',
+            'SWAP' => 'SwapMemory',
+            'DEFAULTGATEWAY' => 'DefaultGateway',
+            'IPADDR' => 'IpAddress',
+            'DNS' => 'DnsServer',
+            'LASTDATE' => 'InventoryDate',
+            'USERID' => 'UserName',
+            'TYPE' => 'Type',
+            'DESCRIPTION' => 'OsComment',
+            'WINCOMPANY' => 'WindowsCompany',
+            'WINOWNER' => 'WindowsOwner',
+            'WINPRODID' => null,
+            'WINPRODKEY' => 'WindowsProductkey',
+            'CHECKSUM' => null,
+        ),
+        'BIOS' => array(
+            'ASSETTAG' => 'AssetTag',
+            'BDATE' => 'BiosDate',
+            'BMANUFACTURER' => 'BiosManufacturer',
+            'BVERSION' => 'BiosVersion',
+            'SMANUFACTURER' => 'Manufacturer',
+            'SMODEL' => 'Model',
+            'SSN' => 'Serial',
+            'TYPE' => 'Type',
+        )
+    );
+
+    /**
      * List of all child object types
      * @var array
      */
@@ -1650,6 +1692,89 @@ class Model_Computer extends Model_ComputerOrGroup
                     break;
             }
         }
+    }
+
+    /**
+     * Export computer as DOMDocument
+     * @return DOMDocument
+     */
+    public function toDomDocument()
+    {
+        $document = new DomDocument('1.0', 'UTF-8');
+        $document->formatOutput = true;
+
+        // Although the order of elements is irrelevant, agents sort them
+        // lexically. To simplify comparision between agent-generated XML and
+        // the output of this method, the sections are collected in an array
+        // first and then sorted before insertion into the document.
+        $fragments['HARDWARE'] = $this->toDomElement($document, 'HARDWARE');
+        $fragments['BIOS'] = $this->toDomElement($document, 'BIOS');
+        $fragments['ACCOUNTINFO'] = $this->getUserDefinedInfo()->toDomDocumentFragment($document);
+        foreach (self::$_childObjectTypes as $childObject) {
+            $model = 'Model_' . $childObject;
+            $dummy = new $model;
+            $statement = $dummy->createStatement(
+                null,
+                'id', // Sort by 'id' to get more predictable results for comparision
+                'asc',
+                array('Computer' => $this->getId())
+            );
+            $fragment = $document->createDocumentFragment();
+            while ($object = $statement->fetchObject($model)) {
+                $fragment->appendChild($object->toDomElement($document));
+            }
+            $fragments[$dummy->getXmlElementName()] = $fragment;
+        }
+        ksort($fragments);
+
+        // Root element
+        $request = $document->createElement('REQUEST');
+        $document->appendChild($request);
+
+        // Main inventory section
+        $content = $document->createElement('CONTENT');
+        $request->appendChild($content);
+        foreach ($fragments as $fragment) {
+            if ($fragment->hasChildNodes()) { // Ignore empty fragments
+                $content->appendChild($fragment);
+            }
+        }
+
+        // Additional elements
+        $text = $document->createTextNode($this->getFullId());
+        $deviceid = $document->createElement('DEVICEID');
+        $deviceid->appendChild($text);
+        $request->appendChild($deviceid);
+        $request->appendChild($document->createElement('QUERY', 'INVENTORY'));
+
+        return $document;
+    }
+
+    /**
+     * Generate a DOMElement object from current data
+     *
+     * @param DOMDocument $document DOMDocument from which to create elements.
+     * @param string $section XML section (case insensitive) to generate ('hardware' or 'bios')
+     * @return DOMElement DOM object ready to be appended to the document.
+     */
+    public function toDomElement(DomDocument $document, $section)
+    {
+        $section = strtoupper($section);
+        if (!isset($this->_xmlElementMap[$section])) {
+            throw new UnexpectedValueException('Bad section name: ' . $section);
+        }
+        $element = $document->createElement($section);
+        foreach ($this->_xmlElementMap[$section] as $name => $property) {
+            if (!$property) {
+                continue; // Don't create empty elements
+            }
+            // Get raw value for element
+            $text = $document->createTextNode($this->getProperty($property, true));
+            $child = $document->createElement($name);
+            $child->appendChild($text);
+            $element->appendChild($child);
+        }
+        return $element;
     }
 
 }

@@ -40,6 +40,12 @@ class Model_AudioDevice extends Model_ChildObject
         'Name' => 'name',
         'Description' => 'description',
     );
+    protected $_xmlElementName = 'SOUNDS';
+    protected $_xmlElementMap = array(
+        'DESCRIPTION' => 'Description',
+        'MANUFACTURER' => 'Manufacturer',
+        'NAME' => 'Name',
+    );
     protected $_tableName = 'sounds';
     protected $_preferredOrder = 'Manufacturer';
 

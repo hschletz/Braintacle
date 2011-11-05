@@ -42,6 +42,13 @@ class Model_Printer extends Model_ChildObject
         'Port' => 'port',
         'Description' => 'description',
     );
+    protected $_xmlElementName = 'PRINTERS';
+    protected $_xmlElementMap = array(
+        'DESCRIPTION' => 'Description',
+        'DRIVER' => 'Driver',
+        'NAME' => 'Name',
+        'PORT' => 'Port',
+    );
     protected $_tableName = 'printers';
     protected $_preferredOrder = 'Name';
 

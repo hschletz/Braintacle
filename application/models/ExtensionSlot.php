@@ -36,6 +36,14 @@ class Model_ExtensionSlot extends Model_ChildObject
         // Values from 'slots' table
         'Name' => 'designation',
     );
+    protected $_xmlElementName = 'SLOTS';
+    protected $_xmlElementMap = array(
+        'DESCRIPTION' => null,
+        'DESIGNATION' => 'Name',
+        'PSHARE' => null,
+        'PURPOSE' => null,
+        'STATUS' => null,
+    );
     protected $_tableName = 'slots';
     protected $_preferredOrder = 'Name';
 

@@ -42,6 +42,16 @@ class Model_Controller extends Model_ChildObject
         'Name' => 'name',
         'Comment' => 'description',
     );
+    protected $_xmlElementName = 'CONTROLLERS';
+    protected $_xmlElementMap = array(
+        'CAPTION' => null,
+        'DESCRIPTION' => 'Comment',
+        'DRIVER' => null,
+        'MANUFACTURER' => 'Manufacturer',
+        'NAME' => 'Name',
+        'TYPE' => 'Type',
+        'VERSION' => null,
+    );
     protected $_tableName = 'controllers';
     protected $_preferredOrder = 'Type';
 

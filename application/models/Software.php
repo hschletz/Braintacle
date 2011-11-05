@@ -55,6 +55,21 @@ class Model_Software extends Model_ChildObject
         'NumComputers' => 'integer',
     );
 
+    protected $_xmlElementName = 'SOFTWARES';
+    protected $_xmlElementMap = array(
+        'BITSWIDTH' => null,
+        'COMMENTS' => 'Comment',
+        'FILENAME' => null,
+        'FILESIZE' => 'Size',
+        'FOLDER' => 'InstallLocation',
+        'GUID' => null,
+        'INSTALLDATE' => null,
+        'LANGUAGE' => null,
+        'NAME' => 'Name',
+        'PUBLISHER' => 'Publisher',
+        'SOURCE' => null,
+        'VERSION' => 'Version',
+    );
     protected $_tableName = 'softwares';
     protected $_preferredOrder = 'Name';
 
