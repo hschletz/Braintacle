@@ -44,9 +44,15 @@ in the future where necessary.
                 <!-- Main inventory section. -->
                 <element name="CONTENT">
                     <interleave>
+                        <zeroOrMore>
+                            <ref name="ACCESSLOG" />
+                        </zeroOrMore>
                         <ref name="BIOS" /><!-- Assumed to be always present -->
                         <zeroOrMore>
                             <ref name="CONTROLLERS" />
+                        </zeroOrMore>
+                        <zeroOrMore>
+                            <ref name="CPUS" />
                         </zeroOrMore>
                         <zeroOrMore>
                             <ref name="DRIVES" />
@@ -65,6 +71,9 @@ in the future where necessary.
                             <ref name="PORTS" />
                         </zeroOrMore>
                         <zeroOrMore>
+                            <ref name="PROCESSES" />
+                        </zeroOrMore>
+                        <zeroOrMore>
                             <ref name="SOFTWARES" />
                         </zeroOrMore>
                         <zeroOrMore>
@@ -72,6 +81,9 @@ in the future where necessary.
                         </zeroOrMore>
                         <zeroOrMore>
                             <ref name="STORAGES" />
+                        </zeroOrMore>
+                        <zeroOrMore>
+                            <ref name="USERS" />
                         </zeroOrMore>
                         <zeroOrMore>
                             <ref name="VIDEOS" />
@@ -90,6 +102,14 @@ in the future where necessary.
     </start>
 
    <!-- Inventory sections -->
+    <define name="ACCESSLOG">
+        <element name="ACCESSLOG">
+            <interleave>
+                <ref name="LOGDATE" />
+                <ref name="USERID" />
+            </interleave>
+        </element>
+    </define>
     <define name="BIOS">
         <element name="BIOS">
             <interleave>
@@ -100,29 +120,69 @@ in the future where necessary.
                 <ref name="SMANUFACTURER" />
                 <ref name="SMODEL" />
                 <ref name="SSN" />
-                <ref name="TYPE" />
+                <optional>
+                    <ref name="TYPE" />
+                </optional>
             </interleave>
         </element>
     </define>
     <define name="CONTROLLERS">
         <element name="CONTROLLERS">
             <interleave>
-                <ref name="CAPTION" />
-                <ref name="DESCRIPTION" />
+                <optional>
+                    <ref name="CAPTION" />
+                </optional>
+                <optional>
+                    <ref name="DESCRIPTION" />
+                </optional>
+                <optional>
+                    <ref name="DRIVER" />
+                </optional>
                 <ref name="NAME" />
                 <ref name="MANUFACTURER" />
+                <optional>
+                    <ref name="PCIID" />
+                </optional>
+                <optional>
+                    <ref name="PCISLOT" />
+                </optional>
                 <ref name="TYPE" />
-                <ref name="VERSION" />
+                <optional>
+                    <ref name="VERSION" />
+                </optional>
+            </interleave>
+        </element>
+    </define>
+    <define name="CPUS">
+        <element name="CPUS">
+            <interleave>
+                <ref name="MANUFACTURER" />
+                <ref name="SERIAL" />
+                <ref name="SPEED" />
+                <ref name="TYPE" />
             </interleave>
         </element>
     </define>
     <define name="DRIVES">
         <element name="DRIVES">
             <interleave>
+                <optional>
+                    <ref name="CREATEDATE" />
+                </optional>
                 <ref name="FILESYSTEM" />
                 <ref name="FREE" />
-                <ref name="LETTER" />
-                <ref name="NUMFILES" />
+                <optional>
+                    <ref name="LABEL" />
+                </optional>
+                <optional>
+                    <ref name="LETTER" />
+                </optional>
+                <optional>
+                    <ref name="NUMFILES" />
+                </optional>
+                <optional>
+                    <ref name="SERIAL" />
+                </optional>
                 <ref name="TOTAL" />
                 <ref name="TYPE" />
                 <ref name="VOLUMN" />
@@ -132,11 +192,25 @@ in the future where necessary.
     <define name="HARDWARE">
         <element name="HARDWARE">
             <interleave>
+                <optional>
+                    <ref name="ARCHNAME" />
+                </optional>
                 <ref name="CHECKSUM" />
+                <optional>
+                    <ref name="DATELASTLOGGEDUSER" />
+                </optional>
+                <optional>
+                    <ref name="DEFAULTGATEWAY" />
+                </optional>
                 <ref name="DESCRIPTION" />
+                <optional>
+                    <ref name="DNS" />
+                </optional>
                 <ref name="ETIME" />
                 <ref name="IPADDR" />
-                <ref name="LASTDATE" />
+                <optional>
+                    <ref name="LASTDATE" />
+                </optional>
                 <ref name="LASTLOGGEDUSER" />
                 <ref name="MEMORY" />
                 <ref name="NAME" />
@@ -147,15 +221,27 @@ in the future where necessary.
                 <ref name="PROCESSORS" />
                 <ref name="PROCESSORT" />
                 <ref name="SWAP" />
-                <ref name="TYPE" />
-                <ref name="USERDOMAIN" />
+                <optional>
+                    <ref name="TYPE" />
+                </optional>
+                <optional>
+                    <ref name="USERDOMAIN" />
+                </optional>
                 <ref name="USERID" />
                 <ref name="UUID" />
                 <ref name="VMSYSTEM" />
-                <ref name="WINCOMPANY" />
-                <ref name="WINOWNER" />
-                <ref name="WINPRODID" />
-                <ref name="WINPRODKEY" />
+                <optional>
+                    <ref name="WINCOMPANY" />
+                </optional>
+                <optional>
+                    <ref name="WINOWNER" />
+                </optional>
+                <optional>
+                    <ref name="WINPRODID" />
+                </optional>
+                <optional>
+                    <ref name="WINPRODKEY" />
+                </optional>
                 <ref name="WORKGROUP" />
             </interleave>
         </element>
@@ -186,6 +272,9 @@ in the future where necessary.
     <define name="NETWORKS">
         <element name="NETWORKS">
             <interleave>
+                <optional>
+                    <ref name="DRIVER" />
+                </optional>
                 <ref name="DESCRIPTION" />
                 <ref name="IPADDRESS" />
                 <ref name="IPDHCP" />
@@ -193,10 +282,20 @@ in the future where necessary.
                 <ref name="IPMASK" />
                 <ref name="IPSUBNET" />
                 <ref name="MACADDR" />
-                <ref name="SPEED" />
+                <optional>
+                    <ref name="PCISLOT" />
+                </optional>
+                <optional>
+                    <ref name="SPEED" />
+                </optional>
                 <ref name="STATUS" />
                 <ref name="TYPE" />
-                <ref name="TYPEMIB" />
+                <optional>
+                    <ref name="TYPEMIB" />
+                </optional>
+                <optional>
+                    <ref name="VIRTUALDEV" />
+                </optional>
             </interleave>
         </element>
     </define>
@@ -210,20 +309,47 @@ in the future where necessary.
             </interleave>
         </element>
     </define>
+    <define name="PROCESSES">
+        <element name="PROCESSES">
+            <interleave>
+                <ref name="CMD" />
+                <ref name="CPUUSAGE" />
+                <ref name="MEM" />
+                <ref name="PID" />
+                <ref name="STARTED" />
+                <ref name="TTY" />
+                <ref name="USER" />
+                <ref name="VIRTUALMEMORY" />
+            </interleave>
+        </element>
+    </define>
     <define name="SOFTWARES">
         <element name="SOFTWARES">
             <interleave>
-                <ref name="BITSWIDTH" />
+                <optional>
+                    <ref name="BITSWIDTH" />
+                </optional>
                 <ref name="COMMENTS" />
-                <ref name="FILENAME" />
+                <optional>
+                    <ref name="FILENAME" />
+                </optional>
                 <ref name="FILESIZE" />
                 <ref name="FOLDER" />
-                <ref name="GUID" />
+                <optional>
+                    <ref name="FROM" />
+                </optional>
+                <optional>
+                    <ref name="GUID" />
+                </optional>
                 <ref name="INSTALLDATE" />
-                <ref name="LANGUAGE" />
+                <optional>
+                    <ref name="LANGUAGE" />
+                </optional>
                 <ref name="NAME" />
                 <ref name="PUBLISHER" />
-                <ref name="SOURCE" />
+                <optional>
+                    <ref name="SOURCE" />
+                </optional>
                 <ref name="VERSION" />
             </interleave>
         </element>
@@ -246,9 +372,26 @@ in the future where necessary.
                 <ref name="NAME" />
                 <ref name="MANUFACTURER" />
                 <ref name="MODEL" />
+                <optional>
+                    <ref name="SCSI_CHID" />
+                </optional>
+                <optional>
+                    <ref name="SCSI_COID" />
+                </optional>
+                <optional>
+                    <ref name="SCSI_LUN" />
+                </optional>
+                <optional>
+                    <ref name="SCSI_UNID" />
+                </optional>
                 <ref name="SERIALNUMBER" />
                 <ref name="TYPE" />
             </interleave>
+        </element>
+    </define>
+    <define name="USERS">
+        <element name="USERS">
+            <ref name="LOGIN" />
         </element>
     </define>
     <define name="VIDEOS">
@@ -263,6 +406,11 @@ in the future where necessary.
     </define>
 
    <!-- Text elements -->
+    <define name="ARCHNAME">
+        <element name="ARCHNAME">
+            <text />
+        </element>
+    </define>
     <define name="ASSETTAG">
         <element name="ASSETTAG">
             <text />
@@ -303,8 +451,33 @@ in the future where necessary.
             <text />
         </element>
     </define>
+    <define name="CMD">
+        <element name="CMD">
+            <text />
+        </element>
+    </define>
     <define name="COMMENTS">
         <element name="COMMENTS">
+            <text />
+        </element>
+    </define>
+    <define name="CPUUSAGE">
+        <element name="CPUUSAGE">
+            <text />
+        </element>
+    </define>
+    <define name="CREATEDATE">
+        <element name="CREATEDATE">
+            <text />
+        </element>
+    </define>
+    <define name="DATELASTLOGGEDUSER">
+        <element name="DATELASTLOGGEDUSER">
+            <text />
+        </element>
+    </define>
+    <define name="DEFAULTGATEWAY">
+        <element name="DEFAULTGATEWAY">
             <text />
         </element>
     </define>
@@ -315,6 +488,16 @@ in the future where necessary.
     </define>
     <define name="DISKSIZE">
         <element name="DISKSIZE">
+            <text />
+        </element>
+    </define>
+    <define name="DNS">
+        <element name="DNS">
+            <text />
+        </element>
+    </define>
+    <define name="DRIVER">
+        <element name="DRIVER">
             <text />
         </element>
     </define>
@@ -350,6 +533,11 @@ in the future where necessary.
     </define>
     <define name="FREE">
         <element name="FREE">
+            <text />
+        </element>
+    </define>
+    <define name="FROM">
+        <element name="FROM">
             <text />
         </element>
     </define>
@@ -398,6 +586,11 @@ in the future where necessary.
             <text />
         </element>
     </define>
+    <define name="LABEL">
+        <element name="LABEL">
+            <text />
+        </element>
+    </define>
     <define name="LANGUAGE">
         <element name="LANGUAGE">
             <text />
@@ -418,6 +611,16 @@ in the future where necessary.
             <text />
         </element>
     </define>
+    <define name="LOGDATE">
+        <element name="LOGDATE">
+            <text />
+        </element>
+    </define>
+    <define name="LOGIN">
+        <element name="LOGIN">
+            <text />
+        </element>
+    </define>
     <define name="MACADDR">
         <element name="MACADDR">
             <text />
@@ -425,6 +628,11 @@ in the future where necessary.
     </define>
     <define name="MANUFACTURER">
         <element name="MANUFACTURER">
+            <text />
+        </element>
+    </define>
+    <define name="MEM">
+        <element name="MEM">
             <text />
         </element>
     </define>
@@ -463,6 +671,21 @@ in the future where necessary.
             <text />
         </element>
     </define>
+    <define name="PCIID">
+        <element name="PCIID">
+            <text />
+        </element>
+    </define>
+    <define name="PCISLOT">
+        <element name="PCISLOT">
+            <text />
+        </element>
+    </define>
+    <define name="PID">
+        <element name="PID">
+            <text />
+        </element>
+    </define>
     <define name="POINTTYPE">
         <element name="POINTTYPE">
             <text />
@@ -490,6 +713,26 @@ in the future where necessary.
     </define>
     <define name="RESOLUTION">
         <element name="RESOLUTION">
+            <text />
+        </element>
+    </define>
+    <define name="SCSI_CHID">
+        <element name="SCSI_CHID">
+            <text />
+        </element>
+    </define>
+    <define name="SCSI_COID">
+        <element name="SCSI_COID">
+            <text />
+        </element>
+    </define>
+    <define name="SCSI_LUN">
+        <element name="SCSI_LUN">
+            <text />
+        </element>
+    </define>
+    <define name="SCSI_UNID">
+        <element name="SCSI_UNID">
             <text />
         </element>
     </define>
@@ -528,6 +771,11 @@ in the future where necessary.
             <text />
         </element>
     </define>
+    <define name="STARTED">
+        <element name="STARTED">
+            <text />
+        </element>
+    </define>
     <define name="STATUS">
         <element name="STATUS">
             <text />
@@ -543,6 +791,11 @@ in the future where necessary.
             <text />
         </element>
     </define>
+    <define name="TTY">
+        <element name="TTY">
+            <text />
+        </element>
+    </define>
     <define name="TYPE">
         <element name="TYPE">
             <text />
@@ -550,6 +803,11 @@ in the future where necessary.
     </define>
     <define name="TYPEMIB">
         <element name="TYPEMIB">
+            <text />
+        </element>
+    </define>
+    <define name="USER">
+        <element name="USER">
             <text />
         </element>
     </define>
@@ -570,6 +828,16 @@ in the future where necessary.
     </define>
     <define name="VERSION">
         <element name="VERSION">
+            <text />
+        </element>
+    </define>
+    <define name="VIRTUALDEV">
+        <element name="VIRTUALDEV">
+            <text />
+        </element>
+    </define>
+    <define name="VIRTUALMEMORY">
+        <element name="VIRTUALMEMORY">
             <text />
         </element>
     </define>
