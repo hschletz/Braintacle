@@ -1703,9 +1703,10 @@ class Model_Computer extends Model_ComputerOrGroup
 
     /**
      * Export computer as DOMDocument
+     * @param bool $validate Validate generated document and throw exception if validation fails
      * @return DOMDocument
      */
-    public function toDomDocument()
+    public function toDomDocument($validate=false)
     {
         $document = new DomDocument('1.0', 'UTF-8');
         $document->formatOutput = true;
@@ -1754,6 +1755,9 @@ class Model_Computer extends Model_ComputerOrGroup
         $request->appendChild($deviceid);
         $request->appendChild($document->createElement('QUERY', 'INVENTORY'));
 
+        if ($validate and !$document->relaxNGValidate(APPLICATION_PATH . '/../xml/InventoryRequest.rng')) {
+            throw new RuntimeException('Validation of generated XML document failed');
+        }
         return $document;
     }
 
