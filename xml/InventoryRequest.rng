@@ -47,6 +47,9 @@ in the future where necessary.
                         <zeroOrMore>
                             <ref name="ACCESSLOG" />
                         </zeroOrMore>
+                        <zeroOrMore>
+                            <ref name="ACCOUNTINFO" />
+                        </zeroOrMore>
                         <ref name="BIOS" /><!-- Assumed to be always present -->
                         <zeroOrMore>
                             <ref name="CONTROLLERS" />
@@ -62,6 +65,9 @@ in the future where necessary.
                             <ref name="INPUTS" />
                         </zeroOrMore>
                         <zeroOrMore>
+                            <ref name="MEMORIES" />
+                        </zeroOrMore>
+                        <zeroOrMore>
                             <ref name="MONITORS" />
                         </zeroOrMore>
                         <zeroOrMore>
@@ -71,7 +77,16 @@ in the future where necessary.
                             <ref name="PORTS" />
                         </zeroOrMore>
                         <zeroOrMore>
+                            <ref name="PRINTERS" />
+                        </zeroOrMore>
+                        <zeroOrMore>
                             <ref name="PROCESSES" />
+                        </zeroOrMore>
+                        <zeroOrMore>
+                            <ref name="REGISTRY" />
+                        </zeroOrMore>
+                        <zeroOrMore>
+                            <ref name="SLOTS" />
                         </zeroOrMore>
                         <zeroOrMore>
                             <ref name="SOFTWARES" />
@@ -107,6 +122,14 @@ in the future where necessary.
             <interleave>
                 <ref name="LOGDATE" />
                 <ref name="USERID" />
+            </interleave>
+        </element>
+    </define>
+    <define name="ACCOUNTINFO">
+        <element name="ACCOUNTINFO">
+            <interleave>
+                <ref name="KEYNAME" />
+                <ref name="KEYVALUE" />
             </interleave>
         </element>
     </define>
@@ -269,6 +292,22 @@ in the future where necessary.
             </interleave>
         </element>
     </define>
+    <define name="MEMORIES">
+        <element name="MEMORIES">
+            <interleave>
+                <ref name="CAPACITY" />
+                <ref name="CAPTION" />
+                <ref name="DESCRIPTION" />
+                <ref name="NUMSLOTS" />
+                <ref name="PURPOSE" />
+                <optional>
+                    <ref name="SERIALNUMBER" />
+                </optional>
+                <ref name="SPEED" />
+                <ref name="TYPE" />
+            </interleave>
+        </element>
+    </define>
     <define name="NETWORKS">
         <element name="NETWORKS">
             <interleave>
@@ -309,6 +348,16 @@ in the future where necessary.
             </interleave>
         </element>
     </define>
+    <define name="PRINTERS">
+        <element name="PRINTERS">
+            <interleave>
+                <ref name="DESCRIPTION" />
+                <ref name="DRIVER" />
+                <ref name="NAME" />
+                <ref name="PORT" />
+            </interleave>
+        </element>
+    </define>
     <define name="PROCESSES">
         <element name="PROCESSES">
             <interleave>
@@ -320,6 +369,26 @@ in the future where necessary.
                 <ref name="TTY" />
                 <ref name="USER" />
                 <ref name="VIRTUALMEMORY" />
+            </interleave>
+        </element>
+    </define>
+    <define name="REGISTRY">
+        <element name="REGISTRY">
+            <interleave>
+                <ref name="NAME" />
+                <ref name="REGVALUE" />
+            </interleave>
+        </element>
+    </define>
+    <define name="SLOTS">
+        <element name="SLOTS">
+            <interleave>
+                <ref name="DESCRIPTION" />
+                <ref name="DESIGNATION" />
+                <ref name="NAME" />
+                <ref name="PSHARE" />
+                <ref name="PURPOSE" />
+                <ref name="STATUS" />
             </interleave>
         </element>
     </define>
@@ -436,6 +505,11 @@ in the future where necessary.
             <text />
         </element>
     </define>
+    <define name="CAPACITY">
+        <element name="CAPACITY">
+            <text />
+        </element>
+    </define>
     <define name="CAPTION">
         <element name="CAPTION">
             <text />
@@ -483,6 +557,11 @@ in the future where necessary.
     </define>
     <define name="DESCRIPTION">
         <element name="DESCRIPTION">
+            <text />
+        </element>
+    </define>
+    <define name="DESIGNATION">
+        <element name="DESIGNATION">
             <text />
         </element>
     </define>
@@ -586,6 +665,16 @@ in the future where necessary.
             <text />
         </element>
     </define>
+    <define name="KEYNAME">
+        <element name="KEYNAME">
+            <text />
+        </element>
+    </define>
+    <define name="KEYVALUE">
+        <element name="KEYVALUE">
+            <text />
+        </element>
+    </define>
     <define name="LABEL">
         <element name="LABEL">
             <text />
@@ -656,6 +745,11 @@ in the future where necessary.
             <text />
         </element>
     </define>
+    <define name="NUMSLOTS">
+        <element name="NUMSLOTS">
+            <text />
+        </element>
+    </define>
     <define name="OSCOMMENTS">
         <element name="OSCOMMENTS">
             <text />
@@ -691,6 +785,11 @@ in the future where necessary.
             <text />
         </element>
     </define>
+    <define name="PORT">
+        <element name="PORT">
+            <text />
+        </element>
+    </define>
     <define name="PROCESSORN">
         <element name="PROCESSORN">
             <text />
@@ -708,6 +807,21 @@ in the future where necessary.
     </define>
     <define name="PUBLISHER">
         <element name="PUBLISHER">
+            <text />
+        </element>
+    </define>
+    <define name="PSHARE">
+        <element name="PSHARE">
+            <text />
+        </element>
+    </define>
+    <define name="PURPOSE">
+        <element name="PURPOSE">
+            <text />
+        </element>
+    </define>
+    <define name="REGVALUE">
+        <element name="REGVALUE">
             <text />
         </element>
     </define>
