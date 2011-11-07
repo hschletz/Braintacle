@@ -220,4 +220,15 @@ print $this->htmlTag(
     $this->escape($user)
 );
 
+if ($computer->getUuid()) {
+    print $this->htmlTag(
+        'dt',
+        $this->translate('UUID')
+    );
+    print $this->htmlTag(
+        'dd',
+        $this->escape($computer->getUuid())
+    );
+}
+
 print "</dl>\n";

@@ -31,6 +31,7 @@
  * - <b>Manufacturer</b>
  * - <b>Name</b>
  * - <b>Comment</b> In most cases identical to Name
+ * - <b>DriverVersion</b> Driver version (Windows only)
  * @package Models
  */
 class Model_Controller extends Model_ChildObject
@@ -41,18 +42,20 @@ class Model_Controller extends Model_ChildObject
         'Manufacturer' => 'manufacturer',
         'Name' => 'name',
         'Comment' => 'description',
+        'DriverVersion' => 'version',
+        'RawCaption' => 'caption' // Duplicate of Name, only used for export
     );
     protected $_xmlElementName = 'CONTROLLERS';
     protected $_xmlElementMap = array(
-        'CAPTION' => null,
+        'CAPTION' => 'RawCaption',
         'DESCRIPTION' => 'Comment',
-        'DRIVER' => null,
+        'DRIVER' => null, // Not available in database
         'MANUFACTURER' => 'Manufacturer',
         'NAME' => 'Name',
-        'PCIID' => null,
-        'PCISLOT' => null,
+        'PCIID' => null,  // Not available in database
+        'PCISLOT' => null,  // Not available in database
         'TYPE' => 'Type',
-        'VERSION' => null,
+        'VERSION' => 'DriverVersion',
     );
     protected $_tableName = 'controllers';
     protected $_preferredOrder = 'Type';

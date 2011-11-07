@@ -43,6 +43,7 @@ class Model_InputDevice extends Model_ChildObject
         'Description' => 'caption',
         'Comment' => 'description',
         'Interface' => 'interface',
+        'RawPointType' => 'pointtype' // No useful information, always 'N/A' or NULL
     );
     protected $_xmlElementName = 'INPUTS';
     protected $_xmlElementMap = array(
@@ -50,7 +51,7 @@ class Model_InputDevice extends Model_ChildObject
         'DESCRIPTION' => 'Comment',
         'INTERFACE' => 'Interface',
         'MANUFACTURER' => 'Manufacturer',
-        'POINTTYPE' => null,
+        'POINTTYPE' => 'RawPointType',
         'TYPE' => 'Type',
     );
     protected $_tableName = 'inputs';

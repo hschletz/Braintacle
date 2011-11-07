@@ -29,7 +29,7 @@
  * Properties:
  * - <b>Type</b>
  * - <b>Name</b>
- * - <b>Connector</b> Connector type (UNIX only)
+ * - <b>Connector</b> Connector type (UNIX only), just a duplicate of Name on Windows
  * @package Models
  */
 class Model_Port extends Model_ChildObject
@@ -39,11 +39,12 @@ class Model_Port extends Model_ChildObject
         'Name' => 'name',
         'Type' => 'type',
         'Connector' => 'caption',
+        'RawDescription' => 'description' // Useless, identical to Name without the port name
     );
     protected $_xmlElementName = 'PORTS';
     protected $_xmlElementMap = array(
         'CAPTION' => 'Connector',
-        'DESCRIPTION' => null,
+        'DESCRIPTION' => 'RawDescription',
         'NAME' => 'Name',
         'TYPE' => 'Type',
     );

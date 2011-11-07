@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-05 20:15+0100\n"
+"POT-Creation-Date: 2011-11-07 13:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -208,7 +208,7 @@ msgstr ""
 #: views/scripts/computer/software.phtml:30
 #: views/scripts/computer/storage.phtml:34
 #: views/scripts/computer/system.phtml:93
-#: views/scripts/computer/system.phtml:134
+#: views/scripts/computer/system.phtml:137
 #: views/scripts/duplicates/index.phtml:26
 #: views/scripts/duplicates/show.phtml:28 views/scripts/group/general.phtml:32
 #: views/scripts/group/index.phtml:44 views/scripts/group/members.phtml:30
@@ -367,23 +367,23 @@ msgstr ""
 msgid "Product key"
 msgstr ""
 
-#: forms/Search.php:119 views/scripts/computer/index.phtml:97
+#: forms/Search.php:119 views/scripts/computer/index.phtml:98
 msgid "Software: Name"
 msgstr ""
 
-#: forms/Search.php:120 views/scripts/computer/index.phtml:98
+#: forms/Search.php:120 views/scripts/computer/index.phtml:99
 msgid "Software: Version"
 msgstr ""
 
-#: forms/Search.php:121 views/scripts/computer/index.phtml:99
+#: forms/Search.php:121 views/scripts/computer/index.phtml:100
 msgid "Software: Publisher"
 msgstr ""
 
-#: forms/Search.php:122 views/scripts/computer/index.phtml:100
+#: forms/Search.php:122 views/scripts/computer/index.phtml:101
 msgid "Software: Comment"
 msgstr ""
 
-#: forms/Search.php:123 views/scripts/computer/index.phtml:101
+#: forms/Search.php:123 views/scripts/computer/index.phtml:102
 msgid "Software: Install location"
 msgstr ""
 
@@ -442,17 +442,17 @@ msgid "Serial number"
 msgstr ""
 
 #: forms/Search.php:134 views/scripts/computer/general.phtml:104
-#: views/scripts/computer/index.phtml:76
+#: views/scripts/computer/index.phtml:77
 #: views/scripts/duplicates/index.phtml:29
 #: views/scripts/duplicates/show.phtml:31
 msgid "Asset tag"
 msgstr ""
 
-#: forms/Search.php:135 views/scripts/computer/index.phtml:74
+#: forms/Search.php:135 views/scripts/computer/index.phtml:75
 msgid "BIOS version"
 msgstr ""
 
-#: forms/Search.php:136 views/scripts/computer/index.phtml:75
+#: forms/Search.php:136 views/scripts/computer/index.phtml:76
 msgid "BIOS date"
 msgstr ""
 
@@ -475,14 +475,14 @@ msgid "Default gateway"
 msgstr ""
 
 #: forms/Search.php:141 views/scripts/computer/index.phtml:56
-#: views/scripts/computer/index.phtml:90
+#: views/scripts/computer/index.phtml:91
 #: views/scripts/computer/network.phtml:61 views/scripts/network/edit.phtml:51
 #: views/scripts/network/showidentified.phtml:28
 #: views/scripts/network/showunknown.phtml:29
 msgid "IP address"
 msgstr ""
 
-#: forms/Search.php:142 views/scripts/computer/index.phtml:89
+#: forms/Search.php:142 views/scripts/computer/index.phtml:90
 #: views/scripts/computer/network.phtml:60
 #: views/scripts/duplicates/show.phtml:29 views/scripts/network/edit.phtml:33
 #: views/scripts/network/showidentified.phtml:27
@@ -490,7 +490,7 @@ msgstr ""
 msgid "MAC address"
 msgstr ""
 
-#: forms/Search.php:143 views/scripts/computer/index.phtml:91
+#: forms/Search.php:143 views/scripts/computer/index.phtml:92
 msgid "Network address"
 msgstr ""
 
@@ -498,15 +498,15 @@ msgstr ""
 msgid "Network Mask"
 msgstr ""
 
-#: forms/Search.php:145 views/scripts/computer/index.phtml:94
+#: forms/Search.php:145 views/scripts/computer/index.phtml:95
 msgid "Printer name"
 msgstr ""
 
-#: forms/Search.php:146 views/scripts/computer/index.phtml:95
+#: forms/Search.php:146 views/scripts/computer/index.phtml:96
 msgid "Printer port"
 msgstr ""
 
-#: forms/Search.php:147 views/scripts/computer/index.phtml:96
+#: forms/Search.php:147 views/scripts/computer/index.phtml:97
 msgid "Printer driver"
 msgstr ""
 
@@ -514,47 +514,47 @@ msgstr ""
 msgid "OCS agent"
 msgstr ""
 
-#: forms/Search.php:149 views/scripts/computer/index.phtml:81
+#: forms/Search.php:149 views/scripts/computer/index.phtml:82
 msgid "Monitor: manufacturer"
 msgstr ""
 
-#: forms/Search.php:150 views/scripts/computer/index.phtml:82
+#: forms/Search.php:150 views/scripts/computer/index.phtml:83
 msgid "Monitor: description"
 msgstr ""
 
-#: forms/Search.php:151 views/scripts/computer/index.phtml:83
+#: forms/Search.php:151 views/scripts/computer/index.phtml:84
 msgid "Monitor: serial"
 msgstr ""
 
-#: forms/Search.php:152 views/scripts/computer/index.phtml:84
+#: forms/Search.php:152 views/scripts/computer/index.phtml:85
 msgid "Monitor: production date"
 msgstr ""
 
-#: forms/Search.php:153 views/scripts/computer/index.phtml:85
+#: forms/Search.php:153 views/scripts/computer/index.phtml:86
 msgid "Display controller"
 msgstr ""
 
-#: forms/Search.php:154 views/scripts/computer/index.phtml:86
+#: forms/Search.php:154 views/scripts/computer/index.phtml:87
 msgid "GPU memory"
 msgstr ""
 
-#: forms/Search.php:155 views/scripts/computer/index.phtml:88
+#: forms/Search.php:155 views/scripts/computer/index.phtml:89
 msgid "Modem"
 msgstr ""
 
-#: forms/Search.php:156 views/scripts/computer/index.phtml:79
+#: forms/Search.php:156 views/scripts/computer/index.phtml:80
 msgid "Audio device"
 msgstr ""
 
-#: forms/Search.php:157 views/scripts/computer/index.phtml:80
+#: forms/Search.php:157 views/scripts/computer/index.phtml:81
 msgid "Controller"
 msgstr ""
 
-#: forms/Search.php:158 views/scripts/computer/index.phtml:93
+#: forms/Search.php:158 views/scripts/computer/index.phtml:94
 msgid "Port name"
 msgstr ""
 
-#: forms/Search.php:159 views/scripts/computer/index.phtml:87
+#: forms/Search.php:159 views/scripts/computer/index.phtml:88
 msgid "Extension slot"
 msgstr ""
 
@@ -564,7 +564,7 @@ msgid "User defined: %s"
 msgstr ""
 
 #: forms/Search.php:183 forms/UserDefinedInfo.php:62
-#: views/scripts/computer/index.phtml:108
+#: views/scripts/computer/index.phtml:109
 msgid "Category"
 msgstr ""
 
@@ -632,32 +632,32 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: models/Computer.php:824
+#: models/Computer.php:830
 #, php-format
 msgid "%1$d computers with an interface in network '%2$s'"
 msgstr ""
 
-#: models/Computer.php:841
+#: models/Computer.php:847
 #, php-format
 msgid "%1$d computers waiting for notification of package '%2$s'"
 msgstr ""
 
-#: models/Computer.php:846
+#: models/Computer.php:852
 #, php-format
 msgid "%1$d computers with package '%2$s' successfully deployed"
 msgstr ""
 
-#: models/Computer.php:851
+#: models/Computer.php:857
 #, php-format
 msgid "%1$d computers with deployment of package '%2$s' in progress"
 msgstr ""
 
-#: models/Computer.php:856
+#: models/Computer.php:862
 #, php-format
 msgid "%1$d computers where deployment of package '%2$s' failed"
 msgstr ""
 
-#: models/Computer.php:861
+#: models/Computer.php:867
 #, php-format
 msgid "%1$d computers where software '%2$s' is installed"
 msgstr ""
@@ -835,7 +835,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: views/scripts/computer/bios.phtml:57 views/scripts/computer/index.phtml:78
+#: views/scripts/computer/bios.phtml:57 views/scripts/computer/index.phtml:79
 #: views/scripts/computer/software.phtml:31
 msgid "Version"
 msgstr ""
@@ -913,6 +913,11 @@ msgstr ""
 msgid "Last user logged in"
 msgstr ""
 
+#: views/scripts/computer/general.phtml:226
+#: views/scripts/computer/index.phtml:73
+msgid "UUID"
+msgstr ""
+
 #: views/scripts/computer/groups.phtml:31
 msgid "Group memberships"
 msgstr ""
@@ -966,39 +971,39 @@ msgstr ""
 msgid "Windows product key"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:73
+#: views/scripts/computer/index.phtml:74
 msgid "BIOS manufacturer"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:77
+#: views/scripts/computer/index.phtml:78
 msgid "Error code"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:92
+#: views/scripts/computer/index.phtml:93
 #: views/scripts/computer/network.phtml:62
 msgid "Netmask"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:102
+#: views/scripts/computer/index.phtml:103
 msgid "Volume size"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:103
+#: views/scripts/computer/index.phtml:104
 #: views/scripts/computer/storage.phtml:93
 #: views/scripts/computer/storage.phtml:103
 msgid "Free space"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:151
+#: views/scripts/computer/index.phtml:152
 #, php-format
 msgid "%d matches"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:155
+#: views/scripts/computer/index.phtml:156
 msgid "Edit filter"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:172 views/scripts/group/members.phtml:70
+#: views/scripts/computer/index.phtml:173 views/scripts/group/members.phtml:70
 #, php-format
 msgid "Number of computers: %d"
 msgstr ""
@@ -1045,6 +1050,7 @@ msgstr ""
 
 #: views/scripts/computer/network.phtml:65
 #: views/scripts/computer/packages.phtml:36
+#: views/scripts/computer/system.phtml:138
 msgid "Status"
 msgstr ""
 
@@ -1188,11 +1194,15 @@ msgstr ""
 msgid "Memory slots"
 msgstr ""
 
-#: views/scripts/computer/system.phtml:125
+#: views/scripts/computer/system.phtml:96
+msgid "Driver version"
+msgstr ""
+
+#: views/scripts/computer/system.phtml:128
 msgid "Controllers"
 msgstr ""
 
-#: views/scripts/computer/system.phtml:154
+#: views/scripts/computer/system.phtml:158
 msgid "Extension slots"
 msgstr ""
 
@@ -1206,6 +1216,10 @@ msgstr ""
 
 #: views/scripts/computer/windows.phtml:42
 msgid "Owner"
+msgstr ""
+
+#: views/scripts/computer/windows.phtml:60
+msgid "Product ID"
 msgstr ""
 
 #: views/scripts/duplicates/allow.phtml:27

@@ -32,7 +32,11 @@
  * - <b>Publisher</b> Publisher/Manufacturer (Windows only)
  * - <b>Size</b> Size (Linux only)
  * - <b>InstallLocation</b> Installation directory (Windows only)
+ * - <b>InstallationDate</b> Date of installation (not always available)
  * - <b>Comment</b> Comment
+ * - <b>Architecture</b> 32/64 (Windows only)
+ * - <b>Language</b> UI Language (Windows only, not always available)
+ * - <b>Guid</b> GUID - may contain the MSI GIUD or arbitrary stuff (Windows only)
  * @package Models
  */
 class Model_Software extends Model_ChildObject
@@ -44,8 +48,14 @@ class Model_Software extends Model_ChildObject
         'Publisher' => 'publisher',
         'Size' => 'filesize',
         'InstallLocation' => 'folder',
+        'InstallationDate' => 'installdate',
         'Comment' => 'comments',
+        'Guid' => 'guid',
+        'Architecture' => 'bitswidth',
+        'Language' => 'language',
         'NumComputers' => 'num_computers',
+        'RawFilename' => 'filename', // Useless, always 'N/A' or NULL
+        'RawSource' => 'source', // Not really useful
     );
 
     protected $_types = array(
@@ -53,22 +63,23 @@ class Model_Software extends Model_ChildObject
         'InstallLocation' => 'clob',
         'Comment' => 'clob',
         'NumComputers' => 'integer',
+        'InstallationDate' => 'date',
     );
 
     protected $_xmlElementName = 'SOFTWARES';
     protected $_xmlElementMap = array(
-        'BITSWIDTH' => null,
+        'BITSWIDTH' => 'Architecture',
         'COMMENTS' => 'Comment',
-        'FILENAME' => null,
+        'FILENAME' => 'RawFilename',
         'FILESIZE' => 'Size',
         'FOLDER' => 'InstallLocation',
-        'FROM' => null,
-        'GUID' => null,
-        'INSTALLDATE' => null,
-        'LANGUAGE' => null,
+        'FROM' => null, // Not available in database
+        'GUID' => 'Guid',
+        'INSTALLDATE' => 'InstallationDate',
+        'LANGUAGE' => 'Language',
         'NAME' => 'Name',
         'PUBLISHER' => 'Publisher',
-        'SOURCE' => null,
+        'SOURCE' => 'RawSource',
         'VERSION' => 'Version',
     );
     protected $_tableName = 'softwares';

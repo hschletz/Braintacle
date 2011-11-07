@@ -92,6 +92,9 @@ $headers = array(
     'Manufacturer' => $this->translate('Manufacturer'),
     'Name' => $this->translate('Name'),
 );
+if ($this->computer->isWindows()) { // Not available for other OS
+    $headers['DriverVersion'] = $this->translate('Driver version');
+}
 
 $renderCallbacks = array (
     'Name' => 'renderName',
@@ -132,6 +135,7 @@ if ($numControllers) {
 
 $headers = array(
     'Name' => $this->translate('Name'),
+    'Status' => $this->translate('Status'),
 );
 
 $renderCallbacks = array (

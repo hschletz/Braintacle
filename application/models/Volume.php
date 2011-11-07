@@ -52,6 +52,7 @@ class Model_Volume extends Model_ChildObject
         'Size' => 'total',
         'FreeSpace' => 'free',
         'CreationDate' => 'createdate',
+        'RawNumFiles' => 'numfiles' // No useful information, always 0
         // UsedSpace is calculated by getProperty()
     );
 
@@ -67,10 +68,10 @@ class Model_Volume extends Model_ChildObject
         'CREATEDATE' => 'CreationDate',
         'FILESYSTEM' => 'Filesystem',
         'FREE' => 'FreeSpace',
-        'LABEL' => null,
+        'LABEL' => null, // Not available in database
         'LETTER' => 'Letter',
-        'NUMFILES' => null,
-        'SERIAL' => null,
+        'NUMFILES' => 'RawNumFiles',
+        'SERIAL' => null, // Not available in database
         'TOTAL' => 'Size',
         'TYPE' => 'Type',
         'VOLUMN' => 'Device',

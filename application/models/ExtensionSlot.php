@@ -28,6 +28,7 @@
  *
  * Properties:
  * - <b>Name</b>
+ * - <b>Status</b>
  * @package Models
  */
 class Model_ExtensionSlot extends Model_ChildObject
@@ -35,14 +36,20 @@ class Model_ExtensionSlot extends Model_ChildObject
     protected $_propertyMap = array(
         // Values from 'slots' table
         'Name' => 'designation',
+        'Status' => 'status',
+        'RawName' => 'name', // Useless, only 'System Slot' or translation of it
+        'RawDescription' => 'description', // Useless, duplicate of RawName
+        'RawPshare' => 'pshare', // obsolete
+        'RawPurpose' => 'purpose', // always NULL
     );
     protected $_xmlElementName = 'SLOTS';
     protected $_xmlElementMap = array(
-        'DESCRIPTION' => null,
+        'DESCRIPTION' => 'RawDescription',
         'DESIGNATION' => 'Name',
-        'PSHARE' => null,
-        'PURPOSE' => null,
-        'STATUS' => null,
+        'NAME' => 'RawName',
+        'PSHARE' => null, // obsolete
+        'PURPOSE' => 'RawPurpose',
+        'STATUS' => 'Status',
     );
     protected $_tableName = 'slots';
     protected $_preferredOrder = 'Name';

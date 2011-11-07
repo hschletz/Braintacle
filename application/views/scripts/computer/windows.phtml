@@ -55,4 +55,13 @@ print $this->htmlTag(
     $this->escape($computer->getWindowsProductkey())
 );
 
+print $this->htmlTag(
+    'dt',
+    $this->translate('Product ID')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escape($computer->getWindowsProductId())
+);
+
 print "</dl>\n";

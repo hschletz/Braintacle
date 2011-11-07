@@ -37,11 +37,13 @@ class Model_Modem extends Model_ChildObject
         // Values from 'modems' table
         'Type' => 'type',
         'Name' => 'name',
+        'RawDescription' => 'description', // Useless, same as Name without enumerator
+        'RawModel' => 'model', // Ussless, identical to RawDescription
     );
     protected $_xmlElementName = 'MODEMS';
     protected $_xmlElementMap = array(
-        'DESCRIPTION' => null,
-        'MODEL' => null,
+        'DESCRIPTION' => 'RawDescription',
+        'MODEL' => 'RawModel',
         'NAME' => 'Name',
         'TYPE' => 'Type',
     );

@@ -57,22 +57,24 @@ class Model_NetworkInterface extends Model_ChildObject
         'DhcpServer' => 'ipdhcp',
         'Status' => 'status',
         'Virtual' => 'virtualdev',
+        'RawType' => 'type', // needs further processing to be really useful
+        'RawTypeMib' => 'typemib', // needs further processing to be really useful
     );
     protected $_xmlElementName = 'NETWORKS';
     protected $_xmlElementMap = array(
         'DESCRIPTION' => 'Description',
-        'DRIVER' => null,
+        'DRIVER' => null, // Not available in database
         'IPADDRESS' => 'IpAddress',
         'IPDHCP' => 'DhcpServer',
         'IPGATEWAY' => 'Gateway',
         'IPMASK' => 'Netmask',
         'IPSUBNET' => 'Subnet',
         'MACADDR' => 'MacAddress',
-        'PCISLOT' => null,
+        'PCISLOT' => null, // Not available in database
         'STATUS' => 'Status',
         'SPEED' => 'Rate',
-        'TYPE' => null,
-        'TYPEMIB' => null,
+        'TYPE' => 'RawType',
+        'TYPEMIB' => 'RawTypeMib',
         'VIRTUALDEV' => 'Virtual',
     );
     protected $_tableName = 'networks';

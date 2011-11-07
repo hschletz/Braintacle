@@ -64,10 +64,10 @@ class Model_StorageDevice extends Model_ChildObject
         'MANUFACTURER' => 'RawManufacturer',
         'MODEL' => 'RawModel',
         'NAME' => 'RawName',
-        'SCSI_CHID' => null,
-        'SCSI_COID' => null,
-        'SCSI_LUN' => null,
-        'SCSI_UNID' => null,
+        'SCSI_CHID' => null, // Not available in database
+        'SCSI_COID' => null, // Not available in database
+        'SCSI_LUN' => null, // Not available in database
+        'SCSI_UNID' => null, // Not available in database
         'SERIALNUMBER' => 'Serial',
         'TYPE' => 'RawType',
     );

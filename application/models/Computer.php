@@ -59,6 +59,8 @@
  * - <b>WindowsCompany:</b> Company name (typed in at installation, Windows only)
  * - <b>WindowsOwner:</b> Owner (typed in at installation, Windows only)
  * - <b>WindowsProductkey:</b> product key, Windows only
+ * - <b>WindowsProductId:</b> product ID, Windows only
+ * - <b>Uuid</b> UUID, typically found in virtual machines
  *
  *
  * Properties containing a '.' character refer to child objects. These properties are:
@@ -105,6 +107,10 @@ class Model_Computer extends Model_ComputerOrGroup
         'WindowsCompany' => 'wincompany',
         'WindowsOwner' => 'winowner',
         'WindowsProductkey' => 'winprodkey',
+        'WindowsProductId' => 'winprodid',
+        'InventoryDiff' => 'checksum',
+        'Uuid' => 'uuid',
+        'RawType' => 'type', // No useful information (always o or NULL)
         // Values from 'bios' table
         'Manufacturer' => 'smanufacturer',
         'Model' => 'smodel',
@@ -137,17 +143,17 @@ class Model_Computer extends Model_ComputerOrGroup
      */
     protected $_xmlElementMap = array(
         'HARDWARE' => array(
-            'ARCHNAME' => null,
-            'CHECKSUM' => null,
-            'DATELASTLOGGEDUSER' => null,
+            'ARCHNAME' => null, // Not available in database
+            'CHECKSUM' => 'InventoryDiff',
+            'DATELASTLOGGEDUSER' => null, // Not available in database
             'DEFAULTGATEWAY' => 'DefaultGateway',
             'DESCRIPTION' => 'OsComment',
             'DNS' => 'DnsServer',
-            'ETIME' => null,
+            'ETIME' => null, // obsolete
             'IPADDR' => 'IpAddress',
             'LASTCOME' => 'LastContactDate',
             'LASTDATE' => 'InventoryDate',
-            'LASTLOGGEDUSER' => null,
+            'LASTLOGGEDUSER' => null, // Not available in database
             'MEMORY' => 'PhysicalMemory',
             'NAME' => 'Name',
             'OSCOMMENTS' => 'OsVersionString',
@@ -157,14 +163,14 @@ class Model_Computer extends Model_ComputerOrGroup
             'PROCESSORS' => 'CpuClock',
             'PROCESSORT' => 'CpuType',
             'SWAP' => 'SwapMemory',
-            'TYPE' => 'Type',
+            'TYPE' => 'RawType',
             'USERID' => 'UserName',
             'USERDOMAIN' => 'UserDomain',
-            'UUID' => null,
-            'VMSYSTEM' => null,
+            'UUID' => 'Uuid',
+            'VMSYSTEM' => null, // Not available in database
             'WINCOMPANY' => 'WindowsCompany',
             'WINOWNER' => 'WindowsOwner',
-            'WINPRODID' => null,
+            'WINPRODID' => 'WindowsProductId',
             'WINPRODKEY' => 'WindowsProductkey',
             'WORKGROUP' => 'Workgroup',
         ),
