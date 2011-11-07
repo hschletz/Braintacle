@@ -33,16 +33,6 @@ sub _hardware{
   $userid = "USERID=".$dbh->quote($base->{USERID})."," if(defined($base->{USERID}) &&  $base->{USERID}!~/(system|localsystem)/i );
 
   my $ipAddress = &_get_default_iface();
- 
-  # ETIME ist typically an integer, but sometimes it is '00:00:00', equivalent to 0.
-  # Other input formats have not been observed yet, but we will abort just in case.
-  if ($base->{ETIME} !~ /^\d+$/ ){
-  	if ($base->{ETIME} eq '00:00:00') {
-  		$base->{ETIME} = 0;
-  	} else {
-  		die ('Unrecognized input format for ETIME: ' . $base->{ETIME});
-  	}
-  }
 
   $dbh->do("UPDATE hardware SET USERAGENT=".$dbh->quote($ua).", 
 	LASTDATE=CURRENT_TIMESTAMP, 
