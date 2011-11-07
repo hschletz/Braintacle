@@ -68,6 +68,9 @@ in the future where necessary.
                             <ref name="MEMORIES" />
                         </zeroOrMore>
                         <zeroOrMore>
+                            <ref name="MODEMS" />
+                        </zeroOrMore>
+                        <zeroOrMore>
                             <ref name="MONITORS" />
                         </zeroOrMore>
                         <zeroOrMore>
@@ -169,7 +172,9 @@ in the future where necessary.
                 <optional>
                     <ref name="PCISLOT" />
                 </optional>
-                <ref name="TYPE" />
+                <optional>
+                    <ref name="TYPE" />
+                </optional>
                 <optional>
                     <ref name="VERSION" />
                 </optional>
@@ -192,8 +197,12 @@ in the future where necessary.
                 <optional>
                     <ref name="CREATEDATE" />
                 </optional>
-                <ref name="FILESYSTEM" />
-                <ref name="FREE" />
+                <optional>
+                    <ref name="FILESYSTEM" />
+                </optional>
+                <optional>
+                    <ref name="FREE" />
+                </optional>
                 <optional>
                     <ref name="LABEL" />
                 </optional>
@@ -206,9 +215,13 @@ in the future where necessary.
                 <optional>
                     <ref name="SERIAL" />
                 </optional>
-                <ref name="TOTAL" />
+                <optional>
+                    <ref name="TOTAL" />
+                </optional>
                 <ref name="TYPE" />
-                <ref name="VOLUMN" />
+                <optional>
+                    <ref name="VOLUMN" />
+                </optional>
             </interleave>
         </element>
     </define>
@@ -229,12 +242,19 @@ in the future where necessary.
                 <optional>
                     <ref name="DNS" />
                 </optional>
-                <ref name="ETIME" />
+                <optional>
+                    <ref name="ETIME" />
+                </optional>
                 <ref name="IPADDR" />
+                <optional>
+                    <ref name="LASTCOME" />
+                </optional>
                 <optional>
                     <ref name="LASTDATE" />
                 </optional>
-                <ref name="LASTLOGGEDUSER" />
+                <optional>
+                    <ref name="LASTLOGGEDUSER" />
+                </optional>
                 <ref name="MEMORY" />
                 <ref name="NAME" />
                 <ref name="OSCOMMENTS" />
@@ -252,7 +272,9 @@ in the future where necessary.
                 </optional>
                 <ref name="USERID" />
                 <ref name="UUID" />
-                <ref name="VMSYSTEM" />
+                <optional>
+                    <ref name="VMSYSTEM" />
+                </optional>
                 <optional>
                     <ref name="WINCOMPANY" />
                 </optional>
@@ -272,11 +294,21 @@ in the future where necessary.
     <define name="INPUTS">
         <element name="INPUTS">
             <interleave>
-                <ref name="CAPTION" />
-                <ref name="DESCRIPTION" />
-                <ref name="INTERFACE" />
-                <ref name="MANUFACTURER" />
-                <ref name="POINTTYPE" />
+                <optional>
+                    <ref name="CAPTION" />
+                </optional>
+                <optional>
+                    <ref name="DESCRIPTION" />
+                </optional>
+                <optional>
+                    <ref name="INTERFACE" />
+                </optional>
+                <optional>
+                    <ref name="MANUFACTURER" />
+                </optional>
+                <optional>
+                    <ref name="POINTTYPE" />
+                </optional>
                 <ref name="TYPE" />
             </interleave>
         </element>
@@ -294,10 +326,18 @@ in the future where necessary.
     <define name="MONITORS">
         <element name="MONITORS">
             <interleave>
-                <ref name="CAPTION" />
-                <ref name="DESCRIPTION" />
-                <ref name="MANUFACTURER" />
-                <ref name="SERIAL" />
+                <optional>
+                    <ref name="CAPTION" />
+                </optional>
+                <optional>
+                    <ref name="DESCRIPTION" />
+                </optional>
+                <optional>
+                    <ref name="MANUFACTURER" />
+                </optional>
+                <optional>
+                    <ref name="SERIAL" />
+                </optional>
                 <ref name="TYPE" />
             </interleave>
         </element>
@@ -305,7 +345,9 @@ in the future where necessary.
     <define name="MEMORIES">
         <element name="MEMORIES">
             <interleave>
-                <ref name="CAPACITY" />
+                <optional>
+                    <ref name="CAPACITY" />
+                </optional>
                 <ref name="CAPTION" />
                 <ref name="DESCRIPTION" />
                 <ref name="NUMSLOTS" />
@@ -313,7 +355,9 @@ in the future where necessary.
                 <optional>
                     <ref name="SERIALNUMBER" />
                 </optional>
-                <ref name="SPEED" />
+                <optional>
+                    <ref name="SPEED" />
+                </optional>
                 <ref name="TYPE" />
             </interleave>
         </element>
@@ -326,10 +370,16 @@ in the future where necessary.
                 </optional>
                 <ref name="DESCRIPTION" />
                 <ref name="IPADDRESS" />
-                <ref name="IPDHCP" />
-                <ref name="IPGATEWAY" />
+                <optional>
+                    <ref name="IPDHCP" />
+                </optional>
+                <optional>
+                    <ref name="IPGATEWAY" />
+                </optional>
                 <ref name="IPMASK" />
-                <ref name="IPSUBNET" />
+                <optional>
+                    <ref name="IPSUBNET" />
+                </optional>
                 <ref name="MACADDR" />
                 <optional>
                     <ref name="PCISLOT" />
@@ -354,14 +404,18 @@ in the future where necessary.
                 <ref name="CAPTION" />
                 <ref name="DESCRIPTION" />
                 <ref name="NAME" />
-                <ref name="TYPE" />
+                <optional>
+                    <ref name="TYPE" />
+                </optional>
             </interleave>
         </element>
     </define>
     <define name="PRINTERS">
         <element name="PRINTERS">
             <interleave>
-                <ref name="DESCRIPTION" />
+                <optional>
+                    <ref name="DESCRIPTION" />
+                </optional>
                 <ref name="DRIVER" />
                 <ref name="NAME" />
                 <ref name="PORT" />
@@ -396,8 +450,12 @@ in the future where necessary.
                 <ref name="DESCRIPTION" />
                 <ref name="DESIGNATION" />
                 <ref name="NAME" />
-                <ref name="PSHARE" />
-                <ref name="PURPOSE" />
+                <optional>
+                    <ref name="PSHARE" />
+                </optional>
+                <optional>
+                    <ref name="PURPOSE" />
+                </optional>
                 <ref name="STATUS" />
             </interleave>
         </element>
@@ -408,28 +466,42 @@ in the future where necessary.
                 <optional>
                     <ref name="BITSWIDTH" />
                 </optional>
-                <ref name="COMMENTS" />
+                <optional>
+                    <ref name="COMMENTS" />
+                </optional>
                 <optional>
                     <ref name="FILENAME" />
                 </optional>
-                <ref name="FILESIZE" />
-                <ref name="FOLDER" />
+                <optional>
+                    <ref name="FILESIZE" />
+                </optional>
+                <optional>
+                    <ref name="FOLDER" />
+                </optional>
                 <optional>
                     <ref name="FROM" />
                 </optional>
                 <optional>
                     <ref name="GUID" />
                 </optional>
-                <ref name="INSTALLDATE" />
+                <optional>
+                    <ref name="INSTALLDATE" />
+                </optional>
                 <optional>
                     <ref name="LANGUAGE" />
                 </optional>
-                <ref name="NAME" />
-                <ref name="PUBLISHER" />
+                <optional>
+                    <ref name="NAME" />
+                </optional>
+                <optional>
+                    <ref name="PUBLISHER" />
+                </optional>
                 <optional>
                     <ref name="SOURCE" />
                 </optional>
-                <ref name="VERSION" />
+                <optional>
+                    <ref name="VERSION" />
+                </optional>
             </interleave>
         </element>
     </define>
@@ -446,11 +518,21 @@ in the future where necessary.
         <element name="STORAGES">
             <interleave>
                 <ref name="DESCRIPTION" />
-                <ref name="DISKSIZE" />
-                <ref name="FIRMWARE" />
-                <ref name="NAME" />
-                <ref name="MANUFACTURER" />
-                <ref name="MODEL" />
+                <optional>
+                    <ref name="DISKSIZE" />
+                </optional>
+                <optional>
+                    <ref name="FIRMWARE" />
+                </optional>
+                <optional>
+                    <ref name="NAME" />
+                </optional>
+                <optional>
+                    <ref name="MANUFACTURER" />
+                </optional>
+                <optional>
+                    <ref name="MODEL" />
+                </optional>
                 <optional>
                     <ref name="SCSI_CHID" />
                 </optional>
@@ -463,8 +545,12 @@ in the future where necessary.
                 <optional>
                     <ref name="SCSI_UNID" />
                 </optional>
-                <ref name="SERIALNUMBER" />
-                <ref name="TYPE" />
+                <optional>
+                    <ref name="SERIALNUMBER" />
+                </optional>
+                <optional>
+                    <ref name="TYPE" />
+                </optional>
             </interleave>
         </element>
     </define>
@@ -476,10 +562,16 @@ in the future where necessary.
     <define name="VIDEOS">
         <element name="VIDEOS">
             <interleave>
-                <ref name="CHIPSET" />
-                <ref name="MEMORY" />
+                <optional>
+                    <ref name="CHIPSET" />
+                </optional>
+                <optional>
+                    <ref name="MEMORY" />
+                </optional>
                 <ref name="NAME" />
-                <ref name="RESOLUTION" />
+                <optional>
+                    <ref name="RESOLUTION" />
+                </optional>
             </interleave>
         </element>
     </define>
@@ -692,6 +784,11 @@ in the future where necessary.
     </define>
     <define name="LANGUAGE">
         <element name="LANGUAGE">
+            <text />
+        </element>
+    </define>
+    <define name="LASTCOME">
+        <element name="LASTCOME">
             <text />
         </element>
     </define>
