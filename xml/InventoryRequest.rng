@@ -281,6 +281,16 @@ in the future where necessary.
             </interleave>
         </element>
     </define>
+    <define name="MODEMS">
+        <element name="MODEMS">
+            <interleave>
+                <ref name="DESCRIPTION" />
+                <ref name="MODEL" />
+                <ref name="NAME" />
+                <ref name="TYPE" />
+            </interleave>
+        </element>
+    </define>
     <define name="MONITORS">
         <element name="MONITORS">
             <interleave>
