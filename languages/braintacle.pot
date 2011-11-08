@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-07 13:27+0100\n"
+"POT-Creation-Date: 2011-11-08 19:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -1110,11 +1110,19 @@ msgstr ""
 msgid "Package '%s' will no longer be associated with this computer. Continue?"
 msgstr ""
 
-#: views/scripts/computer/software.phtml:32
+#: views/scripts/computer/software.phtml:34
 msgid "Publisher"
 msgstr ""
 
-#: views/scripts/computer/software.phtml:33
+#: views/scripts/computer/software.phtml:35
+msgid "Location"
+msgstr ""
+
+#: views/scripts/computer/software.phtml:36
+msgid "Architecture"
+msgstr ""
+
+#: views/scripts/computer/software.phtml:38
 #: views/scripts/computer/storage.phtml:35
 #: views/scripts/computer/storage.phtml:91
 #: views/scripts/computer/storage.phtml:101
@@ -1122,11 +1130,7 @@ msgstr ""
 msgid "Size"
 msgstr ""
 
-#: views/scripts/computer/software.phtml:34
-msgid "Location"
-msgstr ""
-
-#: views/scripts/computer/software.phtml:94
+#: views/scripts/computer/software.phtml:99
 msgid "Display duplicate entries"
 msgstr ""
 

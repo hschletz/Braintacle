@@ -29,14 +29,19 @@ print $this->inventoryHeader($computer);
 $headers = array(
     'Name' => $this->translate('Name'),
     'Version' => $this->translate('Version'),
-    'Publisher' => $this->translate('Publisher'),
-    'Size' => $this->translate('Size'),
-    'InstallLocation' => $this->translate('Location'),
 );
+if ($computer->isWindows()) {
+    $headers['Publisher'] = $this->translate('Publisher');
+    $headers['InstallLocation'] = $this->translate('Location');
+    $headers['Architecture'] = $this->translate('Architecture');
+} else {
+    $headers['Size'] = $this->translate('Size');
+}
 
 $renderCallbacks = array(
     'Name' => 'renderName',
     'Size' => 'renderSize',
+    'Architecture' => 'renderArchitecture',
 );
 
 function renderName($view, $software)
@@ -60,6 +65,15 @@ function renderSize($view, $software)
     return $view->escape($measure->convertTo('KILOBYTE', 0));
 }
 
+function renderArchitecture($view, $software)
+{
+    $architecture = $software->getArchitecture();
+    if ($architecture) { // No formatting of NULL
+        $architecture = $view->escape($architecture . ' Bit');
+    }
+    return $architecture;
+}
+
 function markDuplicates($software, $view)
 {
     static $lines = array(); // preserved across function calls
@@ -80,14 +94,6 @@ function markDuplicates($software, $view)
     }
 }
 
-if ($computer->isWindows()) {
-    unset($headers['Size']); // Always 0 on Windows
-} else {
-    // Only available for Windows
-    unset($headers['Publisher']);
-    unset($headers['InstallLocation']);
-}
-
 print '<p id="toggleDuplicatesLabel">';
 print '<input type="checkbox" name="toggleDuplicates" onchange="toggleDuplicates();">';
 print '&nbsp;';
@@ -98,7 +104,7 @@ print $this->table(
     $computer->getChildObjects('Software', $this->order, $this->direction),
     null,
     $headers,
-    array(),
+    array('Architecture' => 'text'),
     'Model_Software',
     $computer->isWindows() ? 'markDuplicates' : null, // No duplicates on other OS
     $renderCallbacks

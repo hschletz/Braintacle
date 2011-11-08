@@ -34,7 +34,7 @@
  * - <b>InstallLocation</b> Installation directory (Windows only)
  * - <b>InstallationDate</b> Date of installation (not always available)
  * - <b>Comment</b> Comment
- * - <b>Architecture</b> 32/64 (Windows only)
+ * - <b>Architecture</b> 32/64 or NULL (Windows only)
  * - <b>Language</b> UI Language (Windows only, not always available)
  * - <b>Guid</b> GUID - may contain the MSI GIUD or arbitrary stuff (Windows only)
  * @package Models
@@ -55,7 +55,7 @@ class Model_Software extends Model_ChildObject
         'Language' => 'language',
         'NumComputers' => 'num_computers',
         'RawFilename' => 'filename', // Useless, always 'N/A' or NULL
-        'RawSource' => 'source', // Not really useful
+        'RawSource' => 'source', // Unknown meaning
     );
 
     protected $_types = array(
@@ -64,6 +64,8 @@ class Model_Software extends Model_ChildObject
         'Comment' => 'clob',
         'NumComputers' => 'integer',
         'InstallationDate' => 'date',
+        'Architecture' => 'integer',
+        'RawSource' => 'integer',
     );
 
     protected $_xmlElementName = 'SOFTWARES';
@@ -201,6 +203,12 @@ class Model_Software extends Model_ChildObject
             case 'InstallLocation':
                 // Strip trailing slashes
                 $value = rtrim($value, '/');
+                break;
+            case 'Architecture':
+                // Convert 0 to NULL
+                if ($value == 0) {
+                    $value = null;
+                }
                 break;
         }
         return $value;
