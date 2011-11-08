@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-08 20:40+0100\n"
+"POT-Creation-Date: 2011-11-08 20:57+0100\n"
 "PO-Revision-Date: 2011-11-08 20:41+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <holger.schletz@web.de>\n"
@@ -860,7 +860,7 @@ msgid "Chipset"
 msgstr "Chipsatz"
 
 #: views/scripts/computer/display.phtml:35
-#: views/scripts/computer/index.phtml:54 views/scripts/computer/vms.phtml:37
+#: views/scripts/computer/index.phtml:54 views/scripts/computer/vms.phtml:36
 msgid "Memory"
 msgstr "Speicher"
 
@@ -1229,11 +1229,7 @@ msgstr "Die Informationen wurden aktualisiert."
 msgid "Product"
 msgstr "Produkt"
 
-#: views/scripts/computer/vms.phtml:36
-msgid "CPUs"
-msgstr "CPUs"
-
-#: views/scripts/computer/vms.phtml:54
+#: views/scripts/computer/vms.phtml:53
 msgid "Virtual machines hosted on this computer"
 msgstr "Auf diesem Computer beherbergte virtuelle Maschinen"
 
@@ -1399,4 +1395,3 @@ msgstr "Akzeptieren"
 #: views/scripts/software/index.phtml:63
 msgid "Ignore"
 msgstr "Ignorieren"
-

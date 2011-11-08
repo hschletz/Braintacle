@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-08 20:40+0100\n"
+"POT-Creation-Date: 2011-11-08 20:57+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -856,7 +856,7 @@ msgid "Chipset"
 msgstr ""
 
 #: views/scripts/computer/display.phtml:35
-#: views/scripts/computer/index.phtml:54 views/scripts/computer/vms.phtml:37
+#: views/scripts/computer/index.phtml:54 views/scripts/computer/vms.phtml:36
 msgid "Memory"
 msgstr ""
 
@@ -1224,11 +1224,7 @@ msgstr ""
 msgid "Product"
 msgstr ""
 
-#: views/scripts/computer/vms.phtml:36
-msgid "CPUs"
-msgstr ""
-
-#: views/scripts/computer/vms.phtml:54
+#: views/scripts/computer/vms.phtml:53
 msgid "Virtual machines hosted on this computer"
 msgstr ""
 
