@@ -238,7 +238,7 @@ sub handler{
             $i++;
         }
     }
-    # Fix bad date strings for 'DRIVES' entries
+    # Fix bad date strings for 'DRIVES' entries (LP bug #887534)
     if ($query->{'CONTENT'}->{'DRIVES'}) {
         $i = 0;
         while ($query->{'CONTENT'}->{'DRIVES'}[$i]) {
