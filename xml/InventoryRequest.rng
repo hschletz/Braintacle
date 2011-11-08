@@ -57,6 +57,9 @@ in the future where necessary.
                         <zeroOrMore>
                             <ref name="CPUS" />
                         </zeroOrMore>
+                        <optional>
+                            <ref name="DOWNLOAD" />
+                        </optional>
                         <zeroOrMore>
                             <ref name="DRIVES" />
                         </zeroOrMore>
@@ -105,6 +108,9 @@ in the future where necessary.
                         </zeroOrMore>
                         <zeroOrMore>
                             <ref name="VIDEOS" />
+                        </zeroOrMore>
+                        <zeroOrMore>
+                            <ref name="VIRTUALMACHINES" />
                         </zeroOrMore>
                     </interleave>
                 </element>
@@ -191,6 +197,17 @@ in the future where necessary.
             </interleave>
         </element>
     </define>
+    <define name="DOWNLOAD">
+        <element name="DOWNLOAD">
+            <element name="HISTORY">
+                <zeroOrMore>
+                    <element name="PACKAGE">
+                        <attribute name="ID" />
+                    </element>
+                </zeroOrMore>
+            </element>
+        </element>
+    </define>
     <define name="DRIVES">
         <element name="DRIVES">
             <interleave>
@@ -228,6 +245,9 @@ in the future where necessary.
     <define name="HARDWARE">
         <element name="HARDWARE">
             <interleave>
+                <optional>
+                    <ref name="ARCH" />
+                </optional>
                 <optional>
                     <ref name="ARCHNAME" />
                 </optional>
@@ -575,8 +595,28 @@ in the future where necessary.
             </interleave>
         </element>
     </define>
+    <define name="VIRTUALMACHINES">
+        <element name="VIRTUALMACHINES">
+            <interleave>
+                <optional>
+                    <ref name="MEMORY" />
+                </optional>
+                <ref name="NAME" />
+                <ref name="STATUS" />
+                <ref name="SUBSYSTEM" />
+                <ref name="UUID" />
+                <ref name="VCPU" />
+                <ref name="VMTYPE" />
+            </interleave>
+        </element>
+    </define>
 
    <!-- Text elements -->
+    <define name="ARCH">
+        <element name="ARCH">
+            <text />
+        </element>
+    </define>
     <define name="ARCHNAME">
         <element name="ARCHNAME">
             <text />
@@ -1002,6 +1042,11 @@ in the future where necessary.
             <text />
         </element>
     </define>
+    <define name="SUBSYSTEM">
+        <element name="SUBSYSTEM">
+            <text />
+        </element>
+    </define>
     <define name="SWAP">
         <element name="SWAP">
             <text />
@@ -1047,6 +1092,11 @@ in the future where necessary.
             <text />
         </element>
     </define>
+    <define name="VCPU">
+        <element name="VCPU">
+            <text />
+        </element>
+    </define>
     <define name="VERSION">
         <element name="VERSION">
             <text />
@@ -1059,6 +1109,11 @@ in the future where necessary.
     </define>
     <define name="VIRTUALMEMORY">
         <element name="VIRTUALMEMORY">
+            <text />
+        </element>
+    </define>
+    <define name="VMTYPE">
+        <element name="VMTYPE">
             <text />
         </element>
     </define>
