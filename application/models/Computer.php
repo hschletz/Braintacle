@@ -1286,8 +1286,11 @@ class Model_Computer extends Model_ComputerOrGroup
         $tables[] = 'bios';
         $tables[] = 'devices';
         $tables[] = 'download_history';
+        $tables[] = 'download_servers';
         $tables[] = 'groups_cache';
-        $tables[] = 'registry'; // No model class defined yet
+        $tables[] = 'itmgmt_comments';
+        $tables[] = 'javainfo';
+        $tables[] = 'journallog';
 
         // Start transaction to keep database consistent in case of errors
         // If a transaction is already in progress, an exception will be thrown
