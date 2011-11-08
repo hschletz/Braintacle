@@ -205,6 +205,7 @@ class Model_Computer extends Model_ComputerOrGroup
         'Registry',
         'Software',
         'StorageDevice',
+        'VirtualMachine',
         'Volume',
     );
 

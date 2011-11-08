@@ -145,6 +145,11 @@ class ComputerController extends Zend_Controller_Action
         $this->_helper->ordering('Name');
     }
 
+    public function vmsAction()
+    {
+        $this->_helper->ordering('Name');
+    }
+
     public function miscAction()
     {
     }

@@ -1,0 +1,57 @@
+<?php
+/**
+ * Display inventoried virtual machines
+ *
+ * $Id$
+ *
+ * Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
+$computer = $this->computer;
+
+print $this->inventoryHeader($computer);
+
+
+$headers = array(
+    'Name' => $this->translate('Name'),
+    'Status' => $this->translate('Status'),
+    'Product' => $this->translate('Product'),
+    'Type' => $this->translate('Type'),
+    'Uuid' => $this->translate('UUID'),
+    'NumCpus' => $this->translate('CPUs'),
+    'GuestMemory' => $this->translate('Memory'),
+);
+
+$registry = $this->getHelper('table')->table(
+    $computer->getChildObjects('VirtualMachine', $this->order, $this->direction),
+    null,
+    $headers,
+    array(),
+    'Model_VirtualMachine',
+    null,
+    array(),
+    $numKeys
+);
+
+if ($numKeys) {
+    print $this->htmlTag(
+        'h2',
+        $this->translate('Virtual machines hosted on this computer')
+    );
+    print $registry;
+}

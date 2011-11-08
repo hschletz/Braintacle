@@ -124,6 +124,13 @@ class Zend_View_Helper_InventoryHeader extends Zend_View_Helper_Abstract
         }
 
         $page = new Zend_Navigation_Page_Mvc;
+        $page->setLabel('VMs')
+             ->setController('computer')
+             ->setAction('vms')
+             ->setParams($id);
+        $navigation->addPage($page);
+
+        $page = new Zend_Navigation_Page_Mvc;
         $page->setLabel('Misc')
              ->setController('computer')
              ->setAction('misc')

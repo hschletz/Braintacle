@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-08 19:55+0100\n"
-"PO-Revision-Date: 2011-11-08 19:26+0100\n"
+"POT-Creation-Date: 2011-11-08 20:40+0100\n"
+"PO-Revision-Date: 2011-11-08 20:41+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <holger.schletz@web.de>\n"
 "Language: de\n"
@@ -60,12 +60,12 @@ msgid "Import"
 msgstr "Import"
 
 #: Bootstrap.php:73 forms/Package/Edit.php:66
-#: views/helpers/InventoryHeader.php:148
+#: views/helpers/InventoryHeader.php:155
 msgid "Groups"
 msgstr "Gruppen"
 
 #: Bootstrap.php:80 views/helpers/GroupHeader.php:65
-#: views/helpers/InventoryHeader.php:141
+#: views/helpers/InventoryHeader.php:148
 msgid "Packages"
 msgstr "Pakete"
 
@@ -81,12 +81,12 @@ msgstr "Erstellen"
 msgid "Search"
 msgstr "Suchen"
 
-#: controllers/ComputerController.php:205
+#: controllers/ComputerController.php:210
 #, php-format
 msgid "Computer '%s' was successfully deleted."
 msgstr "Computer '%s' wurde erfolgreich gelöscht."
 
-#: controllers/ComputerController.php:210
+#: controllers/ComputerController.php:215
 #, php-format
 msgid "Computer '%s' could not be deleted."
 msgstr "Computer '%s' konnte nicht gelöscht werden."
@@ -185,7 +185,7 @@ msgstr "OK"
 #: views/scripts/computer/storage.phtml:89
 #: views/scripts/computer/system.phtml:35
 #: views/scripts/computer/system.phtml:91
-#: views/scripts/computer/system.phtml:138
+#: views/scripts/computer/system.phtml:138 views/scripts/computer/vms.phtml:34
 #: views/scripts/network/showidentified.phtml:30
 msgid "Type"
 msgstr "Typ"
@@ -211,7 +211,7 @@ msgstr "Beschreibung"
 #: views/scripts/computer/software.phtml:30
 #: views/scripts/computer/storage.phtml:34
 #: views/scripts/computer/system.phtml:93
-#: views/scripts/computer/system.phtml:137
+#: views/scripts/computer/system.phtml:137 views/scripts/computer/vms.phtml:31
 #: views/scripts/duplicates/index.phtml:26
 #: views/scripts/duplicates/show.phtml:28 views/scripts/group/general.phtml:32
 #: views/scripts/group/index.phtml:44 views/scripts/group/members.phtml:30
@@ -635,33 +635,33 @@ msgstr "Interfaces aus Netzwerkliste löschen"
 msgid "Logout"
 msgstr "Abmelden"
 
-#: models/Computer.php:830
+#: models/Computer.php:831
 #, php-format
 msgid "%1$d computers with an interface in network '%2$s'"
 msgstr "%1$d Computer mit Interface in Netzwerk %2$s"
 
-#: models/Computer.php:847
+#: models/Computer.php:848
 #, php-format
 msgid "%1$d computers waiting for notification of package '%2$s'"
 msgstr "%1$d Computer, die auf Installation von Paket '%2$s' warten"
 
-#: models/Computer.php:852
+#: models/Computer.php:853
 #, php-format
 msgid "%1$d computers with package '%2$s' successfully deployed"
 msgstr "%1$d Computer mit erfolgreich installiertem Paket '%2$s'"
 
-#: models/Computer.php:857
+#: models/Computer.php:858
 #, php-format
 msgid "%1$d computers with deployment of package '%2$s' in progress"
 msgstr "%1$d Computer mit laufender Installation von Paket '%2$s'"
 
-#: models/Computer.php:862
+#: models/Computer.php:863
 #, php-format
 msgid "%1$d computers where deployment of package '%2$s' failed"
 msgstr ""
 "%1$d Computer, bei denen die Installation von Paket '%2$s' fehlgeschlagen ist"
 
-#: models/Computer.php:867
+#: models/Computer.php:868
 #, php-format
 msgid "%1$d computers where software '%2$s' is installed"
 msgstr "%1$d Computer, auf denen die Software '%2$s' installiert ist"
@@ -780,7 +780,7 @@ msgstr "Allgemein"
 msgid "Members"
 msgstr "Mitglieder"
 
-#: views/helpers/GroupHeader.php:72 views/helpers/InventoryHeader.php:155
+#: views/helpers/GroupHeader.php:72 views/helpers/InventoryHeader.php:162
 #: views/scripts/network/showidentified.phtml:65
 #: views/scripts/network/showunknown.phtml:64
 #: views/scripts/package/index.phtml:237
@@ -821,10 +821,14 @@ msgid "Registry"
 msgstr "Registry"
 
 #: views/helpers/InventoryHeader.php:127
+msgid "VMs"
+msgstr "VMs"
+
+#: views/helpers/InventoryHeader.php:134
 msgid "Misc"
 msgstr "Verschiedenes"
 
-#: views/helpers/InventoryHeader.php:134
+#: views/helpers/InventoryHeader.php:141
 msgid "User defined"
 msgstr "Benutzerdefiniert"
 
@@ -856,7 +860,7 @@ msgid "Chipset"
 msgstr "Chipsatz"
 
 #: views/scripts/computer/display.phtml:35
-#: views/scripts/computer/index.phtml:54
+#: views/scripts/computer/index.phtml:54 views/scripts/computer/vms.phtml:37
 msgid "Memory"
 msgstr "Speicher"
 
@@ -920,7 +924,7 @@ msgid "Last user logged in"
 msgstr "Letzer angemeldeter Benutzer"
 
 #: views/scripts/computer/general.phtml:226
-#: views/scripts/computer/index.phtml:73
+#: views/scripts/computer/index.phtml:73 views/scripts/computer/vms.phtml:35
 msgid "UUID"
 msgstr "UUID"
 
@@ -1056,7 +1060,7 @@ msgstr "DHCP-Server"
 
 #: views/scripts/computer/network.phtml:65
 #: views/scripts/computer/packages.phtml:36
-#: views/scripts/computer/system.phtml:140
+#: views/scripts/computer/system.phtml:140 views/scripts/computer/vms.phtml:32
 msgid "Status"
 msgstr "Status"
 
@@ -1221,6 +1225,18 @@ msgstr "Erweiterungssteckplätze"
 msgid "The information was successfully updated."
 msgstr "Die Informationen wurden aktualisiert."
 
+#: views/scripts/computer/vms.phtml:33
+msgid "Product"
+msgstr "Produkt"
+
+#: views/scripts/computer/vms.phtml:36
+msgid "CPUs"
+msgstr "CPUs"
+
+#: views/scripts/computer/vms.phtml:54
+msgid "Virtual machines hosted on this computer"
+msgstr "Auf diesem Computer beherbergte virtuelle Maschinen"
+
 #: views/scripts/computer/windows.phtml:33
 msgid "Company"
 msgstr "Firma"
@@ -1383,3 +1399,4 @@ msgstr "Akzeptieren"
 #: views/scripts/software/index.phtml:63
 msgid "Ignore"
 msgstr "Ignorieren"
+
