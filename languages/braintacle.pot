@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-08 19:42+0100\n"
+"POT-Creation-Date: 2011-11-08 19:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -184,6 +184,7 @@ msgstr ""
 #: views/scripts/computer/storage.phtml:89
 #: views/scripts/computer/system.phtml:35
 #: views/scripts/computer/system.phtml:91
+#: views/scripts/computer/system.phtml:138
 #: views/scripts/network/showidentified.phtml:30
 msgid "Type"
 msgstr ""
@@ -192,8 +193,9 @@ msgstr ""
 #: views/scripts/computer/misc.phtml:35 views/scripts/computer/misc.phtml:66
 #: views/scripts/computer/network.phtml:58
 #: views/scripts/computer/printers.phtml:33
-#: views/scripts/computer/system.phtml:39 views/scripts/group/general.phtml:50
-#: views/scripts/group/index.phtml:46
+#: views/scripts/computer/system.phtml:39
+#: views/scripts/computer/system.phtml:139
+#: views/scripts/group/general.phtml:50 views/scripts/group/index.phtml:46
 #: views/scripts/network/showidentified.phtml:31
 msgid "Description"
 msgstr ""
@@ -1050,7 +1052,7 @@ msgstr ""
 
 #: views/scripts/computer/network.phtml:65
 #: views/scripts/computer/packages.phtml:36
-#: views/scripts/computer/system.phtml:138
+#: views/scripts/computer/system.phtml:140
 msgid "Status"
 msgstr ""
 
@@ -1130,7 +1132,7 @@ msgstr ""
 msgid "Size"
 msgstr ""
 
-#: views/scripts/computer/software.phtml:99
+#: views/scripts/computer/software.phtml:100
 msgid "Display duplicate entries"
 msgstr ""
 
@@ -1206,7 +1208,7 @@ msgstr ""
 msgid "Controllers"
 msgstr ""
 
-#: views/scripts/computer/system.phtml:158
+#: views/scripts/computer/system.phtml:160
 msgid "Extension slots"
 msgstr ""
 

@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-08 19:42+0100\n"
+"POT-Creation-Date: 2011-11-08 19:55+0100\n"
 "PO-Revision-Date: 2011-11-08 19:26+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <holger.schletz@web.de>\n"
@@ -185,6 +185,7 @@ msgstr "OK"
 #: views/scripts/computer/storage.phtml:89
 #: views/scripts/computer/system.phtml:35
 #: views/scripts/computer/system.phtml:91
+#: views/scripts/computer/system.phtml:138
 #: views/scripts/network/showidentified.phtml:30
 msgid "Type"
 msgstr "Typ"
@@ -193,8 +194,9 @@ msgstr "Typ"
 #: views/scripts/computer/misc.phtml:35 views/scripts/computer/misc.phtml:66
 #: views/scripts/computer/network.phtml:58
 #: views/scripts/computer/printers.phtml:33
-#: views/scripts/computer/system.phtml:39 views/scripts/group/general.phtml:50
-#: views/scripts/group/index.phtml:46
+#: views/scripts/computer/system.phtml:39
+#: views/scripts/computer/system.phtml:139
+#: views/scripts/group/general.phtml:50 views/scripts/group/index.phtml:46
 #: views/scripts/network/showidentified.phtml:31
 msgid "Description"
 msgstr "Beschreibung"
@@ -1054,7 +1056,7 @@ msgstr "DHCP-Server"
 
 #: views/scripts/computer/network.phtml:65
 #: views/scripts/computer/packages.phtml:36
-#: views/scripts/computer/system.phtml:138
+#: views/scripts/computer/system.phtml:140
 msgid "Status"
 msgstr "Status"
 
@@ -1135,7 +1137,7 @@ msgstr "Architektur"
 msgid "Size"
 msgstr "Größe"
 
-#: views/scripts/computer/software.phtml:99
+#: views/scripts/computer/software.phtml:100
 msgid "Display duplicate entries"
 msgstr "Mehrfach vorhandene Einträge anzeigen"
 
@@ -1211,7 +1213,7 @@ msgstr "Treiber-Version"
 msgid "Controllers"
 msgstr "Controller"
 
-#: views/scripts/computer/system.phtml:158
+#: views/scripts/computer/system.phtml:160
 msgid "Extension slots"
 msgstr "Erweiterungssteckplätze"
 
