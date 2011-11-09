@@ -1727,6 +1727,7 @@ class Model_Computer extends Model_ComputerOrGroup
         // first and then sorted before insertion into the document.
         $fragments['HARDWARE'] = $this->toDomElement($document, 'HARDWARE');
         $fragments['BIOS'] = $this->toDomElement($document, 'BIOS');
+        $fragments['DOWNLOAD'] = $this->toDomElement($document, 'DOWNLOAD');
         $fragments['ACCOUNTINFO'] = $this->getUserDefinedInfo()->toDomDocumentFragment($document);
         foreach (self::$_childObjectTypes as $childObject) {
             $model = 'Model_' . $childObject;
@@ -1772,12 +1773,28 @@ class Model_Computer extends Model_ComputerOrGroup
      * Generate a DOMElement object from current data
      *
      * @param DOMDocument $document DOMDocument from which to create elements.
-     * @param string $section XML section (case insensitive) to generate ('hardware' or 'bios')
+     * @param string $section XML section (case insensitive) to generate ('hardware', 'bios' or 'download')
      * @return DOMElement DOM object ready to be appended to the document.
      */
     public function toDomElement(DomDocument $document, $section)
     {
         $section = strtoupper($section);
+        if ($section == 'DOWNLOAD') {
+            // DOWNLOAD section has 1 HISTORY element with 1 PACKAGE child per package.
+            $history = $document->createElement('HISTORY');
+            foreach ($this->getDownloadedPackages() as $package) {
+                $child = $document->createElement('PACKAGE');
+                $child->setAttribute('ID', $package);
+                $history->appendChild($child);
+            }
+            $download = $document->createElement('DOWNLOAD');
+            if ($history->hasChildNodes()) { // Don't append empty HISTORY
+                $download->appendChild($history);
+            }
+            return $download;
+        }
+
+        // Generate HARDWARE and BIOS sections from _xmlElementMap
         if (!isset($this->_xmlElementMap[$section])) {
             throw new UnexpectedValueException('Bad section name: ' . $section);
         }
@@ -1795,4 +1812,16 @@ class Model_Computer extends Model_ComputerOrGroup
         return $element;
     }
 
+    /**
+     * Get all packages from download history
+     * @return array Package IDs (creation timestamps)
+     */
+    public function getDownloadedPackages()
+    {
+        $db = Zend_Registry::get('db');
+        return $db->fetchCol(
+            'SELECT pkg_id FROM download_history WHERE hardware_id=? ORDER BY pkg_id',
+            $this->getId()
+        );
+    }
 }
