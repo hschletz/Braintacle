@@ -28,7 +28,7 @@
  *
  * Properties:
  * - <b>Id:</b> primary key
- * - <b>FullId:</b> full device ID (name + timestamp, like 'COMPUTERNAME-2009-04-27-15-52-37')
+ * - <b>ClientId:</b> Client-generated ID (name + timestamp, like 'COMPUTERNAME-2009-04-27-15-52-37')
  * - <b>Name:</b> computer name
  * - <b>Type:</b> computer type (Desktop, Notebook...) as reported by BIOS
  * - <b>Manufacturer:</b> system manufacturer
@@ -84,7 +84,7 @@ class Model_Computer extends Model_ComputerOrGroup
     protected $_propertyMap = array(
         // Values from 'hardware' table
         'Id' => 'id',
-        'FullId' => 'deviceid',
+        'ClientId' => 'deviceid',
         'Name' => 'name',
         'Workgroup' => 'workgroup',
         'CpuClock' => 'processors',
@@ -1334,7 +1334,7 @@ class Model_Computer extends Model_ComputerOrGroup
                     'deleted_equiv',
                     array(
                         'date' => new Zend_Db_Expr('CURRENT_TIMESTAMP'),
-                        'deleted' => $this->getFullId(),
+                        'deleted' => $this->getClientId(),
                         'equivalent' => $equivalent
                     )
                 );
@@ -1546,7 +1546,7 @@ class Model_Computer extends Model_ComputerOrGroup
 
             // Delete all older computers
             foreach ($computers as $computer) {
-                $computer->delete(true, $newest->getFullId());
+                $computer->delete(true, $newest->getClientId());
             }
             // Unlock remaining computer
             $newest->unlock();
@@ -1760,7 +1760,7 @@ class Model_Computer extends Model_ComputerOrGroup
         }
 
         // Additional elements
-        $text = $document->createTextNode($this->getFullId());
+        $text = $document->createTextNode($this->getClientId());
         $deviceid = $document->createElement('DEVICEID');
         $deviceid->appendChild($text);
         $request->appendChild($deviceid);

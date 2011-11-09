@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-08 20:57+0100\n"
-"PO-Revision-Date: 2011-11-08 20:41+0100\n"
+"POT-Creation-Date: 2011-11-09 14:34+0100\n"
+"PO-Revision-Date: 2011-11-09 14:34+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <holger.schletz@web.de>\n"
 "Language: de\n"
@@ -887,8 +887,8 @@ msgstr "ID"
 
 #: views/scripts/computer/general.phtml:42
 #: views/scripts/computer/index.phtml:46
-msgid "Full ID"
-msgstr "Volle ID"
+msgid "Client ID"
+msgstr "Client-ID"
 
 #: views/scripts/computer/general.phtml:51
 msgid "Inventory date"
