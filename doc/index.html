@@ -112,6 +112,11 @@ Software dictionaries are much easier to manage.
 Extra categories are not supported yet &ndash; The dictionary manager is intended for software filters only.
 </li>
 <li>
+Computers can be exported as XML, either individually via console or all at once via the <a href="#export.php">export tool</a>.
+The XML files are similar to those generated locally by the agents, and suitable for import via the console or the ocsinventory-injector.pl script.
+This simplifies data migration between different databases or data processing via external tools.
+</li>
+<li>
 Braintacle uses the <a href="http://framework.zend.com">Zend Framework</a> which provides, among many other features, a database abstraction API.
 Together with minor modifications to the communication server, this allows any supported database backend to be used, not only MySQL.
 It was developed and tested with PostgreSQL.
@@ -468,6 +473,14 @@ The tools directory contains some scripts that are not part of the application, 
 
 <p>
 This script is described above.
+</p>
+
+<h3><a name="export.php">export.php</a></h3>
+
+<p>
+This script exports all computers in the database to the directory specified via the --dir or -d argument.
+It will generate 1 XML file per computer.
+The generated files can optionally be validated via the --validate or -v switch.
 </p>
 
 <h3>createpackage.php</h3>
