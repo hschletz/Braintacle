@@ -191,7 +191,7 @@ abstract class Model_Abstract implements Iterator
             if (array_key_exists($property, $this->_data)) {
                 return $this->_data[$property];
             } else {
-                return null;
+                throw new RuntimeException('Tried to access uninitialized property ' . $property);
             }
         } else {
             throw new UnexpectedValueException(
