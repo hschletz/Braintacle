@@ -442,11 +442,9 @@ Other encodings may work for the most part, but cause trouble under certain circ
 </p>
 <p>
 Now run the schema manager to create and initialize the tables.
-Pass the name of the application environment on the command line.
-If unsure, use "production":
 </p>
 <p>
-<code>php tools/schema-manager.php production</code>
+<code>php tools/schema-manager.php</code>
 </p>
 
 <h4>Updating the database</h4>
@@ -459,7 +457,9 @@ Updating a database with MDB2_Schema is a complex operation.
 Despite intensive testing and bugfixing, there could always something go wrong.
 </p>
 <p>
-It should be safe to run the schema manager more than once, even if the schema has not changed.
+It is safe to run the schema manager more than once, even if the schema has not changed.
+It's strongly recommended to run it after every application upgrade.
+The script will detect if a schema upgrade is required and perform it, or abort if not.
 </p>
 
 
