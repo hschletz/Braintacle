@@ -263,7 +263,7 @@ class Braintacle_SchemaManager
                   "<create>true</create>\n" .
                   "<overwrite>false</overwrite>\n";
         if (!fwrite($temp, $header)) {
-            throw new RuntimeException ('Error writing to temporary file');
+            throw new RuntimeException('Error writing to temporary file');
         }
 
         // Iterate through schema directory and append every XML file.

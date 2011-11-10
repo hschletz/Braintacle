@@ -177,7 +177,7 @@ class Form_Search extends Form_Normalized
                     $this->_typeDate[] = $key;
                     break;
                 default:
-                    throw new UnexpectedValueException ('Unsupported datatype: ' . $type);
+                    throw new UnexpectedValueException('Unsupported datatype: ' . $type);
             }
             if ($name == 'tag') {
                 $label = $translate->_('Category');
