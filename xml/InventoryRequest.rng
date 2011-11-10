@@ -349,6 +349,9 @@ in the future where necessary.
         <element name="MONITORS">
             <interleave>
                 <optional>
+                    <ref name="BASE64" />
+                </optional>
+                <optional>
                     <ref name="CAPTION" />
                 </optional>
                 <optional>
@@ -362,6 +365,9 @@ in the future where necessary.
                 </optional>
                 <optional>
                     <ref name="TYPE" />
+                </optional>
+                <optional>
+                    <ref name="UUENCODE" />
                 </optional>
             </interleave>
         </element>
@@ -620,6 +626,7 @@ in the future where necessary.
                 <ref name="SUBSYSTEM" />
                 <ref name="UUID" />
                 <ref name="VCPU" />
+                <ref name="VMID" />
                 <ref name="VMTYPE" />
             </interleave>
         </element>
@@ -638,6 +645,11 @@ in the future where necessary.
     </define>
     <define name="ASSETTAG">
         <element name="ASSETTAG">
+            <text />
+        </element>
+    </define>
+    <define name="BASE64">
+        <element name="BASE64">
             <text />
         </element>
     </define>
@@ -1101,6 +1113,11 @@ in the future where necessary.
             <text />
         </element>
     </define>
+    <define name="UUENCODE">
+        <element name="UUENCODE">
+            <text />
+        </element>
+    </define>
     <define name="UUID">
         <element name="UUID">
             <text />
@@ -1123,6 +1140,11 @@ in the future where necessary.
     </define>
     <define name="VIRTUALMEMORY">
         <element name="VIRTUALMEMORY">
+            <text />
+        </element>
+    </define>
+    <define name="VMID">
+        <element name="VMID">
             <text />
         </element>
     </define>
