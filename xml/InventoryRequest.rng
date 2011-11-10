@@ -235,7 +235,9 @@ in the future where necessary.
                 <optional>
                     <ref name="TOTAL" />
                 </optional>
-                <ref name="TYPE" />
+                <optional>
+                    <ref name="TYPE" />
+                </optional>
                 <optional>
                     <ref name="VOLUMN" />
                 </optional>
@@ -358,7 +360,9 @@ in the future where necessary.
                 <optional>
                     <ref name="SERIAL" />
                 </optional>
-                <ref name="TYPE" />
+                <optional>
+                    <ref name="TYPE" />
+                </optional>
             </interleave>
         </element>
     </define>
@@ -371,7 +375,9 @@ in the future where necessary.
                 <ref name="CAPTION" />
                 <ref name="DESCRIPTION" />
                 <ref name="NUMSLOTS" />
-                <ref name="PURPOSE" />
+                <optional>
+                    <ref name="PURPOSE" />
+                </optional>
                 <optional>
                     <ref name="SERIALNUMBER" />
                 </optional>
@@ -421,9 +427,15 @@ in the future where necessary.
     <define name="PORTS">
         <element name="PORTS">
             <interleave>
-                <ref name="CAPTION" />
-                <ref name="DESCRIPTION" />
-                <ref name="NAME" />
+                <optional>
+                    <ref name="CAPTION" />
+                </optional>
+                <optional>
+                    <ref name="DESCRIPTION" />
+                </optional>
+                <optional>
+                    <ref name="NAME" />
+                </optional>
                 <optional>
                     <ref name="TYPE" />
                 </optional>
@@ -476,7 +488,9 @@ in the future where necessary.
                 <optional>
                     <ref name="PURPOSE" />
                 </optional>
-                <ref name="STATUS" />
+                <optional>
+                    <ref name="STATUS" />
+                </optional>
             </interleave>
         </element>
     </define>
