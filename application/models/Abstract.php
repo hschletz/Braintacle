@@ -42,7 +42,8 @@
  *
  * This class also implements PHP's Iterator interface, allowing instances to
  * be iterated in a foreach() loop. The logical identifiers will be returned as
- * keys, and the values are processed by {@link getProperty()}.
+ * keys, and the values are processed by {@link getProperty()}. Only properties
+ * that were previously set are iterated.
  *
  * Trying to use properties that are not defined in {@link $propertyMap} will
  * cause an exception to be thrown.
@@ -378,7 +379,7 @@ abstract class Model_Abstract implements Iterator
      */
     public function current()
     {
-        return $this->getProperty(key($this->_propertyMap));
+        return $this->getProperty($this->key());
     }
 
     /**
@@ -386,7 +387,10 @@ abstract class Model_Abstract implements Iterator
      */
     public function key()
     {
-        return key($this->_propertyMap);
+        return array_search(
+            key($this->_data),
+            $this->_propertyMap
+        );
     }
 
     /**
@@ -394,7 +398,7 @@ abstract class Model_Abstract implements Iterator
      */
     public function next()
     {
-        if (next($this->_propertyMap) === false) {
+        if (next($this->_data) === false) {
             $this->_iteratorValid = false;
         }
     }
@@ -404,7 +408,7 @@ abstract class Model_Abstract implements Iterator
      */
     public function rewind()
     {
-        reset($this->_propertyMap);
+        reset($this->_data);
         $this->_iteratorValid = true;
     }
 
