@@ -76,13 +76,13 @@ while ($computer = $statement->fetchObject('Model_Computer')) {
         }
         // Save content to file
         $document = $computer->toDomDocument();
-        $filename = $cmdLine->dir . DIRECTORY_SEPARATOR . $id . '.xml';
+        $filename = $cmdLine->dir . DIRECTORY_SEPARATOR . $document->getFilename();
         if (!$document->save($filename)) {
             throw new RuntimeException('Could not write file ' . $filename);
         }
         // Optional validation.
         if ($cmdLine->validate) {
-            $document->forceValid('InventoryRequest');
+            $document->forceValid();
         }
     } catch(Exception $exception) {
         print 'ERROR: ';

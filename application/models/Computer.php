@@ -138,55 +138,6 @@ class Model_Computer extends Model_ComputerOrGroup
     );
 
     /**
-     * Map of valid XML elements to properties
-     * @var array
-     */
-    protected $_xmlElementMap = array(
-        'HARDWARE' => array(
-            'ARCHNAME' => null, // Not available in database
-            'CHECKSUM' => 'InventoryDiff',
-            'DATELASTLOGGEDUSER' => null, // Not available in database
-            'DEFAULTGATEWAY' => 'DefaultGateway',
-            'DESCRIPTION' => 'OsComment',
-            'DNS' => 'DnsServer',
-            'ETIME' => null, // obsolete
-            'IPADDR' => 'IpAddress',
-            'LASTCOME' => 'LastContactDate',
-            'LASTDATE' => 'InventoryDate',
-            'LASTLOGGEDUSER' => null, // Not available in database
-            'MEMORY' => 'PhysicalMemory',
-            'NAME' => 'Name',
-            'OSCOMMENTS' => 'OsVersionString',
-            'OSNAME' => 'OsName',
-            'OSVERSION' => 'OsVersionNumber',
-            'PROCESSORN' => 'CpuCores',
-            'PROCESSORS' => 'CpuClock',
-            'PROCESSORT' => 'CpuType',
-            'SWAP' => 'SwapMemory',
-            'TYPE' => 'RawType',
-            'USERID' => 'UserName',
-            'USERDOMAIN' => 'UserDomain',
-            'UUID' => 'Uuid',
-            'VMSYSTEM' => null, // Not available in database
-            'WINCOMPANY' => 'WindowsCompany',
-            'WINOWNER' => 'WindowsOwner',
-            'WINPRODID' => 'WindowsProductId',
-            'WINPRODKEY' => 'WindowsProductkey',
-            'WORKGROUP' => 'Workgroup',
-        ),
-        'BIOS' => array(
-            'ASSETTAG' => 'AssetTag',
-            'BDATE' => 'BiosDate',
-            'BMANUFACTURER' => 'BiosManufacturer',
-            'BVERSION' => 'BiosVersion',
-            'SMANUFACTURER' => 'Manufacturer',
-            'SMODEL' => 'Model',
-            'SSN' => 'Serial',
-            'TYPE' => 'Type',
-        )
-    );
-
-    /**
      * List of all child object types
      * @var array
      */
@@ -1713,103 +1664,13 @@ class Model_Computer extends Model_ComputerOrGroup
 
     /**
      * Export computer as DOMDocument
-     * @param bool $validate Validate generated document and throw exception if validation fails
-     * @return DOMDocument
+     * @return Model_DomDocument_InventoryRequest
      */
     public function toDomDocument()
     {
-        require_once ('Braintacle/DomDocument.php');
-        $document = new Braintacle_DomDocument;
-
-        // Although the order of elements is irrelevant, agents sort them
-        // lexically. To simplify comparision between agent-generated XML and
-        // the output of this method, the sections are collected in an array
-        // first and then sorted before insertion into the document.
-        $fragments['HARDWARE'] = $this->toDomElement($document, 'HARDWARE');
-        $fragments['BIOS'] = $this->toDomElement($document, 'BIOS');
-        $fragments['DOWNLOAD'] = $this->toDomElement($document, 'DOWNLOAD');
-        $fragments['ACCOUNTINFO'] = $this->getUserDefinedInfo()->toDomDocumentFragment($document);
-        foreach (self::$_childObjectTypes as $childObject) {
-            $model = 'Model_' . $childObject;
-            $dummy = new $model;
-            $statement = $dummy->createStatement(
-                null,
-                'id', // Sort by 'id' to get more predictable results for comparision
-                'asc',
-                array('Computer' => $this->getId())
-            );
-            $fragment = $document->createDocumentFragment();
-            while ($object = $statement->fetchObject($model)) {
-                $fragment->appendChild($object->toDomElement($document));
-            }
-            $fragments[$dummy->getXmlElementName()] = $fragment;
-        }
-        ksort($fragments);
-
-        // Root element
-        $request = $document->createElement('REQUEST');
-        $document->appendChild($request);
-
-        // Main inventory section
-        $content = $document->createElement('CONTENT');
-        $request->appendChild($content);
-        foreach ($fragments as $fragment) {
-            if ($fragment->hasChildNodes()) { // Ignore empty fragments
-                $content->appendChild($fragment);
-            }
-        }
-
-        // Additional elements
-        $text = $document->createTextNode($this->getClientId());
-        $deviceid = $document->createElement('DEVICEID');
-        $deviceid->appendChild($text);
-        $request->appendChild($deviceid);
-        $request->appendChild($document->createElement('QUERY', 'INVENTORY'));
-
+        $document = new Model_DomDocument_InventoryRequest;
+        $document->loadComputer($this);
         return $document;
-    }
-
-    /**
-     * Generate a DOMElement object from current data
-     *
-     * @param DOMDocument $document DOMDocument from which to create elements.
-     * @param string $section XML section (case insensitive) to generate ('hardware', 'bios' or 'download')
-     * @return DOMElement DOM object ready to be appended to the document.
-     */
-    public function toDomElement(DomDocument $document, $section)
-    {
-        $section = strtoupper($section);
-        if ($section == 'DOWNLOAD') {
-            // DOWNLOAD section has 1 HISTORY element with 1 PACKAGE child per package.
-            $history = $document->createElement('HISTORY');
-            foreach ($this->getDownloadedPackages() as $package) {
-                $child = $document->createElement('PACKAGE');
-                $child->setAttribute('ID', $package);
-                $history->appendChild($child);
-            }
-            $download = $document->createElement('DOWNLOAD');
-            if ($history->hasChildNodes()) { // Don't append empty HISTORY
-                $download->appendChild($history);
-            }
-            return $download;
-        }
-
-        // Generate HARDWARE and BIOS sections from _xmlElementMap
-        if (!isset($this->_xmlElementMap[$section])) {
-            throw new UnexpectedValueException('Bad section name: ' . $section);
-        }
-        $element = $document->createElement($section);
-        foreach ($this->_xmlElementMap[$section] as $name => $property) {
-            if (!$property) {
-                continue; // Don't create empty elements
-            }
-            // Get raw value for element
-            $text = $document->createTextNode($this->getProperty($property, true));
-            $child = $document->createElement($name);
-            $child->appendChild($text);
-            $element->appendChild($child);
-        }
-        return $element;
     }
 
     /**

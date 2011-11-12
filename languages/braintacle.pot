@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-09 14:34+0100\n"
+"POT-Creation-Date: 2011-11-12 13:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -634,32 +634,32 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: models/Computer.php:831
+#: models/Computer.php:782
 #, php-format
 msgid "%1$d computers with an interface in network '%2$s'"
 msgstr ""
 
-#: models/Computer.php:848
+#: models/Computer.php:799
 #, php-format
 msgid "%1$d computers waiting for notification of package '%2$s'"
 msgstr ""
 
-#: models/Computer.php:853
+#: models/Computer.php:804
 #, php-format
 msgid "%1$d computers with package '%2$s' successfully deployed"
 msgstr ""
 
-#: models/Computer.php:858
+#: models/Computer.php:809
 #, php-format
 msgid "%1$d computers with deployment of package '%2$s' in progress"
 msgstr ""
 
-#: models/Computer.php:863
+#: models/Computer.php:814
 #, php-format
 msgid "%1$d computers where deployment of package '%2$s' failed"
 msgstr ""
 
-#: models/Computer.php:868
+#: models/Computer.php:819
 #, php-format
 msgid "%1$d computers where software '%2$s' is installed"
 msgstr ""
@@ -776,7 +776,7 @@ msgstr ""
 msgid "Members"
 msgstr ""
 
-#: views/helpers/GroupHeader.php:72 views/helpers/InventoryHeader.php:162
+#: views/helpers/GroupHeader.php:72 views/helpers/InventoryHeader.php:169
 #: views/scripts/network/showidentified.phtml:65
 #: views/scripts/network/showunknown.phtml:64
 #: views/scripts/package/index.phtml:237
@@ -826,6 +826,10 @@ msgstr ""
 
 #: views/helpers/InventoryHeader.php:141
 msgid "User defined"
+msgstr ""
+
+#: views/helpers/InventoryHeader.php:162
+msgid "Export"
 msgstr ""
 
 #: views/helpers/MembershipType.php:44

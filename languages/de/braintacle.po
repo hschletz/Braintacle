@@ -24,10 +24,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-09 14:34+0100\n"
-"PO-Revision-Date: 2011-11-09 14:34+0100\n"
+"POT-Creation-Date: 2011-11-12 13:56+0100\n"
+"PO-Revision-Date: 2011-11-11 19:10+0100\n"
 "Last-Translator: \n"
-"Language-Team: German <holger.schletz@web.de>\n"
+"Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -635,33 +635,33 @@ msgstr "Interfaces aus Netzwerkliste löschen"
 msgid "Logout"
 msgstr "Abmelden"
 
-#: models/Computer.php:831
+#: models/Computer.php:782
 #, php-format
 msgid "%1$d computers with an interface in network '%2$s'"
 msgstr "%1$d Computer mit Interface in Netzwerk %2$s"
 
-#: models/Computer.php:848
+#: models/Computer.php:799
 #, php-format
 msgid "%1$d computers waiting for notification of package '%2$s'"
 msgstr "%1$d Computer, die auf Installation von Paket '%2$s' warten"
 
-#: models/Computer.php:853
+#: models/Computer.php:804
 #, php-format
 msgid "%1$d computers with package '%2$s' successfully deployed"
 msgstr "%1$d Computer mit erfolgreich installiertem Paket '%2$s'"
 
-#: models/Computer.php:858
+#: models/Computer.php:809
 #, php-format
 msgid "%1$d computers with deployment of package '%2$s' in progress"
 msgstr "%1$d Computer mit laufender Installation von Paket '%2$s'"
 
-#: models/Computer.php:863
+#: models/Computer.php:814
 #, php-format
 msgid "%1$d computers where deployment of package '%2$s' failed"
 msgstr ""
 "%1$d Computer, bei denen die Installation von Paket '%2$s' fehlgeschlagen ist"
 
-#: models/Computer.php:868
+#: models/Computer.php:819
 #, php-format
 msgid "%1$d computers where software '%2$s' is installed"
 msgstr "%1$d Computer, auf denen die Software '%2$s' installiert ist"
@@ -780,7 +780,7 @@ msgstr "Allgemein"
 msgid "Members"
 msgstr "Mitglieder"
 
-#: views/helpers/GroupHeader.php:72 views/helpers/InventoryHeader.php:162
+#: views/helpers/GroupHeader.php:72 views/helpers/InventoryHeader.php:169
 #: views/scripts/network/showidentified.phtml:65
 #: views/scripts/network/showunknown.phtml:64
 #: views/scripts/package/index.phtml:237
@@ -831,6 +831,10 @@ msgstr "Verschiedenes"
 #: views/helpers/InventoryHeader.php:141
 msgid "User defined"
 msgstr "Benutzerdefiniert"
+
+#: views/helpers/InventoryHeader.php:162
+msgid "Export"
+msgstr "Exportieren"
 
 #: views/helpers/MembershipType.php:44
 msgid "manual"

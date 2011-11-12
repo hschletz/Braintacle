@@ -177,32 +177,4 @@ class Model_UserDefinedInfo extends Model_Abstract
         }
     }
 
-    /**
-     * Generate a DOMDocumentFragment object from current data
-     * @param DOMDocument $document DOMDocument from which to create elements.
-     * @return DOMDocumentFragment Object ready to be appended to the document.
-     */
-    public function toDomDocumentFragment(DomDocument $document)
-    {
-        $fragment = $document->createDocumentFragment();
-        foreach ($this as $property => $value) {
-            if (!empty($value)) { // Don't generate empty elements
-                $element = $document->createElement('ACCOUNTINFO');
-
-                $text = $document->createTextNode($property);
-                $child = $document->createElement('KEYNAME');
-                $child->appendChild($text);
-                $element->appendChild($child);
-
-                $text = $document->createTextNode($value);
-                $child = $document->createElement('KEYVALUE');
-                $child->appendChild($text);
-                $element->appendChild($child);
-
-                $fragment->appendChild($element);
-            }
-        }
-        return $fragment;
-    }
-
 }

@@ -117,10 +117,10 @@ abstract class Model_ChildObject extends Model_Abstract
     /**
      * Generate a DOMElement object from current data
      *
-     * @param DOMDocument $document DOMDocument from which to create elements.
+     * @param Model_DomDocument_InventoryRequest $document DOMDocument from which to create elements.
      * @return DOMElement DOM object ready to be appended to the document.
      */
-    public function toDomElement(DOMDocument $document)
+    public function toDomElement(Model_DomDocument_InventoryRequest $document)
     {
         // $_xmlElementName must be defined by a subclass
         if (empty($this->_xmlElementName)) {
@@ -137,10 +137,7 @@ abstract class Model_ChildObject extends Model_Abstract
             }
             $value = $this->getProperty($property, true); // Export raw value
             if (!empty($value)) { // Don't generate empty elements
-                $child = $document->createElement($name);
-                $element->appendChild($child);
-                $text = $document->createTextNode($value);
-                $child->appendChild($text);
+                $element->appendChild($document->createElementWithContent($name, $value));
             }
         }
 
