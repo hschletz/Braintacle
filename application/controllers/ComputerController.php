@@ -343,6 +343,31 @@ class ComputerController extends Zend_Controller_Action
         $this->view->form = $form;
     }
 
+    public function exportAction()
+    {
+        // Get XML document
+        $document = $this->computer->toDomDocument();
+        if (APPLICATION_ENV == 'development') {
+            $document->forceValid();
+        }
+        $filename = $document->getFilename(); // Preserve before next step
+        $document = $document->saveXml();
+
+        // Set up response for downloadable document
+        $response = $this->getResponse();
+        $response->setHeader('Content-Type', 'text/xml; charset="utf-8"');
+        $response->setHeader(
+            'Content-Disposition',
+            'attachment; filename="' . $filename . '"'
+        );
+        $response->setHeader('Content-Length', strlen($document));
+        $response->setBody($document);
+
+        // End here, no view script invocation
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+    }
+
     /**
      * Return the part of the URI that defines the current filter
      * @return string URI part, beginning with '/', or empty string if no filter is active.
