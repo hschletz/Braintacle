@@ -35,8 +35,17 @@ for the incomplete DTD. In theory, most elements could be marked optional, but
 that would unnecessarily mess up the schema where the affected elements are
 effectively always present in the wild. Too strict definitions will be loosened
 in the future where necessary.
+The 'braintacle' namespace defines 2 additional attributes which are used by
+Braintacle to map element names to application specific data structures:
+- braintacle:model is used for child elements of 'CONTENT'. It is the name of
+  the model class (without 'Model_' prefix) that handles the data represented
+  by the element. If it is not present, the element is not used by Braintacle.
+- braintacle:property is used by child elements (or references) within the
+  elements having a braintacle:model attribute. It is the name of the property
+  that the model class uses to represent the data. If it is not present, the
+  element is not used by Braintacle.
 -->
-<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:braintacle="http://savannah.nongnu.org/projects/braintacle">
     <start>
         <!-- Root element -->
         <element name="REQUEST">
@@ -50,7 +59,9 @@ in the future where necessary.
                         <zeroOrMore>
                             <ref name="ACCOUNTINFO" />
                         </zeroOrMore>
-                        <ref name="BIOS" /><!-- Assumed to be always present -->
+                        <optional>
+                            <ref name="BIOS" /><!-- May be missing if all empty -->
+                        </optional>
                         <zeroOrMore>
                             <ref name="CONTROLLERS" />
                         </zeroOrMore>
@@ -127,7 +138,7 @@ in the future where necessary.
 
    <!-- Inventory sections -->
     <define name="ACCESSLOG">
-        <element name="ACCESSLOG">
+        <element name="ACCESSLOG"><!-- obsolete -->
             <interleave>
                 <ref name="LOGDATE" />
                 <ref name="USERID" />
@@ -135,7 +146,7 @@ in the future where necessary.
         </element>
     </define>
     <define name="ACCOUNTINFO">
-        <element name="ACCOUNTINFO">
+        <element name="ACCOUNTINFO" braintacle:model="UserDefinedInfo">
             <interleave>
                 <ref name="KEYNAME" />
                 <ref name="KEYVALUE" />
@@ -143,52 +154,64 @@ in the future where necessary.
         </element>
     </define>
     <define name="BIOS">
-        <element name="BIOS">
+        <element name="BIOS" braintacle:model="Computer">
             <interleave>
-                <ref name="ASSETTAG" />
-                <ref name="BDATE" />
-                <ref name="BMANUFACTURER" />
-                <ref name="BVERSION" />
-                <ref name="SMANUFACTURER" />
-                <ref name="SMODEL" />
-                <ref name="SSN" />
                 <optional>
-                    <ref name="TYPE" />
+                    <ref name="ASSETTAG" braintacle:property="AssetTag" />
+                </optional>
+                <optional>
+                    <ref name="BDATE" braintacle:property="BiosDate" />
+                </optional>
+                <optional>
+                    <ref name="BMANUFACTURER" braintacle:property="BiosManufacturer" />
+                </optional>
+                <ref name="BVERSION" braintacle:property="BiosVersion" />
+                <optional>
+                    <ref name="SMANUFACTURER" braintacle:property="Manufacturer" />
+                </optional>
+                <optional>
+                    <ref name="SMODEL" braintacle:property="Model" />
+                </optional>
+                <optional>
+                    <ref name="SSN" braintacle:property="Serial" />
+                </optional>
+                <optional>
+                    <ref name="TYPE" braintacle:property="Type" />
                 </optional>
             </interleave>
         </element>
     </define>
     <define name="CONTROLLERS">
-        <element name="CONTROLLERS">
+        <element name="CONTROLLERS" braintacle:model="Controller">
             <interleave>
                 <optional>
-                    <ref name="CAPTION" />
+                    <ref name="CAPTION" braintacle:property="RawCaption" />
                 </optional>
                 <optional>
-                    <ref name="DESCRIPTION" />
+                    <ref name="DESCRIPTION" braintacle:property="Comment" />
                 </optional>
                 <optional>
-                    <ref name="DRIVER" />
+                    <ref name="DRIVER" /><!-- not available in database -->
                 </optional>
-                <ref name="NAME" />
-                <ref name="MANUFACTURER" />
+                <ref name="MANUFACTURER" braintacle:property="Manufacturer" />
+                <ref name="NAME" braintacle:property="Name" />
                 <optional>
-                    <ref name="PCIID" />
-                </optional>
-                <optional>
-                    <ref name="PCISLOT" />
+                    <ref name="PCIID" /><!-- not available in database -->
                 </optional>
                 <optional>
-                    <ref name="TYPE" />
+                    <ref name="PCISLOT" /><!-- not available in database -->
                 </optional>
                 <optional>
-                    <ref name="VERSION" />
+                    <ref name="TYPE" braintacle:property="Type" />
+                </optional>
+                <optional>
+                    <ref name="VERSION" braintacle:property="DriverVersion" />
                 </optional>
             </interleave>
         </element>
     </define>
     <define name="CPUS">
-        <element name="CPUS">
+        <element name="CPUS"><!-- not available in database -->
             <interleave>
                 <ref name="MANUFACTURER" />
                 <ref name="SERIAL" />
@@ -198,7 +221,7 @@ in the future where necessary.
         </element>
     </define>
     <define name="DOWNLOAD">
-        <element name="DOWNLOAD">
+        <element name="DOWNLOAD" braintacle:model="Computer">
             <element name="HISTORY">
                 <zeroOrMore>
                     <element name="PACKAGE">
@@ -209,259 +232,265 @@ in the future where necessary.
         </element>
     </define>
     <define name="DRIVES">
-        <element name="DRIVES">
+        <element name="DRIVES" braintacle:model="Volume">
             <interleave>
                 <optional>
-                    <ref name="CREATEDATE" />
+                    <ref name="CREATEDATE" braintacle:property="CreationDate" />
                 </optional>
                 <optional>
-                    <ref name="FILESYSTEM" />
+                    <ref name="FILESYSTEM" braintacle:property="Filesystem" />
                 </optional>
                 <optional>
-                    <ref name="FREE" />
+                    <ref name="FREE" braintacle:property="FreeSpace" />
                 </optional>
                 <optional>
-                    <ref name="LABEL" />
+                    <ref name="LABEL" /><!-- not available in database -->
                 </optional>
                 <optional>
-                    <ref name="LETTER" />
+                    <ref name="LETTER" braintacle:property="Letter" />
                 </optional>
                 <optional>
-                    <ref name="NUMFILES" />
+                    <ref name="NUMFILES" braintacle:property="RawNumFiles" />
                 </optional>
                 <optional>
-                    <ref name="SERIAL" />
+                    <ref name="SERIAL" /><!-- not available in database -->
                 </optional>
                 <optional>
-                    <ref name="TOTAL" />
+                    <ref name="TOTAL" braintacle:property="Size" />
                 </optional>
                 <optional>
-                    <ref name="TYPE" />
+                    <ref name="TYPE" braintacle:property="Type" />
                 </optional>
                 <optional>
-                    <ref name="VOLUMN" />
+                    <ref name="VOLUMN" braintacle:property="Device" />
                 </optional>
             </interleave>
         </element>
     </define>
     <define name="HARDWARE">
-        <element name="HARDWARE">
+        <element name="HARDWARE" braintacle:model="Computer">
             <interleave>
                 <optional>
-                    <ref name="ARCH" />
+                    <ref name="ARCH" /><!-- not available in database -->
                 </optional>
                 <optional>
-                    <ref name="ARCHNAME" />
+                    <ref name="ARCHNAME" /><!-- not available in database -->
                 </optional>
-                <ref name="CHECKSUM" />
+                <ref name="CHECKSUM" braintacle:property="InventoryDiff" />
                 <optional>
-                    <ref name="DATELASTLOGGEDUSER" />
-                </optional>
-                <optional>
-                    <ref name="DEFAULTGATEWAY" />
-                </optional>
-                <ref name="DESCRIPTION" />
-                <optional>
-                    <ref name="DNS" />
+                    <ref name="DATELASTLOGGEDUSER" /><!-- not available in database -->
                 </optional>
                 <optional>
-                    <ref name="ETIME" />
-                </optional>
-                <ref name="IPADDR" />
-                <optional>
-                    <ref name="LASTCOME" />
+                    <ref name="DEFAULTGATEWAY" braintacle:property="DefaultGateway" />
                 </optional>
                 <optional>
-                    <ref name="LASTDATE" />
+                    <ref name="DESCRIPTION" braintacle:property="OsComment" />
                 </optional>
                 <optional>
-                    <ref name="LASTLOGGEDUSER" />
-                </optional>
-                <ref name="MEMORY" />
-                <ref name="NAME" />
-                <ref name="OSCOMMENTS" />
-                <ref name="OSNAME" />
-                <ref name="OSVERSION" />
-                <ref name="PROCESSORN" />
-                <ref name="PROCESSORS" />
-                <ref name="PROCESSORT" />
-                <ref name="SWAP" />
-                <optional>
-                    <ref name="TYPE" />
+                    <ref name="DNS" braintacle:property="DnsServer" />
                 </optional>
                 <optional>
-                    <ref name="USERDOMAIN" />
+                    <ref name="ETIME" /><!-- obsolete -->
                 </optional>
-                <ref name="USERID" />
-                <ref name="UUID" />
+                <ref name="IPADDR" braintacle:property="IpAddress" />
                 <optional>
-                    <ref name="VMSYSTEM" />
-                </optional>
-                <optional>
-                    <ref name="WINCOMPANY" />
+                    <ref name="LASTCOME" braintacle:property="LastContactDate" />
                 </optional>
                 <optional>
-                    <ref name="WINOWNER" />
+                    <ref name="LASTDATE" braintacle:property="InventoryDate" />
                 </optional>
                 <optional>
-                    <ref name="WINPRODID" />
+                    <ref name="LASTLOGGEDUSER" /><!-- not available in database -->
+                </optional>
+                <ref name="MEMORY" braintacle:property="PhysicalMemory" />
+                <ref name="NAME" braintacle:property="Name" />
+                <optional>
+                    <ref name="OSCOMMENTS" braintacle:property="OsVersionString" />
+                </optional>
+                <ref name="OSNAME" braintacle:property="OsName" />
+                <ref name="OSVERSION" braintacle:property="OsVersionNumber" />
+                <ref name="PROCESSORN" braintacle:property="CpuCores" />
+                <ref name="PROCESSORS" braintacle:property="CpuClock" />
+                <ref name="PROCESSORT" braintacle:property="CpuType" />
+                <ref name="SWAP" braintacle:property="SwapMemory" />
+                <optional>
+                    <ref name="TYPE" braintacle:property="RawType" />
                 </optional>
                 <optional>
-                    <ref name="WINPRODKEY" />
+                    <ref name="USERDOMAIN" braintacle:property="UserDomain" />
                 </optional>
-                <ref name="WORKGROUP" />
+                <ref name="USERID" braintacle:property="UserName" />
+                <optional>
+                    <ref name="UUID" braintacle:property="Uuid" />
+                </optional>
+                <optional>
+                    <ref name="VMSYSTEM" /><!-- not available in database -->
+                </optional>
+                <optional>
+                    <ref name="WINCOMPANY" braintacle:property="WindowsCompany" />
+                </optional>
+                <optional>
+                    <ref name="WINOWNER" braintacle:property="WindowsOwner" />
+                </optional>
+                <optional>
+                    <ref name="WINPRODID" braintacle:property="WindowsProductId" />
+                </optional>
+                <optional>
+                    <ref name="WINPRODKEY" braintacle:property="WindowsProductkey" />
+                </optional>
+                <ref name="WORKGROUP" braintacle:property="Workgroup" />
             </interleave>
         </element>
     </define>
     <define name="INPUTS">
-        <element name="INPUTS">
+        <element name="INPUTS" braintacle:model="InputDevice">
             <interleave>
                 <optional>
-                    <ref name="CAPTION" />
+                    <ref name="CAPTION" braintacle:property="Description" />
                 </optional>
                 <optional>
-                    <ref name="DESCRIPTION" />
+                    <ref name="DESCRIPTION" braintacle:property="Comment" />
                 </optional>
                 <optional>
-                    <ref name="INTERFACE" />
+                    <ref name="INTERFACE" braintacle:property="Interface" />
                 </optional>
                 <optional>
-                    <ref name="MANUFACTURER" />
+                    <ref name="MANUFACTURER" braintacle:property="Manufacturer" />
                 </optional>
                 <optional>
-                    <ref name="POINTTYPE" />
+                    <ref name="POINTTYPE" braintacle:property="RawPointType" />
                 </optional>
-                <ref name="TYPE" />
-            </interleave>
-        </element>
-    </define>
-    <define name="MODEMS">
-        <element name="MODEMS">
-            <interleave>
-                <ref name="DESCRIPTION" />
-                <ref name="MODEL" />
-                <ref name="NAME" />
-                <ref name="TYPE" />
-            </interleave>
-        </element>
-    </define>
-    <define name="MONITORS">
-        <element name="MONITORS">
-            <interleave>
-                <optional>
-                    <ref name="BASE64" />
-                </optional>
-                <optional>
-                    <ref name="CAPTION" />
-                </optional>
-                <optional>
-                    <ref name="DESCRIPTION" />
-                </optional>
-                <optional>
-                    <ref name="MANUFACTURER" />
-                </optional>
-                <optional>
-                    <ref name="SERIAL" />
-                </optional>
-                <optional>
-                    <ref name="TYPE" />
-                </optional>
-                <optional>
-                    <ref name="UUENCODE" />
-                </optional>
+                <ref name="TYPE" braintacle:property="Type" />
             </interleave>
         </element>
     </define>
     <define name="MEMORIES">
-        <element name="MEMORIES">
+        <element name="MEMORIES" braintacle:model="MemorySlot">
             <interleave>
                 <optional>
-                    <ref name="CAPACITY" />
+                    <ref name="CAPACITY" braintacle:property="Size" />
                 </optional>
-                <ref name="CAPTION" />
-                <ref name="DESCRIPTION" />
-                <ref name="NUMSLOTS" />
+                <ref name="CAPTION" braintacle:property="Caption" />
+                <ref name="DESCRIPTION" braintacle:property="Description" />
+                <ref name="NUMSLOTS" braintacle:property="SlotNumber" />
                 <optional>
-                    <ref name="PURPOSE" />
-                </optional>
-                <optional>
-                    <ref name="SERIALNUMBER" />
+                    <ref name="PURPOSE" braintacle:property="Purpose" />
                 </optional>
                 <optional>
-                    <ref name="SPEED" />
+                    <ref name="SERIALNUMBER" braintacle:property="Serial" />
                 </optional>
-                <ref name="TYPE" />
+                <optional>
+                    <ref name="SPEED" braintacle:property="Clock" />
+                </optional>
+                <ref name="TYPE" braintacle:property="Type" />
+            </interleave>
+        </element>
+    </define>
+    <define name="MODEMS">
+        <element name="MODEMS" braintacle:model="Modem">
+            <interleave>
+                <ref name="DESCRIPTION" braintacle:property="RawDescription" />
+                <ref name="MODEL" braintacle:property="RawModel" />
+                <ref name="NAME" braintacle:property="Name" />
+                <ref name="TYPE" braintacle:property="Type" />
+            </interleave>
+        </element>
+    </define>
+    <define name="MONITORS">
+        <element name="MONITORS" braintacle:model="Display">
+            <interleave>
+                <optional>
+                    <ref name="BASE64" /><!-- not available in database -->
+                </optional>
+                <optional>
+                    <ref name="CAPTION" braintacle:property="Description" />
+                </optional>
+                <optional>
+                    <ref name="DESCRIPTION" braintacle:property="ProductionDate" />
+                </optional>
+                <optional>
+                    <ref name="MANUFACTURER" braintacle:property="Manufacturer" />
+                </optional>
+                <optional>
+                    <ref name="SERIAL" braintacle:property="Serial" />
+                </optional>
+                <optional>
+                    <ref name="TYPE" braintacle:property="Type" />
+                </optional>
+                <optional>
+                    <ref name="UUENCODE" /><!-- not available in database -->
+                </optional>
             </interleave>
         </element>
     </define>
     <define name="NETWORKS">
-        <element name="NETWORKS">
+        <element name="NETWORKS" braintacle:model="NetworkInterface">
             <interleave>
+                <ref name="DESCRIPTION" braintacle:property="Description" />
                 <optional>
-                    <ref name="DRIVER" />
+                    <ref name="DRIVER" /><!-- not available in database -->
                 </optional>
-                <ref name="DESCRIPTION" />
-                <ref name="IPADDRESS" />
+                <ref name="IPADDRESS" braintacle:property="IpAddress" />
                 <optional>
-                    <ref name="IPDHCP" />
-                </optional>
-                <optional>
-                    <ref name="IPGATEWAY" />
-                </optional>
-                <ref name="IPMASK" />
-                <optional>
-                    <ref name="IPSUBNET" />
-                </optional>
-                <ref name="MACADDR" />
-                <optional>
-                    <ref name="PCISLOT" />
+                    <ref name="IPDHCP" braintacle:property="DhcpServer" />
                 </optional>
                 <optional>
-                    <ref name="SPEED" />
+                    <ref name="IPGATEWAY" braintacle:property="Gateway" />
                 </optional>
-                <ref name="STATUS" />
-                <ref name="TYPE" />
+                <ref name="IPMASK" braintacle:property="Netmask" />
                 <optional>
-                    <ref name="TYPEMIB" />
+                    <ref name="IPSUBNET" braintacle:property="Subnet" />
+                </optional>
+                <ref name="MACADDR" braintacle:property="MacAddress" />
+                <optional>
+                    <ref name="PCISLOT" /><!-- not available in database -->
                 </optional>
                 <optional>
-                    <ref name="VIRTUALDEV" />
+                    <ref name="SPEED" braintacle:property="Rate" />
+                </optional>
+                <ref name="STATUS" braintacle:property="Status" />
+                <ref name="TYPE" braintacle:property="RawType" />
+                <optional>
+                    <ref name="TYPEMIB" braintacle:property="RawTypeMib" />
+                </optional>
+                <optional>
+                    <ref name="VIRTUALDEV" braintacle:property="Virtual" />
                 </optional>
             </interleave>
         </element>
     </define>
     <define name="PORTS">
-        <element name="PORTS">
+        <element name="PORTS" braintacle:model="Port">
             <interleave>
                 <optional>
-                    <ref name="CAPTION" />
+                    <ref name="CAPTION" braintacle:property="Connector" />
                 </optional>
                 <optional>
-                    <ref name="DESCRIPTION" />
+                    <ref name="DESCRIPTION" braintacle:property="RawDescription" />
                 </optional>
                 <optional>
-                    <ref name="NAME" />
+                    <ref name="NAME" braintacle:property="Name" />
                 </optional>
                 <optional>
-                    <ref name="TYPE" />
+                    <ref name="TYPE" braintacle:property="Type" />
                 </optional>
             </interleave>
         </element>
     </define>
     <define name="PRINTERS">
-        <element name="PRINTERS">
+        <element name="PRINTERS" braintacle:model="Printer">
             <interleave>
                 <optional>
-                    <ref name="DESCRIPTION" />
+                    <ref name="DESCRIPTION" braintacle:property="Description" />
                 </optional>
-                <ref name="DRIVER" />
-                <ref name="NAME" />
-                <ref name="PORT" />
+                <ref name="DRIVER" braintacle:property="Driver" />
+                <ref name="NAME" braintacle:property="Name" />
+                <ref name="PORT" braintacle:property="Port" />
             </interleave>
         </element>
     </define>
     <define name="PROCESSES">
-        <element name="PROCESSES">
+        <element name="PROCESSES"><!-- not available in database -->
             <interleave>
                 <ref name="CMD" />
                 <ref name="CPUUSAGE" />
@@ -475,159 +504,159 @@ in the future where necessary.
         </element>
     </define>
     <define name="REGISTRY">
-        <element name="REGISTRY">
+        <element name="REGISTRY" braintacle:model="Registry">
             <interleave>
-                <ref name="NAME" />
-                <ref name="REGVALUE" />
+                <ref name="NAME" braintacle:property="Name" />
+                <ref name="REGVALUE" braintacle:property="Value" />
             </interleave>
         </element>
     </define>
     <define name="SLOTS">
-        <element name="SLOTS">
+        <element name="SLOTS" braintacle:model="ExtensionSlot">
             <interleave>
-                <ref name="DESCRIPTION" />
-                <ref name="DESIGNATION" />
-                <ref name="NAME" />
+                <ref name="DESCRIPTION" braintacle:property="Description" />
+                <ref name="DESIGNATION" braintacle:property="Name" />
+                <ref name="NAME" braintacle:property="Type" />
                 <optional>
-                    <ref name="PSHARE" />
+                    <ref name="PSHARE" /><!-- obsolete -->
                 </optional>
                 <optional>
-                    <ref name="PURPOSE" />
+                    <ref name="PURPOSE" braintacle:property="RawPurpose" />
                 </optional>
                 <optional>
-                    <ref name="STATUS" />
+                    <ref name="STATUS" braintacle:property="Status" />
                 </optional>
             </interleave>
         </element>
     </define>
     <define name="SOFTWARES">
-        <element name="SOFTWARES">
+        <element name="SOFTWARES" braintacle:model="Software">
             <interleave>
                 <optional>
-                    <ref name="BITSWIDTH" />
+                    <ref name="BITSWIDTH" braintacle:property="Architecture" />
                 </optional>
                 <optional>
-                    <ref name="COMMENTS" />
+                    <ref name="COMMENTS" braintacle:property="Comment" />
                 </optional>
                 <optional>
-                    <ref name="FILENAME" />
+                    <ref name="FILENAME" braintacle:property="RawFilename" />
                 </optional>
                 <optional>
-                    <ref name="FILESIZE" />
+                    <ref name="FILESIZE" braintacle:property="Size" />
                 </optional>
                 <optional>
-                    <ref name="FOLDER" />
+                    <ref name="FOLDER" braintacle:property="InstallLocation" />
                 </optional>
                 <optional>
-                    <ref name="FROM" />
+                    <ref name="FROM" /><!-- not available in database -->
                 </optional>
                 <optional>
-                    <ref name="GUID" />
+                    <ref name="GUID" braintacle:property="Guid" />
                 </optional>
                 <optional>
-                    <ref name="INSTALLDATE" />
+                    <ref name="INSTALLDATE" braintacle:property="InstallationDate" />
                 </optional>
                 <optional>
-                    <ref name="LANGUAGE" />
+                    <ref name="LANGUAGE" braintacle:property="Language" />
                 </optional>
                 <optional>
-                    <ref name="NAME" />
+                    <ref name="NAME" braintacle:property="Name" />
                 </optional>
                 <optional>
-                    <ref name="PUBLISHER" />
+                    <ref name="PUBLISHER" braintacle:property="Publisher" />
                 </optional>
                 <optional>
-                    <ref name="SOURCE" />
+                    <ref name="SOURCE" braintacle:property="RawSource" />
                 </optional>
                 <optional>
-                    <ref name="VERSION" />
+                    <ref name="VERSION" braintacle:property="Version" />
                 </optional>
             </interleave>
         </element>
     </define>
     <define name="SOUNDS">
-        <element name="SOUNDS">
+        <element name="SOUNDS" braintacle:model="AudioDevice">
             <interleave>
-                <ref name="DESCRIPTION" />
-                <ref name="NAME" />
-                <ref name="MANUFACTURER" />
+                <ref name="DESCRIPTION" braintacle:property="Description" />
+                <ref name="MANUFACTURER" braintacle:property="Manufacturer" />
+                <ref name="NAME" braintacle:property="Name" />
             </interleave>
         </element>
     </define>
     <define name="STORAGES">
-        <element name="STORAGES">
+        <element name="STORAGES" braintacle:model="StorageDevice">
             <interleave>
-                <ref name="DESCRIPTION" />
+                <ref name="DESCRIPTION" braintacle:property="RawDescription" />
                 <optional>
-                    <ref name="DISKSIZE" />
+                    <ref name="DISKSIZE" braintacle:property="Size" />
                 </optional>
                 <optional>
-                    <ref name="FIRMWARE" />
+                    <ref name="FIRMWARE" braintacle:property="Firmware" />
                 </optional>
                 <optional>
-                    <ref name="NAME" />
+                    <ref name="MANUFACTURER" braintacle:property="RawManufacturer" />
                 </optional>
                 <optional>
-                    <ref name="MANUFACTURER" />
+                    <ref name="MODEL" braintacle:property="RawModel" />
                 </optional>
                 <optional>
-                    <ref name="MODEL" />
+                    <ref name="NAME" braintacle:property="RawName" />
                 </optional>
                 <optional>
-                    <ref name="SCSI_CHID" />
+                    <ref name="SCSI_CHID" /><!-- not available in database -->
                 </optional>
                 <optional>
-                    <ref name="SCSI_COID" />
+                    <ref name="SCSI_COID" /><!-- not available in database -->
                 </optional>
                 <optional>
-                    <ref name="SCSI_LUN" />
+                    <ref name="SCSI_LUN" /><!-- not available in database -->
                 </optional>
                 <optional>
-                    <ref name="SCSI_UNID" />
+                    <ref name="SCSI_UNID" /><!-- not available in database -->
                 </optional>
                 <optional>
-                    <ref name="SERIALNUMBER" />
+                    <ref name="SERIALNUMBER" braintacle:property="Serial" />
                 </optional>
                 <optional>
-                    <ref name="TYPE" />
+                    <ref name="TYPE" braintacle:property="RawType" />
                 </optional>
             </interleave>
         </element>
     </define>
     <define name="USERS">
-        <element name="USERS">
+        <element name="USERS"><!-- not available in database -->
             <ref name="LOGIN" />
         </element>
     </define>
     <define name="VIDEOS">
-        <element name="VIDEOS">
+        <element name="VIDEOS" braintacle:model="DisplayController">
             <interleave>
                 <optional>
-                    <ref name="CHIPSET" />
+                    <ref name="CHIPSET" braintacle:property="Chipset" />
                 </optional>
                 <optional>
-                    <ref name="MEMORY" />
+                    <ref name="MEMORY" braintacle:property="Memory" />
                 </optional>
-                <ref name="NAME" />
+                <ref name="NAME" braintacle:property="Name" />
                 <optional>
-                    <ref name="RESOLUTION" />
+                    <ref name="RESOLUTION" braintacle:property="CurrentResolution" />
                 </optional>
             </interleave>
         </element>
     </define>
     <define name="VIRTUALMACHINES">
-        <element name="VIRTUALMACHINES">
+        <element name="VIRTUALMACHINES" braintacle:model="VirtualMachine">
             <interleave>
                 <optional>
-                    <ref name="MEMORY" />
+                    <ref name="MEMORY" braintacle:property="GuestMemory" />
                 </optional>
-                <ref name="NAME" />
-                <ref name="STATUS" />
-                <ref name="SUBSYSTEM" />
-                <ref name="UUID" />
-                <ref name="VCPU" />
-                <ref name="VMID" />
-                <ref name="VMTYPE" />
+                <ref name="NAME" braintacle:property="Name" />
+                <ref name="STATUS" braintacle:property="Status" />
+                <ref name="SUBSYSTEM" braintacle:property="Product" />
+                <ref name="UUID" braintacle:property="Uuid" />
+                <ref name="VCPU" braintacle:property="NumCpus" />
+                <ref name="VMID" /><!-- not available in database -->
+                <ref name="VMTYPE" braintacle:property="Type" />
             </interleave>
         </element>
     </define>

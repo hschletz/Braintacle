@@ -29,83 +29,22 @@
  */
 class Model_DomDocument_InventoryRequest extends Model_DomDocument
 {
-
     /**
-     * Map of valid XML elements
+     * Global cache for element=>model mappings
      *
-     * Each element has an element name as the key. The value is one of:
-     * - NULL if the element is unsupported or has more complex processing rules
-     * - A string with a child object type. Processing is passed to the child object.
-     * - An array with element=>property pairs which are handled by Model_Computer.
+     * Do not use directly, always call {@link getModels} to retrieve map
      * @var array
      */
-    protected $_elementMap = array(
-        'ACCESSLOG' => null, // obsolete
-        'ACCOUNTINFO' => null, // needs more complex processing
-        'BIOS' => array(
-            'ASSETTAG' => 'AssetTag',
-            'BDATE' => 'BiosDate',
-            'BMANUFACTURER' => 'BiosManufacturer',
-            'BVERSION' => 'BiosVersion',
-            'SMANUFACTURER' => 'Manufacturer',
-            'SMODEL' => 'Model',
-            'SSN' => 'Serial',
-            'TYPE' => 'Type',
-        ),
-        'CONTROLLERS' => 'Controller',
-        'CPUS' => null, // not available in database
-        'DOWNLOAD' => null, // needs more complex processing
-        'DRIVES' => 'Volume',
-        'HARDWARE' => array(
-            'ARCH' => null, // not available in database
-            'ARCHNAME' => null, // not available in database
-            'CHECKSUM' => 'InventoryDiff',
-            'DATELASTLOGGEDUSER' => null, // not available in database
-            'DEFAULTGATEWAY' => 'DefaultGateway',
-            'DESCRIPTION' => 'OsComment',
-            'DNS' => 'DnsServer',
-            'ETIME' => null, // obsolete
-            'IPADDR' => 'IpAddress',
-            'LASTCOME' => 'LastContactDate',
-            'LASTDATE' => 'InventoryDate',
-            'LASTLOGGEDUSER' => null, // not available in database
-            'MEMORY' => 'PhysicalMemory',
-            'NAME' => 'Name',
-            'OSCOMMENTS' => 'OsVersionString',
-            'OSNAME' => 'OsName',
-            'OSVERSION' => 'OsVersionNumber',
-            'PROCESSORN' => 'CpuCores',
-            'PROCESSORS' => 'CpuClock',
-            'PROCESSORT' => 'CpuType',
-            'SWAP' => 'SwapMemory',
-            'TYPE' => 'RawType',
-            'USERDOMAIN' => 'UserDomain',
-            'USERID' => 'UserName',
-            'UUID' => 'Uuid',
-            'VMSYSTEM' => null, // not available in database
-            'WINCOMPANY' => 'WindowsCompany',
-            'WINOWNER' => 'WindowsOwner',
-            'WINPRODID' => 'WindowsProductId',
-            'WINPRODKEY' => 'WindowsProductkey',
-            'WORKGROUP' => 'Workgroup',
-        ),
-        'INPUTS' => 'InputDevice',
-        'MEMORIES' => 'MemorySlot',
-        'MODEMS' => 'Modem',
-        'MONITORS' => 'Display',
-        'NETWORKS' => 'NetworkInterface',
-        'PORTS' => 'Port',
-        'PRINTERS' => 'Printer',
-        'PROCESSES' => null, // not available in database
-        'REGISTRY' => 'Registry',
-        'SLOTS' => 'ExtensionSlot',
-        'SOFTWARES' => 'Software',
-        'SOUNDS' => 'AudioDevice',
-        'STORAGES' => 'StorageDevice',
-        'USERS' => null, // not available in database
-        'VIDEOS' => 'DisplayController',
-        'VIRTUALMACHINES' => 'VirtualMachine',
-    );
+    private static $_models;
+
+    /**
+     * Global cache for element=>property mappings
+     *
+     * Do not use directly, always call {@link getProperties} to retrieve map
+     * for a specific section
+     * @var array
+     */
+    private  static $_properties;
 
     /**
      * Load document tree from a computer
@@ -113,19 +52,27 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
      */
     public function loadComputer(Model_Computer $computer)
     {
-        // Although the order of elements is irrelevant, at least the UNIX agent
-        // sorts them lexically. To simplify comparision between agent-generated
-        // XML and the output of this method, the sections are collected in an
-        // array first and then sorted before insertion into the document.
+        // Collect all sections in an array
         $sections = array();
-        foreach ($this->_elementMap as $section => $data) {
+        foreach ($this->getModels() as $section => $model) {
             switch ($section) {
                 case 'HARDWARE':
                 case 'BIOS':
-                    $sections[$section] = $this->_getSectionFromComputer($section, $computer);
+                    $element = $this->createElement($section);
+                    foreach ($this->getProperties($section) as $name => $property) {
+                        $property = $computer->getProperty($property, true); // Get raw value
+                        if ($property) {// Don't generate empty elements
+                            $element->appendChild(
+                                $this->createElementWithContent($name, $property)
+                            );
+                        }
+                    }
+                    $sections[$section] = $element;
                     break;
                 case 'ACCOUNTINFO':
                     $sections['ACCOUNTINFO'] = $this->createDocumentFragment();
+                    // Although not strictly necessary, sort entries to simplify
+                    // comparision of results.
                     $info = array();
                     foreach ($computer->getUserDefinedInfo() as $property => $value) {
                         $info[$property] = $value;
@@ -158,23 +105,30 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
                     }
                     break;
                 default:
-                    if (empty($data)) {
-                        continue; // Skip obsolete/unused elements
-                    }
-                    // $data is the type of the child object that handles the conversion
+                    // Fetch data from child objects
+                    $sections[$section] = $this->createDocumentFragment();
                     $statement = $computer->getChildObjects(
-                        $data,
+                        $model,
                         'id', // Sort by 'id' to get more predictable results for comparision
                         'asc'
                     );
-                    $sections[$section] = $this->createDocumentFragment();
-                    while ($object = $statement->fetchObject('Model_' . $data)) {
-                        $sections[$section]->appendChild($object->toDomElement($this));
+                    while ($object = $statement->fetchObject('Model_' . $model)) {
+                        // Create base element
+                        $element = $this->createElement($section);
+                        // Create child elements, 1 per property
+                        foreach ($this->getProperties($section) as $name => $property) {
+                            $value = $object->getProperty($property, true); // Get raw value
+                            if (!empty($value)) { // Don't generate empty elements
+                                $element->appendChild(
+                                    $this->createElementWithContent($name, $value)
+                                );
+                            }
+                        }
+                        $sections[$section]->appendChild($element);
                     }
                     break;
             }
         }
-        ksort($sections);
 
         // Root element
         $request = $this->createElement('REQUEST');
@@ -192,29 +146,6 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
         // Additional elements
         $request->appendChild($this->createElementWithContent('DEVICEID', $computer->getClientId()));
         $request->appendChild($this->createElement('QUERY', 'INVENTORY'));
-    }
-
-    /**
-     * Get HARDWARE or BIOS section
-     * @param string $section Section name ('HARDWARE' or 'BIOS')
-     * @param Model_Computer $computer Data source
-     * @return DOMElement
-     */
-    protected function _getSectionFromComputer($section, $computer)
-    {
-        $element = $this->createElement($section);
-        foreach ($this->_elementMap[$section] as $name => $property) {
-            if (!$property) {
-                continue; // Don't create empty elements
-            }
-            $element->appendChild(
-                $this->createElementWithContent(
-                    $name,
-                    $computer->getProperty($property, true) // Get raw value
-                )
-            );
-        }
-        return $element;
     }
 
     /**
@@ -245,4 +176,61 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
         return $filename . '.xml';
     }
 
+    /**
+     * Retrieve array of element=>model mappings
+     * @return array
+     */
+    public function getModels()
+    {
+        if (empty(self::$_models)) {
+            $this->_parseSchema();
+        }
+        return self::$_models;
+    }
+
+    /**
+     * Retrieve array of element=>property mappings for a given section
+     * @param string $section Inventory section to evaluate
+     * @return array
+     */
+    public function getProperties($section)
+    {
+        if (empty(self::$_properties)) {
+            $this->_parseSchema();
+        }
+        return self::$_properties[$section];
+    }
+
+    /**
+     * Extract element=>model/property mappings from schema
+     *
+     * The mappings are cached globally so that this has to be done only once.
+     */
+    private function _parseSchema()
+    {
+        self::$_models = array();
+        self::$_properties = array();
+
+        $filename = $this->getSchemaFilename();
+        $schema = new DOMDocument;
+        if (!$schema->load($filename)) {
+            throw new RuntimeException('Unable to load/parse ' . $filename);
+        }
+        $xpath = new DOMXPath($schema);
+
+        // Extract all elements having a braintacle:model attribute
+        $models = $xpath->query('//*[@braintacle:model]');
+        foreach ($models as $item) {
+            $section = $item->getAttribute('name');
+            // Store mapping in cache
+            self::$_models[$section] = $item->getAttribute('braintacle:model');
+            // Extract all child elements having a braintacle:property attribute
+            $properties = $xpath->query('.//*[@braintacle:property]', $item);
+            foreach ($properties as $item) {
+                // Store mapping in cache
+                self::$_properties[$section][$item->getAttribute('name')] =
+                    $item->getAttribute('braintacle:property');
+            }
+        }
+    }
 }

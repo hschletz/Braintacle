@@ -44,15 +44,6 @@ class Model_ExtensionSlot extends Model_ChildObject
         'RawPshare' => 'pshare', // obsolete
         'RawPurpose' => 'purpose', // always NULL
     );
-    protected $_xmlElementName = 'SLOTS';
-    protected $_xmlElementMap = array(
-        'DESCRIPTION' => 'Description',
-        'DESIGNATION' => 'Name',
-        'NAME' => 'Type',
-        'PSHARE' => null, // obsolete
-        'PURPOSE' => 'RawPurpose',
-        'STATUS' => 'Status',
-    );
     protected $_tableName = 'slots';
     protected $_preferredOrder = 'Name';
 

@@ -38,11 +38,6 @@ class Model_Registry extends Model_ChildObject
         'Name' => 'name',
         'Value' => 'regvalue',
     );
-    protected $_xmlElementName = 'REGISTRY';
-    protected $_xmlElementMap = array(
-        'NAME' => 'Name',
-        'REGVALUE' => 'Value',
-    );
     protected $_tableName = 'registry';
     protected $_preferredOrder = 'Name';
 }

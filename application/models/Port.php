@@ -41,13 +41,6 @@ class Model_Port extends Model_ChildObject
         'Connector' => 'caption',
         'RawDescription' => 'description' // Useless, identical to Name without the port name
     );
-    protected $_xmlElementName = 'PORTS';
-    protected $_xmlElementMap = array(
-        'CAPTION' => 'Connector',
-        'DESCRIPTION' => 'RawDescription',
-        'NAME' => 'Name',
-        'TYPE' => 'Type',
-    );
     protected $_tableName = 'ports';
     protected $_preferredOrder = 'Name';
 

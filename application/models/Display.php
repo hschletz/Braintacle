@@ -44,14 +44,6 @@ class Model_Display extends Model_ChildObject
         'ProductionDate' => 'description',
         'Type' => 'type',
     );
-    protected $_xmlElementName = 'MONITORS';
-    protected $_xmlElementMap = array(
-        'CAPTION' => 'Description',
-        'DESCRIPTION' => 'ProductionDate',
-        'MANUFACTURER' => 'Manufacturer',
-        'TYPE' => 'Type',
-        'SERIAL' => 'Serial',
-    );
     protected $_tableName = 'monitors';
     protected $_preferredOrder = 'Manufacturer';
 

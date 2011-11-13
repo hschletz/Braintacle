@@ -56,22 +56,6 @@ class Model_StorageDevice extends Model_ChildObject
         'Size' => 'integer',
     );
 
-    protected $_xmlElementName = 'STORAGES';
-    protected $_xmlElementMap = array(
-        'DESCRIPTION' => 'RawDescription',
-        'DISKSIZE' => 'Size',
-        'FIRMWARE' => 'Firmware',
-        'MANUFACTURER' => 'RawManufacturer',
-        'MODEL' => 'RawModel',
-        'NAME' => 'RawName',
-        'SCSI_CHID' => null, // Not available in database
-        'SCSI_COID' => null, // Not available in database
-        'SCSI_LUN' => null, // Not available in database
-        'SCSI_UNID' => null, // Not available in database
-        'SERIALNUMBER' => 'Serial',
-        'TYPE' => 'RawType',
-    );
-
     protected $_tableName = 'storages';
     protected $_preferredOrder = 'RawType';
 

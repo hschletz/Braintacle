@@ -68,22 +68,6 @@ class Model_Software extends Model_ChildObject
         'RawSource' => 'integer',
     );
 
-    protected $_xmlElementName = 'SOFTWARES';
-    protected $_xmlElementMap = array(
-        'BITSWIDTH' => 'Architecture',
-        'COMMENTS' => 'Comment',
-        'FILENAME' => 'RawFilename',
-        'FILESIZE' => 'Size',
-        'FOLDER' => 'InstallLocation',
-        'FROM' => null, // Not available in database
-        'GUID' => 'Guid',
-        'INSTALLDATE' => 'InstallationDate',
-        'LANGUAGE' => 'Language',
-        'NAME' => 'Name',
-        'PUBLISHER' => 'Publisher',
-        'SOURCE' => 'RawSource',
-        'VERSION' => 'Version',
-    );
     protected $_tableName = 'softwares';
     protected $_preferredOrder = 'Name';
 

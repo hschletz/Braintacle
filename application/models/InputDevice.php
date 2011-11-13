@@ -45,15 +45,6 @@ class Model_InputDevice extends Model_ChildObject
         'Interface' => 'interface',
         'RawPointType' => 'pointtype' // No useful information, always 'N/A' or NULL
     );
-    protected $_xmlElementName = 'INPUTS';
-    protected $_xmlElementMap = array(
-        'CAPTION' => 'Description',
-        'DESCRIPTION' => 'Comment',
-        'INTERFACE' => 'Interface',
-        'MANUFACTURER' => 'Manufacturer',
-        'POINTTYPE' => 'RawPointType',
-        'TYPE' => 'Type',
-    );
     protected $_tableName = 'inputs';
     protected $_preferredOrder = 'Type';
 

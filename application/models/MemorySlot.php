@@ -55,18 +55,6 @@ class Model_MemorySlot extends Model_ChildObject
         'SlotNumber' => 'integer',
     );
 
-    protected $_xmlElementName = 'MEMORIES';
-    protected $_xmlElementMap = array(
-        'CAPACITY' => 'Size',
-        'CAPTION' => 'Caption',
-        'DESCRIPTION' => 'Description',
-        'NUMSLOTS' => 'SlotNumber',
-        'PURPOSE' => 'Purpose',
-        'SERIALNUMBER' => 'Serial',
-        'SPEED' => 'Clock',
-        'TYPE' => 'Type',
-    );
-
     protected $_tableName = 'memories';
     protected $_preferredOrder = 'SlotNumber';
 

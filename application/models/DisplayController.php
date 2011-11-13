@@ -42,13 +42,6 @@ class Model_DisplayController extends Model_ChildObject
         'Memory' => 'memory',
         'CurrentResolution' => 'resolution',
     );
-    protected $_xmlElementName = 'VIDEOS';
-    protected $_xmlElementMap = array(
-        'CHIPSET' => 'Chipset',
-        'MEMORY' => 'Memory',
-        'NAME' => 'Name',
-        'RESOLUTION' => 'CurrentResolution',
-    );
     protected $_tableName = 'videos';
     protected $_preferredOrder = 'Name';
 

@@ -63,20 +63,6 @@ class Model_Volume extends Model_ChildObject
         'UsedSpace' => 'integer',
     );
 
-    protected $_xmlElementName = 'DRIVES';
-    protected $_xmlElementMap = array(
-        'CREATEDATE' => 'CreationDate',
-        'FILESYSTEM' => 'Filesystem',
-        'FREE' => 'FreeSpace',
-        'LABEL' => null, // Not available in database
-        'LETTER' => 'Letter',
-        'NUMFILES' => 'RawNumFiles',
-        'SERIAL' => null, // Not available in database
-        'TOTAL' => 'Size',
-        'TYPE' => 'Type',
-        'VOLUMN' => 'Device',
-    );
-
     protected $_tableName = 'drives';
     protected $_preferredOrder = 'Letter';
 

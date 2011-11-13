@@ -52,16 +52,6 @@ class Model_VirtualMachine extends Model_ChildObject
         'NumCpus' => 'integer',
         'GuestMemory' => 'integer',
     );
-    protected $_xmlElementName = 'VIRTUALMACHINES';
-    protected $_xmlElementMap = array(
-        'NAME' => 'Name',
-        'STATUS' => 'Status',
-        'SUBSYSTEM' => 'Product',
-        'VMTYPE' => 'Type',
-        'UUID' => 'Uuid',
-        'VCPU' => 'NumCpus',
-        'MEMORY' => 'GuestMemory',
-    );
     protected $_tableName = 'virtualmachines';
     protected $_preferredOrder = 'Name';
 }

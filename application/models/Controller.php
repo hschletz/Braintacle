@@ -45,18 +45,6 @@ class Model_Controller extends Model_ChildObject
         'DriverVersion' => 'version',
         'RawCaption' => 'caption' // Duplicate of Name, only used for export
     );
-    protected $_xmlElementName = 'CONTROLLERS';
-    protected $_xmlElementMap = array(
-        'CAPTION' => 'RawCaption',
-        'DESCRIPTION' => 'Comment',
-        'DRIVER' => null, // Not available in database
-        'MANUFACTURER' => 'Manufacturer',
-        'NAME' => 'Name',
-        'PCIID' => null,  // Not available in database
-        'PCISLOT' => null,  // Not available in database
-        'TYPE' => 'Type',
-        'VERSION' => 'DriverVersion',
-    );
     protected $_tableName = 'controllers';
     protected $_preferredOrder = 'Type';
 

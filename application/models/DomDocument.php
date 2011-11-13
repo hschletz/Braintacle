@@ -48,6 +48,20 @@ abstract class Model_DomDocument extends DOMDocument
     }
 
     /**
+     * Retrieve full path to the RELAX NG schema file defining this document type
+     * @return string
+     */
+    public function getSchemaFilename()
+    {
+        $schema = get_class($this); // Will yield the name of the subclass
+        $schema = substr(
+            $schema,
+            strrpos($schema, '_') + 1
+        );
+        return realpath(APPLICATION_PATH . "/../xml/$schema.rng");
+    }
+
+    /**
      * Validate document, return status
      *
      * The document gets validated against the matching RELAX NG schema file in
@@ -56,13 +70,7 @@ abstract class Model_DomDocument extends DOMDocument
      */
     public function isValid()
     {
-        // Determine schema filename from subclass name
-        $schema = get_class($this);
-        $schema = substr(
-            $schema,
-            strrpos($schema, '_') + 1
-        );
-        return $this->relaxNGValidate(APPLICATION_PATH . "/../xml/$schema.rng");
+        return $this->relaxNGValidate($this->getSchemaFilename());
     }
 
     /**
@@ -82,7 +90,7 @@ abstract class Model_DomDocument extends DOMDocument
     /**
      * Create element with text content
      *
-     * This is similat to the 2-argument-variant of createElement(), but the
+     * This is similar to the 2-argument-variant of createElement(), but the
      * text gets properly escaped.
      * @param string $name Element name
      * @param mixed $content Element content
