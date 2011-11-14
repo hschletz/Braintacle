@@ -61,7 +61,7 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
                     $element = $this->createElement($section);
                     foreach ($this->getProperties($section) as $name => $property) {
                         $property = $computer->getProperty($property, true); // Get raw value
-                        if ($property) {// Don't generate empty elements
+                        if (strlen($property)) {// Don't generate empty elements
                             $element->appendChild(
                                 $this->createElementWithContent($name, $property)
                             );
@@ -79,7 +79,7 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
                     }
                     ksort($info);
                     foreach ($info as $property => $value) {
-                        if (!empty($value)) { // Don't generate empty elements
+                        if (strlen($value)) { // Don't generate empty elements
                             $element = $this->createElement('ACCOUNTINFO');
                             $element->appendChild(
                                 $this->createElementWithContent('KEYNAME', $property)
@@ -118,7 +118,7 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
                         // Create child elements, 1 per property
                         foreach ($this->getProperties($section) as $name => $property) {
                             $value = $object->getProperty($property, true); // Get raw value
-                            if (!empty($value)) { // Don't generate empty elements
+                            if (strlen($value)) { // Don't generate empty elements
                                 $element->appendChild(
                                     $this->createElementWithContent($name, $value)
                                 );
