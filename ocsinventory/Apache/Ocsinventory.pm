@@ -222,7 +222,7 @@ sub handler{
         $i = 0;
         while ($query->{'CONTENT'}->{'SOFTWARES'}[$i]) {
             # Valid date strings must be YYYY/MM/DD
-            if ($query->{'CONTENT'}->{'SOFTWARES'}[$i]->{'INSTALLDATE'} =~ /^(\d\d\d\d)\/(\d\d)}\/(\d\d)}$/) {
+            if ($query->{'CONTENT'}->{'SOFTWARES'}[$i]->{'INSTALLDATE'} =~ /^(\d\d\d\d)\/(\d\d)\/(\d\d)$/) {
                 # Since input can be a random string, additionally check if it realy constitutes a valid date.
                 if (check_date($1, $2, $3)) {
                     # Convert to ISO format for maximum portability.
