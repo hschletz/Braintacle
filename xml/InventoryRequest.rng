@@ -314,7 +314,7 @@ Braintacle to map element names to application specific data structures:
                 <ref name="PROCESSORT" braintacle:property="CpuType" />
                 <ref name="SWAP" braintacle:property="SwapMemory" />
                 <optional>
-                    <ref name="TYPE" braintacle:property="RawType" />
+                    <ref name="TYPE" /><!-- Useless, always 0 or NULL. Omitted for possible confusion with bios.type. -->
                 </optional>
                 <optional>
                     <ref name="USERDOMAIN" braintacle:property="UserDomain" />

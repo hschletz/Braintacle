@@ -110,7 +110,6 @@ class Model_Computer extends Model_ComputerOrGroup
         'WindowsProductId' => 'winprodid',
         'InventoryDiff' => 'checksum',
         'Uuid' => 'uuid',
-        'RawType' => 'type', // No useful information (always o or NULL)
         // Values from 'bios' table
         'Manufacturer' => 'smanufacturer',
         'Model' => 'smodel',

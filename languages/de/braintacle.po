@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-12 13:56+0100\n"
+"POT-Creation-Date: 2011-11-14 12:06+0100\n"
 "PO-Revision-Date: 2011-11-11 19:10+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -635,33 +635,33 @@ msgstr "Interfaces aus Netzwerkliste löschen"
 msgid "Logout"
 msgstr "Abmelden"
 
-#: models/Computer.php:782
+#: models/Computer.php:781
 #, php-format
 msgid "%1$d computers with an interface in network '%2$s'"
 msgstr "%1$d Computer mit Interface in Netzwerk %2$s"
 
-#: models/Computer.php:799
+#: models/Computer.php:798
 #, php-format
 msgid "%1$d computers waiting for notification of package '%2$s'"
 msgstr "%1$d Computer, die auf Installation von Paket '%2$s' warten"
 
-#: models/Computer.php:804
+#: models/Computer.php:803
 #, php-format
 msgid "%1$d computers with package '%2$s' successfully deployed"
 msgstr "%1$d Computer mit erfolgreich installiertem Paket '%2$s'"
 
-#: models/Computer.php:809
+#: models/Computer.php:808
 #, php-format
 msgid "%1$d computers with deployment of package '%2$s' in progress"
 msgstr "%1$d Computer mit laufender Installation von Paket '%2$s'"
 
-#: models/Computer.php:814
+#: models/Computer.php:813
 #, php-format
 msgid "%1$d computers where deployment of package '%2$s' failed"
 msgstr ""
 "%1$d Computer, bei denen die Installation von Paket '%2$s' fehlgeschlagen ist"
 
-#: models/Computer.php:819
+#: models/Computer.php:818
 #, php-format
 msgid "%1$d computers where software '%2$s' is installed"
 msgstr "%1$d Computer, auf denen die Software '%2$s' installiert ist"
@@ -759,11 +759,11 @@ msgid ""
 msgstr ""
 "Verbindung zu <a href=\"%1$s\">%1$s</a> fehlgeschlagen mit Statuscode %2$d"
 
-#: models/StorageDevice.php:107
+#: models/StorageDevice.php:91
 msgid "Hard disk"
 msgstr "Festplatte"
 
-#: models/StorageDevice.php:110
+#: models/StorageDevice.php:94
 msgid "Removable media"
 msgstr "Wechselmedium"
 

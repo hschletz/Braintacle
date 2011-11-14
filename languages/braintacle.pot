@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-12 13:56+0100\n"
+"POT-Creation-Date: 2011-11-14 12:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -634,32 +634,32 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: models/Computer.php:782
+#: models/Computer.php:781
 #, php-format
 msgid "%1$d computers with an interface in network '%2$s'"
 msgstr ""
 
-#: models/Computer.php:799
+#: models/Computer.php:798
 #, php-format
 msgid "%1$d computers waiting for notification of package '%2$s'"
 msgstr ""
 
-#: models/Computer.php:804
+#: models/Computer.php:803
 #, php-format
 msgid "%1$d computers with package '%2$s' successfully deployed"
 msgstr ""
 
-#: models/Computer.php:809
+#: models/Computer.php:808
 #, php-format
 msgid "%1$d computers with deployment of package '%2$s' in progress"
 msgstr ""
 
-#: models/Computer.php:814
+#: models/Computer.php:813
 #, php-format
 msgid "%1$d computers where deployment of package '%2$s' failed"
 msgstr ""
 
-#: models/Computer.php:819
+#: models/Computer.php:818
 #, php-format
 msgid "%1$d computers where software '%2$s' is installed"
 msgstr ""
@@ -755,11 +755,11 @@ msgid ""
 "Connection to <a href=\"%1$s\">%1$s</a> failed with HTTP status code %2$d"
 msgstr ""
 
-#: models/StorageDevice.php:107
+#: models/StorageDevice.php:91
 msgid "Hard disk"
 msgstr ""
 
-#: models/StorageDevice.php:110
+#: models/StorageDevice.php:94
 msgid "Removable media"
 msgstr ""
 
