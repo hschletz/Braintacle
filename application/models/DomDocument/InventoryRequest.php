@@ -119,6 +119,12 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
                         foreach ($this->getProperties($section) as $name => $property) {
                             $value = $object->getProperty($property, true); // Get raw value
                             if (strlen($value)) { // Don't generate empty elements
+                                if ($name == 'CREATEDATE') {
+                                    // Re-fetch as Zend_Date
+                                    $value = $object->getProperty($property, false);
+                                    // Convert to agent-specific format.
+                                    $value = $value->get('yyyy/M/d HH:mm:ss');
+                                }
                                 $element->appendChild(
                                     $this->createElementWithContent($name, $value)
                                 );
