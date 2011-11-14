@@ -52,7 +52,6 @@ class Model_Volume extends Model_ChildObject
         'Size' => 'total',
         'FreeSpace' => 'free',
         'CreationDate' => 'createdate',
-        'RawNumFiles' => 'numfiles' // No useful information, always 0
         // UsedSpace is calculated by getProperty()
     );
 

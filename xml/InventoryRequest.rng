@@ -250,7 +250,7 @@ Braintacle to map element names to application specific data structures:
                     <ref name="LETTER" braintacle:property="Letter" />
                 </optional>
                 <optional>
-                    <ref name="NUMFILES" braintacle:property="RawNumFiles" />
+                    <ref name="NUMFILES" /><!-- obsolete -->
                 </optional>
                 <optional>
                     <ref name="SERIAL" /><!-- not available in database -->
