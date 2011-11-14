@@ -47,6 +47,15 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
     private  static $_properties;
 
     /**
+     * Global cache for model=>property=>format specification
+     *
+     * Do not use directly, always call {@link getFormat()} to retrieve format for
+     * a specific property
+     * @var array
+     */
+    private static $_formats;
+
+    /**
      * Load document tree from a computer
      * @param Model_Computer $computer Computer whose data will be exported
      */
@@ -119,11 +128,12 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
                         foreach ($this->getProperties($section) as $name => $property) {
                             $value = $object->getProperty($property, true); // Get raw value
                             if (strlen($value)) { // Don't generate empty elements
-                                if ($name == 'CREATEDATE') {
-                                    // Re-fetch as Zend_Date
+                                $type = $object->getPropertyType($property);
+                                if ($type == 'timestamp' or $type == 'date') {
+                                    // Re-fetch value as Zend_Date
                                     $value = $object->getProperty($property, false);
-                                    // Convert to agent-specific format.
-                                    $value = $value->get('yyyy/M/d HH:mm:ss');
+                                    // Convert to specific format
+                                    $value = $value->get($this->getFormat($model, $property));
                                 }
                                 $element->appendChild(
                                     $this->createElementWithContent($name, $value)
@@ -208,6 +218,20 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
     }
 
     /**
+     * Retrieve date/timestamp format for a given property
+     * @param string $model Model class (without 'Model_' prefix)
+     * @param string $property Property whose format to retrieve
+     * @return string Format string
+     */
+    public function getFormat($model, $property)
+    {
+        if (empty(self::$_formats)) {
+            $this->_parseSchema();
+        }
+        return self::$_formats[$model][$property];
+    }
+
+    /**
      * Extract element=>model/property mappings from schema
      *
      * The mappings are cached globally so that this has to be done only once.
@@ -228,14 +252,20 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
         $models = $xpath->query('//*[@braintacle:model]');
         foreach ($models as $item) {
             $section = $item->getAttribute('name');
+            $model = $item->getAttribute('braintacle:model');
             // Store mapping in cache
-            self::$_models[$section] = $item->getAttribute('braintacle:model');
+            self::$_models[$section] = $model;
             // Extract all child elements having a braintacle:property attribute
             $properties = $xpath->query('.//*[@braintacle:property]', $item);
             foreach ($properties as $item) {
+                $property = $item->getAttribute('braintacle:property');
                 // Store mapping in cache
-                self::$_properties[$section][$item->getAttribute('name')] =
-                    $item->getAttribute('braintacle:property');
+                self::$_properties[$section][$item->getAttribute('name')] = $property;
+                // Store date/timestamp format in cache if specified
+                $format = $item->getAttribute('braintacle:format');
+                if ($format) {
+                    self::$_formats[$model][$property] = $format;
+                }
             }
         }
     }
