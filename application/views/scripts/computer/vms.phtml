@@ -36,6 +36,21 @@ $headers = array(
     'GuestMemory' => $this->translate('Memory'),
 );
 
+$renderCallbacks = array(
+    'GuestMemory' => 'renderGuestMemory',
+);
+
+function renderGuestMemory($view, $virtualMachine)
+{
+    $mem = $virtualMachine->getGuestMemory();
+    if ($mem) {
+        $mem .= ' MB';
+    } else {
+        $mem = $view->translate('unknown');
+    }
+    return $mem;
+}
+
 $registry = $this->getHelper('table')->table(
     $computer->getChildObjects('VirtualMachine', $this->order, $this->direction),
     null,
@@ -43,7 +58,7 @@ $registry = $this->getHelper('table')->table(
     array(),
     'Model_VirtualMachine',
     null,
-    array(),
+    $renderCallbacks,
     $numKeys
 );
 

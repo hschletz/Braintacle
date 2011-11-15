@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-14 12:06+0100\n"
+"POT-Creation-Date: 2011-11-15 19:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -1228,7 +1228,11 @@ msgstr ""
 msgid "Product"
 msgstr ""
 
-#: views/scripts/computer/vms.phtml:53
+#: views/scripts/computer/vms.phtml:49 views/scripts/network/index.phtml:31
+msgid "unknown"
+msgstr ""
+
+#: views/scripts/computer/vms.phtml:68
 msgid "Virtual machines hosted on this computer"
 msgstr ""
 
@@ -1342,10 +1346,6 @@ msgstr ""
 
 #: views/scripts/network/index.phtml:30
 msgid "identified"
-msgstr ""
-
-#: views/scripts/network/index.phtml:31
-msgid "unknown"
 msgstr ""
 
 #: views/scripts/network/showidentified.phtml:29
