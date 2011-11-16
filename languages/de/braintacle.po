@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-15 19:31+0100\n"
+"POT-Creation-Date: 2011-11-16 17:12+0100\n"
 "PO-Revision-Date: 2011-11-11 19:10+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -640,28 +640,28 @@ msgstr "Abmelden"
 msgid "%1$d computers with an interface in network '%2$s'"
 msgstr "%1$d Computer mit Interface in Netzwerk %2$s"
 
-#: models/Computer.php:798
+#: models/Computer.php:796
 #, php-format
 msgid "%1$d computers waiting for notification of package '%2$s'"
 msgstr "%1$d Computer, die auf Installation von Paket '%2$s' warten"
 
-#: models/Computer.php:803
+#: models/Computer.php:801
 #, php-format
 msgid "%1$d computers with package '%2$s' successfully deployed"
 msgstr "%1$d Computer mit erfolgreich installiertem Paket '%2$s'"
 
-#: models/Computer.php:808
+#: models/Computer.php:806
 #, php-format
 msgid "%1$d computers with deployment of package '%2$s' in progress"
 msgstr "%1$d Computer mit laufender Installation von Paket '%2$s'"
 
-#: models/Computer.php:813
+#: models/Computer.php:811
 #, php-format
 msgid "%1$d computers where deployment of package '%2$s' failed"
 msgstr ""
 "%1$d Computer, bei denen die Installation von Paket '%2$s' fehlgeschlagen ist"
 
-#: models/Computer.php:818
+#: models/Computer.php:816
 #, php-format
 msgid "%1$d computers where software '%2$s' is installed"
 msgstr "%1$d Computer, auf denen die Software '%2$s' installiert ist"

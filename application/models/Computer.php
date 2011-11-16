@@ -780,9 +780,7 @@ class Model_Computer extends Model_ComputerOrGroup
                 $description = $translate->_(
                     '%1$d computers with an interface in network \'%2$s\''
                 );
-                $network = $search[0] . '/' .
-                    (32 - log((ip2long($search[1]) ^ 0xffffffff) + 1, 2));
-
+                $network = $search[0] . Model_Subnet::getCidrSuffix($search[1]);
                 return htmlspecialchars(sprintf($description, $count, $network));
             }
             // No other multi-filters defined.

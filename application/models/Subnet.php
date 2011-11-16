@@ -132,8 +132,7 @@ class Model_Subnet extends Model_Abstract
     {
         if ($property == 'AddressWithMask') {
             // add short notation, i.e. 255.255.255.0 becomes /24
-            return $this->getAddress() . '/' .
-                   (32 - log((ip2long($this->getMask()) ^ 0xffffffff) + 1, 2));
+            return $this->getAddress() . self::getCidrSuffix($this->getMask());
         } else {
             return parent::getProperty($property, $rawValue);
         }
@@ -165,6 +164,20 @@ class Model_Subnet extends Model_Abstract
         } else {
             return parent::getOrder($order, $direction, $propertyMap);
         }
+    }
+
+    /**
+     * Static helper method to get CIDR suffix from netmask
+     * @param string $mask IPv4 mask in dotted notation, example: 255.255.255.0
+     * @return string CIDR suffix, example: /24
+     */
+    public static function getCidrSuffix($mask)
+    {
+        $mask = ip2long($mask);
+        if ($mask != 0) { // Next line would not work for /0 (0.0.0.0)
+            $mask = 32 - log(($mask ^ 0xffffffff) + 1, 2);
+        }
+        return '/' . $mask;
     }
 
 }
