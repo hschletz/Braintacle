@@ -101,7 +101,6 @@ abstract class Model_DomDocument extends DOMDocument
         if (is_scalar($content) or is_null($content)) {
             $content = $this->createTextNode($content);
         } else {
-            var_dump($content);
             throw new InvalidArgumentException('Unsupported content type');
         }
         $element = $this->createElement($name);
