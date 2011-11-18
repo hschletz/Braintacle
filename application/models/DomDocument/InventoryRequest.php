@@ -84,6 +84,10 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
                     // comparision of results.
                     $info = array();
                     foreach ($computer->getUserDefinedInfo() as $property => $value) {
+                        // Convert date values
+                        if ($value instanceof Zend_Date) {
+                            $value = $value->get('yyyy-MM-dd');
+                        }
                         $info[$property] = $value;
                     }
                     ksort($info);
