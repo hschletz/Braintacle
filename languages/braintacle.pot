@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-16 17:12+0100\n"
+"POT-Creation-Date: 2011-11-18 11:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -34,1361 +34,1361 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: Bootstrap.php:36
+#: Bootstrap.php
 msgid "Inventory"
 msgstr ""
 
-#: Bootstrap.php:42
+#: Bootstrap.php
 msgid "Computers"
 msgstr ""
 
-#: Bootstrap.php:48 views/helpers/InventoryHeader.php:111
+#: Bootstrap.php; views/helpers/InventoryHeader.php
 msgid "Software"
 msgstr ""
 
-#: Bootstrap.php:54 views/helpers/InventoryHeader.php:67
+#: Bootstrap.php; views/helpers/InventoryHeader.php
 msgid "Network"
 msgstr ""
 
-#: Bootstrap.php:60
+#: Bootstrap.php
 msgid "Duplicates"
 msgstr ""
 
-#: Bootstrap.php:66 forms/Import.php:52
+#: Bootstrap.php; forms/Import.php
 msgid "Import"
 msgstr ""
 
-#: Bootstrap.php:73 forms/Package/Edit.php:66
-#: views/helpers/InventoryHeader.php:155
+#: Bootstrap.php; forms/Package/Edit.php
+#: views/helpers/InventoryHeader.php
 msgid "Groups"
 msgstr ""
 
-#: Bootstrap.php:80 views/helpers/GroupHeader.php:65
-#: views/helpers/InventoryHeader.php:148
+#: Bootstrap.php; views/helpers/GroupHeader.php
+#: views/helpers/InventoryHeader.php
 msgid "Packages"
 msgstr ""
 
-#: Bootstrap.php:86
+#: Bootstrap.php
 msgid "Overview"
 msgstr ""
 
-#: Bootstrap.php:92 forms/Package.php:297
+#: Bootstrap.php; forms/Package.php
 msgid "Build"
 msgstr ""
 
-#: Bootstrap.php:99 forms/Search.php:228
+#: Bootstrap.php; forms/Search.php
 msgid "Search"
 msgstr ""
 
-#: controllers/ComputerController.php:210
+#: controllers/ComputerController.php
 #, php-format
 msgid "Computer '%s' was successfully deleted."
 msgstr ""
 
-#: controllers/ComputerController.php:215
+#: controllers/ComputerController.php
 #, php-format
 msgid "Computer '%s' could not be deleted."
 msgstr ""
 
-#: controllers/GroupController.php:132
+#: controllers/GroupController.php
 #, php-format
 msgid "Group '%s' was successfully deleted."
 msgstr ""
 
-#: controllers/GroupController.php:137
+#: controllers/GroupController.php
 #, php-format
 msgid "Group '%s' could not be deleted."
 msgstr ""
 
-#: controllers/LoginController.php:99
+#: controllers/LoginController.php
 msgid "Invalid username or password"
 msgstr ""
 
-#: controllers/PackageController.php:82
+#: controllers/PackageController.php
 #, php-format
 msgid "Could not retrieve data from package '%s'."
 msgstr ""
 
-#: controllers/PackageController.php:114
+#: controllers/PackageController.php
 #, php-format
 msgid "Package '%s' was successfully changed to '%s'."
 msgstr ""
 
-#: controllers/PackageController.php:122
+#: controllers/PackageController.php
 #, php-format
 msgid "Error changing Package '%s' to '%s':"
 msgstr ""
 
-#: controllers/PackageController.php:147
+#: controllers/PackageController.php
 #, php-format
 msgid "Package '%s' was successfully created."
 msgstr ""
 
-#: controllers/PackageController.php:154
+#: controllers/PackageController.php
 #, php-format
 msgid "Error creating Package '%s':"
 msgstr ""
 
-#: controllers/PackageController.php:182
+#: controllers/PackageController.php
 #, php-format
 msgid "Package '%s' was succesfully deleted."
 msgstr ""
 
-#: controllers/PackageController.php:187
+#: controllers/PackageController.php
 #, php-format
 msgid "Package '%s' could not be deleted."
 msgstr ""
 
-#: forms/AffectPackages.php:84
+#: forms/AffectPackages.php
 msgid "Install"
 msgstr ""
 
-#: forms/Import.php:45
+#: forms/Import.php
 msgid "File (*.ocs, *.xml)"
 msgstr ""
 
-#: forms/Login.php:42
+#: forms/Login.php
 msgid "Username"
 msgstr ""
 
-#: forms/Login.php:49
+#: forms/Login.php
 msgid "Password"
 msgstr ""
 
-#: forms/Login.php:54
+#: forms/Login.php
 msgid "Login"
 msgstr ""
 
-#: forms/ManageGroupMemberships.php:57 views/helpers/MembershipType.php:41
+#: forms/ManageGroupMemberships.php; views/helpers/MembershipType.php
 msgid "automatic"
 msgstr ""
 
-#: forms/ManageGroupMemberships.php:58
+#: forms/ManageGroupMemberships.php
 msgid "always"
 msgstr ""
 
-#: forms/ManageGroupMemberships.php:59
+#: forms/ManageGroupMemberships.php
 msgid "never"
 msgstr ""
 
-#: forms/ManageGroupMemberships.php:124 forms/NetworkDevice.php:62
+#: forms/ManageGroupMemberships.php; forms/NetworkDevice.php
 msgid "OK"
 msgstr ""
 
-#: forms/NetworkDevice.php:49 views/scripts/computer/display.phtml:85
-#: views/scripts/computer/general.phtml:121
-#: views/scripts/computer/index.phtml:72 views/scripts/computer/misc.phtml:64
-#: views/scripts/computer/misc.phtml:112
-#: views/scripts/computer/network.phtml:105
-#: views/scripts/computer/storage.phtml:33
-#: views/scripts/computer/storage.phtml:89
-#: views/scripts/computer/system.phtml:35
-#: views/scripts/computer/system.phtml:91
-#: views/scripts/computer/system.phtml:138 views/scripts/computer/vms.phtml:34
-#: views/scripts/network/showidentified.phtml:30
+#: forms/NetworkDevice.php; views/scripts/computer/display.phtml
+#: views/scripts/computer/general.phtml
+#: views/scripts/computer/index.phtml; views/scripts/computer/misc.phtml
+#: views/scripts/computer/misc.phtml
+#: views/scripts/computer/network.phtml
+#: views/scripts/computer/storage.phtml
+#: views/scripts/computer/storage.phtml
+#: views/scripts/computer/system.phtml
+#: views/scripts/computer/system.phtml
+#: views/scripts/computer/system.phtml; views/scripts/computer/vms.phtml
+#: views/scripts/network/showidentified.phtml
 msgid "Type"
 msgstr ""
 
-#: forms/NetworkDevice.php:58 views/scripts/computer/display.phtml:82
-#: views/scripts/computer/misc.phtml:35 views/scripts/computer/misc.phtml:66
-#: views/scripts/computer/network.phtml:58
-#: views/scripts/computer/printers.phtml:33
-#: views/scripts/computer/system.phtml:39
-#: views/scripts/computer/system.phtml:139
-#: views/scripts/group/general.phtml:50 views/scripts/group/index.phtml:46
-#: views/scripts/network/showidentified.phtml:31
+#: forms/NetworkDevice.php; views/scripts/computer/display.phtml
+#: views/scripts/computer/misc.phtml; views/scripts/computer/misc.phtml
+#: views/scripts/computer/network.phtml
+#: views/scripts/computer/printers.phtml
+#: views/scripts/computer/system.phtml
+#: views/scripts/computer/system.phtml
+#: views/scripts/group/general.phtml; views/scripts/group/index.phtml
+#: views/scripts/network/showidentified.phtml
 msgid "Description"
 msgstr ""
 
-#: forms/Package.php:80 views/scripts/computer/display.phtml:33
-#: views/scripts/computer/index.phtml:47 views/scripts/computer/misc.phtml:34
-#: views/scripts/computer/misc.phtml:113
-#: views/scripts/computer/network.phtml:106
-#: views/scripts/computer/packages.phtml:35
-#: views/scripts/computer/printers.phtml:30
-#: views/scripts/computer/registry.phtml:31
-#: views/scripts/computer/software.phtml:30
-#: views/scripts/computer/storage.phtml:34
-#: views/scripts/computer/system.phtml:93
-#: views/scripts/computer/system.phtml:137 views/scripts/computer/vms.phtml:31
-#: views/scripts/duplicates/index.phtml:26
-#: views/scripts/duplicates/show.phtml:28 views/scripts/group/general.phtml:32
-#: views/scripts/group/index.phtml:44 views/scripts/group/members.phtml:30
-#: views/scripts/group/packages.phtml:35 views/scripts/network/index.phtml:27
-#: views/scripts/package/index.phtml:61 views/scripts/software/index.phtml:27
+#: forms/Package.php; views/scripts/computer/display.phtml
+#: views/scripts/computer/index.phtml; views/scripts/computer/misc.phtml
+#: views/scripts/computer/misc.phtml
+#: views/scripts/computer/network.phtml
+#: views/scripts/computer/packages.phtml
+#: views/scripts/computer/printers.phtml
+#: views/scripts/computer/registry.phtml
+#: views/scripts/computer/software.phtml
+#: views/scripts/computer/storage.phtml
+#: views/scripts/computer/system.phtml
+#: views/scripts/computer/system.phtml; views/scripts/computer/vms.phtml
+#: views/scripts/duplicates/index.phtml
+#: views/scripts/duplicates/show.phtml; views/scripts/group/general.phtml
+#: views/scripts/group/index.phtml; views/scripts/group/members.phtml
+#: views/scripts/group/packages.phtml; views/scripts/network/index.phtml
+#: views/scripts/package/index.phtml; views/scripts/software/index.phtml
 msgid "Name"
 msgstr ""
 
-#: forms/Package.php:86 views/scripts/computer/general.phtml:144
-#: views/scripts/computer/misc.phtml:67
+#: forms/Package.php; views/scripts/computer/general.phtml
+#: views/scripts/computer/misc.phtml
 msgid "Comment"
 msgstr ""
 
-#: forms/Package.php:103 views/scripts/package/index.phtml:64
+#: forms/Package.php; views/scripts/package/index.phtml
 msgid "Platform"
 msgstr ""
 
-#: forms/Package.php:113
+#: forms/Package.php
 msgid "Download package, execute command, retrieve result"
 msgstr ""
 
-#: forms/Package.php:116
+#: forms/Package.php
 msgid "Optionally download package, execute command"
 msgstr ""
 
-#: forms/Package.php:119
+#: forms/Package.php
 msgid "Just download package to target path"
 msgstr ""
 
-#: forms/Package.php:124
+#: forms/Package.php
 msgid "Action"
 msgstr ""
 
-#: forms/Package.php:150
+#: forms/Package.php
 #, php-format
 msgid "File (max. %s)"
 msgstr ""
 
-#: forms/Package.php:160
+#: forms/Package.php
 msgid "may block other downloads!"
 msgstr ""
 
-#: forms/Package.php:163
+#: forms/Package.php
 msgid "high"
 msgstr ""
 
-#: forms/Package.php:167
+#: forms/Package.php
 msgid "low"
 msgstr ""
 
-#: forms/Package.php:171
+#: forms/Package.php
 msgid "Priority"
 msgstr ""
 
-#: forms/Package.php:182
+#: forms/Package.php
 msgid "Maximum fragment size (kB), enter 0 for no fragmentation"
 msgstr ""
 
-#: forms/Package.php:202
+#: forms/Package.php
 msgid "hostname/path for info file (HTTPS)"
 msgstr ""
 
-#: forms/Package.php:222
+#: forms/Package.php
 msgid "hostname/path for package download (HTTP)"
 msgstr ""
 
-#: forms/Package.php:239
+#: forms/Package.php
 msgid "Certificate"
 msgstr ""
 
-#: forms/Package.php:244
+#: forms/Package.php
 msgid "Warn user"
 msgstr ""
 
-#: forms/Package.php:253 forms/Package.php:289
+#: forms/Package.php; forms/Package.php
 msgid "Message"
 msgstr ""
 
-#: forms/Package.php:263
+#: forms/Package.php
 msgid "Countdown (seconds)"
 msgstr ""
 
-#: forms/Package.php:268
+#: forms/Package.php
 msgid "Allow abort by user"
 msgstr ""
 
-#: forms/Package.php:274
+#: forms/Package.php
 msgid "Allow delay by user"
 msgstr ""
 
-#: forms/Package.php:280
+#: forms/Package.php
 msgid "User action Required"
 msgstr ""
 
-#: forms/Package.php:312
+#: forms/Package.php
 msgid "Command line"
 msgstr ""
 
-#: forms/Package.php:315
+#: forms/Package.php
 msgid "Target Path"
 msgstr ""
 
-#: forms/Package/Edit.php:46 views/scripts/package/index.phtml:65
+#: forms/Package/Edit.php; views/scripts/package/index.phtml
 msgid "Not notified"
 msgstr ""
 
-#: forms/Package/Edit.php:51 views/scripts/package/index.phtml:66
+#: forms/Package/Edit.php; views/scripts/package/index.phtml
 msgid "Success"
 msgstr ""
 
-#: forms/Package/Edit.php:56 views/scripts/package/index.phtml:67
+#: forms/Package/Edit.php; views/scripts/package/index.phtml
 msgid "Running"
 msgstr ""
 
-#: forms/Package/Edit.php:61 views/scripts/package/index.phtml:68
+#: forms/Package/Edit.php; views/scripts/package/index.phtml
 msgid "Error"
 msgstr ""
 
-#: forms/Package/Edit.php:81
+#: forms/Package/Edit.php
 msgid "Deploy to computers which have existing package assigned"
 msgstr ""
 
-#: forms/Search.php:110
+#: forms/Search.php
 msgid "Computer name"
 msgstr ""
 
-#: forms/Search.php:111
+#: forms/Search.php
 msgid "User name"
 msgstr ""
 
-#: forms/Search.php:112 views/scripts/computer/index.phtml:64
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "User domain"
 msgstr ""
 
-#: forms/Search.php:113 views/scripts/computer/index.phtml:48
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Workgroup"
 msgstr ""
 
-#: forms/Search.php:114
+#: forms/Search.php
 msgid "OS name"
 msgstr ""
 
-#: forms/Search.php:115 views/scripts/computer/index.phtml:61
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "OS version number"
 msgstr ""
 
-#: forms/Search.php:116 views/scripts/computer/index.phtml:62
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "OS version string"
 msgstr ""
 
-#: forms/Search.php:117 views/scripts/computer/index.phtml:63
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "OS comment"
 msgstr ""
 
-#: forms/Search.php:118 views/scripts/computer/windows.phtml:51
+#: forms/Search.php; views/scripts/computer/windows.phtml
 msgid "Product key"
 msgstr ""
 
-#: forms/Search.php:119 views/scripts/computer/index.phtml:98
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Software: Name"
 msgstr ""
 
-#: forms/Search.php:120 views/scripts/computer/index.phtml:99
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Software: Version"
 msgstr ""
 
-#: forms/Search.php:121 views/scripts/computer/index.phtml:100
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Software: Publisher"
 msgstr ""
 
-#: forms/Search.php:122 views/scripts/computer/index.phtml:101
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Software: Comment"
 msgstr ""
 
-#: forms/Search.php:123 views/scripts/computer/index.phtml:102
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Software: Install location"
 msgstr ""
 
-#: forms/Search.php:124 views/scripts/computer/index.phtml:52
-#: views/scripts/group/members.phtml:32
+#: forms/Search.php; views/scripts/computer/index.phtml
+#: views/scripts/group/members.phtml
 msgid "Last inventory"
 msgstr ""
 
-#: forms/Search.php:125 views/scripts/computer/general.phtml:60
-#: views/scripts/computer/index.phtml:53
-#: views/scripts/duplicates/show.phtml:32
+#: forms/Search.php; views/scripts/computer/general.phtml
+#: views/scripts/computer/index.phtml
+#: views/scripts/duplicates/show.phtml
 msgid "Last contact"
 msgstr ""
 
-#: forms/Search.php:126 views/scripts/computer/general.phtml:153
-#: views/scripts/computer/index.phtml:51
+#: forms/Search.php; views/scripts/computer/general.phtml
+#: views/scripts/computer/index.phtml
 msgid "CPU type"
 msgstr ""
 
-#: forms/Search.php:127
+#: forms/Search.php
 msgid "CPU clock (MHz)"
 msgstr ""
 
-#: forms/Search.php:128 views/scripts/computer/index.phtml:50
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "CPU cores"
 msgstr ""
 
-#: forms/Search.php:129
+#: forms/Search.php
 msgid "Physical memory"
 msgstr ""
 
-#: forms/Search.php:130 views/scripts/computer/general.phtml:203
+#: forms/Search.php; views/scripts/computer/general.phtml
 msgid "Swap memory"
 msgstr ""
 
-#: forms/Search.php:131 views/scripts/computer/bios.phtml:33
-#: views/scripts/computer/display.phtml:81
-#: views/scripts/computer/index.phtml:69 views/scripts/computer/misc.phtml:33
-#: views/scripts/computer/misc.phtml:65 views/scripts/computer/system.phtml:92
+#: forms/Search.php; views/scripts/computer/bios.phtml
+#: views/scripts/computer/display.phtml
+#: views/scripts/computer/index.phtml; views/scripts/computer/misc.phtml
+#: views/scripts/computer/misc.phtml; views/scripts/computer/system.phtml
 msgid "Manufacturer"
 msgstr ""
 
-#: forms/Search.php:132 views/scripts/computer/general.phtml:78
-#: views/scripts/computer/index.phtml:70
+#: forms/Search.php; views/scripts/computer/general.phtml
+#: views/scripts/computer/index.phtml
 msgid "Model"
 msgstr ""
 
-#: forms/Search.php:133 views/scripts/computer/display.phtml:83
-#: views/scripts/computer/general.phtml:87
-#: views/scripts/computer/index.phtml:71
-#: views/scripts/computer/storage.phtml:40
-#: views/scripts/computer/system.phtml:37
-#: views/scripts/duplicates/index.phtml:28
-#: views/scripts/duplicates/show.phtml:30
+#: forms/Search.php; views/scripts/computer/display.phtml
+#: views/scripts/computer/general.phtml
+#: views/scripts/computer/index.phtml
+#: views/scripts/computer/storage.phtml
+#: views/scripts/computer/system.phtml
+#: views/scripts/duplicates/index.phtml
+#: views/scripts/duplicates/show.phtml
 msgid "Serial number"
 msgstr ""
 
-#: forms/Search.php:134 views/scripts/computer/general.phtml:104
-#: views/scripts/computer/index.phtml:77
-#: views/scripts/duplicates/index.phtml:29
-#: views/scripts/duplicates/show.phtml:31
+#: forms/Search.php; views/scripts/computer/general.phtml
+#: views/scripts/computer/index.phtml
+#: views/scripts/duplicates/index.phtml
+#: views/scripts/duplicates/show.phtml
 msgid "Asset tag"
 msgstr ""
 
-#: forms/Search.php:135 views/scripts/computer/index.phtml:75
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "BIOS version"
 msgstr ""
 
-#: forms/Search.php:136 views/scripts/computer/index.phtml:76
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "BIOS date"
 msgstr ""
 
-#: forms/Search.php:137
+#: forms/Search.php
 msgid "Volume size (MB)"
 msgstr ""
 
-#: forms/Search.php:138
+#: forms/Search.php
 msgid "Volume free space (MB)"
 msgstr ""
 
-#: forms/Search.php:139 views/scripts/computer/index.phtml:57
-#: views/scripts/computer/network.phtml:36
+#: forms/Search.php; views/scripts/computer/index.phtml
+#: views/scripts/computer/network.phtml
 msgid "DNS server"
 msgstr ""
 
-#: forms/Search.php:140 views/scripts/computer/index.phtml:58
-#: views/scripts/computer/network.phtml:45
+#: forms/Search.php; views/scripts/computer/index.phtml
+#: views/scripts/computer/network.phtml
 msgid "Default gateway"
 msgstr ""
 
-#: forms/Search.php:141 views/scripts/computer/index.phtml:56
-#: views/scripts/computer/index.phtml:91
-#: views/scripts/computer/network.phtml:61 views/scripts/network/edit.phtml:51
-#: views/scripts/network/showidentified.phtml:28
-#: views/scripts/network/showunknown.phtml:29
+#: forms/Search.php; views/scripts/computer/index.phtml
+#: views/scripts/computer/index.phtml
+#: views/scripts/computer/network.phtml; views/scripts/network/edit.phtml
+#: views/scripts/network/showidentified.phtml
+#: views/scripts/network/showunknown.phtml
 msgid "IP address"
 msgstr ""
 
-#: forms/Search.php:142 views/scripts/computer/index.phtml:90
-#: views/scripts/computer/network.phtml:60
-#: views/scripts/duplicates/show.phtml:29 views/scripts/network/edit.phtml:33
-#: views/scripts/network/showidentified.phtml:27
-#: views/scripts/network/showunknown.phtml:27
+#: forms/Search.php; views/scripts/computer/index.phtml
+#: views/scripts/computer/network.phtml
+#: views/scripts/duplicates/show.phtml; views/scripts/network/edit.phtml
+#: views/scripts/network/showidentified.phtml
+#: views/scripts/network/showunknown.phtml
 msgid "MAC address"
 msgstr ""
 
-#: forms/Search.php:143 views/scripts/computer/index.phtml:92
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Network address"
 msgstr ""
 
-#: forms/Search.php:144
+#: forms/Search.php
 msgid "Network Mask"
 msgstr ""
 
-#: forms/Search.php:145 views/scripts/computer/index.phtml:95
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Printer name"
 msgstr ""
 
-#: forms/Search.php:146 views/scripts/computer/index.phtml:96
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Printer port"
 msgstr ""
 
-#: forms/Search.php:147 views/scripts/computer/index.phtml:97
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Printer driver"
 msgstr ""
 
-#: forms/Search.php:148 views/scripts/computer/index.phtml:59
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "OCS agent"
 msgstr ""
 
-#: forms/Search.php:149 views/scripts/computer/index.phtml:82
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Monitor: manufacturer"
 msgstr ""
 
-#: forms/Search.php:150 views/scripts/computer/index.phtml:83
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Monitor: description"
 msgstr ""
 
-#: forms/Search.php:151 views/scripts/computer/index.phtml:84
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Monitor: serial"
 msgstr ""
 
-#: forms/Search.php:152 views/scripts/computer/index.phtml:85
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Monitor: production date"
 msgstr ""
 
-#: forms/Search.php:153 views/scripts/computer/index.phtml:86
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Display controller"
 msgstr ""
 
-#: forms/Search.php:154 views/scripts/computer/index.phtml:87
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "GPU memory"
 msgstr ""
 
-#: forms/Search.php:155 views/scripts/computer/index.phtml:89
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Modem"
 msgstr ""
 
-#: forms/Search.php:156 views/scripts/computer/index.phtml:80
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Audio device"
 msgstr ""
 
-#: forms/Search.php:157 views/scripts/computer/index.phtml:81
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Controller"
 msgstr ""
 
-#: forms/Search.php:158 views/scripts/computer/index.phtml:94
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Port name"
 msgstr ""
 
-#: forms/Search.php:159 views/scripts/computer/index.phtml:88
+#: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Extension slot"
 msgstr ""
 
-#: forms/Search.php:163
+#: forms/Search.php
 #, php-format
 msgid "User defined: %s"
 msgstr ""
 
-#: forms/Search.php:183 forms/UserDefinedInfo.php:62
-#: views/scripts/computer/index.phtml:109
+#: forms/Search.php; forms/UserDefinedInfo.php
+#: views/scripts/computer/index.phtml
 msgid "Category"
 msgstr ""
 
-#: forms/Search.php:191
+#: forms/Search.php
 msgid "Search for"
 msgstr ""
 
-#: forms/Search.php:210
+#: forms/Search.php
 msgid "Operator"
 msgstr ""
 
-#: forms/Search.php:214 views/scripts/computer/registry.phtml:32
+#: forms/Search.php; views/scripts/computer/registry.phtml
 msgid "Value"
 msgstr ""
 
-#: forms/Search.php:220
+#: forms/Search.php
 msgid "Exact match"
 msgstr ""
 
-#: forms/Search.php:224
+#: forms/Search.php
 msgid "Invert results"
 msgstr ""
 
-#: forms/SoftwareFilter.php:43
+#: forms/SoftwareFilter.php
 msgid "Filter"
 msgstr ""
 
-#: forms/SoftwareFilter.php:47
+#: forms/SoftwareFilter.php
 msgid "selected for display"
 msgstr ""
 
-#: forms/SoftwareFilter.php:48
+#: forms/SoftwareFilter.php
 msgid "ignored for display"
 msgstr ""
 
-#: forms/SoftwareFilter.php:49
+#: forms/SoftwareFilter.php
 msgid "new or not categorized"
 msgstr ""
 
-#: forms/SoftwareFilter.php:50
+#: forms/SoftwareFilter.php
 msgid "all"
 msgstr ""
 
-#: forms/SoftwareFilter.php:57
+#: forms/SoftwareFilter.php
 msgid "Apply"
 msgstr ""
 
-#: forms/UserDefinedInfo.php:92
+#: forms/UserDefinedInfo.php
 msgid "Change"
 msgstr ""
 
-#: forms/YesNo.php:41
+#: forms/YesNo.php
 msgid "Yes"
 msgstr ""
 
-#: forms/YesNo.php:45
+#: forms/YesNo.php
 msgid "No"
 msgstr ""
 
-#: forms/YesNo/DeleteComputer.php:43
+#: forms/YesNo/DeleteComputer.php
 msgid "Delete interfaces from network listing"
 msgstr ""
 
-#: layouts/layout.phtml:90
+#: layouts/layout.phtml
 msgid "Logout"
 msgstr ""
 
-#: models/Computer.php:781
+#: models/Computer.php
 #, php-format
 msgid "%1$d computers with an interface in network '%2$s'"
 msgstr ""
 
-#: models/Computer.php:796
+#: models/Computer.php
 #, php-format
 msgid "%1$d computers waiting for notification of package '%2$s'"
 msgstr ""
 
-#: models/Computer.php:801
+#: models/Computer.php
 #, php-format
 msgid "%1$d computers with package '%2$s' successfully deployed"
 msgstr ""
 
-#: models/Computer.php:806
+#: models/Computer.php
 #, php-format
 msgid "%1$d computers with deployment of package '%2$s' in progress"
 msgstr ""
 
-#: models/Computer.php:811
+#: models/Computer.php
 #, php-format
 msgid "%1$d computers where deployment of package '%2$s' failed"
 msgstr ""
 
-#: models/Computer.php:816
+#: models/Computer.php
 #, php-format
 msgid "%1$d computers where software '%2$s' is installed"
 msgstr ""
 
-#: models/Package.php:348
+#: models/Package.php
 #, php-format
 msgid "There is no package with name '%s'."
 msgstr ""
 
-#: models/Package.php:359
+#: models/Package.php
 #, php-format
 msgid "Could not open file '%s'."
 msgstr ""
 
-#: models/Package.php:462
+#: models/Package.php
 #, php-format
 msgid "Package '%s' already exists."
 msgstr ""
 
-#: models/Package.php:473
+#: models/Package.php
 #, php-format
 msgid "Directory '%s' already exists."
 msgstr ""
 
-#: models/Package.php:477
+#: models/Package.php
 #, php-format
 msgid "Directory '%s' could not be created."
 msgstr ""
 
-#: models/Package.php:503
+#: models/Package.php
 #, php-format
 msgid "ZIP archive could not be created. Error code: %d"
 msgstr ""
 
-#: models/Package.php:510 models/Package.php:593
+#: models/Package.php; models/Package.php
 #, php-format
 msgid "Could not delete source file '%s'"
 msgstr ""
 
-#: models/Package.php:525
+#: models/Package.php
 #, php-format
 msgid "Could not compute SHA1 hash of file '%s'."
 msgstr ""
 
-#: models/Package.php:539
+#: models/Package.php
 #, php-format
 msgid "Could not determine size of file '%s'."
 msgstr ""
 
-#: models/Package.php:555
+#: models/Package.php
 #, php-format
 msgid "Could not move/rename file '%1$s' to '%2$s'"
 msgstr ""
 
-#: models/Package.php:572
+#: models/Package.php
 #, php-format
 msgid "Could not open file '%s' for reading."
 msgstr ""
 
-#: models/Package.php:583 models/Package.php:660
+#: models/Package.php; models/Package.php
 #, php-format
 msgid "Could not write to file '%s'."
 msgstr ""
 
-#: models/Package.php:600
+#: models/Package.php
 #, php-format
 msgid "Reading from file '%s' was incomplete."
 msgstr ""
 
-#: models/Package.php:703
+#: models/Package.php
 #, php-format
 msgid "Could not insert row into table '%1$s'. Message: %2$s"
 msgstr ""
 
-#: models/Package.php:838
+#: models/Package.php
 #, php-format
 msgid "Directory '%s' could not be deleted."
 msgstr ""
 
-#: models/Package.php:845
+#: models/Package.php
 #, php-format
 msgid "Directory '%s' does not exist."
 msgstr ""
 
-#: models/Package.php:977
+#: models/Package.php
 #, php-format
 msgid "Connection to <a href=\"%1$s\">%1$s</a> failed with Message: '%2$s'"
 msgstr ""
 
-#: models/Package.php:985
+#: models/Package.php
 #, php-format
 msgid ""
 "Connection to <a href=\"%1$s\">%1$s</a> failed with HTTP status code %2$d"
 msgstr ""
 
-#: models/StorageDevice.php:91
+#: models/StorageDevice.php
 msgid "Hard disk"
 msgstr ""
 
-#: models/StorageDevice.php:94
+#: models/StorageDevice.php
 msgid "Removable media"
 msgstr ""
 
-#: views/helpers/GroupHeader.php:42
+#: views/helpers/GroupHeader.php
 #, php-format
 msgid "Details for group '%s'"
 msgstr ""
 
-#: views/helpers/GroupHeader.php:51 views/helpers/InventoryHeader.php:51
+#: views/helpers/GroupHeader.php; views/helpers/InventoryHeader.php
 msgid "General"
 msgstr ""
 
-#: views/helpers/GroupHeader.php:58
+#: views/helpers/GroupHeader.php
 msgid "Members"
 msgstr ""
 
-#: views/helpers/GroupHeader.php:72 views/helpers/InventoryHeader.php:169
-#: views/scripts/network/showidentified.phtml:65
-#: views/scripts/network/showunknown.phtml:64
-#: views/scripts/package/index.phtml:237
+#: views/helpers/GroupHeader.php; views/helpers/InventoryHeader.php
+#: views/scripts/network/showidentified.phtml
+#: views/scripts/network/showunknown.phtml
+#: views/scripts/package/index.phtml
 msgid "Delete"
 msgstr ""
 
-#: views/helpers/InventoryHeader.php:42
+#: views/helpers/InventoryHeader.php
 #, php-format
 msgid "Inventory of '%s'"
 msgstr ""
 
-#: views/helpers/InventoryHeader.php:59
+#: views/helpers/InventoryHeader.php
 msgid "Windows"
 msgstr ""
 
-#: views/helpers/InventoryHeader.php:74
+#: views/helpers/InventoryHeader.php
 msgid "Storage"
 msgstr ""
 
-#: views/helpers/InventoryHeader.php:81
+#: views/helpers/InventoryHeader.php
 msgid "Display"
 msgstr ""
 
-#: views/helpers/InventoryHeader.php:88
+#: views/helpers/InventoryHeader.php
 msgid "BIOS"
 msgstr ""
 
-#: views/helpers/InventoryHeader.php:95
+#: views/helpers/InventoryHeader.php
 msgid "System"
 msgstr ""
 
-#: views/helpers/InventoryHeader.php:103
+#: views/helpers/InventoryHeader.php
 msgid "Printers"
 msgstr ""
 
-#: views/helpers/InventoryHeader.php:119
+#: views/helpers/InventoryHeader.php
 msgid "Registry"
 msgstr ""
 
-#: views/helpers/InventoryHeader.php:127
+#: views/helpers/InventoryHeader.php
 msgid "VMs"
 msgstr ""
 
-#: views/helpers/InventoryHeader.php:134
+#: views/helpers/InventoryHeader.php
 msgid "Misc"
 msgstr ""
 
-#: views/helpers/InventoryHeader.php:141
+#: views/helpers/InventoryHeader.php
 msgid "User defined"
 msgstr ""
 
-#: views/helpers/InventoryHeader.php:162
+#: views/helpers/InventoryHeader.php
 msgid "Export"
 msgstr ""
 
-#: views/helpers/MembershipType.php:44
+#: views/helpers/MembershipType.php
 msgid "manual"
 msgstr ""
 
-#: views/helpers/ValidationMessages.php:45
+#: views/helpers/ValidationMessages.php
 msgid "Invalid parameter: "
 msgstr ""
 
-#: views/scripts/computer/bios.phtml:42 views/scripts/network/edit.phtml:69
-#: views/scripts/package/index.phtml:62
+#: views/scripts/computer/bios.phtml; views/scripts/network/edit.phtml
+#: views/scripts/package/index.phtml
 msgid "Date"
 msgstr ""
 
-#: views/scripts/computer/bios.phtml:57 views/scripts/computer/index.phtml:79
-#: views/scripts/computer/software.phtml:31
+#: views/scripts/computer/bios.phtml; views/scripts/computer/index.phtml
+#: views/scripts/computer/software.phtml
 msgid "Version"
 msgstr ""
 
-#: views/scripts/computer/delete.phtml:29
+#: views/scripts/computer/delete.phtml
 #, php-format
 msgid "Computer '%s' will be permanently deleted. Continue?"
 msgstr ""
 
-#: views/scripts/computer/display.phtml:34
+#: views/scripts/computer/display.phtml
 msgid "Chipset"
 msgstr ""
 
-#: views/scripts/computer/display.phtml:35
-#: views/scripts/computer/index.phtml:54 views/scripts/computer/vms.phtml:36
+#: views/scripts/computer/display.phtml
+#: views/scripts/computer/index.phtml; views/scripts/computer/vms.phtml
 msgid "Memory"
 msgstr ""
 
-#: views/scripts/computer/display.phtml:36
+#: views/scripts/computer/display.phtml
 msgid "Current resolution"
 msgstr ""
 
-#: views/scripts/computer/display.phtml:72
+#: views/scripts/computer/display.phtml
 msgid "Display controllers"
 msgstr ""
 
-#: views/scripts/computer/display.phtml:84
+#: views/scripts/computer/display.phtml
 msgid "Production date"
 msgstr ""
 
-#: views/scripts/computer/display.phtml:105
+#: views/scripts/computer/display.phtml
 msgid "Displays"
 msgstr ""
 
-#: views/scripts/computer/general.phtml:33
-#: views/scripts/computer/index.phtml:45 views/scripts/group/general.phtml:41
+#: views/scripts/computer/general.phtml
+#: views/scripts/computer/index.phtml; views/scripts/group/general.phtml
 msgid "ID"
 msgstr ""
 
-#: views/scripts/computer/general.phtml:42
-#: views/scripts/computer/index.phtml:46
+#: views/scripts/computer/general.phtml
+#: views/scripts/computer/index.phtml
 msgid "Client ID"
 msgstr ""
 
-#: views/scripts/computer/general.phtml:51
+#: views/scripts/computer/general.phtml
 msgid "Inventory date"
 msgstr ""
 
-#: views/scripts/computer/general.phtml:69
+#: views/scripts/computer/general.phtml
 msgid "OCS Inventory Agent"
 msgstr ""
 
-#: views/scripts/computer/general.phtml:135
+#: views/scripts/computer/general.phtml
 msgid "Operating System"
 msgstr ""
 
-#: views/scripts/computer/general.phtml:162
-#: views/scripts/computer/index.phtml:49
+#: views/scripts/computer/general.phtml
+#: views/scripts/computer/index.phtml
 msgid "CPU clock"
 msgstr ""
 
-#: views/scripts/computer/general.phtml:171
+#: views/scripts/computer/general.phtml
 msgid "Number of CPU cores"
 msgstr ""
 
-#: views/scripts/computer/general.phtml:185
+#: views/scripts/computer/general.phtml
 msgid "RAM detected by agent"
 msgstr ""
 
-#: views/scripts/computer/general.phtml:194
+#: views/scripts/computer/general.phtml
 msgid "RAM reported by OS"
 msgstr ""
 
-#: views/scripts/computer/general.phtml:216
+#: views/scripts/computer/general.phtml
 msgid "Last user logged in"
 msgstr ""
 
-#: views/scripts/computer/general.phtml:226
-#: views/scripts/computer/index.phtml:73 views/scripts/computer/vms.phtml:35
+#: views/scripts/computer/general.phtml
+#: views/scripts/computer/index.phtml; views/scripts/computer/vms.phtml
 msgid "UUID"
 msgstr ""
 
-#: views/scripts/computer/groups.phtml:31
+#: views/scripts/computer/groups.phtml
 msgid "Group memberships"
 msgstr ""
 
-#: views/scripts/computer/groups.phtml:36
+#: views/scripts/computer/groups.phtml
 msgid "Group"
 msgstr ""
 
-#: views/scripts/computer/groups.phtml:37 views/scripts/group/members.phtml:33
+#: views/scripts/computer/groups.phtml; views/scripts/group/members.phtml
 msgid "Membership"
 msgstr ""
 
-#: views/scripts/computer/groups.phtml:85 views/scripts/group/index.phtml:79
+#: views/scripts/computer/groups.phtml; views/scripts/group/index.phtml
 msgid "No groups defined."
 msgstr ""
 
-#: views/scripts/computer/groups.phtml:96
+#: views/scripts/computer/groups.phtml
 msgid "Manage memberships"
 msgstr ""
 
-#: views/scripts/computer/import.phtml:30
+#: views/scripts/computer/import.phtml
 #, php-format
 msgid "Upload error. Server %1$s responded with error %2$d: %3$s"
 msgstr ""
 
-#: views/scripts/computer/import.phtml:42
+#: views/scripts/computer/import.phtml
 msgid "Import locally generated inventory data"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:55
+#: views/scripts/computer/index.phtml
 msgid "Swap"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:60
+#: views/scripts/computer/index.phtml
 msgid "Operating system"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:65 views/scripts/group/members.phtml:31
+#: views/scripts/computer/index.phtml; views/scripts/group/members.phtml
 msgid "User"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:66
+#: views/scripts/computer/index.phtml
 msgid "Windows company"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:67
+#: views/scripts/computer/index.phtml
 msgid "Windows owner"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:68
+#: views/scripts/computer/index.phtml
 msgid "Windows product key"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:74
+#: views/scripts/computer/index.phtml
 msgid "BIOS manufacturer"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:78
+#: views/scripts/computer/index.phtml
 msgid "Error code"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:93
-#: views/scripts/computer/network.phtml:62
+#: views/scripts/computer/index.phtml
+#: views/scripts/computer/network.phtml
 msgid "Netmask"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:103
+#: views/scripts/computer/index.phtml
 msgid "Volume size"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:104
-#: views/scripts/computer/storage.phtml:93
-#: views/scripts/computer/storage.phtml:103
+#: views/scripts/computer/index.phtml
+#: views/scripts/computer/storage.phtml
+#: views/scripts/computer/storage.phtml
 msgid "Free space"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:152
+#: views/scripts/computer/index.phtml
 #, php-format
 msgid "%d matches"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:156
+#: views/scripts/computer/index.phtml
 msgid "Edit filter"
 msgstr ""
 
-#: views/scripts/computer/index.phtml:173 views/scripts/group/members.phtml:70
+#: views/scripts/computer/index.phtml; views/scripts/group/members.phtml
 #, php-format
 msgid "Number of computers: %d"
 msgstr ""
 
-#: views/scripts/computer/misc.phtml:55
+#: views/scripts/computer/misc.phtml
 msgid "Audio devices"
 msgstr ""
 
-#: views/scripts/computer/misc.phtml:68
+#: views/scripts/computer/misc.phtml
 msgid "Interface"
 msgstr ""
 
-#: views/scripts/computer/misc.phtml:80
+#: views/scripts/computer/misc.phtml
 msgid "Keyboard"
 msgstr ""
 
-#: views/scripts/computer/misc.phtml:83
+#: views/scripts/computer/misc.phtml
 msgid "Pointing device"
 msgstr ""
 
-#: views/scripts/computer/misc.phtml:103
+#: views/scripts/computer/misc.phtml
 msgid "Input devices"
 msgstr ""
 
-#: views/scripts/computer/misc.phtml:116
+#: views/scripts/computer/misc.phtml
 msgid "Connector"
 msgstr ""
 
-#: views/scripts/computer/misc.phtml:136
+#: views/scripts/computer/misc.phtml
 msgid "Ports"
 msgstr ""
 
-#: views/scripts/computer/network.phtml:59
+#: views/scripts/computer/network.phtml
 msgid "Data rate"
 msgstr ""
 
-#: views/scripts/computer/network.phtml:63
+#: views/scripts/computer/network.phtml
 msgid "Gateway"
 msgstr ""
 
-#: views/scripts/computer/network.phtml:64
+#: views/scripts/computer/network.phtml
 msgid "DHCP server"
 msgstr ""
 
-#: views/scripts/computer/network.phtml:65
-#: views/scripts/computer/packages.phtml:36
-#: views/scripts/computer/system.phtml:140 views/scripts/computer/vms.phtml:32
+#: views/scripts/computer/network.phtml
+#: views/scripts/computer/packages.phtml
+#: views/scripts/computer/system.phtml; views/scripts/computer/vms.phtml
 msgid "Status"
 msgstr ""
 
-#: views/scripts/computer/network.phtml:96
+#: views/scripts/computer/network.phtml
 msgid "Network interfaces"
 msgstr ""
 
-#: views/scripts/computer/network.phtml:126
+#: views/scripts/computer/network.phtml
 msgid "Modems"
 msgstr ""
 
-#: views/scripts/computer/packages.phtml:31
-#: views/scripts/group/packages.phtml:31
+#: views/scripts/computer/packages.phtml
+#: views/scripts/group/packages.phtml
 msgid "Associated packages"
 msgstr ""
 
-#: views/scripts/computer/packages.phtml:37
+#: views/scripts/computer/packages.phtml
 msgid "Timestamp"
 msgstr ""
 
-#: views/scripts/computer/packages.phtml:74
+#: views/scripts/computer/packages.phtml
 msgid "not notified"
 msgstr ""
 
-#: views/scripts/computer/packages.phtml:77
+#: views/scripts/computer/packages.phtml
 msgid "in progress"
 msgstr ""
 
-#: views/scripts/computer/packages.phtml:80
+#: views/scripts/computer/packages.phtml
 msgid "installed"
 msgstr ""
 
-#: views/scripts/computer/packages.phtml:92
-#: views/scripts/group/packages.phtml:51
+#: views/scripts/computer/packages.phtml
+#: views/scripts/group/packages.phtml
 msgid "remove"
 msgstr ""
 
-#: views/scripts/computer/packages.phtml:125
-#: views/scripts/group/packages.phtml:80
+#: views/scripts/computer/packages.phtml
+#: views/scripts/group/packages.phtml
 msgid "Install packages"
 msgstr ""
 
-#: views/scripts/computer/printers.phtml:31
+#: views/scripts/computer/printers.phtml
 msgid "Driver"
 msgstr ""
 
-#: views/scripts/computer/printers.phtml:32
+#: views/scripts/computer/printers.phtml
 msgid "Port"
 msgstr ""
 
-#: views/scripts/computer/registry.phtml:49
+#: views/scripts/computer/registry.phtml
 msgid "Registry Keys"
 msgstr ""
 
-#: views/scripts/computer/removepackage.phtml:31
+#: views/scripts/computer/removepackage.phtml
 #, php-format
 msgid "Package '%s' will no longer be associated with this computer. Continue?"
 msgstr ""
 
-#: views/scripts/computer/software.phtml:34
+#: views/scripts/computer/software.phtml
 msgid "Publisher"
 msgstr ""
 
-#: views/scripts/computer/software.phtml:35
+#: views/scripts/computer/software.phtml
 msgid "Location"
 msgstr ""
 
-#: views/scripts/computer/software.phtml:36
+#: views/scripts/computer/software.phtml
 msgid "Architecture"
 msgstr ""
 
-#: views/scripts/computer/software.phtml:38
-#: views/scripts/computer/storage.phtml:35
-#: views/scripts/computer/storage.phtml:91
-#: views/scripts/computer/storage.phtml:101
-#: views/scripts/computer/system.phtml:34 views/scripts/package/index.phtml:63
+#: views/scripts/computer/software.phtml
+#: views/scripts/computer/storage.phtml
+#: views/scripts/computer/storage.phtml
+#: views/scripts/computer/storage.phtml
+#: views/scripts/computer/system.phtml; views/scripts/package/index.phtml
 msgid "Size"
 msgstr ""
 
-#: views/scripts/computer/software.phtml:100
+#: views/scripts/computer/software.phtml
 msgid "Display duplicate entries"
 msgstr ""
 
-#: views/scripts/computer/storage.phtml:39
-#: views/scripts/computer/storage.phtml:98
+#: views/scripts/computer/storage.phtml
+#: views/scripts/computer/storage.phtml
 msgid "Device"
 msgstr ""
 
-#: views/scripts/computer/storage.phtml:41
+#: views/scripts/computer/storage.phtml
 msgid "Firmware version"
 msgstr ""
 
-#: views/scripts/computer/storage.phtml:77
+#: views/scripts/computer/storage.phtml
 msgid "Storage devices"
 msgstr ""
 
-#: views/scripts/computer/storage.phtml:87
+#: views/scripts/computer/storage.phtml
 msgid "Letter"
 msgstr ""
 
-#: views/scripts/computer/storage.phtml:88
+#: views/scripts/computer/storage.phtml
 msgid "Label"
 msgstr ""
 
-#: views/scripts/computer/storage.phtml:90
-#: views/scripts/computer/storage.phtml:99
+#: views/scripts/computer/storage.phtml
+#: views/scripts/computer/storage.phtml
 msgid "Filesystem"
 msgstr ""
 
-#: views/scripts/computer/storage.phtml:92
-#: views/scripts/computer/storage.phtml:102
+#: views/scripts/computer/storage.phtml
+#: views/scripts/computer/storage.phtml
 msgid "Used space"
 msgstr ""
 
-#: views/scripts/computer/storage.phtml:97
+#: views/scripts/computer/storage.phtml
 msgid "Mountpoint"
 msgstr ""
 
-#: views/scripts/computer/storage.phtml:100
-#: views/scripts/group/general.phtml:59 views/scripts/group/index.phtml:45
+#: views/scripts/computer/storage.phtml
+#: views/scripts/group/general.phtml; views/scripts/group/index.phtml
 msgid "Creation date"
 msgstr ""
 
-#: views/scripts/computer/storage.phtml:150
+#: views/scripts/computer/storage.phtml
 msgid "Volumes"
 msgstr ""
 
-#: views/scripts/computer/system.phtml:33
+#: views/scripts/computer/system.phtml
 msgid "Slot number"
 msgstr ""
 
-#: views/scripts/computer/system.phtml:36
+#: views/scripts/computer/system.phtml
 msgid "Clock"
 msgstr ""
 
-#: views/scripts/computer/system.phtml:38
+#: views/scripts/computer/system.phtml
 msgid "Caption"
 msgstr ""
 
-#: views/scripts/computer/system.phtml:40
+#: views/scripts/computer/system.phtml
 msgid "Purpose"
 msgstr ""
 
-#: views/scripts/computer/system.phtml:82
+#: views/scripts/computer/system.phtml
 msgid "Memory slots"
 msgstr ""
 
-#: views/scripts/computer/system.phtml:96
+#: views/scripts/computer/system.phtml
 msgid "Driver version"
 msgstr ""
 
-#: views/scripts/computer/system.phtml:128
+#: views/scripts/computer/system.phtml
 msgid "Controllers"
 msgstr ""
 
-#: views/scripts/computer/system.phtml:160
+#: views/scripts/computer/system.phtml
 msgid "Extension slots"
 msgstr ""
 
-#: views/scripts/computer/userdefined.phtml:32
+#: views/scripts/computer/userdefined.phtml
 msgid "The information was successfully updated."
 msgstr ""
 
-#: views/scripts/computer/vms.phtml:33
+#: views/scripts/computer/vms.phtml
 msgid "Product"
 msgstr ""
 
-#: views/scripts/computer/vms.phtml:49 views/scripts/network/index.phtml:31
+#: views/scripts/computer/vms.phtml; views/scripts/network/index.phtml
 msgid "unknown"
 msgstr ""
 
-#: views/scripts/computer/vms.phtml:68
+#: views/scripts/computer/vms.phtml
 msgid "Virtual machines hosted on this computer"
 msgstr ""
 
-#: views/scripts/computer/windows.phtml:33
+#: views/scripts/computer/windows.phtml
 msgid "Company"
 msgstr ""
 
-#: views/scripts/computer/windows.phtml:42
+#: views/scripts/computer/windows.phtml
 msgid "Owner"
 msgstr ""
 
-#: views/scripts/computer/windows.phtml:60
+#: views/scripts/computer/windows.phtml
 msgid "Product ID"
 msgstr ""
 
-#: views/scripts/duplicates/allow.phtml:27
+#: views/scripts/duplicates/allow.phtml
 #, php-format
 msgid "Exclude MAC address %s from duplicates search?"
 msgstr ""
 
-#: views/scripts/duplicates/allow.phtml:32
+#: views/scripts/duplicates/allow.phtml
 #, php-format
 msgid "Exclude serial numner '%s' from duplicates search?"
 msgstr ""
 
-#: views/scripts/duplicates/allow.phtml:37
+#: views/scripts/duplicates/allow.phtml
 #, php-format
 msgid "Exclude asset tag '%s' from duplicates search?"
 msgstr ""
 
-#: views/scripts/duplicates/index.phtml:27
+#: views/scripts/duplicates/index.phtml
 msgid "MAC Address"
 msgstr ""
 
-#: views/scripts/duplicates/index.phtml:54
+#: views/scripts/duplicates/index.phtml
 msgid "No duplicates present."
 msgstr ""
 
-#: views/scripts/duplicates/show.phtml:107
+#: views/scripts/duplicates/show.phtml
 msgid "Merge user supplied information"
 msgstr ""
 
-#: views/scripts/duplicates/show.phtml:116
+#: views/scripts/duplicates/show.phtml
 msgid "Merge manual group assignments"
 msgstr ""
 
-#: views/scripts/duplicates/show.phtml:125
+#: views/scripts/duplicates/show.phtml
 msgid "Merge missing package assignments"
 msgstr ""
 
-#: views/scripts/duplicates/show.phtml:131
+#: views/scripts/duplicates/show.phtml
 msgid "Merge selected computers"
 msgstr ""
 
-#: views/scripts/group/delete.phtml:29
+#: views/scripts/group/delete.phtml
 #, php-format
 msgid "Group '%s' will be permanently deleted. Continue?"
 msgstr ""
 
-#: views/scripts/group/general.phtml:68
+#: views/scripts/group/general.phtml
 msgid "SQL query"
 msgstr ""
 
-#: views/scripts/group/members.phtml:77
+#: views/scripts/group/members.phtml
 #, php-format
 msgid "Last update: %s"
 msgstr ""
 
-#: views/scripts/group/members.phtml:82
+#: views/scripts/group/members.phtml
 #, php-format
 msgid "Next update: %s"
 msgstr ""
 
-#: views/scripts/group/removepackage.phtml:31
+#: views/scripts/group/removepackage.phtml
 #, php-format
 msgid "Package '%s' will no longer be associated with this group. Continue?"
 msgstr ""
 
-#: views/scripts/login/index.phtml:31
+#: views/scripts/login/index.phtml
 msgid "Login to Braintacle"
 msgstr ""
 
-#: views/scripts/network/delete.phtml:34
+#: views/scripts/network/delete.phtml
 #, php-format
 msgid ""
 "The network device '%1s' with the MAC address %2s will be permanently "
 "deleted. Continue?"
 msgstr ""
 
-#: views/scripts/network/edit.phtml:27
+#: views/scripts/network/edit.phtml
 msgid "Edit network device"
 msgstr ""
 
-#: views/scripts/network/edit.phtml:42
-#: views/scripts/network/showunknown.phtml:28
+#: views/scripts/network/edit.phtml
+#: views/scripts/network/showunknown.phtml
 msgid "Vendor"
 msgstr ""
 
-#: views/scripts/network/edit.phtml:60
-#: views/scripts/network/showunknown.phtml:30
+#: views/scripts/network/edit.phtml
+#: views/scripts/network/showunknown.phtml
 msgid "Hostname"
 msgstr ""
 
-#: views/scripts/network/index.phtml:28
+#: views/scripts/network/index.phtml
 msgid "Address"
 msgstr ""
 
-#: views/scripts/network/index.phtml:29
+#: views/scripts/network/index.phtml
 msgid "inventoried"
 msgstr ""
 
-#: views/scripts/network/index.phtml:30
+#: views/scripts/network/index.phtml
 msgid "identified"
 msgstr ""
 
-#: views/scripts/network/showidentified.phtml:29
-#: views/scripts/network/showunknown.phtml:31
+#: views/scripts/network/showidentified.phtml
+#: views/scripts/network/showunknown.phtml
 msgid "Discovery date"
 msgstr ""
 
-#: views/scripts/network/showidentified.phtml:32
+#: views/scripts/network/showidentified.phtml
 msgid "Idendified by"
 msgstr ""
 
-#: views/scripts/network/showidentified.phtml:51
-#: views/scripts/network/showunknown.phtml:50
+#: views/scripts/network/showidentified.phtml
+#: views/scripts/network/showunknown.phtml
 msgid "Edit"
 msgstr ""
 
-#: views/scripts/package/delete.phtml:31
+#: views/scripts/package/delete.phtml
 #, php-format
 msgid "Package '%s' will be permanently deleted. Continue?"
 msgstr ""
 
-#: views/scripts/package/index.phtml:37
+#: views/scripts/package/index.phtml
 msgid "Warnings:"
 msgstr ""
 
-#: views/scripts/software/accept.phtml:29
+#: views/scripts/software/accept.phtml
 #, php-format
 msgid "Software '%s' will be marked as known and accepted. Continue?"
 msgstr ""
 
-#: views/scripts/software/ignore.phtml:29
+#: views/scripts/software/ignore.phtml
 #, php-format
 msgid "Software '%s' will be no longer be displayed. Continue?"
 msgstr ""
 
-#: views/scripts/software/index.phtml:28
+#: views/scripts/software/index.phtml
 msgid "Computer count"
 msgstr ""
 
-#: views/scripts/software/index.phtml:49
+#: views/scripts/software/index.phtml
 msgid "Accept"
 msgstr ""
 
-#: views/scripts/software/index.phtml:63
+#: views/scripts/software/index.phtml
 msgid "Ignore"
 msgstr ""

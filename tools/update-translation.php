@@ -134,6 +134,13 @@ if (in_array('--noextract', $_SERVER['argv'])) {
         case '"Language-Team: LANGUAGE <LL@li.org>\n"':
             $newPot[$index] = '"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"';
             break;
+        default:
+            // Strip line numbers from comments. These shift too often on
+            // totally unrelated changes on the source file.
+            if (preg_match('/^#: /', $line)) {
+                $line = preg_replace('/:\d+/', ';', $line); // replace with ';' for better readability
+                $newPot[$index] = rtrim($line, ';'); // strip trailing semicolon
+            }
         }
     }
 
