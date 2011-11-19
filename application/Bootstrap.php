@@ -101,6 +101,19 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
              ->setAction('search');
         $navigation->addPage($page);
 
+        // "Preferences" menu
+        $page = new Zend_Navigation_Page_Mvc;
+        $page->setLabel('Preferences')
+             ->setController('preferences')
+             ->setAction('index');
+        $navigation->addPage($page);
+
+        $sub = new Zend_Navigation_Page_Mvc;
+        $sub->setLabel('Display')
+            ->setController('preferences')
+            ->setAction('display');
+        $page->addPage($sub);
+
         Zend_Registry::set('Zend_Navigation', $navigation);
     }
 

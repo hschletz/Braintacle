@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-18 11:53+0100\n"
-"PO-Revision-Date: 2011-11-11 19:10+0100\n"
+"POT-Creation-Date: 2011-11-19 12:14+0100\n"
+"PO-Revision-Date: 2011-11-18 13:17+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -51,9 +51,17 @@ msgstr "Inventar"
 msgid "Overview"
 msgstr "Übersicht"
 
+#: Bootstrap.php
+msgid "Preferences"
+msgstr "Einstellungen"
+
 #: Bootstrap.php; forms/Package.php
 msgid "Build"
 msgstr "Erstellen"
+
+#: Bootstrap.php; views/helpers/InventoryHeader.php
+msgid "Display"
+msgstr "Anzeige"
 
 #: Bootstrap.php; forms/Package/Edit.php views/helpers/InventoryHeader.php
 msgid "Groups"
@@ -319,6 +327,14 @@ msgstr "Laufend"
 #: forms/Package/Edit.php; views/scripts/package/index.phtml
 msgid "Success"
 msgstr "Erfolg"
+
+#: forms/Preferences.php
+msgid "Set"
+msgstr "Setzen"
+
+#: forms/Preferences/Display.php
+msgid "Display ignored software"
+msgstr "Ignorierte Software anzeigen"
 
 #: forms/Search.php
 msgid "CPU clock (MHz)"
@@ -768,10 +784,6 @@ msgstr "Allgemein"
 #: views/helpers/InventoryHeader.php
 msgid "BIOS"
 msgstr "BIOS"
-
-#: views/helpers/InventoryHeader.php
-msgid "Display"
-msgstr "Anzeige"
 
 #: views/helpers/InventoryHeader.php
 msgid "Export"
