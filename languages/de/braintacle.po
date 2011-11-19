@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-19 12:14+0100\n"
-"PO-Revision-Date: 2011-11-18 13:17+0100\n"
+"POT-Creation-Date: 2011-11-19 17:28+0100\n"
+"PO-Revision-Date: 2011-11-19 17:21+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -43,7 +43,7 @@ msgstr "Computer"
 msgid "Duplicates"
 msgstr "Duplikate"
 
-#: Bootstrap.php
+#: Bootstrap.php Bootstrap.php;
 msgid "Inventory"
 msgstr "Inventar"
 
@@ -336,6 +336,27 @@ msgstr "Setzen"
 msgid "Display ignored software"
 msgstr "Ignorierte Software anzeigen"
 
+#: forms/Preferences/Inventory.php forms/Preferences/Inventory.php;
+#, php-format
+msgid "Mark '%s' by default"
+msgstr "\"%s\" als Vorgabe setzen"
+
+#: forms/Preferences/Inventory.php; forms/YesNo/DeleteComputer.php
+msgid "Delete interfaces from network listing"
+msgstr "Interfaces aus Netzwerkliste löschen"
+
+#: forms/Preferences/Inventory.php; views/scripts/duplicates/show.phtml
+msgid "Merge manual group assignments"
+msgstr "Manuelle Gruppenzuweisungen übernehmen"
+
+#: forms/Preferences/Inventory.php; views/scripts/duplicates/show.phtml
+msgid "Merge missing package assignments"
+msgstr "Fehlende Paketzuweisungen übernehmen"
+
+#: forms/Preferences/Inventory.php; views/scripts/duplicates/show.phtml
+msgid "Merge user supplied information"
+msgstr "Benutzerdefinierte Informationen übernehmen"
+
 #: forms/Search.php
 msgid "CPU clock (MHz)"
 msgstr "CPU-Taktfrequenz (MHz)"
@@ -621,10 +642,6 @@ msgstr "Nein"
 #: forms/YesNo.php
 msgid "Yes"
 msgstr "Ja"
-
-#: forms/YesNo/DeleteComputer.php
-msgid "Delete interfaces from network listing"
-msgstr "Interfaces aus Netzwerkliste löschen"
 
 #: layouts/layout.phtml
 msgid "Logout"
@@ -1252,20 +1269,8 @@ msgid "No duplicates present."
 msgstr "Keine Duplikate vorhanden."
 
 #: views/scripts/duplicates/show.phtml
-msgid "Merge manual group assignments"
-msgstr "Manuelle Gruppenzuweisungen übernehmen"
-
-#: views/scripts/duplicates/show.phtml
-msgid "Merge missing package assignments"
-msgstr "Fehlende Paketzuweisungen übernehmen"
-
-#: views/scripts/duplicates/show.phtml
 msgid "Merge selected computers"
 msgstr "Ausgewählte Computer zusammenführen"
-
-#: views/scripts/duplicates/show.phtml
-msgid "Merge user supplied information"
-msgstr "Benutzerdefinierte Informationen übernehmen"
 
 #: views/scripts/group/delete.phtml
 #, php-format

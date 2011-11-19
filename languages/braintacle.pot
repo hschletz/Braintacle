@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-19 12:14+0100\n"
+"POT-Creation-Date: 2011-11-19 17:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -34,7 +34,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: Bootstrap.php
+#: Bootstrap.php; Bootstrap.php
 msgid "Inventory"
 msgstr ""
 
@@ -349,6 +349,28 @@ msgstr ""
 msgid "Display ignored software"
 msgstr ""
 
+#: forms/Preferences/Inventory.php; forms/Preferences/Inventory.php
+#: forms/Preferences/Inventory.php; forms/Preferences/Inventory.php
+#, php-format
+msgid "Mark '%s' by default"
+msgstr ""
+
+#: forms/Preferences/Inventory.php; views/scripts/duplicates/show.phtml
+msgid "Merge user supplied information"
+msgstr ""
+
+#: forms/Preferences/Inventory.php; views/scripts/duplicates/show.phtml
+msgid "Merge manual group assignments"
+msgstr ""
+
+#: forms/Preferences/Inventory.php; views/scripts/duplicates/show.phtml
+msgid "Merge missing package assignments"
+msgstr ""
+
+#: forms/Preferences/Inventory.php; forms/YesNo/DeleteComputer.php
+msgid "Delete interfaces from network listing"
+msgstr ""
+
 #: forms/Search.php
 msgid "Computer name"
 msgstr ""
@@ -640,10 +662,6 @@ msgstr ""
 
 #: forms/YesNo.php
 msgid "No"
-msgstr ""
-
-#: forms/YesNo/DeleteComputer.php
-msgid "Delete interfaces from network listing"
 msgstr ""
 
 #: layouts/layout.phtml
@@ -1281,18 +1299,6 @@ msgstr ""
 
 #: views/scripts/duplicates/index.phtml
 msgid "No duplicates present."
-msgstr ""
-
-#: views/scripts/duplicates/show.phtml
-msgid "Merge user supplied information"
-msgstr ""
-
-#: views/scripts/duplicates/show.phtml
-msgid "Merge manual group assignments"
-msgstr ""
-
-#: views/scripts/duplicates/show.phtml
-msgid "Merge missing package assignments"
 msgstr ""
 
 #: views/scripts/duplicates/show.phtml

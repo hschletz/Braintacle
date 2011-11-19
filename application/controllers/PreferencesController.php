@@ -35,6 +35,11 @@ class PreferencesController extends Zend_Controller_Action
         $this->_useForm('Form_Preferences_Display');
     }
 
+    public function inventoryAction()
+    {
+        $this->_useForm('Form_Preferences_Inventory');
+    }
+
     /**
      * Standard preferences handling via Form_Preferences subclass
      * @param string $class Name of the form class
