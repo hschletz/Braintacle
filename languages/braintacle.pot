@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-19 17:28+0100\n"
+"POT-Creation-Date: 2011-11-20 10:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -86,6 +86,10 @@ msgstr ""
 
 #: Bootstrap.php; views/helpers/InventoryHeader.php
 msgid "Display"
+msgstr ""
+
+#: Bootstrap.php; views/helpers/InventoryHeader.php
+msgid "System"
 msgstr ""
 
 #: controllers/ComputerController.php
@@ -369,6 +373,30 @@ msgstr ""
 
 #: forms/Preferences/Inventory.php; forms/YesNo/DeleteComputer.php
 msgid "Delete interfaces from network listing"
+msgstr ""
+
+#: forms/Preferences/System.php
+msgid "Communication server hostname/address"
+msgstr ""
+
+#: forms/Preferences/System.php
+msgid "Communication server port"
+msgstr ""
+
+#: forms/Preferences/System.php
+msgid "Minimum seconds between group cache rebuilds"
+msgstr ""
+
+#: forms/Preferences/System.php
+msgid "Maximum seconds added to above value"
+msgstr ""
+
+#: forms/Preferences/System.php
+msgid "Maximum seconds to lock a computer"
+msgstr ""
+
+#: forms/Preferences/System.php
+msgid "Keep track of deleted computers"
 msgstr ""
 
 #: forms/Search.php
@@ -832,10 +860,6 @@ msgstr ""
 
 #: views/helpers/InventoryHeader.php
 msgid "BIOS"
-msgstr ""
-
-#: views/helpers/InventoryHeader.php
-msgid "System"
 msgstr ""
 
 #: views/helpers/InventoryHeader.php

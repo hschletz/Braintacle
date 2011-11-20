@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-19 17:28+0100\n"
-"PO-Revision-Date: 2011-11-19 17:21+0100\n"
+"POT-Creation-Date: 2011-11-20 10:44+0100\n"
+"PO-Revision-Date: 2011-11-20 10:47+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -87,6 +87,10 @@ msgstr "Suchen"
 #: Bootstrap.php; views/helpers/InventoryHeader.php
 msgid "Software"
 msgstr "Software"
+
+#: Bootstrap.php; views/helpers/InventoryHeader.php
+msgid "System"
+msgstr "System"
 
 #: controllers/ComputerController.php
 #, php-format
@@ -356,6 +360,30 @@ msgstr "Fehlende Paketzuweisungen übernehmen"
 #: forms/Preferences/Inventory.php; views/scripts/duplicates/show.phtml
 msgid "Merge user supplied information"
 msgstr "Benutzerdefinierte Informationen übernehmen"
+
+#: forms/Preferences/System.php
+msgid "Communication server hostname/address"
+msgstr "Hostname/Adresse des Kommunikationsservers"
+
+#: forms/Preferences/System.php
+msgid "Communication server port"
+msgstr "Port des Kommunikationsservers"
+
+#: forms/Preferences/System.php
+msgid "Keep track of deleted computers"
+msgstr "Gelöschte Computer nachverfolgen"
+
+#: forms/Preferences/System.php
+msgid "Maximum seconds added to above value"
+msgstr "Max. Sekunden, die zum obigen Wert addiert werden"
+
+#: forms/Preferences/System.php
+msgid "Maximum seconds to lock a computer"
+msgstr "Max. Sekunden, die ein Computer gesperrt wird"
+
+#: forms/Preferences/System.php
+msgid "Minimum seconds between group cache rebuilds"
+msgstr "Min. Sekunden bis zur Erneuerung des Gruppencache"
 
 #: forms/Search.php
 msgid "CPU clock (MHz)"
@@ -826,10 +854,6 @@ msgstr "Registry"
 #: views/helpers/InventoryHeader.php
 msgid "Storage"
 msgstr "Massenspeicher"
-
-#: views/helpers/InventoryHeader.php
-msgid "System"
-msgstr "System"
 
 #: views/helpers/InventoryHeader.php
 msgid "User defined"
@@ -1377,3 +1401,4 @@ msgstr "Anzahl Computer"
 #: views/scripts/software/index.phtml
 msgid "Ignore"
 msgstr "Ignorieren"
+

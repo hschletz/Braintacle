@@ -120,6 +120,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             ->setAction('inventory');
         $page->addPage($sub);
 
+        $sub = new Zend_Navigation_Page_Mvc;
+        $sub->setLabel('System')
+            ->setController('preferences')
+            ->setAction('system');
+        $page->addPage($sub);
+
         Zend_Registry::set('Zend_Navigation', $navigation);
     }
 
