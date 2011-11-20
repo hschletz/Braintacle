@@ -45,7 +45,8 @@ abstract class Form_Preferences extends Form_Normalized
      * will also be used as the name of the element. The value is the datatype
      * of the option. It determines the element type: 'bool' creates a checkbox
      * etc. It also affects processing of the value: integers will be localized/
-     * normalized etc.
+     * normalized etc. If the value is an array, a Zend_Form_Element_Select will
+     * be generated with the array data as content.
      * @var array
      */
     protected $_types;
@@ -80,7 +81,13 @@ abstract class Form_Preferences extends Form_Normalized
                     $element = new Zend_Form_Element_Text($name);
                     break;
                 default:
-                    throw new UnexpectedValueException('Unknown element type for ' . $name);
+                    if (is_array($type)) {
+                        $element = new Zend_Form_Element_Select($name);
+                        $element->setDisableTranslator(true); // Content assumed to be already translated
+                        $element->setMultiOptions($type);
+                    } else {
+                        throw new UnexpectedValueException('Unknown element type for ' . $name);
+                    }
             }
 
             // Add label, assumed to be already translated
