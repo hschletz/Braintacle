@@ -40,7 +40,7 @@ class Form_Preferences_System extends Form_Preferences
     );
 
     /**
-     * Translate labels before calling parent implementation
+     * Translate labels before calling parent implementation, set up generated elements
      */
     public function init()
     {
