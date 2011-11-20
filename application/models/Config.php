@@ -168,7 +168,7 @@ class Model_Config
         if ($option == 'PackagePath') {
             if (!$value) {
                 // Default can only be applied at runtime, not in static declaration
-                $value = $_SERVER['DOCUMENT_ROOT'];
+                $value = rtrim($_SERVER['DOCUMENT_ROOT'], DIRECTORY_SEPARATOR);
             }
             // Only base directory is stored in config. Always append real directory.
             $value .= '/download/';
@@ -213,6 +213,20 @@ class Model_Config
             $column = 'tvalue';
         }
 
+        if ($option == 'PackagePath') {
+            // Canonicalize path and strip /download path component. Don't use
+            // realpath() for this to maintain the path as supplied, supporting
+            // symbolic links.
+            $path = preg_split('#[/\\\\]#', $value);
+            do {
+                $component = array_pop($path);
+            } while ($component == '');
+            if ($component != 'download') {
+                throw new UnexpectedValueException('Path must end with \'/download\'');
+            }
+            $value = implode(DIRECTORY_SEPARATOR, $path);
+
+        }
         $ocsOptionName = self::getOcsOptionName($option);
         $oldValue = $db->fetchOne(
             "SELECT $column FROM config WHERE name=?",
