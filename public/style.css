@@ -274,13 +274,16 @@ input#password
 {
     width: 10em;
 }
-input#MaxFragmentSize
+/* The 'size' attribute will have no effect because the default width for
+ * <input> elements applies. These rules override the width to match the given
+ * 'size' attribute. */
+input[size="5"]
 {
     width: 5em;
 }
-input#WarnCountdown
+input[size="8"]
 {
-    width: 4em;
+    width: 8em;
 }
 #yes-label,#no-label,#Deploy-label
 {

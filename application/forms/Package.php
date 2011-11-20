@@ -179,6 +179,7 @@ class Form_Package extends Zend_Form
                             Model_Config::get('DefaultMaxFragmentSize')
                         )
                         ->setRequired(true)
+                        ->setAttrib('size', '8')
                         ->setLabel('Maximum fragment size (kB), enter 0 for no fragmentation');
         $this->addElement($maxFragmentSize);
 
@@ -260,6 +261,7 @@ class Form_Package extends Zend_Form
                         ->setValue(
                             Model_Config::get('DefaultWarnCountdown')
                         )
+                        ->setAttrib('size', '5')
                         ->setLabel('Countdown (seconds)');
         $this->addElement($warnCountdown);
 
