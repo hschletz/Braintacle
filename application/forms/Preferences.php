@@ -72,6 +72,13 @@ abstract class Form_Preferences extends Form_Normalized
                 case 'bool':
                     $element = new Zend_Form_Element_Checkbox($name);
                     break;
+                case 'integer':
+                    $element = new Zend_Form_Element_Text($name);
+                    $element->addValidator('Int', false, array('options' =>'locale'));
+                    break;
+                case 'text':
+                    $element = new Zend_Form_Element_Text($name);
+                    break;
                 default:
                     throw new UnexpectedValueException('Unknown element type for ' . $name);
             }
@@ -119,13 +126,24 @@ abstract class Form_Preferences extends Form_Normalized
     {
         // Perform usual validation steps (display message), but ignore result
         $this->isValid($data);
-        foreach ($this->getValues() as $name => $value) {
-            // Process only valid fields
-            if ($this->getElement($name)->isValid($value)) {
-                // Convert checkbox values to real boolean to make the next
-                // step work with option values of NULL
+        // Iterate over raw data instead of getValues() because normalization
+        // would fail on invalid data.
+        foreach ($data as $name => $value) {
+            if ($name == 'submit') {
+                continue; // Skip 'submit' button
+            }
+            $element = $this->getElement($name);
+            if (!$element) {
+                continue; // Skip unknown elements
+            }
+            if ($element->isValid($value)) { // Process only valid fields
                 if ($this->_types[$name] == 'bool') {
-                    $value = $this->getElement($name)->isChecked();
+                    // Convert checkbox values to real boolean to make the next
+                    // step work with option values of NULL
+                    $value = $element->isChecked();
+                } else {
+                    // Now that the value is known to be valid, it can be normalized.
+                    $value = $this->getValue($name);
                 }
                 // Set new value only if it is different from the previous one.
                 // This keeps the database rid of the application defaults,
