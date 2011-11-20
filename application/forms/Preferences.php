@@ -144,6 +144,7 @@ abstract class Form_Preferences extends Form_Normalized
                 } else {
                     // Now that the value is known to be valid, it can be normalized.
                     $value = $this->getValue($name);
+                    $this->setDefault($name, $value);
                 }
                 // Set new value only if it is different from the previous one.
                 // This keeps the database rid of the application defaults,
