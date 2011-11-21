@@ -121,6 +121,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $page->addPage($sub);
 
         $sub = new Zend_Navigation_Page_Mvc;
+        $sub->setLabel('Packages')
+            ->setController('preferences')
+            ->setAction('packages');
+        $page->addPage($sub);
+
+        $sub = new Zend_Navigation_Page_Mvc;
         $sub->setLabel('System')
             ->setController('preferences')
             ->setAction('system');

@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-20 10:44+0100\n"
-"PO-Revision-Date: 2011-11-20 10:47+0100\n"
+"POT-Creation-Date: 2011-11-21 10:45+0100\n"
+"PO-Revision-Date: 2011-11-21 10:49+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -63,7 +63,8 @@ msgstr "Erstellen"
 msgid "Display"
 msgstr "Anzeige"
 
-#: Bootstrap.php; forms/Package/Edit.php views/helpers/InventoryHeader.php
+#: Bootstrap.php; forms/Package/Edit.php forms/Preferences/Packages.php;
+#: views/helpers/InventoryHeader.php
 msgid "Groups"
 msgstr "Gruppen"
 
@@ -229,17 +230,9 @@ msgid "Countdown (seconds)"
 msgstr "Countdown (Sekunden)"
 
 #: forms/Package.php
-msgid "Download package, execute command, retrieve result"
-msgstr "Paket herunterladen, Befehl ausführen, Ergebnis ermitteln"
-
-#: forms/Package.php
 #, php-format
 msgid "File (max. %s)"
 msgstr "Datei (max. %s)"
-
-#: forms/Package.php
-msgid "Just download package to target path"
-msgstr "Nur Paket in Zielpfad herunterladen"
 
 #: forms/Package.php
 msgid "Maximum fragment size (kB), enter 0 for no fragmentation"
@@ -248,10 +241,6 @@ msgstr "Maximale Fragmentgröße (kB), 0 für keine Fragmentierung"
 #: forms/Package.php forms/Package.php;
 msgid "Message"
 msgstr "Nachricht"
-
-#: forms/Package.php
-msgid "Optionally download package, execute command"
-msgstr "Optional Paket herunterladen, Befehl ausführen"
 
 #: forms/Package.php
 msgid "Priority"
@@ -270,10 +259,6 @@ msgid "Warn user"
 msgstr "Benutzer warnen"
 
 #: forms/Package.php
-msgid "high"
-msgstr "hoch"
-
-#: forms/Package.php
 msgid "hostname/path for info file (HTTPS)"
 msgstr "Hostname/Pfad für Info-Datei (HTTPS)"
 
@@ -281,18 +266,18 @@ msgstr "Hostname/Pfad für Info-Datei (HTTPS)"
 msgid "hostname/path for package download (HTTP)"
 msgstr "Hostname/Pfad für Paketdownload (HTTP)"
 
-#: forms/Package.php
-msgid "low"
-msgstr "niedrig"
-
-#: forms/Package.php
-msgid "may block other downloads!"
-msgstr "kann andere Downloads blockieren!"
-
 #: forms/Package.php; views/scripts/computer/general.phtml
 #: views/scripts/computer/misc.phtml
 msgid "Comment"
 msgstr "Kommentar"
+
+#: forms/Package.php; forms/Preferences/Packages.php
+msgid "Download package, execute command, retrieve result"
+msgstr "Paket herunterladen, Befehl ausführen, Ergebnis ermitteln"
+
+#: forms/Package.php; forms/Preferences/Packages.php
+msgid "Just download package to target path"
+msgstr "Nur Paket in Zielpfad herunterladen"
 
 #: forms/Package.php; views/scripts/computer/display.phtml
 #: views/scripts/computer/index.phtml; views/scripts/computer/misc.phtml
@@ -308,27 +293,47 @@ msgstr "Kommentar"
 msgid "Name"
 msgstr "Name"
 
+#: forms/Package.php; forms/Preferences/Packages.php
+msgid "Optionally download package, execute command"
+msgstr "Optional Paket herunterladen, Befehl ausführen"
+
 #: forms/Package.php; views/scripts/package/index.phtml
 msgid "Platform"
 msgstr "Plattform"
+
+#: forms/Package.php; forms/Preferences/Packages.php
+msgid "high"
+msgstr "hoch"
+
+#: forms/Package.php; forms/Preferences/Packages.php
+msgid "low"
+msgstr "niedrig"
+
+#: forms/Package.php; forms/Preferences/Packages.php
+msgid "may block other downloads!"
+msgstr "kann andere Downloads blockieren!"
 
 #: forms/Package/Edit.php
 msgid "Deploy to computers which have existing package assigned"
 msgstr "Auf Computern installieren, denen das exisierende Paket zugewiesen ist"
 
-#: forms/Package/Edit.php; views/scripts/package/index.phtml
+#: forms/Package/Edit.php; forms/Preferences/Packages.php
+#: views/scripts/package/index.phtml
 msgid "Error"
 msgstr "Fehler"
 
-#: forms/Package/Edit.php; views/scripts/package/index.phtml
+#: forms/Package/Edit.php; forms/Preferences/Packages.php
+#: views/scripts/package/index.phtml
 msgid "Not notified"
 msgstr "Ausstehend"
 
-#: forms/Package/Edit.php; views/scripts/package/index.phtml
+#: forms/Package/Edit.php; forms/Preferences/Packages.php
+#: views/scripts/package/index.phtml
 msgid "Running"
 msgstr "Laufend"
 
-#: forms/Package/Edit.php; views/scripts/package/index.phtml
+#: forms/Package/Edit.php; forms/Preferences/Packages.php
+#: views/scripts/package/index.phtml
 msgid "Success"
 msgstr "Erfolg"
 
@@ -360,6 +365,74 @@ msgstr "Fehlende Paketzuweisungen übernehmen"
 #: forms/Preferences/Inventory.php; views/scripts/duplicates/show.phtml
 msgid "Merge user supplied information"
 msgstr "Benutzerdefinierte Informationen übernehmen"
+
+#: forms/Preferences/Packages.php
+msgid "Allow user abort by default"
+msgstr "Vorgabe für \"Erlaube Abbruch durch Benutzer\""
+
+#: forms/Preferences/Packages.php
+msgid "Allow user delay by default"
+msgstr "Vorgabe für \"Erlaube Aufschub durch Benutzer\""
+
+#: forms/Preferences/Packages.php
+msgid "Default action"
+msgstr "Standardaktion"
+
+#: forms/Preferences/Packages.php
+msgid "Default action parameter"
+msgstr "Standardparameter für Aktion"
+
+#: forms/Preferences/Packages.php
+msgid "Default certificate"
+msgstr "Standardzertifikat"
+
+#: forms/Preferences/Packages.php
+msgid "Default hostname/path for info file (HTTPS)"
+msgstr "Standard Hostname/Pfad für Info-Datei (HTTPS)"
+
+#: forms/Preferences/Packages.php
+msgid "Default hostname/path for package download (HTTP)"
+msgstr "Standard Hostname/Pfad für Paketdownload (HTTP)"
+
+#: forms/Preferences/Packages.php
+msgid "Default maximum fragment size (kB), 0 for no fragmentation"
+msgstr "Vorgabe für maximale Fragmentgröße (kB), 0 für keine Fragmentierung"
+
+#: forms/Preferences/Packages.php
+msgid "Default platform"
+msgstr "Standardplattform"
+
+#: forms/Preferences/Packages.php
+msgid "Default priority"
+msgstr "Standardpriorität"
+
+#: forms/Preferences/Packages.php
+msgid "Default user action message"
+msgstr "Standardnachricht für Benutzereingriff"
+
+#: forms/Preferences/Packages.php
+msgid "Default warn countdown (seconds)"
+msgstr "Standardcountdown (Sekunden)"
+
+#: forms/Preferences/Packages.php
+msgid "Default warn message"
+msgstr "Standardwarnmeldung"
+
+#: forms/Preferences/Packages.php
+msgid "Defaults for deploying updated packages"
+msgstr "Vorgaben für Zuweisung aktualisierter Pakete"
+
+#: forms/Preferences/Packages.php
+msgid "Path to package files (writeable by web server)"
+msgstr "Pfad zu Paketdateien (von Webserver beschreibbar)"
+
+#: forms/Preferences/Packages.php
+msgid "User action required by default"
+msgstr "Vorgabe für \"Benutzereingriff erforderlich\""
+
+#: forms/Preferences/Packages.php
+msgid "Warn user by default"
+msgstr "Vorgabe für \"Benutzer warnen\""
 
 #: forms/Preferences/System.php
 msgid "Communication server hostname/address"

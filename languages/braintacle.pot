@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-20 10:44+0100\n"
+"POT-Creation-Date: 2011-11-21 10:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -59,11 +59,11 @@ msgid "Import"
 msgstr ""
 
 #: Bootstrap.php; forms/Package/Edit.php
-#: views/helpers/InventoryHeader.php
+#: forms/Preferences/Packages.php; views/helpers/InventoryHeader.php
 msgid "Groups"
 msgstr ""
 
-#: Bootstrap.php; views/helpers/GroupHeader.php
+#: Bootstrap.php; Bootstrap.php; views/helpers/GroupHeader.php
 #: views/helpers/InventoryHeader.php
 msgid "Packages"
 msgstr ""
@@ -240,15 +240,15 @@ msgstr ""
 msgid "Platform"
 msgstr ""
 
-#: forms/Package.php
+#: forms/Package.php; forms/Preferences/Packages.php
 msgid "Download package, execute command, retrieve result"
 msgstr ""
 
-#: forms/Package.php
+#: forms/Package.php; forms/Preferences/Packages.php
 msgid "Optionally download package, execute command"
 msgstr ""
 
-#: forms/Package.php
+#: forms/Package.php; forms/Preferences/Packages.php
 msgid "Just download package to target path"
 msgstr ""
 
@@ -261,15 +261,15 @@ msgstr ""
 msgid "File (max. %s)"
 msgstr ""
 
-#: forms/Package.php
+#: forms/Package.php; forms/Preferences/Packages.php
 msgid "may block other downloads!"
 msgstr ""
 
-#: forms/Package.php
+#: forms/Package.php; forms/Preferences/Packages.php
 msgid "high"
 msgstr ""
 
-#: forms/Package.php
+#: forms/Package.php; forms/Preferences/Packages.php
 msgid "low"
 msgstr ""
 
@@ -325,19 +325,23 @@ msgstr ""
 msgid "Target Path"
 msgstr ""
 
-#: forms/Package/Edit.php; views/scripts/package/index.phtml
+#: forms/Package/Edit.php; forms/Preferences/Packages.php
+#: views/scripts/package/index.phtml
 msgid "Not notified"
 msgstr ""
 
-#: forms/Package/Edit.php; views/scripts/package/index.phtml
+#: forms/Package/Edit.php; forms/Preferences/Packages.php
+#: views/scripts/package/index.phtml
 msgid "Success"
 msgstr ""
 
-#: forms/Package/Edit.php; views/scripts/package/index.phtml
+#: forms/Package/Edit.php; forms/Preferences/Packages.php
+#: views/scripts/package/index.phtml
 msgid "Running"
 msgstr ""
 
-#: forms/Package/Edit.php; views/scripts/package/index.phtml
+#: forms/Package/Edit.php; forms/Preferences/Packages.php
+#: views/scripts/package/index.phtml
 msgid "Error"
 msgstr ""
 
@@ -373,6 +377,74 @@ msgstr ""
 
 #: forms/Preferences/Inventory.php; forms/YesNo/DeleteComputer.php
 msgid "Delete interfaces from network listing"
+msgstr ""
+
+#: forms/Preferences/Packages.php
+msgid "Path to package files (writeable by web server)"
+msgstr ""
+
+#: forms/Preferences/Packages.php
+msgid "Default platform"
+msgstr ""
+
+#: forms/Preferences/Packages.php
+msgid "Default action"
+msgstr ""
+
+#: forms/Preferences/Packages.php
+msgid "Default action parameter"
+msgstr ""
+
+#: forms/Preferences/Packages.php
+msgid "Default priority"
+msgstr ""
+
+#: forms/Preferences/Packages.php
+msgid "Default maximum fragment size (kB), 0 for no fragmentation"
+msgstr ""
+
+#: forms/Preferences/Packages.php
+msgid "Default hostname/path for info file (HTTPS)"
+msgstr ""
+
+#: forms/Preferences/Packages.php
+msgid "Default hostname/path for package download (HTTP)"
+msgstr ""
+
+#: forms/Preferences/Packages.php
+msgid "Default certificate"
+msgstr ""
+
+#: forms/Preferences/Packages.php
+msgid "Warn user by default"
+msgstr ""
+
+#: forms/Preferences/Packages.php
+msgid "Default warn message"
+msgstr ""
+
+#: forms/Preferences/Packages.php
+msgid "Default warn countdown (seconds)"
+msgstr ""
+
+#: forms/Preferences/Packages.php
+msgid "Allow user abort by default"
+msgstr ""
+
+#: forms/Preferences/Packages.php
+msgid "Allow user delay by default"
+msgstr ""
+
+#: forms/Preferences/Packages.php
+msgid "User action required by default"
+msgstr ""
+
+#: forms/Preferences/Packages.php
+msgid "Default user action message"
+msgstr ""
+
+#: forms/Preferences/Packages.php
+msgid "Defaults for deploying updated packages"
 msgstr ""
 
 #: forms/Preferences/System.php

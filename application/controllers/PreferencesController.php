@@ -40,6 +40,11 @@ class PreferencesController extends Zend_Controller_Action
         $this->_useForm('Form_Preferences_Inventory');
     }
 
+    public function packagesAction()
+    {
+        $this->_useForm('Form_Preferences_Packages');
+    }
+
     public function systemAction()
     {
         $this->_useForm('Form_Preferences_System');
