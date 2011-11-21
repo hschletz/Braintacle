@@ -423,7 +423,7 @@ class Form_Package extends Zend_Form
                 break;
             }
 
-            document.getElementById("ActionParam-label").firstChild.text = label;
+            document.getElementById("ActionParam-label").firstChild.innerHTML = label;
         }
 
         // Hide or display a block element.
