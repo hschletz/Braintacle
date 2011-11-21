@@ -193,17 +193,31 @@ class Model_Package extends Model_Abstract
         switch ($property) {
             case 'Timestamp':
                 // cast to string to avoid type mismatch errors with DB operations
-                return (string) $value;
+                $value = (string) $value;
+                break;
             case 'Platform':
                 $map = array(
                     'WINDOWS' => 'windows',
                     'LINUX' => 'linux',
                     'MacOSX' => 'mac',
                 );
-                return $map[$value];
-            default:
-                return $value;
+                $value = $map[$value];
+                break;
+            case 'WarnMessage':
+            case 'WarnCountdown':
+            case 'WarnAllowAbort':
+            case 'WarnAllowDelay':
+                if (!$this->getWarn()) {
+                    $value = null;
+                }
+                break;
+            case 'UserActionMessage':
+                if (!$this->getUserActionRequired()) {
+                    $value = null;
+                }
+                break;
         }
+        return $value;
     }
 
     /**
