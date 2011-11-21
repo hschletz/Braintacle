@@ -191,11 +191,12 @@ class Form_Package extends Zend_Form
                         array(
                             array(
                                 'match' => '/^.*:\/\//', // strip URI scheme
-                                'replace' => '/\/+$/', // strip trailing slashes
+                                'replace' => '',
                             ),
                             ''
                         )
                     )
+                    ->addFilter('StringTrim', array('charlist' => '/'))
                     ->addValidator('StringLength', false, array(1, 255))
                     ->addValidator(new Braintacle_Validate_Uri('https'))
                     ->setRequired(true)
@@ -211,11 +212,12 @@ class Form_Package extends Zend_Form
                         array(
                             array(
                                 'match' => '/^.*:\/\//', // strip URI scheme
-                                'replace' => '/\/+$/', // strip trailing slashes
+                                'replace' => '',
                             ),
                             ''
                         )
                     )
+                    ->addFilter('StringTrim', array('charlist' => '/'))
                     ->addValidator('StringLength', false, array(1, 255))
                     ->addValidator(new Braintacle_Validate_Uri('http'))
                     ->setRequired(true)
