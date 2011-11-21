@@ -73,6 +73,9 @@ abstract class Form_Preferences extends Form_Normalized
                 case 'bool':
                     $element = new Zend_Form_Element_Checkbox($name);
                     break;
+                case 'clob':
+                    $element = new Zend_Form_Element_Textarea($name);
+                    break;
                 case 'integer':
                     $element = new Zend_Form_Element_Text($name);
                     $element->addValidator('Int', false, array('options' =>'locale'));
