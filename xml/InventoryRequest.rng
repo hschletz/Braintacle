@@ -657,7 +657,9 @@ Braintacle:
                 <ref name="SUBSYSTEM" braintacle:property="Product" />
                 <ref name="UUID" braintacle:property="Uuid" />
                 <ref name="VCPU" braintacle:property="NumCpus" />
-                <ref name="VMID" /><!-- not available in database -->
+                <optional>
+                    <ref name="VMID" /><!-- not available in database -->
+                </optional>
                 <ref name="VMTYPE" braintacle:property="Type" />
             </interleave>
         </element>
