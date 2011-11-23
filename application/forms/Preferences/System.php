@@ -89,10 +89,13 @@ class Form_Preferences_System extends Form_Preferences
                 )
             );
         $this->getElement('GroupCacheExpirationInterval')
+            ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');
         $this->getElement('GroupCacheExpirationFuzz')
+            ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');
         $this->getElement('LockValidity')
+            ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');
     }
 
