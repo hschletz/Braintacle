@@ -134,8 +134,6 @@ abstract class Form_Preferences extends Form_Normalized
      */
     public function process($data)
     {
-        // Perform usual validation steps (display message), but ignore result
-        $this->isValid($data);
         // Iterate over raw data instead of getValues() because normalization
         // would fail on invalid data.
         foreach ($data as $name => $value) {
