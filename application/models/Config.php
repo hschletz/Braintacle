@@ -23,13 +23,13 @@
  * @package Models
  * @filesource
  */
-/** Class for retrieving and setting options from the config table
- * 
- * All access to the config table should happen through this class via its
- * accessor methods. {@link $optionMap} defines mappings from logical option
- * names to the names actually stored in the table. These internal names are
- * sometimes not very meaningful. Only the logical names should be used
- * instead through {@link get()}.
+/**
+ * Class for retrieving and setting options from the config table
+ *
+ * All access to the config table should happen through this class via
+ * {@link get()} ans {@link set()}. {@link $optionMap} defines mappings from
+ * logical option names (which are used by these methods) to the names actually
+ * stored in the table.
  *
  * This class can optionally provide default values for options not present
  * in the table. These defaults are defined in {@link $_defaults}.
