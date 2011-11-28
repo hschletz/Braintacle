@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-21 10:45+0100\n"
+"POT-Creation-Date: 2011-11-28 11:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -58,7 +58,7 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: Bootstrap.php; forms/Package/Edit.php
+#: Bootstrap.php; Bootstrap.php; forms/Package/Edit.php
 #: forms/Preferences/Packages.php; views/helpers/InventoryHeader.php
 msgid "Groups"
 msgstr ""
@@ -86,6 +86,26 @@ msgstr ""
 
 #: Bootstrap.php; views/helpers/InventoryHeader.php
 msgid "Display"
+msgstr ""
+
+#: Bootstrap.php
+msgid "Agent"
+msgstr ""
+
+#: Bootstrap.php
+msgid "Download"
+msgstr ""
+
+#: Bootstrap.php
+msgid "Network scanning"
+msgstr ""
+
+#: Bootstrap.php
+msgid "Raw data"
+msgstr ""
+
+#: Bootstrap.php
+msgid "Filters"
 msgstr ""
 
 #: Bootstrap.php; views/helpers/InventoryHeader.php
@@ -353,8 +373,93 @@ msgstr ""
 msgid "Set"
 msgstr ""
 
+#: forms/Preferences.php
+msgid "Some settings are discouraged and should be changed."
+msgstr ""
+
+#: forms/Preferences/Agent.php
+msgid "Agent contact interval (in hours)"
+msgstr ""
+
+#: forms/Preferences/Agent.php
+msgid "Inventory interval (in days, 0 = always, -1 = never)"
+msgstr ""
+
+#: forms/Preferences/Agent.php
+msgid "Automatic agent deployment (deprecated)"
+msgstr ""
+
+#: forms/Preferences/Agent.php
+msgid "Automatic agent update (deprecated)"
+msgstr ""
+
 #: forms/Preferences/Display.php
 msgid "Display ignored software"
+msgstr ""
+
+#: forms/Preferences/Download.php
+msgid "Enable package download"
+msgstr ""
+
+#: forms/Preferences/Download.php
+msgid "Delay (in seconds) between periods"
+msgstr ""
+
+#: forms/Preferences/Download.php
+msgid "Delay (in seconds) between cycles"
+msgstr ""
+
+#: forms/Preferences/Download.php
+msgid "Delay (in seconds) between fragments"
+msgstr ""
+
+#: forms/Preferences/Download.php
+msgid ""
+"Maximum package priority (packages with higher value will not be downloaded)"
+msgstr ""
+
+#: forms/Preferences/Download.php
+msgid "Timeout (in days)"
+msgstr ""
+
+#: forms/Preferences/Filters.php
+msgid "Limit agent connections to trusted networks"
+msgstr ""
+
+#: forms/Preferences/Filters.php
+msgid "Limit inventory frequency"
+msgstr ""
+
+#: forms/Preferences/Filters.php
+msgid "Limit inventory processing per IP address"
+msgstr ""
+
+#: forms/Preferences/Filters.php
+msgid "Seconds between inventory processing"
+msgstr ""
+
+#: forms/Preferences/Filters.php
+msgid "Enable customized inventory processing (discouraged)"
+msgstr ""
+
+#: forms/Preferences/Groups.php
+msgid "Use groups"
+msgstr ""
+
+#: forms/Preferences/Groups.php
+msgid "Minimum seconds between group cache rebuilds"
+msgstr ""
+
+#: forms/Preferences/Groups.php
+msgid "Maximum seconds added to above value"
+msgstr ""
+
+#: forms/Preferences/Groups.php
+msgid "Set package status on computers for group-assigned packages"
+msgstr ""
+
+#: forms/Preferences/Inventory.php
+msgid "Inspect registry"
 msgstr ""
 
 #: forms/Preferences/Inventory.php; forms/Preferences/Inventory.php
@@ -377,6 +482,39 @@ msgstr ""
 
 #: forms/Preferences/Inventory.php; forms/YesNo/DeleteComputer.php
 msgid "Delete interfaces from network listing"
+msgstr ""
+
+#: forms/Preferences/NetworkScanning.php
+msgid "Number of scanning computers per subnet"
+msgstr ""
+
+#: forms/Preferences/NetworkScanning.php
+msgid "Use SNMP"
+msgstr ""
+
+#: forms/Preferences/NetworkScanning.php
+msgid "Minimum days before a scanning computer is replaced"
+msgstr ""
+
+#: forms/Preferences/NetworkScanning.php
+msgid "Maximum days before a scanning computer is replaced"
+msgstr ""
+
+#: forms/Preferences/NetworkScanning.php
+msgid "Always scan, even if no computer meets quality criteria"
+msgstr ""
+
+#: forms/Preferences/NetworkScanning.php
+msgid "Use configuration in groups"
+msgstr ""
+
+#: forms/Preferences/NetworkScanning.php
+#: forms/Preferences/NetworkScanning.php
+msgid "Delay (in milliseconds) between ARP requests"
+msgstr ""
+
+#: forms/Preferences/Packages.php
+msgid "Defaults for deploying updated packages"
 msgstr ""
 
 #: forms/Preferences/Packages.php
@@ -443,8 +581,28 @@ msgstr ""
 msgid "Default user action message"
 msgstr ""
 
-#: forms/Preferences/Packages.php
-msgid "Defaults for deploying updated packages"
+#: forms/Preferences/RawData.php
+msgid "uncompressed XML"
+msgstr ""
+
+#: forms/Preferences/RawData.php
+msgid "zlib compressed XML"
+msgstr ""
+
+#: forms/Preferences/RawData.php
+msgid "Save incoming raw inventory data"
+msgstr ""
+
+#: forms/Preferences/RawData.php
+msgid "Target directory"
+msgstr ""
+
+#: forms/Preferences/RawData.php
+msgid "File format"
+msgstr ""
+
+#: forms/Preferences/RawData.php
+msgid "Overwrite existing files"
 msgstr ""
 
 #: forms/Preferences/System.php
@@ -456,19 +614,67 @@ msgid "Communication server port"
 msgstr ""
 
 #: forms/Preferences/System.php
-msgid "Minimum seconds between group cache rebuilds"
-msgstr ""
-
-#: forms/Preferences/System.php
-msgid "Maximum seconds added to above value"
-msgstr ""
-
-#: forms/Preferences/System.php
 msgid "Maximum seconds to lock a computer"
 msgstr ""
 
 #: forms/Preferences/System.php
+msgid "Maximum duration of an agent session in seconds"
+msgstr ""
+
+#: forms/Preferences/System.php
+msgid "Interval in seconds to cleanup sessions"
+msgstr ""
+
+#: forms/Preferences/System.php
+msgid "Session required for inventory"
+msgstr ""
+
+#: forms/Preferences/System.php
 msgid "Keep track of deleted computers"
+msgstr ""
+
+#: forms/Preferences/System.php
+msgid "Path to logfiles"
+msgstr ""
+
+#: forms/Preferences/System.php
+msgid "Log level"
+msgstr ""
+
+#: forms/Preferences/System.php
+msgid "Bitmask for automatic resolution of duplicates (should be 0)"
+msgstr ""
+
+#: forms/Preferences/System.php
+msgid "Update only changed inventory sections"
+msgstr ""
+
+#: forms/Preferences/System.php
+msgid "Update only changed SNMP sections"
+msgstr ""
+
+#: forms/Preferences/System.php
+msgid "Use differential database updates"
+msgstr ""
+
+#: forms/Preferences/System.php
+msgid "Use database transactions (recommended)"
+msgstr ""
+
+#: forms/Preferences/System.php
+msgid "Use cache tables (not recommended)"
+msgstr ""
+
+#: forms/Preferences/System.php
+msgid "Keep obsolete items in the cache"
+msgstr ""
+
+#: forms/Preferences/System.php
+msgid "Days between cache rebuilds"
+msgstr ""
+
+#: forms/Preferences/System.php
+msgid "Accept requests other than raw zlib compressed"
 msgstr ""
 
 #: forms/Search.php

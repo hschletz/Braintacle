@@ -60,6 +60,22 @@ abstract class Form_Preferences extends Form_Normalized
     protected $_labels;
 
     /**
+     * Field name => good value pairs
+     *
+     * If a good value is defined for a field, a warning will be given if a
+     * field is set to a different value. Good values can be defined for
+     * deprecated or discouraged settings to remind the user to disable them.
+     * @var array
+     */
+    protected $_goodValues = array();
+
+    /**
+     * Indicator for the presence of bad values
+     * @var bool
+     */
+    protected $_hasBadValues;
+
+    /**
      * Initialize form, generate elements dynamically
      */
     public function init()
@@ -122,6 +138,7 @@ abstract class Form_Preferences extends Form_Normalized
         foreach ($this->_types as $name => $type) {
             $this->setDefault($name, Model_Config::get($name));
         }
+        $this->_markBadValues();
     }
 
     /**
@@ -168,5 +185,38 @@ abstract class Form_Preferences extends Form_Normalized
                 }
             }
         }
+        $this->_markBadValues();
     }
+
+    /**
+     * Prepend warning about bad values before rendering
+     */
+    public function render(Zend_View_Interface $view = null)
+    {
+        $output = '';
+        if ($this->_hasBadValues) {
+            // Can't use htmlTag helper here because $view is NULL.
+            $output = '<p class="textcenter red">';
+            $output .= Zend_Registry::get('Zend_Translate')->_(
+                'Some settings are discouraged and should be changed.'
+            );
+            $output .= "<p>\n";
+        }
+        $output .= parent::render($view);
+        return $output;
+    }
+
+    /**
+     * Set 'badValue' class for elements with bad values
+     */
+    protected function _markBadValues()
+    {
+        foreach ($this->_goodValues as $name => $value) {
+            if ($this->getValue($name) != $value) { // Use $this->getValue() for normalization.
+                $this->getElement($name)->setAttrib('class', 'badValue');
+                $this->_hasBadValues = true;
+            }
+        }
+    }
+
 }

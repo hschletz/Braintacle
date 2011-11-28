@@ -302,6 +302,9 @@ input[size="8"]
     margin: 1ex auto 2ex auto;
     text-align: center;
 }
+.badValue {
+    background-color: red;
+}
 
 .table_network_devices {
     font-size: 80%;

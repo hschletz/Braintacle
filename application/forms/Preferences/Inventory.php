@@ -31,6 +31,7 @@ class Form_Preferences_Inventory extends Form_Preferences
 {
 
     protected $_types = array(
+        'InspectRegistry' => 'bool',
         'DefaultMergeUserdefined' => 'bool',
         'DefaultMergeGroups' => 'bool',
         'DefaultMergePackages' => 'bool',
@@ -44,6 +45,9 @@ class Form_Preferences_Inventory extends Form_Preferences
     {
         $translate = Zend_Registry::get('Zend_Translate');
         $this->_labels = array(
+            'InspectRegistry' => $translate->_(
+                'Inspect registry'
+            ),
             'DefaultMergeUserdefined' => sprintf(
                 $translate->_('Mark \'%s\' by default'),
                 $translate->_('Merge user supplied information')

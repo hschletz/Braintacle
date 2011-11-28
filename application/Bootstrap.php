@@ -121,9 +121,45 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $page->addPage($sub);
 
         $sub = new Zend_Navigation_Page_Mvc;
+        $sub->setLabel('Agent')
+            ->setController('preferences')
+            ->setAction('agent');
+        $page->addPage($sub);
+
+        $sub = new Zend_Navigation_Page_Mvc;
         $sub->setLabel('Packages')
             ->setController('preferences')
             ->setAction('packages');
+        $page->addPage($sub);
+
+        $sub = new Zend_Navigation_Page_Mvc;
+        $sub->setLabel('Download')
+            ->setController('preferences')
+            ->setAction('download');
+        $page->addPage($sub);
+
+        $sub = new Zend_Navigation_Page_Mvc;
+        $sub->setLabel('Groups')
+            ->setController('preferences')
+            ->setAction('groups');
+        $page->addPage($sub);
+
+        $sub = new Zend_Navigation_Page_Mvc;
+        $sub->setLabel('Network scanning')
+            ->setController('preferences')
+            ->setAction('networkscanning');
+        $page->addPage($sub);
+
+        $sub = new Zend_Navigation_Page_Mvc;
+        $sub->setLabel('Raw data')
+            ->setController('preferences')
+            ->setAction('rawdata');
+        $page->addPage($sub);
+
+        $sub = new Zend_Navigation_Page_Mvc;
+        $sub->setLabel('Filters')
+            ->setController('preferences')
+            ->setAction('filters');
         $page->addPage($sub);
 
         $sub = new Zend_Navigation_Page_Mvc;

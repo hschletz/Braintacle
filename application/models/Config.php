@@ -79,12 +79,59 @@ class Model_Config
         'DisplayBlacklistedSoftware' => 'BRAINTACLE_DISPLAY_BLACKLISTED_SOFTWARE',
         // OCS options. The list is incomplete; only options used by Braintacle are listed.
         'PackagePath' => 'DOWNLOAD_PACK_DIR', // get() will append '/download/'
-        'LockValidity' => 'LOCK_REUSE_TIME', // Seconds before a computer's lock expires
+        'LockValidity' => 'LOCK_REUSE_TIME', // Seconds (>=1) before a computer's lock expires
         'TraceDeleted' => 'TRACE_DELETED', // Use deleted_equiv table
-        'GroupCacheExpirationInterval' => 'GROUPS_CACHE_REVALIDATE', // Seconds between cache rebuilds
-        'GroupCacheExpirationFuzz' => 'GROUPS_CACHE_OFFSET', // Random range added to interval
+        'GroupCacheExpirationInterval' => 'GROUPS_CACHE_REVALIDATE', // Seconds (>=1) between cache rebuilds
+        'GroupCacheExpirationFuzz' => 'GROUPS_CACHE_OFFSET', // Random range (>=1) added to interval
         'CommunicationServerAddress' => 'LOCAL_SERVER', // Hostname/address of communication server
         'CommunicationServerPort' => 'LOCAL_PORT', // Port number of communication server
+        // Options below this point are used by the communication server only.
+        // Braintacle only uses them in the preferences dialogs.
+        'UseGroups' => 'ENABLE_GROUPS', // Use group feature
+        'SetGroupPackageStatus' => 'DOWNLOAD_GROUPS_TRACE_EVENTS', // Set computer status for group-assigned packages
+        'InspectRegistry' => 'REGISTRY', // Turn inventory of configured registry keys on or off
+        'AgentDeployment' => 'DEPLOY', // DEPRECATED: Turn automatic agent deployment on or off
+        'AgentUpdate' => 'UPDATE', // DEPRECATED: Turn automatic agent update on or off
+        'PackageDeployment' => 'DOWNLOAD', // Turn package deployment on or off
+        'ScannersPerSubnet' => 'IPDISCOVER', // Maximum number of computers per subnet used for scanning
+        'ScanSnmp' => 'SNMP', // Use SNMP for scanning
+        'ScannerMinDays' => 'IPDISCOVER_BETTER_THRESHOLD', // Minimum days (>=1) before a scanning computer is replaced
+        'ScannerMaxDays' => 'IPDISCOVER_MAX_ALIVE', // Maximum days (>=1) before a computer is replaced for scanning
+        'ScanAlways' => 'IPDISCOVER_NO_POSTPONE', // Scan immediately, even if no computer qualifies for scanning
+        'ScanningConfigurationInGroups' => 'IPDISCOVER_USE_GROUPS', // Use scanning configuration in groups
+        'ScanArpDelay' => 'IPDISCOVER_LATENCY', // Delay in milliseconds (>=10) between single ARP scans
+        'SaveRawData' => 'GENERATE_OCS_FILES', // Save incoming raw XML data to files
+        'SaveDir' => 'OCS_FILES_PATH', // Directory where to save files
+        'SaveFormat' => 'OCS_FILES_FORMAT', // File format for saving: xml (uncompressed) or ocs (compressed)
+        'SaveOverwrite' => 'OCS_FILES_OVERWRITE', // Overwrite existing files (otherwise, append version to filename)
+        'TrustedNetworksOnly' => 'PROLOG_FILTER_ON', // Reject clients from untrusted networks
+        'InventoryFilter' => 'INVENTORY_FILTER_ON', // Enable inventory filter (prerequisite for the next 2 options)
+        'LimitInventory' => 'INVENTORY_FILTER_FLOOD_IP', // Limit inventory processing from a particular IP address
+        'LimitInventoryInterval' => 'INVENTORY_FILTER_FLOOD_IP_CACHE_TIME', // Number of seconds between connections
+        'CustomProcessing' => 'INVENTORY_FILTER_ENABLED', // DISCOURAGED: Use custom inventory processing routine
+        'SessionValidity' => 'SESSION_VALIDITY_TIME', // Seconds (>=1) a session with the communication server is held
+        'SessionCleanupInterval' => 'SESSION_CLEAN_TIME', // Seconds (>=1) before a stale session is expunged
+        'SessionRequired' => 'INVENTORY_SESSION_ONLY', // Require full session for inventory
+        'LogPath' => 'LOGPATH', // Path to logfiles
+        'LogLevel' => 'LOGLEVEL', // Logging verbosity (0-2)
+        'AutoDuplicateCriteria' => 'AUTO_DUPLICATE_LVL', // DISCOURAGED: Bitmask for automatic duplicate resolution
+        'UpdateChangedSectionsOnly' => 'INVENTORY_DIFF', // Update only changed inventory sections
+        'UpdateChangedSnmpSectionsOnly' => 'SNMP_INVENTORY_DIFF', // Update only changed SNMP sections
+        'UseDifferentialUpdate' => 'INVENTORY_WRITE_DIFF', // Use differential inventory updates (row level)
+        'UseTransactions' => 'INVENTORY_TRANSACTION', // RECOMMENDED: Use database transactions
+        'UseCacheTables' => 'INVENTORY_CACHE_ENABLED', // DISCOURAGED: use cache tables
+        'KeepObsoleteCacheItems' => 'INVENTORY_CACHE_KEEP', // Don't delete obsolete items from cache
+        'CacheTableExpirationinterval' => 'INVENTORY_CACHE_REVALIDATE', // Days (>=1) between cache rebuilds
+        'AcceptNonZlib' => 'COMPRESS_TRY_OTHERS', // Accept requests other than raw zlib compressed
+        // Options below this point can be overridden individually for single
+        // computers or groups.
+        'ContactInterval' => 'PROLOG_FREQ', // Hours between agent contacts (>=1)
+        'InventoryInterval' => 'FREQUENCY', // Days between inventory. 0=always, -1=never
+        'DownloadPeriodDelay' => 'DOWNLOAD_PERIOD_LATENCY', // Delay in seconds (>=1) between 2 download periods
+        'DownloadCycleDelay' => 'DOWNLOAD_CYCLE_LATENCY', // Delay in seconds (>=1) between 2 download cycles
+        'DownloadFragmentDelay' => 'DOWNLOAD_FRAG_LATENCY', // Delay in seconds (>=1) between 2 fragment downloads
+        'DownloadMaxPriority' => 'DOWNLOAD_PERIOD_LENGTH', // Maximum priority (0-10) of downloadable packages
+        'DownloadTimeout' => 'DOWNLOAD_TIMEOUT', // Download timeout in days (>=1)
     );
 
     /**
@@ -110,10 +157,54 @@ class Model_Config
         // Default for PackagePath is provided by get()
         'LockValidity' => 600,
         'TraceDeleted' => false,
-        'GroupCacheExpirationInterval' => 600,
-        'GroupCacheExpirationFuzz' => 600,
+        'GroupCacheExpirationInterval' => 43200,
+        'GroupCacheExpirationFuzz' => 43200,
         'CommunicationServerAddress' => 'localhost',
         'CommunicationServerPort' => 80,
+        // Defaults below this point are defined by communication server.
+        'UseGroups' => 1,
+        'SetGroupPackageStatus' => 1,
+        'InspectRegistry' => 1,
+        'AgentDeployment' => 0,
+        'AgentUpdate' => 0,
+        'PackageDeployment' => 0,
+        'ScannersPerSubnet' => 2,
+        'ScanSnmp' => 1,
+        'ScannerMinDays' => 1,
+        'ScannerMaxDays' => 14,
+        'ScanAlways' => 0,
+        'ScanningConfigurationInGroups' => 1,
+        'ScanArpDelay' => 100,
+        'SaveRawData' => 0,
+        'SaveDir' => '/tmp',
+        'SaveFormat' => 'OCS',
+        'SaveOverwrite' => 0,
+        'TrustedNetworksOnly' => 0,
+        'InventoryFilter' => 0,
+        'LimitInventory' => 0,
+        'LimitInventoryInterval' => 300,
+        'CustomProcessing' => 0,
+        'SessionValidity' => 3600,
+        'SessionCleanupInterval' => 86400,
+        'SessionRequired' => 0,
+        'LogPath' => '/var/log/ocsinventory-server',
+        'LogLevel' => 0,
+        'AutoDuplicateCriteria' => 15,
+        'UpdateChangedSectionsOnly' => 1,
+        'UpdateChangedSnmpSectionsOnly' => 1,
+        'UseDifferentialUpdate' => 1,
+        'UseTransactions' => 1,
+        'UseCacheTables' => 0,
+        'KeepObsoleteCacheItems' => 1,
+        'CacheTableExpirationinterval' => 7,
+        'AcceptNonZlib' => 0,
+        'ContactInterval' => 12,
+        'InventoryInterval' => 0,
+        'DownloadPeriodDelay' => 60,
+        'DownloadCycleDelay' => 60,
+        'DownloadFragmentDelay' => 60,
+        'DownloadMaxPriority' => 10,
+        'DownloadTimeout' => 7,
     );
 
     /**
@@ -126,6 +217,46 @@ class Model_Config
         'GroupCacheExpirationInterval',
         'GroupCacheExpirationFuzz',
         'CommunicationServerPort',
+        'UseGroups',
+        'SetGroupPackageStatus',
+        'InspectRegistry',
+        'ContactInterval',
+        'InventoryInterval',
+        'AgentDeployment',
+        'AgentUpdate',
+        'PackageDeployment',
+        'DownloadPeriodDelay',
+        'DownloadCycleDelay',
+        'DownloadFragmentDelay',
+        'DownloadMaxPriority',
+        'DownloadTimeout',
+        'ScannersPerSubnet',
+        'ScanSnmp',
+        'ScannerMinDays',
+        'ScannerMaxDays',
+        'ScanAlways',
+        'ScanningConfigurationInGroups',
+        'ScanArpDelay',
+        'SaveRawData',
+        'SaveOverwrite',
+        'TrustedNetworksOnly',
+        'InventoryFilter',
+        'LimitInventory',
+        'LimitInventoryInterval',
+        'CustomProcessing',
+        'SessionValidity',
+        'SessionCleanupInterval',
+        'SessionRequired',
+        'LogLevel',
+        'AutoDuplicateCriteria',
+        'UpdateChangedSectionsOnly',
+        'UpdateChangedSnmpSectionsOnly',
+        'UseDifferentialUpdate',
+        'UseTransactions',
+        'UseCacheTables',
+        'KeepObsoleteCacheItems',
+        'CacheTableExpirationinterval',
+        'AcceptNonZlib',
     );
 
     /**
@@ -200,7 +331,7 @@ class Model_Config
 
         if (in_array($option, self::$_iValues)) {
             // Validate and cast $value
-            if ($value === false or ctype_digit((string) $value)) {
+            if ($value === false or preg_match('/^-?[0-9]+$/', (string) $value)) {
                 $value = (integer) $value;
             } else {
                 throw new UnexpectedValueException(

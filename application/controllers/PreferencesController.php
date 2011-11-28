@@ -40,9 +40,39 @@ class PreferencesController extends Zend_Controller_Action
         $this->_useForm('Form_Preferences_Inventory');
     }
 
+    public function agentAction()
+    {
+        $this->_useForm('Form_Preferences_Agent');
+    }
+
     public function packagesAction()
     {
         $this->_useForm('Form_Preferences_Packages');
+    }
+
+    public function downloadAction()
+    {
+        $this->_useForm('Form_Preferences_Download');
+    }
+
+    public function networkscanningAction()
+    {
+        $this->_useForm('Form_Preferences_NetworkScanning');
+    }
+
+    public function groupsAction()
+    {
+        $this->_useForm('Form_Preferences_Groups');
+    }
+
+    public function rawdataAction()
+    {
+        $this->_useForm('Form_Preferences_RawData');
+    }
+
+    public function filtersAction()
+    {
+        $this->_useForm('Form_Preferences_Filters');
     }
 
     public function systemAction()
@@ -63,6 +93,9 @@ class PreferencesController extends Zend_Controller_Action
             $form->process($_POST);
         }
         $this->view->form = $form;
+        // Use generic view script instead of a bunch of individual, but
+        // identical scripts.
+        $this->_helper->viewRenderer->renderScript('preferences/form.phtml');
     }
 
 }

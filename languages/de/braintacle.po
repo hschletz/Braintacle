@@ -1,31 +1,12 @@
-# Translation file for Braintacle
+# Header entry was created by Lokalize.
 #
-# $Id$
-#
-# Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
-#
-# This program is free software; you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation; either version 2 of the License, or (at your option)
-# any later version.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along with
-# this program; if not, write to the Free Software Foundation, Inc.,
-# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-#
-#
-# Holger Schletz <holger.schletz@web.de>, 2011.
+# , 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-21 10:45+0100\n"
-"PO-Revision-Date: 2011-11-21 10:49+0100\n"
+"POT-Creation-Date: 2011-11-28 11:42+0100\n"
+"PO-Revision-Date: 2011-11-28 11:42+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -33,19 +14,35 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Lokalize 1.2\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: Bootstrap.php
+msgid "Agent"
+msgstr "Agent"
 
 #: Bootstrap.php
 msgid "Computers"
 msgstr "Computer"
 
 #: Bootstrap.php
+msgid "Download"
+msgstr "Download"
+
+#: Bootstrap.php
 msgid "Duplicates"
 msgstr "Duplikate"
+
+#: Bootstrap.php
+msgid "Filters"
+msgstr "Filter"
 
 #: Bootstrap.php Bootstrap.php;
 msgid "Inventory"
 msgstr "Inventar"
+
+#: Bootstrap.php
+msgid "Network scanning"
+msgstr "Netzwerk-Scans"
 
 #: Bootstrap.php
 msgid "Overview"
@@ -54,6 +51,10 @@ msgstr "Übersicht"
 #: Bootstrap.php
 msgid "Preferences"
 msgstr "Einstellungen"
+
+#: Bootstrap.php
+msgid "Raw data"
+msgstr "Rohdaten"
 
 #: Bootstrap.php; forms/Package.php
 msgid "Build"
@@ -341,9 +342,96 @@ msgstr "Erfolg"
 msgid "Set"
 msgstr "Setzen"
 
+#: forms/Preferences.php
+msgid "Some settings are discouraged and should be changed."
+msgstr "Einige Einstellungen sind nicht empfohlen und sollten geändert werden."
+
+#: forms/Preferences/Agent.php
+msgid "Agent contact interval (in hours)"
+msgstr "Agenten-Kontaktintervall (in Stunden)"
+
+#: forms/Preferences/Agent.php
+msgid "Automatic agent deployment (deprecated)"
+msgstr "Automatische Agentenverteilung (veraltet)"
+
+#: forms/Preferences/Agent.php
+msgid "Automatic agent update (deprecated)"
+msgstr "Automatische Agentenaktualisierung (veraltet)"
+
+#: forms/Preferences/Agent.php
+msgid "Inventory interval (in days, 0 = always, -1 = never)"
+msgstr "Inventar-Intervall (in Tagen, 0 = immer, -1 = nie)"
+
 #: forms/Preferences/Display.php
 msgid "Display ignored software"
 msgstr "Ignorierte Software anzeigen"
+
+#: forms/Preferences/Download.php
+msgid "Delay (in seconds) between cycles"
+msgstr "Pause (in Sekunden) zwischen Zyklen"
+
+#: forms/Preferences/Download.php
+msgid "Delay (in seconds) between fragments"
+msgstr "Pause (in Sekunden) zwischen Fragmenten"
+
+#: forms/Preferences/Download.php
+msgid "Delay (in seconds) between periods"
+msgstr "Pause (in Sekunden) zwischen Perioden"
+
+#: forms/Preferences/Download.php
+msgid "Enable package download"
+msgstr "Download von Paketen aktivieren"
+
+#: forms/Preferences/Download.php
+msgid ""
+"Maximum package priority (packages with higher value will not be downloaded)"
+msgstr ""
+"Maximale Paket-Priorität (Pakete mit höherem Wert werden nicht herunter "
+"geladen)"
+
+#: forms/Preferences/Download.php
+msgid "Timeout (in days)"
+msgstr "Timeout (in Tagen)"
+
+#: forms/Preferences/Filters.php
+msgid "Enable customized inventory processing (discouraged)"
+msgstr "Angepasste Inventarverarbeitung ermöglichen (nicht empfohlen)"
+
+#: forms/Preferences/Filters.php
+msgid "Limit agent connections to trusted networks"
+msgstr "Agentenverbindungen auf vertrauenswürdige Netze beschränken"
+
+#: forms/Preferences/Filters.php
+msgid "Limit inventory frequency"
+msgstr "Inventarhäufigkeit begrenzen"
+
+#: forms/Preferences/Filters.php
+msgid "Limit inventory processing per IP address"
+msgstr "Inventarverarbeitung pro IP-Adresse begrenzen"
+
+#: forms/Preferences/Filters.php
+msgid "Seconds between inventory processing"
+msgstr "Sekunden zwischen Inventarverarbeitung"
+
+#: forms/Preferences/Groups.php
+msgid "Maximum seconds added to above value"
+msgstr "Max. Sekunden, die zum obigen Wert addiert werden"
+
+#: forms/Preferences/Groups.php
+msgid "Minimum seconds between group cache rebuilds"
+msgstr "Min. Sekunden bis zur Erneuerung des Gruppencache"
+
+#: forms/Preferences/Groups.php
+msgid "Set package status on computers for group-assigned packages"
+msgstr "Status von durch Gruppe zugewiesenen Paketen bei Computern setzen "
+
+#: forms/Preferences/Groups.php
+msgid "Use groups"
+msgstr "Gruppen verwenden"
+
+#: forms/Preferences/Inventory.php
+msgid "Inspect registry"
+msgstr "Registry durchsuchen"
 
 #: forms/Preferences/Inventory.php forms/Preferences/Inventory.php;
 #, php-format
@@ -365,6 +453,34 @@ msgstr "Fehlende Paketzuweisungen übernehmen"
 #: forms/Preferences/Inventory.php; views/scripts/duplicates/show.phtml
 msgid "Merge user supplied information"
 msgstr "Benutzerdefinierte Informationen übernehmen"
+
+#: forms/Preferences/NetworkScanning.php
+msgid "Always scan, even if no computer meets quality criteria"
+msgstr "Immer scannen, auch wenn kein Computer die Qualitätskriterien erfüllt"
+
+#: forms/Preferences/NetworkScanning.php
+msgid "Delay (in milliseconds) between ARP requests"
+msgstr "Pause (in Millisekunden) zwischen ARP-Anfragen"
+
+#: forms/Preferences/NetworkScanning.php
+msgid "Maximum days before a scanning computer is replaced"
+msgstr "Maximale Anzahl Tage bevor ein Scan-Computer ersetzt wird"
+
+#: forms/Preferences/NetworkScanning.php
+msgid "Minimum days before a scanning computer is replaced"
+msgstr "Minimale Anzahl Tage bevor ein Scan-Computer ersetzt wird"
+
+#: forms/Preferences/NetworkScanning.php
+msgid "Number of scanning computers per subnet"
+msgstr "Anzahl der Scan-Computer pro Subnetz"
+
+#: forms/Preferences/NetworkScanning.php
+msgid "Use SNMP"
+msgstr "SNMP verwenden"
+
+#: forms/Preferences/NetworkScanning.php
+msgid "Use configuration in groups"
+msgstr "Konfiguration in Gruppen verwenden"
 
 #: forms/Preferences/Packages.php
 msgid "Allow user abort by default"
@@ -434,6 +550,38 @@ msgstr "Vorgabe für \"Benutzereingriff erforderlich\""
 msgid "Warn user by default"
 msgstr "Vorgabe für \"Benutzer warnen\""
 
+#: forms/Preferences/RawData.php
+msgid "File format"
+msgstr "Dateiformat"
+
+#: forms/Preferences/RawData.php
+msgid "Overwrite existing files"
+msgstr "Existierende Dateien überschreiben"
+
+#: forms/Preferences/RawData.php
+msgid "Save incoming raw inventory data"
+msgstr "Eingehende Inventarrohdaten speichern"
+
+#: forms/Preferences/RawData.php
+msgid "Target directory"
+msgstr "Zielverzeichnis"
+
+#: forms/Preferences/RawData.php
+msgid "uncompressed XML"
+msgstr "XML, unkomprimiert"
+
+#: forms/Preferences/RawData.php
+msgid "zlib compressed XML"
+msgstr "XML, zlib-komprimiert"
+
+#: forms/Preferences/System.php
+msgid "Accept requests other than raw zlib compressed"
+msgstr "Akzeptiere nicht-zlib-komprimierte Requests"
+
+#: forms/Preferences/System.php
+msgid "Bitmask for automatic resolution of duplicates (should be 0)"
+msgstr "Bitmaske für automatische Auflösung von Duplikaten (sollte 0 sein)"
+
 #: forms/Preferences/System.php
 msgid "Communication server hostname/address"
 msgstr "Hostname/Adresse des Kommunikationsservers"
@@ -443,20 +591,60 @@ msgid "Communication server port"
 msgstr "Port des Kommunikationsservers"
 
 #: forms/Preferences/System.php
+msgid "Days between cache rebuilds"
+msgstr "Tage bis zur Erneuerung der Cache-Tabellen"
+
+#: forms/Preferences/System.php
+msgid "Interval in seconds to cleanup sessions"
+msgstr "Intervall für Sitzungsbereinigung in Sekunden"
+
+#: forms/Preferences/System.php
+msgid "Keep obsolete items in the cache"
+msgstr "Veraltete Einträge im Cache behalten"
+
+#: forms/Preferences/System.php
 msgid "Keep track of deleted computers"
 msgstr "Gelöschte Computer nachverfolgen"
 
 #: forms/Preferences/System.php
-msgid "Maximum seconds added to above value"
-msgstr "Max. Sekunden, die zum obigen Wert addiert werden"
+msgid "Log level"
+msgstr "Protokollierungsstufe"
+
+#: forms/Preferences/System.php
+msgid "Maximum duration of an agent session in seconds"
+msgstr "Maximale Dauer einer Agentensitzung in Sekunden"
 
 #: forms/Preferences/System.php
 msgid "Maximum seconds to lock a computer"
 msgstr "Max. Sekunden, die ein Computer gesperrt wird"
 
 #: forms/Preferences/System.php
-msgid "Minimum seconds between group cache rebuilds"
-msgstr "Min. Sekunden bis zur Erneuerung des Gruppencache"
+msgid "Path to logfiles"
+msgstr "Verzeichnis für Protokolldateien"
+
+#: forms/Preferences/System.php
+msgid "Session required for inventory"
+msgstr "Sitzung erforderlich für Inventar"
+
+#: forms/Preferences/System.php
+msgid "Update only changed SNMP sections"
+msgstr "Nur geänderte SNMP-Abschnitte aktualisieren"
+
+#: forms/Preferences/System.php
+msgid "Update only changed inventory sections"
+msgstr "Nur geänderte Inventarabschnitte aktualisieren"
+
+#: forms/Preferences/System.php
+msgid "Use cache tables (not recommended)"
+msgstr "Cache-Tabellen verwenden (nicht empfohlen)"
+
+#: forms/Preferences/System.php
+msgid "Use database transactions (recommended)"
+msgstr "Datenbank-Transaktionen verwenden (empfohlen)"
+
+#: forms/Preferences/System.php
+msgid "Use differential database updates"
+msgstr "Differenzielle Datenbank-Updates"
 
 #: forms/Search.php
 msgid "CPU clock (MHz)"
