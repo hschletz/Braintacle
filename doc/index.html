@@ -195,7 +195,7 @@ Since the PHP Zip extension's capabilities are limited and ressource usage can g
 The original GUI allows specifying both the number of fragments and the fragment size.
 Changing one value automatically affects the other.
 Braintacle simplifies this process a bit, assuming that you don't want to have a package to have a particular number of fragments, but any number of fragments up to a certain size.
-You only specify the maximum fragment size (a default can be provided, see "<a href="#extraoptions">Extra options</a>").
+You only specify the maximum fragment size (a default can be provided).
 The actual size may be lower because Braintacle splits the package into evenly-sized fragments up to the given limit.
 </p>
 <p>
@@ -238,7 +238,7 @@ Once set up this may be easier to handle than having to deal with this everytime
 
 <p>
 The limitation to 1 download server allows package creation and activation to be merged into a single step.
-The download locations must be specified at build time, where defaults can be provided (see "<a href="#extraoptions">Extra options</a>").
+The download locations must be specified at build time, where defaults can be provided.
 </p>
 
 <h4>Secure hashes</h4>
@@ -323,26 +323,6 @@ The package history is intentionally not preserved.
 The typical origin of duplicates is a reinstall, where this would just get in the way.
 </li>
 </ul>
-
-<h3><a name="extraoptions">Extra options</a></h3>
-
-<p>
-Braintacle makes use of extra options in the config table, like defaults for the package builder.
-See
-<a href="http://svn.savannah.nongnu.org/viewvc/*checkout*/trunk/application/models/Config.php?root=braintacle&amp;content-type=text%2Fplain">application/models/config.php</a>
-for supported options and their default values.
-There is currently no GUI to change them.
-You have to set them manually in the database, like:
-</p>
-<p>
-<code>
-INSERT INTO config (name,tvalue) VALUES ('BRAINTACLE_DEFAULT_MAX_FRAGMENT_SIZE', '1024');
-</code>
-</p>
-<p>
-Always use the tvalue column, even for integer values.
-Using ivalue has no benefit and is just an unnecessary complication.
-</p>
 
 
 <h2>Known issues</h2>
