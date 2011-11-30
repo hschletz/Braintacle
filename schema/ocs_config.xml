@@ -387,7 +387,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
     </field>
     <field>
      <name>tvalue</name>
-     <value>6005</value>
+     <value>6007</value>
     </field>
     <field>
      <name>comments</name>
@@ -916,21 +916,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
    <insert>
     <field>
      <name>name</name>
-     <value>SNMP_DIR</value>
-    </field>
-    <field>
-     <name>tvalue</name>
-     <value>/var/lib/ocsinventory-reports/snmp</value>
-    </field>
-    <field>
-     <name>comments</name>
-     <value>Directory for download files</value>
-    </field>
-   </insert>
-
-   <insert>
-    <field>
-     <name>name</name>
      <value>INVENTORY_CACHE_REVALIDATE</value>
     </field>
     <field>
@@ -961,7 +946,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
    <update>
     <field>
      <name>tvalue</name>
-     <value>6005</value>
+     <value>6007</value>
     </field>
     <where>
      <expression>
@@ -1006,6 +991,26 @@ this program; if not, write to the Free Software Foundation, Inc.,
       <column>name</column>
       <operator>EQUAL</operator>
       <value>IP_MIN_QUALITY</value>
+     </expression>
+    </where>
+   </delete>
+
+   <delete>
+    <where>
+     <expression>
+      <column>name</column>
+      <operator>EQUAL</operator>
+      <value>SNMP_DIR</value>
+     </expression>
+    </where>
+   </delete>
+
+   <delete>
+    <where>
+     <expression>
+      <column>name</column>
+      <operator>EQUAL</operator>
+      <value>SNMP_URI</value>
      </expression>
     </where>
    </delete>

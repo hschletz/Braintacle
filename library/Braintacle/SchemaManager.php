@@ -48,7 +48,7 @@ class Braintacle_SchemaManager
     /**
      * Latest version of the database schema
      */
-    const SCHEMA_VERSION = 1;
+    const SCHEMA_VERSION = 2;
 
     /**
      * MDB2_Schema object
@@ -372,6 +372,7 @@ class Braintacle_SchemaManager
             'registry',
             'slots',
             'snmp_accountinfo',
+            'snmp_communities',
             'softwares',
             'sounds',
             'storages',

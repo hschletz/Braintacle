@@ -1,5 +1,10 @@
 Revision history for Apache::Ocsinventory
 
+2.0.3
+        * Fix Bug #881406 about security issue due to snmp_com.txt file which is no longer used 
+        * Do not take care of comment lines when getting external useragents file content
+        * Fix various bugs in NOTIFY mode        
+
 2.0.2
         * Add availibilty to allow external useragents using a text file
 
