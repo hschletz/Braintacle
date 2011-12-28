@@ -388,7 +388,7 @@ class Braintacle_SchemaManager
 
         foreach ($this->_allTables as $table) {
             // Force UTF-8 for all tables to prevent charset conversion issues.
-            $mdb2->exec("ALTER TABLE $table CHARACTER SET utf8");
+            $mdb2->exec("ALTER TABLE $table CONVERT TO CHARACTER SET utf8");
 
             // MDB2_Schema is not aware of MySQL's table engines and always
             // uses the configured default engine. The tables need to be
