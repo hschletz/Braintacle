@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-28 11:42+0100\n"
-"PO-Revision-Date: 2011-11-28 11:42+0100\n"
+"POT-Creation-Date: 2011-12-29 19:20+0100\n"
+"PO-Revision-Date: 2011-12-29 19:20+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -602,12 +602,8 @@ msgid "Bitmask for automatic resolution of duplicates (should be 0)"
 msgstr "Bitmaske für automatische Auflösung von Duplikaten (sollte 0 sein)"
 
 #: forms/Preferences/System.php
-msgid "Communication server hostname/address"
-msgstr "Hostname/Adresse des Kommunikationsservers"
-
-#: forms/Preferences/System.php
-msgid "Communication server port"
-msgstr "Port des Kommunikationsservers"
+msgid "Communication server URI"
+msgstr "URI des Kommunikationsservers"
 
 #: forms/Preferences/System.php
 msgid "Days between cache rebuilds"
@@ -1681,5 +1677,3 @@ msgstr "Anzahl Computer"
 #: views/scripts/software/index.phtml
 msgid "Ignore"
 msgstr "Ignorieren"
-
-

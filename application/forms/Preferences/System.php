@@ -35,8 +35,7 @@ class Form_Preferences_System extends Form_Preferences
 {
 
     protected $_types = array(
-        'CommunicationServerAddress' => 'text',
-        'CommunicationServerPort' => 'text', // Not integer, because normalization would be inadequate
+        'CommunicationServerUri' => 'text',
         'LockValidity' => 'integer',
         'SessionValidity' => 'integer',
         'SessionCleanupInterval' => 'integer',
@@ -68,11 +67,8 @@ class Form_Preferences_System extends Form_Preferences
     {
         $translate = Zend_Registry::get('Zend_Translate');
         $this->_labels = array(
-            'CommunicationServerAddress' => $translate->_(
-                'Communication server hostname/address'
-            ),
-            'CommunicationServerPort' => $translate->_(
-                'Communication server port'
+            'CommunicationServerUri' => $translate->_(
+                'Communication server URI'
             ),
             'LockValidity' => $translate->_(
                 'Maximum seconds to lock a computer'
@@ -124,28 +120,8 @@ class Form_Preferences_System extends Form_Preferences
             ),
         );
         parent::init();
-        $this->getElement('CommunicationServerAddress')
-            ->addValidator(
-                'Hostname',
-                false,
-                array(
-                    'allow' => Zend_Validate_Hostname::ALLOW_DNS |
-                               Zend_Validate_Hostname::ALLOW_IP |
-                               Zend_Validate_Hostname::ALLOW_LOCAL,
-                    'tld' => false,
-                )
-            );
-        $this->getElement('CommunicationServerPort')
-            ->setAttrib('size', '5')
-            ->addValidator('Digits')
-            ->addValidator(
-                'Between',
-                false,
-                array(
-                    'min' => 1,
-                    'max' => 65535,
-                )
-            );
+        $this->getElement('CommunicationServerUri')
+            ->addValidator(new Zend_Validate_Callback(array('Zend_Uri', 'check')));
         $this->getElement('LockValidity')
             ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');

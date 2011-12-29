@@ -83,8 +83,9 @@ class Model_Config
         'TraceDeleted' => 'TRACE_DELETED', // Use deleted_equiv table
         'GroupCacheExpirationInterval' => 'GROUPS_CACHE_REVALIDATE', // Seconds (>=1) between cache rebuilds
         'GroupCacheExpirationFuzz' => 'GROUPS_CACHE_OFFSET', // Random range (>=1) added to interval
-        'CommunicationServerAddress' => 'LOCAL_SERVER', // Hostname/address of communication server
-        'CommunicationServerPort' => 'LOCAL_PORT', // Port number of communication server
+        'CommunicationServerAddress' => 'LOCAL_SERVER', // DEPRECATED: Hostname/address of communication server
+        'CommunicationServerPort' => 'LOCAL_PORT', // DEPRECATED: Port number of communication server
+        'CommunicationServerUri' => 'LOCAL_URI_SERVER', // URI of communication server
         // Options below this point are used by the communication server only.
         // Braintacle only uses them in the preferences dialogs.
         'UseGroups' => 'ENABLE_GROUPS', // Use group feature
@@ -161,6 +162,7 @@ class Model_Config
         'GroupCacheExpirationFuzz' => 43200,
         'CommunicationServerAddress' => 'localhost',
         'CommunicationServerPort' => 80,
+        // Default for CommunicationServerUri is provided by get()
         // Defaults below this point are defined by communication server.
         'UseGroups' => 1,
         'SetGroupPackageStatus' => 1,
@@ -303,6 +305,15 @@ class Model_Config
             }
             // Only base directory is stored in config. Always append real directory.
             $value .= '/download/';
+        } elseif ($option == 'CommunicationServerUri') {
+            if (!$value) {
+                // Default can only be applied at runtime, not in static declaration
+                $value = 'http://' .
+                         self::get('CommunicationServerAddress') .
+                         ':' .
+                         self::get('CommunicationServerPort') .
+                         '/ocsinventory';
+            }
         }
 
         if ($value === false) {

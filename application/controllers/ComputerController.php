@@ -320,10 +320,8 @@ class ComputerController extends Zend_Controller_Action
             }
 
             // Post content to communication server
-            $host = Model_Config::get('CommunicationServerAddress');
-            $port = Model_Config::get('CommunicationServerPort');
             $request = new Zend_Http_Client(
-                "http://$host:$port/ocsinventory",
+                Model_Config::get('CommunicationServerUri'),
                 array(
                     'strictredirects' => 'true', // required for POST requests
                     'useragent' => 'Braintacle_local_upload', // Substring 'local' required for correct server operation
