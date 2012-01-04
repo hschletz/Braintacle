@@ -4,7 +4,7 @@
  *
  * $Id$
  *
- * Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011,2012 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -964,15 +964,7 @@ class Model_Computer extends Model_ComputerOrGroup
             // If $arg contains '%' and '_', they are currently NOT escaped, i.e. they operate as wildcards too.
             // The result is encapsulated within '%' to support searching for arbitrary substrings.
             $arg = '%' . strtr($arg, '*?', '%_') . '%';
-            // String comparisions should be case insensitive if possible.
-            // PostgreSQL has the nonstandard ILIKE operator for this.
-            // For other DBMS we use the standard LIKE operator, which might be case sensitive depending on
-            // implementation.
-            if ($select->getAdapter() instanceof Zend_Db_Adapter_Pdo_Pgsql) {
-                $operator= 'ILIKE';
-            } else {
-                $operator= 'LIKE';
-            }
+            $operator = Model_Database::getNada()->iLike();
         }
 
         if ($table == 'hardware') {
@@ -1137,6 +1129,9 @@ class Model_Computer extends Model_ComputerOrGroup
         // < 00:00:00 of the next day.
         // Other operations (<, >) are defined accordingly.
 
+        $db = Zend_Registry::get('db');
+        $nada = Model_Database::getNada();
+
         // Get beginning of day.
         if ($arg instanceof Zend_Date) {
             $dayStart = new Zend_Date($arg, Zend_Date::DATE_SHORT);
@@ -1149,16 +1144,8 @@ class Model_Computer extends Model_ComputerOrGroup
         $dayNext = clone $dayStart;
         $dayNext->addDay(1);
 
-        // For MySQL the timestamp is composed without timezone specification
-        // because it throws a warning on full ISO 8601 formatted date strings.
-        $db = Zend_Registry::get('db');
-        if ($db instanceof Zend_Db_Adapter_Pdo_Mysql or $db instanceof Zend_Db_Adapter_Mysqli) {
-            $dayStart = $dayStart->get('yyyy-MM-dd HH:mm:ss');
-            $dayNext = $dayNext->get('yyyy-MM-dd HH:mm:ss');
-        } else {
-            $dayStart = $dayStart->get(Zend_Date::ISO_8601);
-            $dayNext = $dayNext->get(Zend_Date::ISO_8601);
-        }
+        $dayStart = $dayStart->get($nada->timestampFormatIso());
+        $dayNext = $dayNext->get($nada->timestampFormatIso());
 
         list($table, $column) = self::_findCommon($select, $model, $property);
         $operand = "$table.$column";

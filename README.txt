@@ -86,3 +86,7 @@ This project contains some third party code:
 - The file application/configs/macaddresses-vendors.txt is taken from the
   wireshark project (http://wireshark.org) under a different name. GPLv2
   and copyright information are contained at the top of this file.
+
+- A copy of NADA (http://savannah.nongnu.org/projects/nada, licensed under the
+  BSD 2-Clause License) is included in the library/NADA/ directory. See
+  http://svn.savannah.nongnu.org/svn/nada/trunk/LICENSE

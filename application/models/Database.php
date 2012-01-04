@@ -4,7 +4,7 @@
  *
  * $Id$
  *
- * Copyright (C) 2011 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011,2012 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -38,6 +38,14 @@ class Model_Database
     protected static $_allTables;
 
     /**
+     * Global NADA object
+     *
+     * This is managed by {@link getNada()}. Do not use directly.
+     * @var Nada_Dbms
+     */
+   protected static $_nada;
+
+     /**
      * Get a list with all table names
      * @return array
      */
@@ -65,4 +73,18 @@ class Model_Database
     {
         return in_array('braintacle_blacklist_assettags', self::_listTables());
     }
+
+    /**
+     * Get NADA object set up for application's database
+     * @return Nada_Dbms
+     */
+    public static function getNada()
+    {
+        if (!self::$_nada) {
+            require_once('NADA/Nada.php');
+            self::$_nada = Nada::factory(Zend_Registry::get('db'));
+        }
+        return self::$_nada;
+    }
+
 }
