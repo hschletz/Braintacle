@@ -173,6 +173,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initDatabase()
     {
+        $this->bootstrap('autoload');
+
         try {
             $config = new Zend_Config_Ini(
                 realpath(APPLICATION_PATH . '/../config/database.ini'),
@@ -196,6 +198,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $db->setFetchMode(Zend_Db::FETCH_OBJ);
         Zend_Registry::set('db', $db);
         Zend_Db_Table::setDefaultAdapter($db);
+
+        // Force strict behavior in development mode
+        if (APPLICATION_ENV == 'development') {
+            Model_Database::getNada()->setStrictMode();
+        }
     }
 
     protected function _initTranslate()
