@@ -41,6 +41,8 @@
  */
 class Model_Software extends Model_ChildObject
 {
+
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'softwares' table
         'Name' => 'name',
@@ -58,6 +60,7 @@ class Model_Software extends Model_ChildObject
         'RawSource' => 'source', // Unknown meaning
     );
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'Size' => 'integer',
         'InstallLocation' => 'clob',
@@ -68,7 +71,10 @@ class Model_Software extends Model_ChildObject
         'RawSource' => 'integer',
     );
 
+    /** {@inheritdoc} */
     protected $_tableName = 'softwares';
+
+    /** {@inheritdoc} */
     protected $_preferredOrder = 'Name';
 
     /**

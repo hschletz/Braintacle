@@ -25,10 +25,25 @@
  */
 /**
  * Base class for all child objects belonging to a computer.
+ *
+ * Derived classes implement at least $_tableName and optionally
+ * $_preferredOrder (defaults to 'Name').
  * @package Models
  */
 abstract class Model_ChildObject extends Model_Abstract
 {
+
+    /**
+     * Name of the database table that stores the corresponding data.
+     * @var string
+     */
+    protected $_tableName;
+
+    /**
+     * Name of the property that is used for sorting if no explicit ordering is given.
+     * @var string
+     */
+    protected $_preferredOrder = 'Name';
 
     /**
      * Return a statement|select object with all objects matching criteria.

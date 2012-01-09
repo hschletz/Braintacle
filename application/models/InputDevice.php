@@ -36,6 +36,8 @@
  */
 class Model_InputDevice extends Model_ChildObject
 {
+
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'inputs' table
         'Type' => 'type',
@@ -45,7 +47,11 @@ class Model_InputDevice extends Model_ChildObject
         'Interface' => 'interface',
         'RawPointType' => 'pointtype' // No useful information, always 'N/A' or NULL
     );
+
+    /** {@inheritdoc} */
     protected $_tableName = 'inputs';
+
+    /** {@inheritdoc} */
     protected $_preferredOrder = 'Type';
 
 }

@@ -57,11 +57,9 @@
  * This is useful when a property name is determined at runtime. For example,
  * to set property values from an array, you can do this:
  *
- * <code>
- * foreach ($data as $property => $value) {
- *     $this->setProperty($property, $value);
- * }
- * </code>
+ *     foreach ($data as $property => $value) {
+ *         $this->setProperty($property, $value);
+ *     }
  *
  * Derived classes may override {@link getProperty()} and {@link setProperty()}
  * to process some values (for example, to lowercase values or map enum-like
@@ -71,20 +69,18 @@
  * implementation should respect the $rawValue parameter. If this is set to
  * TRUE, the unprocessed value should be returned. Example:
  *
- * <code>
- * class Model_Derived extends Model_Abstract
- * {
- *     public function getProperty($property, $rawValue=false)
+ *     class Model_Derived extends Model_Abstract
  *     {
- *         // return LogicalName property lowercased unless raw value is requested
- *         if (!$rawValue && $property == 'LogicalName') {
- *             return strtolower(parent::getProperty($property));
+ *         public function getProperty($property, $rawValue=false)
+ *         {
+ *             // return LogicalName property lowercased unless raw value is requested
+ *             if (!$rawValue and $property == 'LogicalName') {
+ *                 return strtolower(parent::getProperty($property));
+ *             }
+ *             // All other properties are returned unchanged
+ *             return parent::getProperty($property);
  *         }
- *         // All other properties are returned unchanged
- *         return parent::getProperty($property);
  *     }
- * }
- * </code>
  *
  * Overriding {@link setProperty()} is similar, with the value given in the second
  * parameter.
@@ -102,7 +98,7 @@ abstract class Model_Abstract implements Iterator
 {
 
     /**
-     * The property map
+     * The property map.
      *
      * Override this in a derived class.
      * @var array
@@ -219,7 +215,7 @@ abstract class Model_Abstract implements Iterator
     }
 
     /**
-     * Retrieve a property by its logical name
+     * Retrieve a property by its logical name.
      *
      * Properties of type 'timestamp' and 'date' are automatically converted to
      * a Zend_Date object unless $rawValue is true or the value is NULL.
@@ -247,7 +243,7 @@ abstract class Model_Abstract implements Iterator
      *
      * This calls {@link getProperty()} internally, so the same rules for data
      * mangling apply and there is typically no need for overriding this method.
-     * @param bool $rawValue If TRUE, do not process the values. Default: FALSE
+     * @param bool $rawValues If TRUE, do not process the values. Default: FALSE
      * @return array Associative array with property names as key
      */
     public function getProperties($rawValues=false)

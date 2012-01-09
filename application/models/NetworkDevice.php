@@ -44,6 +44,7 @@ require_once ('Braintacle/MacAddress.php');
 class Model_NetworkDevice extends Model_Abstract
 {
 
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // values from 'netmap' table
         'IpAddress' => 'ip',
@@ -58,6 +59,7 @@ class Model_NetworkDevice extends Model_Abstract
         'Vendor' => '',
     );
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'DiscoveryDate' => 'timestamp',
     );

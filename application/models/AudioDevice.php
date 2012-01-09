@@ -34,13 +34,19 @@
  */
 class Model_AudioDevice extends Model_ChildObject
 {
+
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'sounds' table
         'Manufacturer' => 'manufacturer',
         'Name' => 'name',
         'Description' => 'description',
     );
+
+    /** {@inheritdoc} */
     protected $_tableName = 'sounds';
+
+    /** {@inheritdoc} */
     protected $_preferredOrder = 'Manufacturer';
 
 }

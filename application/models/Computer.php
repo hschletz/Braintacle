@@ -81,6 +81,8 @@
  */
 class Model_Computer extends Model_ComputerOrGroup
 {
+
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'hardware' table
         'Id' => 'id',
@@ -125,6 +127,7 @@ class Model_Computer extends Model_ComputerOrGroup
         'Membership' => 'static'
     );
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'Id' => 'integer',
         'CpuClock' => 'integer',

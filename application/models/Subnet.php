@@ -41,6 +41,7 @@
 class Model_Subnet extends Model_Abstract
 {
 
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // values from 'networks' table
         'Address' => 'ipsubnet',
@@ -53,6 +54,7 @@ class Model_Subnet extends Model_Abstract
         'NumUnknown' => 'num_unknown',
     );
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'NumInventoried' => 'integer',
         'NumIdentified' => 'integer',
@@ -123,11 +125,7 @@ class Model_Subnet extends Model_Abstract
         return $select->query(null, $args);
     }
 
-    /**
-     * Retrieve a property by its logical name
-     *
-     * Adds 'AddressWithMask' property
-     */
+    /** {@inheritdoc} */
     public function getProperty($property, $rawValue=false)
     {
         if ($property == 'AddressWithMask') {

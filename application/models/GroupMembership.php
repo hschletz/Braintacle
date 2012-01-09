@@ -60,6 +60,7 @@ class Model_GroupMembership extends Model_Abstract
     // It refers to all membership types.
     const TYPE_ALL = -3;
 
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from query result
         'GroupId' => 'group_id',
@@ -67,6 +68,7 @@ class Model_GroupMembership extends Model_Abstract
         'Membership' => 'static',
     );
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'Membership' => 'enum',
     );

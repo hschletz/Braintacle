@@ -33,6 +33,8 @@
  */
 class Model_Modem extends Model_ChildObject
 {
+
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'modems' table
         'Type' => 'type',
@@ -40,7 +42,11 @@ class Model_Modem extends Model_ChildObject
         'RawDescription' => 'description', // Useless, same as Name without enumerator
         'RawModel' => 'model', // Ussless, identical to RawDescription
     );
+
+    /** {@inheritdoc} */
     protected $_tableName = 'modems';
+
+    /** {@inheritdoc} */
     protected $_preferredOrder = 'Type';
 
 }

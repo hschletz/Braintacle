@@ -33,6 +33,8 @@
  */
 class Model_AssociatedPackage extends Model_ChildObject
 {
+
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from query result
         'Computer' => 'hardware_id',
@@ -41,6 +43,7 @@ class Model_AssociatedPackage extends Model_ChildObject
         'Timestamp' => 'comments'
     );
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'Timestamp' => 'clob',
     );

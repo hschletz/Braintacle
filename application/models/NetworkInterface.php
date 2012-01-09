@@ -45,6 +45,8 @@ require_once ('Braintacle/MacAddress.php');
  */
 class Model_NetworkInterface extends Model_ChildObject
 {
+
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'networks' table
         'Description' => 'description',
@@ -60,7 +62,11 @@ class Model_NetworkInterface extends Model_ChildObject
         'RawType' => 'type', // needs further processing to be really useful
         'RawTypeMib' => 'typemib', // needs further processing to be really useful
     );
+
+    /** {@inheritdoc} */
     protected $_tableName = 'networks';
+
+    /** {@inheritdoc} */
     protected $_preferredOrder = 'Description';
 
     /**

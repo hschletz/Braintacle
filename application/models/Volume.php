@@ -41,6 +41,8 @@
  */
 class Model_Volume extends Model_ChildObject
 {
+
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'drives' table. Some properties refer to the same column, depending on OS.
         'Letter' => 'letter',
@@ -55,6 +57,7 @@ class Model_Volume extends Model_ChildObject
         // UsedSpace is calculated by getProperty()
     );
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'Size' => 'integer',
         'FreeSpace' => 'integer',
@@ -62,7 +65,10 @@ class Model_Volume extends Model_ChildObject
         'UsedSpace' => 'integer',
     );
 
+    /** {@inheritdoc} */
     protected $_tableName = 'drives';
+
+    /** {@inheritdoc} */
     protected $_preferredOrder = 'Letter';
 
     /**

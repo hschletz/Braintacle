@@ -34,6 +34,7 @@
  */
 class Model_Port extends Model_ChildObject
 {
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'ports' table
         'Name' => 'name',
@@ -41,7 +42,11 @@ class Model_Port extends Model_ChildObject
         'Connector' => 'caption',
         'RawDescription' => 'description' // Useless, identical to Name without the port name
     );
+
+    /** {@inheritdoc} */
     protected $_tableName = 'ports';
+
+    /** {@inheritdoc} */
     protected $_preferredOrder = 'Name';
 
 }

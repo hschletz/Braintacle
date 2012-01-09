@@ -36,6 +36,8 @@
  */
 class Model_Controller extends Model_ChildObject
 {
+
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'controllers' table
         'Type' => 'type',
@@ -45,7 +47,11 @@ class Model_Controller extends Model_ChildObject
         'DriverVersion' => 'version',
         'RawCaption' => 'caption' // Duplicate of Name, only used for export
     );
+
+    /** {@inheritdoc} */
     protected $_tableName = 'controllers';
+
+    /** {@inheritdoc} */
     protected $_preferredOrder = 'Type';
 
 }

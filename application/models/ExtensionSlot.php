@@ -35,6 +35,8 @@
  */
 class Model_ExtensionSlot extends Model_ChildObject
 {
+
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'slots' table
         'Name' => 'designation',
@@ -44,7 +46,11 @@ class Model_ExtensionSlot extends Model_ChildObject
         'RawPshare' => 'pshare', // obsolete
         'RawPurpose' => 'purpose', // always NULL
     );
+
+    /** {@inheritdoc} */
     protected $_tableName = 'slots';
+
+    /** {@inheritdoc} */
     protected $_preferredOrder = 'Name';
 
 }

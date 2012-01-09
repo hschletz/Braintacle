@@ -39,6 +39,8 @@
  */
 class Model_MemorySlot extends Model_ChildObject
 {
+
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'memories' table
         'SlotNumber' => 'numslots',
@@ -51,11 +53,15 @@ class Model_MemorySlot extends Model_ChildObject
         'Purpose' => 'purpose',
     );
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'SlotNumber' => 'integer',
     );
 
+    /** {@inheritdoc} */
     protected $_tableName = 'memories';
+
+    /** {@inheritdoc} */
     protected $_preferredOrder = 'SlotNumber';
 
     /**

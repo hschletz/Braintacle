@@ -33,11 +33,16 @@
  */
 class Model_Registry extends Model_ChildObject
 {
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'registry' table
         'Name' => 'name',
         'Value' => 'regvalue',
     );
+
+    /** {@inheritdoc} */
     protected $_tableName = 'registry';
+
+    /** {@inheritdoc} */
     protected $_preferredOrder = 'Name';
 }

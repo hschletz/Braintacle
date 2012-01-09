@@ -35,6 +35,8 @@
  */
 class Model_Printer extends Model_ChildObject
 {
+
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'printers' table
         'Name' => 'name',
@@ -42,7 +44,11 @@ class Model_Printer extends Model_ChildObject
         'Port' => 'port',
         'Description' => 'description',
     );
+
+    /** {@inheritdoc} */
     protected $_tableName = 'printers';
+
+    /** {@inheritdoc} */
     protected $_preferredOrder = 'Name';
 
 }

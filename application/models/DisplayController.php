@@ -35,6 +35,8 @@
  */
 class Model_DisplayController extends Model_ChildObject
 {
+
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'videos' table
         'Name' => 'name',
@@ -42,7 +44,11 @@ class Model_DisplayController extends Model_ChildObject
         'Memory' => 'memory',
         'CurrentResolution' => 'resolution',
     );
+
+    /** {@inheritdoc} */
     protected $_tableName = 'videos';
+
+    /** {@inheritdoc} */
     protected $_preferredOrder = 'Name';
 
     /**

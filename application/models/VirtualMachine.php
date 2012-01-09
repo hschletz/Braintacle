@@ -38,6 +38,8 @@
  */
 class Model_VirtualMachine extends Model_ChildObject
 {
+
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'virtualmachines' table
         'Name' => 'name',
@@ -48,10 +50,16 @@ class Model_VirtualMachine extends Model_ChildObject
         'NumCpus' => 'vcpu',
         'GuestMemory' => 'memory',
     );
+
+    /** {@inheritdoc} */
     protected $_types = array(
         'NumCpus' => 'integer',
         'GuestMemory' => 'integer',
     );
+
+    /** {@inheritdoc} */
     protected $_tableName = 'virtualmachines';
+
+    /** {@inheritdoc} */
     protected $_preferredOrder = 'Name';
 }

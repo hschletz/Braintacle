@@ -37,6 +37,7 @@
  */
 class Model_StorageDevice extends Model_ChildObject
 {
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'storages' table. The 'Raw' properties are for internal use only.
         'RawComputer' => 'hardware_id',
@@ -51,12 +52,16 @@ class Model_StorageDevice extends Model_ChildObject
         'Device' => 'name',
     );
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'RawComputer' => 'integer',
         'Size' => 'integer',
     );
 
+    /** {@inheritdoc} */
     protected $_tableName = 'storages';
+
+    /** {@inheritdoc} */
     protected $_preferredOrder = 'RawType';
 
     /**

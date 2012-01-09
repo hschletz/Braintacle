@@ -86,6 +86,7 @@
 class Model_Package extends Model_Abstract
 {
 
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         'Name' => 'name',
         'Timestamp' => 'fileid',
@@ -119,6 +120,7 @@ class Model_Package extends Model_Abstract
         'FileType' => 'fileType',
     );
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'Priority' => 'integer',
         'NumFragments' => 'integer',

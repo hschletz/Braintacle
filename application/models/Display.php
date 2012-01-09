@@ -36,6 +36,8 @@
  */
 class Model_Display extends Model_ChildObject
 {
+
+    /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'monitors' table
         'Manufacturer' => 'manufacturer',
@@ -44,7 +46,11 @@ class Model_Display extends Model_ChildObject
         'ProductionDate' => 'description',
         'Type' => 'type',
     );
+
+    /** {@inheritdoc} */
     protected $_tableName = 'monitors';
+
+    /** {@inheritdoc} */
     protected $_preferredOrder = 'Manufacturer';
 
 }
