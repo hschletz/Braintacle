@@ -516,6 +516,13 @@ Run this script everytime you have added translatable stings to the source code 
 This script generates/updates the API documentation.
 It requires <a href="http://docblox-project.org">DocBlox</a> to be installed.
 </p>
+<p>
+If no argument is given, DocBlox is invoked via the 'docblox' command.
+If this is not available or a different version (a development snapshot, for
+example) should be used, specify the path to the DocBlox installation:
+<p><code>
+php tools/generate-documentation.php /path/to/docblox
+</code></p>
 
 </body>
 </html>

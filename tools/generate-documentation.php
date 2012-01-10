@@ -24,6 +24,14 @@
  * @package Tools
  */
 
+/*
+ * USAGE: generate-documentation.php [DocBlox path]
+ *
+ * If no argument is given, DocBlox is invoked via the 'docblox' command.
+ * If this is not available or a different version (a development snapshot, for
+ * example) should be used, specify the path to the DocBlox installation.
+ */
+
 error_reporting(-1);
 
 /**
@@ -68,11 +76,18 @@ function hasTag($class, $method, $argument)
 // All paths are relative to this script's parent directory
 $basePath = realpath(dirname(dirname(__FILE__)));
 
+// Determine DocBlox invocation method
+if (isset($_SERVER['argv'][1])) {
+    $docBloxCmd = 'php ' . realpath($_SERVER['argv'][1] . 'bin/docblox.php');
+} else {
+    $docBloxCmd = 'docblox';
+}
+
 print "Running DocBlox on source files\n";
 
 // STAGE 1: Parse source files and generate structure file.
 $cmd = array(
-    'docblox',
+    $docBloxCmd,
     'project:parse',
     '--directory',
     implode(
@@ -150,7 +165,7 @@ $structure->save(realpath("$basePath/doc/api/structure.xml"));
 
 // STAGE 3: Transform structure file into documentation
 $cmd = array(
-    'docblox',
+    $docBloxCmd,
     'project:transform',
     '--config',
     realpath("$basePath/doc/api/docblox.xml"),
