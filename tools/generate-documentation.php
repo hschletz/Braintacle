@@ -152,6 +152,8 @@ $structure->save(realpath("$basePath/doc/api/structure.xml"));
 $cmd = array(
     'docblox',
     'project:transform',
+    '--config',
+    realpath("$basePath/doc/api/docblox.xml"),
     '--source',
     realpath("$basePath/doc/api/structure.xml"),
     '--target',
