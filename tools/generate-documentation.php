@@ -78,7 +78,7 @@ $basePath = realpath(dirname(dirname(__FILE__)));
 
 // Determine DocBlox invocation method
 if (isset($_SERVER['argv'][1])) {
-    $docBloxCmd = 'php ' . realpath($_SERVER['argv'][1] . 'bin/docblox.php');
+    $docBloxCmd = 'php ' . realpath($_SERVER['argv'][1] . '/bin/docblox.php');
 } else {
     $docBloxCmd = 'docblox';
 }
