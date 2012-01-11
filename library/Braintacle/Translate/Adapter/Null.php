@@ -48,15 +48,20 @@ class Braintacle_Translate_Adapter_Null extends Zend_Translate_Adapter
     }
 
     /**
-     * Stub for abstract method
+     * Load translation data
+     * @param mixed $data
+     * @param string|Zend_Locale $locale
+     * @param array $options (optional)
+     * @return array
      */
     protected function _loadTranslationData($data, $locale, array $options = array())
     {
+        // Stub for abstract method
     }
 
-
     /**
-     * Implementation for abstract method
+     * Returns the adapter name
+     * @return string
      */
     public function toString()
     {

@@ -40,6 +40,7 @@ class Braintacle_Validate_Date extends Zend_Validate_Abstract
     const TIMEOFDAY = 'timeofday';
 
     /**
+     * Validation failure message template definitions
      * @var array
      */
     protected $_messageTemplates = array(

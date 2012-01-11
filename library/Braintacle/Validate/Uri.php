@@ -33,6 +33,7 @@ class Braintacle_Validate_Uri extends Zend_Validate_Abstract
     const URI = 'uri';
 
     /**
+     * Additional variables available for validation failure messages
      * @var array
      */
     protected $_messageVariables = array(
@@ -40,6 +41,7 @@ class Braintacle_Validate_Uri extends Zend_Validate_Abstract
     );
 
     /**
+     * Validation failure message template definitions
      * @var array
      */
     protected $_messageTemplates = array(

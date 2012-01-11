@@ -33,6 +33,7 @@ class Braintacle_Validate_DirectoryWritable extends Zend_Validate_Abstract
     const WRITABLE = 'writable';
 
     /**
+     * Validation failure message template definitions
      * @var array
      */
     protected $_messageTemplates = array(
