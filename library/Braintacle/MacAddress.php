@@ -66,6 +66,7 @@ class Braintacle_MacAddress
      * Constructor
      *
      * The address gets canonicalized. No further validation is performed.
+     * @param string $address MAC address
      */
     function __construct($address)
     {
