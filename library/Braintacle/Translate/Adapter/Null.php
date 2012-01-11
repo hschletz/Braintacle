@@ -34,14 +34,17 @@ class Braintacle_Translate_Adapter_Null extends Zend_Translate_Adapter
 {
 
     /**
-     * Constructor
+     * Generates the adapter
+     * @param  array|Zend_Config $options Translation options for this adapter
+     * @throws Zend_Translate_Exception
+     * @return void
      */
-    function __construct($data = null, $locale = null, array $options = array())
+    public function __construct($options = array())
     {
         // Never complain about anything.
         $options['logUntranslated'] = false;
         $options['disableNotices'] = true;
-        parent::__construct($data, $locale, $options);
+        parent::__construct($options);
     }
 
     /**
