@@ -24,6 +24,7 @@
  * @filesource
  */
 /**
+ * Validate and extract parameters "order" and "direction" from request.
  * @package ActionHelpers
  */
 class Zend_Controller_Action_Helper_Ordering
