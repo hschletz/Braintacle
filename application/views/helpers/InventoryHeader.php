@@ -24,6 +24,7 @@
  * @filesource
  */
 /**
+ * Render headline and navigation for inventory details
  * @package ViewHelpers
  */
 class Zend_View_Helper_InventoryHeader extends Zend_View_Helper_Abstract

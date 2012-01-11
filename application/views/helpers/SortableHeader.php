@@ -24,6 +24,7 @@
  * @filesource
  */
 /**
+ * Render a clickable HTML table header
  * @package ViewHelpers
  */
 class Zend_View_Helper_SortableHeader extends Zend_View_Helper_Abstract

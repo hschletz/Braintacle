@@ -24,6 +24,7 @@
  * @filesource
  */
 /**
+ * Render input validation messages
  * @package ViewHelpers
  */
 class Zend_View_Helper_ValidationMessages extends Zend_View_Helper_Abstract

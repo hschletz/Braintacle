@@ -24,6 +24,7 @@
  * @filesource
  */
 /**
+ * Render a single HTML element
  * @package ViewHelpers
  */
 class Zend_View_Helper_HtmlTag extends Zend_View_Helper_Abstract

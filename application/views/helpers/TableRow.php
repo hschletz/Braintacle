@@ -24,6 +24,7 @@
  * @filesource
  */
 /**
+ * Render a HTML table row
  * @package ViewHelpers
  */
 class Zend_View_Helper_TableRow extends Zend_View_Helper_Abstract

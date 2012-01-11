@@ -24,6 +24,7 @@
  * @filesource
  */
 /**
+ * Render headline and navigation for group details
  * @package ViewHelpers
  */
 class Zend_View_Helper_GroupHeader extends Zend_View_Helper_Abstract

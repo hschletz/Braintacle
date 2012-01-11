@@ -24,6 +24,7 @@
  * @filesource
  */
 /**
+ * Render translated text for membership type
  * @package ViewHelpers
  */
 class Zend_View_Helper_MembershipType extends Zend_View_Helper_Abstract

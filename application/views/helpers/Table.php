@@ -24,6 +24,7 @@
  * @filesource
  */
 /**
+ * Render a HTML table from a DB statement object
  * @package ViewHelpers
  */
 class Zend_View_Helper_Table extends Zend_View_Helper_Abstract

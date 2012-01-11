@@ -24,6 +24,7 @@
  * @filesource
  */
 /**
+ * Render date value using Zend_Date
  * @package ViewHelpers
  */
 class Zend_View_Helper_Date extends Zend_View_Helper_Abstract
