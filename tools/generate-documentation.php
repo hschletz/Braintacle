@@ -108,7 +108,6 @@ $cmd = array(
     'php',
     '--title',
     '"Braintacle API documentation"',
-    '--force',
     '--progressbar',
 );
 $cmd = implode(' ', $cmd);
