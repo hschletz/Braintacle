@@ -271,13 +271,13 @@ class Form_Search extends Form_Normalized
 
     /**
      * Validate the form
-     *
-     * This implementation sets options of the 'search' element depending on the
-     * filter before validation, because integers, dates etc. require different
-     * processing.
+     * @param array $data
+     * @return boolean
      */
     public function isValid($data)
     {
+        // Set options of the 'search' element depending on the filter before
+        // validation, because integers, dates etc. require different processing.
         if (isset($data['filter'])) {
             $this->setSearchOptions($data['filter']);
         } else {
@@ -303,7 +303,9 @@ class Form_Search extends Form_Normalized
     }
 
     /**
-     * Generate JavaScript before rendering elements
+     * Render form
+     * @param Zend_View_Interface $view
+     * @return string
      */
     public function render(Zend_View_Interface $view=null)
     {

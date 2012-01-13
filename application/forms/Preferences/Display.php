@@ -30,6 +30,7 @@
 class Form_Preferences_Display extends Form_Preferences
 {
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'DisplayBlacklistedSoftware' => 'bool',
     );

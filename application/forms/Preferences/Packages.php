@@ -35,6 +35,7 @@ require_once ('Braintacle/Validate/Uri.php');
 class Form_Preferences_Packages extends Form_Preferences
 {
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'DefaultDeployNonnotified' => 'bool',
         'DefaultDeploySuccess' => 'bool',

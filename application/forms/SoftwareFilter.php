@@ -60,7 +60,9 @@ class Form_SoftwareFilter extends Zend_Form
     }
 
     /**
-     * Generate JavaScript before rendering elements
+     * Render form
+     * @param Zend_View_Interface $view
+     * @return string
      */
     public function render(Zend_View_Interface $view=null)
     {

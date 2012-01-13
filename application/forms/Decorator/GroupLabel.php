@@ -44,6 +44,7 @@ class Form_Decorator_GroupLabel extends Zend_Form_Decorator_Label
 
     /**
      * Constructor
+     * @param array|Zend_Config $options
      */
     function __construct($options = null)
     {
@@ -55,7 +56,9 @@ class Form_Decorator_GroupLabel extends Zend_Form_Decorator_Label
     }
 
     /**
-     * Render label as hyperlink
+     * Render a label
+     * @param string $content
+     * @return string
      */
     public function render($content)
     {

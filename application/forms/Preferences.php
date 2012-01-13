@@ -189,10 +189,13 @@ abstract class Form_Preferences extends Form_Normalized
     }
 
     /**
-     * Prepend warning about bad values before rendering
+     * Render form
+     * @param Zend_View_Interface $view
+     * @return string
      */
     public function render(Zend_View_Interface $view = null)
     {
+        // Prepend warning about bad values before rendering
         $output = '';
         if ($this->_hasBadValues) {
             // Can't use htmlTag helper here because $view is NULL.

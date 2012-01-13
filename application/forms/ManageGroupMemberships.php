@@ -129,10 +129,13 @@ class Form_ManageGroupMemberships extends Zend_Form
     }
 
     /**
-     * Return plain group IDs instead of raw element names
+     * Retrieve all form element values
+     * @param bool $suppressArrayNotation
+     * @return array
      */
     public function getValues($suppressArrayNotation = false)
     {
+        // Return plain group IDs instead of raw element names
         $values = array();
         foreach (parent::getValues($suppressArrayNotation) as $name => $value) {
             $name = self::extractGroupId($name);

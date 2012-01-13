@@ -30,6 +30,7 @@
 class Form_Preferences_NetworkScanning extends Form_Preferences
 {
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'ScannersPerSubnet' => 'integer',
         'ScanSnmp' => 'bool',

@@ -34,6 +34,7 @@ require_once ('Braintacle/Validate/DirectoryWritable.php');
 class Form_Preferences_System extends Form_Preferences
 {
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'CommunicationServerUri' => 'text',
         'LockValidity' => 'integer',
@@ -54,6 +55,7 @@ class Form_Preferences_System extends Form_Preferences
         'AcceptNonZlib' => 'bool',
     );
 
+    /** {@inheritdoc} */
     protected $_goodValues = array(
         'AutoDuplicateCriteria' => 0,
         'UseTransactions' => true,

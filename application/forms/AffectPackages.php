@@ -89,10 +89,13 @@ class Form_AffectPackages extends Zend_Form
     }
 
     /**
-     * Return only checked items and decode their names.
+     * Retrieve all form element values
+     * @param bool $suppressArrayNotation
+     * @return array
      */
     public function getValues($suppressArrayNotation=false)
     {
+        // Return only checked items and decode their names.
         $values = parent::getValues($suppressArrayNotation);
         $result = array();
 

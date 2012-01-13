@@ -30,6 +30,7 @@
 class Form_Preferences_Filters extends Form_Preferences
 {
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'TrustedNetworksOnly' => 'bool',
         'InventoryFilter' => 'bool',
@@ -38,6 +39,7 @@ class Form_Preferences_Filters extends Form_Preferences
         'CustomProcessing' => 'bool',
     );
 
+    /** {@inheritdoc} */
     protected $_goodValues = array(
         'CustomProcessing' => false,
     );

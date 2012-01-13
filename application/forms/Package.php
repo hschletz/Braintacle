@@ -364,7 +364,9 @@ class Form_Package extends Zend_Form
     }
 
     /**
-     * Overridden validation logic
+     * Validate the form
+     * @param array $data
+     * @return boolean
      */
     public function isValid($data)
     {
@@ -377,10 +379,13 @@ class Form_Package extends Zend_Form
     }
 
     /**
-     * Provide FileName, FileLocation and FileType properties
+     * Retrieve all form element values
+     * @param bool $suppressArrayNotation
+     * @return array
      */
     public function getValues($suppressArrayNotation = false)
     {
+        // Provide FileName, FileLocation and FileType properties
         $values = parent::getValues($suppressArrayNotation);
         $fileInfo = $this->getElement('File')->getFileInfo();
         $values['FileName'] = $fileInfo['File']['name'];
@@ -390,7 +395,9 @@ class Form_Package extends Zend_Form
     }
 
     /**
-     * Generate JavaScript before rendering elements
+     * Render form
+     * @param Zend_View_Interface $view
+     * @return string
      */
     public function render(Zend_View_Interface $view=null)
     {

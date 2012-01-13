@@ -30,6 +30,7 @@
 class Form_Preferences_Inventory extends Form_Preferences
 {
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'InspectRegistry' => 'bool',
         'DefaultMergeUserdefined' => 'bool',

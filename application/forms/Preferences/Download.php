@@ -30,6 +30,7 @@
 class Form_Preferences_Download extends Form_Preferences
 {
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'PackageDeployment' => 'bool',
         'DownloadPeriodDelay' => 'integer',

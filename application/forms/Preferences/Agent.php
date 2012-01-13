@@ -30,6 +30,7 @@
 class Form_Preferences_Agent extends Form_Preferences
 {
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'ContactInterval' => 'integer',
         'InventoryInterval' => 'integer',
@@ -37,6 +38,7 @@ class Form_Preferences_Agent extends Form_Preferences
         'AgentUpdate' => 'bool',
     );
 
+    /** {@inheritdoc} */
     protected $_goodValues = array(
         'AgentDeployment' => false,
         'AgentUpdate' => false,

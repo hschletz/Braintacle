@@ -108,7 +108,10 @@ abstract class Form_Normalized extends Zend_Form
     }
 
     /**
-     * Set localized value on an element
+     * Set default value for an element
+     * @param string $name
+     * @param mixed $value
+     * @return Zend_Form
      */
     public function setDefault($name, $value)
     {
@@ -116,7 +119,11 @@ abstract class Form_Normalized extends Zend_Form
     }
 
     /**
-     * Set localized values on all elements
+     * Set default values for elements
+     *
+     * Sets values for all elements specified in the array of $defaults.
+     * @param array $defaults
+     * @return Zend_Form
      */
     public function setDefaults(array $defaults)
     {
@@ -127,7 +134,9 @@ abstract class Form_Normalized extends Zend_Form
     }
 
     /**
-     * Retrieve normalized value for an element
+     * Retrieve value for single element
+     * @param string $name
+     * @return mixed
      */
     public function getValue($name)
     {
@@ -135,7 +144,9 @@ abstract class Form_Normalized extends Zend_Form
     }
 
     /**
-     * Retrieve normalized values for all elements
+     * Retrieve all form element values
+     * @param bool $suppressArrayNotation
+     * @return array
      */
     public function getValues($suppressArrayNotation=false)
     {

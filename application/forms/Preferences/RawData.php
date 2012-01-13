@@ -34,6 +34,7 @@ require_once ('Braintacle/Validate/DirectoryWritable.php');
 class Form_Preferences_RawData extends Form_Preferences
 {
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'SaveRawData' => 'bool',
         'SaveDir' => 'text',

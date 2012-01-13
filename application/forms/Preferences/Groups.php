@@ -30,6 +30,7 @@
 class Form_Preferences_Groups extends Form_Preferences
 {
 
+    /** {@inheritdoc} */
     protected $_types = array(
         'UseGroups' => 'bool',
         'GroupCacheExpirationInterval' => 'integer',
