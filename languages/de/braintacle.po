@@ -19,13 +19,13 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 #
-# Holger Schletz <holger.schletz@web.de>, 2011.
+# Holger Schletz <holger.schletz@web.de>, 2011, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-12-29 19:20+0100\n"
-"PO-Revision-Date: 2011-12-29 19:20+0100\n"
+"PO-Revision-Date: 2012-01-14 12:34+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -998,7 +998,7 @@ msgstr ""
 #: models/Package.php
 #, php-format
 msgid "Could not compute SHA1 hash of file '%s'."
-msgstr "Konnte SHA1-Hash von Datei '$s' nicht berechnen."
+msgstr "Konnte SHA1-Hash von Datei '%s' nicht berechnen."
 
 #: models/Package.php models/Package.php;
 #, php-format
@@ -1677,3 +1677,4 @@ msgstr "Anzahl Computer"
 #: views/scripts/software/index.phtml
 msgid "Ignore"
 msgstr "Ignorieren"
+
