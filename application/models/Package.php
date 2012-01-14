@@ -587,7 +587,7 @@ class Model_Package extends Model_Abstract
             $numFragments = 0;
             $input = @fopen($file, 'rb');
             if (!$input) {
-                $this->_setError('Could not open file \'%s\' for reading.');
+                $this->_setError('Could not open file \'%s\' for reading.', $file);
                 return false;
             }
             $bytesRead = 0;
