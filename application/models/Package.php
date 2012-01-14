@@ -569,8 +569,10 @@ class Model_Package extends Model_Abstract
             if (!@rename($file, $baseName . '1')) {
                 $this->_setError(
                     'Could not move/rename file \'%1$s\' to \'%2$s\'',
-                    $file,
-                    $baseName . '1'
+                    array(
+                        $file,
+                        $baseName . '1',
+                    )
                 );
                 return false;
             }
@@ -717,8 +719,10 @@ class Model_Package extends Model_Abstract
         } catch (Zend_Exception $exception) {
             $this->_setError(
                 'Could not insert row into table \'%1$s\'. Message: %2$s',
-                $table,
-                $exception->getMessage()
+                array(
+                    $table,
+                    $exception->getMessage(),
+                )
             );
             return false;
         }
@@ -889,12 +893,13 @@ class Model_Package extends Model_Abstract
      * Translate error message and append it to the list. HTML code will be escaped.
      * @param string $message untranslated message with optional {@link sprintf()
      * sprintf()}-style placeholders
-     * @param mixed $args,... arguments for placeholders
+     * @param mixed $args single argument or array of arguments for placeholders
      */
-    protected function _setError($message)
+    protected function _setError($message, $args)
     {
-        $args = func_get_args();
-        unset($args[0]);
+        if (!is_array($args)) {
+            $args = array($args);
+        }
         $this->_errors[] = htmlspecialchars(
             vsprintf(
                 Zend_Registry::get('Zend_Translate')->_($message),
@@ -907,12 +912,13 @@ class Model_Package extends Model_Abstract
      * Translate error message and append it to the list. HTML code will not be escaped.
      * @param string $message untranslated message with optional {@link sprintf()
      * sprintf()}-style placeholders
-     * @param mixed $args,... arguments for placeholders
+     * @param mixed $args single argument or array of arguments for placeholders
      */
-    protected function _setErrorHtml($message)
+    protected function _setErrorHtml($message, $args)
     {
-        $args = func_get_args();
-        unset($args[0]);
+        if (!is_array($args)) {
+            $args = array($args);
+        }
         $this->_errors[] = vsprintf(
             Zend_Registry::get('Zend_Translate')->_($message),
             $args
@@ -991,16 +997,20 @@ class Model_Package extends Model_Abstract
         } catch (Zend_Exception $exception) {
             $this->_setErrorHtml(
                 'Connection to <a href="%1$s">%1$s</a> failed with Message: \'%2$s\'',
-                $connection->getUri(true),
-                htmlspecialchars($exception->getMessage())
+                array(
+                    $connection->getUri(true),
+                    htmlspecialchars($exception->getMessage()),
+                )
             );
             return false;
         }
         if (!$response->isSuccessful()) {
             $this->_setErrorHtml(
                 'Connection to <a href="%1$s">%1$s</a> failed with HTTP status code %2$d',
-                $connection->getUri(true),
-                $response->getStatus()
+                array(
+                    $connection->getUri(true),
+                    $response->getStatus()
+                )
             );
             return false;
         }
