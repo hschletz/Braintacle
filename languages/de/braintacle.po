@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-29 19:20+0100\n"
-"PO-Revision-Date: 2012-01-14 12:34+0100\n"
+"POT-Creation-Date: 2012-01-22 17:24+0100\n"
+"PO-Revision-Date: 2012-01-22 17:24+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -74,6 +74,10 @@ msgstr "Einstellungen"
 #: Bootstrap.php
 msgid "Raw data"
 msgstr "Rohdaten"
+
+#: Bootstrap.php
+msgid "Users"
+msgstr "Benutzer"
 
 #: Bootstrap.php; forms/Package.php
 msgid "Build"
@@ -1655,6 +1659,22 @@ msgstr "Paket '%s' wird dauerhaft gelöscht. Fortfahren?"
 #: views/scripts/package/index.phtml
 msgid "Warnings:"
 msgstr "Warnungen:"
+
+#: views/scripts/preferences/users.phtml
+msgid "First name"
+msgstr "Vorname"
+
+#: views/scripts/preferences/users.phtml
+msgid "Last name"
+msgstr "Nachname"
+
+#: views/scripts/preferences/users.phtml
+msgid "Login name"
+msgstr "Anmeldename"
+
+#: views/scripts/preferences/users.phtml
+msgid "Mail address"
+msgstr "Mailadresse"
 
 #: views/scripts/software/accept.phtml
 #, php-format

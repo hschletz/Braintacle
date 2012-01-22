@@ -80,6 +80,15 @@ class PreferencesController extends Zend_Controller_Action
         $this->_useForm('Form_Preferences_System');
     }
 
+    public function usersAction()
+    {
+        $this->_helper->ordering('Id');
+        $this->view->accounts = Model_Account::createStatementStatic(
+            $this->view->order,
+            $this->view->direction
+        );
+    }
+
     /**
      * Standard preferences handling via Form_Preferences subclass
      * @param string $class Name of the form class

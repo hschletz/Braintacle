@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-29 19:20+0100\n"
+"POT-Creation-Date: 2012-01-22 17:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -110,6 +110,10 @@ msgstr ""
 
 #: Bootstrap.php; views/helpers/InventoryHeader.php
 msgid "System"
+msgstr ""
+
+#: Bootstrap.php
+msgid "Users"
 msgstr ""
 
 #: controllers/ComputerController.php
@@ -1685,6 +1689,22 @@ msgstr ""
 
 #: views/scripts/package/index.phtml
 msgid "Warnings:"
+msgstr ""
+
+#: views/scripts/preferences/users.phtml
+msgid "Login name"
+msgstr ""
+
+#: views/scripts/preferences/users.phtml
+msgid "First name"
+msgstr ""
+
+#: views/scripts/preferences/users.phtml
+msgid "Last name"
+msgstr ""
+
+#: views/scripts/preferences/users.phtml
+msgid "Mail address"
 msgstr ""
 
 #: views/scripts/software/accept.phtml

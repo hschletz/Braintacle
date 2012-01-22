@@ -168,6 +168,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             ->setAction('system');
         $page->addPage($sub);
 
+        $sub = new Zend_Navigation_Page_Mvc;
+        $sub->setLabel('Users')
+            ->setController('preferences')
+            ->setAction('users');
+        $page->addPage($sub);
+
         Zend_Registry::set('Zend_Navigation', $navigation);
     }
 
