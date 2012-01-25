@@ -63,6 +63,14 @@ msgstr ""
 msgid "'%value%' does not appear to be a valid local network name"
 msgstr ""
 
+#: Validate/Hostname.php
+msgid "'%value%' appears to be a local network name but local network names are not allowed"
+msgstr ""
+
+#: Validate/Hostname.php
+msgid "'%value%' appears to be a DNS hostname but cannot extract TLD part"
+msgstr ""
+
 #: Validate/NotEmpty.php:42
 msgid "Value is required and can't be empty"
 msgstr ""
@@ -89,4 +97,12 @@ msgstr ""
 
 #: Validate/Date.php:47
 msgid "'%value%' does not fit the date format '%format%'"
+msgstr ""
+
+#: Validate/EmailAddress.php
+msgid "'%hostname%' is no valid hostname for email address '%value%'"
+msgstr ""
+
+#: Validate/EmailAddress.php
+msgid "'%value%' is no valid email address in the basic format local-part@hostname"
 msgstr ""

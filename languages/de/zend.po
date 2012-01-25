@@ -19,15 +19,15 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 #
-# Holger Schletz <holger.schletz@web.de>, 2011.
+# Holger Schletz <holger.schletz@web.de>, 2011, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-03-05 18:26+0100\n"
-"PO-Revision-Date: 2012-01-25 15:29+0100\n"
+"PO-Revision-Date: 2012-01-25 15:56+0100\n"
 "Last-Translator: \n"
-"Language-Team: German <holger.schletz@web.de>\n"
+"Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,6 +51,15 @@ msgstr "Ein Datensatz '%value%' ist bereits vorhanden"
 msgid "'%value%' must contain only digits"
 msgstr "'%value%' darf nur Ziffern enthalten"
 
+#: Validate/EmailAddress.php
+msgid "'%hostname%' is no valid hostname for email address '%value%'"
+msgstr "'%hostname%' ist kein gültiger Hostname für Emailadresse '%value%'"
+
+#: Validate/EmailAddress.php
+msgid ""
+"'%value%' is no valid email address in the basic format local-part@hostname"
+msgstr "'%value%' ist keine gültige Emailadresse im Format local-part@hostname"
+
 #: Validate/File/Size.php:49
 msgid ""
 "Maximum allowed size for file '%value%' is '%max%' but '%size%' detected"
@@ -66,18 +75,32 @@ msgstr "Datei '%value%' überschreitet die definierte Größe."
 msgid "File '%value%' was not uploaded"
 msgstr "Datei '%value%' wurde nicht hochgeladen."
 
+#: Validate/Hostname.php
+msgid "'%value%' appears to be a DNS hostname but cannot extract TLD part"
+msgstr ""
+"'%value%' scheint ein DNS Hostname zu sein, aber TLD kann nicht extrahiert "
+"werden"
+
+#: Validate/Hostname.php
+msgid ""
+"'%value%' appears to be a local network name but local network names are not "
+"allowed"
+msgstr ""
+"'%value%' scheint ein lokaler Netzwerkname zu sein, aber lokale "
+"Netzwerknamen sind nicht erlaubt"
+
 #: Validate/Hostname.php:66
 msgid ""
 "'%value%' appears to be a DNS hostname but cannot match TLD against known "
 "list"
-msgstr "'%value' scheint ein DNS Hostname zu sein, TLD ist aber unbekannt"
+msgstr "'%value%' scheint ein DNS Hostname zu sein, TLD ist aber unbekannt"
 
 #: Validate/Hostname.php:68
 msgid ""
 "'%value%' appears to be a DNS hostname but cannot match against hostname "
 "schema for TLD '%tld%'"
 msgstr ""
-"'%value' scheint ein DNS Hostname zu sein, passt aber nicht zu "
+"'%value%' scheint ein DNS Hostname zu sein, passt aber nicht zu "
 "Hostnamenschema für TLD '%tld'"
 
 #: Validate/Hostname.php:70
