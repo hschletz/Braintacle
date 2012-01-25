@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-03-05 18:26+0100\n"
-"PO-Revision-Date: 2011-08-30 18:31+0200\n"
+"PO-Revision-Date: 2012-01-25 15:29+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <holger.schletz@web.de>\n"
 "Language: de\n"
@@ -44,7 +44,7 @@ msgid "'%value%' does not fit the date format '%format%'"
 msgstr "'%value%' passt nicht zu Datumsformat '%pattern%'"
 
 #: Validate/Db/Abstract.php:49
-msgid "A record matching %value% was found"
+msgid "A record matching '%value%' was found"
 msgstr "Ein Datensatz '%value%' ist bereits vorhanden"
 
 #: Validate/Digits.php:52

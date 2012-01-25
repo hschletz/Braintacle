@@ -40,7 +40,7 @@ msgid "You must give a non-empty value for field '%field%'"
 msgstr ""
 
 #: Validate/Db/Abstract.php:49
-msgid "A record matching %value% was found"
+msgid "A record matching '%value%' was found"
 msgstr ""
 
 #: Validate/Digits.php:52
