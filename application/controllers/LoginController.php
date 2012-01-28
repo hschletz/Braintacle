@@ -26,16 +26,11 @@ class LoginController extends Zend_Controller_Action
 
     public function init()
     {
-        $this->view->form = $this->getForm();
+        $this->view->form = new Form_Login;
     }
 
     public function indexAction()
     {
-    }
-
-    public function getForm()
-    {
-        return new Form_Login;
     }
 
     public function getAuthAdapter($credentials)
@@ -78,7 +73,7 @@ class LoginController extends Zend_Controller_Action
         }
 
         // Validate form
-        $form = $this->getForm();
+        $form = new Form_Login;
         if (!$form->isValid($request->getPost())) {
             // Invalid entries
             $this->view->form = $form;
