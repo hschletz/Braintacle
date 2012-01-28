@@ -35,6 +35,9 @@ class Form_Login extends Zend_Form
      */
     public function init()
     {
+        $this->setMethod('post');
+        $this->setAction('login/login');
+
         $username = new Zend_Form_Element_Text('userid');
         $username->addFilter('StringTrim')
                  ->addValidator('StringLength', false, array(1, 255))
