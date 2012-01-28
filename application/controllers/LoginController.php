@@ -24,13 +24,9 @@
 class LoginController extends Zend_Controller_Action
 {
 
-    public function init()
-    {
-        $this->view->form = new Form_Login;
-    }
-
     public function indexAction()
     {
+        $this->view->form = new Form_Login;
     }
 
     public function preDispatch()
