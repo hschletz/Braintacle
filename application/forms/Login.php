@@ -46,9 +46,7 @@ class Form_Login extends Zend_Form
         $this->addElement($username);
 
         $password = new Zend_Form_Element_Password('password');
-        $password->addFilter('StringTrim')
-                 ->addValidator('StringLength', false, array(1, 50))
-                 ->setRequired(true)
+        $password->setRequired(true)
                  ->setLabel('Password');
         $this->addElement($password);
 
