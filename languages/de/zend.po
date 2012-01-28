@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-03-05 18:26+0100\n"
-"PO-Revision-Date: 2012-01-25 15:56+0100\n"
+"PO-Revision-Date: 2012-01-27 19:32+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -111,6 +111,14 @@ msgstr "'%value%' passt nicht zu erwarteter Struktur für einen DNS-Hostnamen"
 msgid "'%value%' does not appear to be a valid local network name"
 msgstr "'%value%' scheint kein gültiger lokaler Netzwerkname zu sein"
 
+#: Validate/Identical.php
+msgid "'%value%' does not appear to be a valid IP address"
+msgstr "'%value%' scheint keine gültige IP-Adresse zu sein"
+
+#: Validate/Identical.php
+msgid "The two given tokens do not match"
+msgstr "Die beiden Werte sind verschieden"
+
 #: Validate/NotEmpty.php:42
 msgid "Value is required and can't be empty"
 msgstr "Wert darf nicht leer sein."
@@ -118,6 +126,10 @@ msgstr "Wert darf nicht leer sein."
 #: Validate/Regex.php:46
 msgid "'%value%' does not match against pattern '%pattern%'"
 msgstr "'%value%' passt nicht zu Muster '%pattern%'"
+
+#: Validate/StringLength.php
+msgid "'%value%' is less than %min% characters long"
+msgstr "'%value%' ist kürzer als %min% Zeichen"
 
 #: Validate/StringLength.php:45
 msgid "'%value%' is greater than %max% characters long"

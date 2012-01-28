@@ -79,6 +79,10 @@ msgstr ""
 msgid "'%value%' does not match against pattern '%pattern%'"
 msgstr ""
 
+#: Validate/StringLength.php
+msgid "'%value%' is less than %min% characters long"
+msgstr ""
+
 #: Validate/StringLength.php:45
 msgid "'%value%' is greater than %max% characters long"
 msgstr ""
@@ -105,4 +109,12 @@ msgstr ""
 
 #: Validate/EmailAddress.php
 msgid "'%value%' is no valid email address in the basic format local-part@hostname"
+msgstr ""
+
+#: Validate/Identical.php
+msgid "The two given tokens do not match"
+msgstr ""
+
+#: Validate/Identical.php
+msgid "'%value%' does not appear to be a valid IP address"
 msgstr ""

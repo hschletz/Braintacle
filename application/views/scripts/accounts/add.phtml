@@ -1,6 +1,6 @@
 <?php
 /**
- * Controller for managing Braintacle user accounts
+ * Display user account form
  *
  * $Id$
  *
@@ -18,31 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
  */
 
-class AccountsController extends Zend_Controller_Action
-{
+print $this->htmlTag(
+    'h1',
+    $this->translate('Create new account')
+);
 
-    public function indexAction()
-    {
-        $this->_helper->ordering('Id');
-        $this->view->accounts = Model_Account::createStatementStatic(
-            $this->view->order,
-            $this->view->direction
-        );
-    }
-
-    public function addAction()
-    {
-        $form = new Form_Account;
-
-        if ($this->getRequest()->isPost() and $form->isValid($_POST)) {
-            $data = $form->getValues();
-            Model_Account::create($data, $data['Password']);
-            $this->_redirect('accounts');
-        }
-        $this->view->form = $form;
-    }
-
-}
+print $this->form;

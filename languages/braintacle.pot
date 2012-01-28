@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-22 17:24+0100\n"
+"POT-Creation-Date: 2012-01-27 18:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -175,6 +175,40 @@ msgstr ""
 msgid "Package '%s' could not be deleted."
 msgstr ""
 
+#: forms/Account.php; views/scripts/accounts/index.phtml
+msgid "Login name"
+msgstr ""
+
+#: forms/Account.php; forms/Login.php
+msgid "Password"
+msgstr ""
+
+#: forms/Account.php
+msgid "Repeat password"
+msgstr ""
+
+#: forms/Account.php; views/scripts/accounts/index.phtml
+msgid "First name"
+msgstr ""
+
+#: forms/Account.php; views/scripts/accounts/index.phtml
+msgid "Last name"
+msgstr ""
+
+#: forms/Account.php; views/scripts/accounts/index.phtml
+msgid "Mail address"
+msgstr ""
+
+#: forms/Account.php; forms/Package.php
+#: views/scripts/computer/general.phtml
+#: views/scripts/computer/misc.phtml
+msgid "Comment"
+msgstr ""
+
+#: forms/Account.php
+msgid "Add"
+msgstr ""
+
 #: forms/AffectPackages.php
 msgid "Install"
 msgstr ""
@@ -185,10 +219,6 @@ msgstr ""
 
 #: forms/Login.php
 msgid "Username"
-msgstr ""
-
-#: forms/Login.php
-msgid "Password"
 msgstr ""
 
 #: forms/Login.php
@@ -253,11 +283,6 @@ msgstr ""
 #: views/scripts/group/packages.phtml; views/scripts/network/index.phtml
 #: views/scripts/package/index.phtml; views/scripts/software/index.phtml
 msgid "Name"
-msgstr ""
-
-#: forms/Package.php; views/scripts/computer/general.phtml
-#: views/scripts/computer/misc.phtml
-msgid "Comment"
 msgstr ""
 
 #: forms/Package.php; views/scripts/package/index.phtml
@@ -1172,6 +1197,14 @@ msgstr ""
 msgid "Invalid parameter: "
 msgstr ""
 
+#: views/scripts/accounts/add.phtml
+msgid "Create new account"
+msgstr ""
+
+#: views/scripts/accounts/index.phtml
+msgid "Add user"
+msgstr ""
+
 #: views/scripts/computer/bios.phtml; views/scripts/network/edit.phtml
 #: views/scripts/package/index.phtml
 msgid "Date"
@@ -1689,22 +1722,6 @@ msgstr ""
 
 #: views/scripts/package/index.phtml
 msgid "Warnings:"
-msgstr ""
-
-#: views/scripts/preferences/users.phtml
-msgid "Login name"
-msgstr ""
-
-#: views/scripts/preferences/users.phtml
-msgid "First name"
-msgstr ""
-
-#: views/scripts/preferences/users.phtml
-msgid "Last name"
-msgstr ""
-
-#: views/scripts/preferences/users.phtml
-msgid "Mail address"
 msgstr ""
 
 #: views/scripts/software/accept.phtml

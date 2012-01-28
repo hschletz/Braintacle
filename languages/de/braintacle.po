@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-22 17:24+0100\n"
-"PO-Revision-Date: 2012-01-22 17:24+0100\n"
+"POT-Creation-Date: 2012-01-27 18:36+0100\n"
+"PO-Revision-Date: 2012-01-27 18:36+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -176,6 +176,39 @@ msgstr "Paket '%s' wurde erfolgreich zu '%s' geändert."
 msgid "Package '%s' was successfully created."
 msgstr "Paket '%s' wurde erfolgreich erstellt."
 
+#: forms/Account.php
+msgid "Add"
+msgstr "Hinzufügen"
+
+#: forms/Account.php
+msgid "Repeat password"
+msgstr "Passwort wiederholen"
+
+#: forms/Account.php; forms/Package.php views/scripts/computer/general.phtml
+#: views/scripts/computer/misc.phtml
+msgid "Comment"
+msgstr "Kommentar"
+
+#: forms/Account.php; views/scripts/accounts/index.phtml
+msgid "First name"
+msgstr "Vorname"
+
+#: forms/Account.php; views/scripts/accounts/index.phtml
+msgid "Last name"
+msgstr "Nachname"
+
+#: forms/Account.php; views/scripts/accounts/index.phtml
+msgid "Login name"
+msgstr "Anmeldename"
+
+#: forms/Account.php; views/scripts/accounts/index.phtml
+msgid "Mail address"
+msgstr "Mailadresse"
+
+#: forms/Account.php; forms/Login.php
+msgid "Password"
+msgstr "Passwort"
+
 #: forms/AffectPackages.php
 msgid "Install"
 msgstr "Installieren"
@@ -187,10 +220,6 @@ msgstr "Datei (*.ocs, *.xml)"
 #: forms/Login.php
 msgid "Login"
 msgstr "Anmelden"
-
-#: forms/Login.php
-msgid "Password"
-msgstr "Passwort"
 
 #: forms/Login.php
 msgid "Username"
@@ -289,11 +318,6 @@ msgstr "Hostname/Pfad für Info-Datei (HTTPS)"
 #: forms/Package.php
 msgid "hostname/path for package download (HTTP)"
 msgstr "Hostname/Pfad für Paketdownload (HTTP)"
-
-#: forms/Package.php; views/scripts/computer/general.phtml
-#: views/scripts/computer/misc.phtml
-msgid "Comment"
-msgstr "Kommentar"
 
 #: forms/Package.php; forms/Preferences/Packages.php
 msgid "Download package, execute command, retrieve result"
@@ -1155,6 +1179,14 @@ msgstr "manuell"
 msgid "Invalid parameter: "
 msgstr "Ungültiger Parameter: "
 
+#: views/scripts/accounts/add.phtml
+msgid "Create new account"
+msgstr "Neuen Account erstellen"
+
+#: views/scripts/accounts/index.phtml
+msgid "Add user"
+msgstr "Benutzer hinzufügen"
+
 #: views/scripts/computer/bios.phtml; views/scripts/network/edit.phtml
 #: views/scripts/package/index.phtml
 msgid "Date"
@@ -1659,22 +1691,6 @@ msgstr "Paket '%s' wird dauerhaft gelöscht. Fortfahren?"
 #: views/scripts/package/index.phtml
 msgid "Warnings:"
 msgstr "Warnungen:"
-
-#: views/scripts/preferences/users.phtml
-msgid "First name"
-msgstr "Vorname"
-
-#: views/scripts/preferences/users.phtml
-msgid "Last name"
-msgstr "Nachname"
-
-#: views/scripts/preferences/users.phtml
-msgid "Login name"
-msgstr "Anmeldename"
-
-#: views/scripts/preferences/users.phtml
-msgid "Mail address"
-msgstr "Mailadresse"
 
 #: views/scripts/software/accept.phtml
 #, php-format

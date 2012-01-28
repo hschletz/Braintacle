@@ -36,3 +36,13 @@ print $this->table(
     array(),
     'Model_Account'
 );
+
+print $this->htmlTag(
+    'p',
+    $this->htmlTag(
+        'a',
+        $this->translate('Add user'),
+        array('href' => $this->baseUrl() . '/accounts/add')
+    ),
+    array('class' => 'textcenter')
+);
