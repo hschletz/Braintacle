@@ -33,21 +33,6 @@ class LoginController extends Zend_Controller_Action
     {
     }
 
-    public function getAuthAdapter($credentials)
-    {
-        $adapter = new Zend_Auth_Adapter_DbTable(
-            Zend_Registry::get('db'),
-            'operators',
-            'id',
-            'passwd',
-            '? AND accesslvl=1' // Only administrators can log in.
-        );
-        $adapter
-            ->setIdentity($credentials['userid'])
-            ->setCredential(md5($credentials['password']));
-        return $adapter;
-    }
-
     public function preDispatch()
     {
         if (Zend_Auth::getInstance()->hasIdentity()) {
@@ -81,11 +66,9 @@ class LoginController extends Zend_Controller_Action
         }
 
         // Check credentials
-        $adapter = $this->getAuthAdapter($form->getValues());
-        $auth    = Zend_Auth::getInstance();
-        $result  = $auth->authenticate($adapter);
-
-        if (!$result->isValid()) {
+        try {
+            Model_Account::login($form->getValue('userid'), $form->getValue('password'));
+        } catch (Exception $e) {
             $form->setDescription('Invalid username or password');
             $this->view->form = $form;
             return $this->render('index'); // re-render login form

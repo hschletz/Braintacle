@@ -127,4 +127,26 @@ class Model_Account extends Model_Abstract
 
         Zend_Registry::get('db')->insert('operators', $insert);
     }
+
+    /**
+     * Attempt login with given credentials
+     * @param string $id Login name
+     * @param string $password Password
+     * @throws RuntimeException if authentication fails
+     */
+    public static function login($id, $password)
+    {
+        $adapter = new Zend_Auth_Adapter_DbTable;
+        $adapter->setTableName('operators')
+                ->setIdentityColumn('id')
+                ->setCredentialColumn('passwd')
+                ->setCredentialTreatment("? AND (accesslvl=1 OR new_accesslvl='sadmin')")
+                ->setIdentity($id)
+                ->setCredential(md5($password));
+
+        if (!Zend_Auth::getInstance()->authenticate($adapter)->isValid()) {
+            throw new RuntimeException('Authentication failed');
+        }
+    }
+
 }
