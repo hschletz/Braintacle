@@ -34,7 +34,7 @@ class LoginController extends Zend_Controller_Action
         if (Zend_Auth::getInstance()->hasIdentity()) {
             // Don't show the login form if the user is already logged in
             if ($this->getRequest()->getActionName() != 'logout') {
-                $this->_helper->redirector('index', 'index');
+                $this->_helper->redirector('index', 'computer');
             }
         } else {
             // Logout action is only available to logged in users.
