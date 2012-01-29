@@ -21,7 +21,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * @package Library
- * @filesource
  */
 /**
  * Bootstrap class for all applications that use the Braintacle API.

@@ -21,7 +21,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * @package Forms
- * @filesource
  */
 /**
  * A generic form with yes/no buttons

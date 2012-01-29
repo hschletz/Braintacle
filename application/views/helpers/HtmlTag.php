@@ -21,7 +21,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * @package ViewHelpers
- * @filesource
  */
 /**
  * Render a single HTML element

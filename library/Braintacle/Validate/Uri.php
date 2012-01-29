@@ -21,7 +21,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * @package Library
- * @filesource
  */
 /** Validator class that checks whether a given string is a valid URI.
   * The scheme is passed to the constructor and must not be part of the

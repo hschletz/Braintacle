@@ -21,7 +21,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * @package Models
- * @filesource
  */
 /**
  * A port (Centronics, RS-232...)
