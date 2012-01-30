@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-30 12:09+0100\n"
-"PO-Revision-Date: 2012-01-29 12:51+0100\n"
+"POT-Creation-Date: 2012-01-30 16:27+0100\n"
+"PO-Revision-Date: 2012-01-30 16:28+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -1121,6 +1121,7 @@ msgid "Members"
 msgstr "Mitglieder"
 
 #: views/helpers/GroupHeader.php; views/helpers/InventoryHeader.php
+#: views/scripts/accounts/index.phtml
 #: views/scripts/network/showidentified.phtml
 #: views/scripts/network/showunknown.phtml views/scripts/package/index.phtml
 msgid "Delete"
@@ -1182,6 +1183,11 @@ msgstr "Ungültiger Parameter: "
 #: views/scripts/accounts/add.phtml
 msgid "Create new account"
 msgstr "Neuen Account erstellen"
+
+#: views/scripts/accounts/delete.phtml
+#, php-format
+msgid "Account '%s' will be permanently deleted. Continue?"
+msgstr "Account '%s' wird dauerhaft gelöscht. Fortfahren?"
 
 #: views/scripts/accounts/edit.phtml
 msgid "Edit account"
@@ -1718,3 +1724,4 @@ msgstr "Anzahl Computer"
 #: views/scripts/software/index.phtml
 msgid "Ignore"
 msgstr "Ignorieren"
+

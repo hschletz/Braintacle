@@ -28,14 +28,17 @@ $headers = array(
     'LastName' => $this->translate('Last name'),
     'MailAddress' => $this->translate('Mail address'),
     'edit' => '',
+    'delete' => '',
 );
 
 $formats = array(
     'edit' => 'text',
+    'delete' => 'text',
 );
 
 $renderCallbacks = array(
     'edit' => 'renderEdit',
+    'delete' => 'renderDelete',
 );
 
 function renderEdit($view, $account)
@@ -46,6 +49,20 @@ function renderEdit($view, $account)
         array(
             'href' => $view->BaseUrl()
                      . '/accounts/edit/id/'
+                     . urlencode($account->getId())
+        ),
+        true
+    );
+}
+
+function renderDelete($view, $account)
+{
+    return $view->htmlTag(
+        'a',
+        $view->translate('Delete'),
+        array(
+            'href' => $view->BaseUrl()
+                     . '/accounts/delete/id/'
                      . urlencode($account->getId())
         ),
         true

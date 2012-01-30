@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-30 12:11+0100\n"
+"POT-Creation-Date: 2012-01-30 16:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -1142,6 +1142,7 @@ msgid "Members"
 msgstr ""
 
 #: views/helpers/GroupHeader.php; views/helpers/InventoryHeader.php
+#: views/scripts/accounts/index.phtml
 #: views/scripts/network/showidentified.phtml
 #: views/scripts/network/showunknown.phtml
 #: views/scripts/package/index.phtml
@@ -1199,6 +1200,11 @@ msgstr ""
 
 #: views/scripts/accounts/add.phtml
 msgid "Create new account"
+msgstr ""
+
+#: views/scripts/accounts/delete.phtml
+#, php-format
+msgid "Account '%s' will be permanently deleted. Continue?"
 msgstr ""
 
 #: views/scripts/accounts/edit.phtml

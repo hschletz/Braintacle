@@ -189,6 +189,18 @@ class Model_Account extends Model_Abstract
     }
 
     /**
+     * Delete account
+     * @param string $id Login name of account to delete
+     */
+    public static function delete($id)
+    {
+        Zend_Registry::get('db')->delete(
+            'operators',
+            array('id=?' => $id)
+        );
+    }
+
+    /**
      * Attempt login with given credentials
      * @param string $id Login name
      * @param string $password Password

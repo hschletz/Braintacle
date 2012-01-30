@@ -59,4 +59,18 @@ class AccountsController extends Zend_Controller_Action
         $this->view->form = $form;
     }
 
+    public function deleteAction()
+    {
+        $id = $this->_getParam('id');
+
+        if ($this->getRequest()->isPost()) {
+            if ($this->_getParam('yes')) {
+                Model_Account::delete($id);
+            }
+            $this->_redirect('accounts');
+        } else {
+            $this->view->id = $id;
+        }
+    }
+
 }
