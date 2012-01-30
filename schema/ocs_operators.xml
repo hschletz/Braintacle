@@ -95,38 +95,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
   <initialization>
 
-   <insert>
-    <field>
-     <name>id</name>
-     <value>admin</value>
-    </field>
-    <field>
-     <name>firstname</name>
-     <value>admin</value>
-    </field>
-    <field>
-    <name>lastname</name>
-     <value>admin</value>
-    </field>
-    <field>
-     <name>passwd</name>
-     <value>21232f297a57a5a743894a0e4a801fc3</value>
-     <comments>Default password: admin</comments>
-    </field>
-    <field>
-     <name>accesslvl</name>
-     <value>1</value>
-    </field>
-    <field>
-     <name>comments</name>
-     <value>Default administrator account</value>
-    </field>
-   </insert>
-    <field>
-     <name>new_accesslvl</name>
-     <value>sadmin</value>
-    </field>
-
    <update>
     <field>
      <name>new_accesslvl</name>
