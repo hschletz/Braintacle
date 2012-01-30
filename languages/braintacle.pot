@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-27 18:36+0100\n"
+"POT-Creation-Date: 2012-01-30 12:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -205,7 +205,11 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
-#: forms/Account.php
+#: forms/Account/Edit.php; forms/UserDefinedInfo.php
+msgid "Change"
+msgstr ""
+
+#: forms/Account/New.php
 msgid "Add"
 msgstr ""
 
@@ -983,10 +987,6 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-#: forms/UserDefinedInfo.php
-msgid "Change"
-msgstr ""
-
 #: forms/YesNo.php
 msgid "Yes"
 msgstr ""
@@ -1199,6 +1199,16 @@ msgstr ""
 
 #: views/scripts/accounts/add.phtml
 msgid "Create new account"
+msgstr ""
+
+#: views/scripts/accounts/edit.phtml
+msgid "Edit account"
+msgstr ""
+
+#: views/scripts/accounts/index.phtml
+#: views/scripts/network/showidentified.phtml
+#: views/scripts/network/showunknown.phtml
+msgid "Edit"
 msgstr ""
 
 #: views/scripts/accounts/index.phtml
@@ -1708,11 +1718,6 @@ msgstr ""
 
 #: views/scripts/network/showidentified.phtml
 msgid "Idendified by"
-msgstr ""
-
-#: views/scripts/network/showidentified.phtml
-#: views/scripts/network/showunknown.phtml
-msgid "Edit"
 msgstr ""
 
 #: views/scripts/package/delete.phtml

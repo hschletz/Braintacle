@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-27 18:36+0100\n"
-"PO-Revision-Date: 2012-01-27 18:36+0100\n"
+"POT-Creation-Date: 2012-01-30 12:09+0100\n"
+"PO-Revision-Date: 2012-01-29 12:51+0100\n"
 "Last-Translator: \n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -177,10 +177,6 @@ msgid "Package '%s' was successfully created."
 msgstr "Paket '%s' wurde erfolgreich erstellt."
 
 #: forms/Account.php
-msgid "Add"
-msgstr "Hinzufügen"
-
-#: forms/Account.php
 msgid "Repeat password"
 msgstr "Passwort wiederholen"
 
@@ -208,6 +204,14 @@ msgstr "Mailadresse"
 #: forms/Account.php; forms/Login.php
 msgid "Password"
 msgstr "Passwort"
+
+#: forms/Account/Edit.php; forms/UserDefinedInfo.php
+msgid "Change"
+msgstr "Ändern"
+
+#: forms/Account/New.php
+msgid "Add"
+msgstr "Hinzufügen"
 
 #: forms/AffectPackages.php
 msgid "Install"
@@ -963,10 +967,6 @@ msgstr "neu oder nicht kategorisiert"
 msgid "selected for display"
 msgstr "für Anzeige ausgewählt"
 
-#: forms/UserDefinedInfo.php
-msgid "Change"
-msgstr "Ändern"
-
 #: forms/YesNo.php
 msgid "No"
 msgstr "Nein"
@@ -1183,9 +1183,19 @@ msgstr "Ungültiger Parameter: "
 msgid "Create new account"
 msgstr "Neuen Account erstellen"
 
+#: views/scripts/accounts/edit.phtml
+msgid "Edit account"
+msgstr "Account bearbeiten"
+
 #: views/scripts/accounts/index.phtml
 msgid "Add user"
 msgstr "Benutzer hinzufügen"
+
+#: views/scripts/accounts/index.phtml
+#: views/scripts/network/showidentified.phtml
+#: views/scripts/network/showunknown.phtml
+msgid "Edit"
+msgstr "Bearbeiten"
 
 #: views/scripts/computer/bios.phtml; views/scripts/network/edit.phtml
 #: views/scripts/package/index.phtml
@@ -1675,11 +1685,6 @@ msgid "Discovery date"
 msgstr "Datum"
 
 #: views/scripts/network/showidentified.phtml
-#: views/scripts/network/showunknown.phtml
-msgid "Edit"
-msgstr "Bearbeiten"
-
-#: views/scripts/network/showidentified.phtml
 msgid "Idendified by"
 msgstr "identifiziert von"
 
@@ -1713,4 +1718,3 @@ msgstr "Anzahl Computer"
 #: views/scripts/software/index.phtml
 msgid "Ignore"
 msgstr "Ignorieren"
-

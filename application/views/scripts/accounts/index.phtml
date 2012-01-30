@@ -27,14 +27,39 @@ $headers = array(
     'FirstName' => $this->translate('First name'),
     'LastName' => $this->translate('Last name'),
     'MailAddress' => $this->translate('Mail address'),
+    'edit' => '',
 );
+
+$formats = array(
+    'edit' => 'text',
+);
+
+$renderCallbacks = array(
+    'edit' => 'renderEdit',
+);
+
+function renderEdit($view, $account)
+{
+    return $view->htmlTag(
+        'a',
+        $view->translate('Edit'),
+        array(
+            'href' => $view->BaseUrl()
+                     . '/accounts/edit/id/'
+                     . urlencode($account->getId())
+        ),
+        true
+    );
+}
 
 print $this->table(
     $this->accounts,
     array(),
     $headers,
-    array(),
-    'Model_Account'
+    $formats,
+    'Model_Account',
+    null,
+    $renderCallbacks
 );
 
 print $this->htmlTag(

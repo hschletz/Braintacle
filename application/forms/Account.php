@@ -26,7 +26,7 @@
  * Form for Braintacle user accounts
  * @package Forms
  */
-class Form_Account extends Zend_Form
+abstract class Form_Account extends Zend_Form
 {
 
     /**
@@ -40,12 +40,6 @@ class Form_Account extends Zend_Form
         $id = new Zend_Form_Element_Text('Id');
         $id->setLabel('Login name')
            ->addValidator('StringLength', false, array(1, 255))
-           ->addValidator(
-               'Db_NoRecordExists', false, array(
-                  'table' => 'operators',
-                  'field' => 'id'
-               )
-           )
            ->setRequired(true)
            ->addFilter('StringTrim');
         $this->addElement($id);
@@ -90,11 +84,8 @@ class Form_Account extends Zend_Form
                 ->addFilter('Null', 'string');
         $this->addElement($comment);
 
-        // Submit button
+        // Submit button label is set in subclass
         $submit = new Zend_Form_Element_Submit('submit');
-        $submit->setRequired(false)
-               ->setIgnore(true)
-               ->setLabel('Add');
         $this->addElement($submit);
     }
 

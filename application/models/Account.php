@@ -79,6 +79,32 @@ class Model_Account extends Model_Abstract
     );
 
     /**
+     * Constructor
+     * @param string $id Optional: populate instance with data for given account
+     * @throws RuntimeException if $id is given and no account with that name exists
+     */
+    public function __construct($id=null)
+    {
+        parent::__construct();
+
+        if (!$id) {
+            return;
+        }
+
+        $row = Zend_Registry::get('db')->select()
+               ->from('operators', array_values($this->_propertyMap))
+               ->where('id=?', $id)
+               ->query()
+               ->fetch(Zend_Db::FETCH_ASSOC);
+        if (!$row) {
+            throw new RuntimeException('Invalid login name supplied');
+        }
+        foreach ($row as $column => $value) {
+            $this->$column = $value;
+        }
+    }
+
+    /**
      * Return a statement object with all accounts
      * @param string $order Property to sort by
      * @param string Sorting order (asc|desc)
@@ -126,6 +152,40 @@ class Model_Account extends Model_Abstract
         $insert['new_accesslvl'] = self::PRIVILEGE_ADMIN;
 
         Zend_Registry::get('db')->insert('operators', $insert);
+    }
+
+    /**
+     * Update existing account
+     * @param string $id Login name of account to update
+     * @param array $data List of properties to set. Unknown keys will be ignored.
+     * @param string $password New password. If empty, password will remain unchanged.
+     * @throws UnexpectedValueException if no ID is given.
+     */
+    public static function update($id, $data, $password)
+    {
+        if (!$id) {
+            throw new UnexpectedValueException('No login name specified');
+        }
+
+        $dummy = new self;
+        $map = $dummy->getPropertyMap();
+
+        // Compose array of columns to set
+        foreach ($data as $property => $value) {
+            if (isset($map[$property])) { // Ignore unknown keys
+                $update[$map[$property]] = $value;
+            }
+        }
+        // Set password if specified
+        if ($password) {
+            $update['passwd'] = md5($password);
+        }
+
+        Zend_Registry::get('db')->update(
+            'operators',
+            $update,
+            array('id=?' => $id)
+        );
     }
 
     /**

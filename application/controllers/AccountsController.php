@@ -35,13 +35,27 @@ class AccountsController extends Zend_Controller_Action
 
     public function addAction()
     {
-        $form = new Form_Account;
+        $form = new Form_Account_New;
 
         if ($this->getRequest()->isPost() and $form->isValid($_POST)) {
             $data = $form->getValues();
             Model_Account::create($data, $data['Password']);
             $this->_redirect('accounts');
         }
+        $this->view->form = $form;
+    }
+
+    public function editAction()
+    {
+        $form = new Form_Account_Edit;
+
+        if ($this->getRequest()->isPost() and $form->isValid($_POST)) {
+            $data = $form->getValues();
+            Model_Account::update($data['OriginalId'], $data, $data['Password']);
+            $this->_redirect('accounts');
+        }
+
+        $form->setId($this->_getParam('id'));
         $this->view->form = $form;
     }
 
