@@ -62,9 +62,7 @@ class LoginController extends Zend_Controller_Action
         }
 
         // Check credentials
-        try {
-            Model_Account::login($form->getValue('userid'), $form->getValue('password'));
-        } catch (Exception $e) {
+        if (!Model_Account::login($form->getValue('userid'), $form->getValue('password'))) {
             $form->setDescription('Invalid username or password');
             $this->view->form = $form;
             return $this->render('index'); // re-render login form

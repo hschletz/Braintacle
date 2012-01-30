@@ -192,7 +192,7 @@ class Model_Account extends Model_Abstract
      * Attempt login with given credentials
      * @param string $id Login name
      * @param string $password Password
-     * @throws RuntimeException if authentication fails
+     * @return bool Login success. Don't forget to check this!
      */
     public static function login($id, $password)
     {
@@ -204,9 +204,7 @@ class Model_Account extends Model_Abstract
                 ->setIdentity($id)
                 ->setCredential(md5($password));
 
-        if (!Zend_Auth::getInstance()->authenticate($adapter)->isValid()) {
-            throw new RuntimeException('Authentication failed');
-        }
+        return Zend_Auth::getInstance()->authenticate($adapter)->isValid();
     }
 
 }
