@@ -37,9 +37,25 @@ $formats = array(
 );
 
 $renderCallbacks = array(
+    'MailAddress' => 'renderMailAddress',
     'edit' => 'renderEdit',
     'delete' => 'renderDelete',
 );
+
+function renderMailAddress($view, $account)
+{
+    $address = $account->getMailAddress();
+    if ($address) {
+        return $view->htmlTag(
+            'a',
+            $view->escape($address),
+            array(
+                'href' => 'mailto:' . urlencode($address),
+            ),
+            true
+        );
+    }
+}
 
 function renderEdit($view, $account)
 {
