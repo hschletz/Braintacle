@@ -40,7 +40,7 @@ class Model_Database
      * Global NADA object
      *
      * This is managed by {@link getNada()}. Do not use directly.
-     * @var Nada_Dbms
+     * @var Nada_Database
      */
    protected static $_nada;
 
@@ -75,7 +75,7 @@ class Model_Database
 
     /**
      * Get NADA object set up for application's database
-     * @return Nada_Dbms
+     * @return Nada_Database
      */
     public static function getNada()
     {
