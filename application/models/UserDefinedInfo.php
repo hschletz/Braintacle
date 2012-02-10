@@ -23,10 +23,6 @@
  * @package Models
  */
 /**
- Includes
- */
-require_once 'Braintacle/MDB2.php';
-/**
  * User defined fields for a computer
  *
  * The 'tag' field is always present. Other fields may be defined by the
@@ -137,25 +133,36 @@ class Model_UserDefinedInfo extends Model_Abstract
 
     /**
      * Static variant of {@link getPropertyTypes()}
-     *
-     * This method makes an extra database connection via MDB2. The result is
-     * stored statically, so that no extra connections are made when this
-     * gets called more than once.
      * @return array Associative array with the datatypes
      */
     static function getTypes()
     {
         if (empty(self::$_allTypesStatic)) { // Query database only once
-            Braintacle_MDB2::setErrorReporting();
-            $mdb2 = Braintacle_MDB2::factory();
-            $columns = $mdb2->reverse->tableInfo('accountinfo');
-            Braintacle_MDB2::resetErrorReporting();
-
+            $columns = Model_Database::getNada()->getTable('accountinfo')->getColumns();
             foreach ($columns as $column) {
-                $name = $column['name'];
-                if ($name != 'hardware_id') {
-                    self::$_allTypesStatic[$name] = $column['mdb2type'];
+                $name = $column->getName();
+                if ($name == 'hardware_id') {
+                    continue;
                 }
+                switch ($column->getDatatype()) {
+                    case Nada::DATATYPE_VARCHAR:
+                        $type = 'text';
+                        break;
+                    case Nada::DATATYPE_INTEGER:
+                        $type = 'integer';
+                        break;
+                    case Nada::DATATYPE_FLOAT:
+                        $type = 'float';
+                        break;
+                    case Nada::DATATYPE_DATE:
+                        $type = 'date';
+                        break;
+                    default:
+                        throw new UnexpectedValueException(
+                            'Invalid datatype: ' . $column->getDatatype()
+                        );
+                }
+                self::$_allTypesStatic[$name] = $type;
             }
         }
         return self::$_allTypesStatic;
