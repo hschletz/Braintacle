@@ -73,7 +73,7 @@ This, among other minor annoyances, finally convinced me to pick up my initial i
 
 <p>
 Braintacle is planned to replace the original administration console completely.
-It is far from complete yet, but already usable for most tasks.
+It is not feature-complete yet, but already fully usable for everyday tasks.
 </p>
 
 <p>
@@ -96,9 +96,6 @@ See "<a href="#packagebuilder">Package builder</a>" for a full list of features.
 <li>
 Duplicates are much better to manage.
 You can specify which type of information to merge, and you can blacklist asset tags too, not only serials and MAC addresses.
-</li>
-<li>
-Access to the list of computers with a particular package status is easier, too.
 </li>
 <li>
 Multiple packages can be deployed to a single computer in one step.
@@ -130,9 +127,7 @@ English and german translations are included.
 Other translations can easily be added and maintained using your favorite gettext tools.
 </li>
 <li>
-I tried to keep the code as readable and understandable as possible.
-It follows the recommended structure and coding standards for Zend Framework projects.
-As a side-effect of the MVC architecture, the model classes provide an abstract API to all logical
+As a side-effect of the Zend Framework's MVC architecture, the model classes provide an abstract API to all logical
 objects (computers, packages etc.).
 </li>
 </ul>
@@ -148,8 +143,9 @@ To prevent unprivileged users from unauthorized access, only administrators can 
 </p>
 <p>
 Braintacle requires an account with an MD5 hashed password.
-This is the default when creating an account or changing the password with OCSInventory console.
+This is the default when creating an account or changing the password.
 If the database is populated with the bundled OCSInventory console or schema-manager.php, the default account will already have a hashed password.
+A cleartext 'admin' passord will be converted.
 </p>
 
 <h3><a name="packagebuilder">Package builder</a></h3>
@@ -500,7 +496,6 @@ This operation can be skipped by passing the <code>--noextract</code> option.<br
 By default, the update is done only if changes to the strings are detected.
 If only line numbers have changed, nothing is done in this stage.
 An update can be forced with the <code>--force</code> option.
-This is useful for developers to keep the line numbers in sync with the source files.
 </li>
 <li>It updates all .po files in languages/&lt;language&gt;/.</li>
 <li>It compiles the .po files to .mo files in languages/&lt;language&gt;/LC_MESSAGES/ which are used by the application.</li>

@@ -42,8 +42,8 @@ Quick start to get Braintacle running:
    administrator account (default username: 'admin', password 'admin') and have
    fun.
 
-9. It is strongly recommended to change the default password. Braintacle does not
-   offer a user interface for this yet. Use the ocsreports console for this task.
+9. It is strongly recommended to change the default password (via
+   Preferences->Users).
 
 More information can be found in the doc/ directory and on the project site at:
 http://savannah.nongnu.org/projects/braintacle
