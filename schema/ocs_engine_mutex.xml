@@ -31,7 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
    <field>
     <name>name</name>
     <type>text</type>
-    <length>255</length>
+    <length>50</length>
     <notnull>true</notnull>
     <default></default>
    </field>
@@ -45,7 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
    <field>
     <name>tag</name>
     <type>text</type>
-    <length>255</length>
+    <length>50</length>
     <notnull>true</notnull>
     <default></default>
    </field>

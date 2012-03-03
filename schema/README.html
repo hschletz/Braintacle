@@ -150,6 +150,11 @@ This should not cause any problems.
 The field <em>hardware.etime</em> was changed to INTEGER because it gets fed with integer values.
 MySQL seems to tolerate this on DATETIME fields, too, but SQL standard doesn't.
 </p>
+<p>
+The fields <em>name</em> and <em>tag</em> in the <em>engine_mutex</em> table have been shortened from
+255 to 50 characters to work around the maximum index length with UTF-8 encoding.
+This is more than enough for all uses of this table.
+</p>
 
 <h2>Additional indexes</h2>
 
