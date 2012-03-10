@@ -10,6 +10,9 @@
 //====================================================================================
 //Modified on $Date: 2008-03-04 17:07:55 $$Author: dliroulet $($Revision: 1.19 $)
 
+// This script should not be used.
+die('Installation of ocsreports is incomplete. Refer to manual installation instructions (README.Braintacle.html).');
+
 @set_time_limit(0); 
 error_reporting(E_ALL);
 require_once ('require/function_mdb2.php');
