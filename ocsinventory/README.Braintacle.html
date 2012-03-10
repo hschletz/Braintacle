@@ -28,12 +28,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
 <body>
 <h1>Braintacle's patched version of OCS Inventory NG</h1>
 
-<h2>About this version of OCS inventory NG</h2>
+<h2>About this version</h2>
 
 <p>
 This is a patched version of <a href="http://ocsinventory-ng.org">OCS inventory NG</a>
 2.0.4/1.3.3 that uses a database abstraction layer for all database access,
 allowing to work with databases other than MySQL.
+It was developed and tested with PostgreSQL, which is the recommended database for this version.
+MySQL is also supported.
+Other databases might work, but are entirely untested.
 </p>
 <p>
 <strong>
@@ -45,7 +48,6 @@ Use Braintacle's support tracker or mailing list instead.
 <p>
 This version comes bundled with <a href="http://savannah.nongnu.org/projects/braintacle/">Braintacle</a>.
 It is not a requirement for using Braintacle if you use MySQL &ndash; Braintacle works with the database of an unmodified Installation of OCS Inventory, too.
-This version can be used standalone as well (i.e. you don't have to use Braintacle) &ndash; however, some directories from the Braintacle project (<em>schema</em> and <em>libraries/PEAR</em>) are required in their expected position (one level above this directory).
 <p>
 <strong>This version of the ocsreports console is deprecated.
 It will be maintained for important bugfixes, but no longer receive any major upgrades.</strong>
@@ -53,247 +55,321 @@ Most notably, it will stick at version 1.3.3.
 Version 2.x will not be ported.
 New features will be implemented in the Braintacle console only.
 </p>
-<p>The perl portion of the code uses the DBI module for database access. Only minor changes to the original code were necessary to make the DBD backend configurable and work around some portability issues.</p>
 <p>
-The PHP part now uses the <a href="http://pear.php.net/package/MDB2">PEAR::MDB2</a> abstraction layer.
-The database schema is managed through <a href="http://pear.php.net/package/MDB2_Schema">MDB2_Schema</a>.
+The modified installer is currently available for UNIXoid OSes only.
+The scripts themselves are OS-independent, so they could be installed manually on Windows too.
 </p>
-<p>The modified installer is currently available for UNIXoid OSes only. The scripts themselves are OS-independent, so with some tricks it should be installable on Windows too.</p>
 <p>
 The agent that runs on the clients does not make any direct database connections.
 All interaction runs through the communication server via HTTP/HTTPS.
 No special version of the agent is required for the modified server.
+Use any of the <a href="http://www.ocsinventory-ng.org/en/download/download-agent.html">
+OCS Inventory NG agents</a>.
 </p>
-
-<h3>Supported databases</h3>
-
-<p>
-The following table lists all available MDB2 drivers.
-Just because a driver is available, this doesn't mean it is fully supported.
-</p>
-<p>
-Green means that the database is well supported and tested.
-Yellow means that it is basically supported, but not extensively tested.
-Be prepared for bugs.
-Red means that it is unsupported for various reasons.
-In some cases support could be added once the issues are solved.
-</p>
-
-<table border="1">
-
-<tr>
-<th align="center">DBMS</th>
-<th align="center">DBD driver</th>
-<th align="center">MDB2 driver</th>
-<th>status</th>
-</tr>
-
-<tr style="background-color: #80ff80;">
-<td align="center"><a href="http://postgresql.org">PostgreSQL</a></td>
-<td align="center"><a href="http://search.cpan.org/dist/DBD-Pg/">Pg</a></td>
-<td align="center"><a href="http://pear.php.net/package/MDB2_Driver_pgsql">pgsql</a></td>
-<td>Well tested with 8.1 through 8.4. Running in a production environment for a long time.</td>
-</tr>
-
-<tr style="background-color: #ffff80;">
-<td align="center"><a href="http://mysql.com">MySQL</a></td>
-<td align="center"><a href="http://search.cpan.org/dist/DBD-mysql/">mysql</a></td>
-<td align="center"><a href="http://pear.php.net/package/MDB2_Driver_mysql">mysql</a></td>
-<td>Briefly tested with 5.0.x. Installation, adding machines and quick browsing appear to work. A mysqli driver for MDB2 exists too, which has not been tested.</td>
-</tr>
-
-<tr style="background-color: #ffff80;">
-<td align="center"><a href="http://oracle.com">Oracle</a></td>
-<td align="center"><a href="http://search.cpan.org/dist/DBD-Oracle/">Oracle</a></td>
-<td align="center"><a href="http://pear.php.net/package/MDB2_Driver_oci8">oci8</a></td>
-<td>Untested.</td>
-</tr>
-
-<tr style="background-color: #ff8080;">
-<td align="center"><a href="http://www.microsoft.com/sqlserver/2008/en/us/default.aspx">MS SQL Server</a></td>
-<td align="center">?</td>
-<td align="center"><a href="http://pear.php.net/package/MDB2_Driver_mssql">mssql</a></td>
-<td>Could be supported if I could find a DBD module.</td>
-</tr>
-
-<tr style="background-color: #ff8080;">
-<td align="center"><a href="http://firebirdsql.org">Firebird</a></td>
-<td align="center"><a href="http://search.cpan.org/dist/DBD-InterBase/">Interbase</a></td>
-<td align="center"><a href="http://pear.php.net/package/MDB2_Driver_ibase">ibase</a></td>
-<td>MDB2 driver lacks unixtimestamp() implementation.</td>
-</tr>
-
-<tr style="background-color: #ff8080;">
-<td align="center"><a href="http://sqlite.org">SQLite</a></td>
-<td align="center"><a href="http://search.cpan.org/dist/DBD-SQLite/">SQLite</a></td>
-<td align="center"><a href="http://pear.php.net/package/MDB2_Driver_sqlite">sqlite</a></td>
-<td>MDB2 driver only supports SQLite2.</td>
-</tr>
-
-<tr style="background-color: #ff8080;">
-<td align="center"><a href="http://www.frontbase.com">FrontBase</a></td>
-<td align="center">?</td>
-<td align="center"><a href="http://pear.php.net/package/MDB2_Driver_fbsql">fbsql</a></td>
-<td>Could not find a DBD module. MDB2 driver is unmaintained and out of date.</td>
-</tr>
-
-</table>
-
-<h3>Status</h3>
-
-<p>The following features are known to work:</p>
-<ul>
-<li>inventory</li>
-<li>searching</li>
-<li>software listing</li>
-<li>package management and deployment</li>
-<li>IP discovery, network and device management</li>
-<li>managing groups</li>
-<li>managing registry keys</li>
-<li>managing administrative data</li>
-<li>managing duplicates</li>
-<li>managing blacklists</li>
-<li>managing users</li>
-<li>import of locally generated inventory</li>
-<li>software dictionaries</li>
-</ul>
-
-<p>The following features are not extensively tested because I have no idea how this stuff is supposed to work:</p>
-<ul>
-<li>managing download servers (not supported by Braintacle)</li>
-<li>agent upload (deprecated)</li>
-</ul>
-
-<h3>Known issues</h3>
-<ul>
-<li>Some date values are not formatted nicely in the administration console because the relevant portion of code was impossible to port to the MDB2 API without inadequate effort. This is merely cosmetic.</li>
-<li>I edited some error messages to use the term "Database" instead of "MySQL", but only in the english and german language file. Contributions are welcome.</li>
-</ul>
-
 
 <h3>Differences to the original version</h3>
 
-<p>Beside the different database access methods, I made some further changes to the code:</p>
+<p>
+Besides the different database access methods, more changes have been made to the code:
+</p>
 <ul>
 <li>
-Some <a href="#schema-changes">changes to the database schema</a> were necessary for portability.
+Some
+<a href="http://svn.savannah.nongnu.org/viewvc/*checkout*/trunk/schema/README.html?root=braintacle">
+changes to the database schema</a> were necessary for portability.
+Braintacle and its bundled OCS Inventory code work with both schema types (Braintacle and OCS),
+but an unmodified OCS Inventory installation will not work with the Braintacle schema.
 </li>
 <li>
-The default installation path for the administration console is /usr/local/share/ocsreports instead of /usr/share/ocsinventory-reports/ocsreports.
-</li>
-<li>
-The default language is hardcoded to english.
-The autodetection has been disabled because some translations (like german, and possibly others) are unusable.
-Missing english translations have been added.
+The OCS administration console (ocsreports) is not installed by default.
+Instructions for manual installation are included in this document.
 </li>
 <li>
 The workaround for <a href="https://bugs.launchpad.net/ocsinventory-windows-agent/+bug/530881">bug #530881</a> is included.
 </li>
 <li>
-The communication server uses a different method to calculate group memberships which helped around some serious performance and concurrency issues with PostgreSQL 8.1.
-Other versions and DBMS might benefit too.
+The caching feature is disabled by default.
+Leave it disabled.
 </li>
 <li>
-OCS Inventory NG introduced a caching feature in version 1.02.
-This would duplicate a lot of data within the database and require a big bunch of code to manage this stuff.
-This looks like a very bad idea to me, so I decided to have this feature disabled by default.
-The code has been ported, but is entirely untested.
-Enable it at your own risk.
-If you experience slow performance with search operations, finetuning your database server would be a better approach.
-</li>
-<li>
-The original PHP code disabled logging of E_NOTICE messages.
-I turned them on because they are very helpful for finding errors introduced with the API switch.
-Unfortunately, tons of (mostly harmless) messages started to flood my logfile.
-Most of them are caused by bad pieces of code which was already present before the patch.
-I fixed most of these to keep clear sight for the real problems.
-</li>
-<li>
-All non-ASCII characters have been removed from the code.
-This prevents charset issues with text editors.
-Most of these characters belonged to comments in french which have been either translated to english or removed.
-</li>
-<li>
-Most text files were converted to UNIX line endings.
-This was necessary to make the "patch" utility work.
-</li>
-<li>
-A lot of changes were made to make the code more robust against SQL injection and XSS attacks.
-This doesn't necessarily mean that the original code is vulnerable.
-Protecting generated SQL and HTML code from untrusted user input is just generally a good idea.
-</li>
-<li>
-Other minor fixes and enhancements
+A lot of improvements under the hood.
 </li>
 </ul>
 
 
-<h2>Installing</h2>
+<h2>Installation</h2>
+
+<h3>Install Braintacle first</h3>
 
 <p>
-You must create the database and user before using the installer.
-Log in to your database as superuser and do this:
+This version cannot be run standalone.
+It depends on a properly configured Braintacle installation.
+In particular, the database.ini file needs to be set up for the schema manager (see below).
+Refer to Braintacle's main documentation for instructions.
 </p>
 
+<h3>Create the database and user</h3>
+
+<p>
+If you don't already have the database set up somewhere, you need to create it along with a database user.
+Install a PostgreSQL (recommended) or MySQL server, if not already available, and log into that
+database server with superuser privileges (typically the 'postgres' user for PostgreSQL, 'root' for MySQL).
+</p>
+<p>
+For PostgreSQL, run:
+</p>
 <p>
 <code>
-CREATE USER ocs WITH PASSWORD 'ocs';
+CREATE USER ocs WITH PASSWORD 'ocs';<br>
 CREATE DATABASE ocsweb OWNER ocs ENCODING 'UTF8';
 </code>
 </p>
-
 <p>
-This syntax is valid for PostgreSQL; other databases may have a different syntax.
-Using Unicode for the database is strongly recommended.
-Other encodings may work for the most part, but cause trouble under certain circumstances.
+For MySQL, run:
 </p>
 <p>
-Next, follow the <a href="http://wiki.ocsinventory-ng.org/index.php/Documentation:Server#Under_Linux_Operating_System.">instructions in the manual</a> with the following changes:
-</p>
-
-
-<h3>Changes for installation of communication server</h3>
-
-<p>
-Instead of the <em>DBD::mysql</em> module, install the appropriate driver for your database like <em>DBD::Pg</em> for PostgreSQL.
-Most GNU/Linux distributions have this package available as <em>libdbd-pg-perl</em> (Debian, Ubuntu) or <em>perl-DBD-Pg</em> (Fedora, RedHat, SUSE).
-The installer script will prompt for the name of the driver (<em>Pg</em> or <em>mysql</em>).
+<code>
+CREATE USER ocs IDENTIFIED BY 'ocs';<br>
+CREATE DATABASE ocsweb CHARACTER SET utf8;<br>
+GRANT ALL ON ocsweb.* TO ocs;
+</code>
 </p>
 <p>
-An additional perl module, <em>Date::Calc</em>, is required.
-Most GNU/Linux distributions have this package available as <em>libdate-calc-perl</em> (Debian, Ubuntu) or <em>perl-Date-Calc</em> (Fedora, RedHat, SUSE).
+You can choose any username or password.
+The database name 'ocsweb' is currently hardcoded in some parts of the OCS Inventory code
+and should not be changed.
+UTF8 encoding is strongly recommended.
+</p>
+<p>
+To create and initialize the tables, log out from the database and run the schema manager script
+in the <em>tools</em> directory:
+</p>
+<p>
+<code>
+php tools/schema-manager.php --force
+</code>
+</p>
+<p>
+This will also create a default account 'admin' with the password 'admin'.
+This should be changed immediately.
+Point your browser to the URL of your braintacle installation, log in and click 'Preferences', then 'Users'.
+Click on 'Edit', enter a new password, and optionally a different user name.
 </p>
 
-<h3>Changes for installation of administration server</h3>
+<h3>Install the communication server</h3>
+
+<h4>Requirements</h4>
 
 <p>
-You need the PHP extension for your database.
-Most GNU/Linux distributions have this package available as <em>php5-pgsql</em> (Debian, Ubuntu, SUSE) or <em>php-pgsql</em> (Fedora, RedHat).
+The communication server requires an Apache installation.
+Other web servers are not supported because it heavily relies on mod_perl and its interface to Apache internals.
+A Perl interpreter is installed by default most GNU/Linux distributions.
+Some nonstandard perl modules are required.
+There are several ways to install them, in preferred order:
 </p>
+<ol>
+<li>
+As a native package from a GNU/Linux distribution, see the table below
+</li>
+<li>
+Via the <em>cpan</em> command line utility
+</li>
+<li>
+Manual download from <a href="http://cpan.org">CPAN</a> (take care of dependencies for yourself)
+</li>
+</ol>
+<table border="1">
+<tr>
+<th>Module</th><th>Debian/Ubuntu</th><th>Fedora</th><th>SUSE</th>
+</tr>
+<tr>
+<td>mod_perl2</td><td>libapache2-mod-perl2</td><td>mod_perl</td><td>apache2-mod_perl</td>
+</tr>
+<tr>
+<td>Compress::Zlib</td><td>(already present)</td><td>perl-IO-Compress</td><td>?</td>
+</tr>
+<tr>
+<td>DBI</td><td>libdbi-perl</td><td>perl-DBI</td><td>perl-DBI</td>
+</tr>
+<tr>
+<td>DBD::Pg (PostgreSQL only)</td><td>libdbd-pg-perl</td><td>perl-DBD-Pg</td><td>perl-DBD-Pg</td>
+</tr>
+<tr>
+<td>DBD::mysql (MySQL only)</td><td>libdbd-mysql-perl</td><td>perl-DBD-MySQL</td><td>perl-DBD-mysql</td>
+</tr>
+<tr>
+<td>Apache::DBI</td><td>libapache-dbi-perl</td><td>perl-Apache-DBI</td><td>perl-Apache-DBI</td>
+</tr>
+<tr>
+<td>Date::Calc</td><td>libdate-calc-perl</td><td>perl-Date-Calc</td><td>perl-Date-Calc</td>
+</tr>
+<tr>
+<td>XML::Simple</td><td>libxml-simple-perl</td><td>perl-XML-Simple</td><td>perl-XML-Simple</td>
+</tr>
+<tr>
+<td>SOAP::Lite (optional)</td><td>libsoap-lite-perl</td><td>perl-SOAP-Lite</td><td>perl-SOAP-Lite</td>
+</tr>
+<tr>
+<td>XML::Entities (optional)</td><td>(not available, use CPAN)</td><td>perl-XML-Entities</td><td>perl-XML-Entities</td>
+</tr>
+</table>
+<p>
+If you have used an unmodified version of OCS Inventory before, most of these Modules will probably already be installed.
+Beware of the additional dependency on Date::Calc!
+</p>
+<p>
+The last 2 modules are only required for the SOAP service.
+This is optional and entiely untested.
+</p>
+
+<h4>Prepare for trouble</h4>
 
 <p>
-When using the web interface for the first time, you will see the login screen as documented.
-In addition to database host, user and password, you need to specify the name of the MDB2 driver, like 'pgsql' or 'mysql'.
+mod_perl is unforgiving about compile time errors and will cause Apache to die on start/reload
+if something important goes wrong, like missing Perl modules.
+If your Apache installation hosts other applications, these will be unavailable until the problem is fixed.
+Pick a good moment for installation, when unexpected downtime can be afforded.
+</p>
+<p>
+If possible, consider a dedicated Apache installation exclusively for the communication server.
+That would isolate any problems to that instance and not affect other web applications.
+It is also possible to run multiple Apache instances with different configuration independently
+on the same machine, as long as no 2 instances listen on the same combination of IP address and port.
+Some systems like FreeBSD and recent versions of Debian and Ubuntu offer configuration tools to
+support this out of the box.
+With a bit of tweaking, this should be possible on other systems too.
+</p>
+<p>
+Details about the error can be found in the Apache error log.
+If you don't know how to fix the problem and need to resurrect Apache quickly, remove the configuration file
+(ocsinventory-server.conf or z-ocsinventory-server.conf) from the Apache configuration directory,
+typically /etc/apache2/conf.d/, and start Apache.
+<p>
+
+<h4>Installation</h4>
+
+<p>
+The communication server is installed through the setup.sh script in the ocsinventory directory.
+It assumes this directory to be the current working directory, so don't forget to change to that directory first:
+<p>
+<p>
+<code>
+cd ocsinventory<br>
+sh setup.sh
+</code>
+</p>
+<p>
+Follow the instructions of the script.
+If everything went without error, reload the Apache configuration (see warning above).
+You may see some errors in the Apache log file like this:
+</p>
+<pre>
+ocsinventory-server: Can't load SOAP::Transport::HTTP* - Web service will be unavailable
+</pre>
+<p>
+These messages are harmless and can be ignored if you don't plan to use the SOAP service.
 </p>
 
+<h4>Clean up (optional)</h4>
 
-<h3>Migrating from previous MySQL-based installations (untested!):</h3>
+<p>
+The installation script creates a copy of the ocsinventory/Apache directory in a system dependent path.
+It is recommended to locate that copy and replace it with a symbolic link to the source directory.
+This will simplify upgrading because the new version will be automatically picked up after reloading
+the Apache configuration.
+First locate the directory where the file Ocsinventory.pm resides:
+</p>
+<p>
+<code>
+find /usr -name Ocsinventory.pm -printf '%h\n'
+</code>
+</p>
+<p>
+There may be multiple results if the Braintacle source tree is located below /usr
+(the recommended path is /usr/local/share/braintacle).
+There should be one result that is located outside the Braintacle tree.
+Delete that directory and replace it with a symbolic link.
+In the following example, Braintacle is installed at /usr/local/share/braintacle, and the communication server
+at /usr/local/share/perl/5.10.1/Apache:
+</p>
+<p>
+<code>
+rm -r /usr/local/share/perl/5.10.1/Apache<br>
+ln -s /usr/local/share/braintacle/ocsinventory/Apache/ /usr/local/share/perl/5.10.1/Apache
+</code>
+</p>
+<p>
+Now reload the Apache configuration.
+If everything went fine, Apache should still be alive.</p>
+
+<h3>Installation of administration console (optional and deprecated)</h3>
+
+<p>
+The administration console (ocsreports) is not installed automatically.
+It should not be used except for some operations not yet supported by the Braintacle console:
+<ul>
+<li>
+Creating or deleting user defined fields.
+Braintacle already supports displaying and editing their content
+(under the "User defined" tab in a computer's inventory).
+Only the definition needs to be done via ocsreports.
+</li>
+<li>
+Creating groups.
+Braintacle can display and delete groups and manage manual membership and assigned packages,
+but not yet create new groups.
+</li>
+<li>
+Overriding global configuration for specific computers or groups.
+The global configuration can already be done in Braintacle.
+</li>
+</ul>
+<p>
+Some other operations are intentionally not supported by Braintacle,
+like multiple download servers or agent upload.
+Do not use ocsreports for these operations &ndash; they are deprecated and untested.
+</p>
+
+<h4>Requirements</h4>
+
+<p>
+The database must already be set up with the schema manager.
+</p>
+<p>
+You need the pgsql/mysql PHP extension.
+It is avaliable as a package for GNU/Linux distributions:
+<table border="1">
+<tr>
+<th>PHP extension</th><th>Debian/Ubuntu</th><th>Fedora</th><th>SUSE</th>
+</tr>
+<tr>
+<td>pgsql</td><td>php5-pgsql</td><td>php-pgsql</td><td>php5-pgsql</td>
+</tr>
+<tr>
+<td>mysql</td><td>php5-mysql</td><td>php-mysql</td><td>php5-mysql</td>
+</tr>
+</table>
+
+<h4>Configuration</h4>
 
 <ol>
-<li>Upgrade original OCS Inventory-NG to at least version 1.01. Migration from older versions might work, but I haven't checked the database schema for these versions.</li>
-<li>Follow the installation instructions in this document.</li>
+<li>
+Copy ocsinventory/etc/ocsinventory/ocsinventory-reports.conf to a place where Apache will read it.
+Typically this is "/etc/apache2/conf.d".
+</li>
+<li>
+The default configuration may not be appropriate for your particular Apache setup.
+Read the comments in the configuration file and edit it to suit your needs.
+</li>
+<li>
+Edit ocsinventory/ocsreports/dbconfig.inc.php to match your database setup.
+The default configuration uses MySQL on localhost with a default username and password.
+</li>
+<li>
+Since dbconfig.inc.php contains your database credentials, it should not be world readable.
+It must of course be readable for your web server.
+</li>
 </ol>
-
-
-<h2><a name="schema-changes">Changes to the database schema</a></h2>
-<p>
-The database schema is provided as a set of XML files in the <em>schema</em> directory.
-This is slightly different from the original schema.
-See the
-<a href="http://svn.savannah.nongnu.org/viewvc/*checkout*/trunk/schema/README.html?root=braintacle">schema documentation</a>
-in the same directory for details.
-The ocsbase.sql file is no longer used.
-</p>
 
 <h2>Technical details</h2>
 
