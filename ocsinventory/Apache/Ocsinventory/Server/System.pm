@@ -74,6 +74,8 @@ Exporter::export_ok_tags('server');
 
 use Apache::Ocsinventory::Server::Constants;
 
+use if $ENV{'OCS_OPT_LOGPATH'} eq 'syslog', 'Sys::Syslog';
+
 sub _get_sys_options{
 
   return 0 if $ENV{OCS_OPT_OPTIONS_NOT_OVERLOADED};
@@ -248,6 +250,24 @@ sub _log{
   my $ipaddress = $Apache::Ocsinventory::CURRENT_CONTEXT{'IPADDRESS'}||'??';
   our $LOG;
   
+  # Use syslog if configured
+  if ($ENV{'OCS_OPT_LOGPATH'} eq 'syslog') {
+    openlog('ocsinventory-server', 'nofatal,nowait,pid', 'user');
+    syslog(
+        'info',
+        '%s;%s;%s;%s;%s;%s',
+        $code,
+        $DeviceID,
+        $ipaddress,
+        &_get_http_header('User-agent', $Apache::Ocsinventory::CURRENT_CONTEXT{'APACHE_OBJECT'}),
+        $phase,
+        $comment ? $comment : ''
+    );
+    closelog();
+    return;
+  }
+
+  # Else log to configured logfile
   if(!$LOG){
     open LOG, '>>'.$ENV{'OCS_OPT_LOGPATH'}.'/activity.log' or die "Failed to open log file : $! ($ENV{'OCS_OPT_LOGPATH'})\n";
     # We don't want buffer, so we allways flush the handles
