@@ -555,25 +555,6 @@ then
     echo "Installing Communication server" >> $SETUP_LOG
     echo "============================================================" >> $SETUP_LOG
     echo
-    
-    echo
-    echo "+----------------------------------------------------------+"
-    echo "| Checking for Make utility...                             |"
-    echo "+----------------------------------------------------------+"
-    echo
-    echo "Checking for Make utility" >> $SETUP_LOG
-    if [ -z "$MAKE" ]
-    then
-        echo "Make utility not found !"
-        echo "Make utility not found" >> $SETUP_LOG
-        echo "Setup is not able to build OCS Inventory NG Perl module."
-        echo "Unable to build OCS Inventory NG Perl module !" >> $SETUP_LOG
-        exit 1
-    else
-        echo "OK, Make utility found at <$MAKE> ;-)"
-        echo "Make utility found at <$MAKE>" >> $SETUP_LOG
-    fi
-    echo
 
     echo "+----------------------------------------------------------+"
     echo "| Checking for Apache mod_perl version...                  |"
@@ -918,64 +899,6 @@ then
     echo "+----------------------------------------------------------+"
     echo "| OK, looks good ;-)                                       |"
     echo "|                                                          |"
-    echo "| Configuring Communication server Perl modules...         |"
-    echo "+----------------------------------------------------------+"
-    echo
-    echo "Configuring Communication server (perl Makefile.PL)" >> $SETUP_LOG
-    cd "Apache"
-    $PERL_BIN Makefile.PL
-    if [ $? -ne 0 ]
-    then
-        echo -n "Warning: Prerequisites too old ! Do you wish to continue (y/[n])?"
-        read ligne
-        if [ "$ligne" = "y" ]
-        then
-            echo "Maybe Communication server will encounter problems. Continuing anyway."
-            echo "Warning: Prerequisites too old ! Continuing anyway" >> $SETUP_LOG
-        else
-            echo "Installation aborted !"
-            exit 1
-        fi
-    fi
-    echo
-    echo "+----------------------------------------------------------+"
-    echo "| OK, looks good ;-)                                       |"
-    echo "|                                                          |"
-    echo "| Preparing Communication server Perl modules...           |"
-    echo "+----------------------------------------------------------+"
-    echo
-    echo "Preparing Communication server Perl modules (make)" >> $SETUP_LOG
-    $MAKE >> $SETUP_LOG 2>&1
-    if [ $? -ne 0 ]
-    then
-        echo "*** ERROR: Prepare failed, please look at error in $SETUP_LOG and fix !"
-        echo
-        echo "Installation aborted !"
-        exit 1
-    fi
-    
-    echo
-    echo "+----------------------------------------------------------+"
-    echo "| OK, prepare finshed ;-)                                  |"
-    echo "|                                                          |"
-    echo "| Installing Communication server Perl modules...          |"
-    echo "+----------------------------------------------------------+"
-    echo
-    echo "Installing Communication server Perl modules (make install)" >> $SETUP_LOG
-    $MAKE install >> $SETUP_LOG 2>&1
-    if [ $? -ne 0 ]
-    then 
-        echo "*** ERROR: Install of Perl modules failed, please look at error in $SETUP_LOG and fix !"
-        echo
-        echo "Installation aborted !"
-        exit 1
-    fi
-    cd ".."
-
-    echo
-    echo "+----------------------------------------------------------+"
-    echo "| OK, Communication server Perl modules install finished;-)|"
-    echo "|                                                          |"
     echo "| Creating Communication server log directory...           |"
     echo "+----------------------------------------------------------+"
     echo
@@ -1047,70 +970,8 @@ then
         fi
     fi
     echo
-    
-    echo
     echo "+----------------------------------------------------------+"
     echo "| OK, Communication server log directory created ;-)       |"
-    echo "|                                                          |"
-    echo "| Now configuring Apache web server...                     |"
-    echo "+----------------------------------------------------------+"
-    echo
-    echo "To ensure Apache loads mod_perl before OCS Inventory NG Communication Server,"
-    echo "Setup can name Communication Server Apache configuration file"
-    echo "'z-$COM_SERVER_APACHE_CONF_FILE' instead of '$COM_SERVER_APACHE_CONF_FILE'."
-    echo "Do you allow Setup renaming Communication Server Apache configuration file"
-    echo -n "to 'z-$COM_SERVER_APACHE_CONF_FILE' ([y]/n) ?"
-    read ligne
-    if [ -z $ligne ] || [ "$ligne" = "y" ] || [ "$ligne" = "Y" ]
-    then
-        echo "OK, using 'z-$COM_SERVER_APACHE_CONF_FILE' as Communication Server Apache configuration file"
-        echo "OK, using 'z-$COM_SERVER_APACHE_CONF_FILE' as Communication Server Apache configuration file" >> $SETUP_LOG
-        FORCE_LOAD_AFTER_PERL_CONF=1
-    else
-        echo "OK, using '$COM_SERVER_APACHE_CONF_FILE' as Communication Server Apache configuration file"
-        echo "OK, using '$COM_SERVER_APACHE_CONF_FILE' as Communication Server Apache configuration file" >> $SETUP_LOG
-        FORCE_LOAD_AFTER_PERL_CONF=0
-    fi
-    echo "Configuring Apache web server (file $COM_SERVER_APACHE_CONF_FILE)" >> $SETUP_LOG
-    cp etc/ocsinventory/$COM_SERVER_APACHE_CONF_FILE $COM_SERVER_APACHE_CONF_FILE.local
-    $PERL_BIN -pi -e "s#DATABASE_TYPE#$DB_SERVER_TYPE#g" $COM_SERVER_APACHE_CONF_FILE.local
-    $PERL_BIN -pi -e "s#DATABASE_SERVER#$DB_SERVER_HOST#g" $COM_SERVER_APACHE_CONF_FILE.local
-    $PERL_BIN -pi -e "s#DATABASE_PORT#$DB_SERVER_PORT#g" $COM_SERVER_APACHE_CONF_FILE.local
-    $PERL_BIN -pi -e "s#VERSION_MP#$APACHE_MOD_PERL_VERSION#g" $COM_SERVER_APACHE_CONF_FILE.local
-    $PERL_BIN -pi -e "s#PATH_TO_LOG_DIRECTORY#$OCS_COM_SRV_LOG#g" $COM_SERVER_APACHE_CONF_FILE.local
-    echo "******** Begin updated $COM_SERVER_APACHE_CONF_FILE.local ***********" >> $SETUP_LOG
-    cat $COM_SERVER_APACHE_CONF_FILE.local >> $SETUP_LOG
-    echo "******** End updated $COM_SERVER_APACHE_CONF_FILE.local ***********" >> $SETUP_LOG
-    echo "Removing old communication server configuration to file $APACHE_CONFIG_DIRECTORY/ocsinventory.conf"
-    echo "Removing old communication server configuration to file $APACHE_CONFIG_DIRECTORY/ocsinventory.conf" >> $SETUP_LOG
-    rm -f "$APACHE_CONFIG_DIRECTORY/ocsinventory.conf"
-    if [ $FORCE_LOAD_AFTER_PERL_CONF -eq 1 ]
-    then
-        rm -f "$APACHE_CONFIG_DIRECTORY/$COM_SERVER_APACHE_CONF_FILE"
-        echo "Writing communication server configuration to file $APACHE_CONFIG_DIRECTORY/z-$COM_SERVER_APACHE_CONF_FILE"
-        echo "Writing communication server configuration to file $APACHE_CONFIG_DIRECTORY/z-$COM_SERVER_APACHE_CONF_FILE" >> $SETUP_LOG
-        cp -f $COM_SERVER_APACHE_CONF_FILE.local $APACHE_CONFIG_DIRECTORY/z-$COM_SERVER_APACHE_CONF_FILE >> $SETUP_LOG 2>&1
-        res=$?
-        COM_SERVER_APACHE_CONF_FILE="z-$COM_SERVER_APACHE_CONF_FILE"
-    else
-        echo "Writing communication server configuration to file $APACHE_CONFIG_DIRECTORY/$COM_SERVER_APACHE_CONF_FILE"
-        echo "Writing communication server configuration to file $APACHE_CONFIG_DIRECTORY/$COM_SERVER_APACHE_CONF_FILE" >> $SETUP_LOG
-        cp -f $COM_SERVER_APACHE_CONF_FILE.local $APACHE_CONFIG_DIRECTORY/$COM_SERVER_APACHE_CONF_FILE >> $SETUP_LOG 2>&1
-        res=$?
-    fi
-    if [ $res -ne 0 ]
-    then
-        echo "*** ERROR: Unable to write $APACHE_CONFIG_DIRECTORY/$COM_SERVER_APACHE_CONF_FILE, please look at error in $SETUP_LOG and fix !"
-        echo
-        echo "Installation aborted !"
-        exit 1
-    fi
-    echo
-    echo "+----------------------------------------------------------+"
-    echo "| OK, Communication server setup sucessfully finished ;-)  |"
-    echo "|                                                          |"
-    echo "| Please, review $APACHE_CONFIG_DIRECTORY/$COM_SERVER_APACHE_CONF_FILE"
-    echo "| to ensure all is good. Then restart Apache daemon.       |"
     echo "+----------------------------------------------------------+"
     echo
     echo "Leaving Apache directory" >> $SETUP_LOG

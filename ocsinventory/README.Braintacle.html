@@ -81,8 +81,12 @@ Braintacle and its bundled OCS Inventory code work with both schema types (Brain
 but an unmodified OCS Inventory installation will not work with the Braintacle schema.
 </li>
 <li>
-The OCS administration console (ocsreports) is not installed by default.
-Instructions for manual installation are included in this document.
+Most of the setup must be done manually, giving the administrator more control over the installation process.
+This is better than having a script messing with the system, which might break things and makes uninstallation
+more difficult.<br>
+Detailed installation instructions are given in this document.
+The setup script is deprecated and only used for stuff which has not yet been optimized and documented
+for manual installation.
 </li>
 <li>
 The workaround for <a href="https://bugs.launchpad.net/ocsinventory-windows-agent/+bug/530881">bug #530881</a> is included.
@@ -242,14 +246,37 @@ With a bit of tweaking, this should be possible on other systems too.
 <p>
 Details about the error can be found in the Apache error log.
 If you don't know how to fix the problem and need to resurrect Apache quickly, remove the configuration file
-(ocsinventory-server.conf or z-ocsinventory-server.conf) from the Apache configuration directory,
+(ocsinventory-server.conf) from the Apache configuration directory,
 typically /etc/apache2/conf.d/, and start Apache.
 <p>
 
 <h4>Installation</h4>
 
 <p>
-The communication server is installed through the setup.sh script in the ocsinventory directory.
+Copy the sample configuration file ocsinventory/etc/ocsinventory/ocsinventory-server.conf
+to your apache configuration directory (typically /etc/apache2/conf.d), for example:
+</p>
+<p>
+<code>
+cp /usr/local/share/braintacle/ocsinventory/etc/ocsinventory/ocsinventory-server.conf /etc/apache2/conf.d/
+</code>
+</p>
+<p>
+Edit the copied file to match your environment.
+In particular, adapt the first 2 sections ("General runtime environment settings" and "Master Database settings").
+The default settings from the rest of the file will not need to be changed to make things work.
+However, you may want to review the settings, in particular the access control directives at the
+bottom of the file if you don't want unrestricted access on all virtual hosts.
+</p>
+<p>
+It is important that mod_perl is loaded before that file is included.
+This is the case in most standard Apache setups where modules are set up before conf.d gets evaluated.
+If mod_perl is loaded from a config file in the same directory, make sure that its name comes before
+ocsinventory-server.conf in alphabetical order.
+Rename the file if necessary.
+</p>
+<p>
+The log file is configured through the setup.sh script in the ocsinventory directory.
 It assumes this directory to be the current working directory, so don't forget to change to that directory first:
 <p>
 <p>
@@ -269,38 +296,6 @@ ocsinventory-server: Can't load SOAP::Transport::HTTP* - Web service will be una
 <p>
 These messages are harmless and can be ignored if you don't plan to use the SOAP service.
 </p>
-
-<h4>Clean up (optional)</h4>
-
-<p>
-The installation script creates a copy of the ocsinventory/Apache directory in a system dependent path.
-It is recommended to locate that copy and replace it with a symbolic link to the source directory.
-This will simplify upgrading because the new version will be automatically picked up after reloading
-the Apache configuration.
-First locate the directory where the file Ocsinventory.pm resides:
-</p>
-<p>
-<code>
-find /usr -name Ocsinventory.pm -printf '%h\n'
-</code>
-</p>
-<p>
-There may be multiple results if the Braintacle source tree is located below /usr
-(the recommended path is /usr/local/share/braintacle).
-There should be one result that is located outside the Braintacle tree.
-Delete that directory and replace it with a symbolic link.
-In the following example, Braintacle is installed at /usr/local/share/braintacle, and the communication server
-at /usr/local/share/perl/5.10.1/Apache:
-</p>
-<p>
-<code>
-rm -r /usr/local/share/perl/5.10.1/Apache<br>
-ln -s /usr/local/share/braintacle/ocsinventory/Apache/ /usr/local/share/perl/5.10.1/Apache
-</code>
-</p>
-<p>
-Now reload the Apache configuration.
-If everything went fine, Apache should still be alive.</p>
 
 <h3>Installation of administration console (optional and deprecated)</h3>
 
