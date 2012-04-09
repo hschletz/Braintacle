@@ -148,7 +148,7 @@ sub _database_connect{
   # Slave mode
   elsif($mode eq 'read'){
     if($ENV{'OCS_DB_SL_HOST'}){
-      $type = $ENV{'OCS_DB_SL_TYPE'};
+      $type = $ENV{'OCS_DB_TYPE'};
       $host = $ENV{'OCS_DB_SL_HOST'};
       $database = $ENV{'OCS_DB_SL_NAME'}||'ocsweb';
       $port = $ENV{'OCS_DB_SL_PORT'}||'5432';
@@ -156,7 +156,7 @@ sub _database_connect{
       $password  = $Apache::Ocsinventory::CURRENT_CONTEXT{'APACHE_OBJECT'}->dir_config('OCS_DB_SL_PWD');
     }
     else{
-      $type = $ENV{'OCS_DB_SL_TYPE'};
+      $type = $ENV{'OCS_DB_TYPE'};
       $host = $ENV{'OCS_DB_HOST'};
       $database = $ENV{'OCS_DB_NAME'}||'ocsweb';
       $port = $ENV{'OCS_DB_PORT'}||'5432';
