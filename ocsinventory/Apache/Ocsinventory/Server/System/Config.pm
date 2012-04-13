@@ -458,7 +458,7 @@ sub check_config{
       $ENV{$truename} = $CONFIG{$name}->{default};
     }
     else{
-      print "ocsinventory-server: Parameter `$truename` is ok\n" if $verbose;
+      print STDERR "ocsinventory-server: Parameter `$truename` is ok\n" if $verbose;
     }
   }
   return undef;
