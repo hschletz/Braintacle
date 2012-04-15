@@ -39,54 +39,37 @@ Braintacle is hosted at <a href="http://savannah.nongnu.org/projects/braintacle"
 <h2>What is it?</h2>
 
 <p>
-Braintacle is an alternative administration console for <a href="http://ocsinventory-ng.org">OCS Inventory NG</a>.
-I wrote it for 2 reasons:
+Braintacle is a set of applications for automatic inventory of hard- and software, software deployment and more.
+It consists of several parts:
 </p>
-<ol>
+<ul>
 <li>
-<p>
-I already had a PostgreSQL server in use, and I didn't like the idea of setting up a MySQL server just for OCS Inventory.
-While the communication server component could be easily adapted due to the DBI abstraction layer,
-the administration console uses MySQL functions directly.
-</p>
-<p>
-I briefly considered rewriting a console application from scratch, but that would have been a lot of work.
-Instead, I adapted the code to use the <a href="http://pear.php.net/package/MDB2/">MDB2</a> abstraction layer.
-It turned out that there were other aspects of the code (mostly regarding security and debugging) which I wanted to have sorted out before using it.
-</p>
-<p>
-As a result, the patch is very intrusive, making it difficult to keep up with future development.
-</p>
-</li>
-<li>
-<p>
-While the patched version works well from a technical point of view, I got more and more frustrated
-by the user interface.
-In particular, the process of building and deploying packages involves repeating a lot of steps over and over again everytime a new software release is to be deployed.
-This is not only annoying, but also error-prone.
-</p>
-<p>
-This, among other minor annoyances, finally convinced me to pick up my initial idea of rewriting my own console with an improved workflow.
-</p>
-</li>
-</ol>
-
-<p>
-Braintacle is planned to replace the original administration console completely.
-It is not feature-complete yet, but already fully usable for everyday tasks.
-</p>
-
-<p>
-The mentioned patched version of OCS Inventory NG comes bundled with Braintacle
-in the <em>ocsinventory</em> directory. See the
+A patched version of <a href="http://ocsinventory-ng.org">OCS Inventory NG</a> with several improvements,
+most notably the support for different database backends (PostgreSQL is recommended, but MySQL is still supported).
+It is contained in the <em>ocsinventory</em> directory. See the
 <a href="http://svn.savannah.nongnu.org/viewvc/*checkout*/trunk/ocsinventory/README.Braintacle.html?root=braintacle">README.Braintacle.html</a>
 file in the same directory for details.
-Use of this modified version is recommended.
-</p>
+</li>
+<li>
+An alternative administration console which is aimed to replace the original administration console (ocsreports) completely.
+It is not feature complete yet, but already fully usable for most everyday tasks.
+</li>
+<li>
+Some command line helper applications.
+</li>
+</ul>
 
 <h2>Advantages</h2>
 
 <ul>
+<li>
+Better integration into your IT infrastructure.
+Use the DBMS of your choice &ndash; no need to maintain an extra MySQL installation if you already have a
+different DBMS set up.
+The installation is less intrusive to your server.
+No more code is copied to obscure locations.
+All code is run directly from 1 application directory, making maintenance much easier.
+</li>
 <li>
 The package builder is much easier to use and provides features that the original console does not have.
 Most notably, deploying a new version of an existing package is very easy:
@@ -109,16 +92,11 @@ Software dictionaries are much easier to manage.
 Extra categories are not supported yet &ndash; The dictionary manager is intended for software filters only.
 </li>
 <li>
+Consistent navigation &ndash; no popups, no more lost menus.
+<li>
 Computers can be exported as XML, either individually via console or all at once via the <a href="#export.php">export tool</a>.
 The XML files are similar to those generated locally by the agents, and suitable for import via the console or the ocsinventory-injector.pl script.
 This simplifies data migration between different databases or data processing via external tools.
-</li>
-<li>
-Braintacle uses the <a href="http://framework.zend.com">Zend Framework</a> which provides, among many other features, a database abstraction API.
-Together with minor modifications to the communication server, this allows any supported database backend to be used, not only MySQL.
-It was developed and tested with PostgreSQL.
-Other supported DBMS should work, but have not been extensively tested yet.
-I have designed the SQL commands to be portable, so I would not expect too many bad surprises.
 </li>
 <li>
 Braintacle uses localization functions wherever possible.
@@ -128,7 +106,7 @@ Other translations can easily be added and maintained using your favorite gettex
 </li>
 <li>
 As a side-effect of the Zend Framework's MVC architecture, the model classes provide an abstract API to all logical
-objects (computers, packages etc.).
+objects (computers, packages etc.) which can be used by third party code.
 </li>
 </ul>
 
@@ -323,19 +301,6 @@ The typical origin of duplicates is a reinstall, where this would just get in th
 
 <h2>Known issues</h2>
 
-<h3>Bad number formatting or PHP notices in package listing</h3>
-
-<p>
-On some systems, a message like this is gets logged:
-</p>
-<pre>
-PHP Notice:  Uninitialized string offset:  -1 in /usr/local/share/braintacle/library/Zend/Measure/Abstract.php on line 293
-</pre>
-<p>
-This issue has been reported as <a href="http://framework.zend.com/issues/browse/ZF-9078">ZF-9078</a>.
-To get rid of it, install PHP's <i>bcmath</i> extension.
-</p>
-
 <h3>Apache gives 404 error on certain operations</h3>
 
 <p>
@@ -354,7 +319,7 @@ There are several ways to work around this problem at application level, but the
 For this reason, I have not implemented any and the only way to solve this problem is to set <code>AllowEncodedSlashes On</code> for the virtual host.
 </p>
 
-<h2>Managing the database schema</h2>
+<h2>Managing the database</h2>
 
 <p>
 There are 2 use cases that require different methods for database management.
@@ -363,18 +328,14 @@ There are 2 use cases that require different methods for database management.
 <h3>Using Braintacle in addition to an unmodified OCS Inventory installation</h3>
 
 <p>Use the OCS Inventory installer to manage the database.
-<strong>Do not use braintacle's schema manager.</strong>
+<strong>Do not use Braintacle's schema manager.</strong>
 </p>
 
 <h3>Using Braintacle with its bundled OCS Inventory version</h3>
 
 <p>
 Braintacle manages the database with the script tools/schema-manager.php.
-It uses <a href="http://pear.php.net/package/MDB2_Schema/">MDB2_Schema</a> for this task.
-</p>
-<p>
-The schema is stored in a set of XML fragments in the schema/ directory, one file per table.
-Please note that this schema is slightly different from the original schema.
+Please note that Braintacle's schema is slightly different from the original schema.
 See the
 <a href="http://svn.savannah.nongnu.org/viewvc/*checkout*/trunk/schema/README.html?root=braintacle">schema documentation</a>
 for details.
@@ -382,8 +343,9 @@ for details.
 <p>
 <strong>
 This schema is not fully compatible with the original version of OCS Inventory.
-Do not use Braintacle's schema-manager.php if you use an unmodified server.
-Manage the schema through the original console application instead.
+It can only be used with the OCS Inventory server that comes bundled with Braintacle.
+Do not use schema-manager.php if you use an unmodified server.
+Manage the schema through the original console application in that case.
 </strong>
 </p>
 <p>
@@ -391,44 +353,25 @@ The schema manager checks for compatibility with the original version and refuse
 This can be overridden with the --force option, but compatibility will be lost.
 </p>
 <p>
-The modified version of OCS Inventory that comes bundled with Braintacle works with both schema types.
-Its installer uses the same schema as the schema manager script, so the above warning applies too.
-It does not check for database compatibility fist.
-It is deprecated and not thorougly tested.
-Avoid using it.
-Use schema-manager.php if possible.
+Braintacle and its bundled version of OCS Inventory work with both schema types,
+but some features will only be available with the Braintacle schema.
 </p>
 
 <h4>Creating the database</h4>
 
 <p>
-Creation of the database itself and the database user and setting privileges does not happen automatically.
-Log into your database server as superuser and do this manually.
-For example, the following commands would work for PostgreSQL:
-</p>
-<p>
-<code>
-CREATE USER ocs WITH PASSWORD 'ocs';<br>
-CREATE DATABASE ocsweb OWNER ocs ENCODING 'UTF8';
-</code>
-</p>
-<p>
-Using Unicode for the database is strongly recommended.
-Other encodings may work for the most part, but cause trouble under certain circumstances.
-</p>
-<p>
-Now run the schema manager to create and initialize the tables.
-</p>
-<p>
-<code>php tools/schema-manager.php</code>
+This is documented in the installation instructions for the communication server.
+See
+<a href="http://svn.savannah.nongnu.org/viewvc/*checkout*/trunk/ocsinventory/README.Braintacle.html?root=braintacle">ocsinventory/README.Braintacle.html</a>
+for details.
 </p>
 
 <h4>Updating the database</h4>
 
 <p>
-When the schema has changed, just run the schema-manager again.
+When the schema has changed, just run the schema manager again.
 It will update the tables to the new schema.
-I strongly recommend to back up the database before you do this.
+It's strongly recommend to back up the database before you do this.
 Updating a database with MDB2_Schema is a complex operation.
 Despite intensive testing and bugfixing, there could always something go wrong.
 </p>

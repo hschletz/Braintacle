@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 <p>
 This is a patched version of <a href="http://ocsinventory-ng.org">OCS inventory NG</a>
-2.0.4/1.3.3 that uses a database abstraction layer for all database access,
+2.0.5/1.3.3 that uses a database abstraction layer for all database access,
 allowing to work with databases other than MySQL.
 It was developed and tested with PostgreSQL, which is the recommended database for this version.
 MySQL is also supported.
@@ -56,10 +56,6 @@ Version 2.x will not be ported.
 New features will be implemented in the Braintacle console only.
 </p>
 <p>
-The modified installer is currently available for UNIXoid OSes only.
-The scripts themselves are OS-independent, so they could be installed manually on Windows too.
-</p>
-<p>
 The agent that runs on the clients does not make any direct database connections.
 All interaction runs through the communication server via HTTP/HTTPS.
 No special version of the agent is required for the modified server.
@@ -81,12 +77,13 @@ Braintacle and its bundled OCS Inventory code work with both schema types (Brain
 but an unmodified OCS Inventory installation will not work with the Braintacle schema.
 </li>
 <li>
-Most of the setup must be done manually, giving the administrator more control over the installation process.
+The setup must be done manually, giving the administrator more control over the installation process.
 This is better than having a script messing with the system, which might break things and makes uninstallation
-more difficult.<br>
+more difficult.
 Detailed installation instructions are given in this document.
-The setup script is deprecated and only used for stuff which has not yet been optimized and documented
-for manual installation.
+</li>
+<li>
+The communication server can optionally log to syslog instead of an extra log file.
 </li>
 <li>
 The workaround for <a href="https://bugs.launchpad.net/ocsinventory-windows-agent/+bug/530881">bug #530881</a> is included.
@@ -109,7 +106,7 @@ A lot of improvements under the hood.
 This version cannot be run standalone.
 It depends on a properly configured Braintacle installation.
 In particular, the database.ini file needs to be set up for the schema manager (see below).
-Refer to Braintacle's main documentation for instructions.
+Refer to README.txt in Braintacle's base directory for instructions.
 </p>
 
 <h3>Create the database and user</h3>
@@ -167,6 +164,8 @@ Click on 'Edit', enter a new password, and optionally a different user name.
 <p>
 The communication server requires an Apache installation.
 Other web servers are not supported because it heavily relies on mod_perl and its interface to Apache internals.
+mod_perl2 is available as a native package for most GNU/Linux distributions:
+libapache2-mod-perl2 (Debian/Ubuntu), mod_perl (Fedora), apache2-mod_perl (Suse).
 A Perl interpreter is installed by default most GNU/Linux distributions.
 Some nonstandard perl modules are required.
 There are several ways to install them, in preferred order:
@@ -185,9 +184,6 @@ Manual download from <a href="http://cpan.org">CPAN</a> (take care of dependenci
 <table border="1">
 <tr>
 <th>Module</th><th>Debian/Ubuntu</th><th>Fedora</th><th>SUSE</th>
-</tr>
-<tr>
-<td>mod_perl2</td><td>libapache2-mod-perl2</td><td>mod_perl</td><td>apache2-mod_perl</td>
 </tr>
 <tr>
 <td>Compress::Zlib</td><td>(already present)</td><td>perl-IO-Compress</td><td>?</td>
@@ -211,6 +207,9 @@ Manual download from <a href="http://cpan.org">CPAN</a> (take care of dependenci
 <td>XML::Simple</td><td>libxml-simple-perl</td><td>perl-XML-Simple</td><td>perl-XML-Simple</td>
 </tr>
 <tr>
+<td>Sys::Syslog (optional)</td><td>(already present)</td><td>(already present)</td><td>(already present)</td>
+</tr>
+<tr>
 <td>SOAP::Lite (optional)</td><td>libsoap-lite-perl</td><td>perl-SOAP-Lite</td><td>perl-SOAP-Lite</td>
 </tr>
 <tr>
@@ -218,12 +217,13 @@ Manual download from <a href="http://cpan.org">CPAN</a> (take care of dependenci
 </tr>
 </table>
 <p>
-If you have used an unmodified version of OCS Inventory before, most of these Modules will probably already be installed.
+If you have used an unmodified version of OCS Inventory before, most of these modules will probably already be installed.
 Beware of the additional dependency on Date::Calc!
 </p>
 <p>
+Sys::Syslog is only required if you want to use syslog instead of logging directly to a file (see below).
 The last 2 modules are only required for the SOAP service.
-This is optional and entiely untested.
+This is optional and entirely untested.
 </p>
 
 <h4>Prepare for trouble</h4>
@@ -248,7 +248,7 @@ Details about the error can be found in the Apache error log.
 If you don't know how to fix the problem and need to resurrect Apache quickly, remove the configuration file
 (ocsinventory-server.conf) from the Apache configuration directory,
 typically /etc/apache2/conf.d/, and start Apache.
-<p>
+</p>
 
 <h4>Installation</h4>
 
@@ -262,8 +262,8 @@ cp /usr/local/share/braintacle/ocsinventory/etc/ocsinventory/ocsinventory-server
 </code>
 </p>
 <p>
-Edit the copied file to match your environment.
-In particular, adapt the first 2 sections ("General runtime environment settings" and "Master Database settings").
+Edit the file to match your environment.
+In particular, adapt the first 2 sections ("General runtime environment settings" and "Master database settings").
 The default settings from the rest of the file will not need to be changed to make things work.
 However, you may want to review the settings, in particular the access control directives at the
 bottom of the file if you don't want unrestricted access on all virtual hosts.
@@ -275,19 +275,50 @@ If mod_perl is loaded from a config file in the same directory, make sure that i
 ocsinventory-server.conf in alphabetical order.
 Rename the file if necessary.
 </p>
+
+<h4>Configuring logging</h4>
+
 <p>
-The log file is configured through the setup.sh script in the ocsinventory directory.
-It assumes this directory to be the current working directory, so don't forget to change to that directory first:
+This version of the communication server contains a patch to support syslog instead of direct logging to a file.
+This is the default for the ocsinventory-server.conf shipped with this distribution.
+No further action is required for this configuration.
+</p>
 <p>
+Note that the Sys::Syslog module is required to make this work.
+It is typically present on *NIX systems, so that it works out of the box.
+On Windows, it could be installed manually, but it's difficult to get usable output there.
+It is recommended to set up a log file manually on Windows.
+You can also do this on *NIX systems if you don't want to use syslog.
+</p>
+<p>
+To set up a log file, create a directory for them with write permissions for the web server, and possibly
+no read permissions for the rest of the world.
+For example, the following would work for Debian:
+</p>
 <p>
 <code>
-cd ocsinventory<br>
-sh setup.sh
+mkdir /var/log/ocsinventory-server<br>
+chown www-data:www-data /var/log/ocsinventory-server<br>
+chmod 750 /var/log/ocsinventory-server
 </code>
 </p>
 <p>
-Follow the instructions of the script.
-If everything went without error, reload the Apache configuration (see warning above).
+Other distributions might have different user and group names for the web server.
+</p>
+<p>
+Now edit the ocsinventory-server.conf from your Apache configuration directory and set OCS_OPT_LOGPATH
+to the directory you just created.
+</p>
+<p>
+You may want to rotate the logs regularly to prevent them from growing infinitely.
+A sample logrotate configuration file is shipped in ocsinventory/etc/logrotate.d/ocsinventory-server.
+Copy this file to /etc/logrotate.d and edit it to suit your needs.
+</p>
+
+<h4>Starting the server</h4>
+
+<p>
+To finish installation, reload the Apache configuration (see warning above).
 You may see some errors in the Apache log file like this:
 </p>
 <pre>
@@ -300,7 +331,7 @@ These messages are harmless and can be ignored if you don't plan to use the SOAP
 <h3>Installation of administration console (optional and deprecated)</h3>
 
 <p>
-The administration console (ocsreports) is not installed automatically.
+The old administration console (ocsreports) is not needed for most everyday tasks.
 It should not be used except for some operations not yet supported by the Braintacle console:
 <ul>
 <li>

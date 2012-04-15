@@ -16,27 +16,27 @@ Quick start to get Braintacle running:
    will contain sensitive data (config files with database credentials) which
    would otherwise leak to the outside world.
 
-2. If you don't already have a working installation of OCS Inventory NG, install it -
-   either the original version from http://www.ocsinventory-ng.org/ or the patched
-   version that comes bundled with Braintacle in the ocsinventory directory. See the
-   README.Braintacle.html file in the same directory for details.
-   This version is recommended.
+2. Enable mod_rewrite and mod_env in your Apache configuration.
 
-3. Enable mod_rewrite and mod_env in your Apache configuration.
+3. Set "AllowEncodedSlashes On" on the virtual host that runs Braintacle.
 
-4. Set "AllowEncodedSlashes On" on the virtual host that runs Braintacle.
-
-5. Copy doc/braintacle.conf to a place where Apache will read it. Typically this is
+4. Copy doc/braintacle.conf to a place where Apache will read it. Typically this is
    "/etc/apache2/conf.d". Edit this file to suit your needs.
 
-6. Have Apache reload its configuration.
+5. Have Apache reload its configuration.
 
-7. Copy doc/database.ini to config/ and adjust the settings. The sample
+6. Copy doc/database.ini to config/ and adjust the settings. The sample
    configuration is set to OCSinventory's defaults. This file should not be
    world-readable, only for your webserver.
    You could also copy it to /etc or /usr/local/etc and create a symbolic link
    in the config/ directory instead. This has the advantage of keeping /usr free
    of user-configurable data which does not actually belong there.
+
+7. If you don't already have a working installation of OCS Inventory NG, install it -
+   either the original version from http://www.ocsinventory-ng.org/ or the patched
+   version that comes bundled with Braintacle in the ocsinventory directory. See the
+   README.Braintacle.html file in the same directory for details.
+   This version is recommended.
 
 8. Point your browser to Braintacle's URL. Log in with an OCSinventory
    administrator account (default username: 'admin', password 'admin') and have
