@@ -35,7 +35,7 @@ Quick start to get Braintacle running:
 7. If you don't already have a working installation of OCS Inventory NG, install it -
    either the original version from http://www.ocsinventory-ng.org/ or the patched
    version that comes bundled with Braintacle in the ocsinventory directory. See the
-   README.Braintacle.html file in the same directory for details.
+   README.html file in the same directory for details.
    This version is recommended.
 
 8. Point your browser to Braintacle's URL. Log in with an OCSinventory
