@@ -44,7 +44,8 @@ use Apache::Ocsinventory::Interface::Database;
 use Compress::Zlib;
 use Encode;
 
-# For date input validation
+# Additional modules
+use XML::Simple;
 use Date::Calc qw(check_date);
 
 # Globale structure
