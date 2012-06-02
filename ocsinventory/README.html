@@ -40,14 +40,15 @@ Other databases might work, but are entirely untested.
 </p>
 <p>
 <strong>
-This project is not provided by the OCSInventory team.
+This project is not provided by the OCS Inventory NG team.
 Do not bother them with any issues you encounter with this version.
 Use Braintacle's support tracker or mailing list instead.
 </strong>
 </p>
 <p>
 This version comes bundled with <a href="http://savannah.nongnu.org/projects/braintacle/">Braintacle</a>.
-It is not a requirement for using Braintacle if you use MySQL &ndash; Braintacle works with the database of an unmodified Installation of OCS Inventory, too.
+It is not a requirement for using Braintacle if you use MySQL &ndash;
+Braintacle works with an original OCS Inventory NG database, too.
 <p>
 <strong>This version of the ocsreports console is deprecated.
 It will be maintained for important bugfixes, but no longer receive any major upgrades.</strong>
@@ -73,8 +74,8 @@ Besides the different database access methods, more changes have been made to th
 Some
 <a href="http://svn.savannah.nongnu.org/viewvc/*checkout*/trunk/schema/README.html?root=braintacle">
 changes to the database schema</a> were necessary for portability.
-Braintacle and its bundled OCS Inventory code work with both schema types (Braintacle and OCS),
-but an unmodified OCS Inventory installation will not work with the Braintacle schema.
+Braintacle and its bundled communication server work with both schema types (Braintacle and OCS),
+but an unmodified OCS Inventory NG installation will not work with the Braintacle schema.
 </li>
 <li>
 The setup must be done manually, giving the administrator more control over the installation process.
@@ -122,7 +123,7 @@ For PostgreSQL, run:
 <p>
 <code>
 CREATE USER ocs WITH PASSWORD 'ocs';<br>
-CREATE DATABASE ocsweb OWNER ocs ENCODING 'UTF8';
+CREATE DATABASE braintacle OWNER ocs ENCODING 'UTF8';
 </code>
 </p>
 <p>
@@ -131,14 +132,12 @@ For MySQL, run:
 <p>
 <code>
 CREATE USER ocs IDENTIFIED BY 'ocs';<br>
-CREATE DATABASE ocsweb CHARACTER SET utf8;<br>
-GRANT ALL ON ocsweb.* TO ocs;
+CREATE DATABASE braintacle CHARACTER SET utf8;<br>
+GRANT ALL ON braintacle.* TO ocs;
 </code>
 </p>
 <p>
-You can choose any username or password.
-The database name 'ocsweb' is currently hardcoded in some parts of the OCS Inventory code
-and should not be changed.
+You can choose any database name, user name or password.
 UTF8 encoding is strongly recommended.
 </p>
 <p>
@@ -217,7 +216,7 @@ Manual download from <a href="http://cpan.org">CPAN</a> (take care of dependenci
 </tr>
 </table>
 <p>
-If you have used an unmodified version of OCS Inventory before, most of these modules will probably already be installed.
+If you have used an original OCS Inventory NG server before, most of these modules will probably already be installed.
 Beware of the additional dependency on Date::Calc!
 </p>
 <p>
@@ -226,61 +225,62 @@ The last 2 modules are only required for the SOAP service.
 This is optional and entirely untested.
 </p>
 
-<h4>Prepare for trouble</h4>
-
-<p>
-mod_perl is unforgiving about compile time errors and will cause Apache to die on start/reload
-if something important goes wrong, like missing Perl modules.
-If your Apache installation hosts other applications, these will be unavailable until the problem is fixed.
-Pick a good moment for installation, when unexpected downtime can be afforded.
-</p>
-<p>
-If possible, consider a dedicated Apache installation exclusively for the communication server.
-That would isolate any problems to that instance and not affect other web applications.
-It is also possible to run multiple Apache instances with different configuration independently
-on the same machine, as long as no 2 instances listen on the same combination of IP address and port.
-Some systems like FreeBSD and recent versions of Debian and Ubuntu offer configuration tools to
-support this out of the box.
-With a bit of tweaking, this should be possible on other systems too.
-</p>
-<p>
-Details about the error can be found in the Apache error log.
-If you don't know how to fix the problem and need to resurrect Apache quickly, remove the configuration file
-(ocsinventory-server.conf) from the Apache configuration directory,
-typically /etc/apache2/conf.d/, and start Apache.
-</p>
-
 <h4>Installation</h4>
 
 <p>
-Copy the sample configuration file ocsinventory/etc/ocsinventory/ocsinventory-server.conf
-to your apache configuration directory (typically /etc/apache2/conf.d), for example:
+Create a copy of the sample configuration file config/braintacle-server.conf.template and make it known to Apache.
+If you don't run multiple virtual hosts or want to make the application accessible on all virtual hosts,
+you can simply copy it to a directory where Apache will read it (typically /etc/apache2/conf.d or similar):
 </p>
 <p>
 <code>
-cp /usr/local/share/braintacle/ocsinventory/etc/ocsinventory/ocsinventory-server.conf /etc/apache2/conf.d/
+cp /usr/local/share/braintacle/config/braintacle-server.conf.template /etc/apache2/conf.d/braintacle-server.conf
 </code>
 </p>
 <p>
-Edit the file to match your environment.
-In particular, adapt the first 2 sections ("General runtime environment settings" and "Master database settings").
-The default settings from the rest of the file will not need to be changed to make things work.
-However, you may want to review the settings, in particular the access control directives at the
-bottom of the file if you don't want unrestricted access on all virtual hosts.
+To limit the application to a particular virtual host, copy the file somewhere else
+and include it in the &lt;VirtualHost&gt; block:
 </p>
 <p>
-It is important that mod_perl is loaded before that file is included.
+<code>
+Include /usr/local/share/braintacle/config/braintacle-server.conf
+</code>
+</p>
+<p>
+Create a copy of config/braintacle-server-app.conf.template in a place outside the Apache configuration:
+</p>
+<p>
+<code>
+cp /usr/local/share/braintacle/config/braintacle-server-app.conf.template /usr/local/share/braintacle/config/braintacle-server-app.conf
+</code>
+</p>
+<p>
+Edit both files to match your environment.
+Do not edit the template files directly as they will be overwritten upon upgrading.
+</p>
+<p>
+It is important that mod_perl is loaded before the file is included.
 This is the case in most standard Apache setups where modules are set up before conf.d gets evaluated.
 If mod_perl is loaded from a config file in the same directory, make sure that its name comes before
-ocsinventory-server.conf in alphabetical order.
+the Braintacle configuration file in alphabetical order.
 Rename the file if necessary.
+</p>
+<p>
+The braintacle-server-app.conf file contains your database password in cleartext
+and should only be readable for your web server, for example:
+</p>
+<p>
+<code>
+chgrp www-data /usr/local/share/braintacle/config/braintacle-server-app.conf<br>
+chmod 640 /usr/local/share/braintacle/config/braintacle-server-app.conf
+</code>
 </p>
 
 <h4>Configuring logging</h4>
 
 <p>
 This version of the communication server contains a patch to support syslog instead of direct logging to a file.
-This is the default for the ocsinventory-server.conf shipped with this distribution.
+This is enabled by default.
 No further action is required for this configuration.
 </p>
 <p>
@@ -297,32 +297,31 @@ For example, the following would work for Debian:
 </p>
 <p>
 <code>
-mkdir /var/log/ocsinventory-server<br>
-chown www-data:www-data /var/log/ocsinventory-server<br>
-chmod 750 /var/log/ocsinventory-server
+mkdir /var/log/braintacle<br>
+chown www-data:www-data /var/log/braintacle<br>
+chmod 750 /var/log/braintacle
 </code>
 </p>
 <p>
 Other distributions might have different user and group names for the web server.
 </p>
 <p>
-Now edit the ocsinventory-server.conf from your Apache configuration directory and set OCS_OPT_LOGPATH
-to the directory you just created.
+Now edit braintacle-server-app.conf and set OCS_OPT_LOGPATH to the directory you just created.
 </p>
 <p>
 You may want to rotate the logs regularly to prevent them from growing infinitely.
-A sample logrotate configuration file is shipped in ocsinventory/etc/logrotate.d/ocsinventory-server.
-Copy this file to /etc/logrotate.d and edit it to suit your needs.
+A sample logrotate configuration file is shipped in config/logrotate.template.
+Copy this file to /etc/logrotate.d/braintacle and edit it to suit your needs.
 </p>
 
 <h4>Starting the server</h4>
 
 <p>
-To finish installation, reload the Apache configuration (see warning above).
-You may see some errors in the Apache log file like this:
+To finish installation, reload the Apache configuration.
+Depending on your configuration, you may see some errors in the Apache log file like this:
 </p>
 <pre>
-ocsinventory-server: Can't load SOAP::Transport::HTTP* - Web service will be unavailable
+braintacle-server: Can't load SOAP::Transport::HTTP* - Web service will be unavailable
 </pre>
 <p>
 These messages are harmless and can be ignored if you don't plan to use the SOAP service.
@@ -383,16 +382,12 @@ It is avaliable as a package for GNU/Linux distributions:
 
 <ol>
 <li>
-Copy ocsinventory/etc/ocsinventory/ocsinventory-reports.conf to a place where Apache will read it.
-Typically this is "/etc/apache2/conf.d".
+Create a copy of config/ocsreports.conf.template and make it known to Apache.
+Edit the file to suit your needs.
 </li>
 <li>
-The default configuration may not be appropriate for your particular Apache setup.
-Read the comments in the configuration file and edit it to suit your needs.
-</li>
-<li>
-Edit ocsinventory/ocsreports/dbconfig.inc.php to match your database setup.
-The default configuration uses MySQL on localhost with a default username and password.
+Copy config/dbconfig.inc.php.template to ocsinventory/ocsreports/dbconfig.inc.php
+and edit it to match your database setup.
 </li>
 <li>
 Since dbconfig.inc.php contains your database credentials, it should not be world readable.

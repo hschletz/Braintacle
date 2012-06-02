@@ -1,0 +1,51 @@
+# Sample Apache configuration for the (deprecated) ocsreports console.
+# If you really need it, copy this file to a place where Apache will read it,
+# typically something like /etc/apache2/conf.d/ocsreports.conf, and adjust settings.
+# If you have multiple virtual hosts, you may not want this file in conf.d at all.
+# Instead, you should keep it in a different location and include it in the
+# appropriate <VirtualHost> section, like this:
+#
+# Include /usr/local/share/braintacle/config/ocsreports.conf
+#
+# See ocsinventory/README.html for more instructions.
+#
+# $Id$
+#
+# Copying and distribution of this file, with or without modification,
+# are permitted in any medium without royalty provided the copyright
+# notice and this notice are preserved. This file is offered as-is,
+# without any warranty.
+#
+
+#
+# !!!!!!!! IMPORTANT !!!!!!!
+#
+# DO NOT TAKE THIS FILE AS IS!
+#
+# The default configuration may not work for your particular Apache setup,
+# or expose the application to places where it should not be visible.
+#
+# Carefully review it and adapt it to your needs.
+#
+
+# Make the application visible as /ocsreports (you can choose any other name).
+# Adapt the path if the Braintacle root directory is anywhere other than
+# /usr/local/share/braintacle.
+Alias /ocsreports /usr/local/share/braintacle/ocsinventory/ocsreports
+
+# Application-specific configuration. Adjust path if necessary.
+<Directory /usr/local/share/braintacle/ocsinventory/ocsreports>
+
+    # Example: Restrict access to local network
+    # Order Deny,Allow
+    # Deny from all
+    # Allow from 192.168.1.0/24
+
+    # Uncomment this to force HTTPS connection
+    # SSLRequireSSL
+
+    # Don't touch this!
+    php_flag magic_quotes_runtime off
+    php_flag magic_quotes_gpc off
+
+</Directory>

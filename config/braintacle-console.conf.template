@@ -1,0 +1,61 @@
+# Sample Apache configuration for the Braintacle web console.
+# Copy this file to a place where Apache will read it, typically something like
+# /etc/apache2/conf.d/braintacle-console.conf, and adjust settings.
+# If you have multiple virtual hosts, you may not want this file in conf.d at all.
+# Instead, you should keep a copy in a different location and include it in the
+# appropriate <VirtualHost> section, like this:
+#
+# Include /usr/local/share/braintacle/config/braintacle-console.conf
+#
+# $Id$
+#
+# Copying and distribution of this file, with or without modification,
+# are permitted in any medium without royalty provided the copyright
+# notice and this notice are preserved. This file is offered as-is,
+# without any warranty.
+#
+
+#
+# !!!!!!!! IMPORTANT !!!!!!!
+#
+# DO NOT TAKE THIS FILE AS IS!
+#
+# The default configuration may not work for your particular Apache setup,
+# or expose the application to places where it should not be visible.
+#
+# Carefully review it and adapt it to your needs.
+#
+
+# Make the application visible as /braintacle (you can choose any other name).
+# Adapt the path if the Braintacle root directory is anywhere other than
+# /usr/local/share/braintacle.
+Alias /braintacle /usr/local/share/braintacle/public
+
+# Application-specific configuration. Adjust path if necessary.
+<Location /braintacle>
+
+    # Change "Allow" to restrict access
+    Order Deny,Allow
+    Deny from all
+    Allow from all
+
+    # Uncomment this to force HTTPS connection
+    # SSLRequireSSL
+
+    # Uncomment and adjust if default upload limit is not sufficient
+    # php_admin_value upload_max_filesize 30m
+    # php_admin_value post_max_size 31m
+    # php_admin_value memory_limit 32m
+
+    # Set to 'development' to see more (non-fatal) errors
+    SetEnv APPLICATION_ENV production
+
+    # Don't touch this!
+    PHP_flag magic_quotes_gpc off
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} -s [OR]
+    RewriteCond %{REQUEST_FILENAME} -l [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^.*$ - [NC,L]
+    RewriteRule ^.*$ index.php [NC,L]
+</Location>

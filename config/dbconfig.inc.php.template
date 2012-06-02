@@ -1,0 +1,25 @@
+<?php
+/*
+ * Sample database configuration for the (deprecated) ocsreports console.
+ * If you really need it, copy this file to ocsinventory/ocsreports/dbconfig.inc.php
+ * and adjust settings.
+ * See ocsinventory/README.html for more instructions.
+ *
+ * $Id$
+ *
+ * Copying and distribution of this file, with or without modification,
+ * are permitted in any medium without royalty provided the copyright
+ * notice and this notice are preserved. This file is offered as-is,
+ * without any warranty.
+ */
+
+// MDB2 driver to use, set to 'mysql' or 'pgsql'.
+$_SESSION['MDB2_DRIVER'] = 'pgsql';
+// Database server. Can be a hostname, an IP address or a local socket.
+$_SESSION['SERVEUR_SQL'] = '/var/run/postgresql';
+// Database name
+$_SESSION['DATABASE_NAME'] = 'braintacle';
+// Database user
+$_SESSION['COMPTE_BASE'] = 'ocs';
+// Password for database user
+$_SESSION['PSWD_BASE'] = 'ocs';

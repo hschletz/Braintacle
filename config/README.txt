@@ -8,7 +8,7 @@ without any warranty.
 ====================================================================
 
 
-This directory contains site specific configuration for Braintacle.
-Sample configuration files can be found in the doc/ directory.
+This directory contains site specific configuration and templates for all
+configuration files.
 
-The file database.ini is required.
+See the documentation and the comments inside the files for instructions.

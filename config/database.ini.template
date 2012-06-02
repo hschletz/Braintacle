@@ -1,4 +1,6 @@
 ; Sample database config for Braintacle.
+; Copy or rename this file to database.ini (in the same directory) and adjust
+; settings in the [production] section to match your environment.
 ;
 ; $Id$
 ;
@@ -8,25 +10,29 @@
 ; without any warranty.
 
 
-; Copy this file to config/ and adjust settings to match your environment.
-
 [production]
 
 ; Zend DB Adapter. See http://framework.zend.com/manual/en/zend.db.html#zend.db.adapter
 ; for a list of available adapters and options.
-adapter = pdo_mysql
+adapter = pdo_pgsql
+; For MySQL:
+; adapter = pdo_mysql
 
 ; Database server. Can be a hostname, an IP address or a local socket.
-params.host = localhost
+params.host = /var/run/postgresql
+; params.host = localhost
 
 ; Port of database server
-params.port = 3306
+params.port = 5432
+; For MySQL:
+; params.port = 3306
 
-; Name of database. OCSinventory has the name 'ocsweb' hardcoded, so this
-; typically does not need to be changed.
-params.dbname = ocsweb
+; Name of database
+params.dbname = braintacle
+; For a default OCS Inventory NG setup:
+; params.dbname = ocsweb
 
-; Username and password for database connection. OCSinventory defaults to 'ocs'/'ocs'.
+; Username and password for database connection.
 params.username = ocs
 params.password = ocs
 

@@ -1,0 +1,64 @@
+# Sample configuration for communication server.
+# This file contains the application-specific part. It gets included from
+# the general configuration file and should NOT be placed in the Apache
+# configuration directory.
+# See ocsinventory/README.html for more instructions.
+#
+# $Id$
+#
+# Copying and distribution of this file, with or without modification,
+# are permitted in any medium without royalty provided the copyright
+# notice and this notice are preserved. This file is offered as-is,
+# without any warranty.
+#
+
+#
+# !!!!!!!! IMPORTANT !!!!!!!
+#
+# DO NOT TAKE THIS FILE AS IS!
+#
+# The default configuration may not work for your particular Apache setup.
+# Carefully review it and adapt it to your needs.
+#
+# This file contains your database password. Make sure it is readable by nobody
+# except the apache process.
+#
+
+
+# Directory where log files are written. Must be writable for web server.
+# If set to "syslog", messages get logged via Sys::Syslog instead.
+# No extra logfile needs to be maintained in that case.
+PerlSetEnv OCS_OPT_LOGPATH "syslog"
+
+# Name of the DBD driver (mysql,Pg...). This is case sensitive!
+PerlSetEnv OCS_DB_TYPE Pg
+
+# Hostname, IP address or UNIX socket of database server
+PerlSetEnv OCS_DB_HOST /var/run/postgresql
+
+# Port of database server, typically 5432 for PostgreSQL or 3306 for MySQL.
+PerlSetEnv OCS_DB_PORT 5432
+
+# Name of database
+PerlSetEnv OCS_DB_NAME braintacle
+
+# Database user and password
+PerlSetEnv OCS_DB_USER ocs
+PerlSetVar OCS_DB_PWD ocs
+
+# Uncomment and adjust only if you access a MySQL server through a UNIX socket
+# in a nonstandard location. If in doubt, don't touch this.
+#PerlSetEnv OCS_OPT_DBI_MYSQL_SOCKET "/path/to/socket"
+
+# Set to 1 to enable logging of database errors. Note that the database server
+# may provide more detailed logs, so this is mostly useful if the database logs
+# are unavailable.
+PerlSetEnv OCS_OPT_DBI_PRINT_ERROR 0
+
+# Unicode support - leave it enabled.
+PerlSetEnv OCS_OPT_UNICODE_SUPPORT 1
+
+# If you want to ignore any configuration stored within the database (which can
+# be modified through the web console), set this to 1 and provide any non-default
+# option values in this file.
+PerlSetEnv OCS_OPT_OPTIONS_NOT_OVERLOADED 0

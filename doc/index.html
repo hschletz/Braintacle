@@ -47,7 +47,7 @@ It consists of several parts:
 A patched version of <a href="http://ocsinventory-ng.org">OCS Inventory NG</a> with several improvements,
 most notably the support for different database backends (PostgreSQL is recommended, but MySQL is still supported).
 It is contained in the <em>ocsinventory</em> directory. See the
-<a href="http://svn.savannah.nongnu.org/viewvc/*checkout*/trunk/ocsinventory/README.Braintacle.html?root=braintacle">README.Braintacle.html</a>
+<a href="http://svn.savannah.nongnu.org/viewvc/*checkout*/trunk/ocsinventory/README.html?root=braintacle">README.html</a>
 file in the same directory for details.
 </li>
 <li>
@@ -325,13 +325,13 @@ For this reason, I have not implemented any and the only way to solve this probl
 There are 2 use cases that require different methods for database management.
 </p>
 
-<h3>Using Braintacle in addition to an unmodified OCS Inventory installation</h3>
+<h3>Using Braintacle in addition to an original OCS Inventory NG installation</h3>
 
 <p>Use the OCS Inventory installer to manage the database.
 <strong>Do not use Braintacle's schema manager.</strong>
 </p>
 
-<h3>Using Braintacle with its bundled OCS Inventory version</h3>
+<h3>Using Braintacle with its bundled communication server</h3>
 
 <p>
 Braintacle manages the database with the script tools/schema-manager.php.
@@ -342,9 +342,9 @@ for details.
 </p>
 <p>
 <strong>
-This schema is not fully compatible with the original version of OCS Inventory.
-It can only be used with the OCS Inventory server that comes bundled with Braintacle.
-Do not use schema-manager.php if you use an unmodified server.
+This schema is not fully compatible with the original version of OCS Inventory NG.
+It can only be used with the communication server that comes bundled with Braintacle.
+Do not use schema-manager.php if you use a non-Braintacle server.
 Manage the schema through the original console application in that case.
 </strong>
 </p>
@@ -353,7 +353,7 @@ The schema manager checks for compatibility with the original version and refuse
 This can be overridden with the --force option, but compatibility will be lost.
 </p>
 <p>
-Braintacle and its bundled version of OCS Inventory work with both schema types,
+Braintacle and its bundled communication server work with both schema types,
 but some features will only be available with the Braintacle schema.
 </p>
 
@@ -362,7 +362,7 @@ but some features will only be available with the Braintacle schema.
 <p>
 This is documented in the installation instructions for the communication server.
 See
-<a href="http://svn.savannah.nongnu.org/viewvc/*checkout*/trunk/ocsinventory/README.Braintacle.html?root=braintacle">ocsinventory/README.Braintacle.html</a>
+<a href="http://svn.savannah.nongnu.org/viewvc/*checkout*/trunk/ocsinventory/README.html?root=braintacle">ocsinventory/README.html</a>
 for details.
 </p>
 

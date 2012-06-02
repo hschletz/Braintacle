@@ -1,0 +1,114 @@
+# Sample Apache configuration for communication server.
+# This file only contains the general Apache configuration.
+# Application-specific configuration (database connection etc.) resides in a
+# separate file which is processed by the "Include" directives below.
+# Copy this file to a place where Apache will read it, typically something like
+# /etc/apache2/conf.d/braintacle-server.conf, and adjust settings.
+# If you have multiple virtual hosts, you may not want this file in conf.d at all.
+# Instead, you should keep a copy in a different location and include it in the
+# appropriate <VirtualHost> section, like this:
+#
+# Include /usr/local/share/braintacle/config/braintacle-server.conf
+#
+# See ocsinventory/README.html for more instructions.
+#
+# $Id$
+#
+# Copying and distribution of this file, with or without modification,
+# are permitted in any medium without royalty provided the copyright
+# notice and this notice are preserved. This file is offered as-is,
+# without any warranty.
+#
+
+#
+# !!!!!!!! IMPORTANT !!!!!!!
+#
+# DO NOT TAKE THIS FILE AS IS!
+#
+# The default configuration may not work for your particular Apache setup,
+# or expose the application to places where it should not be visible.
+#
+# Carefully review it and adapt it to your needs.
+#
+# mod_perl MUST be loaded before this file is included by Apache.
+# Typical Apache setups load modules before the conf.d directory is processed,
+# so it should be sufficient to just have the module enabled.
+#
+
+
+# Adjust the path if Braintacle is installed anywhere other than /usr/local/share/braintacle
+PerlSwitches -I /usr/local/share/braintacle/ocsinventory
+
+# Use persistent database connections. Disable at your own risk - this has not been tested.
+# NOTE: This affects ALL mod_perl applications.
+PerlModule Apache::DBI
+
+# Expose the application as /ocsinventory. Older agents have this path hardcoded.
+# For recent agents, this can be configured to a different path.
+<Location /ocsinventory>
+
+    # Include application-specific configuration (database connection).
+    # Adjust path if necessary.
+    Include /usr/local/share/braintacle/config/braintacle-server-app.conf
+
+    # Change "Allow" to restrict access
+    Order Deny,Allow
+    Deny from all
+    Allow from all
+
+    # Uncomment this to force HTTPS connection
+    # SSLRequireSSL
+
+    # Uncomment and adjust the next lines to password-protect access.
+    # This requires proper agent configuration.
+    #AuthType Basic
+    #AuthName "OCS Inventory agent area"
+    #AuthUserFile "/path/to/auth/file"
+    #Require valid-user
+
+    # Don't touch this!
+    SetHandler perl-script
+    PerlHandler Apache::Ocsinventory
+</Location>
+
+
+# Uncomment this section to enable the SOAP service and expose it as /ocsinterface.
+# soap-client.pl has this path hardcoded, but for other clients it can be changed to a different path.
+#<Location /ocsinterface>
+#
+#    # Include application-specific configuration (database connection).
+#    # Adjust path if necessary.
+#    Include /usr/local/share/braintacle/config/braintacle-server-app.conf
+#
+#    # Additional configuration
+#    PerlSetEnv OCS_OPT_WEB_SERVICE_RESULTS_LIMIT 100
+#    # PerlSetEnv OCS_OPT_WEB_SERVICE_PRIV_MODS_CONF "WEBSERV_PRIV_MOD_CONF_FILE"
+#
+#    # Change "Allow" to restrict access
+#    Order Deny,Allow
+#    Deny from all
+#    Allow from all
+#
+#    # Uncomment this to force HTTPS connection
+#    # SSLRequireSSL
+#
+#    # Uncomment and adjust the next lines to password-protect access.
+#    # This requires proper agent configuration.
+#    # AuthType Basic
+#    # AuthName "OCS Inventory agent area"
+#    # AuthUserFile "/path/to/auth/file"
+#    # Require valid-user
+#
+#    # Don't touch this!
+#    SetHandler perl-script
+#    PerlHandler "Apache::Ocsinventory::SOAP"
+#    PerlSetEnv OCS_OPT_WEB_SERVICE_ENABLED 1
+#</Location>
+
+# Don't touch this!
+<IfDefine MODPERL2>
+    PerlSetEnv OCS_MODPERL_VERSION 2
+</IfDefine>
+<IfDefine !MODPERL2>
+    PerlSetEnv OCS_MODPERL_VERSION 1
+</IfDefine>
