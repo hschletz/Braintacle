@@ -383,21 +383,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
    <insert>
     <field>
      <name>name</name>
-     <value>GUI_VERSION</value>
-    </field>
-    <field>
-     <name>tvalue</name>
-     <value>6007</value>
-    </field>
-    <field>
-     <name>comments</name>
-     <value>Version of the installed GUI and database</value>
-    </field>
-   </insert>
-
-   <insert>
-    <field>
-     <name>name</name>
      <value>DOWNLOAD_SERVER_URI</value>
     </field>
     <field>
@@ -942,20 +927,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
      <value>Validity of a session (prolog=>postinventory)</value>
     </field>
    </insert>
-
-   <update>
-    <field>
-     <name>tvalue</name>
-     <value>6007</value>
-    </field>
-    <where>
-     <expression>
-      <column>name</column>
-      <operator>EQUAL</operator>
-      <value>GUI_VERSION</value>
-     </expression>
-    </where>
-   </update>
 
    <update>
     <field>
