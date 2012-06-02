@@ -34,7 +34,7 @@ define("UTF8_DEGREE", 0 );				// 0 For non utf8 database, 1 for utf8. Set to 0 i
 define("GUI_VER", "5005");				// Version of the GUI
 define("MAC_FILE", "files/oui.txt");	// File containing MAC database
 define("TAG_LBL", "Tag");				// Name of the tag information
-define("DB_NAME", "ocsweb");			// Database name
+define("DB_NAME", isset($_SESSION['DATABASE_NAME']) ? $_SESSION['DATABASE_NAME'] : "ocsweb");			// Database name
 define("SADMIN", 1);					// do NOT change
 define("LADMIN", 2);   					// do NOT change
 define("ADMIN", 3);						// do NOT change

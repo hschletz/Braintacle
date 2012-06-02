@@ -183,7 +183,6 @@ if(! isset($_SESSION["first"]) || !check_param ($_GET, "lareq")) {
 			//$data_list_deploy[26]=$l->g(515);
 			$data_list_deploy[34]=$l->g(662);
 			menu_list($name_menu,$packAct,$nam_img,$title,$data_list_deploy);
-			if( DB_NAME == "ocsweb") 	
  				tab($l->g(174), 3);
 			if( @stat("dico.php"))
 				tab($l->g(380),14);
@@ -201,10 +200,9 @@ if(! isset($_SESSION["first"]) || !check_param ($_GET, "lareq")) {
 			
 			tab($l->g(263), 12);
 			tab($l->g(235), 10);
-			if( ($_SESSION["lvluser"]==SADMIN && DB_NAME == "ocsweb") || (DB_NAME != "ocsweb") )
+			if( ($_SESSION["lvluser"]==SADMIN))
  				tab($l->g(287), 13);
 	}
-	if( DB_NAME == "ocsweb")	
 	 			tab($l->g(175), 6);
 	tab($l->g(570), 28);
 	?><script language='javascript'>montre();</script>	<?php
