@@ -252,7 +252,7 @@ sub _log{
   
   # Use syslog if configured
   if ($ENV{'OCS_OPT_LOGPATH'} eq 'syslog') {
-    openlog('ocsinventory-server', 'nofatal,nowait,pid', 'user');
+    openlog('braintacle-server', 'nofatal,nowait,pid', 'user');
     syslog(
         'info',
         '%s;%s;%s;%s;%s;%s',
