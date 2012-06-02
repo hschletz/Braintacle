@@ -122,7 +122,7 @@ class Model_Config
         'UseCacheTables' => 'INVENTORY_CACHE_ENABLED', // DISCOURAGED: use cache tables
         'KeepObsoleteCacheItems' => 'INVENTORY_CACHE_KEEP', // Don't delete obsolete items from cache
         'CacheTableExpirationinterval' => 'INVENTORY_CACHE_REVALIDATE', // Days (>=1) between cache rebuilds
-        'AcceptNonZlib' => 'COMPRESS_TRY_OTHERS', // Accept requests other than raw zlib compressed
+        'AcceptNonZlib' => 'COMPRESS_TRY_OTHERS', // RECOMMENDED: Accept requests other than raw zlib compressed
         // Options below this point can be overridden individually for single
         // computers or groups.
         'ContactInterval' => 'PROLOG_FREQ', // Hours between agent contacts (>=1)

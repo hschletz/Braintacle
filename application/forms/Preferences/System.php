@@ -59,6 +59,7 @@ class Form_Preferences_System extends Form_Preferences
         'AutoDuplicateCriteria' => 0,
         'UseTransactions' => true,
         'UseCacheTables' => false,
+        'AcceptNonZlib' => true,
     );
 
     /**
