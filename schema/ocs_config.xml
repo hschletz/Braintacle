@@ -162,7 +162,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
     </field>
     <field>
      <name>ivalue</name>
-     <value>1</value>
+     <value>0</value>
     </field>
     <field>
      <name>comments</name>
@@ -222,7 +222,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
     </field>
     <field>
      <name>ivalue</name>
-     <value>7</value>
+     <value>0</value>
     </field>
     <field>
      <name>comments</name>
@@ -925,6 +925,17 @@ this program; if not, write to the Free Software Foundation, Inc.,
     <field>
      <name>comments</name>
      <value>Validity of a session (prolog=>postinventory)</value>
+    </field>
+   </insert>
+
+   <insert>
+    <field>
+     <name>name</name>
+     <value>COMPRESS_TRY_OTHERS</value>
+    </field>
+    <field>
+     <name>ivalue</name>
+     <value>1</value>
     </field>
    </insert>
 
