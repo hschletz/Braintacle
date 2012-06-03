@@ -361,7 +361,7 @@ class Model_Config
             $path = preg_split('#[/\\\\]#', $value);
             do {
                 $component = array_pop($path);
-            } while ($component == '');
+            } while ($component == ''); // skip trailing slashes
             if ($component != 'download') {
                 throw new UnexpectedValueException('Path must end with \'/download\'');
             }
