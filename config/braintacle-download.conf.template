@@ -1,0 +1,47 @@
+# Sample Apache configuration for the package download directory.
+# If you want to use Braintacle to deploy packages, copy this file to a place
+# where Apache will read it, typically /etc/apache2/conf.d/braintacle-download.conf,
+# and adjust settings.
+# If you have multiple virtual hosts, you may not want this file in conf.d at all.
+# Instead, you should keep it in a different location and include it in the
+# appropriate <VirtualHost> sections, like this:
+#
+# Include /usr/local/share/braintacle/config/braintacle-download.conf
+#
+# Note that the package directory needs to be visible via both HTTP and HTTPS.
+#
+# See README.txt for more instructions.
+#
+# $Id$
+#
+# Copying and distribution of this file, with or without modification,
+# are permitted in any medium without royalty provided the copyright
+# notice and this notice are preserved. This file is offered as-is,
+# without any warranty.
+#
+
+#
+# !!!!!!!! IMPORTANT !!!!!!!
+#
+# DO NOT TAKE THIS FILE AS IS!
+#
+# The default configuration may not work for your particular Apache setup,
+# or expose the packages to places where it should not be visible.
+#
+# Carefully review it and adapt it to your needs.
+#
+
+# Make the package directory visible as /download.
+# You can choose any other name, but it has to match the URLs in the package
+# configuration.
+# Adapt the path if necessary.
+Alias /download /var/lib/braintacle/download
+
+<Location /download>
+
+    # Change "Allow" to restrict access
+    Order Deny,Allow
+    Deny from all
+    Allow from all
+
+</Location>

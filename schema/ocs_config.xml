@@ -357,7 +357,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
     </field>
     <field>
      <name>tvalue</name>
-     <value>/var/lib/ocsinventory-reports</value>
+     <value>/var/lib/braintacle/</value>
     </field>
     <field>
      <name>comments</name>
