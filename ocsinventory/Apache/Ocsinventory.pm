@@ -38,6 +38,12 @@ use Apache::Ocsinventory::Server::Communication;
 use Apache::Ocsinventory::Server::Inventory;
 use Apache::Ocsinventory::Server::Groups;
 use Apache::Ocsinventory::Server::Useragent;
+use Apache::Ocsinventory::Server::Capacities::Download;
+use Apache::Ocsinventory::Server::Capacities::Ipdiscover;
+use Apache::Ocsinventory::Server::Capacities::Notify;
+use Apache::Ocsinventory::Server::Capacities::Registry;
+use Apache::Ocsinventory::Server::Capacities::Snmp;
+use Apache::Ocsinventory::Server::Capacities::Update;
 use Apache::Ocsinventory::Interface::Database;
 
 # To compress the tx and read the rx
