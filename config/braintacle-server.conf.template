@@ -10,7 +10,8 @@
 #
 # Include /usr/local/share/braintacle/config/braintacle-server.conf
 #
-# See ocsinventory/README.html for more instructions.
+# Take care of the PerlSwitches directive below. See ocsinventory/README.html
+# for more instructions.
 #
 # $Id$
 #
@@ -37,6 +38,8 @@
 
 
 # Adjust the path if Braintacle is installed anywhere other than /usr/local/share/braintacle
+# This line must appear outside of any <VirtualHost> section to have any effect!
+# If you include this file from a <VirtualHost> section, place this line somewhere else outside.
 PerlSwitches -I /usr/local/share/braintacle/ocsinventory
 
 # Use persistent database connections. Disable at your own risk - this has not been tested.

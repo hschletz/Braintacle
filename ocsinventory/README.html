@@ -247,6 +247,10 @@ Include /usr/local/share/braintacle/config/braintacle-server.conf
 </code>
 </p>
 <p>
+The PerlSwitches directive in that file has no effect inside a &lt;VirtualHost&gt; section.
+Place it outside the section to make it work.
+</p>
+<p>
 Create a copy of config/braintacle-server-app.conf.template in a place outside the Apache configuration:
 </p>
 <p>
