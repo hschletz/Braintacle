@@ -431,6 +431,14 @@ our %CONFIG = (
     level => CANSKIP,
     filter => qr '^(1|0)$'
   },
+  EXT_USERAGENTS_FILE_PATH => {
+    type => 'TVALUE',
+    default => '',
+    unit => 'NA',
+    description => 'File with allowed non-OCS agents (FusionInventory etc.)',
+    level => CANSKIP,
+    filter => qr '^(.+)$'
+  },
 );
 
 sub get_settings{

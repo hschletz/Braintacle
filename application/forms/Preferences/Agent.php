@@ -23,6 +23,10 @@
  * @package Forms
  */
 /**
+ * Includes
+ */
+require_once ('Braintacle/Validate/FileReadable.php');
+/**
  * Form for display/setting of 'agent' preferences
  * @package Forms
  */
@@ -35,6 +39,7 @@ class Form_Preferences_Agent extends Form_Preferences
         'InventoryInterval' => 'integer',
         'AgentDeployment' => 'bool',
         'AgentUpdate' => 'bool',
+        'AgentWhitelistFile' => 'text',
     );
 
     /** {@inheritdoc} */
@@ -62,6 +67,9 @@ class Form_Preferences_Agent extends Form_Preferences
             'AgentUpdate' => $translate->_(
                 'Automatic agent update (deprecated)'
             ),
+            'AgentWhitelistFile' => $translate->_(
+                'File with allowed non-OCS agents (FusionInventory etc.)'
+            ),
         );
         parent::init();
         $this->getElement('ContactInterval')
@@ -70,6 +78,9 @@ class Form_Preferences_Agent extends Form_Preferences
         $this->getElement('InventoryInterval')
             ->addValidator('GreaterThan', false, array('min' => -2))
             ->setAttrib('size', '5');
+        $this->getElement('AgentWhitelistFile')
+            ->addFilter('StringTrim')
+            ->addValidator(new Braintacle_Validate_DirectoryWritable);
     }
 
 }
