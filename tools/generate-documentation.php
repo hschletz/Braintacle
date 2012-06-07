@@ -124,8 +124,8 @@ $xPath = new DOMXPath($structure);
 $errorsToRemove = array();
 
 // Generate list of all classes
-foreach ($structure->getElementsByTagName('full_name') as $node) {
-    $classes[$node->nodeValue] = $node->parentNode;
+foreach ($structure->getElementsByTagName('class') as $node) {
+    $classes[$node->getElementsByTagName('name')->item(0)->nodeValue] = $node;
 }
 
 // Iterate over all error messages
