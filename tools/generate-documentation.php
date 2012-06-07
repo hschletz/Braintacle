@@ -25,11 +25,11 @@
  */
 
 /*
- * USAGE: generate-documentation.php [DocBlox path]
+ * USAGE: generate-documentation.php [phpDocumentor2 path]
  *
- * If no argument is given, DocBlox is invoked via the 'docblox' command.
+ * If no argument is given, phpDocumentor is invoked via the 'phpdoc' command.
  * If this is not available or a different version (a development snapshot, for
- * example) should be used, specify the path to the DocBlox installation.
+ * example) should be used, specify the path to the phpDocumentor installation.
  */
 
 error_reporting(-1);
@@ -76,18 +76,18 @@ function hasTag($class, $method, $argument)
 // All paths are relative to this script's parent directory
 $basePath = realpath(dirname(dirname(__FILE__)));
 
-// Determine DocBlox invocation method
+// Determine phpDocumentor invocation method
 if (isset($_SERVER['argv'][1])) {
-    $docBloxCmd = 'php ' . realpath($_SERVER['argv'][1] . '/bin/docblox.php');
+    $phpDocCmd = 'php ' . realpath($_SERVER['argv'][1] . '/bin/phpdoc.php');
 } else {
-    $docBloxCmd = 'docblox';
+    $phpDocCmd = 'phpdoc';
 }
 
-print "Running DocBlox on source files\n";
+print "Running phpDocumentor on source files\n";
 
 // STAGE 1: Parse source files and generate structure file.
 $cmd = array(
-    $docBloxCmd,
+    $phpDocCmd,
     'project:parse',
     '--directory',
     implode(
@@ -100,8 +100,6 @@ $cmd = array(
             realpath("$basePath/library/Braintacle"),
         )
     ),
-    '--hidden',
-    'off',
     '--target',
     realpath("$basePath/doc/api"),
     '--extensions',
@@ -113,7 +111,7 @@ $cmd = array(
 $cmd = implode(' ', $cmd);
 system($cmd, $result);
 if ($result) {
-    print "ERROR: docblox returned with error code $result.\n";
+    print "ERROR: phpDocumentor returned with error code $result.\n";
     print "Command line was:\n\n";
     print "$cmd\n\n";
     exit(1);
@@ -164,10 +162,10 @@ $structure->save(realpath("$basePath/doc/api/structure.xml"));
 
 // STAGE 3: Transform structure file into documentation
 $cmd = array(
-    $docBloxCmd,
+    $phpDocCmd,
     'project:transform',
     '--config',
-    realpath("$basePath/doc/api/docblox.xml"),
+    realpath("$basePath/doc/api/phpdoc.xml"),
     '--source',
     realpath("$basePath/doc/api/structure.xml"),
     '--target',
@@ -176,7 +174,7 @@ $cmd = array(
 $cmd = implode(' ', $cmd);
 system($cmd, $result);
 if ($result) {
-    print "ERROR: docblox returned with error code $result.\n";
+    print "ERROR: phpDocumentor returned with error code $result.\n";
     print "Command line was:\n\n";
     print "$cmd\n\n";
     exit(1);

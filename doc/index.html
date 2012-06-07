@@ -452,14 +452,15 @@ Run this script everytime you have added translatable stings to the source code 
 
 <p>
 This script generates/updates the API documentation.
-It requires <a href="http://docblox-project.org">DocBlox</a> to be installed.
+It requires <a href="http://www.phpdoc.org/">phpDocumentor 2</a> to be installed.
+It will not work with older phpDocumentor versions.
 </p>
 <p>
-If no argument is given, DocBlox is invoked via the 'docblox' command.
+If no argument is given, phpDocumentor is invoked via the 'phpdoc' command.
 If this is not available or a different version (a development snapshot, for
-example) should be used, specify the path to the DocBlox installation:
+example) should be used, specify the path to the phpDocumentor installation:
 <p><code>
-php tools/generate-documentation.php /path/to/docblox
+php tools/generate-documentation.php /path/to/phpDocumentor2
 </code></p>
 
 </body>
