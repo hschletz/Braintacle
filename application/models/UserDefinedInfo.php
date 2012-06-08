@@ -107,7 +107,9 @@ class Model_UserDefinedInfo extends Model_Abstract
             $this->setProperty($property, $value);
             // Convert dates
             if ($value instanceof Zend_Date) {
-                $values[$property] = $value->get(Zend_Date::ISO_8601);
+                $values[$property] = $value->get(
+                    Model_Database::getNada()->timestampFormatIso()
+                );
             }
         }
 
