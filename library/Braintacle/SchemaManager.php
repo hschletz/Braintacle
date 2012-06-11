@@ -47,7 +47,7 @@ class Braintacle_SchemaManager
     /**
      * Latest version of the database schema
      */
-    const SCHEMA_VERSION = 2;
+    const SCHEMA_VERSION = 3;
 
     /**
      * MDB2_Schema object
@@ -160,7 +160,6 @@ class Braintacle_SchemaManager
         // For the tables listed above plus some additional tables, the bad PK
         // needs to be dropped and recreated the right way.
         $fixTables = array(
-            'accesslog',
             'blacklist_macaddresses',
             'blacklist_serials',
             'blacklist_subnet',
@@ -348,7 +347,6 @@ class Braintacle_SchemaManager
         $this->_logger->info('Tweaking tables...');
 
         $engineInnoDb = array(
-            'accesslog',
             'accountinfo',
             'bios',
             'controllers',

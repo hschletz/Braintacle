@@ -1218,7 +1218,6 @@ class Model_Computer extends Model_ComputerOrGroup
             $tables[] = $model->getTableName();
         }
         // Additional tables without associated Model_ChildObject class
-        $tables[] = 'accesslog';
         $tables[] = 'accountinfo';
         $tables[] = 'bios';
         $tables[] = 'devices';

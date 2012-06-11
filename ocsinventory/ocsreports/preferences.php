@@ -1479,7 +1479,7 @@ function deleteDid($id, $checkLock = true, $traceDel = true, $silent=false) {
 			}
 			//deleting a regular computer
 			if( $did != "_SYSTEMGROUP_" and $did != '_DOWNLOADGROUP_') {
-				$tables=Array("accesslog","accountinfo","bios","controllers","drives",
+				$tables=Array("accountinfo","bios","controllers","drives",
 				"inputs","memories","modems","monitors","networks","ports","printers","registry",
 				"slots","softwares","sounds","storages","videos","devices","download_history","download_servers","groups_cache");	
 			}
