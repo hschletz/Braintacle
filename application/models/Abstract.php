@@ -371,6 +371,7 @@ abstract class Model_Abstract implements Iterator
 
     /**
      * Part of iterator implementation. Do not call directly.
+     * @internal
      */
     public function current()
     {
@@ -379,6 +380,7 @@ abstract class Model_Abstract implements Iterator
 
     /**
      * Part of iterator implementation. Do not call directly.
+     * @internal
      */
     public function key()
     {
@@ -390,6 +392,7 @@ abstract class Model_Abstract implements Iterator
 
     /**
      * Part of iterator implementation. Do not call directly.
+     * @internal
      */
     public function next()
     {
@@ -400,6 +403,7 @@ abstract class Model_Abstract implements Iterator
 
     /**
      * Part of iterator implementation. Do not call directly.
+     * @internal
      */
     public function rewind()
     {
@@ -409,6 +413,7 @@ abstract class Model_Abstract implements Iterator
 
     /**
      * Part of iterator implementation. Do not call directly.
+     * @internal
      */
     public function valid()
     {
