@@ -745,6 +745,9 @@ class Model_Computer extends Model_ComputerOrGroup
                 $value = $this->getSerial();
                 break;
             case 'AssetTag':
+                if (!Model_Database::supportsAssetTagBlacklist()) {
+                    return false; // It's not blacklisted if the table does not exist.
+                }
                 $table = 'braintacle_blacklist_assettags';
                 $column = 'assettag';
                 $value = $this->getAssetTag();
