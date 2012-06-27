@@ -1,6 +1,6 @@
 <?php
 /**
- * Display/edit user defined information
+ * Display form for managing userdefined fields
  *
  * $Id$
  *
@@ -22,26 +22,4 @@
  *
  */
 
-print $this->inventoryHeader($this->computer);
-
-$session = new Zend_Session_Namespace('UpdateUserdefinedInfo');
-$session->setExpirationHops(1);
-if ($session->success) {
-    print $this->htmlTag(
-        'p',
-        $this->translate('The information was successfully updated.'),
-        array('class' => 'textcenter green')
-    );
-}
-
 print $this->form;
-print $this->htmlTag(
-    'p',
-    $this->htmlTag(
-        'a',
-        $this->translate('Define fields'),
-        array('href' => $this->baseUrl() . '/preferences/userdefined'),
-        true
-    ),
-    array('class' => 'textcenter clearboth')
-);

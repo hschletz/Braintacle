@@ -185,4 +185,126 @@ class Model_UserDefinedInfo extends Model_Abstract
         }
     }
 
+    /**
+     * Return array of all defined fields
+     * @return array
+     **/
+    static function getFields()
+    {
+        return array_keys(self::getTypes());
+    }
+
+    /**
+     * Add a field
+     * @param string $name Field name
+     * @param string $type One of text, integer, float or date
+     * @throws InvalidArgumentException if column exists or is a system column
+     **/
+    static function addField($name, $type)
+    {
+        if ($name == 'tag' or $name == 'hardware_id') {
+            throw new InvalidArgumentException("Column cannot have reserved name '$name'.");
+        }
+        $types = self::getTypes();
+        if (isset($types[$name])) {
+            throw new InvalidArgumentException("Column '$name' already exists.");
+        }
+
+        switch ($type) {
+            case 'text':
+                $datatype = Nada::DATATYPE_VARCHAR;
+                break;
+            case 'integer':
+                $datatype = Nada::DATATYPE_INTEGER;
+                break;
+            case 'float':
+                $datatype = Nada::DATATYPE_FLOAT;
+                break;
+            case 'date':
+                $datatype = Nada::DATATYPE_DATE;
+                break;
+            default:
+                throw new InvalidArgumentException('Invalid datatype: ' . $type);
+        }
+
+        $nada = Model_Database::getNada();
+
+        // Since $name can be an arbitrary string, NADA must quote it
+        // unconditionally.
+        $quoteAlways = $nada->quoteAlways; // preserve setting
+        $nada->quoteAlways = true;
+
+        if ($type == 'text') {
+            $column = $nada->createColumn($name, $datatype, 255);
+        } else {
+            $column = $nada->createColumn($name, $datatype);
+        }
+        $nada->getTable('accountinfo')->addColumnObject($column);
+        self::$_allTypesStatic[$name] = $type;
+
+        $nada->quoteAlways = $quoteAlways; // restore setting
+    }
+
+    /**
+     * Delete a field definition and all its values
+     * @param string $field Field name
+     * @throws InvalidArgumentException if column does not exist or is a system column
+     **/
+    static function deleteField($field)
+    {
+        if ($field == 'tag' or $field == 'hardware_id') {
+            throw new InvalidArgumentException("Cannot delete system column '$field'.");
+        }
+        $types = self::getTypes();
+        if (!isset($types[$name])) {
+            throw new InvalidArgumentException("Unknown column: $field");
+        }
+
+        $nada = Model_Database::getNada();
+
+        // Since $field can be an arbitrary string, NADA must quote it
+        // unconditionally.
+        $quoteAlways = $nada->quoteAlways; // preserve setting
+        $nada->quoteAlways = true;
+
+        $nada->getTable('accountinfo')->dropColumn($field);
+        unset(self::$_allTypesStatic[$field]);
+
+        $nada->quoteAlways = $quoteAlways; // restore setting
+    }
+
+    /**
+     * Rename field
+     * @param string $oldName Existing field name
+     * @param string $newName New field name
+     * @throws InvalidArgumentException if column does not exist or is a system column or new name exists
+     **/
+    static function renameField($oldName, $newName)
+    {
+        if ($oldName == 'tag' or $oldName == 'hardware_id') {
+            throw new InvalidArgumentException("System column '$oldName' cannot be renamed.");
+        }
+        if ($newName == 'tag' or $newName == 'hardware_id') {
+            throw new InvalidArgumentException("Column cannot be renamed to reserved name '$newName'.");
+        }
+        $types = self::getTypes();
+        if (!isset($types[$oldName])) {
+            throw new InvalidArgumentException('Unknown column: ' . $oldName);
+        }
+        if (isset($types[$newName])) {
+            throw new InvalidArgumentException("Column '$newName' already exists.");
+        }
+
+        $nada = Model_Database::getNada();
+
+        // Since field names can be arbitrary strings, NADA must quote them
+        // unconditionally.
+        $quoteAlways = $nada->quoteAlways; // preserve setting
+        $nada->quoteAlways = true;
+
+        $nada->getTable('accountinfo')->getColumn($oldName)->setName($newName);
+        self::$_allTypesStatic = array(); // force re-read on next usage
+
+        $nada->quoteAlways = $quoteAlways; // restore setting
+    }
 }

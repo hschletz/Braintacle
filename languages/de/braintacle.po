@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-06 10:10+0200\n"
-"PO-Revision-Date: 2012-06-06 10:15+0200\n"
+"POT-Creation-Date: 2012-06-23 17:36+0200\n"
+"PO-Revision-Date: 2012-06-23 17:37+0200\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -205,17 +205,41 @@ msgstr "Mailadresse"
 msgid "Password"
 msgstr "Passwort"
 
-#: forms/Account/Edit.php; forms/UserDefinedInfo.php
+#: forms/Account/Edit.php; forms/DefineFields.php forms/UserDefinedInfo.php
 msgid "Change"
 msgstr "Ändern"
 
-#: forms/Account/New.php
+#: forms/Account/New.php; forms/DefineFields.php
 msgid "Add"
 msgstr "Hinzufügen"
 
 #: forms/AffectPackages.php
 msgid "Install"
 msgstr "Installieren"
+
+#: forms/DefineFields.php
+msgid "Float"
+msgstr "Kommazahl"
+
+#: forms/DefineFields.php
+msgid "Integer"
+msgstr "Ganzzahl"
+
+#: forms/DefineFields.php
+msgid "Text"
+msgstr "Text"
+
+#: forms/DefineFields.php; views/scripts/computer/bios.phtml
+#: views/scripts/network/edit.phtml; views/scripts/package/index.phtml
+msgid "Date"
+msgstr "Datum"
+
+#: forms/DefineFields.php; views/helpers/GroupHeader.php
+#: views/helpers/InventoryHeader.php; views/scripts/accounts/index.phtml
+#: views/scripts/network/showidentified.phtml
+#: views/scripts/network/showunknown.phtml views/scripts/package/index.phtml
+msgid "Delete"
+msgstr "Löschen"
 
 #: forms/Import.php
 msgid "File (*.ocs, *.xml)"
@@ -1125,13 +1149,6 @@ msgid "Members"
 msgstr "Mitglieder"
 
 #: views/helpers/GroupHeader.php; views/helpers/InventoryHeader.php
-#: views/scripts/accounts/index.phtml
-#: views/scripts/network/showidentified.phtml
-#: views/scripts/network/showunknown.phtml views/scripts/package/index.phtml
-msgid "Delete"
-msgstr "Löschen"
-
-#: views/helpers/GroupHeader.php; views/helpers/InventoryHeader.php
 msgid "General"
 msgstr "Allgemein"
 
@@ -1206,11 +1223,6 @@ msgstr "Benutzer hinzufügen"
 #: views/scripts/network/showunknown.phtml
 msgid "Edit"
 msgstr "Bearbeiten"
-
-#: views/scripts/computer/bios.phtml; views/scripts/network/edit.phtml
-#: views/scripts/package/index.phtml
-msgid "Date"
-msgstr "Datum"
 
 #: views/scripts/computer/bios.phtml; views/scripts/computer/index.phtml
 #: views/scripts/computer/software.phtml
@@ -1574,6 +1586,10 @@ msgid "Slot number"
 msgstr "Steckplatz"
 
 #: views/scripts/computer/userdefined.phtml
+msgid "Define fields"
+msgstr "Felder definieren"
+
+#: views/scripts/computer/userdefined.phtml
 msgid "The information was successfully updated."
 msgstr "Die Informationen wurden aktualisiert."
 
@@ -1706,6 +1722,13 @@ msgstr "Paket '%s' wird dauerhaft gelöscht. Fortfahren?"
 #: views/scripts/package/index.phtml
 msgid "Warnings:"
 msgstr "Warnungen:"
+
+#: views/scripts/preferences/deletefield.phtml
+#, php-format
+msgid ""
+"The field '%s' and its contents for all computers will be deleted. Continue?"
+msgstr ""
+"Das Feld '%s' und sein Inhalt für alle Computer werden gelöscht. Fortfahren?"
 
 #: views/scripts/software/accept.phtml
 #, php-format

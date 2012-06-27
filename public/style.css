@@ -183,6 +183,10 @@ td,th {
     text-align: center;
 }
 
+.clearboth {
+    clear:both;
+}
+
 .red {
     color: red;
 }

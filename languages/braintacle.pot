@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-06 10:10+0200\n"
+"POT-Creation-Date: 2012-06-23 17:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -205,16 +205,42 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
-#: forms/Account/Edit.php; forms/UserDefinedInfo.php
+#: forms/Account/Edit.php; forms/DefineFields.php
+#: forms/UserDefinedInfo.php
 msgid "Change"
 msgstr ""
 
-#: forms/Account/New.php
+#: forms/Account/New.php; forms/DefineFields.php
 msgid "Add"
 msgstr ""
 
 #: forms/AffectPackages.php
 msgid "Install"
+msgstr ""
+
+#: forms/DefineFields.php
+msgid "Text"
+msgstr ""
+
+#: forms/DefineFields.php
+msgid "Integer"
+msgstr ""
+
+#: forms/DefineFields.php
+msgid "Float"
+msgstr ""
+
+#: forms/DefineFields.php; views/scripts/computer/bios.phtml
+#: views/scripts/network/edit.phtml; views/scripts/package/index.phtml
+msgid "Date"
+msgstr ""
+
+#: forms/DefineFields.php; views/helpers/GroupHeader.php
+#: views/helpers/InventoryHeader.php; views/scripts/accounts/index.phtml
+#: views/scripts/network/showidentified.phtml
+#: views/scripts/network/showunknown.phtml
+#: views/scripts/package/index.phtml
+msgid "Delete"
 msgstr ""
 
 #: forms/Import.php
@@ -1145,14 +1171,6 @@ msgstr ""
 msgid "Members"
 msgstr ""
 
-#: views/helpers/GroupHeader.php; views/helpers/InventoryHeader.php
-#: views/scripts/accounts/index.phtml
-#: views/scripts/network/showidentified.phtml
-#: views/scripts/network/showunknown.phtml
-#: views/scripts/package/index.phtml
-msgid "Delete"
-msgstr ""
-
 #: views/helpers/InventoryHeader.php
 #, php-format
 msgid "Inventory of '%s'"
@@ -1223,11 +1241,6 @@ msgstr ""
 
 #: views/scripts/accounts/index.phtml
 msgid "Add user"
-msgstr ""
-
-#: views/scripts/computer/bios.phtml; views/scripts/network/edit.phtml
-#: views/scripts/package/index.phtml
-msgid "Date"
 msgstr ""
 
 #: views/scripts/computer/bios.phtml; views/scripts/computer/index.phtml
@@ -1609,6 +1622,10 @@ msgstr ""
 msgid "The information was successfully updated."
 msgstr ""
 
+#: views/scripts/computer/userdefined.phtml
+msgid "Define fields"
+msgstr ""
+
 #: views/scripts/computer/vms.phtml
 msgid "Product"
 msgstr ""
@@ -1737,6 +1754,12 @@ msgstr ""
 
 #: views/scripts/package/index.phtml
 msgid "Warnings:"
+msgstr ""
+
+#: views/scripts/preferences/deletefield.phtml
+#, php-format
+msgid ""
+"The field '%s' and its contents for all computers will be deleted. Continue?"
 msgstr ""
 
 #: views/scripts/software/accept.phtml

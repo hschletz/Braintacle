@@ -80,6 +80,34 @@ class PreferencesController extends Zend_Controller_Action
         $this->_useForm('Form_Preferences_System');
     }
 
+    public function userdefinedAction()
+    {
+        $form = new Form_DefineFields;
+        if ($this->getRequest()->isPost() and $form->isValid($_POST)) {
+            $form->process();
+            $this->_redirect('preferences/userdefined');
+        } else {
+            // render form
+            $this->view->form = $form;
+        }
+    }
+
+    public function deletefieldAction()
+    {
+        $form = new Form_YesNo;
+        $field = $this->_getParam('name');
+        if ($this->getRequest()->isPost()) {
+            if ($form->isValid($_POST) and $this->_getParam('yes')) {
+                Model_UserDefinedInfo::deleteField($field);
+            }
+            $this->_redirect('preferences/userdefined');
+        } else {
+            // render confirmation form
+            $this->view->form = $form;
+            $this->view->field = $field;
+        }
+    }
+
     /**
      * Standard preferences handling via Form_Preferences subclass
      * @param string $class Name of the form class
