@@ -35,6 +35,24 @@
 error_reporting(-1);
 
 /**
+ * Retrieve class node belonging to an error node
+ * @param DOMElement $errorElement <error> element
+ * @return DOMElement Class element or NULL
+ **/
+function getClassFromError($errorElement)
+{
+    // Errors are stored per file. Determine file.
+    $file = $errorElement->parentNode->parentNode;
+    // Assuming 1 class per file, get class
+    $fileClasses = $file->getElementsByTagName('class');
+    if ($fileClasses->length) {
+        return $fileClasses->item(0);
+    } else {
+        return null;
+    }
+}
+
+/**
  * Determine presence of 'param' tag - either direct or inherited.
  * @param DOMElement $class 'class' element to search in
  * @param string $method Method name
@@ -70,6 +88,39 @@ function hasTag($class, $method, $argument)
 
     // Parent documentation available. Lookup tag there.
     return hasTag($classes[$parentClassName], $method, $argument);
+}
+
+/**
+ * Work around typehint misdetection
+ * @param DOMElement $class 'class' element to search in
+ * @param string $method Method name
+ * @param string $argument Argument name
+ * @return bool
+ */
+function typeHintCorrect($class, $method, $argument)
+{
+    global $xPath;
+
+    // Iterate all class methods until $method is found
+    foreach ($xPath->query('method/name', $class) as $methodName) {
+        if ($methodName->nodeValue != $method) {
+            continue;
+        }
+        // Get typehint from <tag> element.
+        $tag = $xPath->query("docblock/tag[@variable='$argument']", $methodName->parentNode)->item(0);
+        $typeFromTag = $tag->getAttribute('type');
+
+        // Get typehint from <argument> element
+        foreach ($xPath->query("argument/name", $methodName->parentNode) as $argumentName) {
+            if ($argumentName->nodeValue != $argument) {
+                continue;
+            }
+            $typeFromArgument = $xPath->query('type', $argumentName->parentNode)->item(0)->nodeValue;
+
+            // Compare types, using prefix
+            return $typeFromTag == '\\global' . $typeFromArgument;
+        }
+    }
 }
 
 
@@ -122,28 +173,34 @@ $structure = new DomDocument('1.0', 'utf-8');
 $structure->load(realpath("$basePath/doc/api/structure.xml"));
 $xPath = new DOMXPath($structure);
 $errorsToRemove = array();
+$regexInheritedArgument = '#^Argument (.*) is missing from the Docblock of (.*)\(\)$#';
+$regexTypehint = '#^The type hint of the argument is incorrect for the type definition ' .
+                 'of the @param tag with argument (\\$[a-zA-Z0-9]+) in ([a-zA-Z_]+)\(\)$#';
 
-// Generate list of all classes
+// Generate list of all classes (prefixed with backslash)
 foreach ($structure->getElementsByTagName('class') as $node) {
-    $classes[$node->getElementsByTagName('name')->item(0)->nodeValue] = $node;
+    $classes['\\' . $node->getElementsByTagName('name')->item(0)->nodeValue] = $node;
 }
 
-// Iterate over all error messages
+// Iterate over all error messages and add non-errors to list
 foreach ($structure->getElementsByTagName('error') as $error) {
     $message = $error->nodeValue;
-    if (!preg_match('#^Argument (.*) is missing from the Docblock of (.*)\(\)$#', $message, $matches)) {
-        continue; // No interest in other messages
-    }
-    $argument = $matches[1];
-    $method = $matches[2];
-
-    // Errors are stored per file. Determine file.
-    $file = $error->parentNode->parentNode;
-    // Assuming 1 class per file, get class
-    $fileClasses = $file->getElementsByTagName('class');
-    if ($fileClasses->length and hasTag($fileClasses->item(0), $method, $argument)) {
-        // Non-error found, add to list
-        $errorsToRemove[] = $error;
+    if (preg_match($regexInheritedArgument, $message, $matches)) {
+        // phpDocumentor2 incorrectly complains about "missing" arguments passed in via @inheritdoc
+        $argument = $matches[1];
+        $method = $matches[2];
+        $class = getClassFromError($error);
+        if ($class and hasTag($class, $method, $argument)) {
+            $errorsToRemove[] = $error;
+        }
+    } elseif (preg_match($regexTypehint, $message, $matches)) {
+        // phpDocumentor2 handles typehints from the global namespace incorrectly
+        $argument = $matches[1];
+        $method = $matches[2];
+        $class = getClassFromError($error);
+        if ($class and typeHintCorrect($class, $method, $argument)) {
+            $errorsToRemove[] = $error;
+        }
     }
 }
 
