@@ -118,7 +118,7 @@ function typeHintCorrect($class, $method, $argument)
             $typeFromArgument = $xPath->query('type', $argumentName->parentNode)->item(0)->nodeValue;
 
             // Compare types, using prefix
-            return $typeFromTag == $typeFromArgument;
+            return $typeFromTag == '\\' . $typeFromArgument;
         }
     }
 }
