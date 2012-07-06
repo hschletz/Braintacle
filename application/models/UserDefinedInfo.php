@@ -78,7 +78,7 @@ class Model_UserDefinedInfo extends Model_Abstract
                 $computer->getId()
             );
             foreach ($data as $property => $value) {
-                if ($property != 'hardware_id') { // Not a property, ignore
+                if (isset($this->_propertyMap[$property])) { // ignore hardware_id and BLOB columns
                     $this->setProperty($property, $value);
                 }
             }
@@ -162,12 +162,19 @@ class Model_UserDefinedInfo extends Model_Abstract
                     case Nada::DATATYPE_CLOB:
                         $type = 'clob';
                         break;
+                    case Nada::DATATYPE_BLOB:
+                        // Ignore column, its values are always NULL.
+                        // Attachments are handled in temp_files table.
+                        $type = null;
+                        break;
                     default:
                         throw new UnexpectedValueException(
                             'Invalid datatype: ' . $column->getDatatype()
                         );
                 }
-                self::$_allTypesStatic[$name] = $type;
+                if ($type) {
+                    self::$_allTypesStatic[$name] = $type;
+                }
             }
         }
         return self::$_allTypesStatic;
