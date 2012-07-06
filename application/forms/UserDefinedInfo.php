@@ -66,7 +66,11 @@ class Form_UserDefinedInfo extends Form_Normalized
             if ($name == 'tag') {
                 continue; // element already created
             }
-            $element = new Zend_Form_Element_Text($name);
+            if ($type == 'clob') {
+                $element = new Zend_Form_Element_Textarea($name);
+            } else {
+                $element = new Zend_Form_Element_Text($name);
+            }
             $element->setDisableTranslator(true) // Don't translate user-defined names
                     ->setLabel(ucfirst($name))
                     ->addFilter('StringTrim');

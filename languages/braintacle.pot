@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-23 17:36+0200\n"
+"POT-Creation-Date: 2012-07-06 14:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -220,6 +220,10 @@ msgstr ""
 
 #: forms/DefineFields.php
 msgid "Text"
+msgstr ""
+
+#: forms/DefineFields.php
+msgid "Long text"
 msgstr ""
 
 #: forms/DefineFields.php

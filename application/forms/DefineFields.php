@@ -47,6 +47,7 @@ class Form_Definefields extends Zend_Form
     {
         $this->_translatedTypes = array(
             'text' => $this->getView()->translate('Text'),
+            'clob' => $this->getView()->translate('Long text'),
             'integer' => $this->getView()->translate('Integer'),
             'float' => $this->getView()->translate('Float'),
             'date' => $this->getView()->translate('Date'),

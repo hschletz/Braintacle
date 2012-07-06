@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-23 17:36+0200\n"
-"PO-Revision-Date: 2012-06-23 17:37+0200\n"
+"POT-Creation-Date: 2012-07-06 14:43+0200\n"
+"PO-Revision-Date: 2012-07-06 14:43+0200\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -224,6 +224,10 @@ msgstr "Kommazahl"
 #: forms/DefineFields.php
 msgid "Integer"
 msgstr "Ganzzahl"
+
+#: forms/DefineFields.php
+msgid "Long text"
+msgstr "Langer Text"
 
 #: forms/DefineFields.php
 msgid "Text"

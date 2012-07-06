@@ -159,6 +159,9 @@ class Model_UserDefinedInfo extends Model_Abstract
                     case Nada::DATATYPE_DATE:
                         $type = 'date';
                         break;
+                    case Nada::DATATYPE_CLOB:
+                        $type = 'clob';
+                        break;
                     default:
                         throw new UnexpectedValueException(
                             'Invalid datatype: ' . $column->getDatatype()
@@ -222,6 +225,9 @@ class Model_UserDefinedInfo extends Model_Abstract
                 break;
             case 'date':
                 $datatype = Nada::DATATYPE_DATE;
+                break;
+            case 'clob':
+                $datatype = Nada::DATATYPE_CLOB;
                 break;
             default:
                 throw new InvalidArgumentException('Invalid datatype: ' . $type);
