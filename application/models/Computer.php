@@ -1265,6 +1265,16 @@ class Model_Computer extends Model_ComputerOrGroup
             foreach ($tables as $table) {
                 $db->delete($table, array('hardware_id=?' => $id));
             }
+
+            // Delete attachments
+            $db->delete(
+                'temp_files',
+                array(
+                    'id_dde=?' => $id,
+                    'table_name=?' => 'accountinfo'
+                )
+            );
+
             // Delete row in hardware table itself
             $db->delete('hardware', array('id=?' => $id));
             // Insert row into deleted_equiv if configured
