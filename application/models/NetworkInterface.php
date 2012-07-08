@@ -89,7 +89,7 @@ class Model_NetworkInterface extends Model_ChildObject
      */
     public function isBlacklisted()
     {
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         return (bool) $db->fetchOne(
             'SELECT COUNT(macaddress) FROM blacklist_macaddresses WHERE macaddress = ?',

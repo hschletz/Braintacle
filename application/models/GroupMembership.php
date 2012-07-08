@@ -89,7 +89,7 @@ class Model_GroupMembership extends Model_Abstract
     {
         Model_Group::updateAll();
 
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         $dummy = new Model_GroupMembership;
         $map = $dummy->getPropertyMap();

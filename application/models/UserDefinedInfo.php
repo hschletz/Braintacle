@@ -71,7 +71,7 @@ class Model_UserDefinedInfo extends Model_Abstract
 
         // Load values if a computer ID is given
         if (!is_null($computer)) {
-            $db = Zend_Registry::get('db');
+            $db = Model_Database::getAdapter();
 
             $data = $db->fetchRow(
                 'SELECT * FROM accountinfo WHERE hardware_id = ?',
@@ -113,7 +113,7 @@ class Model_UserDefinedInfo extends Model_Abstract
             }
         }
 
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         $db->update(
             'accountinfo',

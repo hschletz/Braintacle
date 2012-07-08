@@ -127,7 +127,7 @@ class Model_Group extends Model_ComputerOrGroup
         $direction='asc'
     )
     {
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         $dummy = new Model_Group;
         $map = $dummy->getPropertyMap();
@@ -271,7 +271,7 @@ class Model_Group extends Model_ComputerOrGroup
      */
     public function getPackages($direction='asc')
     {
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         $select = $db->select()
             ->from('devices', array())
@@ -324,7 +324,7 @@ class Model_Group extends Model_ComputerOrGroup
             return; // Another process is currently updating this group.
         }
 
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         // Delete computers from the cache which no longer meet the criteria
         $db->delete(
@@ -422,7 +422,7 @@ class Model_Group extends Model_ComputerOrGroup
             return false;
         }
 
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
         $id = $this->getId();
 
         // Start transaction to keep database consistent in case of errors

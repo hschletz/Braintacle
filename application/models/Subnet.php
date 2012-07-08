@@ -70,7 +70,7 @@ class Model_Subnet extends Model_Abstract
      */
     static function createStatementStatic($order=null, $direction='asc', $conditions=array(), $args=array())
     {
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         $dummy = new Model_Subnet;
         $map = $dummy->getPropertyMap();

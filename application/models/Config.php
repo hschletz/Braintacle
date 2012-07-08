@@ -285,7 +285,7 @@ class Model_Config
      */
     static function get($option)
     {
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         if (in_array($option, self::$_iValues)) {
             $column = 'ivalue';
@@ -338,7 +338,7 @@ class Model_Config
      */
     static function set($option, $value)
     {
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         if (in_array($option, self::$_iValues)) {
             // Validate and cast $value

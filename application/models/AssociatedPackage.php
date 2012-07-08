@@ -60,7 +60,7 @@ class Model_AssociatedPackage extends Model_ChildObject
         $query=true
     )
     {
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         if (is_null($order)) {
             $order = 'Name';

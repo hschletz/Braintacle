@@ -209,7 +209,7 @@ class Model_Software extends Model_ChildObject
      */
     static function ignore($name)
     {
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         if (is_null($name)) { // Inserting NULL would fail
             $name = '';
@@ -224,7 +224,7 @@ class Model_Software extends Model_ChildObject
      */
     static function accept($name)
     {
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         if (is_null($name)) { // Inserting NULL would fail
             $name = '';

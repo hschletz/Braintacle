@@ -253,7 +253,7 @@ class Model_Package extends Model_Abstract
      */
     static function createStatementStatic($order=null, $direction='asc', $conditions=array(), $args=array())
     {
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         $dummy = new Model_Package;
         $map = $dummy->getPropertyMap();
@@ -469,7 +469,7 @@ class Model_Package extends Model_Abstract
         $this->_needCleanup = false;
 
         // Check if the name already exists
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
         if ($db->fetchRow(
             'SELECT name FROM download_available WHERE name=?',
             $this->getName()
@@ -749,7 +749,7 @@ class Model_Package extends Model_Abstract
         }
 
         // Unaffect package from all computers and groups
-        Zend_Registry::get('db')->delete(
+        Model_Database::getAdapter()->delete(
             'devices',
             array(
                 'name=\'DOWNLOAD\' AND ivalue IN'
@@ -818,7 +818,7 @@ class Model_Package extends Model_Abstract
             $where['(' . implode(' OR ', $whereOr) . ')'] = null;
         }
 
-        Zend_Registry::get('db')->update(
+        Model_Database::getAdapter()->update(
             'devices',
             array(
                 'ivalue' => $this->getEnabledId(),
@@ -870,7 +870,7 @@ class Model_Package extends Model_Abstract
         }
 
         if ($this->_activated) {
-            $db = Zend_Registry::get('db');
+            $db = Model_Database::getAdapter();
             $db->delete(
                 'download_enable',
                 array("fileid=?" => $this->getTimestamp())

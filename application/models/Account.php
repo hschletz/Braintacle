@@ -91,7 +91,7 @@ class Model_Account extends Model_Abstract
             return;
         }
 
-        $row = Zend_Registry::get('db')->select()
+        $row = Model_Database::getAdapter()->select()
                ->from('operators', array_values($this->_propertyMap))
                ->where('id=?', $id)
                ->query()
@@ -114,7 +114,7 @@ class Model_Account extends Model_Abstract
     {
         $dummy = new self;
         $map = $dummy->getPropertyMap();
-        return Zend_Registry::get('db')
+        return Model_Database::getAdapter()
             ->select()
             ->from('operators', array_values($map))
             ->order(self::getOrder($order, $direction, $map))
@@ -151,7 +151,7 @@ class Model_Account extends Model_Abstract
         $insert['accesslvl'] = self::OLD_PRIVILEGE_ADMIN;
         $insert['new_accesslvl'] = self::PRIVILEGE_ADMIN;
 
-        Zend_Registry::get('db')->insert('operators', $insert);
+        Model_Database::getAdapter()->insert('operators', $insert);
     }
 
     /**
@@ -181,7 +181,7 @@ class Model_Account extends Model_Abstract
             $update['passwd'] = md5($password);
         }
 
-        Zend_Registry::get('db')->update(
+        Model_Database::getAdapter()->update(
             'operators',
             $update,
             array('id=?' => $id)
@@ -194,7 +194,7 @@ class Model_Account extends Model_Abstract
      */
     public static function delete($id)
     {
-        Zend_Registry::get('db')->delete(
+        Model_Database::getAdapter()->delete(
             'operators',
             array('id=?' => $id)
         );

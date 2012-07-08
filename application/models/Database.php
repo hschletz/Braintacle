@@ -51,7 +51,7 @@ class Model_Database
     protected static function _listTables()
     {
         if (!is_array(self::$_allTables)) {
-            $db = Zend_Registry::get('db');
+            $db = self::getAdapter();
             self::$_allTables = $db->listTables();
         }
         return self::$_allTables;
@@ -74,6 +74,15 @@ class Model_Database
     }
 
     /**
+     * Retrieve global adapter object
+     * @return Zend_Db_Adapter
+     **/
+    public static function getAdapter()
+    {
+        return Zend_Registry::get('db');
+    }
+
+    /**
      * Get NADA object set up for application's database
      * @return Nada_Database
      */
@@ -81,7 +90,7 @@ class Model_Database
     {
         if (!self::$_nada) {
             require_once('NADA/Nada.php');
-            self::$_nada = Nada::factory(Zend_Registry::get('db'));
+            self::$_nada = Nada::factory(self::getAdapter());
         }
         return self::$_nada;
     }

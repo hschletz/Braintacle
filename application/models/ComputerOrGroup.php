@@ -64,7 +64,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
      */
     public function lock()
     {
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
         $id = $this->getId();
         $expire = Model_Config::get('LockValidity');
 
@@ -143,7 +143,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
             error_log('Braintacle error: lock expired prematurely. Increase LOCK_REUSE_TIME.');
         } else {
             // Delete lock from database
-            $db = Zend_Registry::get('db');
+            $db = Model_Database::getAdapter();
             $db->delete('locks', array('hardware_id=?' => $this->getId()));
         }
         // reset tracker
@@ -172,7 +172,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
      */
     function getInstallablePackages()
     {
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         /* The CAST(pkg_id AS CHAR(11)) expression is the attempt for a
          * statement compatible with all DBMS. An integer-to string-cast is
@@ -218,7 +218,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
     {
         $package = new Model_Package;
         if ($package->fromName($name)) {
-            $db = Zend_Registry::get('db');
+            $db = Model_Database::getAdapter();
 
             // Check if the package is already installed or in the history
             $selectInstalled = $db->select()
@@ -257,7 +257,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
      */
     public function unaffectPackage($name)
     {
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         $package = new Model_Package;
         if ($package->fromName($name)) {

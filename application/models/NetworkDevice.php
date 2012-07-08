@@ -74,7 +74,7 @@ class Model_NetworkDevice extends Model_Abstract
      */
     static function getDevices($subnet, $mask, $showIdentified, $order=null, $direction='asc')
     {
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         $dummy = new Model_NetworkDevice;
         $map = $dummy->getPropertyMap();
@@ -147,7 +147,7 @@ class Model_NetworkDevice extends Model_Abstract
         if (!($macaddress instanceof Braintacle_MacAddress)) {
             $macaddress = new Braintacle_MacAddress($macaddress);
         }
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
         return $db->select()
             ->from('netmap', array('ip', 'mac', 'name', 'date'))
             ->joinLeft(
@@ -167,7 +167,7 @@ class Model_NetworkDevice extends Model_Abstract
      */
     static function getCategories()
     {
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
         return $db->fetchCol('SELECT name FROM devicetype ORDER BY name');
     }
 
@@ -197,7 +197,7 @@ class Model_NetworkDevice extends Model_Abstract
         $auth = Zend_Auth::getInstance();
         $this->setIdentifiedBy($auth->getIdentity());
 
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
         $data = array(
             'description' => $this->getDescription(),
             'type' => $this->getType(),
@@ -217,7 +217,7 @@ class Model_NetworkDevice extends Model_Abstract
      */
     public function delete()
     {
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
         $db->delete('network_devices', array('macaddr=?' => $this->getMacAddress()));
         $db->delete('netmap', array('mac=?' => $this->getMacAddress()));
     }

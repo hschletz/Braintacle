@@ -212,7 +212,7 @@ class Model_Computer extends Model_ComputerOrGroup
         // where possible.
         $filterGroups = true;
 
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         $dummy = new Model_Computer;
         $map = $dummy->getPropertyMap();
@@ -758,7 +758,7 @@ class Model_Computer extends Model_ComputerOrGroup
                 );
         }
 
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         return (bool) $db->fetchOne(
             "SELECT COUNT($column) FROM $table WHERE $column = ?",
@@ -1134,7 +1134,7 @@ class Model_Computer extends Model_ComputerOrGroup
         // < 00:00:00 of the next day.
         // Other operations (<, >) are defined accordingly.
 
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
         $nada = Model_Database::getNada();
 
         // Get beginning of day.
@@ -1211,7 +1211,7 @@ class Model_Computer extends Model_ComputerOrGroup
             return false;
         }
 
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
         $id = $this->getId();
 
         // Get list of tables for child objects
@@ -1319,7 +1319,7 @@ class Model_Computer extends Model_ComputerOrGroup
      */
     static function findDuplicates($criteria, $count, $order='Id', $direction='asc')
     {
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
         $select = $db->select();
 
         // All duplicates are determined by a common method with just some
@@ -1426,7 +1426,7 @@ class Model_Computer extends Model_ComputerOrGroup
             return;
         }
 
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
         $db->beginTransaction();
         try {
             // Lock all given computers and create a list sorted by LastContactDate.
@@ -1532,7 +1532,7 @@ class Model_Computer extends Model_ComputerOrGroup
                     'Invalid criteria for allowDuplicates(): ' . $criteria
                 );
         }
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
         // Check for existing record to avoid constraint violation
         if (!$db->fetchRow("SELECT $column FROM $table WHERE $column=?", $value)) {
             $db->insert($table, array($column => $value));
@@ -1571,7 +1571,7 @@ class Model_Computer extends Model_ComputerOrGroup
     public function setGroups($newGroups)
     {
         $id = $this->getId();
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         // Create array with group ID as key and existing membership type as
         // value.
@@ -1677,7 +1677,7 @@ class Model_Computer extends Model_ComputerOrGroup
      */
     public function getDownloadedPackages()
     {
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
         return $db->fetchCol(
             'SELECT pkg_id FROM download_history WHERE hardware_id=? ORDER BY pkg_id',
             $this->getId()

@@ -73,7 +73,7 @@ abstract class Model_ChildObject extends Model_Abstract
         $query=true
     )
     {
-        $db = Zend_Registry::get('db');
+        $db = Model_Database::getAdapter();
 
         if (is_array($columns)) {
             foreach ($columns as $column) {
