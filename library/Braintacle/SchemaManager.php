@@ -50,10 +50,22 @@ class Braintacle_SchemaManager
     const SCHEMA_VERSION = 3;
 
     /**
+     * Database adapter
+     * @var Zend_Db_Adapter_Abstract
+     */
+    protected $_db;
+
+    /**
      * MDB2_Schema object
      * @var MDB2_Schema
      */
     protected $_schema;
+
+    /**
+     * NADA object
+     * @var Nada
+     */
+     protected $_nada;
 
     /**
      * Zend_Log object
@@ -62,7 +74,7 @@ class Braintacle_SchemaManager
     protected $_logger;
 
     /**
-     * List of all tables in the database
+     * List of all tables in the database (array of Nada_Table objects)
      * @var array
      */
     protected $_allTables;
@@ -92,7 +104,12 @@ class Braintacle_SchemaManager
             )
         );
         $this->_logger = $logger;
-        $this->_allTables = $this->_schema->db->manager->listTables();
+        $this->_db = Model_Database::getAdapter();
+        $this->_nada = Model_Database::getNada();
+        if ($this->_nada->isMysql()) {
+            $this->_nada->emulatedDatatypes = array(Nada::DATATYPE_TIMESTAMP);
+        }
+        $this->_allTables = $this->_nada->getTables();
         $this->_basepath = dirname(APPLICATION_PATH);
     }
 
@@ -122,16 +139,14 @@ class Braintacle_SchemaManager
      */
     public function fixKeys()
     {
-        $mdb2 = $this->_schema->db;
-
         // Since OCS Inventory only supports MySQL, databases for any other DBMS
         // will essentially be managed exclusively by Braintacle so that this
         // operation will not be necessary.
-        if ($mdb2->dbsyntax != 'mysql') {
+        if (!$this->_nada->isMysql()) {
             return;
         }
-
         $this->_logger->info('Fixing keys...');
+        $mdb2 = $this->_schema->db;
 
         // The definitions for some tables require an extra constraint to be
         // created before the bad PK can be dropped.
@@ -160,6 +175,7 @@ class Braintacle_SchemaManager
         // For the tables listed above plus some additional tables, the bad PK
         // needs to be dropped and recreated the right way.
         $fixTables = array(
+            'accesslog',
             'blacklist_macaddresses',
             'blacklist_serials',
             'blacklist_subnet',
@@ -182,7 +198,7 @@ class Braintacle_SchemaManager
         );
         $fixTables = array_merge($fixTables, $createConstraint);
         // Only existing tables can be processed.
-        $fixTables = array_intersect($fixTables, $this->_allTables);
+        $fixTables = array_intersect($fixTables, array_keys($this->_allTables));
 
         // Templates for constraint creation
         $templatePrimary = array(
@@ -254,7 +270,7 @@ class Braintacle_SchemaManager
         }
 
         // Write header to temp file
-        $name = $this->_schema->db->getDatabase();
+        $name = $this->_nada->getName();
         $header = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" .
                   "<database>\n" .
                   "<name>$name</name>\n" .
@@ -327,7 +343,8 @@ class Braintacle_SchemaManager
         $this->_logger->info('done');
 
         // Tables may have been added or removed, update list
-        $this->_allTables = $this->_schema->db->manager->listTables();
+        $this->_nada->clearCache();
+        $this->_allTables = $this->_nada->getTables();
 
         // Tweak tables if necessary
         $this->tweakMySql();
@@ -340,8 +357,7 @@ class Braintacle_SchemaManager
      */
     public function tweakMySql()
     {
-        $mdb2 = $this->_schema->db;
-        if ($mdb2->dbsyntax != 'mysql') {
+        if (!$this->_nada->isMysql()) {
             return;
         }
         $this->_logger->info('Tweaking tables...');
@@ -383,21 +399,21 @@ class Braintacle_SchemaManager
             'prolog_conntrack',
         );
 
-        foreach ($this->_allTables as $table) {
+        foreach ($this->_allTables as $name => $table) {
             // Force UTF-8 for all tables to prevent charset conversion issues.
-            $mdb2->exec("ALTER TABLE $table CONVERT TO CHARACTER SET utf8");
+            $table->setCharset('utf8');
 
             // MDB2_Schema is not aware of MySQL's table engines and always
             // uses the configured default engine. The tables need to be
             // converted manually.
-            if (in_array($table, $engineInnoDb)) {
+            if (in_array($name, $engineInnoDb)) {
                 $engine = 'InnoDB';
-            } elseif (in_array($table, $engineMemory)) {
+            } elseif (in_array($name, $engineMemory)) {
                 $engine = 'MEMORY';
             } else {
                 $engine = 'MyISAM';
             }
-            $mdb2->exec("ALTER TABLE $table ENGINE = $engine");
+            $table->setEngine($engine);
         }
         $this->_logger->info('done');
     }
@@ -410,8 +426,6 @@ class Braintacle_SchemaManager
     public function updateData($previousSchema, $newSchema)
     {
         $this->_logger->info('Updating data...');
-
-        $mdb2 = $this->_schema->db;
 
         // Table initialization is only done when the table is created for the
         // first time. In case of an upgrade the tables need to be initialized
@@ -453,7 +467,7 @@ class Braintacle_SchemaManager
 
             // Get constraints for this table
             $constraints = array();
-            foreach ($mdb2->reverse->tableInfo($name) as $column) {
+            foreach ($this->_schema->db->reverse->tableInfo($name) as $column) {
                 if (strpos($column['flags'], 'primary_key') !== false
                     or strpos($column['flags'], 'unique_key') !== false
                 ) {
@@ -486,21 +500,11 @@ class Braintacle_SchemaManager
                 }
 
                 // Check for existing rows that would prevent successful insertion.
-                $query = 'SELECT COUNT(*) FROM ' .
-                        $mdb2->quoteIdentifier($name) .
-                        ' WHERE ';
-                $i = 1;
+                $query = $this->_db->select()->from($name, 'COUNT(*)');
                 foreach ($fieldlist as $fieldname => $value) {
-                    $query .= $mdb2->quoteIdentifier($fieldname);
-                    $query .= '=';
-                    $query .= $mdb2->quote($value, $constraints[$fieldname]);
-                    if ($i < $count)
-                        $query .= ' OR ';
-                    $i++;
+                    $query->orWhere("$fieldname = ?", $value);
                 }
-                $result = $mdb2->query($query);
-
-                if ($result->fetchOne()) {
+                if ($query->query()->fetchColumn()) {
                     // Found existing row.
                     $skipRows[] = $commandIndex;
                 }
@@ -576,7 +580,7 @@ class Braintacle_SchemaManager
     public function isUpdateRequired()
     {
         // Check for presence of 'config' table first
-        if (in_array('config', $this->_allTables)) {
+        if (isset($this->_allTables['config'])) {
             $oldSchemaVersion = Model_Config::get('SchemaVersion');
             if (is_null($oldSchemaVersion) or $oldSchemaVersion < self::SCHEMA_VERSION) {
                 return true;
@@ -603,12 +607,12 @@ class Braintacle_SchemaManager
     public function isOcsCompatible()
     {
         // Only MySQL databases can be compatible
-        if ($this->_schema->db->dbsyntax != 'mysql') {
+        if (!$this->_nada->isMysql()) {
             return false;
         }
         // Empty database (i.e. without 'config' table) is considered compatible
         // because it might as well get populated via ocsreports.
-        if (!in_array('config', $this->_allTables)) {
+        if (!isset($this->_allTables['config'])) {
             return true;
         }
         // The SchemaVersion option will be NULL for databases not managed by
