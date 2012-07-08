@@ -75,7 +75,7 @@ class Model_Database
 
     /**
      * Retrieve global adapter object
-     * @return Zend_Db_Adapter
+     * @return Zend_Db_Adapter_Abstract
      **/
     public static function getAdapter()
     {
