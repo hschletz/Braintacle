@@ -24,7 +24,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
   <transformer>
       <external-class-documentation>
         <prefix>Zend_</prefix>
-        <uri>http://framework.zend.com/apidoc/core/db_{UNPREFIXED_CLASS}.html#%5C{CLASS}</uri>
+        <uri>http://framework.zend.com/apidoc/core/db_{CLASS}.html#%5C{CLASS}</uri>
     </external-class-documentation>
   </transformer>
 </phpdoc>
