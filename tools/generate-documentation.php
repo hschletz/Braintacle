@@ -90,39 +90,6 @@ function hasTag($class, $method, $argument)
     return hasTag($classes[$parentClassName], $method, $argument);
 }
 
-/**
- * Work around typehint misdetection
- * @param DOMElement $class 'class' element to search in
- * @param string $method Method name
- * @param string $argument Argument name
- * @return bool
- */
-function typeHintCorrect($class, $method, $argument)
-{
-    global $xPath;
-
-    // Iterate all class methods until $method is found
-    foreach ($xPath->query('method/name', $class) as $methodName) {
-        if ($methodName->nodeValue != $method) {
-            continue;
-        }
-        // Get typehint from <tag> element.
-        $tag = $xPath->query("docblock/tag[@variable='$argument']", $methodName->parentNode)->item(0);
-        $typeFromTag = $tag->getAttribute('type');
-
-        // Get typehint from <argument> element
-        foreach ($xPath->query("argument/name", $methodName->parentNode) as $argumentName) {
-            if ($argumentName->nodeValue != $argument) {
-                continue;
-            }
-            $typeFromArgument = $xPath->query('type', $argumentName->parentNode)->item(0)->nodeValue;
-
-            // Compare types, using prefix
-            return $typeFromTag == 'array' and $typeFromArgument == '\\array';
-        }
-    }
-}
-
 
 // All paths are relative to this script's parent directory
 $basePath = realpath(dirname(dirname(__FILE__)));
@@ -191,14 +158,6 @@ foreach ($structure->getElementsByTagName('error') as $error) {
         $method = $matches[2];
         $class = getClassFromError($error);
         if ($class and hasTag($class, $method, $argument)) {
-            $errorsToRemove[] = $error;
-        }
-    } elseif (preg_match($regexTypehint, $message, $matches)) {
-        // phpDocumentor2 handles typehints from the global namespace incorrectly
-        $argument = $matches[1];
-        $method = $matches[2];
-        $class = getClassFromError($error);
-        if ($class and typeHintCorrect($class, $method, $argument)) {
             $errorsToRemove[] = $error;
         }
     }
