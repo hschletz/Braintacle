@@ -974,5 +974,26 @@ javainfo => {
    }
   },
 
+  #Plugin MS OFFICE PACK
+    officepack => {
+    mask => 0,
+    multi => 1,
+    auto => 1,
+    delOnReplace => 1,
+    sortBy => 'OFFICEVERSION',
+    writeDiff => 1,
+    cache => 0,
+    fields => {
+        OFFICEKEY => {},
+        OFFICEVERSION => {},
+        PRODUCT => {},
+        PRODUCTID => {},
+        TYPE => {},
+        GUID => {},
+        INSTALL => {},
+        NOTE => {},
+    }
+},
+
 );
 1;

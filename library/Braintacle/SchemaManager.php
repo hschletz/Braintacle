@@ -47,7 +47,7 @@ class Braintacle_SchemaManager
     /**
      * Latest version of the database schema
      */
-    const SCHEMA_VERSION = 3;
+    const SCHEMA_VERSION = 4;
 
     /**
      * Database adapter
@@ -152,6 +152,7 @@ class Braintacle_SchemaManager
         // created before the bad PK can be dropped.
         $createConstraint = array(
             'journallog',
+            'officepack',
             'snmp_cards',
             'snmp_cartridges',
             'snmp_cpus',
@@ -187,6 +188,7 @@ class Braintacle_SchemaManager
             'modems',
             'monitors',
             'networks',
+            'officepack',
             'ports',
             'printers',
             'registry',
