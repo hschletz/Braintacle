@@ -1230,7 +1230,9 @@ class Model_Computer extends Model_ComputerOrGroup
         $tables[] = 'itmgmt_comments';
         $tables[] = 'javainfo';
         $tables[] = 'journallog';
-        $tables[] = 'officepack';
+        if (Model_Database::supportsMsOfficeKeyPlugin()) {
+            $tables[] = 'officepack';
+        }
 
         // Start transaction to keep database consistent in case of errors
         // If a transaction is already in progress, an exception will be thrown
