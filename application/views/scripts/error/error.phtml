@@ -26,13 +26,17 @@
   <h2><?php print $this->message ?></h2>
 
   <?php if ('development' == APPLICATION_ENV): ?>
-
-  <h3>Exception information:</h3>
-  <p>
-      <b>Message:</b> <?php print $this->escape($this->exception->getMessage()) ?>
-  </p>
-
   <?php
+  print "<h3>Exception Message trace:</h3>\n";
+
+  $exception = $this->exception;
+  while ($exception) {
+    print $this->htmlTag(
+        'p',
+        '<strong>Message:</strong> ' . $this->escape($exception->getMessage())
+    );
+    $exception = $exception->getPrevious();
+  }
   // The additional debug information below might contain sensitive data.
   if ($this->request->getParam('controller') == 'login') {
       print 'Details hidden for security reasons.';
