@@ -53,12 +53,7 @@
  * - <b>OsVersionNumber:</b> internal OS version number
  * - <b>OsVersionString:</b> OS version (Service pack, kernel version etc...)
  * - <b>OsComment:</b> comment
- * - <b>UserDomain:</b> Domain of current user (for local accounts, this is identical to the computer name)
  * - <b>UserName:</b> User logged in at time of inventory
- * - <b>WindowsCompany:</b> Company name (typed in at installation, Windows only)
- * - <b>WindowsOwner:</b> Owner (typed in at installation, Windows only)
- * - <b>WindowsProductkey:</b> product key, Windows only
- * - <b>WindowsProductId:</b> product ID, Windows only
  * - <b>Uuid</b> UUID, typically found in virtual machines
  *
  *
@@ -76,6 +71,9 @@
  *
  * If the 'MemberOf' filter is applied, the <b>Membership</b> property is
  * available which contains one of the {@link Model_GroupMembership} constants.
+ *
+ * Windows-specific information is available through the public 'windows' member
+ * and through the 'Windows.*' property.
  * @package Models
  */
 class Model_Computer extends Model_ComputerOrGroup
@@ -103,12 +101,7 @@ class Model_Computer extends Model_ComputerOrGroup
         'OsVersionNumber' => 'osversion',
         'OsVersionString' => 'oscomments',
         'OsComment' => 'description',
-        'UserDomain' => 'userdomain',
         'UserName' => 'userid',
-        'WindowsCompany' => 'wincompany',
-        'WindowsOwner' => 'winowner',
-        'WindowsProductkey' => 'winprodkey',
-        'WindowsProductId' => 'winprodid',
         'InventoryDiff' => 'checksum',
         'Uuid' => 'uuid',
         // Values from 'bios' table
@@ -162,6 +155,14 @@ class Model_Computer extends Model_ComputerOrGroup
     );
 
     /**
+     * Windows-specific information
+     *
+     * Object has undefined content for non-Windows systems.
+     * @var Model_Windows
+     **/
+    public $windows;
+
+    /**
      * Raw properties of child objects from joined queries.
      * @var array
      */
@@ -182,6 +183,21 @@ class Model_Computer extends Model_ComputerOrGroup
      */
     private $_userDefinedInfo;
 
+
+    /**
+     * Constructor
+     **/
+    public function __construct()
+    {
+        parent::__construct();
+
+        // When instantiated from fetchObject(), __set() gets called before the
+        // constructor is invoked, which may initialize the property. Don't
+        // overwrite it in that case.
+        if (!$this->windows) {
+            $this->windows = new Model_Windows;
+        };
+    }
 
     /** Return a statement object with all computers matching criteria
      * @param array $columns Logical properties to be returned. If empty or null, return all properties.
@@ -283,8 +299,6 @@ class Model_Computer extends Model_ComputerOrGroup
                 case 'OsVersionString':
                 case 'OsComment':
                 case 'UserName':
-                case 'UserDomain':
-                case 'WindowsProductkey':
                 case 'Manufacturer':
                 case 'Model':
                 case 'Serial':
@@ -464,6 +478,8 @@ class Model_Computer extends Model_ComputerOrGroup
                 return $childObject->getProperty($property, $rawValue);
             } elseif (preg_match('/^UserDefinedInfo\.(\w+)$/', $property, $matches)) {
                 return $this->getUserDefinedInfo($matches[1]);
+            } elseif (preg_match('/^Windows\.(\w+)$/', $property, $matches)) {
+                return $this->windows->getProperty($matches[1]);
             } else {
                 throw $e;
             }
@@ -523,6 +539,16 @@ class Model_Computer extends Model_ComputerOrGroup
             }
 
             list($model, $property) = explode('_', $property);
+
+            if ($model == 'windows') {
+                // When instantiated from fetchObject(), this gets called before
+                // __construct(). Initialize property if necessary.
+                if (!$this->windows) {
+                    $this->windows = new Model_Windows;
+                }
+                $this->windows->$property = $value;
+                return;
+            }
 
             if ($model == 'userdefinedinfo') {
                 // If _userDefinedInfo is already an object, do nothing - the
@@ -730,6 +756,19 @@ class Model_Computer extends Model_ComputerOrGroup
     }
 
     /**
+     * Update windows property for computer
+     *
+     * It is valid to call this on non-Windows computer objects in which case
+     * the content of the object is undefined.
+     * @return Model_Windows Updated windows property
+     **/
+    public function getWindows()
+    {
+        $this->windows = Model_Windows::getWindows($this);
+        return $this->windows;
+    }
+
+    /**
      * Return TRUE if the serial number or asset tag is blacklisted,
      * i.e. ignored for detection of duplicates.
      *
@@ -908,6 +947,11 @@ class Model_Computer extends Model_ComputerOrGroup
             $table = 'accountinfo';
             $column = $property;
             $columnAlias = 'userdefinedinfo_' . $column;
+        } elseif ($model == 'Windows') {
+            $table = 'hardware';
+            $class = new Model_Windows;
+            $column = $class->getColumnName($property);
+            $columnAlias = 'windows_' . $column;
         } elseif (in_array($model, self::$_childObjectTypes)) {
             $className = "Model_$model";
             $class = new $className;

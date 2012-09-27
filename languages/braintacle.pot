@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-06 14:43+0200\n"
+"POT-Creation-Date: 2012-09-27 17:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -1372,18 +1372,6 @@ msgid "User"
 msgstr ""
 
 #: views/scripts/computer/index.phtml
-msgid "Windows company"
-msgstr ""
-
-#: views/scripts/computer/index.phtml
-msgid "Windows owner"
-msgstr ""
-
-#: views/scripts/computer/index.phtml
-msgid "Windows product key"
-msgstr ""
-
-#: views/scripts/computer/index.phtml
 msgid "BIOS manufacturer"
 msgstr ""
 
@@ -1404,6 +1392,22 @@ msgstr ""
 #: views/scripts/computer/storage.phtml
 #: views/scripts/computer/storage.phtml
 msgid "Free space"
+msgstr ""
+
+#: views/scripts/computer/index.phtml
+msgid "Windows company"
+msgstr ""
+
+#: views/scripts/computer/index.phtml
+msgid "Windows owner"
+msgstr ""
+
+#: views/scripts/computer/index.phtml
+msgid "Windows product key"
+msgstr ""
+
+#: views/scripts/computer/index.phtml
+msgid "Windows product ID"
 msgstr ""
 
 #: views/scripts/computer/index.phtml

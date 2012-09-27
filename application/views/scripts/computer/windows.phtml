@@ -23,6 +23,7 @@
  */
 
 $computer = $this->computer;
+$windows = $computer->getWindows();
 
 print $this->inventoryHeader($computer);
 
@@ -34,7 +35,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($computer->getWindowsCompany())
+    $this->escape($windows->getCompany())
 );
 
 print $this->htmlTag(
@@ -43,7 +44,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($computer->getWindowsOwner())
+    $this->escape($windows->getOwner())
 );
 
 print $this->htmlTag(
@@ -52,7 +53,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($computer->getWindowsProductkey())
+    $this->escape($windows->getProductKey())
 );
 
 print $this->htmlTag(
@@ -61,7 +62,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($computer->getWindowsProductId())
+    $this->escape($windows->getProductId())
 );
 
 print "</dl>\n";

@@ -61,11 +61,7 @@ $headers = array(
     'OsVersionNumber' => $this->translate('OS version number'),
     'OsVersionString' => $this->translate('OS version string'),
     'OsComment' => $this->translate('OS comment'),
-    'UserDomain' => $this->translate('User domain'),
     'UserName' => $this->translate('User'),
-    'WindowsCompany' => $this->translate('Windows company'),
-    'WindowsOwner' => $this->translate('Windows owner'),
-    'WindowsProductkey' => $this->translate('Windows product key'),
     'Manufacturer' => $this->translate('Manufacturer'),
     'Model' => $this->translate('Model'),
     'Serial' => $this->translate('Serial number'),
@@ -102,6 +98,11 @@ $headers = array(
     'Software.InstallLocation' => $this->translate('Software: Install location'),
     'Volume.Size' => $this->translate('Volume size'),
     'Volume.FreeSpace' => $this->translate('Free space'),
+    'Windows.UserDomain' => $this->translate('User domain'),
+    'Windows.Company' => $this->translate('Windows company'),
+    'Windows.Owner' => $this->translate('Windows owner'),
+    'Windows.ProductKey' => $this->translate('Windows product key'),
+    'Windows.ProductId' => $this->translate('Windows product ID'),
 );
 // Append headers for user defined information
 foreach (Model_UserDefinedInfo::getTypes() as $name => $type) {

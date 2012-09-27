@@ -208,8 +208,9 @@ print $this->htmlTag(
 );
 
 $user = $computer->getUserName();
-if ($computer->getUserDomain()) {
-    $user .= ' @ ' . $computer->getUserDomain();
+$domain = $computer->getWindows()->getUserDomain();
+if ($domain) {
+    $user .= ' @ ' . $domain;
 }
 print $this->htmlTag(
     'dt',
