@@ -23,9 +23,10 @@
  * @package Models
  */
 /**
- * A volume (partition with filesystem, removable drive, network share...)
+ * A volume (partition with filesystem, removable drive, network share and similar)
  *
  * Properties:
+ *
  * - <b>Letter</b> Drive letter, like C: (Windows only)
  * - <b>Label</b> Filesystem label (Windows only)
  * - <b>Type</b> Type (partition, removable drive, network share...) (Windows only)

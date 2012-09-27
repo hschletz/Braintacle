@@ -26,6 +26,7 @@
  * An audio device
  *
  * Properties:
+ *
  * - <b>Manufacturer</b>
  * - <b>Name</b>
  * - <b>Description</b>

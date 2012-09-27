@@ -26,6 +26,7 @@
  * Group membership
  *
  * Properties:
+ *
  * - <b>GroupId</b> Group ID
  * - <b>GroupName</b> Group name
  * - <b>Membership</b> Membership type - one of {@link TYPE_DYNAMIC},

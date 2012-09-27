@@ -23,9 +23,10 @@
  * @package Models
  */
 /**
- * A port (Centronics, RS-232...)
+ * A port (Centronics, RS-232 and similar)
  *
  * Properties:
+ *
  * - <b>Type</b>
  * - <b>Name</b>
  * - <b>Connector</b> Connector type (UNIX only), just a duplicate of Name on Windows

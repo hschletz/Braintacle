@@ -26,6 +26,7 @@
  * An installed piece of software.
  *
  * Properties:
+ *
  * - <b>Name</b> Name
  * - <b>Version</b> Version
  * - <b>Publisher</b> Publisher/Manufacturer (Windows only)

@@ -26,6 +26,7 @@
  * A single computer which is inventoried by OCS agent
  *
  * Properties:
+ *
  * - <b>Id:</b> primary key
  * - <b>ClientId:</b> Client-generated ID (name + timestamp, like 'COMPUTERNAME-2009-04-27-15-52-37')
  * - <b>Name:</b> computer name
@@ -58,6 +59,7 @@
  *
  *
  * Properties containing a '.' character refer to child objects. These properties are:
+ *
  * - <b>Package.Status</b> Deployment status (raw value from download_enable.tvalue)
  *
  *

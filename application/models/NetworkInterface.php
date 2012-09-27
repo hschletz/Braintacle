@@ -30,6 +30,7 @@ require_once ('Braintacle/MacAddress.php');
  * A network interface
  *
  * Properties:
+ *
  * - <b>Description</b>
  * - <b>Rate</b>
  * - <b>MacAddress</b>

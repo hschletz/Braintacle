@@ -26,6 +26,7 @@
  * A single RAM slot. If a module is present, details are given.
  *
  * Properties:
+ *
  * - <b>SlotNumber</b> Number of the slot, starting with 1. For every physical slot, empty or not, there is 1 object.
  * - <b>Size</b> Capacity of installed RAM module, if present.
  * - <b>Type</b> RAM type, like 'SDRAM'. Not necessarily accurate, don't rely on it.

@@ -27,6 +27,7 @@
  *
  * In addition to the fields provided by {@link Form_Package}, the following
  * boolean fields are provided:
+ *
  * - DeployNonnotified
  * - DeploySuccess
  * - DeployNotified

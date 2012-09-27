@@ -30,6 +30,7 @@ require_once ('Braintacle/Validate/Uri.php');
  * Form for creating a package
  *
  * The following fields are provided:
+ *
  * - <b>Name</b> Name of the package, must be unique.
  * - <b>Comment</b> Package comment
  * - <b>Platform</b> Target platform, one of 'windows', 'linux' or 'mac'

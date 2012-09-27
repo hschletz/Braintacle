@@ -23,9 +23,10 @@
  * @package Models
  */
 /**
- * A controller (IDE, SCSI, Floppy, USB, FireWire, Infrared, PCMCIA...)
+ * A controller (IDE, SCSI, Floppy, USB, FireWire, Infrared, PCMCIA and similar)
  *
  * Properties:
+ *
  * - <b>Type</b>
  * - <b>Manufacturer</b>
  * - <b>Name</b>

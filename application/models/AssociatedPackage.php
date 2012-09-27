@@ -26,6 +26,7 @@
  * Package association
  *
  * Properties:
+ *
  * - <b>Name</b> Package name
  * - <b>Status</b> Status on this computer
  * @package Models

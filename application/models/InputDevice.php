@@ -26,6 +26,7 @@
  * An input device (Keyboard, mouse, touchpad...)
  *
  * Properties:
+ *
  * - <b>Type</b>
  * - <b>Manufacturer</b>
  * - <b>Description</b>

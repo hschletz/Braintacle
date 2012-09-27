@@ -26,10 +26,11 @@
  Includes
  */
 require_once ('Braintacle/MacAddress.php');
-/** A network device (router, printer, uninventoried computer...)
+/** A network device (router, printer, uninventoried computer and similar)
  *
  *
  * The following properties are available:
+ *
  * - <b>IpAddress:</b> IP address
  * - <b>MacAddress:</b> MAC address
  * - <b>Hostname:</b> Hostname

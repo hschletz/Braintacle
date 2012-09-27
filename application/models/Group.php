@@ -33,6 +33,7 @@
  * match the condition for dynamic membership.
  *
  * Properties:
+ *
  * - <b>Id:</b> primary key
  * - <b>Name:</b> display name
  * - <b>Description:</b> description

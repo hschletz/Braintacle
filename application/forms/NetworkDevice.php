@@ -26,6 +26,7 @@
  * Form for identifying a network device
  *
  * The following text fields are provided:
+ *
  * - Type
  * - Description
  * @package Forms

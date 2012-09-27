@@ -26,6 +26,7 @@
  * An inventoried registry key
  *
  * Properties:
+ *
  * - <b>Name</b> Name under which the key is stored in the registry configuration
  * - <b>Value</b> Registry value
  * @package Models

@@ -26,6 +26,7 @@
  * A modem
  *
  * Properties:
+ *
  * - <b>Type</b>
  * - <b>Name</b>
  * @package Models

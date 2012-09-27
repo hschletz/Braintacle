@@ -26,6 +26,7 @@
  * A display controller
  *
  * Properties:
+ *
  * - <b>Name</b>
  * - <b>Chipset</b>
  * - <b>Memory</b>

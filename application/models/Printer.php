@@ -26,6 +26,7 @@
  * A single printer object.
  *
  * Properties:
+ *
  * - <b>Name</b>
  * - <b>Driver</b>
  * - <b>Port</b>

@@ -23,9 +23,10 @@
  * @package Models
  */
 /**
- * A display device (external monitor, LCD panel...)
+ * A display device (external monitor, LCD panel and similar)
  *
  * Properties:
+ *
  * - <b>Manufacturer</b>
  * - <b>Description</b>
  * - <b>Serial</b>

@@ -23,9 +23,10 @@
  * @package Models
  */
 /**
- * An extension slot (PCI, PCIe, AGP, ISA, PCMCIA...)
+ * An extension slot (PCI, PCIe, AGP, ISA, PCMCIA and similar)
  *
  * Properties:
+ *
  * - <b>Name</b>
  * - <b>Type</b>
  * - <b>Description</b>

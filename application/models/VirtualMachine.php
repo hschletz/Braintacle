@@ -26,6 +26,7 @@
  * A virtual machine hosted on a computer
  *
  * Properties:
+ *
  * - <b>Name</b> Name
  * - <b>Status</b> Status at inventory time
  * - <b>Product</b> Virtualization product

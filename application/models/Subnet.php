@@ -28,6 +28,7 @@
  * details about inventoried, categorized and unknown interfaces.
  *
  * The following properties are available:
+ *
  * - <b>Address:</b> Network Address, example: 192.168.1.0
  * - <b>Mask:</b> Subnet Mask, example: 255.255.255.0
  * - <b>AddressWithMask:</b> Short Address/Mask notation, example: 192.168.1.0/24

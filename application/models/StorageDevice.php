@@ -23,9 +23,10 @@
  * @package Models
  */
 /**
- * A storage device (Hard disk, optical drive...)
+ * A storage device (Hard disk, optical drive, USB storage and similar)
  *
  * Properties:
+ *
  * - <b>Type</b> Type
  * - <b>Name</b> Name
  * - <b>Size</b> Size in MB
