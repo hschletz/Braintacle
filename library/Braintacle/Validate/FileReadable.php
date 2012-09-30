@@ -26,7 +26,7 @@
  * Validate string to be a path to a readable file
  * @package Library
  */
-class Braintacle_Validate_DirectoryWritable extends Zend_Validate_Abstract
+class Braintacle_Validate_FileReadable extends Zend_Validate_Abstract
 {
     const FILE = 'file';
     const READABLE = 'readable';

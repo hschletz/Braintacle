@@ -80,7 +80,7 @@ class Form_Preferences_Agent extends Form_Preferences
             ->setAttrib('size', '5');
         $this->getElement('AgentWhitelistFile')
             ->addFilter('StringTrim')
-            ->addValidator(new Braintacle_Validate_DirectoryWritable);
+            ->addValidator(new Braintacle_Validate_FileReadable);
     }
 
 }
