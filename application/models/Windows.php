@@ -65,7 +65,7 @@ class Model_Windows extends Model_Abstract
                    ->query()
                    ->fetchObject(__CLASS__);
         if (!$windows) {
-            throw new UnexpectedValueException('Invalid computer ID: ' . $computer->getId);
+            throw new UnexpectedValueException('Invalid computer ID: ' . $computer->getId());
         }
         return $windows;
     }
