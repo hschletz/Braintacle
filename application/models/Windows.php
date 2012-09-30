@@ -23,15 +23,21 @@
  * @package Models
  */
 /**
+ * Includes
+ */
+require_once ('Braintacle/Validate/ProductKey.php');
+/**
  * Windows-specific information for a computer
  *
  * Properties:
  *
+ * - <b>ComputerId:</b> ID of computer this instance belongs to
  * - <b>UserDomain:</b> Domain of logged in user (for local accounts this is identical to the computer name)
  * - <b>Company:</b> Company name (typed in at installation)
  * - <b>Owner:</b> Owner (typed in at installation)
  * - <b>ProductKey:</b> Product Key (aka license key, typed in at installation)
  * - <b>ProductId:</b> Product ID (installation-specific, may or may not be unique)
+ * - <b>ManualProductKey:</b> Manually overridden product key (entered in Braintacle console)
  * @package Models
  */
 class Model_Windows extends Model_Abstract
@@ -40,12 +46,49 @@ class Model_Windows extends Model_Abstract
     /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'hardware' table
+        'ComputerId' => 'id',
         'UserDomain' => 'userdomain',
         'Company' => 'wincompany',
         'Owner' => 'winowner',
         'ProductKey' => 'winprodkey',
         'ProductId' => 'winprodid',
+        // Values from 'braintacle_windows' table
+        'ManualProductKey' => 'manual_product_key',
     );
+
+    /** {@inheritdoc} */
+    public function setProperty($property, $value)
+    {
+        if ($property == 'ManualProductKey') {
+            // Validate and store value in database
+            if (empty($value) or $value == $this->getProductKey()) {
+                $value = null;
+            } else {
+                $validator = new Braintacle_Validate_ProductKey;
+                if (!$validator->isValid($value)) {
+                    throw new UnexpectedValueException(array_pop($validator->getMessages()));
+                }
+            }
+
+            $db = Model_Database::getAdapter();
+            // A record might not exist yet, so try UPDATE first, then INSERT
+            if (!$db->update(
+                'braintacle_windows',
+                array('manual_product_key' => $value),
+                array('hardware_id = ?' => $this->getComputerId())
+            )) {
+                $db->insert(
+                    'braintacle_windows',
+                    array(
+                        'hardware_id' => $this->getComputerId(),
+                        'manual_product_key' => $value,
+                    )
+                );
+            }
+        }
+
+        parent::setProperty($property, $value);
+    }
 
     /**
      * Create Model_Windows object for given computer
@@ -58,12 +101,18 @@ class Model_Windows extends Model_Abstract
      **/
     public static function getWindows($computer)
     {
-        $windows = Model_Database::getAdapter()
-                   ->select()
-                   ->from('hardware', array('userdomain, wincompany, winowner, winprodkey, winprodid'))
-                   ->where('id = ?', $computer->getId())
-                   ->query()
-                   ->fetchObject(__CLASS__);
+        $select = Model_Database::getAdapter()
+                  ->select()
+                  ->from('hardware', array('id, userdomain, wincompany, winowner, winprodkey, winprodid'))
+                  ->where('id = ?', $computer->getId());
+        if (Model_Database::supportsManualProductKey()) {
+            $select->joinLeft(
+                'braintacle_windows',
+                'hardware.id = braintacle_windows.hardware_id',
+                array('manual_product_key')
+            );
+        }
+        $windows = $select->query()->fetchObject(__CLASS__);
         if (!$windows) {
             throw new UnexpectedValueException('Invalid computer ID: ' . $computer->getId());
         }

@@ -23,7 +23,7 @@
  */
 
 $computer = $this->computer;
-$windows = $computer->getWindows();
+$windows = $this->windows;
 
 print $this->inventoryHeader($computer);
 
@@ -49,15 +49,6 @@ print $this->htmlTag(
 
 print $this->htmlTag(
     'dt',
-    $this->translate('Product key')
-);
-print $this->htmlTag(
-    'dd',
-    $this->escape($windows->getProductKey())
-);
-
-print $this->htmlTag(
-    'dt',
     $this->translate('Product ID')
 );
 print $this->htmlTag(
@@ -65,4 +56,18 @@ print $this->htmlTag(
     $this->escape($windows->getProductId())
 );
 
+print $this->htmlTag(
+    'dt',
+    $this->translate('Product key (reported by agent)')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escape($windows->getProductKey())
+);
+
 print "</dl>\n";
+
+// Print product key form if supported.
+if (isset($this->form)) {
+    print $this->form;
+}

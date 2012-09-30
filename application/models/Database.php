@@ -74,6 +74,21 @@ class Model_Database
     }
 
     /**
+     * Return status of manual Windows product key support
+     *
+     * The ability to manually enter a Windows product key that differs from the
+     * detected one requires a table which is not part of an original OCS
+     * Inventory database. To support these databases, the presence of the table
+     * should be queried via this method and the table should be used only if
+     * available.
+     * @return bool TRUE if table exists
+     */
+    public static function supportsManualProductKey()
+    {
+        return in_array('braintacle_windows', self::_listTables());
+    }
+
+    /**
      * Return status of MSofficeKey plugin support
      *
      * The {@link http://wiki.ocsinventory-ng.org/index.php/Plugins:MSofficeKey

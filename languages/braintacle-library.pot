@@ -42,6 +42,10 @@ msgstr ""
 msgid "Only date can be given, not time of day"
 msgstr ""
 
+#: Validate/ProductKey:41
+msgid "'%value%' is not a valid product key."
+msgstr ""
+
 #: Validate/URI.php:23
 msgid "'%value%' is not a valid URI (without '%scheme%://')"
 msgstr ""

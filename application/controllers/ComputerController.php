@@ -109,6 +109,22 @@ class ComputerController extends Zend_Controller_Action
 
     public function windowsAction()
     {
+        $windows = $this->computer->getWindows();
+
+        if (Model_Database::supportsManualProductKey()) {
+            $form = new Form_ProductKey;
+
+            if ($this->getRequest()->isPost() and $form->isValid($_POST)) {
+                $windows->setManualProductKey($form->key->getValue());
+            }
+
+            // Always retrieve key, even if it has just been set, because the
+            // model may have altered it.
+            $form->key->setValue($windows->getManualProductKey());
+            $this->view->form = $form;
+        }
+
+        $this->view->windows = $windows;
     }
 
     public function networkAction()
