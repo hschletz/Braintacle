@@ -453,7 +453,9 @@ class Model_Computer extends Model_ComputerOrGroup
                             $invertResult
                         );
                     }
-                    $filterGroups = false;
+                    if ($model != 'Windows') {
+                        $filterGroups = false;
+                    }
             }
         }
 
