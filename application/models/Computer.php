@@ -254,9 +254,22 @@ class Model_Computer extends Model_ComputerOrGroup
                 case 'Membership':
                     break; // columns are added later
                 default:
-                    if (array_key_exists($column, $map)) { // ignore nonexistent columns
+                    if (array_key_exists($column, $map)) { // Other properties provided by this class
                         $fromHardware[] = $map[$column];
+                    } else {
+                        list ($model, $property) = explode('.', $column);
+                        if ($model == 'Windows') {
+                            $dummyWindows = new Model_Windows;
+                            if ($dummyWindows->getTableName($property) == 'hardware') {
+                                $fromHardware['windows_' . strtolower($property)] =
+                                    $dummyWindows->getColumnName($property);
+                            } else {
+                                $fromWindows['windows_' . strtolower($property)] =
+                                    $dummyWindows->getColumnName($property);
+                            }
+                        }
                     }
+                    // ignore nonexistent columns
             }
         }
         // add PK if not already selected
@@ -270,6 +283,10 @@ class Model_Computer extends Model_ComputerOrGroup
         if (isset($fromBios)) {
             // Use left join because there might be no matching row in the 'bios' table.
             $select->joinLeft('bios', 'hardware.id = bios.hardware_id', $fromBios);
+        }
+        if (isset($fromWindows)) {
+            // Use left join because there might be no matching row in the 'braintacle_windows' table.
+            $select->joinLeft('braintacle_windows', 'hardware.id = braintacle_windows.hardware_id', $fromWindows);
         }
 
         // apply filters
@@ -548,8 +565,17 @@ class Model_Computer extends Model_ComputerOrGroup
                 if (!$this->windows) {
                     $this->windows = new Model_Windows;
                 }
-                $this->windows->$property = $value;
-                return;
+                // Perform case insensitive search for the property inside the
+                // property map.
+                $map = $this->windows->getPropertyMap();
+                foreach (array_keys($map) as $windowsProperty) {
+                    if (strcasecmp($property, $windowsProperty) == 0) {
+                        // Property is valid. Store the raw value in windows object.
+                        $this->windows->$map[$windowsProperty] = $value;
+                        return; // No further iteration necessary.
+                    }
+                }
+                throw $exception; // Property is invalid.
             }
 
             if ($model == 'userdefinedinfo') {
@@ -950,10 +976,10 @@ class Model_Computer extends Model_ComputerOrGroup
             $column = $property;
             $columnAlias = 'userdefinedinfo_' . $column;
         } elseif ($model == 'Windows') {
-            $table = 'hardware';
+            $table = Model_Windows::getTableName($property);
             $class = new Model_Windows;
             $column = $class->getColumnName($property);
-            $columnAlias = 'windows_' . $column;
+            $columnAlias = 'windows_' . strtolower($property); // safe, malicious content would have raised an exception
         } elseif (in_array($model, self::$_childObjectTypes)) {
             $className = "Model_$model";
             $class = new $className;

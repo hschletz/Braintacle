@@ -91,6 +91,27 @@ class Model_Windows extends Model_Abstract
     }
 
     /**
+     * Get name of table where a property is stored
+     *
+     * @param string $property Property name
+     * @return string Table name
+     * @throws UnexpectedValueException if $property is invalid
+     **/
+    public static function getTableName($property)
+    {
+        if ($property == 'ManualProductKey') {
+            return 'braintacle_windows';
+        } else {
+            $dummy = new Model_Windows;
+            if (isset($dummy->_propertyMap[$property])) {
+                return 'hardware';
+            } else {
+                throw new UnexpectedValueException('Unknown property: ' . $property);
+            }
+        }
+    }
+
+    /**
      * Create Model_Windows object for given computer
      *
      * It is valid to pass a non-Windows computer object in which case the
