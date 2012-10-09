@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-30 13:22+0200\n"
+"POT-Creation-Date: 2012-10-09 10:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -777,8 +777,12 @@ msgstr ""
 msgid "OS comment"
 msgstr ""
 
-#: forms/Search.php
-msgid "Product key"
+#: forms/Search.php; views/scripts/computer/index.phtml
+msgid "Windows product key"
+msgstr ""
+
+#: forms/Search.php; views/scripts/computer/index.phtml
+msgid "Windows product key (manual)"
 msgstr ""
 
 #: forms/Search.php; views/scripts/computer/index.phtml
@@ -1405,10 +1409,6 @@ msgstr ""
 
 #: views/scripts/computer/index.phtml
 msgid "Windows owner"
-msgstr ""
-
-#: views/scripts/computer/index.phtml
-msgid "Windows product key"
 msgstr ""
 
 #: views/scripts/computer/index.phtml

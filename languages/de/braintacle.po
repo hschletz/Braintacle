@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-30 13:22+0200\n"
+"POT-Creation-Date: 2012-10-09 10:35+0200\n"
 "PO-Revision-Date: 2012-09-30 13:22+0200\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -763,10 +763,6 @@ msgid "Physical memory"
 msgstr "Arbeitsspeicher"
 
 #: forms/Search.php
-msgid "Product key"
-msgstr "Lizenzschlüssel"
-
-#: forms/Search.php
 msgid "Search for"
 msgstr "Suche nach"
 
@@ -975,6 +971,14 @@ msgstr "Benutzerdomäne"
 #: forms/Search.php; views/scripts/computer/registry.phtml
 msgid "Value"
 msgstr "Wert"
+
+#: forms/Search.php; views/scripts/computer/index.phtml
+msgid "Windows product key"
+msgstr "Windows-Lizenzschlüssel"
+
+#: forms/Search.php; views/scripts/computer/index.phtml
+msgid "Windows product key (manual)"
+msgstr "Windows-Lizenzschlüssel (manuell)"
 
 #: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Workgroup"
@@ -1392,10 +1396,6 @@ msgstr "Windows/Besitzer"
 msgid "Windows product ID"
 msgstr "Windows/Produkt-ID"
 
-#: views/scripts/computer/index.phtml
-msgid "Windows product key"
-msgstr "Windows/Lizenzschlüssel"
-
 #: views/scripts/computer/index.phtml; views/scripts/group/members.phtml
 #, php-format
 msgid "Number of computers: %d"
@@ -1768,4 +1768,3 @@ msgstr "Anzahl Computer"
 #: views/scripts/software/index.phtml
 msgid "Ignore"
 msgstr "Ignorieren"
-
