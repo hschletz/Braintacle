@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-09 10:35+0200\n"
-"PO-Revision-Date: 2012-09-30 13:22+0200\n"
+"POT-Creation-Date: 2012-10-09 18:40+0200\n"
+"PO-Revision-Date: 2012-10-09 18:40+0200\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -58,6 +58,10 @@ msgstr "Filter"
 #: Bootstrap.php Bootstrap.php;
 msgid "Inventory"
 msgstr "Inventar"
+
+#: Bootstrap.php
+msgid "Licenses"
+msgstr "Lizenzen"
 
 #: Bootstrap.php
 msgid "Network scanning"
@@ -1685,6 +1689,10 @@ msgstr "Nächstes Update: %s"
 msgid "Package '%s' will no longer be associated with this group. Continue?"
 msgstr "Paket '%s' wird nicht mehr dieser Gruppe zugewiesen sein. Fortfahren?"
 
+#: views/scripts/licenses/index.phtml
+msgid "Manually entered Windows product keys"
+msgstr "Manuell eingegebene Windows-Lizenzschlüssel"
+
 #: views/scripts/login/index.phtml
 msgid "Login to Braintacle"
 msgstr "Bei Braintacle anmelden"
@@ -1768,3 +1776,4 @@ msgstr "Anzahl Computer"
 #: views/scripts/software/index.phtml
 msgid "Ignore"
 msgstr "Ignorieren"
+

@@ -140,4 +140,19 @@ class Model_Windows extends Model_Abstract
         return $windows;
     }
 
+    /**
+     * Get number of computers with manually entered Windows product key
+     * @return integer
+     **/
+    public static function getNumManualProductKeys()
+    {
+        if (Model_Database::supportsManualProductKey()) {
+            return Model_Database::getAdapter()->fetchOne(
+                'SELECT COUNT(manual_product_key) FROM braintacle_windows WHERE manual_product_key IS NOT NULL'
+            );
+        } else {
+            return 0;
+        }
+    }
+
 }

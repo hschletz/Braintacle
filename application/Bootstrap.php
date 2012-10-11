@@ -94,6 +94,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             ->setAction('build');
         $page->addPage($sub);
 
+        // "Licenses" menu
+        $page = new Zend_Navigation_Page_Mvc;
+        $page->setLabel('Licenses')
+             ->setController('licenses')
+             ->setAction('index');
+        $navigation->addPage($page);
+
         // Search button
         $page = new Zend_Navigation_Page_Mvc;
         $page->setLabel('Search')

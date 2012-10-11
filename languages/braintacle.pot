@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-09 10:35+0200\n"
+"POT-Creation-Date: 2012-10-09 18:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -74,6 +74,10 @@ msgstr ""
 
 #: Bootstrap.php; forms/Package.php
 msgid "Build"
+msgstr ""
+
+#: Bootstrap.php
+msgid "Licenses"
 msgstr ""
 
 #: Bootstrap.php; forms/Search.php
@@ -1716,6 +1720,10 @@ msgstr ""
 #: views/scripts/group/removepackage.phtml
 #, php-format
 msgid "Package '%s' will no longer be associated with this group. Continue?"
+msgstr ""
+
+#: views/scripts/licenses/index.phtml
+msgid "Manually entered Windows product keys"
 msgstr ""
 
 #: views/scripts/login/index.phtml
