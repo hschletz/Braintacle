@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-13 18:04+0200\n"
+"POT-Creation-Date: 2012-10-13 18:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -807,6 +807,14 @@ msgstr ""
 
 #: forms/Search.php; views/scripts/computer/index.phtml
 msgid "Software: Install location"
+msgstr ""
+
+#: forms/Search.php; views/scripts/computer/index.phtml
+msgid "MS Office product key"
+msgstr ""
+
+#: forms/Search.php; views/scripts/computer/index.phtml
+msgid "MS Office product ID"
 msgstr ""
 
 #: forms/Search.php; views/scripts/computer/index.phtml

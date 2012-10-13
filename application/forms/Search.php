@@ -121,6 +121,8 @@ class Form_Search extends Form_Normalized
             'Software.Publisher' => $translate->_('Software: Publisher'),
             'Software.Comment' => $translate->_('Software: Comment'),
             'Software.InstallLocation' => $translate->_('Software: Install location'),
+            'MsOfficeProduct.ProductKey' => $translate->_('MS Office product key'),
+            'MsOfficeProduct.ProductId' => $translate->_('MS Office product ID'),
             'InventoryDate' => $translate->_('Last inventory'),
             'LastContactDate' => $translate->_('Last contact'),
             'CpuType' => $translate->_('CPU type'),
@@ -158,6 +160,11 @@ class Form_Search extends Form_Normalized
             'Port.Name' => $translate->_('Port name'),
             'ExtensionSlot.Name' => $translate->_('Extension slot'),
         );
+
+        if (!Model_Database::supportsMsOfficeKeyPlugin()) {
+            unset($this->_filters['MsOfficeProduct.ProductKey']);
+            unset($this->_filters['MsOfficeProduct.ProductId']);
+        }
 
         // Append filters and labels for user defined info
         $template = $translate->_('User defined: %s');

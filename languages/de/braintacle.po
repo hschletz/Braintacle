@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-13 18:04+0200\n"
-"PO-Revision-Date: 2012-10-13 17:41+0200\n"
+"POT-Creation-Date: 2012-10-13 18:29+0200\n"
+"PO-Revision-Date: 2012-10-13 18:30+0200\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -868,6 +868,14 @@ msgstr "Letzte Inventarisierung"
 #: views/scripts/network/showunknown.phtml
 msgid "MAC address"
 msgstr "MAC-Adresse"
+
+#: forms/Search.php; views/scripts/computer/index.phtml
+msgid "MS Office product ID"
+msgstr "Microsoft Office-Produkt-ID"
+
+#: forms/Search.php; views/scripts/computer/index.phtml
+msgid "MS Office product key"
+msgstr "Microsoft Office-Lizenzschlüssel"
 
 #: forms/Search.php; views/scripts/computer/bios.phtml
 #: views/scripts/computer/display.phtml views/scripts/computer/index.phtml;
