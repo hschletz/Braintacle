@@ -114,6 +114,15 @@ class Zend_View_Helper_InventoryHeader extends Zend_View_Helper_Abstract
              ->setParams($id);
         $navigation->addPage($page);
 
+        if ($computer->isWindows() and Model_Database::supportsMsOfficeKeyPlugin()) {
+            $page = new Zend_Navigation_Page_Mvc;
+            $page->setLabel('MS Office')
+                 ->setController('computer')
+                 ->setAction('msoffice')
+                 ->setParams($id);
+            $navigation->addPage($page);
+        }
+
         if ($computer->isWindows()) {
             $page = new Zend_Navigation_Page_Mvc;
             $page->setLabel('Registry')

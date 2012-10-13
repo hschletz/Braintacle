@@ -156,6 +156,11 @@ class ComputerController extends Zend_Controller_Action
         $this->_helper->ordering('Name');
     }
 
+    public function msofficeAction()
+    {
+        $this->_helper->ordering('Name');
+    }
+
     public function registryAction()
     {
         $this->_helper->ordering('Name');

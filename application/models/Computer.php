@@ -147,6 +147,7 @@ class Model_Computer extends Model_ComputerOrGroup
         'Port',
         'MemorySlot',
         'Modem',
+        'MsOfficeProduct',
         'NetworkInterface',
         'Printer',
         'Registry',
@@ -1290,6 +1291,10 @@ class Model_Computer extends Model_ComputerOrGroup
 
         // Get list of tables for child objects
         foreach (self::$_childObjectTypes as $type) {
+            if ($type == 'MsOfficeProduct' and !Model_Database::supportsMsOfficeKeyPlugin()) {
+                // Skip table if not present
+                continue;
+            }
             $model = 'Model_' . $type;
             $model = new $model;
             $tables[] = $model->getTableName();
@@ -1304,9 +1309,6 @@ class Model_Computer extends Model_ComputerOrGroup
         $tables[] = 'itmgmt_comments';
         $tables[] = 'javainfo';
         $tables[] = 'journallog';
-        if (Model_Database::supportsMsOfficeKeyPlugin()) {
-            $tables[] = 'officepack';
-        }
 
         // Start transaction to keep database consistent in case of errors
         // If a transaction is already in progress, an exception will be thrown

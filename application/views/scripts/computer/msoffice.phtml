@@ -1,0 +1,89 @@
+<?php
+/**
+ * Display MS Office products
+ *
+ * $Id$
+ *
+ * Copyright (C) 2011,2012 Holger Schletz <holger.schletz@web.de>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
+$computer = $this->computer;
+
+print $this->inventoryHeader($computer);
+
+
+$headers = array(
+    'Name' => $this->translate('Product'),
+    'Architecture' => $this->translate('Architecture'),
+    'ProductKey' => $this->translate('Product key'),
+    'ProductId' => $this->translate('Product ID'),
+);
+
+$renderCallbacks = array(
+    'Name' => 'renderName',
+    'Architecture' => 'renderArchitecture',
+);
+
+function renderName($view, $product)
+{
+    $name = $view->escape($product->getName());
+    $description = $product->getExtraDescription();
+    if ($description) {
+        $name .= ' (' . $view->escape($description) . ')';
+    }
+    $guid = $product->getGuid();
+    if ($guid) {
+        return $view->htmlTag(
+            'span',
+            $name,
+            array('title' => 'GUID: ' . $view->escape($guid)),
+            true
+        );
+    } else {
+        return $name;
+    }
+}
+
+function renderArchitecture($view, $product)
+{
+    $architecture = $product->getArchitecture();
+    if ($architecture) { // No formatting of NULL
+        $architecture = $view->escape($architecture . ' Bit');
+    }
+    return $architecture;
+}
+
+
+$products = $this->getHelper('table')->table(
+    $computer->getChildObjects('MsOfficeProduct', $this->order, $this->direction),
+    null,
+    $headers,
+    array(),
+    'Model_MsOfficeProduct',
+    null,
+    $renderCallbacks,
+    $numProducts
+);
+
+if ($numProducts) {
+    print $this->htmlTag(
+        'h2',
+        $this->translate('Microsoft Office products')
+    );
+    print $products;
+}

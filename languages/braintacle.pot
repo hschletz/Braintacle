@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-09 18:40+0200\n"
+"POT-Creation-Date: 2012-10-13 18:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -1210,6 +1210,10 @@ msgid "Printers"
 msgstr ""
 
 #: views/helpers/InventoryHeader.php
+msgid "MS Office"
+msgstr ""
+
+#: views/helpers/InventoryHeader.php
 msgid "Registry"
 msgstr ""
 
@@ -1461,6 +1465,29 @@ msgstr ""
 msgid "Ports"
 msgstr ""
 
+#: views/scripts/computer/msoffice.phtml
+#: views/scripts/computer/vms.phtml
+msgid "Product"
+msgstr ""
+
+#: views/scripts/computer/msoffice.phtml
+#: views/scripts/computer/software.phtml
+msgid "Architecture"
+msgstr ""
+
+#: views/scripts/computer/msoffice.phtml
+msgid "Product key"
+msgstr ""
+
+#: views/scripts/computer/msoffice.phtml
+#: views/scripts/computer/windows.phtml
+msgid "Product ID"
+msgstr ""
+
+#: views/scripts/computer/msoffice.phtml
+msgid "Microsoft Office products"
+msgstr ""
+
 #: views/scripts/computer/network.phtml
 msgid "Data rate"
 msgstr ""
@@ -1541,10 +1568,6 @@ msgstr ""
 
 #: views/scripts/computer/software.phtml
 msgid "Location"
-msgstr ""
-
-#: views/scripts/computer/software.phtml
-msgid "Architecture"
 msgstr ""
 
 #: views/scripts/computer/software.phtml
@@ -1643,10 +1666,6 @@ msgstr ""
 msgid "Define fields"
 msgstr ""
 
-#: views/scripts/computer/vms.phtml
-msgid "Product"
-msgstr ""
-
 #: views/scripts/computer/vms.phtml; views/scripts/network/index.phtml
 msgid "unknown"
 msgstr ""
@@ -1661,10 +1680,6 @@ msgstr ""
 
 #: views/scripts/computer/windows.phtml
 msgid "Owner"
-msgstr ""
-
-#: views/scripts/computer/windows.phtml
-msgid "Product ID"
 msgstr ""
 
 #: views/scripts/computer/windows.phtml

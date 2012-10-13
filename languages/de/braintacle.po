@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-09 18:40+0200\n"
-"PO-Revision-Date: 2012-10-09 18:40+0200\n"
+"POT-Creation-Date: 2012-10-13 18:04+0200\n"
+"PO-Revision-Date: 2012-10-13 17:41+0200\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -1183,6 +1183,10 @@ msgid "Inventory of '%s'"
 msgstr "Inventar von '%s'"
 
 #: views/helpers/InventoryHeader.php
+msgid "MS Office"
+msgstr "MS Office"
+
+#: views/helpers/InventoryHeader.php
 msgid "Misc"
 msgstr "Verschiedenes"
 
@@ -1437,6 +1441,26 @@ msgstr "Zeigegerät"
 msgid "Ports"
 msgstr "Anschlüsse"
 
+#: views/scripts/computer/msoffice.phtml views/scripts/computer/software.phtml
+msgid "Architecture"
+msgstr "Architektur"
+
+#: views/scripts/computer/msoffice.phtml
+msgid "Microsoft Office products"
+msgstr "Microsoft Office-Produkte"
+
+#: views/scripts/computer/msoffice.phtml views/scripts/computer/vms.phtml
+msgid "Product"
+msgstr "Produkt"
+
+#: views/scripts/computer/msoffice.phtml views/scripts/computer/windows.phtml
+msgid "Product ID"
+msgstr "Produkt-ID"
+
+#: views/scripts/computer/msoffice.phtml
+msgid "Product key"
+msgstr "Lizenzschlüssel"
+
 #: views/scripts/computer/network.phtml
 msgid "DHCP server"
 msgstr "DHCP-Server"
@@ -1507,10 +1531,6 @@ msgstr "Registry-Schlüssel"
 msgid "Package '%s' will no longer be associated with this computer. Continue?"
 msgstr ""
 "Paket '%s' wird nicht mehr diesem Computer zugewiesen sein. Fortfahren?"
-
-#: views/scripts/computer/software.phtml
-msgid "Architecture"
-msgstr "Architektur"
 
 #: views/scripts/computer/software.phtml
 msgid "Display duplicate entries"
@@ -1611,10 +1631,6 @@ msgid "The information was successfully updated."
 msgstr "Die Informationen wurden aktualisiert."
 
 #: views/scripts/computer/vms.phtml
-msgid "Product"
-msgstr "Produkt"
-
-#: views/scripts/computer/vms.phtml
 msgid "Virtual machines hosted on this computer"
 msgstr "Auf diesem Computer beherbergte virtuelle Maschinen"
 
@@ -1629,10 +1645,6 @@ msgstr "Firma"
 #: views/scripts/computer/windows.phtml
 msgid "Owner"
 msgstr "Besitzer"
-
-#: views/scripts/computer/windows.phtml
-msgid "Product ID"
-msgstr "Produkt-ID"
 
 #: views/scripts/computer/windows.phtml
 msgid "Product key (reported by agent)"
