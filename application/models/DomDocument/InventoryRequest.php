@@ -290,6 +290,10 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
                     self::$_formats[$elementModel][$property] = $format;
                 }
             }
+            // If no properties are defined, store just the model.
+            if (!isset(self::$_models[$section])) {
+                self::$_models[$section] = $model;
+            }
         }
     }
 }
