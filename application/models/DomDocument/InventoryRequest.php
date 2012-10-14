@@ -62,13 +62,18 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
     {
         // Collect all sections in an array
         $sections = array();
-        foreach ($this->getModels() as $section => $model) {
+        foreach ($this->getModels() as $section => $models) {
             switch ($section) {
                 case 'HARDWARE':
                 case 'BIOS':
                     $element = $this->createElement($section);
                     foreach ($this->getProperties($section) as $name => $property) {
-                        $property = $computer->getProperty($property, true); // Get raw value
+                        // Get raw value from model class
+                        if ($models[$name] == 'Windows') {
+                            $property = $computer->getWindows()->getProperty($property, true);
+                        } else {
+                            $property = $computer->getProperty($property, true);
+                        }
                         if (strlen($property)) {// Don't generate empty elements
                             $element->appendChild(
                                 $this->createElementWithContent($name, $property)
@@ -117,33 +122,35 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
                     }
                     break;
                 default:
-                    // Fetch data from child objects
                     $sections[$section] = $this->createDocumentFragment();
-                    $statement = $computer->getChildObjects(
-                        $model,
-                        'id', // Sort by 'id' to get more predictable results for comparision
-                        'asc'
-                    );
-                    while ($object = $statement->fetchObject('Model_' . $model)) {
-                        // Create base element
-                        $element = $this->createElement($section);
-                        // Create child elements, 1 per property
-                        foreach ($this->getProperties($section) as $name => $property) {
-                            $value = $object->getProperty($property, true); // Get raw value
-                            if (strlen($value)) { // Don't generate empty elements
-                                $type = $object->getPropertyType($property);
-                                if ($type == 'timestamp' or $type == 'date') {
-                                    // Re-fetch value as Zend_Date
-                                    $value = $object->getProperty($property, false);
-                                    // Convert to specific format
-                                    $value = $value->get($this->getFormat($model, $property));
+                    // Fetch data from child objects, once per distinct model
+                    foreach (array_unique($models) as $model) {
+                        $statement = $computer->getChildObjects(
+                            $model,
+                            'id', // Sort by 'id' to get more predictable results for comparision
+                            'asc'
+                        );
+                        while ($object = $statement->fetchObject('Model_' . $model)) {
+                            // Create base element
+                            $element = $this->createElement($section);
+                            // Create child elements, 1 per property
+                            foreach ($this->getProperties($section) as $name => $property) {
+                                $value = $object->getProperty($property, true); // Get raw value
+                                if (strlen($value)) { // Don't generate empty elements
+                                    $type = $object->getPropertyType($property);
+                                    if ($type == 'timestamp' or $type == 'date') {
+                                        // Re-fetch value as Zend_Date
+                                        $value = $object->getProperty($property, false);
+                                        // Convert to specific format
+                                        $value = $value->get($this->getFormat($model, $property));
+                                    }
+                                    $element->appendChild(
+                                        $this->createElementWithContent($name, $value)
+                                    );
                                 }
-                                $element->appendChild(
-                                    $this->createElementWithContent($name, $value)
-                                );
                             }
+                            $sections[$section]->appendChild($element);
                         }
-                        $sections[$section]->appendChild($element);
                     }
                     break;
             }
@@ -196,7 +203,7 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
     }
 
     /**
-     * Retrieve array of element=>model mappings
+     * Retrieve array of section=>element=>model mappings
      * @return array
      */
     public function getModels()
@@ -254,20 +261,33 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
         // Extract all elements having a braintacle:model attribute
         $models = $xpath->query('//*[@braintacle:model]');
         foreach ($models as $item) {
+            if ($item->hasAttribute('braintacle:property')) {
+                // $item is a child element with overridden model attribute. It
+                // gets evaluated later. For now, only elements representing an
+                // entire section are relevant.
+                continue;
+            }
             $section = $item->getAttribute('name');
             $model = $item->getAttribute('braintacle:model');
-            // Store mapping in cache
-            self::$_models[$section] = $model;
             // Extract all child elements having a braintacle:property attribute
             $properties = $xpath->query('.//*[@braintacle:property]', $item);
             foreach ($properties as $item) {
+                if ($item->hasAttribute('braintacle:model')) {
+                    // Child element has overridden model attribute
+                    $elementModel = $item->getAttribute('braintacle:model');
+                } else {
+                    // Inherit model attribute from section
+                    $elementModel = $model;
+                }
                 $property = $item->getAttribute('braintacle:property');
-                // Store mapping in cache
-                self::$_properties[$section][$item->getAttribute('name')] = $property;
+                // Store mappings in cache
+                $element = $item->getAttribute('name');
+                self::$_models[$section][$element] = $elementModel;
+                self::$_properties[$section][$element] = $property;
                 // Store date/timestamp format in cache if specified
                 $format = $item->getAttribute('braintacle:format');
                 if ($format) {
-                    self::$_formats[$model][$property] = $format;
+                    self::$_formats[$elementModel][$property] = $format;
                 }
             }
         }

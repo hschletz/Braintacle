@@ -37,9 +37,12 @@ effectively always present in the wild. Too strict definitions will be loosened
 in the future where necessary.
 The 'braintacle' namespace defines additional attributes which are evaluated by
 Braintacle:
-- braintacle:model is used for child elements of 'CONTENT'. It is the name of
-  the model class (without 'Model_' prefix) that handles the data represented
-  by the element. If it is not present, the element is not used by Braintacle.
+- braintacle:model is used for elements below 'CONTENT'. It is the name of a
+  model class (without 'Model_' prefix) that handles the data represented by the
+  element. It is used as a default for entire inventory sections and can be
+  overridden for particular child elements if the data is handled by a different
+  model than the rest of the section. If this attribute is not present for a
+  section, it is not used by Braintacle.
 - braintacle:property is used by child elements (or references) within the
   elements having a braintacle:model attribute. It is the name of the property
   that the model class uses to represent the data. If it is not present, the
@@ -319,7 +322,7 @@ Braintacle:
                     <ref name="TYPE" /><!-- Useless, always 0 or NULL. Omitted for possible confusion with bios.type. -->
                 </optional>
                 <optional>
-                    <ref name="USERDOMAIN" braintacle:property="UserDomain" />
+                    <ref name="USERDOMAIN" braintacle:model="Windows" braintacle:property="UserDomain" />
                 </optional>
                 <ref name="USERID" braintacle:property="UserName" />
                 <optional>
@@ -329,16 +332,16 @@ Braintacle:
                     <ref name="VMSYSTEM" /><!-- not available in database -->
                 </optional>
                 <optional>
-                    <ref name="WINCOMPANY" braintacle:property="WindowsCompany" />
+                    <ref name="WINCOMPANY" braintacle:model="Windows" braintacle:property="Company" />
                 </optional>
                 <optional>
-                    <ref name="WINOWNER" braintacle:property="WindowsOwner" />
+                    <ref name="WINOWNER" braintacle:model="Windows" braintacle:property="Owner" />
                 </optional>
                 <optional>
-                    <ref name="WINPRODID" braintacle:property="WindowsProductId" />
+                    <ref name="WINPRODID" braintacle:model="Windows" braintacle:property="ProductId" />
                 </optional>
                 <optional>
-                    <ref name="WINPRODKEY" braintacle:property="WindowsProductkey" />
+                    <ref name="WINPRODKEY" braintacle:model="Windows" braintacle:property="ProductKey" />
                 </optional>
                 <ref name="WORKGROUP" braintacle:property="Workgroup" />
             </interleave>
