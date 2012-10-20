@@ -79,7 +79,7 @@ Braintacle:
                         <zeroOrMore>
                             <ref name="DRIVES" />
                         </zeroOrMore>
-                        <ref name="HARDWARE" /><!-- Basic stuff, always present -->
+                            <ref name="HARDWARE" /><!-- Basic stuff, always present -->
                         <zeroOrMore>
                             <ref name="INPUTS" />
                         </zeroOrMore>
