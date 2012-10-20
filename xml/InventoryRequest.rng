@@ -96,6 +96,9 @@ Braintacle:
                             <ref name="NETWORKS" />
                         </zeroOrMore>
                         <zeroOrMore>
+                            <ref name="OFFICEPACK" />
+                        </zeroOrMore>
+                        <zeroOrMore>
                             <ref name="PORTS" />
                         </zeroOrMore>
                         <zeroOrMore>
@@ -464,6 +467,28 @@ Braintacle:
             </interleave>
         </element>
     </define>
+    <define name="OFFICEPACK">
+        <element name="OFFICEPACK" braintacle:model="MsOfficeProduct">
+            <interleave>
+                <optional>
+                    <ref name="GUID" braintacle:property="Guid" />
+                </optional>
+                <ref name="INSTALL" braintacle:property="Install" />
+                <optional>
+                    <ref name="NOTE" braintacle:property="ExtraDescription" />
+                </optional>
+                <optional>
+                    <ref name="OFFICEKEY" braintacle:property="ProductKey" />
+                </optional>
+                <ref name="OFFICEVERSION" braintacle:property="Version" />
+                <ref name="PRODUCT" braintacle:property="Name" />
+                <optional>
+                    <ref name="PRODUCTID" braintacle:property="ProductId" />
+                </optional>
+                <ref name="TYPE" braintacle:property="Architecture" />
+            </interleave>
+        </element>
+    </define>
     <define name="PORTS">
         <element name="PORTS" braintacle:model="Port">
             <interleave>
@@ -829,13 +854,18 @@ Braintacle:
             <text />
         </element>
     </define>
-    <define name="INTERFACE">
-        <element name="INTERFACE">
+    <define name="INSTALL">
+        <element name="INSTALL">
             <text />
         </element>
     </define>
     <define name="INSTALLDATE">
         <element name="INSTALLDATE">
+            <text />
+        </element>
+    </define>
+    <define name="INTERFACE">
+        <element name="INTERFACE">
             <text />
         </element>
     </define>
@@ -949,6 +979,11 @@ Braintacle:
             <text />
         </element>
     </define>
+    <define name="NOTE">
+        <element name="NOTE">
+            <text />
+        </element>
+    </define>
     <define name="NUMFILES">
         <element name="NUMFILES">
             <text />
@@ -956,6 +991,16 @@ Braintacle:
     </define>
     <define name="NUMSLOTS">
         <element name="NUMSLOTS">
+            <text />
+        </element>
+    </define>
+    <define name="OFFICEKEY">
+        <element name="OFFICEKEY">
+            <text />
+        </element>
+    </define>
+    <define name="OFFICEVERSION">
+        <element name="OFFICEVERSION">
             <text />
         </element>
     </define>
@@ -1011,6 +1056,16 @@ Braintacle:
     </define>
     <define name="PROCESSORT">
         <element name="PROCESSORT">
+            <text />
+        </element>
+    </define>
+    <define name="PRODUCT">
+        <element name="PRODUCT">
+            <text />
+        </element>
+    </define>
+    <define name="PRODUCTID">
+        <element name="PRODUCTID">
             <text />
         </element>
     </define>
