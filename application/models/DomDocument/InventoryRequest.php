@@ -60,6 +60,11 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
      */
     public function loadComputer(Model_Computer $computer)
     {
+        // Always export all software regardless of DisplayBlacklistedSoftware
+        // option. Preserve old value and temporarily override it.
+        $displayBlacklistedSoftware = Model_Config::get('DisplayBlacklistedSoftware');
+        Model_Config::set('DisplayBlacklistedSoftware', true, false);
+
         // Collect all sections in an array
         $sections = array();
         foreach ($this->getModels() as $section => $models) {
@@ -172,6 +177,9 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
         // Additional elements
         $request->appendChild($this->createElementWithContent('DEVICEID', $computer->getClientId()));
         $request->appendChild($this->createElement('QUERY', 'INVENTORY'));
+
+        // Restore option
+        Model_Config::set('DisplayBlacklistedSoftware', $displayBlacklistedSoftware, false);
     }
 
     /**
