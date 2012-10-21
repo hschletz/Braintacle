@@ -262,6 +262,14 @@ class Model_Config
     );
 
     /**
+     * Option cache
+     *
+     * This is managed by get() and set().
+     * @var array
+     **/
+    private static $_cache = array();
+
+    /**
      * Return internal name matching the given logical name
      * @param string $option logical option name
      * @return string internal option name
@@ -285,6 +293,10 @@ class Model_Config
      */
     static function get($option)
     {
+        if (isset(self::$_cache[$option])) {
+            return self::$_cache[$option];
+        }
+
         $db = Model_Database::getAdapter();
 
         if (in_array($option, self::$_iValues)) {
@@ -327,19 +339,24 @@ class Model_Config
             }
         }
 
+        self::$_cache[$option] = $value;
         return $value;
     }
 
     /**
      * Set the value for a given option
      *
+     * By default, the value is stored in the database and in a cache. This can
+     * be changed to store the value only in the cache for the lifetime of the
+     * script, temporarily overriding the configured value. get() will always
+     * prefer the cached value.
+     *
      * @param string $option Logical option name
      * @param mixed $value Option value
+     * @param bool $permanent Store value in database, not only in cache. Default: true.
      */
-    static function set($option, $value)
+    static function set($option, $value, $permanent=true)
     {
-        $db = Model_Database::getAdapter();
-
         if (in_array($option, self::$_iValues)) {
             // Validate and cast $value
             if ($value === false or preg_match('/^-?[0-9]+$/', (string) $value)) {
@@ -369,27 +386,32 @@ class Model_Config
             $value = implode(DIRECTORY_SEPARATOR, $path);
 
         }
-        $ocsOptionName = self::getOcsOptionName($option);
-        $oldValue = $db->fetchOne(
-            "SELECT $column FROM config WHERE name=?",
-            $ocsOptionName
-        );
 
-        if ($oldValue === false) { // No row yet
-            $db->insert(
-                'config',
-                array(
-                    'name' => $ocsOptionName,
-                    $column => $value
-                )
+        if ($permanent) {
+            $db = Model_Database::getAdapter();
+            $ocsOptionName = self::getOcsOptionName($option);
+            $oldValue = $db->fetchOne(
+                "SELECT $column FROM config WHERE name=?",
+                $ocsOptionName
             );
-        } elseif ($value != $oldValue) { // Update row only if necessary
-            $db->update(
-                'config',
-                array($column => $value),
-                array('name=?' => $ocsOptionName)
-            );
+            if ($oldValue === false) { // No row yet
+                $db->insert(
+                    'config',
+                    array(
+                        'name' => $ocsOptionName,
+                        $column => $value
+                    )
+                );
+            } elseif ($value != $oldValue) { // Update row only if necessary
+                $db->update(
+                    'config',
+                    array($column => $value),
+                    array('name=?' => $ocsOptionName)
+                );
+            }
         }
+
+        self::$_cache[$option] = $value;
     }
 
 }
