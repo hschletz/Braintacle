@@ -79,6 +79,18 @@ this program; if not, write to the Free Software Foundation, Inc.,
     <length>255</length>
    </field>
 
+   <index>
+    <name>accountinfo_config_name_account_type</name>
+    <unique>true</unique>
+    <field>
+     <name>name</name>
+    </field>
+    <field>
+     <name>account_type</name>
+     <length>9</length>
+    </field>
+   </index>
+
   </declaration>
 
   <initialization>
