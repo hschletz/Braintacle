@@ -33,6 +33,26 @@ class Model_UserDefinedInfo extends Model_Abstract
 {
 
     /**
+     * Internal identifier for text, integer and float columns
+     **/
+    const INTERNALTYPE_TEXT = 0;
+
+    /**
+     * Internal identifier for clob columns
+     **/
+    const INTERNALTYPE_TEXTAREA = 1;
+
+    /**
+     * Internal identifier for blob columns
+     **/
+    const INTERNALTYPE_BLOB = 5;
+
+    /**
+     * Internal identifier for date columns
+     **/
+    const INTERNALTYPE_DATE = 6;
+
+    /**
      * Datatypes of all properties.
      *
      * Initially empty, typically managed by {@link getTypes()}.

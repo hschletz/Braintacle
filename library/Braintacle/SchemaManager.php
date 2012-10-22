@@ -80,6 +80,14 @@ class Braintacle_SchemaManager
     protected $_allTables;
 
     /**
+     * Array of userdefined columns to convert
+     *
+     * This is managed by getUserdefinedInfoToConvert(). Do not use directly.
+     * @var mixed
+     **/
+    private $_userDefinedInfoToConvert = null;
+
+    /**
      * Path to Braintacle's base directory
      * @var string
      */
@@ -126,6 +134,7 @@ class Braintacle_SchemaManager
         $newSchema = $this->getSchemaFromXml($previousSchema);
         $this->updateSchema($previousSchema, $newSchema);
         $this->updateData($previousSchema, $newSchema);
+        $this->convertUserdefinedInfo();
         Model_Config::set('SchemaVersion', self::SCHEMA_VERSION);
     }
 
@@ -573,10 +582,117 @@ class Braintacle_SchemaManager
     }
 
     /**
+     * Get list of column names from accountinfo table that need conversion.
+     * @return array
+     **/
+    public function getUserdefinedInfoToConvert()
+    {
+        if ($this->_userDefinedInfoToConvert === null) {
+            // Result not cached yet. Build list.
+            if (!isset($this->_allTables['accountinfo'])) {
+                // Database has not been populated yet. Nothing to do.
+                $this->_userDefinedInfoToConvert = array();
+            } else {
+                // Get names of all columns except "hardware_id" and "tag".
+                // These never need conversion.
+                $columns = array();
+                foreach ($this->_allTables['accountinfo']->getColumns() as $column) {
+                    $name = $column->getName();
+                    if ($name != 'hardware_id' and $name != 'tag') {
+                        $columns[] = $name;
+                    }
+                }
+                // If accountinfo_config table does not exist yet, it will be
+                // created later. In that case, all columns need conversion.
+                if (isset($this->_allTables['accountinfo_config'])) {
+                    // Don't convert any column named fields_n where n matches
+                    // an ID in accountinfo_config. These are already converted.
+                    $ids = $this->_db->fetchCol(
+                        "SELECT id FROM accountinfo_config WHERE account_type = 'COMPUTERS' AND name != 'TAG'"
+                    );
+                    foreach ($ids as $id) {
+                        $key = array_search("fields_$id", $columns);
+                        if ($key !== false) {
+                            unset($columns[$key]);
+                        }
+                    }
+                }
+                // Store remaining list in cache.
+                $this->_userDefinedInfoToConvert = $columns;
+            }
+        }
+        return $this->_userDefinedInfoToConvert;
+    }
+
+    /**
+     * Convert userdefined info to new format
+     *
+     * Old versions of Braintacle and OCS Inventory NG used the name of a
+     * userdefined field directly as a column name in the accountinfo table,
+     * causing unresolvable SQL issues. The names are now managed in the
+     * accountinfo_config table, among some other configuration.
+     **/
+    public function convertUserdefinedInfo()
+    {
+        $db = $this->_db;
+        $table = $this->_allTables['accountinfo'];
+        $order = $db->fetchOne(
+            "SELECT MAX(show_order) FROM accountinfo_config WHERE account_type = 'COMPUTERS'"
+        );
+        foreach ($this->getUserdefinedInfoToConvert() as $name) {
+            $this->_logger->info('Converting userdefined column: ' . ucfirst($name));
+            $order += 1; // Append to the end
+            $column = $table->getColumn($name);
+            switch ($column->getDatatype()) {
+                case Nada::DATATYPE_VARCHAR:
+                case Nada::DATATYPE_INTEGER:
+                case Nada::DATATYPE_FLOAT:
+                    // There is no difference between these types in
+                    // accountinfo_config. They can still be distinguished by
+                    // the column's datatype.
+                    $type = Model_UserDefinedInfo::INTERNALTYPE_TEXT;
+                    break;
+                case Nada::DATATYPE_CLOB:
+                    $type = Model_UserDefinedInfo::INTERNALTYPE_TEXTAREA;
+                    break;
+                case Nada::DATATYPE_BLOB:
+                    $type = Model_UserDefinedInfo::INTERNALTYPE_BLOB;
+                    break;
+                case Nada::DATATYPE_DATE:
+                    $type = Model_UserDefinedInfo::INTERNALTYPE_DATE;
+                    break;
+                default:
+                    throw new UnexpectedValueException(
+                        'Invalid datatype: ' . $column->getDatatype()
+                    );
+            }
+            // Use transaction that can be rolled back should the second
+            // operation fail.
+            $db->beginTransaction();
+            $db->insert(
+                'accountinfo_config',
+                array(
+                    'type' => $type,
+                    'name' => ucfirst($name),
+                    'id_tab' => 1, // default
+                    'show_order' => $order,
+                    'account_type' => 'COMPUTERS'
+                )
+            );
+            // Rename column to fields_n
+            $column->setName('fields_' . $db->lastInsertId('accountinfo_config', 'id'));
+            $db->commit();
+        }
+    }
+
+    /**
      * Check for database update requirement
      *
      * This method evaluates the SchemaVersion option. If it is not present or
      * less than {@link SCHEMA_VERSION}, a database update is required.
+     *
+     * This method also checks for userdefined fields that need conversion.
+     *
      * @return bool TRUE if update is required.
      */
     public function isUpdateRequired()
@@ -584,7 +700,10 @@ class Braintacle_SchemaManager
         // Check for presence of 'config' table first
         if (isset($this->_allTables['config'])) {
             $oldSchemaVersion = Model_Config::get('SchemaVersion');
-            if (is_null($oldSchemaVersion) or $oldSchemaVersion < self::SCHEMA_VERSION) {
+            if (is_null($oldSchemaVersion) or
+                $oldSchemaVersion < self::SCHEMA_VERSION or
+                count($this->getUserdefinedInfoToConvert()) > 0
+            ) {
                 return true;
             } else {
                 return false;
