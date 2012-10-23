@@ -26,7 +26,7 @@
  * User defined fields for a computer
  *
  * The 'tag' field is always present. Other fields may be defined by the
- * administrator. Their names are always returned lowercase.
+ * administrator.
  * @package Models
  */
 class Model_UserDefinedInfo extends Model_Abstract
@@ -161,36 +161,56 @@ class Model_UserDefinedInfo extends Model_Abstract
     {
         if (empty(self::$_allTypesStatic)) { // Query database only once
             $columns = Model_Database::getNada()->getTable('accountinfo')->getColumns();
-            foreach ($columns as $column) {
-                $name = $column->getName();
-                if ($name == 'hardware_id') {
-                    continue;
-                }
-                switch ($column->getDatatype()) {
-                    case Nada::DATATYPE_VARCHAR:
-                        $type = 'text';
-                        break;
-                    case Nada::DATATYPE_INTEGER:
-                        $type = 'integer';
-                        break;
-                    case Nada::DATATYPE_FLOAT:
-                        $type = 'float';
-                        break;
-                    case Nada::DATATYPE_DATE:
-                        $type = 'date';
-                        break;
-                    case Nada::DATATYPE_CLOB:
-                        $type = 'clob';
-                        break;
-                    case Nada::DATATYPE_BLOB:
-                        // Ignore column, its values are always NULL.
-                        // Attachments are handled in temp_files table.
-                        $type = null;
-                        break;
-                    default:
-                        throw new UnexpectedValueException(
-                            'Invalid datatype: ' . $column->getDatatype()
-                        );
+            $statement = Model_Database::getAdapter()->query(
+                "SELECT id, type, name FROM accountinfo_config WHERE account_type = 'COMPUTERS'"
+            );
+            // Iterate over result set and determine name and type of each
+            // field. Unsupported field types will be silently ignored.
+            while ($field = $statement->fetchObject()) {
+                $name = $field->name;
+                if ($name == 'TAG') {
+                    $name = 'tag';
+                    $type = 'text';
+                } else {
+                    $column = $columns['fields_' . $field->id];
+                    switch ($field->type) {
+                        case self::INTERNALTYPE_TEXT:
+                            // Can be text, integer or float. Evaluate column
+                            // datatype.
+                            switch ($column->getDatatype()) {
+                                case Nada::DATATYPE_VARCHAR:
+                                    $type = 'text';
+                                    break;
+                                case Nada::DATATYPE_INTEGER:
+                                    $type = 'integer';
+                                    break;
+                                case Nada::DATATYPE_FLOAT:
+                                    $type = 'float';
+                                    break;
+                                default:
+                                    throw new UnexpectedValueException(
+                                        'Invalid datatype: ' . $column->getDatatype()
+                                    );
+                            }
+                            break;
+                        case self::INTERNALTYPE_TEXTAREA:
+                            $type = 'clob';
+                            break;
+                        case self::INTERNALTYPE_DATE:
+                            // ocsreports creates date columns as varchar(10)
+                            // and stores values in a non-ISO format. Silently
+                            // ignore these fields. Only accept real date
+                            // columns.
+                            if ($column->getDatatype() == Nada::DATATYPE_DATE) {
+                                $type = 'date';
+                            } else {
+                                $type = '';
+                            }
+                            break;
+                        default:
+                            // Silently ignore unsupported field types.
+                            $type = '';
+                    }
                 }
                 if ($type) {
                     self::$_allTypesStatic[$name] = $type;
