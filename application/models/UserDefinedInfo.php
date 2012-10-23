@@ -62,6 +62,15 @@ class Model_UserDefinedInfo extends Model_Abstract
     static protected $_allTypesStatic = array();
 
     /**
+     * Map of field names => column names
+     *
+     * This is the static equivalent to the property map. It gets populated by
+     * getTypes().
+     * @var array
+     */
+    static protected $_columnNames = array();
+
+    /**
      * Computer this instance is linked to
      *
      * This is set if a computer was passed to the constructor
@@ -84,23 +93,19 @@ class Model_UserDefinedInfo extends Model_Abstract
         // Construct array of datatypes
         $this->_types = self::getTypes();
 
-        // Construct property map. Key and value are identical.
-        foreach ($this->_types as $name => $type) {
-            $this->_propertyMap[$name] = $name;
-        }
+        // Set up property map from $_columnNames which got populated by getTypes().
+        $this->_propertyMap = self::$_columnNames;
 
         // Load values if a computer ID is given
         if (!is_null($computer)) {
-            $db = Model_Database::getAdapter();
-
-            $data = $db->fetchRow(
-                'SELECT * FROM accountinfo WHERE hardware_id = ?',
-                $computer->getId()
-            );
-            foreach ($data as $property => $value) {
-                if (isset($this->_propertyMap[$property])) { // ignore hardware_id and BLOB columns
-                    $this->setProperty($property, $value);
-                }
+            $data = Model_Database::getAdapter()
+                ->select()
+                ->from('accountinfo', array_values($this->_propertyMap))
+                ->where('hardware_id = ?', $computer->getId())
+                ->query()
+                ->fetchObject();
+            foreach ($data as $field => $value) {
+                $this->$field = $value;
             }
 
             // Keep track of computer for later updates
@@ -170,9 +175,11 @@ class Model_UserDefinedInfo extends Model_Abstract
                 $name = $field->name;
                 if ($name == 'TAG') {
                     $name = 'tag';
+                    $columnName = 'tag';
                     $type = 'text';
                 } else {
-                    $column = $columns['fields_' . $field->id];
+                    $columnName = 'fields_' . $field->id;
+                    $column = $columns[$columnName];
                     switch ($field->type) {
                         case self::INTERNALTYPE_TEXT:
                             // Can be text, integer or float. Evaluate column
@@ -214,6 +221,7 @@ class Model_UserDefinedInfo extends Model_Abstract
                 }
                 if ($type) {
                     self::$_allTypesStatic[$name] = $type;
+                    self::$_columnNames[$name] = $columnName;
                 }
             }
         }
