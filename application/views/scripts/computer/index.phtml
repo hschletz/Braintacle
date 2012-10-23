@@ -112,7 +112,7 @@ foreach (Model_UserDefinedInfo::getTypes() as $name => $type) {
     if ($name == 'TAG') {
         $header = $this->translate('Category');
     } else {
-        $header = ucfirst($name);
+        $header = $name;
     }
     $headers['UserDefinedInfo.' . $name] = $header;
 }

@@ -72,7 +72,7 @@ class Form_UserDefinedInfo extends Form_Normalized
                 $element = new Zend_Form_Element_Text($name);
             }
             $element->setDisableTranslator(true) // Don't translate user-defined names
-                    ->setLabel(ucfirst($name))
+                    ->setLabel($name)
                     ->addFilter('StringTrim');
             switch ($type) {
                 case 'text':

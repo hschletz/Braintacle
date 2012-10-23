@@ -189,7 +189,7 @@ class Form_Search extends Form_Normalized
             if ($name == 'TAG') {
                 $label = $translate->_('Category');
             } else {
-                $label = ucfirst($name);
+                $label = $name;
             }
             $this->_filters[$key] = sprintf($template, $label);
         }
