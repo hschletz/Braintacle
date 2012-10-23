@@ -168,8 +168,6 @@ class Form_Definefields extends Zend_Form
         if ($field) {
             unset($blacklist[array_search($field, $blacklist)]);
         }
-        $blacklist[] = 'hardware_id';
-        $blacklist[] = 'tag';
         return new Braintacle_Validate_NotInArray($blacklist);
     }
 
