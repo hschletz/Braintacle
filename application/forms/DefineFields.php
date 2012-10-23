@@ -57,7 +57,7 @@ class Form_Definefields extends Zend_Form
 
         // Create text elements for existing fields to rename them
         foreach (Model_UserDefinedInfo::getTypes() as $name => $type) {
-            if ($name == 'tag') { // Static field, can not be edited
+            if ($name == 'TAG') { // Static field, can not be edited
                 continue;
             }
             // Since a field name can be an arbitrary string, the element name

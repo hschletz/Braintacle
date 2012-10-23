@@ -186,7 +186,7 @@ class Form_Search extends Form_Normalized
                 default:
                     throw new UnexpectedValueException('Unsupported datatype: ' . $type);
             }
-            if ($name == 'tag') {
+            if ($name == 'TAG') {
                 $label = $translate->_('Category');
             } else {
                 $label = ucfirst($name);

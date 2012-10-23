@@ -54,8 +54,8 @@ class Form_UserDefinedInfo extends Form_Normalized
 
         $this->setMethod('post');
 
-        // Category ('tag') always comes first
-        $category = new Zend_Form_Element_Text('tag');
+        // Category ('TAG') always comes first
+        $category = new Zend_Form_Element_Text('TAG');
         $category->addFilter('StringTrim')
                  ->addValidator('StringLength', false, array(0, 255))
                  ->setLabel('Category');
@@ -63,7 +63,7 @@ class Form_UserDefinedInfo extends Form_Normalized
 
         $this->_types = Model_UserDefinedInfo::getTypes();
         foreach ($this->_types as $name => $type) {
-            if ($name == 'tag') {
+            if ($name == 'TAG') {
                 continue; // element already created
             }
             if ($type == 'clob') {

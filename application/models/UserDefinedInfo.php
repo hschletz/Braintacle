@@ -25,7 +25,7 @@
 /**
  * User defined fields for a computer
  *
- * The 'tag' field is always present. Other fields may be defined by the
+ * The 'TAG' field is always present. Other fields may be defined by the
  * administrator.
  * @package Models
  */
@@ -174,7 +174,6 @@ class Model_UserDefinedInfo extends Model_Abstract
             while ($field = $statement->fetchObject()) {
                 $name = $field->name;
                 if ($name == 'TAG') {
-                    $name = 'tag';
                     $columnName = 'tag';
                     $type = 'text';
                 } else {
