@@ -354,11 +354,11 @@ class Model_UserDefinedInfo extends Model_Abstract
      **/
     static function renameField($oldName, $newName)
     {
-        if ($oldName == 'tag' or $oldName == 'hardware_id') {
-            throw new InvalidArgumentException("System column '$oldName' cannot be renamed.");
+        if ($oldName == 'TAG') {
+            throw new InvalidArgumentException("System column 'TAG' cannot be renamed.");
         }
-        if ($newName == 'tag' or $newName == 'hardware_id') {
-            throw new InvalidArgumentException("Column cannot be renamed to reserved name '$newName'.");
+        if ($newName == 'TAG') {
+            throw new InvalidArgumentException("Column cannot be renamed to reserved name 'TAG'.");
         }
         $types = self::getTypes();
         if (!isset($types[$oldName])) {
@@ -368,16 +368,13 @@ class Model_UserDefinedInfo extends Model_Abstract
             throw new InvalidArgumentException("Column '$newName' already exists.");
         }
 
-        $nada = Model_Database::getNada();
+        $db = Model_Database::getAdapter();
+        $db->update(
+            'accountinfo_config',
+            array('name' => $newName),
+            array('name = ?' => $oldName)
+        );
 
-        // Since field names can be arbitrary strings, NADA must quote them
-        // unconditionally.
-        $quoteAlways = $nada->quoteAlways; // preserve setting
-        $nada->quoteAlways = true;
-
-        $nada->getTable('accountinfo')->getColumn($oldName)->setName($newName);
         self::$_allTypesStatic = array(); // force re-read on next usage
-
-        $nada->quoteAlways = $quoteAlways; // restore setting
     }
 }
