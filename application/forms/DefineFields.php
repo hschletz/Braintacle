@@ -63,25 +63,19 @@ class Form_Definefields extends Zend_Form
             // Since a field name can be an arbitrary string, the element name
             // gets base64 encoded to ensure validity.
             $element = new Zend_Form_Element_Text(base64_encode($name));
-            // Since the field name is used as a column identifier in the
-            // database, it is constrained to avoid serious trouble.
             $element->setValue($name)
                     ->setRequired(true)
                     ->addFilter('StringTrim')
-                    ->addFilter('StringToLower')
-                    ->addValidator('Regex', false, array('/^[a-z][a-z0-9_]*/'))
                     ->addValidator('StringLength', false, array(1, 255))
                     ->addValidator($this->_createBlacklistValidator($name));
             $this->addElement($element);
         }
 
-        // Empty text field to create new field. Same constraints as above.
+        // Empty text field to create new field.
         // Name is prefixed with an underscore to avoid accidental clash with
         // base64 encoded name (very unlikely, but possible in theory)
         $newName = new Zend_Form_Element_Text('_newName');
         $newName->addFilter('StringTrim')
-                ->addFilter('StringToLower')
-                ->addValidator('Regex', false, array('/^[a-z][a-z0-9_]*/'))
                 ->addValidator('StringLength', false, array(0, 255))
                 ->addValidator($this->_createBlacklistValidator());
         $this->addElement($newName);
@@ -158,7 +152,7 @@ class Form_Definefields extends Zend_Form
     }
 
     /**
-     * Create a validator that forbids any existing column names except the given field
+     * Create a validator that forbids any existing field names except the given field
      * @param string $field Existing field name to allow (default: none)
      * @return Braintacle_Validate_NotInArray Validator object
      **/
