@@ -328,25 +328,22 @@ class Model_UserDefinedInfo extends Model_Abstract
      **/
     static function deleteField($field)
     {
-        if ($field == 'tag' or $field == 'hardware_id') {
-            throw new InvalidArgumentException("Cannot delete system column '$field'.");
+        if ($field == 'TAG') {
+            throw new InvalidArgumentException("Cannot delete system column 'TAG'.");
         }
         $types = self::getTypes();
-        if (!isset($types[$name])) {
+        if (!isset($types[$field])) {
             throw new InvalidArgumentException("Unknown column: $field");
         }
 
-        $nada = Model_Database::getNada();
+        $db = Model_Database::getAdapter();
+        $db->beginTransaction();
+        $id = $db->fetchOne('SELECT id FROM accountinfo_config WHERE name = ?', $field);
+        $db->delete('accountinfo_config', array('id = ?' => $id));
+        Model_Database::getNada()->getTable('accountinfo')->dropColumn('fields_' . $id);
+        $db->commit();
 
-        // Since $field can be an arbitrary string, NADA must quote it
-        // unconditionally.
-        $quoteAlways = $nada->quoteAlways; // preserve setting
-        $nada->quoteAlways = true;
-
-        $nada->getTable('accountinfo')->dropColumn($field);
         unset(self::$_allTypesStatic[$field]);
-
-        $nada->quoteAlways = $quoteAlways; // restore setting
     }
 
     /**
