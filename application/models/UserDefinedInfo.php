@@ -126,23 +126,26 @@ class Model_UserDefinedInfo extends Model_Abstract
             throw new RuntimeException('No Computer was associated with this object');
         }
 
+        $data = array();
         foreach ($values as $property => $value) {
             // Have input processed by setProperty() to ensure valid data and to
             // update the object's internal state
             $this->setProperty($property, $value);
-            // Convert dates
+            // Convert dates to DBMS-specific format
             if ($value instanceof Zend_Date) {
-                $values[$property] = $value->get(
+                $value = $value->get(
                     Model_Database::getNada()->timestampFormatIso()
                 );
             }
+            // Build array with column name as key
+            $data[$this->_propertyMap[$property]] = $value;
         }
 
         $db = Model_Database::getAdapter();
 
         $db->update(
             'accountinfo',
-            $values,
+            $data,
             $db->quoteInto('hardware_id = ?', $this->_computer->getId())
         );
     }
