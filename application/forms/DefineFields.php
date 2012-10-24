@@ -81,12 +81,12 @@ class Form_Definefields extends Zend_Form
         $this->addElement($newName);
 
         // Datatype of new field
-        $newType = new Zend_Form_Element_Select('newType');
+        $newType = new Zend_Form_Element_Select('_newType');
         $newType->setDisableTranslator(true)
                 ->setMultiOptions($this->_translatedTypes);
         $this->addElement($newType);
 
-        $submit = new Zend_Form_Element_Submit('Submit');
+        $submit = new Zend_Form_Element_Submit('_Submit');
         $submit->setLabel('Change');
         $this->addElement($submit);
 
@@ -131,7 +131,7 @@ class Form_Definefields extends Zend_Form
         }
         // Row with elements for creating a new field
         $row = $view->htmlTag('td', $this->getElement('_newName')->render());
-        $row .= $view->htmlTag('td', $this->getElement('newType')->render());
+        $row .= $view->htmlTag('td', $this->getElement('_newType')->render());
         $row .= $view->htmlTag('td', $view->translate('Add'));
         $output .= $view->htmlTag('tr', $row);
 
@@ -141,7 +141,7 @@ class Form_Definefields extends Zend_Form
         // submit button
         $output .= $view->htmlTag(
             'p',
-            $this->getElement('Submit')->render(),
+            $this->getElement('_Submit')->render(),
             array('class' => 'textcenter')
         );
 
@@ -185,7 +185,7 @@ class Form_Definefields extends Zend_Form
         }
         $newName = $this->getElement('_newName')->getValue();
         if ($newName) {
-            Model_UserDefinedInfo::addField($newName, $this->getElement('newType')->getValue());
+            Model_UserDefinedInfo::addField($newName, $this->getElement('_newType')->getValue());
         }
     }
 }
