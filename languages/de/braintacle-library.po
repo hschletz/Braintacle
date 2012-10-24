@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-11-08 11:06+0100\n"
-"PO-Revision-Date: 2012-09-30 13:44+0200\n"
+"PO-Revision-Date: 2012-10-24 10:47+0200\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -35,19 +35,23 @@ msgstr ""
 "X-Generator: Lokalize 1.5\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: Validate/Date.php:46
+#: Validate/Date.php
 msgid "'%value%' is not a valid date"
 msgstr "'%value%' ist kein gültiges Datum"
 
-#: Validate/Date.php:47
+#: Validate/Date.php
 msgid "Only date can be given, not time of day"
 msgstr "Nur Datum kann angegeben werden, keine Uhrzeit"
 
-#: Validate/ProductKey:41
+#: Validate/NotInArray.php
+msgid "'%value%' is in the list of invalid values."
+msgstr "'%value%' ist in der Liste ungültiger Werte."
+
+#: Validate/ProductKey
 msgid "'%value%' is not a valid product key."
 msgstr "'%value%' ist kein gültiger Lizenzschlüssel."
 
-#: Validate/URI.php:23
+#: Validate/URI.php
 msgid "'%value%' is not a valid URI (without '%scheme%://')"
 msgstr "'%value%' ist kein gültiger URI (ohne '%scheme%://)"
 

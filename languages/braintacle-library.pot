@@ -42,6 +42,10 @@ msgstr ""
 msgid "Only date can be given, not time of day"
 msgstr ""
 
+#: Validate/NotInArray.php
+msgid "'%value%' is in the list of invalid values."
+msgstr ""
+
 #: Validate/ProductKey
 msgid "'%value%' is not a valid product key."
 msgstr ""
