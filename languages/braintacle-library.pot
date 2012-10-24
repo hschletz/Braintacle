@@ -34,18 +34,18 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: Validate/Date.php:46
+#: Validate/Date.php
 msgid "'%value%' is not a valid date"
 msgstr ""
 
-#: Validate/Date.php:47
+#: Validate/Date.php
 msgid "Only date can be given, not time of day"
 msgstr ""
 
-#: Validate/ProductKey:41
+#: Validate/ProductKey
 msgid "'%value%' is not a valid product key."
 msgstr ""
 
-#: Validate/URI.php:23
+#: Validate/URI.php
 msgid "'%value%' is not a valid URI (without '%scheme%://')"
 msgstr ""
