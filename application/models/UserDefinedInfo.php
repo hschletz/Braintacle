@@ -257,14 +257,11 @@ class Model_UserDefinedInfo extends Model_Abstract
     /**
      * Add a field
      * @param string $name Field name
-     * @param string $type One of text, integer, float or date
+     * @param string $type One of text, clob, integer, float or date
      * @throws InvalidArgumentException if column exists or is a system column
      **/
     static function addField($name, $type)
     {
-        if ($name == 'tag' or $name == 'hardware_id') {
-            throw new InvalidArgumentException("Column cannot have reserved name '$name'.");
-        }
         $types = self::getTypes();
         if (isset($types[$name])) {
             throw new InvalidArgumentException("Column '$name' already exists.");
@@ -273,39 +270,55 @@ class Model_UserDefinedInfo extends Model_Abstract
         switch ($type) {
             case 'text':
                 $datatype = Nada::DATATYPE_VARCHAR;
+                $internalType = self::INTERNALTYPE_TEXT;
                 break;
             case 'integer':
                 $datatype = Nada::DATATYPE_INTEGER;
+                $internalType = self::INTERNALTYPE_TEXT;
                 break;
             case 'float':
                 $datatype = Nada::DATATYPE_FLOAT;
+                $internalType = self::INTERNALTYPE_TEXT;
                 break;
             case 'date':
                 $datatype = Nada::DATATYPE_DATE;
+                $internalType = self::INTERNALTYPE_DATE;
                 break;
             case 'clob':
                 $datatype = Nada::DATATYPE_CLOB;
+                $internalType = self::INTERNALTYPE_TEXTAREA;
                 break;
             default:
                 throw new InvalidArgumentException('Invalid datatype: ' . $type);
         }
 
+        $db = Model_Database::getAdapter();
         $nada = Model_Database::getNada();
 
-        // Since $name can be an arbitrary string, NADA must quote it
-        // unconditionally.
-        $quoteAlways = $nada->quoteAlways; // preserve setting
-        $nada->quoteAlways = true;
-
+        $db->beginTransaction();
+        $order = $db->fetchOne(
+            "SELECT MAX(show_order) + 1 FROM accountinfo_config WHERE account_type = 'COMPUTERS'"
+        );
+        $db->insert(
+            'accountinfo_config',
+            array(
+                'type' => $internalType,
+                'name' => $name,
+                'id_tab' => 1,
+                'show_order' => $order,
+                'account_type' => 'COMPUTERS'
+            )
+        );
+        $columnName = 'fields_' . $db->lastInsertId('accountinfo_config', 'id');
         if ($type == 'text') {
-            $column = $nada->createColumn($name, $datatype, 255);
+            $column = $nada->createColumn($columnName, $datatype, 255);
         } else {
-            $column = $nada->createColumn($name, $datatype);
+            $column = $nada->createColumn($columnName, $datatype);
         }
         $nada->getTable('accountinfo')->addColumnObject($column);
-        self::$_allTypesStatic[$name] = $type;
+        $db->commit();
 
-        $nada->quoteAlways = $quoteAlways; // restore setting
+        self::$_allTypesStatic[$name] = $type;
     }
 
     /**
