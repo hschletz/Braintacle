@@ -338,7 +338,10 @@ class Model_UserDefinedInfo extends Model_Abstract
 
         $db = Model_Database::getAdapter();
         $db->beginTransaction();
-        $id = $db->fetchOne('SELECT id FROM accountinfo_config WHERE name = ?', $field);
+        $id = $db->fetchOne(
+            "SELECT id FROM accountinfo_config WHERE name = ? AND account_type = 'COMPUTERS'",
+            $field
+        );
         $db->delete('accountinfo_config', array('id = ?' => $id));
         Model_Database::getNada()->getTable('accountinfo')->dropColumn('fields_' . $id);
         $db->commit();
@@ -372,7 +375,10 @@ class Model_UserDefinedInfo extends Model_Abstract
         $db->update(
             'accountinfo_config',
             array('name' => $newName),
-            array('name = ?' => $oldName)
+            array(
+                'name = ?' => $oldName,
+                'account_type = ?' => 'COMPUTERS'
+            )
         );
 
         self::$_allTypesStatic = array(); // force re-read on next usage
