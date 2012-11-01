@@ -55,15 +55,13 @@ class Form_AffectPackages extends Zend_Form
     {
         $statement = $object->getInstallablePackages();
         $numPackages = 0;
+        $encoder = new Braintacle_Filter_FormElementNameEncode;
 
         while ($package = $statement->fetchObject('Model_Package')) {
             $name = $package->getName();
-            // Zend_Form_Element strips most non-alphanumeric characters from
-            // element names. This operation is irreversible and can give
-            // ambiguous results. To make the package name retrievable from
-            // submitted form data, the element name will be base64 encoded.
-            // getValues() will decode the names.
-            $element = new Zend_Form_Element_Checkbox(base64_encode($name));
+            // Encode element names to support arbitrary strings with otherwise
+            // invalid characters.
+            $element = new Zend_Form_Element_Checkbox($encoder->filter($name));
             $element->setDisableTranslator(true);
             $element->setLabel($name);
             $this->addElement($element);
@@ -97,10 +95,11 @@ class Form_AffectPackages extends Zend_Form
         // Return only checked items and decode their names.
         $values = parent::getValues($suppressArrayNotation);
         $result = array();
+        $decoder = new Braintacle_Filter_FormElementNameDecode;
 
         foreach ($values as $name => $value) {
             if ($value) {
-                $result[base64_decode($name)] = $value;
+                $result[$decoder->filter($name)] = $value;
             }
         }
 
