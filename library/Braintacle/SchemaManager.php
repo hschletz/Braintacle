@@ -25,7 +25,6 @@
 /**
  * Includes
  */
-require_once('Braintacle/MDB2.php');
 require_once('MDB2/Schema.php');
 /**
  * Interface for database schema management

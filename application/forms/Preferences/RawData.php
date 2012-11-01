@@ -23,10 +23,6 @@
  * @package Forms
  */
 /**
- * Includes
- */
-require_once ('Braintacle/Validate/DirectoryWritable.php');
-/**
  * Form for display/setting of 'raw data' preferences
  * @package Forms
  */

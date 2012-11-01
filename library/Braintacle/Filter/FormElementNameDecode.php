@@ -1,6 +1,6 @@
 <?php
 /**
- * A form for entering an MS product key
+ * Decode string encoded by Braintacle_Filter_FormElementNameEncode
  *
  * $Id$
  *
@@ -20,32 +20,26 @@
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @package Forms
+ * @package Library
  */
 /**
- * A form for entering an MS product key
- *
- * The product key is held in the 'key' element.
- * @package Forms
+ * Decode string encoded by Braintacle_Filter_FormElementNameEncode
+ * @package Library
  */
-class Form_ProductKey extends Zend_Form
+class Braintacle_Filter_FormElementNameDecode implements Zend_Filter_Interface
 {
-
-    /**
-     * Create elements
-     */
-    public function init()
+    /** @ignore */
+    public function filter($value)
     {
-        $key = new Zend_Form_Element_Text('key');
-        $key->setLabel('Product key (if different)')
-            ->addFilter('StringTrim')
-            ->addFilter('StringToUpper')
-            ->addValidator(new Braintacle_Validate_ProductKey);
-        $this->addElement($key);
-
-        $submit = new Zend_Form_Element_Submit('submit');
-        $submit->setLabel('OK');
-        $this->addElement($submit);
+        return base64_decode(
+            strtr(
+                $value,
+                array(
+                    '_plus_' => '+',
+                    '_dash_' => '/',
+                    '_eq' => '='
+                )
+            )
+        );
     }
-
 }

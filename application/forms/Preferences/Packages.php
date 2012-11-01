@@ -23,11 +23,6 @@
  * @package Forms
  */
 /**
- * Includes
- */
-require_once ('Braintacle/Validate/DirectoryWritable.php');
-require_once ('Braintacle/Validate/Uri.php');
-/**
  * Form for display/setting of 'packages' preferences
  * @package Forms
  */

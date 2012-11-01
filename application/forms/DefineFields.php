@@ -23,10 +23,6 @@
  * @package Forms
  */
 /**
- * Includes
- */
-require_once ('Braintacle/Validate/NotInArray.php');
-/**
  * Form for defining and deleting userdefined fields
  * @package Forms
  */
@@ -54,6 +50,7 @@ class Form_Definefields extends Zend_Form
         );
 
         $this->setMethod('post');
+        $encoder = new Braintacle_Filter_FormElementNameEncode;
 
         // Create text elements for existing fields to rename them
         foreach (Model_UserDefinedInfo::getTypes() as $name => $type) {
@@ -61,8 +58,8 @@ class Form_Definefields extends Zend_Form
                 continue;
             }
             // Since a field name can be an arbitrary string, the element name
-            // gets base64 encoded to ensure validity.
-            $element = new Zend_Form_Element_Text(base64_encode($name));
+            // gets encoded to ensure validity.
+            $element = new Zend_Form_Element_Text($encoder->filter($name));
             $element->setValue($name)
                     ->setRequired(true)
                     ->addFilter('StringTrim')
@@ -73,7 +70,7 @@ class Form_Definefields extends Zend_Form
 
         // Empty text field to create new field.
         // Name is prefixed with an underscore to avoid accidental clash with
-        // base64 encoded name (very unlikely, but possible in theory)
+        // encoded name (very unlikely, but possible in theory)
         $newName = new Zend_Form_Element_Text('_newName');
         $newName->addFilter('StringTrim')
                 ->addValidator('StringLength', false, array(0, 255))
@@ -107,6 +104,7 @@ class Form_Definefields extends Zend_Form
         if (!$view) {
             $view = $this->getView();
         }
+        $decoder = new Braintacle_Filter_FormElementNameDecode;
         $output = '';
 
         // Create table rows for each existing field
@@ -116,7 +114,7 @@ class Form_Definefields extends Zend_Form
                 break;
             }
 
-            $name = base64_decode($name);
+            $name = $decoder->filter($name);
             $row = $view->htmlTag('td', $element->render());
             $row .= $view->htmlTag('td', $this->_translatedTypes[Model_UserDefinedInfo::getType($name)]);
             $row .= $view->htmlTag(
@@ -172,12 +170,13 @@ class Form_Definefields extends Zend_Form
      **/
     public function process()
     {
+        $decoder = new Braintacle_Filter_FormElementNameDecode;
         foreach ($this->getElements() as $element) {
             $name = $element->getName();
             if ($name == '_newName') { // Stop here, remaining elements are processed outside the loop
                 break;
             }
-            $name = base64_decode($name);
+            $name = $decoder->filter($name);
             $value = $element->getValue();
             if ($value != $name) {
                 Model_UserDefinedInfo::renameField($name, $value);

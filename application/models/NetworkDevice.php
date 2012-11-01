@@ -22,10 +22,6 @@
  *
  * @package Models
  */
-/**
- Includes
- */
-require_once ('Braintacle/MacAddress.php');
 /** A network device (router, printer, uninventoried computer and similar)
  *
  *

@@ -23,10 +23,6 @@
  * @package Forms
  */
 /**
- * Includes
- */
-require_once ('Braintacle/Validate/FileReadable.php');
-/**
  * Form for display/setting of 'agent' preferences
  * @package Forms
  */
