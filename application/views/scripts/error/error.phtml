@@ -34,6 +34,14 @@ if (APPLICATION_ENV == 'development') {
             'p',
             '<strong>Message:</strong> ' . $this->escape($exception->getMessage())
         );
+        print $this->htmlTag(
+            'p',
+            sprintf(
+                '<strong>Source:</strong> %s, line %d',
+                $this->escape($exception->getFile()),
+                $exception->getLine()
+            )
+        );
         $exception = $exception->getPrevious();
     }
 
