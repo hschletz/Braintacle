@@ -328,6 +328,26 @@ abstract class Model_Abstract implements Iterator
     }
 
     /**
+     * Get the property matching a column name
+     * @param string $column Database column name
+     * @return string Logical property name
+     * @throws UnexpectedValueException if $column is not defined in property map
+     * @throws InvalidArgumentException if $column would map to more than 1 property
+     */
+    public function getPropertyName($column)
+    {
+        $properties = array_keys($this->_propertyMap, $column);
+        switch (count($properties)) {
+            case 1:
+                return $properties[0];
+            case 0:
+                throw new UnexpectedValueException('Unknown column: '. $column);
+            default:
+                throw new InvalidArgumentException('Ambiguous column: ' . $column);
+        }
+    }
+
+    /**
      * Get the real column name for a property
      * @param string $property Logical property name
      * @return string Column name to be used in SQL queries

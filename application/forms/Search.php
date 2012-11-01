@@ -169,6 +169,7 @@ class Form_Search extends Form_Normalized
             $key = "UserDefinedInfo.$name";
             switch ($type) {
                 case 'text':
+                case 'clob':
                     break;
                 case 'integer':
                     $this->_typeInteger[] = $key;

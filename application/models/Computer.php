@@ -391,14 +391,11 @@ class Model_Computer extends Model_ComputerOrGroup
                     $filterGroups = false;
                     break;
                 default:
-                    // Filter must be of the form 'Model.Property'.
-                    if (!preg_match('/^[a-zA-Z]+\.[a-zA-Z]+$/', $type)) {
-                        throw new UnexpectedValueException('Invalid filter: ' . $type);
-                    }
-                    list($model, $property) = explode('.', $type);
-                    if ($model == 'UserDefinedInfo') {
+                    if (preg_match('#^UserDefinedInfo\\.(.*)#', $type, $matches)) {
+                        $property = $matches[1];
                         switch (Model_UserDefinedInfo::getType($property)) {
                             case 'text':
+                            case 'clob':
                                 $select = self::_findString(
                                     $select,
                                     'UserDefinedInfo',
@@ -443,7 +440,8 @@ class Model_Computer extends Model_ComputerOrGroup
                                     'Unexpected datatype for user defined information'
                                 );
                         }
-                    } else {
+                    } elseif (preg_match('/^[a-zA-Z]+\.[a-zA-Z]+$/', $type)) {
+                        list($model, $property) = explode('.', $type);
                         // apply a generic string filter.
                         $select = self::_findString(
                             $select,
@@ -453,9 +451,12 @@ class Model_Computer extends Model_ComputerOrGroup
                             $matchExact,
                             $invertResult
                         );
-                    }
-                    if ($model != 'Windows') {
-                        $filterGroups = false;
+                        if ($model != 'Windows') {
+                            $filterGroups = false;
+                        }
+                    } else {
+                        // Filter must be of the form 'Model.Property'.
+                        throw new UnexpectedValueException('Invalid filter: ' . $type);
                     }
             }
         }
@@ -498,9 +499,9 @@ class Model_Computer extends Model_ComputerOrGroup
                 $childObject = new $childClass;
                 $childObject->setProperty($property, $this->_childProperties["$model.$property"]);
                 return $childObject->getProperty($property, $rawValue);
-            } elseif (preg_match('/^UserDefinedInfo\.(\w+)$/', $property, $matches)) {
+            } elseif (preg_match('#^UserDefinedInfo\\.(.*)#', $property, $matches)) {
                 return $this->getUserDefinedInfo($matches[1]);
-            } elseif (preg_match('/^Windows\.(\w+)$/', $property, $matches)) {
+            } elseif (preg_match('#^Windows\\.(\w+)$#', $property, $matches)) {
                 return $this->windows->getProperty($matches[1]);
             } else {
                 throw $e;
@@ -555,6 +556,24 @@ class Model_Computer extends Model_ComputerOrGroup
             // Parent's implementation will handle properties from Model_Computer
             parent::__set($property, $value);
         } catch (Exception $exception) {
+            if (preg_match('#^userdefinedinfo_(.*)#', $property, $matches)) {
+                // If _userDefinedInfo is already an object, do nothing - the
+                // information is already there. Otherwise, _userDefinedInfo
+                // will be an array with the given key/value pair.
+                if (!($this->_userDefinedInfo instanceof Model_UserDefinedInfo)) {
+                    $class = new Model_UserDefinedInfo;
+                    $property = $class->getPropertyName($matches[1]);
+                    if (
+                        !is_null($value) and
+                        Model_UserDefinedInfo::getType($property) == 'date'
+                    ) {
+                        $value = new Zend_Date($value);
+                    }
+                    $this->_userDefinedInfo[$property] = $value;
+                }
+                return;
+            }
+
             // Only handle properly formatted column identifiers
             if (!preg_match('/^[a-z]+_[a-z]+$/', $property)) {
                 throw $exception;
@@ -579,22 +598,6 @@ class Model_Computer extends Model_ComputerOrGroup
                     }
                 }
                 throw $exception; // Property is invalid.
-            }
-
-            if ($model == 'userdefinedinfo') {
-                // If _userDefinedInfo is already an object, do nothing - the
-                // information is already there. Otherwise, _userDefinedInfo
-                // will be an array with the given key/value pair.
-                if (!($this->_userDefinedInfo instanceof Model_UserDefinedInfo)) {
-                    if (
-                        !is_null($value) and
-                        Model_UserDefinedInfo::getType($property) == 'date'
-                    ) {
-                        $value = new Zend_Date($value);
-                    }
-                    $this->_userDefinedInfo[$property] = $value;
-                }
-                return;
             }
 
             // Since the column identifier is all lowercase, a case insensitive
@@ -630,12 +633,17 @@ class Model_Computer extends Model_ComputerOrGroup
         try {
             $type = parent::getPropertyType($property);
         } catch (Exception $exception) {
-            // If the property is of the form 'Model.Property', pass it to the
-            // given model class. Re-throw exception if this is invalid.
-            if (!preg_match('/^[a-zA-Z]+\.[a-zA-Z]+$/', $property)) {
+            if (preg_match('#^UserDefinedInfo\\.(.*)#', $property, $matches)) {
+                $model = 'UserDefinedInfo';
+                $property = $matches[1];
+            } elseif (preg_match('/^[a-zA-Z]+\.[a-zA-Z]+$/', $property)) {
+                // Property is of the form 'Model.Property'
+                list($model, $property) = explode('.', $property);
+            } else {
+                // Invalid property. Re-throw exception.
                 throw $exception;
             }
-            list($model, $property) = explode('.', $property);
+            // Pass property to the model class
             $model = "Model_$model";
             if (!class_exists($model)) {
                 throw $exception;
@@ -656,8 +664,9 @@ class Model_Computer extends Model_ComputerOrGroup
         try {
             return parent::getColumnName($property);
         } catch(Exception $e) {
-            if (preg_match('/^UserDefinedInfo\.(\w+)$/', $property, $matches)) {
-                return 'userdefinedinfo_' . $matches[1];
+            if (preg_match('#^UserDefinedInfo\\.(.*)#', $property, $matches)) {
+                $class = new Model_UserDefinedInfo;
+                return $class->getColumnName($matches[1]);
             } else {
                 throw $e;
             }
@@ -976,7 +985,8 @@ class Model_Computer extends Model_ComputerOrGroup
             $columnAlias = $column; // Zend_Db_Select will ignore this alias because the strings are identical
         } elseif ($model == 'UserDefinedInfo') {
             $table = 'accountinfo';
-            $column = $property;
+            $class = new Model_UserDefinedInfo;
+            $column = $class->getColumnName($property);
             $columnAlias = 'userdefinedinfo_' . $column;
         } elseif ($model == 'Windows') {
             $table = Model_Windows::getTableName($property);
@@ -998,7 +1008,6 @@ class Model_Computer extends Model_ComputerOrGroup
         } else {
             throw new UnexpectedValueException('Invalid model: ' . $model);
         }
-
 
         // Join table if not already present
         if ($table != 'hardware' and !array_key_exists($table, $select->getPart('from'))) {
