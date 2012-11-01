@@ -23,10 +23,6 @@
  * @package Models
  */
 /**
- Includes
- */
-require_once ('Braintacle/MacAddress.php');
-/**
  * A network interface
  *
  * Properties:

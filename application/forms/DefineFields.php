@@ -23,10 +23,6 @@
  * @package Forms
  */
 /**
- * Includes
- */
-require_once ('Braintacle/Validate/NotInArray.php');
-/**
  * Form for defining and deleting userdefined fields
  * @package Forms
  */

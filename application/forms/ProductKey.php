@@ -23,10 +23,6 @@
  * @package Forms
  */
 /**
- * Includes
- */
-require_once ('Braintacle/Validate/ProductKey.php');
-/**
  * A form for entering an MS product key
  *
  * The product key is held in the 'key' element.

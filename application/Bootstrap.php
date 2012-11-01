@@ -311,6 +311,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initAutoload()
     {
+        // Load classes from 'library/Braintacle' automatically
+        Zend_Loader_Autoloader::getInstance()->registerNamespace('Braintacle_');
+
+        // Standard autoloader
         $moduleLoader = new Zend_Application_Module_Autoloader(
             array(
                 'namespace' => '',

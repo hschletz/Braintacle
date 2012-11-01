@@ -28,7 +28,6 @@
 Braintacle_MDB2::setErrorReporting();
 require_once 'MDB2.php';
 Braintacle_MDB2::resetErrorReporting();
-require_once 'Zend/Config/Ini.php';
 /**
  * MDB2 connector
  *

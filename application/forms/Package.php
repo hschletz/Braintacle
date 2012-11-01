@@ -23,10 +23,6 @@
  * @package Forms
  */
 /**
- * Includes
- */
-require_once ('Braintacle/Validate/Uri.php');
-/**
  * Form for creating a package
  *
  * The following fields are provided:

@@ -23,10 +23,6 @@
  * @package Models
  */
 /**
- * Includes
- */
-require_once ('Braintacle/Validate/ProductKey.php');
-/**
  * Windows-specific information for a computer
  *
  * Properties:

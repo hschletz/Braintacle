@@ -23,10 +23,6 @@
  * @package Forms
  */
 /**
- * Includes
- */
-require_once ('Braintacle/Validate/Date.php');
-/**
  * Search form.
  *
  * NOTE: validation of the 'search' element depends on the selected filter which
