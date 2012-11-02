@@ -685,12 +685,15 @@ class Model_Computer extends Model_ComputerOrGroup
             // Parent's implementation will handle properties from Model_Computer
             return parent::getOrder($order, $direction, $propertyMap);
         } catch (Exception $exception) {
-            // Only handle properly formatted identifiers
-            if (!preg_match('/^[a-zA-Z]+\.[a-zA-Z]+$/', $order)) {
+            if (preg_match('#^UserDefinedInfo\\.(.*)#', $order, $matches)) {
+                $class = new Model_UserDefinedInfo;
+                $order = 'userdefinedinfo_' . $class->getColumnName($matches[1]);
+            } elseif (preg_match('/^[a-zA-Z]+\.[a-zA-Z]+$/', $order)) {
+                // Assume proper column alias ('model_property')
+                $order = strtolower(strtr($order, '.', '_'));
+            } else {
                 throw $exception;
             }
-            // Assume proper column alias ('model_property')
-            $order = strtolower(strtr($order, '.', '_'));
             if ($direction) {
                 $order .= ' ' . $direction;
             }
