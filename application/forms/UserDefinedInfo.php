@@ -57,28 +57,21 @@ class Form_UserDefinedInfo extends Form_Normalized
         $this->setMethod('post');
         $this->_encoder = new Braintacle_Filter_FormElementNameEncode;
 
-        // Category ('TAG') always comes first
-        $category = new Zend_Form_Element_Text($this->_encoder->filter('TAG'));
-        $category->addFilter('StringTrim')
-                 ->addValidator('StringLength', false, array(0, 255))
-                 ->setLabel('Category');
-        $this->addElement($category);
-
         foreach (Model_UserDefinedInfo::getTypes() as $name => $type) {
             $elementName = $this->_encoder->filter($name);
             $this->_types[$elementName] = $type;
 
-            if ($name == 'TAG') {
-                continue; // element already created
-            }
             if ($type == 'clob') {
                 $element = new Zend_Form_Element_Textarea($elementName);
             } else {
                 $element = new Zend_Form_Element_Text($elementName);
             }
-            $element->setDisableTranslator(true) // Don't translate user-defined names
-                    ->setLabel($name)
-                    ->addFilter('StringTrim');
+            if ($name == 'TAG') {
+                $element->setLabel('Category');
+            } else {
+                $element->setDisableTranslator(true) // Don't translate user-defined names
+                        ->setLabel($name);
+            }
             switch ($type) {
                 case 'text':
                     $element->addValidator('StringLength', false, array(0, 255));
@@ -93,6 +86,7 @@ class Form_UserDefinedInfo extends Form_Normalized
                     $element->addValidator(new Braintacle_Validate_Date);
                     break;
             }
+            $element->addFilter('StringTrim');
             $this->addElement($element);
         }
 

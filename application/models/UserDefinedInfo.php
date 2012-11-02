@@ -27,6 +27,8 @@
  *
  * The 'TAG' field is always present. Other fields may be defined by the
  * administrator.
+ *
+ * When obtaining a list of available fields, the configured order is preserved.
  * @package Models
  */
 class Model_UserDefinedInfo extends Model_Abstract
@@ -170,7 +172,7 @@ class Model_UserDefinedInfo extends Model_Abstract
         if (empty(self::$_allTypesStatic)) { // Query database only once
             $columns = Model_Database::getNada()->getTable('accountinfo')->getColumns();
             $statement = Model_Database::getAdapter()->query(
-                "SELECT id, type, name FROM accountinfo_config WHERE account_type = 'COMPUTERS'"
+                "SELECT id, type, name FROM accountinfo_config WHERE account_type = 'COMPUTERS' ORDER BY show_order"
             );
             // Iterate over result set and determine name and type of each
             // field. Unsupported field types will be silently ignored.
