@@ -607,13 +607,17 @@ class Braintacle_SchemaManager
                 if (isset($this->_allTables['accountinfo_config'])) {
                     // Don't convert any column named fields_n where n matches
                     // an ID in accountinfo_config. These are already converted.
+                    // Exception: fake date columns still need conversion.
                     $ids = $this->_db->fetchCol(
                         "SELECT id FROM accountinfo_config WHERE account_type = 'COMPUTERS' AND name != 'TAG'"
                     );
                     foreach ($ids as $id) {
                         $key = array_search("fields_$id", $columns);
                         if ($key !== false) {
-                            unset($columns[$key]);
+                            $column = $this->_allTables['accountinfo']->getColumn("fields_$id");
+                            if (!($column->getDatatype() == Nada::DATATYPE_VARCHAR and $column->getLength() == 10)) {
+                                unset($columns[$key]);
+                            }
                         }
                     }
                 }
@@ -641,15 +645,44 @@ class Braintacle_SchemaManager
         );
         foreach ($this->getUserdefinedInfoToConvert() as $name) {
             $this->_logger->info('Converting userdefined column: ' . ucfirst($name));
+            // Use transaction that can be rolled back should one operation fail
+            $db->beginTransaction();
             $order += 1; // Append to the end
             $column = $table->getColumn($name);
             switch ($column->getDatatype()) {
                 case Nada::DATATYPE_VARCHAR:
+                    if ($column->getLength() == 10) {
+                        // It's actually a date column with a nonstandard
+                        // format. Convert data and change column datatype.
+                        $this->_logger->info("Converting fake date column $name...");
+                        $date = new Zend_Date;
+                        // Use prepared statement for updating. $name is safe
+                        // for SQL because this operation is only done on
+                        // already converted columns where name is 'fields_n'.
+                        $update = $db->prepare("UPDATE accountinfo SET $name = ? WHERE hardware_id = ?");
+                        $result = $db->query("SELECT hardware_id, $name FROM accountinfo WHERE $name IS NOT NULL");
+                        while ($row = $result->fetch(Zend_Db::FETCH_ASSOC)) {
+                            if (empty($row[$name])) { // Empty string, convert to NULL
+                                $newValue = null;
+                            } else {
+                                // Convert via Zend_Date object, causing invalid
+                                // values to throw an exception
+                                $date->set($row[$name], 'MM/dd/yyyy');
+                                $newValue = $date->get('yyyy-MM-dd');
+                            }
+                            $update->execute(array($newValue, $row['hardware_id']));
+                        }
+                        $column->setDatatype(Nada::DATATYPE_DATE);
+                        $this->_logger->info('done');
+                        $type = Model_UserDefinedInfo::INTERNALTYPE_DATE;
+                    } else {
+                        $type = Model_UserDefinedInfo::INTERNALTYPE_TEXT;
+                    }
+                    break;
                 case Nada::DATATYPE_INTEGER:
                 case Nada::DATATYPE_FLOAT:
-                    // There is no difference between these types in
-                    // accountinfo_config. They can still be distinguished by
-                    // the column's datatype.
+                    // These types are marked as text in accountinfo_config.
+                    // They can still be distinguished by the column's datatype.
                     $type = Model_UserDefinedInfo::INTERNALTYPE_TEXT;
                     break;
                 case Nada::DATATYPE_CLOB:
@@ -666,21 +699,26 @@ class Braintacle_SchemaManager
                         'Invalid datatype: ' . $column->getDatatype()
                     );
             }
-            // Use transaction that can be rolled back should the second
-            // operation fail.
-            $db->beginTransaction();
-            $db->insert(
-                'accountinfo_config',
-                array(
-                    'type' => $type,
-                    'name' => ucfirst($name),
-                    'id_tab' => 1, // default
-                    'show_order' => $order,
-                    'account_type' => 'COMPUTERS'
-                )
-            );
-            // Rename column to fields_n
-            $column->setName('fields_' . $db->lastInsertId('accountinfo_config', 'id'));
+            // Create entry in accountinfo_config and rename column if necessary
+            // (do not process already converted columns, as can happen with
+            // fake date columns)
+            if (
+                !preg_match('/^fields_([0-9]+)$/', $name, $matches) or
+                $db->fetchOne('SELECT COUNT(id) FROM accountinfo_config WHERE id = ?', $matches[1]) == 0
+            ) {
+                $db->insert(
+                    'accountinfo_config',
+                    array(
+                        'type' => $type,
+                        'name' => ucfirst($name),
+                        'id_tab' => 1, // default
+                        'show_order' => $order,
+                        'account_type' => 'COMPUTERS'
+                    )
+                );
+                // Rename column to fields_n
+                $column->setName('fields_' . $db->lastInsertId('accountinfo_config', 'id'));
+            }
             $db->commit();
         }
     }
