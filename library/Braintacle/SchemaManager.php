@@ -374,6 +374,7 @@ class Braintacle_SchemaManager
 
         $engineInnoDb = array(
             'accountinfo',
+            'accountinfo_config',
             'bios',
             'controllers',
             'devices',
