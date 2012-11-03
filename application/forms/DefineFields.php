@@ -160,7 +160,10 @@ class Form_Definefields extends Zend_Form
         if ($field) {
             unset($blacklist[array_search($field, $blacklist)]);
         }
-        return new Braintacle_Validate_NotInArray($blacklist);
+        return new Braintacle_Validate_NotInArray(
+            $blacklist,
+            Braintacle_Validate_NotInArray::CASE_INSENSITIVE
+        );
     }
 
     /**

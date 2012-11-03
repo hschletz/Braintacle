@@ -27,11 +27,22 @@
  *
  * This validator does the opposite of the ZF's InArray validator, but not all
  * functionality of InArray is supported. Simply pass the array of invalid
- * values to the constructor. Array keys will be ignored.
+ * values to the constructor. Array keys will be ignored. Case sensitivity
+ * depends on the second argument to the constructor.
  * @package Library
  */
 class Braintacle_Validate_NotInArray extends Zend_Validate_Abstract
 {
+    /**
+     * Case sensitive comparision
+     **/
+    const CASE_SENSITIVE = 0;
+
+    /**
+     * Case insensitive comparision
+     **/
+    const CASE_INSENSITIVE = 1;
+
     const IN_ARRAY = 'in_array';
 
     /**
@@ -43,16 +54,21 @@ class Braintacle_Validate_NotInArray extends Zend_Validate_Abstract
     );
 
     /**
-     * Sets haystack
+     * Sets haystack and options
      * @param array $haystack
-     * @throws InvalidArgumentException if $haystack is not an array.
+     * @param integer $case CASE_SENSITIVE (default) or CASE_INSENSITIVE
+     * @throws InvalidArgumentException if $haystack is not an array or $case has invalid value
      */
-    public function __construct($haystack)
+    public function __construct($haystack, $case = self::CASE_SENSITIVE)
     {
         if (!is_array($haystack)) {
             throw new InvalidArgumentException('Array expected as parameter');
         }
+        if ($case != self::CASE_SENSITIVE and $case != self::CASE_INSENSITIVE) {
+            throw new InvalidArgumentException('Invalid value for $case: ' . $case);
+        }
         $this->_haystack = $haystack;
+        $this->_case = $case;
     }
 
     /**
@@ -64,10 +80,21 @@ class Braintacle_Validate_NotInArray extends Zend_Validate_Abstract
     {
         $this->_setValue($value);
 
-        if (in_array($value, $this->_haystack)) {
-            $this->_error(self::IN_ARRAY);
-            return false;
+        if ($this->_case == self::CASE_SENSITIVE) {
+            if (in_array($value, $this->_haystack)) {
+                $this->_error(self::IN_ARRAY);
+                return false;
+            } else {
+                return true;
+            }
         } else {
+            $pattern = '#^' . preg_quote($value, '#') . '$#ui';
+            foreach ($this->_haystack as $element) {
+                if (preg_match($pattern, $element)) {
+                    $this->_error(self::IN_ARRAY);
+                    return false;
+                }
+            }
             return true;
         }
     }

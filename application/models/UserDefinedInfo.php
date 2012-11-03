@@ -28,6 +28,10 @@
  * The 'TAG' field is always present. Other fields may be defined by the
  * administrator.
  *
+ * Field names are case sensitive. To guarantee uniqueness independent from the
+ * database implementation, equality checks on field names case insensitive,
+ * i.e. a column 'Name' cannnot be added if a column 'name' already exists.
+ *
  * When obtaining a list of available fields, the configured order is preserved.
  * @package Models
  */
@@ -257,6 +261,34 @@ class Model_UserDefinedInfo extends Model_Abstract
     }
 
     /**
+     * Compare 2 field names for equality (case insensitive)
+     *
+     * @param string $name1 First name to check
+     * @param string $name2 Second name to check
+     * @return bool True if both names resolve to the same field name
+     **/
+    public static function isNameEqual($name1, $name2)
+    {
+        return (bool) preg_match('#^' . preg_quote($name1, '#') . '$#ui', $name2);
+    }
+
+    /**
+     * Check for presence of a field with given name (case insensitive)
+     *
+     * @param string $name Field name to check
+     * @return bool True if field exists
+     **/
+    public static function fieldExists($name)
+    {
+        foreach (array_keys(self::getTypes()) as $field) {
+            if (self::isNameEqual($field, $name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Add a field
      * @param string $name Field name
      * @param string $type One of text, clob, integer, float or date
@@ -264,8 +296,7 @@ class Model_UserDefinedInfo extends Model_Abstract
      **/
     static function addField($name, $type)
     {
-        $types = self::getTypes();
-        if (isset($types[$name])) {
+        if (self::fieldExists($name)) {
             throw new InvalidArgumentException("Column '$name' already exists.");
         }
 
@@ -333,8 +364,7 @@ class Model_UserDefinedInfo extends Model_Abstract
         if ($field == 'TAG') {
             throw new InvalidArgumentException("Cannot delete system column 'TAG'.");
         }
-        $types = self::getTypes();
-        if (!isset($types[$field])) {
+        if (!self::fieldExists($field)) {
             throw new InvalidArgumentException("Unknown column: $field");
         }
 
@@ -365,11 +395,12 @@ class Model_UserDefinedInfo extends Model_Abstract
         if ($newName == 'TAG') {
             throw new InvalidArgumentException("Column cannot be renamed to reserved name 'TAG'.");
         }
-        $types = self::getTypes();
-        if (!isset($types[$oldName])) {
+        if (!self::fieldExists($oldName)) {
             throw new InvalidArgumentException('Unknown column: ' . $oldName);
         }
-        if (isset($types[$newName])) {
+        // The isNameEqual() check is required to allow renaming a field by just
+        // changing the case of one or more characters.
+        if (!self::isNameEqual($oldName, $newName) and self::fieldExists($newName)) {
             throw new InvalidArgumentException("Column '$newName' already exists.");
         }
 
