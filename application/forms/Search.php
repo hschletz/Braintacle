@@ -169,6 +169,7 @@ class Form_Search extends Form_Normalized
             $key = "UserDefinedInfo.$name";
             switch ($type) {
                 case 'text':
+                case 'clob':
                     break;
                 case 'integer':
                     $this->_typeInteger[] = $key;
@@ -182,10 +183,10 @@ class Form_Search extends Form_Normalized
                 default:
                     throw new UnexpectedValueException('Unsupported datatype: ' . $type);
             }
-            if ($name == 'tag') {
+            if ($name == 'TAG') {
                 $label = $translate->_('Category');
             } else {
-                $label = ucfirst($name);
+                $label = $name;
             }
             $this->_filters[$key] = sprintf($template, $label);
         }

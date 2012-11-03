@@ -25,12 +25,38 @@
 /**
  * User defined fields for a computer
  *
- * The 'tag' field is always present. Other fields may be defined by the
- * administrator. Their names are always returned lowercase.
+ * The 'TAG' field is always present. Other fields may be defined by the
+ * administrator.
+ *
+ * Field names are case sensitive. To guarantee uniqueness independent from the
+ * database implementation, equality checks on field names case insensitive,
+ * i.e. a column 'Name' cannnot be added if a column 'name' already exists.
+ *
+ * When obtaining a list of available fields, the configured order is preserved.
  * @package Models
  */
 class Model_UserDefinedInfo extends Model_Abstract
 {
+
+    /**
+     * Internal identifier for text, integer and float columns
+     **/
+    const INTERNALTYPE_TEXT = 0;
+
+    /**
+     * Internal identifier for clob columns
+     **/
+    const INTERNALTYPE_TEXTAREA = 1;
+
+    /**
+     * Internal identifier for blob columns
+     **/
+    const INTERNALTYPE_BLOB = 5;
+
+    /**
+     * Internal identifier for date columns
+     **/
+    const INTERNALTYPE_DATE = 6;
 
     /**
      * Datatypes of all properties.
@@ -40,6 +66,15 @@ class Model_UserDefinedInfo extends Model_Abstract
      * @var array
      */
     static protected $_allTypesStatic = array();
+
+    /**
+     * Map of field names => column names
+     *
+     * This is the static equivalent to the property map. It gets populated by
+     * getTypes().
+     * @var array
+     */
+    static protected $_columnNames = array();
 
     /**
      * Computer this instance is linked to
@@ -64,23 +99,19 @@ class Model_UserDefinedInfo extends Model_Abstract
         // Construct array of datatypes
         $this->_types = self::getTypes();
 
-        // Construct property map. Key and value are identical.
-        foreach ($this->_types as $name => $type) {
-            $this->_propertyMap[$name] = $name;
-        }
+        // Set up property map from $_columnNames which got populated by getTypes().
+        $this->_propertyMap = self::$_columnNames;
 
         // Load values if a computer ID is given
         if (!is_null($computer)) {
-            $db = Model_Database::getAdapter();
-
-            $data = $db->fetchRow(
-                'SELECT * FROM accountinfo WHERE hardware_id = ?',
-                $computer->getId()
-            );
-            foreach ($data as $property => $value) {
-                if (isset($this->_propertyMap[$property])) { // ignore hardware_id and BLOB columns
-                    $this->setProperty($property, $value);
-                }
+            $data = Model_Database::getAdapter()
+                ->select()
+                ->from('accountinfo', array_values($this->_propertyMap))
+                ->where('hardware_id = ?', $computer->getId())
+                ->query()
+                ->fetchObject();
+            foreach ($data as $field => $value) {
+                $this->$field = $value;
             }
 
             // Keep track of computer for later updates
@@ -101,23 +132,26 @@ class Model_UserDefinedInfo extends Model_Abstract
             throw new RuntimeException('No Computer was associated with this object');
         }
 
+        $data = array();
         foreach ($values as $property => $value) {
             // Have input processed by setProperty() to ensure valid data and to
             // update the object's internal state
             $this->setProperty($property, $value);
-            // Convert dates
+            // Convert dates to DBMS-specific format
             if ($value instanceof Zend_Date) {
-                $values[$property] = $value->get(
+                $value = $value->get(
                     Model_Database::getNada()->timestampFormatIso()
                 );
             }
+            // Build array with column name as key
+            $data[$this->_propertyMap[$property]] = $value;
         }
 
         $db = Model_Database::getAdapter();
 
         $db->update(
             'accountinfo',
-            $values,
+            $data,
             $db->quoteInto('hardware_id = ?', $this->_computer->getId())
         );
     }
@@ -141,39 +175,61 @@ class Model_UserDefinedInfo extends Model_Abstract
     {
         if (empty(self::$_allTypesStatic)) { // Query database only once
             $columns = Model_Database::getNada()->getTable('accountinfo')->getColumns();
-            foreach ($columns as $column) {
-                $name = $column->getName();
-                if ($name == 'hardware_id') {
-                    continue;
-                }
-                switch ($column->getDatatype()) {
-                    case Nada::DATATYPE_VARCHAR:
-                        $type = 'text';
-                        break;
-                    case Nada::DATATYPE_INTEGER:
-                        $type = 'integer';
-                        break;
-                    case Nada::DATATYPE_FLOAT:
-                        $type = 'float';
-                        break;
-                    case Nada::DATATYPE_DATE:
-                        $type = 'date';
-                        break;
-                    case Nada::DATATYPE_CLOB:
-                        $type = 'clob';
-                        break;
-                    case Nada::DATATYPE_BLOB:
-                        // Ignore column, its values are always NULL.
-                        // Attachments are handled in temp_files table.
-                        $type = null;
-                        break;
-                    default:
-                        throw new UnexpectedValueException(
-                            'Invalid datatype: ' . $column->getDatatype()
-                        );
+            $statement = Model_Database::getAdapter()->query(
+                "SELECT id, type, name FROM accountinfo_config WHERE account_type = 'COMPUTERS' ORDER BY show_order"
+            );
+            // Iterate over result set and determine name and type of each
+            // field. Unsupported field types will be silently ignored.
+            while ($field = $statement->fetchObject()) {
+                $name = $field->name;
+                if ($name == 'TAG') {
+                    $columnName = 'tag';
+                    $type = 'text';
+                } else {
+                    $columnName = 'fields_' . $field->id;
+                    $column = $columns[$columnName];
+                    switch ($field->type) {
+                        case self::INTERNALTYPE_TEXT:
+                            // Can be text, integer or float. Evaluate column
+                            // datatype.
+                            switch ($column->getDatatype()) {
+                                case Nada::DATATYPE_VARCHAR:
+                                    $type = 'text';
+                                    break;
+                                case Nada::DATATYPE_INTEGER:
+                                    $type = 'integer';
+                                    break;
+                                case Nada::DATATYPE_FLOAT:
+                                    $type = 'float';
+                                    break;
+                                default:
+                                    throw new UnexpectedValueException(
+                                        'Invalid datatype: ' . $column->getDatatype()
+                                    );
+                            }
+                            break;
+                        case self::INTERNALTYPE_TEXTAREA:
+                            $type = 'clob';
+                            break;
+                        case self::INTERNALTYPE_DATE:
+                            // ocsreports creates date columns as varchar(10)
+                            // and stores values in a non-ISO format. Silently
+                            // ignore these fields. Only accept real date
+                            // columns.
+                            if ($column->getDatatype() == Nada::DATATYPE_DATE) {
+                                $type = 'date';
+                            } else {
+                                $type = '';
+                            }
+                            break;
+                        default:
+                            // Silently ignore unsupported field types.
+                            $type = '';
+                    }
                 }
                 if ($type) {
                     self::$_allTypesStatic[$name] = $type;
+                    self::$_columnNames[$name] = $columnName;
                 }
             }
         }
@@ -205,57 +261,97 @@ class Model_UserDefinedInfo extends Model_Abstract
     }
 
     /**
+     * Compare 2 field names for equality (case insensitive)
+     *
+     * @param string $name1 First name to check
+     * @param string $name2 Second name to check
+     * @return bool True if both names resolve to the same field name
+     **/
+    public static function isNameEqual($name1, $name2)
+    {
+        return (bool) preg_match('#^' . preg_quote($name1, '#') . '$#ui', $name2);
+    }
+
+    /**
+     * Check for presence of a field with given name (case insensitive)
+     *
+     * @param string $name Field name to check
+     * @return bool True if field exists
+     **/
+    public static function fieldExists($name)
+    {
+        foreach (array_keys(self::getTypes()) as $field) {
+            if (self::isNameEqual($field, $name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Add a field
      * @param string $name Field name
-     * @param string $type One of text, integer, float or date
+     * @param string $type One of text, clob, integer, float or date
      * @throws InvalidArgumentException if column exists or is a system column
      **/
     static function addField($name, $type)
     {
-        if ($name == 'tag' or $name == 'hardware_id') {
-            throw new InvalidArgumentException("Column cannot have reserved name '$name'.");
-        }
-        $types = self::getTypes();
-        if (isset($types[$name])) {
+        if (self::fieldExists($name)) {
             throw new InvalidArgumentException("Column '$name' already exists.");
         }
 
         switch ($type) {
             case 'text':
                 $datatype = Nada::DATATYPE_VARCHAR;
+                $internalType = self::INTERNALTYPE_TEXT;
                 break;
             case 'integer':
                 $datatype = Nada::DATATYPE_INTEGER;
+                $internalType = self::INTERNALTYPE_TEXT;
                 break;
             case 'float':
                 $datatype = Nada::DATATYPE_FLOAT;
+                $internalType = self::INTERNALTYPE_TEXT;
                 break;
             case 'date':
                 $datatype = Nada::DATATYPE_DATE;
+                $internalType = self::INTERNALTYPE_DATE;
                 break;
             case 'clob':
                 $datatype = Nada::DATATYPE_CLOB;
+                $internalType = self::INTERNALTYPE_TEXTAREA;
                 break;
             default:
                 throw new InvalidArgumentException('Invalid datatype: ' . $type);
         }
 
+        $db = Model_Database::getAdapter();
         $nada = Model_Database::getNada();
 
-        // Since $name can be an arbitrary string, NADA must quote it
-        // unconditionally.
-        $quoteAlways = $nada->quoteAlways; // preserve setting
-        $nada->quoteAlways = true;
-
+        $db->beginTransaction();
+        $order = $db->fetchOne(
+            "SELECT MAX(show_order) + 1 FROM accountinfo_config WHERE account_type = 'COMPUTERS'"
+        );
+        $db->insert(
+            'accountinfo_config',
+            array(
+                'type' => $internalType,
+                'name' => $name,
+                'id_tab' => 1,
+                'show_order' => $order,
+                'account_type' => 'COMPUTERS'
+            )
+        );
+        $columnName = 'fields_' . $db->lastInsertId('accountinfo_config', 'id');
         if ($type == 'text') {
-            $column = $nada->createColumn($name, $datatype, 255);
+            $column = $nada->createColumn($columnName, $datatype, 255);
         } else {
-            $column = $nada->createColumn($name, $datatype);
+            $column = $nada->createColumn($columnName, $datatype);
         }
         $nada->getTable('accountinfo')->addColumnObject($column);
-        self::$_allTypesStatic[$name] = $type;
+        $db->commit();
 
-        $nada->quoteAlways = $quoteAlways; // restore setting
+        self::$_allTypesStatic[$name] = $type;
     }
 
     /**
@@ -265,25 +361,24 @@ class Model_UserDefinedInfo extends Model_Abstract
      **/
     static function deleteField($field)
     {
-        if ($field == 'tag' or $field == 'hardware_id') {
-            throw new InvalidArgumentException("Cannot delete system column '$field'.");
+        if ($field == 'TAG') {
+            throw new InvalidArgumentException("Cannot delete system column 'TAG'.");
         }
-        $types = self::getTypes();
-        if (!isset($types[$name])) {
+        if (!self::fieldExists($field)) {
             throw new InvalidArgumentException("Unknown column: $field");
         }
 
-        $nada = Model_Database::getNada();
+        $db = Model_Database::getAdapter();
+        $db->beginTransaction();
+        $id = $db->fetchOne(
+            "SELECT id FROM accountinfo_config WHERE name = ? AND account_type = 'COMPUTERS'",
+            $field
+        );
+        $db->delete('accountinfo_config', array('id = ?' => $id));
+        Model_Database::getNada()->getTable('accountinfo')->dropColumn('fields_' . $id);
+        $db->commit();
 
-        // Since $field can be an arbitrary string, NADA must quote it
-        // unconditionally.
-        $quoteAlways = $nada->quoteAlways; // preserve setting
-        $nada->quoteAlways = true;
-
-        $nada->getTable('accountinfo')->dropColumn($field);
         unset(self::$_allTypesStatic[$field]);
-
-        $nada->quoteAlways = $quoteAlways; // restore setting
     }
 
     /**
@@ -294,30 +389,31 @@ class Model_UserDefinedInfo extends Model_Abstract
      **/
     static function renameField($oldName, $newName)
     {
-        if ($oldName == 'tag' or $oldName == 'hardware_id') {
-            throw new InvalidArgumentException("System column '$oldName' cannot be renamed.");
+        if ($oldName == 'TAG') {
+            throw new InvalidArgumentException("System column 'TAG' cannot be renamed.");
         }
-        if ($newName == 'tag' or $newName == 'hardware_id') {
-            throw new InvalidArgumentException("Column cannot be renamed to reserved name '$newName'.");
+        if ($newName == 'TAG') {
+            throw new InvalidArgumentException("Column cannot be renamed to reserved name 'TAG'.");
         }
-        $types = self::getTypes();
-        if (!isset($types[$oldName])) {
+        if (!self::fieldExists($oldName)) {
             throw new InvalidArgumentException('Unknown column: ' . $oldName);
         }
-        if (isset($types[$newName])) {
+        // The isNameEqual() check is required to allow renaming a field by just
+        // changing the case of one or more characters.
+        if (!self::isNameEqual($oldName, $newName) and self::fieldExists($newName)) {
             throw new InvalidArgumentException("Column '$newName' already exists.");
         }
 
-        $nada = Model_Database::getNada();
+        $db = Model_Database::getAdapter();
+        $db->update(
+            'accountinfo_config',
+            array('name' => $newName),
+            array(
+                'name = ?' => $oldName,
+                'account_type = ?' => 'COMPUTERS'
+            )
+        );
 
-        // Since field names can be arbitrary strings, NADA must quote them
-        // unconditionally.
-        $quoteAlways = $nada->quoteAlways; // preserve setting
-        $nada->quoteAlways = true;
-
-        $nada->getTable('accountinfo')->getColumn($oldName)->setName($newName);
         self::$_allTypesStatic = array(); // force re-read on next usage
-
-        $nada->quoteAlways = $quoteAlways; // restore setting
     }
 }

@@ -54,42 +54,36 @@ class Form_Definefields extends Zend_Form
 
         // Create text elements for existing fields to rename them
         foreach (Model_UserDefinedInfo::getTypes() as $name => $type) {
-            if ($name == 'tag') { // Static field, can not be edited
+            if ($name == 'TAG') { // Static field, can not be edited
                 continue;
             }
             // Since a field name can be an arbitrary string, the element name
             // gets encoded to ensure validity.
             $element = new Zend_Form_Element_Text($encoder->filter($name));
-            // Since the field name is used as a column identifier in the
-            // database, it is constrained to avoid serious trouble.
             $element->setValue($name)
                     ->setRequired(true)
                     ->addFilter('StringTrim')
-                    ->addFilter('StringToLower')
-                    ->addValidator('Regex', false, array('/^[a-z][a-z0-9_]*/'))
                     ->addValidator('StringLength', false, array(1, 255))
                     ->addValidator($this->_createBlacklistValidator($name));
             $this->addElement($element);
         }
 
-        // Empty text field to create new field. Same constraints as above.
+        // Empty text field to create new field.
         // Name is prefixed with an underscore to avoid accidental clash with
         // encoded name (very unlikely, but possible in theory)
         $newName = new Zend_Form_Element_Text('_newName');
         $newName->addFilter('StringTrim')
-                ->addFilter('StringToLower')
-                ->addValidator('Regex', false, array('/^[a-z][a-z0-9_]*/'))
                 ->addValidator('StringLength', false, array(0, 255))
                 ->addValidator($this->_createBlacklistValidator());
         $this->addElement($newName);
 
         // Datatype of new field
-        $newType = new Zend_Form_Element_Select('newType');
+        $newType = new Zend_Form_Element_Select('_newType');
         $newType->setDisableTranslator(true)
                 ->setMultiOptions($this->_translatedTypes);
         $this->addElement($newType);
 
-        $submit = new Zend_Form_Element_Submit('Submit');
+        $submit = new Zend_Form_Element_Submit('_Submit');
         $submit->setLabel('Change');
         $this->addElement($submit);
 
@@ -135,7 +129,7 @@ class Form_Definefields extends Zend_Form
         }
         // Row with elements for creating a new field
         $row = $view->htmlTag('td', $this->getElement('_newName')->render());
-        $row .= $view->htmlTag('td', $this->getElement('newType')->render());
+        $row .= $view->htmlTag('td', $this->getElement('_newType')->render());
         $row .= $view->htmlTag('td', $view->translate('Add'));
         $output .= $view->htmlTag('tr', $row);
 
@@ -145,7 +139,7 @@ class Form_Definefields extends Zend_Form
         // submit button
         $output .= $view->htmlTag(
             'p',
-            $this->getElement('Submit')->render(),
+            $this->getElement('_Submit')->render(),
             array('class' => 'textcenter')
         );
 
@@ -156,7 +150,7 @@ class Form_Definefields extends Zend_Form
     }
 
     /**
-     * Create a validator that forbids any existing column names except the given field
+     * Create a validator that forbids any existing field names except the given field
      * @param string $field Existing field name to allow (default: none)
      * @return Braintacle_Validate_NotInArray Validator object
      **/
@@ -166,9 +160,10 @@ class Form_Definefields extends Zend_Form
         if ($field) {
             unset($blacklist[array_search($field, $blacklist)]);
         }
-        $blacklist[] = 'hardware_id';
-        $blacklist[] = 'tag';
-        return new Braintacle_Validate_NotInArray($blacklist);
+        return new Braintacle_Validate_NotInArray(
+            $blacklist,
+            Braintacle_Validate_NotInArray::CASE_INSENSITIVE
+        );
     }
 
     /**
@@ -192,7 +187,7 @@ class Form_Definefields extends Zend_Form
         }
         $newName = $this->getElement('_newName')->getValue();
         if ($newName) {
-            Model_UserDefinedInfo::addField($newName, $this->getElement('newType')->getValue());
+            Model_UserDefinedInfo::addField($newName, $this->getElement('_newType')->getValue());
         }
     }
 }

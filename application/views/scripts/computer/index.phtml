@@ -109,10 +109,10 @@ $headers = array(
 );
 // Append headers for user defined information
 foreach (Model_UserDefinedInfo::getTypes() as $name => $type) {
-    if ($name == 'tag') {
+    if ($name == 'TAG') {
         $header = $this->translate('Category');
     } else {
-        $header = ucfirst($name);
+        $header = $name;
     }
     $headers['UserDefinedInfo.' . $name] = $header;
 }
