@@ -1,0 +1,83 @@
+CHANGES IN VERSION 0.10
+=======================
+
+Upgrading from previous versions:
+
+- Required: Run tools/schema-manager.php to update the database schema.
+
+- Recommended: If you are using the bundled communication server (not the
+  original OCS Inventory NG server), remove all PerlModule directives, except
+  for Apache::DBI, from the Apache config file to improve server stability.
+
+New features:
+
+- Server/Console: Support for MSofficeKey plugin
+  (http://wiki.ocsinventory-ng.org/index.php/Plugins:MSofficeKey)
+
+- Console: Userdefined fields can now be added, renamed or deleted. The database
+  representation of field names has been reorganized so that all constraints and
+  potential SQL problems are gone.
+
+- Console: Support entering and searching for a Windows product key different
+  from the inventoried one. This can be useful if the inventoried key is
+  incorrect, which can happen with some license types.
+
+- Console: Licenses overview page. This is intended to become a simple software
+  license management system. For now, it only shows a link to manually entered
+  Windows product keys.
+
+- Console: The agent whitelist file, which is required by the server to accept
+  non-OCS agents like FusionInventory Agent, can now be set in the preferences.
+  The file itself must still be maintained manually on the server.
+
+- Console: The preferences dialog complains if only raw zlib compressed
+  inventory requests are accepted. Non-zlib requests are required for manual
+  inventory upload.
+
+- Tools: New command line tool (decode-ocsfiles.pl) for decoding compressed
+  inventory data.
+
+- Server: Load all required Perl modules (except Apache::DBI) automatically, no
+  more need to load them in Apache configuration. This makes Apache more robust
+  against missing modules. Previously, a missing module would prevent Apache
+  startup altogether. Now the impact of missing module is limited to the
+  communication server, not affecting other sites hosted by the same Apache
+  instance.
+
+- General: Made database name configurable in all components. Some parts had
+  previously hardcoded 'ocsweb', which is still used as default if no database
+  name is configured. The config templates default to 'braintacle'.
+
+Fixed bugs:
+
+- Console: Always export all software, regardless of blacklist.
+
+Misc:
+
+- General: Documentation overhaul.
+
+- General: Templates for all configuration files are now gathered in a single
+  location (config/*.template).
+
+- Server: Rebranding in syslog identification. Syslog messages are now prefixed
+  with 'braintacle-server' instead of 'ocsinventory-server'.
+
+- Server: Don't flood Apache log when an option is not explicitly configured and
+  a default value is applied instead.
+
+- Console: Improved error reporting.
+
+- Database: The default configuration no longer uses any bad values that the
+  preferences dialogs would complain about.
+
+- Database: The GUI_VERSION option, which is used by ocsreports to keep track of
+  the database schema version, is no longer touched. Braintacle uses its own
+  schema versioning, and once the schema is updated by Braintacle, compatibility
+  with original OCS Inventory NG is lost anyway.
+
+- Tools: API documentation is now generated using phpDocumentor 2.
+
+- General: Updated Zend Framework to 1.11.13.
+
+- General: Some internal code restructuring, details can be found in the SVN
+  log.
