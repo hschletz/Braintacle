@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-13 18:29+0200\n"
-"PO-Revision-Date: 2012-10-13 18:30+0200\n"
+"POT-Creation-Date: 2012-12-29 20:15+0100\n"
+"PO-Revision-Date: 2012-12-29 20:16+0100\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -1454,8 +1454,8 @@ msgid "Architecture"
 msgstr "Architektur"
 
 #: views/scripts/computer/msoffice.phtml
-msgid "Microsoft Office products"
-msgstr "Microsoft Office-Produkte"
+msgid "Installed Microsoft Office products"
+msgstr "Installierte Microsoft Office-Produkte"
 
 #: views/scripts/computer/msoffice.phtml views/scripts/computer/vms.phtml
 msgid "Product"
@@ -1468,6 +1468,10 @@ msgstr "Produkt-ID"
 #: views/scripts/computer/msoffice.phtml
 msgid "Product key"
 msgstr "Lizenzschlüssel"
+
+#: views/scripts/computer/msoffice.phtml
+msgid "Unused Microsoft Office licenses"
+msgstr "Ungenutzte Microsoft Office-Lizenzen"
 
 #: views/scripts/computer/network.phtml
 msgid "DHCP server"

@@ -707,9 +707,10 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string $type Object type to retrieve (name of model class without 'Model_' prefix)
      * @param string $order Property to sort by. If ommitted, the model's builtin default is used.
      * @param string $direction Sorting direction (asc|desc)
+     * @param array Extra filters to pass to the child model's createStatement() method
      * @return Zend_Db_Statement Statement object with results
      */
-    public function getChildObjects($type, $order=null, $direction=null)
+    public function getChildObjects($type, $order=null, $direction=null, $filters=array())
     {
         $filters['Computer'] = $this->getId();
         // Apply extra filters.

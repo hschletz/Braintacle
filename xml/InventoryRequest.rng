@@ -473,7 +473,7 @@ Braintacle:
                 <optional>
                     <ref name="GUID" braintacle:property="Guid" />
                 </optional>
-                <ref name="INSTALL" braintacle:property="Install" />
+                <ref name="INSTALL" braintacle:property="Type" />
                 <optional>
                     <ref name="NOTE" braintacle:property="ExtraDescription" />
                 </optional>

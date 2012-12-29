@@ -33,11 +33,22 @@
  * - <b>Architecture</b> 32 or 64 (Bit)
  * - <b>ProductKey</b> Product key
  * - <b>Guid</b> GUID used by Windows Installer
+ * - <b>Type</b> TYPE_INSTALLED_PRODUCT or TYPE_UNUSED_LICENSE
  * - <b>ExtraDescription</b> Extra description for Office 2010
  * @package Models
  */
 class Model_MsOfficeProduct extends Model_ChildObject
 {
+    /**
+     * 'Type' property for an unused license (leftover from an uninstalled product)
+     **/
+    const TYPE_UNUSED_LICENSE = 0;
+
+    /**
+     * 'Type' property for a regular installed product
+     **/
+    const TYPE_INSTALLED_PRODUCT = 1;
+
     /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'officepack' table
@@ -47,7 +58,7 @@ class Model_MsOfficeProduct extends Model_ChildObject
         'Architecture' => 'type',
         'ProductKey' => 'officekey',
         'Guid' => 'guid',
-        'Install' => 'install', // Unknown, seems to be always 1. Only used for export.
+        'Type' => 'install',
         'ExtraDescription' => 'note',
     );
 
@@ -55,6 +66,7 @@ class Model_MsOfficeProduct extends Model_ChildObject
     protected $_types = array(
         'Version' => 'enum',
         'Architecture' => 'integer',
+        'Type' => 'enum', // one of the TYPE_* constants
     );
 
     /** {@inheritdoc} */
@@ -62,5 +74,32 @@ class Model_MsOfficeProduct extends Model_ChildObject
 
     /** {@inheritdoc} */
     protected $_preferredOrder = 'Name';
+
+
+    /**
+     * Return a statement|select object with all objects matching criteria.
+     * This class implements the 'Type' filter which selects only items with the
+     * given 'Type' property.
+     */
+    public function createStatement(
+        $columns=null,
+        $order=null,
+        $direction='asc',
+        $filters=null,
+        $query=true
+    )
+    {
+        $select = parent::createStatement($columns, $order, $direction, $filters, false);
+
+        if (is_array($filters) and isset($filters['Type'])) {
+            $select->where('install = ?', $filters['Type']);
+        }
+
+        if ($query) {
+            return $select->query();
+        } else {
+            return $select;
+        }
+    }
 
 }

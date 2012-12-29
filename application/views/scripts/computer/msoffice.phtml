@@ -69,21 +69,51 @@ function renderArchitecture($view, $product)
 }
 
 
-$products = $this->getHelper('table')->table(
-    $computer->getChildObjects('MsOfficeProduct', $this->order, $this->direction),
+$installedProducts = $this->getHelper('table')->table(
+    $computer->getChildObjects(
+        'MsOfficeProduct',
+        $this->order,
+        $this->direction,
+        array('Type' => Model_MsOfficeProduct::TYPE_INSTALLED_PRODUCT)
+    ),
     null,
     $headers,
     array(),
     'Model_MsOfficeProduct',
     null,
     $renderCallbacks,
-    $numProducts
+    $numInstalledProducts
 );
 
-if ($numProducts) {
+if ($numInstalledProducts) {
     print $this->htmlTag(
         'h2',
-        $this->translate('Microsoft Office products')
+        $this->translate('Installed Microsoft Office products')
     );
-    print $products;
+    print $installedProducts;
+}
+
+
+$unusedLicenses = $this->getHelper('table')->table(
+    $computer->getChildObjects(
+        'MsOfficeProduct',
+        $this->order,
+        $this->direction,
+        array('Type' => Model_MsOfficeProduct::TYPE_UNUSED_LICENSE)
+    ),
+    null,
+    $headers,
+    array(),
+    'Model_MsOfficeProduct',
+    null,
+    $renderCallbacks,
+    $numUnusedLicenses
+);
+
+if ($numUnusedLicenses) {
+    print $this->htmlTag(
+        'h2',
+        $this->translate('Unused Microsoft Office licenses')
+    );
+    print $unusedLicenses;
 }
