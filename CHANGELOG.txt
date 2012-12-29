@@ -77,7 +77,7 @@ Misc:
 
 - Tools: API documentation is now generated using phpDocumentor 2.
 
-- General: Updated Zend Framework to 1.11.13.
+- General: Updated Zend Framework to 1.12.1.
 
 - General: Some internal code restructuring, details can be found in the SVN
   log.
