@@ -303,12 +303,10 @@ class Form_Search extends Form_Normalized
     /** {@inheritdoc} */
     public function setDefaults(array $defaults)
     {
-        if (!isset($defaults['filter'])) {
-            throw new InvalidArgumentException('No filter submitted');
+        if (isset($defaults['filter'])) {
+            // Set filter explicitly because it must be initialized before getType() is called
+            $this->setDefault('filter', $defaults['filter']);
         }
-
-        // Set filter explicitly because it must be initialized before getType() is called
-        $this->setDefault('filter', $defaults['filter']);
         return parent::setDefaults($defaults);
     }
 
