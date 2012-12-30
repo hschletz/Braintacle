@@ -35,7 +35,8 @@ class Zend_View_Helper_Date extends Zend_View_Helper_Abstract
      * For input and output formats, all constants listed in
      * {@link http://framework.zend.com/manual/en/zend.date.constants.html}
      * can be used. If the value is a Zend_Date object, the input format will be
-     * ignored.
+     * ignored. If the value is an invalid string, it will be rendered
+     * unaltered.
      *
      * @param mixed $value Value to be rendered
      * @param mixed $outputFormat Format of return value, default: Zend_Date::DATETIME_SHORT
@@ -44,10 +45,13 @@ class Zend_View_Helper_Date extends Zend_View_Helper_Abstract
      */
     function date ($value, $outputFormat=Zend_Date::DATETIME_SHORT, $inputFormat=Zend_Date::ISO_8601)
     {
-        if (!($value instanceof Zend_Date)) {
+        if (!($value instanceof Zend_Date) and Zend_Date::isDate($value, $inputFormat)) {
             $value = new Zend_Date($value, $inputFormat);
         }
-        return $value->get($outputFormat);
+        if ($value instanceof Zend_Date) {
+            $value = $value->get($outputFormat);
+        }
+        return $value;
     }
 
 }
