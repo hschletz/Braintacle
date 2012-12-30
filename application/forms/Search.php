@@ -71,6 +71,7 @@ class Form_Search extends Form_Normalized
 
     /**
      * Retrieve the datatype of an element
+     * @throws LogicException if the 'filter' Element has no value.
      */
     public function getType($name)
     {
@@ -79,6 +80,9 @@ class Form_Search extends Form_Normalized
         }
 
         $filter = $this->getValue('filter');
+        if (!$filter) {
+            throw new LogicException('Filter element has no value.');
+        }
 
         if (in_array($filter, $this->_typeInteger)) {
              return 'integer';
@@ -253,7 +257,7 @@ class Form_Search extends Form_Normalized
         }
 
         $search->clearValidators();
-        switch ($this->getType($filter)) {
+        switch ($this->getType('search')) {
             case 'integer':
                 $search->setRequired(true);
                 $search->addValidator('Digits');
@@ -282,12 +286,30 @@ class Form_Search extends Form_Normalized
     {
         // Set options of the 'search' element depending on the filter before
         // validation, because integers, dates etc. require different processing.
-        if (isset($data['filter'])) {
-            $this->setSearchOptions($data['filter']);
-        } else {
+
+        if (!isset($data['filter'])) {
             throw new InvalidArgumentException('No filter submitted');
         }
+
+        // Validate filter explicitly because it must be initialized before getType() is called
+        if (!$this->filter->isValid($data['filter'])) {
+            return false;
+        }
+
+        $this->setSearchOptions($data['filter']);
         return parent::isValid($data);
+    }
+
+    /** {@inheritdoc} */
+    public function setDefaults(array $defaults)
+    {
+        if (!isset($defaults['filter'])) {
+            throw new InvalidArgumentException('No filter submitted');
+        }
+
+        // Set filter explicitly because it must be initialized before getType() is called
+        $this->setDefault('filter', $defaults['filter']);
+        return parent::setDefaults($defaults);
     }
 
     /**

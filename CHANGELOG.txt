@@ -52,6 +52,9 @@ Fixed bugs:
 
 - Console: Always export all software, regardless of blacklist.
 
+- Console: When searching on integer or date fields, the search argument was not
+  validated.
+
 Misc:
 
 - General: Documentation overhaul.
