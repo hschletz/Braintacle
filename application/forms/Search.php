@@ -71,18 +71,39 @@ class Form_Search extends Form_Normalized
 
     /**
      * Retrieve the datatype of an element
-     * @throws LogicException if the 'filter' Element has no value.
      */
     public function getType($name)
     {
-        if ($name != 'search') {
+        if ($name == 'search') {
+            return $this->_getTypeFromFilter();
+        } else {
             return 'text';
         }
+    }
 
-        $filter = $this->getValue('filter');
+    /**
+     * Get the datatype for a specific filter
+     *
+     * If $filter is ommitted or empty, the value of the 'filter' element is
+     * used which must not be empty in that case.
+     *
+     * @param string $filter Filter name (default: autodetect)
+     * @return string datatype
+     * @throws LogicException if the 'filter' Element is evaluated but has no value
+     * @throws LogicException if the filter name is invalid
+     **/
+    protected function _getTypeFromFilter($filter=null)
+    {
         if (!$filter) {
-            throw new LogicException('Filter element has no value.');
+            $filter = $this->getValue('filter');
+            if (!$filter) {
+                throw new LogicException('Filter element has no value.');
+            }
         }
+        if (!isset($this->_filters[$filter])) {
+            throw new UnexpectedValueException('Invalid filter: ' . $filter);
+        }
+
 
         if (in_array($filter, $this->_typeInteger)) {
              return 'integer';
@@ -247,17 +268,9 @@ class Form_Search extends Form_Normalized
      */
     public function setSearchOptions($filter)
     {
-        if (!isset($this->_filters[$filter])) {
-            throw new UnexpectedValueException('Invalid filter: ' . $filter);
-        }
-
         $search = $this->getElement('search');
-        if (!$search) {
-            throw new RuntimeException('Element \'search\' not found!');
-        }
-
         $search->clearValidators();
-        switch ($this->getType('search')) {
+        switch ($this->_getTypeFromFilter($filter)) {
             case 'integer':
                 $search->setRequired(true);
                 $search->addValidator('Digits');
@@ -286,16 +299,9 @@ class Form_Search extends Form_Normalized
     {
         // Set options of the 'search' element depending on the filter before
         // validation, because integers, dates etc. require different processing.
-
         if (!isset($data['filter'])) {
             throw new InvalidArgumentException('No filter submitted');
         }
-
-        // Validate filter explicitly because it must be initialized before getType() is called
-        if (!$this->filter->isValid($data['filter'])) {
-            return false;
-        }
-
         $this->setSearchOptions($data['filter']);
         return parent::isValid($data);
     }
@@ -304,7 +310,7 @@ class Form_Search extends Form_Normalized
     public function setDefaults(array $defaults)
     {
         if (isset($defaults['filter'])) {
-            // Set filter explicitly because it must be initialized before getType() is called
+            // Set filter explicitly because it must be initialized to make type detection work
             $this->setDefault('filter', $defaults['filter']);
         }
         return parent::setDefaults($defaults);
