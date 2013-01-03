@@ -8,6 +8,14 @@ without any warranty.
 ====================================================================
 
 
+CHANGES IN VERSION 0.11
+=======================
+
+Fixed bugs:
+
+- Console: Fixed display of package creation dates (0.10 regression)
+
+
 CHANGES IN VERSION 0.10
 =======================
 

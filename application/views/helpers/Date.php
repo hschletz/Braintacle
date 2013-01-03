@@ -45,7 +45,11 @@ class Zend_View_Helper_Date extends Zend_View_Helper_Abstract
      */
     function date ($value, $outputFormat=Zend_Date::DATETIME_SHORT, $inputFormat=Zend_Date::ISO_8601)
     {
-        if (!($value instanceof Zend_Date) and Zend_Date::isDate($value, $inputFormat)) {
+        // isDate() does not work on UNIX timestamps, so these need to be checked manually.
+        if (!($value instanceof Zend_Date) and (
+            ($inputFormat == Zend_Date::TIMESTAMP and ctype_digit((string) $value) and $value <= 0x7fffffff) or
+            Zend_Date::isDate($value, $inputFormat)
+        )) {
             $value = new Zend_Date($value, $inputFormat);
         }
         if ($value instanceof Zend_Date) {
