@@ -103,14 +103,14 @@ function renderRemoveLink($view, $package)
 
 print $this->table(
     $computer->getChildObjects(
-        'AssociatedPackage',
+        'PackageAssignment',
         $this->order,
         $this->direction
     ),
     null,
     $headers,
     $formats,
-    'Model_AssociatedPackage',
+    'Model_PackageAssignment',
     null,
     $renderCallbacks
 );

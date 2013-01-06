@@ -31,7 +31,7 @@
  * - <b>Status</b> Status on this computer
  * @package Models
  */
-class Model_AssociatedPackage extends Model_ChildObject
+class Model_PackageAssignment extends Model_ChildObject
 {
 
     /** {@inheritdoc} */
@@ -104,7 +104,7 @@ class Model_AssociatedPackage extends Model_ChildObject
     {
         throw (
             new ErrorException(
-                'getTableName() can not be called on Model_AssociatedPackage'
+                'getTableName() can not be called on Model_PackageAssignment'
             )
         );
     }
