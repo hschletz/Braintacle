@@ -416,7 +416,7 @@ class Model_Package extends Model_Abstract
     }
 
     /**
-     * Get path to downloadable filesize
+     * Get path to downloadable file
      * @return string
      */
     public function getPath()
