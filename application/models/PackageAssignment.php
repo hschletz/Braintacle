@@ -45,7 +45,7 @@ class Model_PackageAssignment extends Model_ChildObject
 
     /** {@inheritdoc} */
     protected $_types = array(
-        'Timestamp' => 'clob',
+        'Timestamp' => 'timestamp',
     );
 
     /**
@@ -116,11 +116,11 @@ class Model_PackageAssignment extends Model_ChildObject
      */
     public function getProperty($property, $rawValue=false)
     {
-        $value = parent::getProperty($property, $rawValue);
         if ($rawValue or $property != 'Timestamp') {
-            return $value;
+            return parent::getProperty($property, $rawValue);
         }
 
+        $value = parent::getProperty('Timestamp', true);
         if (empty($value)) {
             return null;
         }
