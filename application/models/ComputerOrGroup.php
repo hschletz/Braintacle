@@ -229,7 +229,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
             $selectHistory = $db->select()
                 ->from('download_history', 'hardware_id')
                 ->where('hardware_id=?', $this->getId())
-                ->where('pkg_id=?', $package->getTimestamp());
+                ->where('pkg_id=?', $package->getTimestamp()->get(Zend_Date::TIMESTAMP));
             $select = $db->select()->union(array($selectInstalled, $selectHistory));
 
             // Only proceed if the query does not deliver any results

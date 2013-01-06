@@ -84,7 +84,7 @@ $package->fromArray(
 if ($package->build(false)) {
     $errType = 'WARNING: ';
     $message = "Package successfully built.\n";
-    $path = realpath(Model_Config::get('PackagePath') . '/' . $package->getTimestamp());
+    $path = realpath(Model_Config::get('PackagePath') . '/' . $package->getTimestamp()->get(Zend_Date::TIMESTAMP));
 } else {
     $errType = 'ERROR: ';
     $message = "The package has not been built.\n";

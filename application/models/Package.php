@@ -36,7 +36,7 @@
  * table. Some of these will also be used in the XML metafile.
  *
  * - <b>Name:</b> name to uniquely identify package
- * - <b>Timestamp:</b> UNIX timestamp of package creation
+ * - <b>Timestamp:</b> Timestamp of package creation
  * - <b>Priority:</b> download priority (0-10)
  * - <b>NumFragments:</b> number of download fragments - ignored by {@link build()}
  * - <b>Size:</b> download size - ignored by {@link build()}
@@ -118,6 +118,7 @@ class Model_Package extends Model_Abstract
 
     /** {@inheritdoc} */
     protected $_types = array(
+        'Timestamp' => 'timestamp',
         'Priority' => 'integer',
         'NumFragments' => 'integer',
         'Size' => 'integer',
@@ -183,16 +184,18 @@ class Model_Package extends Model_Abstract
      */
     public function getProperty($property, $rawValue=false)
     {
+        // Treat Timestamp property before calling parent implementation to
+        // avoid a PHP warning.
+        if (!$rawValue and $property == 'Timestamp') {
+            return new Zend_Date(parent::getProperty('Timestamp', true), Zend_Date::TIMESTAMP);
+        }
+
         $value = parent::getProperty($property, $rawValue);
         if ($rawValue) {
             return $value;
         }
 
         switch ($property) {
-            case 'Timestamp':
-                // cast to string to avoid type mismatch errors with DB operations
-                $value = (string) $value;
-                break;
             case 'Platform':
                 $map = array(
                     'WINDOWS' => 'windows',
@@ -421,7 +424,7 @@ class Model_Package extends Model_Abstract
         return Zend_Filter::filterStatic(
             Model_Config::get('PackagePath')
             . DIRECTORY_SEPARATOR
-            . $this->getTimestamp(),
+            . $this->getTimestamp()->get(Zend_Date::TIMESTAMP),
             'RealPath',
             array ('exists' => false)
         );
@@ -709,7 +712,7 @@ class Model_Package extends Model_Abstract
             $this->setEnabledId(
                 $db->fetchOne(
                     'SELECT id FROM download_enable WHERE fileid=?',
-                    $this->getTimestamp()
+                    $this->getTimestamp()->get(Zend_Date::TIMESTAMP)
                 )
             );
         } catch (Zend_Exception $exception) {
@@ -751,7 +754,7 @@ class Model_Package extends Model_Abstract
             array(
                 'name=\'DOWNLOAD\' AND ivalue IN'
                 . '(SELECT id FROM download_enable WHERE fileid=?)'
-                => $this->getTimestamp()
+                => $this->getTimestamp()->get(Zend_Date::TIMESTAMP)
             )
         );
 
@@ -870,14 +873,14 @@ class Model_Package extends Model_Abstract
             $db = Model_Database::getAdapter();
             $db->delete(
                 'download_enable',
-                array("fileid=?" => $this->getTimestamp())
+                array("fileid=?" => $this->getTimestamp()->get(Zend_Date::TIMESTAMP))
             );
             $this->_activated = false;
         }
         if ($this->_writtenToDb) {
             $db->delete(
                 'download_available',
-                array("fileid=?" => $this->getTimestamp())
+                array("fileid=?" => $this->getTimestamp()->get(Zend_Date::TIMESTAMP))
             );
             $this->_writtenToDb = false;
         }
@@ -964,7 +967,7 @@ class Model_Package extends Model_Abstract
         $connection->setMethod('HEAD');
         $connection->setConfig(array('strictredirects' => true));
 
-        $timestamp = $this->getTimestamp();
+        $timestamp = $this->getTimestamp()->get(Zend_Date::TIMESTAMP);
         $httpsPath = $this->getInfoFileUrlPath();
         $connection->setUri("https://$httpsPath/$timestamp/info");
         $result = $this->_testConnection($connection);
