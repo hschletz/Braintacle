@@ -27,7 +27,8 @@ class GroupController extends Zend_Controller_Action
     public function preDispatch()
     {
         // Fetch group with given ID for actions referring to a particular group
-        if ($this->_getParam('action') == 'index') {
+        $action = $this->_getParam('action');
+        if ($action == 'index' or $action == 'add') {
             return; // no specific group for this action
         }
 
@@ -113,6 +114,12 @@ class GroupController extends Zend_Controller_Action
             }
         }
         $this->_redirect('group/packages/id/' . $group->getId());
+    }
+
+    public function addAction()
+    {
+        $form = new Form_AddToGroup;
+        $this->view->form = $form;
     }
 
     public function deleteAction()

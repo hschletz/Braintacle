@@ -165,6 +165,13 @@ if ($filter) {
         // For fixed filters, print a nicer description.
         $header = Model_Computer::getFilterDescription($filter, $search, $count);
     }
+    $header .= "&nbsp;&nbsp;&nbsp;\n";
+    $header .= $this->htmlTag(
+        'a',
+        $this->translate('Save to group'),
+        array('href' => $this->baseUrl() . '/group/add' . $this->filterUriPart),
+        true
+    );
     print $this->htmlTag(
         'p',
         $header,

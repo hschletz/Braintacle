@@ -1,0 +1,221 @@
+<?php
+/**
+ * Form for adding search results to a group
+ *
+ * $Id$
+ *
+ * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * @package Forms
+ */
+/**
+ * Form for adding search results to a group
+ *
+ * Form data should only be processed by process(). Do not call isValid()
+ * manually because validators depend on other form content.
+ * @package Forms
+ */
+class Form_AddToGroup extends Zend_Form
+{
+
+    /**
+     * Create elements
+     */
+    public function init()
+    {
+        $translate = Zend_Registry::get('Zend_Translate');
+
+        $this->setMethod('post');
+        $this->setDecorators(
+            array(
+                'FormElements',
+                array('HtmlTag', array('tag' => 'div')),
+                'Form'
+            )
+        );
+
+        $basicDecorator = array(
+            'ViewHelper',
+            'Errors',
+            array('HtmlTag', array('tag' => 'p')),
+        );
+        $labelDecorator = array(
+            'ViewHelper',
+            'Errors',
+            array(
+                'Label',
+                array(
+                    'tag' => 'p',
+                    'placement' => 'IMPLICIT_PREPEND',
+                    'optionalSuffix' => ':',
+                    'requiredSuffix' => ':'
+                )
+            )
+        );
+
+        $what = new Zend_Form_Element_Radio('What');
+        $what->setDisableTranslator(true)
+             ->setMultiOptions(
+                 array(
+                    'filter' => $translate->_(
+                        'Store search parameters. Group memberships will be updated automatically.'
+                    ),
+                    'result' => $translate->_(
+                        'Add current search results. Group memberships will be set only this time.'
+                    )
+                )
+             )
+             ->setValue('filter')
+             ->setDecorators($basicDecorator);
+        $this->addElement($what);
+
+        $where = new Zend_Form_Element_Radio('Where');
+        $where->setDisableTranslator(true)
+              ->setMultiOptions(
+                  array(
+                    'new' => $translate->_('Store in new group'),
+                    'existing' => $translate->_('Store in existing group')
+                  )
+              )
+              ->setValue('new')
+              ->setAttrib('onchange', 'whereChanged();')
+              ->setDecorators($basicDecorator);
+        $this->addElement($where);
+
+        $newGroup = new Zend_Form_Element_Text('newGroup');
+        $newGroup->setLabel('Name')
+                 ->addDecorator('Label', array('tag' => 'label', 'placement' => 'prepend'))
+                 ->addFilter('StringTrim')
+                 ->setDecorators($labelDecorator);
+        // Validators are set in process() because thy depend on the 'Where' value.
+        $this->addElement($newGroup);
+
+        $existingGroup = new Zend_Form_Element_Select('existingGroup');
+        $existingGroup->setLabel($translate->_('Group'))
+                      ->setDisableTranslator(true)
+                      ->setDecorators($labelDecorator);
+        $statement = Model_Group::createStatementStatic(
+            array('Id', 'Name'),
+            null,
+            null,
+            'Name'
+        );
+        while ($group = $statement->fetchObject('Model_Group')) {
+            $existingGroup->addMultiOption($group->getId(), $group->getName());
+        }
+        $this->addElement($existingGroup);
+
+        $submit = new Zend_Form_Element_Submit('submit');
+        $submit->setLabel('OK')
+        ->setDecorators($basicDecorator);
+        $this->addElement($submit);
+    }
+
+    /**
+     * Process form data
+     *
+     * This method performs validation of form data and, if valid, the requested
+     * action.
+     * @param array $data Form data (typically $_POST)
+     * @return bool TRUE on success, FALSE on invalid form data or processing error
+     **/
+    public function process($data)
+    {
+        if ($data['Where'] == 'new') {
+            // Add extra validators which are only suitable for new groups
+            $this->newGroup
+                ->addValidator('StringLength', false, array(1, 255))
+                ->addValidator(
+                    'Db_NoRecordExists', false, array(
+                        'table' => 'hardware',
+                        'field' => 'name',
+                        'exclude' => "deviceid = '_SYSTEMGROUP_'"
+                    )
+                )
+                ->setRequired(true);
+        }
+        if (!$this->isValid($data)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Render form
+     * @param Zend_View_Interface $view
+     * @return string
+     */
+    public function render(Zend_View_Interface $view=null)
+    {
+        $view = $this->getView();
+
+        $view->headScript()->captureStart();
+        ?>
+
+        // Show/hide fields according to selected "Where" radio button.
+        // Hide error messages.
+        function whereChanged()
+        {
+            selectElements();
+            // Hide error messages
+            var errors = document.getElementsByClassName('errors');
+            for (var i = 0; i < errors.length; i++) {
+                errors[i].style.display = 'none';
+            }
+        }
+
+        // Show/hide fields according to selected "Where" radio button.
+        function selectElements()
+        {
+            if (document.getElementById('Where-new').checked) {
+                display('newGroup', true);
+                display('existingGroup', false);
+            } else {
+                display('newGroup', false);
+                display('existingGroup', true);
+            }
+        }
+
+        /**
+         * Hide or display a form element.
+         * id (string): element name
+         * display (bool): true to display, false to hide
+         */
+        function display(id, display)
+        {
+            if (display) {
+                display = "block";
+            } else {
+                display = "none";
+            }
+            document.getElementById(id+"-label").style.display = display;
+        }
+
+        /**
+         * Called by body.onload().
+         */
+        function init()
+        {
+            selectElements();
+        }
+
+        <?php
+        $view->headScript()->captureEnd();
+
+        return parent::render($view);
+    }
+}

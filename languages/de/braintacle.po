@@ -19,13 +19,13 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 #
-# Holger Schletz <holger.schletz@web.de>, 2011, 2012.
+# Holger Schletz <holger.schletz@web.de>, 2011, 2012, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-29 20:15+0100\n"
-"PO-Revision-Date: 2012-12-29 20:16+0100\n"
+"POT-Creation-Date: 2013-01-09 12:17+0100\n"
+"PO-Revision-Date: 2013-01-09 12:17+0100\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -216,6 +216,28 @@ msgstr "Ändern"
 #: forms/Account/New.php; forms/DefineFields.php
 msgid "Add"
 msgstr "Hinzufügen"
+
+#: forms/AddToGroup.php
+msgid ""
+"Add current search results. Group memberships will be set only this time."
+msgstr ""
+"Aktuelle Suchergebnisse hinzufügen. Gruppenmitgliedschaften werden nur "
+"dieses mal gesetzt."
+
+#: forms/AddToGroup.php
+msgid "Store in existing group"
+msgstr "In vorhandener Gruppe speichern"
+
+#: forms/AddToGroup.php
+msgid "Store in new group"
+msgstr "In neuer Gruppe speichern"
+
+#: forms/AddToGroup.php
+msgid ""
+"Store search parameters. Group memberships will be updated automatically."
+msgstr ""
+"Suchparameter speichern. Gruppenmitgliedschaften werden automatisch "
+"aktualisiert."
 
 #: forms/AffectPackages.php
 msgid "Install"
@@ -1391,6 +1413,10 @@ msgstr "Netzmaske"
 #: views/scripts/computer/index.phtml
 msgid "Operating system"
 msgstr "Betriebssystem"
+
+#: views/scripts/computer/index.phtml
+msgid "Save to group"
+msgstr "In Gruppe speichern"
 
 #: views/scripts/computer/index.phtml
 msgid "Swap"
