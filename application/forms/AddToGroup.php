@@ -24,9 +24,6 @@
  */
 /**
  * Form for adding search results to a group
- *
- * Form data should only be processed by process(). Do not call isValid()
- * manually because validators depend on other form content.
  * @package Forms
  */
 class Form_AddToGroup extends Zend_Form
@@ -126,14 +123,11 @@ class Form_AddToGroup extends Zend_Form
     }
 
     /**
-     * Process form data
-     *
-     * This method performs validation of form data and, if valid, the requested
-     * action.
-     * @param array $data Form data (typically $_POST)
-     * @return bool TRUE on success, FALSE on invalid form data or processing error
-     **/
-    public function process($data)
+     * Validate the form
+     * @param array $data
+     * @return boolean
+     */
+    public function isValid($data)
     {
         if ($data['Where'] == 'new') {
             // Add extra validators which are only suitable for new groups
@@ -148,10 +142,7 @@ class Form_AddToGroup extends Zend_Form
                 )
                 ->setRequired(true);
         }
-        if (!$this->isValid($data)) {
-            return false;
-        }
-        return true;
+        return parent::isValid($data);
     }
 
     /**
