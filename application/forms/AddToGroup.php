@@ -40,28 +40,30 @@ class Form_AddToGroup extends Zend_Form
         $this->setDecorators(
             array(
                 'FormElements',
-                array('HtmlTag', array('tag' => 'div')),
+                array('HtmlTag', array('tag' => 'table', 'class' => 'Form_AddToGroup')),
                 'Form'
             )
         );
 
-        $basicDecorator = array(
+        $radioDecorator = array(
             'ViewHelper',
             'Errors',
-            array('HtmlTag', array('tag' => 'p')),
+            array(array('td' => 'HtmlTag'), 'options' => array('tag' => 'td', 'colspan' => 2)),
+            array(array('tr' => 'HtmlTag'), 'options' => array('tag' => 'tr')),
         );
         $labelDecorator = array(
             'ViewHelper',
             'Errors',
-            array(
-                'Label',
-                array(
-                    'tag' => 'p',
-                    'placement' => 'IMPLICIT_PREPEND',
-                    'optionalSuffix' => ':',
-                    'requiredSuffix' => ':'
-                )
-            )
+            array(array('td' => 'HtmlTag'), 'options' => array('tag' => 'td', 'class' => 'formElement')),
+            array('Label', array('tag' => 'td')),
+            array(array('tr' => 'HtmlTag'), 'options' => array('tag' => 'tr')),
+        );
+        $buttonDecorator = array(
+            'ViewHelper',
+            'Errors',
+            array(array('td' => 'HtmlTag'), 'options' => array('tag' => 'td')),
+            array(array('label' => 'HtmlTag'), array('tag' => 'td', 'placement' => 'prepend')),
+            array(array('tr' => 'HtmlTag'), 'options' => array('tag' => 'tr')),
         );
 
         $what = new Zend_Form_Element_Radio('What');
@@ -77,7 +79,7 @@ class Form_AddToGroup extends Zend_Form
                 )
              )
              ->setValue('filter')
-             ->setDecorators($basicDecorator);
+             ->setDecorators($radioDecorator);
         $this->addElement($what);
 
         $where = new Zend_Form_Element_Radio('Where');
@@ -90,7 +92,7 @@ class Form_AddToGroup extends Zend_Form
               )
               ->setValue('new')
               ->setAttrib('onchange', 'whereChanged();')
-              ->setDecorators($basicDecorator);
+              ->setDecorators($radioDecorator);
         $this->addElement($where);
 
         $newGroup = new Zend_Form_Element_Text('newGroup');
@@ -123,7 +125,7 @@ class Form_AddToGroup extends Zend_Form
 
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('OK')
-        ->setDecorators($basicDecorator);
+        ->setDecorators($buttonDecorator);
         $this->addElement($submit);
     }
 
@@ -196,11 +198,11 @@ class Form_AddToGroup extends Zend_Form
         function display(id, display)
         {
             if (display) {
-                display = "block";
+                display = "table-row";
             } else {
                 display = "none";
             }
-            document.getElementById(id+"-label").style.display = display;
+            document.getElementById(id).parentNode.parentNode.style.display = display;
         }
 
         /**

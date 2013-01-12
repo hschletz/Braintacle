@@ -313,3 +313,12 @@ input[size="8"]
 .table_network_devices {
     font-size: 80%;
 }
+
+.Form_AddToGroup td {
+    padding-top: 2ex;
+}
+
+td.formElement {
+    padding-top: 2ex;
+    width: 87%;
+}
