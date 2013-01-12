@@ -95,7 +95,6 @@ class Form_AddToGroup extends Zend_Form
 
         $newGroup = new Zend_Form_Element_Text('newGroup');
         $newGroup->setLabel('Name')
-                 ->addDecorator('Label', array('tag' => 'label', 'placement' => 'prepend'))
                  ->addFilter('StringTrim')
                  ->setDecorators($labelDecorator);
         // Validators are set in isValid() because thy depend on the 'Where' value.
