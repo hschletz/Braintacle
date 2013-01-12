@@ -100,6 +100,12 @@ class Form_AddToGroup extends Zend_Form
         // Validators are set in isValid() because thy depend on the 'Where' value.
         $this->addElement($newGroup);
 
+        $description = new Zend_Form_Element_Text('Description');
+        $description->setLabel('Description')
+                    ->addValidator('StringLength', false, array(0, 255))
+                    ->setDecorators($labelDecorator);
+        $this->addElement($description);
+
         $existingGroup = new Zend_Form_Element_Select('existingGroup');
         $existingGroup->setLabel($translate->_('Group'))
                       ->setDisableTranslator(true)
@@ -173,9 +179,11 @@ class Form_AddToGroup extends Zend_Form
         {
             if (document.getElementById('Where-new').checked) {
                 display('newGroup', true);
+                display('Description', true);
                 display('existingGroup', false);
             } else {
                 display('newGroup', false);
+                display('Description', false);
                 display('existingGroup', true);
             }
         }
