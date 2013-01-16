@@ -153,6 +153,26 @@ class Form_AddToGroup extends Zend_Form
     }
 
     /**
+     * Get group object referenced by form data. A new group is created if requested.
+     * @return Model_Group
+     **/
+    public function getGroup()
+    {
+        if ($this->getValue('Where') == 'new') {
+            $group = Model_Group::create(
+                $this->getValue('newGroup'),
+                $this->getValue('Description')
+            );
+        } else {
+            $group = Model_Group::fetchById($this->getValue('existingGroup'));
+            if (!$group) {
+                throw new RuntimeException('Invalid group ID: ' . $this->getValue('existingGroup'));
+            }
+        }
+        return $group;
+    }
+
+    /**
      * Render form
      * @param Zend_View_Interface $view
      * @return string

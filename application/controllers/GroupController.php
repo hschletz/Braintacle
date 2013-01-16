@@ -119,7 +119,12 @@ class GroupController extends Zend_Controller_Action
     public function addAction()
     {
         $form = new Form_AddToGroup;
-        $this->view->form = $form;
+        if ($this->getRequest()->isPost() and $form->isValid($_POST)) {
+            $group = $form->getGroup();
+            $this->_redirect('group/members/id/' . $group->getId());
+        } else {
+            $this->view->form = $form;
+        }
     }
 
     public function deleteAction()

@@ -458,4 +458,46 @@ class Model_Group extends Model_ComputerOrGroup
         return true;
     }
 
+    /**
+     * Create a new group
+     *
+     * @param string $name Group name, must not exist yet.
+     * @param string $description Optional description, default: NULL.
+     * @return Model_Group Object that provides access to the newly created group
+     * @throws UnexpectedValueException if group name is empty
+     * @throws RuntimeException if a group with the given name already exists
+     **/
+    public static function create($name, $description=null)
+    {
+        if ($name == '') {
+            throw new UnexpectedValueException('Group name is empty');
+        }
+        if ($description == '') {
+            $description = null; // Convert empty strings to NULL
+        }
+
+        $db = Model_Database::getAdapter();
+        if ($db->fetchOne(
+            "SELECT COUNT(id) FROM hardware WHERE name = ? AND deviceid = '_SYSTEMGROUP_'",
+            $name
+        )) {
+            throw new RuntimeException('Group already exists: ' . $name);
+        }
+
+        $db->beginTransaction();
+        $db->insert(
+            'hardware',
+            array(
+                'name' => $name,
+                'description' => $description,
+                'deviceid' => '_SYSTEMGROUP_',
+                'lastdate' => new Zend_Db_Expr('CURRENT_TIMESTAMP')
+            )
+        );
+        $id = $db->lastInsertId('hardware', 'id');
+        $db->insert('groups', array('hardware_id' => $id));
+        $db->commit();
+
+        return self::fetchById($id);
+    }
 }
