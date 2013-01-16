@@ -73,14 +73,16 @@ print $this->htmlTag(
     array('class' => 'textcenter')
 );
 
+$creationDate = $group->getCacheCreationDate();
 $update = sprintf(
     $this->translate('Last update: %s'),
-    $group->getCacheCreationDate()->get(Zend_Date::DATETIME_MEDIUM)
+    $creationDate ? $creationDate->get(Zend_Date::DATETIME_MEDIUM) : '&ndash;'
 );
 $update .= "<br>\n";
+$expirationDate = $group->getCacheExpirationDate();
 $update .= sprintf(
     $this->translate('Next update: %s'),
-    $group->getCacheExpirationDate()->get(Zend_Date::DATETIME_MEDIUM)
+    $expirationDate ? $expirationDate->get(Zend_Date::DATETIME_MEDIUM) : '&ndash;'
 );
 
 print $this->htmlTag(

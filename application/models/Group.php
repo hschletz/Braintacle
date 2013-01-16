@@ -212,16 +212,22 @@ class Model_Group extends Model_ComputerOrGroup
      * the global GroupCacheExpirationInterval Option is added to
      * CacheExpirationDate, so that the real expiration date is returned instead
      * of the value in the database (which is CacheCreationDate + random offset)
+     * NULL is returned for these Properties if they have not been initialized.
      */
     public function getProperty($property, $rawValue=false)
     {
         if (!$rawValue and ($property == 'CacheExpirationDate' or $property == 'CacheCreationDate')) {
-            $value = new Zend_Date(
-                parent::getProperty($property, true),
-                Zend_Date::TIMESTAMP
-            );
-            if ($property == 'CacheExpirationDate') {
-                $value->addSecond(Model_Config::get('GroupCacheExpirationInterval'));
+            $value = parent::getProperty($property, true);
+            if ($value == 0) {
+                $value = null;
+            } else {
+                $value = new Zend_Date(
+                    $value,
+                    Zend_Date::TIMESTAMP
+                );
+                if ($property == 'CacheExpirationDate') {
+                    $value->addSecond(Model_Config::get('GroupCacheExpirationInterval'));
+                }
             }
         } else {
             $value = parent::getProperty($property, $rawValue);
@@ -313,7 +319,7 @@ class Model_Group extends Model_ComputerOrGroup
         $currentTime = Zend_Date::now();
 
         // Do nothing if expiration time has not been reached and $force is false.
-        if (!$force and ($expires->compare($currentTime) == 1)) {
+        if ($expires and !$force and ($expires->compare($currentTime) == 1)) {
             return;
         }
 
