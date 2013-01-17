@@ -15,6 +15,10 @@ Fixed bugs:
 
 - Console: Fixed display of package creation dates (0.10 regression)
 
+Misc:
+
+- Updated the database that determines the vendor from a MAC address.
+
 
 CHANGES IN VERSION 0.10
 =======================
