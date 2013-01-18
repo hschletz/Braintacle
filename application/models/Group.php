@@ -482,6 +482,8 @@ class Model_Group extends Model_ComputerOrGroup
             $description = null; // Convert empty strings to NULL
         }
 
+        $now = new Zend_Date();
+
         $db = Model_Database::getAdapter();
         if ($db->fetchOne(
             "SELECT COUNT(id) FROM hardware WHERE name = ? AND deviceid = '_SYSTEMGROUP_'",
@@ -497,11 +499,17 @@ class Model_Group extends Model_ComputerOrGroup
                 'name' => $name,
                 'description' => $description,
                 'deviceid' => '_SYSTEMGROUP_',
-                'lastdate' => new Zend_Db_Expr('CURRENT_TIMESTAMP')
+                'lastdate' => $now->get(Model_Database::getNada()->timestampFormatIso()),
             )
         );
         $id = $db->lastInsertId('hardware', 'id');
-        $db->insert('groups', array('hardware_id' => $id));
+        $db->insert(
+            'groups',
+            array(
+                'hardware_id' => $id,
+                'create_time' => $now->get(Zend_Date::TIMESTAMP),
+            )
+        );
         $db->commit();
 
         return self::fetchById($id);
