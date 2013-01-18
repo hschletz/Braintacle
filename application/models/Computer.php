@@ -211,7 +211,9 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param bool|array $exact Force exact match on search parameter(s) (no wildcards, no substrings) (strings only)
      * @param bool|array $invert Invert query results (return all computers NOT matching criteria)
      * @param string|array $operator Comparision operator (numeric/date search only)
-     * @return Zend_Db_Statement Query result
+     * @param bool $query Perform query and return a Zend_Db_Statement object (default).
+     *                    Set to false to return a Zend_Db_Select object.
+     * @return Zend_Db_Statement|Zend_Db_Select Query result or Query
      */
     static function createStatementStatic(
         $columns=null,
@@ -221,7 +223,8 @@ class Model_Computer extends Model_ComputerOrGroup
         $search=null,
         $exact=null,
         $invert=null,
-        $operator=null
+        $operator=null,
+        $query=true
     )
     {
         // The 'hardware' table also contains rows that describe groups which
@@ -466,7 +469,11 @@ class Model_Computer extends Model_ComputerOrGroup
                    ->where("deviceid != '_DOWNLOADGROUP_'");
         }
 
-        return $select->query();
+        if ($query) {
+            return $select->query();
+        } else {
+            return $select;
+        }
     }
 
     /**
