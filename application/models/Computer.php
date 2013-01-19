@@ -467,6 +467,54 @@ class Model_Computer extends Model_ComputerOrGroup
         if ($filterGroups) {
             $select->where("deviceid != '_SYSTEMGROUP_'")
                    ->where("deviceid != '_DOWNLOADGROUP_'");
+        } else {
+            /* Try to optimize the query by removing unnecessary JOINs. The
+               query can be rewritten if all of the following conditions are
+               met:
+               - There is the 'hardware' table (it is always present) and
+                 exactly 1 other table.
+               - The tables are joined by an inner join.
+               - The only column from the 'hardware' table is 'id'
+               In that case, hardware.id can be replaced by the 'hardware_id'
+               column from the other table.
+            */
+            $queryTables = $select->getPart(Zend_Db_Select::FROM);
+            if (count($queryTables == 2)) {
+                // Get the table that is not 'hardware'.
+                unset($queryTables['hardware']);
+                $table = array_pop($queryTables);
+                if ($table['joinType'] == Zend_Db_Select::INNER_JOIN) {
+                    $rewriteQuery = true;
+                    $queryColumns = array();
+                    foreach ($select->getPart(Zend_Db_Select::COLUMNS) as $column) {
+                        if ($column[0] == 'hardware') {
+                            if ($column[1] == 'id') {
+                                // Rewrite column as otherTable.hardware_id
+                                $column[0] = $table['tableName'];
+                                $column[1] = 'hardware_id';
+                                $column[2] = 'id'; // Alias, required for code that expects hardware.id
+                            } else {
+                                // Query cannot be rewritten because there are
+                                // other columns from 'hardware'.
+                                $rewriteQuery = false;
+                                break;
+                            }
+                        }
+                        // Append to new column list.
+                        if ($column[2] === null) { // Column alias?
+                            $queryColumns[] = $column[1];
+                        } else {
+                            $queryColumns[$column[2]] = $column[1];
+                        }
+                    }
+
+                    if ($rewriteQuery) {
+                        $select->reset(Zend_Db_Select::FROM);
+                        $select->reset(Zend_Db_Select::COLUMNS);
+                        $select->from($table['tableName'], $queryColumns);
+                    }
+                }
+            }
         }
 
         if ($query) {
