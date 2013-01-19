@@ -160,18 +160,18 @@ if ($filter) {
                     $this->translate('Edit filter'),
                     array('href' => $this->baseUrl() . '/computer/search' . $this->filterUriPart),
                     true
+                )
+                . "\n&nbsp;&nbsp;&nbsp;\n"
+                . $this->htmlTag(
+                    'a',
+                    $this->translate('Save to group'),
+                    array('href' => $this->baseUrl() . '/group/add' . $this->filterUriPart),
+                    true
                 );
     } else {
         // For fixed filters, print a nicer description.
         $header = Model_Computer::getFilterDescription($filter, $search, $count);
     }
-    $header .= "&nbsp;&nbsp;&nbsp;\n";
-    $header .= $this->htmlTag(
-        'a',
-        $this->translate('Save to group'),
-        array('href' => $this->baseUrl() . '/group/add' . $this->filterUriPart),
-        true
-    );
     print $this->htmlTag(
         'p',
         $header,
