@@ -47,7 +47,9 @@ echo $this->headScript();
 <?php echo $this->layout()->content; ?>
 </div>
 
-<?php if (Zend_Auth::getInstance()->hasIdentity()): ?>
+<?php
+if (Zend_Auth::getInstance()->hasIdentity()):
+?>
 
 <div id="menu">
 <?php
@@ -84,17 +86,21 @@ if (Zend_Registry::isRegistered('subNavigation')) {
 ?>
 
 <div id="logout">
-<?php echo '<a href="'
+<?php
+echo '<a href="'
     . $this->baseUrl()
     . '/login/logout">'
     . $this->translate('Logout')
     . '</a>'
-; ?>
+;
+?>
 
 </div>
 
 </div>
-<?php endif; ?>
+<?php
+endif;
+?>
 
 </body>
 
