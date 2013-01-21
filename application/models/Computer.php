@@ -211,6 +211,8 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param bool|array $exact Force exact match on search parameter(s) (no wildcards, no substrings) (strings only)
      * @param bool|array $invert Invert query results (return all computers NOT matching criteria)
      * @param string|array $operator Comparision operator (numeric/date search only)
+     * @param bool $addSearchColumns Add columns with search criteria (default).
+     *                               Set to false to return only columns specified by $columns.
      * @param bool $query Perform query and return a Zend_Db_Statement object (default).
      *                    Set to false to return a Zend_Db_Select object.
      * @return Zend_Db_Statement|Zend_Db_Select Query result or Query
@@ -224,6 +226,7 @@ class Model_Computer extends Model_ComputerOrGroup
         $exact=null,
         $invert=null,
         $operator=null,
+        $addSearchColumns=true,
         $query=true
     )
     {
@@ -328,23 +331,47 @@ class Model_Computer extends Model_ComputerOrGroup
                 case 'AssetTag':
                 case 'BiosVersion':
                 case 'BiosDate':
-                    $select = self::_findString($select, 'Computer', $type, $arg, $matchExact, $invertResult);
+                    $select = self::_findString(
+                        $select,
+                        'Computer',
+                        $type,
+                        $arg,
+                        $matchExact,
+                        $invertResult,
+                        $addSearchColumns
+                    );
                     break;
                 case 'CpuClock':
                 case 'CpuCores':
                 case 'PhysicalMemory':
                 case 'SwapMemory':
-                    $select = self::_findInteger($select, 'Computer', $type, $arg, $operator, $invertResult);
+                    $select = self::_findInteger(
+                        $select,
+                        'Computer',
+                        $type,
+                        $arg,
+                        $operator,
+                        $invertResult,
+                        $addSearchColumns
+                    );
                     break;
                 case 'InventoryDate':
                 case 'LastContactDate':
-                    $select = self::_findDate($select, 'Computer', $type, $arg, $operator, $invertResult);
+                    $select = self::_findDate(
+                        $select,
+                        'Computer',
+                        $type,
+                        $arg,
+                        $operator,
+                        $invertResult,
+                        $addSearchColumns
+                    );
                     break;
                 case 'PackageNonnotified':
                 case 'PackageSuccess':
                 case 'PackageNotified':
                 case 'PackageError':
-                    $select = Model_Computer::_filterByPackage($select, $type, $arg);
+                    $select = Model_Computer::_filterByPackage($select, $type, $arg, $addSearchColumns);
                     break;
                 case 'Software':
                     $select
@@ -355,7 +382,7 @@ class Model_Computer extends Model_ComputerOrGroup
                                 'hardware.id = softwares.hardware_id AND softwares.name = ?',
                                 $arg
                             ),
-                            array ('software_version' => 'version')
+                            $addSearchColumns ? array('software_version' => 'version') : null
                         );
                     $filterGroups = false;
                     break;
@@ -367,7 +394,7 @@ class Model_Computer extends Model_ComputerOrGroup
                         ->join(
                             'groups_cache',
                             'hardware.id = groups_cache.hardware_id',
-                            array('static')
+                            $addSearchColumns ? array('static') : null
                         )
                         ->where('groups_cache.group_id = ?', $arg->getId())
                         ->where(
@@ -389,7 +416,8 @@ class Model_Computer extends Model_ComputerOrGroup
                         $property,
                         $arg,
                         $operator,
-                        $invertResult
+                        $invertResult,
+                        $addSearchColumns
                     );
                     $filterGroups = false;
                     break;
@@ -405,7 +433,8 @@ class Model_Computer extends Model_ComputerOrGroup
                                     $property,
                                     $arg,
                                     $matchExact,
-                                    $invertResult
+                                    $invertResult,
+                                    $addSearchColumns
                                 );
                                 break;
                             case 'integer':
@@ -415,7 +444,8 @@ class Model_Computer extends Model_ComputerOrGroup
                                     $property,
                                     $arg,
                                     $operator,
-                                    $invertResult
+                                    $invertResult,
+                                    $addSearchColumns
                                 );
                                 break;
                             case 'float':
@@ -425,7 +455,8 @@ class Model_Computer extends Model_ComputerOrGroup
                                     $property,
                                     $arg,
                                     $operator,
-                                    $invertResult
+                                    $invertResult,
+                                    $addSearchColumns
                                 );
                                 break;
                             case 'date':
@@ -435,7 +466,8 @@ class Model_Computer extends Model_ComputerOrGroup
                                     $property,
                                     $arg,
                                     $operator,
-                                    $invertResult
+                                    $invertResult,
+                                    $addSearchColumns
                                 );
                                 break;
                             default:
@@ -452,7 +484,8 @@ class Model_Computer extends Model_ComputerOrGroup
                             $property,
                             $arg,
                             $matchExact,
-                            $invertResult
+                            $invertResult,
+                            $addSearchColumns
                         );
                         if ($model != 'Windows') {
                             $filterGroups = false;
@@ -970,9 +1003,10 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param Zend_Db_Select Object to apply the filter to
      * @param string $filter Name of a pre-defined filter routine
      * @param string $search Search parameter passed to the filter
+     * @param bool $addSearchColumns Add columns with search criteria (Package.Status)
      * @return Zend_Db_Select Object with filter applied
      */
-    protected static function _filterByPackage(Zend_Db_Select $select, $filter, $search)
+    protected static function _filterByPackage(Zend_Db_Select $select, $filter, $search, $addSearchColumns)
     {
         switch ($filter) {
             case 'PackageNonnotified':
@@ -991,9 +1025,7 @@ class Model_Computer extends Model_ComputerOrGroup
         return $select->join(
             'devices',
             'hardware.id = devices.hardware_id AND devices.name=\'DOWNLOAD\' AND devices.tvalue ' . $condition,
-            array(
-                'package_status' => 'tvalue'
-            )
+            $addSearchColumns ? array('package_status' => 'tvalue') : null
         )
         ->join(
             'download_enable',
@@ -1021,9 +1053,10 @@ class Model_Computer extends Model_ComputerOrGroup
      * This must be either 'Computer' or a valid child object class. Every
      * other value will trigger an exception.
      * @param string $property Property to search in. Properties unknown to the model will trigger an exception.
+     * @param bool $addSearchColumns Add columns with search criteria.
      * @return array Table and column of search criteria
      */
-    protected static function _findCommon($select, $model, $property)
+    protected static function _findCommon($select, $model, $property, $addSearchColumns)
     {
         // Determine table name and column alias
         if ($model == 'Computer') {
@@ -1073,15 +1106,17 @@ class Model_Computer extends Model_ComputerOrGroup
             $select->join($table, "$table.hardware_id=hardware.id", array());
         }
 
-        // Add column if not already present
-        $columnPresent = false;
-        foreach ($select->getPart('columns') as $columnPart) {
-            if ($columnPart[0] == $table and $columnPart[1] == $column) {
-                $columnPresent = true;
+        if ($addSearchColumns) {
+            // Add column if not already present
+            $columnPresent = false;
+            foreach ($select->getPart('columns') as $columnPart) {
+                if ($columnPart[0] == $table and $columnPart[1] == $column) {
+                    $columnPresent = true;
+                }
             }
-        }
-        if (!$columnPresent) {
-            $select->columns(array($columnAlias => $column), $table);
+            if (!$columnPresent) {
+                $select->columns(array($columnAlias => $column), $table);
+            }
         }
 
         return array($table, $column);
@@ -1098,11 +1133,20 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string $arg String to search for
      * @param bool $matchExact Disable wildcards ('*', '?', '%', '_') and substring search.
      * @param bool $invertResult Return computers NOT matching criteria
+     * @param bool $addSearchColumns Add columns with search criteria.
      * @return Zend_Db_Select Object with filter applied
      */
-    protected static function _findString($select, $model, $property, $arg, $matchExact, $invertResult)
+    protected static function _findString(
+        $select,
+        $model,
+        $property,
+        $arg,
+        $matchExact,
+        $invertResult,
+        $addSearchColumns
+    )
     {
-        list($table, $column) = self::_findCommon($select, $model, $property);
+        list($table, $column) = self::_findCommon($select, $model, $property, $addSearchColumns);
 
         // Determine comparision operator and prepare search argument
         if ($matchExact) {
@@ -1156,9 +1200,10 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string $arg Numeric operand
      * @param string $operator Comparision operator (= == != <> < <= > >= eq ne lt le gt ge)
      * @param bool $invertResult Return computers NOT matching criteria
+     * @param bool $addSearchColumns Add columns with search criteria.
      * @return Zend_Db_Select Object with filter applied
      */
-    protected static function _findNumber($select, $model, $property, $arg, $operator, $invertResult)
+    protected static function _findNumber($select, $model, $property, $arg, $operator, $invertResult, $addSearchColumns)
     {
         // Convert abstract operator into SQL operator
         switch ($operator) {
@@ -1192,7 +1237,7 @@ class Model_Computer extends Model_ComputerOrGroup
                 throw new UnexpectedValueException('Invalid numeric comparision operator: ' . $operator);
         }
 
-        list($table, $column) = self::_findCommon($select, $model, $property);
+        list($table, $column) = self::_findCommon($select, $model, $property, $addSearchColumns);
 
         $where = "$table.$column $operator ?";
         if ($invertResult) {
@@ -1214,9 +1259,18 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string $arg Integer operand (will be validated)
      * @param string $operator Comparision operator (= == != <> < <= > >= eq ne lt le gt ge)
      * @param bool $invertResult Return computers NOT matching criteria
+     * @param bool $addSearchColumns Add columns with search criteria.
      * @return Zend_Db_Select Object with filter applied
      */
-    protected static function _findInteger($select, $model, $property, $arg, $operator, $invertResult)
+    protected static function _findInteger(
+        $select,
+        $model,
+        $property,
+        $arg,
+        $operator,
+        $invertResult,
+        $addSearchColumns
+    )
     {
         // Sanitize input
         if (!ctype_digit((string) $arg)) {
@@ -1224,7 +1278,7 @@ class Model_Computer extends Model_ComputerOrGroup
         }
         $arg = (integer) $arg;
 
-        return self::_findNumber($select, $model, $property, $arg, $operator, $invertResult);
+        return self::_findNumber($select, $model, $property, $arg, $operator, $invertResult, $addSearchColumns);
     }
 
     /**
@@ -1238,9 +1292,10 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string $arg Float operand (will be validated)
      * @param string $operator Comparision operator (= == != <> < <= > >= eq ne lt le gt ge)
      * @param bool $invertResult Return computers NOT matching criteria
+     * @param bool $addSearchColumns Add columns with search criteria.
      * @return Zend_Db_Select Object with filter applied
      */
-    protected static function _findFloat($select, $model, $property, $arg, $operator, $invertResult)
+    protected static function _findFloat($select, $model, $property, $arg, $operator, $invertResult, $addSearchColumns)
     {
         // Sanitize input
         if (!is_numeric($arg)) {
@@ -1248,7 +1303,7 @@ class Model_Computer extends Model_ComputerOrGroup
         }
         $arg = (float) $arg;
 
-        return self::_findNumber($select, $model, $property, $arg, $operator, $invertResult);
+        return self::_findNumber($select, $model, $property, $arg, $operator, $invertResult, $addSearchColumns);
     }
 
     /**
@@ -1262,9 +1317,10 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param mixed $arg date operand (Zend_Date object or 'yyyy-MM-dd' string). Time of day is ignored.
      * @param string $operator Comparision operator (= == != <> < <= > >= eq ne lt le gt ge)
      * @param bool $invertResult Return computers NOT matching criteria
+     * @param bool $addSearchColumns Add columns with search criteria.
      * @return Zend_Db_Select Object with filter applied
      */
-    protected static function _findDate($select, $model, $property, $arg, $operator, $invertResult)
+    protected static function _findDate($select, $model, $property, $arg, $operator, $invertResult, $addSearchColumns)
     {
         // This method compares date values (ignoring time part) to timestamp
         // columns. The comparision can not be made directly because the date
@@ -1295,7 +1351,7 @@ class Model_Computer extends Model_ComputerOrGroup
         $dayStart = $dayStart->get($nada->timestampFormatIso());
         $dayNext = $dayNext->get($nada->timestampFormatIso());
 
-        list($table, $column) = self::_findCommon($select, $model, $property);
+        list($table, $column) = self::_findCommon($select, $model, $property, $addSearchColumns);
         $operand = "$table.$column";
 
         switch ($operator) {
