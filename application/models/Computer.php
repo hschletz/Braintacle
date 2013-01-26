@@ -475,6 +475,7 @@ class Model_Computer extends Model_ComputerOrGroup
                                     'Unexpected datatype for user defined information'
                                 );
                         }
+                        $filterGroups = false;
                     } elseif (preg_match('/^[a-zA-Z]+\.[a-zA-Z]+$/', $type)) {
                         list($model, $property) = explode('.', $type);
                         // apply a generic string filter.
