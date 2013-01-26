@@ -216,6 +216,7 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param bool $query Perform query and return a Zend_Db_Statement object (default).
      *                    Set to false to return a Zend_Db_Select object.
      * @return Zend_Db_Statement|Zend_Db_Select Query result or Query
+     * @throws LogicException if more than 2 tables are joined (only in development mode)
      */
     static function createStatementStatic(
         $columns=null,
@@ -230,13 +231,6 @@ class Model_Computer extends Model_ComputerOrGroup
         $query=true
     )
     {
-        // The 'hardware' table also contains rows that describe groups which
-        // need to be filtered out. Some filters already prevent these rows from
-        // showing up in the result, so the extra filter would be unnecessary.
-        // The group filter is enabled by default and will be disabled later
-        // where possible.
-        $filterGroups = true;
-
         $db = Model_Database::getAdapter();
 
         $dummy = new Model_Computer;
@@ -384,7 +378,6 @@ class Model_Computer extends Model_ComputerOrGroup
                             ),
                             $addSearchColumns ? array('software_version' => 'version') : null
                         );
-                    $filterGroups = false;
                     break;
                 case 'MemberOf':
                     // $arg is expected to be a Model_Group object.
@@ -404,7 +397,6 @@ class Model_Computer extends Model_ComputerOrGroup
                                 Model_GroupMembership::TYPE_STATIC
                             )
                         );
-                    $filterGroups = false;
                     break;
                 case 'Volume.Size':
                 case 'Volume.FreeSpace':
@@ -419,7 +411,6 @@ class Model_Computer extends Model_ComputerOrGroup
                         $invertResult,
                         $addSearchColumns
                     );
-                    $filterGroups = false;
                     break;
                 default:
                     if (preg_match('#^UserDefinedInfo\\.(.*)#', $type, $matches)) {
@@ -475,7 +466,6 @@ class Model_Computer extends Model_ComputerOrGroup
                                     'Unexpected datatype for user defined information'
                                 );
                         }
-                        $filterGroups = false;
                     } elseif (preg_match('/^[a-zA-Z]+\.[a-zA-Z]+$/', $type)) {
                         list($model, $property) = explode('.', $type);
                         // apply a generic string filter.
@@ -488,9 +478,6 @@ class Model_Computer extends Model_ComputerOrGroup
                             $invertResult,
                             $addSearchColumns
                         );
-                        if ($model != 'Windows') {
-                            $filterGroups = false;
-                        }
                     } else {
                         // Filter must be of the form 'Model.Property'.
                         throw new UnexpectedValueException('Invalid filter: ' . $type);
@@ -498,22 +485,25 @@ class Model_Computer extends Model_ComputerOrGroup
             }
         }
 
-        if ($filterGroups) {
-            $select->where("deviceid != '_SYSTEMGROUP_'")
-                   ->where("deviceid != '_DOWNLOADGROUP_'");
-        } else {
-            /* Try to optimize the query by removing unnecessary JOINs. The
-               query can be rewritten if all of the following conditions are
-               met:
-               - There is the 'hardware' table (it is always present) and
-                 exactly 1 other table.
-               - The tables are joined by an inner join.
-               - The only column from the 'hardware' table is 'id'
-               In that case, hardware.id can be replaced by the 'hardware_id'
-               column from the other table.
-            */
-            $queryTables = $select->getPart(Zend_Db_Select::FROM);
-            if (count($queryTables == 2)) {
+        /* Try to optimize the query by removing unnecessary JOINs. The query
+           can be rewritten if all of the following conditions are met:
+            - There is the 'hardware' table (it is always present) and exactly 1
+              other table.
+            - The tables are joined by an inner join.
+            - The only column from the 'hardware' table is 'id'
+            In that case, hardware.id can be replaced by the 'hardware_id'
+            column from the other table.
+
+            If there is no inner join, the result may contain rows from the
+            'hardware' table that describe groups. These need to be removed.
+        */
+        $queryTables = $select->getPart(Zend_Db_Select::FROM);
+        $filterGroups = false;
+        switch(count($queryTables)) {
+            case 1:
+                $filterGroups = true;
+                break;
+            case 2:
                 // Get the table that is not 'hardware'.
                 unset($queryTables['hardware']);
                 $table = array_pop($queryTables);
@@ -547,8 +537,27 @@ class Model_Computer extends Model_ComputerOrGroup
                         $select->reset(Zend_Db_Select::COLUMNS);
                         $select->from($table['tableName'], $queryColumns);
                     }
+                } else {
+                    $filterGroups = true;
                 }
-            }
+                break;
+            default:
+                // Optimization for more than 2 tables is not implemented. In
+                // production mode, just add the group filter and run the query
+                // unoptimized. Otherwise, throw an exception as a friendly
+                // reminder to the developer.
+                if (Braintacle_Application::getEnvironment() == 'production') {
+                    $filterGroups = true;
+                } else {
+                    throw new LogicException(
+                        'Optimization not implemented for more than 2 tables.'
+                    );
+                }
+        }
+
+        if ($filterGroups) {
+            $select->where("deviceid != '_SYSTEMGROUP_'")
+                   ->where("deviceid != '_DOWNLOADGROUP_'");
         }
 
         if ($query) {
