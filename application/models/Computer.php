@@ -542,16 +542,14 @@ class Model_Computer extends Model_ComputerOrGroup
                 }
                 break;
             default:
-                // Optimization for more than 2 tables is not implemented. In
-                // production mode, just add the group filter and run the query
-                // unoptimized. Otherwise, throw an exception as a friendly
-                // reminder to the developer.
-                if (Braintacle_Application::getEnvironment() == 'production') {
-                    $filterGroups = true;
-                } else {
-                    throw new LogicException(
-                        'Optimization not implemented for more than 2 tables.'
-                    );
+                // JOINs cannot be optimized for more than 2 tables. Only the
+                // group filter can be ommitted if there is an inner join.
+                $filterGroups = true;
+                foreach ($queryTables as $table) {
+                    if ($table['joinType'] == Zend_Db_Select::INNER_JOIN) {
+                        $filterGroups = false;
+                        break;
+                    }
                 }
         }
 
