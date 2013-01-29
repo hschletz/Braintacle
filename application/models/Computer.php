@@ -498,7 +498,6 @@ class Model_Computer extends Model_ComputerOrGroup
             'hardware' table that describe groups. These need to be removed.
         */
         $queryTables = $select->getPart(Zend_Db_Select::FROM);
-        $filterGroups = false;
         switch(count($queryTables)) {
             case 1:
                 $filterGroups = true;
@@ -508,6 +507,7 @@ class Model_Computer extends Model_ComputerOrGroup
                 unset($queryTables['hardware']);
                 $table = array_pop($queryTables);
                 if ($table['joinType'] == Zend_Db_Select::INNER_JOIN) {
+                    $filterGroups = false;
                     $rewriteQuery = true;
                     $queryColumns = array();
                     foreach ($select->getPart(Zend_Db_Select::COLUMNS) as $column) {
