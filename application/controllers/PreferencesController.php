@@ -85,7 +85,7 @@ class PreferencesController extends Zend_Controller_Action
         $form = new Form_DefineFields;
         if ($this->getRequest()->isPost() and $form->isValid($_POST)) {
             $form->process();
-            $this->_redirect('preferences/userdefined');
+            $this->redirect('preferences/userdefined');
         } else {
             // render form
             $this->view->form = $form;
@@ -100,7 +100,7 @@ class PreferencesController extends Zend_Controller_Action
             if ($form->isValid($_POST) and $this->_getParam('yes')) {
                 Model_UserDefinedInfo::deleteField($field);
             }
-            $this->_redirect('preferences/userdefined');
+            $this->redirect('preferences/userdefined');
         } else {
             // render confirmation form
             $this->view->form = $form;

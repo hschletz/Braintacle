@@ -40,7 +40,7 @@ class ComputerController extends Zend_Controller_Action
             $this->view->computer = $computer;
             Zend_Registry::set('subNavigation', 'Inventory');
         } else {
-            $this->_redirect('computer');
+            $this->redirect('computer');
         }
     }
 
@@ -187,7 +187,7 @@ class ComputerController extends Zend_Controller_Action
                 $session->setExpirationHops(1);
                 $session->success = true;
 
-                $this->_redirect('computer/userdefined/id/' . $this->computer->getId());
+                $this->redirect('computer/userdefined/id/' . $this->computer->getId());
                 return;
             }
         } else {
@@ -236,9 +236,9 @@ class ComputerController extends Zend_Controller_Action
                             'Computer \'%s\' could not be deleted.'
                         );
                     }
-                    $this->_redirect('computer');
+                    $this->redirect('computer');
                 } else {
-                    $this->_redirect('computer/general/id/' . $this->computer->getId());
+                    $this->redirect('computer/general/id/' . $this->computer->getId());
                 }
             }
         } else {
@@ -262,7 +262,7 @@ class ComputerController extends Zend_Controller_Action
             $this->computer->unaffectPackage($session->packageName);
         }
 
-        $this->_redirect('computer/packages/id/' . $id);
+        $this->redirect('computer/packages/id/' . $id);
     }
 
     public function installpackageAction()
@@ -276,7 +276,7 @@ class ComputerController extends Zend_Controller_Action
                 $computer->installPackage($packageName);
             }
         }
-        $this->_redirect('computer/packages/id/' . $computer->getId());
+        $this->redirect('computer/packages/id/' . $computer->getId());
     }
 
     public function managegroupsAction()
@@ -288,7 +288,7 @@ class ComputerController extends Zend_Controller_Action
         if ($form->isValid($_POST)) {
             $computer->setGroups($form->getValues());
         }
-        $this->_redirect('computer/groups/id/' . $computer->getId());
+        $this->redirect('computer/groups/id/' . $computer->getId());
     }
 
     public function searchAction()
@@ -314,7 +314,7 @@ class ComputerController extends Zend_Controller_Action
                 $this->_setParam('search', $search);
 
                 // Redirect to index page with all search parameters
-                $this->_redirect(
+                $this->redirect(
                     'computer/index' . $this->getFilterUriPart() . '/customFilter/1/columns/' . implode(',', $columns)
                 );
                 return;
@@ -352,7 +352,7 @@ class ComputerController extends Zend_Controller_Action
             $response = $request->request('POST');
 
             if ($response->isSuccessful()) {
-                $this->_redirect('computer');
+                $this->redirect('computer');
             } else {
                 $this->view->response = $response; // View script can display message
             }

@@ -42,7 +42,7 @@ class PackageController extends Zend_Controller_Action
         if ($this->getRequest()->isPost() and $form->isValid($_POST)) {
             $package = new Model_Package;
             $this->_buildPackage($package, $form);
-            $this->_redirect('package');
+            $this->redirect('package');
             return;
         }
 
@@ -66,7 +66,7 @@ class PackageController extends Zend_Controller_Action
             }
         }
 
-        $this->_redirect('package');
+        $this->redirect('package');
     }
 
     public function editAction()
@@ -86,7 +86,7 @@ class PackageController extends Zend_Controller_Action
                 $oldPackage->getErrors()
             );
 
-            $this->_redirect('package');
+            $this->redirect('package');
             return;
         }
 
@@ -127,7 +127,7 @@ class PackageController extends Zend_Controller_Action
             }
 
             $this->_setSessionData($newName, $success, $message);
-            $this->_redirect('package');
+            $this->redirect('package');
             return;
         }
 

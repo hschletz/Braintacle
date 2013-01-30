@@ -58,7 +58,7 @@ class DuplicatesController extends Zend_Controller_Action
             $this->_getParam('mergeGroups'),
             $this->_getParam('mergePackages')
         );
-        $this->_redirect('duplicates');
+        $this->redirect('duplicates');
     }
 
     public function allowAction()
@@ -71,7 +71,7 @@ class DuplicatesController extends Zend_Controller_Action
             if ($form->isValid($_POST) and $this->_getParam('yes')) {
                 Model_Computer::allowDuplicates($criteria, $value);
             }
-            $this->_redirect('duplicates');
+            $this->redirect('duplicates');
         } else {
             $this->view->form = $form;
             $this->view->criteria = $criteria;

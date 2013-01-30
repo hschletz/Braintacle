@@ -37,7 +37,7 @@ class GroupController extends Zend_Controller_Action
             $this->group = $group;
             $this->view->group = $group;
         } else {
-            $this->_redirect('group');
+            $this->redirect('group');
         }
     }
 
@@ -99,7 +99,7 @@ class GroupController extends Zend_Controller_Action
             $this->group->unaffectPackage($session->packageName);
         }
 
-        $this->_redirect('group/packages/id/' . $id);
+        $this->redirect('group/packages/id/' . $id);
     }
 
     public function installpackageAction()
@@ -113,7 +113,7 @@ class GroupController extends Zend_Controller_Action
                 $group->installPackage($packageName);
             }
         }
-        $this->_redirect('group/packages/id/' . $group->getId());
+        $this->redirect('group/packages/id/' . $group->getId());
     }
 
     public function addAction()
@@ -136,7 +136,7 @@ class GroupController extends Zend_Controller_Action
             if ($form->getValue('What') == Form_AddToGroup::STORE_FILTER) {
                 $group->setDynamicMembersSql($members);
             }
-            $this->_redirect('group/members/id/' . $group->getId());
+            $this->redirect('group/members/id/' . $group->getId());
         } else {
             $this->view->form = $form;
         }
@@ -164,9 +164,9 @@ class GroupController extends Zend_Controller_Action
                             'Group \'%s\' could not be deleted.'
                         );
                     }
-                    $this->_redirect('group');
+                    $this->redirect('group');
                 } else {
-                    $this->_redirect('group/general/id/' . $this->group->getId());
+                    $this->redirect('group/general/id/' . $this->group->getId());
                 }
             }
         } else {

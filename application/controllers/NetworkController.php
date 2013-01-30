@@ -88,7 +88,7 @@ class NetworkController extends Zend_Controller_Action
                 return;
             }
         }
-        $this->_redirect('network');
+        $this->redirect('network');
     }
 
     public function deleteAction()
@@ -104,7 +104,7 @@ class NetworkController extends Zend_Controller_Action
             }
         }
 
-        $this->_redirect('network');
+        $this->redirect('network');
     }
 
 }
