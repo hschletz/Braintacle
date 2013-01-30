@@ -133,8 +133,13 @@ class GroupController extends Zend_Controller_Action
                 false,
                 false
             );
-            if ($form->getValue('What') == Form_AddToGroup::STORE_FILTER) {
-                $group->setDynamicMembersSql($members);
+            switch ($form->getValue('What')) {
+                case Form_AddToGroup::STORE_FILTER:
+                    $group->setDynamicMembersSql($members);
+                    break;
+                case Form_AddToGroup::STORE_RESULT:
+                    $group->addComputers(Model_Database::getAdapter()->fetchCol($members));
+                    break;
             }
             $this->redirect('group/members/id/' . $group->getId());
         } else {

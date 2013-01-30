@@ -327,6 +327,64 @@ class Model_Group extends Model_ComputerOrGroup
     }
 
     /**
+     * Add computers statically
+     *
+     * @param mixed $computers Computer ID or object or array of these
+     *                       (this is recommended when adding multiple computers)
+     **/
+    public function addComputers($computers)
+    {
+        if (!is_array($computers)) {
+            $computers = array($computers);
+        }
+
+        // Wait until lock can be obtained
+        while (!$this->lock()) {
+            sleep(1);
+        }
+
+        $db = Model_Database::getAdapter();
+        $id = $this->getId();
+
+        // Get list of existing memberships.
+        $computerships = $db->fetchPairs(
+            'SELECT hardware_id, static FROM groups_cache WHERE group_id = ?',
+            array ($id)
+        );
+
+        $db->beginTransaction();
+        foreach ($computers as $computer) {
+            if ($computer instanceof Model_Computer) {
+                $computer = $computer->getId();
+            }
+            if (isset($memberships[$computer])) {
+                // Update only memberships of a different type
+                if ($memberships[$computer] != Model_GroupMembership::TYPE_STATIC) {
+                    $db->update(
+                        'groups_cache',
+                        array('static' => Model_GroupMembership::TYPE_STATIC),
+                        array(
+                            'group_id = ?' => $id,
+                            'hardware_id = ?' => $computer
+                        )
+                    );
+                }
+            } else {
+                $db->insert(
+                    'groups_cache',
+                    array(
+                        'group_id' => $id,
+                        'hardware_id' => $computer,
+                        'static' => Model_GroupMembership::TYPE_STATIC
+                    )
+                );
+            }
+        }
+        $db->commit();
+        $this->unlock();
+    }
+
+    /**
      * Update the cache for dynamic members
      *
      * Dynamic members are always determined from the cache. This method updates
