@@ -241,20 +241,53 @@ class Model_Group extends Model_ComputerOrGroup
      * This is strongly recommended over calling setCacheCreationDate() and
      * setCacheExpirationDate(), which would require knowledge of the inner
      * logic.
+     *
+     * For DynamicMembersSql, the value is written to the database if it is
+     * valid - it must be a Zend_Db_Select object for security reasons, and it
+     * must deliver exactly 1 column.
+     *
+     * @throws InvalidArgumentException if DynamicMembersSql value is not a Zend_Db_Select object
+     * @throws LogicException if DynamicMembersSql does not have exactly 1 column
      */
     public function setProperty($property, $value)
     {
         $columnName = $this->getColumnName($property);
+        switch ($property) {
+            case 'CacheExpirationDate':
+                // Create new object to leave original object untouched
+                $value = new Zend_Date($value);
+                $value->subSecond(Model_Config::get('GroupCacheExpirationInterval'));
+                $this->__set($columnName, $value->get(Zend_Date::TIMESTAMP));
+                break;
+            case 'CacheCreationDate':
+                $this->__set($columnName, $value->get(Zend_Date::TIMESTAMP));
+                break;
+            case 'DynamicMembersSql':
+                // Check SQL syntax and number of columns if possible
+                if ($value instanceof Zend_Db_Select) {
+                    $numCols = count($value->getPart(Zend_Db_Select::COLUMNS));
+                    if ($numCols != 1) {
+                        throw new LogicException(
+                            'DynamicMembersSql: expected 1 column, got ' . $numCols
+                        );
+                    }
+                } else {
+                    throw new InvalidArgumentException(
+                        'DynamicMembersSql: invalid datatype'
+                    );
+                }
 
-        if ($property == 'CacheExpirationDate') {
-            // Create new object to leave original object untouched
-            $value = new Zend_Date($value);
-            $value->subSecond(Model_Config::get('GroupCacheExpirationInterval'));
-            $this->__set($columnName, $value->get(Zend_Date::TIMESTAMP));
-        } elseif ($property == 'CacheCreationDate') {
-            $this->__set($columnName, $value->get(Zend_Date::TIMESTAMP));
-        } else {
-            parent::setProperty($property, $value);
+                $value = (string) $value;
+                parent::setProperty($property, $value); // Update internal state
+                Model_Database::getAdapter()->update(
+                    'groups',
+                    array('request' => $value),
+                    array('hardware_id = ?' => $this->getId())
+                );
+                $this->update(true); // Force cache update
+                break;
+            default:
+                parent::setProperty($property, $value);
         }
     }
 

@@ -28,6 +28,15 @@
  */
 class Form_AddToGroup extends Zend_Form
 {
+    /**
+     * Value for 'What' element - store the filter rules for dynamic membership
+     **/
+    const STORE_FILTER = 'filter';
+
+    /**
+     * Value for 'What' element - store the search results as static membership
+     **/
+    const STORE_RESULT = 'result';
 
     /**
      * Create elements
@@ -70,10 +79,10 @@ class Form_AddToGroup extends Zend_Form
         $what->setDisableTranslator(true)
              ->setMultiOptions(
                  array(
-                    'filter' => $translate->_(
+                    self::STORE_FILTER => $translate->_(
                         'Store search parameters. Group memberships will be updated automatically.'
                     ),
-                    'result' => $translate->_(
+                    self::STORE_RESULT => $translate->_(
                         'Add current search results. Group memberships will be set only this time.'
                     )
                 )

@@ -121,6 +121,21 @@ class GroupController extends Zend_Controller_Action
         $form = new Form_AddToGroup;
         if ($this->getRequest()->isPost() and $form->isValid($_POST)) {
             $group = $form->getGroup();
+            $members = Model_Computer::createStatementStatic(
+                array('Id'),
+                null,
+                null,
+                $this->_getParam('filter'),
+                $this->_getParam('search'),
+                $this->_getParam('exact'),
+                $this->_getParam('invert'),
+                $this->_getParam('operator'),
+                false,
+                false
+            );
+            if ($form->getValue('What') == Form_AddToGroup::STORE_FILTER) {
+                $group->setDynamicMembersSql($members);
+            }
             $this->_redirect('group/members/id/' . $group->getId());
         } else {
             $this->view->form = $form;
