@@ -238,9 +238,6 @@ class Model_Group extends Model_ComputerOrGroup
      *
      * For CacheCreationDate and CacheExpirationDate, a Zend_Date object is
      * expected, which will be processed to match the internal representation.
-     * This is strongly recommended over calling setCacheCreationDate() and
-     * setCacheExpirationDate(), which would require knowledge of the inner
-     * logic.
      *
      * For DynamicMembersSql, the value is written to the database if it is
      * valid - it must be a Zend_Db_Select object for security reasons, and it
