@@ -44,9 +44,6 @@
  * - <b>CacheExpirationDate:</b> Timestamp when cache will expire and be rebuilt
  *
  *
- * To set CacheCreationDate and CacheExpirationDate manually, {@link setProperty()}
- * should always be used.
- *
  * The representation of groups in the database is a bit odd. Each group has a
  * row in the 'hardware' table with the 'deviceid' column set to
  * '_SYSTEMGROUP_'. Only the 'id', 'deviceid', 'name', 'lastdate' and
