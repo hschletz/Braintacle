@@ -11,6 +11,12 @@ without any warranty.
 CHANGES IN VERSION 0.11
 =======================
 
+New features:
+
+- New script development/update-from-svn.sh for installations that run directly
+  off an SVN working copy. The script takes care of translation and database
+  updates.
+
 Fixed bugs:
 
 - Console: Fixed display of package creation dates (0.10 regression)
