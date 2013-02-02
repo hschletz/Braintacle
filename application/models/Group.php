@@ -347,7 +347,7 @@ class Model_Group extends Model_ComputerOrGroup
         $id = $this->getId();
 
         // Get list of existing memberships.
-        $computerships = $db->fetchPairs(
+        $memberships = $db->fetchPairs(
             'SELECT hardware_id, static FROM groups_cache WHERE group_id = ?',
             array ($id)
         );
