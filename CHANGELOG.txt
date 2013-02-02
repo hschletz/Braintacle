@@ -13,9 +13,12 @@ CHANGES IN VERSION 0.11
 
 New features:
 
-- New script development/update-from-svn.sh for installations that run directly
-  off an SVN working copy. The script takes care of translation and database
-  updates.
+- Console: Groups can now be created from search results. Queries can be set on
+  groups, results can be added or excluded.
+
+- Tools: New script development/update-from-svn.sh for installations that run
+  directly off an SVN working copy. The script takes care of translation and
+  database updates.
 
 Fixed bugs:
 
@@ -23,7 +26,7 @@ Fixed bugs:
 
 Misc:
 
-- Updated the database that determines the vendor from a MAC address.
+- Console: Updated the database that determines the vendor from a MAC address.
 
 
 CHANGES IN VERSION 0.10
