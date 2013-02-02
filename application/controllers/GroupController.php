@@ -131,7 +131,8 @@ class GroupController extends Zend_Controller_Action
                 $this->_getParam('invert'),
                 $this->_getParam('operator'),
                 false,
-                false
+                false,
+                true
             );
             switch ($form->getValue('What')) {
                 case Form_AddToGroup::STORE_FILTER:

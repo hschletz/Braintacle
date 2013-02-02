@@ -215,6 +215,7 @@ class Model_Computer extends Model_ComputerOrGroup
      *                               Set to false to return only columns specified by $columns.
      * @param bool $query Perform query and return a Zend_Db_Statement object (default).
      *                    Set to false to return a Zend_Db_Select object.
+     * @param bool $distinct Force distinct results.
      * @return Zend_Db_Statement|Zend_Db_Select Query result or Query
      * @throws LogicException if more than 2 tables are joined (only in development mode)
      */
@@ -228,7 +229,8 @@ class Model_Computer extends Model_ComputerOrGroup
         $invert=null,
         $operator=null,
         $addSearchColumns=true,
-        $query=true
+        $query=true,
+        $distinct=false
     )
     {
         $db = Model_Database::getAdapter();
@@ -496,6 +498,10 @@ class Model_Computer extends Model_ComputerOrGroup
 
             If there is no inner join, the result may contain rows from the
             'hardware' table that describe groups. These need to be removed.
+
+            The $distinct parameter only affects queries where the 'hardware'
+            table has been optimized away. Queries based on 'hardware' always
+            produce distinct results.
         */
         $queryTables = $select->getPart(Zend_Db_Select::FROM);
         switch(count($queryTables)) {
@@ -536,6 +542,9 @@ class Model_Computer extends Model_ComputerOrGroup
                         $select->reset(Zend_Db_Select::FROM);
                         $select->reset(Zend_Db_Select::COLUMNS);
                         $select->from($table['tableName'], $queryColumns);
+                        if ($distinct) {
+                            $select->distinct();
+                        }
                     }
                 } else {
                     $filterGroups = true;
