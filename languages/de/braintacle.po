@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-09 12:17+0100\n"
-"PO-Revision-Date: 2013-01-09 12:17+0100\n"
+"POT-Creation-Date: 2013-02-02 12:20+0100\n"
+"PO-Revision-Date: 2013-02-02 12:20+0100\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -225,6 +225,10 @@ msgstr ""
 "dieses mal gesetzt."
 
 #: forms/AddToGroup.php
+msgid "Exclude search results from a group."
+msgstr "Suchergebnisse aus einer Gruppe ausschließen."
+
+#: forms/AddToGroup.php
 msgid "Store in existing group"
 msgstr "In vorhandener Gruppe speichern"
 
@@ -238,6 +242,39 @@ msgid ""
 msgstr ""
 "Suchparameter speichern. Gruppenmitgliedschaften werden automatisch "
 "aktualisiert."
+
+#: forms/AddToGroup.php; forms/NetworkDevice.php
+#: views/scripts/computer/display.phtml views/scripts/computer/misc.phtml
+#: views/scripts/computer/misc.phtml; views/scripts/computer/network.phtml
+#: views/scripts/computer/printers.phtml views/scripts/computer/system.phtml
+#: views/scripts/group/general.phtml; views/scripts/group/index.phtml
+#: views/scripts/network/showidentified.phtml
+msgid "Description"
+msgstr "Beschreibung"
+
+#: forms/AddToGroup.php; views/scripts/computer/groups.phtml
+msgid "Group"
+msgstr "Gruppe"
+
+#: forms/AddToGroup.php; forms/Package.php
+#: views/scripts/computer/display.phtml views/scripts/computer/index.phtml;
+#: views/scripts/computer/misc.phtml views/scripts/computer/network.phtml
+#: views/scripts/computer/packages.phtml views/scripts/computer/printers.phtml
+#: views/scripts/computer/registry.phtml views/scripts/computer/software.phtml
+#: views/scripts/computer/storage.phtml views/scripts/computer/system.phtml
+#: views/scripts/computer/system.phtml; views/scripts/computer/vms.phtml
+#: views/scripts/duplicates/index.phtml views/scripts/duplicates/show.phtml;
+#: views/scripts/group/general.phtml views/scripts/group/index.phtml;
+#: views/scripts/group/members.phtml views/scripts/group/packages.phtml;
+#: views/scripts/network/index.phtml views/scripts/package/index.phtml;
+#: views/scripts/software/index.phtml
+msgid "Name"
+msgstr "Name"
+
+#: forms/AddToGroup.php; forms/ManageGroupMemberships.php
+#: forms/NetworkDevice.php; forms/ProductKey.php
+msgid "OK"
+msgstr "OK"
 
 #: forms/AffectPackages.php
 msgid "Install"
@@ -291,22 +328,9 @@ msgstr "immer"
 msgid "never"
 msgstr "nie"
 
-#: forms/ManageGroupMemberships.php; forms/NetworkDevice.php
-#: forms/ProductKey.php
-msgid "OK"
-msgstr "OK"
-
 #: forms/ManageGroupMemberships.php; views/helpers/MembershipType.php
 msgid "automatic"
 msgstr "automatisch"
-
-#: forms/NetworkDevice.php; views/scripts/computer/display.phtml
-#: views/scripts/computer/misc.phtml views/scripts/computer/misc.phtml;
-#: views/scripts/computer/network.phtml views/scripts/computer/printers.phtml
-#: views/scripts/computer/system.phtml views/scripts/group/general.phtml;
-#: views/scripts/group/index.phtml views/scripts/network/showidentified.phtml
-msgid "Description"
-msgstr "Beschreibung"
 
 #: forms/NetworkDevice.php; views/scripts/computer/display.phtml
 #: views/scripts/computer/general.phtml views/scripts/computer/index.phtml;
@@ -385,20 +409,6 @@ msgstr "Paket herunterladen, Befehl ausführen, Ergebnis ermitteln"
 #: forms/Package.php; forms/Preferences/Packages.php
 msgid "Just download package to target path"
 msgstr "Nur Paket in Zielpfad herunterladen"
-
-#: forms/Package.php; views/scripts/computer/display.phtml
-#: views/scripts/computer/index.phtml; views/scripts/computer/misc.phtml
-#: views/scripts/computer/network.phtml views/scripts/computer/packages.phtml
-#: views/scripts/computer/printers.phtml views/scripts/computer/registry.phtml
-#: views/scripts/computer/software.phtml views/scripts/computer/storage.phtml
-#: views/scripts/computer/system.phtml views/scripts/computer/system.phtml;
-#: views/scripts/computer/vms.phtml views/scripts/duplicates/index.phtml
-#: views/scripts/duplicates/show.phtml; views/scripts/group/general.phtml
-#: views/scripts/group/index.phtml; views/scripts/group/members.phtml
-#: views/scripts/group/packages.phtml; views/scripts/network/index.phtml
-#: views/scripts/package/index.phtml; views/scripts/software/index.phtml
-msgid "Name"
-msgstr "Name"
 
 #: forms/Package.php; forms/Preferences/Packages.php
 msgid "Optionally download package, execute command"
@@ -1357,10 +1367,6 @@ msgid "UUID"
 msgstr "UUID"
 
 #: views/scripts/computer/groups.phtml
-msgid "Group"
-msgstr "Gruppe"
-
-#: views/scripts/computer/groups.phtml
 msgid "Group memberships"
 msgstr "Gruppenmitgliedschaften"
 
@@ -1415,10 +1421,6 @@ msgid "Operating system"
 msgstr "Betriebssystem"
 
 #: views/scripts/computer/index.phtml
-msgid "Save to group"
-msgstr "In Gruppe speichern"
-
-#: views/scripts/computer/index.phtml
 msgid "Swap"
 msgstr "Auslagerungsspeicher"
 
@@ -1442,6 +1444,10 @@ msgstr "Windows/Produkt-ID"
 #, php-format
 msgid "Number of computers: %d"
 msgstr "Anzahl Computer: %d"
+
+#: views/scripts/computer/index.phtml; views/scripts/group/add.phtml
+msgid "Save to group"
+msgstr "In Gruppe speichern"
 
 #: views/scripts/computer/index.phtml; views/scripts/group/members.phtml
 msgid "User"

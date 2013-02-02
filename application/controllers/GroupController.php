@@ -141,6 +141,9 @@ class GroupController extends Zend_Controller_Action
                 case Form_AddToGroup::STORE_RESULT:
                     $group->addComputers(Model_Database::getAdapter()->fetchCol($members));
                     break;
+                case Form_AddToGroup::STORE_EXCLUDED:
+                    $group->excludeComputers(Model_Database::getAdapter()->fetchCol($members));
+                    break;
             }
             $this->redirect('group/members/id/' . $group->getId());
         } else {

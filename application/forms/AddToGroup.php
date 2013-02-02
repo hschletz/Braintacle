@@ -39,6 +39,11 @@ class Form_AddToGroup extends Zend_Form
     const STORE_RESULT = 'result';
 
     /**
+     * Value for 'What' element - exclude the search results from a group
+     **/
+    const STORE_EXCLUDED = 'exclude';
+
+    /**
      * Create elements
      */
     public function init()
@@ -84,6 +89,9 @@ class Form_AddToGroup extends Zend_Form
                     ),
                     self::STORE_RESULT => $translate->_(
                         'Add current search results. Group memberships will be set only this time.'
+                    ),
+                    self::STORE_EXCLUDED => $translate->_(
+                        'Exclude search results from a group.'
                     )
                 )
              )

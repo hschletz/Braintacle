@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-09 12:17+0100\n"
+"POT-Creation-Date: 2013-02-02 12:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -229,11 +229,56 @@ msgid ""
 msgstr ""
 
 #: forms/AddToGroup.php
+msgid "Exclude search results from a group."
+msgstr ""
+
+#: forms/AddToGroup.php
 msgid "Store in new group"
 msgstr ""
 
 #: forms/AddToGroup.php
 msgid "Store in existing group"
+msgstr ""
+
+#: forms/AddToGroup.php; forms/Package.php
+#: views/scripts/computer/display.phtml
+#: views/scripts/computer/index.phtml; views/scripts/computer/misc.phtml
+#: views/scripts/computer/misc.phtml
+#: views/scripts/computer/network.phtml
+#: views/scripts/computer/packages.phtml
+#: views/scripts/computer/printers.phtml
+#: views/scripts/computer/registry.phtml
+#: views/scripts/computer/software.phtml
+#: views/scripts/computer/storage.phtml
+#: views/scripts/computer/system.phtml
+#: views/scripts/computer/system.phtml; views/scripts/computer/vms.phtml
+#: views/scripts/duplicates/index.phtml
+#: views/scripts/duplicates/show.phtml; views/scripts/group/general.phtml
+#: views/scripts/group/index.phtml; views/scripts/group/members.phtml
+#: views/scripts/group/packages.phtml; views/scripts/network/index.phtml
+#: views/scripts/package/index.phtml; views/scripts/software/index.phtml
+msgid "Name"
+msgstr ""
+
+#: forms/AddToGroup.php; forms/NetworkDevice.php
+#: views/scripts/computer/display.phtml
+#: views/scripts/computer/misc.phtml; views/scripts/computer/misc.phtml
+#: views/scripts/computer/network.phtml
+#: views/scripts/computer/printers.phtml
+#: views/scripts/computer/system.phtml
+#: views/scripts/computer/system.phtml
+#: views/scripts/group/general.phtml; views/scripts/group/index.phtml
+#: views/scripts/network/showidentified.phtml
+msgid "Description"
+msgstr ""
+
+#: forms/AddToGroup.php; views/scripts/computer/groups.phtml
+msgid "Group"
+msgstr ""
+
+#: forms/AddToGroup.php; forms/ManageGroupMemberships.php
+#: forms/NetworkDevice.php; forms/ProductKey.php
+msgid "OK"
 msgstr ""
 
 #: forms/AffectPackages.php
@@ -293,11 +338,6 @@ msgstr ""
 msgid "never"
 msgstr ""
 
-#: forms/ManageGroupMemberships.php; forms/NetworkDevice.php
-#: forms/ProductKey.php
-msgid "OK"
-msgstr ""
-
 #: forms/NetworkDevice.php; views/scripts/computer/display.phtml
 #: views/scripts/computer/general.phtml
 #: views/scripts/computer/index.phtml; views/scripts/computer/misc.phtml
@@ -310,36 +350,6 @@ msgstr ""
 #: views/scripts/computer/system.phtml; views/scripts/computer/vms.phtml
 #: views/scripts/network/showidentified.phtml
 msgid "Type"
-msgstr ""
-
-#: forms/NetworkDevice.php; views/scripts/computer/display.phtml
-#: views/scripts/computer/misc.phtml; views/scripts/computer/misc.phtml
-#: views/scripts/computer/network.phtml
-#: views/scripts/computer/printers.phtml
-#: views/scripts/computer/system.phtml
-#: views/scripts/computer/system.phtml
-#: views/scripts/group/general.phtml; views/scripts/group/index.phtml
-#: views/scripts/network/showidentified.phtml
-msgid "Description"
-msgstr ""
-
-#: forms/Package.php; views/scripts/computer/display.phtml
-#: views/scripts/computer/index.phtml; views/scripts/computer/misc.phtml
-#: views/scripts/computer/misc.phtml
-#: views/scripts/computer/network.phtml
-#: views/scripts/computer/packages.phtml
-#: views/scripts/computer/printers.phtml
-#: views/scripts/computer/registry.phtml
-#: views/scripts/computer/software.phtml
-#: views/scripts/computer/storage.phtml
-#: views/scripts/computer/system.phtml
-#: views/scripts/computer/system.phtml; views/scripts/computer/vms.phtml
-#: views/scripts/duplicates/index.phtml
-#: views/scripts/duplicates/show.phtml; views/scripts/group/general.phtml
-#: views/scripts/group/index.phtml; views/scripts/group/members.phtml
-#: views/scripts/group/packages.phtml; views/scripts/network/index.phtml
-#: views/scripts/package/index.phtml; views/scripts/software/index.phtml
-msgid "Name"
 msgstr ""
 
 #: forms/Package.php; views/scripts/package/index.phtml
@@ -1377,10 +1387,6 @@ msgstr ""
 msgid "Group memberships"
 msgstr ""
 
-#: views/scripts/computer/groups.phtml
-msgid "Group"
-msgstr ""
-
 #: views/scripts/computer/groups.phtml; views/scripts/group/members.phtml
 msgid "Membership"
 msgstr ""
@@ -1458,7 +1464,7 @@ msgstr ""
 msgid "Edit filter"
 msgstr ""
 
-#: views/scripts/computer/index.phtml
+#: views/scripts/computer/index.phtml; views/scripts/group/add.phtml
 msgid "Save to group"
 msgstr ""
 

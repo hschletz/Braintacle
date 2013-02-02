@@ -330,9 +330,31 @@ class Model_Group extends Model_ComputerOrGroup
      * Add computers statically
      *
      * @param mixed $computers Computer ID or object or array of these
-     *                       (this is recommended when adding multiple computers)
+     *                         (this is recommended when adding multiple computers)
      **/
     public function addComputers($computers)
+    {
+        $this->_setMemberships($computers, Model_GroupMembership::TYPE_STATIC);
+    }
+
+    /**
+     * Exclude computers from group
+     *
+     * @param mixed $computers Computer ID or object or array of these
+     *                         (this is recommended when excluding multiple computers)
+     **/
+    public function excludeComputers($computers)
+    {
+        $this->_setMemberships($computers, Model_GroupMembership::TYPE_EXCLUDED);
+    }
+
+    /**
+     * Set a membership type on computers
+     *
+     * @param mixed $computers Computer ID or object or array of these
+     * @param integer $type Membership type (TYPE_STATIC or TYPE_EXCLUDED)
+     **/
+    protected function _setMemberships($computers, $type)
     {
         if (!is_array($computers)) {
             $computers = array($computers);
@@ -359,10 +381,10 @@ class Model_Group extends Model_ComputerOrGroup
             }
             if (isset($memberships[$computer])) {
                 // Update only memberships of a different type
-                if ($memberships[$computer] != Model_GroupMembership::TYPE_STATIC) {
+                if ($memberships[$computer] != $type) {
                     $db->update(
                         'groups_cache',
-                        array('static' => Model_GroupMembership::TYPE_STATIC),
+                        array('static' => $type),
                         array(
                             'group_id = ?' => $id,
                             'hardware_id = ?' => $computer
@@ -375,7 +397,7 @@ class Model_Group extends Model_ComputerOrGroup
                     array(
                         'group_id' => $id,
                         'hardware_id' => $computer,
-                        'static' => Model_GroupMembership::TYPE_STATIC
+                        'static' => $type
                     )
                 );
             }
