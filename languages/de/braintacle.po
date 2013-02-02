@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-02 12:20+0100\n"
-"PO-Revision-Date: 2013-02-02 12:20+0100\n"
+"POT-Creation-Date: 2013-02-02 13:19+0100\n"
+"PO-Revision-Date: 2013-02-02 13:20+0100\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -263,11 +263,11 @@ msgstr "Gruppe"
 #: views/scripts/computer/registry.phtml views/scripts/computer/software.phtml
 #: views/scripts/computer/storage.phtml views/scripts/computer/system.phtml
 #: views/scripts/computer/system.phtml; views/scripts/computer/vms.phtml
-#: views/scripts/duplicates/index.phtml views/scripts/duplicates/show.phtml;
-#: views/scripts/group/general.phtml views/scripts/group/index.phtml;
-#: views/scripts/group/members.phtml views/scripts/group/packages.phtml;
-#: views/scripts/network/index.phtml views/scripts/package/index.phtml;
-#: views/scripts/software/index.phtml
+#: views/scripts/duplicates/index.phtml views/scripts/duplicates/show.phtml
+#: views/scripts/group/excluded.phtml; views/scripts/group/general.phtml
+#: views/scripts/group/index.phtml; views/scripts/group/members.phtml
+#: views/scripts/group/packages.phtml; views/scripts/network/index.phtml
+#: views/scripts/package/index.phtml; views/scripts/software/index.phtml
 msgid "Name"
 msgstr "Name"
 
@@ -890,7 +890,7 @@ msgid "Last contact"
 msgstr "Letzer Kontakt"
 
 #: forms/Search.php; views/scripts/computer/index.phtml
-#: views/scripts/group/members.phtml
+#: views/scripts/group/excluded.phtml; views/scripts/group/members.phtml
 msgid "Last inventory"
 msgstr "Letzte Inventarisierung"
 
@@ -1202,6 +1202,10 @@ msgid "Details for group '%s'"
 msgstr "Einzelheiten für Gruppe '%s'"
 
 #: views/helpers/GroupHeader.php
+msgid "Excluded"
+msgstr "Ausgeschlossen"
+
+#: views/helpers/GroupHeader.php
 msgid "Members"
 msgstr "Mitglieder"
 
@@ -1416,6 +1420,12 @@ msgstr "Frei"
 msgid "Netmask"
 msgstr "Netzmaske"
 
+#: views/scripts/computer/index.phtml views/scripts/group/excluded.phtml;
+#: views/scripts/group/members.phtml
+#, php-format
+msgid "Number of computers: %d"
+msgstr "Anzahl Computer: %d"
+
 #: views/scripts/computer/index.phtml
 msgid "Operating system"
 msgstr "Betriebssystem"
@@ -1440,16 +1450,12 @@ msgstr "Windows/Besitzer"
 msgid "Windows product ID"
 msgstr "Windows/Produkt-ID"
 
-#: views/scripts/computer/index.phtml; views/scripts/group/members.phtml
-#, php-format
-msgid "Number of computers: %d"
-msgstr "Anzahl Computer: %d"
-
 #: views/scripts/computer/index.phtml; views/scripts/group/add.phtml
 msgid "Save to group"
 msgstr "In Gruppe speichern"
 
-#: views/scripts/computer/index.phtml; views/scripts/group/members.phtml
+#: views/scripts/computer/index.phtml; views/scripts/group/excluded.phtml
+#: views/scripts/group/members.phtml
 msgid "User"
 msgstr "Benutzer"
 

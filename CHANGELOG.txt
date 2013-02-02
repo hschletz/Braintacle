@@ -16,6 +16,8 @@ New features:
 - Console: Groups can now be created from search results. Queries can be set on
   groups, results can be added or excluded.
 
+- Console: Group page shows excluded computers.
+
 - Tools: New script development/update-from-svn.sh for installations that run
   directly off an SVN working copy. The script takes care of translation and
   database updates.

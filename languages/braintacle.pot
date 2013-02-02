@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-02 12:20+0100\n"
+"POT-Creation-Date: 2013-02-02 13:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -253,7 +253,8 @@ msgstr ""
 #: views/scripts/computer/system.phtml
 #: views/scripts/computer/system.phtml; views/scripts/computer/vms.phtml
 #: views/scripts/duplicates/index.phtml
-#: views/scripts/duplicates/show.phtml; views/scripts/group/general.phtml
+#: views/scripts/duplicates/show.phtml
+#: views/scripts/group/excluded.phtml; views/scripts/group/general.phtml
 #: views/scripts/group/index.phtml; views/scripts/group/members.phtml
 #: views/scripts/group/packages.phtml; views/scripts/network/index.phtml
 #: views/scripts/package/index.phtml; views/scripts/software/index.phtml
@@ -846,7 +847,7 @@ msgid "MS Office product ID"
 msgstr ""
 
 #: forms/Search.php; views/scripts/computer/index.phtml
-#: views/scripts/group/members.phtml
+#: views/scripts/group/excluded.phtml; views/scripts/group/members.phtml
 msgid "Last inventory"
 msgstr ""
 
@@ -1224,6 +1225,10 @@ msgstr ""
 msgid "Members"
 msgstr ""
 
+#: views/helpers/GroupHeader.php
+msgid "Excluded"
+msgstr ""
+
 #: views/helpers/InventoryHeader.php
 #, php-format
 msgid "Inventory of '%s'"
@@ -1416,7 +1421,8 @@ msgstr ""
 msgid "Operating system"
 msgstr ""
 
-#: views/scripts/computer/index.phtml; views/scripts/group/members.phtml
+#: views/scripts/computer/index.phtml; views/scripts/group/excluded.phtml
+#: views/scripts/group/members.phtml
 msgid "User"
 msgstr ""
 
@@ -1468,7 +1474,8 @@ msgstr ""
 msgid "Save to group"
 msgstr ""
 
-#: views/scripts/computer/index.phtml; views/scripts/group/members.phtml
+#: views/scripts/computer/index.phtml
+#: views/scripts/group/excluded.phtml; views/scripts/group/members.phtml
 #, php-format
 msgid "Number of computers: %d"
 msgstr ""

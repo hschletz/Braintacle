@@ -400,6 +400,18 @@ class Model_Computer extends Model_ComputerOrGroup
                             )
                         );
                     break;
+                case 'ExcludedFrom':
+                    // $arg is expected to be a Model_Group object.
+                    $select->where(
+                        $db->quoteInto(
+                            'id IN(SELECT hardware_id FROM groups_cache WHERE group_id = ? AND static = ?)',
+                            $arg->getId(),
+                            Zend_Db::INT_TYPE,
+                            1
+                        ),
+                        Model_GroupMembership::TYPE_EXCLUDED
+                    );
+                    break;
                 case 'Volume.Size':
                 case 'Volume.FreeSpace':
                     // Generic integer filter
