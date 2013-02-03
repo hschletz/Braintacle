@@ -137,6 +137,52 @@ class Model_Subnet extends Model_Abstract
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * Address and Mask are validated. Name gets written to the database.
+     * @throws UnexpectedValueException if IP address is invalid
+     */
+    public function setProperty($property, $value)
+    {
+        switch ($property) {
+            case 'Address':
+            case 'Mask':
+                if (ip2long($value) === false) {
+                    throw new UnexpectedValueException(
+                        'Not an IPv4 address: ' . $value
+                    );
+                }
+                break;
+            case 'Name':
+                if ($value != $this->getName()) {
+                    // Force NULL instead of empty string to maintain correct sorting order
+                    if (empty($value)) {
+                        $value = null;
+                    }
+                    $db = Model_Database::getAdapter();
+                    if (!$db->update(
+                        'subnet',
+                        array('name' => $value),
+                        array(
+                            'netid = ?' => $this->getAddress(),
+                            'mask = ?' => $this->getMask()
+                            )
+                    )) {
+                        $db->insert(
+                            'subnet',
+                            array(
+                                'netid' => $this->getAddress(),
+                                'mask' => $this->getMask(),
+                                'name' => $value,
+                            )
+                        );
+                    }
+                }
+        }
+        parent::setProperty($property, $value);
+    }
+
+    /**
      * Return the datatypes of all properties
      *
      * Add types of calculated properties that are not part of the property map.
@@ -178,4 +224,30 @@ class Model_Subnet extends Model_Abstract
         return '/' . $mask;
     }
 
+    /**
+     * Construct a Model_Subnet object with given properties
+     *
+     * Use this static method to access a subnet with given address and mask. If
+     * a name is defined for this subnet, it is set up for the returned object.
+     *
+     * @param string $address Network address
+     * @param string $mask Netmask
+     * @return Model_Subnet
+     **/
+    public static function construct($address, $mask)
+    {
+        $subnet = new Model_Subnet;
+        $subnet->setAddress($address);
+        $subnet->setMask($mask);
+        $name = Model_Database::getAdapter()->fetchOne(
+            'SELECT name FROM subnet WHERE netid = ? AND mask = ?',
+            array($address, $mask)
+        );
+        if ($name === false) {
+            $subnet->name = null;
+        } else {
+            $subnet->name = $name;
+        }
+        return $subnet;
+    }
 }

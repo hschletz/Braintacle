@@ -65,6 +65,27 @@ class NetworkController extends Zend_Controller_Action
         );
     }
 
+    public function propertiesAction()
+    {
+        $subnet = Model_Subnet::construct(
+            $this->_getParam('subnet'),
+            $this->_getParam('mask')
+        );
+
+        $form = new Form_Subnet;
+        if ($this->getRequest()->isPost()) {
+            if ($form->isValid($_POST)) {
+                $subnet->setName($form->getValue('Name'));
+                $this->redirect('network');
+            }
+        } else {
+            $form->setValuesFromSubnet($subnet);
+        }
+
+        $this->view->subnet = $subnet;
+        $this->view->form = $form;
+    }
+
     public function editAction()
     {
         $device = Model_NetworkDevice::getByMacAddress($this->_getParam('macaddress'));

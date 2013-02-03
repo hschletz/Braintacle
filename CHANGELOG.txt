@@ -18,6 +18,8 @@ New features:
 
 - Console: Group page shows excluded computers.
 
+- Console: Subnet properties can be edited.
+
 - Tools: New script development/update-from-svn.sh for installations that run
   directly off an SVN working copy. The script takes care of translation and
   database updates.

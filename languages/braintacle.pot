@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-02 13:19+0100\n"
+"POT-Creation-Date: 2013-02-03 13:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -240,7 +240,7 @@ msgstr ""
 msgid "Store in existing group"
 msgstr ""
 
-#: forms/AddToGroup.php; forms/Package.php
+#: forms/AddToGroup.php; forms/Package.php; forms/Subnet.php
 #: views/scripts/computer/display.phtml
 #: views/scripts/computer/index.phtml; views/scripts/computer/misc.phtml
 #: views/scripts/computer/misc.phtml
@@ -278,7 +278,7 @@ msgid "Group"
 msgstr ""
 
 #: forms/AddToGroup.php; forms/ManageGroupMemberships.php
-#: forms/NetworkDevice.php; forms/ProductKey.php
+#: forms/NetworkDevice.php; forms/ProductKey.php; forms/Subnet.php
 msgid "OK"
 msgstr ""
 
@@ -1295,7 +1295,7 @@ msgstr ""
 msgid "Edit account"
 msgstr ""
 
-#: views/scripts/accounts/index.phtml
+#: views/scripts/accounts/index.phtml; views/scripts/network/index.phtml
 #: views/scripts/network/showidentified.phtml
 #: views/scripts/network/showunknown.phtml
 msgid "Edit"
@@ -1823,6 +1823,11 @@ msgstr ""
 
 #: views/scripts/network/index.phtml
 msgid "identified"
+msgstr ""
+
+#: views/scripts/network/properties.phtml
+#, php-format
+msgid "Properties of subnet %s"
 msgstr ""
 
 #: views/scripts/network/showidentified.phtml

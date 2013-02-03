@@ -32,10 +32,35 @@ $headers = array(
 );
 
 $renderCallbacks = array(
+    'Name' => 'renderName',
     'NumInventoried' => 'renderNumInventoried',
     'NumIdentified' => 'renderNumUninventoried',
     'NumUnknown' => 'renderNumUninventoried',
 );
+
+function renderName($view, $subnet, $property)
+{
+    // Link to edit subnet properties. If no name is defined, use gray 'Edit' as
+    // link text.
+    $name = $subnet->getName();
+    $attributes = array('href' =>
+        $view->baseUrl() . '/network/properties' .
+        '/subnet/' . urlencode($subnet->getAddress()) .
+        '/mask/' . urlencode($subnet->getMask())
+    );
+    if ($name) {
+        $name = $view->escape($name);
+    } else {
+        $name = $view->translate('Edit');
+        $attributes['class'] = 'gray';
+    }
+    return $view->htmlTag(
+        'a',
+        $view->escape($name),
+        $attributes,
+        true
+    );
+}
 
 function renderNumInventoried($view, $subnet, $property)
 {

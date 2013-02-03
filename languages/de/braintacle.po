@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-02 13:19+0100\n"
-"PO-Revision-Date: 2013-02-02 13:20+0100\n"
+"POT-Creation-Date: 2013-02-03 13:43+0100\n"
+"PO-Revision-Date: 2013-02-03 13:43+0100\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -256,7 +256,7 @@ msgstr "Beschreibung"
 msgid "Group"
 msgstr "Gruppe"
 
-#: forms/AddToGroup.php; forms/Package.php
+#: forms/AddToGroup.php; forms/Package.php; forms/Subnet.php
 #: views/scripts/computer/display.phtml views/scripts/computer/index.phtml;
 #: views/scripts/computer/misc.phtml views/scripts/computer/network.phtml
 #: views/scripts/computer/packages.phtml views/scripts/computer/printers.phtml
@@ -272,7 +272,7 @@ msgid "Name"
 msgstr "Name"
 
 #: forms/AddToGroup.php; forms/ManageGroupMemberships.php
-#: forms/NetworkDevice.php; forms/ProductKey.php
+#: forms/NetworkDevice.php; forms/ProductKey.php; forms/Subnet.php
 msgid "OK"
 msgstr "OK"
 
@@ -1283,7 +1283,7 @@ msgstr "Account bearbeiten"
 msgid "Add user"
 msgstr "Benutzer hinzufügen"
 
-#: views/scripts/accounts/index.phtml
+#: views/scripts/accounts/index.phtml; views/scripts/network/index.phtml
 #: views/scripts/network/showidentified.phtml
 #: views/scripts/network/showunknown.phtml
 msgid "Edit"
@@ -1792,6 +1792,11 @@ msgstr "identifiziert"
 msgid "inventoried"
 msgstr "inventarisiert"
 
+#: views/scripts/network/properties.phtml
+#, php-format
+msgid "Properties of subnet %s"
+msgstr "Eigenschaften von Subnetz %s"
+
 #: views/scripts/network/showidentified.phtml
 #: views/scripts/network/showunknown.phtml
 msgid "Discovery date"
@@ -1838,4 +1843,5 @@ msgstr "Anzahl Computer"
 #: views/scripts/software/index.phtml
 msgid "Ignore"
 msgstr "Ignorieren"
+
 
