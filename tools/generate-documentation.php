@@ -186,6 +186,8 @@ $cmd = array(
     realpath("$basePath/doc/api/structure.xml"),
     '--target',
     realpath("$basePath/doc/api"),
+    '--template',
+    'abstract',
 );
 $cmd = implode(' ', $cmd);
 system($cmd, $result);
