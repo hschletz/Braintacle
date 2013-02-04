@@ -44,13 +44,19 @@ class NetworkController extends Zend_Controller_Action
 
     public function showidentifiedAction()
     {
+        $filters = array('Identified' => true);
+        if ($this->hasParam('subnet')) {
+            $filters['Subnet'] = $this->_getParam('subnet');
+        }
+        if ($this->hasParam('mask')) {
+            $filters['Mask'] = $this->_getParam('mask');
+        }
+        if ($this->hasParam('type')) {
+            $filters['Type'] = $this->_getParam('type');
+        }
         $ordering = $this->_helper->ordering('DiscoveryDate', 'desc');
         $this->view->devices = Model_NetworkDevice::getDevices(
-            array(
-                'Subnet' => $this->_getParam('subnet'),
-                'Mask' => $this->_getParam('mask'),
-                'Identified' => true
-            ),
+            $filters,
             $ordering['order'],
             $ordering['direction']
         );

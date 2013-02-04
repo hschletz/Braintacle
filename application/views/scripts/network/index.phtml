@@ -37,12 +37,32 @@ $headers = array(
 $order = $this->order;
 unset($this->order);
 
+function renderDeviceCount($view, $deviceType, $property)
+{
+    $count = $deviceType->getProperty('Count');
+    if ($count) {
+        return $view->htmlTag(
+            'a',
+            $count,
+            array('href' =>
+                $view->baseUrl() . '/network/showidentified' .
+                '/type/' . urlencode($deviceType->getDescription())
+            )
+        );
+    } else {
+        return '0';
+    }
+
+}
+
 print $this->getHelper('table')->table(
     $this->devices,
     null,
     $headers,
     array(),
-    'Model_NetworkDeviceType'
+    'Model_NetworkDeviceType',
+    null,
+    array('Count' => 'renderDeviceCount')
 );
 
 // Restore order for second table which is sortable

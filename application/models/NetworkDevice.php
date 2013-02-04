@@ -67,6 +67,7 @@ class Model_NetworkDevice extends Model_Abstract
      *
      * - **Subnet:** Network address, most useful in conjunction with 'Mask' filter
      * - **Mask:** Network mask, most useful in conjunction with 'Subnet' filter
+     * - **Type:** Device type (description string), implies Identified=TRUE
      * - **Identified:** Boolean, selects only identified or unidentified devices
      *
      * The 'Description', 'Type' and 'IdentifiedBy' properties are only set if
@@ -88,6 +89,9 @@ class Model_NetworkDevice extends Model_Abstract
             ->from('netmap', array('ip', 'mac', 'name', 'date'))
             ->where('mac NOT IN(SELECT macaddr FROM networks)');
 
+        if (isset($filters['Type'])) {
+            $filters['Identified'] = true;
+        }
         foreach ($filters as $filter => $arg) {
             switch ($filter) {
                 case 'Subnet':
@@ -95,6 +99,9 @@ class Model_NetworkDevice extends Model_Abstract
                     break;
                 case 'Mask':
                     $select->where('mask = ?', $arg);
+                    break;
+                case 'Type':
+                    $select->where('type = ?', $arg);
                     break;
                 case 'Identified':
                     if ($arg) {
