@@ -62,14 +62,22 @@ class Model_NetworkDevice extends Model_Abstract
 
     /**
      * Return a statement object
-     * @param string $subnet Subnet
-     * @param string $mask Netmask
-     * @param bool $showIdentified Whether to show identidied or unknown devices
+     *
+     * Available filters are:
+     *
+     * - **Subnet:** Network address, most useful in conjunction with 'Mask' filter
+     * - **Mask:** Network mask, most useful in conjunction with 'Subnet' filter
+     * - **Identified:** Boolean, selects only identified or unidentified devices
+     *
+     * The 'Description', 'Type' and 'IdentifiedBy' properties are only set if
+     * the 'Identified' filter is TRUE.
+     *
+     * @param array $filters Filters to apply
      * @param string $order Logical property to sort by. Default: null
      * @param string $direction One of [asc|desc].
      * @return Zend_Db_Statement Query result
      */
-    static function getDevices($subnet, $mask, $showIdentified, $order=null, $direction='asc')
+    static function getDevices($filters, $order=null, $direction='asc')
     {
         $db = Model_Database::getAdapter();
 
@@ -78,18 +86,28 @@ class Model_NetworkDevice extends Model_Abstract
 
         $select = $db->select()
             ->from('netmap', array('ip', 'mac', 'name', 'date'))
-            ->where('netid=?', $subnet)
-            ->where('mask=?', $mask)
             ->where('mac NOT IN(SELECT macaddr FROM networks)');
 
-        if ($showIdentified) {
-            $select->join(
-                'network_devices',
-                'netmap.mac = network_devices.macaddr',
-                array('description', 'type', 'user')
-            );
-        } else {
-            $select->where('mac NOT IN(SELECT macaddr FROM network_devices)');
+        foreach ($filters as $filter => $arg) {
+            switch ($filter) {
+                case 'Subnet':
+                    $select->where('netid = ?', $arg);
+                    break;
+                case 'Mask':
+                    $select->where('mask = ?', $arg);
+                    break;
+                case 'Identified':
+                    if ($arg) {
+                        $select->join(
+                            'network_devices',
+                            'netmap.mac = network_devices.macaddr',
+                            array('description', 'type', 'user')
+                        );
+                    } else {
+                        $select->where('mac NOT IN(SELECT macaddr FROM network_devices)');
+                    }
+                    break;
+            }
         }
 
         $select->order(self::getOrder($order, $direction, $map));

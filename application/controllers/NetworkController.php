@@ -46,9 +46,11 @@ class NetworkController extends Zend_Controller_Action
     {
         $ordering = $this->_helper->ordering('DiscoveryDate', 'desc');
         $this->view->devices = Model_NetworkDevice::getDevices(
-            $this->_getParam('subnet'),
-            $this->_getParam('mask'),
-            true,
+            array(
+                'Subnet' => $this->_getParam('subnet'),
+                'Mask' => $this->_getParam('mask'),
+                'Identified' => true
+            ),
             $ordering['order'],
             $ordering['direction']
         );
@@ -58,9 +60,11 @@ class NetworkController extends Zend_Controller_Action
     {
         $ordering = $this->_helper->ordering('DiscoveryDate', 'desc');
         $this->view->devices = Model_NetworkDevice::getDevices(
-            $this->_getParam('subnet'),
-            $this->_getParam('mask'),
-            false,
+            array(
+                'Subnet' => $this->_getParam('subnet'),
+                'Mask' => $this->_getParam('mask'),
+                'Identified' => false
+            ),
             $ordering['order'],
             $ordering['direction']
         );
