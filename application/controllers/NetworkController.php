@@ -39,6 +39,7 @@ class NetworkController extends Zend_Controller_Action
             $ordering['order'],
             $ordering['direction']
         );
+        $this->view->devices = Model_NetworkDeviceType::createStatementStatic();
     }
 
     public function showidentifiedAction()

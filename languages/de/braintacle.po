@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-03 13:43+0100\n"
-"PO-Revision-Date: 2013-02-03 13:43+0100\n"
+"POT-Creation-Date: 2013-02-04 12:26+0100\n"
+"PO-Revision-Date: 2013-02-04 12:26+0100\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -337,6 +337,7 @@ msgstr "automatisch"
 #: views/scripts/computer/misc.phtml views/scripts/computer/network.phtml
 #: views/scripts/computer/storage.phtml views/scripts/computer/system.phtml
 #: views/scripts/computer/system.phtml; views/scripts/computer/vms.phtml
+#: views/scripts/network/index.phtml
 #: views/scripts/network/showidentified.phtml
 msgid "Type"
 msgstr "Typ"
@@ -1785,6 +1786,18 @@ msgid "Address"
 msgstr "Adresse"
 
 #: views/scripts/network/index.phtml
+msgid "Count"
+msgstr "Anzahl"
+
+#: views/scripts/network/index.phtml
+msgid "Identified network devices"
+msgstr "Identifizierte Netzwerkgeräte"
+
+#: views/scripts/network/index.phtml
+msgid "Subnets"
+msgstr "Subnetze"
+
+#: views/scripts/network/index.phtml
 msgid "identified"
 msgstr "identifiziert"
 
@@ -1843,5 +1856,4 @@ msgstr "Anzahl Computer"
 #: views/scripts/software/index.phtml
 msgid "Ignore"
 msgstr "Ignorieren"
-
 

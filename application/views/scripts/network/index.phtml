@@ -22,7 +22,37 @@
  *
  */
 
-// Column headers
+print $this->htmlTag(
+    'h2',
+    $this->translate('Identified network devices')
+);
+
+$headers = array(
+    'Description' => $this->translate('Type'),
+    'Count' => $this->translate('Count'),
+);
+
+// Preserve and unset order to prevent clickable column headers in the first
+// table (there can be only one sortable table per page).
+$order = $this->order;
+unset($this->order);
+
+print $this->getHelper('table')->table(
+    $this->devices,
+    null,
+    $headers,
+    array(),
+    'Model_NetworkDeviceType'
+);
+
+// Restore order for second table which is sortable
+$this->order = $order;
+
+print $this->htmlTag(
+    'h2',
+    $this->translate('Subnets')
+);
+
 $headers = array(
     'Name' => $this->translate('Name'),
     'AddressWithMask' => $this->translate('Address'),

@@ -18,6 +18,9 @@ New features:
 
 - Console: Group page shows excluded computers.
 
+- Console: The Network page displays an additional table with all defined device
+  types and the number of identified devices per type.
+
 - Console: Subnet properties can be edited.
 
 - Tools: New script development/update-from-svn.sh for installations that run
