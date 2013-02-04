@@ -72,6 +72,7 @@ class Model_NetworkDeviceType extends Model_Abstract
                 'devicetype.name = network_devices.type',
                 array('id')
             )
+            ->where('macaddr NOT IN(SELECT macaddr FROM networks)')
             ->group('type')
             ->group('devicetype.id')
             ->order('description')
