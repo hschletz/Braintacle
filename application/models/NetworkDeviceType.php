@@ -30,6 +30,11 @@
  * - <b>Id:</b> ID
  * - <b>Description:</b> Description
  * - <b>Count:</b> Number of identified devices of this type
+ *
+ * Id may be NULL if a type is assigned to a device, but does not have a
+ * definition. This is made possible by ocsreports and must be taken into
+ * account when reading data. This is strongly discouraged and new code
+ * should only assign defined types.
  * @package Models
  */
 class Model_NetworkDeviceType extends Model_Abstract
