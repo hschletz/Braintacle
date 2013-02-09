@@ -60,27 +60,64 @@ class Model_NetworkDeviceType extends Model_Abstract
      **/
     public static function CreateStatementStatic()
     {
-        return Model_Database::getAdapter()->select()
-            ->from(
-                'network_devices',
-                array(
-                    'description' => 'type',
-                    'num_devices' => new Zend_Db_Expr('COUNT(type)')
-                )
-            )
-            // LEFT JOIN in case of missing type definitions. This can happen
-            // because network_devices.type stores the name, not the id, and
-            // ocsreports allows deleting the definition after the type is
-            // assigned to a device.
+        $db = Model_Database::getAdapter();
+
+        // Get all types that are assigned to a device. This may include
+        // undefined types in which case 'id' will be NULL.
+        $presentTypes = $db->select()
+            ->from('network_devices', array())
             ->joinLeft(
                 'devicetype',
                 'devicetype.name = network_devices.type',
-                array('id')
+                array()
             )
+            // Add columns manually to maintain explicit order required for UNION.
+            ->columns('id', 'devicetype')
+            ->columns(
+                array(
+                    'description' => 'type',
+                    'num_devices' => new Zend_Db_Expr('COUNT(type)')
+                ),
+                'network_devices'
+            )
+            // Exclude stale entries where the interface has become part of an
+            // inventoried computer.
             ->where('macaddr NOT IN(SELECT macaddr FROM networks)')
-            ->group('type')
             ->group('devicetype.id')
-            ->order('description')
-            ->query();
+            ->group('network_devices.type');
+
+        // Get all defined types. This may include types that are not assigned
+        // to any device in which case 'num_devices' will be 0.
+        $definedTypes = $db->select()
+            ->from('devicetype', array())
+            ->joinLeft(
+                'network_devices',
+                'devicetype.name = network_devices.type',
+                array()
+            )
+            // Add columns manually to maintain explicit order required for UNION.
+            ->columns(
+                array(
+                    'id',
+                    'description' => 'name',
+                ),
+                'devicetype'
+            )
+            ->columns(
+                array('num_devices' => new Zend_Db_Expr('COUNT(type)')),
+                'devicetype'
+            )
+            // Keep unassigned types which would be excluded by the next
+            // condition otherwise
+            ->where('macaddr IS NULL')
+            ->orWhere('macaddr NOT IN(SELECT macaddr FROM networks)') // see above
+            ->group('devicetype.id')
+            ->group('devicetype.name');
+
+            // Return union of both queries (without duplicates)
+            return $db->select()
+                ->union(array($presentTypes, $definedTypes))
+                ->order('description')
+                ->query();
     }
 }
