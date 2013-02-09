@@ -90,9 +90,13 @@ class Model_NetworkDeviceType extends Model_Abstract
         // to any device in which case 'num_devices' will be 0.
         $definedTypes = $db->select()
             ->from('devicetype', array())
+            // The JOIN condition excludes stale entries where the interface has
+            // become part of an inventoried computer. If this was put in the
+            // WHERE clause instead, types that are assigned only to stale
+            // entries would not appear in the result at all.
             ->joinLeft(
                 'network_devices',
-                'devicetype.name = network_devices.type',
+                'devicetype.name = network_devices.type AND macaddr NOT IN(SELECT macaddr FROM networks)',
                 array()
             )
             // Add columns manually to maintain explicit order required for UNION.
@@ -107,10 +111,6 @@ class Model_NetworkDeviceType extends Model_Abstract
                 array('num_devices' => new Zend_Db_Expr('COUNT(type)')),
                 'devicetype'
             )
-            // Keep unassigned types which would be excluded by the next
-            // condition otherwise
-            ->where('macaddr IS NULL')
-            ->orWhere('macaddr NOT IN(SELECT macaddr FROM networks)') // see above
             ->group('devicetype.id')
             ->group('devicetype.name');
 
