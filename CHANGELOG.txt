@@ -19,7 +19,9 @@ New features:
 - Console: Group page shows excluded computers.
 
 - Console: The Network page displays an additional table with all defined device
-  types and the number of identified devices per type.
+  types and the number of identified devices per type. A link below that table
+  leads to a form that allows adding, renaming and deleting device types. Only
+  types that are not assigned to any device can be deleted.
 
 - Console: Subnet properties can be edited.
 

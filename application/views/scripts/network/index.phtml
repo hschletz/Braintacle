@@ -64,6 +64,16 @@ print $this->getHelper('table')->table(
     null,
     array('Count' => 'renderDeviceCount')
 );
+print $this->htmlTag(
+    'p',
+    $this->htmlTag(
+        'a',
+        $this->translate('Manage device types'),
+        array('href' => $this->baseUrl() . '/preferences/networkdevices'),
+        true
+    ),
+    array('class' => 'textcenter clearboth')
+);
 
 // Restore order for second table which is sortable
 $this->order = $order;

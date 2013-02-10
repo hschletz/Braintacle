@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-04 12:26+0100\n"
-"PO-Revision-Date: 2013-02-04 12:26+0100\n"
+"POT-Creation-Date: 2013-02-09 19:05+0100\n"
+"PO-Revision-Date: 2013-02-09 19:05+0100\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -209,11 +209,13 @@ msgstr "Mailadresse"
 msgid "Password"
 msgstr "Passwort"
 
-#: forms/Account/Edit.php; forms/DefineFields.php forms/UserDefinedInfo.php
+#: forms/Account/Edit.php; forms/DefineFields.php
+#: forms/ManageNetworkDeviceTypes.php; forms/UserDefinedInfo.php
 msgid "Change"
 msgstr "Ändern"
 
 #: forms/Account/New.php; forms/DefineFields.php
+#: forms/ManageNetworkDeviceTypes.php
 msgid "Add"
 msgstr "Hinzufügen"
 
@@ -301,8 +303,9 @@ msgstr "Text"
 msgid "Date"
 msgstr "Datum"
 
-#: forms/DefineFields.php; views/helpers/GroupHeader.php
-#: views/helpers/InventoryHeader.php; views/scripts/accounts/index.phtml
+#: forms/DefineFields.php; forms/ManageNetworkDeviceTypes.php
+#: views/helpers/GroupHeader.php; views/helpers/InventoryHeader.php
+#: views/scripts/accounts/index.phtml
 #: views/scripts/network/showidentified.phtml
 #: views/scripts/network/showunknown.phtml views/scripts/package/index.phtml
 msgid "Delete"
@@ -1794,6 +1797,11 @@ msgid "Identified network devices"
 msgstr "Identifizierte Netzwerkgeräte"
 
 #: views/scripts/network/index.phtml
+#: views/scripts/preferences/networkdevices.phtml
+msgid "Manage device types"
+msgstr "Gerätetypen verwalten"
+
+#: views/scripts/network/index.phtml
 msgid "Subnets"
 msgstr "Subnetze"
 
@@ -1827,6 +1835,11 @@ msgstr "Paket '%s' wird dauerhaft gelöscht. Fortfahren?"
 #: views/scripts/package/index.phtml
 msgid "Warnings:"
 msgstr "Warnungen:"
+
+#: views/scripts/preferences/deletedevicetype.phtml
+#, php-format
+msgid "The device type '%s' will be deleted. Continue?"
+msgstr "Gerätetyp '%s' wird dauerhaft gelöscht. Fortfahren?"
 
 #: views/scripts/preferences/deletefield.phtml
 #, php-format

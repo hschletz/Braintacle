@@ -108,6 +108,34 @@ class PreferencesController extends Zend_Controller_Action
         }
     }
 
+    public function networkdevicesAction()
+    {
+        $form = new Form_ManageNetworkDeviceTypes;
+        if ($this->getRequest()->isPost() and $form->isValid($_POST)) {
+            $form->process();
+            $this->redirect('network');
+        } else {
+            // render form
+            $this->view->form = $form;
+        }
+    }
+
+    public function deletedevicetypeAction()
+    {
+        $form = new Form_YesNo;
+        $type = Model_NetworkDeviceType::construct($this->_getParam('id'));
+        if ($this->getRequest()->isPost()) {
+            if ($form->isValid($_POST) and $this->_getParam('yes')) {
+                $type->delete();
+            }
+            $this->redirect('preferences/networkdevices');
+        } else {
+            // render confirmation form
+            $this->view->form = $form;
+            $this->view->type = $type;
+        }
+    }
+
     /**
      * Standard preferences handling via Form_Preferences subclass
      * @param string $class Name of the form class

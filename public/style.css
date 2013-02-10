@@ -314,11 +314,15 @@ input[size="8"]
     font-size: 80%;
 }
 
-.Form_AddToGroup td {
+.Form_AddToGroup td, .Form_ManageNetworkDeviceTypes td {
     padding-top: 2ex;
 }
 
 td.formElement {
     padding-top: 2ex;
     width: 87%;
+}
+
+.Form_ManageNetworkDeviceTypes input[name=new] {
+    margin-top: 1ex;
 }
