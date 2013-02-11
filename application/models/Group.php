@@ -375,34 +375,40 @@ class Model_Group extends Model_ComputerOrGroup
         );
 
         $db->beginTransaction();
-        foreach ($computers as $computer) {
-            if ($computer instanceof Model_Computer) {
-                $computer = $computer->getId();
-            }
-            if (isset($memberships[$computer])) {
-                // Update only memberships of a different type
-                if ($memberships[$computer] != $type) {
-                    $db->update(
+        try {
+            foreach ($computers as $computer) {
+                if ($computer instanceof Model_Computer) {
+                    $computer = $computer->getId();
+                }
+                if (isset($memberships[$computer])) {
+                    // Update only memberships of a different type
+                    if ($memberships[$computer] != $type) {
+                        $db->update(
+                            'groups_cache',
+                            array('static' => $type),
+                            array(
+                                'group_id = ?' => $id,
+                                'hardware_id = ?' => $computer
+                            )
+                        );
+                    }
+                } else {
+                    $db->insert(
                         'groups_cache',
-                        array('static' => $type),
                         array(
-                            'group_id = ?' => $id,
-                            'hardware_id = ?' => $computer
+                            'group_id' => $id,
+                            'hardware_id' => $computer,
+                            'static' => $type
                         )
                     );
                 }
-            } else {
-                $db->insert(
-                    'groups_cache',
-                    array(
-                        'group_id' => $id,
-                        'hardware_id' => $computer,
-                        'static' => $type
-                    )
-                );
             }
+            $db->commit();
+        } catch (Exception $exception) {
+            $db->rollBack();
+            $this->unlock();
+            throw $exception;
         }
-        $db->commit();
         $this->unlock();
     }
 

@@ -60,6 +60,35 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
      * The lock will be released automatically in the destructor. It can also
      * be released manually via {@link unlock()}.
      *
+     * Be careful when using locks with transactions. The lock is implemented as
+     * a row in the 'locks' table and therefore affected by the transaction and
+     * all sorts of concurrency issues. For best practice, call lock() and
+     * unlock() outside the transaction. Catch any exception that may occur
+     * inside the transaction and roll back before re-throwing the exception.
+     * Otherwise the destructor would call unlock() inside an uncommitted
+     * transcation which would be rolled back automatically on disconnect,
+     * undoing the unlock() effect and keeping a stale lock in the database.
+     *
+     * Example without transaction:
+     *
+     *     $obj->lock();
+     *     ...
+     *     $obj->unlock();
+     *
+     * Example with transaction:
+     *
+     *     $obj->lock();
+     *     $db->beginTransaction();
+     *     try {
+     *         ...
+     *     } catch(Exception $e) {
+     *         $db->rollBack();
+     *         $obj->unlock(); // Not strictly necessary, only for clarity
+     *         throw $e;
+     *     }
+     *     $db->commit();
+     *     $obj->unlock();
+     *
      * @return bool Success. Always check the result. FALSE means that a lock is in use.
      */
     public function lock()
