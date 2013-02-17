@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-09 19:05+0100\n"
-"PO-Revision-Date: 2013-02-09 19:05+0100\n"
+"POT-Creation-Date: 2013-02-17 12:00+0100\n"
+"PO-Revision-Date: 2013-02-17 12:01+0100\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -262,14 +262,14 @@ msgstr "Gruppe"
 #: views/scripts/computer/display.phtml views/scripts/computer/index.phtml;
 #: views/scripts/computer/misc.phtml views/scripts/computer/network.phtml
 #: views/scripts/computer/packages.phtml views/scripts/computer/printers.phtml
-#: views/scripts/computer/registry.phtml views/scripts/computer/software.phtml
-#: views/scripts/computer/storage.phtml views/scripts/computer/system.phtml
-#: views/scripts/computer/system.phtml; views/scripts/computer/vms.phtml
-#: views/scripts/duplicates/index.phtml views/scripts/duplicates/show.phtml
-#: views/scripts/group/excluded.phtml; views/scripts/group/general.phtml
-#: views/scripts/group/index.phtml; views/scripts/group/members.phtml
-#: views/scripts/group/packages.phtml; views/scripts/network/index.phtml
-#: views/scripts/package/index.phtml; views/scripts/software/index.phtml
+#: views/scripts/computer/software.phtml views/scripts/computer/storage.phtml
+#: views/scripts/computer/system.phtml views/scripts/computer/system.phtml;
+#: views/scripts/computer/vms.phtml views/scripts/duplicates/index.phtml
+#: views/scripts/duplicates/show.phtml views/scripts/group/excluded.phtml;
+#: views/scripts/group/general.phtml views/scripts/group/index.phtml;
+#: views/scripts/group/members.phtml views/scripts/group/packages.phtml;
+#: views/scripts/network/index.phtml views/scripts/package/index.phtml;
+#: views/scripts/software/index.phtml
 msgid "Name"
 msgstr "Name"
 
@@ -1575,6 +1575,10 @@ msgstr "Treiber"
 #: views/scripts/computer/printers.phtml
 msgid "Port"
 msgstr "Port"
+
+#: views/scripts/computer/registry.phtml
+msgid "Content"
+msgstr "Inhalt"
 
 #: views/scripts/computer/registry.phtml
 msgid "Registry Keys"

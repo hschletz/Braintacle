@@ -163,7 +163,7 @@ class ComputerController extends Zend_Controller_Action
 
     public function registryAction()
     {
-        $this->_helper->ordering('Name');
+        $this->_helper->ordering('Value');
     }
 
     public function vmsAction()

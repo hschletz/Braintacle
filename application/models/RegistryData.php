@@ -1,6 +1,6 @@
 <?php
 /**
- * Class representing an inventoried registry key
+ * Class representing inventoried registry data
  *
  * $Id$
  *
@@ -23,26 +23,32 @@
  * @package Models
  */
 /**
- * An inventoried registry key
+ * Inventoried registry data
  *
  * Properties:
  *
- * - <b>Name</b> Name under which the key is stored in the registry configuration
- * - <b>Value</b> Registry value
+ * - **Value** Name under which the value is stored in the registry configuration
+ * - **Data** Registry Data
+ *
+ * Don't confuse 'Value' with its content. In registry terms, 'Value' refers to
+ * the name of the entry that holds the data, while 'Key' is the container that
+ * holds the value. While this terminology differs from common usage, it is used
+ * throughout the official Windows documentation and API, and Braintacle follows
+ * this convention.
  * @package Models
  */
-class Model_Registry extends Model_ChildObject
+class Model_RegistryData extends Model_ChildObject
 {
     /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from 'registry' table
-        'Name' => 'name',
-        'Value' => 'regvalue',
+        'Value' => 'name',
+        'Data' => 'regvalue',
     );
 
     /** {@inheritdoc} */
     protected $_tableName = 'registry';
 
     /** {@inheritdoc} */
-    protected $_preferredOrder = 'Name';
+    protected $_preferredOrder = 'Value';
 }

@@ -28,16 +28,16 @@ print $this->inventoryHeader($computer);
 
 
 $headers = array(
-    'Name' => $this->translate('Name'),
     'Value' => $this->translate('Value'),
+    'Data' => $this->translate('Content'),
 );
 
-$registry = $this->getHelper('table')->table(
-    $computer->getChildObjects('Registry', $this->order, $this->direction),
+$data = $this->getHelper('table')->table(
+    $computer->getChildObjects('RegistryData', $this->order, $this->direction),
     null,
     $headers,
     array(),
-    'Model_Registry',
+    'Model_RegistryData',
     null,
     array(),
     $numKeys
@@ -48,5 +48,5 @@ if ($numKeys) {
         'h2',
         $this->translate('Registry Keys')
     );
-    print $registry;
+    print $data;
 }

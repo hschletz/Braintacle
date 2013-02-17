@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-09 19:05+0100\n"
+"POT-Creation-Date: 2013-02-17 12:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -248,7 +248,6 @@ msgstr ""
 #: views/scripts/computer/network.phtml
 #: views/scripts/computer/packages.phtml
 #: views/scripts/computer/printers.phtml
-#: views/scripts/computer/registry.phtml
 #: views/scripts/computer/software.phtml
 #: views/scripts/computer/storage.phtml
 #: views/scripts/computer/system.phtml
@@ -1601,6 +1600,10 @@ msgstr ""
 
 #: views/scripts/computer/printers.phtml
 msgid "Port"
+msgstr ""
+
+#: views/scripts/computer/registry.phtml
+msgid "Content"
 msgstr ""
 
 #: views/scripts/computer/registry.phtml
