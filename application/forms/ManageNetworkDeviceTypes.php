@@ -43,7 +43,6 @@ class Form_ManageNetworkDeviceTypes extends Zend_Form
 
     /**
      * @ignore
-     * Create elements and prepare datatype translations
      **/
     public function init()
     {
