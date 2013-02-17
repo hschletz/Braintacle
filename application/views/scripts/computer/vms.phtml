@@ -51,7 +51,7 @@ function renderGuestMemory($view, $virtualMachine)
     return $mem;
 }
 
-$registry = $this->getHelper('table')->table(
+$vms = $this->getHelper('table')->table(
     $computer->getChildObjects('VirtualMachine', $this->order, $this->direction),
     null,
     $headers,
@@ -67,5 +67,5 @@ if ($numKeys) {
         'h2',
         $this->translate('Virtual machines hosted on this computer')
     );
-    print $registry;
+    print $vms;
 }
