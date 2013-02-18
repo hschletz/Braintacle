@@ -73,8 +73,6 @@ class Form_ManageNetworkDeviceTypes extends Zend_Form
         }
 
         // Empty text field to create new field.
-        // Name is prefixed with an underscore to avoid accidental clash with
-        // encoded name (very unlikely, but possible in theory)
         $new = new Zend_Form_Element_Text('new');
         $new->addFilter('StringTrim')
             ->addValidator('StringLength', false, array(0, 255))
