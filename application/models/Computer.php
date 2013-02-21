@@ -150,7 +150,7 @@ class Model_Computer extends Model_ComputerOrGroup
         'MsOfficeProduct',
         'NetworkInterface',
         'Printer',
-        'Registry',
+        'RegistryData',
         'Software',
         'StorageDevice',
         'VirtualMachine',
