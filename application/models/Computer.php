@@ -564,12 +564,16 @@ class Model_Computer extends Model_ComputerOrGroup
                 break;
             default:
                 // JOINs cannot be optimized for more than 2 tables. Only the
-                // group filter can be ommitted if there is an inner join.
+                // group filter can be ommitted if there is an inner join,
+                // except for the PackageNonnotified filter which may yield
+                // groups because it does not operate on child objects.
                 $filterGroups = true;
-                foreach ($queryTables as $table) {
-                    if ($table['joinType'] == Zend_Db_Select::INNER_JOIN) {
-                        $filterGroups = false;
-                        break;
+                if (!in_array('PackageNonnotified', $filter)) {
+                    foreach ($queryTables as $table) {
+                        if ($table['joinType'] == Zend_Db_Select::INNER_JOIN) {
+                            $filterGroups = false;
+                            break;
+                        }
                     }
                 }
         }
