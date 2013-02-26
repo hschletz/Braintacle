@@ -534,10 +534,10 @@ Braintacle:
         </element>
     </define>
     <define name="REGISTRY">
-        <element name="REGISTRY" braintacle:model="Registry">
+        <element name="REGISTRY" braintacle:model="RegistryData">
             <interleave>
-                <ref name="NAME" braintacle:property="Name" />
-                <ref name="REGVALUE" braintacle:property="Value" />
+                <ref name="NAME" braintacle:property="Value" />
+                <ref name="REGVALUE" braintacle:property="Data" />
             </interleave>
         </element>
     </define>
