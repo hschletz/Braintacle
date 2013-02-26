@@ -78,8 +78,6 @@ This project contains some third party code:
 - A copy of Zend Framework (http://framework.zend.com, licensed under the
   New BSD License) is included in the library/Zend/ directory.
   See http://framework.zend.com/license
-  This copy has some patches applied that fix some bugs which have not been
-  correted upstream. The patches can be found separately in development/Zend.diff.
 
 - The library/PEAR/ directory contains a copy of some PEAR packages, partially
   patched. See the Readme.txt in the same directory for details.
