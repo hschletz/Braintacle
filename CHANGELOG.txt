@@ -33,6 +33,9 @@ Fixed bugs:
 
 - Console: Fixed display of package creation dates (0.10 regression)
 
+- Console: Display printers for non-Windows systems too. Note: the UNIX agent
+  support for printers is rather limited.
+
 Misc:
 
 - Console: Updated the database that determines the vendor from a MAC address.
