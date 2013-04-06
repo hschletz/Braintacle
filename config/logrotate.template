@@ -3,8 +3,6 @@
 # It is not needed for a default syslog configuration.
 # Copy this file to /etc/logrotate.d if necessary and adjust settings.
 #
-# $Id$
-#
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
 # notice and this notice are preserved. This file is offered as-is,

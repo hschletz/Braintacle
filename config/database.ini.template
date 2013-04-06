@@ -2,8 +2,6 @@
 ; Copy or rename this file to database.ini (in the same directory) and adjust
 ; settings in the [production] section to match your environment.
 ;
-; $Id$
-;
 ; Copying and distribution of this file, with or without modification,
 ; are permitted in any medium without royalty provided the copyright
 ; notice and this notice are preserved. This file is offered as-is,

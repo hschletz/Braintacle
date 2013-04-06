@@ -9,8 +9,6 @@
 # WARNING: any local changes to the languages directory will be lost!
 #
 #
-# $Id$
-#
 # Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
 #
 # This program is free software; you can redistribute it and/or modify it

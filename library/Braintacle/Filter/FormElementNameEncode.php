@@ -2,8 +2,6 @@
 /**
  * Encode arbitrary string to be suitable as a Zend_Form_Element name
  *
- * $Id$
- *
  * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
