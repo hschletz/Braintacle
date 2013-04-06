@@ -40,7 +40,7 @@ Misc:
 
 - Console: Updated the database that determines the vendor from a MAC address.
 
-- General: Updated Zend Framework to 1.12.2.
+- General: Updated Zend Framework to 1.12.3.
 
 
 CHANGES IN VERSION 0.10
