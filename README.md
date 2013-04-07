@@ -1,9 +1,9 @@
-====================================================================
+<!--
 Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
 notice and this notice are preserved. This file is offered as-is,
 without any warranty.
-====================================================================
+-->
 
 
 Quick start to get Braintacle running:
@@ -17,7 +17,7 @@ Quick start to get Braintacle running:
 
 2.  Enable mod_rewrite and mod_env in your Apache configuration.
 
-3.  Set "AllowEncodedSlashes On" on the virtual host that runs Braintacle.
+3.  Set `AllowEncodedSlashes On` on the virtual host that runs Braintacle.
 
 4.  Create a copy of config/braintacle-console.conf.template and make it known
     to Apache, either by placing it in a directory where Apache will read it
@@ -54,46 +54,38 @@ Quick start to get Braintacle running:
     which must point to this directory. Configure Apache for this purpose, like
     with the file config/braintacle-download.conf.template.
 
-More information can be found in the doc/ directory and on the project site at:
-http://savannah.nongnu.org/projects/braintacle
+More information can be found in the doc/ directory and on the project site at
+<http://savannah.nongnu.org/projects/braintacle>.
 
 
-====================================================================
-
+--------
 LICENSES
+--------
 
 Braintacle is released under the GNU General Public License v2 or later.
-You can find the full license in the COPYING file in the same directory that
+You can find the full license in the [COPYING](COPYING) file in the same directory that
 contains this file.
 
 This project contains some third party code:
 
-- A heavily patched version of OCS inventory NG (http://www.ocsinventory-ng.org/,
+- A heavily patched version of [OCS inventory NG](http://www.ocsinventory-ng.org/),
   licensed under the GNU General Public License v2) is included in the ocsinventory/
   directory.
-  See http://www.ocsinventory-ng.org/index.php?page=license
-
-- A copy of Zend Framework (http://framework.zend.com, licensed under the
-  New BSD License) is included in the library/Zend/ directory.
-  See http://framework.zend.com/license
+  See <http://www.ocsinventory-ng.org/en/about/licence.html>.
 
 - The library/PEAR/ directory contains a copy of some PEAR packages, partially
   patched. See the Readme.txt in the same directory for details.
   They are licensed under the BSD license, see
-  http://www.opensource.org/licenses/bsd-license.php
+  <http://www.opensource.org/licenses/bsd-license.php>
 
-  - PEAR (http://pear.php.net/package/PEAR)
-  - MDB2 (http://pear.php.net/package/MDB2/)
-  - MDB2_Driver_pgsql (http://pear.php.net/package/MDB2_Driver_pgsql)
-  - MDB2_Driver_mysql (http://pear.php.net/package/MDB2_Driver_mysql)
-  - MDB2_Driver_oci8 (http://pear.php.net/package/MDB2_Driver_oci8)
-  - MDB2_Schema (http://pear.php.net/package/MDB2_Schema)
-  - XML_Parser (http://pear.php.net/package/XML_Parser/)
+  - [PEAR](http://pear.php.net/package/PEAR)
+  - [MDB2](http://pear.php.net/package/MDB2)
+  - [MDB2_Driver_pgsql](http://pear.php.net/package/MDB2_Driver_pgsql)
+  - [MDB2_Driver_mysql](http://pear.php.net/package/MDB2_Driver_mysql)
+  - [MDB2_Driver_oci8](http://pear.php.net/package/MDB2_Driver_oci8)
+  - [MDB2_Schema](http://pear.php.net/package/MDB2_Schema)
+  - [XML_Parser](http://pear.php.net/package/XML_Parser)
 
 - The file application/configs/macaddresses-vendors.txt is taken from the
-  wireshark project (http://wireshark.org) under a different name. GPLv2
+  [Wireshark](http://wireshark.org) project under a different name. GPLv2
   and copyright information are contained at the top of this file.
-
-- A copy of NADA (http://savannah.nongnu.org/projects/nada, licensed under the
-  BSD 2-Clause License) is included in the library/NADA/ directory. See
-  http://svn.savannah.nongnu.org/svn/nada/trunk/LICENSE
