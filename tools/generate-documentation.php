@@ -139,8 +139,6 @@ $structure->load(realpath("$basePath/doc/api/structure.xml"));
 $xPath = new DOMXPath($structure);
 $errorsToRemove = array();
 $regexInheritedArgument = '#^Argument (.*) is missing from the Docblock of (.*)\(\)$#';
-$regexTypehint = '#^The type hint of the argument is incorrect for the type definition ' .
-                 'of the @param tag with argument (\\$[a-zA-Z0-9]+) in ([a-zA-Z_]+)\(\)$#';
 
 // Generate list of all classes (prefixed with backslash)
 foreach ($structure->getElementsByTagName('class') as $node) {
