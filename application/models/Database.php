@@ -117,7 +117,7 @@ class Model_Database
     public static function getNada()
     {
         if (!self::$_nada) {
-            require_once('NADA/Nada.php');
+            require_once('Nada.php');
             self::$_nada = Nada::factory(self::getAdapter());
         }
         return self::$_nada;

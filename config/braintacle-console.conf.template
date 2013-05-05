@@ -32,6 +32,10 @@ Alias /braintacle /usr/local/share/braintacle/public
 # Application-specific configuration. Adjust path if necessary.
 <Location /braintacle>
 
+    # Uncomment and adjust paths if Zend Framework and/or NADA are not in the
+    # global include path
+    # php_value include_path /usr/local/share/php/Zend/library:/usr/local/share/php/NADA
+
     # Change "Allow" to restrict access
     Order Deny,Allow
     Deny from all
