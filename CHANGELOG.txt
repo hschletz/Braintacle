@@ -9,6 +9,12 @@ without any warranty.
 CHANGES IN VERSION 0.11
 =======================
 
+Upgrading from previous versions:
+
+- Required: Some external libraries (Zend Framework and NADA) are no longer
+  included in the distribution. They must be installed manually. See INSTALL.md
+  for more information.
+
 New features:
 
 - Console: Groups can now be created from search results. Queries can be set on
@@ -38,7 +44,8 @@ Misc:
 
 - Console: Updated the database that determines the vendor from a MAC address.
 
-- General: Updated Zend Framework to 1.12.3.
+- General: Documentation overhaul. Installation instructions are now gathered in
+  a single file, INSTALL.md.
 
 
 CHANGES IN VERSION 0.10

@@ -37,8 +37,25 @@ Braintacle is hosted at <a href="http://savannah.nongnu.org/projects/braintacle"
 <h2>What is it?</h2>
 
 <p>
-Braintacle is a set of applications for automatic inventory of hard- and software, software deployment and more.
-It consists of several parts:
+Braintacle is a set of applications for managing hard- and software on a
+network. Braintacle keeps a semi-automatic inventory of computers, other
+network-connected devices and installed software, and provides a generic
+infrastructure for downloading files and executing commands on selected clients,
+allowing centralized software updates, remote configuration and more. For
+developers, a PHP API is provided to access the inventory and control the
+applications.
+</p>
+<p>
+Braintacle currently reuses some code from <a href="http://ocsinventory-ng.org">
+OCS Inventory NG</a>. That code is enhanced with extra features, easier
+maintenance and improved stability. The administration console is written from
+scratch. It is also possible to install Braintacle along an existing OCS
+Inventory NG installation and share the database, but this is only recommended
+for testing purposes. Not all of Braintacle's features will be available, and
+compatibility may be dropped in the future.
+</p>
+<p>
+The application consists of several parts:
 </p>
 <ul>
 <li>
@@ -108,8 +125,7 @@ English and german translations are included.
 Other translations can easily be added and maintained using your favorite gettext tools.
 </li>
 <li>
-As a side-effect of the Zend Framework's MVC architecture, the model classes provide an abstract API to all logical
-objects (computers, packages etc.) which can be used by third party code.
+An abstract API to all logical objects (computers, packages etc.) which can be used by third party code.
 </li>
 </ul>
 
@@ -314,74 +330,9 @@ They don't even show up in the error log.
 If this is disabled (the default), URLs which contain encoded slashes (%2F) trigger this 404.
 </p>
 <p>
-I have not found any information about the purpose of this behavior and the consequences of changing it.
-I suppose this is a lame attempt to stop path traversal attacks on poorly written scripts.
-</p>
-<p>
-There are several ways to work around this problem at application level, but they are all very messy.
-For this reason, I have not implemented any and the only way to solve this problem is to set <code>AllowEncodedSlashes On</code> for the virtual host.
-</p>
-
-<h2>Managing the database</h2>
-
-<p>
-There are 2 use cases that require different methods for database management.
-</p>
-
-<h3>Using Braintacle in addition to an original OCS Inventory NG installation</h3>
-
-<p>Use the OCS Inventory installer to manage the database.
-<strong>Do not use Braintacle's schema manager.</strong>
-</p>
-
-<h3>Using Braintacle with its bundled communication server</h3>
-
-<p>
-Braintacle manages the database with the script tools/schema-manager.php.
-Please note that Braintacle's schema is slightly different from the original schema.
-See the
-<a href="http://svn.savannah.nongnu.org/viewvc/*checkout*/trunk/schema/README.html?root=braintacle">schema documentation</a>
-for details.
-</p>
-<p>
-<strong>
-This schema is not fully compatible with the original version of OCS Inventory NG.
-It can only be used with the communication server that comes bundled with Braintacle.
-Do not use schema-manager.php if you use a non-Braintacle server.
-Manage the schema through the original console application in that case.
-</strong>
-</p>
-<p>
-The schema manager checks for compatibility with the original version and refuses to update the database in that case.
-This can be overridden with the --force option, but compatibility will be lost.
-</p>
-<p>
-Braintacle and its bundled communication server work with both schema types,
-but some features will only be available with the Braintacle schema.
-</p>
-
-<h4>Creating the database</h4>
-
-<p>
-This is documented in the installation instructions for the communication server.
-See
-<a href="http://svn.savannah.nongnu.org/viewvc/*checkout*/trunk/ocsinventory/README.html?root=braintacle">ocsinventory/README.html</a>
-for details.
-</p>
-
-<h4>Updating the database</h4>
-
-<p>
-When the schema has changed, just run the schema manager again.
-It will update the tables to the new schema.
-It's strongly recommend to back up the database before you do this.
-Updating a database with MDB2_Schema is a complex operation.
-Despite intensive testing and bugfixing, there could always something go wrong.
-</p>
-<p>
-It is safe to run the schema manager more than once, even if the schema has not changed.
-It's strongly recommended to run it after every application upgrade.
-The script will detect if a schema upgrade is required and perform it, or abort if not.
+There are several ways to work around this problem at application level.
+The problem will be adressed properly in a future version.
+For now, the only way to solve this problem is to set <code>AllowEncodedSlashes On</code> for the virtual host.
 </p>
 
 
@@ -394,7 +345,7 @@ The tools directory contains some scripts that are not part of the application, 
 <h3>schema-manager.php</h3>
 
 <p>
-This script is described above.
+This script is used to manage the database schema as part of the installation and upgrade process as described in <a href="../INSTALL.md">INSTALL.md</a>
 </p>
 
 <h3><a name="export.php">export.php</a></h3>

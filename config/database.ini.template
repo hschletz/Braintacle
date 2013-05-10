@@ -10,19 +10,21 @@
 
 [production]
 
-; Zend DB Adapter. See http://framework.zend.com/manual/en/zend.db.html#zend.db.adapter
-; for a list of available adapters and options.
+; Zend DB Adapter.
+; See http://framework.zend.com/manual/1.12/en/zend.db.adapter.html for a list
+; of available adapters and options.
 adapter = pdo_pgsql
 ; For MySQL:
 ; adapter = pdo_mysql
 
 ; Database server. Can be a hostname, an IP address or a local socket.
 params.host = /var/run/postgresql
+; Common setting for MySQL:
 ; params.host = localhost
 
 ; Port of database server
 params.port = 5432
-; For MySQL:
+; Common setting for MySQL:
 ; params.port = 3306
 
 ; Name of database
@@ -31,8 +33,8 @@ params.dbname = braintacle
 ; params.dbname = ocsweb
 
 ; Username and password for database connection.
-params.username = ocs
-params.password = ocs
+params.username = username
+params.password = passwd
 
 ; Additional adapter-specific options. If in doubt, leave empty.
 driver_options =

@@ -5,72 +5,79 @@ notice and this notice are preserved. This file is offered as-is,
 without any warranty.
 -->
 
+About Braintacle
+----------------
 
-Quick start to get Braintacle running:
+Braintacle is a set of applications for managing hard- and software on a
+network. Braintacle keeps a semi-automatic inventory of computers, other
+network-connected devices and installed software, and provides a generic
+infrastructure for downloading files and executing commands on selected clients,
+allowing centralized software updates, remote configuration and more. For
+developers, a PHP API is provided to access the inventory and control the
+applications.
 
-1.  Extract the downloaded tarball to a location outside the webserver's
-    document root. The documentation and sample configuration assumes
-    /usr/local/share/braintacle. IT IS VERY IMPORTANT THAT THE CONTENT OF THIS
-    DIRECTORY IS NOT DIRECTLY VISIBLE TO THE BROWSER. It will contain sensitive
-    data (config files with database credentials) which would otherwise leak to
-    the outside world.
+Braintacle currently reuses some code from [OCS Inventory
+NG](http://ocsinventory-ng.org). That code is enhanced with extra features,
+easier maintenance and improved stability. The administration console is written
+from scratch. It is also possible to install Braintacle along an existing OCS
+Inventory NG installation and share the database, but this is only recommended
+for testing purposes. Not all of Braintacle's features will be available, and
+compatibility may be dropped in the future.
 
-2.  Enable mod_rewrite and mod_env in your Apache configuration.
 
-3.  Set `AllowEncodedSlashes On` on the virtual host that runs Braintacle.
+Requirements
+------------
 
-4.  Create a copy of config/braintacle-console.conf.template and make it known
-    to Apache, either by placing it in a directory where Apache will read it
-    (typically /etc/apache2/conf.d or similar) or by including it in a
-    particular VirtualHost definition. See the comments inside the file for
-    details. Edit the file to suit your needs.
+- A [PostgreSQL](http://postgresql.org) or [MySQL](http://mysql.org) database.
+  Support for other database backends may be added in the future.
 
-5.  Have Apache reload its configuration.
+- [Apache httpd](http://httpd.apache.org) web server with
+  [mod_perl](http://perl.apache.org) and a database-specific DBD module for the
+  main server component.
 
-6.  Copy config/database.ini.template to config/database.ini and adjust the
-    settings. This file should not be world-readable, only for your webserver.
-    You could also copy it to /etc or /usr/local/etc and create a symbolic link
-    in the config/ directory instead. This has the advantage of keeping /usr
-    free of user-configurable data which does not actually belong there.
+- A web server with [PHP](http://php.net) 5.2.11 or later for the administration
+  console. PHP is also required for most of the command line tools. A
+  database-specific PHP extension is also required, see
+  <http://framework.zend.com/manual/1.12/en/zend.db.adapter.html>. There are
+  also some PHP libraries required in the include path:
 
-7.  If you don't already have a working installation of OCS Inventory NG, either
-    install it or install the patched version that comes bundled with Braintacle
-    in the ocsinventory directory. See the README.html file in the same
-    directory for details. This version is recommended.
+  - [Zend Framework](http://framework.zend.com) 1.12.3 or later (2.x is not
+    supported).
 
-8.  Point your browser to Braintacle's URL. Log in with an OCSinventory
-    administrator account (default username: 'admin', password 'admin') and have
-    fun.
+  - [NADA](https://github.com/hschletz/NADA)
 
-9.  It is strongly recommended to change the default password (via
-    Preferences->Users).
+- On every client that should be managed through Braintacle, either the
+  [OCS Inventory NG agent](http://www.ocsinventory-ng.org/en/download/download-agent.html) or
+  [FusionInventory Agent](http://www.fusioninventory.org/documentation/agent/installation/)
+  must be installed.
 
-10. If you want to use Braintacle to deploy packages, create a directory with
-    write access for the web server. For compatibility with OCS Inventory NG,
-    it must be named 'download'. Recommended is /var/lib/braintacle/download.
-    Uploaded packages will be stored in this directory.
-    In the Braintacle web console, enter the path unter Preferences->Packages.
-    In the same dialog, you have to specify 2 URLs (1 for HTTP, 1 for HTTPS)
-    which must point to this directory. Configure Apache for this purpose, like
-    with the file config/braintacle-download.conf.template.
 
-More information can be found in the doc/ directory and on the project site at
-<http://savannah.nongnu.org/projects/braintacle>.
+Installation
+------------
+
+Refer to the [INSTALL.md](INSTALL.md) file in the same directory that contains
+this file.
+
+
+Further reading
+---------------
+
+More detailed information is available in the [doc/](doc) directory.
 
 
 --------
 LICENSES
 --------
 
-Braintacle is released under the GNU General Public License v2 or later.
-You can find the full license in the [COPYING](COPYING) file in the same directory that
+Braintacle is released under the GNU General Public License v2 or later. You can
+find the full license in the [COPYING](COPYING) file in the same directory that
 contains this file.
 
 This project contains some third party code:
 
-- A heavily patched version of [OCS inventory NG](http://www.ocsinventory-ng.org/),
-  licensed under the GNU General Public License v2) is included in the ocsinventory/
-  directory.
+- A patched version of the [OCS inventory NG server
+  components](http://www.ocsinventory-ng.org/), licensed under the GNU General
+  Public License v2) is included in the ocsinventory/ directory.
   See <http://www.ocsinventory-ng.org/en/about/licence.html>.
 
 - The library/PEAR/ directory contains a copy of some PEAR packages, partially

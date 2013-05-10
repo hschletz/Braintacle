@@ -1,6 +1,7 @@
 # Sample agent whitelist file.
 # This is only needed if you use non-OCS agents, like FusionInventory agent.
-# Go to Preferences->Agent and enter the path to this file.
+# In the administration console, go to Preferences->Agent and enter the path to
+# this file.
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -9,6 +10,7 @@
 #
 
 # Allow FusionInventory agent, http://fusioninventory.org
-FusionInventory-Agent_v2.0.6
+# Each version must be given separately.
+FusionInventory-Agent_v2.2.7
 
 # Add other agents here
