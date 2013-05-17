@@ -84,10 +84,10 @@ $renderCallbacks = array(
     'Name' => 'renderName',
     'Size' => 'renderSize',
     'Platform' => 'renderPlatform',
-    'NumNonnotified' => 'renderNumNonnotified',
-    'NumSuccess' => 'renderNumSuccess',
-    'NumNotified' => 'renderNumNotified',
-    'NumError' => 'renderNumError',
+    'NumNonnotified' => 'renderNumPackages',
+    'NumSuccess' => 'renderNumPackages',
+    'NumNotified' => 'renderNumPackages',
+    'NumError' => 'renderNumPackages',
     'Delete' => 'renderDelete'
 );
 
@@ -101,9 +101,13 @@ function renderName($view, $package)
         'a',
         $view->escape($package->getName()),
         array(
-            'href' => $view->BaseUrl()
-                     . '/package/edit/name/'
-                     . urlencode($package->getName()),
+            'href' => $view->standardUrl(
+                array(
+                    'controller' => 'package',
+                    'action' => 'edit',
+                    'name' => $package->getName(),
+                )
+            ),
             'title' => $view->escape($title),
         ),
         true
@@ -130,82 +134,43 @@ function renderPlatform($view, $package)
     return $view->escape(ucfirst($package->getPlatform()));
 }
 
-function renderNumNonnotified($view, $package)
+function renderNumPackages($view, $package, $property)
 {
-    $num = $package->getNumNonnotified();
-    if ($num) {
-        return $view->htmlTag(
-            'a',
-            $num,
-            array(
-                'href' => $view->BaseUrl()
-                     . '/computer/index/columns/Name,UserName,LastContactDate,InventoryDate'
-                     . '/jumpto/software/filter/PackageNonnotified/search/'
-                     . urlencode($package->getName()),
-                 'class' => 'blue'
-            ),
-            true
-        );
-    } else {
-        return $num;
+    switch ($property) {
+        case 'NumNonnotified':
+            $filter = 'PackageNonnotified';
+            $class = 'blue';
+            break;
+        case 'NumSuccess':
+            $filter = 'PackageSuccess';
+            $class = 'green';
+            break;
+        case 'NumNotified':
+            $filter = 'PackageNotified';
+            $class = 'red';
+            break;
+        case 'NumError':
+            $filter = 'PackageError';
+            $class = 'red';
+            break;
     }
-}
-
-function renderNumSuccess($view, $package)
-{
-    $num = $package->getNumSuccess();
+    $num = $package->getProperty($property);
     if ($num) {
         return $view->htmlTag(
             'a',
             $num,
             array(
-                'href' => $view->BaseUrl()
-                     . '/computer/index/columns/Name,UserName,LastContactDate,InventoryDate'
-                     . '/jumpto/software/filter/PackageSuccess/search/'
-                     . urlencode($package->getName()),
-                 'class' => 'green'
-            ),
-            true
-        );
-    } else {
-        return $num;
-    }
-}
-
-function renderNumnotified($view, $package)
-{
-    $num = $package->getNumNotified();
-    if ($num) {
-        return $view->htmlTag(
-            'a',
-            $num,
-            array(
-                'href' => $view->BaseUrl()
-                     . '/computer/index/columns/Name,UserName,LastContactDate,InventoryDate'
-                     . '/jumpto/software/filter/PackageNotified/search/'
-                     . urlencode($package->getName()),
-                 'class' => 'red'
-            ),
-            true
-        );
-    } else {
-        return $num;
-    }
-}
-
-function renderNumError($view, $package)
-{
-    $num = $package->getNumError();
-    if ($num) {
-        return $view->htmlTag(
-            'a',
-            $num,
-            array(
-                'href' => $view->BaseUrl()
-                     . '/computer/index/columns/Name,UserName,LastContactDate,InventoryDate,Package.Status'
-                     . '/jumpto/software/filter/PackageError/search/'
-                     . urlencode($package->getName()),
-                 'class' => 'red'
+                'href' => $view->standardUrl(
+                    array(
+                        'controller' => 'computer',
+                        'action' => 'index',
+                        'columns' => 'Name,UserName,LastContactDate,InventoryDate',
+                        'jumpto' => 'software',
+                        'filter' => $filter,
+                        'search' => $package->getName(),
+                    )
+                ),
+                'class' => $class,
             ),
             true
         );
@@ -220,9 +185,13 @@ function renderDelete($view, $package)
         'a',
         $view->translate('Delete'),
         array(
-            'href' => $view->BaseUrl()
-                     . '/package/delete/name/'
-                     . urlencode($package->getName())
+            'href' => $view->standardUrl(
+                array(
+                    'controller' => 'package',
+                    'action' => 'delete',
+                    'name' => $package->getName(),
+                )
+            ),
         ),
         true
     );

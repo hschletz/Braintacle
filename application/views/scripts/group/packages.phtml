@@ -48,11 +48,14 @@ function renderRemoveLink($view, $package)
         'a',
         $view->translate('remove'),
         array(
-            'href' => $view->BaseUrl()
-                     . '/group/removepackage/name/'
-                     . urlencode($package->getName())
-                     . '/id/'
-                     . $view->group->getId()
+            'href' => $view->standardUrl(
+                array(
+                    'controller' => 'group',
+                    'action' => 'removepackage',
+                    'name' => $package->getName(),
+                    'id' => $view->group->getId(),
+                )
+            ),
         ),
         true
     );

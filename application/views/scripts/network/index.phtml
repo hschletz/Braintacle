@@ -42,9 +42,14 @@ function renderDeviceCount($view, $deviceType, $property)
         return $view->htmlTag(
             'a',
             $count,
-            array('href' =>
-                $view->baseUrl() . '/network/showidentified' .
-                '/type/' . urlencode($deviceType->getDescription())
+            array(
+                'href' => $view->standardUrl(
+                    array(
+                        'controller' => 'network',
+                        'action' => 'showidentified',
+                        'type' => $deviceType->getDescription(),
+                    )
+                ),
             )
         );
     } else {
@@ -101,10 +106,15 @@ function renderName($view, $subnet, $property)
     // Link to edit subnet properties. If no name is defined, use gray 'Edit' as
     // link text.
     $name = $subnet->getName();
-    $attributes = array('href' =>
-        $view->baseUrl() . '/network/properties' .
-        '/subnet/' . urlencode($subnet->getAddress()) .
-        '/mask/' . urlencode($subnet->getMask())
+    $attributes = array(
+        'href' => $view->standardUrl(
+            array(
+                'controller' => 'network',
+                'action' => 'properties',
+                'subnet' => $subnet->getAddress(),
+                'mask' => $subnet->getMask(),
+            )
+        ),
     );
     if ($name) {
         $name = $view->escape($name);
@@ -126,14 +136,21 @@ function renderNumInventoried($view, $subnet, $property)
     return $view->htmlTag(
         'a',
         $view->escape($subnet->getNumInventoried()),
-        array('href' =>
-            $view->baseUrl() . '/computer/index' .
-            '/filter1/NetworkInterface.Subnet/exact1/1/search1/' .
-            urlencode($subnet->getAddress()) .
-            '/filter2/NetworkInterface.Netmask/exaxt2/1/search2/' .
-            urlencode($subnet->getMask()) .
-            '/columns/Name,UserName,Type,InventoryDate' .
-            '/jumpto/network'
+        array(
+            'href' => $view->standardUrl(
+                array(
+                    'controller' => 'computer',
+                    'action' => 'index',
+                    'filter1' => 'NetworkInterface.Subnet',
+                    'exact1' => '1',
+                    'search1' => $subnet->getAddress(),
+                    'filter2' => 'NetworkInterface.Netmask',
+                    'exaxt2' => '1',
+                    'search2' => $subnet->getMask(),
+                    'columns' => 'Name,UserName,Type,InventoryDate',
+                    'jumpto' => 'network',
+                )
+            ),
         ),
         true
     );
@@ -143,18 +160,18 @@ function renderNumUninventoried($view, $subnet, $property)
 {
     $count = $subnet->getProperty($property);
     if ($count) {
-        if ($property == 'NumIdentified') {
-            $controller = 'showidentified';
-        } else {
-            $controller = 'showunknown';
-        }
         return $view->htmlTag(
             'a',
             $count,
-            array('href' =>
-                $view->baseUrl() . '/network/' . $controller .
-                '/subnet/' . urlencode($subnet->getAddress()) .
-                '/mask/' . urlencode($subnet->getMask())
+            array(
+                'href' => $view->standardUrl(
+                    array(
+                        'controller' => 'network',
+                        'action' => ($property == 'NumIdentified' ? 'showidentified' : 'showunknown'),
+                        'subnet' => $subnet->getAddress(),
+                        'mask' => $subnet->getMask()
+                    )
+                ),
             )
         );
     } else {

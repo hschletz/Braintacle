@@ -120,7 +120,15 @@ class Form_Definefields extends Zend_Form
                 $view->htmlTag(
                     'a',
                     $view->translate('Delete'),
-                    array('href' => $view->baseUrl() . '/preferences/deletefield/name/' . urlencode($name))
+                    array(
+                        'href' => $view->standardUrl(
+                            array(
+                                'controller' => 'preferences',
+                                'action' => 'deletefield',
+                                'name' => $name
+                            )
+                        )
+                    )
                 )
             );
             $output .= $view->htmlTag('tr', $row);

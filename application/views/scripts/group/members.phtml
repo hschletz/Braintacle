@@ -41,7 +41,15 @@ function renderName($view, $computer)
     return $view->htmlTag(
         'a',
         $view->escape($computer->getName()),
-        array('href' => $view->BaseUrl() . "/computer/groups/id/" . $computer->getId()),
+        array(
+            'href' => $view->standardUrl(
+                array(
+                    'controller' => 'computer',
+                    'action' => 'groups',
+                    'id' => $computer->getId(),
+                )
+            ),
+        ),
         true
     );
 }

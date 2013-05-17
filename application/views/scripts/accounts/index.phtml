@@ -61,9 +61,13 @@ function renderEdit($view, $account)
         'a',
         $view->translate('Edit'),
         array(
-            'href' => $view->BaseUrl()
-                     . '/accounts/edit/id/'
-                     . urlencode($account->getId())
+            'href' => $view->standardUrl(
+                array(
+                    'controller' => 'accounts',
+                    'action' => 'edit',
+                    'id' => $account->getId(),
+                )
+            )
         ),
         true
     );
@@ -75,9 +79,13 @@ function renderDelete($view, $account)
         'a',
         $view->translate('Delete'),
         array(
-            'href' => $view->BaseUrl()
-                     . '/accounts/delete/id/'
-                     . urlencode($account->getId())
+            'href' => $view->standardUrl(
+                array(
+                    'controller' => 'accounts',
+                    'action' => 'delete',
+                    'id' => $account->getId(),
+                )
+            )
         ),
         true
     );

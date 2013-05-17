@@ -108,7 +108,15 @@ class Form_ManageNetworkDeviceTypes extends Zend_Form
                     $view->htmlTag(
                         'a',
                         $view->translate('Delete'),
-                        array('href' => $view->baseUrl() . '/preferences/deletedevicetype/id/' . $id)
+                        array(
+                            'href' => $view->standardUrl(
+                                array(
+                                    'controller' => 'preferences',
+                                    'action' => 'deletedevicetype',
+                                    'id' => $id,
+                                )
+                            )
+                        )
                     )
                 );
             } else {

@@ -53,7 +53,15 @@ function renderName($view, $group)
     return $view->htmlTag(
         'a',
         $view->escape($group->getName()),
-        array('href' => $view->BaseUrl() . "/group/general/id/" . $group->getId()),
+        array(
+            'href' => $view->standardUrl(
+                array(
+                    'controller' => 'group',
+                    'action' => 'general',
+                    'id' => $group->getId(),
+                )
+            ),
+        ),
         true
     );
 }

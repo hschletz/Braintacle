@@ -236,15 +236,6 @@ The console requires *mod_rewrite* and *mod_env* enabled in your Apache
 configuration. Both modules are shipped with Apache httpd, but may need to be
 enabled first. Refer to your distribution's documentation for details.
 
-The application may generate URLs where a '/' will get encoded as `%2F` that is
-part of the URL path. By default, Apache httpd will not allow this and respond
-with a 404 error. To avoid this problem, set `AllowEncodedSlashes On` in the
-virtual host that serves the console. Script parameters are handled safely, so
-this should not create a security risk. If the virtual host serves other
-applications and you are concerned about security for those, consider creating a
-separate virtual host. This problem will be addressed properly in a future
-Braintacle release.
-
 Create a copy of config/braintacle-console.conf.template and make it known to
 Apache, either by placing it in a directory where Apache will read it or by
 including it in a particular VirtualHost definition. Edit the file to suit your

@@ -47,9 +47,13 @@ function renderEdit($view, $device, $property)
         'a',
         $view->translate('Edit'),
         array(
-            'href' => $view->BaseUrl()
-                     . '/network/edit/macaddress/'
-                     . urlencode($device->getMacAddress())
+            'href' => $view->standardUrl(
+                array(
+                    'controller' => 'network',
+                    'action' => 'edit',
+                    'macaddress' => $device->getMacAddress(),
+                )
+            ),
         ),
         true
     );
@@ -61,9 +65,13 @@ function renderDelete($view, $device, $property)
         'a',
         $view->translate('Delete'),
         array(
-            'href' => $view->BaseUrl()
-                     . '/network/delete/macaddress/'
-                     . urlencode($device->getMacAddress())
+            'href' => $view->standardUrl(
+                array(
+                    'controller' => 'network',
+                    'action' => 'delete',
+                    'macaddress' => $device->getMacAddress(),
+                )
+            ),
         ),
         true
     );

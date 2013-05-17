@@ -57,7 +57,15 @@ function renderName($view, $computer)
     return $view->htmlTag(
         'a',
         $view->escape($computer->getName()),
-        array('href' => $view->BaseUrl() . "/computer/userdefined/id/" . $computer->getId()),
+        array(
+            'href' => $view->standardUrl(
+                array(
+                    'controller' => 'computer',
+                    'action' => 'userdefined',
+                    'id' => $computer->getId(),
+                )
+            ),
+        ),
         true
     );
 }
@@ -77,9 +85,14 @@ function renderCriteria($view, $computer, $property)
             'a',
             $view->escape($value),
             array(
-                'href' => $view->BaseUrl() .
-                        '/duplicates/allow/criteria/' . $property .
-                        '/value/' . urlencode($value)
+                'href' => $view->standardUrl(
+                    array(
+                        'controller' => 'duplicates',
+                        'action' => 'allow',
+                        'criteria' => $property,
+                        'value' => $value,
+                    )
+                ),
             ),
             true
         );

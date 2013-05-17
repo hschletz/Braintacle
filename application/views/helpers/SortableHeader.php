@@ -55,8 +55,9 @@ class Zend_View_Helper_SortableHeader extends Zend_View_Helper_Abstract
             'a',
             $label . $arrow,
             array(
-                'href' => $this->view->url(
-                    array('order' => $order, 'direction' => $direction)
+                'href' => $this->view->standardUrl(
+                    array('order' => $order, 'direction' => $direction),
+                    true
                 )
             ),
             true

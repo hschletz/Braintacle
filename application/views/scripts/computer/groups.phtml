@@ -46,9 +46,13 @@ function renderGroupName($view, $membership)
         'a',
         $view->escape($membership->getGroupName()),
         array(
-            'href' => $view->BaseUrl()
-                     . '/group/general/id/'
-                     . urlencode($membership->getGroupId())
+            'href' => $view->standardUrl(
+                array(
+                    'controller' => 'group',
+                    'action' => 'general',
+                    'id' => $membership->getGroupId(),
+                )
+            )
         ),
         true
     );

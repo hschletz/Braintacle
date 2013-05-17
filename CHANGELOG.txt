@@ -36,6 +36,8 @@ Fixed bugs:
 - Console: Display printers for non-Windows systems too. Note: the UNIX agent
   support for printers is rather limited.
 
+- Console: No longer relies on Apache's AllowEncodedSlashes setting.
+
 Misc:
 
 - Console: Updated the database that determines the vendor from a MAC address.

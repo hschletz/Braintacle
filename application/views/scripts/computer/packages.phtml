@@ -89,11 +89,14 @@ function renderRemoveLink($view, $package)
         'a',
         $view->translate('remove'),
         array(
-            'href' => $view->BaseUrl()
-                     . '/computer/removepackage/name/'
-                     . urlencode($package->getName())
-                     . '/id/'
-                     . $package->getComputer()
+            'href' => $view->standardUrl(
+                array(
+                    'controller' => 'computer',
+                    'action' => 'removepackage',
+                    'name' => $package->getName(),
+                    'id' => $package->getComputer(),
+                )
+            )
         ),
         true
     );

@@ -97,7 +97,7 @@ class ComputerController extends Zend_Controller_Action
         $this->view->invert = $invert;
         $this->view->operator = $operator;
         if ($this->_getParam('customFilter')) {
-            $this->view->filterUriPart = $this->getFilterUriPart();
+            $this->view->filterUriParams = $this->getFilterUriParams();
         }
     }
 
@@ -312,8 +312,14 @@ class ComputerController extends Zend_Controller_Action
                 $this->_setParam('search', $search);
 
                 // Redirect to index page with all search parameters
-                $this->redirect(
-                    'computer/index' . $this->getFilterUriPart() . '/customFilter/1/columns/' . implode(',', $columns)
+                $this->_helper->StandardRedirect(
+                    'index',
+                    'computer',
+                    null,
+                    $this->getFilterUriParams() + array(
+                        'customFilter' => '1',
+                        'columns' => implode(',', $columns),
+                    )
                 );
                 return;
             }
@@ -386,33 +392,37 @@ class ComputerController extends Zend_Controller_Action
     }
 
     /**
-     * Return the part of the URI that defines the current filter
-     * @return string URI part, beginning with '/', or empty string if no filter is active.
+     * Return request parameters that define the current filter
+     *
+     * To keep generated URIs short, only non-empty, non-default parameters are
+     * returned.
+     * @return array
      */
-    public function getFilterUriPart()
+    public function getFilterUriParams()
     {
+        $params = array();
         if (!$this->_getParam('filter')) {
-            return '';
+            return $params;
         }
-        $part = '/filter/' . urlencode($this->_getParam('filter'));
+        $params['filter'] = $this->_getParam('filter');
 
         if ($this->_getParam('search')) {
-            $part .= '/search/' . urlencode($this->_getParam('search'));
+            $params['search'] = $this->_getParam('search');
         }
 
         if ($this->_getParam('exact')) {
-            $part .= '/exact/1';
+            $params['exact'] = '1';
         }
 
         if ($this->_getParam('invert')) {
-            $part .= '/invert/1';
+            $params['invert'] = '1';
         }
 
         if ($this->_getParam('operator')) {
-            $part .= '/operator/' . urlencode($this->_getParam('operator'));
+            $params['operator'] = $this->_getParam('operator');
         }
 
-        return $part;
+        return $params;
     }
 
 }

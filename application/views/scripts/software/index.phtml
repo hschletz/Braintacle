@@ -46,9 +46,13 @@ function renderAcceptIgnore($view, $software)
             'a',
             $view->translate('Accept'),
             array(
-                'href' => $view->BaseUrl()
-                    . '/software/accept/name/'
-                    . urlencode($software->getProperty('Name', true)),
+                'href' => $view->standardUrl(
+                    array(
+                        'controller' => 'software',
+                        'action' => 'accept',
+                        'name' => $software->getProperty('Name', true),
+                    )
+                ),
                 'class' => 'blue'
             ),
             true
@@ -60,9 +64,13 @@ function renderAcceptIgnore($view, $software)
             'a',
             $view->translate('Ignore'),
             array(
-                'href' => $view->BaseUrl()
-                    . '/software/ignore/name/'
-                    . urlencode($software->getProperty('Name', true)),
+                'href' => $view->standardUrl(
+                    array(
+                        'controller' => 'software',
+                        'action' => 'ignore',
+                        'name' => $software->getProperty('Name', true),
+                    )
+                ),
                 'class' => 'blue'
             ),
             true
@@ -78,11 +86,17 @@ function renderNumComputers($view, $software)
         'a',
         $software->getNumComputers(),
         array(
-            'href' => $view->BaseUrl()
-                 . '/computer/index/columns/Name,UserName,LastContactDate,InventoryDate,Software.Version'
-                 . '/jumpto/software/filter/Software/search/'
-                 . urlencode($software->getProperty('Name', true)),
-             'class' => 'blue'
+            'href' => $view->standardUrl(
+                array(
+                    'controller' => 'computer',
+                    'action' => 'index',
+                    'columns' => 'Name,UserName,LastContactDate,InventoryDate,Software.Version',
+                    'jumpto' => 'software',
+                    'filter' => 'Software',
+                    'search' => $software->getProperty('Name', true),
+                )
+            ),
+            'class' => 'blue'
         ),
         true
     );

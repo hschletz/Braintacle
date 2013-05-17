@@ -41,7 +41,13 @@ if (count($duplicates)) {
                 'a',
                 $num,
                 array(
-                    'href' => $this->baseUrl() . '/duplicates/show/criteria/' . $type
+                    'href' => $this->standardUrl(
+                        array(
+                            'controller' => 'duplicates',
+                            'action' => 'show',
+                            'criteria' => $type,
+                        )
+                    )
                 )
             )
         );

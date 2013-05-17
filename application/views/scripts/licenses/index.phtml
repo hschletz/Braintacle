@@ -32,14 +32,18 @@ if ($this->windowsProductKeys) {
         $this->htmlTag(
             'a',
             $this->windowsProductKeys,
-            array (
-                'href' => $this->baseUrl() .
-                          '/computer/index' .
-                          '/columns/Name,OsName,Windows.ProductKey,Windows.ManualProductKey' .
-                          '/filter/Windows.ManualProductKey' .
-                          '/customFilter/1' .
-                          '/order/Name' .
-                          '/direction/asc'
+            array(
+                'href' => $this->standardUrl(
+                    array(
+                        'controller' => 'computer',
+                        'action' => 'index',
+                        'columns' => 'Name,OsName,Windows.ProductKey,Windows.ManualProductKey',
+                        'filter' => 'Windows.ManualProductKey',
+                        'customFilter' => '1',
+                        'order' => 'Name',
+                        'direction' => 'asc',
+                    )
+                ),
             )
         )
     );

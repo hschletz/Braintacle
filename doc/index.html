@@ -317,24 +317,6 @@ The typical origin of duplicates is a reinstall, where this would just get in th
 </ul>
 
 
-<h2>Known issues</h2>
-
-<h3>Apache gives 404 error on certain operations</h3>
-
-<p>
-These strange 404 errors come directly from Apache.
-They don't even show up in the error log.
-</p>
-<p>The source of this problem is the <a href="http://httpd.apache.org/docs/2.2/mod/core.html#allowencodedslashes">AllowEncodedSlashes</a> directive.
-If this is disabled (the default), URLs which contain encoded slashes (%2F) trigger this 404.
-</p>
-<p>
-There are several ways to work around this problem at application level.
-The problem will be adressed properly in a future version.
-For now, the only way to solve this problem is to set <code>AllowEncodedSlashes On</code> for the virtual host.
-</p>
-
-
 <h2>Helper applications</h2>
 
 <p>

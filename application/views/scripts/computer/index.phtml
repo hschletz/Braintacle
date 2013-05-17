@@ -124,7 +124,15 @@ function renderName($view, $computer)
     return $view->htmlTag(
         'a',
         $view->escape($computer->getName()),
-        array('href' => $view->BaseUrl() . "/computer/$view->jumpto/id/" . $computer->getId()),
+        array(
+            'href' => $view->standardUrl(
+                array(
+                    'controller' => 'computer',
+                    'action' => $view->jumpto,
+                    'id' => $computer->getId(),
+                )
+            )
+        ),
         true
     );
 }
@@ -147,7 +155,7 @@ if ($filter) {
         $search = Model_Software::mangleName($search);
     }
 
-    if (isset($this->filterUriPart)) {
+    if (isset($this->filterUriParams)) {
         // This is a custom search result. Do not display filter description
         // because this would become difficult to read for multiple filters.
         // Just display the number of results and a link to edit the filter.
@@ -156,14 +164,22 @@ if ($filter) {
                 . $this->htmlTag(
                     'a',
                     $this->translate('Edit filter'),
-                    array('href' => $this->baseUrl() . '/computer/search' . $this->filterUriPart),
+                    array(
+                        'href' => $this->standardUrl(
+                            array('controller' => 'computer', 'action' => 'search') + $this->filterUriParams
+                        ),
+                    ),
                     true
                 )
                 . "\n&nbsp;&nbsp;&nbsp;\n"
                 . $this->htmlTag(
                     'a',
                     $this->translate('Save to group'),
-                    array('href' => $this->baseUrl() . '/group/add' . $this->filterUriPart),
+                    array(
+                        'href' => $this->standardUrl(
+                            array('controller' => 'group', 'action' => 'add') + $this->filterUriParams
+                        ),
+                    ),
                     true
                 );
     } else {
