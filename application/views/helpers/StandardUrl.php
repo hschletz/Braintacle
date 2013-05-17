@@ -38,13 +38,22 @@ class Zend_View_Helper_StandardUrl extends Zend_View_Helper_Abstract
      * URL parameter.
      *
      * @param array $params URL parameters, unencoded
-     * @param bool $inheritParams Inherit parameters from current request. Parameters from $params take precedence.
+     * @param bool $inheritParams Inherit GET parameters from current request. Parameters from $params take precedence.
      * @return string URL
      */
     function standardUrl($params, $inheritParams = false)
     {
         if ($inheritParams) {
-            $params += Zend_Controller_Front::getInstance()->getRequest()->getParams();
+            $request = Zend_Controller_Front::getInstance()->getRequest();
+            // Append missing GET parameters
+            $params += $request->getQuery();
+            // Append controller and action if still missing
+            if (!isset($params['controller'])) {
+                $params['controller'] = $request->getControllerName();
+            }
+            if (!isset($params['action'])) {
+                $params['action'] = $request->getActionName();
+            }
         }
         // Separate controller and action from other parameters
         $route = array();
