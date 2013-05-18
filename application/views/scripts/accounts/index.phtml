@@ -75,20 +75,24 @@ function renderEdit($view, $account)
 
 function renderDelete($view, $account)
 {
-    return $view->htmlTag(
-        'a',
-        $view->translate('Delete'),
-        array(
-            'href' => $view->standardUrl(
-                array(
-                    'controller' => 'accounts',
-                    'action' => 'delete',
-                    'id' => $account->getId(),
+    if ($account->getId() == Zend_Auth::getInstance()->getIdentity()) {
+        return '';
+    } else {
+        return $view->htmlTag(
+            'a',
+            $view->translate('Delete'),
+            array(
+                'href' => $view->standardUrl(
+                    array(
+                        'controller' => 'accounts',
+                        'action' => 'delete',
+                        'id' => $account->getId(),
+                    )
                 )
-            )
-        ),
-        true
-    );
+            ),
+            true
+        );
+    }
 }
 
 print $this->table(

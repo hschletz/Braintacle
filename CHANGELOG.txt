@@ -42,6 +42,9 @@ Misc:
 
 - Console: Updated the database that determines the vendor from a MAC address.
 
+- Console: Users can no longer lock themselves out by deleting their own
+  account.
+
 - General: Documentation overhaul. Installation instructions are now gathered in
   a single file, INSTALL.md.
 

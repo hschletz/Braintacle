@@ -184,14 +184,28 @@ class Model_Account extends Model_Abstract
             $update,
             array('id=?' => $id)
         );
+        if (isset($data['Id'])) {
+            // If the account of the logged in user is changed, the session data
+            // must be updated, so that the identity stays valid in case of a
+            // changed login name.
+            $authStorage = Zend_Auth::getInstance()->getStorage();
+            if ($id == $authStorage->read()) {
+                $authStorage->write($data['Id']);
+            }
+        }
     }
 
     /**
      * Delete account
      * @param string $id Login name of account to delete
+     * @throws RuntimeException if the account to delete is logged in for the current session
      */
     public static function delete($id)
     {
+        if ($id == Zend_Auth::getInstance()->getIdentity()) {
+            throw new RuntimeException('Your own account cannot be deleted.');
+        }
+
         Model_Database::getAdapter()->delete(
             'operators',
             array('id=?' => $id)
