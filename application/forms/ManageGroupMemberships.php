@@ -109,8 +109,7 @@ class Form_ManageGroupMemberships extends Zend_Form
         // If no groups are defined, keep the form empty, i.e. don't create any
         // elements at all.
         if ($numGroups) {
-            $id = new Zend_Form_Element_Hidden('id');
-            $id->setDisableTranslator(true);
+            $id = new Braintacle_Form_Element_Hidden('id');
             $id->setIgnore(true);
             $id->setValue($computer->getId());
             $this->addElement($id);

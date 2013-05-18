@@ -67,8 +67,7 @@ class Form_AffectPackages extends Zend_Form
         }
 
         if ($numPackages) {
-            $id = new Zend_Form_Element_Hidden('id');
-            $id->setDisableTranslator(true);
+            $id = new Braintacle_Form_Element_Hidden('id');
             $id->setIgnore(true);
             $id->setValue($object->getId());
             $this->addElement($id);

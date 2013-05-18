@@ -41,7 +41,7 @@ class Form_Account_Edit extends Form_Account
         $this->getElement('submit')->setLabel('Change');
 
         // Required to keep track of original ID if this gets changed.
-        $originalId = new Zend_Form_Element_Hidden('OriginalId');
+        $originalId = new Braintacle_Form_Element_Hidden('OriginalId');
         $this->addElement($originalId);
     }
 
