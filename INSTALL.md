@@ -247,15 +247,6 @@ ready to use. The default account has the username 'admin' and the password
 then "Users". Here you can change the password and optionally the username and
 also create additional accounts.
 
-A german translation for the user interface is available. To activate it,
-compile the translation source file:
-
-    /usr/local/share/braintacle/tools/update-translation.php --noextract
-
-This requires the `gettext` program in your path. The user interface will use
-the browser's default language and fall back to english if the requested
-language is not available.
-
 
 Set up the package directory
 ----------------------------
@@ -306,13 +297,6 @@ schema-manager.php script:
 
 Although the schema update is usually safe, a database backup is recommended. It
 is also safe to run the script even if there is nothing to update.
-
-For non-english UI languages, the translation files probably need to be
-recompiled:
-
-    /usr/local/share/braintacle/tools/update-translation.php --noextract
-
-Again, this operation is safe even if there is nothing to do.
 
 
 

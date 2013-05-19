@@ -228,11 +228,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             );
         } else {
             $translate = new Zend_Translate(
-                'gettext',
+                'Braintacle_Translate_Adapter_Po',
                 realpath(dirname(APPLICATION_PATH) . DIRECTORY_SEPARATOR . 'languages'),
                 $language,
                 array(
                     'scan' => Zend_Translate::LOCALE_DIRECTORY,
+                    'ignore' => array('regex' => '/pot$/'),
                     'logUntranslated' => (APPLICATION_ENV != 'production'),
                     'disableNotices' => (APPLICATION_ENV == 'production')
                 )

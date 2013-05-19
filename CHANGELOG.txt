@@ -45,6 +45,14 @@ Misc:
 - Console: Users can no longer lock themselves out by deleting their own
   account.
 
+- Console: Translations are now read directly from the shipped .po-files, thus
+  eliminating the need to compile them to .mo format first.
+
+- Tools: The script update-translation.php is no longer needed by end users and
+  has been moved to the development directory. The --noextract option is no
+  longer supported as extracting strings is now the script's only purpose (no
+  .mo compilation any more).
+
 - General: Documentation overhaul. Installation instructions are now gathered in
   a single file, INSTALL.md.
 
