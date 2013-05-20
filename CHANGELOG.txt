@@ -29,6 +29,10 @@ New features:
 
 - Console: Subnet properties can be edited.
 
+- Tools: New script update-from-git.sh for installations that run directly off
+  a git tree. The script takes care of pulling the latest changes and updating
+  the database if necessary.
+
 Fixed bugs:
 
 - Console: Fixed display of package creation dates (0.10 regression)

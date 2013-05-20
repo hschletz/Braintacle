@@ -298,6 +298,10 @@ schema-manager.php script:
 Although the schema update is usually safe, a database backup is recommended. It
 is also safe to run the script even if there is nothing to update.
 
+If you run Braintacle directly off a git tree, upgrading is very easy: you can
+use the script tools/update-from-git.sh which pulls the latest code and invokes
+schema-manager.php.
+
 
 
 Reusing or replacing an OCS Inventory NG installation
