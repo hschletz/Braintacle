@@ -775,10 +775,11 @@ class Braintacle_SchemaManager
         if (!$this->_nada->isMysql()) {
             return false;
         }
-        // Empty database (i.e. without 'config' table) is considered compatible
-        // because it might as well get populated via ocsreports.
+        // Check for presence of 'config' table first because the following code
+        // would throw an exception otherwise. A database without this table is
+        // considered not compatible.
         if (!isset($this->_allTables['config'])) {
-            return true;
+            return false;
         }
         // The SchemaVersion option will be NULL for databases not managed by
         // Braintacle.

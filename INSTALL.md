@@ -103,7 +103,7 @@ file.
 To create and initialize the tables, log out from the database and run the
 schema manager script:
 
-    /usr/local/share/braintacle/tools/schema-manager.php --force
+    /usr/local/share/braintacle/tools/schema-manager.php
 
 If everything ran correctly, you should now be able to log into the database
 with the configured credentials and see the tables.

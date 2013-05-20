@@ -42,7 +42,7 @@ Fixed bugs:
 
 - Console: No longer relies on Apache's AllowEncodedSlashes setting.
 
-- Tools: Fixed abort when populating an empty database (0.10 regression)
+- Tools: Fixed various problems with the schema manager.
 
 Misc:
 
