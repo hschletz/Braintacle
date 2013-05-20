@@ -337,6 +337,20 @@ class Braintacle_SchemaManager
             }
         }
 
+        // Foreign keys cause so many problems with MySQL that it's best to
+        // never create a foreign key at all. The FK definitions are removed
+        // from the definition for MySQL.
+        if ($this->_nada->isMysql()) {
+            foreach ($newSchema['tables'] as &$table) {
+                foreach ($table['constraints'] as $name => $constraint) {
+                    if ($constraint['foreign']) {
+                        unset($table['constraints'][$name]);
+                    }
+                }
+            }
+        }
+        unset($table);
+
         $this->_logger->info('done.');
         return $newSchema;
     }
