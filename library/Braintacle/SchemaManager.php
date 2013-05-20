@@ -293,9 +293,16 @@ class Braintacle_SchemaManager
         if (!$dir) {
             throw new RuntimeException('Can\'t get a handle for schema directory');
         }
+        // Process this file first because other table definitions depend on it
+        $files = array('ocs_hardware.xml');
         while (($file = readdir($dir)) !== false ) {
-            if (substr($file, -4) != '.xml')
-                continue; // Ignore files without .xml suffix
+            if (substr($file, -4) == '.xml' and // Ignore files without .xml suffix
+                !in_array($file, $files) // Not already in list
+            ) {
+                $files[] = $file;
+            }
+        }
+        foreach ($files as $file) {
             $content = file_get_contents("$this->_basepath/schema/$file");
             if ($content == false) {
                 throw new RuntimeException("Error reading $file");
@@ -374,6 +381,7 @@ class Braintacle_SchemaManager
             'accountinfo',
             'accountinfo_config',
             'bios',
+            'braintacle_windows',
             'controllers',
             'devices',
             'download_available',
