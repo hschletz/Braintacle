@@ -97,6 +97,10 @@ class Braintacle_Translate_Adapter_Po extends Zend_Translate_Adapter
                 $state = 0;
             }
         }
+        // The last entry is not added inside the loop.
+        if ($msgid != '' and $msgstr != '') {
+            $translations[$locale][$msgid] = $msgstr;
+        }
         return $translations;
     }
 
