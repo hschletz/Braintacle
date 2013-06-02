@@ -22,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-17 12:00+0100\n"
-"PO-Revision-Date: 2013-02-17 12:01+0100\n"
+"POT-Creation-Date: 2013-06-02 20:00+0200\n"
+"PO-Revision-Date: 2013-06-02 20:01+0200\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -208,12 +208,13 @@ msgid "Password"
 msgstr "Passwort"
 
 #: forms/Account/Edit.php; forms/DefineFields.php
-#: forms/ManageNetworkDeviceTypes.php; forms/UserDefinedInfo.php
+#: forms/ManageNetworkDeviceTypes.php; forms/ManageRegistryValues.php
+#: forms/UserDefinedInfo.php
 msgid "Change"
 msgstr "Ändern"
 
 #: forms/Account/New.php; forms/DefineFields.php
-#: forms/ManageNetworkDeviceTypes.php
+#: forms/ManageNetworkDeviceTypes.php; forms/ManageRegistryValues.php
 msgid "Add"
 msgstr "Hinzufügen"
 
@@ -256,18 +257,18 @@ msgstr "Beschreibung"
 msgid "Group"
 msgstr "Gruppe"
 
-#: forms/AddToGroup.php; forms/Package.php; forms/Subnet.php
-#: views/scripts/computer/display.phtml views/scripts/computer/index.phtml;
-#: views/scripts/computer/misc.phtml views/scripts/computer/network.phtml
-#: views/scripts/computer/packages.phtml views/scripts/computer/printers.phtml
-#: views/scripts/computer/software.phtml views/scripts/computer/storage.phtml
-#: views/scripts/computer/system.phtml views/scripts/computer/system.phtml;
-#: views/scripts/computer/vms.phtml views/scripts/duplicates/index.phtml
-#: views/scripts/duplicates/show.phtml views/scripts/group/excluded.phtml;
-#: views/scripts/group/general.phtml views/scripts/group/index.phtml;
-#: views/scripts/group/members.phtml views/scripts/group/packages.phtml;
-#: views/scripts/network/index.phtml views/scripts/package/index.phtml;
-#: views/scripts/software/index.phtml
+#: forms/AddToGroup.php; forms/ManageRegistryValues.php forms/Package.php;
+#: forms/Subnet.php views/scripts/computer/display.phtml
+#: views/scripts/computer/index.phtml; views/scripts/computer/misc.phtml
+#: views/scripts/computer/network.phtml views/scripts/computer/packages.phtml
+#: views/scripts/computer/printers.phtml views/scripts/computer/software.phtml
+#: views/scripts/computer/storage.phtml views/scripts/computer/system.phtml
+#: views/scripts/computer/system.phtml; views/scripts/computer/vms.phtml
+#: views/scripts/duplicates/index.phtml views/scripts/duplicates/show.phtml
+#: views/scripts/group/excluded.phtml; views/scripts/group/general.phtml
+#: views/scripts/group/index.phtml; views/scripts/group/members.phtml
+#: views/scripts/group/packages.phtml; views/scripts/network/index.phtml
+#: views/scripts/package/index.phtml; views/scripts/software/index.phtml
 msgid "Name"
 msgstr "Name"
 
@@ -302,8 +303,8 @@ msgid "Date"
 msgstr "Datum"
 
 #: forms/DefineFields.php; forms/ManageNetworkDeviceTypes.php
-#: views/helpers/GroupHeader.php; views/helpers/InventoryHeader.php
-#: views/scripts/accounts/index.phtml
+#: forms/ManageRegistryValues.php; views/helpers/GroupHeader.php
+#: views/helpers/InventoryHeader.php; views/scripts/accounts/index.phtml
 #: views/scripts/network/showidentified.phtml
 #: views/scripts/network/showunknown.phtml views/scripts/package/index.phtml
 msgid "Delete"
@@ -332,6 +333,18 @@ msgstr "nie"
 #: forms/ManageGroupMemberships.php; views/helpers/MembershipType.php
 msgid "automatic"
 msgstr "automatisch"
+
+#: forms/ManageRegistryValues.php
+msgid "Only this value (optional)"
+msgstr "Nur dieser Wert (optional)"
+
+#: forms/ManageRegistryValues.php
+msgid "Root key"
+msgstr "Wurzelschlüssel"
+
+#: forms/ManageRegistryValues.php
+msgid "Subkeys"
+msgstr "Unterschlüssel"
 
 #: forms/NetworkDevice.php; views/scripts/computer/display.phtml
 #: views/scripts/computer/general.phtml views/scripts/computer/index.phtml;
@@ -1579,6 +1592,10 @@ msgid "Content"
 msgstr "Inhalt"
 
 #: views/scripts/computer/registry.phtml
+msgid "Manage inventoried values"
+msgstr "Inventarisierte Werte verwalten"
+
+#: views/scripts/computer/registry.phtml
 msgid "Registry Keys"
 msgstr "Registry-Schlüssel"
 
@@ -1849,6 +1866,15 @@ msgid ""
 "The field '%s' and its contents for all computers will be deleted. Continue?"
 msgstr ""
 "Das Feld '%s' und sein Inhalt für alle Computer werden gelöscht. Fortfahren?"
+
+#: views/scripts/preferences/deleteregistryvalue.phtml
+#, php-format
+msgid "The registry value '%s' will be deleted from the inventory. Continue?"
+msgstr "Der Registry-Wert '%s' wird aus dem Inventar gelöscht. Fortfahren?"
+
+#: views/scripts/preferences/registryvalues.phtml
+msgid "Manage registry values"
+msgstr "Registry-Werte verwalten"
 
 #: views/scripts/software/accept.phtml
 #, php-format

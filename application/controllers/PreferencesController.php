@@ -134,6 +134,33 @@ class PreferencesController extends Zend_Controller_Action
         }
     }
 
+    public function registryvaluesAction()
+    {
+        $form = new Form_ManageRegistryValues;
+        if ($this->getRequest()->isPost() and $form->isValid($_POST)) {
+            $form->process();
+            $form->resetNewValue();
+        }
+        // render form
+        $this->view->form = $form;
+    }
+
+    public function deleteregistryvalueAction()
+    {
+        $form = new Form_YesNo;
+        $value = Model_RegistryValue::construct($this->_getParam('id'));
+        if ($this->getRequest()->isPost()) {
+            if ($form->isValid($_POST) and $this->_getParam('yes')) {
+                $value->delete();
+            }
+            $this->redirect('preferences/registryvalues');
+        } else {
+            // render confirmation form
+            $this->view->form = $form;
+            $this->view->value = $value;
+        }
+    }
+
     /**
      * Standard preferences handling via Form_Preferences subclass
      * @param string $class Name of the form class

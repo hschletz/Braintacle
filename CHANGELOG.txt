@@ -6,6 +6,15 @@ without any warranty.
 ====================================================================
 
 
+CHANGES IN VERSION 0.12
+=======================
+
+New features:
+
+- Console: Management of inventoried registry keys. In the "Registry" section of
+  an inventoried Windows computer, click the "Manage inventoried values" link.
+
+
 CHANGES IN VERSION 0.11
 =======================
 

@@ -37,6 +37,14 @@ h2 {
     clear: both;
 }
 
+h3 {
+    font-size: 100%;
+    text-align: center;
+    padding-top: 2ex;
+    margin-bottom: 2ex;
+    clear: both;
+}
+
 a {
     color: #000055;
     text-decoration: none;
@@ -308,11 +316,11 @@ input[size="8"]
     background-color: red;
 }
 
-.table_network_devices {
+.table_network_devices, .table_registry_values {
     font-size: 80%;
 }
 
-.Form_AddToGroup td, .Form_ManageNetworkDeviceTypes td {
+.Form_AddToGroup td, .Form_ManageNetworkDeviceTypes td, .table_registry_values td {
     padding-top: 2ex;
 }
 
@@ -323,4 +331,8 @@ td.formElement {
 
 .Form_ManageNetworkDeviceTypes input[name=new] {
     margin-top: 1ex;
+}
+
+table.table_registry_values {
+    margin-top: 3ex;
 }

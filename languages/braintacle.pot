@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-17 12:00+0100\n"
+"POT-Creation-Date: 2013-06-02 20:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -208,12 +208,13 @@ msgid "Comment"
 msgstr ""
 
 #: forms/Account/Edit.php; forms/DefineFields.php
-#: forms/ManageNetworkDeviceTypes.php; forms/UserDefinedInfo.php
+#: forms/ManageNetworkDeviceTypes.php; forms/ManageRegistryValues.php
+#: forms/UserDefinedInfo.php
 msgid "Change"
 msgstr ""
 
 #: forms/Account/New.php; forms/DefineFields.php
-#: forms/ManageNetworkDeviceTypes.php
+#: forms/ManageNetworkDeviceTypes.php; forms/ManageRegistryValues.php
 msgid "Add"
 msgstr ""
 
@@ -239,7 +240,8 @@ msgstr ""
 msgid "Store in existing group"
 msgstr ""
 
-#: forms/AddToGroup.php; forms/Package.php; forms/Subnet.php
+#: forms/AddToGroup.php; forms/ManageRegistryValues.php
+#: forms/Package.php; forms/Subnet.php
 #: views/scripts/computer/display.phtml
 #: views/scripts/computer/index.phtml; views/scripts/computer/misc.phtml
 #: views/scripts/computer/misc.phtml
@@ -306,8 +308,8 @@ msgid "Date"
 msgstr ""
 
 #: forms/DefineFields.php; forms/ManageNetworkDeviceTypes.php
-#: views/helpers/GroupHeader.php; views/helpers/InventoryHeader.php
-#: views/scripts/accounts/index.phtml
+#: forms/ManageRegistryValues.php; views/helpers/GroupHeader.php
+#: views/helpers/InventoryHeader.php; views/scripts/accounts/index.phtml
 #: views/scripts/network/showidentified.phtml
 #: views/scripts/network/showunknown.phtml
 #: views/scripts/package/index.phtml
@@ -336,6 +338,18 @@ msgstr ""
 
 #: forms/ManageGroupMemberships.php
 msgid "never"
+msgstr ""
+
+#: forms/ManageRegistryValues.php
+msgid "Root key"
+msgstr ""
+
+#: forms/ManageRegistryValues.php
+msgid "Subkeys"
+msgstr ""
+
+#: forms/ManageRegistryValues.php
+msgid "Only this value (optional)"
 msgstr ""
 
 #: forms/NetworkDevice.php; views/scripts/computer/display.phtml
@@ -1608,6 +1622,10 @@ msgstr ""
 msgid "Registry Keys"
 msgstr ""
 
+#: views/scripts/computer/registry.phtml
+msgid "Manage inventoried values"
+msgstr ""
+
 #: views/scripts/computer/removepackage.phtml
 #, php-format
 msgid "Package '%s' will no longer be associated with this computer. Continue?"
@@ -1878,6 +1896,15 @@ msgstr ""
 #, php-format
 msgid ""
 "The field '%s' and its contents for all computers will be deleted. Continue?"
+msgstr ""
+
+#: views/scripts/preferences/deleteregistryvalue.phtml
+#, php-format
+msgid "The registry value '%s' will be deleted from the inventory. Continue?"
+msgstr ""
+
+#: views/scripts/preferences/registryvalues.phtml
+msgid "Manage registry values"
 msgstr ""
 
 #: views/scripts/software/accept.phtml

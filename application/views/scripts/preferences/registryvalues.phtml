@@ -1,6 +1,6 @@
 <?php
 /**
- * Display inventoried registry keys
+ * Display form for managing inventoried registry values
  *
  * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
  *
@@ -20,42 +20,8 @@
  *
  */
 
-$computer = $this->computer;
-
-print $this->inventoryHeader($computer);
-
-
-$headers = array(
-    'Value' => $this->translate('Value'),
-    'Data' => $this->translate('Content'),
-);
-
-$data = $this->getHelper('table')->table(
-    $computer->getChildObjects('RegistryData', $this->order, $this->direction),
-    null,
-    $headers,
-    array(),
-    'Model_RegistryData',
-    null,
-    array(),
-    $numKeys
-);
-
-if ($numKeys) {
-    print $this->htmlTag(
-        'h2',
-        $this->translate('Registry Keys')
-    );
-    print $data;
-}
-
 print $this->htmlTag(
-    'p',
-    $this->htmlTag(
-        'a',
-        $this->translate('Manage inventoried values'),
-        array('href' => $this->baseUrl() . '/preferences/registryvalues'),
-        true
-    ),
-    array('class' => 'textcenter')
+    'h1',
+    $this->translate('Manage registry values')
 );
+print $this->form;
