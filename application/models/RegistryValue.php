@@ -145,8 +145,24 @@ class Model_RegistryValue extends Model_Abstract
         $string .= '\\';
         $string .= $this->getSubKeys();
         $string .= '\\';
-        $string .= $this->getValue();
+        $value = $this->getValue();
+        if (!$value) {
+            $value = '*';
+        }
+        $string .= $value;
         return $string;
+    }
+
+    /**
+     * {@inheritdoc}
+     **/
+    public function getProperty($property, $rawValue=false)
+    {
+        $value = parent::getProperty($property, $rawValue);
+        if (!$rawValue and $property == 'Value' and $value == '*') {
+            $value = null;
+        }
+        return $value;
     }
 
     /**
