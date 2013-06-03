@@ -232,11 +232,18 @@ class Model_RegistryValue extends Model_Abstract
             throw new RuntimeException('Value already exists: ' . $name);
         }
 
+        $db->beginTransaction();
+        $db->update(
+            'registry',
+            array('name' => $name),
+            array('name = ?' => $this->getName())
+        );
         $db->update(
             'regconfig',
             array('name' => $name),
             array('id = ?' => $this->getId())
         );
+        $db->commit();
         $this->setName($name);
     }
 
