@@ -40,7 +40,12 @@ $renderCallbacks = array(
 
 function renderValue($view, $data, $property)
 {
-    return $view->escape($data->getValue()->getName());
+    $value = $data->getValue();
+    return $view->htmlTag(
+        'span',
+        $view->escape($value->getName()),
+        array('title' => $view->escape($value))
+    );
 }
 
 $data = $this->getHelper('table')->table(

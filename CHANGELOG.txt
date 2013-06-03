@@ -14,6 +14,9 @@ New features:
 - Console: Management of inventoried registry keys. In the "Registry" section of
   an inventoried Windows computer, click the "Manage inventoried values" link.
 
+- Console: The full registry value of inventoried registry data is shown as a
+  tooltip over its name.
+
 
 CHANGES IN VERSION 0.11
 =======================
