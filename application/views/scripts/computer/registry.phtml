@@ -30,14 +30,27 @@ $headers = array(
     'Data' => $this->translate('Content'),
 );
 
+$formats = array(
+    'Value' => 'text',
+);
+
+$renderCallbacks = array(
+    'Value' => 'renderValue',
+);
+
+function renderValue($view, $data, $property)
+{
+    return $view->escape($data->getValue()->getName());
+}
+
 $data = $this->getHelper('table')->table(
     $computer->getChildObjects('RegistryData', $this->order, $this->direction),
     null,
     $headers,
-    array(),
+    $formats,
     'Model_RegistryData',
     null,
-    array(),
+    $renderCallbacks,
     $numKeys
 );
 
