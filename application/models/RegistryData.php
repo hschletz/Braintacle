@@ -39,20 +39,32 @@ class Model_RegistryData extends Model_ChildObject
 {
     /** {@inheritdoc} */
     protected $_propertyMap = array(
-        'Value' => '', // populated manually
-        'Data' => 'regvalue', // from 'registry' table
-    );
-
-    /** {@inheritdoc} */
-    protected $_types = array(
-        'Value' => 'Model_RegistryValue',
+        'Data' => 'data', // from complex SQL expression
     );
 
     /** {@inheritdoc} */
     protected $_tableName = 'registry';
 
     /** {@inheritdoc} */
-    protected $_preferredOrder = 'Value'; // createStatement() turns this into the 'Name' property
+    protected $_preferredOrder = 'Value.Name';
+
+    /**
+     * Value definition
+     * @var Model_RegistryValue
+     **/
+    protected $_value;
+
+    /** {@inheritdoc} */
+    function __construct()
+    {
+        parent::__construct();
+        // When instantiated from fetchObject(), __set() gets called before the
+        // constructor is invoked, which may initialize the property. Don't
+        // overwrite it in that case.
+        if (!$this->_value) {
+            $this->_value = new Model_RegistryValue;
+        }
+    }
 
     /** {@inheritdoc} */
     public function createStatement(
@@ -63,6 +75,30 @@ class Model_RegistryData extends Model_ChildObject
         $query=true
     )
     {
+        // The 'data' column is not valid at this point. Filter it out here and
+        // add it later if requested.
+        if (is_array($columns)) {
+            $index = array_search('Data', $columns);
+            if ($index !== false) {
+                unset($columns[$index]);
+                $addDataColumn = true;
+            } else {
+                $addDataColumn = false;
+            }
+        } else {
+            // Pass empty array instead of NULL tp prevent parent implementation
+            // from adding the 'data' column.
+            $columns = array();
+            $addDataColumn = true;
+        }
+
+        // If the result is ordered by Value.*, generating the ORDER BY clause
+        // would fail. Add a valid dummy ordering which gets overridden later.
+        if ($order === null or preg_match('/^Value\.(.*)/', $order, $matches)) {
+            $order = 'Data';
+            $orderByValue = $matches[1];
+        }
+
         // Call parent implementation without querying
         $select = parent::createStatement(
             $columns,
@@ -71,16 +107,64 @@ class Model_RegistryData extends Model_ChildObject
             $filters,
             false
         );
-        // Join regconfig table, rename ambiguous 'regvalue' column
+
+        // Generate expressions for Value.ValueInventoried property
+        // ('value_inventoried' column) and 'Data' property ('data' column). If
+        // regconfig.regvalue is '*', registry.regvalue is
+        // 'value_inventoried=data', so that the column contents must be
+        // extracted from this string. In any other case, the contents map
+        // directly to regconfig.regvalue and registry.regvalue.
+        if ($addDataColumn) {
+            $select->columns(
+                array(
+                    'data' => new Zend_Db_Expr(
+                        <<<EOT
+                        CASE
+                            WHEN regconfig.regvalue = '*'
+                                THEN SUBSTRING(registry.regvalue FROM POSITION('=' IN registry.regvalue) + 1)
+                            ELSE registry.regvalue
+                        END
+EOT
+                    )
+                )
+            );
+        }
         $select->join(
             'regconfig',
             'regconfig.name = registry.name',
-            array('id', 'name', 'regtree', 'regkey', 'value' => 'regvalue')
+            array(
+                'id',
+                'name',
+                'regtree',
+                'regkey',
+                'regvalue',
+                'value_inventoried' => new Zend_Db_Expr(
+                    <<<EOT
+                    CASE
+                        WHEN regconfig.regvalue='*'
+                            THEN SUBSTRING(registry.regvalue FROM 1 FOR POSITION('=' in registry.regvalue) - 1)
+                        ELSE regconfig.regvalue
+                    END
+EOT
+                )
+            )
         );
-        if ($order == 'Value') {
-            // Order is invalid. Replace with name.
+
+        if (isset($orderByValue)) {
+            // Replace fake ordering with ordering from Model_RegistryValue.
             $select->reset('order');
-            $select->order("regconfig.name $direction");
+            if ($orderByValue == 'ValueInventoried') {
+                $select->order("value_inventoried $direction");
+            } else {
+                $dummy = new Model_RegistryValue;
+                $select->order(
+                    Model_RegistryValue::getOrder(
+                        $orderByValue,
+                        $direction,
+                        $dummy->getPropertyMap()
+                    )
+                );
+            }
         }
 
         if ($query) {
@@ -93,23 +177,52 @@ class Model_RegistryData extends Model_ChildObject
     /** {@inheritdoc} */
     function __set($property, $value)
     {
-        if (in_array($property, $this->_propertyMap)) {
-            parent::__set($property, $value);
-        } else {
-            // Unknown columns are passed to Model_RegistryValue. If an instance
-            // does not exist yet, an exception is thrown which must be caught
-            // to create and store that instance.
-            try {
-                $regValue = $this->getValue();
-            } catch (Exception $e) {
-                $regValue = new Model_RegistryValue;
-                $this->setValue($regValue);
-            }
-            // Undo temporary renaming of ambiguous column
-            if ($property == 'value') {
-                $property = 'regvalue';
-            }
-            $regValue->$property = $value;
+        // When instantiated from fetchObject(), this gets called before
+        // __construct(). Initialize property if necessary.
+        if (!$this->_value) {
+            $this->_value = new Model_RegistryValue;
         }
+        switch ($property) {
+            case 'data':
+                parent::__set($property, $value);
+                break;
+            case 'value_inventoried':
+                $this->_value->setValueInventoried($value);
+                break;
+            default:
+                // Unknown columns are passed to Model_RegistryValue.
+                $this->_value->$property = $value;
+        }
+    }
+
+    /** {@inheritdoc} */
+    public function getProperty($property, $rawValue=false)
+    {
+        if ($property == 'Value') {
+            return $this->_value;
+        } else {
+            return parent::getProperty($property, $rawValue);
+        }
+    }
+
+    /** {@inheritdoc} */
+    public function setProperty($property, $value)
+    {
+        if ($property == 'Value') {
+            $this->_value = $value;
+        } else {
+            parent::setProperty($property, $value);
+        }
+    }
+
+    /** {@inheritdoc} */
+    public function getPropertyType($property)
+    {
+        if (preg_match('/^Value\.(.*)/', $property, $matches)) {
+            $type = $this->_value->getPropertyType($matches[1]);
+        } else {
+            $type = parent::getPropertyType($property);
+        }
+        return $type;
     }
 }

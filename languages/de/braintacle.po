@@ -22,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-02 20:00+0200\n"
-"PO-Revision-Date: 2013-06-02 20:01+0200\n"
+"POT-Creation-Date: 2013-06-10 18:48+0200\n"
+"PO-Revision-Date: 2013-06-10 18:48+0200\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -1590,6 +1590,10 @@ msgstr "Port"
 #: views/scripts/computer/registry.phtml
 msgid "Content"
 msgstr "Inhalt"
+
+#: views/scripts/computer/registry.phtml
+msgid "Key"
+msgstr "Schlüssel"
 
 #: views/scripts/computer/registry.phtml
 msgid "Manage inventoried values"

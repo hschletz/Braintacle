@@ -26,19 +26,17 @@ print $this->inventoryHeader($computer);
 
 
 $headers = array(
-    'Value' => $this->translate('Value'),
+    'Value.Name' => $this->translate('Key'),
+    'Value.ValueInventoried' => $this->translate('Value'),
     'Data' => $this->translate('Content'),
 );
 
-$formats = array(
-    'Value' => 'text',
-);
-
 $renderCallbacks = array(
-    'Value' => 'renderValue',
+    'Value.Name' => 'renderName',
+    'Value.ValueInventoried' => 'renderValue',
 );
 
-function renderValue($view, $data, $property)
+function renderName($view, $data, $property)
 {
     $value = $data->getValue();
     return $view->htmlTag(
@@ -48,11 +46,16 @@ function renderValue($view, $data, $property)
     );
 }
 
+function renderValue($view, $data, $property)
+{
+    return $view->escape($data->getValue()->getValueInventoried());
+}
+
 $data = $this->getHelper('table')->table(
     $computer->getChildObjects('RegistryData', $this->order, $this->direction),
     null,
     $headers,
-    $formats,
+    null,
     'Model_RegistryData',
     null,
     $renderCallbacks,

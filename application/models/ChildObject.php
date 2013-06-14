@@ -74,6 +74,7 @@ abstract class Model_ChildObject extends Model_Abstract
         $db = Model_Database::getAdapter();
 
         if (is_array($columns)) {
+            $columnNames = array();
             foreach ($columns as $column) {
                 $columnNames[] = $this->_propertyMap[$column];
             }

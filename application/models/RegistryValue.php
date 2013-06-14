@@ -29,7 +29,13 @@
  * - **Name** User-defined display name
  * - **RootKey** Root key, one of the HKEY_* constants
  * - **SubKeys** Path to the key that contains the value, with components separated by backslashes
- * - **Value** Name of the registry value. This may be '*', in which case all values within the key will be inventoried.
+ * - **ValueConfigured** Name of the registry value to inventory. If NULL, all values be inventoried.
+ * - **ValueInventoried** Name of the actually inventoried value.
+ *
+ * The ValueInventoried property is only valid for Model_RegistryData's 'Value'
+ * property. If ValueConfigured is set to inventory all values, it contains the
+ * name of the registry value for each data item. Otherwise, it is identical to
+ * ValueConfigured.
  *
  * Don't confuse 'Value' with its content (which is accessible via
  * Model_RegistryData). In registry terms, 'Value' refers to the name of the
@@ -81,7 +87,7 @@ class Model_RegistryValue extends Model_Abstract
         'Name' => 'name',
         'RootKey' => 'regtree',
         'SubKeys' => 'regkey',
-        'Value' => 'regvalue',
+        'ValueConfigured' => 'regvalue',
     );
 
     /** {@inheritdoc} */
@@ -89,6 +95,12 @@ class Model_RegistryValue extends Model_Abstract
         'Id' => 'integer',
         'RootKey' => 'enum',
     );
+
+    /**
+     * Data for the ValueInventoried property
+     * @var string
+     **/
+    protected $_valueInventoried;
 
     /**
      * Textual representations of root keys, in the order used by the Windows registry editor
@@ -145,7 +157,7 @@ class Model_RegistryValue extends Model_Abstract
         $string .= '\\';
         $string .= $this->getSubKeys();
         $string .= '\\';
-        $value = $this->getValue();
+        $value = $this->getValueConfigured();
         if (!$value) {
             $value = '*';
         }
@@ -158,11 +170,40 @@ class Model_RegistryValue extends Model_Abstract
      **/
     public function getProperty($property, $rawValue=false)
     {
-        $value = parent::getProperty($property, $rawValue);
-        if (!$rawValue and $property == 'Value' and $value == '*') {
+        if ($property == 'ValueInventoried') {
+            if ($this->_valueInventoried) {
+                $value = $this->_valueInventoried;
+            } else {
+                $value = $this->getValueConfigured();
+            }
+        } else {
+            $value = parent::getProperty($property, $rawValue);
+        }
+        if (!$rawValue and $property == 'ValueConfigured' and $value == '*') {
             $value = null;
         }
         return $value;
+    }
+
+    /** {@inheritdoc} */
+    public function getPropertyType($property)
+    {
+        if ($property == 'ValueInventoried') {
+            $type = 'text';
+        } else {
+            $type = parent::getPropertyType($property);
+        }
+        return $type;
+    }
+
+    /** {@inheritdoc} */
+    public function setProperty($property, $value)
+    {
+        if ($property == 'ValueInventoried') {
+            $this->_valueInventoried = $value;
+        } else {
+            parent::setProperty($property, $value);
+        }
     }
 
     /**
