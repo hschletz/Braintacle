@@ -44,7 +44,6 @@
  * official Windows documentation and API, and Braintacle follows this
  * convention.
  *
- * For display purposes, the object can be cast to a string.
  * @package Models
  */
 class Model_RegistryValue extends Model_Abstract
@@ -148,10 +147,10 @@ class Model_RegistryValue extends Model_Abstract
     }
 
     /**
-     * Retrieve textual representation for display purposes
+     * Retrieve textual representation of configured value
      * @return string
      **/
-    function __toString()
+    function getValueConfiguredAsString()
     {
         $string  = self::rootKey($this->getRootKey());
         $string .= '\\';
