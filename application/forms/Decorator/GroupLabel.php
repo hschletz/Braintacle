@@ -75,7 +75,7 @@ class Form_Decorator_GroupLabel extends Zend_Form_Decorator_Label
                 'a',
                 $view->escape($label),
                 array(
-                    'href' => $view->standardUrl(
+                    'href' => $view->url(
                         array(
                             'controller' => 'group',
                             'action' => 'general',

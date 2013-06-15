@@ -312,7 +312,7 @@ class ComputerController extends Zend_Controller_Action
                 $this->_setParam('search', $search);
 
                 // Redirect to index page with all search parameters
-                $this->_helper->StandardRedirect(
+                $this->_helper->Redirector(
                     'index',
                     'computer',
                     null,

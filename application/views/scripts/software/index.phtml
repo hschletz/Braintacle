@@ -46,7 +46,7 @@ function renderAcceptIgnore($view, $software)
             'a',
             $view->translate('Accept'),
             array(
-                'href' => $view->standardUrl(
+                'href' => $view->url(
                     array(
                         'controller' => 'software',
                         'action' => 'accept',
@@ -64,7 +64,7 @@ function renderAcceptIgnore($view, $software)
             'a',
             $view->translate('Ignore'),
             array(
-                'href' => $view->standardUrl(
+                'href' => $view->url(
                     array(
                         'controller' => 'software',
                         'action' => 'ignore',
@@ -86,7 +86,7 @@ function renderNumComputers($view, $software)
         'a',
         $software->getNumComputers(),
         array(
-            'href' => $view->standardUrl(
+            'href' => $view->url(
                 array(
                     'controller' => 'computer',
                     'action' => 'index',

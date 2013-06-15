@@ -47,7 +47,7 @@ function renderEdit($view, $device, $property)
         'a',
         $view->translate('Edit'),
         array(
-            'href' => $view->standardUrl(
+            'href' => $view->url(
                 array(
                     'controller' => 'network',
                     'action' => 'edit',
@@ -65,7 +65,7 @@ function renderDelete($view, $device, $property)
         'a',
         $view->translate('Delete'),
         array(
-            'href' => $view->standardUrl(
+            'href' => $view->url(
                 array(
                     'controller' => 'network',
                     'action' => 'delete',

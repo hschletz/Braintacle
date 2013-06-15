@@ -272,7 +272,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initController()
     {
-        Zend_Controller_Front::getInstance()->setControllerDirectory(APPLICATION_PATH . '/controllers');
+        $controller = Zend_Controller_Front::getInstance();
+
+        $controller->setControllerDirectory(APPLICATION_PATH . '/controllers');
+
+        $route = new Braintacle_Controller_Router_Route_Module(
+            array(),
+            $controller->getDispatcher(),
+            $controller->getRequest()
+        );
+        $controller->getRouter()->addRoute('default', $route);
     }
 
     protected function _initHeaders()

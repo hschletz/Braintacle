@@ -43,7 +43,7 @@ function renderDeviceCount($view, $deviceType, $property)
             'a',
             $count,
             array(
-                'href' => $view->standardUrl(
+                'href' => $view->url(
                     array(
                         'controller' => 'network',
                         'action' => 'showidentified',
@@ -107,7 +107,7 @@ function renderName($view, $subnet, $property)
     // link text.
     $name = $subnet->getName();
     $attributes = array(
-        'href' => $view->standardUrl(
+        'href' => $view->url(
             array(
                 'controller' => 'network',
                 'action' => 'properties',
@@ -137,7 +137,7 @@ function renderNumInventoried($view, $subnet, $property)
         'a',
         $view->escape($subnet->getNumInventoried()),
         array(
-            'href' => $view->standardUrl(
+            'href' => $view->url(
                 array(
                     'controller' => 'computer',
                     'action' => 'index',
@@ -164,7 +164,7 @@ function renderNumUninventoried($view, $subnet, $property)
             'a',
             $count,
             array(
-                'href' => $view->standardUrl(
+                'href' => $view->url(
                     array(
                         'controller' => 'network',
                         'action' => ($property == 'NumIdentified' ? 'showidentified' : 'showunknown'),

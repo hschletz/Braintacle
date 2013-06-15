@@ -54,7 +54,7 @@ function renderName($view, $group)
         'a',
         $view->escape($group->getName()),
         array(
-            'href' => $view->standardUrl(
+            'href' => $view->url(
                 array(
                     'controller' => 'group',
                     'action' => 'general',

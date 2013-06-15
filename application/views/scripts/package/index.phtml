@@ -101,7 +101,7 @@ function renderName($view, $package)
         'a',
         $view->escape($package->getName()),
         array(
-            'href' => $view->standardUrl(
+            'href' => $view->url(
                 array(
                     'controller' => 'package',
                     'action' => 'edit',
@@ -160,7 +160,7 @@ function renderNumPackages($view, $package, $property)
             'a',
             $num,
             array(
-                'href' => $view->standardUrl(
+                'href' => $view->url(
                     array(
                         'controller' => 'computer',
                         'action' => 'index',
@@ -185,7 +185,7 @@ function renderDelete($view, $package)
         'a',
         $view->translate('Delete'),
         array(
-            'href' => $view->standardUrl(
+            'href' => $view->url(
                 array(
                     'controller' => 'package',
                     'action' => 'delete',

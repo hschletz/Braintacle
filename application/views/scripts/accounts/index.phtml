@@ -61,7 +61,7 @@ function renderEdit($view, $account)
         'a',
         $view->translate('Edit'),
         array(
-            'href' => $view->standardUrl(
+            'href' => $view->url(
                 array(
                     'controller' => 'accounts',
                     'action' => 'edit',
@@ -82,7 +82,7 @@ function renderDelete($view, $account)
             'a',
             $view->translate('Delete'),
             array(
-                'href' => $view->standardUrl(
+                'href' => $view->url(
                     array(
                         'controller' => 'accounts',
                         'action' => 'delete',

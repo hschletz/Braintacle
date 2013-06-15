@@ -89,7 +89,7 @@ function renderRemoveLink($view, $package)
         'a',
         $view->translate('remove'),
         array(
-            'href' => $view->standardUrl(
+            'href' => $view->url(
                 array(
                     'controller' => 'computer',
                     'action' => 'removepackage',

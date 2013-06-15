@@ -123,7 +123,7 @@ class Form_ManageRegistryValues extends Zend_Form
                     'a',
                     $view->translate('Delete'),
                     array(
-                        'href' => $view->standardUrl(
+                        'href' => $view->url(
                             array(
                                 'controller' => 'preferences',
                                 'action' => 'deleteregistryvalue',

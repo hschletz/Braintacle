@@ -125,7 +125,7 @@ function renderName($view, $computer)
         'a',
         $view->escape($computer->getName()),
         array(
-            'href' => $view->standardUrl(
+            'href' => $view->url(
                 array(
                     'controller' => 'computer',
                     'action' => $view->jumpto,
@@ -165,7 +165,7 @@ if ($filter) {
                     'a',
                     $this->translate('Edit filter'),
                     array(
-                        'href' => $this->standardUrl(
+                        'href' => $this->url(
                             array('controller' => 'computer', 'action' => 'search') + $this->filterUriParams
                         ),
                     ),
@@ -176,7 +176,7 @@ if ($filter) {
                     'a',
                     $this->translate('Save to group'),
                     array(
-                        'href' => $this->standardUrl(
+                        'href' => $this->url(
                             array('controller' => 'group', 'action' => 'add') + $this->filterUriParams
                         ),
                     ),

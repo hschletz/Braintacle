@@ -58,7 +58,7 @@ function renderName($view, $computer)
         'a',
         $view->escape($computer->getName()),
         array(
-            'href' => $view->standardUrl(
+            'href' => $view->url(
                 array(
                     'controller' => 'computer',
                     'action' => 'userdefined',
@@ -85,7 +85,7 @@ function renderCriteria($view, $computer, $property)
             'a',
             $view->escape($value),
             array(
-                'href' => $view->standardUrl(
+                'href' => $view->url(
                     array(
                         'controller' => 'duplicates',
                         'action' => 'allow',

@@ -40,7 +40,7 @@ function renderName($view, $computer)
         'a',
         $view->escape($computer->getName()),
         array(
-            'href' => $view->standardUrl(
+            'href' => $view->url(
                 array(
                     'controller' => 'computer',
                     'action' => 'groups',
