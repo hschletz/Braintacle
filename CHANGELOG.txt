@@ -17,6 +17,9 @@ New features:
 - Console: The full registry value of inventoried registry data is shown as a
   tooltip over its name.
 
+- Console: Inventoried registry values are shown in a separate column, separate
+  from the data.
+
 Fixed bugs:
 
 - Console: Fixed nonstandard (ZF-Style) URL parameter syntax in navigation URLs.
