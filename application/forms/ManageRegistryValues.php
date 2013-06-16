@@ -177,7 +177,7 @@ class Form_ManageRegistryValues extends Zend_Form
             $element = new Zend_Form_Element_Text("value_{$value->getId()}_name");
             $element->setValue($name)
                     ->clearDecorators() // No decorators - element is rendered manually
-                    ->setDescription($value) // String representation of value
+                    ->setDescription($value->getValueConfiguredAsString())
                     ->setRequired(true)
                     ->addFilter('StringTrim')
                     ->addValidator('StringLength', false, array(1, 255))
