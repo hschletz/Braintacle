@@ -42,33 +42,41 @@ class Form_ManageRegistryValues extends Zend_Form
         $translate = Zend_Registry::get('Zend_Translate');
 
         // Elements for existing values
+        $subFormExisting = new Zend_Form_SubForm();
+        $subFormExisting->setDecorators(array());
+        $this->addSubForm($subFormExisting, 'existing');
         $this->_getDefinedValues();
 
-        $newName = new Zend_Form_Element_Text('newName');
+        $subFormNew = new Zend_Form_SubForm();
+        $subFormNew->setDecorators(array('FormElements'));
+
+        $newName = new Zend_Form_Element_Text('name');
         $newName->setLabel('Name')
                 ->addFilter('StringTrim')
                 ->addValidator('StringLength', false, array(0, 255))
                 ->addValidator($this->_createBlacklistValidator());
-        $this->addElement($newName);
+        $subFormNew->addElement($newName);
 
-        $newRootKey = new Zend_Form_Element_Select('newRootKey');
+        $newRootKey = new Zend_Form_Element_Select('rootKey');
         $newRootKey->setDisableTranslator(true)
                    ->setLabel($translate->_('Root key'))
                    ->setMultiOptions(Model_RegistryValue::rootKeys());
-        $this->addElement($newRootKey);
+        $subFormNew->addElement($newRootKey);
 
         // Additional validation in isValid()
-        $newSubKeys = new Zend_Form_Element_Text('newSubKeys');
+        $newSubKeys = new Zend_Form_Element_Text('subKeys');
         $newSubKeys->setLabel('Subkeys')
                    ->addFilter('StringTrim')
                    ->addValidator('StringLength', false, array(1, 255));
-        $this->addElement($newSubKeys);
+        $subFormNew->addElement($newSubKeys);
 
-        $newValue = new Zend_Form_Element_Text('newValue');
+        $newValue = new Zend_Form_Element_Text('value');
         $newValue->setLabel('Only this value (optional)')
                  ->addFilter('StringTrim')
                  ->addValidator('StringLength', false, array(0, 255));
-        $this->addElement($newValue);
+        $subFormNew->addElement($newValue);
+
+        $this->addSubForm($subFormNew, 'newValue');
 
         $submit = new Zend_Form_Element_Submit('Submit');
         $submit->setLabel('Change');
@@ -83,11 +91,11 @@ class Form_ManageRegistryValues extends Zend_Form
      */
     public function isValid($data)
     {
-        if ($data['newName']) {
+        if ($data['newValue']['name']) {
             // Only required if a new key is defined
-            $this->newSubKeys->setRequired(true);
+            $this->newValue->subKeys->setRequired(true);
         } else {
-            $this->newSubKeys->setRequired(false);
+            $this->newValue->subKeys->setRequired(false);
         }
         return parent::isValid($data);
     }
@@ -103,9 +111,10 @@ class Form_ManageRegistryValues extends Zend_Form
         $output = '';
 
         // Create table with rows for each existing field
+        $subFormExisting = $this->getSubForm('existing');
         foreach ($this->_definedValues as $value) {
             $id = $value->getId();
-            $element = $this->getElement("value_{$id}_name");
+            $element = $subFormExisting->getElement("value_{$id}_name");
             $errors =$element->getMessages();
 
             // Column 1: Form element and validation error messages
@@ -165,9 +174,10 @@ class Form_ManageRegistryValues extends Zend_Form
         }
 
         // Remove existing elements
-        foreach ($this->getElements() as $element) {
+        $subFormExisting = $this->getSubForm('existing');
+        foreach ($subFormExisting->getElements() as $element) {
             if (preg_match('/^value_[0-9]+_name$/', $element->getName())) {
-                $this->removeElement($element->getName());
+                $subFormExisting->removeElement($element->getName());
             }
         }
 
@@ -183,7 +193,7 @@ class Form_ManageRegistryValues extends Zend_Form
                     ->addValidator('StringLength', false, array(1, 255))
                     ->addValidator($this->_createBlacklistValidator($name))
                     ->setOrder($index); // The element is inserted right before the block for a new value.
-            $this->addElement($element);
+            $subFormExisting->addElement($element);
         }
     }
 
@@ -211,17 +221,20 @@ class Form_ManageRegistryValues extends Zend_Form
      **/
     public function process()
     {
-        $name = $this->getValue('newName');
+        $name = $this->newValue->getValue('name');
         if ($name) {
             Model_RegistryValue::add(
                 $name,
-                $this->getValue('newRootKey'),
-                $this->getValue('newSubKeys'),
-                $this->getValue('newValue')
+                $this->newValue->getValue('rootKey'),
+                $this->newValue->getValue('subKeys'),
+                $this->newValue->getValue('value')
             );
         }
+        $subFormExisting = $this->getSubForm('existing');
         foreach ($this->_definedValues as $value) {
-            $value->rename($this->getValue("value_{$value->getId()}_name"));
+            $value->rename(
+                $subFormExisting->getValue("value_{$value->getId()}_name")
+            );
         }
         // Update list of defined values
         $this->_getDefinedValues();
@@ -232,10 +245,10 @@ class Form_ManageRegistryValues extends Zend_Form
      **/
     public function resetNewValue()
     {
-        $this->newName->setValue(null);
-        $this->newRootKey->setValue(Model_RegistryValue::HKEY_LOCAL_MACHINE);
-        $this->newSubKeys->setValue(null);
-        $this->newValue->setValue(null);
+        $this->newValue->name->setValue(null);
+        $this->newValue->rootKey->setValue(Model_RegistryValue::HKEY_LOCAL_MACHINE);
+        $this->newValue->subKeys->setValue(null);
+        $this->newValue->value->setValue(null);
     }
 
 }
