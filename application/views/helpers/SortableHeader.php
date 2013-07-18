@@ -51,14 +51,15 @@ class Zend_View_Helper_SortableHeader extends Zend_View_Helper_Abstract
             $arrow = '';
         }
 
+        // Append or replace order and direction for existing request parameters
+        $params = Zend_Controller_Front::getInstance()->getRequest()->getParams();
+        $params['order'] = $order;
+        $params['direction'] = $direction;
+
         return $this->view->htmlTag(
             'a',
             $label . $arrow,
-            array(
-                'href' => $this->view->url(
-                    array('order' => $order, 'direction' => $direction)
-                )
-            ),
+            array('href' => $this->view->url($params)),
             true
         );
     }

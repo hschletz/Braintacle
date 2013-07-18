@@ -24,6 +24,8 @@ Fixed bugs:
 
 - Console: Fixed nonstandard (ZF-Style) URL parameter syntax in navigation URLs.
 
+- Console: Fixed broken table sorting links on pages with URL parameters.
+
 
 CHANGES IN VERSION 0.11
 =======================
