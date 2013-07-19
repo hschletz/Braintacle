@@ -41,6 +41,17 @@ class Form_ManageRegistryValues extends Zend_Form
         $this->setMethod('post');
         $translate = Zend_Registry::get('Zend_Translate');
 
+        // Subform for enabling/disabling registry inspection, in addition to
+        // the same setting in preferences.
+        $subFormInspect = new Zend_Form_SubForm;
+        $subFormInspect->setDecorators(array())
+                       ->setElementsBelongTo('inspect'); // Mysterious tweak to make it work...
+        $inspect = new Zend_Form_Element_Checkbox('inspect');
+        $inspect->setLabel('Inspect registry')
+                ->setChecked(Model_Config::get('InspectRegistry'));
+        $subFormInspect->addElement($inspect);
+        $this->addSubForm($subFormInspect, 'inspect');
+
         // Elements for existing values
         $subFormExisting = new Zend_Form_SubForm();
         $subFormExisting->setDecorators(array());
@@ -147,6 +158,9 @@ class Form_ManageRegistryValues extends Zend_Form
         }
         $output = $view->htmlTag('table', $output, array('class' => 'table_registry_values'));
 
+        $subFormInspect = $this->getSubForm('inspect');
+        $output = $this->renderHtmlTag($subFormInspect->inspect->render($view)) . $output;
+
         $output .= $view->htmlTag('h3', $view->translate('Add'), array('class' => 'textcenter'));
 
         // Render remaining elements (those with decorators) in the usual <dl> block
@@ -217,10 +231,12 @@ class Form_ManageRegistryValues extends Zend_Form
     }
 
     /**
-     * Add and rename values according to form data
+     * Add and rename values and set 'InspectRegistry' option according to form data
      **/
     public function process()
     {
+        Model_Config::set('InspectRegistry', $this->inspect->inspect->isChecked());
+
         $name = $this->newValue->getValue('name');
         if ($name) {
             Model_RegistryValue::add(
