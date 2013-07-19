@@ -24,8 +24,6 @@ Fixed bugs:
 
 - Console: Fixed nonstandard (ZF-Style) URL parameter syntax in navigation URLs.
 
-- Console: Fixed broken table sorting links on pages with URL parameters.
-
 
 CHANGES IN VERSION 0.11
 =======================
@@ -35,6 +33,11 @@ Upgrading from previous versions:
 - Required: Some external libraries (Zend Framework and NADA) are no longer
   included in the distribution. They must be installed manually. See INSTALL.md
   for more information.
+
+- Recommended: If you added "AllowEncodedSlashes On" to your Apache
+  configuration, as told in previuos installation instructions, remove it.
+  Braintacle is no longer affected by this directive, which should be left at
+  its default setting unless required by other applications.
 
 New features:
 
