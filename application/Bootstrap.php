@@ -282,39 +282,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $controller->getRequest()
         );
         $controller->getRouter()->addRoute('default', $route);
-    }
 
-    protected function _initHeaders()
-    {
-        if (Braintacle_Application::isCli()) {
-            return;
+        if (!Braintacle_Application::isCli()) {
+            $controller->registerPlugin(new Braintacle_Controller_Plugin_ForceLogin);
         }
-        // Ensure correct session settings before Zend_Auth invokes session
-        $this->bootstrap('session');
-
-        // Create objects (they are not yet initialized at this time)
-        $request = new Zend_Controller_Request_Http;
-        $response = new Zend_Controller_Response_Http;
-
-        // Auto-determine base URL
-        $request->setBaseUrl();
-        // Don't cache any content.
-        $response->setHeader('Cache-Control', 'no-store', true);
-
-        // If user is not yet authenticated, redirect to the login page
-        // except when URI contains /login, in which case redirection would
-        // result in an endless loop. LoginController will handle the rest.
-        if (!Zend_Auth::getInstance()->hasIdentity()
-            and !preg_match('#/login(/|$)#', $request->getRequestUri())
-        ) {
-            $response->setRedirect($request->getBaseUrl() . '/login');
-        }
-
-        // Initialize controller
-        $this->bootstrap('controller');
-        $controller = Zend_Controller_Front::getInstance();
-        $controller->setRequest($request);
-        $controller->setResponse($response);
     }
 
     protected function _initAutoload()

@@ -41,6 +41,7 @@ class Braintacle_Application
     {
         // Set up PHP environment.
         ini_set('session.auto_start', false); // conflicts with Zend_Session
+        session_cache_limiter('nocache'); // Default headers to prevent caching
         self::setIncludePath();
 
         // Create application, bootstrap, and run
