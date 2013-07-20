@@ -30,7 +30,7 @@ class Zend_View_Helper_HtmlTag extends Zend_View_Helper_Abstract
     /**
     * Render a single HTML element
     * @param string $element HTML element name
-    * @param mixed $content Content to be enclosed within tags
+    * @param mixed $content Content to be enclosed within tags, NULL for elements without content
     * @param array $attributes Associative array of attributes for the element
     * @param bool $inline Whether the element should appear inline
                           or with newlines
@@ -48,7 +48,10 @@ class Zend_View_Helper_HtmlTag extends Zend_View_Helper_Abstract
             }
         }
         if (is_null($content)) {
-            $output .= ' />';
+            if ($this->view->doctype()->isXhtml()) {
+                $output .= ' /';
+            }
+            $output .= '>';
             $output .= $newline;
             return $output;
         }
