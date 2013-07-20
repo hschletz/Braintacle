@@ -50,7 +50,7 @@ class Form_SoftwareFilter extends Zend_Form
                ->setAttrib('onchange', 'changeFilter();');
         $this->addElement($filter);
 
-        $submit = new Zend_Form_Element_Submit('submit');
+        $submit = new Braintacle_Form_Element_Submit('submit');
         $submit->setLabel('Apply')
                ->setIgnore(true);
         $this->addElement($submit);
