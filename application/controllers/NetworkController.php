@@ -85,7 +85,7 @@ class NetworkController extends Zend_Controller_Action
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($_POST)) {
                 $subnet->setName($form->getValue('Name'));
-                $this->redirect('network');
+                $this->_helper->redirector('index', 'network');
             }
         } else {
             $form->setValuesFromSubnet($subnet);
@@ -118,7 +118,7 @@ class NetworkController extends Zend_Controller_Action
                 return;
             }
         }
-        $this->redirect('network');
+        $this->_helper->redirector('index', 'network');
     }
 
     public function deleteAction()
@@ -134,7 +134,7 @@ class NetworkController extends Zend_Controller_Action
             }
         }
 
-        $this->redirect('network');
+        $this->_helper->redirector('index', 'network');
     }
 
 }

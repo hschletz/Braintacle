@@ -85,7 +85,12 @@ class SoftwareController extends Zend_Controller_Action
 
         // Retrieve filter from session and redirect with the filter applied
         $session = new Zend_Session_Namespace('ManageSoftware');
-        $this->redirect('software?filter=' . $session->filter);
+        $this->_helper->redirector(
+            'index',
+            'software',
+            null,
+            array('filter' => $session->filter)
+        );
     }
 
 }

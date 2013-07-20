@@ -83,7 +83,7 @@ class PreferencesController extends Zend_Controller_Action
         $form = new Form_DefineFields;
         if ($this->getRequest()->isPost() and $form->isValid($_POST)) {
             $form->process();
-            $this->redirect('preferences/userdefined');
+            $this->_helper->redirector('userdefined', 'preferences');
         } else {
             // render form
             $this->view->form = $form;
@@ -98,7 +98,7 @@ class PreferencesController extends Zend_Controller_Action
             if ($form->isValid($_POST) and $this->_getParam('yes')) {
                 Model_UserDefinedInfo::deleteField($field);
             }
-            $this->redirect('preferences/userdefined');
+            $this->_helper->redirector('userdefined', 'preferences');
         } else {
             // render confirmation form
             $this->view->form = $form;
@@ -111,7 +111,7 @@ class PreferencesController extends Zend_Controller_Action
         $form = new Form_ManageNetworkDeviceTypes;
         if ($this->getRequest()->isPost() and $form->isValid($_POST)) {
             $form->process();
-            $this->redirect('network');
+            $this->_helper->redirector('index', 'network');
         } else {
             // render form
             $this->view->form = $form;
@@ -126,7 +126,7 @@ class PreferencesController extends Zend_Controller_Action
             if ($form->isValid($_POST) and $this->_getParam('yes')) {
                 $type->delete();
             }
-            $this->redirect('preferences/networkdevices');
+            $this->_helper->redirector('networkdevices', 'preferences');
         } else {
             // render confirmation form
             $this->view->form = $form;
@@ -153,7 +153,7 @@ class PreferencesController extends Zend_Controller_Action
             if ($form->isValid($_POST) and $this->_getParam('yes')) {
                 $value->delete();
             }
-            $this->redirect('preferences/registryvalues');
+            $this->_helper->redirector('registryvalues', 'preferences');
         } else {
             // render confirmation form
             $this->view->form = $form;

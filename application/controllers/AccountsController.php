@@ -38,7 +38,7 @@ class AccountsController extends Zend_Controller_Action
         if ($this->getRequest()->isPost() and $form->isValid($_POST)) {
             $data = $form->getValues();
             Model_Account::create($data, $data['Password']);
-            $this->redirect('accounts');
+            $this->_helper->redirector('index', 'accounts');
         }
         $this->view->form = $form;
     }
@@ -50,7 +50,7 @@ class AccountsController extends Zend_Controller_Action
         if ($this->getRequest()->isPost() and $form->isValid($_POST)) {
             $data = $form->getValues();
             Model_Account::update($data['OriginalId'], $data, $data['Password']);
-            $this->redirect('accounts');
+            $this->_helper->redirector('index', 'accounts');
         }
 
         $form->setId($this->_getParam('id'));
@@ -65,7 +65,7 @@ class AccountsController extends Zend_Controller_Action
             if ($this->_getParam('yes')) {
                 Model_Account::delete($id);
             }
-            $this->redirect('accounts');
+            $this->_helper->redirector('index', 'accounts');
         } else {
             $this->view->id = $id;
         }

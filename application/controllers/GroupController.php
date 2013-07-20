@@ -35,7 +35,7 @@ class GroupController extends Zend_Controller_Action
             $this->group = $group;
             $this->view->group = $group;
         } else {
-            $this->redirect('group');
+            $this->_helper->redirector('index', 'group');
         }
     }
 
@@ -115,7 +115,12 @@ class GroupController extends Zend_Controller_Action
             $this->group->unaffectPackage($session->packageName);
         }
 
-        $this->redirect('group/packages/id/' . $id);
+        $this->_helper->redirector(
+            'packages',
+            'group',
+            null,
+            array('id' => $id)
+        );
     }
 
     public function installpackageAction()
@@ -129,7 +134,12 @@ class GroupController extends Zend_Controller_Action
                 $group->installPackage($packageName);
             }
         }
-        $this->redirect('group/packages/id/' . $group->getId());
+        $this->_helper->redirector(
+            'packages',
+            'group',
+            null,
+            array('id' => $group->getId())
+        );
     }
 
     public function addAction()
@@ -161,7 +171,12 @@ class GroupController extends Zend_Controller_Action
                     $group->excludeComputers(Model_Database::getAdapter()->fetchCol($members));
                     break;
             }
-            $this->redirect('group/members/id/' . $group->getId());
+            $this->_helper->redirector(
+                'members',
+                'group',
+                null,
+                array('id' => $group->getId())
+            );
         } else {
             $this->view->form = $form;
         }
@@ -189,9 +204,14 @@ class GroupController extends Zend_Controller_Action
                             'Group \'%s\' could not be deleted.'
                         );
                     }
-                    $this->redirect('group');
+                    $this->_helper->redirector('index', 'group');
                 } else {
-                    $this->redirect('group/general/id/' . $this->group->getId());
+                    $this->_helper->redirector(
+                        'general',
+                        'group',
+                        null,
+                        array('id' => $this->group->getId())
+                    );
                 }
             }
         } else {
