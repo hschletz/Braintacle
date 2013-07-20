@@ -38,7 +38,14 @@ print $this->htmlTag(
     $this->htmlTag(
         'a',
         $this->translate('Define fields'),
-        array('href' => $this->baseUrl() . '/preferences/userdefined'),
+        array(
+            'href' => $this->url(
+                array(
+                    'controller' => 'preferences',
+                    'action' => 'userdefined',
+                )
+            )
+        ),
         true
     ),
     array('class' => 'textcenter clearboth')

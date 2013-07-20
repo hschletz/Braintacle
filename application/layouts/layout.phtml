@@ -85,12 +85,18 @@ if (Zend_Registry::isRegistered('subNavigation')) {
 
 <div id="logout">
 <?php
-echo '<a href="'
-    . $this->baseUrl()
-    . '/login/logout">'
-    . $this->translate('Logout')
-    . '</a>'
-;
+print $this->htmlTag(
+    'a',
+    $this->translate('Logout'),
+    array(
+        'href' => $this->url(
+            array(
+                'controller' => 'login',
+                'action' => 'logout',
+            )
+        )
+    )
+);
 ?>
 
 </div>

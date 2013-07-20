@@ -75,7 +75,14 @@ print $this->htmlTag(
     $this->htmlTag(
         'a',
         $this->translate('Manage inventoried values'),
-        array('href' => $this->baseUrl() . '/preferences/registryvalues'),
+        array(
+            'href' => $this->url(
+                array(
+                    'controller' => 'preferences',
+                    'action' => 'registryvalues',
+                )
+            )
+        ),
         true
     ),
     array('class' => 'textcenter')

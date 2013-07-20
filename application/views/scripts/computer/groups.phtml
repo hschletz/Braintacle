@@ -92,7 +92,14 @@ if ($count) {
 // Print and manage static memberships
 $form = new Form_ManageGroupMemberships();
 if ($form->addGroups($computer)) {
-    $form->setAction($this->baseUrl() . '/computer/managegroups');
+    $form->setAction(
+        $this->url(
+            array(
+                'controller' => 'computer',
+                'action' => 'managegroups'
+            )
+        )
+    );
     print $this->htmlTag(
         'h2',
         $this->translate('Manage memberships')

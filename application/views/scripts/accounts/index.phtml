@@ -110,7 +110,14 @@ print $this->htmlTag(
     $this->htmlTag(
         'a',
         $this->translate('Add user'),
-        array('href' => $this->baseUrl() . '/accounts/add')
+        array(
+            'href' => $this->url(
+                array(
+                    'controller' => 'accounts',
+                    'action' => 'add',
+                )
+            )
+        )
     ),
     array('class' => 'textcenter')
 );

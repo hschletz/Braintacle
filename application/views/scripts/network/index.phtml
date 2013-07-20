@@ -72,7 +72,14 @@ print $this->htmlTag(
     $this->htmlTag(
         'a',
         $this->translate('Manage device types'),
-        array('href' => $this->baseUrl() . '/preferences/networkdevices'),
+        array(
+            'href' => $this->url(
+                array(
+                    'controller' => 'preferences',
+                    'action' => 'networkdevices',
+                )
+            )
+        ),
         true
     ),
     array('class' => 'textcenter clearboth')

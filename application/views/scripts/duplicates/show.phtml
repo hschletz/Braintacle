@@ -150,6 +150,11 @@ print $this->htmlTag(
     array(
         'enctype' => 'multipart/form-data',
         'method' => 'post',
-        'action' => $this->baseUrl() . '/duplicates/merge',
+        'action' => $this->url(
+            array(
+                'controller' => 'duplicates',
+                'action' => 'merge',
+            )
+        )
     )
 );

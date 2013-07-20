@@ -75,7 +75,14 @@ print $this->table(
 // Display package installation form if packages are available
 $form = new Form_AffectPackages();
 if ($form->addPackages($this->group)) {
-    $form->setAction($this->baseUrl() . '/group/installpackage');
+    $form->setAction(
+        $this->url(
+            array(
+                'controller' => 'group',
+                'action' => 'installpackage',
+            )
+        )
+    );
     print $this->htmlTag(
         'h2',
         $this->translate('Install packages')
