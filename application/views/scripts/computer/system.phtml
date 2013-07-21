@@ -100,12 +100,16 @@ $renderCallbacks = array (
 
 function renderName($view, $controller)
 {
-    $name = $view->escape($controller->getName());
-    $comment = $view->escape($controller->getComment());
+    $name = $controller->getName();
+    $comment = $controller->getComment();
     if ($name == $comment) {
-        return $name;
+        return $view->escape($name);
     } else {
-        return $view->htmlTag('span', $name, array('title' => $comment));
+        return $view->htmlTag(
+            'span',
+            $view->escape($name),
+            array('title' => $comment)
+        );
     }
 }
 

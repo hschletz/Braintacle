@@ -49,7 +49,7 @@ function renderName($view, $software)
         return $view->htmlTag(
             'span',
             $view->escape($software->getName()),
-            array('title' => $view->escape($comment)),
+            array('title' => $comment),
             true
         );
     } else {

@@ -31,7 +31,7 @@ class Zend_View_Helper_HtmlTag extends Zend_View_Helper_Abstract
     * Render a single HTML element
     * @param string $element HTML element name
     * @param mixed $content Content to be enclosed within tags, NULL for elements without content
-    * @param array $attributes Associative array of attributes for the element
+    * @param array $attributes Associative array of attributes for the element. Values are escaped automatically.
     * @param bool $inline Whether the element should appear inline
                           or with newlines
     * @return string
@@ -44,7 +44,7 @@ class Zend_View_Helper_HtmlTag extends Zend_View_Helper_Abstract
         $output  = "<$element";
         if (is_array($attributes)) {
             foreach ($attributes as $attribute => $value) {
-                $output .= " $attribute=\"$value\"";
+                $output .= " $attribute=\"" . $this->view->escape($value) . '"';
             }
         }
         if (is_null($content)) {
