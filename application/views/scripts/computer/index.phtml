@@ -114,6 +114,12 @@ foreach (Model_UserDefinedInfo::getTypes() as $name => $type) {
     }
     $headers['UserDefinedInfo.' . $name] = $header;
 }
+// Append headers for registry value names
+$regValues = Model_RegistryValue::createStatementStatic();
+while ($regValue = $regValues->fetchObject('Model_RegistryValue')) {
+    $name = $regValue->getName();
+    $headers["Registry.$name"] = $name;
+}
 
 $renderCallbacks = array(
     'Name' => 'renderName',

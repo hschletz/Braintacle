@@ -74,6 +74,10 @@
  *
  * Windows-specific information is available through the public 'windows' member
  * and through the 'Windows.*' property.
+ *
+ * The properties "Registry.*" refer to the combined value and data of a defined
+ * registry value with the given name.
+ *
  * @package Models
  */
 class Model_Computer extends Model_ComputerOrGroup
@@ -184,6 +188,11 @@ class Model_Computer extends Model_ComputerOrGroup
      */
     private $_userDefinedInfo;
 
+    /**
+     * Content of registry value/data for registry search results
+     * @var string
+     */
+    private $_registryContent;
 
     /**
      * Constructor
@@ -478,6 +487,17 @@ class Model_Computer extends Model_ComputerOrGroup
                                     'Unexpected datatype for user defined information'
                                 );
                         }
+                    } elseif (preg_match('#^Registry\\.(.*)#', $type, $matches)) {
+                        $property = $matches[1];
+                        $select = self::_findString(
+                            $select,
+                            'Registry',
+                            $property,
+                            $arg,
+                            $matchExact,
+                            $invertResult,
+                            $addSearchColumns
+                        );
                     } elseif (preg_match('/^[a-zA-Z]+\.[a-zA-Z]+$/', $type)) {
                         list($model, $property) = explode('.', $type);
                         // apply a generic string filter.
@@ -620,6 +640,8 @@ class Model_Computer extends Model_ComputerOrGroup
                 return $childObject->getProperty($property, $rawValue);
             } elseif (preg_match('#^UserDefinedInfo\\.(.*)#', $property, $matches)) {
                 return $this->getUserDefinedInfo($matches[1]);
+            } elseif (preg_match('#^Registry\\.#', $property)) {
+                return $this->_registryContent;
             } elseif (preg_match('#^Windows\\.(\w+)$#', $property, $matches)) {
                 return $this->windows->getProperty($matches[1]);
             } else {
@@ -675,6 +697,10 @@ class Model_Computer extends Model_ComputerOrGroup
             // Parent's implementation will handle properties from Model_Computer
             parent::__set($property, $value);
         } catch (Exception $exception) {
+            if ($property == 'registry_content') {
+                $this->_registryContent = $value;
+                return;
+            }
             if (preg_match('#^userdefinedinfo_(.*)#', $property, $matches)) {
                 // If _userDefinedInfo is already an object, do nothing - the
                 // information is already there. Otherwise, _userDefinedInfo
@@ -752,6 +778,9 @@ class Model_Computer extends Model_ComputerOrGroup
         try {
             $type = parent::getPropertyType($property);
         } catch (Exception $exception) {
+            if (preg_match('#^Registry\\.#', $property)) {
+                return 'text';
+            }
             if (preg_match('#^UserDefinedInfo\\.(.*)#', $property, $matches)) {
                 $model = 'UserDefinedInfo';
                 $property = $matches[1];
@@ -786,6 +815,8 @@ class Model_Computer extends Model_ComputerOrGroup
             if (preg_match('#^UserDefinedInfo\\.(.*)#', $property, $matches)) {
                 $class = new Model_UserDefinedInfo;
                 return $class->getColumnName($matches[1]);
+            } elseif (preg_match('#^Registry\\.#', $property)) {
+                return 'registry_content';
             } else {
                 throw $e;
             }
@@ -807,6 +838,8 @@ class Model_Computer extends Model_ComputerOrGroup
             if (preg_match('#^UserDefinedInfo\\.(.*)#', $order, $matches)) {
                 $class = new Model_UserDefinedInfo;
                 $order = 'userdefinedinfo_' . $class->getColumnName($matches[1]);
+            } elseif (preg_match('#^Registry\\.#', $order)) {
+                $order = 'registry_content';
             } elseif (preg_match('/^[a-zA-Z]+\.[a-zA-Z]+$/', $order)) {
                 // Assume proper column alias ('model_property')
                 $order = strtolower(strtr($order, '.', '_'));
@@ -1111,6 +1144,11 @@ class Model_Computer extends Model_ComputerOrGroup
             $class = new Model_UserDefinedInfo;
             $column = $class->getColumnName($property);
             $columnAlias = 'userdefinedinfo_' . $column;
+        } elseif ($model == 'Registry') {
+            $table = 'registry';
+            $column = 'regvalue';
+            $columnAlias = 'registry_content';
+            $select->where('registry.name = ?', $property);
         } elseif ($model == 'Windows') {
             $table = Model_Windows::getTableName($property);
             $class = new Model_Windows;

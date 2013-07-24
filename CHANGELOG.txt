@@ -23,6 +23,10 @@ New features:
 - Console: Inventoried registry values are shown in a separate column, separate
   from the data.
 
+- Console: Added search for registry values/data. For every defined value there
+  is 1 entry in the search dropdown. The search operates on both the value and
+  the data for that value.
+
 Fixed bugs:
 
 - Console: Fixed nonstandard (ZF-Style) URL parameter syntax in navigation and

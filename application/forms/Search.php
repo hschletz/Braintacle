@@ -185,6 +185,13 @@ class Form_Search extends Form_Normalized
             unset($this->_filters['MsOfficeProduct.ProductId']);
         }
 
+        // Append filters and labels for registry values/data
+        $regValues = Model_RegistryValue::createStatementStatic();
+        while ($regValue = $regValues->fetchObject('Model_RegistryValue')) {
+            $name = $regValue->getName();
+            $this->_filters["Registry.$name"] = "Registry: $name";
+        }
+
         // Append filters and labels for user defined info
         $template = $translate->_('User defined: %s');
         $types = Model_UserDefinedInfo::getTypes();
