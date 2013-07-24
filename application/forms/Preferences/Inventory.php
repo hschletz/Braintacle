@@ -65,8 +65,9 @@ class Form_Preferences_Inventory extends Form_Preferences
         );
         parent::init();
 
-        $this->InspectRegistry->removeDecorator('Label');
-        $this->InspectRegistry->addDecorator(
+        $inspectRegistry = $this->getElement('InspectRegistry');
+        $inspectRegistry->removeDecorator('Label');
+        $inspectRegistry->addDecorator(
             'Callback',
             array(
                 'callback' => array($this, 'inspectRegistryLabel'),
