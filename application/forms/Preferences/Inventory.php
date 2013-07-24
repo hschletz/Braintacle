@@ -64,6 +64,52 @@ class Form_Preferences_Inventory extends Form_Preferences
             ),
         );
         parent::init();
+
+        $this->InspectRegistry->removeDecorator('Label');
+        $this->InspectRegistry->addDecorator(
+            'Callback',
+            array(
+                'callback' => array($this, 'inspectRegistryLabel'),
+                'placement' => 'prepend',
+            )
+        );
     }
 
+    /**
+     * @ignore
+     * Decorator callback that renders the label for "Inspect Registry" with
+     * additional link to the registry value management form
+     */
+    public function inspectRegistryLabel($content, $element, array $options)
+    {
+        $view = $element->getView();
+        $name = $element->getName();
+        $link = $view->htmlTag(
+            'a',
+            $view->escape(
+                '[' . $view->translate('Manage inventoried values') . ']'
+            ),
+            array(
+                'href' => $view->url(
+                    array(
+                        'controller' => 'preferences',
+                        'action' => 'registryvalues',
+                    )
+                )
+            )
+        );
+        $label = $view->escape($element->getLabel()) . '<br>' . $link;
+        return $view->htmlTag(
+            'dt',
+            $view->formLabel(
+                $name,
+                $label,
+                array(
+                    'escape' => false,
+                    'class' => 'optional',
+                )
+            ),
+            array('id' => "$name-label")
+        );
+    }
 }

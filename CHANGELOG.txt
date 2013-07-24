@@ -12,7 +12,8 @@ CHANGES IN VERSION 0.12
 New features:
 
 - Console: Management of inventoried registry keys. In the "Registry" section of
-  an inventoried Windows computer, click the "Manage inventoried values" link.
+  an inventoried Windows computer or in Preferences->Inventory, click the
+  "Manage inventoried values" link.
   This form also enables turning registry inspection on/off, in addition to the
   "Inventory" preferences dialog.
 

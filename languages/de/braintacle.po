@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-10 18:48+0200\n"
+"POT-Creation-Date: 2013-07-24 10:04+0200\n"
 "PO-Revision-Date: 2013-06-10 18:48+0200\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -346,6 +346,10 @@ msgstr "Wurzelschlüssel"
 msgid "Subkeys"
 msgstr "Unterschlüssel"
 
+#: forms/ManageRegistryValues.php; forms/Preferences/Inventory.php
+msgid "Inspect registry"
+msgstr "Registry durchsuchen"
+
 #: forms/NetworkDevice.php; views/scripts/computer/display.phtml
 #: views/scripts/computer/general.phtml views/scripts/computer/index.phtml;
 #: views/scripts/computer/misc.phtml views/scripts/computer/network.phtml
@@ -564,10 +568,6 @@ msgstr "Status von durch Gruppe zugewiesenen Paketen bei Computern setzen "
 msgid "Use groups"
 msgstr "Gruppen verwenden"
 
-#: forms/Preferences/Inventory.php
-msgid "Inspect registry"
-msgstr "Registry durchsuchen"
-
 #: forms/Preferences/Inventory.php forms/Preferences/Inventory.php;
 #, php-format
 msgid "Mark '%s' by default"
@@ -576,6 +576,10 @@ msgstr "\"%s\" als Vorgabe setzen"
 #: forms/Preferences/Inventory.php; forms/YesNo/DeleteComputer.php
 msgid "Delete interfaces from network listing"
 msgstr "Interfaces aus Netzwerkliste löschen"
+
+#: forms/Preferences/Inventory.php; views/scripts/computer/registry.phtml
+msgid "Manage inventoried values"
+msgstr "Inventarisierte Werte verwalten"
 
 #: forms/Preferences/Inventory.php; views/scripts/duplicates/show.phtml
 msgid "Merge manual group assignments"
@@ -1596,10 +1600,6 @@ msgid "Key"
 msgstr "Schlüssel"
 
 #: views/scripts/computer/registry.phtml
-msgid "Manage inventoried values"
-msgstr "Inventarisierte Werte verwalten"
-
-#: views/scripts/computer/registry.phtml
 msgid "Registry Keys"
 msgstr "Registry-Schlüssel"
 
@@ -1902,3 +1902,6 @@ msgstr "Anzahl Computer"
 msgid "Ignore"
 msgstr "Ignorieren"
 
+#, fuzzy
+#~ msgid "Manage invent oried values"
+#~ msgstr "Inventarisierte Werte verwalten"

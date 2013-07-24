@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-10 18:48+0200\n"
+"POT-Creation-Date: 2013-07-24 10:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -340,6 +340,10 @@ msgstr ""
 msgid "never"
 msgstr ""
 
+#: forms/ManageRegistryValues.php; forms/Preferences/Inventory.php
+msgid "Inspect registry"
+msgstr ""
+
 #: forms/ManageRegistryValues.php
 msgid "Root key"
 msgstr ""
@@ -573,10 +577,6 @@ msgstr ""
 msgid "Set package status on computers for group-assigned packages"
 msgstr ""
 
-#: forms/Preferences/Inventory.php
-msgid "Inspect registry"
-msgstr ""
-
 #: forms/Preferences/Inventory.php; forms/Preferences/Inventory.php
 #: forms/Preferences/Inventory.php; forms/Preferences/Inventory.php
 #, php-format
@@ -597,6 +597,10 @@ msgstr ""
 
 #: forms/Preferences/Inventory.php; forms/YesNo/DeleteComputer.php
 msgid "Delete interfaces from network listing"
+msgstr ""
+
+#: forms/Preferences/Inventory.php; views/scripts/computer/registry.phtml
+msgid "Manage inventoried values"
 msgstr ""
 
 #: forms/Preferences/NetworkScanning.php
@@ -1624,10 +1628,6 @@ msgstr ""
 
 #: views/scripts/computer/registry.phtml
 msgid "Registry Keys"
-msgstr ""
-
-#: views/scripts/computer/registry.phtml
-msgid "Manage inventoried values"
 msgstr ""
 
 #: views/scripts/computer/removepackage.phtml
