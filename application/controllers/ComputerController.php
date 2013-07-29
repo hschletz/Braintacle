@@ -71,11 +71,16 @@ class ComputerController extends Zend_Controller_Action
                 'Name,UserName,OsName,Type,CpuClock,PhysicalMemory,InventoryDate'
             )
         );
+        // Join columns that have been split at an escaped comma
+        $columns = $this->_decodeColumns($columns);
 
-        $this->view->columns = $columns;
-
+        // unescape backslashes
+        $this->view->columns = array();
+        foreach ($columns as $column) {
+            $this->view->columns[] = strtr($column, array('\\\\' => '\\'));
+        }
         $this->view->computers = Model_Computer::createStatementStatic(
-            $columns,
+            $this->view->columns,
             $this->view->order,
             $this->view->direction,
             $filter,
@@ -322,9 +327,11 @@ class ComputerController extends Zend_Controller_Action
             if ($form->isValid($_POST)) {
                 // Request minimal column list and add columns for pattern or inverted searches
                 $columns = array('Name', 'UserName', 'InventoryDate');
+                $encoder = new Braintacle_Filter_ColumnListEncode;
                 if ($form->getValue('invert') or !$form->getValue('exact')) {
-                    if (!in_array($form->getValue('filter'), $columns)) {
-                        $columns[] = $form->getValue('filter');
+                    $filter = $encoder->filter($form->getValue('filter'));
+                    if (!in_array($filter, $columns)) {
+                        $columns[] = $filter;
                     }
                 }
 
@@ -450,4 +457,33 @@ class ComputerController extends Zend_Controller_Action
         return $params;
     }
 
+    /**
+     * @ignore
+     * This is called as part of the decoding process for comma-separated column
+     * lists.
+     * @param array $columns List parts, result from explode()ing the list
+     * @return array List parts with reconstructed commas, but literal backslashes still escaped.
+     */
+    protected function _decodeColumns($columns)
+    {
+        foreach ($columns as $index => $column) {
+            // Check for trailing backslashes
+            if (preg_match('#(\\\\+)$#', $column, $matches)) {
+                // If the number of trailing backslashes is odd, the last
+                // backslash escapes a comma. All other backslashes in this
+                // block are escaped backslashes (\\).
+                if (strlen($matches[1]) % 2) {
+                    // Strip only the last backslash, add the comma that got
+                    // swallowed by explode() and concatenate the next element
+                    // which is part of the original string.
+                    $columns[$index] = substr($column, 0, -1) . ',' . $columns[$index + 1];
+                    unset($columns[$index + 1]);
+                    // Try again with rearranged consecutive indices.
+                    return $this->_decodeColumns(array_values($columns));
+                }
+            }
+        }
+        // No more concatenation to be done. Return original array.
+        return $columns;
+    }
 }

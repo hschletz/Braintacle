@@ -29,6 +29,9 @@ New features:
 
 Fixed bugs:
 
+- Console: Fixed error when displaying userdefined columns with names containing
+  commas.
+
 - Console: Fixed nonstandard (ZF-Style) URL parameter syntax in navigation and
   redirect URLs.
 
