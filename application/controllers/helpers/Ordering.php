@@ -41,7 +41,9 @@ class Zend_Controller_Action_Helper_Ordering
         // validate input and provide defaults if necessary
         $validators = array(
             'order' => array(
-                new Zend_Validate_Regex('/^[a-z_\.]+$/i'),
+                new Zend_Validate_NotEmpty(
+                    Zend_Validate_NotEmpty::STRING + Zend_Validate_NotEmpty::NULL
+                ),
                 'default' => $defaultOrder,
             ),
             'direction' => array(
