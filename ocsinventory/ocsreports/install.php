@@ -11,10 +11,10 @@
 //Modified on $Date: 2008-03-04 17:07:55 $$Author: dliroulet $($Revision: 1.19 $)
 
 // This script should not be used.
-die('Installation of ocsreports is incomplete. Refer to manual installation instructions (README.Braintacle.html).');
+die('Installation of ocsreports is incomplete. Refer to manual installation instructions (ocsinventory/README.html).');
 
 @set_time_limit(0); 
-error_reporting(E_ALL);
+error_reporting(E_ALL ^ E_STRICT);
 require_once ('require/function_mdb2.php');
 require_once ('require/function_misc.php');
 set_include_path(get_include_path() . PATH_SEPARATOR . '../../library');

@@ -19,7 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-error_reporting (E_ALL); // to reveal migration issues (and far more bugs in the original code...)
+error_reporting (E_ALL ^ E_STRICT); // to reveal migration issues (and far more bugs in the original code...)
 
 // The (depreceated) magic_quotes_* feature may interfere with this code.
 if (ini_get ('magic_quotes_gpc'))

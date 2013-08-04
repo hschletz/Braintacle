@@ -24,7 +24,7 @@ function getmicrotime(){
     return ((float)$usec + (float)$sec);
 }
 $debut = getmicrotime();
-error_reporting(E_ALL);
+error_reporting(E_ALL ^ E_STRICT);
 
 require("fichierConf.class.php");
 require('req.class.php');

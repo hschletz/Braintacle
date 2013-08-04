@@ -16,7 +16,7 @@ if(!defined('INC'))
 die('FORBIDDEN');
 
 
-error_reporting(E_ALL);
+error_reporting(E_ALL ^ E_STRICT);
 @set_time_limit(0);
 @session_start();
 

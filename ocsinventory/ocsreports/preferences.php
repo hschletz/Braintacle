@@ -10,7 +10,7 @@
 //====================================================================================
 //Modified on $Date: 2008-06-18 13:26:31 $$Author: airoine $($Revision: 1.35 $)
 
-error_reporting(E_ALL);
+error_reporting(E_ALL ^ E_STRICT);
 @session_start();
 require('dbconfig.inc.php');
 require_once ('fichierConf.class.php');
@@ -623,6 +623,7 @@ function ShowResults($req,$sortable=true,$modeCu=false,$modeRedon=false,$deletab
 			
 		foreach ($result->getColumnNames(true) as $col_name) // recover all column names
 		{
+                        $colname = new stdClass;
 			$colname->name = $col_name; // create dummy object to avoid too many code adaptions
 			if($colname->name!="h.id"&&$colname->name!="deviceid")
 			{							
