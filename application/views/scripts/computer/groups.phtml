@@ -64,7 +64,7 @@ function renderMembership($view, $membership)
 }
 
 $table = $this->getHelper('table')->table(
-    $computer->getGroups(
+    $computer->getGroupMemberships(
         Model_GroupMembership::TYPE_INCLUDED,
         $this->order,
         $this->direction

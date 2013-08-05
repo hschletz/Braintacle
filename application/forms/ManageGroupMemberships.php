@@ -68,7 +68,7 @@ class Form_ManageGroupMemberships extends Zend_Form
         );
 
         // Get a list of computer's memberships to be used as defaults for radio buttons
-        $memberships = $computer->getGroups(Model_GroupMembership::TYPE_ALL);
+        $memberships = $computer->getGroupMemberships(Model_GroupMembership::TYPE_ALL);
         $defaults = array();
         while ($membership = $memberships->fetchObject('Model_GroupMembership')) {
             $defaults[$membership->getGroupId()] = $membership->getMembership();

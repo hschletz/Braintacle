@@ -1731,7 +1731,7 @@ class Model_Computer extends Model_ComputerOrGroup
                 // me somewhat unpredictable.
                 $groupList = array();
                 foreach ($computers as $computer) {
-                    $groups = $computer->getGroups(Model_GroupMembership::TYPE_MANUAL, null);
+                    $groups = $computer->getGroupMemberships(Model_GroupMembership::TYPE_MANUAL, null);
                     while ($group = $groups->fetchObject('Model_GroupMembership')) {
                         $groupList[$group->getGroupId()] = $group->getMembership();
                     }
@@ -1818,7 +1818,7 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string $direction Direction to sort by
      * @return Zend_Db_Statement
      */
-    public function getGroups(
+    public function getGroupMemberships(
         $membership=Model_GroupMembership::TYPE_INCLUDED,
         $order='GroupName',
         $direction='asc'
