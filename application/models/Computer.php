@@ -1987,7 +1987,7 @@ class Model_Computer extends Model_ComputerOrGroup
                 case 'DownloadTimeout':
                     // Get smallest value from groups
                     foreach ($groupValues as $groupValue) {
-                        if ($value === null or $groupValue < $value) {
+                        if ($value === null or ($groupValue !== null and $groupValue < $value)) {
                             $value = $groupValue;
                         }
                     }
