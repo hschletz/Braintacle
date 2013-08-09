@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-24 10:04+0200\n"
+"POT-Creation-Date: 2013-08-09 12:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -90,15 +90,15 @@ msgstr ""
 msgid "Display"
 msgstr ""
 
-#: Bootstrap.php
+#: Bootstrap.php; forms/Configuration.php
 msgid "Agent"
 msgstr ""
 
-#: Bootstrap.php
+#: Bootstrap.php; forms/Configuration.php
 msgid "Download"
 msgstr ""
 
-#: Bootstrap.php
+#: Bootstrap.php; forms/Configuration.php
 msgid "Network scanning"
 msgstr ""
 
@@ -277,13 +277,71 @@ msgstr ""
 msgid "Group"
 msgstr ""
 
-#: forms/AddToGroup.php; forms/ManageGroupMemberships.php
-#: forms/NetworkDevice.php; forms/ProductKey.php; forms/Subnet.php
+#: forms/AddToGroup.php; forms/Configuration.php
+#: forms/ManageGroupMemberships.php; forms/NetworkDevice.php
+#: forms/ProductKey.php; forms/Subnet.php
 msgid "OK"
 msgstr ""
 
 #: forms/AffectPackages.php
 msgid "Install"
+msgstr ""
+
+#: forms/Configuration.php; forms/Preferences/Agent.php
+msgid "Agent contact interval (in hours)"
+msgstr ""
+
+#: forms/Configuration.php; forms/Preferences/Agent.php
+msgid "Inventory interval (in days, 0 = always, -1 = never)"
+msgstr ""
+
+#: forms/Configuration.php; forms/Preferences/Download.php
+msgid "Enable package download"
+msgstr ""
+
+#: forms/Configuration.php; forms/Preferences/Download.php
+msgid "Delay (in seconds) between periods"
+msgstr ""
+
+#: forms/Configuration.php; forms/Preferences/Download.php
+msgid "Delay (in seconds) between cycles"
+msgstr ""
+
+#: forms/Configuration.php; forms/Preferences/Download.php
+msgid "Delay (in seconds) between fragments"
+msgstr ""
+
+#: forms/Configuration.php; forms/Preferences/Download.php
+msgid ""
+"Maximum package priority (packages with higher value will not be downloaded)"
+msgstr ""
+
+#: forms/Configuration.php; forms/Preferences/Download.php
+msgid "Timeout (in days)"
+msgstr ""
+
+#: forms/Configuration.php
+msgid "Allow network scanning"
+msgstr ""
+
+#: forms/Configuration.php
+msgid "Always scan this network"
+msgstr ""
+
+#: forms/Configuration.php; forms/Preferences/NetworkScanning.php
+msgid "Use SNMP"
+msgstr ""
+
+#: forms/Configuration.php
+msgid "Default"
+msgstr ""
+
+#: forms/Configuration.php; forms/YesNo.php
+msgid "Yes"
+msgstr ""
+
+#: forms/Configuration.php; forms/YesNo.php
+msgid "No"
 msgstr ""
 
 #: forms/DefineFields.php
@@ -493,14 +551,6 @@ msgid "Some settings are discouraged and should be changed."
 msgstr ""
 
 #: forms/Preferences/Agent.php
-msgid "Agent contact interval (in hours)"
-msgstr ""
-
-#: forms/Preferences/Agent.php
-msgid "Inventory interval (in days, 0 = always, -1 = never)"
-msgstr ""
-
-#: forms/Preferences/Agent.php
 msgid "Automatic agent deployment (deprecated)"
 msgstr ""
 
@@ -514,31 +564,6 @@ msgstr ""
 
 #: forms/Preferences/Display.php
 msgid "Display ignored software"
-msgstr ""
-
-#: forms/Preferences/Download.php
-msgid "Enable package download"
-msgstr ""
-
-#: forms/Preferences/Download.php
-msgid "Delay (in seconds) between periods"
-msgstr ""
-
-#: forms/Preferences/Download.php
-msgid "Delay (in seconds) between cycles"
-msgstr ""
-
-#: forms/Preferences/Download.php
-msgid "Delay (in seconds) between fragments"
-msgstr ""
-
-#: forms/Preferences/Download.php
-msgid ""
-"Maximum package priority (packages with higher value will not be downloaded)"
-msgstr ""
-
-#: forms/Preferences/Download.php
-msgid "Timeout (in days)"
 msgstr ""
 
 #: forms/Preferences/Filters.php
@@ -605,10 +630,6 @@ msgstr ""
 
 #: forms/Preferences/NetworkScanning.php
 msgid "Number of scanning computers per subnet"
-msgstr ""
-
-#: forms/Preferences/NetworkScanning.php
-msgid "Use SNMP"
 msgstr ""
 
 #: forms/Preferences/NetworkScanning.php
@@ -1089,14 +1110,6 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-#: forms/YesNo.php
-msgid "Yes"
-msgstr ""
-
-#: forms/YesNo.php
-msgid "No"
-msgstr ""
-
 #: layouts/layout.phtml
 msgid "Logout"
 msgstr ""
@@ -1245,6 +1258,10 @@ msgstr ""
 
 #: views/helpers/GroupHeader.php
 msgid "Excluded"
+msgstr ""
+
+#: views/helpers/GroupHeader.php; views/helpers/InventoryHeader.php
+msgid "Configuration"
 msgstr ""
 
 #: views/helpers/InventoryHeader.php

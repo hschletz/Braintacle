@@ -164,6 +164,13 @@ class Zend_View_Helper_InventoryHeader extends Zend_View_Helper_Abstract
         $navigation->addPage($page);
 
         $page = new Zend_Navigation_Page_Mvc;
+        $page->setLabel('Configuration')
+             ->setController('computer')
+             ->setAction('configuration')
+             ->setParams($id);
+        $navigation->addPage($page);
+
+        $page = new Zend_Navigation_Page_Mvc;
         $page->setLabel('Export')
              ->setController('computer')
              ->setAction('export')

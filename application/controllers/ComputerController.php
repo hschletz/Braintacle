@@ -216,6 +216,23 @@ class ComputerController extends Zend_Controller_Action
         $this->_helper->ordering('GroupName');
     }
 
+    public function configurationAction()
+    {
+        $form = new Form_Configuration(array('object' => $this->computer));
+        if ($this->getRequest()->isPost()) {
+            if ($form->isValid($_POST)) {
+                $form->process();
+                $this->_helper->redirector(
+                    'configuration',
+                    'computer',
+                    null,
+                    array('id' => $this->computer->getId())
+                );
+            }
+        }
+        $this->view->form = $form;
+    }
+
     public function deleteAction()
     {
         $form = new Form_YesNo_DeleteComputer;

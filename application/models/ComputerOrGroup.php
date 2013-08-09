@@ -33,6 +33,17 @@
  */
 abstract class Model_ComputerOrGroup extends Model_Abstract
 {
+    /**
+     * @internal
+     * Scan value in 'devices' table
+     */
+    const SCAN_DISABLED = 0;
+
+    /**
+     * @internal
+     * Scan value in 'devices' table
+     */
+    const SCAN_EXPLICIT = 2;
 
     /**
      * Timestamp when a lock held by this instance will expire
@@ -299,4 +310,178 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
         }
     }
 
+    /**
+     * Get stored item-specific configuration value
+     *
+     * Returns configuration values stored for this computer or group. If no
+     * explicit configuration is stored, NULL is returned. Note that a returned
+     * setting is not necessarily in effect - it may be overridden
+     * somewhere else.
+     *
+     * Any valid option name can be passed for $option, though most options have
+     * no item-specific setting and would always return NULL. In addition to the
+     * options defined in Model_Config, the following options are available:
+     *
+     * - **AllowScan:** If 0, prevents this computer or group from scanning any
+     *                  networks.
+     * - **ScanThisNetwork:** Causes a computer to always scan networks with the
+     *                        given address (not taking a network mask into
+     *                        account), overriding the server's automatic
+     *                        choice.
+     *
+     * PackageDeployment, AllowScan and ScanSnmp are never evaluated if disabled
+     * globally or by groups of which a computer is a member. For this reason,
+     * these options can only be 0 (explicitly disabled if enabled on a higher
+     * level) or NULL (inherit behavior) but never 1 - that would be the same as
+     * NULL. It is not possible to enable this if disabled on a higher level.
+     *
+     * @param string $option Option name
+     * @return mixed Stored value or NULL
+     */
+    public function getConfig($option)
+    {
+        $column = 'ivalue';
+        switch ($option) {
+            case 'PackageDeployment':
+                $name = 'DOWNLOAD_SWITCH'; // differs from global option
+                break;
+            case 'AllowScan':
+                $name = 'IPDISCOVER';
+                $ivalue = self::SCAN_DISABLED;
+                break;
+            case 'ScanThisNetwork':
+                $name = 'IPDISCOVER';
+                $ivalue = self::SCAN_EXPLICIT;
+                $column = 'tvalue';
+                break;
+            case 'ScanSnmp':
+                $name = 'SNMP_SWITCH'; // differs from global option
+                break;
+            default:
+                $name = Model_Config::getOcsOptionName($option);
+        }
+        $select = Model_Database::getAdapter()
+                  ->select()
+                  ->from('devices', $column)
+                  ->where('hardware_id = ?', $this->getId())
+                  ->where('name = ?', $name);
+        if (isset($ivalue)) {
+            $select->where('ivalue = ?', $ivalue);
+        }
+        $value = $select->query()->fetch();
+        if ($value) {
+            $value = $value->$column;
+        } else {
+            $value = null;
+        }
+        return $this->_normalizeConfig($option, $value);
+    }
+
+    /**
+     * Store item-specific configuration value
+     *
+     * See getConfig() for available options. Note that a stored setting is not
+     * necessarily in effect - it may be overridden somewhere else.
+     *
+     * @param string $option Option name
+     * @param mixed $value Value to store, NULL to reset to default
+     */
+    public function setConfig($option, $value)
+    {
+        $db = Model_Database::getAdapter();
+
+        // Determine 'name' column in the 'devices' table
+        if ($option == 'AllowScan' or $option == 'ScanThisNetwork') {
+            $name = 'IPDISCOVER';
+        } else {
+            $name = Model_Config::getOcsOptionName($option);
+            if ($option == 'PackageDeployment' or $option == 'ScanSnmp') {
+                $name .= '_SWITCH';
+            }
+        }
+
+        $value = $this->_normalizeConfig($option, $value);
+
+        // Set affected columns
+        if ($option == 'ScanThisNetwork') {
+            $columns = array(
+                'ivalue' => self::SCAN_EXPLICIT,
+                'tvalue' => $value
+            );
+        } else {
+            $columns = array('ivalue' => $value);
+        }
+
+        // Filter for delete()/update()
+        $condition = array(
+            'hardware_id = ?' => $this->getId(),
+            'name = ?' => $name,
+        );
+
+        $db->beginTransaction();
+        if ($value === null) {
+            // Unset option
+            if ($name == 'IPDISCOVER') {
+                // Also check ivalue to prevent accidental deletion of unrelated setting
+                $condition['ivalue = ?'] = ($option == 'AllowScan') ? self::SCAN_DISABLED : self::SCAN_EXPLICIT;
+            }
+            $db->delete('devices', $condition);
+        } else {
+            $oldValue = $this->getConfig($option);
+            if ($oldValue === null) {
+                // Not set yet, insert new record
+                if ($name == 'IPDISCOVER') {
+                    // There may already be an IPDISCOVER record with a
+                    // different ivalue. Since these are mutually exclusive
+                    // (at most 1 IPDISCOVER record per object), this must be
+                    // deleted first.
+                    $db->delete('devices', $condition);
+                }
+                $columns['hardware_id'] = $this->getId();
+                $columns['name'] = $name;
+                $db->insert('devices', $columns);
+            } elseif ($oldValue != $value) {
+                // Already set to a different value, update recort
+                $db->update('devices', $columns, $condition);
+            }
+        }
+        $db->commit();
+    }
+
+    /**
+     * Get default configuration value
+     *
+     * This method returns the default setting for an option that overrides or
+     * gets overriden by this object's setting. For groups, this is the global
+     * setting. For Computers, it is determined from the global setting and/or
+     * all groups of which the computer is a member.
+     *
+     * @param string $option Option name
+     * @return void
+     */
+    abstract public function getDefaultConfig($option);
+
+    /**
+     * Process config value before or after daterbase interaction
+     *
+     * @param string $option Option name
+     * @param mixed $value Raw value
+     * @return mixed Normalized value
+     */
+    protected function _normalizeConfig($option, $value)
+    {
+        if ($option == 'PackageDeployment' or
+            $option == 'ScanSnmp' or
+            $option == 'AllowScan'
+        ) {
+            // These options are only evaluated if their default setting is
+            // enabled, i.e. they only have an effect if they get disabled.
+            // To keep things clearer in the database, the option is unset if
+            // enabled, with the same effect (i.e. none).
+            if ($value) {
+                $value = null;
+            }
+        }
+        return $value;
+    }
 }

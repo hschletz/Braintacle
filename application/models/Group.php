@@ -625,4 +625,19 @@ class Model_Group extends Model_ComputerOrGroup
 
         return self::fetchById($id);
     }
+
+    /** {@inheritdoc} */
+    public function getDefaultConfig($option)
+    {
+        if ($option == 'AllowScan') {
+            if (Model_Config::get('ScannersPerSubnet') == 0) {
+                $value = 0;
+            } else {
+                $value = 1;
+            }
+        } else {
+            $value = Model_Config::get($option);
+        }
+        return $value;
+    }
 }

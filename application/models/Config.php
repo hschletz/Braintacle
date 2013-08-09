@@ -83,16 +83,14 @@ class Model_Config
         'CommunicationServerAddress' => 'LOCAL_SERVER', // DEPRECATED: Hostname/address of communication server
         'CommunicationServerPort' => 'LOCAL_PORT', // DEPRECATED: Port number of communication server
         'CommunicationServerUri' => 'LOCAL_URI_SERVER', // URI of communication server
+        'UseGroups' => 'ENABLE_GROUPS', // Use group feature
         // Options below this point are used by the communication server only.
         // Braintacle only uses them in the preferences dialogs.
-        'UseGroups' => 'ENABLE_GROUPS', // Use group feature
         'SetGroupPackageStatus' => 'DOWNLOAD_GROUPS_TRACE_EVENTS', // Set computer status for group-assigned packages
         'InspectRegistry' => 'REGISTRY', // Turn inventory of configured registry keys on or off
         'AgentDeployment' => 'DEPLOY', // DEPRECATED: Turn automatic agent deployment on or off
         'AgentUpdate' => 'UPDATE', // DEPRECATED: Turn automatic agent update on or off
-        'PackageDeployment' => 'DOWNLOAD', // Turn package deployment on or off
         'ScannersPerSubnet' => 'IPDISCOVER', // Maximum number of computers per subnet used for scanning
-        'ScanSnmp' => 'SNMP', // Use SNMP for scanning
         'ScannerMinDays' => 'IPDISCOVER_BETTER_THRESHOLD', // Minimum days (>=1) before a scanning computer is replaced
         'ScannerMaxDays' => 'IPDISCOVER_MAX_ALIVE', // Maximum days (>=1) before a computer is replaced for scanning
         'ScanAlways' => 'IPDISCOVER_NO_POSTPONE', // Scan immediately, even if no computer qualifies for scanning
@@ -126,11 +124,13 @@ class Model_Config
         // computers or groups.
         'ContactInterval' => 'PROLOG_FREQ', // Hours between agent contacts (>=1)
         'InventoryInterval' => 'FREQUENCY', // Days between inventory. 0=always, -1=never
+        'PackageDeployment' => 'DOWNLOAD', // Turn package deployment on or off
         'DownloadPeriodDelay' => 'DOWNLOAD_PERIOD_LATENCY', // Delay in seconds (>=1) between 2 download periods
         'DownloadCycleDelay' => 'DOWNLOAD_CYCLE_LATENCY', // Delay in seconds (>=1) between 2 download cycles
         'DownloadFragmentDelay' => 'DOWNLOAD_FRAG_LATENCY', // Delay in seconds (>=1) between 2 fragment downloads
         'DownloadMaxPriority' => 'DOWNLOAD_PERIOD_LENGTH', // Maximum priority (0-10) of downloadable packages
         'DownloadTimeout' => 'DOWNLOAD_TIMEOUT', // Download timeout in days (>=1)
+        'ScanSnmp' => 'SNMP', // Use SNMP for scanning
     );
 
     /**

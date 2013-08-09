@@ -1955,4 +1955,74 @@ class Model_Computer extends Model_ComputerOrGroup
             $this->getId()
         );
     }
+
+    /** {@inheritdoc} */
+    public function getDefaultConfig($option)
+    {
+        if ($option == 'AllowScan') {
+            if (Model_Config::get('ScannersPerSubnet') == 0) {
+                $value = 0;
+            } else {
+                $value = 1;
+            }
+        } else {
+            $value = null;
+        }
+        // Get default from groups if enabled. For AllowScan,
+        // ScanningConfigurationInGroups is checked in addition to UseGroups.
+        if (Model_Config::get('UseGroups') and
+            !($option == 'AllowScan' and !Model_Config::get('ScanningConfigurationInGroups'))
+        ) {
+            $groupValues = array();
+            $memberships = $this->getGroupMemberships();
+            while ($membership = $memberships->fetchObject('Model_GroupMembership')) {
+                $group = new Model_Group;
+                $group->setId($membership->getGroupId());
+                $groupValues[] = $group->getConfig($option);
+            }
+            switch ($option) {
+                case 'InventoryInterval':
+                case 'ContactInterval':
+                case 'DownloadMaxPriority':
+                case 'DownloadTimeout':
+                    // Get smallest value from groups
+                    foreach ($groupValues as $groupValue) {
+                        if ($value === null or $groupValue < $value) {
+                            $value = $groupValue;
+                        }
+                    }
+                    break;
+                case 'DownloadPeriodDelay':
+                case 'DownloadCycleDelay':
+                case 'DownloadFragmentDelay':
+                    // Get largest value from groups
+                    foreach ($groupValues as $groupValue) {
+                        if ($groupValue > $value) {
+                            $value = $groupValue;
+                        }
+                    }
+                    break;
+                case 'PackageDeployment':
+                case 'ScanSnmp':
+                case 'AllowScan':
+                    // 0 if global setting or any group setting is 0, otherwise 1.
+                    if ($option != 'AllowScan') { // already initialized for AllowScan
+                        $value = Model_Config::get($option);
+                    }
+                    if ($value) {
+                        foreach ($groupValues as $groupValue) {
+                            if ($groupValue === 0) {
+                                $value = 0;
+                                break;
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
+        if ($value === null) {
+            $value = Model_Config::get($option);
+        }
+        return $value;
+    }
 }

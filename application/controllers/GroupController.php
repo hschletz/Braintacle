@@ -182,6 +182,23 @@ class GroupController extends Zend_Controller_Action
         }
     }
 
+    public function configurationAction()
+    {
+        $form = new Form_Configuration(array('object' => $this->group));
+        if ($this->getRequest()->isPost()) {
+            if ($form->isValid($_POST)) {
+                $form->process();
+                $this->_helper->redirector(
+                    'configuration',
+                    'group',
+                    null,
+                    array('id' => $this->group->getId())
+                );
+            }
+        }
+        $this->view->form = $form;
+    }
+
     public function deleteAction()
     {
         $form = new Form_YesNo;

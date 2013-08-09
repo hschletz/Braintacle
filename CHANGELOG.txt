@@ -6,6 +6,16 @@ without any warranty.
 ====================================================================
 
 
+CHANGES IN VERSION 0.13
+=======================
+
+New features:
+
+- Console: Added individual configuration for computers and groups (via the
+  "Configuration" button). Note that some options are not shown if they are
+  disabled globally or in a group of which a computer is a member.
+
+
 CHANGES IN VERSION 0.12
 =======================
 

@@ -22,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-24 10:04+0200\n"
-"PO-Revision-Date: 2013-06-10 18:48+0200\n"
+"POT-Creation-Date: 2013-08-09 12:36+0200\n"
+"PO-Revision-Date: 2013-08-09 12:37+0200\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -34,16 +34,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: Bootstrap.php
-msgid "Agent"
-msgstr "Agent"
-
-#: Bootstrap.php
 msgid "Computers"
 msgstr "Computer"
-
-#: Bootstrap.php
-msgid "Download"
-msgstr "Download"
 
 #: Bootstrap.php
 msgid "Duplicates"
@@ -62,10 +54,6 @@ msgid "Licenses"
 msgstr "Lizenzen"
 
 #: Bootstrap.php
-msgid "Network scanning"
-msgstr "Netzwerk-Scans"
-
-#: Bootstrap.php
 msgid "Overview"
 msgstr "Übersicht"
 
@@ -81,6 +69,10 @@ msgstr "Rohdaten"
 msgid "Users"
 msgstr "Benutzer"
 
+#: Bootstrap.php; forms/Configuration.php
+msgid "Agent"
+msgstr "Agent"
+
 #: Bootstrap.php; forms/Package.php
 msgid "Build"
 msgstr "Erstellen"
@@ -88,6 +80,10 @@ msgstr "Erstellen"
 #: Bootstrap.php; views/helpers/InventoryHeader.php
 msgid "Display"
 msgstr "Anzeige"
+
+#: Bootstrap.php; forms/Configuration.php
+msgid "Download"
+msgstr "Download"
 
 #: Bootstrap.php; forms/Package/Edit.php forms/Preferences/Packages.php;
 #: views/helpers/InventoryHeader.php
@@ -101,6 +97,10 @@ msgstr "Import"
 #: Bootstrap.php; views/helpers/InventoryHeader.php
 msgid "Network"
 msgstr "Netzwerk"
+
+#: Bootstrap.php; forms/Configuration.php
+msgid "Network scanning"
+msgstr "Netzwerk-Scans"
 
 #: Bootstrap.php; views/helpers/GroupHeader.php
 #: views/helpers/InventoryHeader.php
@@ -272,14 +272,74 @@ msgstr "Gruppe"
 msgid "Name"
 msgstr "Name"
 
-#: forms/AddToGroup.php; forms/ManageGroupMemberships.php
-#: forms/NetworkDevice.php; forms/ProductKey.php; forms/Subnet.php
+#: forms/AddToGroup.php; forms/Configuration.php
+#: forms/ManageGroupMemberships.php; forms/NetworkDevice.php
+#: forms/ProductKey.php; forms/Subnet.php
 msgid "OK"
 msgstr "OK"
 
 #: forms/AffectPackages.php
 msgid "Install"
 msgstr "Installieren"
+
+#: forms/Configuration.php
+msgid "Allow network scanning"
+msgstr "Netzwerk-Scans erlauben"
+
+#: forms/Configuration.php
+msgid "Always scan this network"
+msgstr "Dieses Netzwerk immer scannen"
+
+#: forms/Configuration.php
+msgid "Default"
+msgstr "Standard"
+
+#: forms/Configuration.php; forms/Preferences/Agent.php
+msgid "Agent contact interval (in hours)"
+msgstr "Agenten-Kontaktintervall (in Stunden)"
+
+#: forms/Configuration.php; forms/Preferences/Download.php
+msgid "Delay (in seconds) between cycles"
+msgstr "Pause (in Sekunden) zwischen Zyklen"
+
+#: forms/Configuration.php; forms/Preferences/Download.php
+msgid "Delay (in seconds) between fragments"
+msgstr "Pause (in Sekunden) zwischen Fragmenten"
+
+#: forms/Configuration.php; forms/Preferences/Download.php
+msgid "Delay (in seconds) between periods"
+msgstr "Pause (in Sekunden) zwischen Perioden"
+
+#: forms/Configuration.php; forms/Preferences/Download.php
+msgid "Enable package download"
+msgstr "Download von Paketen aktivieren"
+
+#: forms/Configuration.php; forms/Preferences/Agent.php
+msgid "Inventory interval (in days, 0 = always, -1 = never)"
+msgstr "Inventar-Intervall (in Tagen, 0 = immer, -1 = nie)"
+
+#: forms/Configuration.php; forms/Preferences/Download.php
+msgid ""
+"Maximum package priority (packages with higher value will not be downloaded)"
+msgstr ""
+"Maximale Paket-Priorität (Pakete mit höherem Wert werden nicht herunter "
+"geladen)"
+
+#: forms/Configuration.php; forms/YesNo.php
+msgid "No"
+msgstr "Nein"
+
+#: forms/Configuration.php; forms/Preferences/Download.php
+msgid "Timeout (in days)"
+msgstr "Timeout (in Tagen)"
+
+#: forms/Configuration.php; forms/Preferences/NetworkScanning.php
+msgid "Use SNMP"
+msgstr "SNMP verwenden"
+
+#: forms/Configuration.php; forms/YesNo.php
+msgid "Yes"
+msgstr "Ja"
 
 #: forms/DefineFields.php
 msgid "Float"
@@ -482,10 +542,6 @@ msgid "Some settings are discouraged and should be changed."
 msgstr "Einige Einstellungen sind nicht empfohlen und sollten geändert werden."
 
 #: forms/Preferences/Agent.php
-msgid "Agent contact interval (in hours)"
-msgstr "Agenten-Kontaktintervall (in Stunden)"
-
-#: forms/Preferences/Agent.php
 msgid "Automatic agent deployment (deprecated)"
 msgstr "Automatische Agentenverteilung (veraltet)"
 
@@ -497,40 +553,9 @@ msgstr "Automatische Agentenaktualisierung (veraltet)"
 msgid "File with allowed non-OCS agents (FusionInventory etc.)"
 msgstr "Datei mit erlaubten nicht-OCS-Agenten (FusionInventory etc.)"
 
-#: forms/Preferences/Agent.php
-msgid "Inventory interval (in days, 0 = always, -1 = never)"
-msgstr "Inventar-Intervall (in Tagen, 0 = immer, -1 = nie)"
-
 #: forms/Preferences/Display.php
 msgid "Display ignored software"
 msgstr "Ignorierte Software anzeigen"
-
-#: forms/Preferences/Download.php
-msgid "Delay (in seconds) between cycles"
-msgstr "Pause (in Sekunden) zwischen Zyklen"
-
-#: forms/Preferences/Download.php
-msgid "Delay (in seconds) between fragments"
-msgstr "Pause (in Sekunden) zwischen Fragmenten"
-
-#: forms/Preferences/Download.php
-msgid "Delay (in seconds) between periods"
-msgstr "Pause (in Sekunden) zwischen Perioden"
-
-#: forms/Preferences/Download.php
-msgid "Enable package download"
-msgstr "Download von Paketen aktivieren"
-
-#: forms/Preferences/Download.php
-msgid ""
-"Maximum package priority (packages with higher value will not be downloaded)"
-msgstr ""
-"Maximale Paket-Priorität (Pakete mit höherem Wert werden nicht herunter "
-"geladen)"
-
-#: forms/Preferences/Download.php
-msgid "Timeout (in days)"
-msgstr "Timeout (in Tagen)"
 
 #: forms/Preferences/Filters.php
 msgid "Enable customized inventory processing (discouraged)"
@@ -612,10 +637,6 @@ msgstr "Minimale Anzahl Tage bevor ein Scan-Computer ersetzt wird"
 #: forms/Preferences/NetworkScanning.php
 msgid "Number of scanning computers per subnet"
 msgstr "Anzahl der Scan-Computer pro Subnetz"
-
-#: forms/Preferences/NetworkScanning.php
-msgid "Use SNMP"
-msgstr "SNMP verwenden"
 
 #: forms/Preferences/NetworkScanning.php
 msgid "Use configuration in groups"
@@ -1071,14 +1092,6 @@ msgstr "neu oder nicht kategorisiert"
 msgid "selected for display"
 msgstr "für Anzeige ausgewählt"
 
-#: forms/YesNo.php
-msgid "No"
-msgstr "Nein"
-
-#: forms/YesNo.php
-msgid "Yes"
-msgstr "Ja"
-
 #: layouts/layout.phtml
 msgid "Logout"
 msgstr "Abmelden"
@@ -1227,6 +1240,10 @@ msgstr "Ausgeschlossen"
 #: views/helpers/GroupHeader.php
 msgid "Members"
 msgstr "Mitglieder"
+
+#: views/helpers/GroupHeader.php; views/helpers/InventoryHeader.php
+msgid "Configuration"
+msgstr "Konfiguration"
 
 #: views/helpers/GroupHeader.php; views/helpers/InventoryHeader.php
 msgid "General"
