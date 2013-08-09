@@ -49,7 +49,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
      * Timestamp when a lock held by this instance will expire
      * @var Zend_Date
      */
-   private $_lockTimeout;
+    private $_lockTimeout;
 
 
     /**
