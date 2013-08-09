@@ -46,6 +46,13 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
     const SCAN_EXPLICIT = 2;
 
     /**
+     * Global cache for getConfig() results
+     *
+     * This is a 2-dimensional array: $_config[computer/group ID][option name] = value
+     */
+    protected static $_config = array();
+
+    /**
      * Timestamp when a lock held by this instance will expire
      * @var Zend_Date
      */
@@ -340,6 +347,11 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
      */
     public function getConfig($option)
     {
+        $id = $this->getId();
+        if (isset(self::$_config[$id]) and array_key_exists($option, self::$_config[$id])) {
+            return self::$_config[$id][$option];
+        }
+
         $column = 'ivalue';
         switch ($option) {
             case 'PackageDeployment':
@@ -374,7 +386,10 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
         } else {
             $value = null;
         }
-        return $this->_normalizeConfig($option, $value);
+        $value = $this->_normalizeConfig($option, $value);
+
+        self::$_config[$id][$option] = $value;
+        return $value;
     }
 
     /**
@@ -446,6 +461,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
             }
         }
         $db->commit();
+        self::$_config[$this->getId()][$option] = $value;
     }
 
     /**

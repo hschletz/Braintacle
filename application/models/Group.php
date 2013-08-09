@@ -105,6 +105,13 @@ class Model_Group extends Model_ComputerOrGroup
         'CacheCreationDate' => 'timestamp',
     );
 
+    /**
+     * Global cache for getDefaultConfig() results
+     *
+     * This is a 2-dimensional array: $_configDefault[group ID][option name] = value
+     */
+    protected static $_configDefault = array();
+
 
     /**
      * Return a statement object with all groups
@@ -629,6 +636,11 @@ class Model_Group extends Model_ComputerOrGroup
     /** {@inheritdoc} */
     public function getDefaultConfig($option)
     {
+        $id = $this->getId();
+        if (isset(self::$_configDefault[$id]) and array_key_exists($option, self::$_configDefault[$id])) {
+            return self::$_configDefault[$id][$option];
+        }
+
         if ($option == 'AllowScan') {
             if (Model_Config::get('ScannersPerSubnet') == 0) {
                 $value = 0;
@@ -638,6 +650,8 @@ class Model_Group extends Model_ComputerOrGroup
         } else {
             $value = Model_Config::get($option);
         }
+
+        self::$_configDefault[$id][$option] = $value;
         return $value;
     }
 }

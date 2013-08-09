@@ -168,6 +168,20 @@ class Model_Computer extends Model_ComputerOrGroup
     public $windows;
 
     /**
+     * Global group cache used within getDefaultConfig()
+     *
+     * This is a 2-dimensional array: $_configGroups[computer ID][n] = group
+     */
+    protected static $_configGroups = array();
+
+    /**
+     * Global cache for getDefaultConfig() results
+     *
+     * This is a 2-dimensional array: $_configDefault[computer ID][option name] = value
+     */
+    protected static $_configDefault = array();
+
+    /**
      * Raw properties of child objects from joined queries.
      * @var array
      */
@@ -1959,6 +1973,11 @@ class Model_Computer extends Model_ComputerOrGroup
     /** {@inheritdoc} */
     public function getDefaultConfig($option)
     {
+        $id = $this->getId();
+        if (isset(self::$_configDefault[$id]) and array_key_exists($option, self::$_configDefault[$id])) {
+            return self::$_configDefault[$id][$option];
+        }
+
         if ($option == 'AllowScan') {
             if (Model_Config::get('ScannersPerSubnet') == 0) {
                 $value = 0;
@@ -1973,11 +1992,17 @@ class Model_Computer extends Model_ComputerOrGroup
         if (Model_Config::get('UseGroups') and
             !($option == 'AllowScan' and !Model_Config::get('ScanningConfigurationInGroups'))
         ) {
+            if (!isset(self::$_configGroups[$id])) {
+                self::$_configGroups[$id] = array();
+                $memberships = $this->getGroupMemberships();
+                while ($membership = $memberships->fetchObject('Model_GroupMembership')) {
+                    $group = new Model_Group;
+                    $group->setId($membership->getGroupId());
+                    self::$_configGroups[$id][] = $group;
+                }
+            }
             $groupValues = array();
-            $memberships = $this->getGroupMemberships();
-            while ($membership = $memberships->fetchObject('Model_GroupMembership')) {
-                $group = new Model_Group;
-                $group->setId($membership->getGroupId());
+            foreach (self::$_configGroups[$id] as $group) {
                 $groupValues[] = $group->getConfig($option);
             }
             switch ($option) {
@@ -2023,6 +2048,8 @@ class Model_Computer extends Model_ComputerOrGroup
         if ($value === null) {
             $value = Model_Config::get($option);
         }
+
+        self::$_configDefault[$id][$option] = $value;
         return $value;
     }
 }
