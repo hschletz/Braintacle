@@ -168,7 +168,7 @@ class Model_Computer extends Model_ComputerOrGroup
     public $windows;
 
     /**
-     * Global group cache used within getDefaultConfig()
+     * Global cache for _getConfigGroups() results
      *
      * This is a 2-dimensional array: $_configGroups[computer ID][n] = group
      */
@@ -180,6 +180,13 @@ class Model_Computer extends Model_ComputerOrGroup
      * This is a 2-dimensional array: $_configDefault[computer ID][option name] = value
      */
     protected static $_configDefault = array();
+
+    /**
+     * Global cache for getEffectiveConfig() results
+     *
+     * This is a 2-dimensional array: $_configEffective[computer ID][option name] = value
+     */
+    protected static $_configEffective = array();
 
     /**
      * Raw properties of child objects from joined queries.
@@ -1992,17 +1999,8 @@ class Model_Computer extends Model_ComputerOrGroup
         if (Model_Config::get('UseGroups') and
             !($option == 'AllowScan' and !Model_Config::get('ScanningConfigurationInGroups'))
         ) {
-            if (!isset(self::$_configGroups[$id])) {
-                self::$_configGroups[$id] = array();
-                $memberships = $this->getGroupMemberships();
-                while ($membership = $memberships->fetchObject('Model_GroupMembership')) {
-                    $group = new Model_Group;
-                    $group->setId($membership->getGroupId());
-                    self::$_configGroups[$id][] = $group;
-                }
-            }
             $groupValues = array();
-            foreach (self::$_configGroups[$id] as $group) {
+            foreach ($this->_getConfigGroups() as $group) {
                 $groupValues[] = $group->getConfig($option);
             }
             switch ($option) {
@@ -2063,5 +2061,120 @@ class Model_Computer extends Model_ComputerOrGroup
 
         self::$_configDefault[$id][$option] = $value;
         return $value;
+    }
+
+    /**
+     * Get effective configuration value
+     *
+     * This method returns the effective setting for an option. It is determined
+     * from this computer's individual setting, the global setting and/or all
+     * groups of which the computer is a member. The exact rules are:
+     *
+     * - PackageDeployment, AllowScan and ScanSnmp return 0 if the setting is
+     *   disabled either globally, for any group or for the computer,
+     *   otherwise 1.
+     * - For InventoryInterval, if the global setting is one of the special
+     *   values 0 or -1, this setting is returned. Otherwise, return the
+     *   smallest value of the group and computer setting. If this is undefined,
+     *   use global setting.
+     * - ContactInterval, DownloadMaxPriority and DownloadTimeout evaluate (in
+     *   that order): the computer setting, the smallest value of all group
+     *   settings and the global setting. The first non-null result is returned.
+     * - DownloadPeriodDelay, DownloadCycleDelay, DownloadFragmentDelay evaluate
+     *   (in that order): the computer setting, the largest value of all group
+     *   settings and the global setting. The first non-null result is returned.
+     * - For any other setting, the computer's configured value is evaluated via
+     *   getConfig().
+     *
+     * Group settings are only evaluated if the global UseGroups option is
+     * enabled. Additionally, AllowScan evaluates the global
+     * ScanningConfigurationInGroups option.
+     *
+     * @param string $option Option name
+     * @return mixed Effective value or NULL
+     */
+    public function getEffectiveConfig($option)
+    {
+        $id = $this->getId();
+        if (isset(self::$_configEffective[$id]) and array_key_exists($option, self::$_configEffective[$id])) {
+            return self::$_configEffective[$id][$option];
+        }
+
+        switch ($option) {
+            case 'InventoryInterval':
+                $value = Model_Config::get('InventoryInterval');
+                // Special values 0 and -1 always take precedence if configured
+                // globally.
+                if ($value >= 1) {
+                    // Get smallest value of computer and group settings
+                    $value = $this->getConfig('InventoryInterval');
+                    if (Model_Config::get('UseGroups')) {
+                        foreach ($this->_getConfigGroups() as $group) {
+                            $groupValue = $group->getConfig('InventoryInterval');
+                            if ($value === null or ($groupValue !== null and $groupValue < $value)) {
+                                $value = $groupValue;
+                            }
+                        }
+                    }
+                    // Fall back to global default if not set anywhere else
+                    if ($value === null) {
+                        $value = Model_Config::get('InventoryInterval');
+                    }
+                }
+                break;
+            case 'ContactInterval':
+            case 'DownloadPeriodDelay':
+            case 'DownloadCycleDelay':
+            case 'DownloadFragmentDelay':
+            case 'DownloadMaxPriority':
+            case 'DownloadTimeout':
+                // Computer value takes precedence.
+                $value = $this->getConfig($option);
+                if ($value === null) {
+                    $value = $this->getDefaultConfig($option);
+                }
+                break;
+            case 'PackageDeployment':
+            case 'AllowScan':
+            case 'ScanSnmp':
+                // If default is 0, return 0.
+                // Otherwise override default if explicitly disabled.
+                $default = $this->getDefaultConfig($option);
+                if ($default and $this->getConfig($option) === 0) {
+                    $value = 0;
+                } else {
+                    $value = $default;
+                }
+                break;
+            default:
+                $value = $this->getConfig($option);
+        }
+
+        self::$_configEffective[$id][$option] = $value;
+        return $value;
+    }
+
+    /**
+     * Get a list of all groups of which this is computer is a member, suitable for evaluating group config
+     *
+     * The returned group objects are not fully functional. They contain just
+     * enough information to retrieve their configuration. They should not be
+     * used for anything else.
+     *
+     * @return Model_Group[]
+     */
+    protected function _getConfigGroups()
+    {
+        $id = $this->getId();
+        if (!isset(self::$_configGroups[$id])) {
+            self::$_configGroups[$id] = array();
+            $memberships = $this->getGroupMemberships();
+            while ($membership = $memberships->fetchObject('Model_GroupMembership')) {
+                $group = new Model_Group;
+                $group->setId($membership->getGroupId());
+                self::$_configGroups[$id][] = $group;
+            }
+        }
+        return self::$_configGroups[$id];
     }
 }

@@ -219,22 +219,36 @@ class Form_Configuration extends Zend_Form
     /**
      * @ignore
      * Decorator callback to render the global default of an option (derived from element name).
+     * For computers, the effective value is printed too.
      */
     public function defaultValueDecorator($content, $element, array $options)
     {
         $default = $this->object->getDefaultConfig($element->getName());
         $output  = '(' . $this->_translate->_('Default') .': ';
         if ($element instanceof Zend_Form_Element_Checkbox) {
-            $output .= '%s)';
             if ($default) {
-                $default = $this->_translate->_('Yes');
+                $output .= $this->_translate->_('Yes');
             } else {
-                $default = $this->_translate->_('No');
+                $output .= $this->_translate->_('No');
             }
         } else {
-            $output .= '%d)';
+            $output .= $default;
         }
-        return sprintf($output, $default);
+        if ($this->object instanceof Model_Computer) {
+            $effective = $this->object->getEffectiveConfig($element->getName());
+            $output .= ', ' . $this->_translate->_('Effective') . ': ';
+            if ($element instanceof Zend_Form_Element_Checkbox) {
+                if ($effective) {
+                    $output .= $this->_translate->_('Yes');
+                } else {
+                    $output .= $this->_translate->_('No');
+                }
+            } else {
+                $output .= $effective;
+            }
+        }
+        $output .= ')';
+        return $output;
     }
 
     /**

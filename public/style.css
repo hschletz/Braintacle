@@ -292,9 +292,9 @@ fieldset {
     border: 1px inset black;
 }
 .fieldset-fullwidth {
-    margin-left: 10%;
+    margin-left: 5%;
     margin-top: 1.5ex;
-    width: 80%;
+    width: 90%;
 }
 .fieldset-fullwidth legend {
     /* Center legend */

@@ -22,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-09 12:36+0200\n"
-"PO-Revision-Date: 2013-08-09 12:37+0200\n"
+"POT-Creation-Date: 2013-08-09 19:33+0200\n"
+"PO-Revision-Date: 2013-08-09 19:33+0200\n"
 "Last-Translator: Holger Schletz <holger.schletz@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -293,6 +293,10 @@ msgstr "Dieses Netzwerk immer scannen"
 #: forms/Configuration.php
 msgid "Default"
 msgstr "Standard"
+
+#: forms/Configuration.php
+msgid "Effective"
+msgstr "Effektiv"
 
 #: forms/Configuration.php; forms/Preferences/Agent.php
 msgid "Agent contact interval (in hours)"
