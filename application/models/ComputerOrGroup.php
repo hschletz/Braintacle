@@ -473,7 +473,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
      * all groups of which the computer is a member.
      *
      * @param string $option Option name
-     * @return void
+     * @return mixed Default value or NULL
      */
     abstract public function getDefaultConfig($option);
 
