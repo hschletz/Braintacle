@@ -2007,6 +2007,18 @@ class Model_Computer extends Model_ComputerOrGroup
             }
             switch ($option) {
                 case 'InventoryInterval':
+                    $value = Model_Config::get('InventoryInterval');
+                    // Special values 0 and -1 always take precedence if
+                    // configured globally.
+                    if ($value >= 1) {
+                        // Get smallest value of group and global settings
+                        foreach ($groupValues as $groupValue) {
+                            if ($groupValue !== null and $groupValue < $value) {
+                                $value = $groupValue;
+                            }
+                        }
+                    }
+                    break;
                 case 'ContactInterval':
                 case 'DownloadMaxPriority':
                 case 'DownloadTimeout':
