@@ -19,10 +19,25 @@ this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
 <phpdoc>
-  <transformer>
-      <external-class-documentation>
-        <prefix>Zend_</prefix>
-        <uri>http://framework.zend.com/apidoc/1.12/db_{CLASS}.html#%5C{CLASS}</uri>
-    </external-class-documentation>
-  </transformer>
+    <title>Braintacle API documentation</title>
+    <files>
+        <directory>../../application/models</directory>
+        <directory>../../application/forms</directory>
+        <directory>../../application/views/helpers</directory>
+        <directory>../../application/controllers/helpers</directory>
+        <directory>../../library/Braintacle</directory>
+    </files>
+    <parser>
+        <target>.</target>
+    </parser>
+    <transformer>
+        <target>.</target>
+        <external-class-documentation>
+            <prefix>Zend_</prefix>
+            <uri>http://framework.zend.com/apidoc/1.12/db_{CLASS}.html#%5C{CLASS}</uri>
+        </external-class-documentation>
+    </transformer>
+    <logging>
+        <level>quiet</level>
+    </logging>
 </phpdoc>
