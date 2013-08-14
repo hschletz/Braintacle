@@ -59,21 +59,22 @@ The application consists of several parts:
 </p>
 <ul>
 <li>
-A patched version of <a href="http://ocsinventory-ng.org">OCS Inventory NG</a> with several improvements,
+A patched version of the <a href="http://ocsinventory-ng.org">OCS Inventory NG</a> server with several improvements,
 most notably the support for different database backends (PostgreSQL is recommended, but MySQL is still supported).
 It is contained in the <em>ocsinventory</em> directory.
 See the <a href="../ocsinventory/README.html">README.html</a> file in the same directory for details.
 </li>
 <li>
-An alternative administration console which is aimed to replace the original administration console (ocsreports) completely.
-It is not feature complete yet, but already fully usable for most everyday tasks.
+A web administration console.
 </li>
 <li>
 Some command line helper applications.
 </li>
 </ul>
 
-<h2>Advantages</h2>
+<h2>Differences to OCS Inventory NG</h2>
+
+<h3>Advantages</h3>
 
 <ul>
 <li>
@@ -102,20 +103,12 @@ Software listings can be freed of clutter like these boring Windows updates and 
 See "<a href="#softwarefilter">software filter</a>" for details.
 </li>
 <li>
-Software dictionaries are much easier to manage.
-Extra categories are not supported yet &ndash; The dictionary manager is intended for software filters only.
-</li>
-<li>
 In addition to the automatically collected Windows license key, a key can be entered manually.
 This can be useful if the reported key is garbage (this can happen in certain situations)
 or if licenses have been reassigned within an organization.
 </li>
 <li>
 Consistent navigation &ndash; no popups, no more lost menus.
-<li>
-Computers can be exported as XML, either individually via console or all at once via the <a href="#export.php">export tool</a>.
-The XML files are similar to those generated locally by the agents, and suitable for import via the console or the ocsinventory-injector.pl script.
-This simplifies data migration between different databases or data processing via external tools.
 </li>
 <li>
 Braintacle uses localization functions wherever possible.
@@ -129,9 +122,9 @@ An abstract API to all logical objects (computers, packages etc.) which can be u
 </ul>
 
 
-<h2>Extra features and limitations</h2>
+<h3>Extra features and limitations</h3>
 
-<h3>Login restrictions</h3>
+<h4>Login restrictions</h4>
 
 <p>
 Braintacle does not implement different access privileges.
@@ -144,12 +137,12 @@ If the database is populated with the bundled OCSInventory console or schema-man
 A cleartext 'admin' passord will be converted.
 </p>
 
-<h3><a name="packagebuilder">Package builder</a></h3>
+<h4><a name="packagebuilder">Package builder</a></h4>
 
-<h4>Editing packages</h4>
+<h5>Editing packages</h5>
 
 <p>
-Braintacle's most notable feature is the ability to edit existing packages.
+Braintacle allows editing existing packages.
 More precisely, by clicking on the name of a package you invoke the package builder with the old package's metadata already filled in.
 The package content itself does not get copied to the new package, so you have to upload a file again.
 This limitation is OK for the typical scenario where you deploy a new software version, so you would have to upload a new file anyway.
@@ -161,11 +154,11 @@ For this reason, the new package needs a different name (typically a different v
 If anything goes wrong with building the new package, the old package will not be touched.
 </p>
 
-<h4>Additional metadata</h4>
+<h5>Customizable certificate path</h5>
 
 <p>
-You can specify a comment and a certificate path.
-Both fields are already present in the database and the certificate path is really evaluated, but the original GUI always submits hardcoded defaults (empty comment and 'INSTALL_PATH/cacert.pem').
+The field is already present in the database and the certificate path is really evaluated,
+but the original GUI submits a hardcoded default ('INSTALL_PATH/cacert.pem').
 INSTALL_PATH will be expanded to the agent's installation directory
 (like '%PROGRAMFILES%\Ocs Inventory Agent').
 You can set any path and filename you like.
@@ -173,15 +166,15 @@ The Windows agent also accepts UNC paths (which will probably only work if all c
 This allows some cool stuff like changing the HTTPS server's certificate without breaking deployment.
 </p>
 
-<h4>On-the-fly ZIP compression</h4>
+<h5>On-the-fly ZIP compression</h5>
 
 <p>
 If you want to deploy a single file, having to wrap it into a ZIP archive before uploading can be annoying.
 Braintacle creates the archive on the fly if the uploaded file is not a ZIP archive (currently only implemented for Windows packages).
-Since the PHP Zip extension's capabilities are limited and ressource usage can grow high for huge files, you can bypass this feature by creating the archive manually before upload, like you always did.
+Since the PHP Zip extension's capabilities are limited and ressource usage can grow high for huge files, you can bypass this feature by creating the archive manually before upload.
 </p>
 
-<h4>Computation of fragment size</h4>
+<h5>Computation of fragment size</h5>
 
 <p>
 The original GUI allows specifying both the number of fragments and the fragment size.
@@ -196,7 +189,7 @@ The result will almost certainly be different from the original value, but still
 In particular, it would deliver the same number of fragments if the size of the new file had not changed.
 </p>
 
-<h4>Upload size limit</h4>
+<h5>Upload size limit</h5>
 
 <p>
 Braintacle will try to prevent you from uploading a file that is too big to handle.
@@ -213,7 +206,7 @@ It is the smallest value of these PHP settings:
 <li>80% of memory_limit</li>
 </ul>
 
-<h4>Only 1 download server supported</h4>
+<h5>Only 1 download server supported</h5>
 
 <p>
 Braintacle supports only 1 download server.
@@ -226,21 +219,21 @@ For example, you could force usage of a caching proxy on external sites or set u
 Once set up this may be easier to handle than having to deal with this everytime you build a new package.
 </p>
 
-<h4>Automatic activation</h4>
+<h5>Automatic activation</h5>
 
 <p>
 The limitation to 1 download server allows package creation and activation to be merged into a single step.
 The download locations must be specified at build time, where defaults can be provided.
 </p>
 
-<h4>Secure hashes</h4>
+<h5>Secure hashes</h5>
 
 <p>
 Since MD5 hashes are insecure, SHA1 hashes are used instead.
 This is already supported by the agent, but the OCS GUI does not make use of this feature.
 </p>
 
-<h4>More reliable connection testing</h4>
+<h5>More reliable connection testing</h5>
 
 <p>
 The HTTP and HTTPS connections are checked without using fopen() wrappers.
@@ -253,7 +246,7 @@ The test results only indicate success or failure on the server that runs Braint
 It's up to you to interpret the results.
 </p>
 
-<h3><a name="softwarefilter">Software filter</a></h3>
+<h4><a name="softwarefilter">Software filter</a></h4>
 
 <p>
 OCS Inventory provides a function called "software dictionaries" where pieces of installed software can be tagged to be ignored.
@@ -270,7 +263,7 @@ Some software (like MS Office 2007) causes multiple identical entries in a compu
 These duplicate entries are hidden by default, but can be shown with a single mouseclick if you are really interested.
 </p>
 
-<h3>Network management (aka IP discovery)</h3>
+<h4>Network scanning (aka IP discovery)</h4>
 
 <p>
 Braintacle uses a different method to determine which network a computer belongs to.
@@ -279,7 +272,7 @@ and also ignores 127.0.0.0/8 completely as this is not a real network.
 Additionally, interfaces belonging to an inventoried computer will never show up as unknown, even if the inventory is out of date.
 </p>
 
-<h3>Installing packages on a computer</h3>
+<h4>Installing packages on a computer</h4>
 
 <p>
 Multiple packages can be deployed to a computer at once instead of picking them one by one.
@@ -291,13 +284,10 @@ If a package is not in the list, it would not be installable anyway.
 This also keeps the list as short as possible.
 </p>
 
-<h3>Managing duplicates</h3>
+<h4>Managing duplicates</h4>
 
 <p>
 Braintacle supports a blacklist for asset tags, in addition to serials and MAC addresses.
-</p>
-<p>
-The implementation for merging duplicates is more robust &ndash; no more database errors on weird combinations.
 </p>
 <p>
 The information to be merged can be specified in detail:

@@ -9,6 +9,13 @@ without any warranty.
 CHANGES IN VERSION 0.13
 =======================
 
+Upgrading from previous versions:
+
+- Recommended: Starting with this release, all major features are avalable in
+  the Braintacle console. obsoleting the bundled ocsreports. If you have set up
+  ocsreports, consider removing it from your web server configuration. It will
+  be removed entirely in the next major release.
+
 New features:
 
 - Console: Added individual configuration for computers and groups (via the
