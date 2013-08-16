@@ -26,11 +26,12 @@
 
 # Make the application visible as /braintacle (you can choose any other name).
 # Adapt the path if the Braintacle root directory is anywhere other than
-# /usr/local/share/braintacle.
+# /usr/local/share/braintacle. The path must point to the "public" directory,
+# not the base directory.
 Alias /braintacle /usr/local/share/braintacle/public
 
 # Application-specific configuration. Adjust path if necessary.
-<Location /braintacle>
+<Directory /usr/local/share/braintacle/public/>
 
     # Uncomment and adjust paths if Zend Framework and/or NADA are not in the
     # global include path
@@ -44,20 +45,17 @@ Alias /braintacle /usr/local/share/braintacle/public
     # Uncomment this to force HTTPS connection
     # SSLRequireSSL
 
-    # Uncomment and adjust if default upload limit is not sufficient
-    # php_admin_value upload_max_filesize 30m
-    # php_admin_value post_max_size 31m
-    # php_admin_value memory_limit 32m
+    # Uncomment and adjust if the efault upload limit is not sufficient. Note
+    # that the actual limit may be smaller than the values provided here. See
+    # the "upload size limit" section in doc/index.html for an explanation.
+    # php_value upload_max_filesize 128m
+    # php_value post_max_size 128m
+    # php_value memory_limit 128m
 
     # Set to 'development' to see more (non-fatal) errors
     SetEnv APPLICATION_ENV production
 
+    # Enable static, site-independent configuration via .htaccess file.
     # Don't touch this!
-    PHP_flag magic_quotes_gpc off
-    RewriteEngine On
-    RewriteCond %{REQUEST_FILENAME} -s [OR]
-    RewriteCond %{REQUEST_FILENAME} -l [OR]
-    RewriteCond %{REQUEST_FILENAME} -d
-    RewriteRule ^.*$ - [NC,L]
-    RewriteRule ^.*$ index.php [NC,L]
-</Location>
+    AllowOverride FileInfo Options=php_flag
+</Directory>

@@ -1,15 +1,32 @@
-# Rewrite rules required for shorter URLs.
+# Static Apache configuration that is independent of the environment and not to
+# be modified by the end user
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
 # notice and this notice are preserved.  This file is offered as-is,
 # without any warranty.
 
-# If the .htaccess file does not work for your setup, put these lines in
-# your apache configuration.
+
+# The magic_quotes_gpc option cannot be set at runtime, so it's forced off here.
+php_flag magic_quotes_gpc off
+
+
+# Rewrite rules required for the default ZF URL scheme
+
 RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} -s [OR]
-RewriteCond %{REQUEST_FILENAME} -l [OR]
+
+# If the requested path resolves to an existing file (-f) within this directory,
+# serve it directly and stop rewriting. The -d condition is required to match
+# the current directory itself.
+RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^.*$ - [NC,L]
-RewriteRule ^.*$ index.php [NC,L]
+RewriteRule ^.*$ - [L]
+
+# Some black magic to extract the base path to the BASE variable, which is
+# required for paths affected by an Alias directive.
+RewriteCond %{REQUEST_URI}::$1 ^(/.+)(.+)::\2$
+RewriteRule ^(.*) - [E=BASE:%1]
+
+# Force all requests not matched by the first rule (i.e. nonexisting paths) to
+# invoke index.php where a ZF route will evaluate the path.
+RewriteRule ^(.*)$ %{ENV:BASE}index.php [L]

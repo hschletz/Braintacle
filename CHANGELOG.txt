@@ -16,6 +16,10 @@ Upgrading from previous versions:
   ocsreports, consider removing it from your web server configuration. It will
   be removed entirely in the next major release.
 
+- Recommended: The Apache configuration for the console has been improved. The
+  previous configuration should continue to work for most sites, but should be
+  re-created from the new template (config/braintacle-console.conf.template)
+
 New features:
 
 - Console: Added individual configuration for computers and groups (via the

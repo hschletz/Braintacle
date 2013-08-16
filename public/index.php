@@ -36,13 +36,6 @@ if (Braintacle_Application::getEnvironment() == 'production') {
     ini_set('display_errors', true);
     ini_set('display_startup_errors', true);
 }
-if (get_magic_quotes_gpc()) {
-    // Undo effects of magic_quotes_gpc because this setting cannot be changed
-    // at runtime.
-    $_GET = array_map('stripslashes', $_GET);
-    $_POST = array_map('stripslashes', $_POST);
-    $_COOKIE = array_map('stripslashes', $_COOKIE);
-}
 ini_set('magic_quotes_runtime', false);
 
 // Bootstrap the application
