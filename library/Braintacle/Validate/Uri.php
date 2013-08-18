@@ -60,13 +60,15 @@ class Braintacle_Validate_Uri extends Zend_Validate_Abstract
     public function isValid($value)
     {
         $this->_setValue($value);
-
-        if (Zend_Uri::check("$this->scheme://$value")) {
+        try {
+            \Zend\Uri\UriFactory::factory("$this->scheme://$value");
             return true;
+        } catch(\Zend\Uri\Exception\InvalidArgumentException $e) {
+            $this->_error(self::URI);
+            return false;
+        } catch(\Exception $e) {
+            throw $e;
         }
-
-        $this->_error(self::URI);
-        return false;
     }
 
     /**

@@ -394,17 +394,19 @@ class ComputerController extends Zend_Controller_Action
             }
 
             // Post content to communication server
-            $request = new Zend_Http_Client(
+            $request = new \Zend\Http\Client(
                 Model_Config::get('CommunicationServerUri'),
                 array(
                     'strictredirects' => 'true', // required for POST requests
                     'useragent' => 'Braintacle_local_upload', // Substring 'local' required for correct server operation
                 )
             );
-            $request->setRawData($data, 'application/x-compress');
-            $response = $request->request('POST');
+            $request->setMethod('POST')
+                    ->setHeaders(array('Content-Type' => 'application/x-compress'))
+                    ->setRawBody($data);
+            $response = $request->send();
 
-            if ($response->isSuccessful()) {
+            if ($response->isSuccess()) {
                 $this->_helper->redirector('index', 'computer');
             } else {
                 $this->view->response = $response; // View script can display message

@@ -49,6 +49,7 @@ class Form_AddToGroup extends Zend_Form
         $translate = Zend_Registry::get('Zend_Translate');
 
         $this->setMethod('post');
+        $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
         $this->setDecorators(
             array(
                 'FormElements',

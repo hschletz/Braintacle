@@ -78,6 +78,7 @@ abstract class Form_Preferences extends Form_Normalized
     public function init()
     {
         $this->setMethod('POST');
+        $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
 
         // Create elements dynamically
         foreach ($this->_types as $name => $type) {

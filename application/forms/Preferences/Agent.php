@@ -48,6 +48,7 @@ class Form_Preferences_Agent extends Form_Preferences
     public function init()
     {
         $translate = Zend_Registry::get('Zend_Translate');
+
         $this->_labels = array(
             'ContactInterval' => $translate->_(
                 'Agent contact interval (in hours)'

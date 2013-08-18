@@ -23,10 +23,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
     protected function _initNavigation()
     {
-        if (Braintacle_Application::isCli()) {
+        if (\Library\Application::isCli()) {
             return;
         }
 
+        $this->bootstrap('autoload');
         $navigation = new Zend_Navigation;
 
         // "Inventory" menu
@@ -251,7 +252,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initViewHelpers()
     {
-        if (Braintacle_Application::isCli()) {
+        if (\Library\Application::isCli()) {
             return;
         }
 
@@ -259,6 +260,17 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $layout->setLayoutPath(APPLICATION_PATH . '/layouts');
         $view = $layout->getView();
         $view->strictVars(true);
+
+        $pluginLoader = new Zend_Loader_PluginLoader;
+        $pluginLoader->addPrefixPath(
+            'Zend_View_Helper',
+            \Library\Application::$zf1Path . '/View/Helper'
+        );
+        $pluginLoader->addPrefixPath(
+            'Zend_View_Helper_Navigation',
+            \Library\Application::$zf1Path . '/View/Helper/Navigation'
+        );
+        $view->setPluginLoader($pluginLoader, 'helper');
 
         $view->doctype('HTML4_STRICT');
 
@@ -274,6 +286,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         $controller = Zend_Controller_Front::getInstance();
 
+        // Skip ZF1 handling of exceptions; have them handled by the ZF2 error handler instead
+        $controller->throwExceptions(true);
+
         $controller->setControllerDirectory(APPLICATION_PATH . '/controllers');
 
         $route = new Braintacle_Controller_Router_Route_Module(
@@ -283,21 +298,38 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         );
         $controller->getRouter()->addRoute('default', $route);
 
-        if (!Braintacle_Application::isCli()) {
+        if (!\Library\Application::isCli()) {
             $controller->registerPlugin(new Braintacle_Controller_Plugin_ForceLogin);
         }
     }
 
     protected function _initAutoload()
     {
-        // Load classes from 'library/Braintacle' automatically
-        Zend_Loader_Autoloader::getInstance()->registerNamespace('Braintacle_');
+        // Autoloader for old library code
+        \Zend\Loader\AutoloaderFactory::factory(
+            array(
+                '\Zend\Loader\StandardAutoloader' => array(
+                    'prefixes' => array(
+                        'Zend' => \Library\Application::$zf1Path,
+                        'Braintacle' => \Library\Application::getApplicationPath('library/Braintacle'),
+                    )
+                ),
+            )
+        );
 
-        // Standard autoloader
+        // Autoloader for Zend_Filter_Inflector
+        $pluginLoader = new Zend_Loader_PluginLoader(
+            array(
+                'Zend_Filter' => \Library\Application::$zf1Path . '/Filter',
+            ),
+            'Zend_Filter_Inflector'
+        );
+
+        // ZF1 module autoloader
         $moduleLoader = new Zend_Application_Module_Autoloader(
             array(
                 'namespace' => '',
-                'basePath' => APPLICATION_PATH
+                'basePath' => __DIR__
             )
         );
         return $moduleLoader;

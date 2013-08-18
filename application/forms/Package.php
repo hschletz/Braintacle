@@ -59,6 +59,7 @@ class Form_Package extends Zend_Form
         $view = $this->getView();
 
         $this->setMethod('post');
+        $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
 
         // Package name
         $name = new Zend_Form_Element_Text('Name');
@@ -135,7 +136,8 @@ class Form_Package extends Zend_Form
         $maxFileSize = $this->_getMaxUploadSize();
         $measure = new Zend_Measure_Binary($maxFileSize / 1048576, 'MEGABYTE');
         $file = new Zend_Form_Element_File('File');
-        $file->setMaxFileSize($maxFileSize)
+        $file->addPrefixPath('Zend_File', \Library\Application::$zf1Path . '/File')
+             ->setMaxFileSize($maxFileSize)
              ->setValueDisabled(true)
              ->setIgnore(true)
              ->addValidator('Size', false, $maxFileSize)

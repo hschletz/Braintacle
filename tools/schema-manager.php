@@ -30,11 +30,10 @@
  */
 
 // All paths are relative to this script's parent directory
-$basepath = realpath(dirname(dirname(__FILE__)));
+$basepath = realpath(dirname(__DIR__));
 
-// Set include path
-require_once "$basepath/library/Braintacle/Application.php";
-Braintacle_Application::setIncludePath();
+require_once "$basepath/module/Library/Application.php";
+\Library\Application::init('Cli');
 
 // Parse command line. This needs to be done before initializing the application
 // because that would set APPLICATION_ENV, but that could be overridden in the
@@ -62,8 +61,7 @@ $environment = $cmdLine->environment;
 if (!$environment) {
     $environment = 'production';
 }
-define('APPLICATION_ENV', $environment);
-Braintacle_Application::init();
+putenv("APPLICATION_ENV=$environment");
 
 // Set up logger
 $writer = new Zend_Log_Writer_Stream('php://stderr');
@@ -72,9 +70,7 @@ $writer->setFormatter($formatter);
 $logger = new Zend_Log($writer);
 
 // Create Schema manager object
-require_once 'Braintacle/MDB2.php';
 Braintacle_MDB2::setErrorReporting();
-require_once 'Braintacle/SchemaManager.php';
 $manager = new Braintacle_SchemaManager($logger);
 
 $isCompatible = $manager->isOcsCompatible();

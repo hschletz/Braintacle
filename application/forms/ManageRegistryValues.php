@@ -39,6 +39,7 @@ class Form_ManageRegistryValues extends Zend_Form
     public function init()
     {
         $this->setMethod('post');
+        $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
         $translate = Zend_Registry::get('Zend_Translate');
 
         // Subform for enabling/disabling registry inspection, in addition to

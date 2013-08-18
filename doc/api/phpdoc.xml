@@ -26,6 +26,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
         <directory>../../application/views/helpers</directory>
         <directory>../../application/controllers/helpers</directory>
         <directory>../../library/Braintacle</directory>
+        <directory>../../module</directory>
     </files>
     <parser>
         <target>.</target>

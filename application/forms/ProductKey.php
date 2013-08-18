@@ -34,6 +34,7 @@ class Form_ProductKey extends Zend_Form
      */
     public function init()
     {
+        $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
         $key = new Zend_Form_Element_Text('key');
         $key->setLabel('Product key (if different)')
             ->addFilter('StringTrim')

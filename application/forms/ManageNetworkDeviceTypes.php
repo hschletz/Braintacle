@@ -45,6 +45,7 @@ class Form_ManageNetworkDeviceTypes extends Zend_Form
     public function init()
     {
         $this->setMethod('post');
+        $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
 
         $statement = Model_NetworkDeviceType::createStatementStatic();
         while ($type = $statement->fetchObject('Model_NetworkDeviceType')) {

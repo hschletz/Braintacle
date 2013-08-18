@@ -419,7 +419,7 @@ class Model_Package extends Model_Abstract
      */
     public function getPath()
     {
-        return Zend_Filter::filterStatic(
+        return \Zend\Filter\StaticFilter::execute(
             Model_Config::get('PackagePath')
             . DIRECTORY_SEPARATOR
             . $this->getTimestamp()->get(Zend_Date::TIMESTAMP),
@@ -961,9 +961,14 @@ class Model_Package extends Model_Abstract
     {
         $this->_errors = array();
 
-        $connection = new Zend_Http_Client;
+        $connection = new \Zend\Http\Client;
         $connection->setMethod('HEAD');
-        $connection->setConfig(array('strictredirects' => true));
+        $connection->setOptions(
+            array(
+                'strictredirects' => true,
+                'sslverifypeer' => false, // The certificate may not be installed on this server
+            )
+        );
 
         $timestamp = $this->getTimestamp()->get(Zend_Date::TIMESTAMP);
         $httpsPath = $this->getInfoFileUrlPath();
@@ -984,29 +989,18 @@ class Model_Package extends Model_Abstract
      * Test a single HTTP or HTTPS connection
      *
      * Exceptions are caught and the HTTP status code is checked.
-     * @param Zend_Http_Client $connection must be fully set up to execute request.
+     * @param \Zend\Http\Client $connection must be fully set up to execute request.
      * @return bool result of connection attempt
      */
-    protected function _testConnection($connection)
+    protected function _testConnection(\Zend\Http\Client $connection)
     {
-        try {
-            $response = $connection->request();
-        } catch (Zend_Exception $exception) {
-            $this->_setErrorHtml(
-                'Connection to <a href="%1$s">%1$s</a> failed with Message: \'%2$s\'',
-                array(
-                    $connection->getUri(true),
-                    htmlspecialchars($exception->getMessage()),
-                )
-            );
-            return false;
-        }
-        if (!$response->isSuccessful()) {
+        $response = $connection->send();
+        if (!$response->isSuccess()) {
             $this->_setErrorHtml(
                 'Connection to <a href="%1$s">%1$s</a> failed with HTTP status code %2$d',
                 array(
                     $connection->getUri(true),
-                    $response->getStatus()
+                    $response->getStatusCode()
                 )
             );
             return false;

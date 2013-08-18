@@ -34,6 +34,7 @@ abstract class Form_Account extends Zend_Form
     {
         $this->setMethod('post');
         $this->setAttrib('enctype', 'multipart/form-data');
+        $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
 
         $id = new Zend_Form_Element_Text('Id');
         $id->setLabel('Login name')

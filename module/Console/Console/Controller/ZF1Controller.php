@@ -1,6 +1,6 @@
 <?php
 /**
- * Subnet properties form
+ * Configuration for Console module
  *
  * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,40 +17,23 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Forms
  */
+
+namespace Console\Controller;
+
+use Zend\Stdlib;
+
 /**
- * Subnet properties form
- * @package Forms
+ * Transitional controller that starts the ZF1 application
  */
-class Form_Subnet extends Zend_Form
+class ZF1Controller implements Stdlib\DispatchableInterface
 {
-
     /**
-     * Create elements
+     * Run ZF1 application and exit
      */
-    public function init()
+    public function dispatch(Stdlib\RequestInterface $request, Stdlib\ResponseInterface $response = null)
     {
-        $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
-
-        $name = new Zend_Form_Element_Text('Name');
-        $name->setLabel('Name')
-             ->addValidator('StringLength', false, array(0, 255));
-        $this->addElement($name);
-
-        $submit = new Zend_Form_Element_Submit('Submit');
-        $submit->setLabel('OK');
-        $this->addElement($submit);
-    }
-
-    /**
-     * Populate form with values from given subnet
-     *
-     * @param Model_Subnet $subnet Subnet
-     **/
-    public function setValuesFromSubnet(Model_Subnet $subnet)
-    {
-        $this->setDefault('Name', $subnet->getName());
+        \Library\Application::$application->run();
+        exit;
     }
 }

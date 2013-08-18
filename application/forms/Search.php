@@ -121,6 +121,7 @@ class Form_Search extends Form_Normalized
     public function init()
     {
         $this->setMethod('post');
+        $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
 
         $translate = Zend_Registry::get('Zend_Translate');
 

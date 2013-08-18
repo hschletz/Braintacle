@@ -53,6 +53,7 @@ class Form_UserDefinedInfo extends Form_Normalized
         $translate = Zend_Registry::get('Zend_Translate');
 
         $this->setMethod('post');
+        $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
         $this->_encoder = new Braintacle_Filter_FormElementNameEncode;
 
         foreach (Model_UserDefinedInfo::getTypes() as $name => $type) {

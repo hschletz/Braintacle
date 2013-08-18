@@ -1,6 +1,6 @@
 <?php
 /**
- * Display inventory import form
+ * HTML page template
  *
  * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,27 +17,31 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-if (property_exists($this, 'response')) {
-    print $this->htmlTag(
-        'p',
-        sprintf(
-            $this->translate(
-                'Upload error. Server %1$s responded with error %2$d: %3$s'
-            ),
-            Model_Config::get('CommunicationServerUri'),
-            $this->response->getStatusCode(),
-            $this->escape($this->response->getReasonPhrase())
-        ),
-        array('class' => 'red textcenter')
-    );
-}
+print $this->doctype();
+print "<html>\n";
+print "<head>\n";
 
-print $this->htmlTag(
-    'h1',
-    $this->translate('Import locally generated inventory data')
-);
+$this->headMeta()->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8');
+print $this->headMeta();
+print "\n";
+print $this->headTitle();
+print "\n";
+print $this->HeadLink()->appendStylesheet($this->basePath('style.css'));
+print "\n";
+print $this->headStyle();
+print "\n";
+print $this->headScript();
 
-print $this->form;
+print "</head>\n";
+print "<body>\n"; // TODO: add onload handler on demand
+
+print "<div id='content'>\n";
+print $this->content;
+print "</div>\n";
+
+// TODO: render navigation
+
+print "</body>\n";
+print "</html>\n";

@@ -34,6 +34,7 @@ class Form_Login extends Zend_Form
     {
         $this->setMethod('post');
         $this->setAction('login/login');
+        $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
 
         $username = new Zend_Form_Element_Text('userid');
         $username->addFilter('StringTrim')

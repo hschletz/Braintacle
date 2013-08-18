@@ -51,6 +51,7 @@ class Form_Configuration extends Zend_Form
             throw new LogicException(__CLASS__ . ' has invalid "object" property.');
         }
 
+        $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
         $this->_translate = Zend_Registry::get('Zend_Translate');
 
         // Agent options. Always present.

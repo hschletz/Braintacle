@@ -48,6 +48,7 @@ class Form_Definefields extends Zend_Form
         );
 
         $this->setMethod('post');
+        $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
         $encoder = new Braintacle_Filter_FormElementNameEncode;
 
         // Create text elements for existing fields to rename them

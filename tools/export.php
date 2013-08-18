@@ -32,10 +32,10 @@ if (extension_loaded('xdebug')) {
 }
 
 // All paths are relative to this script's parent directory
-$basepath = realpath(dirname(dirname(__FILE__)));
+$basepath = realpath(dirname(__DIR__));
 
-require_once "$basepath/library/Braintacle/Application.php";
-Braintacle_Application::init();
+require_once "$basepath/module/Library/Application.php";
+\Library\Application::init('Cli');
 
 // Parse command line
 $cmdLine = new Zend_Console_Getopt(

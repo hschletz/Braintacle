@@ -50,8 +50,8 @@ if (is_resource($zip)) {
 }
 
 // Set up environment
-require(realpath(dirname(dirname(__FILE__)) . '/library/Braintacle/Application.php'));
-Braintacle_Application::init();
+require(__DIR__ . '/../module/Library/Application.php');
+\Library\Application::init('Cli');
 
 // Create Package
 $package = new Model_Package;

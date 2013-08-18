@@ -1,6 +1,6 @@
 <?php
 /**
- * Subnet properties form
+ * The CLI module
  *
  * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,40 +17,27 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Forms
  */
+
+namespace Cli;
+
+use Zend\ModuleManager\Feature;
+
 /**
- * Subnet properties form
- * @package Forms
+ * Module for command line tools
+ *
+ * This module does nothing except for loading other modules for the Braintacle
+ * API. In particular, it has no MVC functionality. Command line tools can load
+ * this module via \Library\Application::init() and continue their operation in
+ * the same script.
  */
-class Form_Subnet extends Zend_Form
+class Module implements Feature\InitProviderInterface
 {
-
     /**
-     * Create elements
+     * @internal
      */
-    public function init()
+    public function init(\Zend\ModuleManager\ModuleManagerInterface $manager)
     {
-        $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
-
-        $name = new Zend_Form_Element_Text('Name');
-        $name->setLabel('Name')
-             ->addValidator('StringLength', false, array(0, 255));
-        $this->addElement($name);
-
-        $submit = new Zend_Form_Element_Submit('Submit');
-        $submit->setLabel('OK');
-        $this->addElement($submit);
-    }
-
-    /**
-     * Populate form with values from given subnet
-     *
-     * @param Model_Subnet $subnet Subnet
-     **/
-    public function setValuesFromSubnet(Model_Subnet $subnet)
-    {
-        $this->setDefault('Name', $subnet->getName());
+        $manager->loadModule('Library');
     }
 }

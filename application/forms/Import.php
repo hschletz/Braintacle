@@ -34,10 +34,12 @@ class Form_Import extends Zend_Form
     {
         $this->setMethod('post');
         $this->setAttrib('enctype', 'multipart/form-data');
+        $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
 
         // Upload file
         $file = new Zend_Form_Element_File('File');
-        $file->addValidator('Count', false, 1)
+        $file->addPrefixPath('Zend_File', \Library\Application::$zf1Path . '/File')
+             ->addValidator('Count', false, 1)
              ->setRequired(true)
              ->setLabel('File (*.ocs, *.xml)');
         $this->addElement($file);

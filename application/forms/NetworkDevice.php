@@ -38,6 +38,7 @@ class Form_NetworkDevice extends Zend_Form
     public function init()
     {
         $translate = Zend_Registry::get('Zend_Translate');
+        $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
 
         // Translation must be turned off for this element to prevent the
         // application from trying to translate the values from the database.
