@@ -199,7 +199,14 @@ EOT
     public function getProperty($property, $rawValue=false)
     {
         if ($property == 'Value') {
-            return $this->_value;
+            if ($rawValue) {
+                return $this->_value->getName();
+            } else {
+                return $this->_value;
+            }
+        } elseif ($property == 'Data' and $rawValue and $this->_value->getValueConfigured() === null) {
+            // Reassemble the compound data ('value=data')
+            return $this->_value->getValueInventoried() . '=' . parent::getProperty('Data');
         } else {
             return parent::getProperty($property, $rawValue);
         }
@@ -220,6 +227,8 @@ EOT
     {
         if (preg_match('/^Value\.(.*)/', $property, $matches)) {
             $type = $this->_value->getPropertyType($matches[1]);
+        } elseif ($property == 'Value') {
+            $type = get_class($this->_value);
         } else {
             $type = parent::getPropertyType($property);
         }
