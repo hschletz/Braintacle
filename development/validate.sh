@@ -29,6 +29,7 @@ BASEDIR=$(readlink -f "$DEVDIR/..")
 # Run PHP_CodeSniffer on relevant directories
 phpcs -n --standard=Zend --extensions=php,phtml \
     "$BASEDIR/application/" \
+    "$BASEDIR/development/" \
     "$BASEDIR/library/Braintacle/" \
     "$BASEDIR/module" \
     "$BASEDIR/public" \
