@@ -19,11 +19,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use \Library\Application;
+
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
     protected function _initNavigation()
     {
-        if (\Library\Application::isCli()) {
+        if (Application::isCli()) {
             return;
         }
 
@@ -252,7 +254,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initViewHelpers()
     {
-        if (\Library\Application::isCli()) {
+        if (Application::isCli()) {
             return;
         }
 
@@ -264,11 +266,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $pluginLoader = new Zend_Loader_PluginLoader;
         $pluginLoader->addPrefixPath(
             'Zend_View_Helper',
-            \Library\Application::$zf1Path . '/View/Helper'
+            Application::$zf1Path . '/View/Helper'
         );
         $pluginLoader->addPrefixPath(
             'Zend_View_Helper_Navigation',
-            \Library\Application::$zf1Path . '/View/Helper/Navigation'
+            Application::$zf1Path . '/View/Helper/Navigation'
         );
         $view->setPluginLoader($pluginLoader, 'helper');
 
@@ -298,7 +300,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         );
         $controller->getRouter()->addRoute('default', $route);
 
-        if (!\Library\Application::isCli()) {
+        if (!Application::isCli()) {
             $controller->registerPlugin(new Braintacle_Controller_Plugin_ForceLogin);
         }
     }
@@ -310,8 +312,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             array(
                 '\Zend\Loader\StandardAutoloader' => array(
                     'prefixes' => array(
-                        'Zend' => \Library\Application::$zf1Path,
-                        'Braintacle' => \Library\Application::getApplicationPath('library/Braintacle'),
+                        'Zend' => Application::$zf1Path,
+                        'Braintacle' => Application::getApplicationPath('library/Braintacle'),
                     )
                 ),
             )
@@ -320,7 +322,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Autoloader for Zend_Filter_Inflector
         $pluginLoader = new Zend_Loader_PluginLoader(
             array(
-                'Zend_Filter' => \Library\Application::$zf1Path . '/Filter',
+                'Zend_Filter' => Application::$zf1Path . '/Filter',
             ),
             'Zend_Filter_Inflector'
         );
