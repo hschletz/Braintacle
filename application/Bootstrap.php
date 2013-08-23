@@ -214,7 +214,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Db_Table::setDefaultAdapter($db);
 
         // Force strict behavior in development mode
-        if (APPLICATION_ENV == 'development') {
+        if (Application::isDevelopment() and !Application::isTest()) {
             Model_Database::getNada()->setStrictMode();
         }
     }

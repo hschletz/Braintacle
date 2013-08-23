@@ -29,6 +29,7 @@ use Zend\ModuleManager\Feature;
  * This module provides a library of general purpose classes (not specific to
  * other modules). Provided view helpers etc. are automatically registered and
  * don't need to be loaded explicitly.
+ * @codeCoverageIgnore
  */
 class Module implements Feature\ConfigProviderInterface, Feature\AutoloaderProviderInterface
 {

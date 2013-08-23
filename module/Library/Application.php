@@ -42,15 +42,24 @@ class Application
     public static $zf1Path;
 
     /**
-     * Set up application environment and run the application
+     * The application's service manager instance
+     * @var \Zend\ServiceManager\ServiceManager
+     */
+    protected static $_serviceManager;
+
+    /**
+     * Set up application environment, optionally run the application
      *
      * This sets up the PHP environment and autoloaders, loads the provided
-     * module and runs the MVC application. The "Cli" module has no MVC
-     * functionality, so that only the initialization is performed in that case.
+     * module and optionally runs the MVC application. The default behavior for
+     * the $run option depends on the module. This should rarely need to be
+     * overridden except for testing.
      *
      * @param string $module Module to load
+     * @param bool Run the application after initialization.
+     * @codeCoverageIgnore
      */
-    static function init($module)
+    static function init($module, $run=null)
     {
         // Set up PHP environment.
         ini_set('session.auto_start', false); // conflicts with Zend_Session
@@ -74,7 +83,7 @@ class Application
         // It is run at a later point if required.
         // TODO: remove APPLICATION_PATH and APPLICATION_ENV when no longer used
         define('APPLICATION_PATH', self::getApplicationPath('application'));
-        self::getEnvironment();
+        $environment = self::getEnvironment();
 
         // Get absolute path to ZF1 library
         $file = new \SplFileInfo('Zend/Application.php');
@@ -82,7 +91,7 @@ class Application
 
         require_once 'Zend/Application.php';
         self::$application = new \Zend_Application(
-            self::getEnvironment(),
+            ($environment == 'test' ? 'development' : $environment),
             self::getApplicationPath('application/configs/application.ini')
         );
         self::$application->setBootstrap(self::getApplicationPath('application/Bootstrap.php'));
@@ -100,7 +109,15 @@ class Application
                 ),
             )
         );
-        if ($module != 'Cli') {
+        self::$_serviceManager = $application->getServiceManager();
+        if ($run === null) {
+            if ($module == 'Console') {
+                $run = true;
+            } else {
+                $run = false;
+            }
+        }
+        if ($run) {
             $application->run();
         }
     }
@@ -111,6 +128,7 @@ class Application
      * @param string $path Optional path component that is appended to the application root path
      * @return string Absolute path to requested file/directory (directories without trailing slash)
      * @throws \LogicException if the requested path component does not exist
+     * @codeCoverageIgnore
      */
     static function getApplicationPath($path='')
     {
@@ -124,14 +142,23 @@ class Application
     /**
      * Determine application environment
      *
+     * This should rarely be used directly. Use isProduction(), isDevelopment()
+     * or isTest() instead.
+     *
      * @return string Either the APPLICATION_ENV environment variable or 'production' if this is undefined.
+     * @throws \DomainException if the value is invalid
      */
     static function getEnvironment()
     {
         $environment = getenv('APPLICATION_ENV') ?: 'production';
-        if (!defined('APPLICATION_ENV')) {
-            define('APPLICATION_ENV', $environment);
+        if ($environment != 'production' and $environment != 'development' and $environment != 'test') {
+            throw new \DomainException('APPLICATION_ENV environment variable has invalid value: ' . $environment);
         }
+        if (!defined('APPLICATION_ENV')) {
+            // @codeCoverageIgnoreStart
+            define('APPLICATION_ENV', ($environment == 'test' ? 'development' : $environment));
+        }
+        // @codeCoverageIgnoreEnd
         return $environment;
     }
 
@@ -148,11 +175,25 @@ class Application
     /**
      * Check for development environment
      *
+     * This returns true if the APPLICATION_ENV environment variable is either
+     * "development" or "test". Check isTest() additionally if you need to need
+     * to check for "development" explicitly.
      * @return bool
      */
     static function isDevelopment()
     {
-        return self::getEnvironment() == 'development';
+        $environment = self::getEnvironment();
+        return ($environment == 'development' or $environment == 'test');
+    }
+
+    /**
+     * Check for test environment used by unit tests
+     *
+     * @return bool
+     */
+    static function isTest()
+    {
+        return self::getEnvironment() == 'test';
     }
 
     /**
@@ -165,4 +206,22 @@ class Application
         return PHP_SAPI == 'cli';
     }
 
+    /**
+     * Get a service from the application's service manager.
+     *
+     * Objects created through the service manager (view helpers etc.) should
+     * preferrably implement \Zend\ServiceManager\ServicLocatorAwareInterface
+     * instead of calling this method, making the code more portable by reducing
+     * external depenencies. Other objects should have the service manager
+     * instance injected manually. This method should only be used where this
+     * functionality is not available. One use case is unit testing where the
+     * initialization code bypasses this part of the Zend Framework.
+     *
+     * @param string Service name
+     * @return mixed Registered service
+     */
+    public static function getService($name)
+    {
+        return self::$_serviceManager->get($name);
+    }
 }
