@@ -35,9 +35,15 @@ print "\n";
 print $this->headScript();
 
 print "</head>\n";
-print "<body>\n"; // TODO: add onload handler on demand
-
-print "<div id='content'>\n";
+print "<body";
+$onLoad = $this->placeholder('BodyOnLoad');
+// TODO: Replace all init() functions with direct placeholder access and remove invoking handler
+$onLoad->append('if (typeof(init) == "function") init()');
+if ($onLoad->count()) {
+    $onLoad->setSeparator('; ');
+    printf(' onload="%s"', $this->escapeHtmlAttr($onLoad));
+}
+print ">\n<div id='content'>\n";
 print $this->content;
 print "</div>\n";
 
