@@ -35,14 +35,18 @@ Requirements
   [mod_perl](http://perl.apache.org) and a database-specific DBD module for the
   main server component.
 
-- A web server with [PHP](http://php.net) 5.2.11 or later for the administration
-  console. PHP is also required for most of the command line tools. A
-  database-specific PHP extension is also required, see
-  <http://framework.zend.com/manual/1.12/en/zend.db.adapter.html>. There are
-  also some PHP libraries required in the include path:
+- A web server with [PHP](http://php.net) 5.3.3 or later for the administration
+  console. PHP is also required for most of the command line tools. The following
+  PHP extensions are required:
 
-  - [Zend Framework](http://framework.zend.com) 1.12.3 or later (2.x is not
-    supported).
+  - A database-specific PHP extension,
+  <http://framework.zend.com/manual/2.2/en/modules/zend.db.adapter.html>
+
+  - The "intl" extension
+
+  There are also some PHP libraries required in the include path:
+
+  - [Zend Framework](http://framework.zend.com) 2.x (tested with 2.2)
 
   - [NADA](https://github.com/hschletz/NADA)
 
