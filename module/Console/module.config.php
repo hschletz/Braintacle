@@ -22,16 +22,32 @@
 return array(
     'controllers' => array(
         'invokables' => array(
+            'login' => 'Console\Controller\LoginController',
             'Console\Controller\ZF1' => 'Console\Controller\ZF1Controller',
         ),
     ),
     'router' => array(
         'routes' => array(
-            // URL paths that are still handled by the ZF1 application, including the base path itself
+            'console' => array(
+                'type' => 'segment',
+                'options' => array(
+                    // Match "console" prefix, followed by controller and action
+                    // names. All three components are optional except the
+                    // controller, which is required if an action is given.
+                    // Matches with or without trailing slash.
+                    // Note: a controller cannot be named "console".
+                    'route' => '/[console[/]][:controller[/][:action[/]]]',
+                    'defaults' => array(
+                        'controller' => 'login', // TODO: default to "computer" when available
+                        'action' => 'index',
+                    ),
+                ),
+            ),
+            // URL paths that are still handled by the ZF1 application
             'zf1' => array(
                 'type'    => 'regex',
                 'options' => array(
-                    'regex'    => '/(|accounts|computer|duplicates|error|group|index|licenses|login|network|package|preferences|software)/?.*',
+                    'regex'    => '/(console/)?(accounts|computer|duplicates|error|group|index|licenses|network|package|preferences|software)/?.*',
                     'spec' => '',
                     'defaults' => array(
                         'controller' => 'Console\Controller\ZF1',

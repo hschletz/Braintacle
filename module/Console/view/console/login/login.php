@@ -20,10 +20,6 @@
  *
  */
 
-$this->headScript()->appendScript(
-    "\n    function init() {document.getElementById('userid').focus();}\n\n"
-);
-
 print $this->htmlTag(
     'h1',
     $this->translate('Login to Braintacle')

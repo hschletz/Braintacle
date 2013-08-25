@@ -39,6 +39,13 @@
 class Braintacle_Controller_Router_Route_Module extends Zend_Controller_Router_Route_Module
 {
     /** @ignore */
+    public function match($path, $partial = false)
+    {
+        // Strip /console prefix which would be misinterpreted as a controller name
+        return parent::match(preg_replace('#^/console/#', '/', $path), $partial);
+    }
+
+    /** @ignore */
     public function assemble($data = array(), $reset = false, $encode = true, $partial = false)
     {
         // Move module, controller and action from $data to $route and use
