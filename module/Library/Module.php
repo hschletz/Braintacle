@@ -39,6 +39,12 @@ class Module implements Feature\ConfigProviderInterface, Feature\AutoloaderProvi
     public function getConfig()
     {
         return array(
+            'controller_plugins' => array(
+                'invokables' => array(
+                    'RedirectToRoute' => 'Library\Mvc\Controller\Plugin\RedirectToRoute',
+                    'UrlFromRoute' => 'Library\Mvc\Controller\Plugin\UrlFromRoute',
+                )
+            ),
             'view_helpers' => array(
                 'invokables' => array(
                     'htmlTag' => 'Library\View\Helper\HtmlTag',
