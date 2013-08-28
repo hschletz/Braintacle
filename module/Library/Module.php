@@ -29,6 +29,10 @@ use Zend\ModuleManager\Feature;
  * This module provides a library of general purpose classes (not specific to
  * other modules). Provided view helpers etc. are automatically registered and
  * don't need to be loaded explicitly.
+ *
+ * It also processes configuration from /config/braintacle.ini and sets up the
+ * "Db" service which provides a configured Zend\Db\Adapter\Adapter instance.
+ *
  * @codeCoverageIgnore
  */
 class Module implements Feature\ConfigProviderInterface, Feature\AutoloaderProviderInterface
@@ -38,12 +42,18 @@ class Module implements Feature\ConfigProviderInterface, Feature\AutoloaderProvi
      */
     public function getConfig()
     {
-        return array(
+        // Static configuration part
+        $config = array(
             'controller_plugins' => array(
                 'invokables' => array(
                     'RedirectToRoute' => 'Library\Mvc\Controller\Plugin\RedirectToRoute',
                     'UrlFromRoute' => 'Library\Mvc\Controller\Plugin\UrlFromRoute',
                 )
+            ),
+            'service_manager' => array(
+                'factories' => array(
+                    'Db' => 'Zend\Db\Adapter\AdapterServiceFactory',
+                ),
             ),
             'view_helpers' => array(
                 'invokables' => array(
@@ -51,6 +61,13 @@ class Module implements Feature\ConfigProviderInterface, Feature\AutoloaderProvi
                 ),
             ),
         );
+
+        // Merge user configuration from /config/braintacle.ini
+        $ini = \Zend\Config\Factory::fromFile(__DIR__ . '/../../config/braintacle.ini');
+        $config['db'] = $ini['database'];
+        $config['db']['charset'] = 'utf8';
+
+        return $config;
     }
 
     /**

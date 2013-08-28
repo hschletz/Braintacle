@@ -1,0 +1,38 @@
+; Sample config for Braintacle.
+; Copy or rename this file to braintacle.ini (in the same directory) and adjust
+; settings to match your environment.
+;
+; Copying and distribution of this file, with or without modification,
+; are permitted in any medium without royalty provided the copyright
+; notice and this notice are preserved. This file is offered as-is,
+; without any warranty.
+
+
+; Database connection options.
+
+[database]
+
+; Zend\DB Adapter.
+; See http://framework.zend.com/manual/2.2/en/modules/zend.db.adapter.html
+; for a list of available drivers.
+driver = Pdo_Pgsql
+; For MySQL:
+; driver = Pdo_Mysql
+
+; Database server. Can be a hostname, an IP address or a local socket.
+; Can be left unconfigured to use the database's default.
+; hostname = /var/run/postgresql
+; hostname = localhost
+
+; Port of database server.
+; Can be left unconfigured to use the database's default.
+; port = 5432
+
+; Name of database
+database = braintacle
+; For a default OCS Inventory NG setup:
+; database = ocsweb
+
+; Username and password for database connection.
+username = ocs
+password = ocs
