@@ -1,6 +1,6 @@
 <?php
 /**
- * The Library module
+ * The Database module
  *
  * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,55 +19,38 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Library;
+namespace Database;
 
 use Zend\ModuleManager\Feature;
 
 /**
- * The Library module
- * 
- * This module provides a library of general purpose classes (not specific to
- * other modules). Provided view helpers etc. are automatically registered and
- * don't need to be loaded explicitly.
+ * The Database module
  *
- * @codeCoverageIgnore
+ * This module provides a low level interface to the database. It is used by the
+ * model classes and for managing the database structure.
  */
-class Module implements
-Feature\AutoloaderProviderInterface,
-Feature\ConfigProviderInterface,
-Feature\InitProviderInterface
+class Module implements Feature\ConfigProviderInterface, Feature\AutoloaderProviderInterface
 {
-    /**
-     * @internal
-     */
-    public function init(\Zend\ModuleManager\ModuleManagerInterface $manager)
-    {
-        $manager->loadModule('Database');
-    }
-
     /**
      * @internal
      */
     public function getConfig()
     {
-        return array(
-            'controller_plugins' => array(
-                'invokables' => array(
-                    'RedirectToRoute' => 'Library\Mvc\Controller\Plugin\RedirectToRoute',
-                    'UrlFromRoute' => 'Library\Mvc\Controller\Plugin\UrlFromRoute',
-                )
-            ),
+        // Static configuration part
+        $config = array(
             'service_manager' => array(
                 'factories' => array(
                     'Db' => 'Zend\Db\Adapter\AdapterServiceFactory',
                 ),
             ),
-            'view_helpers' => array(
-                'invokables' => array(
-                    'htmlTag' => 'Library\View\Helper\HtmlTag',
-                ),
-            ),
         );
+
+        // Merge database configuration from /config/braintacle.ini
+        $ini = \Zend\Config\Factory::fromFile(__DIR__ . '/../../config/braintacle.ini');
+        $config['db'] = $ini['database'];
+        $config['db']['charset'] = 'utf8';
+
+        return $config;
     }
 
     /**

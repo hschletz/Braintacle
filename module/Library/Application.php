@@ -104,6 +104,7 @@ class Application
                     'module_paths' => array(
                         'Cli' => self::getApplicationPath('module/Cli'),
                         'Console' => self::getApplicationPath('module/Console/Console'),
+                        'Database' => self::getApplicationPath('module/Database'),
                         'Library' => self::getApplicationPath('module/Library'),
                     ),
                 ),
