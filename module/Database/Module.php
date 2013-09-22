@@ -41,6 +41,7 @@ class Module implements Feature\ConfigProviderInterface, Feature\AutoloaderProvi
             'service_manager' => array(
                 'factories' => array(
                     'Db' => 'Zend\Db\Adapter\AdapterServiceFactory',
+                    'Database\Nada' => 'Database\Service\NadaFactory',
                 ),
             ),
         );

@@ -72,6 +72,7 @@ $logger = new Zend_Log($writer);
 // Create Schema manager object
 Braintacle_MDB2::setErrorReporting();
 $manager = new Braintacle_SchemaManager($logger);
+$schemaManager = new \Database\SchemaManager($manager);
 
 $isCompatible = $manager->isOcsCompatible();
 if ($cmdLine->force or (!$isCompatible and $manager->isUpdateRequired())) {
@@ -84,7 +85,7 @@ if ($cmdLine->force or (!$isCompatible and $manager->isUpdateRequired())) {
         );
     }
     // Update the database automatically
-    $manager->updateAll();
+    $schemaManager->updateAll();
     $logger->info('Database successfully updated.');
 } else {
     if ($isCompatible) {

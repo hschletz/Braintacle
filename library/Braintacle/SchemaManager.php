@@ -27,16 +27,10 @@ require_once('MDB2/Schema.php');
 /**
  * Interface for database schema management
  *
- * This class contains all functionality to manage the database schema and its
- * statically initialized data. Progress is communicated via Zend_Log. The
- * simplest usage is a 3-step process:
+ * This is the legacy schema manager. It is superseded by Database\SchemaManager
+ * which must be used instead.
  *
- * 1. Set up a Zend_Log object.
- * 2. Pass it to the constructor of a new Braintacle_SchemaManager object.
- * 3. Call its {@link updateAll()} method.
- *
- * That's it! For mor control over the update process, the other methods can be
- * called manually instead of {@link updateAll()}.
+ * @deprecated Used only internally by Database\SchemaManager for functionality not ported yet. Do not use directly.
  * @package Library
  */
 class Braintacle_SchemaManager
