@@ -57,6 +57,11 @@ Feature\InitProviderInterface
                     'UrlFromRoute' => 'Library\Mvc\Controller\Plugin\UrlFromRoute',
                 )
             ),
+            'service_manager' => array(
+                'factories' => array(
+                    '\Library\Logger' => 'Library\Log\LoggerServiceFactory',
+                ),
+            ),
             'view_helpers' => array(
                 'invokables' => array(
                     'htmlTag' => 'Library\View\Helper\HtmlTag',
