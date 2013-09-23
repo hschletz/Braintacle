@@ -70,6 +70,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
      */
     public function setSchema()
     {
+        $logger = $this->_serviceLocator->get('Library\Logger');
         $schema = \Zend\Config\Factory::fromFile(
             Module::getPath('data/' . $this->_getClassName() . '.json')
         );
@@ -87,13 +88,14 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
             }
         } else {
             // Table does not exist, create it
-            // TODO: log CREATE TABLE
+            $logger->info("Creating table '$this->table...");
             $table = $database->createTable($this->table, $schema['columns'], $schema['primary_key']);
             $table->setComment($schema['comment']);
             if ($database->isMySql()) {
                 $table->setEngine($schema['mysql']['engine']);
                 $table->setCharset('utf8');
             }
+            $logger->info('done.');
         }
     }
 }

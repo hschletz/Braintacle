@@ -29,8 +29,19 @@ use Zend\ModuleManager\Feature;
  * This module provides a low level interface to the database. It is used by the
  * model classes and for managing the database structure.
  */
-class Module implements Feature\ConfigProviderInterface, Feature\AutoloaderProviderInterface
+class Module implements
+Feature\AutoloaderProviderInterface,
+Feature\ConfigProviderInterface,
+Feature\InitProviderInterface
 {
+    /**
+     * @internal
+     */
+    public function init(\Zend\ModuleManager\ModuleManagerInterface $manager)
+    {
+        $manager->loadModule('Library');
+    }
+
     /**
      * @internal
      */
