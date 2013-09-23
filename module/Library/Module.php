@@ -57,11 +57,6 @@ Feature\InitProviderInterface
                     'UrlFromRoute' => 'Library\Mvc\Controller\Plugin\UrlFromRoute',
                 )
             ),
-            'service_manager' => array(
-                'factories' => array(
-                    'Db' => 'Zend\Db\Adapter\AdapterServiceFactory',
-                ),
-            ),
             'view_helpers' => array(
                 'invokables' => array(
                     'htmlTag' => 'Library\View\Helper\HtmlTag',
