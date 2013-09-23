@@ -26,6 +26,9 @@ namespace Library\Test\Log;
  */
 class LoggerServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * Test service
+     */
     public function testLoggerService()
     {
         $logger = \Library\Application::getService('Library\Logger');
