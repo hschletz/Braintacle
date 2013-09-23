@@ -67,6 +67,24 @@ class SchemaManager
      */
     public function updateAll()
     {
+        $this->updateTables();
         $this->_legacySchemaManager->updateAll();
+    }
+
+    /**
+     * Create/update all tables
+     *
+     * This method iterates over all JSON schema files in ./data, instantiates
+     * table objects of the same name for each file and calls their setSchema()
+     * method.
+     */
+    public function updateTables()
+    {
+        $glob = new \GlobIterator(Module::getPath('data') . '/*.json');
+        foreach ($glob as $fileinfo) {
+            $tableClass = $fileinfo->getBaseName('.json');
+            $table = \Library\Application::getService('Database\Table\\' . $tableClass);
+            $table->setSchema();
+        }
     }
 }

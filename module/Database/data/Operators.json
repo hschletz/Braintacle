@@ -1,0 +1,93 @@
+{
+    "name": "operators",
+    "comment": "Application user accounts",
+    "columns": [
+        {
+            "name": "id",
+            "type": "varchar",
+            "length": 255,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Login name"
+        },
+        {
+            "name": "firstname",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "lastname",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "passwd",
+            "type": "varchar",
+            "length": 50,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "MD5 hash of password"
+        },
+        {
+            "name": "accesslvl",
+            "type": "integer",
+            "length": 32,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "deprecated"
+        },
+        {
+            "name": "comments",
+            "type": "clob",
+            "length": null,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "new_accesslvl",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "deprecated"
+        },
+        {
+            "name": "email",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "user_group",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "unused"
+        }
+    ],
+    "primary_key": [
+        "id"
+    ],
+    "mysql": {
+        "engine": "MyISAM"
+    }
+}

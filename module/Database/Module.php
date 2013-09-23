@@ -39,6 +39,9 @@ class Module implements Feature\ConfigProviderInterface, Feature\AutoloaderProvi
         // Static configuration part
         $config = array(
             'service_manager' => array(
+                'abstract_factories' => array(
+                    'Database\Service\AbstractTableFactory',
+                ),
                 'factories' => array(
                     'Db' => 'Zend\Db\Adapter\AdapterServiceFactory',
                     'Database\Nada' => 'Database\Service\NadaFactory',
@@ -66,5 +69,16 @@ class Module implements Feature\ConfigProviderInterface, Feature\AutoloaderProvi
                 ),
             ),
         );
+    }
+
+    /**
+     * Get path to module directory
+     *
+     * @param string $path Optional path component that is appended to the module root path
+     * @return string Absolute path to requested file/directory (directories without trailing slash)
+     */
+    static function getPath($path='')
+    {
+        return \Library\Application::getApplicationPath('module/Database/' . $path);
     }
 }
