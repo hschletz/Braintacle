@@ -97,5 +97,14 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
             }
             $logger->info('done.');
         }
+
+        $this->_postSetSchema();
+    }
+
+    /**
+     * Hook to be called after creating/altering table schema
+     */
+    protected function _postSetSchema()
+    {
     }
 }

@@ -26,5 +26,36 @@ Namespace Database\Table;
  */
 class Operators extends \Database\AbstractTable
 {
-    // TODO: Migrate account setup
+    /** {@inheritdoc} */
+    protected function _postSetSchema()
+    {
+        $logger = $this->_serviceLocator->get('Library\Logger');
+
+        // If no account exists yet, create a default account.
+        $logger->debug('Checking for existing account.');
+        if (
+            $this->adapter->query(
+                'SELECT COUNT(id) AS num FROM operators',
+                \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
+            )->current()->offsetGet('num') === '0'
+        ) {
+            \Model_Account::create(array('Id' => 'admin'), 'admin');
+            $logger->notice(
+                'Default account \'admin\' created with password \'admin\'.'
+            );
+        }
+
+        // Warn about default password 'admin'
+        $logger->debug('Checking for accounts with default password.');
+        if (
+            $this->adapter->query(
+                'SELECT COUNT(id) AS num FROM operators WHERE passwd = ?',
+                array(md5('admin'))
+            )->current()->offsetGet('num') !== '0'
+        ) {
+            $logger->warn(
+                'Account with default password detected. It should be changed as soon as possible!'
+            );
+        }
+    }
 }

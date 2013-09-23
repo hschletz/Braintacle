@@ -550,49 +550,6 @@ class Braintacle_SchemaManager
                 ' rows skipped)'
             );
         }
-
-        $this->setupAccounts();
-    }
-
-    /**
-     * Setup user accounts
-     *
-     * This will create a default account if no account exists yet, and convert
-     * a cleartext password for the default account.
-     */
-    public function setupAccounts()
-    {
-        $db = $this->_schema->db;
-
-        // If no account exists yet, create a default account.
-        if ($db->queryOne('SELECT COUNT(id) FROM operators') === '0') {
-            Model_Account::create(array('Id' => 'admin'), 'admin');
-            $this->_logger->notice(
-                'Default account \'admin\' created with password \'admin\'.'
-            );
-        }
-
-        // Braintacle does not support cleartext passwords. Old databases for
-        // which the password for the default 'admin' account has never been
-        // changed may contain a cleartext password so that logging in would be
-        // impossible. It will be converted to its MD5 hash.
-        $numRows = $db->exec(
-            "UPDATE operators SET passwd='21232f297a57a5a743894a0e4a801fc3' WHERE passwd='admin'"
-        );
-        if ($numRows) {
-            $this->_logger->info(
-                'Cleartext password hashed.'
-            );
-        }
-
-        // Warn about default password 'admin'
-        if ($db->queryOne(
-            "SELECT COUNT(id) FROM operators WHERE passwd = '21232f297a57a5a743894a0e4a801fc3'"
-        ) !== '0') {
-            $this->_logger->warn(
-                'Account with default password detected. It should be changed as soon as possible!'
-            );
-        }
     }
 
     /**
