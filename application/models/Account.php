@@ -184,14 +184,12 @@ class Model_Account extends Model_Abstract
             $update,
             array('id=?' => $id)
         );
-        if (isset($data['Id'])) {
-            // If the account of the logged in user is changed, the session data
-            // must be updated, so that the identity stays valid in case of a
-            // changed login name.
-            $authStorage = Zend_Auth::getInstance()->getStorage();
-            if ($id == $authStorage->read()) {
-                $authStorage->write($data['Id']);
-            }
+
+        $authService = \Library\Application::getService('Library\AuthenticationService');
+        if (isset($data['Id']) and $id == $authService->getIdentity()) {
+            // If the account name of the logged in user is changed, the
+            // identity must be updated to remain valid.
+            $authService->changeIdentity($data['Id']);
         }
     }
 
@@ -202,7 +200,7 @@ class Model_Account extends Model_Abstract
      */
     public static function delete($id)
     {
-        if ($id == Zend_Auth::getInstance()->getIdentity()) {
+        if ($id == \Library\Application::getService('Library\AuthenticationService')->getIdentity()) {
             throw new RuntimeException('Your own account cannot be deleted.');
         }
 
@@ -211,24 +209,4 @@ class Model_Account extends Model_Abstract
             array('id=?' => $id)
         );
     }
-
-    /**
-     * Attempt login with given credentials
-     * @param string $id Login name
-     * @param string $password Password
-     * @return bool Login success. Don't forget to check this!
-     */
-    public static function login($id, $password)
-    {
-        $adapter = new Zend_Auth_Adapter_DbTable;
-        $adapter->setTableName('operators')
-                ->setIdentityColumn('id')
-                ->setCredentialColumn('passwd')
-                ->setCredentialTreatment("? AND (accesslvl=1 OR new_accesslvl='sadmin')")
-                ->setIdentity($id)
-                ->setCredential(md5($password));
-
-        return Zend_Auth::getInstance()->authenticate($adapter)->isValid();
-    }
-
 }

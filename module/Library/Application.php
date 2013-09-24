@@ -96,6 +96,7 @@ class Application
         );
         self::$application->setBootstrap(self::getApplicationPath('application/Bootstrap.php'));
         self::$application->bootstrap();
+        \Zend_Session::start(); // Required to avoid interference with \Zend\Session
 
         $application = \Zend\Mvc\Application::init(
             array(

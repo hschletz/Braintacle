@@ -75,7 +75,8 @@ function renderEdit($view, $account)
 
 function renderDelete($view, $account)
 {
-    if ($account->getId() == Zend_Auth::getInstance()->getIdentity()) {
+    $identity = \Library\Application::getService('Library\AuthenticationService')->getIdentity();
+    if ($account->getId() == $identity) {
         return '';
     } else {
         return $view->htmlTag(

@@ -32,7 +32,7 @@ class Braintacle_Controller_Plugin_ForceLogin extends Zend_Controller_Plugin_Abs
         // If user is not yet authenticated, redirect to the login page except
         // for the login controller, in which case redirection would result in
         // an infinite loop. LoginController will handle the rest.
-        if (!Zend_Auth::getInstance()->hasIdentity() and
+        if (!\Library\Application::getService('Library\AuthenticationService')->hasIdentity() and
             $request->getControllerName() != 'login'
         ) {
             $redirector = new Zend_Controller_Action_Helper_Redirector();

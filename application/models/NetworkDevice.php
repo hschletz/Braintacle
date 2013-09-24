@@ -214,7 +214,7 @@ class Model_NetworkDevice extends Model_Abstract
             throw new UnexpectedValueException('Uninitialized NetworkDevice object');
         }
 
-        $auth = Zend_Auth::getInstance();
+        $auth = \Library\Application::getService('Library\AuthenticationService');
         $this->setIdentifiedBy($auth->getIdentity());
 
         $db = Model_Database::getAdapter();

@@ -61,6 +61,9 @@ Feature\InitProviderInterface
                 'factories' => array(
                     '\Library\Logger' => 'Library\Log\LoggerServiceFactory',
                 ),
+                'invokables' => array(
+                    'Library\AuthenticationService' => '\Library\Authentication\AuthenticationService',
+                ),
             ),
             'view_helpers' => array(
                 'invokables' => array(

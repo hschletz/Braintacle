@@ -46,7 +46,7 @@ echo $this->headScript();
 </div>
 
 <?php
-if (Zend_Auth::getInstance()->hasIdentity()):
+if (\Library\Application::getService('Library\AuthenticationService')->hasIdentity()):
 ?>
 
 <div id="menu">

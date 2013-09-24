@@ -45,8 +45,10 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function loginAction()
     {
+        $auth = $this->getServiceLocator()->get('Library\AuthenticationService');
+
         // Don't show the login form if the user is already logged in
-        if (\Zend_Auth::getInstance()->hasIdentity()) {
+        if ($auth->hasIdentity()) {
             return $this->redirectToRoute('computer');
         }
 
@@ -56,7 +58,7 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost() and $form->isValid($request->getPost()->toArray())) {
             // Check credentials
-            if (\Model_Account::login($form->getValue('userid'), $form->getValue('password'))) {
+            if ($auth->login($form->getValue('userid'), $form->getValue('password'))) {
                 // Authentication successful. Redirect to computer listing.
                 return $this->redirectToRoute('computer');
             } else {
@@ -75,7 +77,7 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function logoutAction()
     {
-        \Zend_Auth::getInstance()->clearIdentity();
+        $this->getServiceLocator()->get('Library\AuthenticationService')->clearIdentity();
         return $this->redirectToRoute('login', 'login');
     }
 }
