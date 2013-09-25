@@ -22,6 +22,7 @@
 namespace Console;
 
 use Zend\ModuleManager\Feature;
+use Zend\Mvc\MvcEvent;
 
 /**
  * This is the module for the web administration console.
@@ -68,7 +69,35 @@ Feature\BootstrapListenerInterface
      */
     public function onBootstrap(\Zend\EventManager\EventInterface $e)
     {
-        $e->getParam('application')->getEventManager()->attach('render', array($this, 'setLayoutTitle'));
+        $eventManager = $e->getParam('application')->getEventManager();
+        $eventManager->attach(MvcEvent::EVENT_ROUTE, array($this, 'forceLogin'));
+        $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'setLayoutTitle'));
+    }
+
+    /**
+     * Hook to redirect unauthenticated requests to the login page
+     *
+     * @param \Zend\Mvc\MvcEvent $e MVC event
+     * @return mixed Redirect response (\Zend\Stdlib\ResponseInterface) or NULL to continue
+     */
+    public function forceLogin(\Zend\Mvc\MvcEvent $e)
+    {
+        // If user is not yet authenticated, redirect to the login page except
+        // for the login controller, in which case redirection would result in
+        // an infinite loop.
+        if (!$e->getApplication()->getServiceManager()->get('Library\AuthenticationService')->hasIdentity() and
+            $e->getRouteMatch()->getParam('controller') != 'login' and
+            !\Library\Application::isTest() // TODO: Provide test case
+        ) {
+            $location = $e->getRouter()->assemble(
+                array('controller' => 'login'),
+                array('name' => 'console')
+            );
+            $response = $e->getResponse();
+            $response->setStatusCode(302);
+            $response->getHeaders()->addHeaderLine('Location', $location);
+            return $response;
+        }
     }
 
     /**
