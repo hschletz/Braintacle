@@ -30,6 +30,8 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
 {
     /**
      * Alias for loginAction()
+     *
+     * @return mixed View model (form => \Form_Login) or redirect response
      */
     public function indexAction()
     {
@@ -42,6 +44,8 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
 
     /**
      * Handle login form
+     *
+     * @return mixed View model (form => \Form_Login) or redirect response
      */
     public function loginAction()
     {
@@ -74,6 +78,8 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
 
     /**
      * Log out and get back to login form
+     *
+     * @return \Zend\Http\Response Redirect response
      */
     public function logoutAction()
     {
