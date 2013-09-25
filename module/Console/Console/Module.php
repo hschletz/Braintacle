@@ -25,6 +25,7 @@ use Zend\ModuleManager\Feature;
 
 /**
  * This is the module for the web administration console.
+ * @codeCoverageIgnore
  */
 class Module implements
 Feature\InitProviderInterface,

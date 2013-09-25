@@ -254,7 +254,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initViewHelpers()
     {
-        if (Application::isCli()) {
+        if (Application::isCli() and !Application::isTest()) {
             return;
         }
 

@@ -33,6 +33,7 @@ class Form_Login extends Zend_Form
     public function init()
     {
         $this->setMethod('post');
+        $this->setAttrib('class', 'form_login');
         $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
 
         $username = new Zend_Form_Element_Text('userid');
@@ -69,12 +70,9 @@ class Form_Login extends Zend_Form
     /**
      * @ignore
      */
-    public function render(Zend_View_Interface $view=null)
+    public function toHtml(\Zend\View\Renderer\RendererInterface $view)
     {
-        if (!$view) {
-            $renderer = \Library\Application::getService('ViewRenderer');
-            $renderer->placeholder('BodyOnLoad')->append('document.getElementById("userid").focus()');
-        }
-        return parent::render($view);
+        $view->placeholder('BodyOnLoad')->append('document.getElementById("userid").focus()');
+        return $this->render();
     }
 }

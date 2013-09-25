@@ -23,6 +23,7 @@
 print "<h1>An error occurred</h1>\n";
 print $this->htmlTag('h2', $this->message);
 
+// @codeCoverageIgnoreStart
 if (\Library\Application::isDevelopment()) {
     $exception = $this->exception;
     if ($exception) {

@@ -25,6 +25,7 @@ use Zend\Stdlib;
 
 /**
  * Transitional controller that starts the ZF1 application
+ * @codeCoverageIgnore
  */
 class ZF1Controller implements Stdlib\DispatchableInterface
 {

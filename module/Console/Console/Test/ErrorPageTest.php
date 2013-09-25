@@ -1,6 +1,6 @@
 <?php
 /**
- * Display login form
+ * Tests for the error page
  *
  * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,12 +17,22 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-print $this->htmlTag(
-    'h1',
-    $this->translate('Login to Braintacle')
-);
+namespace Console\Test;
 
-print $this->form->toHtml($this);
+/**
+ * Tests for the error page
+ */
+class ErrorPageTest extends AbstractControllerTest
+{
+    /**
+     * Test 404 case
+     */
+    public function testPageNotFound()
+    {
+        $this->dispatch('/invalid');
+        $this->assertResponseStatusCode(404);
+        $this->assertQueryContentContains('h2', "\nPage not found.\n");
+    }
+}

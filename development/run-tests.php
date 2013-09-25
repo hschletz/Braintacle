@@ -50,3 +50,4 @@ putenv('APPLICATION_ENV=test');
 
 // Run tests for all modules that have tests defined
 testModule('Library');
+testModule('Console');

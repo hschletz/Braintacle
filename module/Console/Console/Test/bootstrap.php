@@ -1,6 +1,6 @@
 <?php
 /**
- * Display login form
+ * Bootstrap for unit tests
  *
  * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,12 +17,9 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-print $this->htmlTag(
-    'h1',
-    $this->translate('Login to Braintacle')
-);
-
-print $this->form->toHtml($this);
+error_reporting(-1);
+require_once(__DIR__ . '/../../../Library/Application.php');
+\Library\Application::init('Console', false);
+\Zend_Session::$_unitTestEnabled = true;
