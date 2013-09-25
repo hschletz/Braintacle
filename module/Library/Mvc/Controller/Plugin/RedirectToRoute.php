@@ -38,7 +38,7 @@ class RedirectToRoute extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
      * @param string $controllerName Controller name. If empty, the default controller is used.
      * @param string $action Action name. If empty, the default action is used.
      * @param array $params Associative array of URL parameters
-     * @return string URL
+     * @return \Zend\Http\Response Redirect response
      */
     function __invoke($controllerName=null, $action=null, array $params=array())
     {
