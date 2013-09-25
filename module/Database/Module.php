@@ -61,7 +61,7 @@ Feature\InitProviderInterface
         );
 
         // Merge database configuration from /config/braintacle.ini
-        $ini = \Zend\Config\Factory::fromFile(__DIR__ . '/../../config/braintacle.ini');
+        $ini = \Zend\Config\Factory::fromFile(\Library\Application::getPath('config/braintacle.ini'));
         $config['db'] = $ini['database'];
         $config['db']['charset'] = 'utf8';
 
