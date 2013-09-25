@@ -48,6 +48,11 @@ chdir(dirname(__DIR__));
 // appropriate in a unit test environment.
 putenv('APPLICATION_ENV=test');
 
-// Run tests for all modules that have tests defined
-testModule('Library');
-testModule('Console');
+if ($argc == 2) {
+    // Run tests for explicit module
+    testModule(ucfirst(strtolower($argv[1])));
+} else {
+    // Run tests for all modules that have tests defined
+    testModule('Library');
+    testModule('Console');
+}
