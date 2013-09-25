@@ -77,12 +77,12 @@ class Application
         );
 
         // PEAR libraries are not suitable for autoloading. Add them to include path instead.
-        set_include_path(get_include_path() . PATH_SEPARATOR . self::getApplicationPath('library/PEAR'));
+        set_include_path(get_include_path() . PATH_SEPARATOR . self::getPath('library/PEAR'));
 
         // Bootstrap ZF1 application part, but don't run it yet.
         // It is run at a later point if required.
         // TODO: remove APPLICATION_PATH and APPLICATION_ENV when no longer used
-        define('APPLICATION_PATH', self::getApplicationPath('application'));
+        define('APPLICATION_PATH', self::getPath('application'));
         $environment = self::getEnvironment();
 
         // Get absolute path to ZF1 library
@@ -92,9 +92,9 @@ class Application
         require_once 'Zend/Application.php';
         self::$application = new \Zend_Application(
             ($environment == 'test' ? 'development' : $environment),
-            self::getApplicationPath('application/configs/application.ini')
+            self::getPath('application/configs/application.ini')
         );
-        self::$application->setBootstrap(self::getApplicationPath('application/Bootstrap.php'));
+        self::$application->setBootstrap(self::getPath('application/Bootstrap.php'));
         self::$application->bootstrap();
         \Zend_Session::start(); // Required to avoid interference with \Zend\Session
 
@@ -103,10 +103,10 @@ class Application
                 'modules' => array($module),
                 'module_listener_options' => array(
                     'module_paths' => array(
-                        'Cli' => self::getApplicationPath('module/Cli'),
-                        'Console' => self::getApplicationPath('module/Console/Console'),
-                        'Database' => self::getApplicationPath('module/Database'),
-                        'Library' => self::getApplicationPath('module/Library'),
+                        'Cli' => self::getPath('module/Cli'),
+                        'Console' => self::getPath('module/Console/Console'),
+                        'Database' => self::getPath('module/Database'),
+                        'Library' => self::getPath('module/Library'),
                     ),
                 ),
             )
@@ -132,7 +132,7 @@ class Application
      * @throws \LogicException if the requested path component does not exist
      * @codeCoverageIgnore
      */
-    static function getApplicationPath($path='')
+    static function getPath($path='')
     {
         $realPath = realpath(__DIR__ . '/../../' . $path);
         if (!$realPath) {

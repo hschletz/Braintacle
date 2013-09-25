@@ -313,7 +313,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 '\Zend\Loader\StandardAutoloader' => array(
                     'prefixes' => array(
                         'Zend' => Application::$zf1Path,
-                        'Braintacle' => Application::getApplicationPath('library/Braintacle'),
+                        'Braintacle' => Application::getPath('library/Braintacle'),
                     )
                 ),
             )

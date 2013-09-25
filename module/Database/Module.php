@@ -90,6 +90,6 @@ Feature\InitProviderInterface
      */
     static function getPath($path='')
     {
-        return \Library\Application::getApplicationPath('module/Database/' . $path);
+        return \Library\Application::getPath('module/Database/' . $path);
     }
 }

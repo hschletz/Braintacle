@@ -26,7 +26,7 @@ use \Library\Application;
 /**
  * Tests for the Application class
  *
- * The methods init() and getApplicationPath() are not tested explicitly. They
+ * The methods init() and getPath() are not tested explicitly. They
  * are invoked as part of the bootstrap process which would most likely fail if
  * these methods didn't work correctly.
  */
