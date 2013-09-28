@@ -26,13 +26,22 @@ error_reporting(-1);
  * Run tests for specified module
  * 
  * @param string $module Module name
+ * @param string $testClass optional path of test class to run, relative to module namespace root
  */
-function testModule($module)
+function testModule($module, $testClass=null)
 {
+    if ($testClass) {
+        $testBase = dirname(__DIR__) . "/module/$module/";
+        if ($module == 'Console') {
+            $testBase .= 'Console/';
+        }
+        $testBase .= 'Test/';
+        $testClass = ' ' . $testBase . $testClass;
+    }
     system(
         "phpunit -c module/$module/phpunit.xml --strict --colors " .
         "--coverage-text --coverage-html=doc/CodeCoverage/$module " .
-        "-d include_path=" . get_include_path(),
+        "-d include_path=" . get_include_path() . $testClass,
         $exitCode
     );
     if ($exitCode) {
@@ -48,9 +57,9 @@ chdir(dirname(__DIR__));
 // appropriate in a unit test environment.
 putenv('APPLICATION_ENV=test');
 
-if ($argc == 2) {
-    // Run tests for explicit module
-    testModule(ucfirst(strtolower($argv[1])));
+if ($argc >= 2) {
+    // Run tests for explicit module and optional explicit test
+    testModule(ucfirst(strtolower($argv[1])), @$argv[2]);
 } else {
     // Run tests for all modules that have tests defined
     testModule('Library');
