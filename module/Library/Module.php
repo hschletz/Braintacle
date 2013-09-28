@@ -58,6 +58,9 @@ Feature\InitProviderInterface
                 )
             ),
             'service_manager' => array(
+                'aliases' => array(
+                    'Zend\Authentication\AuthenticationService' => 'Library\AuthenticationService',
+                ),
                 'factories' => array(
                     '\Library\Logger' => 'Library\Log\LoggerServiceFactory',
                 ),

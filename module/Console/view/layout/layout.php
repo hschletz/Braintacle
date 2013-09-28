@@ -47,7 +47,33 @@ print ">\n<div id='content'>\n";
 print $this->content;
 print "</div>\n";
 
-// TODO: render navigation
+if ($this->identity()) {
+    print "<div id='menu'>\n";
+
+    $menu = $this->navigation()->menu('Console\Navigation\MainMenuFactory');
+
+    // Top level menu
+    print $menu->renderMenu(
+        null,
+        array(
+            'maxDepth' => 0,
+            'ulClass' => 'navigation',
+        )
+    );
+
+    // TODO: render submenu
+
+    // Logout button
+    print "<div id='logout'>\n";
+    print $this->htmlTag(
+        'a',
+        $this->translate('Logout'),
+        array('href' => $this->consoleUrl('login', 'logout'))
+    );
+
+    print "</div>\n"; // id=logout
+    print "</div>\n"; // id=menu
+}
 
 print "</body>\n";
 print "</html>\n";

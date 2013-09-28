@@ -56,6 +56,16 @@ return array(
             ),
         ),
     ),
+    'service_manager' => array(
+        'factories' => array(
+            'Console\Navigation\MainMenuFactory' => 'Console\Navigation\MainMenuFactory',
+        ),
+    ),
+    'view_helpers' => array(
+        'invokables' => array(
+            'consoleUrl' => 'Console\View\Helper\ConsoleUrl',
+        ),
+    ),
     'view_manager' => array(
         'doctype' => 'HTML4_STRICT',
         'template_path_stack' => array(
