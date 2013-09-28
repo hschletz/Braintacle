@@ -32,6 +32,22 @@ class ConsoleUrlTest extends \Library\Test\View\Helper\AbstractTest
     public function testInvokable()
     {
         $helper = $this->_getHelper();
-        $this->assertEquals('/console/computer/index/', $helper('computer', 'index'));
+
+        $this->assertEquals(
+            '/console/computer/index/',
+            $helper('computer', 'index')
+        );
+
+        $params = array('param1' => 'value1');
+        $this->assertEquals(
+            '/console/computer/index/?param1=value1',
+            $helper('computer', 'index', $params)
+        );
+
+        $params['param2'] = 'value2';
+        $this->assertEquals(
+            '/console/computer/index/?param1=value1&param2=value2',
+            $helper('computer', 'index', $params)
+        );
     }
 }
