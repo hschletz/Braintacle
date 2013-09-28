@@ -36,7 +36,7 @@ function testModule($module)
         $exitCode
     );
     if ($exitCode) {
-        printf("\n\nUnit tests for module '%s'' failed with status %d. Aborting.\n", $module, $exitCode);
+        printf("\n\nUnit tests for module '%s' failed with status %d. Aborting.\n", $module, $exitCode);
         exit(1);
     }
 }
