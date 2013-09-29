@@ -29,7 +29,6 @@ use Zend\Mvc\MvcEvent;
  * @codeCoverageIgnore
  */
 class Module implements
-Feature\InitProviderInterface,
 Feature\ConfigProviderInterface,
 Feature\AutoloaderProviderInterface,
 Feature\BootstrapListenerInterface
@@ -37,9 +36,9 @@ Feature\BootstrapListenerInterface
     /**
      * @internal
      */
-    public function init(\Zend\ModuleManager\ModuleManagerInterface $manager)
+    public function getDependencies()
     {
-        $manager->loadModule('Library');
+        return array('Library');
     }
 
     /**

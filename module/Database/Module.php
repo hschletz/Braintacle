@@ -31,15 +31,14 @@ use Zend\ModuleManager\Feature;
  */
 class Module implements
 Feature\AutoloaderProviderInterface,
-Feature\ConfigProviderInterface,
-Feature\InitProviderInterface
+Feature\ConfigProviderInterface
 {
     /**
      * @internal
      */
-    public function init(\Zend\ModuleManager\ModuleManagerInterface $manager)
+    public function getDependencies()
     {
-        $manager->loadModule('Library');
+        return array('Library');
     }
 
     /**

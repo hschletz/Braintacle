@@ -98,16 +98,17 @@ class Application
         self::$application->bootstrap();
         \Zend_Session::start(); // Required to avoid interference with \Zend\Session
 
+        $modulePaths = array(
+            'Cli' => 'module/Cli',
+            'Console' => 'module/Console/Console',
+            'Database' => 'module/Database',
+            'Library' => 'module/Library',
+        );
         $application = \Zend\Mvc\Application::init(
             array(
-                'modules' => array($module),
+                'modules' => self::_getModules($modulePaths, $module),
                 'module_listener_options' => array(
-                    'module_paths' => array(
-                        'Cli' => self::getPath('module/Cli'),
-                        'Console' => self::getPath('module/Console/Console'),
-                        'Database' => self::getPath('module/Database'),
-                        'Library' => self::getPath('module/Library'),
-                    ),
+                    'module_paths' => $modulePaths
                 ),
             )
         );
@@ -122,6 +123,43 @@ class Application
         if ($run) {
             $application->run();
         }
+    }
+
+    /**
+     * Get list of modules to load, resolving module dependencies
+     *
+     * This method takes care of module dependencies. These are declared by the
+     * modules themselves by providing an optional getDependencies() method
+     * which should return an array of module names it depends on. Recursive and
+     * circular dependencies are gracefully handled.
+     *
+     * The result is a list of modules with all dependencies taken into account.
+     *
+     * Note that modules are loaded in an indeterminate order. Modules should not
+     * rely on their dependencies having been loaded at their early
+     * initialization stage.
+     *
+     * @param array $modulePaths Module paths (same as for the "module_paths" option)
+     * @param string $name Name of base module
+     * @param array $modules List of already found modules (used internally)
+     * @return array Associative array of module names => module objects
+     * @codeCoverageIgnore
+     */
+    protected static function _getModules($modulePaths, $name, $modules=array())
+    {
+        if (!isset($modules[$name])) { // Skip if this module has already been processed
+            // Create module and add it to the list
+            require_once(self::getPath($modulePaths[$name] . '/Module.php'));
+            $class = $name . '\Module';
+            $modules[$name] = new $class;
+            if (method_exists($modules[$name], 'getDependencies')) {
+                // Add dependencies
+                foreach ($modules[$name]->getDependencies() as $dependency) {
+                    $modules = self::_getModules($modulePaths, $dependency, $modules);
+                }
+            }
+        }
+        return $modules;
     }
 
     /**

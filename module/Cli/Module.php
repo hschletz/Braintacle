@@ -31,13 +31,13 @@ use Zend\ModuleManager\Feature;
  * this module via \Library\Application::init() and continue their operation in
  * the same script.
  */
-class Module implements Feature\InitProviderInterface
+class Module
 {
     /**
      * @internal
      */
-    public function init(\Zend\ModuleManager\ModuleManagerInterface $manager)
+    public function getDependencies()
     {
-        $manager->loadModule('Library');
+        return array('Library');
     }
 }
