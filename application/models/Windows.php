@@ -138,7 +138,7 @@ class Model_Windows extends Model_Abstract
      * Get number of computers with manually entered Windows product key
      * @return integer
      **/
-    public static function getNumManualProductKeys()
+    public function getNumManualProductKeys()
     {
         if (Model_Database::supportsManualProductKey()) {
             return Model_Database::getAdapter()->fetchOne(

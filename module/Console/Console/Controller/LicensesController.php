@@ -19,13 +19,22 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-class LicensesController extends Zend_Controller_Action
-{
+namespace Console\Controller;
 
+/**
+ * Controller for managing software licenses
+ */
+class LicensesController extends \Zend\Mvc\Controller\AbstractActionController
+{
+    /**
+     * Display overview of software licenses
+     *
+     * @return array windowsProductKeys => number of manually entered keys
+     */
     public function indexAction()
     {
-        $this->view->windowsProductKeys = Model_Windows::getNumManualProductKeys();
+        return array(
+            'windowsProductKeys' => $this->serviceLocator->get('Model\Computer\Windows')->getNumManualProductKeys()
+        );
     }
-
 }
-

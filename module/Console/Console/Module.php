@@ -38,7 +38,7 @@ Feature\BootstrapListenerInterface
      */
     public function getDependencies()
     {
-        return array('Library');
+        return array('Library', 'Model');
     }
 
     /**

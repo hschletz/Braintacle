@@ -103,6 +103,7 @@ class Application
             'Console' => 'module/Console/Console',
             'Database' => 'module/Database',
             'Library' => 'module/Library',
+            'Model' => 'module/Model',
         );
         $application = \Zend\Mvc\Application::init(
             array(

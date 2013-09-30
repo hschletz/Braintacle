@@ -22,6 +22,7 @@
 return array(
     'controllers' => array(
         'invokables' => array(
+            'licenses' => 'Console\Controller\LicensesController',
             'login' => 'Console\Controller\LoginController',
             'Console\Controller\ZF1' => 'Console\Controller\ZF1Controller',
         ),
@@ -47,7 +48,7 @@ return array(
             'zf1' => array(
                 'type'    => 'regex',
                 'options' => array(
-                    'regex'    => '/(console/)?(accounts|computer|duplicates|error|group|index|licenses|network|package|preferences|software)/?.*',
+                    'regex'    => '/(console/)?(accounts|computer|duplicates|error|group|index|network|package|preferences|software)/?.*',
                     'spec' => '',
                     'defaults' => array(
                         'controller' => 'Console\Controller\ZF1',

@@ -33,10 +33,10 @@ if ($this->windowsProductKeys) {
             'a',
             $this->windowsProductKeys,
             array(
-                'href' => $this->url(
+                'href' => $this->consoleUrl(
+                    'computer',
+                    'index',
                     array(
-                        'controller' => 'computer',
-                        'action' => 'index',
                         'columns' => 'Name,OsName,Windows.ProductKey,Windows.ManualProductKey',
                         'filter' => 'Windows.ManualProductKey',
                         'customFilter' => '1',
