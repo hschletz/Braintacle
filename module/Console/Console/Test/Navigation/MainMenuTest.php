@@ -26,7 +26,7 @@ use Library\Application;
 /**
  * Tests for the main menu
  */
-class ErrorPageTest extends \PHPUnit_Framework_TestCase
+class MainMenuTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Test for valid factory output
