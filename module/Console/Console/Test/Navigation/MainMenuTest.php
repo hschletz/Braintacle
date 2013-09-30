@@ -26,7 +26,7 @@ use Library\Application;
 /**
  * Tests for the main menu
  */
-class MainMenuTest extends \PHPUnit_Framework_TestCase
+class MainMenuTest extends \Console\Test\AbstractControllerTest
 {
     /**
      * Test for valid factory output
@@ -37,5 +37,36 @@ class MainMenuTest extends \PHPUnit_Framework_TestCase
             'Zend\Navigation\Navigation',
             Application::getService('Console\Navigation\MainMenuFactory')
         );
+    }
+
+    /**
+     * Test for highlighting of active menu entry
+     */
+    public function testActive()
+    {
+        // Mock AuthenticationService to provide an identity
+        $auth = $this->getMock('Library\Authentication\AuthenticationService');
+        $auth->expects($this->any())
+             ->method('hasIdentity')
+             ->will($this->returnValue(true));
+        $auth->expects($this->any())
+             ->method('getIdentity')
+             ->will($this->returnValue('test'));
+
+        // Mock model to make action run without errors
+        $model = $this->getMock('Model_Windows');
+        $model->expects($this->any())
+              ->method('getNumManualProductKeys')
+              ->will($this->returnValue(0));
+
+        $this->getApplicationServiceLocator()
+             ->setAllowOverride(true)
+             ->setService('Library\AuthenticationService', $auth)
+             ->setService('Model\Computer\Windows', $model);
+
+        // Dispatch arbitrary action and test corresponding menu entry
+        $this->dispatch('/console/licenses/index/');
+        $this->assertResponseStatusCode(200);
+        $this->assertQueryContentContains('li.active a', 'Licenses');
     }
 }
