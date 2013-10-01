@@ -71,6 +71,8 @@ Feature\BootstrapListenerInterface
         $eventManager = $e->getParam('application')->getEventManager();
         $eventManager->attach(MvcEvent::EVENT_ROUTE, array($this, 'forceLogin'));
         $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'setLayoutTitle'));
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onError'));
+        $eventManager->attach(MvcEvent::EVENT_RENDER_ERROR, array($this, 'onError'));
     }
 
     /**
@@ -111,5 +113,20 @@ Feature\BootstrapListenerInterface
         $headTitleHelper = $e->getApplication()->getServiceManager()->get('viewHelperManager')->get('headTitle');
         $headTitleHelper->setTranslatorEnabled(false);
         $headTitleHelper->append('Braintacle'); // TODO: append page-specific information
+    }
+
+    /**
+     * Hook to inject the controller name and request object into the error template
+     *
+     * This is triggered by EVENT_DISPATCH_ERROR and EVENT_RENDER_ERROR.
+     *
+     * @param \Zend\Mvc\MvcEvent $e MVC event
+     */
+    public function onError(\Zend\Mvc\MvcEvent $e)
+    {
+        $result = $e->getResult();
+//         var_dump($e->getParams());
+        $result->controller = $e->getRouteMatch()->getParam('controller');
+        $result->request = $e->getRequest();
     }
 }

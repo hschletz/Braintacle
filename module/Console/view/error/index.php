@@ -45,33 +45,36 @@ if (\Library\Application::isDevelopment()) {
             $exception = $exception->getPrevious();
         }
 
-// TODO: hide details for login controller
-//     // The additional debug information below might contain sensitive data.
-//     if ($this->request->getParam('controller') == 'login') {
-//         print 'Details hidden for security reasons.';
-//         return;
-//     }
+        // The additional debug information below might contain sensitive data.
+        if ($this->controller == 'login') {
+            print 'Details hidden for security reasons.';
+            return;
+        }
 
         print "<h3>Stack trace:</h3>\n";
         print $this->htmlTag('pre', $this->escapeHtml($this->exception->getTraceAsString()));
-    }
 
-// TODO: display request parameters
-//     print "<h3>Request Parameters:</h3>\n";
-//     $params = $this->request->getParams();
-//     // If the Xdebug extension is loaded, var_dump() is overloaded with Xdebug's
-//     // version that formats and escapes the output. Starting with Xdebug 2.1,
-//     // this feature can be disabled, so this needs to be checked too. For Xdebug
-//     // 2.1+, ini_get() returns '0' (disabled) or a nonempty string (enabled),
-//     // while older versions always return '' (always enabled).
-//     $prettyprint = ini_get('xdebug.overload_var_dump');
-//     if (extension_loaded('xdebug') and ($prettyprint === '' or !empty($prettyprint))) {
-//         // Xdebug extension formats and escapes the output.
-//         var_dump($params);
-//     } else {
-//         // Standard output
-//         print $this->htmlTag('pre', $this->escape(var_export($params, true)));
-//     }
+        $request = $this->request;
+        print "<h3>Request Parameters:</h3>\n";
+
+        print "<h4>Method</h4>\n";
+        print $this->htmlTag('p', $this->escapeHtml($request->getMethod()));
+
+        print "<h4>URL parameters</h4>\n";
+        \Zend\Debug\Debug::dump($request->getQuery());
+
+        print "<h4>POST parameters</h4>\n";
+        \Zend\Debug\Debug::dump($request->getPost());
+
+        print "<h4>Files</h4>\n";
+        \Zend\Debug\Debug::dump($request->getFiles());
+
+        print "<h4>HTTP headers</h4>\n";
+        \Zend\Debug\Debug::dump($request->getHeaders()->toArray());
+
+        print "<h4>Environment variables</h4>\n";
+        \Zend\Debug\Debug::dump($request->getEnv());
+    }
 } else {
     print "<p class='textcenter'>Details can be found in the web server error log.</p>\n";
 }
