@@ -26,8 +26,9 @@ use Zend\ModuleManager\Feature;
 /**
  * The Model module
  *
- * This module provides models as services. Most services are not shared, i.e.
- * the service manager creates a new instance every time a model is requested.
+ * This module provides models as services. The services are shared, i.e. the
+ * returned objects should not be modifed, but used as a prototype by cloning
+ * where necessary.
  */
 class Module implements
 Feature\AutoloaderProviderInterface,
@@ -50,9 +51,6 @@ Feature\ConfigProviderInterface
             'service_manager' => array(
                 'invokables' => array(
                     'Model\Computer\Windows' => 'Model_Windows',
-                ),
-                'shared' => array(
-                    'Model\Computer\Windows' => false,
                 ),
             ),
         );
