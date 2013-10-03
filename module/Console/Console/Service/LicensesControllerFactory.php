@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for the error page
+ * Factory for LicensesController
  *
  * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,31 +19,20 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Console\Test;
+namespace Console\Service;
 
 /**
- * Tests for the error page
+ * Factory for LicensesController
  */
-class ErrorPageTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
+class LicensesControllerFactory implements \Zend\ServiceManager\FactoryInterface
 {
-
     /**
-     * Set up application config
+     * @internal
      */
-    public function setUp()
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $this->setTraceError(true);
-        $this->setApplicationConfig(\Library\Application::getService('ApplicationConfig'));
-        parent::setUp();
-    }
-
-    /**
-     * Test 404 case
-     */
-    public function testPageNotFound()
-    {
-        $this->dispatch('/invalid');
-        $this->assertResponseStatusCode(404);
-        $this->assertQueryContentContains('h2', "\nPage not found.\n");
+        return new \Console\Controller\LicensesController(
+            $serviceLocator->getServiceLocator()->get('Model\Computer\Windows')
+        );
     }
 }

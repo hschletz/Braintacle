@@ -26,8 +26,18 @@ use Library\Application;
 /**
  * Tests for the main menu
  */
-class MainMenuTest extends \Console\Test\AbstractControllerTest
+class MainMenuTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
 {
+    /**
+     * Set up application config
+     */
+    public function setUp()
+    {
+        $this->setTraceError(true);
+        $this->setApplicationConfig(\Library\Application::getService('ApplicationConfig'));
+        parent::setUp();
+    }
+
     /**
      * Test for valid factory output
      */

@@ -27,6 +27,22 @@ namespace Console\Controller;
 class LicensesController extends \Zend\Mvc\Controller\AbstractActionController
 {
     /**
+     * Windows prototype
+     * @var \Model_Windows
+     */
+    protected $_windows;
+
+    /**
+     * Constructor
+     * 
+     * @param \Model_Windows $windows Windows prototype
+     */
+    public function __construct(\Model_Windows $windows)
+    {
+        $this->_windows = $windows;
+    }
+
+    /**
      * Display overview of software licenses
      *
      * @return array windowsProductKeys => number of manually entered keys
@@ -34,7 +50,7 @@ class LicensesController extends \Zend\Mvc\Controller\AbstractActionController
     public function indexAction()
     {
         return array(
-            'windowsProductKeys' => $this->serviceLocator->get('Model\Computer\Windows')->getNumManualProductKeys()
+            'windowsProductKeys' => $this->_windows->getNumManualProductKeys()
         );
     }
 }

@@ -29,12 +29,66 @@ namespace Console\Test;
 abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
 {
     /**
+     * ControllerManager mock
+     * @var \Zend\Mvc\Controller\ControllerManager
+     */
+    protected $_controllerManager;
+
+    /**
      * Set up application config
      */
     public function setUp()
     {
         $this->setTraceError(true);
         $this->setApplicationConfig(\Library\Application::getService('ApplicationConfig'));
+        $this->_controllerManager = $this->getMock('Zend\Mvc\Controller\ControllerManager');
+        $this->_controllerManager->expects($this->any())
+                                 ->method('has')
+                                 ->will($this->returnValue(true));
+        $this->_controllerManager->expects($this->any())
+                                 ->method('get')
+                                 ->will($this->returnCallback(array($this, 'createController')));
         parent::setUp();
     }
+
+    /**
+     * Dispatch the MVC with an URL
+     *
+     * This extends the base implementation by automatically invoking reset()
+     * and injecting the mock controller manager.
+     *
+     * @param string $url
+     * @param string|null $method
+     * @param array|null $params
+     */
+    public function dispatch($url, $method = null, $params = array())
+    {
+        $this->reset();
+        $this->getApplicationServiceLocator()
+             ->setAllowOverride(true)
+             ->setService('ControllerLoader', $this->_controllerManager);
+        parent::dispatch($url, $method, $params);
+    }
+
+    /**
+     * Create the controller
+     *
+     * @return \Zend\Stdlib\DispatchableInterface Controller instance
+     */
+    public function createController()
+    {
+        $controller = $this->_createController();
+        $controller->setPluginManager($this->getApplicationServiceLocator()->get('ControllerPluginManager'));
+        return $controller;
+    }
+
+    /**
+     * Create controller instance
+     *
+     * This abstract method must be implemented by derived classes. It returns a
+     * controller instance, with all controller-specific dependencies injected.
+     *
+     * @return \Zend\Stdlib\DispatchableInterface
+     */
+    abstract protected function _createController();
 }

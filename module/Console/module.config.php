@@ -22,9 +22,11 @@
 return array(
     'controllers' => array(
         'invokables' => array(
-            'licenses' => 'Console\Controller\LicensesController',
-            'login' => 'Console\Controller\LoginController',
             'Console\Controller\ZF1' => 'Console\Controller\ZF1Controller',
+        ),
+        'factories' => array(
+            'licenses' => 'Console\Service\LicensesControllerFactory',
+            'login' => 'Console\Service\LoginControllerFactory',
         ),
     ),
     'router' => array(

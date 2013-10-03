@@ -29,6 +29,22 @@ use \Zend\View\Model\ViewModel;
 class LoginController extends \Zend\Mvc\Controller\AbstractActionController
 {
     /**
+     * Authentication service
+     * @var \Library\Authentication\AuthenticationService
+     */
+    protected $_authenticationService;
+
+    /**
+     * Constructor
+     *
+     * @param \Library\Authentication\AuthenticationService $authenticationService Authentication service
+     */
+    public function __construct($authenticationService)
+    {
+        $this->_authenticationService = $authenticationService;
+    }
+
+    /**
      * Alias for loginAction()
      *
      * @return mixed View model (form => \Form_Login) or redirect response
@@ -49,10 +65,8 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function loginAction()
     {
-        $auth = $this->getServiceLocator()->get('Library\AuthenticationService');
-
         // Don't show the login form if the user is already logged in
-        if ($auth->hasIdentity()) {
+        if ($this->_authenticationService->hasIdentity()) {
             return $this->redirectToRoute('computer');
         }
 
@@ -62,7 +76,7 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost() and $form->isValid($request->getPost()->toArray())) {
             // Check credentials
-            if ($auth->login($form->getValue('userid'), $form->getValue('password'))) {
+            if ($this->_authenticationService->login($form->getValue('userid'), $form->getValue('password'))) {
                 // Authentication successful. Redirect to computer listing.
                 return $this->redirectToRoute('computer');
             } else {
@@ -83,7 +97,7 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function logoutAction()
     {
-        $this->getServiceLocator()->get('Library\AuthenticationService')->clearIdentity();
+        $this->_authenticationService->clearIdentity();
         return $this->redirectToRoute('login', 'login');
     }
 }

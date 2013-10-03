@@ -26,28 +26,10 @@ namespace Console\Test\Controller;
  */
 class LicensesControllerTest extends \Console\Test\AbstractControllerTest
 {
-    /**
-     * Common indexAction() test functionality
-     * 
-     * @param integer $numManualProductKeys Number of manual product keys to test
-     * @param string $path CSS selector to locate $numManualProductKeys in script output
-     */
-    protected function _testIndexAction($numManualProductKeys, $path)
+    /** {@inheritdoc} */
+    public function _createController()
     {
-        $this->reset();
-        $model = $this->getMock('Model_Windows');
-        $model->expects($this->any())
-              ->method('getNumManualProductKeys')
-              ->will($this->returnValue($numManualProductKeys));
-
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('Model\Computer\Windows', $model);
-
-        $this->dispatch('/console/licenses/index/');
-        $this->assertResponseStatusCode(200);
-        $this->assertQueryContentContains($path, "\n$numManualProductKeys\n");
-
+        return new \Console\Controller\LicensesController($this->_windows);
     }
 
     /**
@@ -55,7 +37,24 @@ class LicensesControllerTest extends \Console\Test\AbstractControllerTest
      */
     public function testIndexAction()
     {
-        $this->_testIndexAction(0, 'dd');
-        $this->_testIndexAction(1, 'dd a');
+        $url = '/console/licenses/index/';
+
+        // Zero manual product keys produce <dd>0</dd>.
+        $this->_windows = $this->getMock('Model_Windows');
+        $this->_windows->expects($this->any())
+                       ->method('getNumManualProductKeys')
+                       ->will($this->returnValue(0));
+        $this->dispatch($url);
+        $this->assertResponseStatusCode(200);
+        $this->assertQueryContentContains('dd', "\n0\n");
+
+        // Nonzero manual product keys produce <dd><a...>n</a></dd>.
+        $this->_windows = $this->getMock('Model_Windows');
+        $this->_windows->expects($this->any())
+                       ->method('getNumManualProductKeys')
+                       ->will($this->returnValue(1));
+        $this->dispatch($url);
+        $this->assertResponseStatusCode(200);
+        $this->assertQueryContentContains('dd a', "\n1\n");
     }
 }
