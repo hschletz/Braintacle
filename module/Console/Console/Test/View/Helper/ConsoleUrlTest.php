@@ -31,23 +31,40 @@ class ConsoleUrlTest extends \Library\Test\View\Helper\AbstractTest
      */
     public function testInvokable()
     {
+        // Inject mock RouteMatch into Url helper which is used by ConsoleUrl
+        $routeMatch = new \Zend\Mvc\Router\RouteMatch(
+            array(
+                'controller' => 'currentcontroller',
+                'action' => 'currentaction',
+            )
+        );
+        $this->_getHelperManager()->get('Url')->setRouteMatch($routeMatch);
+
         $helper = $this->_getHelper();
 
+        // Default is currentcontroller/currentaction
         $this->assertEquals(
-            '/console/computer/index/',
-            $helper('computer', 'index')
+            '/console/currentcontroller/currentaction/',
+            $helper()
         );
 
+        // Override controller/action
+        $this->assertEquals(
+            '/console/controller/action/',
+            $helper('controller', 'action')
+        );
+
+        // Test with parameters
         $params = array('param1' => 'value1');
         $this->assertEquals(
-            '/console/computer/index/?param1=value1',
-            $helper('computer', 'index', $params)
+            '/console/controller/action/?param1=value1',
+            $helper('controller', 'action', $params)
         );
 
         $params['param2'] = 'value2';
         $this->assertEquals(
-            '/console/computer/index/?param1=value1&param2=value2',
-            $helper('computer', 'index', $params)
+            '/console/controller/action/?param1=value1&param2=value2',
+            $helper('controller', 'action', $params)
         );
     }
 }

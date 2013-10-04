@@ -29,24 +29,26 @@ class ConsoleUrl extends \Zend\View\Helper\AbstractHelper
     /**
      * Generate URL to given controller and action
      *
-     * @param string $controller Controller name
-     * @param string $action Action name
+     * @param string $controller Optional controller name (default: current controller)
+     * @param string $action Optional action name (default: current action)
      * @param array $params Optional associative array of query parameters
      * @return string Target URL
      */
-    public function __invoke($controller, $action, $params=null)
+    public function __invoke($controller=null, $action=null, $params=null)
     {
+        $route = array();
+        if ($controller) {
+            $route['controller'] = $controller;
+        }
+        if ($action) {
+            $route['action'] = $action;
+        }
+
         $options = array();
         if ($params) {
             $options['query'] = $params;
         }
-        return $this->view->url(
-            'console',
-            array(
-                'controller' => $controller,
-                'action' => $action,
-            ),
-            $options
-        );
+
+        return $this->view->url('console', $route, $options, true);
     }
 }
