@@ -33,6 +33,12 @@ use \Library\Application;
 abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * Controller used for tests, if set by _getPlugin()
+     * @var \Zend\Stdlib\DispatchableInterface
+     */
+    protected $_controller;
+
+    /**
      * Get the name of the controller plugin, derived from the test class name
      *
      * @return string Plugin name
@@ -104,10 +110,10 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
             // not done in the module setup
             $manager = Application::getService('ControllerLoader');
             $manager->setInvokableClass('test', 'Library\Test\Mvc\Controller\TestController');
-            $controller = $manager->get('test');
-            $controller->setEvent($event);
+            $this->_controller = $manager->get('test');
+            $this->_controller->setEvent($event);
 
-            return $controller->plugin($this->_getPluginName());
+            return $this->_controller->plugin($this->_getPluginName());
         } else {
             return $this->_getPluginManager()->get($this->_getPluginName());
         }

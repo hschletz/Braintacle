@@ -20,6 +20,11 @@
  */
 
 return array(
+    'controller_plugins' => array(
+        'invokables' => array(
+            'GetOrder' => 'Console\Mvc\Controller\Plugin\GetOrder',
+        )
+    ),
     'controllers' => array(
         'invokables' => array(
             'Console\Controller\ZF1' => 'Console\Controller\ZF1Controller',
