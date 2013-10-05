@@ -27,14 +27,31 @@ namespace Console\View\Helper;
 class ConsoleUrl extends \Zend\View\Helper\AbstractHelper
 {
     /**
+     * Request parameters passed to the constructor
+     * @param array
+     */
+    protected $_requestParams;
+
+    /**
+     * Constructor
+     *
+     * @param array $requestParams Associative array of request parameters
+     */
+    public function __construct(array $requestParams=array())
+    {
+        $this->_requestParams = $requestParams;
+    }
+
+    /**
      * Generate URL to given controller and action
      *
      * @param string $controller Optional controller name (default: current controller)
      * @param string $action Optional action name (default: current action)
      * @param array $params Optional associative array of query parameters
+     * @param bool $inheritParams Include request query parameters. Parameters in $params take precedence.
      * @return string Target URL
      */
-    public function __invoke($controller=null, $action=null, $params=null)
+    public function __invoke($controller=null, $action=null, $params=array(), $inheritParams=false)
     {
         $route = array();
         if ($controller) {
@@ -44,8 +61,15 @@ class ConsoleUrl extends \Zend\View\Helper\AbstractHelper
             $route['action'] = $action;
         }
 
+        if ($inheritParams) {
+            // Merge current request parameters (parameters from $params take precedence)
+            $params = array_merge(
+                $this->_requestParams,
+                $params
+            );
+        }
         $options = array();
-        if ($params) {
+        if (!empty($params)) {
             $options['query'] = $params;
         }
 

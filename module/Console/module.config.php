@@ -70,8 +70,11 @@ return array(
         ),
     ),
     'view_helpers' => array(
+        'factories' => array(
+            'consoleUrl' => 'Console\View\Helper\Service\ConsoleUrlFactory',
+        ),
         'invokables' => array(
-            'consoleUrl' => 'Console\View\Helper\ConsoleUrl',
+            'table' => 'Console\View\Helper\Table',
         ),
     ),
     'view_manager' => array(

@@ -40,6 +40,12 @@ class ConsoleUrlTest extends \Library\Test\View\Helper\AbstractTest
         );
         $this->_getHelperManager()->get('Url')->setRouteMatch($routeMatch);
 
+        // Inject request parameters
+        $requestParams = array('param1' => 'requestValue1');
+        $request = new \Zend\Http\PhpEnvironment\Request;
+        $request->setQuery(new \Zend\Stdlib\Parameters($requestParams));
+        \Library\Application::getService('ServiceManager')->setAllowOverride(true)->setService('Request', $request);
+
         $helper = $this->_getHelper();
 
         // Default is currentcontroller/currentaction
@@ -65,6 +71,25 @@ class ConsoleUrlTest extends \Library\Test\View\Helper\AbstractTest
         $this->assertEquals(
             '/console/controller/action/?param1=value1&param2=value2',
             $helper('controller', 'action', $params)
+        );
+
+        // Test with request parameters
+        $params = array();
+        $this->assertEquals(
+            '/console/controller/action/?param1=requestValue1',
+            $helper('controller', 'action', $params, true)
+        );
+
+        $params['param2'] = 'value2';
+        $this->assertEquals(
+            '/console/controller/action/?param1=requestValue1&param2=value2',
+            $helper('controller', 'action', $params, true)
+        );
+
+        $params['param1'] = 'value1';
+        $this->assertEquals(
+            '/console/controller/action/?param1=value1&param2=value2',
+            $helper('controller', 'action', $params, true)
         );
     }
 }
