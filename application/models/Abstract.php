@@ -28,6 +28,7 @@
  * {@link getProperty()} and {@link setProperty()} which use the
  * {@link $_propertyMap} property to map logical identifiers to actual
  * schema identifiers, and some utility methods to deal with logical identifiers.
+ * The \ArrayAccess interface is the preferred way of property access.
  *
  * This is required because Zend coding standards require camelCasing,
  * which is not portable across different DBMS (lowercase folding is used
@@ -91,7 +92,7 @@
  * {@link getPropertyMap} method.
  * @package Models
  */
-abstract class Model_Abstract implements Iterator
+abstract class Model_Abstract implements Iterator, ArrayAccess
 {
 
     /**
@@ -438,4 +439,39 @@ abstract class Model_Abstract implements Iterator
         return $this->_iteratorValid;
     }
 
+    /**
+     * Part of ArrayAccess interface
+     * @internal
+     */
+    public function offsetExists($offset)
+    {
+        return isset($this->_propertyMap[$offset]) and array_key_exists($this->_propertyMap[$offset], $this->_data);
+    }
+
+    /**
+     * Part of ArrayAccess interface
+     * @internal
+     */
+    public function offsetGet($offset)
+    {
+        return $this->getProperty($offset);
+    }
+
+    /**
+     * Part of ArrayAccess interface
+     * @internal
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->setProperty($offset, $value);
+    }
+
+    /**
+     * Part of ArrayAccess interface
+     * @internal
+     */
+    public function offsetUnset($offset)
+    {
+        unset($this->_data[$this->_propertyMap[$offset]]);
+    }
 }
