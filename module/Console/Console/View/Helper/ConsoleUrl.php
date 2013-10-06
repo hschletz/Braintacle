@@ -35,11 +35,14 @@ class ConsoleUrl extends \Zend\View\Helper\AbstractHelper
     /**
      * Constructor
      *
-     * @param array $requestParams Associative array of request parameters
+     * @param array|\Zend\Http\Request $request Request or associative array of request parameters
      */
-    public function __construct(array $requestParams=array())
+    public function __construct($request=array())
     {
-        $this->_requestParams = $requestParams;
+        if ($request instanceof \Zend\Http\Request) {
+            $request = $request->getQuery()->toArray();
+        }
+        $this->_requestParams = $request;
     }
 
     /**
