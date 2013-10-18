@@ -44,6 +44,17 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Get the name of the view helper class, derived from the test class name
+     * 
+     * @return string Helper name
+     */
+    protected function _getHelperClass()
+    {
+        // Derive helper class from test class name (minus \Test namespace and 'Test' suffix)
+        return substr(str_replace('\Test', '', get_class($this)), 0, -4);
+    }
+
+    /**
      * Get view helper manager
      *
      * If the $helpers array is not empty, a new helper manager is created and
@@ -64,8 +75,11 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
             foreach ($helpers as $name => $helper) {
                 $helperManager->setService($name, $helper);
             }
-            $helperClass = substr(str_replace('\Test', '', get_class($this)), 0, -4);
-            $helperManager->setService($this->_getHelperName(), new $helperClass);
+            $name = $this->_getHelperName();
+            if (!isset($helpers[$name])) {
+                $helperClass = $this->_getHelperClass();
+                $helperManager->setService($this->_getHelperName(), new $helperClass);
+            }
         }
         return $helperManager;
     }
