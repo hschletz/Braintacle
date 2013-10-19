@@ -30,7 +30,7 @@ class UrlFromRouteTest extends AbstractTest
      * Tests combinations of default/given arguments, query parameters and
      * encoding.
      */
-    public function testInvokable()
+    public function testInvoke()
     {
         $plugin = $this->_getPlugin();
 

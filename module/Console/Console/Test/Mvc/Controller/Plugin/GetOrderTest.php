@@ -29,7 +29,7 @@ class GetOrderTest extends \Library\Test\Mvc\Controller\Plugin\AbstractTest
     /**
      * Invoke plugin and test various combinations of request and plugin parameters
      */
-    public function testInvokable()
+    public function testInvoke()
     {
         $plugin = $this->_getPlugin(true);
         $request = $this->_controller->getRequest();

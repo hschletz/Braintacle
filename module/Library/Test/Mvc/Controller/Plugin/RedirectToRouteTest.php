@@ -32,7 +32,7 @@ class RedirectToRouteTest extends AbstractTest
      * Not all possible parameter combinations are tested - this is done by the
      * tests for the underlying UrlFromRoute plugin.
      */
-    public function testInvokable()
+    public function testInvoke()
     {
         $plugin = $this->_getPlugin();
         $response = $plugin('testedcontroller', 'testedaction');

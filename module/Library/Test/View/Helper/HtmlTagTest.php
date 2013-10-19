@@ -29,7 +29,7 @@ class HtmlTagTest extends AbstractTest
     /**
      * Tests for the __invoke() method
      */
-    public function testInvokable()
+    public function testInvoke()
     {
         $helper = $this->_getHelper();
 

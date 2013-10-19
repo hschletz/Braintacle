@@ -29,7 +29,7 @@ class ConsoleUrlTest extends \Library\Test\View\Helper\AbstractTest
     /**
      * Tests for the __invoke() method
      */
-    public function testInvokable()
+    public function testInvoke()
     {
         // Inject mock RouteMatch into Url helper which is used by ConsoleUrl
         $routeMatch = new \Zend\Mvc\Router\RouteMatch(
