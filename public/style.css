@@ -177,6 +177,10 @@ table {
     clear: both;
 }
 
+.alternating tr:nth-child(even) {
+    background-color: #e0f0ff;
+}
+
 td,th {
     padding: .3ex .5em .3ex .5em;
 }
