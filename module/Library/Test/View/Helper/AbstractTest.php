@@ -98,7 +98,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     /**
      * Get an arbitrary helper and initialize it with a view
      *
-     * @param string Helper name
+     * @param string $name Helper name
      * @param \Zend\View\Helper\HelperInterface[] Optional dependencies passed to _getHelperManager()
      * @return \Zend\View\Helper\HelperInterface
      */
