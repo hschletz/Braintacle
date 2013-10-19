@@ -26,6 +26,12 @@ namespace Console\Test\Controller;
  */
 class LicensesControllerTest extends \Console\Test\AbstractControllerTest
 {
+    /**
+     * Windows mock
+     * @var \Model_Windows
+     */
+    protected $_windows;
+
     /** {@inheritdoc} */
     public function _createController()
     {
