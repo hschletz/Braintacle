@@ -474,4 +474,20 @@ abstract class Model_Abstract implements Iterator, ArrayAccess
     {
         unset($this->_data[$this->_propertyMap[$offset]]);
     }
+
+    /**
+     * Return query result as an array of objects of the current class
+     *
+     * @param \Zend_Db_Statement $statement
+     * @return array
+     */
+    protected function _fetchAll(\Zend_Db_Statement $statement)
+    {
+        $class = get_class($this);
+        $result = array();
+        while ($row = $statement->fetchObject($class)) {
+            $result[] = $row;
+        }
+        return $result;
+    }
 }
