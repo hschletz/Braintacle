@@ -38,7 +38,7 @@ Feature\ConfigProviderInterface
      */
     public function getDependencies()
     {
-        return array('Library');
+        return array('Library', 'Model');
     }
 
     /**

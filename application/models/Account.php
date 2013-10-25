@@ -77,25 +77,51 @@ class Model_Account extends Model_Abstract
     );
 
     /**
-     * Constructor
-     * @param string $id Optional: populate instance with data for given account
-     * @throws RuntimeException if $id is given and no account with that name exists
+     * Authentication service
+     * @var \Zend\Authentication\AuthenticationService
      */
-    public function __construct($id=null)
+    protected $_authService;
+
+    /**
+     * Constructor
+     *
+     * @param \Zend\Authentication\AuthenticationService $authService Authentication service
+     */
+    public function __construct(\Zend\Authentication\AuthenticationService $authService)
     {
         parent::__construct();
+        $this->_authService = $authService;
+    }
 
+    /**
+     * Get injected authentication service
+     * 
+     * @return \Zend\Authentication\AuthenticationService
+     */
+    public function getAuthService()
+    {
+        return $this->_authService;
+    }
+
+    /**
+     * Populate with data for the given ID
+     *
+     * @param string $id
+     * @throws UnexpectedValueException if no ID is given.
+     * @throws \RuntimeException if no account with given name exists
+     */
+    public function fetch($id)
+    {
         if (!$id) {
-            return;
+            throw new UnexpectedValueException('No login name specified');
         }
-
         $row = Model_Database::getAdapter()->select()
                ->from('operators', array_values($this->_propertyMap))
                ->where('id=?', $id)
                ->query()
                ->fetch(Zend_Db::FETCH_ASSOC);
         if (!$row) {
-            throw new RuntimeException('Invalid login name supplied');
+            throw new \RuntimeException('Invalid login name supplied');
         }
         foreach ($row as $column => $value) {
             $this->$column = $value;
@@ -103,20 +129,19 @@ class Model_Account extends Model_Abstract
     }
 
     /**
-     * Return a statement object with all accounts
+     * Fetch all accounts
      * @param string $order Property to sort by
-     * @param string Sorting order (asc|desc)
-     * @return Zend_Db_Statement
+     * @param string $direction Sorting order (asc|desc)
+     * @return array[\Model_Account]
      */
-    public static function createStatementStatic($order='Id', $direction='asc')
+    public function fetchAll($order='Id', $direction='asc')
     {
-        $dummy = new self;
-        $map = $dummy->getPropertyMap();
-        return Model_Database::getAdapter()
+        $statement = \Model_Database::getAdapter()
             ->select()
-            ->from('operators', array_values($map))
-            ->order(self::getOrder($order, $direction, $map))
+            ->from('operators', array_values($this->_propertyMap))
+            ->order(self::getOrder($order, $direction, $this->_propertyMap))
             ->query();
+        return $this->_fetchAll($statement, $this->_authService);
     }
 
     /**
@@ -125,7 +150,7 @@ class Model_Account extends Model_Abstract
      * @param string $password Password for the new account, must not be empty.
      * @throws UnexpectedValueException if no ID or password is given.
      */
-    public static function create($data, $password)
+    public function create($data, $password)
     {
         if (!$data['Id']) {
             throw new UnexpectedValueException('No login name specified');
@@ -134,13 +159,10 @@ class Model_Account extends Model_Abstract
             throw new UnexpectedValueException('No password specified');
         }
 
-        $dummy = new self;
-        $map = $dummy->getPropertyMap();
-
         // Compose array of columns to set
         foreach ($data as $property => $value) {
-            if (isset($map[$property])) { // Ignore unknown keys
-                $insert[$map[$property]] = $value;
+            if (isset($this->_propertyMap[$property])) { // Ignore unknown keys
+                $insert[$this->_propertyMap[$property]] = $value;
             }
         }
         // Set password
@@ -158,20 +180,18 @@ class Model_Account extends Model_Abstract
      * @param array $data List of properties to set. Unknown keys will be ignored.
      * @param string $password New password. If empty, password will remain unchanged.
      * @throws UnexpectedValueException if no ID is given.
+     * @todo Update instance directly instead of specifying $id
      */
-    public static function update($id, $data, $password)
+    public function update($id, $data, $password)
     {
         if (!$id) {
             throw new UnexpectedValueException('No login name specified');
         }
 
-        $dummy = new self;
-        $map = $dummy->getPropertyMap();
-
         // Compose array of columns to set
         foreach ($data as $property => $value) {
-            if (isset($map[$property])) { // Ignore unknown keys
-                $update[$map[$property]] = $value;
+            if (isset($this->_propertyMap[$property])) { // Ignore unknown keys
+                $update[$this->_propertyMap[$property]] = $value;
             }
         }
         // Set password if specified
@@ -185,11 +205,10 @@ class Model_Account extends Model_Abstract
             array('id=?' => $id)
         );
 
-        $authService = \Library\Application::getService('Library\AuthenticationService');
-        if (isset($data['Id']) and $id == $authService->getIdentity()) {
+        if (isset($data['Id']) and $id == $this->_authService->getIdentity()) {
             // If the account name of the logged in user is changed, the
             // identity must be updated to remain valid.
-            $authService->changeIdentity($data['Id']);
+            $this->_authService->changeIdentity($data['Id']);
         }
     }
 
@@ -198,9 +217,9 @@ class Model_Account extends Model_Abstract
      * @param string $id Login name of account to delete
      * @throws RuntimeException if the account to delete is logged in for the current session
      */
-    public static function delete($id)
+    public function delete($id)
     {
-        if ($id == \Library\Application::getService('Library\AuthenticationService')->getIdentity()) {
+        if ($id == $this->_authService->getIdentity()) {
             throw new RuntimeException('Your own account cannot be deleted.');
         }
 

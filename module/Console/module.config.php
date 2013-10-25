@@ -30,6 +30,7 @@ return array(
             'Console\Controller\ZF1' => 'Console\Controller\ZF1Controller',
         ),
         'factories' => array(
+            'accounts' => 'Console\Service\AccountsControllerFactory',
             'licenses' => 'Console\Service\LicensesControllerFactory',
             'login' => 'Console\Service\LoginControllerFactory',
         ),
@@ -55,7 +56,7 @@ return array(
             'zf1' => array(
                 'type'    => 'regex',
                 'options' => array(
-                    'regex'    => '/(console/)?(accounts|computer|duplicates|error|group|index|network|package|preferences|software)/?.*',
+                    'regex'    => '/(console/)?(computer|duplicates|error|group|index|network|package|preferences|software)/?.*',
                     'spec' => '',
                     'defaults' => array(
                         'controller' => 'Console\Controller\ZF1',

@@ -26,6 +26,11 @@
  */
 class Form_Account_Edit extends Form_Account
 {
+    /**
+     * Operators prototype
+     * @var \Model_Account
+     */
+    protected $_operators;
 
     /**
      * Create elements
@@ -46,18 +51,33 @@ class Form_Account_Edit extends Form_Account
     }
 
     /**
+     * Set operators model prototype
+     *
+     * @param \Model_Account $operators
+     */
+    public function setOperators($operators)
+    {
+        $this->_operators = $operators;
+    }
+
+    /**
      * Populate form with existing account data
      * @param $id Login name of existing acount. Must be valid.
+     * @throws \LogicException if the operators model prototype is not set
      */
     public function setId($id)
     {
+        if (!$this->_operators) {
+            throw new \LogicException('Operators prototype not set');
+        }
         $originalId = $this->getElement('OriginalId');
         if ($originalId->getValue()) {
             return; // Form already populated. Don't overwrite.
         }
 
         $originalId->setValue($id);
-        $account = new Model_Account($id);
+        $account = clone $this->_operators;
+        $account->fetch($id);
         foreach ($account as $property => $value) {
             $this->getElement($property)->setValue($value);
         }

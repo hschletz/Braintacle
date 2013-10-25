@@ -1,6 +1,6 @@
 <?php
 /**
- * Display confirmation form for account deletion
+ * Factory for Model\Operator
  *
  * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,17 +17,22 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-print $this->htmlTag(
-    'p',
-    sprintf(
-        $this->translate(
-            'Account \'%s\' will be permanently deleted. Continue?'
-        ),
-        $this->escape($this->id)
-    )
-);
+namespace Model\Service;
 
-print new Form_YesNo;
+/**
+ * Factory for Model\Operator
+ */
+class OperatorFactory implements \Zend\ServiceManager\FactoryInterface
+{
+    /**
+     * @internal
+     */
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    {
+        return new \Model_Account(
+            $serviceLocator->get('Library\AuthenticationService')
+        );
+    }
+}

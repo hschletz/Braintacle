@@ -39,7 +39,7 @@ class Operators extends \Database\AbstractTable
                 \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
             )->current()->offsetGet('num') === '0'
         ) {
-            \Model_Account::create(array('Id' => 'admin'), 'admin');
+            $this->_serviceLocator->get('Model\Operator')->create(array('Id' => 'admin'), 'admin');
             $logger->notice(
                 'Default account \'admin\' created with password \'admin\'.'
             );

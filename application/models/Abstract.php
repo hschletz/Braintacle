@@ -479,13 +479,17 @@ abstract class Model_Abstract implements Iterator, ArrayAccess
      * Return query result as an array of objects of the current class
      *
      * @param \Zend_Db_Statement $statement
+     * @param mixed $constructorArgs Argument or array of arguments to be passed to the constructor
      * @return array
      */
-    protected function _fetchAll(\Zend_Db_Statement $statement)
+    protected function _fetchAll(\Zend_Db_Statement $statement, $constructorArgs=array())
     {
+        if (!is_array($constructorArgs)) {
+            $constructorArgs = array($constructorArgs);
+        }
         $class = get_class($this);
         $result = array();
-        while ($row = $statement->fetchObject($class)) {
+        while ($row = $statement->fetchObject($class, $constructorArgs)) {
             $result[] = $row;
         }
         return $result;

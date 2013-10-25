@@ -52,6 +52,9 @@ Feature\ConfigProviderInterface
                 'invokables' => array(
                     'Model\Computer\Windows' => 'Model_Windows',
                 ),
+                'factories' => array(
+                    'Model\Operator' => 'Model\Service\OperatorFactory',
+                ),
             ),
         );
     }
