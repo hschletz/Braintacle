@@ -39,7 +39,7 @@ Feature\ConfigProviderInterface
      */
     public function getDependencies()
     {
-        return array('Database');
+        return array('Database', 'Library');
     }
 
     /**

@@ -78,16 +78,16 @@ class Model_Account extends Model_Abstract
 
     /**
      * Authentication service
-     * @var \Zend\Authentication\AuthenticationService
+     * @var \Library\Authentication\AuthenticationService
      */
     protected $_authService;
 
     /**
      * Constructor
      *
-     * @param \Zend\Authentication\AuthenticationService $authService Authentication service
+     * @param \Library\Authentication\AuthenticationService $authService Authentication service
      */
-    public function __construct(\Zend\Authentication\AuthenticationService $authService)
+    public function __construct(\Library\Authentication\AuthenticationService $authService)
     {
         parent::__construct();
         $this->_authService = $authService;

@@ -77,7 +77,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
 
         // First query uses the same identity as the mock account, which should
         // prevent the "Delete" link, and no mail address.
-        $auth = $this->getMock('Zend\Authentication\AuthenticationService');
+        $auth = $this->getMock('Library\Authentication\AuthenticationService');
         $auth->expects($this->any())
              ->method('getIdentity')
              ->will($this->returnValue('testId'));
@@ -101,7 +101,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
 
         // Another query with different identity and a mail address
         $account['MailAddress'] = 'test@example.com';
-        $auth = $this->getMock('Zend\Authentication\AuthenticationService');
+        $auth = $this->getMock('Library\Authentication\AuthenticationService');
         $auth->expects($this->any())
              ->method('getIdentity')
              ->will($this->returnValue('otherId'));
@@ -129,7 +129,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
     public function testAddAction()
     {
         $url = '/console/accounts/add/';
-        $auth = $this->getMock('Zend\Authentication\AuthenticationService');
+        $auth = $this->getMock('Library\Authentication\AuthenticationService');
 
         // GET request should display form
         $this->_operators = $this->getMockBuilder('Model_Account')
@@ -174,7 +174,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
     public function testEditAction()
     {
         $url = '/console/accounts/edit/?id=testId';
-        $auth = $this->getMock('Zend\Authentication\AuthenticationService');
+        $auth = $this->getMock('Library\Authentication\AuthenticationService');
         $this->_formAccountEdit = $this->getMock('Form_Account_Edit');
         $this->_formAccountEdit->expects($this->any())
                                ->method('setId')
@@ -226,7 +226,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
     public function testDeleteAction()
     {
         $url = '/console/accounts/delete/?id=testId';
-        $auth = $this->getMock('Zend\Authentication\AuthenticationService');
+        $auth = $this->getMock('Library\Authentication\AuthenticationService');
 
         // GET request should display form and caption containing Id
         $this->_operators = $this->getMockBuilder('Model_Account')
