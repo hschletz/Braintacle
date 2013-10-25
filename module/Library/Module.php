@@ -69,6 +69,7 @@ Feature\ConfigProviderInterface
             ),
             'view_helpers' => array(
                 'invokables' => array(
+                    'formYesNo' => 'Library\View\Helper\FormYesNo',
                     'htmlTag' => 'Library\View\Helper\HtmlTag',
                 ),
             ),
