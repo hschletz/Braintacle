@@ -45,7 +45,7 @@ class MainMenuTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerT
     {
         $this->assertInstanceOf(
             'Zend\Navigation\Navigation',
-            Application::getService('Console\Navigation\MainMenuFactory')
+            Application::getService('Console\Navigation\MainMenu')
         );
     }
 

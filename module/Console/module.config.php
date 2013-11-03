@@ -67,7 +67,7 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
-            'Console\Navigation\MainMenuFactory' => 'Console\Navigation\MainMenuFactory',
+            'Console\Navigation\MainMenu' => 'Console\Navigation\MainMenuFactory',
         ),
     ),
     'view_helpers' => array(

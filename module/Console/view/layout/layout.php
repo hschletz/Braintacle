@@ -50,7 +50,7 @@ print "</div>\n";
 if ($this->identity()) {
     print "<div id='menu'>\n";
 
-    $menu = $this->navigation()->menu('Console\Navigation\MainMenuFactory');
+    $menu = $this->navigation()->menu('Console\Navigation\MainMenu');
 
     // Top level menu
     print $menu->renderMenu(
