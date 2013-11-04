@@ -118,8 +118,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
 
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
-        // Workaround for ZF2 issue #5310
-        $this->assertQueryContentContains('td a[href*="mailto:test%40example."]', 'test@example.com');
+        $this->assertQueryContentContains('td a[href="mailto:test%40example.com"]', 'test@example.com');
         $this->assertQueryContentContains('td a[href="/console/accounts/delete/?id=testId"]', 'Delete');
     }
 
