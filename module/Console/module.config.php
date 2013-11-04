@@ -21,6 +21,9 @@
 
 return array(
     'controller_plugins' => array(
+        'factories' => array(
+            'SetActiveMenu' => 'Console\Mvc\Controller\Plugin\Service\SetActiveMenuFactory',
+        ),
         'invokables' => array(
             'GetOrder' => 'Console\Mvc\Controller\Plugin\GetOrder',
         )

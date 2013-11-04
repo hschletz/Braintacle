@@ -92,6 +92,8 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
             $this->_operators->create($data, $data['Password']);
             return $this->redirectToRoute('accounts', 'index');
         }
+
+        $this->setActiveMenu('Preferences', 'Users');
         return array ('form' => $form);
     }
 
@@ -111,6 +113,7 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
             return $this->redirectToRoute('accounts', 'index');
         }
 
+        $this->setActiveMenu('Preferences', 'Users');
         $form->setId($this->params()->fromQuery('id'));
         return array ('form' => $form);
     }
@@ -130,6 +133,7 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
             }
             $this->redirectToRoute('accounts', 'index');
         } else {
+            $this->setActiveMenu('Preferences', 'Users');
             return array('id' => $id);
         }
     }

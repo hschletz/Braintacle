@@ -60,8 +60,15 @@ if ($this->identity()) {
             'ulClass' => 'navigation',
         )
     );
-
-    // TODO: render submenu
+    // Submenu of active branch, if present
+    echo $menu->renderMenu(
+        null,
+        array(
+            'ulClass' => 'navigation navigation_sub',
+            'minDepth' => 1,
+            'onlyActiveBranch' => true,
+        )
+    );
 
     // Logout button
     print "<div id='logout'>\n";
