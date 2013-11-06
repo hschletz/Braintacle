@@ -125,7 +125,6 @@ Feature\BootstrapListenerInterface
     public function onError(\Zend\Mvc\MvcEvent $e)
     {
         $result = $e->getResult();
-//         var_dump($e->getParams());
         $result->controller = $e->getRouteMatch()->getParam('controller');
         $result->request = $e->getRequest();
     }
