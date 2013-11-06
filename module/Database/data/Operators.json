@@ -73,15 +73,6 @@
             "default": null,
             "autoincrement": false,
             "comment": null
-        },
-        {
-            "name": "user_group",
-            "type": "varchar",
-            "length": 255,
-            "notnull": false,
-            "default": null,
-            "autoincrement": false,
-            "comment": "unused"
         }
     ],
     "primary_key": [
