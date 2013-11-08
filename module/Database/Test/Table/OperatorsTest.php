@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for NADA interface
+ * Tests for the Operators class
  *
  * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,23 +19,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Database\Service;
+namespace Database\Test\Table;
 
 /**
- * Factory for NADA interface
- *
- * This factory provides the "Database\Nada" service.
- *
- * @codeCoverageIgnore
+ * Tests for the Operators class
  */
-class NadaFactory implements \Zend\ServiceManager\FactoryInterface
+class OperatorsTest extends AbstractTest
 {
-    /**
-     * @internal
-     */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        require_once('Nada.php');
-        return \Nada::factory($serviceLocator->get('Db'));
-    }
 }

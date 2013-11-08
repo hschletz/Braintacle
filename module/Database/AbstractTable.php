@@ -27,6 +27,8 @@ Namespace Database;
  * Table objects should be pulled from the service manager which provides the
  * Database\Table\ClassName services which will create and set up object
  * instances.
+ *
+ * @codeCoverageIgnore
  */
 abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
 {

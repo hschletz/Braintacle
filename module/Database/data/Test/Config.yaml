@@ -1,0 +1,12 @@
+# Fixture for ConfigTest
+config:
+  -
+    # Example for ivalue with non-default content
+    name: "FREQUENCY"
+    ivalue: 42
+    tvalue:
+  -
+    # Example for tvalue with non-default content
+    name: "LOGPATH"
+    ivalue:
+    tvalue: "/example/log/path"

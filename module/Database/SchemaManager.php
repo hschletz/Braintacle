@@ -26,6 +26,8 @@ Namespace Database;
  *
  * This class contains all functionality to manage the database schema and to
  * initialize and migrate data.
+ *
+ * @codeCoverageIgnore
  */
 class SchemaManager
 {

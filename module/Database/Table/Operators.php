@@ -26,7 +26,10 @@ Namespace Database\Table;
  */
 class Operators extends \Database\AbstractTable
 {
-    /** {@inheritdoc} */
+    /**
+     * {@inheritdoc}
+     * @codeCoverageIgnore
+     */
     protected function _postSetSchema()
     {
         $logger = $this->_serviceLocator->get('Library\Logger');

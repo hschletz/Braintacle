@@ -28,6 +28,8 @@ use Zend\ModuleManager\Feature;
  *
  * This module provides a low level interface to the database. It is used by the
  * model classes and for managing the database structure.
+ *
+ * @codeCoverageIgnore
  */
 class Module implements
 Feature\AutoloaderProviderInterface,
