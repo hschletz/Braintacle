@@ -49,7 +49,6 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
             $this->table = strtolower($this->_getClassName());
         }
         $this->adapter = $serviceLocator->get('Db');
-        $this->initialize();
     }
 
     /**
