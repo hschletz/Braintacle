@@ -24,9 +24,8 @@ namespace Database\Test\Table;
 /**
  * Base class for table interface tests
  *
- * Tests for view helper classes can derive from this class for some convenience
- * functions. Additionally, the testHelperInterface() test is executed for all
- * derived tests. 
+ * The table, class and fixture are automatically set up and the service is
+ * automatically tested.
  */
 abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
 {
