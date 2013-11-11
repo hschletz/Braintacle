@@ -29,6 +29,8 @@ use Zend\ModuleManager\Feature;
  * This module provides models as services. The services are shared, i.e. the
  * returned objects should not be modifed, but used as a prototype by cloning
  * where necessary.
+ *
+ * @codeCoverageIgnore
  */
 class Module implements
 Feature\AutoloaderProviderInterface,
@@ -71,5 +73,16 @@ Feature\ConfigProviderInterface
                 ),
             ),
         );
+    }
+
+    /**
+     * Get path to module directory
+     *
+     * @param string $path Optional path component that is appended to the module root path
+     * @return string Absolute path to requested file/directory (directories without trailing slash)
+     */
+    public static function getPath($path='')
+    {
+        return \Library\Application::getPath('module/Model/' . $path);
     }
 }

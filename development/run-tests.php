@@ -64,5 +64,6 @@ if ($argc >= 2) {
     // Run tests for all modules that have tests defined
     testModule('Library');
     testModule('Database');
+    testModule('Model');
     testModule('Console');
 }

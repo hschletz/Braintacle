@@ -1,0 +1,12 @@
+# Fixture for OperatorTest
+operators:
+  -
+    # Default account
+    id: "admin"
+    firstname:
+    lastname:
+    passwd: "0cc175b9c0f1b6a831c399e269772661"
+    accesslvl: 1
+    comments:
+    new_accesslvl: "sadmin"
+    email:
