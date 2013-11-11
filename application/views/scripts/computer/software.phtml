@@ -98,8 +98,12 @@ print '&nbsp;';
 print $this->translate('Display duplicate entries');
 print "</p>\n";
 
+$filters = array();
+if (!Model_Config::get('DisplayBlacklistedSoftware')) {
+    $filters['Status'] = 'notIgnored';
+}
 print $this->table(
-    $computer->getChildObjects('Software', $this->order, $this->direction),
+    $computer->getChildObjects('Software', $this->order, $this->direction, $filters),
     null,
     $headers,
     array('Architecture' => 'text'),

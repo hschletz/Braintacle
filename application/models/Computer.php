@@ -886,10 +886,6 @@ class Model_Computer extends Model_ComputerOrGroup
     public function getChildObjects($type, $order=null, $direction=null, $filters=array())
     {
         $filters['Computer'] = $this->getId();
-        // Apply extra filters.
-        if ($type == 'Software' and !Model_Config::get('DisplayBlacklistedSoftware')) {
-            $filters['Status'] = 'notIgnored';
-        }
         $className = "Model_$type";
         $class = new $className;
         return $class->createStatement(
