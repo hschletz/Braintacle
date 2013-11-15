@@ -88,7 +88,7 @@ class Form_Preferences_System extends Form_Preferences
         );
         parent::init();
         $this->getElement('communicationServerUri')
-            ->addValidator(new Zend_Validate_Callback(array('Zend_Uri', 'check')));
+            ->addValidator(new Zend_Validate_Callback(array($this, 'validateUri')));
         $this->getElement('lockValidity')
             ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');
@@ -105,4 +105,21 @@ class Form_Preferences_System extends Form_Preferences
             ->setAttrib('size', '5');
     }
 
+    /**
+     * URI validation callback
+     * @internal
+     * @param string $uri
+     * @return bool
+     */
+    public function validateUri($uri)
+    {
+        try {
+            \Zend\Uri\UriFactory::factory($uri);
+            return true;
+        } catch(\Zend\Uri\Exception\InvalidArgumentException $e) {
+            return false;
+        } catch(\Exception $e) {
+            throw $e;
+        }
+    }
 }
