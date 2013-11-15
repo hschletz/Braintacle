@@ -29,7 +29,7 @@ class Form_Preferences_Display extends Form_Preferences
 
     /** {@inheritdoc} */
     protected $_types = array(
-        'DisplayBlacklistedSoftware' => 'bool',
+        'displayBlacklistedSoftware' => 'bool',
     );
 
     /**
@@ -39,7 +39,7 @@ class Form_Preferences_Display extends Form_Preferences
     {
         $translate = Zend_Registry::get('Zend_Translate');
         $this->_labels = array(
-            'DisplayBlacklistedSoftware' => $translate->_(
+            'displayBlacklistedSoftware' => $translate->_(
                 'Display ignored software'
             ),
         );

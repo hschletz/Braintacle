@@ -101,6 +101,7 @@ function renderCriteria($view, $computer, $property)
     }
 }
 
+$config = \Library\Application::getService('Model\Config');
 $formContent = $this->getHelper('table')->table(
     $this->computers,
     null,
@@ -114,7 +115,7 @@ $formContent .= $this->htmlTag(
     'p',
     sprintf(
         '<input type="checkbox" name="mergeUserdefined"%s>%s',
-        Model_Config::get('DefaultMergeUserdefined') ? ' checked' : '',
+        $config->defaultMergeUserdefined ? ' checked' : '',
         $this->translate('Merge user supplied information')
     ),
     array('class' => 'textcenter')
@@ -123,7 +124,7 @@ $formContent .= $this->htmlTag(
     'p',
     sprintf(
         '<input type="checkbox" name="mergeGroups"%s>%s',
-        Model_Config::get('DefaultMergeGroups') ? ' checked' : '',
+        $config->defaultMergeGroups ? ' checked' : '',
         $this->translate('Merge manual group assignments')
     ),
     array('class' => 'textcenter')
@@ -132,7 +133,7 @@ $formContent .= $this->htmlTag(
     'p',
     sprintf(
         '<input type="checkbox" name="mergePackages"%s>%s',
-        Model_Config::get('DefaultMergePackages') ? ' checked' : '',
+        $config->defaultMergePackages ? ' checked' : '',
         $this->translate('Merge missing package assignments')
     ),
     array('class' => 'textcenter')

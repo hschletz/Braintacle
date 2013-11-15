@@ -29,13 +29,12 @@ class Form_Preferences_NetworkScanning extends Form_Preferences
 
     /** {@inheritdoc} */
     protected $_types = array(
-        'ScannersPerSubnet' => 'integer',
-        'ScanSnmp' => 'bool',
-        'ScannerMinDays' => 'integer',
-        'ScannerMaxDays' => 'integer',
-        'ScanAlways' => 'bool',
-        'ScanningConfigurationInGroups' => 'bool',
-        'ScanArpDelay' => 'integer',
+        'scannersPerSubnet' => 'integer',
+        'scanSnmp' => 'bool',
+        'scannerMinDays' => 'integer',
+        'scannerMaxDays' => 'integer',
+        'scanAlways' => 'bool',
+        'scanArpDelay' => 'integer',
     );
 
     /**
@@ -45,42 +44,39 @@ class Form_Preferences_NetworkScanning extends Form_Preferences
     {
         $translate = Zend_Registry::get('Zend_Translate');
         $this->_labels = array(
-            'ScannersPerSubnet' => $translate->_(
+            'scannersPerSubnet' => $translate->_(
                 'Number of scanning computers per subnet'
             ),
-            'ScanSnmp' => $translate->_(
+            'scanSnmp' => $translate->_(
                 'Use SNMP'
             ),
-            'ScannerMinDays' => $translate->_(
+            'scannerMinDays' => $translate->_(
                 'Minimum days before a scanning computer is replaced'
             ),
-            'ScannerMaxDays' => $translate->_(
+            'scannerMaxDays' => $translate->_(
                 'Maximum days before a scanning computer is replaced'
             ),
-            'ScanAlways' => $translate->_(
+            'scanAlways' => $translate->_(
                 'Always scan, even if no computer meets quality criteria'
             ),
-            'ScanningConfigurationInGroups' => $translate->_(
-                'Use configuration in groups'
-            ),
-            'ScanArpDelay' => $translate->_(
+            'scanArpDelay' => $translate->_(
                 'Delay (in milliseconds) between ARP requests'
             ),
-            'ScanArpDelay' => $translate->_(
+            'scanArpDelay' => $translate->_(
                 'Delay (in milliseconds) between ARP requests'
             ),
         );
         parent::init();
-        $this->getElement('ScannersPerSubnet')
+        $this->getElement('scannersPerSubnet')
             ->addValidator('GreaterThan', false, array('min' => -1))
             ->setAttrib('size', '5');
-        $this->getElement('ScannerMinDays')
+        $this->getElement('scannerMinDays')
             ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');
-        $this->getElement('ScannerMaxDays')
+        $this->getElement('scannerMaxDays')
             ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');
-        $this->getElement('ScanArpDelay')
+        $this->getElement('scanArpDelay')
             ->addValidator('GreaterThan', false, array('min' => 9))
             ->setAttrib('size', '5');
     }

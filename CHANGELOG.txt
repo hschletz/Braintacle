@@ -14,6 +14,13 @@ Fixed bugs:
 - Console: Fixed inconsistent navigation (missing submenu and/or active menu not
   highlighted) on some pages.
 
+Misc:
+
+- Support for some previously deprecated options has been dropped. They are
+  removed from the database during upgrade, enforcing sensible default behavior
+  by legacy code that tries to evaluate them. They also no longer show up in the
+  preferences dialogs.
+
 
 CHANGES IN VERSION 0.13
 =======================

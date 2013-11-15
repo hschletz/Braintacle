@@ -99,7 +99,7 @@ print $this->translate('Display duplicate entries');
 print "</p>\n";
 
 $filters = array();
-if (!Model_Config::get('DisplayBlacklistedSoftware')) {
+if (!\Library\Application::getService('Model\Config')->displayBlacklistedSoftware) {
     $filters['Status'] = 'notIgnored';
 }
 print $this->table(

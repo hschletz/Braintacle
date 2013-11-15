@@ -1,6 +1,6 @@
 <?php
 /**
- * Display inventory import form
+ * Factory for Model\Config
  *
  * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,27 +17,22 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-if (property_exists($this, 'response')) {
-    print $this->htmlTag(
-        'p',
-        sprintf(
-            $this->translate(
-                'Upload error. Server %1$s responded with error %2$d: %3$s'
-            ),
-            \Library\Application::getService('Model\Config')->communicationServerUri,
-            $this->response->getStatusCode(),
-            $this->escape($this->response->getReasonPhrase())
-        ),
-        array('class' => 'red textcenter')
-    );
+namespace Model\Service;
+
+/**
+ * Factory for Model\Config
+ */
+class ConfigFactory implements \Zend\ServiceManager\FactoryInterface
+{
+    /**
+     * @internal
+     */
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    {
+        return new \Model\Config(
+            $serviceLocator->get('Database\Table\Config')
+        );
+    }
 }
-
-print $this->htmlTag(
-    'h1',
-    $this->translate('Import locally generated inventory data')
-);
-
-print $this->form;

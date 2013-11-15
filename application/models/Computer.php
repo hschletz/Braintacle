@@ -1485,11 +1485,10 @@ class Model_Computer extends Model_ComputerOrGroup
     /**
      * Delete this computer and all associated child objects from the database
      * @param bool $reuseLock If this instance already has a lock, reuse it.
-     * @param string $equivalent Inserted into deleted_equiv table if TraceDeleted is set.
      * @param bool $deleteInterfaces Delete interfaces from network listing
      * @return bool Success
      */
-    public function delete($reuseLock=false, $equivalent=null, $deleteInterfaces=false)
+    public function delete($reuseLock=false, $deleteInterfaces=false)
     {
         // A lock is required
         if ((!$reuseLock or !$this->isLocked()) and !$this->lock()) {
@@ -1566,17 +1565,6 @@ class Model_Computer extends Model_ComputerOrGroup
 
             // Delete row in hardware table itself
             $db->delete('hardware', array('id=?' => $id));
-            // Insert row into deleted_equiv if configured
-            if (Model_Config::get('TraceDeleted')) {
-                $db->insert(
-                    'deleted_equiv',
-                    array(
-                        'date' => new Zend_Db_Expr('CURRENT_TIMESTAMP'),
-                        'deleted' => $this->getClientId(),
-                        'equivalent' => $equivalent
-                    )
-                );
-            }
         } catch (Exception $exception) {
             if ($transaction) {
                 $db->rollBack();
@@ -1784,7 +1772,7 @@ class Model_Computer extends Model_ComputerOrGroup
 
             // Delete all older computers
             foreach ($computers as $computer) {
-                $computer->delete(true, $newest->getClientId());
+                $computer->delete(true);
             }
             // Unlock remaining computer
             $newest->unlock();
@@ -1981,8 +1969,8 @@ class Model_Computer extends Model_ComputerOrGroup
             return self::$_configDefault[$id][$option];
         }
 
-        if ($option == 'AllowScan') {
-            if (Model_Config::get('ScannersPerSubnet') == 0) {
+        if ($option == 'allowScan') {
+            if ($this->_config->scannersPerSubnet == 0) {
                 $value = 0;
             } else {
                 $value = 1;
@@ -1990,69 +1978,64 @@ class Model_Computer extends Model_ComputerOrGroup
         } else {
             $value = null;
         }
-        // Get default from groups if enabled. For AllowScan,
-        // ScanningConfigurationInGroups is checked in addition to UseGroups.
-        if (Model_Config::get('UseGroups') and
-            !($option == 'AllowScan' and !Model_Config::get('ScanningConfigurationInGroups'))
-        ) {
-            $groupValues = array();
-            foreach ($this->_getConfigGroups() as $group) {
-                $groupValues[] = $group->getConfig($option);
-            }
-            switch ($option) {
-                case 'InventoryInterval':
-                    $value = Model_Config::get('InventoryInterval');
-                    // Special values 0 and -1 always take precedence if
-                    // configured globally.
-                    if ($value >= 1) {
-                        // Get smallest value of group and global settings
-                        foreach ($groupValues as $groupValue) {
-                            if ($groupValue !== null and $groupValue < $value) {
-                                $value = $groupValue;
-                            }
-                        }
-                    }
-                    break;
-                case 'ContactInterval':
-                case 'DownloadMaxPriority':
-                case 'DownloadTimeout':
-                    // Get smallest value from groups
+        // Get default from groups.
+        $groupValues = array();
+        foreach ($this->_getConfigGroups() as $group) {
+            $groupValues[] = $group->getConfig($option);
+        }
+        switch ($option) {
+            case 'inventoryInterval':
+                $value = $this->_config->inventoryInterval;
+                // Special values 0 and -1 always take precedence if
+                // configured globally.
+                if ($value >= 1) {
+                    // Get smallest value of group and global settings
                     foreach ($groupValues as $groupValue) {
-                        if ($value === null or ($groupValue !== null and $groupValue < $value)) {
+                        if ($groupValue !== null and $groupValue < $value) {
                             $value = $groupValue;
                         }
                     }
-                    break;
-                case 'DownloadPeriodDelay':
-                case 'DownloadCycleDelay':
-                case 'DownloadFragmentDelay':
-                    // Get largest value from groups
+                }
+                break;
+            case 'contactInterval':
+            case 'downloadMaxPriority':
+            case 'downloadTimeout':
+                // Get smallest value from groups
+                foreach ($groupValues as $groupValue) {
+                    if ($value === null or ($groupValue !== null and $groupValue < $value)) {
+                        $value = $groupValue;
+                    }
+                }
+                break;
+            case 'downloadPeriodDelay':
+            case 'downloadCycleDelay':
+            case 'downloadFragmentDelay':
+                // Get largest value from groups
+                foreach ($groupValues as $groupValue) {
+                    if ($groupValue > $value) {
+                        $value = $groupValue;
+                    }
+                }
+                break;
+            case 'packageDeployment':
+            case 'scanSnmp':
+            case 'allowScan':
+                // 0 if global setting or any group setting is 0, otherwise 1.
+                if ($option != 'allowScan') { // already initialized for allowScan
+                    $value = $this->_config->$option;
+                }
+                if ($value) {
                     foreach ($groupValues as $groupValue) {
-                        if ($groupValue > $value) {
-                            $value = $groupValue;
+                        if ($groupValue === 0) {
+                            $value = 0;
+                            break;
                         }
                     }
-                    break;
-                case 'PackageDeployment':
-                case 'ScanSnmp':
-                case 'AllowScan':
-                    // 0 if global setting or any group setting is 0, otherwise 1.
-                    if ($option != 'AllowScan') { // already initialized for AllowScan
-                        $value = Model_Config::get($option);
-                    }
-                    if ($value) {
-                        foreach ($groupValues as $groupValue) {
-                            if ($groupValue === 0) {
-                                $value = 0;
-                                break;
-                            }
-                        }
-                    }
-                    break;
-            }
+                }
+                break;
         }
         if ($value === null) {
-            $value = Model_Config::get($option);
+            $value = $this->_config->$option;
         }
 
         self::$_configDefault[$id][$option] = $value;
@@ -2066,25 +2049,21 @@ class Model_Computer extends Model_ComputerOrGroup
      * from this computer's individual setting, the global setting and/or all
      * groups of which the computer is a member. The exact rules are:
      *
-     * - PackageDeployment, AllowScan and ScanSnmp return 0 if the setting is
+     * - packageDeployment, allowScan and scanSnmp return 0 if the setting is
      *   disabled either globally, for any group or for the computer,
      *   otherwise 1.
-     * - For InventoryInterval, if the global setting is one of the special
+     * - For inventoryInterval, if the global setting is one of the special
      *   values 0 or -1, this setting is returned. Otherwise, return the
      *   smallest value of the group and computer setting. If this is undefined,
      *   use global setting.
-     * - ContactInterval, DownloadMaxPriority and DownloadTimeout evaluate (in
+     * - contactInterval, downloadMaxPriority and downloadTimeout evaluate (in
      *   that order): the computer setting, the smallest value of all group
      *   settings and the global setting. The first non-null result is returned.
-     * - DownloadPeriodDelay, DownloadCycleDelay, DownloadFragmentDelay evaluate
+     * - downloadPeriodDelay, downloadCycleDelay, downloadFragmentDelay evaluate
      *   (in that order): the computer setting, the largest value of all group
      *   settings and the global setting. The first non-null result is returned.
      * - For any other setting, the computer's configured value is evaluated via
      *   getConfig().
-     *
-     * Group settings are only evaluated if the global UseGroups option is
-     * enabled. Additionally, AllowScan evaluates the global
-     * ScanningConfigurationInGroups option.
      *
      * @param string $option Option name
      * @return mixed Effective value or NULL
@@ -2097,42 +2076,40 @@ class Model_Computer extends Model_ComputerOrGroup
         }
 
         switch ($option) {
-            case 'InventoryInterval':
-                $value = Model_Config::get('InventoryInterval');
+            case 'inventoryInterval':
+                $value = $this->_config->inventoryInterval;
                 // Special values 0 and -1 always take precedence if configured
                 // globally.
                 if ($value >= 1) {
                     // Get smallest value of computer and group settings
-                    $value = $this->getConfig('InventoryInterval');
-                    if (Model_Config::get('UseGroups')) {
-                        foreach ($this->_getConfigGroups() as $group) {
-                            $groupValue = $group->getConfig('InventoryInterval');
-                            if ($value === null or ($groupValue !== null and $groupValue < $value)) {
-                                $value = $groupValue;
-                            }
+                    $value = $this->getConfig('inventoryInterval');
+                    foreach ($this->_getConfigGroups() as $group) {
+                        $groupValue = $group->getConfig('inventoryInterval');
+                        if ($value === null or ($groupValue !== null and $groupValue < $value)) {
+                            $value = $groupValue;
                         }
                     }
                     // Fall back to global default if not set anywhere else
                     if ($value === null) {
-                        $value = Model_Config::get('InventoryInterval');
+                        $value = $this->_config->inventoryInterval;
                     }
                 }
                 break;
-            case 'ContactInterval':
-            case 'DownloadPeriodDelay':
-            case 'DownloadCycleDelay':
-            case 'DownloadFragmentDelay':
-            case 'DownloadMaxPriority':
-            case 'DownloadTimeout':
+            case 'contactInterval':
+            case 'downloadPeriodDelay':
+            case 'downloadCycleDelay':
+            case 'downloadFragmentDelay':
+            case 'downloadMaxPriority':
+            case 'downloadTimeout':
                 // Computer value takes precedence.
                 $value = $this->getConfig($option);
                 if ($value === null) {
                     $value = $this->getDefaultConfig($option);
                 }
                 break;
-            case 'PackageDeployment':
-            case 'AllowScan':
-            case 'ScanSnmp':
+            case 'packageDeployment':
+            case 'allowScan':
+            case 'scanSnmp':
                 // If default is 0, return 0.
                 // Otherwise override default if explicitly disabled.
                 $default = $this->getDefaultConfig($option);

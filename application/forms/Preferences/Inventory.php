@@ -29,11 +29,11 @@ class Form_Preferences_Inventory extends Form_Preferences
 
     /** {@inheritdoc} */
     protected $_types = array(
-        'InspectRegistry' => 'bool',
-        'DefaultMergeUserdefined' => 'bool',
-        'DefaultMergeGroups' => 'bool',
-        'DefaultMergePackages' => 'bool',
-        'DefaultDeleteInterfaces' => 'bool',
+        'inspectRegistry' => 'bool',
+        'defaultMergeUserdefined' => 'bool',
+        'defaultMergeGroups' => 'bool',
+        'defaultMergePackages' => 'bool',
+        'defaultDeleteInterfaces' => 'bool',
     );
 
     /**
@@ -43,29 +43,29 @@ class Form_Preferences_Inventory extends Form_Preferences
     {
         $translate = Zend_Registry::get('Zend_Translate');
         $this->_labels = array(
-            'InspectRegistry' => $translate->_(
+            'inspectRegistry' => $translate->_(
                 'Inspect registry'
             ),
-            'DefaultMergeUserdefined' => sprintf(
+            'defaultMergeUserdefined' => sprintf(
                 $translate->_('Mark \'%s\' by default'),
                 $translate->_('Merge user supplied information')
             ),
-            'DefaultMergeGroups' => sprintf(
+            'defaultMergeGroups' => sprintf(
                 $translate->_('Mark \'%s\' by default'),
                 $translate->_('Merge manual group assignments')
             ),
-            'DefaultMergePackages' => sprintf(
+            'defaultMergePackages' => sprintf(
                 $translate->_('Mark \'%s\' by default'),
                 $translate->_('Merge missing package assignments')
             ),
-            'DefaultDeleteInterfaces' => sprintf(
+            'defaultDeleteInterfaces' => sprintf(
                 $translate->_('Mark \'%s\' by default'),
                 $translate->_('Delete interfaces from network listing')
             ),
         );
         parent::init();
 
-        $inspectRegistry = $this->getElement('InspectRegistry');
+        $inspectRegistry = $this->getElement('inspectRegistry');
         $inspectRegistry->removeDecorator('Label');
         $inspectRegistry->addDecorator(
             'Callback',

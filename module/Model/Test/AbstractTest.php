@@ -30,6 +30,12 @@ namespace Model\Test;
 abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
 {
     /**
+     * Model prototype tested by this class
+     * @var object
+     */
+    protected $_model;
+
+    /**
      * Array of tables to set up (table class names without Database\Table prefix)
      * @var string[]
      */
@@ -42,13 +48,14 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
     private $_db;
 
     /**
-     * Set up tables
+     * Set up model and tables
      */
     public function setUp()
     {
         foreach ($this->_tables as $table) {
             \Library\Application::getService("Database\Table\\$table")->setSchema();
         }
+        $this->_model = \Library\Application::getService($this->_getClass());
         parent::setUp();
     }
 
@@ -111,6 +118,6 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
      */
     public function testInterface()
     {
-        $this->assertInternalType('object', \Library\Application::getService($this->_getClass()));
+        $this->assertInternalType('object', $this->_model);
     }
 }

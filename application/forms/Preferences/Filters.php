@@ -29,16 +29,10 @@ class Form_Preferences_Filters extends Form_Preferences
 
     /** {@inheritdoc} */
     protected $_types = array(
-        'TrustedNetworksOnly' => 'bool',
-        'InventoryFilter' => 'bool',
-        'LimitInventory' => 'bool',
-        'LimitInventoryInterval' => 'integer',
-        'CustomProcessing' => 'bool',
-    );
-
-    /** {@inheritdoc} */
-    protected $_goodValues = array(
-        'CustomProcessing' => false,
+        'trustedNetworksOnly' => 'bool',
+        'inventoryFilter' => 'bool',
+        'limitInventory' => 'bool',
+        'limitInventoryInterval' => 'integer',
     );
 
     /**
@@ -48,24 +42,21 @@ class Form_Preferences_Filters extends Form_Preferences
     {
         $translate = Zend_Registry::get('Zend_Translate');
         $this->_labels = array(
-            'TrustedNetworksOnly' => $translate->_(
+            'trustedNetworksOnly' => $translate->_(
                 'Limit agent connections to trusted networks'
             ),
-            'InventoryFilter' => $translate->_(
+            'inventoryFilter' => $translate->_(
                 'Limit inventory frequency'
             ),
-            'LimitInventory' => $translate->_(
+            'limitInventory' => $translate->_(
                 'Limit inventory processing per IP address'
             ),
-            'LimitInventoryInterval' => $translate->_(
+            'limitInventoryInterval' => $translate->_(
                 'Seconds between inventory processing'
-            ),
-            'CustomProcessing' => $translate->_(
-                'Enable customized inventory processing (discouraged)'
             ),
         );
         parent::init();
-        $this->getElement('LimitInventoryInterval')
+        $this->getElement('limitInventoryInterval')
             ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', 5);
     }

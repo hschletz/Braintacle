@@ -1,0 +1,37 @@
+# Result set for testSet(), ordered by name
+config:
+  -
+    # unchanged
+    name: "FREQUENCY"
+    ivalue: 42
+    tvalue:
+  -
+    # boolean true, new
+    name: "INVENTORY_SESSION_ONLY"
+    ivalue: 1
+    tvalue:
+  -
+    # boolean false, updated
+    name: "IPDISCOVER_NO_POSTPONE"
+    ivalue: 0
+    tvalue:
+  -
+    # updated
+    name: "LOGPATH"
+    ivalue:
+    tvalue: "/other/log/path"
+  -
+    # boolean false, new
+    name: "PROLOG_FILTER_ON"
+    ivalue: 0
+    tvalue:
+  -
+    # new
+    name: "PROLOG_FREQ"
+    ivalue: 10
+    tvalue:
+  -
+    # boolean true, updated
+    name: "REGISTRY"
+    ivalue: 1
+    tvalue:

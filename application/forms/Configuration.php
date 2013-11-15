@@ -55,19 +55,19 @@ class Form_Configuration extends Zend_Form
         $this->_translate = Zend_Registry::get('Zend_Translate');
 
         // Agent options. Always present.
-        $contactInterval = new Zend_Form_Element_Text('ContactInterval');
+        $contactInterval = new Zend_Form_Element_Text('contactInterval');
         $contactInterval->setLabel('Agent contact interval (in hours)')
                         ->addValidator('Int', false, array('options' =>'locale'))
                         ->addValidator('GreaterThan', false, array('min' => 0))
                         ->setAttrib('size', '5')
-                        ->setValue($this->object->getConfig('ContactInterval'));
+                        ->setValue($this->object->getConfig('contactInterval'));
         $this->_setElementDecorators($contactInterval);
-        $inventoryInterval = new Zend_Form_Element_Text('InventoryInterval');
+        $inventoryInterval = new Zend_Form_Element_Text('inventoryInterval');
         $inventoryInterval->setLabel('Inventory interval (in days, 0 = always, -1 = never)')
                           ->addValidator('Int', false, array('options' =>'locale'))
                           ->addValidator('GreaterThan', false, array('min' => -2))
                           ->setAttrib('size', '5')
-                          ->setValue($this->object->getConfig('InventoryInterval'));
+                          ->setValue($this->object->getConfig('inventoryInterval'));
         $this->_setElementDecorators($inventoryInterval);
         $agent = new Zend_Form_SubForm(array('class' => 'fieldset-fullwidth'));
         $agent->setLegend('Agent')
@@ -76,36 +76,36 @@ class Form_Configuration extends Zend_Form
         $this->addSubForm($agent, 'Agent');
 
         // Download options. Not present if globally disabled.
-        if ($this->object->getDefaultConfig('PackageDeployment')) {
-            $packageDeployment = new Zend_Form_Element_Checkbox('PackageDeployment');
+        if ($this->object->getDefaultConfig('packageDeployment')) {
+            $packageDeployment = new Zend_Form_Element_Checkbox('packageDeployment');
             $packageDeployment->setLabel('Enable package download')
                               ->setAttrib('onchange', 'toggle(this, "download_option");')
-                              ->setChecked($this->object->getConfig('PackageDeployment') === null);
+                              ->setChecked($this->object->getConfig('packageDeployment') === null);
             $this->_setElementDecorators($packageDeployment);
             // The following elements are displayed or hidden depending on the
             // state of the previous checkbox.
-            $downloadPeriodDelay = new Zend_Form_Element_Text('DownloadPeriodDelay');
+            $downloadPeriodDelay = new Zend_Form_Element_Text('downloadPeriodDelay');
             $downloadPeriodDelay->setLabel('Delay (in seconds) between periods')
                                 ->addValidator('Int', false, array('options' =>'locale'))
                                 ->addValidator('GreaterThan', false, array('min' => 0))
                                 ->setAttrib('size', '5')
-                                ->setValue($this->object->getConfig('DownloadPeriodDelay'));
+                                ->setValue($this->object->getConfig('downloadPeriodDelay'));
             $this->_setElementDecorators($downloadPeriodDelay, 'download_option');
-            $downloadCycleDelay = new Zend_Form_Element_Text('DownloadCycleDelay');
+            $downloadCycleDelay = new Zend_Form_Element_Text('downloadCycleDelay');
             $downloadCycleDelay->setLabel('Delay (in seconds) between cycles')
                                 ->addValidator('Int', false, array('options' =>'locale'))
                                 ->addValidator('GreaterThan', false, array('min' => 0))
                                 ->setAttrib('size', '5')
-                                ->setValue($this->object->getConfig('DownloadCycleDelay'));
+                                ->setValue($this->object->getConfig('downloadCycleDelay'));
             $this->_setElementDecorators($downloadCycleDelay, 'download_option');
-            $downloadFragmentDelay = new Zend_Form_Element_Text('DownloadFragmentDelay');
+            $downloadFragmentDelay = new Zend_Form_Element_Text('downloadFragmentDelay');
             $downloadFragmentDelay->setLabel('Delay (in seconds) between fragments')
                                 ->addValidator('Int', false, array('options' =>'locale'))
                                 ->addValidator('GreaterThan', false, array('min' => 0))
                                 ->setAttrib('size', '5')
-                                ->setValue($this->object->getConfig('DownloadFragmentDelay'));
+                                ->setValue($this->object->getConfig('downloadFragmentDelay'));
             $this->_setElementDecorators($downloadFragmentDelay, 'download_option');
-            $downloadMaxPriority = new Zend_Form_Element_Text('DownloadMaxPriority');
+            $downloadMaxPriority = new Zend_Form_Element_Text('downloadMaxPriority');
             $downloadMaxPriority
                 ->setLabel(
                     'Maximum package priority (packages with higher value will not be downloaded)'
@@ -113,14 +113,14 @@ class Form_Configuration extends Zend_Form
                 ->addValidator('Int', false, array('options' =>'locale'))
                 ->addValidator('GreaterThan', false, array('min' => 0))
                 ->setAttrib('size', '5')
-                ->setValue($this->object->getConfig('DownloadMaxPriority'));
+                ->setValue($this->object->getConfig('downloadMaxPriority'));
             $this->_setElementDecorators($downloadMaxPriority, 'download_option');
-            $downloadTimeout = new Zend_Form_Element_Text('DownloadTimeout');
+            $downloadTimeout = new Zend_Form_Element_Text('downloadTimeout');
             $downloadTimeout->setLabel('Timeout (in days)')
                             ->addValidator('Int', false, array('options' =>'locale'))
                             ->addValidator('GreaterThan', false, array('min' => 0))
                             ->setAttrib('size', '5')
-                            ->setValue($this->object->getConfig('DownloadTimeout'));;
+                            ->setValue($this->object->getConfig('downloadTimeout'));;
             $this->_setElementDecorators($downloadTimeout, 'download_option');
             $download = new Zend_Form_SubForm(array('class' => 'fieldset-fullwidth'));
             $download->setLegend('Download')
@@ -134,12 +134,12 @@ class Form_Configuration extends Zend_Form
         }
 
         // Network scanning options. Not present if globally disabled.
-        if ($this->object->getDefaultConfig('AllowScan')) {
+        if ($this->object->getDefaultConfig('allowScan')) {
             $scan = new Zend_Form_SubForm(array('class' => 'fieldset-fullwidth'));
             $scan->setLegend('Network scanning');
-            $allowScan = new Zend_Form_Element_Checkbox('AllowScan');
+            $allowScan = new Zend_Form_Element_Checkbox('allowScan');
             $allowScan->setLabel('Allow network scanning')
-                      ->setChecked($this->object->getConfig('AllowScan') === null)
+                      ->setChecked($this->object->getConfig('allowScan') === null)
                       ->setAttrib('onchange', 'toggle(this, "scan_option");');
             $scan->addElement($allowScan);
             $this->_setElementDecorators($allowScan);
@@ -165,19 +165,19 @@ class Form_Configuration extends Zend_Form
                 // Create Dropdown only if networks are available, i.e.
                 // $addresses contains more than the empty default entry.
                 if (count($addresses) > 1) {
-                    $subnets = new Zend_Form_Element_Select('ScanThisNetwork');
+                    $subnets = new Zend_Form_Element_Select('scanThisNetwork');
                     $subnets->setLabel($this->_translate->_('Always scan this network'))
                             ->setDisableTranslator(true)
                             ->setMultiOptions($addresses)
-                            ->setValue($this->object->getConfig('ScanThisNetwork'));
+                            ->setValue($this->object->getConfig('scanThisNetwork'));
                     $this->_setElementDecorators($subnets, 'scan_option', false);
                     $scan->addElement($subnets);
                 }
             }
-            if ($this->object->getDefaultConfig('ScanSnmp')) {
-                $scanSnmp = new Zend_Form_Element_Checkbox('ScanSnmp');
+            if ($this->object->getDefaultConfig('scanSnmp')) {
+                $scanSnmp = new Zend_Form_Element_Checkbox('scanSnmp');
                 $scanSnmp->setLabel('Use SNMP')
-                         ->setChecked($this->object->getConfig('ScanSnmp') === null);
+                         ->setChecked($this->object->getConfig('scanSnmp') === null);
                 $this->_setElementDecorators($scanSnmp, 'scan_option');
                 $scan->addElement($scanSnmp);
             }
@@ -320,8 +320,8 @@ class Form_Configuration extends Zend_Form
          */
         function init()
         {
-            toggle(document.getElementById('Download-PackageDeployment'), 'download_option');
-            toggle(document.getElementById('Scan-AllowScan'), 'scan_option');
+            toggle(document.getElementById('Download-packageDeployment'), 'download_option');
+            toggle(document.getElementById('Scan-allowScan'), 'scan_option');
         }
 
         <?php
@@ -336,8 +336,8 @@ class Form_Configuration extends Zend_Form
     public function process()
     {
         $this->_processSubForm('Agent');
-        $this->_processSubForm('Download', 'PackageDeployment');
-        $this->_processSubForm('Scan', 'AllowScan');
+        $this->_processSubForm('Download', 'packageDeployment');
+        $this->_processSubForm('Scan', 'allowScan');
     }
 
     /**

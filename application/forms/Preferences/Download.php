@@ -29,12 +29,12 @@ class Form_Preferences_Download extends Form_Preferences
 
     /** {@inheritdoc} */
     protected $_types = array(
-        'PackageDeployment' => 'bool',
-        'DownloadPeriodDelay' => 'integer',
-        'DownloadCycleDelay' => 'integer',
-        'DownloadFragmentDelay' => 'integer',
-        'DownloadMaxPriority' => 'integer',
-        'DownloadTimeout' => 'integer',
+        'packageDeployment' => 'bool',
+        'downloadPeriodDelay' => 'integer',
+        'downloadCycleDelay' => 'integer',
+        'downloadFragmentDelay' => 'integer',
+        'downloadMaxPriority' => 'integer',
+        'downloadTimeout' => 'integer',
     );
 
     /**
@@ -44,39 +44,39 @@ class Form_Preferences_Download extends Form_Preferences
     {
         $translate = Zend_Registry::get('Zend_Translate');
         $this->_labels = array(
-            'PackageDeployment' => $translate->_(
+            'packageDeployment' => $translate->_(
                 'Enable package download'
             ),
-            'DownloadPeriodDelay' => $translate->_(
+            'downloadPeriodDelay' => $translate->_(
                 'Delay (in seconds) between periods'
             ),
-            'DownloadCycleDelay' => $translate->_(
+            'downloadCycleDelay' => $translate->_(
                 'Delay (in seconds) between cycles'
             ),
-            'DownloadFragmentDelay' => $translate->_(
+            'downloadFragmentDelay' => $translate->_(
                 'Delay (in seconds) between fragments'
             ),
-            'DownloadMaxPriority' => $translate->_(
+            'downloadMaxPriority' => $translate->_(
                 'Maximum package priority (packages with higher value will not be downloaded)'
             ),
-            'DownloadTimeout' => $translate->_(
+            'downloadTimeout' => $translate->_(
                 'Timeout (in days)'
             ),
         );
         parent::init();
-        $this->getElement('DownloadPeriodDelay')
+        $this->getElement('downloadPeriodDelay')
             ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');
-        $this->getElement('DownloadCycleDelay')
+        $this->getElement('downloadCycleDelay')
             ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');
-        $this->getElement('DownloadFragmentDelay')
+        $this->getElement('downloadFragmentDelay')
             ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');
-        $this->getElement('DownloadMaxPriority')
+        $this->getElement('downloadMaxPriority')
             ->addValidator('Between', false, array('min' => 0, 'max' => 10))
             ->setAttrib('size', '5');
-        $this->getElement('DownloadTimeout')
+        $this->getElement('downloadTimeout')
             ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');
     }

@@ -33,15 +33,20 @@
  */
 abstract class Form_Preferences extends Form_Normalized
 {
+    /**
+     * Application config
+     * @var \Model\Config
+     */
+    protected $_config;
 
     /**
      * Field name => datatype pairs
      *
      * The data in this array is used to automatically create form elements. The
-     * key is the name of a valid option defined by {@link Model_Config} and
-     * will also be used as the name of the element. The value is the datatype
-     * of the option. It determines the element type: 'bool' creates a checkbox
-     * etc. It also affects processing of the value: integers will be localized/
+     * key is the name of a valid option defined by \Model\Config and will also
+     * be used as the name of the element. The value is the datatype of the
+     * option. It determines the element type: 'bool' creates a checkbox etc. It
+     * also affects processing of the value: integers will be localized/
      * normalized etc. If the value is an array, a Zend_Form_Element_Select will
      * be generated with the array data as content.
      * @var array
@@ -79,6 +84,7 @@ abstract class Form_Preferences extends Form_Normalized
     {
         $this->setMethod('POST');
         $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
+        $this->_config = \Library\Application::getService('Model\Config');
 
         // Create elements dynamically
         foreach ($this->_types as $name => $type) {
@@ -134,7 +140,7 @@ abstract class Form_Preferences extends Form_Normalized
     public function loadDefaults()
     {
         foreach ($this->_types as $name => $type) {
-            $this->setDefault($name, Model_Config::get($name));
+            $this->setDefault($name, $this->_config->$name);
         }
         $this->_markBadValues();
     }
@@ -173,13 +179,13 @@ abstract class Form_Preferences extends Form_Normalized
                 // This keeps the database rid of the application defaults,
                 // allowing future changes of defaults to take effect unless
                 // manually overridden.
-                if ($value != Model_Config::get($name)) {
+                if ($value != $this->_config->$name) {
                     // Convert booleans back to string representation
                     // (implicit cast would yield '' instead of '0')
                     if ($this->_types[$name] == 'bool') {
                         $value = $value ? '1' : '0';
                     }
-                    Model_Config::set($name, $value);
+                    $this->_config->$name = $value;
                 }
             }
         }

@@ -26,6 +26,11 @@
  */
 class Form_ManageRegistryValues extends Zend_Form
 {
+    /**
+     * Application config
+     * @var \Model\Config
+     */
+    protected $_config;
 
     /**
      * Array of all values defined in the database
@@ -40,6 +45,7 @@ class Form_ManageRegistryValues extends Zend_Form
     {
         $this->setMethod('post');
         $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
+        $this->_config = \Library\Application::getService('Model\Config');
         $translate = Zend_Registry::get('Zend_Translate');
 
         // Subform for enabling/disabling registry inspection, in addition to
@@ -49,7 +55,7 @@ class Form_ManageRegistryValues extends Zend_Form
                        ->setElementsBelongTo('inspect'); // Mysterious tweak to make it work...
         $inspect = new Zend_Form_Element_Checkbox('inspect');
         $inspect->setLabel('Inspect registry')
-                ->setChecked(Model_Config::get('InspectRegistry'));
+                ->setChecked($this->_config->inspectRegistry);
         $subFormInspect->addElement($inspect);
         $this->addSubForm($subFormInspect, 'inspect');
 
@@ -236,7 +242,7 @@ class Form_ManageRegistryValues extends Zend_Form
      **/
     public function process()
     {
-        Model_Config::set('InspectRegistry', $this->inspect->inspect->isChecked());
+        $this->_config->inspectRegistry = $this->inspect->inspect->isChecked();
 
         $name = $this->newValue->getValue('name');
         if ($name) {

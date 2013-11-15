@@ -29,10 +29,9 @@ class Form_Preferences_Groups extends Form_Preferences
 
     /** {@inheritdoc} */
     protected $_types = array(
-        'UseGroups' => 'bool',
-        'GroupCacheExpirationInterval' => 'integer',
-        'GroupCacheExpirationFuzz' => 'integer',
-        'SetGroupPackageStatus' => 'bool',
+        'groupCacheExpirationInterval' => 'integer',
+        'groupCacheExpirationFuzz' => 'integer',
+        'setGroupPackageStatus' => 'bool',
     );
 
     /**
@@ -42,24 +41,21 @@ class Form_Preferences_Groups extends Form_Preferences
     {
         $translate = Zend_Registry::get('Zend_Translate');
         $this->_labels = array(
-            'UseGroups' => $translate->_(
-                'Use groups'
-            ),
-            'GroupCacheExpirationInterval' => $translate->_(
+            'groupCacheExpirationInterval' => $translate->_(
                 'Minimum seconds between group cache rebuilds'
             ),
-            'GroupCacheExpirationFuzz' => $translate->_(
+            'groupCacheExpirationFuzz' => $translate->_(
                 'Maximum seconds added to above value'
             ),
-            'SetGroupPackageStatus' => $translate->_(
+            'setGroupPackageStatus' => $translate->_(
                 'Set package status on computers for group-assigned packages'
             ),
         );
         parent::init();
-        $this->getElement('GroupCacheExpirationInterval')
+        $this->getElement('groupCacheExpirationInterval')
             ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');
-        $this->getElement('GroupCacheExpirationFuzz')
+        $this->getElement('groupCacheExpirationFuzz')
             ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');
     }

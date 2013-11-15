@@ -247,7 +247,6 @@ class ComputerController extends Zend_Controller_Action
                     if (
                         $this->computer->delete(
                             false,
-                            null,
                             $form->getValue('DeleteInterfaces')
                         )
                     ) {
@@ -395,7 +394,7 @@ class ComputerController extends Zend_Controller_Action
 
             // Post content to communication server
             $request = new \Zend\Http\Client(
-                Model_Config::get('CommunicationServerUri'),
+                \Library\Application::getService('Model\Config')->communicationServerUri,
                 array(
                     'strictredirects' => 'true', // required for POST requests
                     'useragent' => 'Braintacle_local_upload', // Substring 'local' required for correct server operation

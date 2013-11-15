@@ -29,10 +29,10 @@ class Form_Preferences_RawData extends Form_Preferences
 
     /** {@inheritdoc} */
     protected $_types = array(
-        'SaveRawData' => 'bool',
-        'SaveDir' => 'text',
-        'SaveFormat' => null, // populated by init()
-        'SaveOverwrite' => 'bool',
+        'saveRawData' => 'bool',
+        'saveDir' => 'text',
+        'saveFormat' => null, // populated by init()
+        'saveOverwrite' => 'bool',
     );
 
     /**
@@ -41,26 +41,26 @@ class Form_Preferences_RawData extends Form_Preferences
     public function init()
     {
         $translate = Zend_Registry::get('Zend_Translate');
-        $this->_types['SaveFormat'] = array(
+        $this->_types['saveFormat'] = array(
             'XML' => $translate->_('uncompressed XML'),
             'OCS' => $translate->_('zlib compressed XML')
         );
         $this->_labels = array(
-            'SaveRawData' => $translate->_(
+            'saveRawData' => $translate->_(
                 'Save incoming raw inventory data'
             ),
-            'SaveDir' => $translate->_(
+            'saveDir' => $translate->_(
                 'Target directory'
             ),
-            'SaveFormat' => $translate->_(
+            'saveFormat' => $translate->_(
                 'File format'
             ),
-            'SaveOverwrite' => $translate->_(
+            'saveOverwrite' => $translate->_(
                 'Overwrite existing files'
             ),
         );
         parent::init();
-        $this->getElement('SaveDir')
+        $this->getElement('saveDir')
             ->addValidator(new Braintacle_Validate_DirectoryWritable);
     }
 

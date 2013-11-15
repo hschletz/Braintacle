@@ -41,6 +41,12 @@ class Braintacle_SchemaManager
     const SCHEMA_VERSION = 6;
 
     /**
+     * Application config
+     * @var \Model\Config
+     */
+    protected $_config;
+
+    /**
      * Database adapter
      * @var Zend_Db_Adapter_Abstract
      */
@@ -91,6 +97,8 @@ class Braintacle_SchemaManager
      */
     function __construct(Zend_Log $logger, MDB2_Driver_Common $mdb2=null)
     {
+        $this->_config = \Library\Application::getService('Model\Config');
+
         if (is_null($mdb2)) {
             $mdb2 =  Braintacle_MDB2::factory();
         }
@@ -126,7 +134,7 @@ class Braintacle_SchemaManager
         $this->updateSchema($previousSchema, $newSchema);
         $this->updateData($previousSchema, $newSchema);
         $this->convertUserdefinedInfo();
-        Model_Config::set('SchemaVersion', self::SCHEMA_VERSION);
+        $this->_config->schemaVersion = self::SCHEMA_VERSION;
     }
 
     /**
@@ -708,7 +716,7 @@ class Braintacle_SchemaManager
     {
         // Check for presence of 'config' table first
         if (isset($this->_allTables['config'])) {
-            $oldSchemaVersion = Model_Config::get('SchemaVersion');
+            $oldSchemaVersion = $this->_config->schemaVersion;
             if (is_null($oldSchemaVersion) or
                 $oldSchemaVersion < self::SCHEMA_VERSION or
                 count($this->getUserdefinedInfoToConvert()) > 0
@@ -748,7 +756,7 @@ class Braintacle_SchemaManager
         }
         // The SchemaVersion option will be NULL for databases not managed by
         // Braintacle.
-        if (is_null(Model_Config::get('SchemaVersion'))) {
+        if (is_null($this->_config->schemaVersion)) {
             return true;
         }
         // SchemaVersion present => database has previously been managed by

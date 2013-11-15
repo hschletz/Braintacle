@@ -40,29 +40,31 @@ class Form_Package_Edit extends Form_Package
      */
     public function init()
     {
+        $config = \Library\Application::getService('Model\Config');
+
         $deployNonnotified = new Zend_Form_Element_Checkbox('DeployNonnotified');
         $deployNonnotified->setLabel('Not notified')
-            ->setChecked(Model_Config::get('DefaultDeployNonnotified'));
+            ->setChecked($config->defaultDeployNonnotified);
         $this->addElement($deployNonnotified);
 
         $deploySuccess = new Zend_Form_Element_Checkbox('DeploySuccess');
         $deploySuccess->setLabel('Success')
-            ->setChecked(Model_Config::get('DefaultDeploySuccess'));
+            ->setChecked($config->defaultDeploySuccess);
         $this->addElement($deploySuccess);
 
         $deployNotified = new Zend_Form_Element_Checkbox('DeployNotified');
         $deployNotified->setLabel('Running')
-            ->setChecked(Model_Config::get('DefaultDeployNotified'));
+            ->setChecked($config->defaultDeployNotified);
         $this->addElement($deployNotified);
 
         $deployError = new Zend_Form_Element_Checkbox('DeployError');
         $deployError->setLabel('Error')
-            ->setChecked(Model_Config::get('DefaultDeployError'));
+            ->setChecked($config->defaultDeployError);
         $this->addElement($deployError);
 
         $deployGroups = new Zend_Form_Element_Checkbox('DeployGroups');
         $deployGroups->setLabel('Groups')
-            ->setChecked(Model_Config::get('DefaultDeployGroups'));
+            ->setChecked($config->defaultDeployGroups);
         $this->addElement($deployGroups);
 
         $this->addDisplayGroup(

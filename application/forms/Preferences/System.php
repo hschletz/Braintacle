@@ -29,31 +29,23 @@ class Form_Preferences_System extends Form_Preferences
 
     /** {@inheritdoc} */
     protected $_types = array(
-        'CommunicationServerUri' => 'text',
-        'LockValidity' => 'integer',
-        'SessionValidity' => 'integer',
-        'SessionCleanupInterval' => 'integer',
-        'SessionRequired' => 'bool',
-        'TraceDeleted' => 'bool',
-        'LogPath' => 'text',
-        'LogLevel' => array(0, 1, 2),
-        'AutoDuplicateCriteria' => 'integer',
-        'UpdateChangedSectionsOnly' => 'bool',
-        'UpdateChangedSnmpSectionsOnly' => 'bool',
-        'UseDifferentialUpdate' => 'bool',
-        'UseTransactions' => 'bool',
-        'UseCacheTables' => 'bool',
-        'KeepObsoleteCacheItems' => 'bool',
-        'CacheTableExpirationinterval' => 'integer',
-        'AcceptNonZlib' => 'bool',
+        'communicationServerUri' => 'text',
+        'lockValidity' => 'integer',
+        'sessionValidity' => 'integer',
+        'sessionCleanupInterval' => 'integer',
+        'sessionRequired' => 'bool',
+        'logPath' => 'text',
+        'logLevel' => array(0, 1, 2),
+        'autoDuplicateCriteria' => 'integer',
+        'useTransactions' => 'bool',
+        'acceptNonZlib' => 'bool',
     );
 
     /** {@inheritdoc} */
     protected $_goodValues = array(
-        'AutoDuplicateCriteria' => 0,
-        'UseTransactions' => true,
-        'UseCacheTables' => false,
-        'AcceptNonZlib' => true,
+        'autoDuplicateCriteria' => 0,
+        'useTransactions' => true,
+        'acceptNonZlib' => true,
     );
 
     /**
@@ -63,77 +55,53 @@ class Form_Preferences_System extends Form_Preferences
     {
         $translate = Zend_Registry::get('Zend_Translate');
         $this->_labels = array(
-            'CommunicationServerUri' => $translate->_(
+            'communicationServerUri' => $translate->_(
                 'Communication server URI'
             ),
-            'LockValidity' => $translate->_(
+            'lockValidity' => $translate->_(
                 'Maximum seconds to lock a computer'
             ),
-            'SessionValidity' => $translate->_(
+            'sessionValidity' => $translate->_(
                 'Maximum duration of an agent session in seconds'
             ),
-            'SessionCleanupInterval' => $translate->_(
+            'sessionCleanupInterval' => $translate->_(
                 'Interval in seconds to cleanup sessions'
             ),
-            'SessionRequired' => $translate->_(
+            'sessionRequired' => $translate->_(
                 'Session required for inventory'
             ),
-            'TraceDeleted' => $translate->_(
-                'Keep track of deleted computers'
-            ),
-            'LogPath' => $translate->_(
+            'logPath' => $translate->_(
                 'Path to logfiles'
             ),
-            'LogLevel' => $translate->_(
+            'logLevel' => $translate->_(
                 'Log level'
             ),
-            'AutoDuplicateCriteria' => $translate->_(
+            'autoDuplicateCriteria' => $translate->_(
                 'Bitmask for automatic resolution of duplicates (should be 0)'
             ),
-            'UpdateChangedSectionsOnly' => $translate->_(
-                'Update only changed inventory sections'
-            ),
-            'UpdateChangedSnmpSectionsOnly' => $translate->_(
-                'Update only changed SNMP sections'
-            ),
-            'UseDifferentialUpdate' => $translate->_(
-                'Use differential database updates'
-            ),
-            'UseTransactions' => $translate->_(
+            'useTransactions' => $translate->_(
                 'Use database transactions (recommended)'
             ),
-            'UseCacheTables' => $translate->_(
-                'Use cache tables (not recommended)'
-            ),
-            'KeepObsoleteCacheItems' => $translate->_(
-                'Keep obsolete items in the cache'
-            ),
-            'CacheTableExpirationinterval' => $translate->_(
-                'Days between cache rebuilds'
-            ),
-            'AcceptNonZlib' => $translate->_(
+            'acceptNonZlib' => $translate->_(
                 'Accept requests other than raw zlib compressed'
             ),
         );
         parent::init();
-        $this->getElement('CommunicationServerUri')
+        $this->getElement('communicationServerUri')
             ->addValidator(new Zend_Validate_Callback(array('Zend_Uri', 'check')));
-        $this->getElement('LockValidity')
+        $this->getElement('lockValidity')
             ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');
-        $this->getElement('SessionValidity')
+        $this->getElement('sessionValidity')
             ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');
-        $this->getElement('SessionCleanupInterval')
+        $this->getElement('sessionCleanupInterval')
             ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');
-        $this->getElement('LogPath')
+        $this->getElement('logPath')
             ->addValidator(new Braintacle_Validate_DirectoryWritable);
-        $this->getElement('AutoDuplicateCriteria')
+        $this->getElement('autoDuplicateCriteria')
             ->addValidator('GreaterThan', false, array('min' => -1))
-            ->setAttrib('size', '5');
-        $this->getElement('CacheTableExpirationinterval')
-            ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');
     }
 

@@ -29,17 +29,9 @@ class Form_Preferences_Agent extends Form_Preferences
 
     /** {@inheritdoc} */
     protected $_types = array(
-        'ContactInterval' => 'integer',
-        'InventoryInterval' => 'integer',
-        'AgentDeployment' => 'bool',
-        'AgentUpdate' => 'bool',
-        'AgentWhitelistFile' => 'text',
-    );
-
-    /** {@inheritdoc} */
-    protected $_goodValues = array(
-        'AgentDeployment' => false,
-        'AgentUpdate' => false,
+        'contactInterval' => 'integer',
+        'inventoryInterval' => 'integer',
+        'agentWhitelistFile' => 'text',
     );
 
     /**
@@ -50,30 +42,24 @@ class Form_Preferences_Agent extends Form_Preferences
         $translate = Zend_Registry::get('Zend_Translate');
 
         $this->_labels = array(
-            'ContactInterval' => $translate->_(
+            'contactInterval' => $translate->_(
                 'Agent contact interval (in hours)'
             ),
-            'InventoryInterval' => $translate->_(
+            'inventoryInterval' => $translate->_(
                 'Inventory interval (in days, 0 = always, -1 = never)'
             ),
-            'AgentDeployment' => $translate->_(
-                'Automatic agent deployment (deprecated)'
-            ),
-            'AgentUpdate' => $translate->_(
-                'Automatic agent update (deprecated)'
-            ),
-            'AgentWhitelistFile' => $translate->_(
+            'agentWhitelistFile' => $translate->_(
                 'File with allowed non-OCS agents (FusionInventory etc.)'
             ),
         );
         parent::init();
-        $this->getElement('ContactInterval')
+        $this->getElement('contactInterval')
             ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');
-        $this->getElement('InventoryInterval')
+        $this->getElement('inventoryInterval')
             ->addValidator('GreaterThan', false, array('min' => -2))
             ->setAttrib('size', '5');
-        $this->getElement('AgentWhitelistFile')
+        $this->getElement('agentWhitelistFile')
             ->addFilter('StringTrim')
             ->addValidator(new Braintacle_Validate_FileReadable);
     }

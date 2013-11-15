@@ -55,6 +55,7 @@ Feature\ConfigProviderInterface
                     'Model\Computer\Windows' => 'Model_Windows',
                 ),
                 'factories' => array(
+                    'Model\Config' => 'Model\Service\ConfigFactory',
                     'Model\Operator' => 'Model\Service\OperatorFactory',
                 ),
             ),

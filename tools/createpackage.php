@@ -52,6 +52,7 @@ if (is_resource($zip)) {
 // Set up environment
 require(__DIR__ . '/../module/Library/Application.php');
 \Library\Application::init('Cli');
+$config = \Library\Application::getService('Model\Config');
 
 // Create Package
 $package = new Model_Package;
@@ -62,21 +63,21 @@ $package->fromArray(
         'FileName' => basename($file),
         'FileType' => $type,
         'FileLocation' => $file,
-        'Priority' => Model_Config::get('DefaultPackagePriority'),
-        'Platform' => Model_Config::get('DefaultPlatform'),
-        'DeployAction' => Model_Config::get('DefaultAction'),
-        'ActionParam' => Model_Config::get('DefaultActionParam'),
-        'Warn' => Model_Config::get('DefaultWarn'),
-        'WarnMessage' => Model_Config::get('DefaultWarnMessage'),
-        'WarnCountdown' => Model_Config::get('DefaultWarnCountdown'),
-        'WarnAllowAbort' => Model_Config::get('DefaultWarnAllowAbort'),
-        'WarnAllowDelay' => Model_Config::get('DefaultWarnAllowDelay'),
-        'UserActionRequired' => Model_Config::get('DefaultUserActionRequired'),
-        'UserActionMessage' => Model_Config::get('DefaultUserActionMessage'),
-        'MaxFragmentSize' => Model_Config::get('DefaultMaxFragmentSize'),
-        'InfoFileUrlPath' => Model_Config::get('DefaultInfoFileLocation'),
-        'DownloadUrlPath' => Model_Config::get('DefaultDownloadLocation'),
-        'CertFile' => Model_Config::get('DefaultCertificate'),
+        'Priority' => $config->defaultPackagePriority,
+        'Platform' => $config->defaultPlatform,
+        'DeployAction' => $config->defaultAction,
+        'ActionParam' => $config->defaultActionParam,
+        'Warn' => $config->defaultWarn,
+        'WarnMessage' => $config->defaultWarnMessage,
+        'WarnCountdown' => $config->defaultWarnCountdown,
+        'WarnAllowAbort' => $config->defaultWarnAllowAbort,
+        'WarnAllowDelay' => $config->defaultWarnAllowDelay,
+        'UserActionRequired' => $config->defaultUserActionRequired,
+        'UserActionMessage' => $config->defaultUserActionMessage,
+        'MaxFragmentSize' => $config->defaultMaxFragmentSize,
+        'InfoFileUrlPath' => $config->defaultInfoFileLocation,
+        'DownloadUrlPath' => $config->defaultDownloadLocation,
+        'CertFile' => $config->defaultCertificate,
     )
 );
 if ($package->build(false)) {

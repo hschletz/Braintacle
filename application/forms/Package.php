@@ -57,6 +57,7 @@ class Form_Package extends Zend_Form
     {
         $translate = Zend_Registry::get('Zend_Translate');
         $view = $this->getView();
+        $config = \Library\Application::getService('Model\Config');
 
         $this->setMethod('post');
         $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
@@ -94,7 +95,7 @@ class Form_Package extends Zend_Form
                         'mac' => 'MacOS'
                      )
                  )
-                 ->setValue(Model_Config::get('DefaultPlatform'))
+                 ->setValue($config->defaultPlatform)
                  ->setLabel($translate->_('Platform'));
         $this->addElement($platform);
 
@@ -115,7 +116,7 @@ class Form_Package extends Zend_Form
                         ),
                    )
                )
-               ->setValue(Model_Config::get('DefaultAction'))
+               ->setValue($config->defaultAction)
                ->setLabel($translate->_('Action'))
                ->setAttrib('onchange', 'changeParam();');
         $this->addElement($action);
@@ -126,7 +127,7 @@ class Form_Package extends Zend_Form
         $actionParamLabel = 'Parameter';
         $actionParam = new Zend_Form_Element_Text('ActionParam');
         $actionParam->setDisableTranslator(true)
-                    ->setValue(Model_Config::get('DefaultActionParam'))
+                    ->setValue($config->defaultActionParam)
                     ->setRequired(true)
                     ->setLabel($actionParamLabel);
         $this->addElement($actionParam);
@@ -163,7 +164,7 @@ class Form_Package extends Zend_Form
                         '10 (' . $translate->_('low') . ')'
                     )
                  )
-                 ->setValue(Model_Config::get('DefaultPackagePriority'))
+                 ->setValue($config->defaultPackagePriority)
                  ->setLabel($translate->_('Priority'));
         $this->addElement($priority);
 
@@ -171,9 +172,7 @@ class Form_Package extends Zend_Form
         $maxFragmentSize = new Zend_Form_Element_Text('MaxFragmentSize');
         $maxFragmentSize->addValidator('StringLength', false, array(1, 8))
                         ->addValidator('Digits')
-                        ->setValue(
-                            Model_Config::get('DefaultMaxFragmentSize')
-                        )
+                        ->setValue($config->defaultMaxFragmentSize)
                         ->setRequired(true)
                         ->setAttrib('size', '8')
                         ->setLabel('Maximum fragment size (kB), enter 0 for no fragmentation');
@@ -196,7 +195,7 @@ class Form_Package extends Zend_Form
                     ->addValidator('StringLength', false, array(1, 255))
                     ->addValidator(new Braintacle_Validate_Uri('https'))
                     ->setRequired(true)
-                    ->setValue(Model_Config::get('DefaultInfoFileLocation'))
+                    ->setValue($config->defaultInfoFileLocation)
                     ->setLabel('hostname/path for info file (HTTPS)');
         $this->addElement($infoFileUrl);
 
@@ -217,7 +216,7 @@ class Form_Package extends Zend_Form
                     ->addValidator('StringLength', false, array(1, 255))
                     ->addValidator(new Braintacle_Validate_Uri('http'))
                     ->setRequired(true)
-                    ->setValue(Model_Config::get('DefaultDownloadLocation'))
+                    ->setValue($config->defaultDownloadLocation)
                     ->setLabel('hostname/path for package download (HTTP)');
         $this->addElement($downloadUrl);
 
@@ -234,21 +233,21 @@ class Form_Package extends Zend_Form
              ->addValidator('StringLength', false, array(1, 255))
              ->addValidator('Regex', false, array('/\//')) // at least 1 /
              ->setRequired(true)
-             ->setValue(Model_Config::get('DefaultCertificate'))
+             ->setValue($config->defaultCertificate)
              ->setLabel('Certificate');
         $this->addElement($cert);
 
         // The next elements are only relevant and displayed when this one is checked.
         $warn = new Zend_Form_Element_Checkbox('Warn');
         $warn->setLabel('Warn user')
-             ->setChecked(Model_Config::get('DefaultWarn'))
+             ->setChecked($config->defaultWarn)
              ->setAttrib('onchange', 'toggleWarn();');
         $this->addElement($warn);
 
         // Message to display to user before deployment
         $warnMessage = new Zend_Form_Element_Textarea('WarnMessage');
         $warnMessage->addFilter('StringTrim')
-                    ->setValue(Model_Config::get('DefaultWarnMessage'))
+                    ->setValue($config->defaultWarnMessage)
                     ->setLabel('Message');
         $this->addElement($warnMessage);
 
@@ -256,9 +255,7 @@ class Form_Package extends Zend_Form
         $warnCountdown = new Zend_Form_Element_Text('WarnCountdown');
         $warnCountdown->addValidator('StringLength', false, array(1, 5))
                         ->addValidator('Digits')
-                        ->setValue(
-                            Model_Config::get('DefaultWarnCountdown')
-                        )
+                        ->setValue($config->defaultWarnCountdown)
                         ->setAttrib('size', '5')
                         ->setLabel('Countdown (seconds)');
         $this->addElement($warnCountdown);
@@ -266,26 +263,26 @@ class Form_Package extends Zend_Form
         // Whether user may abort deployment
         $warnAllowAbort = new Zend_Form_Element_Checkbox('WarnAllowAbort');
         $warnAllowAbort->setLabel('Allow abort by user')
-                       ->setValue(Model_Config::get('DefaultWarnAllowAbort'));
+                       ->setValue($config->defaultWarnAllowAbort);
         $this->addElement($warnAllowAbort);
 
         // Whether user may delay deployment
         $warnAllowDelay = new Zend_Form_Element_Checkbox('WarnAllowDelay');
         $warnAllowDelay->setLabel('Allow delay by user')
-                       ->setValue(Model_Config::get('DefaultWarnAllowDelay'));
+                       ->setValue($config->defaultWarnAllowDelay);
         $this->addElement($warnAllowDelay);
 
         // The next element is only relevant and displayed when this one is checked.
         $userActionRequired = new Zend_Form_Element_Checkbox('UserActionRequired');
         $userActionRequired->setLabel('User action Required')
-                           ->setChecked(Model_Config::get('DefaultUserActionRequired'))
+                           ->setChecked($config->defaultUserActionRequired)
                            ->setAttrib('onchange', 'toggleUserAction();');
         $this->addElement($userActionRequired);
 
         // Message to display to user after deployment
         $userActionMessage = new Zend_Form_Element_Textarea('UserActionMessage');
         $userActionMessage->addFilter('StringTrim')
-                          ->setValue(Model_Config::get('DefaultUserActionMessage'))
+                          ->setValue($config->defaultUserActionMessage)
                           ->setLabel('Message');
         $this->addElement($userActionMessage);
 

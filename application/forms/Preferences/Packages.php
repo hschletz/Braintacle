@@ -29,31 +29,31 @@ class Form_Preferences_Packages extends Form_Preferences
 
     /** {@inheritdoc} */
     protected $_types = array(
-        'DefaultDeployNonnotified' => 'bool',
-        'DefaultDeploySuccess' => 'bool',
-        'DefaultDeployNotified' => 'bool',
-        'DefaultDeployError' => 'bool',
-        'DefaultDeployGroups' => 'bool',
-        'PackagePath' => 'text',
-        'DefaultPlatform' => array(
+        'defaultDeployNonnotified' => 'bool',
+        'defaultDeploySuccess' => 'bool',
+        'defaultDeployNotified' => 'bool',
+        'defaultDeployError' => 'bool',
+        'defaultDeployGroups' => 'bool',
+        'packagePath' => 'text',
+        'defaultPlatform' => array(
             'windows' => 'Windows',
             'linux' => 'Linux',
             'mac' => 'MacOS'
         ),
-        'DefaultAction' => array(), // Translated content provided by init()
-        'DefaultActionParam' => 'text',
-        'DefaultPackagePriority' => array(), // Translated content provided by init()
-        'DefaultMaxFragmentSize' => 'integer',
-        'DefaultInfoFileLocation' => 'text',
-        'DefaultDownloadLocation' => 'text',
-        'DefaultCertificate' => 'text',
-        'DefaultWarn' => 'bool',
-        'DefaultWarnMessage' => 'clob',
-        'DefaultWarnCountdown' => 'integer',
-        'DefaultWarnAllowAbort' => 'bool',
-        'DefaultWarnAllowDelay' => 'bool',
-        'DefaultUserActionRequired' => 'bool',
-        'DefaultUserActionMessage' => 'clob',
+        'defaultAction' => array(), // Translated content provided by init()
+        'defaultActionParam' => 'text',
+        'defaultPackagePriority' => array(), // Translated content provided by init()
+        'defaultMaxFragmentSize' => 'integer',
+        'defaultInfoFileLocation' => 'text',
+        'defaultDownloadLocation' => 'text',
+        'defaultCertificate' => 'text',
+        'defaultWarn' => 'bool',
+        'defaultWarnMessage' => 'clob',
+        'defaultWarnCountdown' => 'integer',
+        'defaultWarnAllowAbort' => 'bool',
+        'defaultWarnAllowDelay' => 'bool',
+        'defaultUserActionRequired' => 'bool',
+        'defaultUserActionMessage' => 'clob',
     );
 
     /**
@@ -74,7 +74,7 @@ class Form_Preferences_Packages extends Form_Preferences
         $this->addDisplayGroups(array($deployGroup));
 
         // Translate and set elements for dropdown fields
-        $this->_types['DefaultAction'] = array(
+        $this->_types['defaultAction'] = array(
             'launch' => $translate->_(
                 'Download package, execute command, retrieve result'
             ),
@@ -85,7 +85,7 @@ class Form_Preferences_Packages extends Form_Preferences
                 'Just download package to target path'
             ),
         );
-        $this->_types['DefaultPackagePriority'] = array(
+        $this->_types['defaultPackagePriority'] = array(
             '0 (' . $translate->_('may block other downloads!') . ')',
             '1 (' . $translate->_('high') . ')',
             2, 3, 4, 5, 6, 7, 8, 9,
@@ -94,67 +94,67 @@ class Form_Preferences_Packages extends Form_Preferences
 
         // Translate labels
         $this->_labels = array(
-            'PackagePath' => $translate->_(
+            'packagePath' => $translate->_(
                 'Path to package files (writeable by web server)'
             ),
-            'DefaultPlatform' => $translate->_(
+            'defaultPlatform' => $translate->_(
                 'Default platform'
             ),
-            'DefaultAction' => $translate->_(
+            'defaultAction' => $translate->_(
                 'Default action'
             ),
-            'DefaultActionParam' => $translate->_(
+            'defaultActionParam' => $translate->_(
                 'Default action parameter'
             ),
-            'DefaultPackagePriority' => $translate->_(
+            'defaultPackagePriority' => $translate->_(
                 'Default priority'
             ),
-            'DefaultMaxFragmentSize' => $translate->_(
+            'defaultMaxFragmentSize' => $translate->_(
                 'Default maximum fragment size (kB), 0 for no fragmentation'
             ),
-            'DefaultInfoFileLocation' => $translate->_(
+            'defaultInfoFileLocation' => $translate->_(
                 'Default hostname/path for info file (HTTPS)'
             ),
-            'DefaultDownloadLocation' => $translate->_(
+            'defaultDownloadLocation' => $translate->_(
                 'Default hostname/path for package download (HTTP)'
             ),
-            'DefaultCertificate' => $translate->_(
+            'defaultCertificate' => $translate->_(
                 'Default certificate'
             ),
-            'DefaultWarn' => $translate->_(
+            'defaultWarn' => $translate->_(
                 'Warn user by default'
             ),
-            'DefaultWarnMessage' => $translate->_(
+            'defaultWarnMessage' => $translate->_(
                 'Default warn message'
             ),
-            'DefaultWarnCountdown' => $translate->_(
+            'defaultWarnCountdown' => $translate->_(
                 'Default warn countdown (seconds)'
             ),
-            'DefaultWarnAllowAbort' => $translate->_(
+            'defaultWarnAllowAbort' => $translate->_(
                 'Allow user abort by default'
             ),
-            'DefaultWarnAllowDelay' => $translate->_(
+            'defaultWarnAllowDelay' => $translate->_(
                 'Allow user delay by default'
             ),
-            'DefaultUserActionRequired' => $translate->_(
+            'defaultUserActionRequired' => $translate->_(
                 'User action required by default'
             ),
-            'DefaultUserActionMessage' => $translate->_(
+            'defaultUserActionMessage' => $translate->_(
                 'Default user action message'
             ),
-            'DefaultDeployNonnotified' => $translate->_(
+            'defaultDeployNonnotified' => $translate->_(
                 'Not notified'
             ),
-            'DefaultDeploySuccess' => $translate->_(
+            'defaultDeploySuccess' => $translate->_(
                 'Success'
             ),
-            'DefaultDeployNotified' => $translate->_(
+            'defaultDeployNotified' => $translate->_(
                 'Running'
             ),
-            'DefaultDeployError' => $translate->_(
+            'defaultDeployError' => $translate->_(
                 'Error'
             ),
-            'DefaultDeployGroups' => $translate->_(
+            'defaultDeployGroups' => $translate->_(
                 'Groups'
             ),
         );
@@ -163,18 +163,18 @@ class Form_Preferences_Packages extends Form_Preferences
         parent::init();
 
         // Move elements to display group
-        $deployGroup->addElement($this->getElement('DefaultDeployNonnotified'));
-        $deployGroup->addElement($this->getElement('DefaultDeploySuccess'));
-        $deployGroup->addElement($this->getElement('DefaultDeployNotified'));
-        $deployGroup->addElement($this->getElement('DefaultDeployError'));
-        $deployGroup->addElement($this->getElement('DefaultDeployGroups'));
+        $deployGroup->addElement($this->getElement('defaultDeployNonnotified'));
+        $deployGroup->addElement($this->getElement('defaultDeploySuccess'));
+        $deployGroup->addElement($this->getElement('defaultDeployNotified'));
+        $deployGroup->addElement($this->getElement('defaultDeployError'));
+        $deployGroup->addElement($this->getElement('defaultDeployGroups'));
 
         // Additional setup for elements
-        $this->getElement('PackagePath')
+        $this->getElement('packagePath')
             ->addFilter('StringTrim')
             ->addValidator('Regex', false, array('pattern' => '#[/\\\\]download[/\\\\]?$#'))
             ->addValidator(new Braintacle_Validate_DirectoryWritable);
-        $this->getElement('DefaultInfoFileLocation')
+        $this->getElement('defaultInfoFileLocation')
             ->addFilter(
                 'PregReplace',
                 array(
@@ -187,7 +187,7 @@ class Form_Preferences_Packages extends Form_Preferences
             )
             ->addFilter('StringTrim', array('charlist' => '/'))
             ->addValidator(new Braintacle_Validate_Uri('https'));
-        $this->getElement('DefaultDownloadLocation')
+        $this->getElement('defaultDownloadLocation')
             ->addFilter(
                 'PregReplace',
                 array(
@@ -200,7 +200,7 @@ class Form_Preferences_Packages extends Form_Preferences
             )
             ->addFilter('StringTrim', array('charlist' => '/'))
             ->addValidator(new Braintacle_Validate_Uri('https'));
-        $this->getElement('DefaultWarnCountdown')
+        $this->getElement('defaultWarnCountdown')
             ->setAttrib('size', '5');
     }
 

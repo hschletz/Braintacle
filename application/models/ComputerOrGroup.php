@@ -46,11 +46,17 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
     const SCAN_EXPLICIT = 2;
 
     /**
+     * Application config
+     * @var \Model\Config
+     */
+    protected $_config;
+
+    /**
      * Global cache for getConfig() results
      *
-     * This is a 2-dimensional array: $_config[computer/group ID][option name] = value
+     * This is a 2-dimensional array: $_configCache[computer/group ID][option name] = value
      */
-    protected static $_config = array();
+    protected static $_configCache = array();
 
     /**
      * Timestamp when a lock held by this instance will expire
@@ -58,6 +64,14 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
      */
     private $_lockTimeout;
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->_config = \Library\Application::getService('Model\Config');
+    }
 
     /**
      * Destructor
@@ -111,7 +125,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
     {
         $db = Model_Database::getAdapter();
         $id = $this->getId();
-        $expire = Model_Config::get('LockValidity');
+        $expire = $this->_config->lockValidity;
 
         // Check if a lock already exists. CURRENT_TIMESTAMP is fetched from the
         // database to ensure that the same timezone is used for comparisions.
@@ -327,16 +341,16 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
      *
      * Any valid option name can be passed for $option, though most options have
      * no item-specific setting and would always return NULL. In addition to the
-     * options defined in Model_Config, the following options are available:
+     * options defined in \Model\Config, the following options are available:
      *
-     * - **AllowScan:** If 0, prevents this computer or group from scanning any
+     * - **allowScan:** If 0, prevents this computer or group from scanning any
      *                  networks.
-     * - **ScanThisNetwork:** Causes a computer to always scan networks with the
+     * - **scanThisNetwork:** Causes a computer to always scan networks with the
      *                        given address (not taking a network mask into
      *                        account), overriding the server's automatic
      *                        choice.
      *
-     * PackageDeployment, AllowScan and ScanSnmp are never evaluated if disabled
+     * packageDeployment, allowScan and scanSnmp are never evaluated if disabled
      * globally or by groups of which a computer is a member. For this reason,
      * these options can only be 0 (explicitly disabled if enabled on a higher
      * level) or NULL (inherit behavior) but never 1 - that would be the same as
@@ -348,8 +362,8 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
     public function getConfig($option)
     {
         $id = $this->getId();
-        if (isset(self::$_config[$id]) and array_key_exists($option, self::$_config[$id])) {
-            return self::$_config[$id][$option];
+        if (isset(self::$_configCache[$id]) and array_key_exists($option, self::$_configCache[$id])) {
+            return self::$_configCache[$id][$option];
         }
 
         $column = 'ivalue';
@@ -357,20 +371,20 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
             case 'PackageDeployment':
                 $name = 'DOWNLOAD_SWITCH'; // differs from global option
                 break;
-            case 'AllowScan':
+            case 'allowScan':
                 $name = 'IPDISCOVER';
                 $ivalue = self::SCAN_DISABLED;
                 break;
-            case 'ScanThisNetwork':
+            case 'scanThisNetwork':
                 $name = 'IPDISCOVER';
                 $ivalue = self::SCAN_EXPLICIT;
                 $column = 'tvalue';
                 break;
-            case 'ScanSnmp':
+            case 'scanSnmp':
                 $name = 'SNMP_SWITCH'; // differs from global option
                 break;
             default:
-                $name = Model_Config::getOcsOptionName($option);
+                $name = $this->_config->getDbIdentifier($option);
         }
         $select = Model_Database::getAdapter()
                   ->select()
@@ -388,7 +402,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
         }
         $value = $this->_normalizeConfig($option, $value);
 
-        self::$_config[$id][$option] = $value;
+        self::$_configCache[$id][$option] = $value;
         return $value;
     }
 
@@ -406,11 +420,11 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
         $db = Model_Database::getAdapter();
 
         // Determine 'name' column in the 'devices' table
-        if ($option == 'AllowScan' or $option == 'ScanThisNetwork') {
+        if ($option == 'allowScan' or $option == 'scanThisNetwork') {
             $name = 'IPDISCOVER';
         } else {
-            $name = Model_Config::getOcsOptionName($option);
-            if ($option == 'PackageDeployment' or $option == 'ScanSnmp') {
+            $name = $this->_config->getDbIdentifier($option);
+            if ($option == 'packageDeployment' or $option == 'scanSnmp') {
                 $name .= '_SWITCH';
             }
         }
@@ -418,7 +432,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
         $value = $this->_normalizeConfig($option, $value);
 
         // Set affected columns
-        if ($option == 'ScanThisNetwork') {
+        if ($option == 'scanThisNetwork') {
             $columns = array(
                 'ivalue' => self::SCAN_EXPLICIT,
                 'tvalue' => $value
@@ -438,7 +452,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
             // Unset option
             if ($name == 'IPDISCOVER') {
                 // Also check ivalue to prevent accidental deletion of unrelated setting
-                $condition['ivalue = ?'] = ($option == 'AllowScan') ? self::SCAN_DISABLED : self::SCAN_EXPLICIT;
+                $condition['ivalue = ?'] = ($option == 'allowScan') ? self::SCAN_DISABLED : self::SCAN_EXPLICIT;
             }
             $db->delete('devices', $condition);
         } else {
@@ -461,7 +475,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
             }
         }
         $db->commit();
-        self::$_config[$this->getId()][$option] = $value;
+        self::$_configCache[$this->getId()][$option] = $value;
     }
 
     /**
@@ -486,9 +500,9 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
      */
     protected function _normalizeConfig($option, $value)
     {
-        if ($option == 'PackageDeployment' or
-            $option == 'ScanSnmp' or
-            $option == 'AllowScan'
+        if ($option == 'packageDeployment' or
+            $option == 'scanSnmp' or
+            $option == 'allowScan'
         ) {
             // These options are only evaluated if their default setting is
             // enabled, i.e. they only have an effect if they get disabled.

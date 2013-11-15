@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for the Config class
+ * Tests for Model\Config
  *
  * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,64 +19,71 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Database\Test\Table;
+namespace Model\Test;
 
 /**
- * Tests for the Config class
+ * Tests for Model\Config
  */
 class ConfigTest extends AbstractTest
 {
+    /** {@inheritdoc} */
+    protected $_tables = array('Config');
+
     /**
      * Tests for getDbIdentifier()
      */
     public function testGetDbIdentifier()
     {
-        $this->assertEquals('FREQUENCY', $this->_table->getDbIdentifier('inventoryInterval'));
+        $this->assertEquals('FREQUENCY', $this->_model->getDbIdentifier('inventoryInterval'));
         $this->setExpectedException('InvalidArgumentException');
-        $this->_table->getDbIdentifier('Invalid');
+        $this->_model->getDbIdentifier('invalid');
     }
 
     /**
-     * Tests for get()
+     * Tests for __get()
      */
-    public function testGet()
+    public function testMagicGet()
     {
+        $config = clone $this->_model;
+
         // Test populated ivalue and tvalue options
-        $this->assertEquals(42, $this->_table->get('inventoryInterval'));
-        $this->assertEquals('/example/log/path', $this->_table->get('logPath'));
-        // Test unpopulated option
-        $this->assertNull($this->_table->get('contactInterval'));
+        $this->assertEquals(42, $config->inventoryInterval);
+        $this->assertEquals('/example/log/path', $config->logPath);
+        // Test default for unpopulated option
+        $this->assertEquals(12, $config->contactInterval);
         // Test invalid option
         $this->setExpectedException('InvalidArgumentException');
-        $this->_table->get('invalid');
+        $config->invalid;
     }
 
     /**
-     * Tests for set()
+     * Tests for __set()
      */
-    public function testSet()
+    public function testMagicSet()
     {
-        $this->_table->set('inventoryInterval', 42); // unchanged
-        $this->_table->set('contactInterval', 10); // new
-        $this->_table->set('logPath', '/other/log/path'); // updated
-        $this->_table->set('inspectRegistry', true); // ivalue true, updated
-        $this->_table->set('scanAlways', false); // ivalue false, updated
-        $this->_table->set('sessionRequired', true); // ivalue true, new
-        $this->_table->set('trustedNetworksOnly', false); // ivalue false, new
+        $config = clone $this->_model;
+
+        $config->inventoryInterval = 42; // unchanged
+        $config->contactInterval = 10; // new
+        $config->logPath = '/other/log/path'; // updated
+        $config->inspectRegistry = true; // ivalue true, updated
+        $config->scanAlways = false; // ivalue false, updated
+        $config->sessionRequired = true; // ivalue true, new
+        $config->trustedNetworksOnly = false; // ivalue false, new
         $this->assertTablesEqual(
-            $this->_loadDataSet('Set')->getTable('config'),
+            $this->_loadDataSet('MagicSet')->getTable('config'),
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
         );
 
         try {
-            $this->_table->set('invalid', 0);
+            $config->invalid = 0;
             $this->fail('Invalid option should have thrown an exception');
         } catch(\Exception $e) {
             $this->assertEquals('Invalid option: invalid', $e->getMessage());
         }
 
         try {
-            $this->_table->set('inventoryInterval', 'invalid');
+            /**/$config->inventoryInterval = 'invalid';
             $this->fail('Invalid value should have thrown an exception');
         } catch(\Exception $e) {
             $this->assertEquals(

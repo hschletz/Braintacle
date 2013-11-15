@@ -180,7 +180,7 @@ class Model_Group extends Model_ComputerOrGroup
                 $now = Zend_Date::now()->get(Zend_Date::TIMESTAMP);
                 $select->where(
                     'revalidate_from <= ?',
-                    $now - Model_Config::get('GroupCacheExpirationInterval')
+                    $now - \Library\Application::getService('Model\Config')->groupCacheExpirationInterval
                 );
                 break;
             default:
@@ -228,7 +228,7 @@ class Model_Group extends Model_ComputerOrGroup
                     Zend_Date::TIMESTAMP
                 );
                 if ($property == 'CacheExpirationDate') {
-                    $value->addSecond(Model_Config::get('GroupCacheExpirationInterval'));
+                    $value->addSecond($this->_config->groupCacheExpirationInterval);
                 }
             }
         } else {
@@ -258,7 +258,7 @@ class Model_Group extends Model_ComputerOrGroup
             case 'CacheExpirationDate':
                 // Create new object to leave original object untouched
                 $value = new Zend_Date($value);
-                $value->subSecond(Model_Config::get('GroupCacheExpirationInterval'));
+                $value->subSecond($this->_config->groupCacheExpirationInterval);
                 $this->__set($columnName, $value->get(Zend_Date::TIMESTAMP));
                 break;
             case 'CacheCreationDate':
@@ -487,7 +487,7 @@ class Model_Group extends Model_ComputerOrGroup
         }
 
         // Update CacheCreationDate and CacheExpirationDate in the database
-        $fuzz = mt_rand(0, Model_Config::get('GroupCacheExpirationFuzz'));
+        $fuzz = mt_rand(0, $this->_config->groupCacheExpirationFuzz);
         $minExpires = new Zend_Date($currentTime);
         $minExpires->addSecond($fuzz);
 
@@ -641,14 +641,14 @@ class Model_Group extends Model_ComputerOrGroup
             return self::$_configDefault[$id][$option];
         }
 
-        if ($option == 'AllowScan') {
-            if (Model_Config::get('ScannersPerSubnet') == 0) {
+        if ($option == 'allowScan') {
+            if ($this->_config->scannersPerSubnet == 0) {
                 $value = 0;
             } else {
                 $value = 1;
             }
         } else {
-            $value = Model_Config::get($option);
+            $value = $this->_config->$option;
         }
 
         self::$_configDefault[$id][$option] = $value;
