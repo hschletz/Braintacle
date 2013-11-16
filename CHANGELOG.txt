@@ -21,6 +21,9 @@ Misc:
   by legacy code that tries to evaluate them. They also no longer show up in the
   preferences dialogs.
 
+- Packages can now be stored in an arbitrary directory. The directory name no
+  longer has to be "download".
+
 
 CHANGES IN VERSION 0.13
 =======================

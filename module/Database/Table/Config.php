@@ -146,8 +146,17 @@ class Config extends \Database\AbstractTable
     {
         $logger = $this->_serviceLocator->get('Library\Logger');
 
+        // If packagePath has not been converted yet, append /download directory
+        // with had previously been appended automatically.
+        if ($this->get('schemaVersion') < 7) {
+            $packagePath = $this->get('packagePath') . '/download';
+            $logger->info('Setting packagePath option to ' . $packagePath);
+            $this->set('packagePath', $packagePath);
+        }
+
         // If no communication server URI is set, try to generate it from the
         // obsolete Host/Port options
+        $this->columns = array();
         $server = array();
         foreach ($this->select("name LIKE 'LOCAL%'") as $option) {
             $server[$option->name] = array(

@@ -172,7 +172,6 @@ class Form_Preferences_Packages extends Form_Preferences
         // Additional setup for elements
         $this->getElement('packagePath')
             ->addFilter('StringTrim')
-            ->addValidator('Regex', false, array('pattern' => '#[/\\\\]download[/\\\\]?$#'))
             ->addValidator(new Braintacle_Validate_DirectoryWritable);
         $this->getElement('defaultInfoFileLocation')
             ->addFilter(

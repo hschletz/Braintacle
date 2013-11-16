@@ -197,14 +197,6 @@ class Config
     {
         if (!isset($this->_cache[$option])) {
             $value = $this->_config->get($option);
-            if ($option == 'packagePath') {
-                if (!$value) {
-                    // Default can only be applied at runtime, not in static declaration
-                    $value = $_SERVER['DOCUMENT_ROOT'];
-                }
-                // Only base directory is stored in config. Always append real directory.
-                $value .= '/download/';
-            }
             if ($value === null and isset($this->_defaults[$option])) {
                 $value = $this->_defaults[$option];
             }
@@ -221,15 +213,6 @@ class Config
      */
     public function __set($option, $value)
     {
-        if ($option == 'packagePath') {
-            // Canonicalize path and strip /download path component. Don't use
-            // realpath() for this to maintain the path as supplied, supporting
-            // symbolic links.
-            $value = preg_replace('#[/\\\\]download[/\\\\]?$#', '', $value, 1, $replacements);
-            if (!$replacements) {
-                throw new \InvalidArgumentException('Package path must end with "/download"');
-            }
-        }
         $this->_config->set($option, $value);
         $this->_cache[$option] = $value;
     }
