@@ -122,4 +122,15 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
         $controller = \Library\Application::getService('ControllerLoader')->get($this->_getControllerName());
         $this->assertInstanceOf($this->_getControllerClass(), $controller);
     }
+
+    /**
+     * Get instance of a controller plugin
+     *
+     * @param string $name Plugin name
+     * @return \Zend\Mvc\Controller\Plugin\PluginInterface Plugin instance
+     */
+    protected function _getControllerPlugin($name)
+    {
+        return \Library\Application::getService('ControllerPluginManager')->get($name);
+    }
 }

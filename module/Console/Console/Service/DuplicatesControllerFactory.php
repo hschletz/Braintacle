@@ -1,6 +1,6 @@
 <?php
 /**
- * Display confirmation form to allow duplicates for given criteria
+ * Factory for DuplicatesController
  *
  * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,27 +19,22 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-switch ($this->criteria) {
-    case 'MacAddress':
-        $message = $this->translate(
-            'Exclude MAC address %s from duplicates search?'
+namespace Console\Service;
+
+/**
+ * Factory for DuplicatesController
+ */
+class DuplicatesControllerFactory implements \Zend\ServiceManager\FactoryInterface
+{
+    /**
+     * @internal
+     */
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    {
+        $serviceManager = $serviceLocator->getServiceLocator();
+        return new \Console\Controller\DuplicatesController(
+            $serviceManager->get('Model\Config'),
+            $serviceManager->get('Model\Computer\Computer')
         );
-        break;
-    case 'Serial':
-        $message = $this->translate(
-            'Exclude serial numner \'%s\' from duplicates search?'
-        );
-        break;
-    case 'AssetTag':
-        $message = $this->translate(
-            'Exclude asset tag \'%s\' from duplicates search?'
-        );
-        break;
-}
-if (isset($message)) {
-    print $this->htmlTag(
-        'p',
-        sprintf($message, $this->escape($this->value))
-    );
-    print $this->form;
+    }
 }

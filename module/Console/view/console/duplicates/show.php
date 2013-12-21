@@ -22,7 +22,7 @@
 
 // Column headers
 $headers = array(
-    'Id' => 'ID', // will become comumn of checkboxes without header
+    'Id' => 'ID', // will become column of checkboxes without header
     'Name' => $this->translate('Name'),
     'NetworkInterface.MacAddress' => $this->translate('MAC address'),
     'Serial' => $this->translate('Serial number'),
@@ -30,65 +30,22 @@ $headers = array(
     'LastContactDate' => $this->translate('Last contact'),
 );
 
-$renderCallbacks = array(
-    'Id' => 'renderId',
-    'Name' => 'renderName',
-    'NetworkInterface.MacAddress' => 'renderCriteria',
-    'Serial' => 'renderCriteria',
-    'AssetTag' => 'renderCriteria',
-);
 
-function renderId($view, $computer)
-{
-    // Display ID and a checkbox.
-    // The computers[] name will result in a convenient array of IDs in $_POST.
-    $id = $computer->getId();
-    return sprintf(
-        '<input type="checkbox" name="computers[]" value="%d">%d',
-        $id,
-        $id
-    );
-}
-
-function renderName($view, $computer)
-{
-    // Hyperlink to "userdefined" page of given computer.
-    // This allows for easy review of the information about to be merged.
-    return $view->htmlTag(
-        'a',
-        $view->escape($computer->getName()),
-        array(
-            'href' => $view->url(
-                array(
-                    'controller' => 'computer',
-                    'action' => 'userdefined',
-                    'id' => $computer->getId(),
-                )
-            ),
-        ),
-        true
-    );
-}
-
-function renderCriteria($view, $computer, $property)
-{
-    $value = $computer->getProperty($property);
+$renderCriteria = function($view, $computer, $property) {
+    $value = $computer[$property];
     if ($property == 'NetworkInterface.MacAddress') {
         $property = 'MacAddress';
     }
     // Hyperlink to blacklist form if the column matches the criteria for the table
     if ($property == $view->criteria) {
-        if ($property == 'AssetTag' and !Model_Database::supportsAssetTagBlacklist()) {
-            return $view->escape($value);
-        }
         return $view->htmlTag(
             'a',
-            $view->escape($value),
+            $view->escapeHtml($value),
             array(
-                'href' => $view->url(
+                'href' => $view->consoleUrl(
+                    'duplicates',
+                    'allow',
                     array(
-                        'controller' => 'duplicates',
-                        'action' => 'allow',
                         'criteria' => $property,
                         'value' => $value,
                     )
@@ -97,25 +54,52 @@ function renderCriteria($view, $computer, $property)
             true
         );
     } else {
-        return $view->escape($value);
+        return $view->escapeHtml($value);
     }
-}
+};
+$renderCallbacks = array(
+    'Id' => function($view, $computer) {
+        // Display ID and a checkbox.
+        // The computers[] name will result in a convenient array of IDs in $_POST.
+        $id = $computer['Id'];
+        return sprintf(
+            '<input type="checkbox" name="computers[]" value="%d">%d',
+            $id,
+            $id
+        );
+    },
+    'Name' => function($view, $computer) {
+        // Hyperlink to "userdefined" page of given computer.
+        // This allows for easy review of the information about to be merged.
+        return $view->htmlTag(
+            'a',
+            $view->escapeHtml($computer['Name']),
+            array(
+                'href' => $view->consoleUrl(
+                    'computer',
+                    'userdefined',
+                    array('id' => $computer['Id'])
+                ),
+            ),
+            true
+        );
+    },
+    'NetworkInterface.MacAddress' => $renderCriteria,
+    'Serial' => $renderCriteria,
+    'AssetTag' => $renderCriteria,
+);
 
-$config = \Library\Application::getService('Model\Config');
-$formContent = $this->getHelper('table')->table(
+$formContent = $this->table(
     $this->computers,
-    null,
     $headers,
-    array(),
-    'Model_Computer',
-    null,
+    $this->vars(),
     $renderCallbacks
 );
 $formContent .= $this->htmlTag(
     'p',
     sprintf(
-        '<input type="checkbox" name="mergeUserdefined"%s>%s',
-        $config->defaultMergeUserdefined ? ' checked' : '',
+        '<input type="checkbox" name="mergeUserdefined" value="1"%s>%s',
+        $this->config->defaultMergeUserdefined ? ' checked="checked"' : '',
         $this->translate('Merge user supplied information')
     ),
     array('class' => 'textcenter')
@@ -123,8 +107,8 @@ $formContent .= $this->htmlTag(
 $formContent .= $this->htmlTag(
     'p',
     sprintf(
-        '<input type="checkbox" name="mergeGroups"%s>%s',
-        $config->defaultMergeGroups ? ' checked' : '',
+        '<input type="checkbox" name="mergeGroups" value="1"%s>%s',
+        $this->config->defaultMergeGroups ? ' checked="checked"' : '',
         $this->translate('Merge manual group assignments')
     ),
     array('class' => 'textcenter')
@@ -132,8 +116,8 @@ $formContent .= $this->htmlTag(
 $formContent .= $this->htmlTag(
     'p',
     sprintf(
-        '<input type="checkbox" name="mergePackages"%s>%s',
-        $config->defaultMergePackages ? ' checked' : '',
+        '<input type="checkbox" name="mergePackages" value="1"%s>%s',
+        $this->config->defaultMergePackages ? ' checked="checked"' : '',
         $this->translate('Merge missing package assignments')
     ),
     array('class' => 'textcenter')
@@ -151,11 +135,6 @@ print $this->htmlTag(
     array(
         'enctype' => 'multipart/form-data',
         'method' => 'post',
-        'action' => $this->url(
-            array(
-                'controller' => 'duplicates',
-                'action' => 'merge',
-            )
-        )
+        'action' => $this->consoleUrl('duplicates', 'merge')
     )
 );

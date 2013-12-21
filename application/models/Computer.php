@@ -1593,8 +1593,9 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string $order Sorting order (ignored for $count=false)
      * @param string $direction One of asc|desc (ignored for $count=false)
      * @return mixed Number of duplicates or Zend_Db_Statement object, depending on $count
+     * @throws \InvalidArgumentException if $criteria is invalid
      */
-    static function findDuplicates($criteria, $count, $order='Id', $direction='asc')
+    public function findDuplicates($criteria, $count, $order='Id', $direction='asc')
     {
         $db = Model_Database::getAdapter();
         $select = $db->select();
@@ -1630,7 +1631,7 @@ class Model_Computer extends Model_ComputerOrGroup
                 }
                 break;
             default:
-                throw new UnexpectedValueException('Invalid criteria: ' . $criteria);
+                throw new \InvalidArgumentException('Invalid criteria: ' . $criteria);
         }
 
         $select->from($table, $column)
@@ -1650,10 +1651,7 @@ class Model_Computer extends Model_ComputerOrGroup
 
             return $outer->query()->fetchColumn();
         } else {
-            $dummy = new Model_Computer;
-            $map = $dummy->getPropertyMap();
-
-            return $db->select()
+            $result = $db->select()
                 ->from(
                     'hardware',
                     array('id, name, lastcome')
@@ -1669,8 +1667,9 @@ class Model_Computer extends Model_ComputerOrGroup
                     array('ssn, assettag')
                 )
                 ->where("$column IN($select)")
-                ->order(self::getOrder($order, $direction, $map))
+                ->order(self::getOrder($order, $direction, $this->_propertyMap))
                 ->query();
+            return $this->_fetchAll($result);
         }
     }
 
@@ -1686,15 +1685,16 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param bool $mergeUserdefined Preserve user supplied information from old computer
      * @param bool $mergeGroups Preserve manual group assignments from old computers
      * @param bool $mergePackages Preserve package assignments from old computers missing on new computer
+     * @throws \InvalidArgumentException if $computers is not an array and not NULL
      */
-    static function mergeComputers($computers, $mergeUserdefined, $mergeGroups, $mergePackages)
+    public function mergeComputers($computers, $mergeUserdefined, $mergeGroups, $mergePackages)
     {
         if (is_null($computers)) { // Can happen if no items have been checked
             return;
         }
 
         if (!is_array($computers)) {
-            throw new UnexpectedValueException('mergeComputers() expects array.');
+            throw new \InvalidArgumentException('mergeComputers() expects array.');
         }
 
         // $computers may contain duplicate values if a computer has been marked more than once.
@@ -1786,10 +1786,11 @@ class Model_Computer extends Model_ComputerOrGroup
     /**
      * Exclude a MAC address, serial or asset tag from being used as criteria
      * for duplicates search.
+     *
      * @param string $criteria One of 'MacAddress', 'Serial' or 'AssetTag'
      * @param string $value Value to be excluded
      */
-    static function allowDuplicates($criteria, $value)
+    public function allowDuplicates($criteria, $value)
     {
         switch ($criteria) {
             case 'MacAddress':
@@ -1805,8 +1806,8 @@ class Model_Computer extends Model_ComputerOrGroup
                 $column = 'assettag';
                 break;
             default:
-                throw new UnexpectedValueException(
-                    'Invalid criteria for allowDuplicates(): ' . $criteria
+                throw new \InvalidArgumentException(
+                    'Invalid criteria : ' . $criteria
                 );
         }
         $db = Model_Database::getAdapter();

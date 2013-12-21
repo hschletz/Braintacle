@@ -20,6 +20,10 @@
  *
  */
 
+foreach ($this->messages as $message) {
+    print $this->htmlTag('p', $this->escapeHtml($message), array('class' => 'textcenter green'));
+}
+
 $labels = array(
     'Name' => $this->translate('Name'),
     'MacAddress' => $this->translate('MAC Address'),
@@ -27,10 +31,9 @@ $labels = array(
     'AssetTag' => $this->translate('Asset tag'),
 );
 
-$duplicates = $this->duplicates;
-if (count($duplicates)) {
+if (count($this->duplicates)) {
     print "<dl>\n";
-    foreach ($duplicates as $type => $num) {
+    foreach ($this->duplicates as $type => $num) {
         print $this->htmlTag(
             'dt',
             $labels[$type]
@@ -41,13 +44,7 @@ if (count($duplicates)) {
                 'a',
                 $num,
                 array(
-                    'href' => $this->url(
-                        array(
-                            'controller' => 'duplicates',
-                            'action' => 'show',
-                            'criteria' => $type,
-                        )
-                    )
+                    'href' => $this->consoleUrl('duplicates', 'show', array('criteria' => $type)),
                 )
             )
         );
