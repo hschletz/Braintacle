@@ -295,22 +295,15 @@ class Braintacle_SchemaManager
         if (!$dir) {
             throw new RuntimeException('Can\'t get a handle for schema directory');
         }
-        // Process this file first because other table definitions depend on it
-        $files = array('ocs_hardware.xml');
         while (($file = readdir($dir)) !== false ) {
-            if (substr($file, -4) == '.xml' and // Ignore files without .xml suffix
-                !in_array($file, $files) // Not already in list
-            ) {
-                $files[] = $file;
-            }
-        }
-        foreach ($files as $file) {
-            $content = file_get_contents("$this->_basepath/schema/$file");
-            if ($content == false) {
-                throw new RuntimeException("Error reading $file");
-            }
-            if (!fwrite($temp, $content)) {
-                throw new RuntimeException('Error writing to temporary file');
+            if (substr($file, -4) == '.xml') {
+                $content = file_get_contents("$this->_basepath/schema/$file");
+                if ($content == false) {
+                    throw new RuntimeException("Error reading $file");
+                }
+                if (!fwrite($temp, $content)) {
+                    throw new RuntimeException('Error writing to temporary file');
+                }
             }
         }
 
@@ -336,19 +329,6 @@ class Braintacle_SchemaManager
                     $previousSchema['tables'][$table]['fields'],
                     $newSchema['tables'][$table]['fields']
                 );
-            }
-        }
-
-        // Foreign keys cause so many problems with MySQL that it's best to
-        // never create a foreign key at all. The FK definitions are removed
-        // from the definition for MySQL.
-        if ($this->_nada->isMysql()) {
-            foreach ($newSchema['tables'] as &$table) {
-                foreach ($table['constraints'] as $name => $constraint) {
-                    if ($constraint['foreign']) {
-                        unset($table['constraints'][$name]);
-                    }
-                }
             }
         }
         unset($table);

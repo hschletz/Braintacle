@@ -54,16 +54,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
     </field>
    </index>
 
-   <foreign>
-    <name>windows_hardware_id</name>
-    <field>hardware_id</field>
-    <references>
-      <table>hardware</table>
-      <field>id</field>
-    </references>
-    <ondelete>cascade</ondelete>
-   </foreign>
-
   </declaration>
 
  </table>
