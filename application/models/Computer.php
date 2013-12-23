@@ -1673,7 +1673,7 @@ class Model_Computer extends Model_ComputerOrGroup
             $outer = $db->select()
                 ->from(
                     'hardware',
-                    array('id, name, lastcome')
+                    array('id', 'name', 'lastcome')
                 )
                 ->joinLeft(
                     'networks',
@@ -1683,7 +1683,7 @@ class Model_Computer extends Model_ComputerOrGroup
                 ->joinLeft(
                     'bios',
                     'bios.hardware_id=hardware.id',
-                    array('ssn, assettag')
+                    array('ssn', 'assettag')
                 );
                 if ($table == 'hardware') {
                     $outer->where(
