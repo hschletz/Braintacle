@@ -31,6 +31,9 @@ Fixed bugs:
 - Console: Fixed exception when exporting computers with inventoried registry
   data.
 
+- Console: Fixed incorrect display of duplicates if a group has the same name as
+  a computer.
+
 
 CHANGES IN VERSION 0.12
 =======================

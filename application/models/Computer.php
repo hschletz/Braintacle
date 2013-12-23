@@ -1621,6 +1621,7 @@ class Model_Computer extends Model_ComputerOrGroup
             case 'Name':
                 $table = 'hardware';
                 $column = 'name';
+                $select->where('deviceid NOT IN(\'_SYSTEMGROUP_\', \'_DOWNLOADGROUP_\')');
                 break;
             case 'MacAddress':
                 $table = 'networks';
@@ -1658,7 +1659,7 @@ class Model_Computer extends Model_ComputerOrGroup
                 ->from($table, new Zend_Db_Expr("COUNT($column)"))
                 ->where("$column IN($select)");
 
-            if ($criteria == 'Name') {
+            if ($table == 'hardware') {
                 $outer->where(
                     'deviceid NOT IN(\'_SYSTEMGROUP_\', \'_DOWNLOADGROUP_\')'
                 );
@@ -1669,7 +1670,7 @@ class Model_Computer extends Model_ComputerOrGroup
             $dummy = new Model_Computer;
             $map = $dummy->getPropertyMap();
 
-            return $db->select()
+            $outer = $db->select()
                 ->from(
                     'hardware',
                     array('id, name, lastcome')
@@ -1683,10 +1684,15 @@ class Model_Computer extends Model_ComputerOrGroup
                     'bios',
                     'bios.hardware_id=hardware.id',
                     array('ssn, assettag')
-                )
-                ->where("$column IN($select)")
-                ->order(self::getOrder($order, $direction, $map))
-                ->query();
+                );
+                if ($table == 'hardware') {
+                    $outer->where(
+                        'deviceid NOT IN(\'_SYSTEMGROUP_\', \'_DOWNLOADGROUP_\')'
+                    );
+                }
+                return $outer->where("$column IN($select)")
+                             ->order(self::getOrder($order, $direction, $map))
+                             ->query();
         }
     }
 
