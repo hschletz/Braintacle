@@ -99,6 +99,17 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
             $logger->info('done.');
         }
 
+        // Create missing indexes. Ignore name for comparision with existing indexes.
+        if (isset($schema['indexes'])) {
+            foreach ($schema['indexes'] as $index) {
+                if (!$table->hasIndex($index['columns'], $index['unique'])) {
+                    $logger->info("Creating index '$index[name]'...");
+                    $table->createIndex($index['name'], $index['columns'], $index['unique']);
+                    $logger->info('done.');
+                }
+            }
+        }
+
         $this->_postSetSchema();
     }
 
