@@ -34,6 +34,12 @@ Fixed bugs:
 - Console: Fixed incorrect display of duplicates if a group has the same name as
   a computer.
 
+Misc:
+
+- Server: The inventory cache is now permanently disabled. Configuration is
+  ignored. It was disabled by default, but never worked with Braintacle if
+  enabled. This feature is deprecated anyway and there are no plans to fix it.
+
 
 CHANGES IN VERSION 0.12
 =======================
