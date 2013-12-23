@@ -96,6 +96,7 @@ sub _get_sys_options{
       }
     }
   }
+  $ENV{'OCS_OPT_INVENTORY_CACHE_ENABLED'} = 0; # broken, no plans to fix
   $request->finish;
   0;
 }
