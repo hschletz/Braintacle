@@ -63,6 +63,15 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
         return substr(get_class($this), strrpos(get_class($this), '\\') + 1);
     }
 
+    /** {@inheritdoc} */
+    public function getSql()
+    {
+        if (!$this->isInitialized) {
+            $this->initialize();
+        }
+        return parent::getSql();
+    }
+
     /**
      * Create or update table according to schema file
      *
