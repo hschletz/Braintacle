@@ -494,4 +494,30 @@ abstract class Model_Abstract implements Iterator, ArrayAccess
         }
         return $result;
     }
+
+    /**
+     * Populate object with raw data
+     *
+     * @param array|\Traversable $input Input data (column names as keys)
+     */
+    public function exchangeArray($input)
+    {
+        foreach ($input as $key => $value) {
+            $this->$key = $value;
+        }
+    }
+
+    /**
+     * Get content as associative array
+     *
+     * @return array Property names as keys with processed values
+     */
+    public function getArrayCopy()
+    {
+        $array = array();
+        foreach ($this as $key => $value) {
+            $array[$key] = $value;
+        }
+        return $array;
+    }
 }
