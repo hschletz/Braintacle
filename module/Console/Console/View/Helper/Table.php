@@ -55,13 +55,13 @@ class Table extends \Zend\View\Helper\AbstractHelper
  * the view renderer. The \Console\Mvc\Controller\Plugin\GetOrder controller
  * plugin simplifies these tasks.
  *
- * @param array $data
+ * @param array|\Traversable $data
  * @param array $headers
  * @param array $sorting
  * @param array $renderCallbacks
  */
     function __invoke(
-        array $data,
+        $data,
         array $headers,
         $sorting=array(),
         $renderCallbacks=array()
