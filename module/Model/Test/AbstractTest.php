@@ -30,12 +30,6 @@ namespace Model\Test;
 abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
 {
     /**
-     * Model prototype tested by this class
-     * @var object
-     */
-    protected $_model;
-
-    /**
      * Array of tables to set up (table class names without Database\Table prefix)
      * @var string[]
      */
@@ -55,7 +49,6 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
         foreach ($this->_tables as $table) {
             \Library\Application::getService("Database\Table\\$table")->setSchema();
         }
-        $this->_model = \Library\Application::getService($this->_getClass());
         parent::setUp();
     }
 
@@ -114,10 +107,49 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
     }
 
     /**
+     * Get model instance from service manager
+     *
+     * This method allows temporarily overriding services with manually supplied
+     * instances. This is useful for injecting mock objects which will be passed
+     * to the model's constructor by a factory. The service manager is reset to
+     * its default state after the model is retrieved so that the override does
+     * not interfere with subsequent code execution.
+     *
+     * @param array $overrideServices Optional associative array (name => instance) with services to override
+     * @return object Model instance
+     */
+    protected function _getModel(array $overrideServices=array())
+    {
+        $serviceManager = \Library\Application::getService('ServiceManager');
+        $module = $serviceManager->get('ModuleManager')->getModule('Model');
+        $config = new \Zend\ServiceManager\Config($module->getConfig()['service_manager']);
+
+        if (!empty($overrideServices)) {
+            // Reset SM config. This will force a new instance of our model to
+            // be created with overriden services.
+            $config->configureServiceManager($serviceManager);
+            // Override specified services
+            $serviceManager->setAllowOverride(true);
+            foreach ($overrideServices as $name => $service) {
+                $serviceManager->setService($name, $service);
+            }
+        }
+
+        $model = $serviceManager->get($this->_getClass());
+
+        if (!empty($overrideServices)) {
+            // Reset SM config to discard all service overrides
+            $config->configureServiceManager($serviceManager);
+        }
+
+        return $model;
+    }
+
+    /**
      * Test if the class is properly registered with the service manager
      */
     public function testInterface()
     {
-        $this->assertInternalType('object', $this->_model);
+        $this->assertInternalType('object', $this->_getModel());
     }
 }

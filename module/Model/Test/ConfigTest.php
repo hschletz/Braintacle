@@ -34,9 +34,10 @@ class ConfigTest extends AbstractTest
      */
     public function testGetDbIdentifier()
     {
-        $this->assertEquals('FREQUENCY', $this->_model->getDbIdentifier('inventoryInterval'));
+        $model = $this->_getModel();
+        $this->assertEquals('FREQUENCY', $model->getDbIdentifier('inventoryInterval'));
         $this->setExpectedException('InvalidArgumentException');
-        $this->_model->getDbIdentifier('invalid');
+        $model->getDbIdentifier('invalid');
     }
 
     /**
@@ -44,7 +45,7 @@ class ConfigTest extends AbstractTest
      */
     public function testMagicGet()
     {
-        $config = clone $this->_model;
+        $config = clone $this->_getModel();
 
         // Test populated ivalue and tvalue options
         $this->assertEquals(42, $config->inventoryInterval);
@@ -61,7 +62,7 @@ class ConfigTest extends AbstractTest
      */
     public function testMagicSet()
     {
-        $config = clone $this->_model;
+        $config = clone $this->_getModel();
 
         $config->inventoryInterval = 42; // unchanged
         $config->contactInterval = 10; // new
