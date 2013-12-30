@@ -25,6 +25,14 @@ Misc:
   longer has to be "download".
 
 
+CHANGES IN VERSION 0.14
+=======================
+
+Fixed bugs:
+
+- Console: Fixed fatal error when a locking conflict occurs.
+
+
 CHANGES IN VERSION 0.13
 =======================
 

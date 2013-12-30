@@ -136,8 +136,8 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
 
         if ($lock) {
             // A lock already exists. Check its timestamp.
-            $since = new Zend_Date($lock->since);
-            $current = new Zend_Date($lock->current);
+            $since = new Zend_Date($lock['since']);
+            $current = new Zend_Date($lock['current']);
             if ($current->sub($since)->get() >= $expire) {
                 // The existing lock is stale and can be reused.
                 $db->update(
