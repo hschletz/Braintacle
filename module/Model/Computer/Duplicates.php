@@ -250,6 +250,15 @@ class Duplicates
             $select->where('deviceid NOT IN(\'_SYSTEMGROUP_\', \'_DOWNLOADGROUP_\')');
         }
         $select->order(\Model_Computer::getOrder($order, $direction, $this->_computer->getPropertyMap()));
+        if ($order != 'Name') {
+            // Secondary ordering by name
+            $select->order('name');
+        }
+        if ($order != 'Id') {
+            // Additional ordering by ID, to ensure multiple rows for the same
+            // computer are kept together where primary ordering allows
+            $select->order('hardware.id');
+        }
 
         $resultSet = new \Zend\Db\ResultSet\HydratingResultSet(
             new \Zend\Stdlib\Hydrator\ArraySerializable,

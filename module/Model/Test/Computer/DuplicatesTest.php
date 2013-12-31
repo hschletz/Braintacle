@@ -203,6 +203,12 @@ class DuplicatesTest extends \Model\Test\AbstractTest
             $duplicates->find('Name', 'Id', 'desc')->toArray()
         );
 
+        // Test secondary sorting
+        $this->assertEquals(
+            $expectedResult,
+            $duplicates->find('Name', 'Name')->toArray()
+        );
+
         // Test invalid criteria
         $this->setExpectedException('InvalidArgumentException');
         $duplicates->count('invalid');
