@@ -20,6 +20,7 @@
  *
  */
 
+print $this->flashMessenger()->render('info');
 print $this->flashMessenger()->render('success');
 
 $labels = array(

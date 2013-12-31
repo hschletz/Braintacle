@@ -256,17 +256,25 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         // Test without selection
         $this->dispatch($url, 'POST');
         $this->assertRedirectTo('/console/duplicates/index/');
-        $this->assertNotContains(
-            'The selected computers have been merged.',
-            $this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
+        $this->assertContains(
+            'At least 2 different computers have to be selected.',
+            $this->_getControllerPlugin('FlashMessenger')->getCurrentInfoMessages()
         );
 
         // Test with only 1 selected computer
         $this->dispatch($url, 'POST', array('computers' => array(1)));
         $this->assertRedirectTo('/console/duplicates/index/');
-        $this->assertNotContains(
-            'The selected computers have been merged.',
-            $this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
+        $this->assertContains(
+            'At least 2 different computers have to be selected.',
+            $this->_getControllerPlugin('FlashMessenger')->getCurrentInfoMessages()
+        );
+
+        // Test with only 1 multiply selected computer
+        $this->dispatch($url, 'POST', array('computers' => array(1, 1)));
+        $this->assertRedirectTo('/console/duplicates/index/');
+        $this->assertContains(
+            'At least 2 different computers have to be selected.',
+            $this->_getControllerPlugin('FlashMessenger')->getCurrentInfoMessages()
         );
 
         // GET request should throw exception.
