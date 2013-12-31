@@ -28,6 +28,7 @@ class OperatorFactory implements \Zend\ServiceManager\FactoryInterface
 {
     /**
      * @internal
+     * @codeCoverageIgnore
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {

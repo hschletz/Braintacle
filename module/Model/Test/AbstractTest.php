@@ -33,7 +33,7 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
      * Array of tables to set up (table class names without Database\Table prefix)
      * @var string[]
      */
-    protected $_tables;
+    protected static $_tables;
 
     /**
      * Connection used by DbUnit
@@ -42,14 +42,14 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
     private $_db;
 
     /**
-     * Set up model and tables
+     * Set up tables
      */
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        foreach ($this->_tables as $table) {
+        foreach (static::$_tables as $table) {
             \Library\Application::getService("Database\Table\\$table")->setSchema();
         }
-        parent::setUp();
+        parent::setUpBeforeClass();
     }
 
     /**

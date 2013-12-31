@@ -31,9 +31,9 @@ class ConfigTest extends AbstractTest
      */
     public function testGetDbIdentifier()
     {
-        $this->assertEquals('FREQUENCY', $this->_table->getDbIdentifier('inventoryInterval'));
+        $this->assertEquals('FREQUENCY', static::$_table->getDbIdentifier('inventoryInterval'));
         $this->setExpectedException('InvalidArgumentException');
-        $this->_table->getDbIdentifier('Invalid');
+        static::$_table->getDbIdentifier('Invalid');
     }
 
     /**
@@ -42,13 +42,13 @@ class ConfigTest extends AbstractTest
     public function testGet()
     {
         // Test populated ivalue and tvalue options
-        $this->assertEquals(42, $this->_table->get('inventoryInterval'));
-        $this->assertEquals('/example/log/path', $this->_table->get('logPath'));
+        $this->assertEquals(42, static::$_table->get('inventoryInterval'));
+        $this->assertEquals('/example/log/path', static::$_table->get('logPath'));
         // Test unpopulated option
-        $this->assertNull($this->_table->get('contactInterval'));
+        $this->assertNull(static::$_table->get('contactInterval'));
         // Test invalid option
         $this->setExpectedException('InvalidArgumentException');
-        $this->_table->get('invalid');
+        static::$_table->get('invalid');
     }
 
     /**
@@ -56,27 +56,27 @@ class ConfigTest extends AbstractTest
      */
     public function testSet()
     {
-        $this->_table->set('inventoryInterval', 42); // unchanged
-        $this->_table->set('contactInterval', 10); // new
-        $this->_table->set('logPath', '/other/log/path'); // updated
-        $this->_table->set('inspectRegistry', true); // ivalue true, updated
-        $this->_table->set('scanAlways', false); // ivalue false, updated
-        $this->_table->set('sessionRequired', true); // ivalue true, new
-        $this->_table->set('trustedNetworksOnly', false); // ivalue false, new
+        static::$_table->set('inventoryInterval', 42); // unchanged
+        static::$_table->set('contactInterval', 10); // new
+        static::$_table->set('logPath', '/other/log/path'); // updated
+        static::$_table->set('inspectRegistry', true); // ivalue true, updated
+        static::$_table->set('scanAlways', false); // ivalue false, updated
+        static::$_table->set('sessionRequired', true); // ivalue true, new
+        static::$_table->set('trustedNetworksOnly', false); // ivalue false, new
         $this->assertTablesEqual(
             $this->_loadDataSet('Set')->getTable('config'),
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
         );
 
         try {
-            $this->_table->set('invalid', 0);
+            static::$_table->set('invalid', 0);
             $this->fail('Invalid option should have thrown an exception');
         } catch(\Exception $e) {
             $this->assertEquals('Invalid option: invalid', $e->getMessage());
         }
 
         try {
-            $this->_table->set('inventoryInterval', 'invalid');
+            static::$_table->set('inventoryInterval', 'invalid');
             $this->fail('Invalid value should have thrown an exception');
         } catch(\Exception $e) {
             $this->assertEquals(

@@ -27,5 +27,5 @@ namespace Model\Test;
 class OperatorTest extends AbstractTest
 {
     /** {@inheritdoc} */
-    protected $_tables = array('Operators');
+    protected static $_tables = array('Operators');
 }

@@ -32,6 +32,7 @@ class AbstractTableFactory implements \Zend\ServiceManager\AbstractFactoryInterf
 {
     /**
      * @internal
+     * @codeCoverageIgnore
      */
     public function canCreateServiceWithName(
         \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
@@ -44,6 +45,7 @@ class AbstractTableFactory implements \Zend\ServiceManager\AbstractFactoryInterf
 
     /**
      * @internal
+     * @codeCoverageIgnore
      */
     public function createServiceWithName(
         \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,

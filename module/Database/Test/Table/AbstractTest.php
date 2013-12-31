@@ -30,10 +30,10 @@ namespace Database\Test\Table;
 abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
 {
     /**
-     * Table class, provided by setUp();
+     * Table class, provided by setUpBeforeClass();
      * @var \Database\AbstractTable
      */
-    protected $_table;
+    protected static $_table;
 
     /**
      * Connection used by DbUnit
@@ -44,11 +44,11 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
     /**
      * Provide table class and create table
      */
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        $this->_table = \Library\Application::getService('ServiceManager')->get($this->_getClass());
-        $this->_table->setSchema();
-        parent::setUp();
+        static::$_table = \Library\Application::getService(static::_getClass());
+        static::$_table->setSchema();
+        parent::setUpBeforeClass();
     }
 
     /**
@@ -59,7 +59,7 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
     public function getConnection()
     {
         if (!$this->_db) {
-            $pdo = $this->_table->getAdapter()->getDriver()->getConnection()->getResource();
+            $pdo = static::$_table->getAdapter()->getDriver()->getConnection()->getResource();
             $this->_db = $this->createDefaultDBConnection($pdo, ':memory:');
         }
         return $this->_db;
@@ -99,10 +99,10 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
      *
      * @return string
      */
-    protected function _getClass()
+    protected static function _getClass()
     {
         // Derive table class from test class name (minus \Test namespace and 'Test' suffix)
-        return substr(str_replace('\Test', '', get_class($this)), 0, -4);
+        return substr(str_replace('\Test', '', get_called_class()), 0, -4);
     }
 
     /**
@@ -110,6 +110,6 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
      */
     public function testInterface()
     {
-        $this->assertInstanceOf('Database\AbstractTable', $this->_table);
+        $this->assertInstanceOf('Database\AbstractTable', static::$_table);
     }
 }

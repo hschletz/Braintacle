@@ -27,7 +27,7 @@ namespace Model\Test;
 class ConfigTest extends AbstractTest
 {
     /** {@inheritdoc} */
-    protected $_tables = array('Config');
+    protected static $_tables = array('Config');
 
     /**
      * Tests for getDbIdentifier()

@@ -27,7 +27,7 @@ namespace Model\Test\Computer;
 class DuplicatesTest extends \Model\Test\AbstractTest
 {
     /** {@inheritdoc} */
-    protected $_tables = array(
+    protected static $_tables = array(
         'ComputersAndGroups',
         'ComputerSystemInfo',
         'Config',
