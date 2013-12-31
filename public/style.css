@@ -218,6 +218,30 @@ td,th {
     display: none; /* This may be changed by JS */
 }
 
+/* FlashMessenger output */
+.success {
+    color: green;
+    text-align: center;
+    list-style-type: none;
+    margin-bottom: 3ex;
+}
+.error {
+    color: red;
+    text-align: center;
+    list-style-type: none;
+    margin-bottom: 3ex;
+}
+.info {
+    color: blue;
+    text-align: center;
+    list-style-type: none;
+    margin-bottom: 3ex;
+}
+.success li, .error li, .info li {
+    margin-bottom: 1ex;
+}
+
+
 tr.bgcolor {
     background-color: #e0f0ff;
 }

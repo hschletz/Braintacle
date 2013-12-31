@@ -63,10 +63,7 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
                 $duplicates[$criteria] = $num;
             }
         }
-        return array(
-            'messages' => $this->flashMessenger()->getSuccessMessages(), // from merge/allow action
-            'duplicates' => $duplicates,
-        );
+        return array('duplicates' => $duplicates);
     }
 
     /**

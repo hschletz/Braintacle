@@ -20,9 +20,7 @@
  *
  */
 
-foreach ($this->messages as $message) {
-    print $this->htmlTag('p', $this->escapeHtml($message), array('class' => 'textcenter green'));
-}
+print $this->flashMessenger()->render('success');
 
 $labels = array(
     'Name' => $this->translate('Name'),
