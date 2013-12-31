@@ -78,12 +78,8 @@ class Model_StorageDevice extends Model_ChildObject
             return parent::getProperty($property, $rawValue);
         }
 
-        $computer = Model_Computer::fetchById($this->getRawComputer());
-        if (!$computer) {
-            throw new RuntimeException(
-                sprintf('No computer found with ID %d', $this->getRawComputer())
-            );
-        }
+        $computer = \Library\Application::getService('Model\Computer\Computer');
+        $computer->fetchById($this->getRawComputer());
         if ($computer->isWindows()) {
             switch ($property) {
                 case 'Type':

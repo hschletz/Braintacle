@@ -34,14 +34,14 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
 
     /**
      * Computer mock
-     * @var \Model_Computer
+     * @var \Model\Computer\Duplicates
      */
-    protected $_computer;
+    protected $_duplicates;
 
     /** {@inheritdoc} */
     public function _createController()
     {
-        return new \Console\Controller\DuplicatesController($this->_config, $this->_computer);
+        return new \Console\Controller\DuplicatesController($this->_config, $this->_duplicates);
     }
 
     /**
@@ -55,21 +55,23 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
                               ->getMock();
 
         // No duplicates should lead to a simple message.
-        $this->_computer = $this->getMock('Model_Computer');
-        $this->_computer->expects($this->exactly(4))
-                        ->method('findDuplicates')
-                        ->with($this->anything(), true)
-                        ->will($this->returnValue(0));
+        $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
+                                  ->disableOriginalconstructor()
+                                  ->getMock();
+        $this->_duplicates->expects($this->exactly(4))
+                          ->method('count')
+                          ->will($this->returnValue(0));
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains('p', 'No duplicates present.');
 
         // Duplicates should lead to a list with 4 hyperlinks.
-        $this->_computer = $this->getMock('Model_Computer');
-        $this->_computer->expects($this->exactly(4))
-                        ->method('findDuplicates')
-                        ->with($this->anything(), true)
-                        ->will($this->returnValue(2));
+        $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
+                                  ->disableOriginalconstructor()
+                                  ->getMock();
+        $this->_duplicates->expects($this->exactly(4))
+                          ->method('count')
+                          ->will($this->returnValue(2));
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
         $this->assertQueryCount('dd a[href*="/console/duplicates/show/?criteria="]', 4);
@@ -117,28 +119,29 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
                           )
                       );
 
-        $this->_computer = $this->getMock('Model_Computer');
-        $this->_computer->expects($this->any())
-                        ->method('findDuplicates')
-                        ->with($this->anything(), false, $this->anything(), $this->anything())
-                        ->will(
-                            $this->returnCallback(
-                                function($criteria) use ($computers) {
-                                    switch ($criteria) {
-                                        case 'Name':
-                                        case 'MacAddress':
-                                        case 'Serial':
-                                        case 'AssetTag':
-                                            return $computers;
-                                            break;
-                                        default:
-                                            throw new \InvalidArgumentException(
-                                                'Invalid criteria: ' . $criteria
-                                            );
-                                    }
-                                }
-                            )
-                        );
+        $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
+                                  ->disableOriginalconstructor()
+                                  ->getMock();
+        $this->_duplicates->expects($this->any())
+                          ->method('find')
+                          ->will(
+                              $this->returnCallback(
+                                  function($criteria) use ($computers) {
+                                      switch ($criteria) {
+                                          case 'Name':
+                                          case 'MacAddress':
+                                          case 'Serial':
+                                          case 'AssetTag':
+                                              return $computers;
+                                              break;
+                                          default:
+                                              throw new \InvalidArgumentException(
+                                                  'Invalid criteria: ' . $criteria
+                                              );
+                                      }
+                                  }
+                              )
+                          );
 
         // Test missing/invelid "Criteria" parameters
         try {
@@ -227,11 +230,14 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
                               ->disableOriginalconstructor()
                               ->getMock();
 
-        $this->_computer = $this->getMock('Model_Computer');
-        $this->_computer->expects($this->once())
-                        ->method('mergeComputers')
-                        ->with(array(1, 2), true, true, false);
+        $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
+                                  ->disableOriginalconstructor()
+                                  ->getMock();
+        $this->_duplicates->expects($this->once())
+                          ->method('merge')
+                          ->with(array(1, 2), true, true, false);
 
+        // Test valid selection
         $this->dispatch(
             $url,
             'POST',
@@ -243,6 +249,22 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->assertRedirectTo('/console/duplicates/index/');
         $this->assertContains(
+            'The selected computers have been merged.',
+            $this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
+        );
+
+        // Test without selection
+        $this->dispatch($url, 'POST');
+        $this->assertRedirectTo('/console/duplicates/index/');
+        $this->assertNotContains(
+            'The selected computers have been merged.',
+            $this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
+        );
+
+        // Test with only 1 selected computer
+        $this->dispatch($url, 'POST', array('computers' => array(1)));
+        $this->assertRedirectTo('/console/duplicates/index/');
+        $this->assertNotContains(
             'The selected computers have been merged.',
             $this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
         );
@@ -264,9 +286,11 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
                               ->getMock();
 
         // GET request should display confirmation form.
-        $this->_computer = $this->getMock('Model_Computer');
-        $this->_computer->expects($this->never())
-                        ->method('allowDuplicates');
+        $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
+                                  ->disableOriginalconstructor()
+                                  ->getMock();
+        $this->_duplicates->expects($this->never())
+                          ->method('allow');
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
         $this->assertQuery('form');
@@ -276,10 +300,12 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/duplicates/show/?criteria=Serial');
 
         // POST request with "Yes" should exclude criteria and redirect to duplicates index page.
-        $this->_computer = $this->getMock('Model_Computer');
-        $this->_computer->expects($this->once())
-                        ->method('allowDuplicates')
-                        ->with('Serial', '12345678');
+        $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
+                                  ->disableOriginalconstructor()
+                                  ->getMock();
+        $this->_duplicates->expects($this->once())
+                          ->method('allow')
+                          ->with('Serial', '12345678');
         $this->dispatch($url, 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/duplicates/index/');
         $this->assertContains(

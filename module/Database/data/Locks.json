@@ -1,0 +1,48 @@
+{
+    "name": "locks",
+    "comment": "Advisory locks for computers and groups",
+    "columns": [
+        {
+            "name": "hardware_id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Computer or group ID"
+        },
+        {
+            "name": "id",
+            "type": "integer",
+            "length": 32,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "obsolete"
+        },
+        {
+            "name": "since",
+            "type": "timestamp",
+            "length": null,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Timestamp of lock creation"
+        }
+    ],
+    "primary_key": [
+        "hardware_id"
+    ],
+    "indexes": [
+        {
+            "name": "locks_since_idx",
+            "unique": false,
+            "columns": [
+                "since"
+            ]
+        }
+    ],
+    "mysql": {
+        "engine": "MEMORY"
+    }
+}

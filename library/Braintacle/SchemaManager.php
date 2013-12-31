@@ -320,18 +320,15 @@ class Braintacle_SchemaManager
             throw new RuntimeException($newSchema->getUserInfo());
         }
 
-        // The accountinfo and snmp_accountinfo tables have a dynamic structure.
+        // The snmp_accountinfo table has a dynamic structure.
         // Only the static part is defined in the XML file. The additional
         // fields have to be preserved here.
-        foreach (array('accountinfo', 'snmp_accountinfo') as $table) {
-            if (array_key_exists($table, $previousSchema['tables'])) {
-                $newSchema['tables'][$table]['fields'] = array_merge(
-                    $previousSchema['tables'][$table]['fields'],
-                    $newSchema['tables'][$table]['fields']
-                );
-            }
+        if (array_key_exists('snmp_accountinfo', $previousSchema['tables'])) {
+            $newSchema['tables']['snmp_accountinfo']['fields'] = array_merge(
+                $previousSchema['tables']['snmp_accountinfo']['fields'],
+                $newSchema['tables']['snmp_accountinfo']['fields']
+            );
         }
-        unset($table);
 
         $this->_logger->info('done.');
         return $newSchema;
@@ -374,17 +371,12 @@ class Braintacle_SchemaManager
         $this->_logger->info('Tweaking tables...');
 
         $engineInnoDb = array(
-            'accountinfo',
-            'accountinfo_config',
-            'bios',
             'braintacle_windows',
             'controllers',
-            'devices',
             'download_available',
             'download_enable',
             'download_history',
             'drives',
-            'hardware',
             'inputs',
             'javainfo',
             'journallog',
@@ -392,7 +384,6 @@ class Braintacle_SchemaManager
             'modems',
             'monitors',
             'netmap',
-            'networks',
             'ports',
             'printers',
             'registry',
@@ -408,7 +399,6 @@ class Braintacle_SchemaManager
         $engineMemory = array(
             'conntrack',
             'engine_mutex',
-            'locks',
             'prolog_conntrack',
         );
 
@@ -470,8 +460,7 @@ class Braintacle_SchemaManager
             // static initialization of a foreign table. The foreign key might
             // be incorrect then if a referenced row has been inserted later.
             if (
-                $name == 'accountinfo_config'
-                or $name == 'downloadwk_fields'
+                $name == 'downloadwk_fields'
                 or $name == 'downloadwk_tab_values'
                 or $name == 'downloadwk_statut_request'
             ) {
@@ -670,7 +659,6 @@ class Braintacle_SchemaManager
                     array(
                         'type' => $type,
                         'name' => ucfirst($name),
-                        'id_tab' => 1, // default
                         'show_order' => $order,
                         'account_type' => 'COMPUTERS'
                     )

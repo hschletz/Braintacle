@@ -32,14 +32,15 @@ class ComputerController extends Zend_Controller_Action
                 return; // no specific computer for these actions
         }
 
-        $computer = Model_Computer::fetchById($this->_getParam('id'));
-        if ($computer) {
-            $this->computer = $computer;
-            $this->view->computer = $computer;
-            Zend_Registry::set('subNavigation', 'Inventory');
-        } else {
+        $computer = clone \Library\Application::getService('Model\Computer\Computer');
+        try {
+            $computer->fetchById($this->_getParam('id'));
+        } catch(\RuntimeException $e) {
             $this->_helper->redirector('index', 'computer');
         }
+        $this->computer = $computer;
+        $this->view->computer = $computer;
+        Zend_Registry::set('subNavigation', 'Inventory');
     }
 
     public function indexAction()

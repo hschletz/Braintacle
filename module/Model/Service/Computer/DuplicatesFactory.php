@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for DuplicatesController
+ * Factory for Model\Computer\Duplicates
  *
  * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,22 +19,27 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Console\Service;
+namespace Model\Service\Computer;
 
 /**
- * Factory for DuplicatesController
+ * Factory for Model\Computer\Duplicates
  */
-class DuplicatesControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class DuplicatesFactory implements \Zend\ServiceManager\FactoryInterface
 {
     /**
      * @internal
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $serviceManager = $serviceLocator->getServiceLocator();
-        return new \Console\Controller\DuplicatesController(
-            $serviceManager->get('Model\Config'),
-            $serviceManager->get('Model\Computer\Duplicates')
+        return new \Model\Computer\Duplicates(
+            $serviceLocator->get('Database\Table\ComputersAndGroups'),
+            $serviceLocator->get('Database\Table\ComputerSystemInfo'),
+            $serviceLocator->get('Database\Table\NetworkInterfaces'),
+            $serviceLocator->get('Database\Table\DuplicateAssetTags'),
+            $serviceLocator->get('Database\Table\DuplicateSerials'),
+            $serviceLocator->get('Database\Table\DuplicateMacAddresses'),
+            $serviceLocator->get('Database\Table\ItemConfig'),
+            $serviceLocator->get('Model\Computer\Computer')
         );
     }
 }

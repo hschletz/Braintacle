@@ -34,19 +34,19 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
 
     /**
      * Computer prototype
-     * @var \Model_Computer
+     * @var \Model\Computer\duplicates
      */
-    protected $_computer;
+    protected $_duplicates;
 
     /**
      * Constructor
      *
      * @param \Model_Computer
      */
-    public function __construct(\Model\Config $config, \Model_Computer $computer)
+    public function __construct(\Model\Config $config, \Model\Computer\Duplicates $duplicates)
     {
         $this->_config = $config;
-        $this->_computer = $computer;
+        $this->_duplicates = $duplicates;
     }
 
     /**
@@ -58,7 +58,7 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
     {
         $duplicates = array();
         foreach (array('Name', 'MacAddress', 'Serial', 'AssetTag') as $criteria) {
-            $num = $this->_computer->findDuplicates($criteria, true);
+            $num = $this->_duplicates->count($criteria);
             if ($num) {
                 $duplicates[$criteria] = $num;
             }
@@ -79,9 +79,8 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
         $this->setActiveMenu('Inventory', 'Duplicates');
         $params = $this->getOrder('Id', 'asc');
         $params['criteria'] = $this->params()->fromQuery('criteria');
-        $params['computers'] = $this->_computer->findDuplicates(
+        $params['computers'] = $this->_duplicates->find(
             $params['criteria'],
-            false,
             $params['order'],
             $params['direction']
         );
@@ -101,13 +100,15 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
             throw new \RuntimeException('Action "merge" can only be invoked via POST');
         }
         $params = $this->params();
-        $this->_computer->mergeComputers(
-            $params->fromPost('computers'),
-            $params->fromPost('mergeUserdefined'),
-            $params->fromPost('mergeGroups'),
-            $params->fromPost('mergePackages')
-        );
-        $this->flashMessenger()->addSuccessMessage('The selected computers have been merged.');
+        if (count($params->fromPost('computers')) >= 2) {
+            $this->_duplicates->merge(
+                $params->fromPost('computers'),
+                $params->fromPost('mergeUserdefined'),
+                $params->fromPost('mergeGroups'),
+                $params->fromPost('mergePackages')
+            );
+            $this->flashMessenger()->addSuccessMessage('The selected computers have been merged.');
+        }
         return $this->redirectToRoute('duplicates', 'index');
     }
 
@@ -124,7 +125,7 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
 
         if ($this->getRequest()->isPost()) {
             if ($params->fromPost('yes')) {
-                $this->_computer->allowDuplicates($criteria, $value);
+                $this->_duplicates->allow($criteria, $value);
                 $this->flashMessenger()->addSuccessMessage(
                     sprintf(
                         '"%s" is no longer considered duplicate.',

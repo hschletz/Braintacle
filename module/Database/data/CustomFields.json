@@ -1,0 +1,30 @@
+{
+    "name": "accountinfo",
+    "comment": "Userdefined fields. Additional columns may be added by the user.",
+    "columns": [
+        {
+            "name": "hardware_id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "tag",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": "NA",
+            "autoincrement": false,
+            "comment": "Default field with some special treatment"
+        }
+    ],
+    "primary_key": [
+        "hardware_id"
+    ],
+    "mysql": {
+        "engine": "InnoDB"
+    }
+}

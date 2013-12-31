@@ -1,0 +1,175 @@
+{
+    "name": "networks",
+    "comment": "Computer's network interfaces",
+    "columns": [
+        {
+            "name": "id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": true,
+            "comment": null
+        },
+        {
+            "name": "hardware_id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "description",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "type",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Part of type description (Ethernet, Wireless) - see also typemib"
+        },
+        {
+            "name": "typemib",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Part of type description (Ethernet, Wireless) - see also type"
+        },
+        {
+            "name": "speed",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Textual representation of data rate, including unit. Example: '100 Mb/s', '1 Gb/s'"
+        },
+        {
+            "name": "macaddr",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "MAC address, lowercase, colon-separated"
+        },
+        {
+            "name": "status",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "One of Up/Down"
+        },
+        {
+            "name": "ipaddress",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "IPv4 address, dot syntax"
+        },
+        {
+            "name": "ipmask",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "IPv4 netmask, dot syntax"
+        },
+        {
+            "name": "ipgateway",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "IPv4 gateway, dot syntax"
+        },
+        {
+            "name": "ipsubnet",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "IPv4 network address, dot syntax"
+        },
+        {
+            "name": "ipdhcp",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "IPv4 address of DHCP server for current subnet"
+        },
+        {
+            "name": "virtualdev",
+            "type": "integer",
+            "length": 8,
+            "notnull": false,
+            "default": 0,
+            "autoincrement": false,
+            "comment": "unreliable"
+        }
+    ],
+    "primary_key": [
+        "id"
+    ],
+    "indexes": [
+        {
+            "name": "networks_hardware_id_idx",
+            "unique": false,
+            "columns": [
+                "hardware_id"
+            ]
+        },
+        {
+            "name": "networks_macaddr_idx",
+            "unique": false,
+            "columns": [
+                "macaddr"
+            ]
+        },
+        {
+            "name": "networks_ipaddress_idx",
+            "unique": false,
+            "columns": [
+                "ipaddress"
+            ]
+        },
+        {
+            "name": "networks_ipmask_idx",
+            "unique": false,
+            "columns": [
+                "ipmask"
+            ]
+        },
+        {
+            "name": "networks_ipsubnet_idx",
+            "unique": false,
+            "columns": [
+                "ipsubnet"
+            ]
+        }
+    ],
+    "mysql": {
+        "engine": "InnoDB"
+    }
+}

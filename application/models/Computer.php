@@ -630,14 +630,19 @@ class Model_Computer extends Model_ComputerOrGroup
     }
 
     /**
-     * Get a Model_Computer object for the given primary key.
+     * Populate object with data for the given ID
+     *
      * @param int $id Primary key
-     * @return mixed Fully populated Model_Computer object, FALSE if no computer was found
+     * @throws \RuntimeException if there is no computer with the given ID
      */
-    static function fetchById($id)
+    public function fetchById($id)
     {
-        return Model_Computer::createStatementStatic(null, null, null, 'Id', $id)
-            ->fetchObject('Model_Computer');
+        $row = self::createStatementStatic(null, null, null, 'Id', $id)->fetch(\Zend_Db::FETCH_ASSOC);
+        if ($row) {
+            $this->exchangeArray($row);
+        } else {
+            throw new \RuntimeException("Invalid computer ID: $id");
+        }
     }
 
     /**
@@ -872,6 +877,16 @@ class Model_Computer extends Model_ComputerOrGroup
             }
             return $order;
         }
+    }
+
+    /** {@inheritdoc} */
+    public function getArrayCopy()
+    {
+        $array = parent::getArrayCopy();
+        foreach ($this->_childProperties as $key => $value) {
+            $array[$key] = $value;
+        }
+        return $array;
     }
 
     /**
@@ -1578,243 +1593,6 @@ class Model_Computer extends Model_ComputerOrGroup
 
         $this->unlock();
         return true;
-    }
-
-    /**
-     * Find duplicate computers based on different criteria
-     *
-     * The criteria are: hostname, MAC address, serial number and asset tag.
-     * The return value is either the number of duplicates ($count=TRUE) or a
-     * Zend_Db_Statement object providing access to Id, Name, MacAddress, Serial
-     * AssetTag and LastContactDate ($count=FALSE).
-     *
-     * @param string $criteria One of Name|MacAddress|Serial|AssetTag
-     * @param bool $count Return only number of duplicates instead of full list
-     * @param string $order Sorting order (ignored for $count=false)
-     * @param string $direction One of asc|desc (ignored for $count=false)
-     * @return mixed Number of duplicates or Zend_Db_Statement object, depending on $count
-     * @throws \InvalidArgumentException if $criteria is invalid
-     */
-    public function findDuplicates($criteria, $count, $order='Id', $direction='asc')
-    {
-        $db = Model_Database::getAdapter();
-        $select = $db->select();
-
-        // All duplicates are determined by a common method with just some
-        // parameters depending on search criteria.
-        switch ($criteria) {
-            case 'Name':
-                $table = 'hardware';
-                $column = 'name';
-                break;
-            case 'MacAddress':
-                $table = 'networks';
-                $column = 'macaddr';
-                $select->where(
-                    'macaddr NOT IN(SELECT macaddress FROM blacklist_macaddresses)'
-                );
-                break;
-            case 'Serial':
-                $table = 'bios';
-                $column = 'ssn';
-                $select->where(
-                    'ssn NOT IN(SELECT serial FROM blacklist_serials)'
-                );
-                break;
-            case 'AssetTag':
-                $table = 'bios';
-                $column = 'assettag';
-                if (Model_Database::supportsAssetTagBlacklist()) {
-                    $select->where(
-                        'assettag NOT IN(SELECT assettag FROM braintacle_blacklist_assettags)'
-                    );
-                }
-                break;
-            default:
-                throw new \InvalidArgumentException('Invalid criteria: ' . $criteria);
-        }
-
-        $select->from($table, $column)
-               ->group($column)
-               ->having("COUNT($column) > 1");
-
-        if ($count) {
-            $outer = $db->select()
-                ->from($table, new Zend_Db_Expr("COUNT($column)"))
-                ->where("$column IN($select)");
-
-            if ($criteria == 'Name') {
-                $outer->where(
-                    'deviceid NOT IN(\'_SYSTEMGROUP_\', \'_DOWNLOADGROUP_\')'
-                );
-            }
-
-            return $outer->query()->fetchColumn();
-        } else {
-            $result = $db->select()
-                ->from(
-                    'hardware',
-                    array('id, name, lastcome')
-                )
-                ->joinLeft(
-                    'networks',
-                    'networks.hardware_id=hardware.id',
-                    array('NetworkInterface_MacAddress' => 'macaddr')
-                )
-                ->joinLeft(
-                    'bios',
-                    'bios.hardware_id=hardware.id',
-                    array('ssn, assettag')
-                )
-                ->where("$column IN($select)")
-                ->order(self::getOrder($order, $direction, $this->_propertyMap))
-                ->query();
-            return $this->_fetchAll($result);
-        }
-    }
-
-    /**
-     * Merge 2 or more computers
-     *
-     * This method is used to eliminate duplicates in the database. Based on the
-     * last contact, the newest entry is preserved. All older entries are
-     * deleted. Some information from the older entries can be preserved on the
-     * remaining computer.
-     *
-     * @param array $computers IDs of computers to merge
-     * @param bool $mergeUserdefined Preserve user supplied information from old computer
-     * @param bool $mergeGroups Preserve manual group assignments from old computers
-     * @param bool $mergePackages Preserve package assignments from old computers missing on new computer
-     * @throws \InvalidArgumentException if $computers is not an array and not NULL
-     */
-    public function mergeComputers($computers, $mergeUserdefined, $mergeGroups, $mergePackages)
-    {
-        if (is_null($computers)) { // Can happen if no items have been checked
-            return;
-        }
-
-        if (!is_array($computers)) {
-            throw new \InvalidArgumentException('mergeComputers() expects array.');
-        }
-
-        // $computers may contain duplicate values if a computer has been marked more than once.
-        $computers = array_unique($computers);
-        if (count($computers) < 2) {
-            return;
-        }
-
-        $db = Model_Database::getAdapter();
-        $db->beginTransaction();
-        try {
-            // Lock all given computers and create a list sorted by LastContactDate.
-            foreach ($computers as $id) {
-                $computer = self::fetchById($id);
-                if (!$computer or !$computer->lock()) {
-                    return;
-                }
-                $timestamp = $computer->getLastContactDate()->get(Zend_Date::TIMESTAMP);
-                $list[$timestamp] = $computer;
-            }
-            ksort($list);
-            // Now that the list is sorted, renumber the indices
-            $computers = array_values($list);
-
-            // Newest computer will be the only one not to be deleted, remove it from the list
-            $newest = array_pop($computers);
-
-            // Copy the desired data
-            if ($mergeUserdefined) {
-                // Oldest computer will be the source for merged information
-                $oldest = $computers[0];
-                $newest->setUserDefinedInfo($oldest->getUserDefinedInfo()->getProperties());
-            }
-
-            if ($mergeGroups) {
-                // Build list with all manual group assignments from old computers.
-                // If more than 1 old computer is to be merged and the computers
-                // have different assignments for the same group, the result may
-                // me somewhat unpredictable.
-                $groupList = array();
-                foreach ($computers as $computer) {
-                    $groups = $computer->getGroupMemberships(Model_GroupMembership::TYPE_MANUAL, null);
-                    while ($group = $groups->fetchObject('Model_GroupMembership')) {
-                        $groupList[$group->getGroupId()] = $group->getMembership();
-                    }
-                }
-                $newest->setGroups($groupList);
-            }
-
-            if ($mergePackages) {
-                // The simplest way to merge package assignments is to update
-                // the hardware ID directly. If more than 2 computers are to be
-                // merged, assignments from all computers are merged, not only
-                // from the oldest one.
-
-                // To prevent multiple assignment of the same package to the
-                // remaining computer, do not merge packages that are already
-                // assigned to the newest computer.
-                $subquery = $db->quoteInto(
-                    '(SELECT ivalue FROM devices WHERE hardware_id=? AND name=\'DOWNLOAD\')',
-                    (int) $newest->getId()
-                );
-                foreach ($computers as $computer) {
-                    $db->update(
-                        'devices',
-                        array('hardware_id' => $newest->getId()),
-                        array(
-                            'hardware_id=?' => $computer->getId(),
-                            'name=\'DOWNLOAD\'',
-                            'ivalue NOT IN ' . $subquery
-                        )
-                    );
-                }
-            }
-
-            // Delete all older computers
-            foreach ($computers as $computer) {
-                $computer->delete(true);
-            }
-            // Unlock remaining computer
-            $newest->unlock();
-        } catch (Exception $exception) {
-            $db->rollBack();
-            throw ($exception);
-        }
-        $db->commit();
-    }
-
-    /**
-     * Exclude a MAC address, serial or asset tag from being used as criteria
-     * for duplicates search.
-     *
-     * @param string $criteria One of 'MacAddress', 'Serial' or 'AssetTag'
-     * @param string $value Value to be excluded
-     */
-    public function allowDuplicates($criteria, $value)
-    {
-        switch ($criteria) {
-            case 'MacAddress':
-                $table = 'blacklist_macaddresses';
-                $column = 'macaddress';
-                break;
-            case 'Serial':
-                $table = 'blacklist_serials';
-                $column = 'serial';
-                break;
-            case 'AssetTag':
-                $table = 'braintacle_blacklist_assettags';
-                $column = 'assettag';
-                break;
-            default:
-                throw new \InvalidArgumentException(
-                    'Invalid criteria : ' . $criteria
-                );
-        }
-        $db = Model_Database::getAdapter();
-        // Check for existing record to avoid constraint violation
-        if (!$db->fetchRow("SELECT $column FROM $table WHERE $column=?", $value)) {
-            $db->insert($table, array($column => $value));
-        }
     }
 
     /**

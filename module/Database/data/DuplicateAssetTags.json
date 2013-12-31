@@ -1,0 +1,21 @@
+{
+    "name": "braintacle_blacklist_assettags",
+    "comment": "List of asset tags that are not unique, i.e. no indicator for duplicate computers.",
+    "columns": [
+        {
+            "name": "assettag",
+            "type": "varchar",
+            "length": 255,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        }
+    ],
+    "primary_key": [
+        "assettag"
+    ],
+    "mysql": {
+        "engine": "MyISAM"
+    }
+}

@@ -335,7 +335,6 @@ class Model_UserDefinedInfo extends Model_Abstract
             array(
                 'type' => $internalType,
                 'name' => $name,
-                'id_tab' => 1,
                 'show_order' => $order,
                 'account_type' => 'COMPUTERS'
             )
