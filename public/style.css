@@ -192,6 +192,9 @@ td,th {
 .textcenter {
     text-align: center;
 }
+.textnormalsize {
+    font-size: 100%;
+}
 
 .clearboth {
     clear:both;

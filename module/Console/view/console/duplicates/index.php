@@ -31,24 +31,27 @@ $labels = array(
 );
 
 if (count($this->duplicates)) {
-    print "<dl>\n";
+    print "<table class='textnormalsize'>\n";
     foreach ($this->duplicates as $type => $num) {
+        print '<tr>';
         print $this->htmlTag(
-            'dt',
+            'td',
             $labels[$type]
         );
         print $this->htmlTag(
-            'dd',
+            'td',
             $this->htmlTag(
                 'a',
                 $num,
                 array(
                     'href' => $this->consoleUrl('duplicates', 'show', array('criteria' => $type)),
                 )
-            )
+            ),
+            array('class' => 'textright')
         );
+        print "</tr>\n";
     }
-    print "</dl>\n";
+    print "</table>\n";
 } else {
     print '<p class="textcenter">';
     print $this->translate('No duplicates present.');

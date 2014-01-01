@@ -74,8 +74,8 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
                           ->will($this->returnValue(2));
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
-        $this->assertQueryCount('dd a[href*="/console/duplicates/show/?criteria="]', 4);
-        $this->assertQueryContentContains('dd a[href*="/console/duplicates/show/?criteria="]', "\n2\n");
+        $this->assertQueryCount('td a[href*="/console/duplicates/show/?criteria="]', 4);
+        $this->assertQueryContentContains('td a[href*="/console/duplicates/show/?criteria="]', "\n2\n");
     }
 
     /**
