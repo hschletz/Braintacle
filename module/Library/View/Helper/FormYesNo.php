@@ -40,11 +40,12 @@ class FormYesNo extends \Zend\View\Helper\AbstractHelper
     public function __invoke($caption)
     {
         return sprintf(
+            "<div class='form_yesno'>\n" .
             "<p>%s</p>\n" .
             "<form action='' method='POST'>\n" .
             "<p><input type='submit' name='yes' value='%s'>&nbsp;\n" .
             "<input type='submit' name='no' value='%s'></p>\n" .
-            "</form>\n",
+            "</form>\n</div>\n",
             $caption,
             $this->view->translate('Yes'),
             $this->view->translate('No')

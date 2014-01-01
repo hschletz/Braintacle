@@ -390,3 +390,7 @@ td.formElement {
 table.table_registry_values {
     margin-top: 3ex;
 }
+
+.form_yesno {
+    text-align: center;
+}
