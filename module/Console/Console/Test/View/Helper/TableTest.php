@@ -184,6 +184,37 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
     }
 
     /**
+     * Test rendering of \Zend_Date objects
+     */
+    public function testDateFormat()
+    {
+        $date = new \Zend_Date(1388567012);
+        $data = array(
+            array(1388567012, $date),
+            array($date, $date),
+            array($date, 1388567012),
+        );
+        $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat->expects($this->exactly(2)) // column 0 should be rendered by callback
+                   ->method('__invoke')
+                   ->with(1388567012, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT);
+        $callback = function() {
+        };
+        $helper = $this->_getHelper(
+            array(
+                'DateFormat' => $dateFormat,
+                'HtmlTag' => $this->getMock('Library\View\Helper\HtmlTag'),
+            )
+        );
+        $helper(
+            $data,
+            array('col1', 'col2'),
+            array(),
+            array(0 => $callback)
+        );
+    }
+
+    /**
      * Tests for the sortableHeader() method
      */
     public function testSortableHeader()
