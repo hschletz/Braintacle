@@ -75,9 +75,8 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
     {
         $this->setActiveMenu('Inventory', 'Duplicates');
         $params = $this->getOrder('Id', 'asc');
-        $params['criteria'] = $this->params()->fromQuery('criteria');
         $params['computers'] = $this->_duplicates->find(
-            $params['criteria'],
+            $this->params()->fromQuery('criteria'),
             $params['order'],
             $params['direction']
         );

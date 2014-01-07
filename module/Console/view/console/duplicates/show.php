@@ -36,26 +36,22 @@ $renderCriteria = function($view, $computer, $property) {
     if ($property == 'NetworkInterface.MacAddress') {
         $property = 'MacAddress';
     }
-    // Hyperlink to blacklist form if the column matches the criteria for the table
-    if ($property == $view->criteria) {
-        return $view->htmlTag(
-            'a',
-            $view->escapeHtml($value),
-            array(
-                'href' => $view->consoleUrl(
-                    'duplicates',
-                    'allow',
-                    array(
-                        'criteria' => $property,
-                        'value' => $value,
-                    )
-                ),
+    // Hyperlink to blacklist form
+    return $view->htmlTag(
+        'a',
+        $view->escapeHtml($value),
+        array(
+            'href' => $view->consoleUrl(
+                'duplicates',
+                'allow',
+                array(
+                    'criteria' => $property,
+                    'value' => $value,
+                )
             ),
-            true
-        );
-    } else {
-        return $view->escapeHtml($value);
-    }
+        ),
+        true
+    );
 };
 $renderCallbacks = array(
     'Id' => function($view, $computer) {

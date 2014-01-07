@@ -119,97 +119,58 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
                           )
                       );
 
+        // Test missing/invelid "Criteria" parameters
         $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
                                   ->disableOriginalconstructor()
                                   ->getMock();
         $this->_duplicates->expects($this->any())
                           ->method('find')
-                          ->will(
-                              $this->returnCallback(
-                                  function($criteria) use ($computers) {
-                                      switch ($criteria) {
-                                          case 'Name':
-                                          case 'MacAddress':
-                                          case 'Serial':
-                                          case 'AssetTag':
-                                              return $computers;
-                                              break;
-                                          default:
-                                              throw new \InvalidArgumentException(
-                                                  'Invalid criteria: ' . $criteria
-                                              );
-                                      }
-                                  }
-                              )
-                          );
+                          ->with($this->logicalOr($this->isNull(), $this->identicalTo('invalid')), 'Id', 'asc')
+                          ->will($this->throwException(new \InvalidArgumentException('Invalid criteria')));
 
-        // Test missing/invelid "Criteria" parameters
         try {
             $this->dispatch($url);
             $this->fail('showAction() should have thrown an Exceptopn on missing parameter "criteria"');
         } catch (\Exception $e) {
-            $this->assertEquals('Invalid criteria: ', $e->getMessage());
+            $this->assertEquals('Invalid criteria', $e->getMessage());
         }
         try {
             $this->dispatch($url, 'GET', array('criteria' => 'invalid'));
             $this->fail('showAction() should have thrown an Exceptopn on invalid parameter "criteria"');
         } catch (\Exception $e) {
-            $this->assertEquals('Invalid criteria: invalid', $e->getMessage());
+            $this->assertEquals('Invalid criteria', $e->getMessage());
         }
 
-        // Test with all valid criteria
+        // Test with 'Name' - actual criteria are not relevant for this test.
+        $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
+                                  ->disableOriginalconstructor()
+                                  ->getMock();
+        $this->_duplicates->expects($this->once())
+                          ->method('find')
+                          ->with('Name', 'Id', 'asc')
+                          ->will($this->returnValue($computers));
+
         $this->dispatch($url, 'GET', array('criteria' => 'Name'));
         $this->assertResponseStatusCode(200);
         $this->assertQuery('input[type="checkbox"][name="computers[]"][value="2"]'); // Checkbox with Id
-        $this->assertQueryContentContains(
-            'td a[href="/console/computer/userdefined/?id=2"]',
-            'Test2'
-        ); // Name
-        $this->assertQueryContentContains('td', "\n00:00:5E:00:53:00\n"); // MacAddress
-        $this->assertQueryContentContains('td', "\n12345678\n"); // Serial
-        $this->assertQueryContentContains('td', "\nabc\n"); // AssetTag
 
-        $this->dispatch($url, 'GET', array('criteria' => 'MacAddress'));
-        $this->assertResponseStatusCode(200);
-        $this->assertQuery('input[type="checkbox"][name="computers[]"][value="2"]'); // Checkbox with Id
+        // Test content of criteria columns
         $this->assertQueryContentContains(
             'td a[href="/console/computer/userdefined/?id=2"]',
             'Test2'
-        ); // Name
+        );
         $this->assertQueryContentContains(
             'td a[href="/console/duplicates/allow/?criteria=MacAddress&value=00:00:5E:00:53:00"]',
             '00:00:5E:00:53:00'
-        ); // MacAddress
-        $this->assertQueryContentContains('td', "\n12345678\n"); // Serial
-        $this->assertQueryContentContains('td', "\nabc\n"); // AssetTag
-
-        $this->dispatch($url, 'GET', array('criteria' => 'Serial'));
-        $this->assertResponseStatusCode(200);
-        $this->assertQuery('input[type="checkbox"][name="computers[]"][value="2"]'); // Checkbox with Id
-        $this->assertQueryContentContains(
-            'td a[href="/console/computer/userdefined/?id=2"]',
-            'Test2'
-        ); // Name
-        $this->assertQueryContentContains('td', "\n00:00:5E:00:53:00\n"); // MacAddress
+        );
         $this->assertQueryContentContains(
             'td a[href="/console/duplicates/allow/?criteria=Serial&value=12345678"]',
             '12345678'
-        ); // Serial
-        $this->assertQueryContentContains('td', "\nabc\n"); // AssetTag
-
-        $this->dispatch($url, 'GET', array('criteria' => 'AssetTag'));
-        $this->assertResponseStatusCode(200);
-        $this->assertQuery('input[type="checkbox"][name="computers[]"][value="2"]'); // Checkbox with Id
-        $this->assertQueryContentContains(
-            'td a[href="/console/computer/userdefined/?id=2"]',
-            'Test2'
-        ); // Name
-        $this->assertQueryContentContains('td', "\n00:00:5E:00:53:00\n"); // MacAddress
-        $this->assertQueryContentContains('td', "\n12345678\n"); // Serial
+        );
         $this->assertQueryContentContains(
             'td a[href="/console/duplicates/allow/?criteria=AssetTag&value=abc"]',
             'abc'
-        ); // AssetTag
+        );
 
         // Test state of the 3 merge option checkboxes (depending on \Model\Config mock)
         $this->assertQuery('input[name="mergeUserdefined"][checked="checked"]');
