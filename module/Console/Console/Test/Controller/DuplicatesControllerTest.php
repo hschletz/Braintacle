@@ -33,13 +33,13 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
     protected $_config;
 
     /**
-     * Computer mock
+     * Duplicates mock
      * @var \Model\Computer\Duplicates
      */
     protected $_duplicates;
 
     /** {@inheritdoc} */
-    public function _createController()
+    protected function _createController()
     {
         return new \Console\Controller\DuplicatesController($this->_config, $this->_duplicates);
     }

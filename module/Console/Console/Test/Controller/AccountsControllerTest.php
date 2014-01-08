@@ -45,7 +45,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
     protected $_formAccountEdit;
 
     /** {@inheritdoc} */
-    public function _createController()
+    protected function _createController()
     {
         if (!$this->_formAccountNew) {
             $this->_formAccountNew = new \Form_Account_New;

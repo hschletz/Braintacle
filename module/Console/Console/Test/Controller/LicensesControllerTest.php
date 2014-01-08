@@ -33,7 +33,7 @@ class LicensesControllerTest extends \Console\Test\AbstractControllerTest
     protected $_windows;
 
     /** {@inheritdoc} */
-    public function _createController()
+    protected function _createController()
     {
         return new \Console\Controller\LicensesController($this->_windows);
     }

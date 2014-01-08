@@ -33,7 +33,7 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
     protected $_authenticationService;
 
     /** {@inheritdoc} */
-    public function _createController()
+    protected function _createController()
     {
         return new \Console\Controller\LoginController($this->_authenticationService);
     }

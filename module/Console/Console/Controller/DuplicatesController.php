@@ -33,15 +33,15 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
     protected $_config;
 
     /**
-     * Computer prototype
-     * @var \Model\Computer\duplicates
+     * Duplicates prototype
+     * @var \Model\Computer\Duplicates
      */
     protected $_duplicates;
 
     /**
      * Constructor
      *
-     * @param \Model_Computer
+     * @param \Model\Computer\Duplicates
      */
     public function __construct(\Model\Config $config, \Model\Computer\Duplicates $duplicates)
     {
