@@ -119,7 +119,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
                           )
                       );
 
-        // Test missing/invelid "Criteria" parameters
+        // Test missing/invalid "Criteria" parameters
         $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
                                   ->disableOriginalconstructor()
                                   ->getMock();
@@ -130,13 +130,13 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
 
         try {
             $this->dispatch($url);
-            $this->fail('showAction() should have thrown an Exceptopn on missing parameter "criteria"');
+            $this->fail('showAction() should have thrown an Exception on missing parameter "criteria"');
         } catch (\Exception $e) {
             $this->assertEquals('Invalid criteria', $e->getMessage());
         }
         try {
             $this->dispatch($url, 'GET', array('criteria' => 'invalid'));
-            $this->fail('showAction() should have thrown an Exceptopn on invalid parameter "criteria"');
+            $this->fail('showAction() should have thrown an Exception on invalid parameter "criteria"');
         } catch (\Exception $e) {
             $this->assertEquals('Invalid criteria', $e->getMessage());
         }
