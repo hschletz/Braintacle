@@ -26,42 +26,43 @@ namespace Console\View\Helper;
  */
 class Table extends \Zend\View\Helper\AbstractHelper
 {
-/**
- * Generate HTML table
- *
- * $headers is an associative array with header labels. Its keys are used to
- * match corresponding fields in the other arguments. For each header, a
- * corresponding field must be set in the table data or in $renderCallbacks.
- *
- * $data is an array of row objects. Row objects are associative arrays or
- * objects implementing the \ArrayAccess interface.
- *
- * By default, cell data is retrieved from $data and escaped automatically.
- * \Zend_Date objects are rendered as short timestamps (yy-mm-dd hh:mm). The
- * application's default locale controls the date/time format.
- * Alternatively, a callback can be provided in the $renderCallbacks array.
- * If a callback is defined for a column, the callback is responsible for
- * escaping cell data. It gets called with the following arguments:
- *
- * 1. The view renderer
- * 2. The row object
- * 3. The key of the column to be rendered. This is useful for callbacks that
- *    render more than 1 column.
- *
- * If the optional $sorting array contains the "order" and "direction" elements
- * (other elements are ignored), headers are generated as hyperlinks with
- * "order" and "direction" parameters set to the corresponding column. The
- * values denote the sorting in effect for the current request - the header will
- * be marked with an arrow indicating the current sorting. The controller action
- * should evaluate these parameters, sort the data and provide the sorting to
- * the view renderer. The \Console\Mvc\Controller\Plugin\GetOrder controller
- * plugin simplifies these tasks.
- *
- * @param array|\Traversable $data
- * @param array $headers
- * @param array $sorting
- * @param array $renderCallbacks
- */
+    /**
+     * Generate HTML table
+     *
+     * $headers is an associative array with header labels. Its keys are used to
+     * match corresponding fields in the other arguments. For each header, a
+     * corresponding field must be set in the table data or in $renderCallbacks.
+     *
+     * $data is an array of row objects. Row objects are associative arrays or
+     * objects implementing the \ArrayAccess interface.
+     *
+     * By default, cell data is retrieved from $data and escaped automatically.
+     * \Zend_Date objects are rendered as short timestamps (yy-mm-dd hh:mm). The
+     * application's default locale controls the date/time format.
+     * Alternatively, a callback can be provided in the $renderCallbacks array.
+     * If a callback is defined for a column, the callback is responsible for
+     * escaping cell data. It gets called with the following arguments:
+     *
+     * 1. The view renderer
+     * 2. The row object
+     * 3. The key of the column to be rendered. This is useful for callbacks
+     *    that render more than 1 column.
+     *
+     * If the optional $sorting array contains the "order" and "direction"
+     * elements (other elements are ignored), headers are generated as
+     * hyperlinks with "order" and "direction" parameters set to the
+     * corresponding column. The values denote the sorting in effect for the
+     * current request - the header will be marked with an arrow indicating the
+     * current sorting. The controller action should evaluate these parameters,
+     * sort the data and provide the sorting to the view renderer. The
+     * \Console\Mvc\Controller\Plugin\GetOrder controller plugin simplifies
+     * these tasks.
+     *
+     * @param array|\Traversable $data
+     * @param array $headers
+     * @param array $sorting
+     * @param array $renderCallbacks
+     */
     function __invoke(
         $data,
         array $headers,
