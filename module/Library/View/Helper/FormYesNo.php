@@ -32,6 +32,21 @@ namespace Library\View\Helper;
 class FormYesNo extends \Zend\View\Helper\AbstractHelper
 {
     /**
+     * Translate view helper
+     * @var \Zend\I18n\View\Helper\Translate
+     */
+    protected $_translate;
+
+    /**
+     * Constructor
+     * @param \Zend\I18n\View\Helper\Translate $translate
+     */
+    public function __construct(\Zend\I18n\View\Helper\Translate $translate)
+    {
+        $this->_translate = $translate;
+    }
+
+    /**
      * Render Form
      *
      * @param string $caption Any valid HTML code. Calling code must escape content if necessary.
@@ -47,8 +62,8 @@ class FormYesNo extends \Zend\View\Helper\AbstractHelper
             "<input type='submit' name='no' value='%s'></p>\n" .
             "</form>\n</div>\n",
             $caption,
-            $this->view->translate('Yes'),
-            $this->view->translate('No')
+            $this->_translate->__invoke('Yes'),
+            $this->_translate->__invoke('No')
         );
     }
 }

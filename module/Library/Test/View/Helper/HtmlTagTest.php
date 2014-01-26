@@ -31,7 +31,10 @@ class HtmlTagTest extends AbstractTest
      */
     public function testInvoke()
     {
-        $helper = $this->_getHelper();
+        $escapeHtmlAttr = $this->_getHelper('escapeHtmlAttr');
+
+        // Start tests with non-XHTML doctype
+        $helper = new \Library\View\Helper\HtmlTag($escapeHtmlAttr, false);
 
         // Empty element, non-inline
         $this->assertEquals("<element>\n", $helper('element'));
@@ -57,7 +60,7 @@ class HtmlTagTest extends AbstractTest
         );
 
         // Empty XHTML Element, inline
-        $helper->getView()->doctype('XHTML11');
+        $helper = new \Library\View\Helper\HtmlTag($escapeHtmlAttr, true);
         $this->assertEquals('<element />', $helper('element', null, null, true));
     }
 }

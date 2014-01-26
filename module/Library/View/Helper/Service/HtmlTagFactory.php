@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for ConsoleUrl
+ * Factory for HtmlTag
  *
  * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,21 +19,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Console\View\Helper\Service;
+namespace Library\View\Helper\Service;
 
 /**
- * Factory for ConsoleUrl
+ * Factory for HtmlTag
  */
-class ConsoleUrlFactory implements \Zend\ServiceManager\FactoryInterface
+class HtmlTagFactory implements \Zend\ServiceManager\FactoryInterface
 {
     /**
      * @internal
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        return new \Console\View\Helper\ConsoleUrl(
-            $serviceLocator->getServiceLocator()->get('Request'),
-            $serviceLocator->get('Url')
+        return new \Library\View\Helper\HtmlTag(
+            $serviceLocator->get('EscapeHtmlAttr'),
+            $serviceLocator->get('Doctype')->isXhtml()
         );
     }
 }

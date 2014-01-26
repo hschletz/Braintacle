@@ -38,15 +38,14 @@ class ConsoleUrlTest extends \Library\Test\View\Helper\AbstractTest
                 'action' => 'currentaction',
             )
         );
-        $this->_getHelperManager()->get('Url')->setRouteMatch($routeMatch);
+        $this->_getHelper('Url')->setRouteMatch($routeMatch);
 
         // Inject request parameters
         $requestParams = array('param1' => 'requestValue1');
         $request = new \Zend\Http\PhpEnvironment\Request;
         $request->setQuery(new \Zend\Stdlib\Parameters($requestParams));
-        \Library\Application::getService('ServiceManager')->setAllowOverride(true)->setService('Request', $request);
 
-        $helper = $this->_getHelper();
+        $helper = new \Console\View\Helper\ConsoleUrl($request, $this->_getHelper('Url'));
 
         // Default is currentcontroller/currentaction
         $this->assertEquals(

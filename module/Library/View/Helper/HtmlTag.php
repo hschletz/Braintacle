@@ -27,6 +27,30 @@ namespace Library\View\Helper;
 class HtmlTag extends \Zend\View\Helper\AbstractHelper
 {
     /**
+     * EscapeHtmlAttr view helper
+     * @var \Zend\View\Helper\EscapeHtmlAttr
+     */
+    protected $_escapeHtmlAttr;
+
+    /**
+     * Flag for XHTML output
+     * @var bool
+     */
+    protected $_isXhtml;
+
+    /**
+     * Constructor
+     *
+     * @param \Zend\View\Helper\EscapeHtmlAttr $escapeHtmlAttr View helper
+     * @param bool $isXhtml Flag for XHTML output
+     */
+    public function __construct(\Zend\View\Helper\EscapeHtmlAttr $escapeHtmlAttr, $isXhtml)
+    {
+        $this->_escapeHtmlAttr = $escapeHtmlAttr;
+        $this->_isXhtml = $isXhtml;
+    }
+
+    /**
      * Render a single HTML element
      *
      * @param string $element HTML element name
@@ -37,18 +61,17 @@ class HtmlTag extends \Zend\View\Helper\AbstractHelper
      */
     function __invoke($element, $content=null, $attributes=null, $inline=false)
     {
-        $view = $this->getView();
         $newline = $inline ? '' : "\n";
 
         // opening tag
         $output  = "<$element";
         if (is_array($attributes)) {
             foreach ($attributes as $attribute => $value) {
-                $output .= " $attribute=\"" . $view->escapeHtmlAttr($value) . '"';
+                $output .= " $attribute=\"" . $this->_escapeHtmlAttr->__invoke($value) . '"';
             }
         }
         if ($content === null) {
-            if ($view->doctype()->isXhtml()) {
+            if ($this->_isXhtml) {
                 $output .= ' /';
             }
             $output .= '>';

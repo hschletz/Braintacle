@@ -55,65 +55,17 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get view helper manager
+     * Get view helper
      *
-     * If the $helpers array is not empty, a new helper manager is created and
-     * populated with the contained services, allowing easy injection of mock
-     * objects. An instance of the tested helper class (derived from the test
-     * class name) is also provided. By default, the standard helper manager is
-     * returned.
-     *
-     * @param \Zend\View\Helper\HelperInterface[] Optional associative array of helper names and instances
-     * @return \Zend\View\HelperPluginManager
-     */
-    protected function _getHelperManager(array $helpers=array())
-    {
-        if (empty($helpers)) {
-            $helperManager = Application::getService('ViewHelperManager');
-        } else {
-            $helperManager = new \Zend\View\HelperPluginManager;
-            foreach ($helpers as $name => $helper) {
-                $helperManager->setService($name, $helper);
-            }
-            $name = $this->_getHelperName();
-            if (!isset($helpers[$name])) {
-                $helperClass = $this->_getHelperClass();
-                $helperManager->setService($this->_getHelperName(), new $helperClass);
-            }
-        }
-        return $helperManager;
-    }
-
-    /**
-     * Get helper (derived from test class name) and initialize it with a view
-     *
-     * @param \Zend\View\Helper\HelperInterface[] Optional dependencies passed to _getHelperManager()
+     * @param string $name Helper name (default: derive from test class name)
      * @return \Zend\View\Helper\HelperInterface Helper instance
      */
-    protected function _getHelper(array $helpers=array())
+    protected function _getHelper($name=null)
     {
-        return $this->_getHelperByName($this->_getHelperName(), $helpers);
-    }
-
-    /**
-     * Get an arbitrary helper and initialize it with a view
-     *
-     * @param string $name Helper name
-     * @param \Zend\View\Helper\HelperInterface[] Optional dependencies passed to _getHelperManager()
-     * @return \Zend\View\Helper\HelperInterface
-     */
-    protected function _getHelperByName($name, array $helpers=array())
-    {
-        $helperManager = $this->_getHelperManager($helpers);
-        if (empty($helpers)) {
-            $view = $helperManager->getServiceLocator()->get('ViewManager')->getRenderer();
-        } else {
-            $view = new \Zend\View\Renderer\PhpRenderer;
-            $view->setHelperPluginManager($helperManager);
+        if (!$name) {
+            $name = $this->_getHelperName();
         }
-        $helper = $helperManager->get($name);
-        $helper->setView($view);
-        return $helper;
+        return \Library\Application::getService('ViewHelperManager')->get($name);
     }
 
     /**
@@ -122,7 +74,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     public function testHelperInterface()
     {
         // Test if the helper is registered with the application's service manager
-        $this->assertTrue($this->_getHelperManager()->has($this->_getHelperName()));
+        $this->assertTrue(\Library\Application::getService('ViewHelperManager')->has($this->_getHelperName()));
 
         // Get helper instance through service manager and test for required interface
         $this->assertInstanceOf('Zend\View\Helper\HelperInterface', $this->_getHelper());

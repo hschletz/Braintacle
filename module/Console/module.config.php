@@ -77,9 +77,7 @@ return array(
     'view_helpers' => array(
         'factories' => array(
             'consoleUrl' => 'Console\View\Helper\Service\ConsoleUrlFactory',
-        ),
-        'invokables' => array(
-            'table' => 'Console\View\Helper\Table',
+            'table' => 'Console\View\Helper\Service\TableFactory',
         ),
     ),
     'view_manager' => array(

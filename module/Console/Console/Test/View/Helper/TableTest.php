@@ -106,21 +106,21 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
         $escapeHtml->expects($this->exactly(4)) // once per non-header cell
                    ->method('__invoke')
                    ->will($this->returnArgument(0));
+        $htmlTag = $this->_getHelper('HtmlTag');
+        $consoleUrl = $this->getMockBuilder('Console\View\Helper\ConsoleUrl')->disableOriginalConstructor()->getMock();
+        $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
 
-        $table = $this->getMock($this->_getHelperClass(), $stubs);
+        $table = $this->getMockBuilder($this->_getHelperClass())
+                      ->setConstructorArgs(array($escapeHtml, $htmlTag, $consoleUrl, $dateFormat))
+                      ->setMethods($stubs)
+                      ->getMock();
         $table->expects($this->never()) // No sortable headers in this test
               ->method('sortableHeader');
         $table->expects($this->exactly(3))
               ->method('row')
               ->will($this->returnCallback($rowCallback));
 
-        $helper = $this->_getHelper(
-            array(
-                'Table' => $table,
-                'EscapeHtml' => $escapeHtml,
-            )
-        );
-        $this->assertEquals($expectedTable, $helper($data, $this->_headers));
+        $this->assertEquals($expectedTable, $table($data, $this->_headers));
 
         // Test with sortable headers
         $escapeHtml = $this->getMock('Zend\View\Helper\EscapeHtml');
@@ -128,7 +128,10 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
                    ->method('__invoke')
                    ->will($this->returnArgument(0));
 
-        $table = $this->getMock($this->_getHelperClass(), $stubs);
+        $table = $this->getMockBuilder($this->_getHelperClass())
+                      ->setConstructorArgs(array($escapeHtml, $htmlTag, $consoleUrl, $dateFormat))
+                      ->setMethods($stubs)
+                      ->getMock();
         $table->expects($this->exactly(2)) // once per column
               ->method('sortableHeader')
               ->will($this->returnArgument(0));
@@ -136,15 +139,9 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
               ->method('row')
               ->will($this->returnCallback($rowCallback));
 
-        $helper = $this->_getHelper(
-            array(
-                'Table' => $table,
-                'EscapeHtml' => $escapeHtml,
-            )
-        );
         $this->assertEquals(
             $expectedTable,
-            $helper(
+            $table(
                 $data,
                 $this->_headers,
                 array('order' => 'column1', 'direction' => 'asc')
@@ -157,23 +154,21 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
                    ->method('__invoke')
                    ->will($this->returnArgument(0));
 
-        $table = $this->getMock($this->_getHelperClass(), $stubs);
+        $table = $this->getMockBuilder($this->_getHelperClass())
+                      ->setConstructorArgs(array($escapeHtml, $htmlTag, $consoleUrl, $dateFormat))
+                      ->setMethods($stubs)
+                      ->getMock();
         $table->expects($this->never()) // No sortable headers in this test
               ->method('sortableHeader');
         $table->expects($this->exactly(3))
               ->method('row')
               ->will($this->returnCallback($rowCallback));
+        $table->setView(\Library\Application::getService('ViewManager')->getRenderer());
 
-        $helper = $this->_getHelper(
-            array(
-                'Table' => $table,
-                'EscapeHtml' => $escapeHtml,
-            )
-        );
         $this->_renderCallbackData = array();
         $this->assertEquals(
             $expectedTable,
-            $helper(
+            $table(
                 $data,
                 $this->_headers,
                 array(),
@@ -188,6 +183,10 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
      */
     public function testDateFormat()
     {
+        $escapeHtml = $this->getMock('Zend\View\Helper\EscapeHtml');
+        $htmlTag = $this->_getHelper('HtmlTag');
+        $consoleUrl = $this->getMockBuilder('Console\View\Helper\ConsoleUrl')->disableOriginalConstructor()->getMock();
+
         $date = new \Zend_Date(1388567012);
         $data = array(
             array(1388567012, $date),
@@ -200,12 +199,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
                    ->with(1388567012, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT);
         $callback = function() {
         };
-        $helper = $this->_getHelper(
-            array(
-                'DateFormat' => $dateFormat,
-                'HtmlTag' => $this->getMock('Library\View\Helper\HtmlTag'),
-            )
-        );
+        $helper = new \Console\View\Helper\Table($escapeHtml, $htmlTag, $consoleUrl, $dateFormat);
         $helper(
             $data,
             array('col1', 'col2'),
@@ -219,61 +213,48 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
      */
     public function testSortableHeader()
     {
+        $escapeHtml = $this->getMock('Zend\View\Helper\EscapeHtml');
+        $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
         // Test for current column sorted ascending: Arrow indicator up, link sorts descending
-        $consoleUrl = $this->getMock('Console\View\Helper\ConsoleUrl');
+        $consoleUrl = $this->getMockBuilder('Console\View\Helper\ConsoleUrl')->disableOriginalConstructor()->getMock();
         $consoleUrl->expects($this->once())
                    ->method('__invoke')
                    ->with(null, null, array('order' => 'Key', 'direction' => 'desc'), true)
                    ->will($this->returnValue('ConsoleUrlMock'));
-        $htmlTag = $this->getMock('Library\View\Helper\HtmlTag');
+        $htmlTag = $this->getMockBuilder('Library\View\Helper\HtmlTag')->disableOriginalConstructor()->getMock();
         $htmlTag->expects($this->once())
                 ->method('__invoke')
                 ->with('a', 'Label&uarr;', array('href' => 'ConsoleUrlMock'))
                 ->will($this->returnValue('HtmlTagMock'));
-        $helper = $this->_getHelper(
-            array(
-                'ConsoleUrl' => $consoleUrl,
-                'HtmlTag' => $htmlTag,
-            )
-        );
+        $helper = new \Console\View\Helper\Table($escapeHtml, $htmlTag, $consoleUrl, $dateFormat);
         $this->assertEquals('HtmlTagMock', $helper->sortableHeader('Label', 'Key', 'Key', 'asc'));
 
         // Test for current column sorted descending: Arrow indicator down, link sorts ascending
-        $consoleUrl = $this->getMock('Console\View\Helper\ConsoleUrl');
+        $consoleUrl = $this->getMockBuilder('Console\View\Helper\ConsoleUrl')->disableOriginalConstructor()->getMock();
         $consoleUrl->expects($this->once())
                    ->method('__invoke')
                    ->with(null, null, array('order' => 'Key', 'direction' => 'asc'), true)
                    ->will($this->returnValue('ConsoleUrlMock'));
-        $htmlTag = $this->getMock('Library\View\Helper\HtmlTag');
+        $htmlTag = $this->getMockBuilder('Library\View\Helper\HtmlTag')->disableOriginalConstructor()->getMock();
         $htmlTag->expects($this->once())
                 ->method('__invoke')
                 ->with('a', 'Label&darr;', array('href' => 'ConsoleUrlMock'))
                 ->will($this->returnValue('HtmlTagMock'));
-        $helper = $this->_getHelper(
-            array(
-                'ConsoleUrl' => $consoleUrl,
-                'HtmlTag' => $htmlTag,
-            )
-        );
+        $helper = new \Console\View\Helper\Table($escapeHtml, $htmlTag, $consoleUrl, $dateFormat);
         $this->assertEquals('HtmlTagMock', $helper->sortableHeader('Label', 'Key', 'Key', 'desc'));
 
         // Test for current column not sorted: No arrow indicator, link sorts ascending
-        $consoleUrl = $this->getMock('Console\View\Helper\ConsoleUrl');
+        $consoleUrl = $this->getMockBuilder('Console\View\Helper\ConsoleUrl')->disableOriginalConstructor()->getMock();
         $consoleUrl->expects($this->once())
                    ->method('__invoke')
                    ->with(null, null, array('order' => 'Key', 'direction' => 'asc'), true)
                    ->will($this->returnValue('ConsoleUrlMock'));
-        $htmlTag = $this->getMock('Library\View\Helper\HtmlTag');
+        $htmlTag = $this->getMockBuilder('Library\View\Helper\HtmlTag')->disableOriginalConstructor()->getMock();
         $htmlTag->expects($this->once())
                 ->method('__invoke')
                 ->with('a', 'Label', array('href' => 'ConsoleUrlMock'))
                 ->will($this->returnValue('HtmlTagMock'));
-        $helper = $this->_getHelper(
-            array(
-                'ConsoleUrl' => $consoleUrl,
-                'HtmlTag' => $htmlTag,
-            )
-        );
+        $helper = new \Console\View\Helper\Table($escapeHtml, $htmlTag, $consoleUrl, $dateFormat);
         $this->assertEquals('HtmlTagMock', $helper->sortableHeader('Label', 'Key', 'Order', 'desc'));
     }
 

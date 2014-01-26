@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for ConsoleUrl
+ * Factory for Table
  *
  * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,18 +22,20 @@
 namespace Console\View\Helper\Service;
 
 /**
- * Factory for ConsoleUrl
+ * Factory for Table
  */
-class ConsoleUrlFactory implements \Zend\ServiceManager\FactoryInterface
+class TableFactory implements \Zend\ServiceManager\FactoryInterface
 {
     /**
      * @internal
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        return new \Console\View\Helper\ConsoleUrl(
-            $serviceLocator->getServiceLocator()->get('Request'),
-            $serviceLocator->get('Url')
+        return new \Console\View\Helper\Table(
+            $serviceLocator->get('EscapeHtml'),
+            $serviceLocator->get('HtmlTag'),
+            $serviceLocator->get('ConsoleUrl'),
+            $serviceLocator->get('DateFormat')
         );
     }
 }

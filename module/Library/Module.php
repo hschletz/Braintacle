@@ -68,9 +68,9 @@ Feature\ConfigProviderInterface
                 ),
             ),
             'view_helpers' => array(
-                'invokables' => array(
-                    'formYesNo' => 'Library\View\Helper\FormYesNo',
-                    'htmlTag' => 'Library\View\Helper\HtmlTag',
+                'factories' => array(
+                    'formYesNo' => 'Library\View\Helper\Service\FormYesNoFactory',
+                    'htmlTag' => 'Library\View\Helper\Service\HtmlTagFactory',
                 ),
             ),
         );

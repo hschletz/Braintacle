@@ -27,22 +27,28 @@ namespace Console\View\Helper;
 class ConsoleUrl extends \Zend\View\Helper\AbstractHelper
 {
     /**
-     * Request parameters passed to the constructor
-     * @param array
+     * Parameters of request passed to the constructor
+     * @var array
      */
-    protected $_requestParams;
+    protected $_requestParams = array();
+
+    /**
+     * Url helper
+     * @var \Zend\View\Helper\Url
+     */
+    protected $_url;
 
     /**
      * Constructor
      *
-     * @param array|\Zend\Http\Request $request Request or associative array of request parameters
+     * @param mixed $request If \Zend\Http\Request, its query parameters are evaluated (see $inheritParams)
      */
-    public function __construct($request=array())
+    public function __construct($request, \Zend\View\Helper\Url $url)
     {
         if ($request instanceof \Zend\Http\Request) {
-            $request = $request->getQuery()->toArray();
+            $this->_requestParams = $request->getQuery()->toArray();
         }
-        $this->_requestParams = $request;
+        $this->_url = $url;
     }
 
     /**
@@ -76,6 +82,6 @@ class ConsoleUrl extends \Zend\View\Helper\AbstractHelper
             $options['query'] = $params;
         }
 
-        return $this->view->url('console', $route, $options, true);
+        return $this->_url->__invoke('console', $route, $options, true);
     }
 }
