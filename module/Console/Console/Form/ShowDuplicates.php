@@ -44,7 +44,7 @@ class ShowDuplicates extends \Zend\Form\Form
 
         $mergeCustomFields = new Element\Checkbox('mergeCustomFields');
         $mergeCustomFields->setLabel('Merge user supplied information');
-        $mergeCustomFields->setChecked($config->defaultMergeUserdefined);
+        $mergeCustomFields->setChecked($config->defaultMergeCustomFields);
         $this->add($mergeCustomFields);
 
         $mergeGroups = new Element\Checkbox('mergeGroups');

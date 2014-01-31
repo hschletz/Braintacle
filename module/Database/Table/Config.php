@@ -50,7 +50,7 @@ class Config extends \Database\AbstractTable
         'defaultMaxFragmentSize' => 'BRAINTACLE_DEFAULT_MAX_FRAGMENT_SIZE',
         'defaultMergeGroups' => 'BRAINTACLE_DEFAULT_MERGE_GROUPS',
         'defaultMergePackages' => 'BRAINTACLE_DEFAULT_MERGE_PACKAGES',
-        'defaultMergeUserdefined' => 'BRAINTACLE_DEFAULT_MERGE_USERDEFINED',
+        'defaultMergeCustomFields' => 'BRAINTACLE_DEFAULT_MERGE_USERDEFINED',
         'defaultPackagePriority' => 'BRAINTACLE_DEFAULT_PACKAGE_PRIORITY',
         'defaultPlatform' => 'BRAINTACLE_DEFAULT_PLATFORM',
         'defaultUserActionMessage' => 'BRAINTACLE_DEFAULT_USER_ACTION_MESSAGE',

@@ -46,7 +46,7 @@ class ShowDuplicatesTest extends \PHPUnit_Framework_TestCase
                       ->will(
                           $this->returnValueMap(
                               array(
-                                array('defaultMergeUserdefined', '1'),
+                                array('defaultMergeCustomFields', '1'),
                                 array('defaultMergeGroups', '1'),
                                 array('defaultMergePackages', '0'),
                               )

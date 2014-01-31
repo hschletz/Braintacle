@@ -53,7 +53,7 @@ namespace Model;
  * @property integer $defaultMaxFragmentSize  Default maximum fragment size (in kB) for new packages. Default: 0
  * @property bool $defaultMergeGroups  Default for merging manual group memberships along with computers. Default: true
  * @property bool $defaultMergePackages  Default for merging package assignments along with computers. Default: true
- * @property bool $defaultMergeUserdefined  Default for merging userdefined fields along with computers. Default: true
+ * @property bool $defaultMergeCustomFields  Default for merging userdefined fields along with computers. Default: true
  * @property integer $defaultPackagePriority  Default priority (0-10) for new packages. Default: 5
  * @property string $defaultPlatform  Default platform for new packages (one of windows, linux, mac). Default: windows
  * @property string $defaultUserActionMessage  Default user action message for new packages
@@ -120,7 +120,7 @@ class Config
         'defaultDeploySuccess' => '1',
         'defaultMaxFragmentSize' => '0',
         'defaultMergeGroups' => '1',
-        'defaultMergeUserdefined' => '1',
+        'defaultMergeCustomFields' => '1',
         'defaultPackagePriority' => '5',
         'defaultPlatform' => 'windows',
         'defaultUserActionRequired' => '0',

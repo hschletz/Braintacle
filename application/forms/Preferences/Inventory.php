@@ -30,7 +30,7 @@ class Form_Preferences_Inventory extends Form_Preferences
     /** {@inheritdoc} */
     protected $_types = array(
         'inspectRegistry' => 'bool',
-        'defaultMergeUserdefined' => 'bool',
+        'defaultMergeCustomFields' => 'bool',
         'defaultMergeGroups' => 'bool',
         'defaultMergePackages' => 'bool',
         'defaultDeleteInterfaces' => 'bool',
@@ -46,7 +46,7 @@ class Form_Preferences_Inventory extends Form_Preferences
             'inspectRegistry' => $translate->_(
                 'Inspect registry'
             ),
-            'defaultMergeUserdefined' => sprintf(
+            'defaultMergeCustomFields' => sprintf(
                 $translate->_('Mark \'%s\' by default'),
                 $translate->_('Merge user supplied information')
             ),
