@@ -79,7 +79,11 @@ class ConsoleUrl extends \Zend\View\Helper\AbstractHelper
         }
         $options = array();
         if (!empty($params)) {
-            $options['query'] = $params;
+            // Cast values to string to support values that would otherwise get
+            // ignored by Url helper, like objects implementing __toString()
+            foreach ($params as $name => $value) {
+                $options['query'][$name] = (string) $value;
+            }
         }
 
         return $this->_url->__invoke('console', $route, $options, true);
