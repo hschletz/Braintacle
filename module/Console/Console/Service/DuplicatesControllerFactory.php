@@ -33,8 +33,8 @@ class DuplicatesControllerFactory implements \Zend\ServiceManager\FactoryInterfa
     {
         $serviceManager = $serviceLocator->getServiceLocator();
         return new \Console\Controller\DuplicatesController(
-            $serviceManager->get('Model\Config'),
-            $serviceManager->get('Model\Computer\Duplicates')
+            $serviceManager->get('Model\Computer\Duplicates'),
+            $serviceManager->get('FormElementManager')->get('Console\Form\ShowDuplicates')
         );
     }
 }

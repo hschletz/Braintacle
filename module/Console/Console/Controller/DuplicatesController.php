@@ -27,26 +27,29 @@ namespace Console\Controller;
 class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
 {
     /**
-     * Application config
-     * @var \Model\Config
-     */
-    protected $_config;
-
-    /**
      * Duplicates prototype
      * @var \Model\Computer\Duplicates
      */
     protected $_duplicates;
 
     /**
+     * ShowDuplicates prototype
+     * @var \Console\Form\ShowDuplicates
+     */
+    protected $_showDuplicates;
+
+    /**
      * Constructor
      *
      * @param \Model\Computer\Duplicates
      */
-    public function __construct(\Model\Config $config, \Model\Computer\Duplicates $duplicates)
+    public function __construct(
+        \Model\Computer\Duplicates $duplicates,
+        \Console\Form\ShowDuplicates $showDuplicates
+    )
     {
-        $this->_config = $config;
         $this->_duplicates = $duplicates;
+        $this->_showDuplicates = $showDuplicates;
     }
 
     /**
@@ -74,14 +77,20 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
     public function showAction()
     {
         $this->setActiveMenu('Inventory', 'Duplicates');
-        $params = $this->getOrder('Id', 'asc');
-        $params['computers'] = $this->_duplicates->find(
+        $search = $this->getOrder('Id', 'asc');
+        $computers = $this->_duplicates->find(
             $this->params()->fromQuery('criteria'),
-            $params['order'],
-            $params['direction']
+            $search['order'],
+            $search['direction']
         );
-        $params['config'] = $this->_config;
-        return $params;
+        $this->_showDuplicates->setOptions(
+            array(
+                'computers' => $computers,
+                'order' => $search['order'],
+                'direction' => $search['direction'],
+            )
+        );
+        return array('form' => $this->_showDuplicates);
     }
 
     /**
@@ -100,7 +109,7 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
         if (count($computers) >= 2) {
             $this->_duplicates->merge(
                 $computers,
-                $params->fromPost('mergeUserdefined'),
+                $params->fromPost('mergeCustomFields'),
                 $params->fromPost('mergeGroups'),
                 $params->fromPost('mergePackages')
             );

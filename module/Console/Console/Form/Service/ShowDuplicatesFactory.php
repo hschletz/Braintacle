@@ -1,6 +1,6 @@
 <?php
 /**
- * Display form for merging duplicate computers
+ * Factory for ShowDuplicates
  *
  * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,8 +17,24 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-$this->form->setAttribute('action', $this->consoleUrl('duplicates', 'merge'));
-print $this->form->render($this);
+namespace Console\Form\Service;
+
+/**
+ * Factory for ShowDuplicates
+ * @codeCoverageIgnore
+ */
+class ShowDuplicatesFactory implements \Zend\ServiceManager\FactoryInterface
+{
+    /**
+     * @internal
+     */
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    {
+        return new \Console\Form\ShowDuplicates(
+            null,
+            array('config' => $serviceLocator->getServiceLocator()->get('Model\Config'))
+        );
+    }
+}

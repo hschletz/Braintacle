@@ -39,6 +39,11 @@ return array(
             'login' => 'Console\Service\LoginControllerFactory',
         ),
     ),
+    'form_elements' => array(
+        'factories' => array(
+            'Console\Form\ShowDuplicates' => 'Console\Form\Service\ShowDuplicatesFactory',
+        ),
+    ),
     'router' => array(
         'routes' => array(
             'console' => array(

@@ -27,21 +27,41 @@ namespace Console\Test\Controller;
 class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
-     * Config mock
-     * @var \Model\Config
-     */
-    protected $_config;
-
-    /**
      * Duplicates mock
      * @var \Model\Computer\Duplicates
      */
     protected $_duplicates;
 
+    /**
+     * ShowDuplicates mock
+     * @var \Console\Form\ShowDuplicates
+     */
+    protected $_showDuplicates;
+
+    /**
+     * Set up mock objects
+     */
+    public function setUp()
+    {
+        $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
+                                  ->disableOriginalconstructor()
+                                  ->getMock();
+        $this->_showDuplicates = $this->getMock('Console\Form\ShowDuplicates');
+        parent::setUp();
+    }
+
     /** {@inheritdoc} */
     protected function _createController()
     {
-        return new \Console\Controller\DuplicatesController($this->_config, $this->_duplicates);
+        return new \Console\Controller\DuplicatesController($this->_duplicates, $this->_showDuplicates);
+    }
+
+    /** {@inheritdoc} */
+    public function testService()
+    {
+        $this->_overrideService('Model\Computer\Duplicates', $this->_duplicates);
+        $this->_overrideService('Console\Form\ShowDuplicates', $this->_showDuplicates, 'FormElementManager');
+        parent::testService();
     }
 
     /**
@@ -50,14 +70,8 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
     public function testIndexAction()
     {
         $url = '/console/duplicates/index/';
-        $this->_config = $this->getMockBuilder('Model\Config')
-                              ->disableOriginalconstructor()
-                              ->getMock();
 
         // No duplicates should lead to a simple message.
-        $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
-                                  ->disableOriginalconstructor()
-                                  ->getMock();
         $this->_duplicates->expects($this->exactly(4))
                           ->method('count')
                           ->will($this->returnValue(0));
@@ -84,45 +98,8 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
     public function testShowAction()
     {
         $url = '/console/duplicates/show/';
-        $now = \Zend_Date::now();
-        $computers = array(
-            array(
-                'Id' => 1,
-                'Name' => 'Test1',
-                'NetworkInterface.MacAddress' => '00:00:5E:00:53:00', // Reserved for documentation purposes
-                'Serial' => '12345678',
-                'AssetTag' => 'abc',
-                'LastContactDate' => $now,
-            ),
-            array(
-                'Id' => 2,
-                'Name' => 'Test2',
-                'NetworkInterface.MacAddress' => '00:00:5E:00:53:00',
-                'Serial' => '12345678',
-                'AssetTag' => 'abc',
-                'LastContactDate' => $now,
-            ),
-        );
-
-        $this->_config = $this->getMockBuilder('Model\Config')
-                              ->disableOriginalconstructor()
-                              ->getMock();
-        $this->_config->expects($this->any())
-                      ->method('__get')
-                      ->will(
-                          $this->returnValueMap(
-                              array(
-                                array('defaultMergeUserdefined', '1'),
-                                array('defaultMergeGroups', '1'),
-                                array('defaultMergePackages', '0'),
-                              )
-                          )
-                      );
 
         // Test missing/invalid "Criteria" parameters
-        $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
-                                  ->disableOriginalconstructor()
-                                  ->getMock();
         $this->_duplicates->expects($this->any())
                           ->method('find')
                           ->with($this->logicalOr($this->isNull(), $this->identicalTo('invalid')), 'Id', 'asc')
@@ -141,43 +118,18 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
             $this->assertEquals('Invalid criteria', $e->getMessage());
         }
 
-        // Test with 'Name' - actual criteria are not relevant for this test.
+        // Test with valid criteria - should render form
         $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
                                   ->disableOriginalconstructor()
                                   ->getMock();
         $this->_duplicates->expects($this->once())
                           ->method('find')
-                          ->with('Name', 'Id', 'asc')
-                          ->will($this->returnValue($computers));
+                          ->with('Name', 'Id', 'asc');
+        $this->_showDuplicates->expects($this->once())
+                              ->method('render');
 
         $this->dispatch($url, 'GET', array('criteria' => 'Name'));
         $this->assertResponseStatusCode(200);
-        $this->assertQuery('input[type="checkbox"][name="computers[]"][value="2"]'); // Checkbox with Id
-
-        // Test content of criteria columns
-        $this->assertQueryContentContains(
-            'td a[href="/console/computer/userdefined/?id=2"]',
-            'Test2'
-        );
-        $this->assertQueryContentContains(
-            'td a[href="/console/duplicates/allow/?criteria=MacAddress&value=00:00:5E:00:53:00"]',
-            '00:00:5E:00:53:00'
-        );
-        $this->assertQueryContentContains(
-            'td a[href="/console/duplicates/allow/?criteria=Serial&value=12345678"]',
-            '12345678'
-        );
-        $this->assertQueryContentContains(
-            'td a[href="/console/duplicates/allow/?criteria=AssetTag&value=abc"]',
-            'abc'
-        );
-
-        // Test state of the 3 merge option checkboxes (depending on \Model\Config mock)
-        $this->assertQuery('input[name="mergeUserdefined"][checked="checked"]');
-        $this->assertQuery('input[name="mergeGroups"][checked="checked"]');
-        // This should be unchecked. Test for presence first, then confirm that it's not checked.
-        $this->assertQuery('input[name="mergePackages"]');
-        $this->assertNotQuery('input[name="mergePackages"][checked="checked"]');
     }
 
     /**
@@ -187,13 +139,6 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
     {
         $url = '/console/duplicates/merge/';
 
-        $this->_config = $this->getMockBuilder('Model\Config')
-                              ->disableOriginalconstructor()
-                              ->getMock();
-
-        $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
-                                  ->disableOriginalconstructor()
-                                  ->getMock();
         $this->_duplicates->expects($this->once())
                           ->method('merge')
                           ->with(array(1, 2), true, true, false);
@@ -204,7 +149,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
             'POST',
             array(
                 'computers' => array(1, 2),
-                'mergeUserdefined' => '1',
+                'mergeCustomFields' => '1',
                 'mergeGroups' => '1',
             )
         );
@@ -250,14 +195,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
     {
         $url = '/console/duplicates/allow/?criteria=Serial&value=12345678';
 
-        $this->_config = $this->getMockBuilder('Model\Config')
-                              ->disableOriginalconstructor()
-                              ->getMock();
-
         // GET request should display confirmation form.
-        $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
-                                  ->disableOriginalconstructor()
-                                  ->getMock();
         $this->_duplicates->expects($this->never())
                           ->method('allow');
         $this->dispatch($url);

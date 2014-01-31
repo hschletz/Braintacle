@@ -115,6 +115,19 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
     abstract protected function _createController();
 
     /**
+     * Override a service globally
+     *
+     * @param string $name Service name
+     * @param mixed $service New service (a mock object, for example)
+     * @param string $serviceLocatorName Service locator to manipulate (default: 'ServiceManager')
+     */
+    protected function _overrideService($name, $service, $serviceLocatorName='ServiceManager')
+    {
+        $serviceLocator = \Library\Application::getService($serviceLocatorName);
+        $serviceLocator->setAllowOverride(true)->setService($name, $service);
+    }
+
+    /**
      * Test if the controller is properly registered with the service manager
      */
     public function testService()
