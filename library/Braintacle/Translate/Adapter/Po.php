@@ -3,7 +3,7 @@
  * Translation adapter that parses gettext .po files directly without a need for
  * compiling .mo files
  *
- * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
