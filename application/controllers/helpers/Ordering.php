@@ -2,7 +2,7 @@
 /**
  * Validate and extract parameters "order" and "direction" from request.
  *
- * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
