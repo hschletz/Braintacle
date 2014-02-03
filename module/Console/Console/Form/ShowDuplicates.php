@@ -60,6 +60,83 @@ class ShowDuplicates extends \Zend\Form\Form
         $submit = new Element\Submit('submit');
         $submit->setValue('Merge selected computers');
         $this->add($submit);
+
+        // Checkboxes for "computers[]" are generated manually, without
+        // \Zend\Form\Element. Define an input filter to have them processed.
+        $arrayCount = new \Zend\Validator\Callback;
+        $arrayCount->setCallback(array($this, 'validateArrayCount'))
+                   ->setMessage(
+                       'At least 2 different computers have to be selected.',
+                       \Zend\Validator\Callback::INVALID_VALUE
+                   );
+        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter->add(
+            array(
+                'name' => 'computers',
+                'continue_if_empty' => true, // Have empty/missing array processed by callback validator
+                'filters' => array(
+                    (array($this, 'computersFilter')),
+                ),
+                'validators' => array(
+                    $arrayCount,
+                    new \Zend\Validator\Explode(array('validator' => new \Zend\Validator\Digits)),
+                ),
+            )
+        );
+        $this->setInputFilter($inputFilter);
+    }
+
+    /** {@inheritdoc} */
+    public function getMessages($elementName = null)
+    {
+        if ($elementName === null) {
+            $messages = parent::getMessages();
+            $filterMessages = $this->getInputFilter()->getMessages();
+            if (isset($filterMessages['computers'])) {
+                $messages['computers'] = $filterMessages['computers'];
+            }
+            return $messages;
+        } elseif ($elementName == 'computers') {
+            $messages = array();
+            $filterMessages = $this->getInputFilter()->getMessages();
+            if (isset($filterMessages['computers'])) {
+                $messages += $filterMessages['computers'];
+            }
+            return $messages;
+        } else {
+            return parent::getMessages($elementName);
+        }
+    }
+
+    /**
+     * Filter callback for "computers" input
+     *
+     * @internal
+     * @param mixed $computers
+     * @return array Unique input values
+     * @throws \InvalidArgumentException if $computers is not array|null
+     */
+    public function computersFilter($computers)
+    {
+        if (is_array($computers)) {
+            return array_unique($computers);
+        } elseif ($computers === null) {
+            return array();
+        } else {
+            throw new \InvalidArgumentException('Invalid input for "computers": ' . $computers);
+        }
+    }
+
+    /**
+     * Validator callback for "computers" input
+     *
+     * @internal
+     * @param array $array
+     * @return bool TRUE if $array has at least 2 members
+     */
+    public function validateArrayCount(array $array)
+    {
+        return count($array) >= 2;
     }
 
     /**

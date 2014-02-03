@@ -104,18 +104,24 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
         if (!$this->getRequest()->isPost()) {
             throw new \RuntimeException('Action "merge" can only be invoked via POST');
         }
-        $params = $this->params();
-        $computers = array_unique($params->fromPost('computers', array()));
-        if (count($computers) >= 2) {
+        $this->_showDuplicates->setData($this->params()->fromPost());
+        if ($this->_showDuplicates->isValid()) {
+            $data = $this->_showDuplicates->getData();
             $this->_duplicates->merge(
-                $computers,
-                $params->fromPost('mergeCustomFields'),
-                $params->fromPost('mergeGroups'),
-                $params->fromPost('mergePackages')
+                $data['computers'],
+                $data['mergeCustomFields'],
+                $data['mergeGroups'],
+                $data['mergePackages']
             );
             $this->flashMessenger()->addSuccessMessage('The selected computers have been merged.');
         } else {
-            $this->flashMessenger()->addInfoMessage('At least 2 different computers have to be selected.');
+            $messages = $this->_showDuplicates->getMessages();
+            array_walk_recursive(
+                $messages,
+                function($message) {
+                    $this->flashMessenger()->addInfoMessage($message);
+                }
+            );
         }
         return $this->redirectToRoute('duplicates', 'index');
     }

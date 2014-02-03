@@ -69,6 +69,86 @@ class ShowDuplicatesTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests for input filter provided by init()
+     */
+    public function testInputFilter()
+    {
+        $form = new \Console\Form\ShowDuplicates(null, array('config' => $this->_config));
+        $form->init();
+
+        // Test without "computers" array (happens when no computer is selected)
+        $data = array(
+            'mergeCustomFields' => '1',
+            'mergeGroups' => '1',
+            'mergePackages' => '0',
+            'submit' => 'Merge selected computers',
+        );
+        $form->setData($data);
+        $this->assertFalse($form->isValid());
+
+        // Test with empty "computers" array
+        $data['computers'] = array();
+        $form->setData($data);
+        $this->assertFalse($form->isValid());
+
+        // Test with 2 identical computers
+        $data['computers'] = array('1', '1');
+        $form->setData($data);
+        $this->assertFalse($form->isValid());
+
+        // Test with invalid array content
+        $data['computers'] = array('1', 'a');
+        $form->setData($data);
+        $this->assertFalse($form->isValid());
+
+        // Test with 2 identical computers + 1 extra
+        $data['computers'] = array('1', '1', '2');
+        $form->setData($data);
+        $this->assertTrue($form->isValid());
+
+        // Test filtered and validated data
+        $this->assertEquals(array('1', '2'), array_values($form->getData()['computers']));
+
+        // Test invalid input on other elements to ensure that builtin input
+        // filters are not overwritten
+        $data['mergeGroups'] = '2';
+        $form->setData($data);
+        $this->assertFalse($form->isValid());
+
+        // Test non-array input on "computers"
+        $this->setExpectedException('InvalidArgumentException');
+        $data['computers'] = '';
+        $form->setData($data);
+        $form->isValid();
+    }
+
+    /**
+     * Tests for getMessages()
+     */
+    public function testGetMessages()
+    {
+        $form = new \Console\Form\ShowDuplicates(null, array('config' => $this->_config));
+        $form->init();
+
+        // Test with invalid "computers" and "mergeGroups" fields
+        $data = array(
+            'mergeCustomFields' => '1',
+            'mergeGroups' => '2',
+            'mergePackages' => '0',
+            'submit' => 'Merge selected computers',
+        );
+        $form->setData($data);
+        $form->isValid();
+
+        $this->assertCount(2, $form->getMessages());
+        $this->assertCount(1, $form->getMessages('mergeGroups'));
+        $this->assertEquals(
+            array('callbackValue' => 'At least 2 different computers have to be selected.'),
+            $form->getMessages('computers')
+        );
+    }
+
+    /**
      * Tests for render()
      */
     public function testRender()

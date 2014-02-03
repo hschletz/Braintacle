@@ -139,47 +139,49 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
     {
         $url = '/console/duplicates/merge/';
 
+        // Test valid data
+        $params = array(
+            'computers' => array(1, 2),
+            'mergeCustomFields' => '1',
+            'mergeGroups' => '1',
+            'mergePackages' => '0'
+        );
+        $this->_showDuplicates->expects($this->once())
+                              ->method('setData')
+                              ->with($params);
+        $this->_showDuplicates->expects($this->once())
+                              ->method('isValid')
+                              ->will($this->returnValue(true));
+        $this->_showDuplicates->expects($this->once())
+                              ->method('getData')
+                              ->will($this->returnValue($params));
         $this->_duplicates->expects($this->once())
                           ->method('merge')
-                          ->with(array(1, 2), true, true, false);
+                          ->with(array(1, 2), true, true, '0');
 
-        // Test valid selection
-        $this->dispatch(
-            $url,
-            'POST',
-            array(
-                'computers' => array(1, 2),
-                'mergeCustomFields' => '1',
-                'mergeGroups' => '1',
-            )
-        );
+        $this->dispatch($url, 'POST', $params);
         $this->assertRedirectTo('/console/duplicates/index/');
         $this->assertContains(
             'The selected computers have been merged.',
             $this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
         );
 
-        // Test without selection
+        // Test invalid data
+        $this->_showDuplicates = $this->getMock('Console\Form\ShowDuplicates');
+        $this->_showDuplicates->expects($this->once())
+                              ->method('setData');
+        $this->_showDuplicates->expects($this->once())
+                              ->method('isValid')
+                              ->will($this->returnValue(false));
+        $this->_showDuplicates->expects($this->once())
+                              ->method('getMessages')
+                              ->with(null)
+                              ->will($this->returnValue(array('computers' => array('invalid'))));
+
         $this->dispatch($url, 'POST');
         $this->assertRedirectTo('/console/duplicates/index/');
         $this->assertContains(
-            'At least 2 different computers have to be selected.',
-            $this->_getControllerPlugin('FlashMessenger')->getCurrentInfoMessages()
-        );
-
-        // Test with only 1 selected computer
-        $this->dispatch($url, 'POST', array('computers' => array(1)));
-        $this->assertRedirectTo('/console/duplicates/index/');
-        $this->assertContains(
-            'At least 2 different computers have to be selected.',
-            $this->_getControllerPlugin('FlashMessenger')->getCurrentInfoMessages()
-        );
-
-        // Test with only 1 multiply selected computer
-        $this->dispatch($url, 'POST', array('computers' => array(1, 1)));
-        $this->assertRedirectTo('/console/duplicates/index/');
-        $this->assertContains(
-            'At least 2 different computers have to be selected.',
+            'invalid',
             $this->_getControllerPlugin('FlashMessenger')->getCurrentInfoMessages()
         );
 
