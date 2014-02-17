@@ -24,7 +24,7 @@ namespace Console\Test\Form;
 /**
  * Tests for ShowDuplicates
  */
-class ShowDuplicatesTest extends \PHPUnit_Framework_TestCase
+class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
 {
     /**
      * Config mock object
@@ -37,7 +37,6 @@ class ShowDuplicatesTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        parent::setUp();
         $this->_config = $this->getMockBuilder('Model\Config')
                               ->disableOriginalconstructor()
                               ->getMock();
@@ -52,6 +51,15 @@ class ShowDuplicatesTest extends \PHPUnit_Framework_TestCase
                               )
                           )
                       );
+        parent::setUp();
+    }
+
+    /** {@inheritdoc}
+    protected function _getForm()
+    {
+        $form = new \Console\Form\ShowDuplicates(null, array('config' => $this->_config));
+        $form->init();
+        return $form;
     }
 
     /**
@@ -59,13 +67,10 @@ class ShowDuplicatesTest extends \PHPUnit_Framework_TestCase
      */
     public function testInit()
     {
-        $form = new \Console\Form\ShowDuplicates(null, array('config' => $this->_config));
-        $form->init();
-
-        $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $form->get('mergeCustomFields'));
-        $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $form->get('mergeGroups'));
-        $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $form->get('mergePackages'));
-        $this->assertInstanceOf('\Zend\Form\Element\Submit', $form->get('submit'));
+        $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $this->_form->get('mergeCustomFields'));
+        $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $this->_form->get('mergeGroups'));
+        $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $this->_form->get('mergePackages'));
+        $this->assertInstanceOf('\Zend\Form\Element\Submit', $this->_form->get('submit'));
     }
 
     /**
@@ -73,9 +78,6 @@ class ShowDuplicatesTest extends \PHPUnit_Framework_TestCase
      */
     public function testInputFilter()
     {
-        $form = new \Console\Form\ShowDuplicates(null, array('config' => $this->_config));
-        $form->init();
-
         // Test without "computers" array (happens when no computer is selected)
         $data = array(
             'mergeCustomFields' => '1',
@@ -83,43 +85,43 @@ class ShowDuplicatesTest extends \PHPUnit_Framework_TestCase
             'mergePackages' => '0',
             'submit' => 'Merge selected computers',
         );
-        $form->setData($data);
-        $this->assertFalse($form->isValid());
+        $this->_form->setData($data);
+        $this->assertFalse($this->_form->isValid());
 
         // Test with empty "computers" array
         $data['computers'] = array();
-        $form->setData($data);
-        $this->assertFalse($form->isValid());
+        $this->_form->setData($data);
+        $this->assertFalse($this->_form->isValid());
 
         // Test with 2 identical computers
         $data['computers'] = array('1', '1');
-        $form->setData($data);
-        $this->assertFalse($form->isValid());
+        $this->_form->setData($data);
+        $this->assertFalse($this->_form->isValid());
 
         // Test with invalid array content
         $data['computers'] = array('1', 'a');
-        $form->setData($data);
-        $this->assertFalse($form->isValid());
+        $this->_form->setData($data);
+        $this->assertFalse($this->_form->isValid());
 
         // Test with 2 identical computers + 1 extra
         $data['computers'] = array('1', '1', '2');
-        $form->setData($data);
-        $this->assertTrue($form->isValid());
+        $this->_form->setData($data);
+        $this->assertTrue($this->_form->isValid());
 
         // Test filtered and validated data
-        $this->assertEquals(array('1', '2'), array_values($form->getData()['computers']));
+        $this->assertEquals(array('1', '2'), array_values($this->_form->getData()['computers']));
 
         // Test invalid input on other elements to ensure that builtin input
         // filters are not overwritten
         $data['mergeGroups'] = '2';
-        $form->setData($data);
-        $this->assertFalse($form->isValid());
+        $this->_form->setData($data);
+        $this->assertFalse($this->_form->isValid());
 
         // Test non-array input on "computers"
         $this->setExpectedException('InvalidArgumentException');
         $data['computers'] = '';
-        $form->setData($data);
-        $form->isValid();
+        $this->_form->setData($data);
+        $this->_form->isValid();
     }
 
     /**
@@ -127,9 +129,6 @@ class ShowDuplicatesTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetMessages()
     {
-        $form = new \Console\Form\ShowDuplicates(null, array('config' => $this->_config));
-        $form->init();
-
         // Test with invalid "computers" and "mergeGroups" fields
         $data = array(
             'mergeCustomFields' => '1',
@@ -137,14 +136,14 @@ class ShowDuplicatesTest extends \PHPUnit_Framework_TestCase
             'mergePackages' => '0',
             'submit' => 'Merge selected computers',
         );
-        $form->setData($data);
-        $form->isValid();
+        $this->_form->setData($data);
+        $this->_form->isValid();
 
-        $this->assertCount(2, $form->getMessages());
-        $this->assertCount(1, $form->getMessages('mergeGroups'));
+        $this->assertCount(2, $this->_form->getMessages());
+        $this->assertCount(1, $this->_form->getMessages('mergeGroups'));
         $this->assertEquals(
             array('callbackValue' => 'At least 2 different computers have to be selected.'),
-            $form->getMessages('computers')
+            $this->_form->getMessages('computers')
         );
     }
 
@@ -173,18 +172,15 @@ class ShowDuplicatesTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $form = new \Console\Form\ShowDuplicates;
-        $form->setOptions(
+        $this->_form->setOptions(
             array(
-                'config' => $this->_config,
                 'computers' => $computers,
                 'order' => 'Id',
                 'direction' => 'asc',
             )
         );
-        $form->init();
 
-        $output = $form->render(\Library\Application::getService('ViewManager')->getRenderer());
+        $output = $this->_form->render(\Library\Application::getService('ViewManager')->getRenderer());
 
         // Test table content
         $dom = new \Zend\Dom\Query;

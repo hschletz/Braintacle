@@ -35,7 +35,7 @@ use Zend\Form\Element;
  * - **computers:** Array of Computer objects to display, required by render().
  * - **order, direction:** Sorting of result table, required by render().
  */
-class ShowDuplicates extends \Zend\Form\Form
+class ShowDuplicates extends AbstractForm
 {
     /** {@inheritdoc} */
     public function init()
@@ -220,13 +220,11 @@ class ShowDuplicates extends \Zend\Form\Form
             $renderCallbacks
         );
 
+        $formContent .= "<div>\n";
         foreach ($this as $element) {
-            $formContent .= $view->htmlTag(
-                'p',
-                $view->formRow($element, 'append'),
-                array('class' => 'textcenter')
-            );
+            $formContent .= $view->formRow($element, 'append') . "\n";
         }
+        $formContent .= "</div>\n";
 
         return $view->form()->openTag($this) . "\n" . $formContent . $view->form()->closeTag();
     }

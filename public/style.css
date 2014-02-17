@@ -391,6 +391,17 @@ table.table_registry_values {
     margin-top: 3ex;
 }
 
+.form label {
+    display: block;
+    margin: 1.5ex auto;
+    text-align: center;
+}
+
+.form input[type=submit] {
+    display: block;
+    margin: 3ex auto;
+}
+
 .form_yesno {
     text-align: center;
 }
