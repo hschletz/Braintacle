@@ -55,8 +55,8 @@ class ShowDuplicates extends AbstractForm
         $mergePackages = new Element\Checkbox('mergePackages');
         $mergePackages->setLabel('Merge missing package assignments');
         $mergePackages->setChecked($config->defaultMergePackages);
-
         $this->add($mergePackages);
+
         $submit = new Element\Submit('submit');
         $submit->setValue('Merge selected computers');
         $this->add($submit);
