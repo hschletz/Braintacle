@@ -54,7 +54,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
         parent::setUp();
     }
 
-    /** {@inheritdoc}
+    /** {@inheritdoc} */
     protected function _getForm()
     {
         $form = new \Console\Form\ShowDuplicates(null, array('config' => $this->_config));
