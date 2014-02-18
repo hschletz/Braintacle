@@ -84,6 +84,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
             'mergeGroups' => '1',
             'mergePackages' => '0',
             'submit' => 'Merge selected computers',
+            '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
@@ -135,6 +136,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
             'mergeGroups' => '2',
             'mergePackages' => '0',
             'submit' => 'Merge selected computers',
+            '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setData($data);
         $this->_form->isValid();

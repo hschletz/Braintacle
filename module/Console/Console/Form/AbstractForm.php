@@ -31,6 +31,8 @@ namespace Console\Form;
  * - The constructor sets the "class" attribute to "form" and a second value
  *   derived from the class name: Console\Form\Foo\Bar becomes form_foo_bar and
  *   so on. This allows general and individual styling of form content.
+ *
+ * - Automatic CSRF protection via hidden "_csrf" element.
  */
 abstract class AbstractForm extends \Zend\Form\Form
 {
@@ -44,5 +46,9 @@ abstract class AbstractForm extends \Zend\Form\Form
         $class = substr($class, strpos($class, '_') + 1);
         $class = strtolower($class);
         $this->setAttribute('class', 'form ' . $class);
+
+        $csrf = new \Zend\Form\Element\Csrf('_csrf');
+        $csrf->setCsrfValidatorOptions(array('timeout' => null)); // Rely on session cleanup
+        $this->add($csrf);
     }
 }

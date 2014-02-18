@@ -69,7 +69,7 @@ abstract class AbstractFormTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test basic form properties (form class, "class" attribute)
+     * Test basic form properties (form class, "class" attribute, CSRF element)
      */
     public function testForm()
     {
@@ -78,5 +78,6 @@ abstract class AbstractFormTest extends \PHPUnit_Framework_TestCase
             'form ' . substr(strtr(strtolower($this->_getFormClass()), '\\', '_'), 8),
             $this->_form->getAttribute('class')
         );
+        $this->assertInstanceOf('\Zend\Form\Element\Csrf', $this->_form->get('_csrf'));
     }
 }
