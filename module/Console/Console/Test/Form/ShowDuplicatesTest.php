@@ -70,7 +70,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
         $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $this->_form->get('mergeCustomFields'));
         $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $this->_form->get('mergeGroups'));
         $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $this->_form->get('mergePackages'));
-        $this->assertInstanceOf('\Zend\Form\Element\Submit', $this->_form->get('submit'));
+        $this->assertInstanceOf('\Library\Form\Element\Submit', $this->_form->get('submit'));
     }
 
     /**

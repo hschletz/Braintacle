@@ -57,8 +57,8 @@ class ShowDuplicates extends AbstractForm
         $mergePackages->setChecked($config->defaultMergePackages);
         $this->add($mergePackages);
 
-        $submit = new Element\Submit('submit');
-        $submit->setValue('Merge selected computers');
+        $submit = new \Library\Form\Element\Submit('submit');
+        $submit->setText('Merge selected computers');
         $this->add($submit);
 
         // Checkboxes for "computers[]" are generated manually, without
