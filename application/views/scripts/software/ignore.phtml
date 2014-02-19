@@ -26,7 +26,7 @@ print $this->htmlTag(
         $this->translate(
             'Software \'%s\' will be no longer be displayed. Continue?'
         ),
-        Model_Software::mangleName($this->name)
+        $this->escape(Model_Software::mangleName($this->name))
     )
 );
 

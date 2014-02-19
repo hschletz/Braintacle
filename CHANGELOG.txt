@@ -11,6 +11,8 @@ CHANGES IN VERSION 0.14
 
 Fixed bugs:
 
+- Console: Fixed possible XSS.
+
 - Console: Fixed fatal error when a locking conflict occurs.
 
 
