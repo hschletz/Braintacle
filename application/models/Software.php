@@ -26,6 +26,7 @@
  * Properties:
  *
  * - <b>Name</b> Name
+ * - <b>RawName</b> Name as stored in the database, may contain non-UTF8 characters
  * - <b>Version</b> Version
  * - <b>Publisher</b> Publisher/Manufacturer (Windows only)
  * - <b>Size</b> Size (Linux only)
@@ -44,6 +45,7 @@ class Model_Software extends Model_ChildObject
     protected $_propertyMap = array(
         // Values from 'softwares' table
         'Name' => 'name',
+        'RawName' => 'name',
         'Version' => 'version',
         'Publisher' => 'publisher',
         'Size' => 'filesize',
@@ -206,7 +208,7 @@ class Model_Software extends Model_ChildObject
      * Blacklist a piece of software, i.e. mark it for not being displayed.
      * @param string $name Raw name
      */
-    static function ignore($name)
+    public function ignore($name)
     {
         $db = Model_Database::getAdapter();
 
@@ -221,7 +223,7 @@ class Model_Software extends Model_ChildObject
      * Whitelist a piece of software, i.e. mark it for being known and accepted.
      * @param string $name Raw name
      */
-    static function accept($name)
+    public function accept($name)
     {
         $db = Model_Database::getAdapter();
 

@@ -37,6 +37,7 @@ return array(
             'duplicates' => 'Console\Service\DuplicatesControllerFactory',
             'licenses' => 'Console\Service\LicensesControllerFactory',
             'login' => 'Console\Service\LoginControllerFactory',
+            'software' => 'Console\Service\SoftwareControllerFactory',
         ),
     ),
     'form_elements' => array(
@@ -65,7 +66,7 @@ return array(
             'zf1' => array(
                 'type'    => 'regex',
                 'options' => array(
-                    'regex'    => '/(console/)?(computer|error|group|index|network|package|preferences|software)/?.*',
+                    'regex'    => '/(console/)?(computer|error|group|index|network|package|preferences)/?.*',
                     'spec' => '',
                     'defaults' => array(
                         'controller' => 'Console\Controller\ZF1',

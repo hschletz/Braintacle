@@ -35,6 +35,19 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
     protected $_controllerManager;
 
     /**
+     * Session setup
+     *
+     * Tests can set this to a 2-dimensional array. The first dimension key is a
+     * session namespace. Its value is an associative array of key=>value pairs
+     * set up for the given namespace. \Zend\Session is set up with this data on
+     * every call to dispatch().
+     *
+     * The content is reset by setUp(), i.e. every test starts with an empty
+     * session.
+     */
+    protected $_sessionSetup;
+
+    /**
      * Set up application config
      */
     public function setUp()
@@ -48,6 +61,7 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
         $this->_controllerManager->expects($this->any())
                                  ->method('get')
                                  ->will($this->returnCallback(array($this, 'createController')));
+        $this->_sessionSetup = array();
         parent::setUp();
     }
 
@@ -77,7 +91,8 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
      * Dispatch the MVC with an URL
      *
      * This extends the base implementation by automatically invoking reset()
-     * and injecting the mock controller manager.
+     * and injecting the mock controller manager. Session data is initialized
+     * from $_sessionSetup.
      *
      * @param string $url
      * @param string|null $method
@@ -89,6 +104,12 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
         $this->getApplicationServiceLocator()
              ->setAllowOverride(true)
              ->setService('ControllerLoader', $this->_controllerManager);
+        foreach ($this->_sessionSetup as $namespace => $data) {
+            $container = new \Zend\Session\Container($namespace);
+            foreach ($data as $key => $value) {
+                $container->$key = $value;
+            }
+        }
         parent::dispatch($url, $method, $params);
     }
 

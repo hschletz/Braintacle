@@ -53,6 +53,7 @@ Feature\ConfigProviderInterface
             'service_manager' => array(
                 'invokables' => array(
                     'Model\Computer\Computer' => 'Model_Computer',
+                    'Model\Computer\Software' => 'Model_Software',
                     'Model\Computer\Windows' => 'Model_Windows',
                 ),
                 'factories' => array(

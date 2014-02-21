@@ -57,13 +57,10 @@ class Form_SoftwareFilter extends Zend_Form
     }
 
     /**
-     * Render form
-     * @param Zend_View_Interface $view
-     * @return string
+     * @ignore
      */
-    public function render(Zend_View_Interface $view=null)
+    public function toHtml(\Zend\View\Renderer\RendererInterface $view)
     {
-        $view = $this->getView();
         $view->headScript()->captureStart();
         ?>
 
@@ -79,7 +76,7 @@ class Form_SoftwareFilter extends Zend_Form
         <?php
         $view->headScript()->captureEnd();
 
-        return parent::render($view);
+        return $this->render();
     }
 
     /**

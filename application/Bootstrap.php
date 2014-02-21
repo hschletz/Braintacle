@@ -272,6 +272,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'Zend_View_Helper_Navigation',
             Application::$zf1Path . '/View/Helper/Navigation'
         );
+        $pluginLoader->addPrefixPath(
+            'Braintacle_View_Helper',
+            \Library\Application::getPath('application/views/helpers')
+        );
         $view->setPluginLoader($pluginLoader, 'helper');
 
         $view->doctype('HTML4_STRICT');

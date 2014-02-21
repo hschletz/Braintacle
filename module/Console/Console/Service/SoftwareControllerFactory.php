@@ -1,6 +1,6 @@
 <?php
 /**
- * Display confirmation form for software blacklisting
+ * Factory for SoftwareController
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,17 +17,23 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-print $this->htmlTag(
-    'p',
-    sprintf(
-        $this->translate(
-            'Software \'%s\' will be no longer be displayed. Continue?'
-        ),
-        $this->escape(Model_Software::mangleName($this->name))
-    )
-);
+namespace Console\Service;
 
-print new Form_YesNo;
+/**
+ * Factory for SoftwareController
+ */
+class SoftwareControllerFactory implements \Zend\ServiceManager\FactoryInterface
+{
+    /**
+     * @internal
+     */
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    {
+        return new \Console\Controller\SoftwareController(
+            $serviceLocator->getServiceLocator()->get('Model\Computer\Software'),
+            new \Form_SoftwareFilter
+        );
+    }
+}

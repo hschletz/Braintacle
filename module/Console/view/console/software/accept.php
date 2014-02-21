@@ -20,14 +20,11 @@
  *
  */
 
-print $this->htmlTag(
-    'p',
+print $this->formYesNo(
     sprintf(
         $this->translate(
             'Software \'%s\' will be marked as known and accepted. Continue?'
         ),
-        $this->escape(Model_Software::mangleName($this->name))
+        $this->escapeHtml(Model_Software::mangleName($this->name))
     )
 );
-
-print new Form_YesNo;

@@ -112,4 +112,22 @@ abstract class Model_ChildObject extends Model_Abstract
         return $this->_tableName;
     }
 
+    /**
+     * Return array of object instances which match criteria.
+     *
+     * This calls createStatement() with the given parameters. The result is
+     * returned as an array of objects of the current class.
+     *
+     * @param array $columns
+     * @param string $order
+     * @param string $direction
+     * @param array $filters
+     * @return self[] Query result
+     */
+    public function find($columns=null, $order=null, $direction='asc', $filters=null)
+    {
+        return $this->_fetchAll(
+            $this->createStatement($columns, $order, $direction, $filters, true)
+        );
+    }
 }
