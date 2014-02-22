@@ -25,6 +25,8 @@ print $this->formYesNo(
         $this->translate(
             'Software \'%s\' will be no longer be displayed. Continue?'
         ),
-        $this->escapeHtml(Model_Software::mangleName($this->name))
+        $this->escapeHtml(
+            \Zend\Filter\StaticFilter::execute($this->name, 'Library\FixEncodingErrors')
+        )
     )
 );

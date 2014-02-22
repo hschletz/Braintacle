@@ -89,4 +89,15 @@ Feature\ConfigProviderInterface
             ),
         );
     }
+
+    /**
+     * @internal
+     */
+    public function onBootstrap(\Zend\EventManager\EventInterface $e)
+    {
+        \Zend\Filter\StaticFilter::getPluginManager()->setInvokableClass(
+            'Library\FixEncodingErrors',
+            'Library\Filter\FixEncodingErrors'
+        );
+    }
 }

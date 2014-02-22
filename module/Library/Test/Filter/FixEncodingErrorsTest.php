@@ -1,6 +1,6 @@
 <?php
 /**
- * Display confirmation form for software whitelisting
+ * Tests for FixEncodingErrors filter
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,16 +17,32 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-print $this->formYesNo(
-    sprintf(
-        $this->translate(
-            'Software \'%s\' will be marked as known and accepted. Continue?'
-        ),
-        $this->escapeHtml(
-            \Zend\Filter\StaticFilter::execute($this->name, 'Library\FixEncodingErrors')
-        )
-    )
-);
+namespace Library\Test\Filter;
+
+/**
+ * Tests for FixEncodingErrors filter
+ */
+class FixEncodingErrorsTest extends \PHPUnit_Framework_TestCase
+{
+    /**
+     * Test filter() method
+     */
+    public function testFilter()
+    {
+        // 2 common example characters
+        $enDashBad  = "\xC2\x96";
+        $enDashGood = "\xE2\x80\x93";
+        $tmBad      = "\xC2\x99";
+        $tmGood     = "\xE2\x84\xA2";
+
+        // Test 1 character twice to check repeated replacements
+        $input = $enDashBad . $tmBad . $enDashBad;
+        $expected = $enDashGood . $tmGood . $enDashGood;
+        $this->assertEquals(
+            $expected,
+            \Zend\Filter\StaticFilter::execute($input, 'Library\FixEncodingErrors')
+        );
+    }
+}

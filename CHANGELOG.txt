@@ -14,6 +14,8 @@ Fixed bugs:
 - Console: Fixed inconsistent navigation (missing submenu and/or active menu not
   highlighted) on some pages.
 
+- Console: Fixed display of some characters incorrectly encoded by old agents
+
 Misc:
 
 - Support for some previously deprecated options has been dropped. They are

@@ -158,7 +158,7 @@ $filter = $this->filter;
 if ($filter) {
     $search = $this->search;
     if ($filter == 'Software') {
-        $search = Model_Software::mangleName($search);
+        $search = \Zend\Filter\StaticFilter::execute($search, 'Library\FixEncodingErrors');
     }
 
     if (isset($this->filterUriParams)) {

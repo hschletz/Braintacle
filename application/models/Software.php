@@ -188,7 +188,7 @@ class Model_Software extends Model_ChildObject
 
         switch ($property) {
             case 'Name':
-                $value = self::mangleName($value);
+                $value = \Zend\Filter\StaticFilter::execute($value, 'Library\FixEncodingErrors');
                 break;
             case 'InstallLocation':
                 // Strip trailing slashes
@@ -239,20 +239,4 @@ class Model_Software extends Model_ChildObject
             )
         );
     }
-
-    /**
-     * Static helper which mangles certain characters in software names to valid UTF-8.
-     * @param string $name Raw name
-     * @return string UTF8-compliant name
-     */
-    static function mangleName($name)
-    {
-        // Fix invalid representation of (TM) symbol
-        return str_replace(
-            chr(0xc2).chr(0x99),
-            chr(0xe2).chr(0x84).chr(0xa2),
-            $name
-        );
-    }
-
 }
