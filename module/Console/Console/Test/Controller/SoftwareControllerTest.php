@@ -59,7 +59,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
      */
     public function testIndexAction()
     {
-        $url = '/console/software/index/'; //TODO: all filters
+        $url = '/console/software/index/';
         $software = array(
             array('Name' => 'name1', 'RawName' => 'raw_name1', 'NumComputers' => 1),
             array('Name' => 'name2', 'RawName' => 'raw_name2', 'NumComputers' => 2),
