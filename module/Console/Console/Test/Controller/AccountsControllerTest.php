@@ -45,14 +45,16 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
     protected $_formAccountEdit;
 
     /** {@inheritdoc} */
+    public function setUp()
+    {
+        $this->_formAccountNew = $this->getMock('Form_Account_New');
+        $this->_formAccountEdit = $this->getMock('Form_Account_Edit');
+        parent::setUp();
+    }
+
+    /** {@inheritdoc} */
     protected function _createController()
     {
-        if (!$this->_formAccountNew) {
-            $this->_formAccountNew = new \Form_Account_New;
-        }
-        if (!$this->_formAccountEdit) {
-            $this->_formAccountEdit = new \Form_Account_Edit;
-        }
         return new \Console\Controller\AccountsController(
             $this->_operators,
             $this->_formAccountNew,
@@ -130,19 +132,6 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         $url = '/console/accounts/add/';
         $auth = $this->getMock('Library\Authentication\AuthenticationService');
 
-        // GET request should display form
-        $this->_operators = $this->getMockBuilder('Model_Account')
-                                 ->setConstructorArgs(array($auth))
-                                 ->getMock();
-        $this->dispatch($url);
-        $this->assertResponseStatusCode(200);
-        $this->assertQuery('form');
-
-        // POST request without valid data should display form
-        $this->dispatch($url, 'POST');
-        $this->assertResponseStatusCode(200);
-        $this->assertQuery('form');
-
         // POST request with valid data should create account and redirect to index action
         $data = array(
             'Id' => 'testId',
@@ -165,6 +154,28 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
                               ->will($this->returnValue($data));
         $this->dispatch($url, 'POST', $data);
         $this->assertRedirectTo('/console/accounts/index/');
+
+        // POST request without valid data should display form
+        $this->_formAccountNew = $this->getMock('Form_Account_New');
+        $this->_formAccountNew->expects($this->once())
+                              ->method('isValid')
+                              ->will($this->returnValue(false));
+        $this->_formAccountNew->expects($this->once())
+                              ->method('__toString')
+                              ->will($this->returnValue(''));
+        $this->dispatch($url, 'POST');
+        $this->assertResponseStatusCode(200);
+
+        // GET request should display form
+        $this->_operators = $this->getMockBuilder('Model_Account')
+                                 ->setConstructorArgs(array($auth))
+                                 ->getMock();
+        $this->_formAccountNew = $this->getMock('Form_Account_New');
+        $this->_formAccountNew->expects($this->once())
+                              ->method('__toString')
+                              ->will($this->returnValue(''));
+        $this->dispatch($url);
+        $this->assertResponseStatusCode(200);
     }
 
     /**

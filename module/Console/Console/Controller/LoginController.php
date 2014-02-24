@@ -35,13 +35,23 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
     protected $_authenticationService;
 
     /**
+     * Login form
+     * @var \Form_Login
+     */
+    protected $_form;
+
+    /**
      * Constructor
      *
      * @param \Library\Authentication\AuthenticationService $authenticationService Authentication service
      */
-    public function __construct($authenticationService)
+    public function __construct(
+        \Library\Authentication\AuthenticationService $authenticationService,
+        \Form_Login $form
+    )
     {
         $this->_authenticationService = $authenticationService;
+        $this->_form = $form;
     }
 
     /**
@@ -70,23 +80,26 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
             return $this->redirectToRoute('computer');
         }
 
-        $form = new \Form_Login;
-        $form->setAction($this->urlFromRoute('login', 'login'));
+        $this->_form->setAction($this->urlFromRoute('login', 'login'));
 
-        $request = $this->getRequest();
-        if ($request->isPost() and $form->isValid($request->getPost()->toArray())) {
+        if ($this->getRequest()->isPost() and $this->_form->isValid($this->params()->fromPost())) {
             // Check credentials
-            if ($this->_authenticationService->login($form->getValue('userid'), $form->getValue('password'))) {
+            if (
+                $this->_authenticationService->login(
+                    $this->_form->getValue('userid'),
+                    $this->_form->getValue('password')
+                )
+            ) {
                 // Authentication successful. Redirect to computer listing.
                 return $this->redirectToRoute('computer');
             } else {
-                $form->setDescription('Invalid username or password');
+                $this->_form->setDescription('Invalid username or password');
             }
         }
 
         // Manual setup of ViewModel because indexAction might have to modify it
         $viewModel = new ViewModel;
-        $viewModel->form = $form;
+        $viewModel->form = $this->_form;
         return $viewModel;
     }
 

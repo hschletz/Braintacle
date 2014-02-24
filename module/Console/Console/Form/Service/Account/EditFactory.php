@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for AccountsController
+ * Factory for Account\Edit
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,23 +19,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Console\Service;
+namespace Console\Form\Service\Account;
 
 /**
- * Factory for AccountsController
+ * Factory for Account\Edit
+ * @codeCoverageIgnore
  */
-class AccountsControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class EditFactory implements \Zend\ServiceManager\FactoryInterface
 {
     /**
      * @internal
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $serviceManager = $serviceLocator->getServiceLocator();
-        return new \Console\Controller\AccountsController(
-            $serviceManager->get('Model\Operator'),
-            $serviceManager->get('Form\Account\New'),
-            $serviceManager->get('Form\Account\Edit')
+        return new \Form_Account_Edit(
+            array('operators' => $serviceLocator->get('Model\Operator'))
         );
     }
 }

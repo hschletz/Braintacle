@@ -31,9 +31,10 @@ class SoftwareControllerFactory implements \Zend\ServiceManager\FactoryInterface
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
+        $serviceManager = $serviceLocator->getServiceLocator();
         return new \Console\Controller\SoftwareController(
-            $serviceLocator->getServiceLocator()->get('Model\Computer\Software'),
-            new \Form_SoftwareFilter
+            $serviceManager->get('Model\Computer\Software'),
+            $serviceManager->get('Form\SoftwareFilter')
         );
     }
 }

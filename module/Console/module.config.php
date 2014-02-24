@@ -79,9 +79,13 @@ return array(
     'service_manager' => array(
         'factories' => array(
             'Console\Navigation\MainMenu' => 'Console\Navigation\MainMenuFactory',
+            'Form\Account\Edit' => 'Console\Form\Service\Account\EditFactory',
         ),
         'invokables' => array(
+            'Form\Account\New' => 'Form_Account_New',
+            'Form\Login' => 'Form_Login',
             'Form\NetworkDevice' => 'Form_NetworkDevice',
+            'Form\SoftwareFilter' => 'Form_SoftwareFilter',
             'Form\Subnet' => 'Form_Subnet',
         )
     ),

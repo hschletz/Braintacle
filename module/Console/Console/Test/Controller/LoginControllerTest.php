@@ -32,10 +32,26 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
      */
     protected $_authenticationService;
 
+    /**
+     * Login form mock
+     * @var \Form_Login
+     */
+    protected $_form;
+
+    /** {@inheritdoc} */
+    public function setUp()
+    {
+        $this->_form = $this->getMock('Form_Login');
+        parent::setUp();
+    }
+
     /** {@inheritdoc} */
     protected function _createController()
     {
-        return new \Console\Controller\LoginController($this->_authenticationService);
+        return new \Console\Controller\LoginController(
+            $this->_authenticationService,
+            $this->_form
+        );
     }
 
     /**
@@ -85,32 +101,71 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
     {
         $this->_mockAuthenticationService(false);
 
-        // GET request should yield login form.
-        $this->dispatch($uri);
-        $this->assertResponseStatusCode(200);
-        $this->assertQuery('form.form_login');
-
-        // POST request with invalid form data should yield login form.
-        $this->dispatch($uri, 'POST');
-        $this->assertResponseStatusCode(200);
-        $this->assertQuery('form.form_login');
-
-        // POST request with invalid credentials should yield login form.
-        $this->dispatch(
-            $uri,
-            'POST',
-            array('userid' => 'baduser', 'password' => 'badpassword')
-        );
-        $this->assertResponseStatusCode(200);
-        $this->assertQuery('form.form_login');
-
         // POST request with valid credentials should yield redirect.
+        $postData = array('userid' => 'gooduser', 'password' => 'goodpassword');
+        $this->_form->expects($this->once())
+                    ->method('isValid')
+                    ->with($postData)
+                    ->will($this->returnValue(true));
+        $this->_form->expects($this->exactly(2))
+                    ->method('getValue')
+                    ->will(
+                        $this->returnValueMap(
+                            array(
+                                array('userid', 'gooduser'),
+                                array('password', 'goodpassword')
+                            )
+                        )
+                    );
         $this->dispatch(
             $uri,
             'POST',
-            array('userid' => 'gooduser', 'password' => 'goodpassword')
+            $postData
         );
         $this->assertRedirectTo('/console/computer/index/');
+
+        // POST request with invalid credentials should yield login form.
+        $postData = array('userid' => 'baduser', 'password' => 'badpassword');
+        $this->_form = $this->getMock('Form_Login');
+        $this->_form->expects($this->once())
+                    ->method('isValid')
+                    ->with($postData)
+                    ->will($this->returnValue(true));
+        $this->_form->expects($this->exactly(2))
+                    ->method('getValue')
+                    ->will(
+                        $this->returnValueMap(
+                            array(
+                                array('userid', 'baduser'),
+                                array('password', 'badpassword')
+                            )
+                        )
+                    );
+        $this->_form->expects($this->once())
+                    ->method('toHtml');
+        $this->dispatch(
+            $uri,
+            'POST',
+            $postData
+        );
+        $this->assertResponseStatusCode(200);
+
+        // POST request with invalid form data should yield login form.
+        $this->_form = $this->getMock('Form_Login');
+        $this->_form->expects($this->once())
+                    ->method('isValid')
+                    ->will($this->returnValue(false));
+        $this->_form->expects($this->once())
+                    ->method('toHtml');
+        $this->dispatch($uri, 'POST');
+        $this->assertResponseStatusCode(200);
+
+        // GET request should yield login form.
+        $this->_form = $this->getMock('Form_Login');
+        $this->_form->expects($this->once())
+                    ->method('toHtml');
+        $this->dispatch($uri);
+        $this->assertResponseStatusCode(200);
     }
 
     /**
