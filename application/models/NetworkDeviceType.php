@@ -68,6 +68,16 @@ class Model_NetworkDeviceType extends Model_Abstract
     }
 
     /**
+     * Retrieve all network device types
+     *
+     * @return \Model_NetworkDeviceType[]
+     */
+    public function fetchAll()
+    {
+        return $this->_fetchAll(self::CreateStatementStatic());
+    }
+
+    /**
      * Generate statement to retrieve all network device types
      *
      * @param integer $id Return only given type. Default: return all types.

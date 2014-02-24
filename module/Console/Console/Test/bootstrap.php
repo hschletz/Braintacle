@@ -23,3 +23,4 @@ error_reporting(-1);
 require_once(__DIR__ . '/../../../Library/Application.php');
 \Library\Application::init('Console', false);
 \Zend_Session::$_unitTestEnabled = true;
+\Locale::setDefault('de_DE'); // Force environment-independent locale

@@ -32,7 +32,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($device->getMacAddress())
+    $this->escapeHtml($device['MacAddress'])
 );
 
 print $this->htmlTag(
@@ -41,7 +41,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($device->getMacAddress()->getVendor())
+    $this->escapeHtml($device['MacAddress']->getVendor())
 );
 
 print $this->htmlTag(
@@ -50,7 +50,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($device->getIpAddress())
+    $this->escapeHtml($device['IpAddress'])
 );
 
 print $this->htmlTag(
@@ -59,7 +59,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($device->getHostname())
+    $this->escapeHtml($device['Hostname'])
 );
 
 print $this->htmlTag(
@@ -68,7 +68,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($device->getDiscoveryDate())
+    $this->escapeHtml($device['DiscoveryDate'])
 );
 
 print "</dl>\n";

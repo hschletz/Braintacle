@@ -59,7 +59,7 @@ class Model_NetworkDevice extends Model_Abstract
     );
 
     /**
-     * Return a statement object
+     * Retrieve devices
      *
      * Available filters are:
      *
@@ -76,12 +76,9 @@ class Model_NetworkDevice extends Model_Abstract
      * @param string $direction One of [asc|desc].
      * @return Zend_Db_Statement Query result
      */
-    static function getDevices($filters, $order=null, $direction='asc')
+    public function fetch($filters, $order=null, $direction='asc')
     {
         $db = Model_Database::getAdapter();
-
-        $dummy = new Model_NetworkDevice;
-        $map = $dummy->getPropertyMap();
 
         $select = $db->select()
             ->from('netmap', array('ip', 'mac', 'name', 'date'))
@@ -115,9 +112,9 @@ class Model_NetworkDevice extends Model_Abstract
             }
         }
 
-        $select->order(self::getOrder($order, $direction, $map));
+        $select->order(self::getOrder($order, $direction, $this->_propertyMap));
 
-        return $select->query();
+        return $this->_fetchAll($select->query());
     }
 
     /**
@@ -161,7 +158,7 @@ class Model_NetworkDevice extends Model_Abstract
      * @param string|Braintacle_MacAddress $macaddress MAC address for which to retrieve information
      * @return Model_NetworkDevice|false
      */
-    static function getByMacAddress($macaddress)
+    public function fetchByMacAddress($macaddress)
     {
         // Canonicalize the MAC address
         if (!($macaddress instanceof Braintacle_MacAddress)) {

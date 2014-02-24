@@ -1,6 +1,6 @@
 <?php
 /**
- * Subnet properties form
+ * Display form for network properties
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -18,29 +18,13 @@
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @package Forms
  */
-/**
- * Subnet properties form
- * @package Forms
- */
-class Form_Subnet extends Zend_Form
-{
 
-    /**
-     * Create elements
-     */
-    public function init()
-    {
-        $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
-
-        $name = new Zend_Form_Element_Text('Name');
-        $name->setLabel('Name')
-             ->addValidator('StringLength', false, array(0, 255));
-        $this->addElement($name);
-
-        $submit = new Zend_Form_Element_Submit('Submit');
-        $submit->setLabel('OK');
-        $this->addElement($submit);
-    }
-}
+print $this->htmlTag(
+    'h1',
+    sprintf(
+        $this->translate('Properties of subnet %s'),
+        $this->escapeHtml($this->subnet['AddressWithMask'])
+    )
+);
+print $this->form;

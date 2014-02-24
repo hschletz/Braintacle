@@ -60,19 +60,15 @@ class Model_Subnet extends Model_Abstract
     );
 
     /**
-     * Return a statement object with all subnets, including statistics
-     * @param string $order Logical property to sort by. Default: null
+     * Return all subnets, including statistics
+     *
+     * @param string $order Property to sort by, default: null
      * @param string $direction One of [asc|desc].
-     * @param array $conditions additional WHERE conditions
-     * @param array $args arguments which replace placeholders in $conditions
-     * @return Zend_Db_Statement Query result
+     * @return \Model_Subnet[]
      */
-    static function createStatementStatic($order=null, $direction='asc', $conditions=array(), $args=array())
+    public function fetchAll($order=null, $direction='asc')
     {
         $db = Model_Database::getAdapter();
-
-        $dummy = new Model_Subnet;
-        $map = $dummy->getPropertyMap();
 
         $numIdentified = $db->select()
             ->from(
@@ -114,13 +110,9 @@ class Model_Subnet extends Model_Abstract
             ->where('ipsubnet != \'127.0.0.0\'')
             ->where('description NOT LIKE \'%PPP%\'')
             ->group(array('ipsubnet', 'ipmask', 'name'))
-            ->order(self::getOrder($order, $direction, $map));
+            ->order(self::getOrder($order, $direction, $this->_propertyMap));
 
-        foreach ($conditions as $condition) {
-            $select->where($condition);
-        }
-
-        return $select->query(null, $args);
+        return $this->_fetchAll($select->query());
     }
 
     /** {@inheritdoc} */
@@ -138,7 +130,8 @@ class Model_Subnet extends Model_Abstract
      * {@inheritdoc}
      *
      * Address and Mask are validated. Name gets written to the database.
-     * @throws UnexpectedValueException if IP address is invalid
+     *
+     * @throws \InvalidArgumentException if IP address is invalid
      */
     public function setProperty($property, $value)
     {
@@ -146,7 +139,7 @@ class Model_Subnet extends Model_Abstract
             case 'Address':
             case 'Mask':
                 if (ip2long($value) === false) {
-                    throw new UnexpectedValueException(
+                    throw new \InvalidArgumentException(
                         'Not an IPv4 address: ' . $value
                     );
                 }
@@ -223,20 +216,20 @@ class Model_Subnet extends Model_Abstract
     }
 
     /**
-     * Construct a Model_Subnet object with given properties
+     * Create a Model_Subnet object with given properties
      *
-     * Use this static method to access a subnet with given address and mask. If
-     * a name is defined for this subnet, it is set up for the returned object.
+     * Use this method to access a subnet with given address and mask. If a name
+     * is defined for this subnet, it is set up for the returned object.
      *
      * @param string $address Network address
      * @param string $mask Netmask
      * @return Model_Subnet
      **/
-    public static function construct($address, $mask)
+    public function create($address, $mask)
     {
-        $subnet = new Model_Subnet;
-        $subnet->setAddress($address);
-        $subnet->setMask($mask);
+        $subnet = clone $this;
+        $subnet['Address'] = $address;
+        $subnet['Mask'] = $mask;
         $name = Model_Database::getAdapter()->fetchOne(
             'SELECT name FROM subnet WHERE netid = ? AND mask = ?',
             array($address, $mask)
@@ -246,6 +239,10 @@ class Model_Subnet extends Model_Abstract
         } else {
             $subnet->name = $name;
         }
+        unset($subnet['NumInventoried']);
+        unset($subnet['NumIdentified']);
+        unset($subnet['NumUnknown']);
+
         return $subnet;
     }
 }

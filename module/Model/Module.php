@@ -55,6 +55,9 @@ Feature\ConfigProviderInterface
                     'Model\Computer\Computer' => 'Model_Computer',
                     'Model\Computer\Software' => 'Model_Software',
                     'Model\Computer\Windows' => 'Model_Windows',
+                    'Model\Network\Device' => 'Model_NetworkDevice',
+                    'Model\Network\DeviceType' => 'Model_NetworkDeviceType',
+                    'Model\Network\Subnet' => 'Model_Subnet',
                 ),
                 'factories' => array(
                     'Model\Computer\Duplicates' => 'Model\Service\Computer\DuplicatesFactory',

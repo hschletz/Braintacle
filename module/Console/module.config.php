@@ -37,6 +37,7 @@ return array(
             'duplicates' => 'Console\Service\DuplicatesControllerFactory',
             'licenses' => 'Console\Service\LicensesControllerFactory',
             'login' => 'Console\Service\LoginControllerFactory',
+            'network' => 'Console\Service\NetworkControllerFactory',
             'software' => 'Console\Service\SoftwareControllerFactory',
         ),
     ),
@@ -66,7 +67,7 @@ return array(
             'zf1' => array(
                 'type'    => 'regex',
                 'options' => array(
-                    'regex'    => '/(console/)?(computer|error|group|index|network|package|preferences)/?.*',
+                    'regex'    => '/(console/)?(computer|error|group|index|package|preferences)/?.*',
                     'spec' => '',
                     'defaults' => array(
                         'controller' => 'Console\Controller\ZF1',
@@ -79,6 +80,10 @@ return array(
         'factories' => array(
             'Console\Navigation\MainMenu' => 'Console\Navigation\MainMenuFactory',
         ),
+        'invokables' => array(
+            'Form\NetworkDevice' => 'Form_NetworkDevice',
+            'Form\Subnet' => 'Form_Subnet',
+        )
     ),
     'view_helpers' => array(
         'factories' => array(

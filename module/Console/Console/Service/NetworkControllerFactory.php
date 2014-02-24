@@ -1,6 +1,6 @@
 <?php
 /**
- * Display form for network properties
+ * Factory for NetworkController
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,14 +17,27 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-print $this->htmlTag(
-    'h1',
-    sprintf(
-        $this->translate('Properties of subnet %s'),
-        $this->escape($this->subnet->getAddressWithMask())
-    )
-);
-print $this->form;
+namespace Console\Service;
+
+/**
+ * Factory for NetworkController
+ */
+class NetworkControllerFactory implements \Zend\ServiceManager\FactoryInterface
+{
+    /**
+     * @internal
+     */
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    {
+        $serviceManager = $serviceLocator->getServiceLocator();
+        return new \Console\Controller\NetworkController(
+            $serviceManager->get('Model\Network\Device'),
+            $serviceManager->get('Model\Network\DeviceType'),
+            $serviceManager->get('Model\Network\Subnet'),
+            $serviceManager->get('Form\Subnet'),
+            $serviceManager->get('Form\NetworkDevice')
+        );
+    }
+}

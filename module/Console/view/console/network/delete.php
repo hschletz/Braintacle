@@ -20,20 +20,16 @@
  *
  */
 
-$name = $this->device->getDescription();
+$name = $this->device['Description'];
 if (!$name) {
-    $name = $this->device->getHostname();
+    $name = $this->device['Hostname'];
 }
-
-print $this->htmlTag(
-    'p',
+print $this->formYesNo(
     sprintf(
         $this->translate(
             'The network device \'%1s\' with the MAC address %2s will be permanently deleted. Continue?'
         ),
-        $this->escape($name),
-        $this->escape($this->device->getMacAddress())
+        $this->escapeHtml($name),
+        $this->escapeHtml($this->device['MacAddress'])
     )
 );
-
-print new Form_YesNo;

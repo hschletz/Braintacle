@@ -61,18 +61,4 @@ class Form_NetworkDevice extends Zend_Form
         $submit->setLabel('OK');
         $this->addElement($submit);
     }
-
-    /**
-     * Populate form with values from a NetworkDevice object
-     * @param Model_NetworkDevice Network device with values to put into the form
-     */
-    public function setValuesFromDevice($device)
-    {
-        foreach ($device as $property => $value) {
-            $element = $this->getElement($property);
-            if ($element) {
-                $element->setValue($value);
-            }
-        }
-    }
 }

@@ -31,60 +31,41 @@ $headers = array(
     'delete' => '',
 );
 
-$formats = array(
-    'edit' => 'text',
-    'delete' => 'text',
-);
-
 $renderCallbacks = array(
-    'edit' => 'renderEdit',
-    'delete' => 'renderDelete',
+    'edit' => function ($view, $device, $property) {
+        return $view->htmlTag(
+            'a',
+            $view->translate('Edit'),
+            array(
+                'href' => $view->consoleUrl(
+                    'network',
+                    'edit',
+                    array('macaddress' => $device['MacAddress'])
+                ),
+            ),
+            true
+        );
+    },
+    'delete' => function($view, $device, $property) {
+        return $view->htmlTag(
+            'a',
+            $view->translate('Delete'),
+            array(
+                'href' => $view->consoleUrl(
+                    'network',
+                    'delete',
+                    array('macaddress' => $device['MacAddress'])
+                ),
+            ),
+            true
+        );
+    },
 );
 
-function renderEdit($view, $device, $property)
-{
-    return $view->htmlTag(
-        'a',
-        $view->translate('Edit'),
-        array(
-            'href' => $view->url(
-                array(
-                    'controller' => 'network',
-                    'action' => 'edit',
-                    'macaddress' => $device->getMacAddress(),
-                )
-            ),
-        ),
-        true
-    );
-}
-
-function renderDelete($view, $device, $property)
-{
-    return $view->htmlTag(
-        'a',
-        $view->translate('Delete'),
-        array(
-            'href' => $view->url(
-                array(
-                    'controller' => 'network',
-                    'action' => 'delete',
-                    'macaddress' => $device->getMacAddress(),
-                )
-            ),
-        ),
-        true
-    );
-}
-
-
-print $this->getHelper('table')->table(
+print $this->table(
     $this->devices,
-    null,
     $headers,
-    $formats,
-    'Model_NetworkDevice',
-    null,
+    $this->ordering,
     $renderCallbacks
 );
 
