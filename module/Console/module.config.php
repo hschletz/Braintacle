@@ -43,6 +43,7 @@ return array(
     ),
     'form_elements' => array(
         'factories' => array(
+            'Console\Form\ManageRegistryValues' => 'Console\Form\Service\ManageRegistryValuesFactory',
             'Console\Form\ShowDuplicates' => 'Console\Form\Service\ShowDuplicatesFactory',
         ),
     ),

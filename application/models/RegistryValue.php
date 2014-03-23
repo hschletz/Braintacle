@@ -31,6 +31,7 @@
  * - **SubKeys** Path to the key that contains the value, with components separated by backslashes
  * - **ValueConfigured** Name of the registry value to inventory. If NULL, all values be inventoried.
  * - **ValueInventoried** Name of the actually inventoried value.
+ * - **FullPath** Textual representation of configured value
  *
  * The ValueInventoried property is only valid for Model_RegistryData's 'Value'
  * property. If ValueConfigured is set to inventory all values, it contains the
@@ -130,6 +131,16 @@ class Model_RegistryValue extends Model_Abstract
     }
 
     /**
+     * Fetch all registry value definitions
+     *
+     * @return \Model_RegistryValue[]
+     */
+    public function fetchAll()
+    {
+        return $this->_fetchAll(self::createStatementStatic());
+    }
+
+    /**
      * Generate statement to retrieve all value definitions
      *
      * @param integer $id Return only given value. Default: return all values.
@@ -147,36 +158,31 @@ class Model_RegistryValue extends Model_Abstract
     }
 
     /**
-     * Retrieve textual representation of configured value
-     * @return string
-     **/
-    function getValueConfiguredAsString()
-    {
-        $string  = self::rootKey($this->getRootKey());
-        $string .= '\\';
-        $string .= $this->getSubKeys();
-        $string .= '\\';
-        $value = $this->getValueConfigured();
-        if (!$value) {
-            $value = '*';
-        }
-        $string .= $value;
-        return $string;
-    }
-
-    /**
      * {@inheritdoc}
      **/
     public function getProperty($property, $rawValue=false)
     {
-        if ($property == 'ValueInventoried') {
-            if ($this->_valueInventoried) {
-                $value = $this->_valueInventoried;
-            } else {
-                $value = $this->getValueConfigured();
-            }
-        } else {
-            $value = parent::getProperty($property, $rawValue);
+        switch ($property) {
+            case 'ValueInventoried':
+                if ($this->_valueInventoried) {
+                    $value = $this->_valueInventoried;
+                } else {
+                    $value = $this->getValueConfigured();
+                }
+                break;
+            case 'FullPath':
+                $value  = self::rootKey($this->getRootKey());
+                $value .= '\\';
+                $value .= $this->getSubKeys();
+                $value .= '\\';
+                $valueConfigured = $this->getValueConfigured();
+                if ($valueConfigured == '') {
+                    $valueConfigured = '*';
+                }
+                $value .= $valueConfigured;
+                break;
+            default:
+                $value = parent::getProperty($property, $rawValue);
         }
         if (!$rawValue and $property == 'ValueConfigured' and $value == '*') {
             $value = null;
@@ -240,7 +246,7 @@ class Model_RegistryValue extends Model_Abstract
      * @throws RuntimeException if a value with the same name already exists.
      * @throws DomainException if $rootkey is not one of the HKEY_* constants or $subKeys is empty
      **/
-    public static function add($name, $rootKey, $subKeys, $value=null)
+    public function add($name, $rootKey, $subKeys, $value=null)
     {
         $db = Model_Database::getAdapter();
         if ($db->fetchOne('SELECT name FROM regconfig WHERE name = ?', $name)) {

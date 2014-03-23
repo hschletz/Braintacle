@@ -136,10 +136,14 @@ class PreferencesController extends Zend_Controller_Action
 
     public function registryvaluesAction()
     {
-        $form = new Form_ManageRegistryValues;
-        if ($this->getRequest()->isPost() and $form->isValid($_POST)) {
-            $form->process();
-            $form->resetNewValue();
+        $form = \Library\Application::getService('FormElementManager')->get('Console\Form\ManageRegistryValues');
+        if ($this->getRequest()->isPost()) {
+            $form->setData($_POST);
+            if ($form->isValid()) {
+                $form->process();
+                $this->_helper->redirector('registryvalues', 'preferences');
+                return;
+            }
         }
         // render form
         $this->view->form = $form;

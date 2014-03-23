@@ -1,6 +1,6 @@
 <?php
 /**
- * Display form for managing inventoried registry values
+ * Factory for ManageRegistryValues
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,11 +17,28 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-print $this->htmlTag(
-    'h1',
-    $this->translate('Manage registry values')
-);
-print $this->form->render(\Library\Application::getService('ViewManager')->getRenderer());
+namespace Console\Form\Service;
+
+/**
+ * Factory for ManageRegistryValues
+ * @codeCoverageIgnore
+ */
+class ManageRegistryValuesFactory implements \Zend\ServiceManager\FactoryInterface
+{
+    /**
+     * @internal
+     */
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    {
+        $serviceManager = $serviceLocator->getServiceLocator();
+        return new \Console\Form\ManageRegistryValues(
+            null,
+            array(
+                'config' => $serviceManager->get('Model\Config'),
+                'registryValue' => $serviceManager->get('Model\RegistryValue'),
+            )
+        );
+    }
+}

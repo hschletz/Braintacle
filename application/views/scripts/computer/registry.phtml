@@ -42,7 +42,7 @@ function renderName($view, $data, $property)
     return $view->htmlTag(
         'span',
         $view->escape($value->getName()),
-        array('title' => $value->getValueConfiguredAsString())
+        array('title' => $value['FullPath'])
     );
 }
 

@@ -26,7 +26,8 @@ body {
 h1 {
     font-size: 120%;
     text-align: center;
-    margin: 0;
+    margin-top: 0;
+    margin-bottom: 2ex;
 }
 
 h2 {
@@ -177,6 +178,12 @@ table {
     clear: both;
 }
 
+.table {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .alternating tr:nth-child(even) {
     background-color: #e0f0ff;
 }
@@ -185,8 +192,16 @@ td,th {
     padding: .3ex .5em .3ex .5em;
 }
 
+.cell {
+    display: table-cell;
+}
+
 .block {
     display: block;
+}
+
+.nomargin {
+    margin: 0;
 }
 
 .textright {
@@ -304,8 +319,10 @@ fieldset dd {
 }
 ul.errors {
     margin-top: 0;
+    margin-bottom: 0.8ex;
     padding-left: 1em;
     color: red;
+    list-style-position: inside;
 }
 
 /* general format for input fields */
@@ -374,11 +391,11 @@ input[size="8"]
     background-color: red;
 }
 
-.table_network_devices, .table_registry_values {
+.table_network_devices, .form_manageregistryvalues table {
     font-size: 80%;
 }
 
-.Form_AddToGroup td, .Form_ManageNetworkDeviceTypes td, .table_registry_values td {
+.Form_AddToGroup td, .Form_ManageNetworkDeviceTypes td {
     padding-top: 2ex;
 }
 
@@ -391,21 +408,37 @@ td.formElement {
     margin-top: 1ex;
 }
 
-table.table_registry_values {
-    margin-top: 3ex;
+.table label {
+    display: table-row;
 }
 
-.form label {
-    display: block;
-    margin: 1.5ex auto;
-    text-align: center;
+.table label span, .table input, .table select {
+    display: table-cell;
+    margin: 1.4ex 1em 1.4ex 1em;
+    vertical-align: middle;
+}
+
+.table label span {
+    text-align: right;
+}
+
+.form label span, .form input, .form select {
+    vertical-align: middle;
+}
+
+.form .input-error {
+    border-color: red;
+    border-style: solid;
 }
 
 .form input[type=submit] {
-    display: block;
-    margin: 3ex auto;
+    margin-top: 3ex;
 }
 
 .form_yesno {
     text-align: center;
+}
+
+.form_manageregistryvalues td input {
+    margin: 1.2ex 0em 1.2ex 0em;
 }

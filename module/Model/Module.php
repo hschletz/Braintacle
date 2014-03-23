@@ -58,6 +58,7 @@ Feature\ConfigProviderInterface
                     'Model\Network\Device' => 'Model_NetworkDevice',
                     'Model\Network\DeviceType' => 'Model_NetworkDeviceType',
                     'Model\Network\Subnet' => 'Model_Subnet',
+                    'Model\RegistryValue' => 'Model_RegistryValue',
                 ),
                 'factories' => array(
                     'Model\Computer\Duplicates' => 'Model\Service\Computer\DuplicatesFactory',
