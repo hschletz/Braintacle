@@ -186,12 +186,12 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      *
      * @return array Array(form)
      */
-    public function userdefinedAction()
+    public function customfieldsAction()
     {
         $form = $this->_formManager->get('Form\DefineFields');
         if ($this->getRequest()->isPost() and $form->isValid($this->params()->fromPost())) {
             $form->process();
-            return $this->redirectToRoute('preferences', 'userdefined');
+            return $this->redirectToRoute('preferences', 'customfields');
         } else {
             return array('form' => $form);
         }
@@ -210,7 +210,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
             if ($this->params()->fromPost('yes')) {
                 $this->_customFields->deleteField($field);
             }
-            $this->redirectToRoute('preferences', 'userdefined');
+            $this->redirectToRoute('preferences', 'customfields');
         } else {
             return array('field' => $field);
         }

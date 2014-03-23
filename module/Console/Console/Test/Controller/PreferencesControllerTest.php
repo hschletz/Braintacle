@@ -208,11 +208,11 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     }
 
     /**
-     * Tests for userdefinedAction()
+     * Tests for customfieldsAction()
      */
-    public function testUserdefinedAction()
+    public function testCustomfieldsAction()
     {
-        $url = '/console/preferences/userdefined';
+        $url = '/console/preferences/customfields';
 
         // GET request should render form
         $form = $this->getMock('Form_DefineFields');
@@ -261,7 +261,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
                            ->with('Form\DefineFields')
                            ->will($this->returnValue($form));
         $this->dispatch($url, 'POST', $postData);
-        $this->assertRedirectTo('/console/preferences/userdefined/');
+        $this->assertRedirectTo('/console/preferences/customfields/');
     }
 
     /**
@@ -280,7 +280,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_customFields->expects($this->never())
                             ->method('deleteField');
         $this->dispatch($url, 'POST', array('no' => 'No'));
-        $this->assertRedirectTo('/console/preferences/userdefined/');
+        $this->assertRedirectTo('/console/preferences/customfields/');
 
         // Confirmed POST request should delete field and redirect
         $this->_customFields = $this->getMockBuilder('Model_UserDefinedInfo')->disableOriginalConstructor()->getMock();
@@ -288,7 +288,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
                             ->method('deleteField')
                             ->with('Name');
         $this->dispatch($url, 'POST', array('yes' => 'Yes'));
-        $this->assertRedirectTo('/console/preferences/userdefined/');
+        $this->assertRedirectTo('/console/preferences/customfields/');
     }
 
     /**
