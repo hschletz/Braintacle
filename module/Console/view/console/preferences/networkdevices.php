@@ -1,6 +1,6 @@
 <?php
 /**
- * Display confirmation form for deletion of network device type
+ * Display form for managing network device types
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -21,13 +21,7 @@
  */
 
 print $this->htmlTag(
-    'p',
-    sprintf(
-        $this->translate(
-            'The device type \'%s\' will be deleted. Continue?'
-        ),
-        $this->escape($this->type->getDescription())
-    )
+    'h1',
+    $this->translate('Manage device types')
 );
-
-print $this->form;
+print $this->form->toHtml($this);

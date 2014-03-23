@@ -115,17 +115,17 @@ class Model_RegistryValue extends Model_Abstract
     );
 
     /**
-     * Construct an object from an Id
+     * Instantiate a new object with data for the given ID
      *
      * @param integer $id ID of an existing value definition
-     * @return Model_RegistryValue
-     * @throws RuntimeException if given ID id invalid
+     * @return \Model_RegistryValue
+     * @throws \RuntimeException if given ID id invalid
      **/
-    public static function construct($id)
+    public function fetchById($id)
     {
         $value = self::createStatementStatic($id)->fetchObject(__CLASS__);
         if (!$value) {
-            throw new RuntimeException('Invalid device type ID: ' . $id);
+            throw new \RuntimeException('Invalid registry value ID: ' . $id);
         }
         return $value;
     }

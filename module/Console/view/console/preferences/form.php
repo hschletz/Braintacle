@@ -1,6 +1,6 @@
 <?php
 /**
- * Generic view script to display preferences form
+ * Generic view script to display a form
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *

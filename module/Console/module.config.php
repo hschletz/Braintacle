@@ -38,6 +38,7 @@ return array(
             'licenses' => 'Console\Service\LicensesControllerFactory',
             'login' => 'Console\Service\LoginControllerFactory',
             'network' => 'Console\Service\NetworkControllerFactory',
+            'preferences' => 'Console\Service\PreferencesControllerFactory',
             'software' => 'Console\Service\SoftwareControllerFactory',
         ),
     ),
@@ -68,7 +69,7 @@ return array(
             'zf1' => array(
                 'type'    => 'regex',
                 'options' => array(
-                    'regex'    => '/(console/)?(computer|error|group|index|package|preferences)/?.*',
+                    'regex'    => '/(console/)?(computer|error|group|index|package)/?.*',
                     'spec' => '',
                     'defaults' => array(
                         'controller' => 'Console\Controller\ZF1',
@@ -84,8 +85,20 @@ return array(
         ),
         'invokables' => array(
             'Form\Account\New' => 'Form_Account_New',
+            'Form\DefineFields' => 'Form_DefineFields',
+            'Form\NetworkDeviceTypes' => 'Form_ManageNetworkDeviceTypes',
             'Form\Login' => 'Form_Login',
             'Form\NetworkDevice' => 'Form_NetworkDevice',
+            'Form\Preferences\Agent' => 'Form_Preferences_Agent',
+            'Form\Preferences\Display' => 'Form_Preferences_Display',
+            'Form\Preferences\Download' => 'Form_Preferences_Download',
+            'Form\Preferences\Filters' => 'Form_Preferences_Filters',
+            'Form\Preferences\Groups' => 'Form_Preferences_Groups',
+            'Form\Preferences\Inventory' => 'Form_Preferences_Inventory',
+            'Form\Preferences\NetworkScanning' => 'Form_Preferences_NetworkScanning',
+            'Form\Preferences\Packages' => 'Form_Preferences_Packages',
+            'Form\Preferences\RawData' => 'Form_Preferences_RawData',
+            'Form\Preferences\System' => 'Form_Preferences_System',
             'Form\SoftwareFilter' => 'Form_SoftwareFilter',
             'Form\Subnet' => 'Form_Subnet',
         )

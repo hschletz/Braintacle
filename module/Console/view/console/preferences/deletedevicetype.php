@@ -1,6 +1,6 @@
 <?php
 /**
- * Display confirmation form for deletion of userdefined fields
+ * Display confirmation form for deletion of network device type
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -20,14 +20,11 @@
  *
  */
 
-print $this->htmlTag(
-    'p',
+print $this->formYesNo(
     sprintf(
         $this->translate(
-            'The field \'%s\' and its contents for all computers will be deleted. Continue?'
+            'The device type \'%s\' will be deleted. Continue?'
         ),
-        $this->escape($this->field)
+        $this->escapeHtml($this->description)
     )
 );
-
-print $this->form;

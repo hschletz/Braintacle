@@ -20,4 +20,8 @@
  *
  */
 
-print $this->form;
+print $this->htmlTag(
+    'h1',
+    $this->translate('Manage custom fields')
+);
+print $this->form->toHtml($this);

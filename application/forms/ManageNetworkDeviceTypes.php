@@ -88,15 +88,13 @@ class Form_ManageNetworkDeviceTypes extends Zend_Form
         $this->setElementDecorators(array('ViewHelper', 'Errors'));
     }
 
+
     /**
      * @ignore
      * Render form as table
      */
-    public function render(Zend_View_Interface $view=null)
+    public function toHtml(\Zend\View\Renderer\PhpRenderer $view)
     {
-        if (!$view) {
-            $view = $this->getView();
-        }
         $output = '';
 
         // Create table rows for each existing field
@@ -110,12 +108,10 @@ class Form_ManageNetworkDeviceTypes extends Zend_Form
                         'a',
                         $view->translate('Delete'),
                         array(
-                            'href' => $view->url(
-                                array(
-                                    'controller' => 'preferences',
-                                    'action' => 'deletedevicetype',
-                                    'id' => $id,
-                                )
+                            'href' => $view->consoleUrl(
+                                'preferences',
+                                'deletedevicetype',
+                                array('id' => $id)
                             )
                         )
                     )

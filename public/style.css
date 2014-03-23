@@ -395,7 +395,7 @@ input[size="8"]
     font-size: 80%;
 }
 
-.Form_AddToGroup td, .Form_ManageNetworkDeviceTypes td {
+.Form_AddToGroup td, .Form_ManageNetworkDeviceTypes td, .table_registry_values td, .form_definefields td {
     padding-top: 2ex;
 }
 

@@ -48,6 +48,7 @@ class Form_Definefields extends Zend_Form
         );
 
         $this->setMethod('post');
+        $this->setAttrib('class', 'form_definefields');
         $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
         $encoder = new Braintacle_Filter_FormElementNameEncode;
 
@@ -98,11 +99,8 @@ class Form_Definefields extends Zend_Form
      * @ignore
      * Render form as table
      */
-    public function render(Zend_View_Interface $view=null)
+    public function toHtml(\Zend\View\Renderer\PhpRenderer $view)
     {
-        if (!$view) {
-            $view = $this->getView();
-        }
         $decoder = new Braintacle_Filter_FormElementNameDecode;
         $output = '';
 
@@ -122,12 +120,10 @@ class Form_Definefields extends Zend_Form
                     'a',
                     $view->translate('Delete'),
                     array(
-                        'href' => $view->url(
-                            array(
-                                'controller' => 'preferences',
-                                'action' => 'deletefield',
-                                'name' => $name
-                            )
+                        'href' => $view->consoleUrl(
+                            'preferences',
+                            'deletefield',
+                            array('name' => $name)
                         )
                     )
                 )

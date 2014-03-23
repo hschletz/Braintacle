@@ -1,6 +1,6 @@
 <?php
 /**
- * Display form for managing network device types
+ * Display confirmation form for deletion of userdefined fields
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -20,8 +20,11 @@
  *
  */
 
-print $this->htmlTag(
-    'h1',
-    $this->translate('Manage device types')
+print $this->formYesNo(
+    sprintf(
+        $this->translate(
+            'The field \'%s\' and its contents for all computers will be deleted. Continue?'
+        ),
+        $this->escapeHtml($this->field)
+    )
 );
-print $this->form;

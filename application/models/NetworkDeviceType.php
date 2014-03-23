@@ -52,13 +52,13 @@ class Model_NetworkDeviceType extends Model_Abstract
     );
 
     /**
-     * Construct an object from an Id
+     * Instantiate a new object with data for the given ID
      *
      * @param integer $id ID of an existing type definition
      * @return Model_NetworkDeviceType
      * @throws RuntimeException if given ID id invalid
      **/
-    public static function construct($id)
+    public function fetchById($id)
     {
         $type = self::createStatementStatic($id)->fetchObject(__CLASS__);
         if (!$type) {

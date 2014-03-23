@@ -356,7 +356,7 @@ class Model_UserDefinedInfo extends Model_Abstract
      * @param string $field Field name
      * @throws InvalidArgumentException if column does not exist or is a system column
      **/
-    static function deleteField($field)
+    public function deleteField($field)
     {
         if ($field == 'TAG') {
             throw new InvalidArgumentException("Cannot delete system column 'TAG'.");

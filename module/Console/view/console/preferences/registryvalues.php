@@ -24,4 +24,4 @@ print $this->htmlTag(
     'h1',
     $this->translate('Manage registry values')
 );
-print $this->form->render(\Library\Application::getService('ViewManager')->getRenderer());
+print $this->form->render($this);
