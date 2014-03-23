@@ -182,7 +182,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
             )
         );
 
-        $output = $this->_form->render(\Library\Application::getService('ViewManager')->getRenderer());
+        $output = $this->_form->render($this->_getView());
 
         // Test table content
         $dom = new \Zend\Dom\Query;

@@ -69,6 +69,16 @@ abstract class AbstractFormTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Get a view renderer
+     *
+     * @return \Zend\View\Renderer\PhpRenderer
+     */
+    protected function _getView()
+    {
+        return \Library\Application::getService('ViewManager')->getRenderer();
+    }
+
+    /**
      * Test basic form properties (form class, "class" attribute, CSRF element)
      */
     public function testForm()
