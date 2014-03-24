@@ -55,7 +55,7 @@ Feature\ConfigProviderInterface
                     'Database\Service\AbstractTableFactory',
                 ),
                 'factories' => array(
-                    'Db' => 'Zend\Db\Adapter\AdapterServiceFactory',
+                    'Db' => 'Database\Service\AdapterServiceFactory',
                     'Database\Nada' => 'Database\Service\NadaFactory',
                 ),
             ),
@@ -64,7 +64,6 @@ Feature\ConfigProviderInterface
         // Merge database configuration from /config/braintacle.ini
         $ini = \Zend\Config\Factory::fromFile(\Library\Application::getPath('config/braintacle.ini'));
         $config['db'] = $ini['database'];
-        $config['db']['charset'] = 'utf8';
 
         return $config;
     }

@@ -143,9 +143,9 @@ class DuplicatesTest extends \Model\Test\AbstractTest
         $this->assertEquals(2, $duplicates->count('Name'));
 
         // Clear list of allowed duplicate values and re-check.
-        \Library\Application::getService('Database\Table\DuplicateMacAddresses')->delete(null);
-        \Library\Application::getService('Database\Table\DuplicateSerials')->delete(null);
-        \Library\Application::getService('Database\Table\DuplicateAssetTags')->delete(null);
+        \Library\Application::getService('Database\Table\DuplicateMacAddresses')->delete(true);
+        \Library\Application::getService('Database\Table\DuplicateSerials')->delete(true);
+        \Library\Application::getService('Database\Table\DuplicateAssetTags')->delete(true);
         $this->assertEquals(2, $duplicates->count('MacAddress'));
         $this->assertEquals(2, $duplicates->count('Serial'));
         $this->assertEquals(2, $duplicates->count('AssetTag'));
@@ -190,9 +190,9 @@ class DuplicatesTest extends \Model\Test\AbstractTest
         $this->assertEquals($expectedResult, $duplicates->find('Name')->toArray());
 
         // Clear list of allowed duplicate values and re-check.
-        \Library\Application::getService('Database\Table\DuplicateMacAddresses')->delete(null);
-        \Library\Application::getService('Database\Table\DuplicateSerials')->delete(null);
-        \Library\Application::getService('Database\Table\DuplicateAssetTags')->delete(null);
+        \Library\Application::getService('Database\Table\DuplicateMacAddresses')->delete(true);
+        \Library\Application::getService('Database\Table\DuplicateSerials')->delete(true);
+        \Library\Application::getService('Database\Table\DuplicateAssetTags')->delete(true);
         $this->assertEquals($expectedResult, $duplicates->find('MacAddress')->toArray());
         $this->assertEquals($expectedResult, $duplicates->find('Serial')->toArray());
         $this->assertEquals($expectedResult, $duplicates->find('AssetTag')->toArray());

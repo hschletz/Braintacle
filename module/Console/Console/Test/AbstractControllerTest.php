@@ -95,10 +95,11 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
      * from $_sessionSetup.
      *
      * @param string $url
-     * @param string|null $method
-     * @param array|null $params
+     * @param string $method
+     * @param array $params
+     * @param bool $isXmlHttpRequest
      */
-    public function dispatch($url, $method = null, $params = array())
+    public function dispatch($url, $method = null, $params = array(), $isXmlHttpRequest = false)
     {
         $this->reset();
         $this->getApplicationServiceLocator()

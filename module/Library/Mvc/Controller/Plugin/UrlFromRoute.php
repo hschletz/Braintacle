@@ -49,10 +49,6 @@ class UrlFromRoute extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
         if ($action) {
             $path['action'] = urlencode($action);
         }
-        $encodedParams = array();
-        foreach ($params as $key => $value) {
-            $encodedParams[urlencode($key)] = urlencode($value);
-        }
-        return $this->getController()->url()->fromRoute(null, $path, array('query' => $encodedParams));
+        return $this->getController()->url()->fromRoute(null, $path, array('query' => $params));
     }
 }

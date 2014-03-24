@@ -55,13 +55,13 @@ class UrlFromRouteTest extends AbstractTest
         );
 
         $this->assertEquals(
-            '/module/tested%2Fcontroller/tested%2Faction/?tested%2Fkey=tested%2Fvalue&testedkey=testedvalue',
+            '/module/tested%2Fcontroller/tested%2Faction/?tested/key=tested/value&tested%26key=tested%26value',
             $plugin(
                 'tested/controller',
                 'tested/action',
                 array(
-                    'tested/key' => 'tested/value',
-                    'testedkey' => 'testedvalue',
+                    'tested/key' => 'tested/value', // not encoded
+                    'tested&key' => 'tested&value', // encoded to %26
                 )
             )
         );
