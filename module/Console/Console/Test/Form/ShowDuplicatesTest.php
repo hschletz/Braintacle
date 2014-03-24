@@ -21,6 +21,8 @@
 
 namespace Console\Test\Form;
 
+use Zend\Dom\Document\Query as Query;
+
 /**
  * Tests for ShowDuplicates
  */
@@ -185,34 +187,53 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
         $output = $this->_form->render($this->_getView());
 
         // Test table content
-        $dom = new \Zend\Dom\Query;
-        $dom->setDocumentHtml($output);
+        $document = new \Zend\Dom\Document($output);
 
-        $result = $dom->execute('td a[href="/console/computer/userdefined/?id=2"]');
+        $result = Query::execute(
+            '//td//a[@href="/console/computer/userdefined/?id=2"]',
+            $document
+        );
         $this->assertCount(1, $result);
         $this->assertEquals('Test2', $result[0]->nodeValue);
 
-        $result = $dom->execute('td a[href="/console/duplicates/allow/?criteria=MacAddress&value=00:00:5E:00:53:00"]');
+        $result = Query::execute(
+            '//td//a[@href="/console/duplicates/allow/?criteria=MacAddress&value=00:00:5E:00:53:00"]',
+            $document
+        );
         $this->assertCount(2, $result);
         $this->assertEquals('00:00:5E:00:53:00', $result[0]->nodeValue);
 
-        $result = $dom->execute('td a[href="/console/duplicates/allow/?criteria=Serial&value=12345678"]');
+        $result = Query::execute(
+            '//td//a[@href="/console/duplicates/allow/?criteria=Serial&value=12345678"]',
+            $document
+        );
         $this->assertCount(2, $result);
         $this->assertEquals('12345678', $result[0]->nodeValue);
 
-        $result = $dom->execute('td a[href="/console/duplicates/allow/?criteria=AssetTag&value=abc"]');
+        $result = Query::execute(
+            '//td//a[@href="/console/duplicates/allow/?criteria=AssetTag&value=abc"]',
+            $document
+        );
         $this->assertCount(2, $result);
         $this->assertEquals('abc', $result[0]->nodeValue);
 
         // Test state of the 3 merge option checkboxes (depending on \Model\Config mock)
-        $result = $dom->execute('input[name="mergeCustomFields"][checked="checked"]');
+        $result = Query::execute(
+            '//input[@name="mergeCustomFields"][@checked="checked"]',
+            $document
+        );
         $this->assertCount(1, $result);
-        $result = $dom->execute('input[name="mergeGroups"][checked="checked"]');
+        $result = Query::execute(
+            '//input[@name="mergeGroups"][@checked="checked"]',
+            $document
+        );
         $this->assertCount(1, $result);
         // This should be unchecked. Test for presence first, excluding "hidden"
         // element with same name, then confirm that it's not checked.
-        $result = $dom->execute('input[type="checkbox"][name="mergePackages"]');
+        $result = Query::execute(
+            '//input[@type="checkbox"][@name="mergePackages"][not(@checked)]',
+            $document
+        );
         $this->assertCount(1, $result);
-        $this->assertNotEquals('checked', $result[0]->getAttribute('checked'));
     }
 }

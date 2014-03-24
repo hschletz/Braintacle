@@ -21,6 +21,8 @@
 
 namespace Console\Test\Form;
 
+use Zend\Dom\Document\Query as Query;
+
 /**
  * Tests for ManageRegistryValues
  */
@@ -207,47 +209,55 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
     {
         $this->_form->get('existing')->get('value_1_name')->setMessages(array('test' => 'Message1'));
         $this->_form->get('new_value')->get('subkeys')->setMessages(array('test' => 'Message2'));
-        $dom = new \Zend\Dom\Query;
-        $dom->setDocumentHtml(
+        $document = new \Zend\Dom\Document(
             $this->_form->render($this->_getView())
         );
 
         // Test state of inspect checkbox
-        $result = $dom->execute('input[name="inspect[inspect]"][checked="checked"]');
+        $result = Query::execute(
+            '//input[@name="inspect[inspect]"][@checked="checked"]',
+            $document
+        );
         $this->assertCount(1, $result);
 
         // Test table with existing values
-        $result = $dom->execute('tr');
+        $result = Query::execute('//tr', $document);
         $this->assertCount(2, $result);
 
-        $result = $dom->execute('td input[name="existing[value_1_name]"][value="Test1"]');
+        $result = Query::execute(
+            '//td//input[@name="existing[value_1_name]"][@value="Test1"]',
+            $document
+        );
         $this->assertCount(1, $result);
 
-        $result = $dom->execute('td');
+        $result = Query::execute('//td', $document);
         $this->assertEquals("\na\b\c\n", $result[1]->textContent);
 
-        $result = $dom->execute('td a[href="/console/preferences/deleteregistryvalue/?id=1"]');
+        $result = Query::execute(
+            '//td//a[@href="/console/preferences/deleteregistryvalue/?id=1"]',
+            $document
+        );
         $this->assertCount(1, $result);
 
         // Test elements for new value
-        $result = $dom->execute('input[name="new_value[name]"]');
+        $result = Query::execute('//input[@name="new_value[name]"]', $document);
         $this->assertCount(1, $result);
 
-        $result = $dom->execute('select[name="new_value[root_key]"]');
+        $result = Query::execute('//select[@name="new_value[root_key]"]', $document);
         $this->assertCount(1, $result);
 
-        $result = $dom->execute('input[name="new_value[subkeys]"]');
+        $result = Query::execute('//input[@name="new_value[subkeys]"]', $document);
         $this->assertCount(1, $result);
 
-        $result = $dom->execute('input[name="new_value[value]"]');
+        $result = Query::execute('//input[@name="new_value[value]"]', $document);
         $this->assertCount(1, $result);
 
         // Test submit button
-        $result = $dom->execute('input[type="submit"]');
+        $result = Query::execute('//input[@type="submit"]', $document);
         $this->assertCount(1, $result);
 
         // Test message rendering
-        $result = $dom->execute('ul[class="errors"] li');
+        $result = Query::execute('//ul[@class="errors"]/li', $document);
         $this->assertCount(2, $result);
         $this->assertEquals("Message1", $result[0]->textContent);
         $this->assertEquals("Message2", $result[1]->textContent);
