@@ -104,7 +104,7 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
         $this->reset();
         $this->getApplicationServiceLocator()
              ->setAllowOverride(true)
-             ->setService('ControllerLoader', $this->_controllerManager);
+             ->setService('ControllerManager', $this->_controllerManager);
         foreach ($this->_sessionSetup as $namespace => $data) {
             $container = new \Zend\Session\Container($namespace);
             foreach ($data as $key => $value) {
@@ -154,7 +154,7 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
      */
     public function testService()
     {
-        $controller = \Library\Application::getService('ControllerLoader')->get($this->_getControllerName());
+        $controller = \Library\Application::getService('ControllerManager')->get($this->_getControllerName());
         $this->assertInstanceOf($this->_getControllerClass(), $controller);
     }
 

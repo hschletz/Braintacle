@@ -108,7 +108,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 
             // Register TestController with the service manager because this is
             // not done in the module setup
-            $manager = Application::getService('ControllerLoader');
+            $manager = Application::getService('ControllerManager');
             $manager->setInvokableClass('test', 'Library\Test\Mvc\Controller\TestController');
             $this->_controller = $manager->get('test');
             $this->_controller->setEvent($event);
