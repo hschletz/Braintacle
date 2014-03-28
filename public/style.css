@@ -442,3 +442,9 @@ td.formElement {
 .form_manageregistryvalues td input {
     margin: 1.2ex 0em 1.2ex 0em;
 }
+
+.form_showduplicates label, .form_showduplicates input[type=submit] {
+    display: block;
+    text-align: center;
+    margin: 2ex auto 0 auto;
+}
