@@ -34,7 +34,7 @@ use Zend\Form\Element;
  *
  * The factory injects these automatically.
  */
-class ManageRegistryValues extends AbstractForm
+class ManageRegistryValues extends Form
 {
     /**
      * Array of all values defined in the database

@@ -35,7 +35,7 @@ use Zend\Form\Element;
  * - **computers:** Array of Computer objects to display, required by render().
  * - **order, direction:** Sorting of result table, required by render().
  */
-class ShowDuplicates extends AbstractForm
+class ShowDuplicates extends Form
 {
     /** {@inheritdoc} */
     public function init()

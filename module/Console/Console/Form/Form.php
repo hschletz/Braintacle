@@ -25,8 +25,7 @@ namespace Console\Form;
 /**
  * Base class for forms
  *
- * This abstract class provides some convenience functionality for all derived
- * forms:
+ * This base class extends \Zend\Form\Form with some convenience functionality:
  *
  * - The constructor sets the "class" attribute to "form" and a second value
  *   derived from the class name: Console\Form\Foo\Bar becomes form_foo_bar and
@@ -34,7 +33,7 @@ namespace Console\Form;
  *
  * - Automatic CSRF protection via hidden "_csrf" element.
  */
-abstract class AbstractForm extends \Zend\Form\Form
+class Form extends \Zend\Form\Form
 {
     /** {@inheritdoc} */
     public function __construct($name = null, $options = array())

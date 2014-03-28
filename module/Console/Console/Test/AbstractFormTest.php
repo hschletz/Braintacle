@@ -25,13 +25,13 @@ namespace Console\Test;
  * Abstract form test case
  *
  * This base class performs common setup and tests for all forms derived from
- * \Console\Form\AbstractForm.
+ * \Console\Form\Form.
  */
 abstract class AbstractFormTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Form instance provided by setUp()
-     * @var \Console\Form\AbstractForm
+     * @var \Console\Form\Form
      */
     protected $_form;
 
@@ -83,7 +83,7 @@ abstract class AbstractFormTest extends \PHPUnit_Framework_TestCase
      */
     public function testForm()
     {
-        $this->assertInstanceOf('Console\Form\AbstractForm', $this->_form);
+        $this->assertInstanceOf('Console\Form\Form', $this->_form);
         $this->assertEquals(
             'form ' . substr(strtr(strtolower($this->_getFormClass()), '\\', '_'), 8),
             $this->_form->getAttribute('class')
