@@ -33,34 +33,50 @@ class HtmlTagTest extends AbstractTest
     {
         $escapeHtmlAttr = $this->_getHelper('escapeHtmlAttr');
 
-        // Start tests with non-XHTML doctype
-        $helper = new \Library\View\Helper\HtmlTag($escapeHtmlAttr, false);
+        // Start tests with no doctype - assume HTML4.
+        $doctype = new \Zend\View\Helper\Doctype;
+        $helper = new \Library\View\Helper\HtmlTag($escapeHtmlAttr, $doctype);
+        // Empty br element, non-inline
+        $this->assertEquals("<br>\n", $helper('br'));
 
-        // Empty element, non-inline
-        $this->assertEquals("<element>\n", $helper('element'));
+        // Empty br element, inline
+        $this->assertEquals('<br>', $helper('br', null, null, true));
 
-        // Empty element, inline
-        $this->assertEquals('<element>', $helper('element', null, null, true));
-
-        // Empty element with escaped attribute, inline
+        // Empty br element with escaped attribute, inline
         $this->assertEquals(
-            '<element attribute="value&quot;value">',
+            '<br attribute="value&quot;value">',
             $helper(
-                'element',
+                'br',
                 null,
                 array('attribute' => 'value"value'),
                 true
             )
         );
 
-        // Element with content, inline
+        // Element with integer content '0' (tests sideeffects from PHP's type juggling), inline
         $this->assertEquals(
-            '<element>content</element>',
-            $helper('element', 'content', null, true)
+            '<element>0</element>',
+            $helper('element', 0, null, true)
         );
 
-        // Empty XHTML Element, inline
-        $helper = new \Library\View\Helper\HtmlTag($escapeHtmlAttr, true);
-        $this->assertEquals('<element />', $helper('element', null, null, true));
+        // Empty string as content (tests sideeffects from PHP's type juggling), regardless of type
+        $this->assertEquals('<br></br>', $helper('br', '', null, true));
+
+        // Empty command element (HTML5 only) should get closing tag
+        $this->assertEquals("<command></command>\n", $helper('command'));
+
+        // Test empty HTML5 elements
+        $doctype->setDoctype('HTML5');
+        $helper = new \Library\View\Helper\HtmlTag($escapeHtmlAttr, $doctype);
+        $this->assertEquals("<command>\n", $helper('command'));
+        $this->assertEquals("<br>\n", $helper('br'));
+        $this->assertEquals("<a></a>\n", $helper('a'));
+
+        // Empty XHTML Elements
+        $doctype->setDoctype('XHTML11');
+        $helper = new \Library\View\Helper\HtmlTag($escapeHtmlAttr, $doctype);
+        $this->assertEquals("<command />\n", $helper('command'));
+        $this->assertEquals("<br />\n", $helper('br'));
+        $this->assertEquals("<a />\n", $helper('a'));
     }
 }

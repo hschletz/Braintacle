@@ -33,7 +33,7 @@ class HtmlTagFactory implements \Zend\ServiceManager\FactoryInterface
     {
         return new \Library\View\Helper\HtmlTag(
             $serviceLocator->get('EscapeHtmlAttr'),
-            $serviceLocator->get('Doctype')->isXhtml()
+            $serviceLocator->get('Doctype')
         );
     }
 }

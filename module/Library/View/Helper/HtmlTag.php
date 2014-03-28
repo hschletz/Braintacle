@@ -33,21 +33,25 @@ class HtmlTag extends \Zend\View\Helper\AbstractHelper
     protected $_escapeHtmlAttr;
 
     /**
-     * Flag for XHTML output
-     * @var bool
+     * List of elements without closing tag, depending on doctype
      */
-    protected $_isXhtml;
+    protected $_emptyTags;
 
     /**
      * Constructor
      *
      * @param \Zend\View\Helper\EscapeHtmlAttr $escapeHtmlAttr View helper
-     * @param bool $isXhtml Flag for XHTML output
+     * @param \Zend\View\Helper\doctype $doctype Doctype helper
      */
-    public function __construct(\Zend\View\Helper\EscapeHtmlAttr $escapeHtmlAttr, $isXhtml)
+    public function __construct(\Zend\View\Helper\EscapeHtmlAttr $escapeHtmlAttr, $doctype)
     {
         $this->_escapeHtmlAttr = $escapeHtmlAttr;
-        $this->_isXhtml = $isXhtml;
+        if (!$doctype->isXhtml()) {
+            $this->_emptyTags = array('area', 'base', 'br', 'col', 'hr', 'img', 'input', 'link', 'meta', 'param');
+            if ($doctype->isHtml5()) {
+                $this->_emptyTags = array_merge($this->_emptyTags, array('command', 'keygen', 'source'));
+            }
+        }
     }
 
     /**
@@ -71,10 +75,15 @@ class HtmlTag extends \Zend\View\Helper\AbstractHelper
             }
         }
         if ($content === null) {
-            if ($this->_isXhtml) {
-                $output .= ' /';
+            if ($this->_emptyTags) { // HTML
+                if (in_array(strtolower($element), $this->_emptyTags)) {
+                    $output .= '>';
+                } else {
+                    $output .= "></$element>";
+                }
+            } else { // XHTML
+                $output .= ' />';
             }
-            $output .= '>';
             $output .= $newline;
             return $output;
         }
