@@ -171,7 +171,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
                 'Name' => 'Test2',
                 'NetworkInterface.MacAddress' => '00:00:5E:00:53:00',
                 'Serial' => '12345678',
-                'AssetTag' => 'abc',
+                'AssetTag' => null,
                 'LastContactDate' => $now,
             ),
         );
@@ -214,8 +214,15 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
             '//td//a[@href="/console/duplicates/allow/?criteria=AssetTag&value=abc"]',
             $document
         );
-        $this->assertCount(2, $result);
+        $this->assertCount(1, $result);
         $this->assertEquals('abc', $result[0]->nodeValue);
+
+        // 1 Empty cell resulting from NULL value
+        $result = Query::execute(
+            '//td[not(node())]',
+            $document
+        );
+        $this->assertCount(1, $result);
 
         // Test state of the 3 merge option checkboxes (depending on \Model\Config mock)
         $result = Query::execute(

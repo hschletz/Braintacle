@@ -152,6 +152,11 @@ class ShowDuplicates extends Form
         );
         $renderCriteria = function($view, $computer, $property) {
             $value = $computer[$property];
+            if ($value === null) {
+                // NULL values are never considered for duplicates and cannot be blacklisted.
+                return;
+            }
+
             if ($property == 'NetworkInterface.MacAddress') {
                 $property = 'MacAddress';
             }
