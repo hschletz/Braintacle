@@ -139,13 +139,8 @@ class ShowDuplicates extends Form
         return count($array) >= 2;
     }
 
-    /**
-     * Render the form
-     *
-     * @param \Zend\View\Renderer\PhpRenderer $view
-     * @return string HTML form code
-     */
-    public function render(\Zend\View\Renderer\PhpRenderer $view)
+    /** {@inheritdoc} */
+    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset)
     {
         $headers = array(
             'Id' => 'ID',
@@ -226,6 +221,6 @@ class ShowDuplicates extends Form
         }
         $formContent .= "</div>\n";
 
-        return $view->form()->openTag($this) . "\n" . $formContent . $view->form()->closeTag();
+        return $formContent;
     }
 }

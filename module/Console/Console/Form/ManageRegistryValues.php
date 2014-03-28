@@ -112,11 +112,11 @@ class ManageRegistryValues extends Form
         $newValue->setLabel('Only this value (optional)');
         $fieldsetNew->add($newValue);
 
-        $this->add($fieldsetNew);
-
         $submit = new \Library\Form\Element\Submit('submit');
         $submit->setText('Change');
-        $this->add($submit);
+        $fieldsetNew->add($submit);
+
+        $this->add($fieldsetNew);
 
         $inputFilterNew = new \Zend\InputFilter\InputFilter;
         $inputFilterNew->add(
@@ -194,72 +194,62 @@ class ManageRegistryValues extends Form
         }
     }
 
-    /**
-     * Render the form
-     *
-     * @param \Zend\View\Renderer\PhpRenderer $view
-     * @return string HTML form code
-     */
-    public function render(\Zend\View\Renderer\PhpRenderer $view)
+    /** {@inheritdoc} */
+    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset=null)
     {
-        $this->prepare();
-
-        // Subform for registry inspection
-        $fieldsetInspect = $this->get('inspect');
-        $output = "<div class='textcenter'>\n";
-        $output .= $view->formRow($fieldsetInspect->get('inspect'), 'append') . "\n";
-        $output .= "</div>\n";
-
-        // Subform for existing values
-        $fieldsetExisting = $this->get('existing');
-        $output .= $view->htmlTag('h2', $view->translate('Values'), array('class' => 'nomargin'));
-        $table = '';
-        foreach ($this->_definedValues as $value) {
-            $id = $value['Id'];
-            $element = $fieldsetExisting->get("value_{$id}_name");
-            $row = $view->htmlTag(
-                'td',
-                $view->formElement($element) . $view->formElementErrors($element, array('class' => 'errors'))
-            );
-            $row .= $view->htmlTag(
-                'td',
-                $view->escapeHtml($element->getLabel())
-            );
-            $row .= $view->htmlTag(
-                'td',
-                $view->htmlTag(
-                    'a',
-                    $view->translate('Delete'),
-                    array(
-                        'href' => $view->consoleUrl(
-                            'preferences',
-                            'deleteregistryvalue',
-                            array('id' => $id,)
+        $output = '';
+        $name = $fieldset->getName();
+        switch ($name) {
+            case 'inspect':
+                $output .= "<div class='textcenter'>\n";
+                $output .= $view->formRow($fieldset->get('inspect'), 'append') . "\n";
+                $output .= "</div>\n";
+                break;
+            case 'existing':
+                $table = '';
+                foreach ($this->_definedValues as $value) {
+                    $id = $value['Id'];
+                    $element = $fieldset->get("value_{$id}_name");
+                    $row = $view->htmlTag(
+                        'td',
+                        $view->formElement($element) . $view->formElementErrors($element, array('class' => 'errors'))
+                    );
+                    $row .= $view->htmlTag(
+                        'td',
+                        $view->escapeHtml($element->getLabel())
+                    );
+                    $row .= $view->htmlTag(
+                        'td',
+                        $view->htmlTag(
+                            'a',
+                            $view->translate('Delete'),
+                            array(
+                                'href' => $view->consoleUrl(
+                                    'preferences',
+                                    'deleteregistryvalue',
+                                    array('id' => $id,)
+                                )
+                            )
                         )
-                    )
-                )
-            );
-            $table .= $view->htmlTag('tr', $row);
+                    );
+                    $table .= $view->htmlTag('tr', $row);
+                }
+                $output .= $view->htmlTag('table', $table);
+                break;
+            case 'new_value':
+                $output .= parent::renderFieldset($view, $fieldset);
+                break;
+            default:
+                if ($fieldset == $this) {
+                    $output .= $this->renderFieldset($view, $fieldset->get('inspect'));
+                    $output .= $view->htmlTag('h2', $view->translate('Values'), array('class' => 'nomargin'));
+                    $output .= $this->renderFieldset($view, $fieldset->get('existing'));
+                    $output .= $view->htmlTag('h2', $view->translate('Add'), array('class' => 'nomargin'));
+                    $output .= $this->renderFieldset($view, $fieldset->get('new_value'));
+                }
+                break;
         }
-        $output .= $view->htmlTag('table', $table);
-
-        // Subform for new value
-        $output .= $view->htmlTag('h2', $view->translate('Add'), array('class' => 'nomargin'));
-        $output .= "<div class='table'>\n";
-        foreach ($this->get('new_value') as $element) {
-            $output .= $view->formRow($element, 'prepend', false) . "\n";
-            if ($element->getMessages()) {
-                $output .= "<span class='cell'></span>\n";
-                $output .= $view->formElementErrors($element, array('class' => 'errors'));
-            }
-        }
-
-        $output .= "<span class='cell'></span>\n";
-        $output .= $view->formRow($this->get('submit'));
-        $output .= $view->formRow($this->get('_csrf'));
-        $output .= "</div>\n";
-
-        return $view->form()->openTag($this) . "\n" . $output . $view->form()->closeTag() ."\n";
+        return $output;
     }
 
     /**

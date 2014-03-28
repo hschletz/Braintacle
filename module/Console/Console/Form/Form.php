@@ -32,6 +32,8 @@ namespace Console\Form;
  *   so on. This allows general and individual styling of form content.
  *
  * - Automatic CSRF protection via hidden "_csrf" element.
+ *
+ * - Default rendering methods.
  */
 class Form extends \Zend\Form\Form
 {
@@ -49,5 +51,55 @@ class Form extends \Zend\Form\Form
         $csrf = new \Zend\Form\Element\Csrf('_csrf');
         $csrf->setCsrfValidatorOptions(array('timeout' => null)); // Rely on session cleanup
         $this->add($csrf);
+    }
+
+    /**
+     * Render the form
+     *
+     * @param \Zend\View\Renderer\PhpRenderer $view
+     * @return string HTML form code
+     */
+    public function render(\Zend\View\Renderer\PhpRenderer $view)
+    {
+        $this->prepare();
+        $output  = $view->form()->openTag($this);
+        $output .= "\n<div>";
+        $output .= $view->formHidden($this->get('_csrf'));
+        $output .= "</div>\n";
+        $output .= $this->renderFieldset($view, $this);
+        $output .= "\n";
+        $output .= $view->form()->closeTag();
+        $output .= "\n";
+        return $output;
+    }
+
+    /**
+     * Render all elements from a fieldset
+     *
+     * This method iterates over all elements from the given fieldset and
+     * renders them in a way appropriate for each element type. Subclasses with
+     * more specialized rendering may extend or replace this method.
+     *
+     * @param \Zend\View\Renderer\PhpRenderer $view
+     * @param \Zend\Form\Fieldset $fieldset
+     * @return string HTML code
+     */
+    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset)
+    {
+        $output = "<div class='table'>\n";
+        foreach ($fieldset as $element) {
+            if ($element instanceof \Zend\Form\Element\Submit) {
+                $output .= "<span class='cell'></span>\n";
+                $output .= $view->formSubmit($element) . "\n";
+            } elseif (!$element instanceof \Zend\Form\Element\Csrf) {
+                $output .= $view->formRow($element, 'prepend', false) . "\n";
+                if ($element->getMessages()) {
+                    $output .= "<span class='cell'></span>\n";
+                    $output .= $view->formElementErrors($element, array('class' => 'errors')) . "\n";
+                }
+            }
+        }
+        $output .= "</div>\n";
+        return $output;
     }
 }

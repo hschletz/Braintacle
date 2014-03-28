@@ -116,8 +116,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         $this->assertEquals(\Model_RegistryValue::rootKeys(), $fieldset->get('root_key')->getValueOptions());
         $this->assertInstanceOf('Zend\Form\Element\Text', $fieldset->get('subkeys'));
         $this->assertInstanceOf('Zend\Form\Element\Text', $fieldset->get('value'));
-
-        $this->assertInstanceOf('\Library\Form\Element\Submit', $this->_form->get('submit'));
+        $this->assertInstanceOf('\Library\Form\Element\Submit', $fieldset->get('submit'));
     }
 
     /**
