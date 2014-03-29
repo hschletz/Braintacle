@@ -223,9 +223,9 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
      */
     protected function _testManageAction($action)
     {
-        $tmUtf16 = chr(0xc2) . chr(0x99); // UTF-16 representation of TM symbol
-        $tmUtf8  = chr(0xe2) . chr(0x84) . chr(0xa2); // UTF-8 representation of TM symbol
-        $url = "/console/software/$action/?name=" . urlencode($tmUtf16);
+        $tmBad = chr(0xc2) . chr(0x99); // Incorrect representation of TM symbol, filtered where necessary
+        $tmGood  = chr(0xe2) . chr(0x84) . chr(0xa2); // Corrected representation of TM symbol
+        $url = "/console/software/$action/?name=" . urlencode($tmBad);
         $this->_sessionSetup = array(
             'ManageSoftware' => array('filter' => 'test')
         );
@@ -234,7 +234,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
         $this->assertQuery('form');
-        $this->assertQueryContentRegex('p', "/$tmUtf8/");
+        $this->assertQueryContentRegex('p', "/$tmGood/");
 
         // Cancelled POST request should redirect and do nothing else
         $this->_software->expects($this->never())
@@ -246,7 +246,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $this->_software = $this->getMock('Model_Software');
         $this->_software->expects($this->once())
                         ->method($action)
-                        ->with($tmUtf16);
+                        ->with($tmBad);
         $this->dispatch($url, 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/software/index/?filter=test');
 
