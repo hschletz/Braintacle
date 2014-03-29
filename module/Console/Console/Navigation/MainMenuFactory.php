@@ -88,18 +88,6 @@ class MainMenuFactory extends \Library\Navigation\AbstractNavigationFactory
                 'label' => $this->_('Licenses'),
                 'controller' => 'licenses',
                 'action' => 'index',
-                'pages' => array(
-                    array(
-                        'label' => $this->_('Overview'),
-                        'controller' => 'package',
-                        'action' => 'index',
-                    ),
-                    array(
-                        'label' => $this->_('Build'),
-                        'controller' => 'package',
-                        'action' => 'build',
-                    ),
-                ),
             ),
             array(
                 'label' => $this->_('Search'),
