@@ -148,7 +148,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
             )
         );
 
-        // Test with render callback on column2
+        // Test with render callback on column2. Also check for empty $columnClasses passed to row().
         $escapeHtml = $this->getMock('Zend\View\Helper\EscapeHtml');
         $escapeHtml->expects($this->exactly(2)) // once per non-header cell that is not rendered via callback
                    ->method('__invoke')
@@ -162,6 +162,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
               ->method('sortableHeader');
         $table->expects($this->exactly(3))
               ->method('row')
+              ->with($this->anything(), $this->anything(), array())
               ->will($this->returnCallback($rowCallback));
         $table->setView(\Library\Application::getService('ViewManager')->getRenderer());
 
@@ -176,6 +177,36 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
             )
         );
         $this->assertEquals(array('value2a', 'value2b'), $this->_renderCallbackData);
+
+        // Test with column class set on column 2. The row() invocations are
+        // tested explicitly because the passed keys are significant.
+        $columnClasses = array('column2' => 'test');
+        $escapeHtml = $this->getMock('Zend\View\Helper\EscapeHtml');
+        $escapeHtml->expects($this->exactly(4)) // once per non-header cell
+                   ->method('__invoke')
+                   ->will($this->returnArgument(0));
+        $htmlTag = $this->_getHelper('HtmlTag');
+        $consoleUrl = $this->getMockBuilder('Console\View\Helper\ConsoleUrl')->disableOriginalConstructor()->getMock();
+        $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
+
+        $table = $this->getMockBuilder($this->_getHelperClass())
+                      ->setConstructorArgs(array($escapeHtml, $htmlTag, $consoleUrl, $dateFormat))
+                      ->setMethods($stubs)
+                      ->getMock();
+        $table->expects($this->at(0))
+              ->method('row')
+              ->with($this->_headers, true, $columnClasses)
+              ->will($this->returnCallback($rowCallback));
+        $table->expects($this->at(1))
+              ->method('row')
+              ->with(array('column1' => 'value1a', 'column2' => 'value2a'), false, $columnClasses)
+              ->will($this->returnCallback($rowCallback));
+        $table->expects($this->at(2))
+              ->method('row')
+              ->with(array('column1' => 'value1b', 'column2' => 'value2b'), false, $columnClasses)
+              ->will($this->returnCallback($rowCallback));
+
+        $this->assertEquals($expectedTable, $table($data, $this->_headers, array(), array(), $columnClasses));
     }
 
     /**
@@ -271,6 +302,10 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
         $this->assertEquals(
             "<tr>\n<th>\nheader1\n</th>\n<th>\nheader2\n</th>\n\n</tr>\n",
             $helper->row($this->_headers, true)
+        );
+        $this->assertEquals(
+            "<tr>\n<th>\nheader1\n</th>\n<th class=\"test\">\nheader2\n</th>\n\n</tr>\n",
+            $helper->row($this->_headers, true, array('column2' => 'test'))
         );
     }
 }

@@ -92,6 +92,10 @@ class Table extends \Zend\View\Helper\AbstractHelper
      * 3. The key of the column to be rendered. This is useful for callbacks
      *    that render more than 1 column.
      *
+     * The optional $columnClasses array may contain values for a "class"
+     * attribute which gets applied to all cells of a specified column. The
+     * $columnClasses keys are matched against the keys of each row.
+     *
      * If the optional $sorting array contains the "order" and "direction"
      * elements (other elements are ignored), headers are generated as
      * hyperlinks with "order" and "direction" parameters set to the
@@ -106,12 +110,15 @@ class Table extends \Zend\View\Helper\AbstractHelper
      * @param array $headers
      * @param array $sorting
      * @param array $renderCallbacks
+     * @param string[] $columnClasses Optional class attributes to apply to columns (keys are matched against $row)
+     * @return string HTML table
      */
     function __invoke(
         $data,
         array $headers,
         $sorting=array(),
-        $renderCallbacks=array()
+        $renderCallbacks=array(),
+        $columnClasses=array()
     )
     {
         $table = "<table class='alternating'>\n";
@@ -122,9 +129,9 @@ class Table extends \Zend\View\Helper\AbstractHelper
             foreach ($headers as $key => $label) {
                 $row[] = $this->sortableHeader($label, $key, $sorting['order'], $sorting['direction']);
             }
-            $table .= $this->row($row, true);
+            $table .= $this->row($row, true, $columnClasses);
         } else {
-            $table .= $this->row($headers, true);
+            $table .= $this->row($headers, true, $columnClasses);
         }
 
         // Generate data rows
@@ -133,9 +140,9 @@ class Table extends \Zend\View\Helper\AbstractHelper
             $row = array();
             foreach ($keys as $key) {
                 if (isset($renderCallbacks[$key])) {
-                    $row[] = $renderCallbacks[$key]($this->view, $rowData, $key);
+                    $row[$key] = $renderCallbacks[$key]($this->view, $rowData, $key);
                 } elseif ($rowData[$key] instanceof \Zend_Date) {
-                    $row[] = $this->_escapeHtml->__invoke(
+                    $row[$key] = $this->_escapeHtml->__invoke(
                         $this->_dateFormat->__invoke(
                             (int) $rowData[$key]->get(\Zend_Date::TIMESTAMP),
                             \IntlDateFormatter::SHORT,
@@ -143,10 +150,10 @@ class Table extends \Zend\View\Helper\AbstractHelper
                         )
                     );
                 } else {
-                    $row[] = $this->_escapeHtml->__invoke($rowData[$key]);
+                    $row[$key] = $this->_escapeHtml->__invoke($rowData[$key]);
                 }
             }
-            $table .= $this->row($row, false);
+            $table .= $this->row($row, false, $columnClasses);
         }
 
         $table .= "</table>\n";
@@ -196,13 +203,18 @@ class Table extends \Zend\View\Helper\AbstractHelper
      * 
      * @param array $columns Column data
      * @param bool $isHeader Use "th" tag instead of "td".
+     * @param string[] $columnClasses Optional class attributes to apply to cells (keys are matched against $row)
      * @return string HTML table row
      */
-    public function row(array $columns, $isHeader)
+    public function row(array $columns, $isHeader, $columnClasses=array())
     {
         $row = '';
-        foreach ($columns as $column) {
-            $row .= $this->_htmlTag->__invoke($isHeader ? 'th' : 'td', $column);
+        foreach ($columns as $key => $column) {
+            $row .= $this->_htmlTag->__invoke(
+                $isHeader ? 'th' : 'td',
+                $column,
+                isset($columnClasses[$key]) ? array('class' => $columnClasses[$key]) : null
+            );
         }
         return $this->_htmlTag->__invoke('tr', $row);
     }

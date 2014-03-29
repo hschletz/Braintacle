@@ -104,7 +104,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
             "\nname2\n"
         );
         $this->assertQueryContentContains(
-            'td a[href*="/console/computer/index/"][href*="search=raw_name2"]',
+            'td[class="textright"] a[href*="/console/computer/index/"][href*="search=raw_name2"]',
             '2'
         );
 

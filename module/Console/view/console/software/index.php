@@ -74,7 +74,6 @@ $renderCallbacks = array (
                         'search' => $software['RawName'],
                     )
                 ),
-                'class' => 'block textright'
             ),
             true
         );
@@ -86,5 +85,6 @@ print $this->table(
     $this->software,
     $headers,
     $this->order,
-    $renderCallbacks
+    $renderCallbacks,
+    array('NumComputers' => 'textright')
 );
