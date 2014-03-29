@@ -185,7 +185,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
              ->will($this->returnValue(''));
         $this->_formManager->expects($this->once())
                            ->method('get')
-                           ->with("Form\Preferences\\$formClass")
+                           ->with("Console\Form\Preferences\\$formClass")
                            ->will($this->returnValue($form));
         $this->dispatch("/console/preferences/$action");
         $this->assertResponseStatusCode(200);
@@ -201,7 +201,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_formManager = $this->getMock('Zend\ServiceManager\ServiceManager');
         $this->_formManager->expects($this->once())
                            ->method('get')
-                           ->with("Form\Preferences\\$formClass")
+                           ->with("Console\Form\Preferences\\$formClass")
                            ->will($this->returnValue($form));
         $this->dispatch("/console/preferences/$action", 'POST', $postData);
         $this->assertResponseStatusCode(200);
@@ -222,7 +222,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
              ->method('toHtml');
         $this->_formManager->expects($this->once())
                            ->method('get')
-                           ->with('Form\DefineFields')
+                           ->with('Console\Form\DefineFields')
                            ->will($this->returnValue($form));
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
@@ -242,7 +242,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_formManager = $this->getMock('Zend\ServiceManager\ServiceManager');
         $this->_formManager->expects($this->once())
                            ->method('get')
-                           ->with('Form\DefineFields')
+                           ->with('Console\Form\DefineFields')
                            ->will($this->returnValue($form));
         $this->dispatch($url, 'POST', $postData);
         $this->assertResponseStatusCode(200);
@@ -258,7 +258,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_formManager = $this->getMock('Zend\ServiceManager\ServiceManager');
         $this->_formManager->expects($this->once())
                            ->method('get')
-                           ->with('Form\DefineFields')
+                           ->with('Console\Form\DefineFields')
                            ->will($this->returnValue($form));
         $this->dispatch($url, 'POST', $postData);
         $this->assertRedirectTo('/console/preferences/customfields/');
@@ -306,7 +306,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
              ->method('toHtml');
         $this->_formManager->expects($this->once())
                            ->method('get')
-                           ->with('Form\NetworkDeviceTypes')
+                           ->with('Console\Form\NetworkDeviceTypes')
                            ->will($this->returnValue($form));
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
@@ -326,7 +326,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_formManager = $this->getMock('Zend\ServiceManager\ServiceManager');
         $this->_formManager->expects($this->once())
                            ->method('get')
-                           ->with('Form\NetworkDeviceTypes')
+                           ->with('Console\Form\NetworkDeviceTypes')
                            ->will($this->returnValue($form));
         $this->dispatch($url, 'POST', $postData);
         $this->assertResponseStatusCode(200);
@@ -342,7 +342,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_formManager = $this->getMock('Zend\ServiceManager\ServiceManager');
         $this->_formManager->expects($this->once())
                            ->method('get')
-                           ->with('Form\NetworkDeviceTypes')
+                           ->with('Console\Form\NetworkDeviceTypes')
                            ->will($this->returnValue($form));
         $this->dispatch($url, 'POST', $postData);
         $this->assertRedirectTo('/console/network/index/');

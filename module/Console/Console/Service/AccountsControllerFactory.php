@@ -34,8 +34,8 @@ class AccountsControllerFactory implements \Zend\ServiceManager\FactoryInterface
         $serviceManager = $serviceLocator->getServiceLocator();
         return new \Console\Controller\AccountsController(
             $serviceManager->get('Model\Operator'),
-            $serviceManager->get('Form\Account\New'),
-            $serviceManager->get('Form\Account\Edit')
+            $serviceManager->get('Console\Form\Account\New'),
+            $serviceManager->get('Console\Form\Account\Edit')
         );
     }
 }

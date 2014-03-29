@@ -88,7 +88,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     public function displayAction()
     {
-        return $this->_useForm('Form\Preferences\Display');
+        return $this->_useForm('Console\Form\Preferences\Display');
     }
 
     /**
@@ -98,7 +98,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     public function inventoryAction()
     {
-        return $this->_useForm('Form\Preferences\Inventory');
+        return $this->_useForm('Console\Form\Preferences\Inventory');
     }
 
     /**
@@ -108,7 +108,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     public function agentAction()
     {
-        return $this->_useForm('Form\Preferences\Agent');
+        return $this->_useForm('Console\Form\Preferences\Agent');
     }
 
     /**
@@ -118,7 +118,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     public function packagesAction()
     {
-        return $this->_useForm('Form\Preferences\Packages');
+        return $this->_useForm('Console\Form\Preferences\Packages');
     }
 
     /**
@@ -128,7 +128,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     public function downloadAction()
     {
-        return $this->_useForm('Form\Preferences\Download');
+        return $this->_useForm('Console\Form\Preferences\Download');
     }
 
     /**
@@ -138,7 +138,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     public function networkscanningAction()
     {
-        return $this->_useForm('Form\Preferences\NetworkScanning');
+        return $this->_useForm('Console\Form\Preferences\NetworkScanning');
     }
 
     /**
@@ -148,7 +148,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     public function groupsAction()
     {
-        return $this->_useForm('Form\Preferences\Groups');
+        return $this->_useForm('Console\Form\Preferences\Groups');
     }
 
     /**
@@ -158,7 +158,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     public function rawdataAction()
     {
-        return $this->_useForm('Form\Preferences\RawData');
+        return $this->_useForm('Console\Form\Preferences\RawData');
     }
 
     /**
@@ -168,7 +168,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     public function filtersAction()
     {
-        return $this->_useForm('Form\Preferences\Filters');
+        return $this->_useForm('Console\Form\Preferences\Filters');
     }
 
     /**
@@ -178,7 +178,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     public function systemAction()
     {
-        return $this->_useForm('Form\Preferences\System');
+        return $this->_useForm('Console\Form\Preferences\System');
     }
 
     /**
@@ -188,7 +188,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     public function customfieldsAction()
     {
-        $form = $this->_formManager->get('Form\DefineFields');
+        $form = $this->_formManager->get('Console\Form\DefineFields');
         if ($this->getRequest()->isPost() and $form->isValid($this->params()->fromPost())) {
             $form->process();
             return $this->redirectToRoute('preferences', 'customfields');
@@ -223,7 +223,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     public function networkdevicesAction()
     {
-        $form = $this->_formManager->get('Form\NetworkDeviceTypes');
+        $form = $this->_formManager->get('Console\Form\NetworkDeviceTypes');
         if ($this->getRequest()->isPost() and $form->isValid($this->params()->fromPost())) {
             $form->process();
             return $this->redirectToRoute('network', 'index');

@@ -84,7 +84,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     /** {@inheritdoc} */
     public function testService()
     {
-        $this->_overrideService('Form\NetworkDevice', $this->_deviceForm);
+        $this->_overrideService('Console\Form\NetworkDevice', $this->_deviceForm);
         parent::testService();
     }
 
