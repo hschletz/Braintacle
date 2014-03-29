@@ -90,6 +90,10 @@ Feature\BootstrapListenerInterface
             $e->getRouteMatch()->getParam('controller') != 'login' and
             !\Library\Application::isTest() // TODO: Provide test case
         ) {
+            // Preserve URI of current request for redirect after successful login
+            $session = new \Zend\Session\Container('login');
+            $session->originalUri = $e->getRequest()->getUriString();
+
             $location = $e->getRouter()->assemble(
                 array('controller' => 'login'),
                 array('name' => 'console')

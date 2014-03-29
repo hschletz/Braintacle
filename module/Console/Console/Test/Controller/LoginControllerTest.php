@@ -123,6 +123,7 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
             $postData
         );
         $this->assertRedirectTo('/console/computer/index/');
+        $this->assertArrayNotHasKey('login', $_SESSION); // Should be cleared by action
 
         // POST request with invalid credentials should yield login form.
         $postData = array('userid' => 'baduser', 'password' => 'badpassword');
@@ -166,6 +167,32 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
                     ->method('toHtml');
         $this->dispatch($uri);
         $this->assertResponseStatusCode(200);
+
+        // Test redirect to previous page after successful login.
+        $postData = array('userid' => 'gooduser', 'password' => 'goodpassword');
+        $this->_sessionSetup = array('login' => array('originalUri' => 'redirectTest'));
+        $this->_form = $this->getMock('Form_Login');
+        $this->_form->expects($this->once())
+                    ->method('isValid')
+                    ->with($postData)
+                    ->will($this->returnValue(true));
+        $this->_form->expects($this->exactly(2))
+                    ->method('getValue')
+                    ->will(
+                        $this->returnValueMap(
+                            array(
+                                array('userid', 'gooduser'),
+                                array('password', 'goodpassword')
+                            )
+                        )
+                    );
+        $this->dispatch(
+            $uri,
+            'POST',
+            $postData
+        );
+        $this->assertRedirectTo('redirectTest');
+        $this->assertArrayNotHasKey('login', $_SESSION); // Should be cleared by action
     }
 
     /**

@@ -90,8 +90,17 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
                     $this->_form->getValue('password')
                 )
             ) {
-                // Authentication successful. Redirect to computer listing.
-                return $this->redirectToRoute('computer');
+                // Authentication successful. Redirect to appropriate page.
+                $session = new \Zend\Session\Container('login');
+                if (isset($session->originalUri)) {
+                    // We got redirected here from another page. Redirect to original page.
+                    $response = $this->redirect()->toUrl($session->originalUri);
+                } else {
+                    // Redirect to default page (computer listing)
+                    $response = $this->redirectToRoute('computer');
+                }
+                $session->getManager()->getStorage()->clear('login');
+                return $response;
             } else {
                 $this->_form->setDescription('Invalid username or password');
             }

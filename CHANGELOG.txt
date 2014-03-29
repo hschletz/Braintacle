@@ -9,6 +9,12 @@ without any warranty.
 CHANGES IN VERSION 1.0
 =======================
 
+New features:
+
+- Console: After being redirected to the login page from an unauthenticated
+  request, redirect to the original page after successful login. This simplifies
+  quick access to particular pages via bookmarks etc.
+
 Fixed bugs:
 
 - Console: Fixed inconsistent navigation (missing submenu and/or active menu not
