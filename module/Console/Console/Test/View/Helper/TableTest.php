@@ -122,7 +122,8 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
         $this->assertEquals($expectedTable, $table($data, $this->_headers));
 
-        // Test with sortable headers
+        // Test with sortable headers. The row() invocations are tested
+        // explicitly because the passed keys are significant.
         $escapeHtml = $this->getMock('Zend\View\Helper\EscapeHtml');
         $escapeHtml->expects($this->exactly(4)) // once per non-header cell
                    ->method('__invoke')
@@ -135,8 +136,17 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
         $table->expects($this->exactly(2)) // once per column
               ->method('sortableHeader')
               ->will($this->returnArgument(0));
-        $table->expects($this->exactly(3))
+        $table->expects($this->at(2))
               ->method('row')
+              ->with($this->_headers, true)
+              ->will($this->returnCallback($rowCallback));
+        $table->expects($this->at(3))
+              ->method('row')
+              ->with(array('column1' => 'value1a', 'column2' => 'value2a'), false)
+              ->will($this->returnCallback($rowCallback));
+        $table->expects($this->at(4))
+              ->method('row')
+              ->with(array('column1' => 'value1b', 'column2' => 'value2b'), false)
               ->will($this->returnCallback($rowCallback));
 
         $this->assertEquals(

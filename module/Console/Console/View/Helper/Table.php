@@ -127,7 +127,7 @@ class Table extends \Zend\View\Helper\AbstractHelper
         if (isset($sorting['order']) and isset($sorting['direction'])) {
             $row = array();
             foreach ($headers as $key => $label) {
-                $row[] = $this->sortableHeader($label, $key, $sorting['order'], $sorting['direction']);
+                $row[$key] = $this->sortableHeader($label, $key, $sorting['order'], $sorting['direction']);
             }
             $table .= $this->row($row, true, $columnClasses);
         } else {
