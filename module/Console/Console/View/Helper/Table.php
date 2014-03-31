@@ -96,6 +96,10 @@ class Table extends \Zend\View\Helper\AbstractHelper
      * attribute which gets applied to all cells of a specified column. The
      * $columnClasses keys are matched against the keys of each row.
      *
+     * $rowClassCallback, if given, is called for every non-header row. It
+     * receives the unprocessed column data for each row and delivers a string
+     * that is set as the row's class attribute if it is not empty.
+     *
      * If the optional $sorting array contains the "order" and "direction"
      * elements (other elements are ignored), headers are generated as
      * hyperlinks with "order" and "direction" parameters set to the
@@ -111,6 +115,7 @@ class Table extends \Zend\View\Helper\AbstractHelper
      * @param array $sorting
      * @param array $renderCallbacks
      * @param string[] $columnClasses Optional class attributes to apply to columns (keys are matched against $row)
+     * @param callable $rowClassCallback Optional callback to provide row class attributes
      * @return string HTML table
      */
     function __invoke(
@@ -118,7 +123,8 @@ class Table extends \Zend\View\Helper\AbstractHelper
         array $headers,
         $sorting=array(),
         $renderCallbacks=array(),
-        $columnClasses=array()
+        $columnClasses=array(),
+        $rowClassCallback = null
     )
     {
         $table = "<table class='alternating'>\n";
@@ -153,7 +159,12 @@ class Table extends \Zend\View\Helper\AbstractHelper
                     $row[$key] = $this->_escapeHtml->__invoke($rowData[$key]);
                 }
             }
-            $table .= $this->row($row, false, $columnClasses);
+            $table .= $this->row(
+                $row,
+                false,
+                $columnClasses,
+                $rowClassCallback ? $rowClassCallback($rowData) : null
+            );
         }
 
         $table .= "</table>\n";
@@ -204,9 +215,10 @@ class Table extends \Zend\View\Helper\AbstractHelper
      * @param array $columns Column data
      * @param bool $isHeader Use "th" tag instead of "td".
      * @param string[] $columnClasses Optional class attributes to apply to cells (keys are matched against $row)
+     * @param string $rowClass Optional class attribute for the row
      * @return string HTML table row
      */
-    public function row(array $columns, $isHeader, $columnClasses=array())
+    public function row(array $columns, $isHeader, $columnClasses=array(), $rowClass=null)
     {
         $row = '';
         foreach ($columns as $key => $column) {
@@ -216,6 +228,10 @@ class Table extends \Zend\View\Helper\AbstractHelper
                 isset($columnClasses[$key]) ? array('class' => $columnClasses[$key]) : null
             );
         }
-        return $this->_htmlTag->__invoke('tr', $row);
+        return $this->_htmlTag->__invoke(
+            'tr',
+            $row,
+            $rowClass ? array('class' => $rowClass) : null
+        );
     }
 }
