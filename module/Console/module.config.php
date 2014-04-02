@@ -26,6 +26,7 @@ return array(
         ),
         'invokables' => array(
             'GetOrder' => 'Console\Mvc\Controller\Plugin\GetOrder',
+            'PrintForm' => 'Console\Mvc\Controller\Plugin\PrintForm',
         )
     ),
     'controllers' => array(

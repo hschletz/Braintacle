@@ -302,26 +302,6 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
         } else {
             $form->process($this->params()->fromPost());
         }
-        return $this->_returnForm($form);
-    }
-
-    /**
-     * Return view model for "form.php" template
-     *
-     * Many actions simply render a form object. Instead of a bunch of identical
-     * scripts, a generic template "form.php" is available which simply renders
-     * the provided form. This method returns a view model set up to use this
-     * template.
-     *
-     * @param mixed $form Form to inject into the template
-     * @return \Zend\View\Model\ViewModel
-     */
-    protected function _returnForm($form)
-    {
-        $view = new \Zend\View\Model\ViewModel;
-        $view->setTemplate('console/preferences/form.php');
-        $view->form = $form;
-        return $view;
+        return $this->printForm($form);
     }
 }
-

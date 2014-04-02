@@ -1,6 +1,6 @@
 <?php
 /**
- * Generic view script to display a form
+ * Return ViewModel which outputs a given form
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,7 +17,30 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-print $this->form;
+namespace Console\Mvc\Controller\Plugin;
+
+/**
+ * Return ViewModel which outputs a given form
+ *
+ * Many actions simply render a form object. Instead of writing a bunch of
+ * identical scripts with a single rendering method call, this plugin provides a
+ * generic template which simply renders the provided form.
+ */
+class PrintForm extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
+{
+    /**
+     * Return view model set up to output given form
+     *
+     * @param mixed $form Form to render
+     * @return \Zend\View\Model\ViewModel
+     */
+    function __invoke($form)
+    {
+        $view = new \Zend\View\Model\ViewModel;
+        $view->setTemplate('plugin/PrintForm.php');
+        $view->form = $form;
+        return $view;
+    }
+}
