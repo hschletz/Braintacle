@@ -27,7 +27,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
         <directory>../../application/controllers/helpers</directory>
         <directory>../../library/Braintacle</directory>
         <directory>../../module</directory>
-        <ignore>module/*/Test/bootstrap.php</ignore>
+        <ignore>module/*/Test/</ignore>
     </files>
     <parser>
         <target>.</target>
