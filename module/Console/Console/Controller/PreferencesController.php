@@ -291,7 +291,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Standard preferences handling via preferences form subclass
      *
-     * @param string $class Name of the form service
+     * @param string $name Name of the form service
      * @return \Zend\View\Model\ViewModel View model for "form.php" template
      */
     protected function _useForm($name)

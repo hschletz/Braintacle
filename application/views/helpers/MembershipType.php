@@ -29,7 +29,8 @@ class Zend_View_Helper_MembershipType extends Zend_View_Helper_Abstract
 
     /**
      * Render translated text for membership type
-     * @param integer One of {@link Model_GroupMembership::TYPE_DYNAMIC} or {@link Model_GroupMembership::TYPE_STATIC}
+     *
+     * @param integer $type One of \Model_GroupMembership::TYPE_DYNAMIC or \Model_GroupMembership::TYPE_STATIC
      * @return string Translation for either 'automatic' or 'manual'
      */
     function MembershipType($type)

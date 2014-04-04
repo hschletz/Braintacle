@@ -81,7 +81,8 @@ class Form_SoftwareFilter extends Zend_Form
 
     /**
      * Set the value for the 'Filter' element
-     * @param string One of accepted|ignored|new|all. Other values trigger an exception.
+     *
+     * @param string $filter One of accepted|ignored|new|all. Other values trigger an exception.
      */
     public function setFilter($filter)
     {

@@ -225,7 +225,7 @@ class Model_RegistryValue extends Model_Abstract
 
     /**
      * Retrieve textual representation of a given root key
-     * @param integer One of the HKEY_* constants
+     * @param integer $root One of the HKEY_* constants
      * @return string
      */
     public static function rootKey($root)

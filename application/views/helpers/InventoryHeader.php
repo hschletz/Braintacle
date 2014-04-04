@@ -29,7 +29,7 @@ class Zend_View_Helper_InventoryHeader extends Zend_View_Helper_Abstract
 
     /**
      * Render headline and navigation for inventory details
-     * @param Model_Computer Computer for which inventory is displayed
+     * @param Model_Computer $computer Computer for which inventory is displayed
      * @return string HTML code with header and navigation
      */
     function inventoryHeader($computer)

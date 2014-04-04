@@ -29,7 +29,7 @@ class Zend_View_Helper_GroupHeader extends Zend_View_Helper_Abstract
 
     /**
      * Render headline and navigation for group details
-     * @param Model_Group Group for which details are displayed
+     * @param Model_Group $group Group for which details are displayed
      * @return string HTML code with header and navigation
      */
     function groupHeader($group)

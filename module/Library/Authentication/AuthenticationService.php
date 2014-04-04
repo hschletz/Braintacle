@@ -78,7 +78,7 @@ implements \Zend\ServiceManager\ServiceLocatorAwareInterface
      * name. However, the service must have an identity befor this method is
      * called.
      *
-     * @param @id New identity
+     * @param $id New identity
      * @throws \LogicException if the session is not authenticated
      */
     public function changeIdentity($id)

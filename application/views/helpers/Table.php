@@ -77,7 +77,7 @@ class Zend_View_Helper_Table extends Zend_View_Helper_Abstract
      * @param string $modelClass Name of the class to hold the fetched data. Must be derived from Model_Abstract.
      * @param string $rowFormatCallback Optional name of callback function to return class attribute for a given row
      * @param array $renderCallbacks Optional array with property as key and name of callback function for rendering
-     * @param int &$rowCount Optional reference to a variable that will hold the number of rows
+     * @param int $rowCount Optional reference to a variable that will hold the number of rows
      * @return string HTML table output
      */
     function table(
@@ -167,7 +167,7 @@ class Zend_View_Helper_Table extends Zend_View_Helper_Abstract
      * Determine <class> attributes for each cell in a row
      * @param array $columns Property names of all columns
      * @param array $formats Associative array with format descriptions
-     * @param mixed Object with row data (default: NULL, for header row)
+     * @param mixed $row Object with row data (default: NULL, for header row)
      * @return array List of <class> attributes for each column
      */
     protected function _buildFormats($columns, $formats, $row=null)

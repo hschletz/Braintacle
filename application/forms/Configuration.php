@@ -344,7 +344,7 @@ class Form_Configuration extends Zend_Form
      * Apply the settings of a subform
      *
      * @param string $name Subform name
-     * @param string If not NULL, this is the name of a checkbox that voids all other elements if unchecked.
+     * @param string $masterElement Optional name of a checkbox that voids all other elements if unchecked.
      */
     protected function _processSubForm($name, $masterElement=null)
     {

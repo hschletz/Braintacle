@@ -49,7 +49,7 @@ abstract class Form_Normalized extends Zend_Form
      *
      * The result can be any string, but only 'integer', 'float' and 'date' will
      * be recognized.
-     * @param string Element name
+     * @param string $name Element name
      * @return string
      */
     abstract public function getType($name);

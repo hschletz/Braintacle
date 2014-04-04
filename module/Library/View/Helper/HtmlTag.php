@@ -40,10 +40,13 @@ class HtmlTag extends \Zend\View\Helper\AbstractHelper
     /**
      * Constructor
      *
-     * @param \Zend\View\Helper\EscapeHtmlAttr $escapeHtmlAttr View helper
-     * @param \Zend\View\Helper\doctype $doctype Doctype helper
+     * @param \Zend\View\Helper\EscapeHtmlAttr $escapeHtmlAttr EscapeHtmlAttr helper
+     * @param \Zend\View\Helper\Doctype $doctype Doctype helper
      */
-    public function __construct(\Zend\View\Helper\EscapeHtmlAttr $escapeHtmlAttr, $doctype)
+    public function __construct(
+        \Zend\View\Helper\EscapeHtmlAttr $escapeHtmlAttr,
+        \Zend\View\Helper\Doctype $doctype
+    )
     {
         $this->_escapeHtmlAttr = $escapeHtmlAttr;
         if (!$doctype->isXhtml()) {

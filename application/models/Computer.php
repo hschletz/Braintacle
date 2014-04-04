@@ -895,7 +895,7 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string $type Object type to retrieve (name of model class without 'Model_' prefix)
      * @param string $order Property to sort by. If ommitted, the model's builtin default is used.
      * @param string $direction Sorting direction (asc|desc)
-     * @param array Extra filters to pass to the child model's createStatement() method
+     * @param array $filters Extra filters to pass to the child model's createStatement() method
      * @return Zend_Db_Statement Statement object with results
      */
     public function getChildObjects($type, $order=null, $direction=null, $filters=array())
@@ -1144,7 +1144,7 @@ class Model_Computer extends Model_ComputerOrGroup
      * This method determines the table and column name and adds them to $select
      * if necessary. The only part left is the WHERE clause as this depends on
      * the column datatype.
-     * @param Zend_Db_Select Object to apply the filter to
+     * @param \Zend_Db_Select $select Object to apply the filter to
      * @param string $model Name of model class (without 'Model_' prefix) where property can be found.
      * This must be either 'Computer' or a valid child object class. Every
      * other value will trigger an exception.
@@ -1226,7 +1226,7 @@ class Model_Computer extends Model_ComputerOrGroup
     /**
      * Apply a filter for a string value.
      *
-     * @param Zend_Db_Select Object to apply the filter to
+     * @param \Zend_Db_Select $select Object to apply the filter to
      * @param string $model Name of model class (without 'Model_' prefix) where property can be found.
      * This must be either 'Computer' or a valid child object class. Every
      * other value will trigger an exception.
@@ -1293,7 +1293,7 @@ class Model_Computer extends Model_ComputerOrGroup
      * Input is not validated. It's better to call {@link _findInteger()} or
      * {@link _findFloat()} instead that perform proper input validation.
      *
-     * @param Zend_Db_Select Object to apply the filter to
+     * @param \Zend_Db_Select $select Object to apply the filter to
      * @param string $model Name of model class (without 'Model_' prefix) where property can be found.
      * This must be either 'Computer' or a valid child object class. Every
      * other value will trigger an exception.
@@ -1352,7 +1352,7 @@ class Model_Computer extends Model_ComputerOrGroup
     /**
      * Apply a filter for an integer value.
      *
-     * @param Zend_Db_Select Object to apply the filter to
+     * @param \Zend_Db_Select $select Object to apply the filter to
      * @param string $model Name of model class (without 'Model_' prefix) where property can be found.
      * This must be either 'Computer' or a valid child object class. Every
      * other value will trigger an exception.
@@ -1385,7 +1385,7 @@ class Model_Computer extends Model_ComputerOrGroup
     /**
      * Apply a filter for a float value.
      *
-     * @param Zend_Db_Select Object to apply the filter to
+     * @param \Zend_Db_Select $select Object to apply the filter to
      * @param string $model Name of model class (without 'Model_' prefix) where property can be found.
      * This must be either 'Computer' or a valid child object class. Every
      * other value will trigger an exception.
@@ -1410,7 +1410,7 @@ class Model_Computer extends Model_ComputerOrGroup
     /**
      * Apply a filter for a date value.
      *
-     * @param Zend_Db_Select Object to apply the filter to
+     * @param \Zend_Db_Select $select Object to apply the filter to
      * @param string $model Name of model class (without 'Model_' prefix) where property can be found.
      * This must be either 'Computer' or a valid child object class. Every
      * other value will trigger an exception.

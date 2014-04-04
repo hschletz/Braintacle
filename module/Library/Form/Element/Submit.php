@@ -42,6 +42,8 @@ class Submit extends \Zend\Form\Element\Submit
 {
     /**
      * Proxy to setValue()
+     *
+     * @param string $text Button text
      */
     public function setText($text)
     {

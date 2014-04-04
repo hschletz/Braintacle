@@ -56,7 +56,7 @@ class Application
      * overridden except for testing.
      *
      * @param string $module Module to load
-     * @param bool Run the application after initialization.
+     * @param bool $run Run the application after initialization.
      * @codeCoverageIgnore
      */
     static function init($module, $run=null)
@@ -261,7 +261,7 @@ class Application
      * functionality is not available. One use case is unit testing where the
      * initialization code bypasses this part of the Zend Framework.
      *
-     * @param string Service name
+     * @param string $name Service name
      * @return mixed Registered service
      */
     public static function getService($name)

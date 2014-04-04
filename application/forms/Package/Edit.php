@@ -86,7 +86,7 @@ class Form_Package_Edit extends Form_Package
 
     /**
      * Populate form with values from a package object
-     * @param Model_Package Package with values to put into the form
+     * @param \Model_Package $package Package with values to put into the form
      */
     public function setValuesFromPackage($package)
     {
