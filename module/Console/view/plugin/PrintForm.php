@@ -21,7 +21,11 @@
  */
 
 if ($this->form instanceof \Zend_Form) {
-    if (!method_exists($this->form, 'toHtml')) {
+    if (method_exists($this->form, 'toHtml')) {
+        // @codeCoverageIgnoreStart
+        print $this->form->toHtml($this); // ZF1 glue method
+    } else {
+        // @codeCoverageIgnoreEnd
         print $this->form; // Default renderer without ZF1 glue method
     }
 }
