@@ -1,6 +1,6 @@
 <?php
 /**
- * Display package builder form
+ * Factory for PackageController
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,7 +17,25 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-print $this->form;
+namespace Console\Service;
+
+/**
+ * Factory for PackageController
+ */
+class PackageControllerFactory implements \Zend\ServiceManager\FactoryInterface
+{
+    /**
+     * @internal
+     */
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    {
+        $serviceManager = $serviceLocator->getServiceLocator();
+        return new \Console\Controller\PackageController(
+            $serviceManager->get('Model\Package\Package'),
+            $serviceManager->get('Console\Form\Package\Build'),
+            $serviceManager->get('Console\Form\Package\Edit')
+        );
+    }
+}

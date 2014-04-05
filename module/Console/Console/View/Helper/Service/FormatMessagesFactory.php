@@ -1,6 +1,6 @@
 <?php
 /**
- * Display confirmation form for package deletion
+ * Factory for FormatMessages
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,19 +17,24 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-$session = new Zend_Session_Namespace('PackageBuilder');
+namespace Console\View\Helper\Service;
 
-print $this->htmlTag(
-    'p',
-    sprintf(
-        $this->translate(
-            'Package \'%s\' will be permanently deleted. Continue?'
-        ),
-        $this->escape($session->packageName)
-    )
-);
-
-print new Form_YesNo;
+/**
+ * Factory for FormatMessages
+ */
+class FormatMessagesFactory implements \Zend\ServiceManager\FactoryInterface
+{
+    /**
+     * @internal
+     */
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    {
+        return new \Console\View\Helper\FormatMessages(
+            $serviceLocator->get('EscapeHtml'),
+            $serviceLocator->get('HtmlTag'),
+            $serviceLocator->get('Translate')
+        );
+    }
+}

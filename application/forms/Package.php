@@ -389,13 +389,12 @@ class Form_Package extends Zend_Form
 
     /**
      * Render form
-     * @param Zend_View_Interface $view
+     *
+     * @param \Zend\View\Renderer\RendererInterface $view
      * @return string
      */
-    public function render(Zend_View_Interface $view=null)
+    public function toHtml(\Zend\View\Renderer\RendererInterface $view)
     {
-        $view = $this->getView();
-
         // Generate JavaScript to make this form fully functional.
         $displayErrors = ini_get('display_errors');
         // Don't let missing translations screw up the JS code
@@ -473,7 +472,7 @@ class Form_Package extends Zend_Form
         $view->headScript()->captureEnd();
         ini_set('display_errors', $displayErrors);
 
-        return parent::render($view);
+        return $this->render();
     }
 
 }

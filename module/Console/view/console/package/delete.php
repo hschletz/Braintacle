@@ -1,6 +1,6 @@
 <?php
 /**
- * Display package editing form
+ * Display confirmation form for package deletion
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -20,4 +20,11 @@
  *
  */
 
-print $this->form;
+print $this->formYesNo(
+    sprintf(
+        $this->translate(
+            'Package \'%s\' will be permanently deleted. Continue?'
+        ),
+        $this->escapeHtml($this->name)
+    )
+);

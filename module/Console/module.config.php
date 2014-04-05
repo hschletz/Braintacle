@@ -39,6 +39,7 @@ return array(
             'licenses' => 'Console\Service\LicensesControllerFactory',
             'login' => 'Console\Service\LoginControllerFactory',
             'network' => 'Console\Service\NetworkControllerFactory',
+            'package' => 'Console\Service\PackageControllerFactory',
             'preferences' => 'Console\Service\PreferencesControllerFactory',
             'software' => 'Console\Service\SoftwareControllerFactory',
         ),
@@ -70,7 +71,7 @@ return array(
             'zf1' => array(
                 'type'    => 'regex',
                 'options' => array(
-                    'regex'    => '/(console/)?(computer|error|group|index|package)/?.*',
+                    'regex'    => '/(console/)?(computer|error|group|index)/?.*',
                     'spec' => '',
                     'defaults' => array(
                         'controller' => 'Console\Controller\ZF1',
@@ -90,6 +91,8 @@ return array(
             'Console\Form\NetworkDeviceTypes' => 'Form_ManageNetworkDeviceTypes',
             'Console\Form\Login' => 'Form_Login',
             'Console\Form\NetworkDevice' => 'Form_NetworkDevice',
+            'Console\Form\Package\Build' => 'Form_Package',
+            'Console\Form\Package\Edit' => 'Form_Package_Edit',
             'Console\Form\Preferences\Agent' => 'Form_Preferences_Agent',
             'Console\Form\Preferences\Display' => 'Form_Preferences_Display',
             'Console\Form\Preferences\Download' => 'Form_Preferences_Download',
@@ -107,6 +110,7 @@ return array(
     'view_helpers' => array(
         'factories' => array(
             'consoleUrl' => 'Console\View\Helper\Service\ConsoleUrlFactory',
+            'formatMessages' => 'Console\View\Helper\Service\FormatMessagesFactory',
             'table' => 'Console\View\Helper\Service\TableFactory',
         ),
     ),

@@ -59,6 +59,7 @@ Feature\ConfigProviderInterface
                     'Model\Network\Device' => 'Model_NetworkDevice',
                     'Model\Network\DeviceType' => 'Model_NetworkDeviceType',
                     'Model\Network\Subnet' => 'Model_Subnet',
+                    'Model\Package\Package' => 'Model_Package',
                     'Model\RegistryValue' => 'Model_RegistryValue',
                 ),
                 'factories' => array(
