@@ -77,8 +77,10 @@ class Table extends \Zend\View\Helper\AbstractHelper
      * match corresponding fields in the other arguments. For each header, a
      * corresponding field must be set in the table data or in $renderCallbacks.
      *
-     * $data is an array of row objects. Row objects are associative arrays or
-     * objects implementing the \ArrayAccess interface.
+     * $data is an array of row objects. Row objects are typically associative
+     * arrays or objects implementing the \ArrayAccess interface. A default
+     * rendering method is available for these types. For any other type, all
+     * columns must be rendered by a callback.
      *
      * By default, cell data is retrieved from $data and escaped automatically.
      * \Zend_Date objects are rendered as short timestamps (yy-mm-dd hh:mm). The
