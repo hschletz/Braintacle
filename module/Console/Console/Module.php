@@ -70,6 +70,7 @@ Feature\BootstrapListenerInterface
     {
         $eventManager = $e->getParam('application')->getEventManager();
         $eventManager->attach(MvcEvent::EVENT_ROUTE, array($this, 'forceLogin'));
+        $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'setStrictVars'));
         $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'setLayoutTitle'));
         $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onError'));
         $eventManager->attach(MvcEvent::EVENT_RENDER_ERROR, array($this, 'onError'));
@@ -102,6 +103,36 @@ Feature\BootstrapListenerInterface
             $response->setStatusCode(302);
             $response->getHeaders()->addHeaderLine('Location', $location);
             return $response;
+        }
+    }
+
+    /**
+     * Hook to trigger notices on undefined view variables
+     *
+     * This is invoked by the "render" event.
+     *
+     * @param \Zend\Mvc\MvcEvent $e MVC event
+     */
+    public function setStrictVars(\Zend\EventManager\EventInterface $e)
+    {
+        $this->_setStrictVars($e->getViewModel());
+    }
+
+    /**
+     * Set strict vars on a view model recursively
+     *
+     * @param \Zend\View\Model\ViewModel $model
+     */
+    protected function _setStrictVars(\Zend\View\Model\ViewModel $model)
+    {
+        $vars = $model->getVariables();
+        if (!$vars instanceof \Zend\View\Variables) {
+            $vars = new \Zend\View\Variables($vars);
+        }
+        $vars->setStrictVars(true);
+        $model->setVariables($vars, true);
+        foreach ($model->getChildren() as $child) {
+            $this->_setStrictVars($child);
         }
     }
 

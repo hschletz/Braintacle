@@ -210,7 +210,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
             if ($this->params()->fromPost('yes')) {
                 $this->_customFields->deleteField($field);
             }
-            $this->redirectToRoute('preferences', 'customfields');
+            return $this->redirectToRoute('preferences', 'customfields');
         } else {
             return array('field' => $field);
         }

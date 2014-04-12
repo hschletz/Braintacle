@@ -76,6 +76,7 @@ class SoftwareController extends \Zend\Mvc\Controller\AbstractActionController
                     'Unique' => null,
                 )
             ),
+            'order' => $order,
         );
     }
 

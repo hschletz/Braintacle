@@ -183,7 +183,7 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
         if ($this->getRequest()->isPost()) {
             if ($this->_subnetForm->isValid($params->fromPost())) {
                 $subnet['Name'] = $this->_subnetForm->getValue('Name');
-                $this->redirectToRoute('network', 'index');
+                return $this->redirectToRoute('network', 'index');
             }
         } else {
             $this->_subnetForm->setDefault('Name', $subnet['Name']);

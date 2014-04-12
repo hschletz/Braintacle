@@ -24,7 +24,7 @@ print "<h1>An error occurred</h1>\n";
 print $this->htmlTag('h2', $this->message);
 
 // @codeCoverageIgnoreStart
-if (\Library\Application::isDevelopment()) {
+if (\Library\Application::isDevelopment() and isset($this->exception)) {
     $exception = $this->exception;
     if ($exception) {
         print "<h3>Exception Message trace:</h3>\n";

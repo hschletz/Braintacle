@@ -131,7 +131,7 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
             if ($this->params()->fromPost('yes')) {
                 $this->_operators->delete($id);
             }
-            $this->redirectToRoute('accounts', 'index');
+            return $this->redirectToRoute('accounts', 'index');
         } else {
             $this->setActiveMenu('Preferences', 'Users');
             return array('id' => $id);
