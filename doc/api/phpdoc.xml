@@ -28,6 +28,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
         <directory>../../library/Braintacle</directory>
         <directory>../../module</directory>
         <ignore>module/*/Test/</ignore>
+        <ignore>module/*/view/</ignore>
     </files>
     <parser>
         <target>.</target>
