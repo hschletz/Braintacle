@@ -32,7 +32,7 @@ class FormYesNoTest extends AbstractTest
     public function testInvoke()
     {
         $helper = $this->_getHelper();
-        $result = $helper('TestCaption');
+        $result = $helper('TestCaption', array('hiddenName' => 'hiddenValue'));
 
         $this->assertTag(
             array(
@@ -52,6 +52,18 @@ class FormYesNoTest extends AbstractTest
             ),
             $result,
             'Expected <form action="" method="POST">'
+        );
+        $this->assertTag(
+            array(
+                'tag' => 'input',
+                'attributes' => array(
+                    'type' => 'hidden',
+                    'name' => 'hiddenName',
+                    'value' => 'hiddenValue',
+                ),
+            ),
+            $result,
+            'Expected <input type="hidden" name="hiddenName" value="hiddenValue">'
         );
         $this->assertTag(
             array(

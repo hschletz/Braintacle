@@ -32,7 +32,8 @@ class FormYesNoFactory implements \Zend\ServiceManager\FactoryInterface
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         return new \Library\View\Helper\FormYesNo(
-            $serviceLocator->get('Translate')
+            $serviceLocator->get('Translate'),
+            $serviceLocator->get('HtmlTag')
         );
     }
 }
