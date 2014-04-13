@@ -25,56 +25,53 @@ print $this->htmlTag('h2', $this->message);
 
 // @codeCoverageIgnoreStart
 if (\Library\Application::isDevelopment() and isset($this->exception)) {
+    print "<h3>Exception Message trace:</h3>\n";
     $exception = $this->exception;
-    if ($exception) {
-        print "<h3>Exception Message trace:</h3>\n";
-
-        while ($exception) {
-            print $this->htmlTag(
-                'p',
-                '<strong>Message:</strong> ' . $this->escapeHtml($exception->getMessage())
-            );
-            print $this->htmlTag(
-                'p',
-                sprintf(
-                    '<strong>Source:</strong> %s, line %d',
-                    $this->escapeHtml($exception->getFile()),
-                    $this->escapeHtml($exception->getLine())
-                )
-            );
-            $exception = $exception->getPrevious();
-        }
-
-        // The additional debug information below might contain sensitive data.
-        if ($this->controller == 'login') {
-            print 'Details hidden for security reasons.';
-            return;
-        }
-
-        print "<h3>Stack trace:</h3>\n";
-        print $this->htmlTag('pre', $this->escapeHtml($this->exception->getTraceAsString()));
-
-        $request = $this->request;
-        print "<h3>Request Parameters:</h3>\n";
-
-        print "<h4>Method</h4>\n";
-        print $this->htmlTag('p', $this->escapeHtml($request->getMethod()));
-
-        print "<h4>URL parameters</h4>\n";
-        \Zend\Debug\Debug::dump($request->getQuery());
-
-        print "<h4>POST parameters</h4>\n";
-        \Zend\Debug\Debug::dump($request->getPost());
-
-        print "<h4>Files</h4>\n";
-        \Zend\Debug\Debug::dump($request->getFiles());
-
-        print "<h4>HTTP headers</h4>\n";
-        \Zend\Debug\Debug::dump($request->getHeaders()->toArray());
-
-        print "<h4>Environment variables</h4>\n";
-        \Zend\Debug\Debug::dump($request->getEnv());
+    while ($exception) {
+        print $this->htmlTag(
+            'p',
+            '<strong>Message:</strong> ' . $this->escapeHtml($exception->getMessage())
+        );
+        print $this->htmlTag(
+            'p',
+            sprintf(
+                '<strong>Source:</strong> %s, line %d',
+                $this->escapeHtml($exception->getFile()),
+                $this->escapeHtml($exception->getLine())
+            )
+        );
+        $exception = $exception->getPrevious();
     }
+
+    // The additional debug information below might contain sensitive data.
+    if ($this->controller == 'login') {
+        print 'Details hidden for security reasons.';
+        return;
+    }
+
+    print "<h3>Stack trace:</h3>\n";
+    print $this->htmlTag('pre', $this->escapeHtml($this->exception->getTraceAsString()));
+
+    $request = $this->request;
+    print "<h3>Request Parameters:</h3>\n";
+
+    print "<h4>Method</h4>\n";
+    print $this->htmlTag('p', $this->escapeHtml($request->getMethod()));
+
+    print "<h4>URL parameters</h4>\n";
+    \Zend\Debug\Debug::dump($request->getQuery());
+
+    print "<h4>POST parameters</h4>\n";
+    \Zend\Debug\Debug::dump($request->getPost());
+
+    print "<h4>Files</h4>\n";
+    \Zend\Debug\Debug::dump($request->getFiles());
+
+    print "<h4>HTTP headers</h4>\n";
+    \Zend\Debug\Debug::dump($request->getHeaders()->toArray());
+
+    print "<h4>Environment variables</h4>\n";
+    \Zend\Debug\Debug::dump($request->getEnv());
 } else {
     print "<p class='textcenter'>Details can be found in the web server error log.</p>\n";
 }
