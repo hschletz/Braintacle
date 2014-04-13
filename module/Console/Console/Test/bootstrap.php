@@ -20,6 +20,7 @@
  */
 
 error_reporting(-1);
+ini_set('memory_limit', '256M');
 require_once(__DIR__ . '/../../../Library/Application.php');
 \Library\Application::init('Console', false);
 \Zend_Session::$_unitTestEnabled = true;
