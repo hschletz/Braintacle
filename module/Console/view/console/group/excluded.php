@@ -1,6 +1,6 @@
 <?php
 /**
- * Display all group members
+ * Display all excluded computers
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,12 +17,9 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-$group = $this->group;
-
-print $this->groupHeader($group);
+require('header.php');
 
 $headers = array(
     'Name' => $this->translate('Name'),
@@ -31,47 +28,34 @@ $headers = array(
 );
 
 $renderCallbacks = array(
-    'Name' => 'renderName',
-);
-
-function renderName($view, $computer)
-{
-    return $view->htmlTag(
-        'a',
-        $view->escape($computer->getName()),
-        array(
-            'href' => $view->url(
-                array(
-                    'controller' => 'computer',
-                    'action' => 'groups',
-                    'id' => $computer->getId(),
-                )
+    'Name' => function($view, $computer) {
+        return $view->htmlTag(
+            'a',
+            $view->escapeHtml($computer['Name']),
+            array(
+                'href' => $view->consoleUrl(
+                    'computer',
+                    'groups',
+                    array('id' => $computer['Id'])
+                ),
             ),
-        ),
-        true
-    );
-}
-
-$table = $this->getHelper('table')->table(
-    $this->computers,
-    $this->columns,
-    $headers,
-    array(),
-    'Model_Computer',
-    null,
-    $renderCallbacks,
-    $count
+            true
+        );
+    }
 );
 
 print $this->htmlTag(
     'p',
     sprintf(
         $this->translate('Number of computers: %d'),
-        $count
+        count($this->computers)
     ),
     array('class' => 'textcenter')
 );
 
-if ($count) {
-    print $table;
-}
+print $this->table(
+    $this->computers,
+    $headers,
+    $this->sorting,
+    $renderCallbacks
+);

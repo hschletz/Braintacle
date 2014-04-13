@@ -1,6 +1,6 @@
 <?php
 /**
- * Display confirmation form for deletion.
+ * Included by group templates to render headline and group navigation
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,17 +17,16 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
 print $this->htmlTag(
-    'p',
+    'h1',
     sprintf(
-        $this->translate(
-            'Group \'%s\' will be permanently deleted. Continue?'
-        ),
-        $this->escape($this->group->getName())
+        $this->translate('Details for group \'%s\''),
+        $this->escapeHtml($group['Name'])
     )
 );
 
-print $this->form;
+print $this->navigation('Console\Navigation\GroupMenu')
+           ->menu()
+           ->setUlClass('navigation navigation_details');

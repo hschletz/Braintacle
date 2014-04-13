@@ -235,6 +235,18 @@ td,th {
     color: gray;
 }
 
+.bold {
+    font-weight: bold;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.align-top {
+    vertical-align: top;
+}
+
 .duplicate {
     color: gray;
     display: none; /* This may be changed by JS */

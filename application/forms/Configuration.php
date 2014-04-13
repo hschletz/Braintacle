@@ -23,8 +23,8 @@
 /**
  * Form for computer/group configuration
  *
- * This form operates on a particular computer or group which must be passed to
- * the constructor as the 'object' option.
+ * This form operates on a particular computer or group which must be set via
+ * setObject().
  * @package Forms
  */
 class Form_Configuration extends Zend_Form
@@ -42,14 +42,13 @@ class Form_Configuration extends Zend_Form
     protected $_translate;
 
     /**
-     * @ignore
+     * Create elements for given computer or group
+     *
+     * @param \Model_ComputerOrGroup $object
      */
-    public function init()
+    public function setObject(\Model_ComputerOrGroup $object)
     {
-        // This MUST be passed to the constructor.
-        if (!$this->object instanceof Model_ComputerOrGroup) {
-            throw new LogicException(__CLASS__ . ' has invalid "object" property.');
-        }
+        $this->object = $object;
 
         $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
         $this->_translate = Zend_Registry::get('Zend_Translate');
@@ -205,16 +204,6 @@ class Form_Configuration extends Zend_Form
             )
         );
         $this->setDecorators(array('FormElements', 'Form'));
-    }
-
-    /**
-     * Set computer or group for which configuration is shown/set.
-     *
-     * @param Model_ComputerOrGroup $object Computer or group object
-     */
-    public function setObject(Model_ComputerOrGroup $object)
-    {
-        $this->object = $object;
     }
 
     /**

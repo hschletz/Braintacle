@@ -17,25 +17,18 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-// render messages if present
-$session = new Zend_Session_Namespace('GroupMessages');
-if (isset($session->success)) {
-    if ($session->success == true) {
-        $class = 'green textcenter';
-    } else {
-        $class = 'red textcenter';
+foreach (array('error', 'success') as $namespace) {
+    $messages = $this->flashMessenger()->getMessagesFromNamespace($namespace);
+    if ($messages) {
+        print $this->htmlList(
+            $this->formatMessages($messages),
+            false,
+            array('class' => $namespace),
+            false
+        );
     }
-    print $this->htmlTag(
-        'p',
-        sprintf(
-            $session->message,
-            $this->escape($session->groupName)
-        ),
-        array('class' => $class)
-    );
 }
 
 $headers = array(
@@ -45,40 +38,32 @@ $headers = array(
 );
 
 $renderCallbacks = array(
-    'Name' => 'renderName',
-);
-
-function renderName($view, $group)
-{
-    return $view->htmlTag(
-        'a',
-        $view->escape($group->getName()),
-        array(
-            'href' => $view->url(
-                array(
-                    'controller' => 'group',
-                    'action' => 'general',
-                    'id' => $group->getId(),
-                )
+    'Name' => function($view, $group) {
+        return $view->htmlTag(
+            'a',
+            $view->escapeHtml($group['Name']),
+            array(
+                'href' => $view->consoleUrl(
+                    'group',
+                    'general',
+                    array(
+                        'id' => $group['Id'],
+                    )
+                ),
             ),
-        ),
-        true
-    );
-}
-
-$table = $this->getHelper('table')->table(
-    $this->groups,
-    null,
-    $headers,
-    array(),
-    'Model_Group',
-    null,
-    $renderCallbacks,
-    $count
+            true
+        );
+    },
 );
 
-if ($count) {
-    print $table;
+if (count($this->groups)) {
+    print $this->table(
+        $this->groups,
+        $headers,
+        $this->sorting,
+        $renderCallbacks,
+        array('CreationDate' => 'nowrap')
+    );
 } else {
     print $this->htmlTag(
         'p',

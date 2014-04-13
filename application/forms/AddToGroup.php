@@ -180,7 +180,7 @@ class Form_AddToGroup extends Zend_Form
                 $this->getValue('Description')
             );
         } else {
-            $group = Model_Group::fetchById($this->getValue('existingGroup'));
+            $group = Model_Group::fetchByIdStatic($this->getValue('existingGroup'));
             if (!$group) {
                 throw new RuntimeException('Invalid group ID: ' . $this->getValue('existingGroup'));
             }

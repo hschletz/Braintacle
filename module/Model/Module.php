@@ -56,6 +56,7 @@ Feature\ConfigProviderInterface
                     'Model\Computer\Software' => 'Model_Software',
                     'Model\Computer\Windows' => 'Model_Windows',
                     'Model\Computer\CustomFields' => 'Model_UserDefinedInfo',
+                    'Model\Group\Group' => 'Model_Group',
                     'Model\Network\Device' => 'Model_NetworkDevice',
                     'Model\Network\DeviceType' => 'Model_NetworkDeviceType',
                     'Model\Network\Subnet' => 'Model_Subnet',

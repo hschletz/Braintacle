@@ -17,60 +17,47 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-$group = $this->group;
-print $this->groupHeader($group);
+require('header.php');
 
-print "<dl>\n";
+$format = "<tr>\n<td class='textright bold align-top nowrap'>%s</td>\n<td>%s</td>\n</tr>\n";
 
-print $this->htmlTag(
-    'dt',
-    $this->translate('Name')
-);
-print $this->htmlTag(
-    'dd',
-    $this->escape($group->getName())
-);
+print "<table class='textnormalsize'>\n";
 
-print $this->htmlTag(
-    'dt',
-    $this->translate('ID')
+printf(
+    $format,
+    $this->translate('Name'),
+    $this->escapeHtml($this->group['Name'])
 );
-print $this->htmlTag(
-    'dd',
-    $group->getId()
+printf(
+    $format,
+    $this->translate('ID'),
+    $this->escapeHtml($this->group['Id'])
 );
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Description')
+printf(
+    $format,
+    $this->translate('Description'),
+    $this->escapeHtml($this->group['Description'])
 );
-print $this->htmlTag(
-    'dd',
-    $this->escape($group->getDescription())
+printf(
+    $format,
+    $this->translate('Creation date'),
+    $this->escapeHtml(
+        $this->dateFormat(
+            (int) $this->group['CreationDate']->get(\Zend_Date::TIMESTAMP),
+            \IntlDateFormatter::FULL,
+            \IntlDateFormatter::MEDIUM
+        )
+    )
 );
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Creation date')
-);
-print $this->htmlTag(
-    'dd',
-    $this->escape($group->getCreationDate())
-);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('SQL query')
-);
-print $this->htmlTag(
-    'dd',
+printf(
+    $format,
+    $this->translate('SQL query'),
     $this->htmlTag(
         'code',
-        $this->escape($group->getDynamicMembersSql())
+        $this->escapeHtml($this->group['DynamicMembersSql'])
     )
 );
 
-print "</dl>\n";
+print "</table\n>";

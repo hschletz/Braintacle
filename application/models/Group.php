@@ -112,6 +112,28 @@ class Model_Group extends Model_ComputerOrGroup
      */
     protected static $_configDefault = array();
 
+    /**
+     * Return a all groups matching criteria
+     *
+     * @param array $columns Properties which should be returned. Default: all properties
+     * @param string $filter Optional filter to apply (Id|Expired), default: return all groups
+     * @param mixed $filterArg Value to filter by
+     * @param string $order Property to sort by. Default: none
+     * @param string $direction one of [asc|desc]. Default: asc
+     * @return \Model_Group[] Query result
+     */
+    public function fetch(
+        $columns=null,
+        $filter = null,
+        $filterArg = null,
+        $order=null,
+        $direction='asc'
+    )
+    {
+        return $this->_fetchAll(
+            static::createStatementStatic($columns, $filter, $filterArg, $order, $direction)
+        );
+    }
 
     /**
      * Return a statement object with all groups
@@ -121,6 +143,7 @@ class Model_Group extends Model_ComputerOrGroup
      * @param string $order Logical property to sort by. Default: null
      * @param string $direction one of [asc|desc]. Default: asc
      * @return Zend_Db_Statement Query result
+     * @deprecated Superseded by fetch().
      */
     static function createStatementStatic(
         $columns=null,
@@ -294,19 +317,38 @@ class Model_Group extends Model_ComputerOrGroup
     }
 
     /**
+     * Get group object for the given primary key.
+     *
+     * @param int $id Primary key
+     * @return \Model_Group
+     * @throws \RuntimeException if the given ID does not exist
+     */
+    public function fetchById($id)
+    {
+        $result = $this->fetch(null, 'Id', $id);
+        if (empty($result)) {
+            throw new \RuntimeException('Unknown group ID: ' . $id);
+        } else {
+            return $result[0];
+        }
+    }
+
+    /**
      * Get a Model_Group object for the given primary key.
      * @param int $id Primary key
      * @return mixed Fully populated Model_Group object, FALSE if no group was found
+     * @deprecated Superseded by fetchById()
      */
-    static function fetchById($id)
+    static function fetchByIdStatic($id)
     {
         return self::createStatementStatic(null, 'Id', $id)->fetchObject('Model_Group');
     }
 
     /**
-     * Return a statement object with names of all packages associated with this group
+     * Return names of all packages assigned to this group
+     *
      * @param string $direction one of [asc|desc]. Default: asc
-     * @return Zend_Db_Statement Query result
+     * @return string[]
      */
     public function getPackages($direction='asc')
     {
@@ -328,7 +370,7 @@ class Model_Group extends Model_ComputerOrGroup
             ->where("devices.name='DOWNLOAD'")
             ->order(self::getOrder('Name', $direction, $this->_propertyMap));
 
-        return $select->query();
+        return $select->query()->fetchAll(\Zend_Db::FETCH_COLUMN);
     }
 
     /**
@@ -630,7 +672,7 @@ class Model_Group extends Model_ComputerOrGroup
         );
         $db->commit();
 
-        return self::fetchById($id);
+        return self::fetchByIdStatic($id);
     }
 
     /** {@inheritdoc} */

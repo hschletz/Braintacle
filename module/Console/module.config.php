@@ -36,6 +36,7 @@ return array(
         'factories' => array(
             'accounts' => 'Console\Service\AccountsControllerFactory',
             'duplicates' => 'Console\Service\DuplicatesControllerFactory',
+            'group' => 'Console\Service\GroupControllerFactory',
             'licenses' => 'Console\Service\LicensesControllerFactory',
             'login' => 'Console\Service\LoginControllerFactory',
             'network' => 'Console\Service\NetworkControllerFactory',
@@ -71,7 +72,7 @@ return array(
             'zf1' => array(
                 'type'    => 'regex',
                 'options' => array(
-                    'regex'    => '/(console/)?(computer|error|group|index)/?.*',
+                    'regex'    => '/(console/)?(computer|error|index)/?.*',
                     'spec' => '',
                     'defaults' => array(
                         'controller' => 'Console\Controller\ZF1',
@@ -82,15 +83,19 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
+            'Console\Navigation\GroupMenu' => 'Console\Navigation\GroupMenuFactory',
             'Console\Navigation\MainMenu' => 'Console\Navigation\MainMenuFactory',
             'Console\Form\Account\Edit' => 'Console\Form\Service\Account\EditFactory',
         ),
         'invokables' => array(
             'Console\Form\Account\New' => 'Form_Account_New',
+            'Console\Form\AddToGroup' => 'Form_AddToGroup',
+            'Console\Form\ClientConfig' => 'Form_Configuration',
             'Console\Form\DefineFields' => 'Form_DefineFields',
             'Console\Form\NetworkDeviceTypes' => 'Form_ManageNetworkDeviceTypes',
             'Console\Form\Login' => 'Form_Login',
             'Console\Form\NetworkDevice' => 'Form_NetworkDevice',
+            'Console\Form\Package\Assign' => 'Form_AffectPackages',
             'Console\Form\Package\Build' => 'Form_Package',
             'Console\Form\Package\Edit' => 'Form_Package_Edit',
             'Console\Form\Preferences\Agent' => 'Form_Preferences_Agent',
