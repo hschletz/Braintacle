@@ -192,6 +192,10 @@ td,th {
     padding: .3ex .5em .3ex .5em;
 }
 
+th {
+    text-align: left;
+}
+
 .cell {
     display: table-cell;
 }
