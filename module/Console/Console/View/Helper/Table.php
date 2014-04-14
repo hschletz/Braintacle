@@ -80,7 +80,8 @@ class Table extends \Zend\View\Helper\AbstractHelper
      * $data is an array of row objects. Row objects are typically associative
      * arrays or objects implementing the \ArrayAccess interface. A default
      * rendering method is available for these types. For any other type, all
-     * columns must be rendered by a callback.
+     * columns must be rendered by a callback. If no rows are present, an
+     * empty string is returned.
      *
      * By default, cell data is retrieved from $data and escaped automatically.
      * \Zend_Date objects are rendered as short timestamps (yy-mm-dd hh:mm). The
@@ -129,6 +130,10 @@ class Table extends \Zend\View\Helper\AbstractHelper
         $rowClassCallback = null
     )
     {
+        if (count($data) == 0) {
+            return '';
+        }
+
         $table = "<table class='alternating'>\n";
 
         // Generate header row

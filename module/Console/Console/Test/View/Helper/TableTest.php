@@ -135,6 +135,17 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
         parent::setUp();
     }
 
+    public function testInvokeNoData()
+    {
+        $table = $this->getMockBuilder($this->_getHelperClass())
+                      ->setConstructorArgs(
+                          array($this->_escapeHtml, $this->_htmlTag, $this->_consoleUrl, $this->_dateFormat)
+                      )
+                      ->setMethods(array('sortableHeader', 'row'))
+                      ->getMock();
+        $this->assertEquals('', $table(array(), $this->_headers));
+    }
+
     public function testInvokeBasic()
     {
         $this->_escapeHtml->expects($this->exactly(4)) // once per non-header cell
