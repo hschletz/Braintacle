@@ -46,4 +46,14 @@ class ErrorPageTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpController
         $this->assertResponseStatusCode(404);
         $this->assertQueryContentContains('h2', "\nPage not found.\n");
     }
+
+    /**
+     * Test routing error
+     */
+    public function testNoRouteMatch()
+    {
+        $this->dispatch('/console/group/general/id=42'); // missing '?'
+        $this->assertResponseStatusCode(404);
+        $this->assertXPathQuery('//p[text()=" No route matched."]');
+    }
 }

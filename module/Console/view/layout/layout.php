@@ -47,7 +47,9 @@ print ">\n<div id='content'>\n";
 print $this->content;
 print "</div>\n";
 
-if ($this->identity()) {
+// Render menu only if a user is logged in.
+// Since menus require a matched route, check for routing errors.
+if ($this->identity() and !isset($this->noRoute)) {
     print "<div id='menu'>\n";
 
     $menu = $this->navigation()->menu('Console\Navigation\MainMenu');
