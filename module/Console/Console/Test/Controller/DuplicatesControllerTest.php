@@ -38,9 +38,6 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
      */
     protected $_showDuplicates;
 
-    /**
-     * Set up mock objects
-     */
     public function setUp()
     {
         $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
@@ -50,13 +47,11 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         parent::setUp();
     }
 
-    /** {@inheritdoc} */
     protected function _createController()
     {
         return new \Console\Controller\DuplicatesController($this->_duplicates, $this->_showDuplicates);
     }
 
-    /** {@inheritdoc} */
     public function testService()
     {
         $this->_overrideService('Model\Computer\Duplicates', $this->_duplicates);
@@ -64,82 +59,61 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         parent::testService();
     }
 
-    /**
-     * Tests for indexAction()
-     */
-    public function testIndexAction()
+    public function testIndexActionNoDuplicates()
     {
-        $url = '/console/duplicates/index/';
-
-        // No duplicates should lead to a simple message.
         $this->_duplicates->expects($this->exactly(4))
                           ->method('count')
                           ->will($this->returnValue(0));
-        $this->dispatch($url);
+        $this->dispatch('/console/duplicates/index/');
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains('p', 'No duplicates present.');
+    }
 
-        // Duplicates should lead to a list with 4 hyperlinks.
-        $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
-                                  ->disableOriginalconstructor()
-                                  ->getMock();
+    public function testIndexActionShowDuplicates()
+    {
         $this->_duplicates->expects($this->exactly(4))
                           ->method('count')
                           ->will($this->returnValue(2));
-        $this->dispatch($url);
+        $this->dispatch('/console/duplicates/index/');
         $this->assertResponseStatusCode(200);
+        // List with 4 hyperlinks.
         $this->assertQueryCount('td a[href*="/console/duplicates/show/?criteria="]', 4);
         $this->assertQueryContentContains('td a[href*="/console/duplicates/show/?criteria="]', "\n2\n");
     }
 
-    /**
-     * Tests for showAction()
-     */
-    public function testShowAction()
+    public function testShowActionMissingCriteria()
     {
-        $url = '/console/duplicates/show/';
-
-        // Test missing/invalid "Criteria" parameters
         $this->_duplicates->expects($this->any())
                           ->method('find')
-                          ->with($this->logicalOr($this->isNull(), $this->identicalTo('invalid')), 'Id', 'asc')
+                          ->with(null)
                           ->will($this->throwException(new \InvalidArgumentException('Invalid criteria')));
+        $this->setExpectedException('InvalidArgumentException');
+        $this->dispatch('/console/duplicates/show/');
+    }
 
-        try {
-            $this->dispatch($url);
-            $this->fail('showAction() should have thrown an Exception on missing parameter "criteria"');
-        } catch (\Exception $e) {
-            $this->assertEquals('Invalid criteria', $e->getMessage());
-        }
-        try {
-            $this->dispatch($url, 'GET', array('criteria' => 'invalid'));
-            $this->fail('showAction() should have thrown an Exception on invalid parameter "criteria"');
-        } catch (\Exception $e) {
-            $this->assertEquals('Invalid criteria', $e->getMessage());
-        }
+    public function testShowActionInvalidCriteria()
+    {
+        $this->_duplicates->expects($this->any())
+                          ->method('find')
+                          ->with('invalid')
+                          ->will($this->throwException(new \InvalidArgumentException('Invalid criteria')));
+        $this->setExpectedException('InvalidArgumentException');
+        $this->dispatch('/console/duplicates/show/?criteria=invalid');
+    }
 
-        // Test with valid criteria - should render form
-        $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
-                                  ->disableOriginalconstructor()
-                                  ->getMock();
+    public function testShowActionValidCriteria()
+    {
         $this->_duplicates->expects($this->once())
                           ->method('find')
                           ->with('Name', 'Id', 'asc');
         $this->_showDuplicates->expects($this->once())
                               ->method('render');
-
-        $this->dispatch($url, 'GET', array('criteria' => 'Name'));
+        $this->dispatch('/console/duplicates/show/?criteria=Name');
         $this->assertResponseStatusCode(200);
     }
 
-    /**
-     * Tests for mergeAction()
-     */
-    public function testMergeAction()
+    public function testMergeActionValid()
     {
-        $url = '/console/duplicates/merge/';
-
-        // Test valid data
         $params = array(
             'computers' => array(1, 2),
             'mergeCustomFields' => '1',
@@ -158,16 +132,16 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_duplicates->expects($this->once())
                           ->method('merge')
                           ->with(array(1, 2), true, true, '0');
-
-        $this->dispatch($url, 'POST', $params);
+        $this->dispatch('/console/duplicates/merge/', 'POST', $params);
         $this->assertRedirectTo('/console/duplicates/index/');
         $this->assertContains(
             'The selected computers have been merged.',
             $this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
         );
+    }
 
-        // Test invalid data
-        $this->_showDuplicates = $this->getMock('Console\Form\ShowDuplicates');
+    public function testMergeActionInvalid()
+    {
         $this->_showDuplicates->expects($this->once())
                               ->method('setData');
         $this->_showDuplicates->expects($this->once())
@@ -177,45 +151,47 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
                               ->method('getMessages')
                               ->with(null)
                               ->will($this->returnValue(array('computers' => array('invalid'))));
-
-        $this->dispatch($url, 'POST');
+        $this->_duplicates->expects($this->never())
+                          ->method('merge');
+        $this->dispatch('/console/duplicates/merge/', 'POST');
         $this->assertRedirectTo('/console/duplicates/index/');
         $this->assertContains(
             'invalid',
             $this->_getControllerPlugin('FlashMessenger')->getCurrentInfoMessages()
         );
-
-        // GET request should throw exception.
-        $this->setExpectedException('RuntimeException', 'Action "merge" can only be invoked via POST');
-        $this->dispatch($url);
     }
 
-    /**
-     * Tests for allowAction()
-     */
-    public function testAllowAction()
+    public function testMergeActionGet()
     {
-        $url = '/console/duplicates/allow/?criteria=Serial&value=12345678';
+        $this->_duplicates->expects($this->never())
+                          ->method('merge');
+        $this->setExpectedException('RuntimeException', 'Action "merge" can only be invoked via POST');
+        $this->dispatch('/console/duplicates/merge/');
+    }
 
-        // GET request should display confirmation form.
+    public function testAllowActionGet()
+    {
         $this->_duplicates->expects($this->never())
                           ->method('allow');
-        $this->dispatch($url);
+        $this->dispatch('/console/duplicates/allow/?criteria=Serial&value=12345678');
         $this->assertResponseStatusCode(200);
         $this->assertQuery('form');
+    }
 
-        // POST request with "No" should redirect to criteria index page.
-        $this->dispatch($url, 'POST', array('no' => 'No'));
+    public function testAllowActionPostNo()
+    {
+        $this->_duplicates->expects($this->never())
+                          ->method('allow');
+        $this->dispatch('/console/duplicates/allow/?criteria=Serial&value=12345678', 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/duplicates/show/?criteria=Serial');
+    }
 
-        // POST request with "Yes" should exclude criteria and redirect to duplicates index page.
-        $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
-                                  ->disableOriginalconstructor()
-                                  ->getMock();
+    public function testAllowActionPostYes()
+    {
         $this->_duplicates->expects($this->once())
                           ->method('allow')
                           ->with('Serial', '12345678');
-        $this->dispatch($url, 'POST', array('yes' => 'Yes'));
+        $this->dispatch('/console/duplicates/allow/?criteria=Serial&value=12345678', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/duplicates/index/');
         $this->assertContains(
             '"12345678" is no longer considered duplicate.',

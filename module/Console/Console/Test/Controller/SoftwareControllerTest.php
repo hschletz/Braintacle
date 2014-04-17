@@ -39,39 +39,40 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
     protected $_form;
 
     /**
-     * Set up mock objects
+     * Sample result data
+     * @var array[]
      */
+    protected $_result = array(
+        array('Name' => 'name1', 'RawName' => 'raw_name1', 'NumComputers' => 1),
+        array('Name' => 'name2', 'RawName' => 'raw_name2', 'NumComputers' => 2),
+    );
+
+    /**
+     * Session container
+     * @var \Zend\Session\Container;
+     */
+    protected $_session;
+
     public function setUp()
     {
         $this->_software = $this->getMock('Model_Software');
         $this->_form = $this->getMock('Form_SoftwareFilter');
+        $this->_session = new \Zend\Session\Container('ManageSoftware');
         parent::setUp();
     }
 
-    /** {@inheritdoc} */
     protected function _createController()
     {
         return new \Console\Controller\SoftwareController($this->_software, $this->_form);
     }
 
-    /**
-     * Tests for indexAction()
-     */
-    public function testIndexAction()
+    public function testIndexActionDefaultFilterAccepted()
     {
-        $url = '/console/software/index/';
-        $software = array(
-            array('Name' => 'name1', 'RawName' => 'raw_name1', 'NumComputers' => 1),
-            array('Name' => 'name2', 'RawName' => 'raw_name2', 'NumComputers' => 2),
-        );
         $filters = array(
             'Os' => 'windows',
             'Status' => 'accepted',
             'Unique' => null,
         );
-        $session = new \Zend\Session\Container('ManageSoftware');
-
-        // Test default filter ('accepted')
         $this->_software->expects($this->once())
                         ->method('find')
                         ->with(
@@ -80,16 +81,14 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
                             'asc',
                             $filters
                         )
-                        ->will($this->returnValue($software));
-
+                        ->will($this->returnValue($this->_result));
         $this->_form->expects($this->once())
                     ->method('setFilter')
                     ->with('accepted');
         $this->_form->expects($this->once())->method('toHtml');
-
-        unset($session->filter);
-        $this->dispatch($url);
-        $this->assertEquals('accepted', $session->filter);
+        unset($this->_session->filter);
+        $this->dispatch('/console/software/index/');
+        $this->assertEquals('accepted', $this->_session->filter);
         $this->assertResponseStatusCode(200);
         $this->assertNotQueryContentContains(
             'td a',
@@ -107,10 +106,15 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
             'td[class="textright"] a[href*="/console/computer/index/"][href*="search=raw_name2"]',
             '2'
         );
+    }
 
-        // Test 'ignored' filter
-        $filters['Status'] = 'ignored';
-        $this->_software = $this->getMock('Model_Software');
+    public function testIndexActionFilterIgnored()
+    {
+        $filters = array(
+            'Os' => 'windows',
+            'Status' => 'ignored',
+            'Unique' => null,
+        );
         $this->_software->expects($this->once())
                         ->method('find')
                         ->with(
@@ -119,16 +123,13 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
                             'asc',
                             $filters
                         )
-                        ->will($this->returnValue($software));
-
-        $this->_form = $this->getMock('Form_SoftwareFilter');
+                        ->will($this->returnValue($this->_result));
         $this->_form->expects($this->once())
                     ->method('setFilter')
                     ->with('ignored');
         $this->_form->expects($this->once())->method('toHtml');
-
-        $this->dispatch($url, 'GET', array('filter' => 'ignored'));
-        $this->assertEquals('ignored', $session->filter);
+        $this->dispatch('/console/software/index/?filter=ignored');
+        $this->assertEquals('ignored', $this->_session->filter);
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains(
             'td a[href="/console/software/accept/?name=raw_name2"]',
@@ -138,10 +139,15 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
             'td a',
             'Ignore'
         );
+    }
 
-        // Test 'new' filter
-        $filters['Status'] = 'new';
-        $this->_software = $this->getMock('Model_Software');
+    public function testIndexActionFilterNew()
+    {
+        $filters = array(
+            'Os' => 'windows',
+            'Status' => 'new',
+            'Unique' => null,
+        );
         $this->_software->expects($this->once())
                         ->method('find')
                         ->with(
@@ -150,16 +156,13 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
                             'asc',
                             $filters
                         )
-                        ->will($this->returnValue($software));
-
-        $this->_form = $this->getMock('Form_SoftwareFilter');
+                        ->will($this->returnValue($this->_result));
         $this->_form->expects($this->once())
                     ->method('setFilter')
                     ->with('new');
         $this->_form->expects($this->once())->method('toHtml');
-
-        $this->dispatch($url, 'GET', array('filter' => 'new'));
-        $this->assertEquals('new', $session->filter);
+        $this->dispatch('/console/software/index/?filter=new');
+        $this->assertEquals('new', $this->_session->filter);
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains(
             'td a[href="/console/software/accept/?name=raw_name2"]',
@@ -169,10 +172,15 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
             'td a[href="/console/software/ignore/?name=raw_name2"]',
             'Ignore'
         );
+    }
 
-        // Test 'all' filter
-        $filters['Status'] = 'all';
-        $this->_software = $this->getMock('Model_Software');
+    public function testIndexActionFilterAll()
+    {
+        $filters = array(
+            'Os' => 'windows',
+            'Status' => 'all',
+            'Unique' => null,
+        );
         $this->_software->expects($this->once())
                         ->method('find')
                         ->with(
@@ -181,16 +189,14 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
                             'asc',
                             $filters
                         )
-                        ->will($this->returnValue($software));
+                        ->will($this->returnValue($this->_result));
 
-        $this->_form = $this->getMock('Form_SoftwareFilter');
         $this->_form->expects($this->once())
                     ->method('setFilter')
                     ->with('all');
         $this->_form->expects($this->once())->method('toHtml');
-
-        $this->dispatch($url, 'GET', array('filter' => 'all'));
-        $this->assertEquals('all', $session->filter);
+        $this->dispatch('/console/software/index/?filter=all');
+        $this->assertEquals('all', $this->_session->filter);
         $this->assertResponseStatusCode(200);
         $this->assertNotQueryContentContains(
             'td a',
@@ -202,56 +208,84 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         );
     }
 
-    /**
-     * Tests for accept action
-     */
-    public function testAcceptAction()
+    public function testAcceptActionGet()
     {
-        $this->_testManageAction('accept');
+        $this->_testManageActionGet('accept');
     }
 
-    /**
-     * Tests for ignore action
-     */
-    public function testIgnoreAction()
+    public function testAcceptActionPostNo()
     {
-        $this->_testManageAction('ignore');
+        $this->_testManageActionPostNo('accept');
     }
 
-    /**
-     * Common tests for accept/ignore actions
-     */
-    protected function _testManageAction($action)
+    public function testAcceptActionPostYes()
+    {
+        $this->_testManageActionPostYes('accept');
+    }
+
+    public function testAcceptActionMissingName()
+    {
+        $this->_testManageActionMissingName('accept');
+    }
+
+    public function testIgnoreActionGet()
+    {
+        $this->_testManageActionGet('ignore');
+    }
+
+    public function testIgnoreActionPostNo()
+    {
+        $this->_testManageActionPostNo('ignore');
+    }
+
+    public function testIgnoreActionPostYes()
+    {
+        $this->_testManageActionPostYes('ignore');
+    }
+
+    public function testIgnoreActionMissingName()
+    {
+        $this->_testManageActionMissingName('ignore');
+    }
+
+    protected function _testManageActionGet($action)
     {
         $tmBad = chr(0xc2) . chr(0x99); // Incorrect representation of TM symbol, filtered where necessary
         $tmGood  = chr(0xe2) . chr(0x84) . chr(0xa2); // Corrected representation of TM symbol
-        $url = "/console/software/$action/?name=" . urlencode($tmBad);
-        $this->_sessionSetup = array(
-            'ManageSoftware' => array('filter' => 'test')
-        );
-
-        // GET request should display form
-        $this->dispatch($url);
+        $this->dispatch("/console/software/$action/?name=" . urlencode($tmBad));
         $this->assertResponseStatusCode(200);
         $this->assertQuery('form');
         $this->assertQueryContentRegex('p', "/$tmGood/");
+    }
 
-        // Cancelled POST request should redirect and do nothing else
+    protected function _testManageActionPostNo($action)
+    {
         $this->_software->expects($this->never())
                         ->method($action);
-        $this->dispatch($url, 'POST', array('no' => 'No'));
+        $this->_sessionSetup = array(
+            'ManageSoftware' => array('filter' => 'test')
+        );
+        $this->dispatch("/console/software/$action/?name=test", 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/software/index/?filter=test');
+    }
 
-        // Confirmed POST request should invoke action and redirect
+    protected function _testManageActionPostYes($action)
+    {
+        $tmBad = chr(0xc2) . chr(0x99); // Incorrect representation of TM symbol
         $this->_software = $this->getMock('Model_Software');
         $this->_software->expects($this->once())
                         ->method($action)
                         ->with($tmBad);
-        $this->dispatch($url, 'POST', array('yes' => 'Yes'));
+        $this->_sessionSetup = array(
+            'ManageSoftware' => array('filter' => 'test')
+        );
+        $this->dispatch("/console/software/$action/?name=$tmBad", 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/software/index/?filter=test');
+    }
 
-        // Missing name should throw exception
+    protected function _testManageActionMissingName($action)
+    {
         $this->setExpectedException('RuntimeException', 'Missing name parameter');
-        $this->dispatch(substr($url, 0, strpos($url, '?')));
+        $this->dispatch("/console/software/$action/");
     }
 }

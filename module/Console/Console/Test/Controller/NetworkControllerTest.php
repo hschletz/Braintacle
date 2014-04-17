@@ -81,19 +81,14 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         );
     }
 
-    /** {@inheritdoc} */
     public function testService()
     {
         $this->_overrideService('Console\Form\NetworkDevice', $this->_deviceForm);
         parent::testService();
     }
 
-    /**
-     * Tests for indexAction()
-     */
     public function testIndexAction()
     {
-        $url = '/console/network/index/';
         $devices = array(
             array('Description' => 'type1', 'Count' => 0),
             array('Description' => 'type2', 'Count' => 1),
@@ -118,16 +113,13 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                 'NumUnknown' => 3,
             ),
         );
-
         $this->_deviceType->expects($this->once())
                           ->method('fetchAll')
                           ->will($this->returnValue($devices));
-
         $this->_subnet->expects($this->once())
                       ->method('fetchAll')
                       ->will($this->returnValue($subnets));
-
-        $this->dispatch($url);
+        $this->dispatch('/console/network/index/');
         $this->assertResponseStatusCode(200);
 
         // Network device section
@@ -176,12 +168,8 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         );
     }
 
-    /**
-     * Tests for showidentifiedAction()
-     */
-    public function testShowidentifiedAction()
+    public function testShowidentifiedActionWithoutParameters()
     {
-        $url = '/console/network/showidentified/';
         $filters = array('Identified' => true);
         $result = array(
             array(
@@ -193,12 +181,11 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                 'IdentifiedBy' => 'idendified_by',
             ),
         );
-
         $this->_device->expects($this->once())
                       ->method('fetch')
                       ->with($filters, 'DiscoveryDate', 'desc')
                       ->will($this->returnValue($result));
-        $this->dispatch($url);
+        $this->dispatch('/console/network/showidentified/');
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains('td', "\n00:00:5E:00:53:00\n");
         $this->assertQueryContentContains('td', "\n192.0.2.1\n");
@@ -214,27 +201,35 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
             'td a[href="/console/network/delete/?macaddress=00:00:5E:00:53:00"]',
             'Delete'
         );
+    }
 
-        // Test evaluation of optional URL parameters
-        $filters += array(
+    public function testShowidentifiedActionWithParameters()
+    {
+        $filters = array(
+            'Identified' => true,
             'Subnet' => '192.0.2.0',
             'Mask' => '255.255.255.0',
             'Type' => 'type'
         );
-        $this->_device = $this->getMock('Model_NetworkDevice');
+        $result = array(
+            array(
+                'MacAddress' => '00:00:5E:00:53:00',
+                'IpAddress' => '192.0.2.1',
+                'DiscoveryDate' => new \Zend_Date('2014-02-23 18:43:42'),
+                'Type' => 'type',
+                'Description' => 'description',
+                'IdentifiedBy' => 'idendified_by',
+            ),
+        );
         $this->_device->expects($this->once())
                       ->method('fetch')
                       ->with($filters, 'DiscoveryDate', 'desc')
                       ->will($this->returnValue($result));
-        $this->dispatch($url . '?subnet=192.0.2.0&mask=255.255.255.0&type=type');
+        $this->dispatch('/console/network/showidentified/?subnet=192.0.2.0&mask=255.255.255.0&type=type');
     }
 
-    /**
-     * Tests for showunknownAction()
-     */
-    public function testShowunknownAction()
+    public function testShowunknownActionWithoutParameters()
     {
-        $url = '/console/network/showunknown/';
         $filters = array('Identified' => false);
         $result = array(
             array(
@@ -245,12 +240,11 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                 'DiscoveryDate' => new \Zend_Date('2014-02-23 18:43:42'),
             ),
         );
-
         $this->_device->expects($this->once())
                       ->method('fetch')
                       ->with($filters, 'DiscoveryDate', 'desc')
                       ->will($this->returnValue($result));
-        $this->dispatch($url);
+        $this->dispatch('/console/network/showunknown/');
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains('td', "\n00:00:5E:00:53:00\n");
         $this->assertQueryContentContains('td', "\nvendor\n");
@@ -265,26 +259,33 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
             'td a[href="/console/network/delete/?macaddress=00:00:5E:00:53:00"]',
             'Delete'
         );
+    }
 
-        // Test evaluation of optional URL parameters
-        $filters += array(
+    public function testShowunknownActionWithParameters()
+    {
+        $filters = array(
+            'Identified' => false,
             'Subnet' => '192.0.2.0',
             'Mask' => '255.255.255.0',
         );
-        $this->_device = $this->getMock('Model_NetworkDevice');
+        $result = array(
+            array(
+                'MacAddress' => '00:00:5E:00:53:00',
+                'Vendor' => 'vendor',
+                'IpAddress' => '192.0.2.1',
+                'Hostname' => 'host.example.net',
+                'DiscoveryDate' => new \Zend_Date('2014-02-23 18:43:42'),
+            ),
+        );
         $this->_device->expects($this->once())
                       ->method('fetch')
                       ->with($filters, 'DiscoveryDate', 'desc')
                       ->will($this->returnValue($result));
-        $this->dispatch($url . '?subnet=192.0.2.0&mask=255.255.255.0&type=type');
+        $this->dispatch('/console/network/showunknown/?subnet=192.0.2.0&mask=255.255.255.0&type=type');
     }
 
-    /**
-     * Tests for propertiesAction()
-     */
-    public function testPropertiesAction()
+    public function testPropertiesActionGet()
     {
-        $url = '/console/network/properties/?subnet=192.0.2.0&mask=255.255.255.0';
         $subnet = array(
             'Address' => '192.0.2.0',
             'Mask' => '255.255.255.0',
@@ -295,35 +296,35 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                       ->method('create')
                       ->with('192.0.2.0', '255.255.255.0')
                       ->will($this->returnValue($subnet));
-
-        // Test GET method
         $this->_subnetForm->expects($this->once())
                           ->method('setDefault')
                           ->with('Name', 'name');
         $this->_subnetForm->expects($this->once())
                           ->method('__toString')
                           ->will($this->returnValue(''));
-        $this->dispatch($url);
+        $this->dispatch('/console/network/properties/?subnet=192.0.2.0&mask=255.255.255.0');
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains(
             'h1',
             "\nProperties of subnet 192.0.2.0/24\n"
         );
+    }
 
-        // Test POST method with invalid data
-        $this->_subnetForm = $this->getMock('Form_Subnet');
+    public function testPropertiesActionPostInvalid()
+    {
         $this->_subnetForm->expects($this->once())
                           ->method('isValid')
                           ->will($this->returnValue(false));
         $this->_subnetForm->expects($this->once())
                           ->method('__toString')
                           ->will($this->returnValue(''));
-        $this->dispatch($url, 'POST');
+        $this->dispatch('/console/network/properties/?subnet=192.0.2.0&mask=255.255.255.0', 'POST');
         $this->assertResponseStatusCode(200);
+    }
 
-        // Test POST method with valid data
+    public function testPropertiesActionPostValid()
+    {
         $postData = array('Name' => 'new_name');
-        $this->_subnetForm = $this->getMock('Form_Subnet');
         $this->_subnetForm->expects($this->once())
                           ->method('isValid')
                           ->with($postData)
@@ -332,21 +333,19 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                           ->method('getValue')
                           ->with('Name')
                           ->will($this->returnValue('new_name'));
-        $this->dispatch($url, 'POST', $postData);
+        $this->dispatch('/console/network/properties/?subnet=192.0.2.0&mask=255.255.255.0', 'POST', $postData);
         $this->assertRedirectTo('/console/network/index/');
+    }
 
-        // Test invalid (missing) query params
+    public function testPropertiesActionMissingParams()
+    {
         $this->_subnet = $this->getMockBuilder('Model_Subnet')->setMethods(null)->getMock();
         $this->setExpectedException('InvalidArgumentException');
         $this->dispatch('/console/network/properties');
     }
 
-    /**
-     * Tests for editAction()
-     */
-    public function testEditAction()
+    public function testEditActionGet()
     {
-        $url = '/console/network/edit/?macaddress=00:00:5E:00:53:00';
         $macAddress = $this->getMockBuilder('Braintacle_MacAddress')->disableOriginalConstructor()->getMock();
         $macAddress->expects($this->any())
                    ->method('__toString')
@@ -364,8 +363,6 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                       ->method('fetchByMacAddress')
                       ->with('00:00:5E:00:53:00')
                       ->will($this->returnValue($device));
-
-        // Test GET method
         $this->_deviceForm->expects($this->exactly(4))
                           ->method('setDefault')
                           ->with(
@@ -383,7 +380,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->_deviceForm->expects($this->once())
                           ->method('__toString')
                           ->will($this->returnValue(''));
-        $this->dispatch($url);
+        $this->dispatch('/console/network/edit/?macaddress=00:00:5E:00:53:00');
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains(
             'dd',
@@ -405,21 +402,40 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
             'dd',
             "\n24.02.2014 13:21:32\n"
         );
+    }
 
-        // Test POST method with invalid data
-        $this->_deviceForm = $this->getMock('Form_NetworkDevice');
+    public function testEditActionPostInvalid()
+    {
+        $macAddress = $this->getMockBuilder('Braintacle_MacAddress')->disableOriginalConstructor()->getMock();
+        $macAddress->expects($this->any())
+                   ->method('__toString')
+                   ->will($this->returnValue('00:00:5E:00:53:00'));
+        $macAddress->expects($this->any())
+                   ->method('getVendor')
+                   ->will($this->returnValue('vendor'));
+        $device = array(
+            'MacAddress' => $macAddress,
+            'IpAddress' => '192.0.2.1',
+            'Hostname' => 'host.example.net',
+            'DiscoveryDate' => new \Zend_Date('2014-02-24 13:21:32'),
+        );
+        $this->_device->expects($this->any())
+                      ->method('fetchByMacAddress')
+                      ->with('00:00:5E:00:53:00')
+                      ->will($this->returnValue($device));
         $this->_deviceForm->expects($this->once())
                           ->method('isValid')
                           ->will($this->returnValue(false));
         $this->_deviceForm->expects($this->once())
                           ->method('__toString')
                           ->will($this->returnValue(''));
-        $this->dispatch($url, 'POST');
+        $this->dispatch('/console/network/edit/?macaddress=00:00:5E:00:53:00', 'POST');
         $this->assertResponseStatusCode(200);
+    }
 
-        // Test POST method with valid data
+    public function testEditActionPostValid()
+    {
         $postData = array('Type' => 'type', 'Description' => 'description');
-        $this->_deviceForm = $this->getMock('Form_NetworkDevice');
         $this->_deviceForm->expects($this->once())
                           ->method('isValid')
                           ->with($postData)
@@ -427,7 +443,6 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->_deviceForm->expects($this->once())
                           ->method('getValues')
                           ->will($this->returnValue($postData));
-        $this->_device = $this->getMock('Model_NetworkDevice');
         $this->_device->expects($this->any())
                       ->method('fetchByMacAddress')
                       ->with('00:00:5E:00:53:00')
@@ -437,25 +452,22 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                       ->with($postData);
         $this->_device->expects($this->once())
                       ->method('save');
-        $this->dispatch($url, 'POST', $postData);
+        $this->dispatch('/console/network/edit/?macaddress=00:00:5E:00:53:00', 'POST', $postData);
         $this->assertRedirectTo('/console/network/index/');
+    }
 
-        // Test invalid (missing) query params
-        $this->_device = $this->getMock('Model_NetworkDevice');
+    public function testEditActionMissingParams()
+    {
         $this->_device->expects($this->once())
                       ->method('fetchByMacAddress')
                       ->with(null)
                       ->will($this->returnValue(false));
-        $this->dispatch('/console/network/edit');
+        $this->dispatch('/console/network/edit/');
         $this->assertRedirectTo('/console/network/index/');
     }
 
-    /**
-     * Tests for deleteAction()
-     */
-    public function testDeleteAction()
+    public function testDeleteActionGet()
     {
-        $url = '/console/network/delete/?macaddress=00:00:5E:00:53:00';
         $macAddress = $this->getMockBuilder('Braintacle_MacAddress')->disableOriginalConstructor()->getMock();
         $macAddress->expects($this->any())
                    ->method('__toString')
@@ -469,44 +481,45 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                       ->method('fetchByMacAddress')
                       ->with('00:00:5E:00:53:00')
                       ->will($this->returnValue($device));
-
-        // Test GET method
-        $this->dispatch($url);
+        $this->dispatch('/console/network/delete/?macaddress=00:00:5E:00:53:00');
         $this->assertResponseStatusCode(200);
         $this->assertContains('host.example.net', $this->getResponse()->getContent());
         $this->assertContains('00:00:5E:00:53:00', $this->getResponse()->getContent());
+    }
 
-        // Test POST method with cancelled form
-        $this->_device = $this->getMock('Model_NetworkDevice');
+    public function testDeleteActionPostNo()
+    {
         $this->_device->expects($this->once())
                       ->method('fetchByMacAddress')
                       ->with('00:00:5E:00:53:00')
                       ->will($this->returnSelf());
         $this->_device->expects($this->never())
                       ->method('delete');
-        $this->dispatch($url, 'POST', array('no' => 'No'));
+        $this->dispatch('/console/network/delete/?macaddress=00:00:5E:00:53:00', 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/network/index/');
+    }
 
-        // Test POST method with confirmed form
-        $this->_device = $this->getMock('Model_NetworkDevice');
+    public function testDeleteActionPostYes()
+    {
         $this->_device->expects($this->once())
                       ->method('fetchByMacAddress')
                       ->with('00:00:5E:00:53:00')
                       ->will($this->returnSelf());
         $this->_device->expects($this->once())
                       ->method('delete');
-        $this->dispatch($url, 'POST', array('yes' => 'Yes'));
+        $this->dispatch('/console/network/delete/?macaddress=00:00:5E:00:53:00', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/network/index/');
+    }
 
-        // Test invalid (missing) query params
-        $this->_device = $this->getMock('Model_NetworkDevice');
+    public function testDeleteActionMissingParams()
+    {
         $this->_device->expects($this->once())
                       ->method('fetchByMacAddress')
                       ->with(null)
                       ->will($this->returnValue(false));
         $this->_device->expects($this->never())
                       ->method('delete');
-        $this->dispatch('/console/network/delete');
+        $this->dispatch('/console/network/delete/');
         $this->assertRedirectTo('/console/network/index/');
     }
 }
