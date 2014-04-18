@@ -34,14 +34,16 @@ use Zend\ModuleManager\Feature;
  */
 class Module implements
 Feature\AutoloaderProviderInterface,
-Feature\ConfigProviderInterface
+Feature\ConfigProviderInterface,
+Feature\InitProviderInterface
 {
     /**
      * @internal
      */
-    public function getDependencies()
+    public function init(\Zend\ModuleManager\ModuleManagerInterface $manager)
     {
-        return array('Database', 'Library');
+        $manager->loadModule('Database');
+        $manager->loadModule('Model');
     }
 
     /**
