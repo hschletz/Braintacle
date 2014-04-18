@@ -22,6 +22,10 @@
 error_reporting(-1);
 ini_set('memory_limit', '256M');
 require_once(__DIR__ . '/../../../Library/Application.php');
+require_once('Zend/Console/Console.php');
+
+// Pretend to be not on a console to force choice of HTTP route over console route.
+\Zend\Console\Console::overrideIsConsole(false);
 \Library\Application::init('Console', false);
 \Zend_Session::$_unitTestEnabled = true;
 \Locale::setDefault('de_DE'); // Force environment-independent locale

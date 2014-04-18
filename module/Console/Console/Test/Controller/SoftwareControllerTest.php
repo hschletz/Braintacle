@@ -285,7 +285,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
 
     protected function _testManageActionMissingName($action)
     {
-        $this->setExpectedException('RuntimeException', 'Missing name parameter');
         $this->dispatch("/console/software/$action/");
+        $this->assertApplicationException('RuntimeException', 'Missing name parameter');
     }
 }

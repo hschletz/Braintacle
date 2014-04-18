@@ -340,8 +340,8 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     public function testPropertiesActionMissingParams()
     {
         $this->_subnet = $this->getMockBuilder('Model_Subnet')->setMethods(null)->getMock();
-        $this->setExpectedException('InvalidArgumentException');
         $this->dispatch('/console/network/properties');
+        $this->assertApplicationException('InvalidArgumentException');
     }
 
     public function testEditActionGet()

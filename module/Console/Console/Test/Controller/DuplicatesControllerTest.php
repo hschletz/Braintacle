@@ -87,8 +87,8 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
                           ->method('find')
                           ->with(null)
                           ->will($this->throwException(new \InvalidArgumentException('Invalid criteria')));
-        $this->setExpectedException('InvalidArgumentException');
         $this->dispatch('/console/duplicates/show/');
+        $this->assertApplicationException('InvalidArgumentException');
     }
 
     public function testShowActionInvalidCriteria()
@@ -97,8 +97,8 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
                           ->method('find')
                           ->with('invalid')
                           ->will($this->throwException(new \InvalidArgumentException('Invalid criteria')));
-        $this->setExpectedException('InvalidArgumentException');
         $this->dispatch('/console/duplicates/show/?criteria=invalid');
+        $this->assertApplicationException('InvalidArgumentException');
     }
 
     public function testShowActionValidCriteria()
@@ -165,8 +165,8 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
     {
         $this->_duplicates->expects($this->never())
                           ->method('merge');
-        $this->setExpectedException('RuntimeException', 'Action "merge" can only be invoked via POST');
         $this->dispatch('/console/duplicates/merge/');
+        $this->assertApplicationException('RuntimeException', 'Action "merge" can only be invoked via POST');
     }
 
     public function testAllowActionGet()

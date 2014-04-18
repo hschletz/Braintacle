@@ -55,7 +55,7 @@ class FormRendererTest extends \PHPUnit_Framework_TestCase
         $form->add($csrf);
 
         $expected = <<<EOT
-<form action="" method="POST" class="form mock">
+<form action="" method="POST" class="form&#x20;mock">
 <div><input type="hidden" name="_csrf" value="csrf"></div>
 fieldset
 </form>
