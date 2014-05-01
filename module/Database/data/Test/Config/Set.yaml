@@ -4,34 +4,34 @@ config:
     # unchanged
     name: "FREQUENCY"
     ivalue: 42
-    tvalue:
+    tvalue: null
   -
     # boolean true, new
     name: "INVENTORY_SESSION_ONLY"
     ivalue: 1
-    tvalue:
+    tvalue: null
   -
     # boolean false, updated
     name: "IPDISCOVER_NO_POSTPONE"
     ivalue: 0
-    tvalue:
+    tvalue: null
   -
     # updated
     name: "LOGPATH"
-    ivalue:
+    ivalue: null
     tvalue: "/other/log/path"
   -
     # boolean false, new
     name: "PROLOG_FILTER_ON"
     ivalue: 0
-    tvalue:
+    tvalue: null
   -
     # new
     name: "PROLOG_FREQ"
     ivalue: 10
-    tvalue:
+    tvalue: null
   -
     # boolean true, updated
     name: "REGISTRY"
     ivalue: 1
-    tvalue:
+    tvalue: null

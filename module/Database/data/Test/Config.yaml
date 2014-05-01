@@ -4,19 +4,19 @@ config:
     # Example for ivalue with non-default content
     name: "FREQUENCY"
     ivalue: 42
-    tvalue:
+    tvalue: null
   -
     # Example for tvalue with non-default content
     name: "LOGPATH"
-    ivalue:
+    ivalue: null
     tvalue: "/example/log/path"
   -
     # Example for ivalue with boolean false
     name: "REGISTRY"
     ivalue: 0
-    tvalue:
+    tvalue: null
   -
     # Example for ivalue with boolean true
     name: "IPDISCOVER_NO_POSTPONE"
     ivalue: 1
-    tvalue:
+    tvalue: null
