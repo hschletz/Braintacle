@@ -166,6 +166,14 @@ class SearchTest extends \Console\Test\AbstractFormTest
         $this->assertEquals('01.05.2014', $this->_form->get('search')->getValue());
     }
 
+    public function testSetDataNoSearch()
+    {
+        $data = array(
+            'filter' => 'UserDefinedInfo.TAG',
+        );
+        $this->_form->setData($data); // Must not generate error
+    }
+
     public function testInputFilterText()
     {
         $data = array(

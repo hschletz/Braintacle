@@ -250,7 +250,7 @@ class Search extends Form
     /** {@inheritdoc} */
     public function setData($data)
     {
-        $data['search'] = $this->localize($this->_getTypeFromFilter($data['filter']), $data['search']);
+        $data['search'] = $this->localize($this->_getTypeFromFilter($data['filter']), @$data['search']);
         return parent::setData($data);
     }
 
