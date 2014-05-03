@@ -31,9 +31,14 @@ namespace Console\Form;
  *   derived from the class name: Console\Form\Foo\Bar becomes form_foo_bar and
  *   so on. This allows general and individual styling of form content.
  *
+ * - The form's "id" attribute is set to the class-derived value ("form_foo_bar"
+ *   in the above example). This can be overridden manually if necessary.
+ *
  * - Automatic CSRF protection via hidden "_csrf" element.
  *
  * - Default rendering methods.
+ *
+ * - Helper methods for dealing with localized integer, float and date formats.
  */
 class Form extends \Zend\Form\Form
 {
@@ -47,6 +52,7 @@ class Form extends \Zend\Form\Form
         $class = substr($class, strpos($class, '_') + 1);
         $class = strtolower($class);
         $this->setAttribute('class', 'form ' . $class);
+        $this->setAttribute('id', $class);
 
         $csrf = new \Zend\Form\Element\Csrf('_csrf');
         $csrf->setCsrfValidatorOptions(array('timeout' => null)); // Rely on session cleanup
@@ -101,5 +107,153 @@ class Form extends \Zend\Form\Form
         }
         $output .= "</div>\n";
         return $output;
+    }
+
+    /**
+     * Convert normalized integer, float or date values to localized string representation
+     *
+     * Subclasses can support localized input formats by overriding setData()
+     * where this method can be used to preprocess specific fields. It accepts
+     * strictly normalized input data:
+     *
+     * - Integers must contain only digits.
+     * - Floats must contain only digits and at most 1 dot, but not at the end
+     *   of the string.
+     * - Dates must be passed as \Zend_Date objects or ISO date strings.
+     *
+     * Invalid input data is returned unmodified. The attached input filter
+     * should take care of it.
+     *
+     * @param string $type Data type (integer, float, date). Any other value will be ignored.
+     * @param mixed $value Normalized input value
+     * @return mixed Localized or unmodified value
+     */
+    public function localize($type, $value)
+    {
+        switch ($type) {
+            case 'integer':
+                if (ctype_digit((string) $value)) {
+                    $value = \Zend\Filter\StaticFilter::execute(
+                        (integer) $value,
+                        'NumberFormat',
+                        array('type' => \NumberFormatter::TYPE_INT32)
+                    );
+                }
+                break;
+            case 'float':
+                if ($value !== '' and preg_match('/^([0-9]+)?(\.[0-9]+)?$/', $value)) {
+                    $numberFormat = new \Zend\I18n\Filter\NumberFormat;
+                    $numberFormat->getFormatter()->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, 100);
+                    $value = $numberFormat->filter((float) $value);
+                }
+                break;
+            case 'date':
+                if ($value instanceof \Zend_Date) {
+                    $value = $value->get(\Zend_Date::DATE_MEDIUM);
+                } elseif (\Zend\Validator\StaticValidator::execute($value, 'Date')) {
+                    $value = new \Zend_Date($value);
+                    $value = $value->get(\Zend_Date::DATE_MEDIUM);
+                }
+                break;
+        }
+        return $value;
+    }
+
+    /**
+     * Convert localized string representations to integer, float or date values
+     *
+     * Subclasses can support localized input formats by calling this method
+     * from a filter.
+     *
+     * Non-string values get trimmed and converted to integer, float or
+     * \Zend_Date, depending on $type. Invalid values are returned as string.
+     * The input filter should validate filtered data by checking the datatype
+     * via validateType().
+     *
+     * @param string $type Data type (integer, float, date). Any other value will be ignored.
+     * @param string $value Localized input string
+     * @return mixed Normalized value or input string
+     */
+    public function normalize($type, $value)
+    {
+        switch ($type) {
+            case 'integer':
+                $value = trim($value);
+                $numberParse = new \Zend\I18n\Filter\NumberParse;
+                $numberParse->setType(\NumberFormatter::TYPE_INT32);
+                // Floats would successfully get parsed as integers with the
+                // fractional part cut off. For strict integer parsing, test
+                // that $value contains only digits and grouping separators.
+                $pattern = sprintf(
+                    '/^[0-9%s]+$/',
+                    preg_quote(
+                        $numberParse->getFormatter()->getSymbol(\NumberFormatter::GROUPING_SEPARATOR_SYMBOL),
+                        '/'
+                    )
+                );
+                if (preg_match($pattern, $value)) {
+                    $value = $numberParse->filter($value);
+                }
+                break;
+            case 'float':
+                $value = trim($value);
+                $numberParse = new \Zend\I18n\Filter\NumberParse;
+                $numberParse->setType(\NumberFormatter::TYPE_DOUBLE);
+                $value = $numberParse->filter($value);
+                break;
+            case 'date':
+                $value = trim($value);
+                $validator = new \Zend\I18n\Validator\DateTime;
+                $validator->setDateType(\IntlDateFormatter::SHORT);
+                if ($validator->isValid($value)) {
+                    $value = new \Zend_Date($value);
+                }
+                break;
+        }
+        return $value;
+    }
+
+    /**
+     * Validate datatype
+     *
+     * This method can be used to validate data returned by normalize(). It
+     * checks the value's actual datatype (integer, float, \Zend_Date) against
+     * the expected type.
+     *
+     * @param string $type Expected type (integer, float, date). Any other value will always yield TRUE.
+     * @param mixed $value Value to test
+     * @return bool
+     */
+    public function validateType($type, $value)
+    {
+        switch ($type) {
+            case 'integer':
+                $valid = is_int($value);
+                break;
+            case 'float':
+                $valid = is_float($value);
+                break;
+            case 'date':
+                $valid = $value instanceof \Zend_Date;
+                break;
+            default:
+                $valid = true;
+        }
+        return $valid;
+    }
+
+    /**
+     * Set form data unprocessed
+     *
+     * When a subclass overrides setData() to preprocess values, this method can
+     * be used to bypass preprocessing. This is mostly useful for injecting raw
+     * data when testing the input filter.
+     *
+     * @param array|\ArrayAccess|\Traversable $data
+     * @return $this
+     */
+    public function setRawData($data)
+    {
+        return parent::setData($data);
     }
 }

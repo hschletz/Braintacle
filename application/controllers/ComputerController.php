@@ -338,24 +338,25 @@ class ComputerController extends Zend_Controller_Action
 
     public function searchAction()
     {
-        $form = new Form_Search;
+        $form = \Library\Application::getService('FormElementManager')->get('Console\Form\Search');
 
         if ($this->getRequest()->isPost()) {
-            if ($form->isValid($_POST)) {
+            $form->setData($_POST);
+            if ($form->isValid()) {
+                $data = $form->getData();
                 // Request minimal column list and add columns for pattern or inverted searches
                 $columns = array('Name', 'UserName', 'InventoryDate');
                 $encoder = new Braintacle_Filter_ColumnListEncode;
-                if ($form->getValue('invert') or !$form->getValue('exact')) {
-                    $filter = $encoder->filter($form->getValue('filter'));
+                if ($data['invert'] or !$data['exact']) {
+                    $filter = $encoder->filter($data['filter']);
                     if (!in_array($filter, $columns)) {
                         $columns[] = $filter;
                     }
                 }
 
                 // Normalize search argument
-                $search = $form->getValue('search'); // Will process integers, floats and dates
-                if ($form->getType('search') == 'date') {
-                    // Convert Zend_Date to short date string
+                $search = $data['search']; // Will process integers, floats and dates
+                if ($search instanceof \Zend_Date) {
                     $search = $search->get('yyyy-MM-dd');
                 }
                 $this->_setParam('search', $search);
@@ -372,11 +373,14 @@ class ComputerController extends Zend_Controller_Action
                 );
                 return;
             }
+        } else {
+            $data = $this->_getAllParams();
+            if (isset($data['filter'])) {
+                $form->setData($data);
+            }
         }
-
-        $form->setDefaults($this->_getAllParams());
         // Set form action explicitly to prevent GET parameters leaking into submitted form data
-        $form->setAction($this->_helper->url('search'));
+        $form->setAttribute('action', $this->_helper->url('search'));
         $this->view->form = $form;
     }
 

@@ -35,6 +35,7 @@ echo "\n";
 echo $this->headStyle();
 echo "\n";
 echo $this->headScript();
+echo \Library\Application::getService('ViewHelperManager')->get('headScript');
 ?>
 
 </head>
