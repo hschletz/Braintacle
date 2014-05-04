@@ -158,7 +158,6 @@ class Search extends Form
 
         $search = new Element\Text('search');
         $search->setLabel('Value');
-        // Extra options like validators are set dynamically upon validation.
         $this->add($search);
 
         // Only displayed for ordinal searches
