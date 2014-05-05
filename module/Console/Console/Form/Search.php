@@ -191,7 +191,7 @@ class Search extends Form
         $invert->setLabel('Invert results');
         $this->add($invert);
 
-        $submit = new \Library\Form\Element\Submit('submit');
+        $submit = new \Library\Form\Element\Submit('customSearch');
         $submit->setText('Search');
         $this->add($submit);
 

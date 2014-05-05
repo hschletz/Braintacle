@@ -157,14 +157,18 @@ $table = $this->getHelper('table')->table(
 $filter = $this->filter;
 if ($filter) {
     $search = $this->search;
-    if ($filter == 'Software') {
-        $search = \Zend\Filter\StaticFilter::execute($search, 'Library\FixEncodingErrors');
-    }
-
-    if (isset($this->filterUriParams)) {
-        // This is a custom search result. Do not display filter description
-        // because this would become difficult to read for multiple filters.
-        // Just display the number of results and a link to edit the filter.
+    if ($this->isCustomSearch) {
+        // Display the number of results and links to edit the filter or add it
+        // to a group.
+        if ($search instanceof \Zend_Date) {
+            $search = $search->get('yyyy-MM-dd');
+        }
+        $params = array(
+            'filter' => $filter,
+            'search' => $search,
+            'operator' => $this->operator,
+            'invert' => $this->invert,
+        );
         $header = sprintf($this->translate('%d matches'), $count)
                 . "<br>\n"
                 . $this->htmlTag(
@@ -172,7 +176,7 @@ if ($filter) {
                     $this->translate('Edit filter'),
                     array(
                         'href' => $this->url(
-                            array('controller' => 'computer', 'action' => 'search') + $this->filterUriParams
+                            array('controller' => 'computer', 'action' => 'search') + $params
                         ),
                     ),
                     true
@@ -183,13 +187,16 @@ if ($filter) {
                     $this->translate('Save to group'),
                     array(
                         'href' => $this->url(
-                            array('controller' => 'group', 'action' => 'add') + $this->filterUriParams
+                            array('controller' => 'group', 'action' => 'add') + $params
                         ),
                     ),
                     true
                 );
     } else {
         // For fixed filters, print a nicer description.
+        if ($filter == 'Software') {
+            $search = \Zend\Filter\StaticFilter::execute($search, 'Library\FixEncodingErrors');
+        }
         $header = Model_Computer::getFilterDescription($filter, $search, $count);
     }
     print $this->htmlTag(

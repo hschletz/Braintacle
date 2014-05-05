@@ -331,7 +331,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
         $this->assertCount(1, $result);
 
         $result = Query::execute(
-            '//input[@name="submit"][@type="submit"]',
+            '//input[@name="customSearch"][@type="submit"]',
             $document
         );
         $this->assertCount(1, $result);

@@ -45,39 +45,71 @@ class ComputerController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $this->_helper->ordering('InventoryDate', 'desc');
+        if ($this->_getParam('customSearch')) {
+            // Submitted from search form
+            $form = \Library\Application::getService('FormElementManager')->get('Console\Form\Search');
+            $form->setData($this->_getAllParams());
+            if ($form->isValid()) {
+                $isCustomFilter = true;
 
-        $filter = $this->_getParam('filter');
-        $search = $this->_getParam('search');
-        $invert = $this->_getParam('invert');
-        $operator = $this->_getParam('operator');
+                $data = $form->getData();
+                $filter = $data['filter'];
+                $search = $data['search'];
+                $operator = $data['operator'];
+                $invert = $data['invert'];
 
-        if (!$filter) {
-            $index = 1;
-            while ($this->_getParam('filter' . $index)) {
-                $filter[] = $this->_getParam('filter' . $index);
-                $search[] = $this->_getParam('search' . $index);
-                $invert[] = $this->_getParam('invert' . $index);
-                $operator[] = $this->_getParam('operator' . $index);
-                $index++;
+                // Request minimal column list and add columns for non-equality searches
+                $columns = array('Name', 'UserName', 'InventoryDate');
+                if ($data['operator'] != 'eq' and !in_array($filter, $columns)) {
+                    $columns[] = $filter;
+                }
+                $this->view->columns = $columns;
+            } else {
+                $this->_helper->redirector(
+                    'search',
+                    'computer',
+                    null,
+                    $this->_getAllParams()
+                );
+                return;
+            }
+        } else {
+            // Direct query via URL
+            $isCustomFilter = false;
+
+            $filter = $this->_getParam('filter');
+            $search = $this->_getParam('search');
+            $invert = $this->_getParam('invert');
+            $operator = $this->_getParam('operator');
+
+            if (!$filter) {
+                $index = 1;
+                while ($this->_getParam('filter' . $index)) {
+                    $filter[] = $this->_getParam('filter' . $index);
+                    $search[] = $this->_getParam('search' . $index);
+                    $invert[] = $this->_getParam('invert' . $index);
+                    $operator[] = $this->_getParam('operator' . $index);
+                    $index++;
+                }
+            }
+
+            $columns = explode(
+                ',',
+                $this->_getParam(
+                    'columns',
+                    'Name,UserName,OsName,Type,CpuClock,PhysicalMemory,InventoryDate'
+                )
+            );
+            // Join columns that have been split at an escaped comma
+            $columns = $this->_decodeColumns($columns);
+            // unescape backslashes
+            $this->view->columns = array();
+            foreach ($columns as $column) {
+                $this->view->columns[] = strtr($column, array('\\\\' => '\\'));
             }
         }
 
-        $columns = explode(
-            ',',
-            $this->_getParam(
-                'columns',
-                'Name,UserName,OsName,Type,CpuClock,PhysicalMemory,InventoryDate'
-            )
-        );
-        // Join columns that have been split at an escaped comma
-        $columns = $this->_decodeColumns($columns);
-
-        // unescape backslashes
-        $this->view->columns = array();
-        foreach ($columns as $column) {
-            $this->view->columns[] = strtr($column, array('\\\\' => '\\'));
-        }
+        $this->_helper->ordering('InventoryDate', 'desc');
         $this->view->computers = Model_Computer::createStatementStatic(
             $this->view->columns,
             $this->view->order,
@@ -98,9 +130,7 @@ class ComputerController extends Zend_Controller_Action
         $this->view->search = $search;
         $this->view->invert = $invert;
         $this->view->operator = $operator;
-        if ($this->_getParam('customFilter')) {
-            $this->view->filterUriParams = $this->getFilterUriParams();
-        }
+        $this->view->isCustomSearch = ($isCustomFilter or $this->_getParam('customFilter'));
     }
 
     public function generalAction()
@@ -335,48 +365,13 @@ class ComputerController extends Zend_Controller_Action
     public function searchAction()
     {
         $form = \Library\Application::getService('FormElementManager')->get('Console\Form\Search');
-
-        if ($this->getRequest()->isPost()) {
-            $form->setData($_POST);
-            if ($form->isValid()) {
-                $data = $form->getData();
-                // Request minimal column list and add columns for non-equality searches
-                $columns = array('Name', 'UserName', 'InventoryDate');
-                $encoder = new Braintacle_Filter_ColumnListEncode;
-                if ($data['operator'] != 'eq') {
-                    $filter = $encoder->filter($data['filter']);
-                    if (!in_array($filter, $columns)) {
-                        $columns[] = $filter;
-                    }
-                }
-
-                // Normalize search argument
-                $search = $data['search']; // Will process integers, floats and dates
-                if ($search instanceof \Zend_Date) {
-                    $search = $search->get('yyyy-MM-dd');
-                }
-                $this->_setParam('search', $search);
-
-                // Redirect to index page with all search parameters
-                $this->_helper->redirector(
-                    'index',
-                    'computer',
-                    null,
-                    $this->getFilterUriParams() + array(
-                        'customFilter' => '1',
-                        'columns' => implode(',', $columns),
-                    )
-                );
-                return;
-            }
-        } else {
-            $data = $this->_getAllParams();
-            if (isset($data['filter'])) {
-                $form->setData($data);
-            }
+        $data = $this->_getAllParams();
+        if (isset($data['filter'])) {
+            $form->setData($data);
+            $form->isValid(); // Set validation messages
         }
-        // Set form action explicitly to prevent GET parameters leaking into submitted form data
-        $form->setAttribute('action', $this->_helper->url('search'));
+        $form->setAttribute('method', 'GET');
+        $form->setAttribute('action', $this->_helper->url('index'));
         $this->view->form = $form;
     }
 
@@ -440,36 +435,6 @@ class ComputerController extends Zend_Controller_Action
         // End here, no view script invocation
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
-    }
-
-    /**
-     * Return request parameters that define the current filter
-     *
-     * To keep generated URIs short, only non-empty, non-default parameters are
-     * returned.
-     * @return array
-     */
-    public function getFilterUriParams()
-    {
-        $params = array();
-        if (!$this->_getParam('filter')) {
-            return $params;
-        }
-        $params['filter'] = $this->_getParam('filter');
-
-        if ($this->_getParam('search')) {
-            $params['search'] = $this->_getParam('search');
-        }
-
-        if ($this->_getParam('invert')) {
-            $params['invert'] = '1';
-        }
-
-        if ($this->_getParam('operator')) {
-            $params['operator'] = $this->_getParam('operator');
-        }
-
-        return $params;
     }
 
     /**
