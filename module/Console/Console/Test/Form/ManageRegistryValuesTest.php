@@ -209,7 +209,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         $this->_form->get('existing')->get('value_1_name')->setMessages(array('test' => 'Message1'));
         $this->_form->get('new_value')->get('subkeys')->setMessages(array('test' => 'Message2'));
         $document = new \Zend\Dom\Document(
-            $this->_form->render($this->_getView())
+            $this->_form->render($this->_createView())
         );
 
         // Test state of inspect checkbox

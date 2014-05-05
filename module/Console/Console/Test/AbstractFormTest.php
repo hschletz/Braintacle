@@ -69,13 +69,24 @@ abstract class AbstractFormTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get a view renderer
+     * Create a view renderer
+     *
+     * A new view renderer instance is created on every call. If the state of
+     * the renderer or a helper needs to be preserved, call this only once and
+     * store it in a variable.
      *
      * @return \Zend\View\Renderer\PhpRenderer
      */
-    protected function _getView()
+    protected function _createView()
     {
-        return \Library\Application::getService('ViewManager')->getRenderer();
+        // Clone helper plugin manager to get the helpers in a fresh state.
+        // This is important for helpers like HeadScript that store information
+        // across invocations. These state changes must not leak into other
+        // tests.
+        $plugins = clone \Library\Application::getService('ViewHelperManager');
+        $view = new \Zend\View\Renderer\PhpRenderer;
+        $view->setHelperPluginManager($plugins);
+        return $view;
     }
 
     /**

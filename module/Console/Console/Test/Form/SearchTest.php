@@ -268,8 +268,9 @@ class SearchTest extends \Console\Test\AbstractFormTest
 
     public function testRender()
     {
+        $view = $this->_createView();
         $document = new \Zend\Dom\Document(
-            $this->_form->render($this->_getView())
+            $this->_form->render($view)
         );
 
         $result = Query::execute(
@@ -308,7 +309,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
         );
         $this->assertCount(1, $result);
 
-        $headScript = $this->_getView()->headScript();
+        $headScript = $view->headScript();
         $this->assertCount(1, $headScript);
         $this->assertContains('function filterChanged(', $headScript->toString());
     }

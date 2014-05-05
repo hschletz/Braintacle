@@ -184,7 +184,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
             )
         );
 
-        $output = $this->_form->render($this->_getView());
+        $output = $this->_form->render($this->_createView());
 
         // Test table content
         $document = new \Zend\Dom\Document($output);
