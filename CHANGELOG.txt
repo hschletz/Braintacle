@@ -33,6 +33,14 @@ Misc:
   longer has to be "download".
 
 
+CHANGES IN VERSION 0.15
+=======================
+
+Fixed bugs:
+
+- Console: Fixed exception when sarching for an empty string with exact match.
+
+
 CHANGES IN VERSION 0.14
 =======================
 
