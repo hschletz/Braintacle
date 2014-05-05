@@ -1236,6 +1236,7 @@ class Model_Computer extends Model_ComputerOrGroup
         $addSearchColumns
     )
     {
+        $arg = (string) $arg; // Treat NULL as empty string
         list($table, $column) = self::_findCommon($select, $model, $property, $addSearchColumns);
 
         // Determine comparision operator and prepare search argument
