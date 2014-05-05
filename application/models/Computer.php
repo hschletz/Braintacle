@@ -1138,6 +1138,11 @@ class Model_Computer extends Model_ComputerOrGroup
                     '%1$d computers where software \'%2$s\' is installed'
                 );
                 break;
+            case 'Windows.ManualProductKey':
+                $description = $translate->_(
+                    '%1$d computers with manually entered product key'
+                );
+                break;
             default:
                 throw(new Zend_Exception('No description available for filter ' . $filter));
         }

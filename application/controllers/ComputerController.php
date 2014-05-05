@@ -50,7 +50,7 @@ class ComputerController extends Zend_Controller_Action
             $form = \Library\Application::getService('FormElementManager')->get('Console\Form\Search');
             $form->setData($this->_getAllParams());
             if ($form->isValid()) {
-                $isCustomFilter = true;
+                $isCustomSearch = true;
 
                 $data = $form->getData();
                 $filter = $data['filter'];
@@ -75,7 +75,7 @@ class ComputerController extends Zend_Controller_Action
             }
         } else {
             // Direct query via URL
-            $isCustomFilter = false;
+            $isCustomSearch = false;
 
             $filter = $this->_getParam('filter');
             $search = $this->_getParam('search');
@@ -130,7 +130,7 @@ class ComputerController extends Zend_Controller_Action
         $this->view->search = $search;
         $this->view->invert = $invert;
         $this->view->operator = $operator;
-        $this->view->isCustomSearch = ($isCustomFilter or $this->_getParam('customFilter'));
+        $this->view->isCustomSearch = $isCustomSearch;
     }
 
     public function generalAction()

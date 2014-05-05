@@ -39,7 +39,6 @@ if ($this->windowsProductKeys) {
                     array(
                         'columns' => 'Name,OsName,Windows.ProductKey,Windows.ManualProductKey',
                         'filter' => 'Windows.ManualProductKey',
-                        'customFilter' => '1',
                         'order' => 'Name',
                         'direction' => 'asc',
                     )
