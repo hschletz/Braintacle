@@ -59,6 +59,25 @@ class Search extends Form
         'Volume.FreeSpace' => 'integer',
     );
 
+    /**
+     * Value options for ordinal searches (integer, float, date)
+     * @var string[]
+     */
+    protected $_operatorsOrdinal = array(
+        'eq' => '=',
+        'ne' => '!=',
+        'lt' => '<',
+        'le' => '<=',
+        'ge' => '>=',
+        'gt' => '>',
+    );
+
+    /**
+     * Value options for text searches
+     * @var string[]
+     */
+    protected $_operatorsText; // Populated by init()
+
     /** {@inheritdoc} */
     public function init()
     {
@@ -152,7 +171,7 @@ class Search extends Form
 
         $filter = new Element\Select('filter');
         $filter->setLabel('Search for')
-               ->setAttribute('onchange', 'filterChanged();') // Show and hide elements for selected filter
+               ->setAttribute('onchange', 'filterChanged();') // Set operators for selected filter
                ->setValueOptions($this->_filters);
         $this->add($filter);
 
@@ -160,25 +179,13 @@ class Search extends Form
         $search->setLabel('Value');
         $this->add($search);
 
-        // Only displayed for ordinal searches
+        // Operators dropdown. Options are set by JS depending on filter type.
+        // Since valid options are known only after submission, the internal
+        // InArray validator must be disabled and replaced by a callback.
         $operator = new Element\Select('operator');
-        $operator->setValueOptions(
-            array(
-                'eq' => '=',
-                'ne' => '!=',
-                'lt' => '<',
-                'le' => '<=',
-                'ge' => '>=',
-                'gt' => '>',
-            )
-        )
-        ->setLabel('Operator');
+        $operator->setDisableInArrayValidator(true)
+                 ->setLabel('Operator');
         $this->add($operator);
-
-        // Only displayed for text searches
-        $exact = new Element\Checkbox('exact');
-        $exact->setLabel('Exact match');
-        $this->add($exact);
 
         $invert = new Element\Checkbox('invert');
         $invert->setLabel('Invert results');
@@ -211,7 +218,25 @@ class Search extends Form
                 ),
             )
         );
+        $inputFilter->add(
+            array(
+                'name' => 'operator',
+                'validators' => array(
+                    array(
+                        'name' => 'Callback',
+                        'options' => array(
+                            'callback' => array($this, 'validateOperator'),
+                        ),
+                    ),
+                ),
+            )
+        );
         $this->setInputFilter($inputFilter);
+
+        $this->_operatorsText = array(
+            'like' => $translator->translate('Substring match, wildcards "?" and "*" allowed'),
+            'eq' => $translator->translate('Exact match'),
+        );
     }
 
     /**
@@ -244,6 +269,28 @@ class Search extends Form
             throw new \LogicException('No filter submitted');
         }
         return $this->validateType($this->_getTypeFromFilter($context['filter']), $value);
+    }
+
+    /**
+     * Validator callback for operator input
+     *
+     * @internal
+     * @param string $value
+     * @param array $context
+     * @return bool TRUE if $value is valid for the selected filter type
+     * @throws \LogicException if context does not contain filter
+     */
+    public function validateOperator($value, $context)
+    {
+        if (!isset($context['filter'])) {
+            throw new \LogicException('No filter submitted');
+        }
+        if ($this->_getTypeFromFilter($context['filter']) == 'text') {
+            $operators = $this->_operatorsText;
+        } else {
+            $operators = $this->_operatorsOrdinal;
+        }
+        return isset($operators[$value]);
     }
 
     /** {@inheritdoc} */
@@ -290,22 +337,25 @@ class Search extends Form
         /**
          * Event handler for Filter combobox
          *
-         * Displays or hides elements according to selected filter.
+         * Sets options for "operators" element according to selected filter.
          */
         function filterChanged()
         {
             var elements = document.getElementById('form_search').elements;
+            var operators;
             switch (types[elements['filter'].value]) {
                 case 'integer':
                 case 'float':
                 case 'date':
-                    elements['operator'].parentNode.style.display = 'table-row';
-                    elements['exact'][0].parentNode.style.display = 'none';
+                    operators = <?php print json_encode($this->_operatorsOrdinal); ?>;
                     break;
                 default:
-                    // Text search
-                    elements['operator'].parentNode.style.display = 'none';
-                    elements['exact'][0].parentNode.style.display = 'table-row';
+                    operators = <?php print json_encode($this->_operatorsText); ?>;
+            }
+            var options = elements['operator'].options;
+            options.length = 0;
+            for (var value in operators) {
+                options.add(new Option(operators[value], value));
             }
         }
 
@@ -315,6 +365,17 @@ class Search extends Form
         function init()
         {
             filterChanged();
+            <?php
+            // Set operator value manually because the element creation code
+            // does not know it's valid and ignores it.
+            $initialOperator = $this->get('operator')->getValue();
+            if ($initialOperator) {
+                print 'document.getElementById("form_search").elements["operator"].value = ';
+                print json_encode($initialOperator);
+                print ';';
+            }
+            ?>
+
         }
 
         <?php

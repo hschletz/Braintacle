@@ -15,6 +15,10 @@ New features:
   request, redirect to the original page after successful login. This simplifies
   quick access to particular pages via bookmarks etc.
 
+- Console: The search form has been simplified a bit, with the "Exact match"
+  field merged into the "Operator" field, which now describes the previously
+  undocumented wildcard usage.
+
 Fixed bugs:
 
 - Console: Fixed inconsistent navigation (missing submenu and/or active menu not

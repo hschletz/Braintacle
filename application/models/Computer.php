@@ -238,9 +238,8 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string $direction One of [asc|desc]
      * @param string|array $filter Name or array of names of a pre-defined filter routine
      * @param string|array $search Search parameter(s) passed to the filter. May be case sensitive depending on DBMS.
-     * @param bool|array $exact Force exact match on search parameter(s) (no wildcards, no substrings) (strings only)
+     * @param string|array $operator Comparision operator
      * @param bool|array $invert Invert query results (return all computers NOT matching criteria)
-     * @param string|array $operator Comparision operator (numeric/date search only)
      * @param bool $addSearchColumns Add columns with search criteria (default).
      *                               Set to false to return only columns specified by $columns.
      * @param bool $distinct Force distinct results.
@@ -255,9 +254,8 @@ class Model_Computer extends Model_ComputerOrGroup
         $direction='asc',
         $filter=null,
         $search=null,
-        $exact=null,
-        $invert=null,
         $operator=null,
+        $invert=null,
         $addSearchColumns=true,
         $distinct=false,
         $query=true
@@ -269,7 +267,6 @@ class Model_Computer extends Model_ComputerOrGroup
             $direction,
             $filter,
             $search,
-            $exact,
             $invert,
             $operator,
             $addSearchColumns,
@@ -289,9 +286,8 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string $direction One of [asc|desc]
      * @param string|array $filter Name or array of names of a pre-defined filter routine
      * @param string|array $search Search parameter(s) passed to the filter. May be case sensitive depending on DBMS.
-     * @param bool|array $exact Force exact match on search parameter(s) (no wildcards, no substrings) (strings only)
      * @param bool|array $invert Invert query results (return all computers NOT matching criteria)
-     * @param string|array $operator Comparision operator (numeric/date search only)
+     * @param string|array $operator Comparision operator
      * @param bool $addSearchColumns Add columns with search criteria (default).
      *                               Set to false to return only columns specified by $columns.
      * @param bool $query Perform query and return a Zend_Db_Statement object (default).
@@ -307,7 +303,6 @@ class Model_Computer extends Model_ComputerOrGroup
         $direction='asc',
         $filter=null,
         $search=null,
-        $exact=null,
         $invert=null,
         $operator=null,
         $addSearchColumns=true,
@@ -379,12 +374,13 @@ class Model_Computer extends Model_ComputerOrGroup
             // convert to array if necessary
             $filter = array($filter);
             $search = array($search);
-            $exact = array($exact);
+            $operator = array($operator);
             $invert = array($invert);
         }
         foreach ($filter as $index => $type) {
             $arg = $search[$index];
-            $matchExact = $exact[$index];
+            $operator = $operator[$index];
+            $matchExact = ($operator == 'eq');
             $invertResult = $invert[$index];
             switch ($type) {
                 case '':

@@ -490,7 +490,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                               ->method('__toString')
                               ->will($this->returnValue(''));
         $this->dispatch(
-            '/console/group/add?filter=filter&search=search&exact=exact&invert=invert&operator=operator'
+            '/console/group/add?filter=filter&search=search&invert=invert&operator=operator'
         );
         $this->assertResponseStatusCode(200);
     }
@@ -512,7 +512,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                               ->method('__toString')
                               ->will($this->returnValue(''));
         $this->dispatch(
-            '/console/group/add?filter=filter&search=search&exact=exact&invert=invert&operator=operator',
+            '/console/group/add?filter=filter&search=search&invert=invert&operator=operator',
             'POST',
             $postData
         );
@@ -543,9 +543,8 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                             null,
                             'filter',
                             'search',
-                            'exact',
-                            'invert',
                             'operator',
+                            'invert',
                             false,
                             true,
                             false
@@ -565,7 +564,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_addToGroupForm->expects($this->never())
                               ->method('__toString');
         $this->dispatch(
-            '/console/group/add?filter=filter&search=search&exact=exact&invert=invert&operator=operator',
+            '/console/group/add?filter=filter&search=search&invert=invert&operator=operator',
             'POST',
             $postData
         );
@@ -596,9 +595,8 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                             null,
                             'filter',
                             'search',
-                            'exact',
-                            'invert',
                             'operator',
+                            'invert',
                             false,
                             true,
                             true
@@ -618,7 +616,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_addToGroupForm->expects($this->never())
                               ->method('__toString');
         $this->dispatch(
-            '/console/group/add?filter=filter&search=search&exact=exact&invert=invert&operator=operator',
+            '/console/group/add?filter=filter&search=search&invert=invert&operator=operator',
             'POST',
             $postData
         );
@@ -649,9 +647,8 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                             null,
                             'filter',
                             'search',
-                            'exact',
-                            'invert',
                             'operator',
+                            'invert',
                             false,
                             true,
                             true
@@ -671,7 +668,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_addToGroupForm->expects($this->never())
                               ->method('__toString');
         $this->dispatch(
-            '/console/group/add?filter=filter&search=search&exact=exact&invert=invert&operator=operator',
+            '/console/group/add?filter=filter&search=search&invert=invert&operator=operator',
             'POST',
             $postData
         );

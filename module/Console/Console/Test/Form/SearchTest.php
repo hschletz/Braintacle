@@ -90,7 +90,6 @@ class SearchTest extends \Console\Test\AbstractFormTest
 
         $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('search'));
         $this->assertInstanceOf('Zend\Form\Element\Select', $this->_form->get('operator'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $this->_form->get('exact'));
         $this->assertInstanceOf('Zend\Form\Element\Checkbox', $this->_form->get('invert'));
     }
 
@@ -180,7 +179,6 @@ class SearchTest extends \Console\Test\AbstractFormTest
             'filter' => 'UserDefinedInfo.Clob',
             'search' => ' test ',
             'operator' => 'eq',
-            'exact' => '0',
             'invert' => '0',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
@@ -200,7 +198,6 @@ class SearchTest extends \Console\Test\AbstractFormTest
             'filter' => 'UserDefinedInfo.Integer',
             'search' => ' 1.234 ',
             'operator' => 'eq',
-            'exact' => '0',
             'invert' => '0',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
@@ -220,7 +217,6 @@ class SearchTest extends \Console\Test\AbstractFormTest
             'filter' => 'UserDefinedInfo.Float',
             'search' => ' 1.234,5678 ',
             'operator' => 'eq',
-            'exact' => '0',
             'invert' => '0',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
@@ -240,7 +236,6 @@ class SearchTest extends \Console\Test\AbstractFormTest
             'filter' => 'UserDefinedInfo.Date',
             'search' => ' 2.5.2014 ',
             'operator' => 'eq',
-            'exact' => '0',
             'invert' => '0',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
@@ -254,16 +249,54 @@ class SearchTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
     }
 
+    public function testInputFilterOnTextOperator()
+    {
+        $data = array(
+            'filter' => 'UserDefinedInfo.Clob',
+            'search' => '1',
+            'operator' => 'like',
+            'invert' => '0',
+            '_csrf' => $this->_form->get('_csrf')->getValue(),
+        );
+        $this->_form->setRawData($data);
+        $this->assertTrue($this->_form->isValid());
+        $data['operator'] = 'ne';
+        $this->_form->setRawData($data);
+        $this->assertFalse($this->_form->isValid());
+    }
+
+    public function testInputFilterOnOrdinalOperator()
+    {
+        $data = array(
+            'filter' => 'UserDefinedInfo.Integer',
+            'search' => '1',
+            'operator' => 'ne',
+            'invert' => '0',
+            '_csrf' => $this->_form->get('_csrf')->getValue(),
+        );
+        $this->_form->setRawData($data);
+        $this->assertTrue($this->_form->isValid());
+        $data['operator'] = 'like';
+        $this->_form->setRawData($data);
+        $this->assertFalse($this->_form->isValid());
+    }
+
     public function testInvalidFilter()
     {
         $this->setExpectedException('InvalidArgumentException', 'Invalid filter: invalidFilter');
         $this->_form->setData(array('filter' => 'invalidFilter'));
     }
 
-    public function testMissingFilterOnValidation()
+    public function testMissingFilterOnSearchValidation()
     {
         $this->setExpectedException('LogicException', 'No filter submitted');
         $this->_form->validateSearch('value', array('search' => 'value'));
+    }
+
+    public function testMissingFilterOnOperatorValidation()
+    {
+        $this->setExpectedException('LogicException', 'No filter submitted');
+        $this->_form->validateOperator('value', array('search' => 'value'));
     }
 
     public function testRender()
@@ -292,12 +325,6 @@ class SearchTest extends \Console\Test\AbstractFormTest
         $this->assertCount(1, $result);
 
         $result = Query::execute(
-            '//input[@name="exact"][@type="checkbox"]',
-            $document
-        );
-        $this->assertCount(1, $result);
-
-        $result = Query::execute(
             '//input[@name="invert"][@type="checkbox"]',
             $document
         );
@@ -309,8 +336,30 @@ class SearchTest extends \Console\Test\AbstractFormTest
         );
         $this->assertCount(1, $result);
 
+        $headScript = $view->headScript()->toString();
+        $this->assertContains('function filterChanged(', $headScript);
+    }
+
+    public function testRenderNoPreset()
+    {
+        $view = $this->_createView();
+        $this->_form->render($view);
         $headScript = $view->headScript();
-        $this->assertCount(1, $headScript);
-        $this->assertContains('function filterChanged(', $headScript->toString());
+        $this->assertNotContains(
+            'document.getElementById("form_search").elements["operator"].value = "eq";',
+            $headScript
+        );
+    }
+
+    public function testRenderWithPreset()
+    {
+        $this->_form->get('operator')->setValue('eq');
+        $view = $this->_createView();
+        $this->_form->render($view);
+        $headScript = $view->headScript()->toString();
+        $this->assertContains(
+            'document.getElementById("form_search").elements["operator"].value = "eq";',
+            $headScript
+        );
     }
 }

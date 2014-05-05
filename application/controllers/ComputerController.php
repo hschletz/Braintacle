@@ -49,7 +49,6 @@ class ComputerController extends Zend_Controller_Action
 
         $filter = $this->_getParam('filter');
         $search = $this->_getParam('search');
-        $exact = $this->_getParam('exact');
         $invert = $this->_getParam('invert');
         $operator = $this->_getParam('operator');
 
@@ -58,7 +57,6 @@ class ComputerController extends Zend_Controller_Action
             while ($this->_getParam('filter' . $index)) {
                 $filter[] = $this->_getParam('filter' . $index);
                 $search[] = $this->_getParam('search' . $index);
-                $exact[] = $this->_getParam('exact' . $index);
                 $invert[] = $this->_getParam('invert' . $index);
                 $operator[] = $this->_getParam('operator' . $index);
                 $index++;
@@ -86,7 +84,6 @@ class ComputerController extends Zend_Controller_Action
             $this->view->direction,
             $filter,
             $search,
-            $exact,
             $invert,
             $operator
         );
@@ -99,7 +96,6 @@ class ComputerController extends Zend_Controller_Action
 
         $this->view->filter = $filter;
         $this->view->search = $search;
-        $this->view->exact = $exact;
         $this->view->invert = $invert;
         $this->view->operator = $operator;
         if ($this->_getParam('customFilter')) {
@@ -344,10 +340,10 @@ class ComputerController extends Zend_Controller_Action
             $form->setData($_POST);
             if ($form->isValid()) {
                 $data = $form->getData();
-                // Request minimal column list and add columns for pattern or inverted searches
+                // Request minimal column list and add columns for non-equality searches
                 $columns = array('Name', 'UserName', 'InventoryDate');
                 $encoder = new Braintacle_Filter_ColumnListEncode;
-                if ($data['invert'] or !$data['exact']) {
+                if ($data['operator'] != 'eq') {
                     $filter = $encoder->filter($data['filter']);
                     if (!in_array($filter, $columns)) {
                         $columns[] = $filter;
@@ -463,10 +459,6 @@ class ComputerController extends Zend_Controller_Action
 
         if ($this->_getParam('search')) {
             $params['search'] = $this->_getParam('search');
-        }
-
-        if ($this->_getParam('exact')) {
-            $params['exact'] = '1';
         }
 
         if ($this->_getParam('invert')) {

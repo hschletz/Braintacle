@@ -266,9 +266,8 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
                 null,
                 $this->params()->fromQuery('filter'),
                 $this->params()->fromQuery('search'),
-                $this->params()->fromQuery('exact'),
-                $this->params()->fromQuery('invert'),
                 $this->params()->fromQuery('operator'),
+                $this->params()->fromQuery('invert'),
                 false,
                 true,
                 ($what == \Form_AddToGroup::STORE_FILTER) ? false : true
