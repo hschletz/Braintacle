@@ -31,7 +31,7 @@ class FormRendererTest extends \PHPUnit_Framework_TestCase
     /**
      * Test default form tags
      */
-    public function testRender()
+    public function testRenderWithCsrf()
     {
         $view = \Library\Application::getService('ViewManager')->getRenderer();
 
@@ -57,6 +57,29 @@ class FormRendererTest extends \PHPUnit_Framework_TestCase
         $expected = <<<EOT
 <form action="" method="POST" class="form&#x20;mock" id="mock">
 <div><input type="hidden" name="_csrf" value="csrf"></div>
+fieldset
+</form>
+
+EOT;
+        $this->assertEquals($expected, $form->render($view));
+    }
+
+    public function testRenderWithoutCsrf()
+    {
+        $view = \Library\Application::getService('ViewManager')->getRenderer();
+
+        $form = $this->getMockBuilder('Console\Form\Form')
+                     ->setMethods(array('renderFieldset'))
+                     ->setMockClassName('Form_Mock')
+                     ->getMock();
+        $form->expects($this->once())
+             ->method('renderFieldset')
+             ->with($view, $form)
+             ->will($this->returnValue('fieldset'));
+        $form->remove('_csrf');
+
+        $expected = <<<EOT
+<form action="" method="POST" class="form&#x20;mock" id="mock">
 fieldset
 </form>
 

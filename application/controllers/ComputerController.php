@@ -48,6 +48,7 @@ class ComputerController extends Zend_Controller_Action
         if ($this->_getParam('customSearch')) {
             // Submitted from search form
             $form = \Library\Application::getService('FormElementManager')->get('Console\Form\Search');
+            $form->remove('_csrf');
             $form->setData($this->_getAllParams());
             if ($form->isValid()) {
                 $isCustomSearch = true;
@@ -358,6 +359,7 @@ class ComputerController extends Zend_Controller_Action
     public function searchAction()
     {
         $form = \Library\Application::getService('FormElementManager')->get('Console\Form\Search');
+        $form->remove('_csrf');
         $data = $this->_getAllParams();
         if (isset($data['filter'])) {
             $form->setData($data);

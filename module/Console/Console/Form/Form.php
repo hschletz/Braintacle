@@ -69,9 +69,12 @@ class Form extends \Zend\Form\Form
     {
         $this->prepare();
         $output  = $view->form()->openTag($this);
-        $output .= "\n<div>";
-        $output .= $view->formHidden($this->get('_csrf'));
-        $output .= "</div>\n";
+        $output .= "\n";
+        if ($this->has('_csrf')) {
+            $output .= "<div>";
+            $output .= $view->formHidden($this->get('_csrf'));
+            $output .= "</div>\n";
+        }
         $output .= $this->renderFieldset($view, $this);
         $output .= "\n";
         $output .= $view->form()->closeTag();
