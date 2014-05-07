@@ -183,12 +183,12 @@ class SearchTest extends \Console\Test\AbstractFormTest
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
 
-        $this->_form->setRawData($data);
+        $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
         $this->assertEquals(' test ', $this->_form->getData()['search']);
 
         $data['search'] = '';
-        $this->_form->setRawData($data);
+        $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
     }
 
@@ -202,12 +202,12 @@ class SearchTest extends \Console\Test\AbstractFormTest
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
 
-        $this->_form->setRawData($data);
+        $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
         $this->assertEquals(1234, $this->_form->getData()['search']);
 
         $data['search'] = '';
-        $this->_form->setRawData($data);
+        $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
     }
 
@@ -221,12 +221,12 @@ class SearchTest extends \Console\Test\AbstractFormTest
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
 
-        $this->_form->setRawData($data);
+        $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
         $this->assertEquals(1234.5678, $this->_form->getData()['search']);
 
         $data['search'] = '';
-        $this->_form->setRawData($data);
+        $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
     }
 
@@ -240,12 +240,12 @@ class SearchTest extends \Console\Test\AbstractFormTest
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
 
-        $this->_form->setRawData($data);
+        $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
         $this->assertEquals('02.05.2014', $this->_form->getData()['search']->get(\Zend_Date::DATE_MEDIUM));
 
         $data['search'] = '';
-        $this->_form->setRawData($data);
+        $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
     }
 
@@ -258,10 +258,10 @@ class SearchTest extends \Console\Test\AbstractFormTest
             'invert' => '0',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
-        $this->_form->setRawData($data);
+        $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
         $data['operator'] = 'ne';
-        $this->_form->setRawData($data);
+        $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
     }
 
@@ -274,10 +274,10 @@ class SearchTest extends \Console\Test\AbstractFormTest
             'invert' => '0',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
-        $this->_form->setRawData($data);
+        $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
         $data['operator'] = 'like';
-        $this->_form->setRawData($data);
+        $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
     }
 

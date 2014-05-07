@@ -241,19 +241,4 @@ class Form extends \Zend\Form\Form
         }
         return $valid;
     }
-
-    /**
-     * Set form data unprocessed
-     *
-     * When a subclass overrides setData() to preprocess values, this method can
-     * be used to bypass preprocessing. This is mostly useful for injecting raw
-     * data when testing the input filter.
-     *
-     * @param array|\ArrayAccess|\Traversable $data
-     * @return $this
-     */
-    public function setRawData($data)
-    {
-        return parent::setData($data);
-    }
 }
