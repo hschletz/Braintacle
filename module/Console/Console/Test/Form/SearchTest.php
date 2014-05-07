@@ -139,20 +139,36 @@ class SearchTest extends \Console\Test\AbstractFormTest
     {
         $data = array(
             'filter' => 'UserDefinedInfo.Integer',
-            'search' => '1000000',
+            'search' => '1234',
         );
         $this->_form->setData($data);
-        $this->assertEquals('1.000.000', $this->_form->get('search')->getValue());
+        $this->assertEquals('1.234', $this->_form->get('search')->getValue());
+
+        $data['search'] = '1.234';
+        $this->_form->setData($data);
+        $this->assertEquals('1.234', $this->_form->get('search')->getValue());
+
+        $data['search'] = '1,234';
+        $this->_form->setData($data);
+        $this->assertEquals('1,234', $this->_form->get('search')->getValue());
     }
 
     public function testSetDataFloat()
     {
         $data = array(
             'filter' => 'UserDefinedInfo.Float',
-            'search' => '1000000.1234',
+            'search' => '1234.5678',
         );
         $this->_form->setData($data);
-        $this->assertEquals('1.000.000,1234', $this->_form->get('search')->getValue());
+        $this->assertEquals('1.234,5678', $this->_form->get('search')->getValue());
+
+        $data['search'] = '1.234,5678';
+        $this->_form->setData($data);
+        $this->assertEquals('1.234,5678', $this->_form->get('search')->getValue());
+
+        $data['search'] = '1,234.5678';
+        $this->_form->setData($data);
+        $this->assertEquals('1,234.5678', $this->_form->get('search')->getValue());
     }
 
     public function testSetDataDate()
@@ -163,6 +179,14 @@ class SearchTest extends \Console\Test\AbstractFormTest
         );
         $this->_form->setData($data);
         $this->assertEquals('01.05.2014', $this->_form->get('search')->getValue());
+
+        $data['search'] = '2014-05-01';
+        $this->_form->setData($data);
+        $this->assertEquals('01.05.2014', $this->_form->get('search')->getValue());
+
+        $data['search'] = '05/01/2014';
+        $this->_form->setData($data);
+        $this->assertEquals('05/01/2014', $this->_form->get('search')->getValue());
     }
 
     public function testSetDataNoSearch()
@@ -196,7 +220,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     {
         $data = array(
             'filter' => 'UserDefinedInfo.Integer',
-            'search' => ' 1.234 ',
+            'search' => ' 1234 ',
             'operator' => 'eq',
             'invert' => '0',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
@@ -205,6 +229,15 @@ class SearchTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
         $this->assertEquals(1234, $this->_form->getData()['search']);
+
+        $data['search'] = '1.234';
+        $this->_form->setData($data);
+        $this->assertTrue($this->_form->isValid());
+        $this->assertEquals(1234, $this->_form->getData()['search']);
+
+        $data['search'] = '1,234';
+        $this->_form->setData($data);
+        $this->assertFalse($this->_form->isValid());
 
         $data['search'] = '';
         $this->_form->setData($data);
@@ -215,7 +248,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     {
         $data = array(
             'filter' => 'UserDefinedInfo.Float',
-            'search' => ' 1.234,5678 ',
+            'search' => ' 1234,5678 ',
             'operator' => 'eq',
             'invert' => '0',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
@@ -224,6 +257,15 @@ class SearchTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
         $this->assertEquals(1234.5678, $this->_form->getData()['search']);
+
+        $data['search'] = '1.234,5678';
+        $this->_form->setData($data);
+        $this->assertTrue($this->_form->isValid());
+        $this->assertEquals(1234.5678, $this->_form->getData()['search']);
+
+        $data['search'] = '1,234.5678';
+        $this->_form->setData($data);
+        $this->assertFalse($this->_form->isValid());
 
         $data['search'] = '';
         $this->_form->setData($data);
@@ -234,7 +276,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     {
         $data = array(
             'filter' => 'UserDefinedInfo.Date',
-            'search' => ' 2.5.2014 ',
+            'search' => ' 1.5.2014 ',
             'operator' => 'eq',
             'invert' => '0',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
@@ -242,7 +284,16 @@ class SearchTest extends \Console\Test\AbstractFormTest
 
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
-        $this->assertEquals('02.05.2014', $this->_form->getData()['search']->get(\Zend_Date::DATE_MEDIUM));
+        $this->assertEquals('01.05.2014', $this->_form->getData()['search']->get(\Zend_Date::DATE_MEDIUM));
+
+        $data['search'] = '2014-05-01';
+        $this->_form->setData($data);
+        $this->assertTrue($this->_form->isValid());
+        $this->assertEquals('01.05.2014', $this->_form->getData()['search']->get(\Zend_Date::DATE_MEDIUM));
+
+        $data['search'] = '05/01/2014';
+        $this->_form->setData($data);
+        $this->assertFalse($this->_form->isValid());
 
         $data['search'] = '';
         $this->_form->setData($data);
