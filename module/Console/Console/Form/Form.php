@@ -176,30 +176,29 @@ class Form extends \Zend\Form\Form
      */
     public function normalize($type, $value)
     {
+        // Integers and floats are validated first to prevent successful parsing
+        // of strings containing invalid characters with the invalid part simply
+        // cut off.
         switch ($type) {
             case 'integer':
                 $value = trim($value);
-                $numberParse = new \Zend\I18n\Filter\NumberParse;
-                $numberParse->setType(\NumberFormatter::TYPE_INT32);
-                // Floats would successfully get parsed as integers with the
-                // fractional part cut off. For strict integer parsing, test
-                // that $value contains only digits and grouping separators.
-                $pattern = sprintf(
-                    '/^[0-9%s]+$/',
-                    preg_quote(
-                        $numberParse->getFormatter()->getSymbol(\NumberFormatter::GROUPING_SEPARATOR_SYMBOL),
-                        '/'
-                    )
-                );
-                if (preg_match($pattern, $value)) {
-                    $value = $numberParse->filter($value);
+                if (\Zend\Validator\StaticValidator::execute($value, 'Zend\I18n\Validator\Int')) {
+                    $value = \Zend\Filter\StaticFilter::execute(
+                        $value,
+                        'Zend\I18n\Filter\NumberParse',
+                        array('type' => \NumberFormatter::TYPE_INT32)
+                    );
                 }
                 break;
             case 'float':
                 $value = trim($value);
-                $numberParse = new \Zend\I18n\Filter\NumberParse;
-                $numberParse->setType(\NumberFormatter::TYPE_DOUBLE);
-                $value = $numberParse->filter($value);
+                if (\Zend\Validator\StaticValidator::execute($value, 'Zend\I18n\Validator\Float')) {
+                    $value = \Zend\Filter\StaticFilter::execute(
+                        $value,
+                        'Zend\I18n\Filter\NumberParse',
+                        array('type' => \NumberFormatter::TYPE_DOUBLE)
+                    );
+                }
                 break;
             case 'date':
                 $value = trim($value);

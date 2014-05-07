@@ -122,6 +122,7 @@ class FormLocalizationTest extends \PHPUnit_Framework_TestCase
     public function testNormalizeFloatInvalid()
     {
         $this->assertEquals('1000.1', $this->_form->normalize('float', ' 1000.1 '));
+        $this->assertEquals('1,234.5678', $this->_form->normalize('float', ' 1,234.5678 '));
         $this->assertEquals('', $this->_form->normalize('float', ' '));
     }
 
