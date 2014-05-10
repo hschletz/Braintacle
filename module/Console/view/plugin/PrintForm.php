@@ -28,4 +28,6 @@ if ($this->form instanceof \Zend_Form) {
         // @codeCoverageIgnoreEnd
         print $this->form; // Default renderer without ZF1 glue method
     }
+} elseif ($this->form instanceof \Console\Form\Form) {
+    print $this->form->render($this);
 }
