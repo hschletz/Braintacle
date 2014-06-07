@@ -335,6 +335,14 @@ our %CONFIG = (
     level => IMPORTANT,
     filter => qr '^([1-9]\d*)$'
   },
+  DOWNLOAD_EXECUTION_TIMEOUT => {
+    type => 'IVALUE',
+    default => 120,
+    unit => 'minute',
+    description => 'Agents will send an error event and clean the package if package command does not respond during this setting',
+    level => IMPORTANT,
+    filter => qr '^([1-9]\d*)$'
+  },
   DOWNLOAD_GROUPS_TRACE_EVENTS => {
     type => 'IVALUE',
     default => 1,
@@ -421,14 +429,6 @@ our %CONFIG = (
     unit => 'NA',
     description => 'Configure engine to update snmp inventory regarding to snmp_laststate table (lower DB backend load)',
     level => IMPORTANT,
-    filter => qr '^(1|0)$'
-  },
-  SUPPORT => { 
-    type => 'IVALUE',
-    default => 0,
-    unit => 'NA',
-    description => 'Support activation',
-    level => CANSKIP,
     filter => qr '^(1|0)$'
   },
   EXT_USERAGENTS_FILE_PATH => {

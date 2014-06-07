@@ -73,6 +73,13 @@ PerlModule Apache::DBI
 </Location>
 
 
+# Uncomment this section to enable server plugins.
+# Adjust paths if necessary.
+# PerlSetEnv OCS_PLUGINS_PERL_DIR /usr/local/share/braintacle/plugins/perl
+# PerlSetEnv OCS_PLUGINS_CONF_DIR /usr/local/share/braintacle/plugins/conf
+# PerlModule Apache::Ocsinventory::Plugins
+
+
 # Uncomment this section to enable the SOAP service and expose it as /ocsinterface.
 # soap-client.pl has this path hardcoded, but for other clients it can be changed to a different path.
 #<Location /ocsinterface>

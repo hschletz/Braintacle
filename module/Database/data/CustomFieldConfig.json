@@ -55,6 +55,15 @@
             "default": null,
             "autoincrement": false,
             "comment": null
+        },
+        {
+            "name": "default_value",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
         }
     ],
     "primary_key": [

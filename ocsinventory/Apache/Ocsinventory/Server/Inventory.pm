@@ -197,15 +197,4 @@ sub _post_inventory{
   0;
 }
 
-sub _get_account_fields{
-  my $dbh = $Apache::Ocsinventory::CURRENT_CONTEXT{'DBI_HANDLE'};
-  my $request = $dbh->column_info( undef, undef, 'accountinfo', undef );
-  my @accountFields;
-  
-  while(my $row=$request->fetchrow_hashref){
-    push @accountFields, $row->{'COLUMN_NAME'} if(uc($row->{'COLUMN_NAME'}) ne 'HARDWARE_ID');
-  }
-  return @accountFields;
-}
-
 1;

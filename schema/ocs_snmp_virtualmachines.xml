@@ -1,5 +1,5 @@
 <!--
-Schema fragment for table printers
+Schema fragment for table snmp_virtualmachines
 
 Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
 
@@ -19,10 +19,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 -->
  <table>
 
-  <name>printers</name>
+  <name>snmp_virtualmachines</name>
 
   <description>
-    A machine's printer objects, including those specific to the user logged on at time of inventory.
   </description>
 
   <declaration>
@@ -36,10 +35,28 @@ this program; if not, write to the Free Software Foundation, Inc.,
    </field>
 
    <field>
-    <name>hardware_id</name>
+    <name>snmp_id</name>
     <type>integer</type>
     <length>4</length>
     <notnull>true</notnull>
+   </field>
+
+   <field>
+    <name>config_file</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
+   <field>
+    <name>cpu</name>
+    <type>integer</type>
+    <length>4</length>
+   </field>
+
+   <field>
+    <name>memory</name>
+    <type>integer</type>
+    <length>4</length>
    </field>
 
    <field>
@@ -49,61 +66,25 @@ this program; if not, write to the Free Software Foundation, Inc.,
    </field>
 
    <field>
-    <name>driver</name>
+    <name>os</name>
     <type>text</type>
     <length>255</length>
    </field>
 
    <field>
-    <name>port</name>
+    <name>power</name>
     <type>text</type>
     <length>255</length>
    </field>
 
    <field>
-    <name>description</name>
+    <name>uuid</name>
     <type>text</type>
     <length>255</length>
-   </field>
-
-   <field>
-    <name>servername</name>
-    <type>text</type>
-    <length>255</length>
-   </field>
-
-   <field>
-    <name>sharename</name>
-    <type>text</type>
-    <length>255</length>
-   </field>
-
-   <field>
-    <name>resolution</name>
-    <type>text</type>
-    <length>50</length>
-   </field>
-
-   <field>
-    <name>comment</name>
-    <type>text</type>
-    <length>255</length>
-   </field>
-
-   <field>
-    <name>shared</name>
-    <type>integer</type>
-    <length>4</length>
-   </field>
-
-   <field>
-    <name>network</name>
-    <type>integer</type>
-    <length>4</length>
    </field>
 
    <index>
-    <name>printers_primary</name>
+    <name>snmp_virtualmachines_primary</name>
     <primary>true</primary>
     <field>
      <name>id</name>
@@ -111,13 +92,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
    </index>
 
    <index>
-    <name>printers_hardware_id</name>
+    <name>snmp_virtualmachines_snmp_id</name>
     <field>
-     <name>hardware_id</name>
+     <name>snmp_id</name>
     </field>
    </index>
 
   </declaration>
 
  </table>
- 
+

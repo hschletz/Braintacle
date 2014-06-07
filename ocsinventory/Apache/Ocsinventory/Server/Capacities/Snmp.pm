@@ -62,8 +62,12 @@ sub snmp_prolog_resp{
   my $select_ip_req;
   my $select_communities_req;
   my $select_deviceid_req;
+  my $select_network_req;
+  my $select_mibs_req;
   my @devicesToScan;
+  my @networksToScan;
   my @communities;
+  my @mibs;
 
   #Verify if SNMP is enable for this computer or in config
   my $snmpSwitch = &_get_snmp_switch($current_context);
@@ -80,9 +84,43 @@ sub snmp_prolog_resp{
   my $behaviour     = $current_context->{'PARAMS'}{'IPDISCOVER'}->{'IVALUE'};
   my $groupsParams  = $current_context->{'PARAMS_G'};
 
+
+  #Only if communication is https 
+  if ($current_context->{'APACHE_OBJECT'}->subprocess_env('https')) {
+
+    $select_deviceid_req=$dbh->prepare('SELECT DEVICEID FROM hardware WHERE DEVICEID=?');
+    $select_deviceid_req->execute($current_context->{'DEVICEID'});
+
+    #Only if agent deviceid already exists in database
+    if ($select_deviceid_req->fetchrow_hashref) {
+
+      #Getting networks specified for scans
+      $select_network_req=$dbh->prepare("SELECT TVALUE FROM devices WHERE HARDWARE_ID=? AND NAME='SNMP_NETWORK'");
+      $select_network_req->execute($current_context->{'DATABASE_ID'});
+
+      #Getting networks separated by commas (will be removed when GUI will be OK to add several networks cleanly) 
+      my $row = $select_network_req->fetchrow_hashref; #Only one line per HARDWARE_ID
+      @networksToScan= split(',',$row->{TVALUE});
+      
+
+      #TODO: use this lines instead of previous ones when GUI will be OK to add several networks cleanly
+      #while(my $row = $select_network_req->fetchrow_hashref){
+      #   push @networksToScan,$row;
+      #}
+
+      if (@networksToScan) {
+        #Adding devices informations in the XML
+        foreach my $network (@networksToScan) {
+          push @snmp,{
+            #'SUBNET' => $network->{TVALUE},   #TODO: uncomment this line when GUI will be OK to add several networks cleanly 
+            'SUBNET' => $network,
+            'TYPE' => 'NETWORK',
+          };
+        }
+      }
+
   #If the computer is Ipdicover elected 
   if ($behaviour == 1 || $behaviour == 2) {
-
 
     #Getting non inventoried network devices for the agent subnet 
     $select_ip_req=$dbh->prepare('SELECT IP,MAC FROM netmap WHERE NETID=? AND mac NOT IN (SELECT DISTINCT(macaddr) FROM networks WHERE macaddr IS NOT NULL AND IPSUBNET=?)');
@@ -93,16 +131,6 @@ sub snmp_prolog_resp{
     }
 
     if (@devicesToScan) {
-
-      #Only if communication is https 
-      if ($current_context->{'APACHE_OBJECT'}->subprocess_env('https')) {
-    
-        $select_deviceid_req=$dbh->prepare('SELECT DEVICEID FROM hardware WHERE DEVICEID=?');
-        $select_deviceid_req->execute($current_context->{'DEVICEID'});
-
-        #Only if agent deviceid already exists in database
-        if ($select_deviceid_req->fetchrow_hashref) {
-
           #Adding devices informations in the XML
           foreach my $device (@devicesToScan) {
             push @snmp,{
@@ -111,7 +139,10 @@ sub snmp_prolog_resp{
                'TYPE'     => 'DEVICE',
             };
           }
+	}
+      }
 
+      if (@snmp) {
           #Getting snmp communities
           $select_communities_req = $dbh->prepare('SELECT VERSION,NAME,USERNAME,AUTHKEY,AUTHPASSWD FROM snmp_communities');
           $select_communities_req->execute();
@@ -125,7 +156,7 @@ sub snmp_prolog_resp{
               push @snmp,{
                 'VERSION'       => $community->{'VERSION'}?$community->{'VERSION'}:'',
                 'NAME'       => $community->{'NAME'}?$community->{'NAME'}:'',
-                'USERNAME'     => $community->{'USERNAME'}?$community->{'USERNAME'}:'',
+              'USERNAME'=> $community->{'USERNAME'}?$community->{'USERNAME'}:'',
                 'AUTHKEY'   => $community->{'AUTHKEY'}?$community->{'AUTHKEY'}:'',
                 'AUTHPASSWD'   => $community->{'AUTHPASSWD'}?$community->{'AUTHPASSWD'}:'',
                 'TYPE'   => 'COMMUNITY',
@@ -133,15 +164,37 @@ sub snmp_prolog_resp{
             }
           }
 
+        #Getting custom mibs informations 
+        $select_mibs_req = $dbh->prepare('SELECT VENDOR,URL,CHECKSUM,VERSION,PARSER FROM snmp_mibs');
+        $select_mibs_req->execute();
+
+        while(my $row = $select_mibs_req->fetchrow_hashref){
+          push @mibs,$row;
+        }
+
+        if (@mibs) {
+          foreach my $mib (@mibs) {
+            push @snmp,{
+              'VENDOR' => $mib->{'VENDOR'}?$mib->{'VENDOR'}:'',
+              'URL'=> $mib->{'URL'}?$mib->{'URL'}:'',
+              'CHECKSUM' => $mib->{'CHECKSUM'}?$mib->{'CHECKSUM'}:'',
+              'VERSION' => $mib->{'VERSION'}?$mib->{'VERSION'}:'',
+              'PARSER' => $mib->{'PARSER'}?$mib->{'PARSER'}:'',
+              'TYPE' => 'MIB',
+            };
+          }
+        }
+	
           #Final XML
           push @{ $resp->{'OPTION'} },{
             'NAME' => ['SNMP'],
             'PARAM' => \@snmp,
           };
+      } 
+
         } else { &_log(104,'snmp',"error: agent must have a deviceid in database !!"); }
       } else { &_log(103,'snmp',"error: agent must communicate using https to be able to get SNMP communities (only affects OCS unix agent) !!"); } 
-    }
-  }
+
 }
 
 sub snmp_handler{
@@ -155,7 +208,6 @@ sub snmp_handler{
   my $result  = $current_context->{'XML_ENTRY'};
   my $r     = $current_context->{'APACHE_OBJECT'};
   my $hardware_id = $current_context->{'DATABASE_ID'};
-  my $result = $current_context->{'XML_ENTRY'};
 
   # Remanent data
   my ( %SNMP_SECTIONS, @SNMP_SECTIONS );

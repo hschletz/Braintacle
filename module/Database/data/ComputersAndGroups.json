@@ -138,6 +138,15 @@
             "comment": "Windows product key (reported by agent)"
         },
         {
+            "name": "arch",
+            "type": "varchar",
+            "length": 10,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Windows product key (reported by agent)"
+        },
+        {
             "name": "processort",
             "type": "varchar",
             "length": 255,

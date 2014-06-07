@@ -58,7 +58,8 @@ our %DATA_MAP= (
        FIDELITY => {},
        SSTATE => { noXml => 1 },
        USERAGENT => { noXml => 1 },
-       IPSRC => {}
+       IPSRC => {},
+       ARCH => {}
      },
   },
   
@@ -308,7 +309,13 @@ our %DATA_MAP= (
        NAME => {},
        DRIVER => {},
        PORT => {},
-       DESCRIPTION => {}
+       DESCRIPTION => {},
+       SERVERNAME => {},
+       SHARENAME => {},
+       RESOLUTION => {},
+       COMMENT => {},
+       SHARED => {},
+       NETWORK => {}
    }
   },
 
@@ -363,7 +370,7 @@ our %DATA_MAP= (
        GUID => {},
        LANGUAGE => {},
        INSTALLDATE => {},
-       BITSWIDTH => {},
+       BITSWIDTH => {}
    }
   },
   
@@ -382,7 +389,49 @@ our %DATA_MAP= (
       STATUS => {},
       SUBSYSTEM => {},
       VMTYPE => {},
-      VCPU => {},
+      VCPU => {}
+    }
+  },
+
+  cpus => {
+    mask => 262144,
+    multi => 1,
+    auto => 1,
+    delOnReplace => 1,
+    sortBy => 'SERIALNUMBER',
+    writeDiff => 1,
+    cache => 0,
+    fields =>  {
+      MANUFACTURER => {},
+      TYPE => {},
+      SERIALNUMBER => {},
+      SPEED => {},
+      CORES => {},
+      L2CACHESIZE => {}, 
+      CPUARCH => {},
+      DATA_WIDTH => {},
+      CURRENT_ADDRESS_WIDTH => {},
+      LOGICAL_CPUS => {},
+      VOLTAGE => {},
+      CURRENT_SPEED => {},
+      SOCKET => {}
+    }
+  },
+
+  sim => {
+    mask => 524288,
+    multi => 1,
+    auto => 1,
+    delOnReplace => 1,
+    sortBy => 'SERIALNUMBER',
+    writeDiff => 1,
+    cache => 0,
+    fields =>  {
+      OPERATOR => {},
+      OPNAME => {},
+      COUNTRY => {},
+      SERIALNUMBER => {},
+      DEVICEID => {}
     }
   },
 
@@ -503,7 +552,7 @@ javainfo => {
        DOMAIN => {},
        TYPE => {},
        LASTDATE => {},
-       CHECKSUM => {},
+       CHECKSUM => {}
    }
   },
 
@@ -521,7 +570,7 @@ javainfo => {
        SERIALNUMBER => {},
        COUNTER => {},
        STATUS => {},
-       ERRORSTATE => {},
+       ERRORSTATE => {}
    }
   },
 
@@ -542,7 +591,7 @@ javainfo => {
        FIRMVERSION => {},
        SERIALNUMBER => {},
        REVISION => {},
-       DESCRIPTION => {},
+       DESCRIPTION => {}
    }
   },
 
@@ -557,7 +606,7 @@ javainfo => {
    capacities => 'snmp',
    fields =>  {
        SERIALNUMBER => {},
-       SYSTEM => {},
+       SYSTEM => {}
    }
   },
 
@@ -572,7 +621,7 @@ javainfo => {
    capacities => 'snmp',
    fields =>  {
        SERIALNUMBER => {},
-       SYSTEM => {},
+       SYSTEM => {}
    }
   },
 
@@ -588,6 +637,8 @@ javainfo => {
    fields =>  {
        SERIALNUMBER => {},
        SYSTEM => {},
+       TYPE => {},
+       MANUFACTURER => {}
    }
   },
 
@@ -604,7 +655,7 @@ javainfo => {
        NAME => {},
        DESCRIPTION => {},
        LEVEL => {},
-       MAXCAPACITY => {},
+       MAXCAPACITY => {}
    }
   },
 
@@ -622,7 +673,7 @@ javainfo => {
        TYPE => {},
        LEVEL => {},
        MAXCAPACITY => {},
-       COLOR => {},
+       COLOR => {}
    }
   },
 
@@ -654,7 +705,7 @@ javainfo => {
        IPSUBNET => {},
        IPDHCP => {},
        DRIVER => {},
-       VIRTUALDEV => {},
+       VIRTUALDEV => {}
    }
   },
 
@@ -675,7 +726,7 @@ javainfo => {
        DISKSIZE => {},
        TYPE => {},
        SERIALNUMBER => {},
-       FIRMWARE => {},
+       FIRMWARE => {}
    }
   },
 
@@ -698,7 +749,7 @@ javainfo => {
        NUMFILES => {},
        VOLUMN => {},
        LABEL => {},
-       SERIAL => {},
+       SERIAL => {}
    }
   },
 
@@ -717,7 +768,7 @@ javainfo => {
        TYPE => {},
        SERIALNUMBER => {},
        DESCRIPTION => {},
-       REVISION => {},
+       REVISION => {}
    }
   },
 
@@ -736,7 +787,7 @@ javainfo => {
        REVISION => {},
        SERIALNUMBER => {},
        MANUFACTURER => {},
-       TYPE => {},
+       TYPE => {}
    }
   },
 
@@ -758,7 +809,7 @@ javainfo => {
        REVISION => {},
        SERIALNUMBER => {},
        MANUFACTURER => {},
-       TYPE => {},
+       TYPE => {}
    }
   },
 
@@ -772,7 +823,7 @@ javainfo => {
    cache => 0,
    capacities => 'snmp',
    fields =>  {
-       TYPE => {},
+       TYPE => {}
    }
   },
 
@@ -786,7 +837,7 @@ javainfo => {
    cache => 0,
    capacities => 'snmp',
    fields =>  {
-       SYSTEM => {},
+       SYSTEM => {}
    }
   },
 
@@ -803,7 +854,7 @@ javainfo => {
        NAME => {},
        INSTALLDATE => {},
        COMMENTS => {},
-       VERSION => {},
+       VERSION => {}
    }
   },
 
@@ -817,7 +868,7 @@ javainfo => {
    cache => 0,
    capacities => 'snmp',
    fields =>  {
-       CAPACITY => {},
+       CAPACITY => {}
    }
   },
 
@@ -833,7 +884,7 @@ javainfo => {
    fields =>  {
        SPEED => {},
        TYPE => {},
-       MANUFACTURER => {},
+       MANUFACTURER => {}
    }
   },
 
@@ -848,7 +899,7 @@ javainfo => {
    capacities => 'snmp',
    fields =>  {
        DESCRIPTION => {},
-       TYPE => {},
+       TYPE => {}
    }
   },
 
@@ -863,7 +914,7 @@ javainfo => {
    capacities => 'snmp',
    fields =>  {
        NAME => {},
-       TYPE => {},
+       TYPE => {}
    }
   },
 
@@ -877,7 +928,7 @@ javainfo => {
    cache => 0,
    capacities => 'snmp',
    fields =>  {
-       NAME => {},
+       NAME => {}
    }
   },
 
@@ -891,7 +942,7 @@ javainfo => {
    cache => 0,
    capacities => 'snmp',
    fields =>  {
-       NAME => {},
+       NAME => {}
    }
   },
 
@@ -905,7 +956,7 @@ javainfo => {
    cache => 0,
    capacities => 'snmp',
    fields =>  {
-       NAME => {},
+       NAME => {}
    }
   },
 
@@ -919,7 +970,27 @@ javainfo => {
    cache => 0,
    capacities => 'snmp',
    fields =>  {
+       NAME => {}
+   }
+  },
+
+  snmp_virtualmachines => {
+   mask => 33554432,
+   multi => 1,
+   auto => 1,
+   delOnReplace => 1,
+   sortBy => '',
+   writeDiff => 1,
+   cache => 0,
+   capacities => 'snmp',
+   fields =>  {
+       CONFIG_FILE => {},
+       CPU => {},
+       MEMORY => {},
        NAME => {},
+       OS => {},
+       POWER => {},
+       UUID => {} 
    }
   },
 
@@ -971,6 +1042,7 @@ javainfo => {
        VIDEOS => {},
        MODEMS => {},
        LOCALPRINTERS => {},
+       VIRTUALMACHINES => {}
    }
   },
 
