@@ -9,11 +9,19 @@ without any warranty.
 CHANGES IN VERSION 0.15
 =======================
 
+Upgrading from previous versions:
+
+- Required: Run tools/schema-manager.php to update the database schema.
+
 Fixed bugs:
 
 - Console: Fixed possible XSS.
 
 - Console: Fixed exception when sarching for an empty string with exact match.
+
+Misc:
+
+-Server: Updated server to version 2.1.1.
 
 
 CHANGES IN VERSION 0.14

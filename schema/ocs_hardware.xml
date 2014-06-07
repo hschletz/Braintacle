@@ -79,6 +79,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
    </field>
 
    <field>
+    <name>arch</name>
+    <type>text</type>
+    <length>10</length>
+   </field>
+
+   <field>
     <name>processort</name>
     <type>text</type>
     <length>255</length>

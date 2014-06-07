@@ -77,6 +77,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
     <length>255</length>
    </field>
 
+   <field>
+    <name>default_value</name>
+    <type>text</type>
+    <length>255</length>
+   </field>
+
    <index>
     <name>accountinfo_config_name_account_type</name>
     <unique>true</unique>

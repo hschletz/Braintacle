@@ -1,5 +1,5 @@
 <!--
-Schema fragment for table printers
+Schema fragment for table sim
 
 Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
 
@@ -19,10 +19,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 -->
  <table>
 
-  <name>printers</name>
+  <name>sim</name>
 
   <description>
-    A machine's printer objects, including those specific to the user logged on at time of inventory.
+      A device's SIM cards
   </description>
 
   <declaration>
@@ -43,67 +43,37 @@ this program; if not, write to the Free Software Foundation, Inc.,
    </field>
 
    <field>
-    <name>name</name>
+    <name>operator</name>
     <type>text</type>
     <length>255</length>
    </field>
 
    <field>
-    <name>driver</name>
+    <name>opname</name>
     <type>text</type>
     <length>255</length>
    </field>
 
    <field>
-    <name>port</name>
+    <name>country</name>
     <type>text</type>
     <length>255</length>
    </field>
 
    <field>
-    <name>description</name>
+    <name>serialnumber</name>
     <type>text</type>
     <length>255</length>
    </field>
 
    <field>
-    <name>servername</name>
+    <name>deviceid</name>
     <type>text</type>
     <length>255</length>
-   </field>
-
-   <field>
-    <name>sharename</name>
-    <type>text</type>
-    <length>255</length>
-   </field>
-
-   <field>
-    <name>resolution</name>
-    <type>text</type>
-    <length>50</length>
-   </field>
-
-   <field>
-    <name>comment</name>
-    <type>text</type>
-    <length>255</length>
-   </field>
-
-   <field>
-    <name>shared</name>
-    <type>integer</type>
-    <length>4</length>
-   </field>
-
-   <field>
-    <name>network</name>
-    <type>integer</type>
-    <length>4</length>
    </field>
 
    <index>
-    <name>printers_primary</name>
+    <name>sim_primary</name>
     <primary>true</primary>
     <field>
      <name>id</name>
@@ -111,7 +81,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
    </index>
 
    <index>
-    <name>printers_hardware_id</name>
+    <name>sim_hardware_id</name>
     <field>
      <name>hardware_id</name>
     </field>
@@ -120,4 +90,4 @@ this program; if not, write to the Free Software Foundation, Inc.,
   </declaration>
 
  </table>
- 
+

@@ -1,5 +1,35 @@
 Revision history for Apache::Ocsinventory
 
+2.1.1
+        * Fix Bug #1315004 about MySQL replication broken using MySQL 5.6
+        * Fix Bug #1311852 and Bug #1296633 about CHECKSUM updated for all computers
+        * Fix a mistake for OCS_PLUGINS_PERL_DIR and OCS_PLUGINS_CONF_DIR options in ocsinventory-server.conf
+
+2.1
+        * Add new fields for printers table in Map.pm
+        * Fix Bug #1214436 about removing already registered hosts and add Mac support in ipdiscover-util.pl
+        * Add a new table for SNMP virtual machines data in Map.pm
+        * Fix Bug #1248582 about custom field names not decoded in SOAP ACCOUNTINFO 
+        * Fix Bug #1191791 about CHECKSUM value not updated when NOTIFY mode send new network changes
+        * New plugins system to be able to add new entries in Map.pm and more...
+
+2.1rc1
+        * Add availibility to specify a post command for a package deployment
+        * SOAP engine is now able to get SNMP devices inventory
+        * Add new 'sims' inventory section to get various SIM card data from phone devices     
+        * Add availibility to schedule a package deployment
+        * Remove OCS_OPT_SUPPORT configuration option and <SUPPORT_LOG> XML tag in PROLOG 
+        * Add availibility to reforce a package deployment
+        * Add availability to specify custom MIBS for SNMP scans
+        * Add availability to specify a custom network adress for SNMP scans 
+        * New OCS_OPT_DOWNLOAD_EXECUTION_TIMEOUT configuration option to prevent package commands to run indefinitely
+        * setup.sh script can now detect Suse/OpenSuse distributions      
+        * Add new 'cpus' inventory section to get various CPU data     
+        * Add a new field in hardware section to get the computer architecture 
+        * Add new fields for snmp_loadbalancer table in Map.pm
+        * Fix Bug #1085020 about ERR_ALREADY_IN_HISTORY message that should be success 
+        * Prevent bugs in NOTIFY mode with older XML behaviour
+
 2.0.5
         * Create "logs" and "scripts" directories for administration console in setup.sh
 
