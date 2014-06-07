@@ -11,6 +11,8 @@ CHANGES IN VERSION 0.15
 
 Fixed bugs:
 
+- Console: Fixed possible XSS.
+
 - Console: Fixed exception when sarching for an empty string with exact match.
 
 
