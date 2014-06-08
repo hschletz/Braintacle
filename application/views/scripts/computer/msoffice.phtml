@@ -44,7 +44,7 @@ function renderName($view, $product)
     if ($description) {
         $name .= ' (' . $view->escape($description) . ')';
     }
-    $guid = $view->escape($product->getGuid());
+    $guid = $product->getGuid();
     if ($guid) {
         return $view->htmlTag(
             'span',
