@@ -48,7 +48,7 @@ Fixed bugs:
 
 - Console: Fixed possible XSS.
 
-- Console: Fixed exception when sarching for an empty string with exact match.
+- Console: Fixed exception when searching for an empty string with exact match.
 
 Misc:
 
