@@ -40,7 +40,7 @@ $renderCallbacks = array(
 
 function renderGuestMemory($view, $virtualMachine)
 {
-    $mem = $virtualMachine->getGuestMemory();
+    $mem = $view->escape($virtualMachine->getGuestMemory());
     if ($mem) {
         $mem .= ' MB';
     } else {

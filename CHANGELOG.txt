@@ -46,6 +46,8 @@ Upgrading from previous versions:
 
 Fixed bugs:
 
+- Console: Fixed possible XSS.
+
 - Console: Fixed exception when sarching for an empty string with exact match.
 
 Misc:
