@@ -148,7 +148,7 @@ class Config extends \Database\AbstractTable
 
         // If packagePath has not been converted yet, append /download directory
         // with had previously been appended automatically.
-        if ($this->get('schemaVersion') < 7) {
+        if ($this->get('schemaVersion') < 8) {
             $packagePath = $this->get('packagePath') . '/download';
             $logger->info('Setting packagePath option to ' . $packagePath);
             $this->set('packagePath', $packagePath);

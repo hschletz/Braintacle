@@ -140,7 +140,7 @@
         {
             "name": "arch",
             "type": "varchar",
-            "length": 10,
+            "length": 30,
             "notnull": false,
             "default": null,
             "autoincrement": false,

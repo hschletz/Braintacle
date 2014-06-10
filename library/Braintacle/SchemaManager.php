@@ -38,7 +38,7 @@ class Braintacle_SchemaManager
     /**
      * Latest version of the database schema
      */
-    const SCHEMA_VERSION = 7;
+    const SCHEMA_VERSION = 8;
 
     /**
      * Application config
