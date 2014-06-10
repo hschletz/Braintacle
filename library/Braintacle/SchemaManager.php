@@ -44,7 +44,7 @@ class Braintacle_SchemaManager
     /**
      * Latest version of the database schema
      */
-    const SCHEMA_VERSION = 6;
+    const SCHEMA_VERSION = 7;
 
     /**
      * Database adapter

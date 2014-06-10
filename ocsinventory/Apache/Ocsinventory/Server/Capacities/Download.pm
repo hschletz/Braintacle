@@ -470,7 +470,7 @@ sub get_forced_packages {
     WHERE HARDWARE_ID=? 
     AND devices.IVALUE=download_enable.ID 
     AND devices.NAME='DOWNLOAD_FORCE'
-    AND TVALUE=1
+    AND TVALUE='1'
   };
 
   $forced_req = $dbh->prepare( $forced_sql );
