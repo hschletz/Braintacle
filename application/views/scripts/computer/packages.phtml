@@ -78,7 +78,7 @@ function renderStatus($view, $package)
             $content = $view->translate('installed');
             break;
         default: // ERR_*
-            $content = $status;
+            $content = $view->escape($status);
     }
     return $content;
 }
