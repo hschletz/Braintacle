@@ -85,19 +85,13 @@ class Form_Preferences_Inventory extends Form_Preferences
     {
         $view = $element->getView();
         $name = $element->getName();
+        $urlHelper = \Library\Application::getService('ViewHelperManager')->get('ConsoleUrl');
         $link = $view->htmlTag(
             'a',
             $view->escape(
                 '[' . $view->translate('Manage inventoried values') . ']'
             ),
-            array(
-                'href' => $view->url(
-                    array(
-                        'controller' => 'preferences',
-                        'action' => 'registryvalues',
-                    )
-                )
-            )
+            array('href' => $urlHelper('preferences', 'registryvalues'))
         );
         $label = $view->escape($element->getLabel()) . '<br>' . $link;
         return $view->htmlTag(
