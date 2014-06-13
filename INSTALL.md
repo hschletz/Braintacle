@@ -51,8 +51,8 @@ Set up libraries and PHP environment
 ------------------------------------
 
 If not already present on your system, download and extract [Zend Framework
-1.12.3 or later](https://packages.zendframework.com/releases/
-ZendFramework-1.12.3/ZendFramework-1.12.3-minimal.zip) (2.x is not supported by
+1.12.7 or later](https://packages.zendframework.com/releases/
+ZendFramework-1.12.7/ZendFramework-1.12.7-minimal.zip) (2.x is not supported by
 Braintacle) and [NADA](https://github.com/hschletz/NADA/archive/master.zip) to
 an arbitrary location (for example, /usr/local/share/php).
 

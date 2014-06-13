@@ -13,6 +13,10 @@ Upgrading from previous versions:
 
 - Required: Run tools/schema-manager.php to update the database schema.
 
+- Recommended: Upgrade Zend Framework to 1.12.7 or later. This ZF release
+  contains a security fix, as well as a backwards incompatible change that
+  causes a PHP warning on some forms.
+
 Fixed bugs:
 
 - Console: Fixed possible XSS.
@@ -22,6 +26,8 @@ Fixed bugs:
 Misc:
 
 -Server: Updated server to version 2.1.1.
+
+- General: Minimum ZF version is now 1.12.7.
 
 
 CHANGES IN VERSION 0.14
