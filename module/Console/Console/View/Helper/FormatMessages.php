@@ -85,7 +85,7 @@ class FormatMessages extends \Zend\View\Helper\AbstractHelper
      *         'translated3 arg1 arg2'
      *     );
      *
-     * All strings and arguments get escaped. \Zend\Uri\Hrrp arguments are
+     * All strings and arguments get escaped. \Zend\Uri\Http arguments are
      * converted to hyperlinks.
      *
      * @param mixed[]
