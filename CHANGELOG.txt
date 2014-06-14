@@ -23,6 +23,9 @@ Fixed bugs:
 
 - Console: Fixed exception when searching for an empty string with exact match.
 
+- Console: When deleting a computer, unchecking the "Delete interfaces from
+  network listing" checkbox had no effect.
+
 Misc:
 
 - Server: Updated server to version 2.1.1.
