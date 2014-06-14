@@ -26,22 +26,17 @@ error_reporting(-1);
  * Run tests for specified module
  * 
  * @param string $module Module name
- * @param string $testClass optional path of test class to run, relative to module namespace root
+ * @param string $filter optional filter for tests, used as phpunit's --filter option
  */
-function testModule($module, $testClass=null)
+function testModule($module, $filter=null)
 {
-    if ($testClass) {
-        $testBase = dirname(__DIR__) . "/module/$module/";
-        if ($module == 'Console') {
-            $testBase .= 'Console/';
-        }
-        $testBase .= 'Test/';
-        $testClass = ' ' . $testBase . $testClass;
+    if ($filter) {
+        $filter = ' --filter ' .escapeshellarg($filter);
     }
     system(
         "phpunit -c module/$module/phpunit.xml --strict --colors " .
         "--coverage-text --coverage-html=doc/CodeCoverage/$module " .
-        "-d include_path=" . get_include_path() . $testClass,
+        "-d include_path=" . get_include_path() . $filter,
         $exitCode
     );
     if ($exitCode) {
@@ -58,7 +53,7 @@ chdir(dirname(__DIR__));
 putenv('APPLICATION_ENV=test');
 
 if ($argc >= 2) {
-    // Run tests for explicit module and optional explicit test
+    // Run tests for explicit module and optional filter
     testModule(ucfirst(strtolower($argv[1])), @$argv[2]);
 } else {
     // Run tests for all modules that have tests defined
