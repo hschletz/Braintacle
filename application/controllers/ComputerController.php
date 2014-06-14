@@ -268,7 +268,7 @@ class ComputerController extends Zend_Controller_Action
                     if (
                         $this->computer->delete(
                             false,
-                            $form->getValue('DeleteInterfaces')
+                            $form->getElement('DeleteInterfaces')->isChecked()
                         )
                     ) {
                         $session->success = true;
