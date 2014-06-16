@@ -23,6 +23,19 @@ error_reporting(-1);
 require_once(__DIR__ . '/../../Library/Application.php');
 \Library\Application::init('Library', false);
 
+// Get absolute path to vfsStream library
+$file = new \SplFileObject('org/bovigo/vfs/vfsStream.php', 'r', true);
+\Zend\Loader\AutoloaderFactory::factory(
+    array(
+        '\Zend\Loader\StandardAutoloader' => array(
+            'namespaces' => array(
+                'org\bovigo\vfs' => $file->getPath(),
+            ),
+        )
+    )
+);
+unset($file);
+
 // Replace global ZF1 adapter with SQLite :memory: database.
 $zf1adapter = new Zend_Db_Adapter_Pdo_Sqlite(array('dbname' => ':memory:'));
 Zend_Registry::set('db', $zf1adapter);
