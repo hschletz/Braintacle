@@ -93,8 +93,16 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
             if ($schema['comment'] != $table->getComment()) {
                 $table->setComment($schema['comment']);
             }
+            $columns = $table->getColumns();
             foreach ($schema['columns'] as $column) {
-                $table->getColumn($column['name'])->setComment($column['comment']);
+                if (isset($columns[$column['name']])) {
+                    // Column already exists, just set comment
+                    $table->getColumn($column['name'])->setComment($column['comment']);
+                } else {
+                    $logger->info("Creating column $this->table.$column[name]...");
+                    $table->addColumnObject($database->createColumnFromArray($column));
+                    $logger->info('done.');
+                }
             }
         } else {
             // Table does not exist, create it
