@@ -17,12 +17,11 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-$computer = $this->computer;
+require 'header.php';
 
-print $this->inventoryHeader($computer);
+$computer = $this->computer;
 
 
 // Display storage devices
@@ -33,54 +32,41 @@ $headers = array(
     'Size' => $this->translate('Size'),
 );
 // Additional Columns for UNIX systems
-if (!$computer->isWindows()) {
+if (!$computer['Windows']) {
     $headers['Device'] = $this->translate('Device');
     $headers['Serial'] = $this->translate('Serial number');
     $headers['Firmware'] = $this->translate('Firmware version');
 }
 
-$renderCallbacks = array(
-    'Size' => 'renderSize',
-);
-
-function renderSize($view, $object, $property)
-{
-    $size = $object->getProperty($property);
-    if ($size) {
-        $measure = new Zend_Measure_Binary($size / 1024, 'GIGABYTE');
-        $output = $view->escape($measure->convertTo('GIGABYTE', 1));
+$renderSize = function($view, $object, $property) {
+    $size = $object[$property];
+    if ($object['Size']) { // Ignore objects with no total size
+        $measure = new \Zend_Measure_Binary($size / 1024, 'GIGABYTE');
+        $output = $measure->convertTo('GIGABYTE', 1);
         if ($property != 'Size') {
-            $output .= ' (' . round($size / $object->getSize() * 100, 0) . '%)';
+            $output .= sprintf(' (%.0f%%)', 100 * $size / $object['Size']);
         }
-        return $output;
-    } else {
-        return '&ndash;';
+        return $view->escapeHtml($output);
     }
-}
+};
 
-$devices = $this->getHelper('table')->table(
-    $computer->getChildObjects('StorageDevice'),
-    null,
-    $headers,
-    array(),
-    'Model_StorageDevice',
-    null,
-    $renderCallbacks,
-    $numDevices
+$renderCallbacks = array('Size' => $renderSize);
+
+print $this->htmlTag(
+    'h2',
+    $this->translate('Storage devices')
 );
-
-if ($numDevices) {
-    print $this->htmlTag(
-        'h2',
-        $this->translate('Storage devices')
-    );
-    print $devices;
-}
+print $this->table(
+    $computer['StorageDevice'],
+    $headers,
+    null,
+    $renderCallbacks
+);
 
 
 // Display volumes
 
-if ($computer->isWindows()) {
+if ($computer['Windows']) {
     $headers = array(
         'Letter' => $this->translate('Letter'),
         'Label' => $this->translate('Label'),
@@ -103,49 +89,24 @@ if ($computer->isWindows()) {
 }
 
 $renderCallbacks = array(
-    'Label' => 'replaceNA',
-    'Filesystem' => 'replaceNA',
-    'CreationDate' => 'renderDate',
-    'Size' => 'renderSize',
-    'UsedSpace' => 'renderSize',
-    'FreeSpace' => 'renderSize',
+    'Size' => $renderSize,
+    'UsedSpace' => $renderSize,
+    'FreeSpace' => $renderSize,
+    'CreationDate' => function ($view, $volume) {
+        $date = $volume['CreationDate'];
+        if ($date) {
+            return $view->escapeHtml($date->get(\Zend_Date::DATE_MEDIUM));
+        }
+    }
 );
 
-function replaceNA($view, $object, $property)
-{
-    $value = $object->getProperty($property);
-    if ($value == 'N/A') {
-        return '&ndash;';
-    } else {
-        return $view->escape($value);
-    }
-}
-
-function renderDate($view, $volume)
-{
-    $date = $volume->getCreationDate();
-    if ($date) {
-        return $view->escape($date->get(Zend_Date::DATE_MEDIUM));
-    } else {
-        return '&ndash;';
-    }
-}
-
-$volumes = $this->getHelper('table')->table(
-    $computer->getChildObjects('Volume'),
-    null,
+print $this->htmlTag(
+    'h2',
+    $this->translate('Volumes')
+);
+print $this->table(
+    $computer['Volume'],
     $headers,
-    array(),
-    'Model_Volume',
     null,
-    $renderCallbacks,
-    $numVolumes
+    $renderCallbacks
 );
-
-if ($numVolumes) {
-    print $this->htmlTag(
-        'h2',
-        $this->translate('Volumes')
-    );
-    print $volumes;
-}

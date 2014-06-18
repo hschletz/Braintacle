@@ -1,6 +1,6 @@
 <?php
 /**
- * Configuration form
+ * Display Windows-specific information
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,8 +17,50 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-print $this->inventoryHeader($this->computer);
+require 'header.php';
+
+$windows = $this->windows;
+
+print "<dl>\n";
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('Company')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escapeHtml($windows['Company'])
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('Owner')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escapeHtml($windows['Owner'])
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('Product ID')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escapeHtml($windows['ProductId'])
+);
+
+print $this->htmlTag(
+    'dt',
+    $this->translate('Product key (reported by agent)')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escapeHtml($windows['ProductKey'])
+);
+
+print "</dl>\n";
+
 print $this->form;

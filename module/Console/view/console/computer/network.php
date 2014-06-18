@@ -17,13 +17,11 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
+require 'header.php';
+
 $computer = $this->computer;
-
-print $this->inventoryHeader($computer);
-
 
 // Display global network settings
 
@@ -35,7 +33,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($computer->getDnsServer())
+    $this->escapeHtml($computer['DnsServer'])
 );
 
 print $this->htmlTag(
@@ -44,7 +42,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($computer->getDefaultGateway())
+    $this->escapeHtml($computer['DefaultGateway'])
 );
 
 print "</dl>\n";
@@ -64,36 +62,28 @@ $headers = array(
 );
 
 $renderCallbacks = array(
-    'MacAddress' => 'renderMacAddress',
-);
-
-function renderMacAddress($view, $interface)
-{
-    $mac = $view->escape($interface->getMacAddress()->getAddressWithVendor());
-    if ($interface->isBlacklisted()) {
-        return "<span class='gray'>$mac</span>";
-    } else {
-        return $mac;
+    'MacAddress' => function($view, $interface) {
+        $mac = $view->escapeHtml($interface['MacAddress']->getAddressWithVendor());
+        if ($interface['IsBlacklisted']) {
+            return "<span class='gray'>$mac</span>";
+        } else {
+            return $mac;
+        }
     }
-}
-
-$interfaces = $this->getHelper('table')->table(
-    $computer->getChildObjects('NetworkInterface'),
-    null,
-    $headers,
-    array(),
-    'Model_NetworkInterface',
-    null,
-    $renderCallbacks,
-    $numInterfaces
 );
 
-if ($numInterfaces) {
+$interfaces = $computer['NetworkInterface'];
+if (count($interfaces)) {
     print $this->htmlTag(
         'h2',
         $this->translate('Network interfaces')
     );
-    print $interfaces;
+    print $this->table(
+        $interfaces,
+        $headers,
+        null,
+        $renderCallbacks
+    );
 }
 
 
@@ -104,24 +94,11 @@ $headers = array(
     'Name' => $this->translate('Name'),
 );
 
-$renderCallbacks = array(
-);
-
-$modems = $this->getHelper('table')->table(
-    $computer->getChildObjects('Modem'),
-    null,
-    $headers,
-    array(),
-    'Model_Modem',
-    null,
-    array(),
-    $numModems
-);
-
-if ($numModems) {
+$modems = $computer['Modem'];
+if (count($modems)) {
     print $this->htmlTag(
         'h2',
         $this->translate('Modems')
     );
-    print $modems;
+    print $this->table($modems, $headers);
 }

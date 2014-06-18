@@ -72,12 +72,34 @@ class Model_GroupMembership extends Model_Abstract
     );
 
     /**
+     * Return all group memberships for given computer and type
+     *
+     * @param \Model_Computer $computer Computer for which to determine memberships
+     * @param integer $membershipType Type of membership to determine,
+     * @param string $order Property to sort by, default: GroupName
+     * @param string $direction Direction for sorting, default: ascending
+     * @return \Model_GroupMembership[]
+     */
+    public function fetch(
+        $computer,
+        $membershipType,
+        $order='GroupName',
+        $direction='asc'
+    )
+    {
+        return $this->_fetchAll(
+            self::createStatementStatic($computer['Id'], $membershipType, $order, $direction)
+        );
+    }
+
+    /**
      * Return a statement object with all all group memberships matching criteria.
      * @param integer $computer ID of computer for which to determine memberships
      * @param integer $membership Type of membership to determine, default: all types
      * @param string $order Property to sort by, default: Group
      * @param string $direction Direction for sorting, default: ascending
      * @return Zend_Db_Statement
+     * @deprecated superseded by fetch()
      */
     static function createStatementStatic(
         $computer,

@@ -1,6 +1,6 @@
 <?php
 /**
- * Display confirmation form for deletion.
+ * Display inventory import form
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,17 +17,26 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-print $this->htmlTag(
-    'p',
-    sprintf(
-        $this->translate(
-            'Computer \'%s\' will be permanently deleted. Continue?'
+if (isset($this->response)) {
+    print $this->htmlTag(
+        'p',
+        sprintf(
+            $this->translate(
+                'Upload error. Server %1$s responded with error %2$d: %3$s'
+            ),
+            $this->escapeHtml($this->uri),
+            $this->response->getStatusCode(),
+            $this->escapeHtml($this->response->getReasonPhrase())
         ),
-        $this->escape($this->computer->getName())
-    )
+        array('class' => 'error')
+    );
+}
+
+print $this->htmlTag(
+    'h1',
+    $this->translate('Import locally generated inventory data')
 );
 
 print $this->form;

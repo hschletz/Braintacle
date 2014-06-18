@@ -17,12 +17,11 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-$computer = $this->computer;
+require 'header.php';
 
-print $this->inventoryHeader($computer);
+$computer = $this->computer;
 
 print "<dl>\n";
 
@@ -32,7 +31,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $computer->getId()
+    $computer['Id']
 );
 
 print $this->htmlTag(
@@ -41,7 +40,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($computer->getClientId())
+    $this->escapeHtml($computer['ClientId'])
 );
 
 print $this->htmlTag(
@@ -50,7 +49,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($computer->getInventoryDate())
+    $this->escapeHtml($computer['InventoryDate'])
 );
 
 print $this->htmlTag(
@@ -59,16 +58,16 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($computer->getLastContactDate())
+    $this->escapeHtml($computer['LastContactDate'])
 );
 
 print $this->htmlTag(
     'dt',
-    $this->translate('OCS Inventory Agent')
+    $this->translate('User Agent')
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($computer->getOcsAgent())
+    $this->escapeHtml($computer['OcsAgent'])
 );
 
 print $this->htmlTag(
@@ -77,42 +76,28 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($computer->getManufacturer() . ' ' . $computer->getModel())
+    $this->escapeHtml($computer['Manufacturer'] . ' ' . $computer['Model'])
 );
 
 print $this->htmlTag(
     'dt',
     $this->translate('Serial number')
 );
-if ($computer->isBlacklisted('Serial')) {
-    print $this->htmlTag(
-        'dd',
-        $this->escape($computer->getSerial()),
-        array('class' => 'gray')
-    );
-} else {
-    print $this->htmlTag(
-        'dd',
-        $this->escape($computer->getSerial())
-    );
-}
+print $this->htmlTag(
+    'dd',
+    $this->escapeHtml($computer['Serial']),
+    $computer['IsSerialBlacklisted'] ? array('class' => 'gray') : null
+);
 
 print $this->htmlTag(
     'dt',
     $this->translate('Asset tag')
 );
-if ($computer->isBlacklisted('AssetTag')) {
-    print $this->htmlTag(
-        'dd',
-        $this->escape($computer->getAssetTag()),
-        array('class' => 'gray')
-    );
-} else {
-    print $this->htmlTag(
-        'dd',
-        $this->escape($computer->getAssetTag())
-    );
-}
+print $this->htmlTag(
+    'dd',
+    $this->escapeHtml($computer['AssetTag']),
+    $computer['IsAssetTagBlacklisted'] ? array('class' => 'gray') : null
+);
 
 print $this->htmlTag(
     'dt',
@@ -120,21 +105,23 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($computer->getType())
+    $this->escapeHtml($computer['Type'])
 );
 
-$os = $computer->getOsName();
-if ($computer->getOsVersionString()) {
-    $os .= ' ' . $computer->getOsVersionString();
-}
-$os .= ' (' . $computer->getOsVersionNumber() . ')';
 print $this->htmlTag(
     'dt',
     $this->translate('Operating System')
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($os)
+    $this->escapeHtml(
+        sprintf(
+            '%s %s (%s)',
+            $computer['OsName'],
+            $computer['OsVersionString'],
+            $computer['OsVersionNumber']
+        )
+    )
 );
 
 print $this->htmlTag(
@@ -143,7 +130,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($computer->getOsComment())
+    $this->escapeHtml($computer['OsComment'])
 );
 
 print $this->htmlTag(
@@ -152,7 +139,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($computer->getCpuType())
+    $this->escapeHtml($computer['CpuType'])
 );
 
 print $this->htmlTag(
@@ -161,7 +148,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $computer->getCpuClock() . '&nbsp;MHz'
+    $computer['CpuClock'] . '&nbsp;MHz'
 );
 
 print $this->htmlTag(
@@ -170,13 +157,12 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $computer->getCpuCores()
+    $computer['CpuCores']
 );
 
 $physicalRam = 0;
-$slots = $computer->getChildObjects('MemorySlot');
-while ($slot = $slots->fetchObject('Model_MemorySlot')) {
-    $physicalRam += $slot->getSize();
+foreach ($computer['MemorySlot'] as $slot) {
+    $physicalRam += $slot['Size'];
 }
 print $this->htmlTag(
     'dt',
@@ -193,7 +179,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $computer->getPhysicalMemory() . '&nbsp;MB'
+    $computer['PhysicalMemory'] . '&nbsp;MB'
 );
 
 print $this->htmlTag(
@@ -202,11 +188,11 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $computer->getSwapMemory() . '&nbsp;MB'
+    $computer['SwapMemory'] . '&nbsp;MB'
 );
 
-$user = $computer->getUserName();
-$domain = $computer->getWindows()->getUserDomain();
+$user = $computer['UserName'];
+$domain = $computer['Windows']['UserDomain'];
 if ($domain) {
     $user .= ' @ ' . $domain;
 }
@@ -216,17 +202,17 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($user)
+    $this->escapeHtml($user)
 );
 
-if ($computer->getUuid()) {
+if ($computer['Uuid']) {
     print $this->htmlTag(
         'dt',
         $this->translate('UUID')
     );
     print $this->htmlTag(
         'dd',
-        $this->escape($computer->getUuid())
+        $this->escapeHtml($computer['Uuid'])
     );
 }
 

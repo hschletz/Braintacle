@@ -27,5 +27,19 @@ require_once('Zend/Console/Console.php');
 // Pretend to be not on a console to force choice of HTTP route over console route.
 \Zend\Console\Console::overrideIsConsole(false);
 \Library\Application::init('Console', false);
+
+// Get absolute path to vfsStream library
+$file = new \SplFileObject('org/bovigo/vfs/vfsStream.php', 'r', true);
+\Zend\Loader\AutoloaderFactory::factory(
+    array(
+        '\Zend\Loader\StandardAutoloader' => array(
+            'namespaces' => array(
+                'org\bovigo\vfs' => $file->getPath(),
+            ),
+        )
+    )
+);
+unset($file);
+
 \Zend_Session::$_unitTestEnabled = true;
 \Locale::setDefault('de_DE'); // Force environment-independent locale

@@ -1,6 +1,6 @@
 <?php
 /**
- * Display inventory import form
+ * Display confirmation form for removing package from computer
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,27 +17,11 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-if (property_exists($this, 'response')) {
-    print $this->htmlTag(
-        'p',
-        sprintf(
-            $this->translate(
-                'Upload error. Server %1$s responded with error %2$d: %3$s'
-            ),
-            \Library\Application::getService('Model\Config')->communicationServerUri,
-            $this->response->getStatusCode(),
-            $this->escape($this->response->getReasonPhrase())
-        ),
-        array('class' => 'red textcenter')
-    );
-}
-
-print $this->htmlTag(
-    'h1',
-    $this->translate('Import locally generated inventory data')
+print $this->formYesNo(
+    sprintf(
+        $this->translate('Package "%s" will no longer be assigned to this computer. Continue?'),
+        $this->escapeHtml($this->packageName)
+    )
 );
-
-print $this->form;

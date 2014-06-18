@@ -17,13 +17,11 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
+require 'header.php';
+
 $computer = $this->computer;
-
-print $this->inventoryHeader($computer);
-
 
 $headers = array(
     'Value.Name' => $this->translate('Key'),
@@ -32,42 +30,31 @@ $headers = array(
 );
 
 $renderCallbacks = array(
-    'Value.Name' => 'renderName',
-    'Value.ValueInventoried' => 'renderValue',
+    'Value.Name' => function($view, $data) {
+        $value = $data['Value'];
+        return $view->htmlTag(
+            'span',
+            $view->escapeHtml($value['Name']),
+            array('title' => $value['FullPath'])
+        );
+    },
+    'Value.ValueInventoried' => function($view, $data) {
+        return $view->escapeHtml($data['Value']['ValueInventoried']);
+    },
 );
 
-function renderName($view, $data, $property)
-{
-    $value = $data->getValue();
-    return $view->htmlTag(
-        'span',
-        $view->escape($value->getName()),
-        array('title' => $value['FullPath'])
-    );
-}
-
-function renderValue($view, $data, $property)
-{
-    return $view->escape($data->getValue()->getValueInventoried());
-}
-
-$data = $this->getHelper('table')->table(
-    $computer->getChildObjects('RegistryData', $this->order, $this->direction),
-    null,
-    $headers,
-    null,
-    'Model_RegistryData',
-    null,
-    $renderCallbacks,
-    $numKeys
-);
-
-if ($numKeys) {
+$data = $computer->getItems('RegistryData', $this->order, $this->direction);
+if (count($data)) {
     print $this->htmlTag(
         'h2',
         $this->translate('Registry Keys')
     );
-    print $data;
+    print $this->table(
+        $data,
+        $headers,
+        array('order' => $this->order, 'direction' => $this->direction),
+        $renderCallbacks
+    );
 }
 
 print $this->htmlTag(
@@ -75,14 +62,7 @@ print $this->htmlTag(
     $this->htmlTag(
         'a',
         $this->translate('Manage inventoried values'),
-        array(
-            'href' => $this->url(
-                array(
-                    'controller' => 'preferences',
-                    'action' => 'registryvalues',
-                )
-            )
-        ),
+        array('href' => $this->ConsoleUrl('preferences', 'registryvalues')),
         true
     ),
     array('class' => 'textcenter')

@@ -1,6 +1,6 @@
 <?php
 /**
- * Display search form
+ * Included by computer templates to render headline and computer navigation
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,7 +17,23 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-print $this->form->render(\Library\Application::getService('ViewRenderer'));
+print $this->htmlTag(
+    'h1',
+    sprintf(
+        $this->translate('Details for computer \'%s\''),
+        $this->escapeHtml($this->computer['Name'])
+    )
+);
+
+$menu = $this->navigation('Console\Navigation\ComputerMenu')
+             ->menu()
+             ->setUlClass('navigation navigation_details');
+if (!$this->computer['Windows']) {
+    foreach ($menu->findAllBy('windowsOnly', true) as $page) {
+        $menu->removePage($page);
+    }
+}
+print $menu;
+print "\n\n";

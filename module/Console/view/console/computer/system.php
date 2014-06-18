@@ -1,6 +1,6 @@
 <?php
 /**
- * Display RAM, controllers and slots
+ * Show RAM, controllers and slots
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,15 +17,14 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
+
+require 'header.php';
 
 $computer = $this->computer;
 
-print $this->inventoryHeader($computer);
 
-
-// Display memory slots
+// Show memory slots
 
 $headers = array(
     'SlotNumber' => $this->translate('Slot number'),
@@ -39,101 +38,78 @@ $headers = array(
 );
 
 $renderCallbacks = array (
-    'Size' => 'renderSize',
-    'Clock' => 'renderClock',
+    'Size' => function($view, $memorySlot) {
+        $size = $memorySlot['Size'];
+        if ($size) {
+            $size .= '&nbsp;MB';
+        } else {
+            $size = ''; // Suppress literal '0'
+        }
+        return $size;
+    },
+    'Clock' => function($view, $memorySlot) {
+        $clock = $view->escapeHtml($memorySlot['Clock']);
+        if (is_numeric($clock)) {
+            $clock .= '&nbsp;MHz';
+        }
+        return $clock;
+    },
 );
 
-function renderSize($view, $memorySlot)
-{
-    $size = $memorySlot->getSize();
-    if ($size) {
-        $size .= '&nbsp;MB';
-    } else {
-        $size = '&ndash;';
-    }
-    return $size;
-}
-
-function renderClock($view, $memorySlot)
-{
-    $clock = $view->escape($memorySlot->getClock());
-    if (is_numeric($clock)) {
-        $clock .= '&nbsp;MHz';
-    }
-    return $clock;
-}
-
-$memSlots = $this->getHelper('table')->table(
-    $computer->getChildObjects('MemorySlot'),
-    null,
-    $headers,
-    array(),
-    'Model_MemorySlot',
-    null,
-    $renderCallbacks,
-    $numMemSlots
-);
-
-if ($numMemSlots) {
+$memSlots = $computer['MemorySlot'];
+if (count($memSlots)) {
     print $this->htmlTag(
         'h2',
         $this->translate('Memory slots')
     );
-    print $memSlots;
+    print $this->table(
+        $memSlots,
+        $headers,
+        null,
+        $renderCallbacks
+    );
 }
 
 
-// Display controllers
+// Show controllers
 
 $headers = array(
     'Type' => $this->translate('Type'),
     'Manufacturer' => $this->translate('Manufacturer'),
     'Name' => $this->translate('Name'),
 );
-if ($this->computer->isWindows()) { // Not available for other OS
+if ($this->computer['Windows']) { // Not available for other OS
     $headers['DriverVersion'] = $this->translate('Driver version');
 }
 
 $renderCallbacks = array (
-    'Name' => 'renderName',
+    'Name' => function($view, $controller) {
+        $name = $controller['Name'];
+        $comment = $controller['Comment'];
+        if ($name == $comment) {
+            return $view->escapeHtml($name);
+        } else {
+            return $view->htmlTag(
+                'span',
+                $view->escapeHtml($name),
+                array('title' => $comment)
+            );
+        }
+    },
 );
-
-function renderName($view, $controller)
-{
-    $name = $controller->getName();
-    $comment = $controller->getComment();
-    if ($name == $comment) {
-        return $view->escape($name);
-    } else {
-        return $view->htmlTag(
-            'span',
-            $view->escape($name),
-            array('title' => $comment)
-        );
-    }
-}
-
-$controllers = $this->getHelper('table')->table(
-    $computer->getChildObjects('Controller'),
-    null,
+print $this->htmlTag(
+    'h2',
+    $this->translate('Controllers')
+);
+print $this->table(
+    $computer['Controller'],
     $headers,
-    array(),
-    'Model_Controller',
     null,
-    $renderCallbacks,
-    $numControllers
+    $renderCallbacks
 );
 
-if ($numControllers) {
-    print $this->htmlTag(
-        'h2',
-        $this->translate('Controllers')
-    );
-    print $controllers;
-}
 
-
-// Display extension slots
+// Show extension slots
 
 $headers = array(
     'Name' => $this->translate('Name'),
@@ -142,24 +118,14 @@ $headers = array(
     'Status' => $this->translate('Status'),
 );
 
-$renderCallbacks = array (
-);
-
-$extSlots = $this->getHelper('table')->table(
-    $computer->getChildObjects('ExtensionSlot'),
-    null,
-    $headers,
-    array(),
-    'Model_ExtensionSlot',
-    null,
-    array(),
-    $numExtSlots
-);
-
-if ($numExtSlots) {
+$extSlots = $computer['ExtensionSlot'];
+if (count($extSlots)) {
     print $this->htmlTag(
         'h2',
         $this->translate('Extension slots')
     );
-    print $extSlots;
+    print $this->table(
+        $extSlots,
+        $headers
+    );
 }

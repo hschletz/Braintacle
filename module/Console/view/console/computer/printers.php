@@ -1,6 +1,6 @@
 <?php
 /**
- * Display confirmation form for removing package from computer
+ * Display printers
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,19 +17,20 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-$session = new Zend_Session_Namespace('RemovePackage');
+require 'header.php';
 
-print $this->htmlTag(
-    'p',
-    sprintf(
-        $this->translate(
-            'Package \'%s\' will no longer be associated with this computer. Continue?'
-        ),
-        $this->escape($session->packageName)
-    )
+$computer = $this->computer;
+
+$headers = array(
+    'Name' => $this->translate('Name'),
+    'Driver' => $this->translate('Driver'),
+    'Port' => $this->translate('Port'),
+    'Description' => $this->translate('Description'),
 );
 
-print new Form_YesNo;
+print $this->table(
+    $computer['Printer'],
+    $headers
+);

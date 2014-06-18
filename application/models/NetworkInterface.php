@@ -35,6 +35,7 @@
  * - <b>DhcpServer</b>
  * - <b>Status</b>
  * - <b>Virtual</b>
+ * - <b>IsBlacklisted</b> TRUE if the MAC address is blacklisted, i.e. ignored for detection of duplicates
  * @package Models
  */
 class Model_NetworkInterface extends Model_ChildObject
@@ -63,33 +64,19 @@ class Model_NetworkInterface extends Model_ChildObject
     /** {@inheritdoc} */
     protected $_preferredOrder = 'Description';
 
-    /**
-     * Retrieve a property by its logical name
-     *
-     * Converts MacAddres into a Braintacle_MacAddress object.
-     */
+    /** {@inheritdoc} */
     function getProperty($property, $rawValue=false)
     {
+        if ($property == 'IsBlacklisted') {
+            return (bool) \Model_Database::getAdapter()->fetchOne(
+                'SELECT COUNT(macaddress) FROM blacklist_macaddresses WHERE macaddress = ?',
+                $this['MacAddress']
+            );
+        }
         $value = parent::getProperty($property, $rawValue);
         if ($rawValue or $property != 'MacAddress') {
             return $value;
         }
         return new Braintacle_MacAddress($value);
     }
-
-    /**
-     * Return TRUE if an interface's MAC address is blacklisted, i.e. ignored
-     * for detection of duplicates.
-     * @return bool
-     */
-    public function isBlacklisted()
-    {
-        $db = Model_Database::getAdapter();
-
-        return (bool) $db->fetchOne(
-            'SELECT COUNT(macaddress) FROM blacklist_macaddresses WHERE macaddress = ?',
-            $this->getMacAddress()
-        );
-    }
-
 }

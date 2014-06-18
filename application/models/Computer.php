@@ -54,7 +54,15 @@
  * - <b>OsComment:</b> comment
  * - <b>UserName:</b> User logged in at time of inventory
  * - <b>Uuid</b> UUID, typically found in virtual machines
- *
+ * - <b>Windows:</b> \Model_Windows object, NULL for non-Windows systems
+ * - <b>CustomFields:</b> \Model_UserDefinedInfo object
+ * - <b>IsSerialBlacklisted:</b> TRUE if the serial number is blacklisted, i.e. ignored for detection of duplicates.
+ * - <b>IsAssetTagBlacklisted:</b> TRUE if the asset tag is blacklisted, i.e. ignored for detection of duplicates.
+ * - <b>AudioDevice, Controller, Display, DisplayController, ExtensionSlot,
+ *   InputDevice, Port, MemorySlot, Modem, MsOfficeProduct, NetworkInterface,
+ *   Printer, RegistryData, Software, StorageDevice, VirtualMachine, Volume:</b>
+ *   A list of all items of the given type. Equivalent of calling getItems()
+ *   without extra arguments.
  *
  * Properties containing a '.' character refer to child objects. These properties are:
  *
@@ -720,6 +728,30 @@ class Model_Computer extends Model_ComputerOrGroup
                 return $this->_registryContent;
             } elseif (preg_match('#^Windows\\.(\w+)$#', $property, $matches)) {
                 return $this->windows->getProperty($matches[1]);
+            } elseif ($property == 'Windows') {
+                // The OS type is not stored directly in the database. However,
+                // the ProductId property is always non-empty on Windows systems
+                // so that it can be used to check for a Windows system.
+                $windows = \Model_Windows::getWindows($this);
+                if ($windows['ProductId']) {
+                    return $windows;
+                } else {
+                    return null;
+                }
+            } elseif ($property == 'CustomFields') {
+                return $this->getUserDefinedInfo();
+            } elseif ($property == 'IsSerialBlacklisted') {
+                return (bool) \Model_Database::getAdapter()->fetchOne(
+                    "SELECT COUNT(serial) FROM blacklist_serials WHERE serial = ?",
+                    $this['Serial']
+                );
+            } elseif ($property == 'IsAssetTagBlacklisted') {
+                return (bool) \Model_Database::getAdapter()->fetchOne(
+                    "SELECT COUNT(assettag) FROM braintacle_blacklist_assettags WHERE assettag = ?",
+                    $this['AssetTag']
+                );
+            } elseif (in_array($property, self::$_childObjectTypes)) {
+                return $this->getItems($property);
             } else {
                 throw $e;
             }
@@ -940,6 +972,25 @@ class Model_Computer extends Model_ComputerOrGroup
     }
 
     /**
+     * Get all items of a given type belonging to this computer.
+     *
+     * @param string $type Item type to retrieve (name of model class without 'Model_' prefix)
+     * @param string $order Property to sort by. If ommitted, the model's builtin default is used.
+     * @param string $direction Sorting direction (asc|desc)
+     * @param array $filters Extra filters to pass to the model's createStatement() method
+     * @return \Model_ChildObject[]
+     */
+    public function getItems($type, $order=null, $direction=null, $filters=array())
+    {
+        $statement = $this->getChildObjects($type, $order, $direction, $filters);
+        $items = array();
+        while ($item = $statement->fetchObject("Model_$type")) {
+            $items[] = $item;
+        }
+        return $items;
+    }
+
+    /**
      * Get a statement object for all child objects of a given type belonging to this computer.
      *
      * @param string $type Object type to retrieve (name of model class without 'Model_' prefix)
@@ -947,6 +998,7 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string $direction Sorting direction (asc|desc)
      * @param array $filters Extra filters to pass to the child model's createStatement() method
      * @return Zend_Db_Statement Statement object with results
+     * @deprecated superseded by getItems()
      */
     public function getChildObjects($type, $order=null, $direction=null, $filters=array())
     {
@@ -969,6 +1021,7 @@ class Model_Computer extends Model_ComputerOrGroup
      * Model_UserDefinedInfo object is returned.
      * @param string $name Field to retrieve (default: all fields)
      * @return mixed
+     * @deprecated superseded by CustomFields property
      */
     public function getUserDefinedInfo($name=null)
     {
@@ -1015,6 +1068,7 @@ class Model_Computer extends Model_ComputerOrGroup
      * The OS type is not stored directly in the database. This method tries to
      * determine it from different criteria (user agent, OS name).
      * @return bool
+     * @deprecated check "Windows" property instead
      */
     public function isWindows()
     {
@@ -1039,6 +1093,7 @@ class Model_Computer extends Model_ComputerOrGroup
      * It is valid to call this on non-Windows computer objects in which case
      * the content of the object is undefined.
      * @return Model_Windows Updated windows property
+     * @deprecated superseded by "Windows" property
      **/
     public function getWindows()
     {
@@ -1052,6 +1107,7 @@ class Model_Computer extends Model_ComputerOrGroup
      *
      * @param string $criteria One of 'Serial' or 'AssetTag'
      * @return bool
+     * @deprecated superseded by IsSerialBlacklisted and IsAssetTagBlacklisted properties.
      */
     public function isBlacklisted($criteria)
     {
@@ -1653,10 +1709,33 @@ class Model_Computer extends Model_ComputerOrGroup
 
     /**
      * Retrieve group membership information for this computer
+     *
+     * @param integer $membershipType Membership type to retrieve
+     * @param string $order Property to sort by, default: GroupName
+     * @param string $direction Direction to sort by, default: asc
+     * @return \Model_GroupMembership[]
+     */
+    public function getGroups(
+        $membershipType,
+        $order='GroupName',
+        $direction='asc'
+    )
+    {
+        return \Library\Application::getService('Model\Group\Membership')->fetch(
+            $this,
+            $membershipType,
+            $order,
+            $direction
+        );
+    }
+
+    /**
+     * Retrieve group membership information for this computer
      * @param integer $membership Membership type to retrieve
      * @param string $order Property to sort by
      * @param string $direction Direction to sort by
      * @return Zend_Db_Statement
+     * @deprecated superseded by getGroups()
      */
     public function getGroupMemberships(
         $membership=Model_GroupMembership::TYPE_INCLUDED,

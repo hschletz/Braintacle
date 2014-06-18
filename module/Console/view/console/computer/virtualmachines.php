@@ -1,6 +1,6 @@
 <?php
 /**
- * Display inventoried virtual machines
+ * Display virtual machines hosted on a computer
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,13 +17,11 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
+require 'header.php';
+
 $computer = $this->computer;
-
-print $this->inventoryHeader($computer);
-
 
 $headers = array(
     'Name' => $this->translate('Name'),
@@ -35,35 +33,25 @@ $headers = array(
 );
 
 $renderCallbacks = array(
-    'GuestMemory' => 'renderGuestMemory',
-);
-
-function renderGuestMemory($view, $virtualMachine)
-{
-    $mem = $view->escape($virtualMachine->getGuestMemory());
-    if ($mem) {
-        $mem .= ' MB';
-    } else {
-        $mem = $view->translate('unknown');
+    'GuestMemory' => function($view, $virtualMachine) {
+        $mem = $view->escapeHtml($virtualMachine['GuestMemory']);
+        if ($mem) {
+            $mem .= ' MB';
+        }
+        return $mem;
     }
-    return $mem;
-}
-
-$vms = $this->getHelper('table')->table(
-    $computer->getChildObjects('VirtualMachine', $this->order, $this->direction),
-    null,
-    $headers,
-    array(),
-    'Model_VirtualMachine',
-    null,
-    $renderCallbacks,
-    $numKeys
 );
 
-if ($numKeys) {
+$vms = $computer->getItems('VirtualMachine', $this->order, $this->direction);
+if (count($vms)) {
     print $this->htmlTag(
         'h2',
         $this->translate('Virtual machines hosted on this computer')
     );
-    print $vms;
+    print $this->table(
+        $vms,
+        $headers,
+        array('order' => $this->order, 'direction' => $this->direction),
+        $renderCallbacks
+    );
 }

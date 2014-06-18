@@ -59,6 +59,7 @@ Feature\InitProviderInterface
                     'Model\Computer\Windows' => 'Model_Windows',
                     'Model\Computer\CustomFields' => 'Model_UserDefinedInfo',
                     'Model\Group\Group' => 'Model_Group',
+                    'Model\Group\Membership' => 'Model_GroupMembership',
                     'Model\Network\Device' => 'Model_NetworkDevice',
                     'Model\Network\DeviceType' => 'Model_NetworkDeviceType',
                     'Model\Network\Subnet' => 'Model_Subnet',

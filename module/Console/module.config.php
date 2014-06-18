@@ -35,6 +35,7 @@ return array(
         ),
         'factories' => array(
             'accounts' => 'Console\Service\AccountsControllerFactory',
+            'computer' => 'Console\Service\ComputerControllerFactory',
             'duplicates' => 'Console\Service\DuplicatesControllerFactory',
             'group' => 'Console\Service\GroupControllerFactory',
             'licenses' => 'Console\Service\LicensesControllerFactory',
@@ -73,7 +74,7 @@ return array(
             'zf1' => array(
                 'type'    => 'regex',
                 'options' => array(
-                    'regex'    => '/(console/)?(computer|error|index)/?.*',
+                    'regex'    => '/(console/)?(error|index)/?.*',
                     'spec' => '',
                     'defaults' => array(
                         'controller' => 'Console\Controller\ZF1',
@@ -84,6 +85,7 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
+            'Console\Navigation\ComputerMenu' => 'Console\Navigation\ComputerMenuFactory',
             'Console\Navigation\GroupMenu' => 'Console\Navigation\GroupMenuFactory',
             'Console\Navigation\MainMenu' => 'Console\Navigation\MainMenuFactory',
             'Console\Form\Account\Edit' => 'Console\Form\Service\Account\EditFactory',
@@ -91,8 +93,13 @@ return array(
         'invokables' => array(
             'Console\Form\Account\New' => 'Form_Account_New',
             'Console\Form\AddToGroup' => 'Form_AddToGroup',
+            'Console\Form\AssignPackages' => 'Form_AffectPackages',
             'Console\Form\ClientConfig' => 'Form_Configuration',
+            'Console\Form\CustomFields' => 'Form_UserDefinedInfo',
             'Console\Form\DefineFields' => 'Form_DefineFields',
+            'Console\Form\DeleteComputer' => 'Form_YesNo_DeleteComputer',
+            'Console\Form\GroupMemberships' => 'Form_ManageGroupMemberships',
+            'Console\Form\Import' => 'Form_Import',
             'Console\Form\NetworkDeviceTypes' => 'Form_ManageNetworkDeviceTypes',
             'Console\Form\Login' => 'Form_Login',
             'Console\Form\NetworkDevice' => 'Form_NetworkDevice',
@@ -109,6 +116,7 @@ return array(
             'Console\Form\Preferences\Packages' => 'Form_Preferences_Packages',
             'Console\Form\Preferences\RawData' => 'Form_Preferences_RawData',
             'Console\Form\Preferences\System' => 'Form_Preferences_System',
+            'Console\Form\ProductKey' => 'Form_ProductKey',
             'Console\Form\SoftwareFilter' => 'Form_SoftwareFilter',
             'Console\Form\Subnet' => 'Form_Subnet',
         )

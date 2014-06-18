@@ -17,29 +17,22 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-// render messages if present
-$session = new Zend_Session_Namespace('ComputerMessages');
-if (isset($session->success)) {
-    if ($session->success == true) {
-        $class = 'green textcenter';
-    } else {
-        $class = 'red textcenter';
+foreach (array('error', 'success') as $namespace) {
+    $messages = $this->flashMessenger()->getMessagesFromNamespace($namespace);
+    if ($messages) {
+        print $this->htmlList(
+            $this->formatMessages($messages),
+            false,
+            array('class' => $namespace),
+            false
+        );
     }
-    print $this->htmlTag(
-        'p',
-        sprintf(
-            $session->message,
-            $this->escape($session->computerName)
-        ),
-        array('class' => $class)
-    );
 }
 
 // Column headers
-$headers = array(
+$allHeaders = array(
     'Id' => $this->translate('ID'),
     'ClientId' => $this->translate('Client ID'),
     'Name' => $this->translate('Name'),
@@ -105,56 +98,51 @@ $headers = array(
     'MsOfficeProduct.ProductKey' => $this->translate('MS Office product key'),
     'MsOfficeProduct.ProductId' => $this->translate('MS Office product ID'),
 );
-// Append headers for user defined information
-foreach (Model_UserDefinedInfo::getTypes() as $name => $type) {
-    if ($name == 'TAG') {
-        $header = $this->translate('Category');
+
+$columnClasses = array(
+    'Id' => 'textright',
+    'CpuClock' => 'textright',
+    'CpuCores' => 'textright',
+    'PhysicalMemory' => 'textright',
+    'SwapMemory' => 'textright',
+    'DisplayController.Memory' => 'textright',
+    'Volume.Size' => 'textright',
+    'Volume.FreeSpace' => 'textright',
+);
+
+$headers = array();
+foreach ($this->columns as $column) {
+    if (preg_match('/^(Registry|UserDefinedInfo)\.(.+)/', $column, $matches)) {
+        // Extract column header from name
+        if ($matches[1] == 'UserDefinedInfo' and $matches[2] == 'TAG') {
+            $headers[$column] = $this->translate('Category');
+        } else {
+            $headers[$column] = $matches[2];
+        }
     } else {
-        $header = $name;
+        $headers[$column] = $allHeaders[$column];
     }
-    $headers['UserDefinedInfo.' . $name] = $header;
-}
-// Append headers for registry value names
-$regValues = Model_RegistryValue::createStatementStatic();
-while ($regValue = $regValues->fetchObject('Model_RegistryValue')) {
-    $name = $regValue->getName();
-    $headers["Registry.$name"] = $name;
 }
 
 $renderCallbacks = array(
-    'Name' => 'renderName',
-);
-
-function renderName($view, $computer)
-{
-    return $view->htmlTag(
-        'a',
-        $view->escape($computer->getName()),
-        array(
-            'href' => $view->url(
-                array(
-                    'controller' => 'computer',
-                    'action' => $view->jumpto,
-                    'id' => $computer->getId(),
+    'Name' => function($view, $computer) {
+        return $view->htmlTag(
+            'a',
+            $view->escapeHtml($computer['Name']),
+            array(
+                'href' => $view->consoleUrl(
+                    'computer',
+                    $view->jumpto,
+                    array('id' => $computer['Id'])
                 )
-            )
-        ),
-        true
-    );
-}
-
-$table = $this->getHelper('table')->table(
-    $this->computers,
-    $this->columns,
-    $headers,
-    array(),
-    'Model_Computer',
-    null,
-    $renderCallbacks,
-    $count
+            ),
+            true
+        );
+    },
 );
 
 $filter = $this->filter;
+$count = count($this->computers);
 if ($filter) {
     $search = $this->search;
     if ($this->isCustomSearch) {
@@ -174,22 +162,14 @@ if ($filter) {
                 . $this->htmlTag(
                     'a',
                     $this->translate('Edit filter'),
-                    array(
-                        'href' => $this->url(
-                            array('controller' => 'computer', 'action' => 'search') + $params
-                        ),
-                    ),
+                    array('href' => $this->consoleUrl('computer', 'search', $params)),
                     true
                 )
                 . "\n&nbsp;&nbsp;&nbsp;\n"
                 . $this->htmlTag(
                     'a',
                     $this->translate('Save to group'),
-                    array(
-                        'href' => $this->url(
-                            array('controller' => 'group', 'action' => 'add') + $params
-                        ),
-                    ),
+                    array('href' => $this->consoleUrl('group', 'add', $params)),
                     true
                 );
     } else {
@@ -197,22 +177,25 @@ if ($filter) {
         if ($filter == 'Software') {
             $search = \Zend\Filter\StaticFilter::execute($search, 'Library\FixEncodingErrors');
         }
-        $header = Model_Computer::getFilterDescription($filter, $search, $count);
+        $header = \Model_Computer::getFilterDescription($filter, $search, $count);
     }
-    print $this->htmlTag(
-        'p',
-        $header,
-        array('class' => 'textcenter')
-    );
 } else {
-    print $this->htmlTag(
-        'p',
-        sprintf(
-            $this->translate('Number of computers: %d'),
-            $count
-        ),
-        array('class' => 'textcenter')
+    $header = sprintf(
+        $this->translate('Number of computers: %d'),
+        $count
     );
 }
 
-print $table;
+print $this->htmlTag(
+    'p',
+    $header,
+    array('class' => 'textcenter')
+);
+
+print $this->table(
+    $this->computers,
+    $headers,
+    array('order' => $this->order, 'direction' => $this->direction),
+    $renderCallbacks,
+    $columnClasses
+);

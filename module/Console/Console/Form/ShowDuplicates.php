@@ -190,7 +190,7 @@ class ShowDuplicates extends Form
                 );
             },
             'Name' => function($view, $computer) {
-                // Hyperlink to "userdefined" page of given computer.
+                // Hyperlink to "customfields" page of given computer.
                 // This allows for easy review of the information about to be merged.
                 return $view->htmlTag(
                     'a',
@@ -198,7 +198,7 @@ class ShowDuplicates extends Form
                     array(
                         'href' => $view->consoleUrl(
                             'computer',
-                            'userdefined',
+                            'customfields',
                             array('id' => $computer['Id'])
                         ),
                     ),

@@ -17,47 +17,28 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
+
+require 'header.php';
 
 $computer = $this->computer;
 
-print $this->inventoryHeader($computer);
-
-
 // Display audio devices
-
 $headers = array(
     'Manufacturer' => $this->translate('Manufacturer'),
     'Name' => $this->translate('Name'),
     'Description' => $this->translate('Description'),
 );
-
-$renderCallbacks = array (
-);
-
-$audio = $this->getHelper('table')->table(
-    $computer->getChildObjects('AudioDevice'),
-    null,
-    $headers,
-    array(),
-    'Model_AudioDevice',
-    null,
-    array(),
-    $numAudio
-);
-
-if ($numAudio) {
+$audio = $computer['AudioDevice'];
+if (count($audio)) {
     print $this->htmlTag(
         'h2',
         $this->translate('Audio devices')
     );
-    print $audio;
+    print $this->table($audio, $headers);
 }
 
-
 // Display input devices
-
 $headers = array(
     'Type' => $this->translate('Type'),
     'Manufacturer' => $this->translate('Manufacturer'),
@@ -65,73 +46,42 @@ $headers = array(
     'Comment' => $this->translate('Comment'),
     'Interface' => $this->translate('Interface'),
 );
-
 $renderCallbacks = array (
-    'Type' => 'renderType',
+    'Type' => function($view, $inputDevice) {
+        $type = $inputDevice['Type'];
+        switch ($type) {
+            case 'Keyboard':
+                $type = $view->translate('Keyboard');
+                break;
+            case 'Pointing':
+                $type = $view->translate('Pointing device');
+                break;
+        }
+        return $view->escapeHtml($type);
+    },
 );
-
-function renderType($view, $inputDevice)
-{
-    $type = $inputDevice->getType();
-    switch ($type) {
-        case 'Keyboard':
-            $type = $view->translate('Keyboard');
-            break;
-        case 'Pointing':
-            $type = $view->translate('Pointing device');
-            break;
-    }
-    return $view->escape($type);
-}
-
-$input = $this->getHelper('table')->table(
-    $computer->getChildObjects('InputDevice'),
-    null,
-    $headers,
-    array(),
-    'Model_InputDevice',
-    null,
-    $renderCallbacks,
-    $numInput
-);
-
-if ($numInput) {
+$input = $computer['InputDevice'];
+if (count($input)) {
     print $this->htmlTag(
         'h2',
         $this->translate('Input devices')
     );
-    print $input;
+    print $this->table($input, $headers, null, $renderCallbacks);
 }
-
 
 // Display ports
-
-$headers = array(
-    'Type' => $this->translate('Type'),
-    'Name' => $this->translate('Name'),
-);
-if (!$computer->isWindows()) {
-    $headers['Connector'] = $this->translate('Connector');
-}
-
-$renderCallbacks = array (
-);
-
-$ports = $this->getHelper('table')->table(
-    $computer->getChildObjects('Port'),
-    null,
-    $headers,
-    array(),
-    'Model_Port',
-    null,
-    array(),
-    $numPorts
-);
-
-if ($numPorts) {
+$ports = $computer['Port'];
+if (count($ports)) {
+    $headers = array(
+        'Type' => $this->translate('Type'),
+        'Name' => $this->translate('Name'),
+    );
+    if (!$computer['Windows']) {
+        $headers['Connector'] = $this->translate('Connector');
+    }
     print $this->htmlTag(
         'h2',
         $this->translate('Ports')
     );
-    print $ports;
+    print $this->table($ports, $headers);
 }

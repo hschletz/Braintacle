@@ -1,0 +1,98 @@
+<?php
+/**
+ * Display installled software
+ *
+ * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+require 'header.php';
+
+$computer = $this->computer;
+
+$headers = array(
+    'Name' => $this->translate('Name'),
+    'Version' => $this->translate('Version'),
+);
+if ($computer['Windows']) {
+    $headers['Publisher'] = $this->translate('Publisher');
+    $headers['InstallLocation'] = $this->translate('Location');
+    $headers['Architecture'] = $this->translate('Architecture');
+} else {
+    $headers['Size'] = $this->translate('Size');
+}
+
+$renderCallbacks = array(
+    'Name' => function($view, $software) {
+        $content = $view->escapeHtml($software['Name']);
+        if ($software['Comment']) {
+            $content = $view->htmlTag(
+                'span',
+                $content,
+                array('title' => $software['Comment']),
+                true
+            );
+        }
+        if ($software['NumInstances'] > 1) {
+            $content .= ' ';
+            $content .= $view->htmlTag(
+                'span',
+                sprintf('(%d)', $software['NumInstances']),
+                array(
+                    'class' => 'gray',
+                ),
+                true
+            );
+        }
+        return $content;
+    },
+    'Size' => function($view, $software) {
+        $measure = new Zend_Measure_Binary($software['Size'] / 1024, 'KILOBYTE');
+        return $view->escapeHtml($measure->convertTo('KILOBYTE', 0));
+    },
+    'Architecture' => function($view, $software) {
+        $architecture = $software['Architecture'];
+        if ($architecture) {
+            $architecture = $view->escapeHtml($architecture . ' Bit');
+        }
+        return $architecture;
+    },
+);
+
+$filters = array();
+if (!$this->displayBlacklistedSoftware) {
+    $filters['Status'] = 'notIgnored';
+}
+
+// Compact list by suppressing duplicate entries, adding the number of instances for each entry.
+$list = array();
+foreach ($computer->getItems('Software', $this->order, $this->direction, $filters) as $software) {
+    $software = $software->getArrayCopy();
+    $key = implode("\0", $software);
+    if (isset($list[$key])) {
+        $list[$key]['NumInstances']++;
+    } else {
+        $software['NumInstances'] = 1;
+        $list[$key] = $software;
+    }
+}
+
+print $this->table(
+    $list,
+    $headers,
+    array('order' => $this->order, 'direction' => $this->direction),
+    $renderCallbacks
+);

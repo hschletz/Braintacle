@@ -1,6 +1,6 @@
 <?php
 /**
- * Display BIOS information
+ * Display/edit custom fields
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,46 +17,19 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-$computer = $this->computer;
+require 'header.php';
 
-print $this->inventoryHeader($computer);
-
-print "<dl>\n";
-
+print $this->flashMessenger()->render('success');
+print $this->form;
 print $this->htmlTag(
-    'dt',
-    $this->translate('Manufacturer')
+    'p',
+    $this->htmlTag(
+        'a',
+        $this->translate('Define fields'),
+        array('href' => $this->consoleUrl('preferences', 'customfields')),
+        true
+    ),
+    array('class' => 'textcenter clearboth')
 );
-print $this->htmlTag(
-    'dd',
-    $this->escape($computer->getBiosManufacturer())
-);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Date')
-);
-print $this->htmlTag(
-    'dd',
-    $this->escape($computer->getBiosDate())
-);
-
-// Split version strings into multiple lines
-$parts = explode(';', $computer->getBiosVersion());
-$version = array();
-foreach ($parts as $part) {
-    $version[] = $this->escape($part);
-}
-print $this->htmlTag(
-    'dt',
-    $this->translate('Version')
-);
-print $this->htmlTag(
-    'dd',
-    implode('<br>', $version)
-);
-
-print "</dl>\n";

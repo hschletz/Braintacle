@@ -190,7 +190,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
         $document = new \Zend\Dom\Document($output);
 
         $result = Query::execute(
-            '//td//a[@href="/console/computer/userdefined/?id=2"]',
+            '//td//a[@href="/console/computer/customfields/?id=2"]',
             $document
         );
         $this->assertCount(1, $result);

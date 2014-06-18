@@ -1,6 +1,6 @@
 <?php
 /**
- * Display Windows-specific information
+ * Display BIOS/UEFI information
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,55 +17,40 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-$computer = $this->computer;
-$windows = $this->windows;
+require 'header.php';
 
-print $this->inventoryHeader($computer);
+$computer = $this->computer;
 
 print "<dl>\n";
 
 print $this->htmlTag(
     'dt',
-    $this->translate('Company')
+    $this->translate('Manufacturer')
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($windows->getCompany())
+    $this->escapeHtml($computer['BiosManufacturer'])
 );
 
 print $this->htmlTag(
     'dt',
-    $this->translate('Owner')
+    $this->translate('Date')
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($windows->getOwner())
+    $this->escapeHtml($computer['BiosDate'])
 );
 
+$version = strtr($computer['BiosVersion'], ';', "\n");
 print $this->htmlTag(
     'dt',
-    $this->translate('Product ID')
+    $this->translate('Version')
 );
 print $this->htmlTag(
     'dd',
-    $this->escape($windows->getProductId())
-);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Product key (reported by agent)')
-);
-print $this->htmlTag(
-    'dd',
-    $this->escape($windows->getProductKey())
+    nl2br($this->escapeHtml($version), $this->doctype()->isXhtml())
 );
 
 print "</dl>\n";
-
-// Print product key form if supported.
-if (isset($this->form)) {
-    print $this->form;
-}
