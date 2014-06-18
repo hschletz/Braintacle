@@ -52,6 +52,9 @@ return array(
             'Console\Form\Search' => 'Console\Form\Service\SearchFactory',
             'Console\Form\ShowDuplicates' => 'Console\Form\Service\ShowDuplicatesFactory',
         ),
+        'invokables' => array(
+            'Console\Form\SoftwareFilter' => 'Console\Form\SoftwareFilter',
+        ),
     ),
     'router' => array(
         'routes' => array(
@@ -117,7 +120,6 @@ return array(
             'Console\Form\Preferences\RawData' => 'Form_Preferences_RawData',
             'Console\Form\Preferences\System' => 'Form_Preferences_System',
             'Console\Form\ProductKey' => 'Form_ProductKey',
-            'Console\Form\SoftwareFilter' => 'Form_SoftwareFilter',
             'Console\Form\Subnet' => 'Form_Subnet',
         )
     ),

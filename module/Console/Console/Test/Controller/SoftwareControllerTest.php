@@ -34,7 +34,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
 
     /**
      * Form mock
-     * @var \Form_SoftwareFilter
+     * @var \Console\Form\SoftwareFilter
      */
     protected $_form;
 
@@ -56,7 +56,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
     public function setUp()
     {
         $this->_software = $this->getMock('Model_Software');
-        $this->_form = $this->getMock('Form_SoftwareFilter');
+        $this->_form = $this->getMock('Console\Form\SoftwareFilter');
         $this->_session = new \Zend\Session\Container('ManageSoftware');
         parent::setUp();
     }
@@ -85,7 +85,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $this->_form->expects($this->once())
                     ->method('setFilter')
                     ->with('accepted');
-        $this->_form->expects($this->once())->method('toHtml');
+        $this->_form->expects($this->once())->method('render');
         unset($this->_session->filter);
         $this->dispatch('/console/software/index/');
         $this->assertEquals('accepted', $this->_session->filter);
@@ -127,7 +127,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $this->_form->expects($this->once())
                     ->method('setFilter')
                     ->with('ignored');
-        $this->_form->expects($this->once())->method('toHtml');
+        $this->_form->expects($this->once())->method('render');
         $this->dispatch('/console/software/index/?filter=ignored');
         $this->assertEquals('ignored', $this->_session->filter);
         $this->assertResponseStatusCode(200);
@@ -160,7 +160,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $this->_form->expects($this->once())
                     ->method('setFilter')
                     ->with('new');
-        $this->_form->expects($this->once())->method('toHtml');
+        $this->_form->expects($this->once())->method('render');
         $this->dispatch('/console/software/index/?filter=new');
         $this->assertEquals('new', $this->_session->filter);
         $this->assertResponseStatusCode(200);
@@ -194,7 +194,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $this->_form->expects($this->once())
                     ->method('setFilter')
                     ->with('all');
-        $this->_form->expects($this->once())->method('toHtml');
+        $this->_form->expects($this->once())->method('render');
         $this->dispatch('/console/software/index/?filter=all');
         $this->assertEquals('all', $this->_session->filter);
         $this->assertResponseStatusCode(200);

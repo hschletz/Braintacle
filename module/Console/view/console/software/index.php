@@ -80,7 +80,7 @@ $renderCallbacks = array (
     }
 );
 
-print $this->form->toHtml($this);
+print $this->form->render($this);
 print $this->table(
     $this->software,
     $headers,

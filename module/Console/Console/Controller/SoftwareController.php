@@ -34,7 +34,7 @@ class SoftwareController extends \Zend\Mvc\Controller\AbstractActionController
 
     /**
      * Software filter form
-     * @var \Form_SoftwareFilter
+     * @var \Console\Form\SoftwareFilter
      */
     protected $_form;
 
@@ -42,9 +42,9 @@ class SoftwareController extends \Zend\Mvc\Controller\AbstractActionController
      * Constructor
      *
      * @param \Model_Software $software
-     * @param \Form_SoftwareFilter $form
+     * @param \Console\Form\SoftwareFilter $form
      */
-    public function __construct(\Model_Software $software, \Form_SoftwareFilter $form)
+    public function __construct(\Model_Software $software, \Console\Form\SoftwareFilter $form)
     {
         $this->_software = $software;
         $this->_form = $form;
@@ -58,7 +58,8 @@ class SoftwareController extends \Zend\Mvc\Controller\AbstractActionController
     public function indexAction()
     {
         $filter = $this->params()->fromQuery('filter', 'accepted');
-        $this->_form->setFilter($filter); // invalid filter will trigger an exception
+        $this->_form->setFilter($filter);
+        $this->_form->remove('_csrf');
         $session = new \Zend\Session\Container('ManageSoftware');
         $session->filter = $filter;
 
