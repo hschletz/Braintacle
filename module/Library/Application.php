@@ -62,7 +62,6 @@ class Application
     static function init($module, $run=null)
     {
         // Set up PHP environment.
-        ini_set('session.auto_start', false); // conflicts with Zend_Session
         session_cache_limiter('nocache'); // Default headers to prevent caching
         ini_set('magic_quotes_runtime', false);
 
@@ -94,12 +93,10 @@ class Application
 
         require_once 'Zend/Application.php';
         self::$application = new \Zend_Application(
-            ($environment == 'test' ? 'development' : $environment),
-            self::getPath('application/configs/application.ini')
+            ($environment == 'test' ? 'development' : $environment)
         );
         self::$application->setBootstrap(self::getPath('application/Bootstrap.php'));
         self::$application->bootstrap();
-        \Zend_Session::start(); // Required to avoid interference with \Zend\Session
 
         $application = \Zend\Mvc\Application::init(
             array(

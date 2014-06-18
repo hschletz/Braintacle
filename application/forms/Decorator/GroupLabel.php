@@ -70,9 +70,11 @@ class Form_Decorator_GroupLabel extends Zend_Form_Decorator_Label
         // Change the label to a hyperlink. This would normally get escaped,
         // so escaping must be turned off and the content gets escaped manually.
         $this->setOption('escape', false);
-        $urlHelper = \Library\Application::getService('ViewHelperManager')->get('ConsoleUrl');
+        $helpers = \Library\Application::getService('ViewHelperManager');
+        $htmlTagHelper = $helpers->get('HtmlTag');
+        $urlHelper = $helpers->get('ConsoleUrl');
         $element->setLabel(
-            $view->htmlTag(
+            $htmlTagHelper(
                 'a',
                 $view->escape($label),
                 array(

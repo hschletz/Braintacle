@@ -69,7 +69,12 @@ abstract class Form_Normalized extends Zend_Form
                 break;
             case 'date':
                 if (!is_null($value)) {
-                    $value = $this->getView()->date($value, Zend_Date::DATE_MEDIUM, 'yyyy-MM-dd');
+                    if (!($value instanceof Zend_Date) and Zend_Date::isDate($value, 'yyyy-MM-dd')) {
+                        $value = new Zend_Date($value, 'yyyy-MM-dd');
+                    }
+                    if ($value instanceof Zend_Date) {
+                        $value = $value->get(Zend_Date::DATE_MEDIUM);
+                    }
                 }
                 break;
         }

@@ -41,5 +41,4 @@ $file = new \SplFileObject('org/bovigo/vfs/vfsStream.php', 'r', true);
 );
 unset($file);
 
-\Zend_Session::$_unitTestEnabled = true;
 \Locale::setDefault('de_DE'); // Force environment-independent locale

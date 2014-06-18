@@ -30,9 +30,6 @@ return array(
         )
     ),
     'controllers' => array(
-        'invokables' => array(
-            'Console\Controller\ZF1' => 'Console\Controller\ZF1Controller',
-        ),
         'factories' => array(
             'accounts' => 'Console\Service\AccountsControllerFactory',
             'computer' => 'Console\Service\ComputerControllerFactory',
@@ -70,17 +67,6 @@ return array(
                     'defaults' => array(
                         'controller' => 'login', // TODO: default to "computer" when available
                         'action' => 'index',
-                    ),
-                ),
-            ),
-            // URL paths that are still handled by the ZF1 application
-            'zf1' => array(
-                'type'    => 'regex',
-                'options' => array(
-                    'regex'    => '/(console/)?(error|index)/?.*',
-                    'spec' => '',
-                    'defaults' => array(
-                        'controller' => 'Console\Controller\ZF1',
                     ),
                 ),
             ),

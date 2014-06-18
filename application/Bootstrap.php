@@ -23,168 +23,6 @@ use \Library\Application;
 
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
-    protected function _initNavigation()
-    {
-        if (Application::isCli()) {
-            return;
-        }
-
-        $this->bootstrap('autoload');
-        $navigation = new Zend_Navigation;
-
-        // "Inventory" menu
-        $page = new Zend_Navigation_Page_Mvc;
-        $page->setLabel('Inventory')
-             ->setController('computer')
-             ->setAction('index');
-        $navigation->addPage($page);
-
-        $sub = new Zend_Navigation_Page_Mvc;
-        $sub->setLabel('Computers')
-            ->setController('computer')
-            ->setAction('index');
-        $page->addPage($sub);
-
-        $sub = new Zend_Navigation_Page_Mvc;
-        $sub->setLabel('Software')
-            ->setController('software')
-            ->setAction('index');
-        $page->addPage($sub);
-
-        $sub = new Zend_Navigation_Page_Mvc;
-        $sub->setLabel('Network')
-            ->setController('network')
-            ->setAction('index');
-        $page->addPage($sub);
-
-        $sub = new Zend_Navigation_Page_Mvc;
-        $sub->setLabel('Duplicates')
-            ->setController('duplicates')
-            ->setAction('index');
-        $page->addPage($sub);
-
-        $sub = new Zend_Navigation_Page_Mvc;
-        $sub->setLabel('Import')
-            ->setController('computer')
-            ->setAction('import');
-        $page->addPage($sub);
-
-        // "Groups" menu
-        $page = new Zend_Navigation_Page_Mvc;
-        $page->setLabel('Groups')
-             ->setController('group')
-             ->setAction('index');
-        $navigation->addPage($page);
-
-        // "Packages" menu
-        $page = new Zend_Navigation_Page_Mvc;
-        $page->setLabel('Packages')
-             ->setController('package')
-             ->setAction('index');
-        $navigation->addPage($page);
-
-        $sub = new Zend_Navigation_Page_Mvc;
-        $sub->setLabel('Overview')
-            ->setController('package')
-            ->setAction('index');
-        $page->addPage($sub);
-
-        $sub = new Zend_Navigation_Page_Mvc;
-        $sub->setLabel('Build')
-            ->setController('package')
-            ->setAction('build');
-        $page->addPage($sub);
-
-        // "Licenses" menu
-        $page = new Zend_Navigation_Page_Mvc;
-        $page->setLabel('Licenses')
-             ->setController('licenses')
-             ->setAction('index');
-        $navigation->addPage($page);
-
-        // Search button
-        $page = new Zend_Navigation_Page_Mvc;
-        $page->setLabel('Search')
-             ->setController('computer')
-             ->setAction('search');
-        $navigation->addPage($page);
-
-        // "Preferences" menu
-        $page = new Zend_Navigation_Page_Mvc;
-        $page->setLabel('Preferences')
-             ->setController('preferences')
-             ->setAction('index');
-        $navigation->addPage($page);
-
-        $sub = new Zend_Navigation_Page_Mvc;
-        $sub->setLabel('Display')
-            ->setController('preferences')
-            ->setAction('display');
-        $page->addPage($sub);
-
-        $sub = new Zend_Navigation_Page_Mvc;
-        $sub->setLabel('Inventory')
-            ->setController('preferences')
-            ->setAction('inventory');
-        $page->addPage($sub);
-
-        $sub = new Zend_Navigation_Page_Mvc;
-        $sub->setLabel('Agent')
-            ->setController('preferences')
-            ->setAction('agent');
-        $page->addPage($sub);
-
-        $sub = new Zend_Navigation_Page_Mvc;
-        $sub->setLabel('Packages')
-            ->setController('preferences')
-            ->setAction('packages');
-        $page->addPage($sub);
-
-        $sub = new Zend_Navigation_Page_Mvc;
-        $sub->setLabel('Download')
-            ->setController('preferences')
-            ->setAction('download');
-        $page->addPage($sub);
-
-        $sub = new Zend_Navigation_Page_Mvc;
-        $sub->setLabel('Groups')
-            ->setController('preferences')
-            ->setAction('groups');
-        $page->addPage($sub);
-
-        $sub = new Zend_Navigation_Page_Mvc;
-        $sub->setLabel('Network scanning')
-            ->setController('preferences')
-            ->setAction('networkscanning');
-        $page->addPage($sub);
-
-        $sub = new Zend_Navigation_Page_Mvc;
-        $sub->setLabel('Raw data')
-            ->setController('preferences')
-            ->setAction('rawdata');
-        $page->addPage($sub);
-
-        $sub = new Zend_Navigation_Page_Mvc;
-        $sub->setLabel('Filters')
-            ->setController('preferences')
-            ->setAction('filters');
-        $page->addPage($sub);
-
-        $sub = new Zend_Navigation_Page_Mvc;
-        $sub->setLabel('System')
-            ->setController('preferences')
-            ->setAction('system');
-        $page->addPage($sub);
-
-        $sub = new Zend_Navigation_Page_Mvc;
-        $sub->setLabel('Users')
-            ->setController('accounts')
-            ->setAction('index');
-        $page->addPage($sub);
-
-        Zend_Registry::set('Zend_Navigation', $navigation);
-    }
-
     protected function _initDatabase()
     {
         $this->bootstrap('autoload');
@@ -245,68 +83,19 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Registry::set('Zend_Translate', $translate);
     }
 
-    protected function _initActionHelpers()
-    {
-        Zend_Controller_Action_HelperBroker::addPath(
-            APPLICATION_PATH . '/controllers/helpers'
-        );
-    }
-
     protected function _initViewHelpers()
     {
         if (Application::isCli() and !Application::isTest()) {
             return;
         }
-
         $layout = Zend_Layout::startMvc();
-        $layout->setLayoutPath(APPLICATION_PATH . '/layouts');
         $view = $layout->getView();
-        $view->strictVars(true);
-
         $pluginLoader = new Zend_Loader_PluginLoader;
         $pluginLoader->addPrefixPath(
             'Zend_View_Helper',
             Application::$zf1Path . '/View/Helper'
         );
-        $pluginLoader->addPrefixPath(
-            'Zend_View_Helper_Navigation',
-            Application::$zf1Path . '/View/Helper/Navigation'
-        );
-        $pluginLoader->addPrefixPath(
-            'Braintacle_View_Helper',
-            \Library\Application::getPath('application/views/helpers')
-        );
         $view->setPluginLoader($pluginLoader, 'helper');
-
-        $view->doctype('HTML4_STRICT');
-
-        $view->headMeta()->appendHttpEquiv(
-            'Content-Type', 'text/html; charset=UTF-8'
-        );
-
-        $view->headTitle()->setSeparator(' - ');
-        $view->headTitle('Braintacle');
-    }
-
-    protected function _initController()
-    {
-        $controller = Zend_Controller_Front::getInstance();
-
-        // Skip ZF1 handling of exceptions; have them handled by the ZF2 error handler instead
-        $controller->throwExceptions(true);
-
-        $controller->setControllerDirectory(APPLICATION_PATH . '/controllers');
-
-        $route = new Braintacle_Controller_Router_Route_Module(
-            array(),
-            $controller->getDispatcher(),
-            $controller->getRequest()
-        );
-        $controller->getRouter()->addRoute('default', $route);
-
-        if (!Application::isCli()) {
-            $controller->registerPlugin(new Braintacle_Controller_Plugin_ForceLogin);
-        }
     }
 
     protected function _initAutoload()
@@ -322,15 +111,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 ),
             )
         );
-
-        // Autoloader for Zend_Filter_Inflector
-        $pluginLoader = new Zend_Loader_PluginLoader(
-            array(
-                'Zend_Filter' => Application::$zf1Path . '/Filter',
-            ),
-            'Zend_Filter_Inflector'
-        );
-
         // ZF1 module autoloader
         $moduleLoader = new Zend_Application_Module_Autoloader(
             array(
@@ -340,5 +120,4 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         );
         return $moduleLoader;
     }
-
 }

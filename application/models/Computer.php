@@ -1101,44 +1101,6 @@ class Model_Computer extends Model_ComputerOrGroup
         return $this->windows;
     }
 
-    /**
-     * Return TRUE if the serial number or asset tag is blacklisted,
-     * i.e. ignored for detection of duplicates.
-     *
-     * @param string $criteria One of 'Serial' or 'AssetTag'
-     * @return bool
-     * @deprecated superseded by IsSerialBlacklisted and IsAssetTagBlacklisted properties.
-     */
-    public function isBlacklisted($criteria)
-    {
-        switch ($criteria) {
-            case 'Serial':
-                $table = 'blacklist_serials';
-                $column = 'serial';
-                $value = $this->getSerial();
-                break;
-            case 'AssetTag':
-                if (!Model_Database::supportsAssetTagBlacklist()) {
-                    return false; // It's not blacklisted if the table does not exist.
-                }
-                $table = 'braintacle_blacklist_assettags';
-                $column = 'assettag';
-                $value = $this->getAssetTag();
-                break;
-            default:
-                throw new UnexpectedValueException(
-                    'Invalid criteria for isBlacklisted(): ' . $criteria
-                );
-        }
-
-        $db = Model_Database::getAdapter();
-
-        return (bool) $db->fetchOne(
-            "SELECT COUNT($column) FROM $table WHERE $column = ?",
-            $value
-        );
-    }
-
     /** Get long description for a filter
      *
      * @param string $filter Name of a pre-defined filter routine

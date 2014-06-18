@@ -40,12 +40,6 @@ $basePath = realpath(dirname(dirname(__FILE__)));
 require_once "$basePath/module/Library/Application.php";
 \Library\Application::init('Cli');
 
-// Workaround for ZF1 view helpers which are not handled by standard autoloader.
-$zf1ViewHelpers = new \FilesystemIterator("$basePath/application/views/helpers");
-foreach ($zf1ViewHelpers as $helper) {
-    require_once($helper->getPathname());
-}
-
 // Autoload Console namespace
 require_once("$basePath/module/Console/Console/Module.php");
 $module = new \Console\Module;

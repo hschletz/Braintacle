@@ -85,8 +85,10 @@ class Form_Preferences_Inventory extends Form_Preferences
     {
         $view = $element->getView();
         $name = $element->getName();
-        $urlHelper = \Library\Application::getService('ViewHelperManager')->get('ConsoleUrl');
-        $link = $view->htmlTag(
+        $helpers = \Library\Application::getService('ViewHelperManager');
+        $htmlTagHelper = $helpers->get('HtmlTag');
+        $urlHelper = $helpers->get('ConsoleUrl');
+        $link = $htmlTagHelper(
             'a',
             $view->escape(
                 '[' . $view->translate('Manage inventoried values') . ']'
@@ -94,7 +96,7 @@ class Form_Preferences_Inventory extends Form_Preferences
             array('href' => $urlHelper('preferences', 'registryvalues'))
         );
         $label = $view->escape($element->getLabel()) . '<br>' . $link;
-        return $view->htmlTag(
+        return $htmlTagHelper(
             'dt',
             $view->formLabel(
                 $name,
