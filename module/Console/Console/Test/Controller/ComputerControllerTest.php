@@ -144,6 +144,10 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->throwException(new \RuntimeException));
         $this->dispatch('/console/computer/general/?id=42');
         $this->assertRedirectTo('/console/computer/index/');
+        $this->assertContains(
+            'The requested computer does not exist.',
+            $this->_getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
+        );
     }
 
     public function testMenuForWindowsComputers()

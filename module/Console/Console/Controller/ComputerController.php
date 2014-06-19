@@ -93,6 +93,7 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
                 );
             } catch(\RuntimeException $e) {
                 // Computer does not exist - may happen when URL has become stale.
+                $this->flashMessenger()->addErrorMessage('The requested computer does not exist.');
                 return $this->redirectToRoute('computer', 'index');
             }
         }

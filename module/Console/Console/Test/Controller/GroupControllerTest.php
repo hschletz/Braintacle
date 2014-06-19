@@ -97,6 +97,10 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                      ->will($this->throwException(new \RuntimeException));
         $this->dispatch('/console/group/general/?id=42');
         $this->assertRedirectTo('/console/group/index/');
+        $this->assertContains(
+            'The requested group does not exist.',
+            $this->_getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
+        );
     }
 
     public function testIndexActionNoData()

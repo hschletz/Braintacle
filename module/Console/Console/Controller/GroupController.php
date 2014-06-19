@@ -101,6 +101,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
                 );
             } catch(\RuntimeException $e) {
                 // Group does not exist - may happen when URL has become stale.
+                $this->flashMessenger()->addErrorMessage('The requested group does not exist.');
                 return $this->redirectToRoute('group', 'index');
             }
         }
