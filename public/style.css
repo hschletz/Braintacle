@@ -251,9 +251,12 @@ th {
     vertical-align: top;
 }
 
+.blacklisted {
+    color: gray;
+}
+
 .duplicate {
     color: gray;
-    display: none; /* This may be changed by JS */
 }
 
 /* FlashMessenger output */

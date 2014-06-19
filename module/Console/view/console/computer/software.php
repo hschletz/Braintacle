@@ -52,7 +52,7 @@ $renderCallbacks = array(
                 'span',
                 sprintf('(%d)', $software['NumInstances']),
                 array(
-                    'class' => 'gray',
+                    'class' => 'duplicate',
                 ),
                 true
             );

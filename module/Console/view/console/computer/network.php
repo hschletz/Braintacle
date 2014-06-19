@@ -62,7 +62,7 @@ $renderCallbacks = array(
     'MacAddress' => function($view, $interface) {
         $mac = $view->escapeHtml($interface['MacAddress']->getAddressWithVendor());
         if ($interface['IsBlacklisted']) {
-            return "<span class='gray'>$mac</span>";
+            return "<span class='blacklisted'>$mac</span>";
         } else {
             return $mac;
         }

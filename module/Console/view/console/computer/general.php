@@ -86,7 +86,7 @@ print $this->htmlTag(
 print $this->htmlTag(
     'dd',
     $this->escapeHtml($computer['Serial']),
-    $computer['IsSerialBlacklisted'] ? array('class' => 'gray') : null
+    $computer['IsSerialBlacklisted'] ? array('class' => 'blacklisted') : null
 );
 
 print $this->htmlTag(
@@ -96,7 +96,7 @@ print $this->htmlTag(
 print $this->htmlTag(
     'dd',
     $this->escapeHtml($computer['AssetTag']),
-    $computer['IsAssetTagBlacklisted'] ? array('class' => 'gray') : null
+    $computer['IsAssetTagBlacklisted'] ? array('class' => 'blacklisted') : null
 );
 
 print $this->htmlTag(

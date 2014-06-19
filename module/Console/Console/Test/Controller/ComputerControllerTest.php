@@ -660,7 +660,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
         $this->dispatch('/console/computer/general/?id=1');
-        $this->assertXpathQuery("//dd[text()='\nserial\n'][@class='gray']");
+        $this->assertXpathQuery("//dd[text()='\nserial\n'][@class='blacklisted']");
         $this->assertXpathQuery("//dd[text()='\nasset_tag\n'][not(@class)]");
     }
 
@@ -678,7 +678,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->dispatch('/console/computer/general/?id=1');
         $this->assertXpathQuery("//dd[text()='\nserial\n'][not(@class)]");
-        $this->assertXpathQuery("//dd[text()='\nasset_tag\n'][@class='gray']");
+        $this->assertXpathQuery("//dd[text()='\nasset_tag\n'][@class='blacklisted']");
     }
 
     public function testGeneralActionWindowsUser()
@@ -843,7 +843,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertNotXpathQuery("//h2[text()='\nGlobal network configuration\n']");
         $this->assertXpathQuery("//h2[text()='\nNetwork interfaces\n']");
         $this->assertXpathQuery("//td[text()='\nmac_address_regular\n'][not(@class)]");
-        $this->assertXpathQuery("//td/span[text()='mac_address_blacklisted'][@class='gray']");
+        $this->assertXpathQuery("//td/span[text()='mac_address_blacklisted'][@class='blacklisted']");
         $this->assertNotXpathQuery("//h2[text()='\nModems\n']");
     }
 
@@ -1330,7 +1330,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValue(array($softwareModel, $softwareModel, $softwareModel)));
         $this->dispatch('/console/computer/software/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery('//tr[2]/td[1]/span[@class="gray"][text()="(2)"]');
+        $this->assertXpathQuery('//tr[2]/td[1]/span[@class="duplicate"][text()="(2)"]');
         $this->assertNotXpathQuery('//tr[3]/td[1]/span');
     }
 
