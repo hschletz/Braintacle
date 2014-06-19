@@ -220,12 +220,12 @@ class Table extends \Zend\View\Helper\AbstractHelper
      * Generate a table row
      * 
      * @param array $columns Column data
-     * @param bool $isHeader Use "th" tag instead of "td".
+     * @param bool $isHeader Use "th" tag instead of "td". Default: false
      * @param string[] $columnClasses Optional class attributes to apply to cells (keys are matched against $row)
      * @param string $rowClass Optional class attribute for the row
      * @return string HTML table row
      */
-    public function row(array $columns, $isHeader, $columnClasses=array(), $rowClass=null)
+    public function row(array $columns, $isHeader=false, $columnClasses=array(), $rowClass=null)
     {
         $row = '';
         foreach ($columns as $key => $column) {

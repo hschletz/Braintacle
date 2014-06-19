@@ -23,30 +23,27 @@ require 'header.php';
 
 $computer = $this->computer;
 
-// Display global network settings
-
-print "<dl>\n";
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('DNS server')
-);
-print $this->htmlTag(
-    'dd',
-    $this->escapeHtml($computer['DnsServer'])
-);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Default gateway')
-);
-print $this->htmlTag(
-    'dd',
-    $this->escapeHtml($computer['DefaultGateway'])
-);
-
-print "</dl>\n";
-
+// Display global network settings if available
+$dnsServer = $computer['DnsServer'];
+$defaultGateway = $computer['DefaultGateway'];
+if ($dnsServer or $defaultGateway) {
+    print $this->htmlTag('h2', $this->translate('Global network configuration'));
+    $table = $this->plugin('table');
+    print "<table class='textnormalsize'>\n";
+    print $table->row(
+        array(
+            $this->translate('DNS server'),
+            $this->escapeHtml($dnsServer),
+        )
+    );
+    print $table->row(
+        array(
+            $this->translate('Default gateway'),
+            $this->escapeHtml($defaultGateway),
+        )
+    );
+    print "</table>\n";
+}
 
 // Display netwok interfaces if present
 
