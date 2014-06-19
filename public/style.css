@@ -92,6 +92,7 @@ ul.navigation li {
     list-style: none;
     display: inline;
     vertical-align: middle;
+    white-space: nowrap;
 }
 
 ul.navigation a {
