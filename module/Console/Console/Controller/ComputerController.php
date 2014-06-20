@@ -139,7 +139,7 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
 
                 // Request minimal column list and add columns for non-equality searches
                 $columns = array('Name', 'UserName', 'InventoryDate');
-                if ($data['operator'] != 'eq' and !in_array($filter, $columns)) {
+                if (($invert or $data['operator'] != 'eq') and !in_array($filter, $columns)) {
                     $columns[] = $filter;
                 }
             } else {

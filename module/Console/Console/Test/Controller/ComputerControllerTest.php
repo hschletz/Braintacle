@@ -442,6 +442,117 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         );
     }
 
+    public function testIndexActionWithCustomEqualitySearchOnNonDefaultColumn()
+    {
+        // Equality search should not add the searched column.
+        $form = $this->_formManager->get('Console\Form\Search');
+        $form->expects($this->once())
+             ->method('isValid')
+             ->will($this->returnValue(true));
+        $form->expects($this->once())
+             ->method('getData')
+             ->will(
+                 $this->returnValue(
+                     array(
+                        'filter' => 'CpuType',
+                        'search' => 'value',
+                        'operator' => 'eq',
+                        'invert' => '0',
+                        'customSearch' => 'button',
+                     )
+                 )
+             );
+        $this->_computer->expects($this->once())
+                        ->method('fetch')
+                        ->with(
+                            array('Name', 'UserName', 'InventoryDate'),
+                            'InventoryDate',
+                            'desc',
+                            'CpuType',
+                            'value',
+                            'eq',
+                            '0'
+                        )
+                        ->will($this->returnValue(array()));
+        $query = 'filter=CpuType&search=value&operator=eq&invert=0';
+        $this->dispatch("/console/computer/index/?customSearch=button&$query");
+        $this->assertResponseStatusCode(200);
+    }
+
+    public function testIndexActionWithCustomNonEqualitySearchOnNonDefaultColumn()
+    {
+        // Non-equality search should add the searched column.
+        $form = $this->_formManager->get('Console\Form\Search');
+        $form->expects($this->once())
+             ->method('isValid')
+             ->will($this->returnValue(true));
+        $form->expects($this->once())
+             ->method('getData')
+             ->will(
+                 $this->returnValue(
+                     array(
+                        'filter' => 'CpuType',
+                        'search' => 'value',
+                        'operator' => 'ne',
+                        'invert' => '0',
+                        'customSearch' => 'button',
+                     )
+                 )
+             );
+        $this->_computer->expects($this->once())
+                        ->method('fetch')
+                        ->with(
+                            array('Name', 'UserName', 'InventoryDate', 'CpuType'),
+                            'InventoryDate',
+                            'desc',
+                            'CpuType',
+                            'value',
+                            'ne',
+                            '0'
+                        )
+                        ->will($this->returnValue(array()));
+        $query = 'filter=CpuType&search=value&operator=ne&invert=0';
+        $this->dispatch("/console/computer/index/?customSearch=button&$query");
+        $this->assertResponseStatusCode(200);
+    }
+
+    public function testIndexActionWithCustomInvertedEqualitySearchOnNonDefaultColumn()
+    {
+        // Inverted equality search should add the searched column.
+        $form = $this->_formManager->get('Console\Form\Search');
+        $form->expects($this->once())
+             ->method('isValid')
+             ->will($this->returnValue(true));
+        $form->expects($this->once())
+             ->method('getData')
+             ->will(
+                 $this->returnValue(
+                     array(
+                        'filter' => 'CpuType',
+                        'search' => 'value',
+                        'operator' => 'eq',
+                        'invert' => '1',
+                        'customSearch' => 'button',
+                     )
+                 )
+             );
+        $this->_computer->expects($this->once())
+                        ->method('fetch')
+                        ->with(
+                            array('Name', 'UserName', 'InventoryDate', 'CpuType'),
+                            'InventoryDate',
+                            'desc',
+                            'CpuType',
+                            'value',
+                            'eq',
+                            '1'
+                        )
+                        ->will($this->returnValue(array()));
+        $query = 'filter=CpuType&search=value&operator=eq&invert=1';
+        $this->dispatch("/console/computer/index/?customSearch=button&$query");
+        $this->assertResponseStatusCode(200);
+    }
+
     public function testIndexActionWithCustomSearchOnRegistry()
     {
         $formData = array(
