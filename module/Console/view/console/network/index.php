@@ -67,7 +67,7 @@ print $this->htmlTag(
         array('href' => $this->consoleUrl('preferences', 'networkdevices')),
         true
     ),
-    array('class' => 'textcenter clearboth')
+    array('class' => 'textcenter')
 );
 
 print $this->htmlTag(

@@ -51,6 +51,7 @@ a {
     text-decoration: none;
 }
 
+/* Main page content */
 #content {
     position: absolute;
     top: 10ex;
@@ -58,6 +59,7 @@ a {
     padding: 0 0.3em 0 0.3em;
 }
 
+/* Main navigation area */
 #menu {
     position: fixed;
     top: 0;
@@ -69,6 +71,7 @@ a {
     font-weight: bold;
 }
 
+/* Navigation elements */
 ul.navigation {
     height: 4ex;
     margin: 0;
@@ -77,11 +80,13 @@ ul.navigation {
     background-color: #80c0ff;
 }
 
+/* Level 2 main menu */
 ul.navigation_sub {
     background-color: #c0e0ff;
     border-bottom: 1px solid black;
 }
 
+/* Navigation for computers and groups */
 ul.navigation_details {
     background-color: #ffffff;
     line-height: 175%;
@@ -142,6 +147,7 @@ ul.navigation_details a {
     font-weight: bold;
 }
 
+/* Logout button */
 #logout {
     position: fixed;
     top: 1ex;
@@ -179,12 +185,14 @@ table {
     clear: both;
 }
 
+/* Pseudo table rendering for forms */
 .table {
     display: table;
     margin-left: auto;
     margin-right: auto;
 }
 
+/* Alternating background colors for table rows */
 .alternating tr:nth-child(even) {
     background-color: #e0f0ff;
 }
@@ -193,16 +201,26 @@ td,th {
     padding: .3ex .5em .3ex .5em;
 }
 
+tr.bgcolor {
+    background-color: #e0f0ff;
+}
+
+tr.highlight {
+    font-weight: bold;
+}
+
 th {
     text-align: left;
 }
 
-.cell {
-    display: table-cell;
+th a {
+    color: #000055;
+    text-decoration: none;
 }
 
-.block {
-    display: block;
+/* Cell placeholders for form pseudo tables */
+.cell {
+    display: table-cell;
 }
 
 .nomargin {
@@ -216,6 +234,7 @@ th {
 .textcenter {
     text-align: center;
 }
+
 .textnormalsize {
     font-size: 100%;
 }
@@ -281,20 +300,6 @@ th {
 }
 .success li, .error li, .info li {
     margin-bottom: 1ex;
-}
-
-
-tr.bgcolor {
-    background-color: #e0f0ff;
-}
-
-tr.highlight {
-    font-weight: bold;
-}
-
-th a {
-    color: #000055;
-    text-decoration: none;
 }
 
 /* used for forms */
@@ -397,15 +402,6 @@ input[size="8"]
 .yesbutton_not_inline #yes-label
 {
     display: block;
-}
-.hint {
-    text-align: right;
-    color: red;
-}
-#toggleDuplicatesLabel {
-    display: none; /* This may be changed by JS */
-    margin: 1ex auto 2ex auto;
-    text-align: center;
 }
 .badValue {
     background-color: red;
