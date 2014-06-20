@@ -389,6 +389,10 @@ class SearchTest extends \Console\Test\AbstractFormTest
 
         $headScript = $view->headScript()->toString();
         $this->assertContains('function filterChanged(', $headScript);
+        $this->assertContains(
+            'filterChanged()',
+            $view->placeholder('BodyOnLoad')->getValue()
+        );
     }
 
     public function testRenderNoPreset()
@@ -397,8 +401,8 @@ class SearchTest extends \Console\Test\AbstractFormTest
         $this->_form->render($view);
         $headScript = $view->headScript();
         $this->assertNotContains(
-            'document.getElementById("form_search").elements["operator"].value = "eq";',
-            $headScript
+            'document.getElementById("form_search").elements["operator"].value = "eq"',
+            $view->placeholder('BodyOnLoad')->getValue()
         );
     }
 
@@ -407,10 +411,9 @@ class SearchTest extends \Console\Test\AbstractFormTest
         $this->_form->get('operator')->setValue('eq');
         $view = $this->_createView();
         $this->_form->render($view);
-        $headScript = $view->headScript()->toString();
         $this->assertContains(
-            'document.getElementById("form_search").elements["operator"].value = "eq";',
-            $headScript
+            'document.getElementById("form_search").elements["operator"].value = "eq"',
+            $view->placeholder('BodyOnLoad')->getValue()
         );
     }
 }

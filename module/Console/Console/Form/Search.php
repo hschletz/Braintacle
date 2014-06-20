@@ -359,28 +359,23 @@ class Search extends Form
             }
         }
 
-        /**
-         * Called by body.onload()
-         */
-        function init()
-        {
-            filterChanged();
-            <?php
-            // Set operator value manually because the element creation code
-            // does not know it's valid and ignores it.
-            $initialOperator = $this->get('operator')->getValue();
-            if ($initialOperator) {
-                print 'document.getElementById("form_search").elements["operator"].value = ';
-                print json_encode($initialOperator);
-                print ';';
-            }
-            ?>
-
-        }
-
         <?php
         $view->headScript()->captureEnd();
 
+        $onload = $view->placeholder('BodyOnLoad');
+        $onload->append('filterChanged()');
+
+        // Set operator value manually because the element creation code does
+        // not know it's valid and ignores it.
+        $initialOperator = $this->get('operator')->getValue();
+        if ($initialOperator) {
+            $onload->append(
+                sprintf(
+                    'document.getElementById("form_search").elements["operator"].value = %s',
+                    json_encode($initialOperator)
+                )
+            );
+        }
         return parent::render($view);
     }
 }
