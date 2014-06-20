@@ -53,19 +53,19 @@ $renderNumPackages = function($view, $package, $property) {
     switch ($property) {
         case 'NumNonnotified':
             $filter = 'PackageNonnotified';
-            $class = 'blue';
+            $class = 'package_notnotified';
             break;
         case 'NumSuccess':
             $filter = 'PackageSuccess';
-            $class = 'green';
+            $class = 'package_success';
             break;
         case 'NumNotified':
             $filter = 'PackageNotified';
-            $class = 'red';
+            $class = 'package_inprogress';
             break;
         case 'NumError':
             $filter = 'PackageError';
-            $class = 'red';
+            $class = 'package_error';
             break;
     }
     $num = $package[$property];

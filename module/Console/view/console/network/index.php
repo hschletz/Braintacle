@@ -123,7 +123,7 @@ $renderCallbacks = array(
             $name = $view->escapeHtml($name);
         } else {
             $name = $view->translate('Edit');
-            $attributes['class'] = 'gray';
+            $attributes['class'] = 'blur';
         }
         return $view->htmlTag(
             'a',

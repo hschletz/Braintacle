@@ -143,19 +143,19 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                  '"][@class="%s"]';
 
         $this->assertXpathQueryContentContains(
-            sprintf($query, 'PackageNonnotified', 'name1', 'blue'),
+            sprintf($query, 'PackageNonnotified', 'name1', 'package_notnotified'),
             '1'
         );
         $this->assertXpathQueryContentContains(
-            sprintf($query, 'PackageSuccess', 'name1', 'green'),
+            sprintf($query, 'PackageSuccess', 'name1', 'package_success'),
             '2'
         );
         $this->assertXpathQueryContentContains(
-            sprintf($query, 'PackageNotified', 'name1', 'red'),
+            sprintf($query, 'PackageNotified', 'name1', 'package_inprogress'),
             '3'
         );
         $this->assertXpathQueryContentContains(
-            sprintf($query, 'PackageError', 'name1', 'red'),
+            sprintf($query, 'PackageError', 'name1', 'package_error'),
             '4'
         );
 

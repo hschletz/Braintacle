@@ -143,7 +143,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
             'td a[href="/console/network/properties/?subnet=192.0.2.0&mask=255.255.255.0"]',
             'subnet1'
         );
-        $this->assertNotQueryContentContains('td a[class="gray"]', 'subnet1');
+        $this->assertNotQueryContentContains('td a[class="blur"]', 'subnet1');
         $this->assertQueryContentContains('td', "\n192.0.2.0/24\n"); // AddressWithMask column
         $this->assertQueryContentContains(
             'td a[href*="/console/computer/index/"][href*="search1=192.0.2.0"][href*="search2=255.255.255.0"]',
@@ -155,7 +155,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         // Second row: unnamed subnet with uninventoried devices
         // AddressWithMask and NumInventoried columns are not tested again
         $this->assertQueryContentContains(
-            'td a[href="/console/network/properties/?subnet=198.51.100.0&mask=255.255.255.0"][class="gray"]',
+            'td a[href="/console/network/properties/?subnet=198.51.100.0&mask=255.255.255.0"][class="blur"]',
             'Edit'
         );
         $this->assertQueryContentContains(

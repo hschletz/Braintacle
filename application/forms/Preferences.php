@@ -203,7 +203,7 @@ abstract class Form_Preferences extends Form_Normalized
         $output = '';
         if ($this->_hasBadValues) {
             // Can't use htmlTag helper here because $view is NULL.
-            $output = '<p class="textcenter red">';
+            $output = '<p class="error">';
             $output .= Zend_Registry::get('Zend_Translate')->_(
                 'Some settings are discouraged and should be changed.'
             );

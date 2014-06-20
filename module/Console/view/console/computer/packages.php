@@ -36,19 +36,19 @@ $renderCallbacks = array(
         switch ($status) {
             case null:
                 $content = $view->translate('not notified');
-                $class = 'blue';
+                $class = 'package_notnotified';
                 break;
             case 'NOTIFIED':
                 $content = $view->translate('in progress');
-                $class = 'red';
+                $class = 'package_inprogress';
                 break;
             case 'SUCCESS':
                 $content = $view->translate('installed');
-                $class = 'green';
+                $class = 'package_success';
                 break;
             default: // ERR_*
                 $content = $view->escapeHtml($status);
-                $class = 'red';
+                $class = 'package_error';
         }
         return $view->htmlTag('span', $content, array('class' => $class), true);
     },

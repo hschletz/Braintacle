@@ -242,9 +242,9 @@ class ManageRegistryValues extends Form
             default:
                 if ($fieldset == $this) {
                     $output .= $this->renderFieldset($view, $fieldset->get('inspect'));
-                    $output .= $view->htmlTag('h2', $view->translate('Values'), array('class' => 'nomargin'));
+                    $output .= $view->htmlTag('h2', $view->translate('Values'));
                     $output .= $this->renderFieldset($view, $fieldset->get('existing'));
-                    $output .= $view->htmlTag('h2', $view->translate('Add'), array('class' => 'nomargin'));
+                    $output .= $view->htmlTag('h2', $view->translate('Add'));
                     $output .= $this->renderFieldset($view, $fieldset->get('new_value'));
                 }
                 break;

@@ -21,7 +21,7 @@
 
 require('header.php');
 
-$format = "<tr>\n<td class='textright bold align-top nowrap'>%s</td>\n<td>%s</td>\n</tr>\n";
+$format = "<tr>\n<td class='label'>%s</td>\n<td>%s</td>\n</tr>\n";
 
 print "<table class='textnormalsize'>\n";
 

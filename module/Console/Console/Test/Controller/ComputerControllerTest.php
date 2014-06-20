@@ -1956,10 +1956,10 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//h2', "\nAssigned packages\n");
         $this->assertXpathQueryCount('//h2', 1);
-        $this->assertXpathQueryContentContains('//tr[2]/td[2]/span[@class="blue"]', 'not notified');
-        $this->assertXpathQueryContentContains('//tr[3]/td[2]/span[@class="red"]', 'in progress');
-        $this->assertXpathQueryContentContains('//tr[4]/td[2]/span[@class="green"]', 'installed');
-        $this->assertXpathQueryContentContains('//tr[5]/td[2]/span[@class="red"]', '<ERROR>');
+        $this->assertXpathQueryContentContains('//tr[2]/td[2]/span[@class="package_notnotified"]', 'not notified');
+        $this->assertXpathQueryContentContains('//tr[3]/td[2]/span[@class="package_inprogress"]', 'in progress');
+        $this->assertXpathQueryContentContains('//tr[4]/td[2]/span[@class="package_success"]', 'installed');
+        $this->assertXpathQueryContentContains('//tr[5]/td[2]/span[@class="package_error"]', '<ERROR>');
         $this->assertXpathQueryContentContains(
             '//tr[3]/td[4]/a[@href="/console/computer/removepackage/?id=1&package=package2"]',
             'remove'

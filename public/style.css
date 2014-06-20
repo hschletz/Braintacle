@@ -223,10 +223,6 @@ th a {
     display: table-cell;
 }
 
-.nomargin {
-    margin: 0;
-}
-
 .textright {
     text-align: right;
 }
@@ -243,32 +239,8 @@ th a {
     clear:both;
 }
 
-.red {
-    color: red;
-}
-
-.green {
-    color: green;
-}
-
-.blue {
-    color: blue;
-}
-
-.gray {
-    color: gray;
-}
-
-.bold {
-    font-weight: bold;
-}
-
 .nowrap {
     white-space: nowrap;
-}
-
-.align-top {
-    vertical-align: top;
 }
 
 .blacklisted {
@@ -277,6 +249,29 @@ th a {
 
 .duplicate {
     color: gray;
+}
+
+.blur {
+    color: gray;
+}
+
+td.label {
+    text-align: right;
+    vertical-align: top;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.package_inprogress, .package_error {
+    color: red;
+}
+
+.package_success {
+    color: green;
+}
+
+.package_notnotified {
+    color: blue;
 }
 
 /* FlashMessenger output */
@@ -453,6 +448,10 @@ td.formElement {
 
 .form_yesno {
     text-align: center;
+}
+
+.form_manageregistryvalues h2 {
+    margin: 0;
 }
 
 .form_manageregistryvalues td input {
