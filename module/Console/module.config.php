@@ -65,7 +65,7 @@ return array(
                     // Note: a controller cannot be named "console".
                     'route' => '/[console[/]][:controller[/][:action[/]]]',
                     'defaults' => array(
-                        'controller' => 'login', // TODO: default to "computer" when available
+                        'controller' => 'computer',
                         'action' => 'index',
                     ),
                 ),

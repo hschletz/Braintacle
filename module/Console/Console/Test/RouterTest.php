@@ -35,7 +35,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $request = new \Zend\Http\Request;
 
         $matchDefaultDefault = array(
-            'controller' => 'login',
+            'controller' => 'computer',
             'action' => 'index',
         );
         $matchControllerDefault = array(
