@@ -102,4 +102,15 @@ Feature\InitProviderInterface
             'Library\Filter\FixEncodingErrors'
         );
     }
+
+    /**
+     * Get path to module directory
+     *
+     * @param string $path Optional path component that is appended to the module root path
+     * @return string Absolute path to requested file/directory (directories without trailing slash)
+     */
+    static function getPath($path='')
+    {
+        return \Library\Application::getPath('module/Library/' . $path);
+    }
 }

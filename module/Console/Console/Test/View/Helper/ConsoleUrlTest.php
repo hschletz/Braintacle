@@ -73,7 +73,7 @@ class ConsoleUrlTest extends \Library\Test\View\Helper\AbstractTest
         );
 
         // Test with stringifiable object parameter
-        $params = array('param' => new \Braintacle_MacAddress('00:00:5E:00:53:00'));
+        $params = array('param' => new \Library\MacAddress('00:00:5E:00:53:00'));
         $this->assertEquals(
             '/console/controller/action/?param=00:00:5E:00:53:00',
             $helper('controller', 'action', $params)

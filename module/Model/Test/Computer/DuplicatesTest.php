@@ -169,7 +169,7 @@ class DuplicatesTest extends \Model\Test\AbstractTest
                 'LastContactDate' => new \Zend_Date('2013-12-23 13:02:33'),
                 'Serial' => 'duplicate',
                 'AssetTag' => 'duplicate',
-                'NetworkInterface.MacAddress' => new \Braintacle_MacAddress('00:00:5E:00:53:01'),
+                'NetworkInterface.MacAddress' => new \Library\MacAddress('00:00:5E:00:53:01'),
             ),
             array (
                 'Id' => '3',
@@ -177,7 +177,7 @@ class DuplicatesTest extends \Model\Test\AbstractTest
                 'LastContactDate' => new \Zend_Date('2013-12-23 13:03:33'),
                 'Serial' => 'duplicate',
                 'AssetTag' => 'duplicate',
-                'NetworkInterface.MacAddress' => new \Braintacle_MacAddress('00:00:5E:00:53:01'),
+                'NetworkInterface.MacAddress' => new \Library\MacAddress('00:00:5E:00:53:01'),
             ),
         );
 

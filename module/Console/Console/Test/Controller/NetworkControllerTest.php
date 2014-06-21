@@ -346,7 +346,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testEditActionGet()
     {
-        $macAddress = $this->getMockBuilder('Braintacle_MacAddress')->disableOriginalConstructor()->getMock();
+        $macAddress = $this->getMockBuilder('Library\MacAddress')->disableOriginalConstructor()->getMock();
         $macAddress->expects($this->any())
                    ->method('__toString')
                    ->will($this->returnValue('00:00:5E:00:53:00'));
@@ -406,7 +406,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testEditActionPostInvalid()
     {
-        $macAddress = $this->getMockBuilder('Braintacle_MacAddress')->disableOriginalConstructor()->getMock();
+        $macAddress = $this->getMockBuilder('Library\MacAddress')->disableOriginalConstructor()->getMock();
         $macAddress->expects($this->any())
                    ->method('__toString')
                    ->will($this->returnValue('00:00:5E:00:53:00'));
@@ -468,7 +468,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionGet()
     {
-        $macAddress = $this->getMockBuilder('Braintacle_MacAddress')->disableOriginalConstructor()->getMock();
+        $macAddress = $this->getMockBuilder('Library\MacAddress')->disableOriginalConstructor()->getMock();
         $macAddress->expects($this->any())
                    ->method('__toString')
                    ->will($this->returnValue('00:00:5E:00:53:00'));

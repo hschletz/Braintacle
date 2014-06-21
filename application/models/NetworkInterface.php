@@ -77,6 +77,6 @@ class Model_NetworkInterface extends Model_ChildObject
         if ($rawValue or $property != 'MacAddress') {
             return $value;
         }
-        return new Braintacle_MacAddress($value);
+        return new \Library\MacAddress($value);
     }
 }

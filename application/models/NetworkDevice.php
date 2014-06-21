@@ -120,7 +120,7 @@ class Model_NetworkDevice extends Model_Abstract
     /**
      * Retrieve a property by its logical name
      *
-     * Converts MacAddress into a Braintacle_MacAddress object and supports Vendor
+     * Converts MacAddress into a \Library\MacAddress object and supports Vendor
      * property.
      */
     function getProperty($property, $rawValue=false)
@@ -135,7 +135,7 @@ class Model_NetworkDevice extends Model_Abstract
             return $value;
         }
 
-        return new Braintacle_MacAddress($value);
+        return new \Library\MacAddress($value);
     }
 
     /**
@@ -155,14 +155,14 @@ class Model_NetworkDevice extends Model_Abstract
 
     /**
      * Instantiate a new object with data for the given MAC address
-     * @param string|Braintacle_MacAddress $macaddress MAC address for which to retrieve information
+     * @param string|\Library\MacAddress $macaddress MAC address for which to retrieve information
      * @return Model_NetworkDevice|false
      */
     public function fetchByMacAddress($macaddress)
     {
         // Canonicalize the MAC address
-        if (!($macaddress instanceof Braintacle_MacAddress)) {
-            $macaddress = new Braintacle_MacAddress($macaddress);
+        if (!($macaddress instanceof \Library\MacAddress)) {
+            $macaddress = new \Library\MacAddress($macaddress);
         }
         $db = Model_Database::getAdapter();
         return $db->select()

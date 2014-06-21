@@ -1,6 +1,6 @@
 <?php
 /**
- * Class representing a MAC address
+ * MAC address datatype
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,36 +17,33 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Library
  */
+
+namespace Library;
+
 /**
- * Class that represents a MAC address
+ * MAC address datatype
  *
- * The address is stored in a canonicalized form to make string operations
- * successful. For basic usage, just pass a MAC address to the constructor:
+ * The class operates on MAC addresses in the common notation of colon-separated
+ * pairs of hexadecimal digits. Pass a MAC address to the constructor:
  *
- * <code>$address = new Braintacle_MacAddress('01:23:45:67:89:ab');</code>
+ *     $address = new \Library\MacAddress('00:00:5e:00:53:00');
  *
- * The Class implements the magic __tostring() method, so that it can be used
+ * The class implements the magic __toString() method, so that it can be used
  * as a string:
  *
- * <code>print $address;</code>
+ *     print $address;
  *
- * The address is always returned in the common form of 6 pairs of hexadecimal
- * digits in uppercase characters. This is important to know when
- * case-sensitive operations are performed on the address. For this reason,
- * this class should always be used to canonicalize an address before use.
+ * The address is always returned in uppercase characters. This is important
+ * when case sensitive operations are performed on the address.
  *
  * The class also provides some utility methods, like retrieving the vendor
  * from a database.
- * @package Library
  */
-class Braintacle_MacAddress
+class MacAddress
 {
-
     /**
-     * The already canonicalized address
+     * The address passed to the constructor (uppercase)
      * @var string
      */
     protected $_address;
@@ -54,16 +51,19 @@ class Braintacle_MacAddress
     /**
      * The database of address-vendor relationships
      *
-     * This is made static so that the database has to be loaded only once.
-     * @var array
+     * This is static so that the database is shared across instances.
+     * Each entry is an associative array with 3 fields:
+     * - address: Address (full or partial), uppercase without separators
+     * - length: Significant characters of address fragment used to match an address
+     * - vendor: Vendor name
+     * @var array[]
      */
     protected static $_vendorList;
 
     /**
      * Constructor
      *
-     * The address gets canonicalized. No further validation is performed.
-     * @param string $address MAC address
+     * @param string $address MAC address. No validation is performed.
      */
     function __construct($address)
     {
@@ -71,41 +71,62 @@ class Braintacle_MacAddress
     }
 
     /**
-     * Return the address as a string
+     * Alias for getAddress()
+     *
+     * @return string
      */
-    function __tostring()
+    function __toString()
     {
         return $this->_address;
     }
 
     /**
-     * Load the database of address-vendor relationships.
-     * A copy of a text file from the Wireshark project, located in
-     * APPLICATION_PATH/configs/macaddresses-vendors.txt, is used as source.
-     * The file gets parsed only once, so it is safe to call this method
-     * multiple times without hurting performance.
+     * Return the address as a string
+     *
+     * @return string
      */
-    static function loadVendorList()
+    function getAddress()
     {
-        if (is_array(self::$_vendorList)) {
-            return; // Already loaded
-        }
+        return $this->_address;
+    }
 
-        $input = fopen(APPLICATION_PATH . '/configs/macaddresses-vendors.txt', 'r');
-        while ($line = fgets($input)) {
+    /**
+     * Load vendor database from a file
+     *
+     * @param string $fileName
+     */
+    public static function loadVendorDatabaseFromFile($fileName)
+    {
+        $input = new \Library\FileObject($fileName, 'r');
+        $input->setFlags(\SplFileObject::DROP_NEW_LINE);
+        self::loadVendorDatabase($input);
+    }
+
+    /**
+     * Load vendor database
+     *
+     * Clears the database and iterates over $input. Each entry of the form
+     * "MAC_address[/bits] TAB short_name [whitespace # long_name]" gets parsed
+     * and added to the database.
+     *
+     * @param array|\Traversable $input
+     */
+    public static function loadVendorDatabase($input)
+    {
+        self::$_vendorList = array();
+        foreach ($input as $line) {
             /* This regular expression matches lines of the following pattern:
 
                <MAC address><TAB><short name>[<whitespace># <long name>]
 
-               Matching lines get returned as an array with exaxtly 5 elements:
+               Matching lines leave $data as an array with exaxtly 5 elements:
                [0] unused
-               [1] MAC address
-               [2] short name (used if [4] is empty)
+               [1] MAC address with optional mask suffix ("/36")
+               [2] short vendor name (used if [4] is empty)
                [3] unused
-               [4] long name or empty string
+               [4] long vendor name or empty string
             */
-            preg_match("/^(\H+)\t(\H+)\h*(# )?(.*)/", $line, $data);
-            if (empty($data)) {
+            if (!preg_match("/^(\H+)\t(\H+)\h*(# )?(.*)/", $line, $data)) {
                 continue;
             }
             // remove ':' and '-' delimiters
@@ -119,6 +140,12 @@ class Braintacle_MacAddress
                     // limited to 4 bits (1 hex digit). Entries with a number
                     // of mask bits that is not a multiple of 4 cannot be
                     // matched and are ignored.
+                    if (\Library\Application::isDevelopment()) {
+                        trigger_error(
+                            "Ignoring MAC address $data[1] because mask is not a multiple of 4.",
+                            E_USER_NOTICE
+                        );
+                    }
                     continue;
                 }
                 $numDigits = $mask / 4;
@@ -129,57 +156,40 @@ class Braintacle_MacAddress
                 $numDigits = strlen($mac);
             }
 
-            $vendor = rtrim($data[4]);
-            if (empty($vendor)) {
-                $vendor = $data[2];
-            }
-
             self::$_vendorList[] = array(
                 'address' => strtoupper($mac),
-                'mask' => $numDigits,
-                'vendor' => rtrim($vendor)
+                'length' => $numDigits,
+                'vendor' => $data[4] ?: $data[2],
             );
         }
     }
 
     /**
      * Return the vendor for this address.
-     * It is not necessary to call loadVendorList() before using this.
+     *
+     * If the database is empty, the default database is loaded.
+     *
      * @return string Vendor or NULL if the address is not found in the database.
      */
     public function getVendor()
     {
-        self::loadVendorList();
-
-        $mac = str_replace(':', '', $this->_address);
-        $longestMask = 0;
+        if (empty(self::$_vendorList)) {
+            self::loadVendorDatabaseFromFile(\Library\Module::getPath('data/MacAddress/manuf'));
+        }
+        $addr = str_replace(':', '', $this->_address);
+        $longest = 0;
         $vendor = null;
         foreach (self::$_vendorList as $entry) {
-            $mask = $entry['mask'];
+            $length = $entry['length'];
             // Compare strings only if this entry is more specific than the
             // last matching one. The === operator is necessary to prevent
             // implicit casts that would lead to false positives with
             // "00:00:00" and similar.
-            if ($mask > $longestMask and substr($mac, 0, $mask) === $entry['address']) {
+            if ($length > $longest and substr($addr, 0, $length) === $entry['address']) {
                 $vendor = $entry['vendor'];
-                $longestMask = $mask;
+                $longest = $length;
             }
         }
         return $vendor;
-    }
-
-    /**
-     * Return a string with address and vendor for this address.
-     * It is not necessary to call loadVendorList() before using this.
-     * @return string "address (Vendor)" or just the the address if it is not found in the database.
-     */
-    public function getAddressWithVendor()
-    {
-        $vendor = $this->getVendor();
-        if ($vendor) {
-            return "$this->_address ($vendor)";
-        } else {
-            return $this->_address;
-        }
     }
 }

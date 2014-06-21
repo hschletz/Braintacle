@@ -60,11 +60,17 @@ $headers = array(
 
 $renderCallbacks = array(
     'MacAddress' => function($view, $interface) {
-        $mac = $view->escapeHtml($interface['MacAddress']->getAddressWithVendor());
+        $macAddress = $interface['MacAddress'];
+        $address = $macAddress->getAddress();
+        $vendor = $macAddress->getVendor();
+        if ($vendor) {
+            $address .= " ($vendor)";
+        }
+        $address = $view->escapeHtml($address);
         if ($interface['IsBlacklisted']) {
-            return "<span class='blacklisted'>$mac</span>";
+            return "<span class='blacklisted'>$address</span>";
         } else {
-            return $mac;
+            return $address;
         }
     }
 );

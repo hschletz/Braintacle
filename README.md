@@ -97,6 +97,6 @@ This project contains some third party code:
   - [MDB2_Schema](http://pear.php.net/package/MDB2_Schema)
   - [XML_Parser](http://pear.php.net/package/XML_Parser)
 
-- The file application/configs/macaddresses-vendors.txt is taken from the
-  [Wireshark](http://wireshark.org) project under a different name. GPLv2
-  and copyright information are contained at the top of this file.
+- The file module/data/MacAddress/manuf is taken from the
+  [Wireshark](http://wireshark.org) project. GPLv2 and copyright information are
+  contained at the top of this file.

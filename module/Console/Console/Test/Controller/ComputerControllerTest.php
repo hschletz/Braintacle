@@ -924,10 +924,13 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testNetworkActionInterfacesOnly()
     {
-        $macAddress = $this->getMockBuilder('Braintacle_MacAddress')->disableOriginalConstructor()->getMock();
+        $macAddress = $this->getMockBuilder('Library\MacAddress')->disableOriginalConstructor()->getMock();
         $macAddress->expects($this->exactly(2))
-                   ->method('getAddressWithVendor')
+                   ->method('getAddress')
                    ->will($this->onConsecutiveCalls('mac_address_regular', 'mac_address_blacklisted'));
+        $macAddress->expects($this->exactly(2))
+                   ->method('getVendor')
+                   ->will($this->onConsecutiveCalls('vendor1', null));
         $interface = array(
             'Description' => 'description',
             'Rate' => 'data_rate',
@@ -953,7 +956,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery("//h2[text()='\nGlobal network configuration\n']");
         $this->assertXpathQuery("//h2[text()='\nNetwork interfaces\n']");
-        $this->assertXpathQuery("//td[text()='\nmac_address_regular\n'][not(@class)]");
+        $this->assertXpathQuery("//td[text()='\nmac_address_regular (vendor1)\n'][not(@class)]");
         $this->assertXpathQuery("//td/span[text()='mac_address_blacklisted'][@class='blacklisted']");
         $this->assertNotXpathQuery("//h2[text()='\nModems\n']");
     }
