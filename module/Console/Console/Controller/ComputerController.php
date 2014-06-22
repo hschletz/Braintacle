@@ -456,7 +456,7 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function deleteAction()
     {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\DeleteComputer');
+        $form = $this->_formManager->get('Console\Form\DeleteComputer');
         if ($this->getRequest()->isPost()) {
             if ($this->params()->fromPost('yes')) {
                 $name = $this->_currentComputer['Name'];

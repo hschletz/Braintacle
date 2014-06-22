@@ -103,11 +103,11 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $legacyFormManager->setService('Console\Form\AssignPackages', $this->getMock('Form_AffectPackages'));
         $legacyFormManager->setService('Console\Form\GroupMemberships', $this->getMock('Form_ManageGroupMemberships'));
         $legacyFormManager->setService('Console\Form\ClientConfig', $this->getMock('Form_Configuration'));
-        $legacyFormManager->setService('Console\Form\DeleteComputer', $this->getMock('Form_YesNo_DeleteComputer'));
         $legacyFormManager->setService('Console\Form\Import', $this->getMock('Form_Import'));
 
         $this->_formManager = new \Zend\Form\FormElementManager;
         $this->_formManager->setServiceLocator($legacyFormManager);
+        $this->_formManager->setService('Console\Form\DeleteComputer', $this->getMock('Console\Form\DeleteComputer'));
         $this->_formManager->setService('Console\Form\Search', $this->getMock('Console\Form\Search'));
 
         $this->_config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
@@ -2141,10 +2141,10 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionGet()
     {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\DeleteComputer');
+        $form = $this->_formManager->get('Console\Form\DeleteComputer');
         $form->expects($this->once())
-             ->method('__toString')
-             ->will($this->returnValue(''));
+             ->method('render')
+             ->will($this->returnValue('<form></form>'));
         $map = array(
             array('Name', 'name'),
         );
@@ -2159,13 +2159,14 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
             '//p[@class="textcenter"]',
             "\nComputer 'name' will be permanently deleted. Continue?\n"
         );
+        $this->assertXPathQuery('//form');
     }
 
     public function testDeleteActionPostNo()
     {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\DeleteComputer');
+        $form = $this->_formManager->get('Console\Form\DeleteComputer');
         $form->expects($this->never())
-             ->method('__toString');
+             ->method('render');
         $map = array(
             array('Id', 1),
         );
@@ -2180,9 +2181,9 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionPostYesDeleteInterfacesSuccess()
     {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\DeleteComputer');
+        $form = $this->_formManager->get('Console\Form\DeleteComputer');
         $form->expects($this->never())
-             ->method('__toString');
+             ->method('render');
         $map = array(
             array('Name', 'name'),
         );
@@ -2206,9 +2207,9 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionPostYesKeepInterfacesError()
     {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\DeleteComputer');
+        $form = $this->_formManager->get('Console\Form\DeleteComputer');
         $form->expects($this->never())
-             ->method('__toString');
+             ->method('render');
         $map = array(
             array('Name', 'name'),
         );

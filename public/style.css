@@ -390,13 +390,9 @@ input[size="8"]
 {
     width: 8em;
 }
-#yes-label,#no-label,#Deploy-label
+#Deploy-label
 {
     display: none;
-}
-.yesbutton_not_inline #yes-label
-{
-    display: block;
 }
 .badValue {
     background-color: red;
@@ -448,6 +444,15 @@ td.formElement {
 
 .form_yesno {
     text-align: center;
+}
+
+.form_deletecomputer {
+    text-align: center;
+    margin-top: 4ex;
+}
+
+.form_deletecomputer input[type=submit]{
+    margin: 4ex 1em;
 }
 
 .form_manageregistryvalues h2 {

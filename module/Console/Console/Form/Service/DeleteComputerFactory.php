@@ -1,6 +1,6 @@
 <?php
 /**
- * A generic form with yes/no buttons
+ * Factory for DeleteComputer form
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,30 +17,25 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Forms
  */
+
+namespace Console\Form\Service;
+
 /**
- * A generic form with yes/no buttons
- *
- * After submission, only one of 'yes' or 'no' will show up in $_POST.
- * @package Forms
+ * Factory for DeleteComputer form
+ * @codeCoverageIgnore
  */
-class Form_YesNo extends Zend_Form
+class DeleteComputerFactory implements \Zend\ServiceManager\FactoryInterface
 {
-
     /**
-     * Create elements
+     * @internal
      */
-    public function init()
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $yes = new Zend_Form_Element_Submit('yes');
-        $yes->setLabel('Yes');
-        $this->addElement($yes);
-
-        $no = new Zend_Form_Element_Submit('no');
-        $no->setLabel('No');
-        $this->addElement($no);
+        $serviceManager = $serviceLocator->getServiceLocator();
+        return new \Console\Form\DeleteComputer(
+            null,
+            array('config' => $serviceManager->get('Model\Config'))
+        );
     }
-
 }

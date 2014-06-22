@@ -30,4 +30,4 @@ print $this->htmlTag(
     array('class' => 'textcenter')
 );
 
-print $this->form;
+print $this->form->render($this);
