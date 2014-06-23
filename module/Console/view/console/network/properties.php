@@ -27,4 +27,4 @@ print $this->htmlTag(
         $this->escapeHtml($this->subnet['AddressWithMask'])
     )
 );
-print $this->form;
+print $this->form->render($this);

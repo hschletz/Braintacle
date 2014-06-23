@@ -46,7 +46,7 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
 
     /**
      * Subnet form prototype
-     * @var \Form_Subnet
+     * @var \Console\Form\Subnet
      */
     protected $_subnetForm;
 
@@ -62,13 +62,13 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
      * @param \Model_NetworkDevice $device
      * @param \Model_NetworkDeviceType $deviceType
      * @param \Model_Subnet $subnet
-     * @param \Form_Subnet $subnetForm
+     * @param \Console\Form\Subnet $subnetForm
      */
     public function __construct(
         \Model_NetworkDevice $device,
         \Model_NetworkDeviceType $deviceType,
         \Model_Subnet $subnet,
-        \Form_Subnet $subnetForm,
+        \Console\Form\Subnet $subnetForm,
         \Form_NetworkDevice $deviceForm
     )
     {
@@ -181,12 +181,14 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
         );
 
         if ($this->getRequest()->isPost()) {
-            if ($this->_subnetForm->isValid($params->fromPost())) {
-                $subnet['Name'] = $this->_subnetForm->getValue('Name');
+            $this->_subnetForm->setData($params->fromPost());
+            if ($this->_subnetForm->isValid()) {
+                $data = $this->_subnetForm->getData();
+                $subnet['Name'] = $data['Name'];
                 return $this->redirectToRoute('network', 'index');
             }
         } else {
-            $this->_subnetForm->setDefault('Name', $subnet['Name']);
+            $this->_subnetForm->setData(array('Name' => $subnet['Name']));
         }
         return array(
             'subnet' => $subnet,

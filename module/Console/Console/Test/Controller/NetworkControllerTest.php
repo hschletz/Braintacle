@@ -46,7 +46,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
 
     /**
      * Subnet form mock
-     * @var \Form_Subnet
+     * @var \Console\Form\Subnet
      */
     protected $_subnetForm;
 
@@ -64,7 +64,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->_device = $this->getMock('Model_NetworkDevice');
         $this->_deviceType = $this->getMock('Model_NetworkDeviceType');
         $this->_subnet = $this->getMock('Model_Subnet');
-        $this->_subnetForm = $this->getMock('Form_Subnet');
+        $this->_subnetForm = $this->getMock('Console\Form\Subnet');
         $this->_deviceForm = $this->getMock('Form_NetworkDevice');
         parent::setUp();
     }
@@ -287,38 +287,53 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     public function testPropertiesActionGet()
     {
         $subnet = array(
-            'Address' => '192.0.2.0',
-            'Mask' => '255.255.255.0',
-            'AddressWithMask' => '192.0.2.0/24',
-            'Name' => 'name',
+            array('Address', '192.0.2.0'),
+            array('Mask', '255.255.255.0'),
+            array('AddressWithMask', '192.0.2.0/24'),
+            array('Name', 'name'),
         );
-        $this->_subnet->expects($this->any())
+        $this->_subnet->expects($this->once())
                       ->method('create')
                       ->with('192.0.2.0', '255.255.255.0')
-                      ->will($this->returnValue($subnet));
+                      ->will($this->returnSelf());
+        $this->_subnet->expects($this->never())
+                      ->method('offsetSet');
+        $this->_subnet->expects($this->any())
+                      ->method('offsetGet')
+                      ->will($this->returnValueMap($subnet));
         $this->_subnetForm->expects($this->once())
-                          ->method('setDefault')
-                          ->with('Name', 'name');
+                          ->method('setData')
+                          ->with(array('Name' => 'name'));
         $this->_subnetForm->expects($this->once())
-                          ->method('__toString')
-                          ->will($this->returnValue(''));
+                          ->method('render')
+                          ->will($this->returnValue('<form></form>'));
         $this->dispatch('/console/network/properties/?subnet=192.0.2.0&mask=255.255.255.0');
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains(
             'h1',
             "\nProperties of subnet 192.0.2.0/24\n"
         );
+        $this->assertXPathQuery('//form');
     }
 
     public function testPropertiesActionPostInvalid()
     {
+        $postData = array('Name' => 'new_name');
+        $this->_subnetForm->expects($this->once())
+                          ->method('setData')
+                          ->with($postData);
         $this->_subnetForm->expects($this->once())
                           ->method('isValid')
                           ->will($this->returnValue(false));
         $this->_subnetForm->expects($this->once())
-                          ->method('__toString')
-                          ->will($this->returnValue(''));
-        $this->dispatch('/console/network/properties/?subnet=192.0.2.0&mask=255.255.255.0', 'POST');
+                          ->method('render');
+        $this->_subnet->expects($this->once())
+                      ->method('create')
+                      ->with('192.0.2.0', '255.255.255.0')
+                      ->will($this->returnSelf());
+        $this->_subnet->expects($this->never())
+                      ->method('offsetSet');
+        $this->dispatch('/console/network/properties/?subnet=192.0.2.0&mask=255.255.255.0', 'POST', $postData);
         $this->assertResponseStatusCode(200);
     }
 
@@ -326,13 +341,23 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     {
         $postData = array('Name' => 'new_name');
         $this->_subnetForm->expects($this->once())
+                          ->method('setData')
+                          ->with($postData);
+        $this->_subnetForm->expects($this->once())
                           ->method('isValid')
-                          ->with($postData)
                           ->will($this->returnValue(true));
         $this->_subnetForm->expects($this->once())
-                          ->method('getValue')
-                          ->with('Name')
-                          ->will($this->returnValue('new_name'));
+                          ->method('getData')
+                          ->will($this->returnValue($postData));
+        $this->_subnetForm->expects($this->never())
+                          ->method('render');
+        $this->_subnet->expects($this->once())
+                      ->method('create')
+                      ->with('192.0.2.0', '255.255.255.0')
+                      ->will($this->returnSelf());
+        $this->_subnet->expects($this->once())
+                      ->method('offsetSet')
+                      ->with('Name', 'new_name');
         $this->dispatch('/console/network/properties/?subnet=192.0.2.0&mask=255.255.255.0', 'POST', $postData);
         $this->assertRedirectTo('/console/network/index/');
     }

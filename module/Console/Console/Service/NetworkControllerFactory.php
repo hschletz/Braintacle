@@ -32,11 +32,12 @@ class NetworkControllerFactory implements \Zend\ServiceManager\FactoryInterface
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $serviceManager = $serviceLocator->getServiceLocator();
+        $formManager = $serviceManager->get('FormElementManager');
         return new \Console\Controller\NetworkController(
             $serviceManager->get('Model\Network\Device'),
             $serviceManager->get('Model\Network\DeviceType'),
             $serviceManager->get('Model\Network\Subnet'),
-            $serviceManager->get('Console\Form\Subnet'),
+            $formManager->get('Console\Form\Subnet'),
             $serviceManager->get('Console\Form\NetworkDevice')
         );
     }
