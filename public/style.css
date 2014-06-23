@@ -463,6 +463,17 @@ td.formElement {
     margin: 1.2ex 0em 1.2ex 0em;
 }
 
+.form_productkey {
+    margin-top: 4ex;
+}
+
+.form_productkey .error {
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+
 .form_showduplicates label, .form_showduplicates input[type=submit] {
     display: block;
     text-align: center;

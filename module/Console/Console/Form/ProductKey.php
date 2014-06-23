@@ -17,34 +17,42 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Forms
  */
+
+namespace Console\Form;
+
 /**
  * A form for entering an MS product key
  *
- * The product key is held in the 'key' element.
- * @package Forms
+ * The product key is held in the 'Key' element.
  */
-class Form_ProductKey extends Zend_Form
+class ProductKey extends Form
 {
-
-    /**
-     * Create elements
-     */
+    /** {@inheritdoc} */
     public function init()
     {
-        $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
-        $key = new Zend_Form_Element_Text('key');
-        $key->setLabel('Product key (if different)')
-            ->addFilter('StringTrim')
-            ->addFilter('StringToUpper')
-            ->addValidator(new Braintacle_Validate_ProductKey);
-        $this->addElement($key);
+        $key = new \Zend\Form\Element\Text('Key');
+        $key->setLabel('Product key (if different)');
+        $this->add($key);
 
-        $submit = new Zend_Form_Element_Submit('submit');
-        $submit->setLabel('OK');
-        $this->addElement($submit);
+        $submit = new \Library\Form\Element\Submit('Submit');
+        $submit->setText('OK');
+        $this->add($submit);
+
+        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter->add(
+            array(
+                'name' => 'Key',
+                'required' => false,
+                'filters' => array(
+                    array('name' => 'StringTrim'),
+                    array('name' => 'StringToUpper'),
+                ),
+                'validators' => array(
+                    array('name' => 'Library\Validator\ProductKey'),
+                ),
+            )
+        );
+        $this->setInputFilter($inputFilter);
     }
-
 }

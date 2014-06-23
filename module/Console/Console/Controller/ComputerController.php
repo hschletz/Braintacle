@@ -219,12 +219,21 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
     public function windowsAction()
     {
         $windows = $this->_currentComputer['Windows'];
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\ProductKey');
+        $form = $this->_formManager->get('Console\Form\ProductKey');
 
-        if ($this->getRequest()->isPost() and $form->isValid($this->params()->fromPost())) {
-            $windows['ManualProductKey'] = $form->key->getValue();
-            // Model may have altered the key. Set to new value.
-            $form->key->setValue($windows['ManualProductKey']);
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->params()->fromPost());
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $windows['ManualProductKey'] = $data['Key'];
+                return $this->redirectToRoute(
+                    'computer',
+                    'windows',
+                    array('id' => $this->_currentComputer['Id'])
+                );
+            }
+        } else {
+            $form->setData(array('Key' => $windows['ManualProductKey']));
         }
 
         return array(

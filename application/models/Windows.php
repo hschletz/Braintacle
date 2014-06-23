@@ -58,9 +58,9 @@ class Model_Windows extends Model_Abstract
             if (empty($value) or $value == $this->getProductKey()) {
                 $value = null;
             } else {
-                $validator = new Braintacle_Validate_ProductKey;
+                $validator = new \Library\Validator\ProductKey;
                 if (!$validator->isValid($value)) {
-                    throw new UnexpectedValueException(array_pop($validator->getMessages()));
+                    throw new UnexpectedValueException(current($validator->getMessages()));
                 }
             }
 

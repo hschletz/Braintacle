@@ -98,7 +98,6 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer = $this->getMockBuilder('Model_Computer')->disableOriginalConstructor()->getMock();
 
         $legacyFormManager = new \Zend\ServiceManager\ServiceManager;
-        $legacyFormManager->setService('Console\Form\ProductKey', $this->getMock('Form_ProductKey'));
         $legacyFormManager->setService('Console\Form\CustomFields', $this->getMock('Form_UserDefinedInfo'));
         $legacyFormManager->setService('Console\Form\AssignPackages', $this->getMock('Form_AffectPackages'));
         $legacyFormManager->setService('Console\Form\GroupMemberships', $this->getMock('Form_ManageGroupMemberships'));
@@ -108,6 +107,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_formManager = new \Zend\Form\FormElementManager;
         $this->_formManager->setServiceLocator($legacyFormManager);
         $this->_formManager->setService('Console\Form\DeleteComputer', $this->getMock('Console\Form\DeleteComputer'));
+        $this->_formManager->setService('Console\Form\ProductKey', $this->getMock('Console\Form\ProductKey'));
         $this->_formManager->setService('Console\Form\Search', $this->getMock('Console\Form\Search'));
 
         $this->_config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
@@ -808,11 +808,24 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testWindowsActionGet()
     {
+        // Since form elements are rendered manually, mocking the entire form
+        // would be very complicated. Just stub the pivotal methods and leave
+        // elements as is.
+        $form = $this->getMockBuilder('Console\Form\ProductKey')->setMethods(array('isValid', 'setData'))->getMock();
+        $form->expects($this->once())
+             ->method('setData')
+             ->with(array('Key' => 'manual_product_key'));
+        $form->expects($this->never())
+             ->method('isValid');
+        $form->init();
+        $this->_formManager = new \Zend\Form\FormElementManager;
+        $this->_formManager->setService('Console\Form\ProductKey', $form);
         $map = array(
             array('Company', 'company'),
             array('Owner', 'owner'),
             array('ProductId', 'product_id'),
             array('ProductKey', 'product_key'),
+            array('ManualProductKey', 'manual_product_key'),
         );
         $windows = $this->getMock('Model_Windows');
         $windows->expects($this->any())
@@ -820,83 +833,76 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                 ->will($this->returnValueMap($map));
         $windows->expects($this->never())
                 ->method('offsetSet');
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\ProductKey');
-        $form->expects($this->never())
-             ->method('isValid');
-        $form->expects($this->never())
-             ->method('__get');
-        $form->expects($this->once())
-             ->method('__toString')
-             ->will($this->returnValue(''));
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap(array(array('Windows', $windows))));
         $this->dispatch('/console/computer/windows/?id=1');
         $this->assertResponseStatusCode(200);
-        $query = "//dl/dt[text()='\n%s\n']/following::dd[1][text()='\n%s\n']";
+        $this->assertXPathQuery('//form[@action=""][@method="POST"]');
+        $query = '//td[@class="label"][text()="%s"]/following::td[1][text()="%s"]';
         $this->assertXPathQuery(sprintf($query, 'Company', 'company'));
         $this->assertXPathQuery(sprintf($query, 'Owner', 'owner'));
         $this->assertXPathQuery(sprintf($query, 'Product ID', 'product_id'));
         $this->assertXPathQuery(sprintf($query, 'Product key (reported by agent)', 'product_key'));
+        $this->assertXpathQueryContentContains('//tr[5]/td[1]', $form->get('Key')->getLabel());
+        $this->assertXpathQuery('//tr[5]/td[2]/input[@type="text"][@name="Key"]');
+        $this->assertXpathQuery('//input[@type="hidden"][@name="_csrf"]');
+        $this->assertXpathQuery('//input[@type="submit"]');
+        $this->assertNotXpathQuery('//*[@class="error"]');
     }
 
     public function testWindowsActionPostInvalid()
     {
         $postData = array('key' => 'entered_key');
+        // Again, just stub the pivotal methods
+        $form = $this->getMockBuilder('Console\Form\ProductKey')->setMethods(array('isValid', 'setData'))->getMock();
+        $form->expects($this->once())
+             ->method('setData')
+             ->with($postData);
+        $form->expects($this->once())
+             ->method('isValid')
+             ->will($this->returnValue(false));
+        $form->init();
+        $form->get('Key')->setMessages(array('message'));
+        $this->_formManager = new \Zend\Form\FormElementManager;
+        $this->_formManager->setService('Console\Form\ProductKey', $form);
         $windows = $this->getMock('Model_Windows');
         $windows->expects($this->never())
                 ->method('offsetSet');
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\ProductKey');
-        $form->expects($this->once())
-             ->method('isValid')
-             ->with($postData)
-             ->will($this->returnValue(false));
-        $form->expects($this->never())
-             ->method('__get');
-        $form->expects($this->once())
-             ->method('__toString')
-             ->will($this->returnValue(''));
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap(array(array('Windows', $windows))));
         $this->dispatch('/console/computer/windows/?id=1', 'POST', $postData);
         $this->assertResponseStatusCode(200);
+        $this->assertXpathQuery('//*[@class="error"]//*[text()="message"]');
     }
 
     public function testWindowsActionPostValid()
     {
-        $postData = array('key' => 'entered_key');
+        $postData = array('Key' => 'entered_key');
         $windows = $this->getMock('Model_Windows');
         $windows->expects($this->once())
                 ->method('offsetSet')
                 ->with('ManualProductKey', 'entered_key');
-        $windows->expects($this->any())
-                ->method('offsetGet')
-                ->will($this->returnValueMap(array(array('ManualProductKey', 'modified_key'))));
-        $element = $this->getMockBuilder('Zend_Form_Element_Text')->disableOriginalConstructor()->getMock();
-        $element->expects($this->once())
-                ->method('getValue')
-                ->will($this->returnValue('entered_key'));
-        $element->expects($this->once())
-                ->method('setValue')
-                ->with('modified_key');
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\ProductKey');
+        $form = $this->_formManager->get('Console\Form\ProductKey');
+        $form->expects($this->once())
+             ->method('setData')
+             ->with($postData);
         $form->expects($this->once())
              ->method('isValid')
-             ->with($postData)
              ->will($this->returnValue(true));
-        $form->expects($this->exactly(2))
-             ->method('__get')
-             ->with('key')
-             ->will($this->returnValue($element));
         $form->expects($this->once())
-             ->method('__toString')
-             ->will($this->returnValue(''));
+             ->method('getData')
+             ->will($this->returnValue($postData));
+        $map = array(
+            array('Id', 1),
+            array('Windows', $windows),
+        );
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
-                        ->will($this->returnValueMap(array(array('Windows', $windows))));
+                        ->will($this->returnValueMap($map));
         $this->dispatch('/console/computer/windows/?id=1', 'POST', $postData);
-        $this->assertResponseStatusCode(200);
+        $this->assertRedirectTo('/console/computer/windows/?id=1');
     }
 
     public function testNetworkActionSettingsOnly()

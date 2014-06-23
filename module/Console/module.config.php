@@ -51,6 +51,7 @@ return array(
             'Console\Form\ShowDuplicates' => 'Console\Form\Service\ShowDuplicatesFactory',
         ),
         'invokables' => array(
+            'Console\Form\ProductKey' => 'Console\Form\ProductKey',
             'Console\Form\SoftwareFilter' => 'Console\Form\SoftwareFilter',
             'Console\Form\Subnet' => 'Console\Form\Subnet',
         ),
@@ -106,7 +107,6 @@ return array(
             'Console\Form\Preferences\Packages' => 'Form_Preferences_Packages',
             'Console\Form\Preferences\RawData' => 'Form_Preferences_RawData',
             'Console\Form\Preferences\System' => 'Form_Preferences_System',
-            'Console\Form\ProductKey' => 'Form_ProductKey',
         )
     ),
     'view_helpers' => array(

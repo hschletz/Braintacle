@@ -23,44 +23,49 @@ require 'header.php';
 
 $windows = $this->windows;
 
-print "<dl>\n";
+print $this->plugin('Form')->openTag($this->form);
 
-print $this->htmlTag(
-    'dt',
-    $this->translate('Company')
-);
-print $this->htmlTag(
-    'dd',
+$format = "<tr>\n<td class='label'>%s</td>\n<td>%s</td>\n</tr>\n";
+$key = $this->form->get('Key');
+$messages = $key->getMessages();
+
+print "<table class='textnormalsize'>\n";
+printf(
+    $format,
+    $this->translate('Company'),
     $this->escapeHtml($windows['Company'])
 );
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Owner')
-);
-print $this->htmlTag(
-    'dd',
+printf(
+    $format,
+    $this->translate('Owner'),
     $this->escapeHtml($windows['Owner'])
 );
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Product ID')
-);
-print $this->htmlTag(
-    'dd',
+printf(
+    $format,
+    $this->translate('Product ID'),
     $this->escapeHtml($windows['ProductId'])
 );
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Product key (reported by agent)')
-);
-print $this->htmlTag(
-    'dd',
+printf(
+    $format,
+    $this->translate('Product key (reported by agent)'),
     $this->escapeHtml($windows['ProductKey'])
 );
-
-print "</dl>\n";
-
-print $this->form;
+printf(
+    $format,
+    $this->translate($key->getLabel()),
+    $this->formText($key)
+);
+if ($messages) {
+    printf(
+        $format,
+        '',
+        $this->formElementErrors($key, array('class' => 'error'))
+    );
+}
+printf(
+    $format,
+    $this->formHidden($this->form->get('_csrf')),
+    $this->formSubmit($this->form->get('Submit'))
+);
+print "</table>\n";
+print $this->plugin('Form')->closeTag();

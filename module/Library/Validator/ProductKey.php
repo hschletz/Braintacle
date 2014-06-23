@@ -17,43 +17,47 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Library
  */
+
+namespace Library\Validator;
+
 /**
  * Validate string as an MS product key
  *
  * A valid product key has 5 groups of 5 upper case characters or digits,
  * separated by dashes, i.e. AAAAA-AAAAA-AAAAA-AAAAA-AAAAA.
- * @package Library
  */
-class Braintacle_Validate_ProductKey extends Zend_Validate_Abstract
+class ProductKey extends \Zend\Validator\AbstractValidator
 {
-    const PRODUCT_KEY = 'product_key';
+    /**
+     * Key for message template
+     */
+    const PRODUCT_KEY = 'productKey';
 
+    // @codingStandardsIgnoreStart
     /**
      * Validation failure message template definitions
-     * @var array
+     * @var string[]
      */
-    protected $_messageTemplates = array(
+    protected $messageTemplates = array(
         self::PRODUCT_KEY => "'%value%' is not a valid product key.",
     );
+    // @codingStandardsIgnoreEnd
 
     /**
-     * Returns true if $value is a valid product key
+     * Returns TRUE if $value is a valid product key
+     *
      * @param string $value String to be validated
      * @return bool
      */
     public function isValid($value)
     {
-        $this->_setValue($value);
-
+        $this->setValue($value);
         if (preg_match('/^[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}$/', $value)) {
             return true;
         } else {
-            $this->_error(self::PRODUCT_KEY);
+            $this->error(self::PRODUCT_KEY);
             return false;
         }
     }
-
 }
