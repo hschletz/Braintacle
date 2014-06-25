@@ -98,7 +98,7 @@ Feature\BootstrapListenerInterface
             $session->originalUri = $e->getRequest()->getUriString();
 
             $location = $e->getRouter()->assemble(
-                array('controller' => 'login'),
+                array('controller' => 'login', 'action' => 'login'),
                 array('name' => 'console')
             );
             $response = $e->getResponse();

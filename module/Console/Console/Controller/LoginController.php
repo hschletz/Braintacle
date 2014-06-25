@@ -55,23 +55,19 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
     }
 
     /**
-     * Alias for loginAction()
+     * Redirect to login action
      *
-     * @return mixed View model (form => \Form_Login) or redirect response
+     * @return \Zend\Http\Response Redirect response
      */
     public function indexAction()
     {
-        $response = $this->loginAction();
-        if ($response instanceof ViewModel) {
-            $response->setTemplate('console/login/login');
-        }
-        return $response;
+        return $this->redirectToRoute('login', 'login');
     }
 
     /**
      * Handle login form
      *
-     * @return mixed View model (form => \Form_Login) or redirect response
+     * @return array|\Zend\Http\Response array (form => \Form_Login) or redirect response
      */
     public function loginAction()
     {
@@ -105,11 +101,7 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
                 $this->_form->setDescription('Invalid username or password');
             }
         }
-
-        // Manual setup of ViewModel because indexAction might have to modify it
-        $viewModel = new ViewModel;
-        $viewModel->form = $this->_form;
-        return $viewModel;
+        return array('form' => $this->_form);
     }
 
     /**

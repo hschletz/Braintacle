@@ -41,6 +41,7 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
     /** {@inheritdoc} */
     public function setUp()
     {
+        $this->_authenticationService = $this->getMock('\Library\Authentication\AuthenticationService');
         $this->_form = $this->getMock('Form_Login');
         parent::setUp();
     }
@@ -195,13 +196,10 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertArrayNotHasKey('login', $_SESSION); // Should be cleared by action
     }
 
-    /**
-     * Tests for indexAction()
-     */
     public function testIndexAction()
     {
-        $this->_testLoginActionWithIdentity('/console/login/index');
-        $this->_testLoginActionWithoutIdentity('/console/login/index');
+        $this->dispatch('/console/login/index/');
+        $this->assertRedirectTo('/console/login/login/');
     }
 
     /**
