@@ -184,6 +184,7 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
     public function testLogoutAction()
     {
         $this->_mockAuthenticationService(true);
+        $this->_authenticationService->expects($this->once())->method('clearIdentity');
         $this->dispatch('/console/login/logout');
         $this->assertRedirectTo('/console/login/login/');
     }
