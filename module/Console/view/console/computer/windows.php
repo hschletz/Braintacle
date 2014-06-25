@@ -23,6 +23,7 @@ require 'header.php';
 
 $windows = $this->windows;
 
+$this->form->prepare();
 print $this->plugin('Form')->openTag($this->form);
 
 $format = "<tr>\n<td class='label'>%s</td>\n<td>%s</td>\n</tr>\n";

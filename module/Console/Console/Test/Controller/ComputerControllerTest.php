@@ -806,12 +806,16 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         // Since form elements are rendered manually, mocking the entire form
         // would be very complicated. Just stub the pivotal methods and leave
         // elements as is.
-        $form = $this->getMockBuilder('Console\Form\ProductKey')->setMethods(array('isValid', 'setData'))->getMock();
+        $form = $this->getMockBuilder('Console\Form\ProductKey')
+                     ->setMethods(array('isValid', 'prepare', 'setData'))
+                     ->getMock();
         $form->expects($this->once())
              ->method('setData')
              ->with(array('Key' => 'manual_product_key'));
         $form->expects($this->never())
              ->method('isValid');
+        $form->expects($this->once())
+             ->method('prepare');
         $form->init();
         $this->_formManager = new \Zend\Form\FormElementManager;
         $this->_formManager->setService('Console\Form\ProductKey', $form);
@@ -850,13 +854,17 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
     {
         $postData = array('key' => 'entered_key');
         // Again, just stub the pivotal methods
-        $form = $this->getMockBuilder('Console\Form\ProductKey')->setMethods(array('isValid', 'setData'))->getMock();
+        $form = $this->getMockBuilder('Console\Form\ProductKey')
+                     ->setMethods(array('isValid', 'prepare', 'setData'))
+                     ->getMock();
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
         $form->expects($this->once())
              ->method('isValid')
              ->will($this->returnValue(false));
+        $form->expects($this->once())
+             ->method('prepare');
         $form->init();
         $form->get('Key')->setMessages(array('message'));
         $this->_formManager = new \Zend\Form\FormElementManager;
