@@ -262,9 +262,8 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
     {
         $this->_software->expects($this->never())
                         ->method($action);
-        $this->_sessionSetup = array(
-            'ManageSoftware' => array('filter' => 'test')
-        );
+        $session = new \Zend\Session\Container('ManageSoftware');
+        $session->filter = 'test';
         $this->dispatch("/console/software/$action/?name=test", 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/software/index/?filter=test');
     }
@@ -276,9 +275,8 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $this->_software->expects($this->once())
                         ->method($action)
                         ->with($tmBad);
-        $this->_sessionSetup = array(
-            'ManageSoftware' => array('filter' => 'test')
-        );
+        $session = new \Zend\Session\Container('ManageSoftware');
+        $session->filter = 'test';
         $this->dispatch("/console/software/$action/?name=$tmBad", 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/software/index/?filter=test');
     }

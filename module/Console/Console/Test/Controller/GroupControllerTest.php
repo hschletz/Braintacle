@@ -168,14 +168,9 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_group->expects($this->once())
                      ->method('fetch')
                      ->will($this->returnValue(array()));
-        $this->_sessionSetup = array(
-            'FlashMessenger' => array(
-                'error' => new \Zend\Stdlib\SplQueue,
-                'success' => new \Zend\Stdlib\SplQueue,
-            ),
-        );
-        $this->_sessionSetup['FlashMessenger']['error']->enqueue('error');
-        $this->_sessionSetup['FlashMessenger']['success']->enqueue('success');
+        $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
+        $flashMessenger->addErrorMessage('error');
+        $flashMessenger->addSuccessMessage('success');
         $this->dispatch('/console/group/index/');
         $this->assertXpathQuery('//ul[@class="error"]/li[text()="error"]');
         $this->assertXpathQuery('//ul[@class="success"]/li[text()="success"]');

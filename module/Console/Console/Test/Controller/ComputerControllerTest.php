@@ -683,14 +683,9 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionMessages()
     {
-        $this->_sessionSetup = array(
-            'FlashMessenger' => array(
-                'error' => new \Zend\Stdlib\SplQueue,
-                'success' => new \Zend\Stdlib\SplQueue,
-            ),
-        );
-        $this->_sessionSetup['FlashMessenger']['error']->enqueue('error');
-        $this->_sessionSetup['FlashMessenger']['success']->enqueue(array('success %d' => 42));
+        $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
+        $flashMessenger->addErrorMessage('error');
+        $flashMessenger->addSuccessMessage(array('success %d' => 42));
         $this->_computer->expects($this->once())
                         ->method('fetch')
                         ->will($this->returnValue(array()));
@@ -1787,10 +1782,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->_sessionSetup = array(
-            'FlashMessenger' => array('success' => new \Zend\Stdlib\SplQueue),
-        );
-        $this->_sessionSetup['FlashMessenger']['success']->enqueue('successMessage');
+        $this->_getControllerPlugin('FlashMessenger')->addSuccessMessage('successMessage');
         $this->dispatch('/console/computer/customfields/?id=1');
         $this->assertXpathQueryContentContains(
             '//ul[@class="success"]/li',

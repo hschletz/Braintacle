@@ -173,18 +173,11 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionPackageFlashMessages()
     {
-        $this->_sessionSetup = array(
-            'FlashMessenger' => array(
-                'error' => new \Zend\Stdlib\SplQueue,
-                'success' => new \Zend\Stdlib\SplQueue,
-                'info' => new \Zend\Stdlib\SplQueue,
-                'packageName' => new \Zend\Stdlib\SplQueue,
-            ),
-        );
-        $this->_sessionSetup['FlashMessenger']['error']->enqueue('error');
-        $this->_sessionSetup['FlashMessenger']['success']->enqueue('success');
-        $this->_sessionSetup['FlashMessenger']['info']->enqueue('info');
-        $this->_sessionSetup['FlashMessenger']['packageName']->enqueue('<br>');
+        $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
+        $flashMessenger->addErrorMessage('error');
+        $flashMessenger->addSuccessMessage('success');
+        $flashMessenger->addInfoMessage('info');
+        $flashMessenger->setNamespace('packageName')->addMessage('<br>');
 
         $this->_package->expects($this->once())
                        ->method('fetchAll')
@@ -232,14 +225,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'NumError' => 0,
             ),
         );
-
-        $this->_sessionSetup = array(
-            'FlashMessenger' => array(
-                'packageName' => new \Zend\Stdlib\SplQueue,
-            ),
-        );
-        $this->_sessionSetup['FlashMessenger']['packageName']->enqueue('name1');
-
+        $this->_getControllerPlugin('FlashMessenger')->setNamespace('packageName')->addMessage('name1');
         $this->_package->expects($this->once())
                        ->method('fetchAll')
                        ->will($this->returnValue($packages));
