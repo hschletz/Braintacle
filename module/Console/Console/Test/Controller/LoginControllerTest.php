@@ -62,7 +62,6 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
      */
     protected function _mockAuthenticationService($hasIdentity)
     {
-        $this->_authenticationService = $this->getMock('Library\Authentication\AuthenticationService');
         $this->_authenticationService->expects($this->any())
                                      ->method('login')
                                      ->will(
@@ -76,33 +75,18 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
         $this->_authenticationService->expects($this->any())
                                      ->method('hasIdentity')
                                      ->will($this->returnValue($hasIdentity));
-
     }
 
-    /**
-     * Common tests for indexAction() and loginAction() with supplied identity
-     *
-     * @param string $uri Uri to dispatch
-     */
-    protected function _testLoginActionWithIdentity($uri)
+    public function testLoginActionWithIdentity()
     {
-        // Requests to authenticated session should yield redirect.
         $this->_mockAuthenticationService(true);
-        $this->dispatch($uri);
+        $this->dispatch('/console/login/login');
         $this->assertRedirectTo('/console/computer/index/');
     }
 
-
-    /**
-     * Common tests for indexAction() and loginAction() without supplied identity
-     *
-     * @param string $uri Uri to dispatch
-     */
-    protected function _testLoginActionWithoutIdentity($uri)
+    public function testLoginActionWithoutIdentityPostValidCorrectCredentials()
     {
         $this->_mockAuthenticationService(false);
-
-        // POST request with valid credentials should yield redirect.
         $postData = array('userid' => 'gooduser', 'password' => 'goodpassword');
         $this->_form->expects($this->once())
                     ->method('isValid')
@@ -118,17 +102,14 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
                             )
                         )
                     );
-        $this->dispatch(
-            $uri,
-            'POST',
-            $postData
-        );
+        $this->dispatch('/console/login/login', 'POST', $postData);
         $this->assertRedirectTo('/console/computer/index/');
-        $this->assertArrayNotHasKey('login', $_SESSION); // Should be cleared by action
+    }
 
-        // POST request with invalid credentials should yield login form.
+    public function testLoginActionWithoutIdentityPostValidIncorrectCredentials()
+    {
+        $this->_mockAuthenticationService(false);
         $postData = array('userid' => 'baduser', 'password' => 'badpassword');
-        $this->_form = $this->getMock('Form_Login');
         $this->_form->expects($this->once())
                     ->method('isValid')
                     ->with($postData)
@@ -145,34 +126,36 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
                     );
         $this->_form->expects($this->once())
                     ->method('toHtml');
-        $this->dispatch(
-            $uri,
-            'POST',
-            $postData
-        );
+        $this->dispatch('/console/login/login', 'POST', $postData);
         $this->assertResponseStatusCode(200);
+    }
 
-        // POST request with invalid form data should yield login form.
-        $this->_form = $this->getMock('Form_Login');
+    public function testLoginActionWithoutIdentityPostInvalid()
+    {
+        $this->_mockAuthenticationService(false);
         $this->_form->expects($this->once())
                     ->method('isValid')
                     ->will($this->returnValue(false));
         $this->_form->expects($this->once())
                     ->method('toHtml');
-        $this->dispatch($uri, 'POST');
+        $this->dispatch('/console/login/login', 'POST');
         $this->assertResponseStatusCode(200);
+    }
 
-        // GET request should yield login form.
-        $this->_form = $this->getMock('Form_Login');
+    public function testLoginActionWithoutIdentityGet()
+    {
+        $this->_mockAuthenticationService(false);
         $this->_form->expects($this->once())
                     ->method('toHtml');
-        $this->dispatch($uri);
+        $this->dispatch('/console/login/login');
         $this->assertResponseStatusCode(200);
+    }
 
-        // Test redirect to previous page after successful login.
+    public function testLoginActionRedidectsToPreviousPageAfterSuccessfulLogin()
+    {
+        $this->_mockAuthenticationService(false);
         $postData = array('userid' => 'gooduser', 'password' => 'goodpassword');
         $this->_sessionSetup = array('login' => array('originalUri' => 'redirectTest'));
-        $this->_form = $this->getMock('Form_Login');
         $this->_form->expects($this->once())
                     ->method('isValid')
                     ->with($postData)
@@ -187,11 +170,7 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
                             )
                         )
                     );
-        $this->dispatch(
-            $uri,
-            'POST',
-            $postData
-        );
+        $this->dispatch('/console/login/login', 'POST', $postData);
         $this->assertRedirectTo('redirectTest');
         $this->assertArrayNotHasKey('login', $_SESSION); // Should be cleared by action
     }
@@ -202,18 +181,6 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/login/login/');
     }
 
-    /**
-     * Tests for loginAction()
-     */
-    public function testLoginAction()
-    {
-        $this->_testLoginActionWithIdentity('/console/login/login');
-        $this->_testLoginActionWithoutIdentity('/console/login/login');
-    }
-
-    /**
-     * Tests for logoutAction()
-     */
     public function testLogoutAction()
     {
         $this->_mockAuthenticationService(true);
