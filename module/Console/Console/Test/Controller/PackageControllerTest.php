@@ -73,12 +73,8 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         parent::testService();
     }
 
-    /**
-     * Tests for indexAction()
-     */
-    public function testIndexAction()
+    public function testIndexActionPackageList()
     {
-        $url = '/console/package/index/';
         $packages = array(
             array(
                 'Name' => 'name1',
@@ -106,7 +102,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_package->expects($this->once())
                        ->method('fetchAll')
                        ->will($this->returnValue($packages));
-        $this->dispatch($url);
+        $this->dispatch('/console/package/index/');
         $this->assertResponseStatusCode(200);
 
         // Name column
@@ -173,8 +169,10 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
         // No flash messages
         $this->assertNotXpathQuery('//ul');
+    }
 
-        // Test rendering of flash messages
+    public function testIndexActionPackageFlashMessages()
+    {
         $this->_sessionSetup = array(
             'FlashMessenger' => array(
                 'error' => new \Zend\Stdlib\SplQueue,
@@ -188,11 +186,10 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_sessionSetup['FlashMessenger']['info']->enqueue('info');
         $this->_sessionSetup['FlashMessenger']['packageName']->enqueue('<br>');
 
-        $this->_package = $this->getMock('Model_Package');
         $this->_package->expects($this->once())
                        ->method('fetchAll')
                        ->will($this->returnValue(array()));
-        $this->dispatch($url);
+        $this->dispatch('/console/package/index/');
         $this->assertResponseStatusCode(200);
 
         $this->assertXpathQueryContentContains(
@@ -207,8 +204,35 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             '//ul[@class="info"]/li',
             'info'
         );
+    }
 
-        // Test highlighting of current package
+    public function testIndexActionPackageHighlightCurrentPackage()
+    {
+        $packages = array(
+            array(
+                'Name' => 'name1',
+                'Comment' => 'comment1',
+                'Timestamp' => new \Zend_Date('2014-03-29 20:03:45'),
+                'Size' => 12345678,
+                'Platform' => 'platform',
+                'NumNonnotified' => 1,
+                'NumSuccess' => 2,
+                'NumNotified' => 3,
+                'NumError' => 4,
+            ),
+            array(
+                'Name' => 'name2',
+                'Comment' => '',
+                'Timestamp' => new \Zend_Date('2014-03-29 20:15:43'),
+                'Size' => 87654321,
+                'Platform' => 'platform',
+                'NumNonnotified' => 0,
+                'NumSuccess' => 0,
+                'NumNotified' => 0,
+                'NumError' => 0,
+            ),
+        );
+
         $this->_sessionSetup = array(
             'FlashMessenger' => array(
                 'packageName' => new \Zend\Stdlib\SplQueue,
@@ -216,11 +240,10 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->_sessionSetup['FlashMessenger']['packageName']->enqueue('name1');
 
-        $this->_package = $this->getMock('Model_Package');
         $this->_package->expects($this->once())
                        ->method('fetchAll')
                        ->will($this->returnValue($packages));
-        $this->dispatch($url);
+        $this->dispatch('/console/package/index/');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryCount(
             '//tr[@class="highlight"]',
@@ -232,34 +255,34 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
     }
 
-    /**
-     * Tests for buildAction()
-     */
-    public function testBuildAction()
+    public function testBuildActionGet()
     {
-        $url = '/console/package/build';
-
-        // GET request should render form.
         $this->_buildForm->expects($this->once())
                          ->method('toHtml');
-        $this->dispatch($url);
+        $this->_package->expects($this->never())
+                       ->method('build');
+        $this->dispatch('/console/package/build');
         $this->assertResponseStatusCode(200);
+    }
 
-        // Invalid POST request should render form.
+    public function testBuildActionPostInvalid()
+    {
         $postData = array('Name' => 'packageName');
-        $this->_buildForm = $this->getMockBuilder('Form_Package')->disableOriginalConstructor()->getMock();
         $this->_buildForm->expects($this->once())
                          ->method('isValid')
                          ->with($postData)
                          ->will($this->returnValue(false));
         $this->_buildForm->expects($this->once())
                          ->method('toHtml');
-        $this->dispatch($url, 'POST', $postData);
+        $this->_package->expects($this->never())
+                       ->method('build');
+        $this->dispatch('/console/package/build', 'POST', $postData);
         $this->assertResponseStatusCode(200);
+    }
 
-        // Valid POST request should build package and redirect. Assume build success.
-        $this->_package = $this->getMock('Model_Package');
-        $this->_buildForm = $this->getMockBuilder('Form_Package')->disableOriginalConstructor()->getMock();
+    public function testBuildActionPostValidSuccess()
+    {
+        $postData = array('Name' => 'packageName');
         $this->_buildForm->expects($this->once())
                          ->method('isValid')
                          ->with($postData)
@@ -269,94 +292,96 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                          ->will($this->returnValue($postData));
         $this->_buildForm->expects($this->never())
                          ->method('toHtml');
-        $this->_testBuildPackage($url, $postData, true);
-        $this->assertRedirectTo('/console/package/index/');
-
-        // Valid POST request should build package and redirect. Assume build failure.
-        $this->_package = $this->getMock('Model_Package');
-        $this->_buildForm = $this->getMockBuilder('Form_Package')->disableOriginalConstructor()->getMock();
-        $this->_buildForm->expects($this->once())
-                         ->method('isValid')
-                         ->with($postData)
-                         ->will($this->returnValue(true));
-        $this->_buildForm->expects($this->once())
-                         ->method('getValues')
-                         ->will($this->returnValue($postData));
-        $this->_buildForm->expects($this->never())
-                         ->method('toHtml');
-        $this->_testBuildPackage($url, $postData, false);
+        $this->_testBuildPackage('/console/package/build', $postData, true);
         $this->assertRedirectTo('/console/package/index/');
     }
 
-    /**
-     * Tests for deleteAction()
-     */
-    public function testDeleteAction()
+    public function testBuildActionPostValidError()
     {
-        $url = '/console/package/delete/?name=Name';
+        $postData = array('Name' => 'packageName');
+        $this->_buildForm->expects($this->once())
+                         ->method('isValid')
+                         ->with($postData)
+                         ->will($this->returnValue(true));
+        $this->_buildForm->expects($this->once())
+                         ->method('getValues')
+                         ->will($this->returnValue($postData));
+        $this->_buildForm->expects($this->never())
+                         ->method('toHtml');
+        $this->_testBuildPackage('/console/package/build', $postData, false);
+        $this->assertRedirectTo('/console/package/index/');
+    }
 
-        // GET request should render form
+    public function testDeleteActionGet()
+    {
         $this->_package->expects($this->never())
                        ->method('fromName');
-        $this->dispatch($url);
+        $this->_package->expects($this->never())
+                       ->method('delete');
+        $this->dispatch('/console/package/delete/?name=Name');
         $this->assertResponseStatusCode(200);
         $this->assertContains("'Name'", $this->getResponse()->getContent());
+    }
 
-        // Cancelled POST request should only redirect
-        $this->_package = $this->getMock('Model_Package');
+    public function testDeleteActionPostNo()
+    {
         $this->_package->expects($this->never())
                        ->method('fromName');
-        $this->dispatch($url, 'POST', array('no' => 'No'));
+        $this->_package->expects($this->never())
+                       ->method('delete');
+        $this->dispatch('/console/package/delete/?name=Name', 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/package/index/');
+    }
 
-        // Confirmed POST request should try to delete field and redirect.
-
-        // Assume success
-        $this->_package = $this->getMock('Model_Package');
+    public function testDeleteActionPostYesSuccess()
+    {
         $this->_package->expects($this->once())
                        ->method('fromName')
                        ->with('Name')
                        ->will($this->returnValue(true));
-        $this->_testDeletePackage($url, array('yes' => 'Yes'), 'Name', true);
+        $this->_testDeletePackage('/console/package/delete/?name=Name', array('yes' => 'Yes'), 'Name', true);
         $this->assertRedirectTo('/console/package/index/');
+    }
 
-        // Assume error
-        $this->_package = $this->getMock('Model_Package');
+    public function testDeleteActionPostYesError()
+    {
         $this->_package->expects($this->once())
                        ->method('fromName')
                        ->with('Name')
                        ->will($this->returnValue(false));
-        $this->_testDeletePackage($url, array('yes' => 'Yes'), 'Name', false);
+        $this->_testDeletePackage('/console/package/delete/?name=Name', array('yes' => 'Yes'), 'Name', false);
         $this->assertRedirectTo('/console/package/index/');
     }
 
-    /**
-     * Tests for editAction()
-     */
-    public function testEditAction()
+    public function testEditActionGet()
     {
-        $url = '/console/package/edit/?name=oldName';
-
-        // GET request should render form.
         $this->_package->expects($this->once())
                        ->method('fromName')
                        ->with('oldName')
                        ->will($this->returnValue(true));
+        $this->_package->expects($this->never())
+                       ->method('build');
+        $this->_package->expects($this->never())
+                       ->method('delete');
         $this->_editForm->expects($this->once())
                         ->method('setValuesFromPackage');
         $this->_editForm->expects($this->once())
                         ->method('toHtml');
-        $this->dispatch($url);
+        $this->dispatch('/console/package/edit/?name=oldName');
         $this->assertResponseStatusCode(200);
+    }
 
-        // Invalid POST request should render form.
+    public function testEditActionGetPostInvalid()
+    {
         $postData = array('Name' => 'newName');
-        $this->_package = $this->getMock('Model_Package');
         $this->_package->expects($this->once())
                        ->method('fromName')
                        ->with('oldName')
                        ->will($this->returnValue(true));
-        $this->_editForm = $this->getMockBuilder('Form_Package_Edit')->disableOriginalConstructor()->getMock();
+        $this->_package->expects($this->never())
+                       ->method('build');
+        $this->_package->expects($this->never())
+                       ->method('delete');
         $this->_editForm->expects($this->once())
                         ->method('isValid')
                         ->with($postData)
@@ -365,12 +390,13 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('setValuesFromPackage');
         $this->_editForm->expects($this->once())
                         ->method('toHtml');
-        $this->dispatch($url, 'POST', $postData);
+        $this->dispatch('/console/package/edit/?name=oldName', 'POST', $postData);
         $this->assertResponseStatusCode(200);
+    }
 
-        // Valid POST request should build package and redirect. Assume build success.
-        $names = array('oldName', 'newName');
-        $this->_package = $this->getMock('Model_Package');
+    public function testEditActionGetPostValidSuccessBuild()
+    {
+        $postData = array('Name' => 'newName');
         $this->_package->expects($this->exactly(2))
                        ->method('fromName')
                        ->with('oldName')
@@ -378,7 +404,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_package->expects($this->once())
                        ->method('delete')
                        ->will($this->returnValue(true));
-        $this->_editForm = $this->getMockBuilder('Form_Package_Edit')->disableOriginalConstructor()->getMock();
         $this->_editForm->expects($this->once())
                         ->method('isValid')
                         ->with($postData)
@@ -403,18 +428,20 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_editForm->expects($this->never())
                         ->method('toHtml');
         $this->_testBuildPackage(
-            $url,
+            '/console/package/edit/?name=oldName',
             $postData,
             true,
             array(
                 array("Package '%s' was successfully deleted." => 'oldName'),
-                array("Package '%s' was successfully changed to '%s'." => $names)
+                array("Package '%s' was successfully changed to '%s'." => array('oldName', 'newName'))
             )
         );
         $this->assertRedirectTo('/console/package/index/');
+    }
 
-        // Repeat test setup, test actions after package creation
-        $this->_package = $this->getMock('Model_Package');
+    public function testEditActionGetPostValidSuccessDelete()
+    {
+        $postData = array('Name' => 'newName');
         $this->_package->expects($this->exactly(2))
                        ->method('fromName')
                        ->with('oldName')
@@ -423,7 +450,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                        ->method('build')
                        ->with(true)
                        ->will($this->returnValue(true));
-        $this->_editForm = $this->getMockBuilder('Form_Package_Edit')->disableOriginalConstructor()->getMock();
         $this->_editForm->expects($this->once())
                         ->method('isValid')
                         ->with($postData)
@@ -445,15 +471,16 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                                 )
                             )
                         );
-        $this->_testDeletePackage($url, $postData, 'oldName', true);
+        $this->_testDeletePackage('/console/package/edit/?name=oldName', $postData, 'oldName', true);
+    }
 
-        // Valid POST request should build package and redirect. Assume build failure.
-        $this->_package = $this->getMock('Model_Package');
+    public function testEditActionGetPostValidBuildError()
+    {
+        $postData = array('Name' => 'newName');
         $this->_package->expects($this->once())
                        ->method('fromName')
                        ->with('oldName')
                        ->will($this->returnValue(true));
-        $this->_editForm = $this->getMockBuilder('Form_Package_Edit')->disableOriginalConstructor()->getMock();
         $this->_editForm->expects($this->once())
                         ->method('isValid')
                         ->with($postData)
@@ -468,23 +495,28 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_editForm->expects($this->never())
                          ->method('toHtml');
         $this->_testBuildPackage(
-            $url,
+            '/console/package/edit/?name=oldName',
             $postData,
             false,
-            array(array('Error changing Package \'%s\' to \'%s\':' => $names))
+            array(array('Error changing Package \'%s\' to \'%s\':' => array('oldName', 'newName')))
         );
         $this->assertRedirectTo('/console/package/index/');
+    }
 
-        // Valid POST request should build package and redirect. Assume package reconstruction failure.
-        $this->_package = $this->getMock('Model_Package');
+    public function testEditActionGetPostValidReconstructionError()
+    {
+        $postData = array('Name' => 'newName');
         $this->_package->expects($this->once())
                        ->method('fromName')
                        ->with('oldName')
                        ->will($this->returnValue(false));
-        $this->_editForm = $this->getMockBuilder('Form_Package_Edit')->disableOriginalConstructor()->getMock();
+        $this->_package->expects($this->never())
+                       ->method('build');
+        $this->_package->expects($this->never())
+                       ->method('delete');
         $this->_editForm->expects($this->never())
                         ->method('isValid');
-        $this->dispatch($url, 'POST', $postData);
+        $this->dispatch('/console/package/edit/?name=oldName', 'POST', $postData);
         $this->assertRedirectTo('/console/package/index/');
         $this->assertEquals(
             array(array("Could not retrieve data from package '%s'." => 'oldName')),

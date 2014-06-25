@@ -47,6 +47,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
     /** {@inheritdoc} */
     public function setUp()
     {
+        $this->_operators = $this->getMockBuilder('Model_Account')->disableOriginalConstructor()->getMock();
         $this->_formAccountNew = $this->getMock('Form_Account_New');
         $this->_formAccountEdit = $this->getMock('Form_Account_Edit');
         parent::setUp();
@@ -62,13 +63,8 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         );
     }
 
-    /**
-     * Tests for indexAction()
-     */
-    public function testIndexAction()
+    public function testIndexActionCurrentAccount()
     {
-        $url = '/console/accounts/index/';
-
         $account = array(
             'Id' => 'testId',
             'FirstName' => '',
@@ -76,17 +72,10 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
             'MailAddress' => '',
             'Comment' => '',
         );
-
-        // First query uses the same identity as the mock account, which should
-        // prevent the "Delete" link, and no mail address.
         $auth = $this->getMock('Library\Authentication\AuthenticationService');
-        $auth->expects($this->any())
+        $auth->expects($this->once())
              ->method('getIdentity')
              ->will($this->returnValue('testId'));
-
-        $this->_operators = $this->getMockBuilder('Model_Account')
-                                 ->setConstructorArgs(array($auth))
-                                 ->getMock();
         $this->_operators->expects($this->once())
                          ->method('getAuthService')
                          ->will($this->returnValue($auth));
@@ -94,23 +83,27 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
                          ->method('fetchAll')
                          ->will($this->returnValue(array($account)));
 
-        $this->dispatch($url);
+        $this->dispatch('/console/accounts/index/');
         $this->assertResponseStatusCode(200);
         $this->assertNotQuery('td a[href*="mailto:test"]');
         $this->assertNotQueryContentContains('td a', 'Delete');
-        // The "Edit" link is independent of the conditions and only tested once.
         $this->assertQueryContentContains('td a[href="/console/accounts/edit/?id=testId"]', 'Edit');
 
-        // Another query with different identity and a mail address
-        $account['MailAddress'] = 'test@example.com';
+    }
+
+    public function testIndexActionOtherAccount()
+    {
+        $account = array(
+            'Id' => 'testId',
+            'FirstName' => '',
+            'LastName' => '',
+            'MailAddress' => '',
+            'Comment' => '',
+        );
         $auth = $this->getMock('Library\Authentication\AuthenticationService');
-        $auth->expects($this->any())
+        $auth->expects($this->once())
              ->method('getIdentity')
              ->will($this->returnValue('otherId'));
-
-        $this->_operators = $this->getMockBuilder('Model_Account')
-                                 ->setConstructorArgs(array($auth))
-                                 ->getMock();
         $this->_operators->expects($this->once())
                          ->method('getAuthService')
                          ->will($this->returnValue($auth));
@@ -118,33 +111,46 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
                          ->method('fetchAll')
                          ->will($this->returnValue(array($account)));
 
-        $this->dispatch($url);
+        $this->dispatch('/console/accounts/index/');
         $this->assertResponseStatusCode(200);
-        $this->assertQueryContentContains('td a[href="mailto:test%40example.com"]', 'test@example.com');
         $this->assertQueryContentContains('td a[href="/console/accounts/delete/?id=testId"]', 'Delete');
     }
 
-    /**
-     * Tests for addAction()
-     */
-    public function testAddAction()
+    public function testIndexActionMailAddress()
     {
-        $url = '/console/accounts/add/';
+        $account = array(
+            'Id' => 'testId',
+            'FirstName' => '',
+            'LastName' => '',
+            'MailAddress' => 'test@example.com',
+            'Comment' => '',
+        );
         $auth = $this->getMock('Library\Authentication\AuthenticationService');
+        $auth->expects($this->once())
+             ->method('getIdentity')
+             ->will($this->returnValue('otherId'));
+        $this->_operators->expects($this->once())
+                         ->method('getAuthService')
+                         ->will($this->returnValue($auth));
+        $this->_operators->expects($this->once())
+                         ->method('fetchAll')
+                         ->will($this->returnValue(array($account)));
 
-        // POST request with valid data should create account and redirect to index action
+        $this->dispatch('/console/accounts/index/');
+        $this->assertResponseStatusCode(200);
+        $this->assertQueryContentContains('td a[href="mailto:test%40example.com"]', 'test@example.com');
+    }
+
+    public function testAddActionPostValid()
+    {
         $data = array(
             'Id' => 'testId',
             'Password' => 'topsecret',
             'PasswordRepeat' => 'topsecret',
         );
-        $this->_operators = $this->getMockBuilder('Model_Account')
-                                 ->setConstructorArgs(array($auth))
-                                 ->getMock();
         $this->_operators->expects($this->once())
                          ->method('create')
                          ->with($data, 'topsecret');
-        $this->_formAccountNew = $this->getMock('Form_Account_New');
         $this->_formAccountNew->expects($this->once())
                               ->method('isValid')
                               ->with($data)
@@ -152,73 +158,75 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         $this->_formAccountNew->expects($this->once())
                               ->method('getValues')
                               ->will($this->returnValue($data));
-        $this->dispatch($url, 'POST', $data);
+        $this->dispatch('/console/accounts/add/', 'POST', $data);
         $this->assertRedirectTo('/console/accounts/index/');
+    }
 
-        // POST request without valid data should display form
-        $this->_formAccountNew = $this->getMock('Form_Account_New');
+    public function testAddActionPostInvalid()
+    {
+        $this->_operators->expects($this->never())
+                         ->method('create');
         $this->_formAccountNew->expects($this->once())
                               ->method('isValid')
                               ->will($this->returnValue(false));
         $this->_formAccountNew->expects($this->once())
                               ->method('__toString')
                               ->will($this->returnValue(''));
-        $this->dispatch($url, 'POST');
-        $this->assertResponseStatusCode(200);
-
-        // GET request should display form
-        $this->_operators = $this->getMockBuilder('Model_Account')
-                                 ->setConstructorArgs(array($auth))
-                                 ->getMock();
-        $this->_formAccountNew = $this->getMock('Form_Account_New');
-        $this->_formAccountNew->expects($this->once())
-                              ->method('__toString')
-                              ->will($this->returnValue(''));
-        $this->dispatch($url);
+        $this->dispatch('/console/accounts/add/', 'POST');
         $this->assertResponseStatusCode(200);
     }
 
-    /**
-     * Tests for editAction()
-     */
-    public function testEditAction()
+    public function testAddActionGet()
     {
-        $url = '/console/accounts/edit/?id=testId';
-        $auth = $this->getMock('Library\Authentication\AuthenticationService');
-        $this->_formAccountEdit = $this->getMock('Form_Account_Edit');
-        $this->_formAccountEdit->expects($this->any())
+        $this->_operators->expects($this->never())
+                         ->method('create');
+        $this->_formAccountNew->expects($this->once())
+                              ->method('__toString')
+                              ->will($this->returnValue(''));
+        $this->dispatch('/console/accounts/add/');
+        $this->assertResponseStatusCode(200);
+    }
+
+    public function testEditActionGet()
+    {
+        $this->_formAccountEdit->expects($this->once())
                                ->method('setId')
                                ->with('testId');
-        $this->_formAccountEdit->expects($this->any())
+        $this->_formAccountEdit->expects($this->once())
                                ->method('__toString')
                                ->will($this->returnValue('<form></form>'));
-
-        // GET request should display form
-        $this->_operators = $this->getMockBuilder('Model_Account')
-                                 ->setConstructorArgs(array($auth))
-                                 ->getMock();
-        $this->dispatch($url);
+        $this->_operators->expects($this->never())
+                         ->method('update');
+        $this->dispatch('/console/accounts/edit/?id=testId');
         $this->assertResponseStatusCode(200);
         $this->assertQuery('form');
+    }
 
-        // POST request without valid data should display form
-        $this->dispatch($url, 'POST');
+    public function testEditActionPostInvalid()
+    {
+        $this->_formAccountEdit->expects($this->once())
+                               ->method('setId')
+                               ->with('testId');
+        $this->_formAccountEdit->expects($this->once())
+                               ->method('__toString')
+                               ->will($this->returnValue('<form></form>'));
+        $this->_operators->expects($this->never())
+                         ->method('update');
+        $this->dispatch('/console/accounts/edit/?id=testId', 'POST');
         $this->assertResponseStatusCode(200);
         $this->assertQuery('form');
+    }
 
-        // POST request with valid data should update account and redirect to index action
+    public function testEditActionPostValid()
+    {
         $data = array(
             'OriginalId' => 'testId',
             'Password' => 'topsecret',
             'PasswordRepeat' => 'topsecret',
         );
-        $this->_operators = $this->getMockBuilder('Model_Account')
-                                 ->setConstructorArgs(array($auth))
-                                 ->getMock();
         $this->_operators->expects($this->once())
                          ->method('update')
                          ->with('testId', $data, 'topsecret');
-        $this->_formAccountEdit = $this->getMock('Form_Account_Edit');
         $this->_formAccountEdit->expects($this->once())
                                ->method('isValid')
                                ->with($data)
@@ -226,47 +234,39 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         $this->_formAccountEdit->expects($this->once())
                                ->method('getValues')
                                ->will($this->returnValue($data));
-        $this->dispatch($url, 'POST', $data);
+        $this->_formAccountEdit->expects($this->never())
+                               ->method('__toString');
+        $this->dispatch('/console/accounts/edit/?id=testId', 'POST', $data);
         $this->assertRedirectTo('/console/accounts/index/');
     }
 
-    /**
-     * Tests for deleteAction()
-     */
-    public function testDeleteAction()
+    public function testDeleteActionGet()
     {
-        $url = '/console/accounts/delete/?id=testId';
-        $auth = $this->getMock('Library\Authentication\AuthenticationService');
-
-        // GET request should display form and caption containing Id
-        $this->_operators = $this->getMockBuilder('Model_Account')
-                                 ->setConstructorArgs(array($auth))
-                                 ->getMock();
-        $this->dispatch($url);
+        $this->_operators->expects($this->never())
+                         ->method('delete');
+        $this->dispatch('/console/accounts/delete/?id=testId');
         $this->assertResponseStatusCode(200);
         $this->assertContains(
             'Account "testId" will be permanently deleted. Continue?',
             $this->getResponse()->getContent()
         );
         $this->assertQuery('form');
+    }
 
-        // POST request without 'yes' argument should redirect to index and not delete account
-        $this->_operators = $this->getMockBuilder('Model_Account')
-                                 ->setConstructorArgs(array($auth))
-                                 ->getMock();
+    public function testDeleteActionPostNo()
+    {
         $this->_operators->expects($this->never())
                          ->method('delete');
-        $this->dispatch($url, 'POST', array('no' => 'No'));
+        $this->dispatch('/console/accounts/delete/?id=testId', 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/accounts/index/');
+    }
 
-        // POST request with 'yes' argument should redirect to index and delete account
-        $this->_operators = $this->getMockBuilder('Model_Account')
-                                 ->setConstructorArgs(array($auth))
-                                 ->getMock();
+    public function testDeleteActionPostYes()
+    {
         $this->_operators->expects($this->once())
                          ->method('delete')
                          ->with('testId');
-        $this->dispatch($url, 'POST', array('yes' => 'Yes'));
+        $this->dispatch('/console/accounts/delete/?id=testId', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/accounts/index/');
     }
 }

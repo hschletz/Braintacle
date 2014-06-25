@@ -89,93 +89,113 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/preferences/display/');
     }
 
-    /**
-     * Tests for displayAction()
-     */
-    public function testDisplayActionTest()
+    public function testDisplayActionTestGet()
     {
-        $this->_testUseForm('display', 'Display');
+        $this->_testUseFormGet('display', 'Display');
+    }
+
+    public function testDisplayActionTestPost()
+    {
+        $this->_testUseFormPost('display', 'Display');
+    }
+
+    public function testInventoryActionTestGet()
+    {
+        $this->_testUseFormGet('inventory', 'Inventory');
+    }
+
+    public function testInventoryActionTestPost()
+    {
+        $this->_testUseFormPost('inventory', 'Inventory');
+    }
+
+    public function testAgentActionTestGet()
+    {
+        $this->_testUseFormGet('agent', 'Agent');
+    }
+
+    public function testAgentActionTestPost()
+    {
+        $this->_testUseFormPost('agent', 'Agent');
+    }
+
+    public function testPackagesActionTestGet()
+    {
+        $this->_testUseFormGet('packages', 'Packages');
+    }
+
+    public function testPackagesActionTestPost()
+    {
+        $this->_testUseFormPost('packages', 'Packages');
+    }
+
+    public function testDownloadActionTestGet()
+    {
+        $this->_testUseFormGet('download', 'Download');
+    }
+
+    public function testDownloadActionTestPost()
+    {
+        $this->_testUseFormPost('download', 'Download');
+    }
+
+    public function testNetworkscanningActionTestGet()
+    {
+        $this->_testUseFormGet('networkscanning', 'NetworkScanning');
+    }
+
+    public function testNetworkscanningActionTestPost()
+    {
+        $this->_testUseFormPost('networkscanning', 'NetworkScanning');
+    }
+
+    public function testGroupsActionTestGet()
+    {
+        $this->_testUseFormGet('groups', 'Groups');
+    }
+
+    public function testGroupsActionTestPost()
+    {
+        $this->_testUseFormPost('groups', 'Groups');
+    }
+
+    public function testRawdataActionTestGet()
+    {
+        $this->_testUseFormGet('rawdata', 'RawData');
+    }
+
+    public function testRawdataActionTestPost()
+    {
+        $this->_testUseFormPost('rawdata', 'RawData');
+    }
+
+    public function testFiltersActionTestGet()
+    {
+        $this->_testUseFormGet('filters', 'Filters');
+    }
+
+    public function testFiltersActionTestPost()
+    {
+        $this->_testUseFormPost('filters', 'Filters');
+    }
+
+    public function testSystemActionTestGet()
+    {
+        $this->_testUseFormGet('system', 'System');
+    }
+
+    public function testSystemActionTestPost()
+    {
+        $this->_testUseFormPost('system', 'System');
     }
 
     /**
-     * Tests for inventoryAction()
-     */
-    public function testInventoryActionTest()
-    {
-        $this->_testUseForm('inventory', 'Inventory');
-    }
-
-    /**
-     * Tests for agentAction()
-     */
-    public function testAgentActionTest()
-    {
-        $this->_testUseForm('agent', 'Agent');
-    }
-
-    /**
-     * Tests for packagesAction()
-     */
-    public function testPackagesActionTest()
-    {
-        $this->_testUseForm('packages', 'Packages');
-    }
-
-    /**
-     * Tests for downloadAction()
-     */
-    public function testDownloadActionTest()
-    {
-        $this->_testUseForm('download', 'Download');
-    }
-
-    /**
-     * Tests for networkscanningAction()
-     */
-    public function testNetworkscanningActionTest()
-    {
-        $this->_testUseForm('networkscanning', 'NetworkScanning');
-    }
-
-    /**
-     * Tests for groupsAction()
-     */
-    public function testGroupsActionTest()
-    {
-        $this->_testUseForm('groups', 'Groups');
-    }
-
-    /**
-     * Tests for rawdataAction()
-     */
-    public function testRawdataActionTest()
-    {
-        $this->_testUseForm('rawdata', 'RawData');
-    }
-
-    /**
-     * Tests for filtersAction()
-     */
-    public function testFiltersActionTest()
-    {
-        $this->_testUseForm('filters', 'Filters');
-    }
-
-    /**
-     * Tests for systemAction()
-     */
-    public function testSystemActionTest()
-    {
-        $this->_testUseForm('system', 'System');
-    }
-
-    /**
-     * Base tests for all _useform()-based actions
+     * Base tests for all _useform()-based actions (GET method)
      *
      * @param string $action "action" part of URI
      * @param string $formClass Form name without namespace
      */
-    protected function _testUseForm($action, $formClass)
+    protected function _testUseFormGet($action, $formClass)
     {
         $form = $this->getMock("Form_Preferences_$formClass");
         $form->expects($this->once())
@@ -189,7 +209,16 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
                            ->will($this->returnValue($form));
         $this->dispatch("/console/preferences/$action");
         $this->assertResponseStatusCode(200);
+    }
 
+    /**
+     * Base tests for all _useform()-based actions (POST method)
+     *
+     * @param string $action "action" part of URI
+     * @param string $formClass Form name without namespace
+     */
+    protected function _testUseFormPost($action, $formClass)
+    {
         $postData = array('key' => 'value');
         $form = $this->getMock("Form_Preferences_$formClass");
         $form->expects($this->once())
@@ -198,7 +227,6 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('__toString')
              ->will($this->returnValue(''));
-        $this->_formManager = $this->getMock('Zend\ServiceManager\ServiceManager');
         $this->_formManager->expects($this->once())
                            ->method('get')
                            ->with("Console\Form\Preferences\\$formClass")
@@ -207,14 +235,8 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
     }
 
-    /**
-     * Tests for customfieldsAction()
-     */
-    public function testCustomfieldsAction()
+    public function testCustomfieldsActionGet()
     {
-        $url = '/console/preferences/customfields';
-
-        // GET request should render form
         $form = $this->getMock('Form_DefineFields');
         $form->expects($this->never())
              ->method('process');
@@ -224,11 +246,13 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
                            ->method('get')
                            ->with('Console\Form\DefineFields')
                            ->will($this->returnValue($form));
-        $this->dispatch($url);
+        $this->dispatch('/console/preferences/customfields');
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains('h1', "\nManage custom fields\n");
+    }
 
-        // POST request with invalid data should render form
+    public function testCustomfieldsActionPostInvalid()
+    {
         $postData = array('key' => 'value');
         $form = $this->getMock('Form_DefineFields');
         $form->expects($this->never())
@@ -239,15 +263,17 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
              ->will($this->returnValue(false));
         $form->expects($this->once())
              ->method('toHtml');
-        $this->_formManager = $this->getMock('Zend\ServiceManager\ServiceManager');
         $this->_formManager->expects($this->once())
                            ->method('get')
                            ->with('Console\Form\DefineFields')
                            ->will($this->returnValue($form));
-        $this->dispatch($url, 'POST', $postData);
+        $this->dispatch('/console/preferences/customfields', 'POST', $postData);
         $this->assertResponseStatusCode(200);
+    }
 
-        // POST request with valid data should process and redirect
+    public function testCustomfieldsActionPostValid()
+    {
+        $postData = array('key' => 'value');
         $form = $this->getMock('Form_DefineFields');
         $form->expects($this->once())
              ->method('process');
@@ -255,50 +281,42 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
              ->method('isValid')
              ->with($postData)
              ->will($this->returnValue(true));
-        $this->_formManager = $this->getMock('Zend\ServiceManager\ServiceManager');
         $this->_formManager->expects($this->once())
                            ->method('get')
                            ->with('Console\Form\DefineFields')
                            ->will($this->returnValue($form));
-        $this->dispatch($url, 'POST', $postData);
+        $this->dispatch('/console/preferences/customfields', 'POST', $postData);
         $this->assertRedirectTo('/console/preferences/customfields/');
     }
 
-    /**
-     * Tests for deletefieldAction()
-     */
-    public function testDeletefieldAction()
+    public function testDeletefieldActionGet()
     {
-        $url = '/console/preferences/deletefield/?name=Name';
-
-        // GET request should render form
-        $this->dispatch($url);
-        $this->assertResponseStatusCode(200);
-        $this->assertContains("'Name'", $this->getResponse()->getContent());
-
-        // Cancelled POST request should only redirect
         $this->_customFields->expects($this->never())
                             ->method('deleteField');
-        $this->dispatch($url, 'POST', array('no' => 'No'));
-        $this->assertRedirectTo('/console/preferences/customfields/');
+        $this->dispatch('/console/preferences/deletefield/?name=Name');
+        $this->assertResponseStatusCode(200);
+        $this->assertContains("'Name'", $this->getResponse()->getContent());
+    }
 
-        // Confirmed POST request should delete field and redirect
-        $this->_customFields = $this->getMockBuilder('Model_UserDefinedInfo')->disableOriginalConstructor()->getMock();
+    public function testDeletefieldActionPostNo()
+    {
+        $this->_customFields->expects($this->never())
+                            ->method('deleteField');
+        $this->dispatch('/console/preferences/deletefield/?name=Name', 'POST', array('no' => 'No'));
+        $this->assertRedirectTo('/console/preferences/customfields/');
+    }
+
+    public function testDeletefieldActionPostYes()
+    {
         $this->_customFields->expects($this->once())
                             ->method('deleteField')
                             ->with('Name');
-        $this->dispatch($url, 'POST', array('yes' => 'Yes'));
+        $this->dispatch('/console/preferences/deletefield/?name=Name', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/preferences/customfields/');
     }
 
-    /**
-     * Tests for networkdevicesAction()
-     */
-    public function testNetworkdevicesAction()
+    public function testNetworkdevicesActionGet()
     {
-        $url = '/console/preferences/networkdevices';
-
-        // GET request should render form
         $form = $this->getMock('Form_ManageNetworkDeviceTypes');
         $form->expects($this->never())
              ->method('process');
@@ -308,11 +326,13 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
                            ->method('get')
                            ->with('Console\Form\NetworkDeviceTypes')
                            ->will($this->returnValue($form));
-        $this->dispatch($url);
+        $this->dispatch('/console/preferences/networkdevices');
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains('h1', "\nManage device types\n");
+    }
 
-        // POST request with invalid data should render form
+    public function testNetworkdevicesActionPostInvalid()
+    {
         $postData = array('key' => 'value');
         $form = $this->getMock('Form_ManageNetworkDeviceTypes');
         $form->expects($this->never())
@@ -323,15 +343,17 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
              ->will($this->returnValue(false));
         $form->expects($this->once())
              ->method('toHtml');
-        $this->_formManager = $this->getMock('Zend\ServiceManager\ServiceManager');
         $this->_formManager->expects($this->once())
                            ->method('get')
                            ->with('Console\Form\NetworkDeviceTypes')
                            ->will($this->returnValue($form));
-        $this->dispatch($url, 'POST', $postData);
+        $this->dispatch('/console/preferences/networkdevices', 'POST', $postData);
         $this->assertResponseStatusCode(200);
+    }
 
-        // POST request with valid data should process and redirect
+    public function testNetworkdevicesActionPostValid()
+    {
+        $postData = array('key' => 'value');
         $form = $this->getMock('Form_ManageNetworkDeviceTypes');
         $form->expects($this->once())
              ->method('process');
@@ -339,56 +361,48 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
              ->method('isValid')
              ->with($postData)
              ->will($this->returnValue(true));
-        $this->_formManager = $this->getMock('Zend\ServiceManager\ServiceManager');
         $this->_formManager->expects($this->once())
                            ->method('get')
                            ->with('Console\Form\NetworkDeviceTypes')
                            ->will($this->returnValue($form));
-        $this->dispatch($url, 'POST', $postData);
+        $this->dispatch('/console/preferences/networkdevices', 'POST', $postData);
         $this->assertRedirectTo('/console/network/index/');
     }
 
-    /**
-     * Tests for deletedevicetypeAction()
-     */
-    public function testDeletedevicetypeAction()
+    public function testDeletedevicetypeActionGet()
     {
-        $url = '/console/preferences/deletedevicetype/?id=1';
-
-        // GET request should render form
         $this->_deviceType->expects($this->any())
                           ->method('fetchById')
                           ->with('1')
                           ->will($this->returnValue(array('Description' => 'description')));
         $this->_deviceType->expects($this->never())
                           ->method('delete');
-        $this->dispatch($url);
+        $this->dispatch('/console/preferences/deletedevicetype/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertContains("'description'", $this->getResponse()->getContent());
+    }
 
-        // Cancelled POST request should only redirect
-        $this->dispatch($url, 'POST', array('no' => 'No'));
+    public function testDeletedevicetypeActionPostNo()
+    {
+        $this->_deviceType->expects($this->never())
+                          ->method('delete');
+        $this->dispatch('/console/preferences/deletedevicetype/?id=1', 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/preferences/networkdevices/');
+    }
 
-        // Confirmed POST request should delete field and redirect
-        $this->_deviceType = $this->getMock('Model_NetworkDeviceType');
+    public function testDeletedevicetypeActionPostYes()
+    {
         $this->_deviceType->expects($this->any())
                           ->method('fetchById')
                           ->will($this->returnSelf());
         $this->_deviceType->expects($this->once())
                           ->method('delete');
-        $this->dispatch($url, 'POST', array('yes' => 'Yes'));
+        $this->dispatch('/console/preferences/deletedevicetype/?id=1', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/preferences/networkdevices/');
     }
 
-    /**
-     * Tests for networkdevicesAction()
-     */
-    public function testRegistryValuesAction()
+    public function testRegistryValuesActionGet()
     {
-        $url = '/console/preferences/registryvalues/';
-
-        // GET request should render form
         $form = $this->getMock('Console\Form\ManageRegistryValues');
         $form->expects($this->never())
              ->method('process');
@@ -403,10 +417,12 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
                            ->method('get')
                            ->with('FormElementManager')
                            ->will($this->returnValue($formManager));
-        $this->dispatch($url);
+        $this->dispatch('/console/preferences/registryvalues/');
         $this->assertResponseStatusCode(200);
+    }
 
-        // POST request with invalid data should render form
+    public function testRegistryValuesActionPostInvalid()
+    {
         $postData = array('key' => 'value');
         $form = $this->getMock('Console\Form\ManageRegistryValues');
         $form->expects($this->never())
@@ -424,15 +440,17 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
                     ->method('get')
                     ->with('Console\Form\ManageRegistryValues')
                     ->will($this->returnValue($form));
-        $this->_formManager = $this->getMock('Zend\ServiceManager\ServiceManager');
         $this->_formManager->expects($this->once())
                            ->method('get')
                            ->with('FormElementManager')
                            ->will($this->returnValue($formManager));
-        $this->dispatch($url, 'POST', $postData);
+        $this->dispatch('/console/preferences/registryvalues/', 'POST', $postData);
         $this->assertResponseStatusCode(200);
+    }
 
-        // POST request with valid data should process and redirect
+    public function testRegistryValuesActionPostValid()
+    {
+        $postData = array('key' => 'value');
         $form = $this->getMock('Console\Form\ManageRegistryValues');
         $form->expects($this->once())
              ->method('process');
@@ -454,40 +472,39 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
                            ->method('get')
                            ->with('FormElementManager')
                            ->will($this->returnValue($formManager));
-        $this->dispatch($url, 'POST', $postData);
-        $this->assertRedirectTo($url);
+        $this->dispatch('/console/preferences/registryvalues/', 'POST', $postData);
+        $this->assertRedirectTo('/console/preferences/registryvalues/');
     }
 
-    /**
-     * Tests for deleteregistryvalueAction()
-     */
-    public function testDeleteregistryvalueAction()
+    public function testDeleteregistryvalueActionGet()
     {
-        $url = '/console/preferences/deleteregistryvalue/?id=1';
-
-        // GET request should render form
         $this->_registryValue->expects($this->any())
                              ->method('fetchById')
                              ->with('1')
                              ->will($this->returnValue(array('Name' => 'name')));
         $this->_registryValue->expects($this->never())
                              ->method('delete');
-        $this->dispatch($url);
+        $this->dispatch('/console/preferences/deleteregistryvalue/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertContains("'name'", $this->getResponse()->getContent());
+    }
 
-        // Cancelled POST request should only redirect
-        $this->dispatch($url, 'POST', array('no' => 'No'));
+    public function testDeleteregistryvalueActionPostNo()
+    {
+        $this->_registryValue->expects($this->never())
+                             ->method('delete');
+        $this->dispatch('/console/preferences/deleteregistryvalue/?id=1', 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/preferences/registryvalues/');
+    }
 
-        // Confirmed POST request should delete field and redirect
-        $this->_registryValue = $this->getMock('Model_RegistryValue');
+    public function testDeleteregistryvalueActionPostYes()
+    {
         $this->_registryValue->expects($this->any())
                              ->method('fetchById')
                              ->will($this->returnSelf());
         $this->_registryValue->expects($this->once())
                              ->method('delete');
-        $this->dispatch($url, 'POST', array('yes' => 'Yes'));
+        $this->dispatch('/console/preferences/deleteregistryvalue/?id=1', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/preferences/registryvalues/');
     }
 }
