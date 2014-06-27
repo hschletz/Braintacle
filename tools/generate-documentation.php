@@ -90,7 +90,7 @@ foreach (Query::execute('//div[@class="package-contents"]/a', $errorDocument) as
 
     $fileName = $node->getAttribute('name'); // file which contains the error
     $fileDocument = new \Zend\Dom\Document(
-        file_get_contents($basePath . '/doc/api/files/' . strtr($fileName, '/', '.') . '.html')
+        file_get_contents($basePath . '/doc/api/files/' . basename(strtr($fileName, '/', '.'), '.php') . '.html')
     );
 
     // Extract hyperlink to class file
