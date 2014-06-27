@@ -17,39 +17,30 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Forms
  */
+
+namespace Console\Form;
+
 /**
  * Form for inventory data upload
- * @package Forms
+ *
+ * The uploaded file (required) is accessed through the "File" element.
  */
-class Form_Import extends Zend_Form
+class Import extends Form
 {
-
-    /**
-     * Create elements
-     */
+    /** {@inheritdoc} */
     public function init()
     {
-        $this->setMethod('post');
-        $this->setAttrib('enctype', 'multipart/form-data');
-        $this->addElementPrefixPath('Zend', \Library\Application::$zf1Path);
+        $file = new \Zend\Form\Element\File('File');
+        $file->setLabel('File (*.ocs, *.xml)');
+        $this->add($file);
 
-        // Upload file
-        $file = new Zend_Form_Element_File('File');
-        $file->addPrefixPath('Zend_File', \Library\Application::$zf1Path . '/File')
-             ->addValidator('Count', false, 1)
-             ->setRequired(true)
-             ->setLabel('File (*.ocs, *.xml)');
-        $this->addElement($file);
+        $submit = new \Library\Form\Element\Submit('Submit');
+        $submit->setText('Import');
+        $this->add($submit);
 
-        // Submit button
-        $submit = new Zend_Form_Element_Submit('submit');
-        $submit->setRequired(false)
-               ->setIgnore(true)
-               ->setLabel('Import');
-        $this->addElement($submit);
+        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter->add(array('name' => 'File')); // Sufficient to force uploaded file
+        $this->setInputFilter($inputFilter);
     }
-
 }

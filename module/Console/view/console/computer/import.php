@@ -39,4 +39,4 @@ print $this->htmlTag(
     $this->translate('Import locally generated inventory data')
 );
 
-print $this->form;
+print $this->form->render($this);

@@ -102,11 +102,11 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $legacyFormManager->setService('Console\Form\AssignPackages', $this->getMock('Form_AffectPackages'));
         $legacyFormManager->setService('Console\Form\GroupMemberships', $this->getMock('Form_ManageGroupMemberships'));
         $legacyFormManager->setService('Console\Form\ClientConfig', $this->getMock('Form_Configuration'));
-        $legacyFormManager->setService('Console\Form\Import', $this->getMock('Form_Import'));
 
         $this->_formManager = new \Zend\Form\FormElementManager;
         $this->_formManager->setServiceLocator($legacyFormManager);
         $this->_formManager->setService('Console\Form\DeleteComputer', $this->getMock('Console\Form\DeleteComputer'));
+        $this->_formManager->setService('Console\Form\Import', $this->getMock('Console\Form\Import'));
         $this->_formManager->setService('Console\Form\ProductKey', $this->getMock('Console\Form\ProductKey'));
         $this->_formManager->setService('Console\Form\Search', $this->getMock('Console\Form\Search'));
 
@@ -2477,35 +2477,39 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testImportActionGet()
     {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\Import');
+        $form = $this->_formManager->get('Console\Form\Import');
         $form->expects($this->never())
              ->method('isValid');
         $form->expects($this->never())
-             ->method('getElement');
+             ->method('setData');
+        $form->expects($this->never())
+             ->method('getData');
         $form->expects($this->once())
-             ->method('__toString')
-             ->will($this->returnValue(''));
+             ->method('render')
+             ->will($this->returnValue('<form></form>'));
         $this->_inventoryUploader->expects($this->never())
                                  ->method('uploadFile');
         $this->dispatch('/console/computer/import/');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//p[@class="error"]');
         $this->assertXpathQueryContentContains('//h1', "\nImport locally generated inventory data\n");
+        $this->assertXPathQuery('//form');
     }
 
     public function testImportActionPostInvalid()
     {
         $postData = array('key' => 'value');
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\Import');
+        $form = $this->_formManager->get('Console\Form\Import');
         $form->expects($this->once())
              ->method('isValid')
-             ->with($postData)
              ->will($this->returnValue(false));
-        $form->expects($this->never())
-             ->method('getElement');
         $form->expects($this->once())
-             ->method('__toString')
-             ->will($this->returnValue(''));
+             ->method('setData')
+             ->with($postData);
+        $form->expects($this->never())
+             ->method('getData');
+        $form->expects($this->once())
+             ->method('render');
         $this->_inventoryUploader->expects($this->never())
                                  ->method('uploadFile');
         $this->dispatch('/console/computer/import/', 'POST', $postData);
@@ -2516,25 +2520,26 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testImportActionPostValidError()
     {
+        $fileSpec = array('tmp_name' => 'uploaded_file');
+        $this->getRequest()->getFiles()->set('File', $fileSpec);
         $postData = array('key' => 'value');
-        $fileElement = $this->getMockBuilder('Zend_Form_Element_File')->disableOriginalConstructor()->getMock();
-        $fileElement->expects($this->once())
-                    ->method('receive');
-        $fileElement->expects($this->once())
-                    ->method('getFileName')
-                    ->will($this->returnValue('uploaded_file'));
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\Import');
+        $form = $this->_formManager->get('Console\Form\Import');
         $form->expects($this->once())
              ->method('isValid')
-             ->with($postData)
              ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('getElement')
-             ->with('File')
-             ->will($this->returnValue($fileElement));
+             ->method('setData')
+             ->with(
+                 array(
+                     'File' => $fileSpec,
+                     'key' => 'value',
+                 )
+             );
         $form->expects($this->once())
-             ->method('__toString')
-             ->will($this->returnValue(''));
+             ->method('getData')
+             ->will($this->returnValue(array('File' => $fileSpec)));
+        $form->expects($this->once())
+             ->method('render');
         $this->_config->expects($this->once())
                       ->method('__get')
                       ->with('communicationServerUri')
@@ -2557,24 +2562,26 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testImportActionPostValidSuccess()
     {
+        $fileSpec = array('tmp_name' => 'uploaded_file');
+        $this->getRequest()->getFiles()->set('File', $fileSpec);
         $postData = array('key' => 'value');
-        $fileElement = $this->getMockBuilder('Zend_Form_Element_File')->disableOriginalConstructor()->getMock();
-        $fileElement->expects($this->once())
-                    ->method('receive');
-        $fileElement->expects($this->once())
-                    ->method('getFileName')
-                    ->will($this->returnValue('uploaded_file'));
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\Import');
+        $form = $this->_formManager->get('Console\Form\Import');
         $form->expects($this->once())
              ->method('isValid')
-             ->with($postData)
              ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('getElement')
-             ->with('File')
-             ->will($this->returnValue($fileElement));
+             ->method('setData')
+             ->with(
+                 array(
+                     'File' => $fileSpec,
+                     'key' => 'value',
+                 )
+             );
+        $form->expects($this->once())
+             ->method('getData')
+             ->will($this->returnValue(array('File' => $fileSpec)));
         $form->expects($this->never())
-             ->method('__toString');
+             ->method('render');
         $response = new \Zend\Http\Response;
         $response->setStatusCode(200);
         $this->_inventoryUploader->expects($this->once())

@@ -593,18 +593,19 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function importAction()
     {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\Import');
+        $form = $this->_formManager->get('Console\Form\Import');
         $vars = array('form' => $form);
-        if ($this->getRequest()->isPost() and $form->isValid($this->params()->fromPost())) {
-            // Read content of uploaded file
-            $file = $form->getElement('File');
-            $file->receive();
-            $response = $this->_inventoryUploader->uploadFile($file->getFileName());
-            if ($response->isSuccess()) {
-                return $this->redirectToRoute('computer', 'index');
-            } else {
-                $vars['response'] = $response;
-                $vars['uri'] = $this->_config->communicationServerUri;
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->params()->fromFiles() + $this->params()->fromPost());
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $response = $this->_inventoryUploader->uploadFile($data['File']['tmp_name']);
+                if ($response->isSuccess()) {
+                    return $this->redirectToRoute('computer', 'index');
+                } else {
+                    $vars['response'] = $response;
+                    $vars['uri'] = $this->_config->communicationServerUri;
+                }
             }
         }
         return $vars;

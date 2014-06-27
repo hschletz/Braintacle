@@ -51,6 +51,7 @@ return array(
             'Console\Form\ShowDuplicates' => 'Console\Form\Service\ShowDuplicatesFactory',
         ),
         'invokables' => array(
+            'Console\Form\Import' => 'Console\Form\Import',
             'Console\Form\ProductKey' => 'Console\Form\ProductKey',
             'Console\Form\SoftwareFilter' => 'Console\Form\SoftwareFilter',
             'Console\Form\Subnet' => 'Console\Form\Subnet',
@@ -90,7 +91,6 @@ return array(
             'Console\Form\CustomFields' => 'Form_UserDefinedInfo',
             'Console\Form\DefineFields' => 'Form_DefineFields',
             'Console\Form\GroupMemberships' => 'Form_ManageGroupMemberships',
-            'Console\Form\Import' => 'Form_Import',
             'Console\Form\NetworkDeviceTypes' => 'Form_ManageNetworkDeviceTypes',
             'Console\Form\Login' => 'Form_Login',
             'Console\Form\NetworkDevice' => 'Form_NetworkDevice',
