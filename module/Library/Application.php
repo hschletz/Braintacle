@@ -88,8 +88,7 @@ class Application
         $environment = self::getEnvironment();
 
         // Get absolute path to ZF1 library
-        $file = new \SplFileInfo('Zend/Application.php');
-        self::$zf1Path = dirname($file->openFile('r', true)->getRealPath());
+        self::$zf1Path = dirname(stream_resolve_include_path('Zend/Application.php'));
 
         require_once 'Zend/Application.php';
         self::$application = new \Zend_Application(
