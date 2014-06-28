@@ -180,9 +180,10 @@ class Model_NetworkDevice extends Model_Abstract
 
     /**
      * Get all userdefined categories for identified devices
-     * @return array
+     *
+     * @return string[]
      */
-    static function getCategories()
+    public function getCategories()
     {
         $db = Model_Database::getAdapter();
         return $db->fetchCol('SELECT name FROM devicetype ORDER BY name');

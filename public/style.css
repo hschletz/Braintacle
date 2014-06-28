@@ -467,7 +467,7 @@ td.formElement {
     margin-top: 4ex;
 }
 
-.form_productkey .error {
+.form_productkey .error, .form_networkdevice .error {
     text-align: left;
     margin: 0;
     padding: 0;

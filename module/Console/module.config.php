@@ -47,6 +47,7 @@ return array(
         'factories' => array(
             'Console\Form\DeleteComputer' => 'Console\Form\Service\DeleteComputerFactory',
             'Console\Form\ManageRegistryValues' => 'Console\Form\Service\ManageRegistryValuesFactory',
+            'Console\Form\NetworkDevice' => 'Console\Form\Service\NetworkDeviceFactory',
             'Console\Form\Search' => 'Console\Form\Service\SearchFactory',
             'Console\Form\ShowDuplicates' => 'Console\Form\Service\ShowDuplicatesFactory',
         ),
@@ -93,7 +94,6 @@ return array(
             'Console\Form\GroupMemberships' => 'Form_ManageGroupMemberships',
             'Console\Form\NetworkDeviceTypes' => 'Form_ManageNetworkDeviceTypes',
             'Console\Form\Login' => 'Form_Login',
-            'Console\Form\NetworkDevice' => 'Form_NetworkDevice',
             'Console\Form\Package\Assign' => 'Form_AffectPackages',
             'Console\Form\Package\Build' => 'Form_Package',
             'Console\Form\Package\Edit' => 'Form_Package_Edit',

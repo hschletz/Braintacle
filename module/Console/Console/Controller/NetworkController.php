@@ -52,7 +52,7 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
 
     /**
      * Device form prototype
-     * @var \Form_NetworkDevice
+     * @var \Console\Form\NetworkDevice
      */
     protected $_deviceForm;
 
@@ -63,13 +63,14 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
      * @param \Model_NetworkDeviceType $deviceType
      * @param \Model_Subnet $subnet
      * @param \Console\Form\Subnet $subnetForm
+     * @param \Console\Form\NetworkDevice $deviceForm
      */
     public function __construct(
         \Model_NetworkDevice $device,
         \Model_NetworkDeviceType $deviceType,
         \Model_Subnet $subnet,
         \Console\Form\Subnet $subnetForm,
-        \Form_NetworkDevice $deviceForm
+        \Console\Form\NetworkDevice $deviceForm
     )
     {
         $this->_device = $device;
@@ -209,15 +210,22 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
         $device = $this->_device->fetchByMacAddress($params->fromQuery('macaddress'));
         if ($device) {
             if ($this->getRequest()->isPost()) {
-                if ($this->_deviceForm->isValid($params->fromPost())) {
-                    $device->fromArray($this->_deviceForm->getValues());
+                $this->_deviceForm->setData($params->fromPost());
+                if ($this->_deviceForm->isValid()) {
+                    $data = $this->_deviceForm->getData();
+                    unset($data['_csrf']);
+                    unset($data['Submit']);
+                    $device->fromArray($data);
                     $device->save();
                     return $this->redirectToRoute('network', 'index');
                 }
             } else {
-                foreach ($device as $property => $value) {
-                    $this->_deviceForm->setDefault($property, $value);
-                }
+                $this->_deviceForm->setData(
+                    array(
+                        'Type' => $device['Type'],
+                        'Description' => $device['Description'],
+                    )
+                );
             }
             return array(
                 'device' => $device,

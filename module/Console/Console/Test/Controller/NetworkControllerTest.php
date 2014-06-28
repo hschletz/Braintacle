@@ -52,7 +52,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
 
     /**
      * Device form mock
-     * @var \Form_NetworkDevice
+     * @var \Console\Form\NetworkDevice
      */
     protected $_deviceForm;
 
@@ -65,7 +65,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->_deviceType = $this->getMock('Model_NetworkDeviceType');
         $this->_subnet = $this->getMock('Model_Subnet');
         $this->_subnetForm = $this->getMock('Console\Form\Subnet');
-        $this->_deviceForm = $this->getMock('Form_NetworkDevice');
+        $this->_deviceForm = $this->getMock('Console\Form\NetworkDevice');
         parent::setUp();
     }
 
@@ -383,54 +383,52 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
             'IpAddress' => '192.0.2.1',
             'Hostname' => 'host.example.net',
             'DiscoveryDate' => new \Zend_Date('2014-02-24 13:21:32'),
+            'Type' => 'type1',
+            'Description' => 'description1',
         );
         $this->_device->expects($this->any())
                       ->method('fetchByMacAddress')
                       ->with('00:00:5E:00:53:00')
                       ->will($this->returnValue($device));
-        $this->_deviceForm->expects($this->exactly(4))
-                          ->method('setDefault')
-                          ->with(
-                              $this->callback(
-                                  function($arg) use($device) {
-                                      return isset($device[$arg]);
-                                  }
-                              ),
-                              $this->callback(
-                                  function($arg) use($device) {
-                                      return in_array($arg, $device);
-                                  }
-                              )
-                          );
+        $this->_device->expects($this->once())
+                      ->method('getCategories')
+                      ->will($this->returnValue(array()));
+        // Since form elements are rendered manually, mocking the entire form
+        // would be very complicated. Just stub the pivotal methods and leave
+        // elements as is.
+        $this->_deviceForm = $this->getMockBuilder('Console\Form\NetworkDevice')
+                                  ->setMethods(array('isValid', 'prepare', 'setData'))
+                                  ->getMock();
         $this->_deviceForm->expects($this->once())
-                          ->method('__toString')
-                          ->will($this->returnValue(''));
+                          ->method('setData')
+                          ->with(array('Type' => 'type1', 'Description' => 'description1'));
+        $this->_deviceForm->expects($this->never())
+                          ->method('isValid');
+        $this->_deviceForm->expects($this->once())
+                          ->method('prepare');
+        $this->_deviceForm->setOption('NetworkDeviceModel', $this->_device);
+        $this->_deviceForm->init();
         $this->dispatch('/console/network/edit/?macaddress=00:00:5E:00:53:00');
         $this->assertResponseStatusCode(200);
-        $this->assertQueryContentContains(
-            'dd',
-            "\n00:00:5E:00:53:00\n"
-        );
-        $this->assertQueryContentContains(
-            'dd',
-            "\nvendor\n"
-        );
-        $this->assertQueryContentContains(
-            'dd',
-            "\n192.0.2.1\n"
-        );
-        $this->assertQueryContentContains(
-            'dd',
-            "\nhost.example.net\n"
-        );
-        $this->assertQueryContentContains(
-            'dd',
-            "\n24.02.2014 13:21:32\n"
-        );
+        $this->assertXPathQuery('//form[@action=""][@method="POST"]');
+        $query = '//td[@class="label"][text()="%s"]/following::td[1][text()="%s"]';
+        $this->assertXPathQuery(sprintf($query, 'MAC address', '00:00:5E:00:53:00'));
+        $this->assertXPathQuery(sprintf($query, 'Vendor', 'vendor'));
+        $this->assertXPathQuery(sprintf($query, 'IP address', '192.0.2.1'));
+        $this->assertXPathQuery(sprintf($query, 'Hostname', 'host.example.net'));
+        $this->assertXPathQuery(sprintf($query, 'Date', '24.02.2014 13:21:32'));
+        $this->assertXpathQueryContentContains('//tr[6]/td[1]', $this->_deviceForm->get('Type')->getLabel());
+        $this->assertXpathQuery('//tr[6]/td[2]/select[@name="Type"]');
+        $this->assertXpathQueryContentContains('//tr[7]/td[1]', $this->_deviceForm->get('Description')->getLabel());
+        $this->assertXpathQuery('//tr[7]/td[2]/input[@type="text"][@name="Description"]');
+        $this->assertXpathQuery('//input[@type="hidden"][@name="_csrf"]');
+        $this->assertXpathQuery('//input[@type="submit"]');
+        $this->assertNotXpathQuery('//*[@class="error"]');
     }
 
     public function testEditActionPostInvalid()
     {
+        $postData = array('Type' => 'type', 'Description' => 'description');
         $macAddress = $this->getMockBuilder('Library\MacAddress')->disableOriginalConstructor()->getMock();
         $macAddress->expects($this->any())
                    ->method('__toString')
@@ -448,26 +446,42 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                       ->method('fetchByMacAddress')
                       ->with('00:00:5E:00:53:00')
                       ->will($this->returnValue($device));
+        $this->_device->expects($this->once())
+                      ->method('getCategories')
+                      ->will($this->returnValue(array()));
+        $this->_deviceForm = $this->getMockBuilder('Console\Form\NetworkDevice')
+                                  ->setMethods(array('isValid', 'prepare', 'setData'))
+                                  ->getMock();
+        $this->_deviceForm->expects($this->once())
+                          ->method('setData')
+                          ->with($postData);
         $this->_deviceForm->expects($this->once())
                           ->method('isValid')
                           ->will($this->returnValue(false));
         $this->_deviceForm->expects($this->once())
-                          ->method('__toString')
-                          ->will($this->returnValue(''));
-        $this->dispatch('/console/network/edit/?macaddress=00:00:5E:00:53:00', 'POST');
+                          ->method('prepare');
+        $this->_deviceForm->setOption('NetworkDeviceModel', $this->_device);
+        $this->_deviceForm->init();
+        $this->_deviceForm->get('Description')->setMessages(array('message'));
+        $this->dispatch('/console/network/edit/?macaddress=00:00:5E:00:53:00', 'POST', $postData);
         $this->assertResponseStatusCode(200);
+        $this->assertXpathQuery('//*[@class="error"]//*[text()="message"]');
     }
 
     public function testEditActionPostValid()
     {
         $postData = array('Type' => 'type', 'Description' => 'description');
         $this->_deviceForm->expects($this->once())
-                          ->method('isValid')
-                          ->with($postData)
-                          ->will($this->returnValue(true));
+                          ->method('setData')
+                          ->with($postData);
         $this->_deviceForm->expects($this->once())
-                          ->method('getValues')
-                          ->will($this->returnValue($postData));
+                          ->method('getData')
+                          ->will($this->returnValue($postData + array('_csrf' => '', 'Submit' => '')));
+        $this->_deviceForm->expects($this->once())
+                          ->method('isValid')
+                          ->will($this->returnValue(true));
+        $this->_deviceForm->expects($this->never())
+                          ->method('prepare');
         $this->_device->expects($this->any())
                       ->method('fetchByMacAddress')
                       ->with('00:00:5E:00:53:00')
