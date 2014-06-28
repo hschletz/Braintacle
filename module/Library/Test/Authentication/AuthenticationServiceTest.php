@@ -29,9 +29,6 @@ class AuthenticationServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * An AuthenticationService instance pulled in by setUp()
      *
-     * Tests should leave this in an unauthenticated state, i.e. call
-     * clearIdentity() to clean up.
-     *
      * @var \Library\Authentication\AuthenticationService
      */
     protected $_auth;
@@ -44,7 +41,8 @@ class AuthenticationServiceTest extends \PHPUnit_Framework_TestCase
         // Create table and default account
         \Library\Application::getService('Database\Table\Operators')->setSchema();
 
-        $this->_auth = \Library\Application::getService('Library\AuthenticationService');
+        $this->_auth = new \Library\Authentication\AuthenticationService;
+        $this->_auth->setServiceLocator(\Library\Application::getService('ServiceManager'));
     }
 
     /**
@@ -52,7 +50,10 @@ class AuthenticationServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testService()
     {
-        $this->assertInstanceOf('Library\Authentication\AuthenticationService', $this->_auth);
+        $this->assertInstanceOf(
+            'Library\Authentication\AuthenticationService',
+            \Library\Application::getService('Library\AuthenticationService')
+        );
     }
 
     /**
@@ -60,6 +61,7 @@ class AuthenticationServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testLogin()
     {
+        $this->assertFalse($this->_auth->login('', 'admin')); // Should not throw exception
         $this->assertFalse($this->_auth->login('baduser', 'admin'));
         $this->assertFalse($this->_auth->login('admin', 'badpassword'));
 
@@ -70,21 +72,23 @@ class AuthenticationServiceTest extends \PHPUnit_Framework_TestCase
         $this->_auth->clearIdentity();
     }
 
-    /**
-     * Test changeIdentity() method
-     * 
-     * @return void
-     */
-    public function testChangeIdentity()
+    public function testChangeIdentityValid()
     {
         // Get valid identity first
         $this->_auth->login('admin', 'admin');
         $this->_auth->changeIdentity('test');
         $this->assertEquals('test', $this->_auth->getIdentity());
+    }
 
-        // Test exception on unauthenticated service
-        $this->_auth->clearIdentity();
+    public function testChangeIdentityUnauthenticated()
+    {
         $this->setExpectedException('LogicException');
         $this->_auth->changeIdentity('test');
+    }
+
+    public function testChangeIdentityNoIdentity()
+    {
+        $this->setExpectedException('InvalidArgumentException', 'No identity provided');
+        $this->_auth->changeIdentity('');
     }
 }

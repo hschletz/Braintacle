@@ -54,12 +54,16 @@ implements \Zend\ServiceManager\ServiceLocatorAwareInterface
 
     /**
      * Attempt login with given credentials
-     * @param string $id Login name
+     *
+     * @param string $id Login name - empty name will not authenticate
      * @param string $password Password
      * @return bool Login success. Don't forget to check this!
      */
     public function login($id, $password)
     {
+        if (!$id) {
+            return false;
+        }
         $adapter = new \Zend\Authentication\Adapter\DbTable($this->getServiceLocator()->get('Db'));
         $adapter->setTableName('operators')
                 ->setIdentityColumn('id')
@@ -75,14 +79,18 @@ implements \Zend\ServiceManager\ServiceLocatorAwareInterface
      * Change identity of the logged in user
      *
      * The new identity is not validated, i.e. not checked for a valid account
-     * name. However, the service must have an identity befor this method is
+     * name. However, the service must have an identity before this method is
      * called.
      *
      * @param $id New identity
+     * @throws \InvalidArgumentException if $id is empty
      * @throws \LogicException if the session is not authenticated
      */
     public function changeIdentity($id)
     {
+        if (!$id) {
+            throw new \InvalidArgumentException('No identity provided');
+        }
         if (!$this->hasIdentity()) {
             throw new \LogicException('Cannot change identity: not authenticated yet');
         }
