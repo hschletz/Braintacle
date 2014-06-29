@@ -227,9 +227,10 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
      *
      * A package is installable if it is not already assigned and not listed
      * in the history for a computer.
-     * @return Zend_Db_Statement
+     *
+     * @return string[]
      */
-    function getInstallablePackages()
+    public function getInstallablePackages()
     {
         $db = Model_Database::getAdapter();
 
@@ -241,17 +242,8 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
          * schema to avoid the cast alltogether.
          */
         $select = $db->select()
-            ->from(
-                'download_available', array(
-                    'fileid',
-                    'name',
-                )
-            )
-            ->joinLeftUsing(
-                'download_enable', 'fileid', array(
-                    'id',
-                )
-            )
+            ->from('download_available', 'name')
+            ->joinLeftUsing('download_enable', 'fileid', array())
             ->where(
                 'id NOT IN(SELECT ivalue FROM devices WHERE hardware_id=? AND name=\'DOWNLOAD\')',
                 $this->getId()
@@ -263,7 +255,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
             )
             ->order('name');
 
-        return $select->query();
+        return $select->query()->fetchAll(\Zend_Db::FETCH_COLUMN);
     }
 
 

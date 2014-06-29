@@ -32,10 +32,11 @@ class GroupControllerFactory implements \Zend\ServiceManager\FactoryInterface
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $serviceManager = $serviceLocator->getServiceLocator();
+        $formManager = $serviceManager->get('FormElementManager');
         return new \Console\Controller\GroupController(
             $serviceManager->get('Model\Group\Group'),
             $serviceManager->get('Model\Computer\Computer'),
-            $serviceManager->get('Console\Form\Package\Assign'),
+            $formManager->get('Console\Form\Package\Assign'),
             $serviceManager->get('Console\Form\AddToGroup'),
             $serviceManager->get('Console\Form\ClientConfig')
         );

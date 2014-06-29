@@ -99,12 +99,12 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
         $legacyFormManager = new \Zend\ServiceManager\ServiceManager;
         $legacyFormManager->setService('Console\Form\CustomFields', $this->getMock('Form_UserDefinedInfo'));
-        $legacyFormManager->setService('Console\Form\AssignPackages', $this->getMock('Form_AffectPackages'));
         $legacyFormManager->setService('Console\Form\GroupMemberships', $this->getMock('Form_ManageGroupMemberships'));
         $legacyFormManager->setService('Console\Form\ClientConfig', $this->getMock('Form_Configuration'));
 
         $this->_formManager = new \Zend\Form\FormElementManager;
         $this->_formManager->setServiceLocator($legacyFormManager);
+        $this->_formManager->setService('Console\Form\Package\Assign', $this->getMock('Console\Form\Package\Assign'));
         $this->_formManager->setService('Console\Form\DeleteComputer', $this->getMock('Console\Form\DeleteComputer'));
         $this->_formManager->setService('Console\Form\Import', $this->getMock('Console\Form\Import'));
         $this->_formManager->setService('Console\Form\ProductKey', $this->getMock('Console\Form\ProductKey'));
@@ -1905,16 +1905,17 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testPackagesActionNoPackages()
     {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\AssignPackages');
-        $form->expects($this->once())
-             ->method('addPackages')
-             ->with($this->_computer)
-             ->will($this->returnValue(0));
+        $form = $this->_formManager->get('Console\Form\Package\Assign');
         $form->expects($this->never())
-             ->method('__toString');
+             ->method('setPackages');
+        $form->expects($this->never())
+             ->method('render');
         $this->_computer->expects($this->once())
                         ->method('getItems')
                         ->with('PackageAssignment', 'Name', 'asc')
+                        ->will($this->returnValue(array()));
+        $this->_computer->expects($this->once())
+                        ->method('getInstallablePackages')
                         ->will($this->returnValue(array()));
         $this->dispatch('/console/computer/packages/?id=1');
         $this->assertResponseStatusCode(200);
@@ -1924,13 +1925,11 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testPackagesActionAssigned()
     {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\AssignPackages');
-        $form->expects($this->once())
-             ->method('addPackages')
-             ->with($this->_computer)
-             ->will($this->returnValue(0));
+        $form = $this->_formManager->get('Console\Form\Package\Assign');
         $form->expects($this->never())
-             ->method('__toString');
+             ->method('setPackages');
+        $form->expects($this->never())
+             ->method('render');
         $assignments = array(
             array(
                 'Computer' => 1,
@@ -1961,6 +1960,9 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('getItems')
                         ->with('PackageAssignment', 'Name', 'asc')
                         ->will($this->returnValue($assignments));
+        $this->_computer->expects($this->once())
+                        ->method('getInstallablePackages')
+                        ->will($this->returnValue(array()));
         $this->dispatch('/console/computer/packages/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//h2', "\nAssigned packages\n");
@@ -1977,17 +1979,17 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testPackagesActionInstallable()
     {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\AssignPackages');
+        $packages = array('package1', 'package2');
+        $form = $this->_formManager->get('Console\Form\Package\Assign');
         $form->expects($this->once())
-             ->method('addPackages')
-             ->with($this->_computer)
-             ->will($this->returnValue(1));
+             ->method('setPackages')
+             ->with($packages);
         $form->expects($this->once())
-             ->method('setAction')
-             ->with('/console/computer/installpackage/?id=1');
+             ->method('setAttribute')
+             ->with('action', '/console/computer/installpackage/?id=1');
         $form->expects($this->once())
-             ->method('__toString')
-             ->will($this->returnValue(''));
+             ->method('render')
+             ->will($this->returnValue('<form></form>'));
         $map = array(
             array('Id', 1),
         );
@@ -1998,10 +2000,14 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('getItems')
                         ->with('PackageAssignment', 'Name', 'asc')
                         ->will($this->returnValue(array()));
+        $this->_computer->expects($this->once())
+                        ->method('getInstallablePackages')
+                        ->will($this->returnValue($packages));
         $this->dispatch('/console/computer/packages/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//h2', "\nInstall packages\n");
         $this->assertXpathQueryCount('//h2', 1);
+        $this->assertXPathQuery('//form');
     }
 
     public function testGroupsActionNoGroups()
@@ -2280,13 +2286,13 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testInstallpackageActionGet()
     {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\AssignPackages');
-        $form->expects($this->never())
-             ->method('addPackages');
+        $form = $this->_formManager->get('Console\Form\Package\Assign');
         $form->expects($this->never())
              ->method('isValid');
         $form->expects($this->never())
-             ->method('getValues');
+             ->method('setData');
+        $form->expects($this->never())
+             ->method('getData');
         $map = array(
             array('Id', 1),
         );
@@ -2302,16 +2308,15 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
     public function testInstallpackageActionPostInvalid()
     {
         $postData = array('package1' => '1', 'package2' => '1');
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\AssignPackages');
-        $form->expects($this->once())
-             ->method('addPackages')
-             ->with($this->_computer);
+        $form = $this->_formManager->get('Console\Form\Package\Assign');
         $form->expects($this->once())
              ->method('isValid')
-             ->with($postData)
              ->will($this->returnValue(false));
+        $form->expects($this->once())
+             ->method('setData')
+             ->with($postData);
         $form->expects($this->never())
-             ->method('getValues');
+             ->method('getData');
         $map = array(
             array('Id', 1),
         );
@@ -2326,17 +2331,16 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testInstallpackageActionPostValid()
     {
-        $postData = array('package1' => '1', 'package2' => '1');
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\AssignPackages');
-        $form->expects($this->once())
-             ->method('addPackages')
-             ->with($this->_computer);
+        $postData = array('Packages' => array('package1' => '0', 'package2' => '1'));
+        $form = $this->_formManager->get('Console\Form\Package\Assign');
         $form->expects($this->once())
              ->method('isValid')
-             ->with($postData)
              ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('getValues')
+             ->method('setData')
+             ->with($postData);
+        $form->expects($this->once())
+             ->method('getData')
              ->will($this->returnValue($postData));
         $map = array(
             array('Id', 1),
@@ -2344,15 +2348,9 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->exactly(2))
+        $this->_computer->expects($this->once())
                         ->method('installPackage')
-                        ->with(
-                            $this->callback(
-                                function($name) use($postData) {
-                                    return isset($postData[$name]);
-                                }
-                            )
-                        );
+                        ->with('package2');
         $this->dispatch('/console/computer/installpackage/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/computer/packages/?id=1');
     }

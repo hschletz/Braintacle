@@ -443,6 +443,14 @@ td.formElement {
     text-align: center;
 }
 
+.form_package_assign label span {
+    text-align: left;
+}
+
+.form_package_assign input[type="submit"] {
+    margin-left: 0;
+}
+
 .form_deletecomputer {
     text-align: center;
     margin-top: 4ex;

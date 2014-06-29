@@ -40,7 +40,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     /**
      * Package assignment form mock
-     * @var \Form_AffectPackages
+     * @var \Console\Form\Package\Assign
      */
     protected $_packageAssignmentForm;
 
@@ -63,7 +63,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     {
         $this->_group = $this->getMockBuilder('Model_Group')->disableOriginalConstructor()->getMock();
         $this->_computer = $this->getMockBuilder('Model_Computer')->disableOriginalConstructor()->getMock();
-        $this->_packageAssignmentForm = $this->getMock('Form_AffectPackages');
+        $this->_packageAssignmentForm = $this->getMock('Console\Form\Package\Assign');
         $this->_addToGroupForm = $this->getMockBuilder('Form_AddToGroup')->disableOriginalConstructor()->getMock();
         $this->_clientConfigForm = $this->getMock('Form_Configuration');
         parent::setUp();
@@ -305,12 +305,13 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                             )
                          )
                      );
-        $this->_packageAssignmentForm->expects($this->once())
-                                     ->method('addPackages')
-                                     ->with($this->_group)
-                                     ->will($this->returnValue(0));
+        $this->_group->expects($this->once())
+                     ->method('getInstallablePackages')
+                     ->will($this->returnValue(array()));
         $this->_packageAssignmentForm->expects($this->never())
-                                     ->method('__toString');
+                                     ->method('setPackages');
+        $this->_packageAssignmentForm->expects($this->never())
+                                     ->method('render');
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
@@ -326,7 +327,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     public function testPackagesActionOnlyAvailable()
     {
         $url = '/console/group/packages/?id=42';
-        $packages = array();
+        $packages = array('package1', 'package2');
         $this->_group->expects($this->once())
                      ->method('fetchById')
                      ->with('42')
@@ -334,7 +335,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_group->expects($this->once())
                      ->method('getPackages')
                      ->with('asc')
-                     ->will($this->returnValue($packages));
+                     ->will($this->returnValue(array()));
         $this->_group->expects($this->atLeastOnce())
                      ->method('offsetGet')
                      ->will(
@@ -345,19 +346,22 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                             )
                          )
                      );
+        $this->_group->expects($this->once())
+                     ->method('getInstallablePackages')
+                     ->will($this->returnValue($packages));
         $this->_packageAssignmentForm->expects($this->once())
-                                     ->method('addPackages')
-                                     ->with($this->_group)
-                                     ->will($this->returnValue(2));
+                                     ->method('setPackages')
+                                     ->with($packages);
         $this->_packageAssignmentForm->expects($this->once())
-                                     ->method('setAction')
-                                     ->with('/console/group/installpackage/?id=42');
+                                     ->method('render')
+                                     ->will($this->returnValue('<form></form>'));
         $this->_packageAssignmentForm->expects($this->once())
-                                     ->method('__toString')
-                                     ->will($this->returnValue(''));
+                                     ->method('setAttribute')
+                                     ->with('action', '/console/group/installpackage/?id=42');
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
-        $this->assertNotXpathQuery('table');
+        $this->assertNotXpathQuery('//table');
+        $this->assertXpathQuery('//form');
     }
 
     public function testRemovepackageActionGet()
@@ -419,7 +423,9 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_packageAssignmentForm->expects($this->never())
                                      ->method('isValid');
         $this->_packageAssignmentForm->expects($this->never())
-                                     ->method('getValues');
+                                     ->method('setData');
+        $this->_packageAssignmentForm->expects($this->never())
+                                     ->method('getData');
 
         $this->dispatch('/console/group/installpackage/?id=42');
         $this->assertRedirectTo('/console/group/packages/?id=42');
@@ -427,11 +433,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testInstallpackageActionPostInvalid()
     {
-        $filter = new \Braintacle_Filter_FormElementNameEncode;
-        $postData = array(
-            $filter->filter('package1') => '0',
-            $filter->filter('package2') => '1',
-        );
+        $postData = array('Packages' => array('package1' => '0', 'package2' => '1'));
         $this->_group->expects($this->once())
                      ->method('fetchById')
                      ->with('42')
@@ -440,22 +442,19 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                      ->method('installPackage');
         $this->_packageAssignmentForm->expects($this->once())
                                      ->method('isValid')
-                                     ->with($postData)
                                      ->will($this->returnValue(false));
+        $this->_packageAssignmentForm->expects($this->once())
+                                     ->method('setData')
+                                     ->with($postData);
         $this->_packageAssignmentForm->expects($this->never())
-                                     ->method('getValues');
-
+                                     ->method('getData');
         $this->dispatch('/console/group/installpackage/?id=42', 'POST', $postData);
         $this->assertRedirectTo('/console/group/packages/?id=42');
     }
 
     public function testInstallpackageActionPostValid()
     {
-        $filter = new \Braintacle_Filter_FormElementNameEncode;
-        $postData = array(
-            $filter->filter('package1') => '0',
-            $filter->filter('package2') => '1',
-        );
+        $postData = array('Packages' => array('package1' => '0', 'package2' => '1'));
         $this->_group->expects($this->once())
                      ->method('fetchById')
                      ->with('42')
@@ -465,12 +464,13 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                      ->with('package2');
         $this->_packageAssignmentForm->expects($this->once())
                                      ->method('isValid')
-                                     ->with($postData)
                                      ->will($this->returnValue(true));
         $this->_packageAssignmentForm->expects($this->once())
-                                     ->method('getValues')
-                                     ->will($this->returnValue(array('package2' => '1')));
-
+                                     ->method('setData')
+                                     ->with($postData);
+        $this->_packageAssignmentForm->expects($this->once())
+                                     ->method('getData')
+                                     ->will($this->returnValue($postData));
         $this->dispatch('/console/group/installpackage/?id=42', 'POST', $postData);
         $this->assertRedirectTo('/console/group/packages/?id=42');
     }

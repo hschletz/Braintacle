@@ -40,7 +40,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
 
     /**
      * Package assignment form
-     * @var \Form_AffectPackages
+     * @var \Console\Form\Package\Assign
      */
     protected $_packageAssignmentForm;
 
@@ -67,14 +67,14 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
      *
      * @param \Model_Group $group
      * @param \Model_Computer $computer
-     * @param \Form_AffectPackages $packageAssignmentForm
+     * @param \Console\Form\Package\Assign $packageAssignmentForm
      * @param \Form_AddToGroup $addToGroupForm
      * @param \Form_Configuration $clientConfigForm
      */
     public function __construct(
         \Model_Group $group,
         \Model_Computer $computer,
-        \Form_AffectPackages $packageAssignmentForm,
+        \Console\Form\Package\Assign $packageAssignmentForm,
         \Form_AddToGroup $addToGroupForm,
         \Form_Configuration $clientConfigForm
     )
@@ -195,7 +195,17 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
         $vars['packageNames'] = $this->_currentGroup->getPackages($vars['sorting']['direction']);
 
         // Add package installation form if packages are available.
-        if ($this->_packageAssignmentForm->addPackages($this->_currentGroup)) {
+        $packages = $this->_currentGroup->getInstallablePackages();
+        if ($packages) {
+            $this->_packageAssignmentForm->setPackages($packages);
+            $this->_packageAssignmentForm->setAttribute(
+                'action',
+                $this->urlFromRoute(
+                    'group',
+                    'installpackage',
+                    array('id' => $this->_currentGroup['Id'])
+                )
+            );
             $vars['form'] = $this->_packageAssignmentForm;
         }
 
@@ -234,14 +244,15 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function installpackageAction()
     {
-        $this->_packageAssignmentForm->addPackages($this->_currentGroup);
-        if (
-            $this->getRequest()->isPost() and
-            $this->_packageAssignmentForm->isValid($this->params()->fromPost())
-        ) {
-            $packages = array_keys($this->_packageAssignmentForm->getValues());
-            foreach ($packages as $packageName) {
-                $this->_currentGroup->installPackage($packageName);
+        if ($this->getRequest()->isPost()) {
+            $this->_packageAssignmentForm->setData($this->params()->fromPost());
+            if ($this->_packageAssignmentForm->isValid()) {
+                $data = $this->_packageAssignmentForm->getData();
+                foreach ($data['Packages'] as $name => $install) {
+                    if ($install) {
+                        $this->_currentGroup->installPackage($name);
+                    }
+                }
             }
         }
         return $this->redirectToRoute(

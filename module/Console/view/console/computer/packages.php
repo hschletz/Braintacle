@@ -90,5 +90,5 @@ if (isset($this->form)) {
         'h2',
         $this->translate('Install packages')
     );
-    print $this->form;
+    print $this->form->render($this);
 }

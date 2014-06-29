@@ -64,16 +64,9 @@ if (count($this->packageNames)) {
 }
 
 if (isset($this->form)) {
-    $this->form->setAction(
-        $this->consoleUrl(
-            'group',
-            'installpackage',
-            array('id' => $this->group['Id'])
-        )
-    );
     print $this->htmlTag(
         'h2',
         $this->translate('Install packages')
     );
-    print $this->form;
+    print $this->form->render($this);
 }

@@ -389,16 +389,19 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Status and management of assigned packages
      *
-     * @return array computer, order, direction [, form (Console\Form\AssignPackages) if packages are available]
+     * @return array computer, order, direction [, form (Console\Form\Package\Assign) if packages are available]
      */
     public function packagesAction()
     {
         $vars = $this->getOrder('Name');
         $vars['computer'] = $this->_currentComputer;
         // Add package installation form if packages are available
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\AssignPackages');
-        if ($form->addPackages($this->_currentComputer)) {
-            $form->setAction(
+        $packages = $this->_currentComputer->getInstallablePackages();
+        if ($packages) {
+            $form = $this->_formManager->get('Console\Form\Package\Assign');
+            $form->setPackages($packages);
+            $form->setAttribute(
+                'action',
                 $this->urlFromRoute(
                     'computer',
                     'installpackage',
@@ -522,18 +525,21 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
     }
 
     /**
-     * Install packages from Console\Form\AssignPackages (POST only)
+     * Install packages from Console\Form\Package\Assign (POST only)
      *
      * @return \Zend\Http\Response redirect response
      */
     public function installpackageAction()
     {
         if ($this->getRequest()->isPost()) {
-            $form = $this->_formManager->getServiceLocator()->get('Console\Form\AssignPackages');
-            $form->addPackages($this->_currentComputer);
-            if ($form->isValid($this->params()->fromPost())) {
-                foreach (array_keys($form->getValues()) as $packageName) {
-                    $this->_currentComputer->installPackage($packageName);
+            $form = $this->_formManager->get('Console\Form\Package\Assign');
+            $form->setData($this->params()->fromPost());
+            if ($form->isValid()) {
+                $data = $form->getData();
+                foreach ($data['Packages'] as $name => $install) {
+                    if ($install) {
+                        $this->_currentComputer->installPackage($name);
+                    }
                 }
             }
         }
