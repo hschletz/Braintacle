@@ -36,7 +36,7 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
 
     /**
      * Login form
-     * @var \Form_Login
+     * @var \Console\Form\Login
      */
     protected $_form;
 
@@ -44,10 +44,11 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
      * Constructor
      *
      * @param \Library\Authentication\AuthenticationService $authenticationService Authentication service
+     * @param \Console\Form\Login $form
      */
     public function __construct(
         \Library\Authentication\AuthenticationService $authenticationService,
-        \Form_Login $form
+        \Console\Form\Login $form
     )
     {
         $this->_authenticationService = $authenticationService;
@@ -75,33 +76,34 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
         if ($this->_authenticationService->hasIdentity()) {
             return $this->redirectToRoute('computer');
         }
-
-        $this->_form->setAction($this->urlFromRoute('login', 'login'));
-
-        if ($this->getRequest()->isPost() and $this->_form->isValid($this->params()->fromPost())) {
-            // Check credentials
-            if (
-                $this->_authenticationService->login(
-                    $this->_form->getValue('userid'),
-                    $this->_form->getValue('password')
-                )
-            ) {
-                // Authentication successful. Redirect to appropriate page.
-                $session = new \Zend\Session\Container('login');
-                if (isset($session->originalUri)) {
-                    // We got redirected here from another page. Redirect to original page.
-                    $response = $this->redirect()->toUrl($session->originalUri);
-                } else {
-                    // Redirect to default page (computer listing)
-                    $response = $this->redirectToRoute('computer');
+        $vars = array('form' => $this->_form);
+        if ($this->getRequest()->isPost()) {
+            $this->_form->setData($this->params()->fromPost());
+            if ($this->_form->isValid()) {
+                // Check credentials
+                $data = $this->_form->getData();
+                if (
+                    $this->_authenticationService->login(
+                        $data['User'],
+                        $data['Password']
+                    )
+                ) {
+                    // Authentication successful. Redirect to appropriate page.
+                    $session = new \Zend\Session\Container('login');
+                    if (isset($session->originalUri)) {
+                        // We got redirected here from another page. Redirect to original page.
+                        $response = $this->redirect()->toUrl($session->originalUri);
+                    } else {
+                        // Redirect to default page (computer listing)
+                        $response = $this->redirectToRoute('computer');
+                    }
+                    $session->getManager()->getStorage()->clear('login');
+                    return $response;
                 }
-                $session->getManager()->getStorage()->clear('login');
-                return $response;
-            } else {
-                $this->_form->setDescription('Invalid username or password');
             }
+            $vars['invalidCredentials'] = true;
         }
-        return array('form' => $this->_form);
+        return $vars;
     }
 
     /**

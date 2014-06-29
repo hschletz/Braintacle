@@ -373,12 +373,9 @@ fieldset {
     margin-left: auto;
     margin-right: auto;
 }
+
 /* special formats */
-input#userid,
-input#password
-{
-    width: 10em;
-}
+
 /* The 'size' attribute will have no effect because the default width for
  * <input> elements applies. These rules override the width to match the given
  * 'size' attribute. */
@@ -453,6 +450,10 @@ td.formElement {
 
 .form_deletecomputer input[type=submit]{
     margin: 4ex 1em;
+}
+
+.form_login input[type="text"], .form_login input[type="password"] {
+    width: 12em;
 }
 
 .form_manageregistryvalues h2 {

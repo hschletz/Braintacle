@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for LoginController
+ * Tests for Login form
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,22 +19,29 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Console\Service;
+namespace Console\Test\Form;
 
 /**
- * Factory for LoginController
+ * Tests for Login form
  */
-class LoginControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class LoginTest extends \Console\Test\AbstractFormTest
 {
-    /**
-     * @internal
-     */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function testInit()
     {
-        $serviceManager = $serviceLocator->getServiceLocator();
-        return new \Console\Controller\LoginController(
-            $serviceManager->get('Library\AuthenticationService'),
-            $serviceManager->get('FormElementManager')->get('Console\Form\Login')
+        $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('User'));
+        $this->assertInstanceOf('Zend\Form\Element\Password', $this->_form->get('Password'));
+        $this->assertInstanceOf('\Library\Form\Element\Submit', $this->_form->get('Submit'));
+    }
+
+    public function testRender()
+    {
+        $view = $this->_createView();
+        $html = $this->_form->render($view);
+        $document = new \Zend\Dom\Document($html);
+        $this->assertCount(1, \Zend\Dom\Document\Query::execute('//form', $document));
+        $this->assertContains(
+            'document.forms["form_login"]["User"].focus()',
+            $view->placeHolder('BodyOnLoad')
         );
     }
 }

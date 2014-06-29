@@ -25,4 +25,12 @@ print $this->htmlTag(
     $this->translate('Login to Braintacle')
 );
 
-print $this->form->toHtml($this);
+if (isset($this->invalidCredentials)) {
+    print $this->htmlTag(
+        'p',
+        $this->translate('Invalid username or password'),
+        array('class' => 'error')
+    );
+}
+
+print $this->form->render($this);

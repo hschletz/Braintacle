@@ -53,6 +53,7 @@ return array(
         ),
         'invokables' => array(
             'Console\Form\Import' => 'Console\Form\Import',
+            'Console\Form\Login' => 'Console\Form\Login',
             'Console\Form\ProductKey' => 'Console\Form\ProductKey',
             'Console\Form\SoftwareFilter' => 'Console\Form\SoftwareFilter',
             'Console\Form\Subnet' => 'Console\Form\Subnet',
@@ -93,7 +94,6 @@ return array(
             'Console\Form\DefineFields' => 'Form_DefineFields',
             'Console\Form\GroupMemberships' => 'Form_ManageGroupMemberships',
             'Console\Form\NetworkDeviceTypes' => 'Form_ManageNetworkDeviceTypes',
-            'Console\Form\Login' => 'Form_Login',
             'Console\Form\Package\Assign' => 'Form_AffectPackages',
             'Console\Form\Package\Build' => 'Form_Package',
             'Console\Form\Package\Edit' => 'Form_Package_Edit',
