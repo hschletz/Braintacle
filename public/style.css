@@ -416,7 +416,7 @@ td.formElement {
     display: table-row;
 }
 
-.table label span, .table input, .table select {
+.table label span, .table input, .table select, .table textarea {
     display: table-cell;
     margin: 1.4ex 1em 1.4ex 1em;
     vertical-align: middle;
@@ -472,7 +472,7 @@ td.formElement {
     margin: 1.2ex 0em 1.2ex 0em;
 }
 
-.form_productkey {
+.form_customfields, .form_productkey {
     margin-top: 4ex;
 }
 

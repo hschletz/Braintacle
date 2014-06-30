@@ -98,13 +98,13 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer = $this->getMockBuilder('Model_Computer')->disableOriginalConstructor()->getMock();
 
         $legacyFormManager = new \Zend\ServiceManager\ServiceManager;
-        $legacyFormManager->setService('Console\Form\CustomFields', $this->getMock('Form_UserDefinedInfo'));
         $legacyFormManager->setService('Console\Form\GroupMemberships', $this->getMock('Form_ManageGroupMemberships'));
         $legacyFormManager->setService('Console\Form\ClientConfig', $this->getMock('Form_Configuration'));
 
         $this->_formManager = new \Zend\Form\FormElementManager;
         $this->_formManager->setServiceLocator($legacyFormManager);
         $this->_formManager->setService('Console\Form\Package\Assign', $this->getMock('Console\Form\Package\Assign'));
+        $this->_formManager->setService('Console\Form\CustomFields', $this->getMock('Console\Form\CustomFields'));
         $this->_formManager->setService('Console\Form\DeleteComputer', $this->getMock('Console\Form\DeleteComputer'));
         $this->_formManager->setService('Console\Form\Import', $this->getMock('Console\Form\Import'));
         $this->_formManager->setService('Console\Form\ProductKey', $this->getMock('Console\Form\ProductKey'));
@@ -1784,8 +1784,12 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testCustomfieldsActionFlashMessage()
     {
+        $customFields = $this->getMockBuilder('Model_UserDefinedInfo')->disableOriginalConstructor()->getMock();
+        $customFields->expects($this->once())
+                     ->method('getArrayCopy')
+                     ->will($this->returnValue(array()));
         $map = array(
-            array('CustomFields', array()),
+            array('CustomFields', $customFields),
         );
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
@@ -1800,38 +1804,28 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testCustomfieldsActionGet()
     {
-        $customFields = array(
-            'field1' => 'value1',
-            'field2' => 'value2',
-        );
+        $data = array('field1' => 'value1', 'field2' => 'value2');
+        $customFields = $this->getMockBuilder('Model_UserDefinedInfo')->disableOriginalConstructor()->getMock();
+        $customFields->expects($this->once())
+                     ->method('getArrayCopy')
+                     ->will($this->returnValue($data));
         $map = array(
             array('CustomFields', $customFields),
         );
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\CustomFields');
+        $form = $this->_formManager->get('Console\Form\CustomFields');
         $form->expects($this->never())
              ->method('isValid');
         $form->expects($this->never())
-             ->method('getValues');
-        $form->expects($this->exactly(2))
-             ->method('setDefault')
-             ->with(
-                 $this->callback(
-                     function($name) use($customFields) {
-                        return isset($customFields[$name]);
-                     }
-                 ),
-                 $this->callback(
-                     function($value) use($customFields) {
-                        return in_array($value, $customFields);
-                     }
-                 )
-             );
+             ->method('getData');
         $form->expects($this->once())
-             ->method('__toString')
-             ->will($this->returnValue(''));
+             ->method('setData')
+             ->with(array('Fields' => $data));
+        $form->expects($this->once())
+             ->method('render')
+             ->will($this->returnValue('<form></form>'));
         $this->dispatch('/console/computer/customfields/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertEmpty($this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages());
@@ -1839,26 +1833,26 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
             '//p/a[@href="/console/preferences/customfields/"]',
             'Define fields'
         );
+        $this->assertXpathQuery('//form');
     }
 
-    public function testCustomfieldsPostInvalid()
+    public function testCustomfieldsActionPostInvalid()
     {
         $postData = array(
-            'field1' => 'value1',
-            'field2' => 'value2',
+            '_csrf' => 'csrf',
+            'Fields' => array('field1' => 'value1', 'field2' => 'value2')
         );
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\CustomFields');
+        $form = $this->_formManager->get('Console\Form\CustomFields');
         $form->expects($this->once())
              ->method('isValid')
-             ->with($postData)
              ->will($this->returnValue(false));
         $form->expects($this->never())
-             ->method('getValues');
-        $form->expects($this->never())
-             ->method('setDefault');
+             ->method('getData');
         $form->expects($this->once())
-             ->method('__toString')
-             ->will($this->returnValue(''));
+             ->method('setData')
+             ->with($postData);
+        $form->expects($this->once())
+             ->method('render');
         $this->dispatch('/console/computer/customfields/?id=1', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertEmpty($this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages());
@@ -1868,24 +1862,24 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         );
     }
 
-    public function testCustomfieldsPostValid()
+    public function testCustomfieldsActionPostValid()
     {
         $postData = array(
-            'field1' => 'value1',
-            'field2' => 'value2',
+            '_csrf' => 'csrf',
+            'Fields' => array('field1' => 'value1', 'field2' => 'value2')
         );
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\CustomFields');
+        $form = $this->_formManager->get('Console\Form\CustomFields');
         $form->expects($this->once())
              ->method('isValid')
-             ->with($postData)
              ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('getValues')
+             ->method('getData')
              ->will($this->returnValue($postData));
+        $form->expects($this->once())
+             ->method('setData')
+             ->with($postData);
         $form->expects($this->never())
-             ->method('setDefault');
-        $form->expects($this->never())
-             ->method('__toString');
+             ->method('render');
         $map = array(
             array('Id', 1),
         );
@@ -1894,7 +1888,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->once())
                         ->method('setUserDefinedInfo')
-                        ->with($postData);
+                        ->with($postData['Fields']);
         $this->dispatch('/console/computer/customfields/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/computer/customfields/?id=1');
         $this->assertContains(

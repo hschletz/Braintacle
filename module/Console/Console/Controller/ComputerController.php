@@ -363,11 +363,13 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function customfieldsAction()
     {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\CustomFields');
+        $form = $this->_formManager->get('Console\Form\CustomFields');
 
         if ($this->getRequest()->isPost()) {
-            if ($form->isValid($this->params()->fromPost())) {
-                $this->_currentComputer->setUserDefinedInfo($form->getValues());
+            $form->setData($this->params()->fromPost());
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $this->_currentComputer->setUserDefinedInfo($data['Fields']);
                 $this->flashMessenger()->addSuccessMessage('The information was successfully updated.');
                 return $this->redirectToRoute(
                     'computer',
@@ -376,9 +378,7 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
                 );
             }
         } else {
-            foreach ($this->_currentComputer['CustomFields'] as $name => $value) {
-                $form->setDefault($name, $value);
-            }
+            $form->setData(array('Fields' => $this->_currentComputer['CustomFields']->getArrayCopy()));
         }
         return array(
             'computer' => $this->_currentComputer,

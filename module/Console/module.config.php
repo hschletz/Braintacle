@@ -45,6 +45,7 @@ return array(
     ),
     'form_elements' => array(
         'factories' => array(
+            'Console\Form\CustomFields' => 'Console\Form\Service\CustomFieldsFactory',
             'Console\Form\DeleteComputer' => 'Console\Form\Service\DeleteComputerFactory',
             'Console\Form\ManageRegistryValues' => 'Console\Form\Service\ManageRegistryValuesFactory',
             'Console\Form\NetworkDevice' => 'Console\Form\Service\NetworkDeviceFactory',
@@ -90,7 +91,6 @@ return array(
             'Console\Form\Account\New' => 'Form_Account_New',
             'Console\Form\AddToGroup' => 'Form_AddToGroup',
             'Console\Form\ClientConfig' => 'Form_Configuration',
-            'Console\Form\CustomFields' => 'Form_UserDefinedInfo',
             'Console\Form\DefineFields' => 'Form_DefineFields',
             'Console\Form\GroupMemberships' => 'Form_ManageGroupMemberships',
             'Console\Form\NetworkDeviceTypes' => 'Form_ManageNetworkDeviceTypes',

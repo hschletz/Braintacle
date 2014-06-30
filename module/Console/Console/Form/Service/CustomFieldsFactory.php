@@ -1,6 +1,6 @@
 <?php
 /**
- * Display/edit custom fields
+ * Factory for CustomFields form
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,17 +19,23 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-require 'header.php';
+namespace Console\Form\Service;
 
-print $this->flashMessenger()->render('success');
-print $this->form->render($this);
-print $this->htmlTag(
-    'p',
-    $this->htmlTag(
-        'a',
-        $this->translate('Define fields'),
-        array('href' => $this->consoleUrl('preferences', 'customfields')),
-        true
-    ),
-    array('class' => 'textcenter clearboth')
-);
+/**
+ * Factory for CustomFields form
+ * @codeCoverageIgnore
+ */
+class CustomFieldsFactory implements \Zend\ServiceManager\FactoryInterface
+{
+    /**
+     * @internal
+     */
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    {
+        $serviceManager = $serviceLocator->getServiceLocator();
+        return new \Console\Form\CustomFields(
+            null,
+            array('customFields' => $serviceManager->get('Model\Computer\CustomFields'))
+        );
+    }
+}
