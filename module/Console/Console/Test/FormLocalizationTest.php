@@ -90,6 +90,13 @@ class FormLocalizationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $this->_form->localize('date', ''));
     }
 
+    public function testLocalizeNull()
+    {
+        $this->assertNull($this->_form->localize('integer', null));
+        $this->assertNull($this->_form->localize('float', null));
+        $this->assertNull($this->_form->localize('date', null));
+    }
+
     public function testNormalizeText()
     {
         $this->assertEquals('test', $this->_form->normalize('text', 'test'));
@@ -146,15 +153,29 @@ class FormLocalizationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $this->_form->normalize('date', ' '));
     }
 
+    public function testNormalizeNull()
+    {
+        $this->assertEquals('', $this->_form->normalize('integer', null));
+        $this->assertEquals('', $this->_form->normalize('float', null));
+        $this->assertEquals('', $this->_form->normalize('date', null));
+    }
+
     public function testValidateType()
     {
         $this->assertTrue($this->_form->validateType('text', ''));
         $this->assertTrue($this->_form->validateType('text', 0));
+        $this->assertTrue($this->_form->validateType('text', null));
+
         $this->assertFalse($this->_form->validateType('integer', ''));
         $this->assertTrue($this->_form->validateType('integer', 0));
+        $this->assertFalse($this->_form->validateType('integer', null));
+
         $this->assertFalse($this->_form->validateType('float', ''));
         $this->assertTrue($this->_form->validateType('float', 0.0));
+        $this->assertFalse($this->_form->validateType('float', null));
+
         $this->assertFalse($this->_form->validateType('date', ''));
         $this->assertTrue($this->_form->validateType('date', new \Zend_Date));
+        $this->assertFalse($this->_form->validateType('date', null));
     }
 }

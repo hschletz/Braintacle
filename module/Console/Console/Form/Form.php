@@ -144,7 +144,7 @@ class Form extends \Zend\Form\Form
                 }
                 break;
             case 'float':
-                if ($value !== '' and preg_match('/^([0-9]+)?(\.[0-9]+)?$/', $value)) {
+                if ($value !== null and $value !== '' and preg_match('/^([0-9]+)?(\.[0-9]+)?$/', $value)) {
                     $numberFormat = new \Zend\I18n\Filter\NumberFormat;
                     $numberFormat->getFormatter()->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, 100);
                     $value = $numberFormat->filter((float) $value);
