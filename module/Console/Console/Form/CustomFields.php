@@ -49,15 +49,6 @@ class CustomFields extends Form
         $fields = new \Zend\Form\Fieldset('Fields');
         $inputFilterField = new \Zend\InputFilter\InputFilter;
         foreach ($this->_types as $name => $type) {
-            $filter = array(
-                'name' => $name,
-                'required' => false,
-                'filters' => array(
-                    array('name' => 'StringTrim'),
-                ),
-            );
-            $this->_types[$name] = $type;
-
             if ($type == 'clob') {
                 $element = new \Zend\Form\Element\Textarea($name);
             } else {
@@ -68,33 +59,30 @@ class CustomFields extends Form
             } else {
                 $element->setLabel($name);
             }
-            switch ($type) {
-                case 'text':
-                    $filter['validators'][] = array(
-                        'name' => 'StringLength',
-                        'options' => array('max' => 255),
-                    );
-                    break;
-                case 'integer':
-                case 'float':
-                case 'date':
-                    $filter['filters'][] = array(
+            $fields->add($element);
+
+            $filter = array(
+                'name' => $name,
+                'required' => false,
+                'filters' => array(
+                    array(
                         'name' => 'Callback',
                         'options' => array(
                             'callback' => array($this, 'filterField'),
                             'callback_params' => $type,
                         ),
-                    );
-                    $filter['validators'][] = array(
+                    ),
+                ),
+                'validators' => array(
+                    array(
                         'name' => 'Callback',
                         'options' => array(
                             'callback' => array($this, 'validateField'),
                             'callbackOptions' => $type,
                         ),
-                    );
-                    break;
-            }
-            $fields->add($element);
+                    ),
+                ),
+            );
             $inputFilterField->add($filter);
         }
         $this->add($fields);
@@ -118,17 +106,18 @@ class CustomFields extends Form
     }
 
     /**
-     * Filter callback for non-text field input
+     * Filter callback
      *
      * @internal
      * @param string $value
      * @param string $type Field datatype
-     * @return mixed normalized input depending on field type
+     * @return mixed trimmed and normalized input depending on field type
      */
     public function filterField($value, $type)
     {
+        $value = trim($value);
         if ($value == '') {
-            $value = null; // Value must not be returned as string
+            $value = null;
         } else {
             $value = $this->normalize($type, $value);
         }
@@ -136,7 +125,7 @@ class CustomFields extends Form
     }
 
     /**
-     * Validator callback for non-text field input
+     * Validator callback
      *
      * @internal
      * @param string $value
@@ -147,10 +136,22 @@ class CustomFields extends Form
     public function validateField($value, $context, $type)
     {
         if ($value === null) {
-            return true;
+            $result = true;
         } else {
-            return $this->validateType($type, $value);
+            switch ($type) {
+                case 'text':
+                    $result = (\Zend\Stdlib\StringUtils::getWrapper('UTF-8')->strlen($value) <= 255);
+                    break;
+                case 'integer':
+                case 'float':
+                case 'date':
+                    $result = $this->validateType($type, $value);
+                    break;
+                default:
+                    $result = true;
+            }
         }
+        return $result;
     }
 
     /** {@inheritdoc} */

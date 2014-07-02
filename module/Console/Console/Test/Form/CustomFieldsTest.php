@@ -100,8 +100,9 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
     public function testInputFilterTextEmpty()
     {
         $this->_form->setValidationGroup('Fields');
-        $this->_form->setData(array('Fields' => array('TAG' => '')));
+        $this->_form->setData(array('Fields' => array('TAG' => ' ')));
         $this->assertTrue($this->_form->isValid());
+        $this->assertNull($this->_form->getData()['Fields']['TAG']);
     }
 
     public function testInputFilterTextTrim()
@@ -115,22 +116,30 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
     public function testInputFilterTextMax()
     {
         $this->_form->setValidationGroup('Fields');
-        $this->_form->setData(array('Fields' => array('TAG' => str_repeat('x', 255))));
+        $this->_form->setData(array('Fields' => array('TAG' => str_repeat("\xC3\x84", 255))));
         $this->assertTrue($this->_form->isValid());
     }
 
     public function testInputFilterTextTooLong()
     {
         $this->_form->setValidationGroup('Fields');
-        $this->_form->setData(array('Fields' => array('TAG' => str_repeat('x', 256))));
+        $this->_form->setData(array('Fields' => array('TAG' => str_repeat("\xC3\x84", 256))));
         $this->assertFalse($this->_form->isValid());
     }
 
-    public function testInputFilterClob()
+    public function testInputFilterClobLength()
     {
         $this->_form->setValidationGroup('Fields');
-        $this->_form->setData(array('Fields' => array('Clob' => str_repeat('x', 256))));
+        $this->_form->setData(array('Fields' => array('Clob' => str_repeat("\xC3\x84", 256))));
         $this->assertTrue($this->_form->isValid());
+    }
+
+    public function testInputFilterClobTrim()
+    {
+        $this->_form->setValidationGroup('Fields');
+        $this->_form->setData(array('Fields' => array('Clob' => ' trim ')));
+        $this->assertTrue($this->_form->isValid());
+        $this->assertEquals('trim', $this->_form->getData()['Fields']['Clob']);
     }
 
     public function testInputFilterNormalizeInvalid()
