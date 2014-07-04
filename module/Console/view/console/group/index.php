@@ -47,7 +47,7 @@ $renderCallbacks = array(
                     'group',
                     'general',
                     array(
-                        'id' => $group['Id'],
+                        'name' => $group['Name'],
                     )
                 ),
             ),

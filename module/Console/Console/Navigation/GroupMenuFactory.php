@@ -32,9 +32,9 @@ class GroupMenuFactory extends \Library\Navigation\AbstractNavigationFactory
     protected function getPages(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         parent::getPages($serviceLocator);
-        $id = array('id' => $serviceLocator->get('Request')->getQuery('id'));
+        $name = array('name' => $serviceLocator->get('Request')->getQuery('name'));
         foreach ($this->pages as &$page) {
-            $page['query'] = $id;
+            $page['query'] = $name;
         }
         return $this->pages;
     }

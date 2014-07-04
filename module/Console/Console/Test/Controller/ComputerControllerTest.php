@@ -2035,7 +2035,6 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $memberships = array(
             array(
                 'GroupName' => 'group_name',
-                'GroupId' => 42,
                 'Membership' => \Model_GroupMembership::TYPE_DYNAMIC,
             ),
         );
@@ -2048,7 +2047,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXpathQueryContentContains('//h2', "\nGroup memberships\n");
         $this->assertXpathQueryCount('//h2', 1);
         $this->assertXpathQueryContentContains(
-            '//tr[2]/td[1]/a[@href="/console/group/general/?id=42"]',
+            '//tr[2]/td[1]/a[@href="/console/group/general/?name=group_name"]',
             'group_name'
         );
         $this->assertXpathQueryContentContains('//tr[2]/td[2]', "\nautomatic\n");

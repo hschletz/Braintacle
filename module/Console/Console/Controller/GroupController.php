@@ -92,12 +92,12 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
         \Zend\Stdlib\ResponseInterface $response = null
     )
     {
-        // Fetch group with given ID for actions referring to a particular group
+        // Fetch group with given name for actions referring to a particular group
         $action = $this->getEvent()->getRouteMatch()->getParam('action');
         if ($action != 'index' and $action != 'add') {
             try {
-                $this->_currentGroup = $this->_group->fetchById(
-                    $request->getQuery('id')
+                $this->_currentGroup = $this->_group->fetchByName(
+                    $request->getQuery('name')
                 );
             } catch(\RuntimeException $e) {
                 // Group does not exist - may happen when URL has become stale.
@@ -203,7 +203,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
                 $this->urlFromRoute(
                     'group',
                     'installpackage',
-                    array('id' => $this->_currentGroup['Id'])
+                    array('name' => $this->_currentGroup['Name'])
                 )
             );
             $vars['form'] = $this->_packageAssignmentForm;
@@ -215,23 +215,21 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Remove a package
      *
-     * POST params: packageName, groupId
-     *
-     * @return array|\Zend\Http\Response array(packageName, groupId) or redirect response
+     * @return array|\Zend\Http\Response array(package, name) or redirect response
      */
     public function removepackageAction()
     {
         if ($this->getRequest()->isPost()) {
             if ($this->params()->fromPost('yes')) {
-                $this->_currentGroup->unaffectPackage($this->params()->fromQuery('name'));
+                $this->_currentGroup->unaffectPackage($this->params()->fromQuery('package'));
             }
             return $this->redirectToRoute(
                 'group',
                 'packages',
-                array('id' => $this->params()->fromQuery('id'))
+                array('name' => $this->params()->fromQuery('name'))
             );
         } else {
-            return array('name' => $this->params()->fromQuery('name'));
+            return array('package' => $this->params()->fromQuery('package'));
         }
     }
 
@@ -258,7 +256,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
         return $this->redirectToRoute(
             'group',
             'packages',
-            array('id' => $this->params()->fromQuery('id'))
+            array('name' => $this->params()->fromQuery('name'))
         );
     }
 
@@ -298,7 +296,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
             return $this->redirectToRoute(
                 'group',
                 'members',
-                array('id' => $group['Id'])
+                array('name' => $group['Name'])
             );
         } else {
             return array('form' => $this->_addToGroupForm);
@@ -319,7 +317,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
             return $this->redirectToRoute(
                 'group',
                 'configuration',
-                array('id' => $this->_currentGroup['Id'])
+                array('name' => $this->_currentGroup['Name'])
             );
         }
         return array(
@@ -352,7 +350,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
                 return $this->redirectToRoute(
                     'group',
                     'general',
-                    array('id' => $this->_currentGroup['Id'])
+                    array('name' => $this->_currentGroup['Name'])
                 );
             }
         } else {

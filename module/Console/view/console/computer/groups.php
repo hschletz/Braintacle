@@ -37,7 +37,7 @@ $renderCallbacks = array(
                 'href' => $view->consoleUrl(
                     'group',
                     'general',
-                    array('id' => $membership['GroupId'])
+                    array('name' => $membership['GroupName'])
                 )
             ),
             true

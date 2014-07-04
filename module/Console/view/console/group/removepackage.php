@@ -25,6 +25,6 @@ print $this->formYesNo(
         $this->translate(
             'Package "%s" will no longer be assigned to this group. Continue?'
         ),
-        $this->escapeHtml($this->name)
+        $this->escapeHtml($this->package)
     )
 );

@@ -191,8 +191,11 @@ class Model_Group extends Model_ComputerOrGroup
         switch ($filter) {
             case '':
                 break;
-            case 'Id':
+            case 'Id': // DEPRECATED use "Name" filter
                 $select->where('id=?', (integer) $filterArg);
+                break;
+            case 'Name':
+                $select->where('name=?', $filterArg);
                 break;
             case 'Expired':
                 $column = $map['CacheExpirationDate'];
@@ -317,17 +320,20 @@ class Model_Group extends Model_ComputerOrGroup
     }
 
     /**
-     * Get group object for the given primary key.
+     * Get group object for the given name.
      *
-     * @param int $id Primary key
+     * @param string $name Group name
      * @return \Model_Group
-     * @throws \RuntimeException if the given ID does not exist
+     * @throws \RuntimeException if the given group name does not exist
      */
-    public function fetchById($id)
+    public function fetchByName($name)
     {
-        $result = $this->fetch(null, 'Id', $id);
+        if (!$name) {
+            throw new \InvalidArgumentException('No group name given');
+        }
+        $result = $this->fetch(null, 'Name', $name);
         if (empty($result)) {
-            throw new \RuntimeException('Unknown group ID: ' . $id);
+            throw new \RuntimeException('Unknown group name: ' . $name);
         } else {
             return $result[0];
         }

@@ -92,10 +92,10 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     public function testInvalidGroup()
     {
         $this->_group->expects($this->once())
-                     ->method('fetchById')
-                     ->with(42)
+                     ->method('fetchByName')
+                     ->with('test')
                      ->will($this->throwException(new \RuntimeException));
-        $this->dispatch('/console/group/general/?id=42');
+        $this->dispatch('/console/group/general/?name=test');
         $this->assertRedirectTo('/console/group/index/');
         $this->assertContains(
             'The requested group does not exist.',
@@ -137,8 +137,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                          $this->returnValue(
                              array(
                                  array(
-                                     'Id' => 1,
-                                     'Name' => 'name',
+                                     'Name' => 'test',
                                      'CreationDate' => new \Zend_Date('2014-04-06 11:55:33'),
                                      'Description' => 'description',
                                  )
@@ -148,8 +147,8 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/group/index/');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
-            '//td/a[@href="/console/group/general/?id=1"]',
-            'name'
+            '//td/a[@href="/console/group/general/?name=test"]',
+            'test'
         );
         $this->assertXpathQueryContentContains(
             '//td',
@@ -178,7 +177,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testGeneralAction()
     {
-        $url = '/console/group/general/?id=42';
+        $url = '/console/group/general/?name=test';
         $group = array(
             'Name' => 'groupName',
             'Id' => 'groupID',
@@ -187,8 +186,8 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
             'DynamicMembersSql' => 'groupSql',
         );
         $this->_group->expects($this->once())
-                     ->method('fetchById')
-                     ->with('42')
+                     ->method('fetchByName')
+                     ->with('test')
                      ->will($this->returnValue($group));
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
@@ -207,7 +206,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testMembersAction()
     {
-        $url = '/console/group/members/?id=42';
+        $url = '/console/group/members/?name=test';
         $group = array(
             'Name' => 'groupName',
             'CacheCreationDate' => new \Zend_Date('2014-04-08 20:12:21'),
@@ -223,8 +222,8 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
         $this->_group->expects($this->once())
-                     ->method('fetchById')
-                     ->with('42')
+                     ->method('fetchByName')
+                     ->with('test')
                      ->will($this->returnValue($group));
         $this->_computer->expects($this->once())
                         ->method('fetch')
@@ -251,8 +250,8 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testExcludedAction()
     {
-        $url = '/console/group/excluded/?id=42';
-        $group = array('Name' => 'groupName');
+        $url = '/console/group/excluded/?name=test';
+        $group = array('Name' => 'test');
         $computers = array(
             array(
                 'Id' => '1',
@@ -262,8 +261,8 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
         $this->_group->expects($this->once())
-                     ->method('fetchById')
-                     ->with('42')
+                     ->method('fetchByName')
+                     ->with('test')
                      ->will($this->returnValue($group));
         $this->_computer->expects($this->once())
                         ->method('fetch')
@@ -285,11 +284,11 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testPackagesActionOnlyAssigned()
     {
-        $url = '/console/group/packages/?id=42';
+        $url = '/console/group/packages/?name=test';
         $packages = array('package1', 'package2');
         $this->_group->expects($this->once())
-                     ->method('fetchById')
-                     ->with('42')
+                     ->method('fetchByName')
+                     ->with('test')
                      ->will($this->returnSelf());
         $this->_group->expects($this->once())
                      ->method('getPackages')
@@ -300,8 +299,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                      ->will(
                          $this->returnValueMap(
                              array(
-                                array('Id', 42),
-                                array('Name', 'groupName')
+                                array('Name', 'test')
                             )
                          )
                      );
@@ -320,17 +318,17 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->assertXpathQuery("//td[text()='\npackage2\n']");
         $this->assertXpathQuery(
-            "//td/a[@href='/console/group/removepackage/?name=package2&id=42'][text()='remove']"
+            "//td/a[@href='/console/group/removepackage/?package=package2&name=test'][text()='remove']"
         );
     }
 
     public function testPackagesActionOnlyAvailable()
     {
-        $url = '/console/group/packages/?id=42';
+        $url = '/console/group/packages/?name=test';
         $packages = array('package1', 'package2');
         $this->_group->expects($this->once())
-                     ->method('fetchById')
-                     ->with('42')
+                     ->method('fetchByName')
+                     ->with('test')
                      ->will($this->returnSelf());
         $this->_group->expects($this->once())
                      ->method('getPackages')
@@ -341,8 +339,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                      ->will(
                          $this->returnValueMap(
                              array(
-                                array('Id', 42),
-                                array('Name', 'groupName')
+                                array('Name', 'test')
                             )
                          )
                      );
@@ -357,7 +354,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                                      ->will($this->returnValue('<form></form>'));
         $this->_packageAssignmentForm->expects($this->once())
                                      ->method('setAttribute')
-                                     ->with('action', '/console/group/installpackage/?id=42');
+                                     ->with('action', '/console/group/installpackage/?name=test');
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//table');
@@ -366,57 +363,57 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testRemovepackageActionGet()
     {
-        $group = array('Id' => '42');
+        $group = array('Name' => 'test');
         $this->_group->expects($this->once())
-                     ->method('fetchById')
-                     ->with('42')
+                     ->method('fetchByName')
+                     ->with('test')
                      ->will($this->returnValue($group));
         $this->_group->expects($this->never())
                      ->method('unaffectPackage');
-        $this->dispatch('/console/group/removepackage/?name=package&id=42');
+        $this->dispatch('/console/group/removepackage/?package=package&name=test');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//p[contains(text(), \'"package"\')]');
     }
 
     public function testRemovepackageActionPostNo()
     {
-        $group = array('Id' => '42');
+        $group = array('Name' => 'test');
         $this->_group->expects($this->once())
-                     ->method('fetchById')
-                     ->with('42')
+                     ->method('fetchByName')
+                     ->with('test')
                      ->will($this->returnValue($group));
         $this->_group->expects($this->never())
                      ->method('unaffectPackage');
         $this->dispatch(
-            '/console/group/removepackage/?name=package&id=42',
+            '/console/group/removepackage/?package=package&name=test',
             'POST',
             array('no' => 'No')
         );
-        $this->assertRedirectTo('/console/group/packages/?id=42');
+        $this->assertRedirectTo('/console/group/packages/?name=test');
     }
 
     public function testRemovepackageActionPostYes()
     {
         $this->_group->expects($this->once())
-                     ->method('fetchById')
-                     ->with('42')
+                     ->method('fetchByName')
+                     ->with('test')
                      ->will($this->returnSelf());
         $this->_group->expects($this->once())
                      ->method('unaffectPackage')
                      ->with('package');
         $this->dispatch(
-            '/console/group/removepackage/?name=package&id=42',
+            '/console/group/removepackage/?package=package&name=test',
             'POST',
             array('yes' => 'Yes')
         );
-        $this->assertRedirectTo('/console/group/packages/?id=42');
+        $this->assertRedirectTo('/console/group/packages/?name=test');
     }
 
     public function testInstallpackageActionGet()
     {
         $this->_group->expects($this->once())
-                     ->method('fetchById')
-                     ->with('42')
+                     ->method('fetchByName')
+                     ->with('test')
                      ->will($this->returnSelf());
         $this->_group->expects($this->never())
                      ->method('installPackage');
@@ -427,16 +424,16 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_packageAssignmentForm->expects($this->never())
                                      ->method('getData');
 
-        $this->dispatch('/console/group/installpackage/?id=42');
-        $this->assertRedirectTo('/console/group/packages/?id=42');
+        $this->dispatch('/console/group/installpackage/?name=test');
+        $this->assertRedirectTo('/console/group/packages/?name=test');
     }
 
     public function testInstallpackageActionPostInvalid()
     {
         $postData = array('Packages' => array('package1' => '0', 'package2' => '1'));
         $this->_group->expects($this->once())
-                     ->method('fetchById')
-                     ->with('42')
+                     ->method('fetchByName')
+                     ->with('test')
                      ->will($this->returnSelf());
         $this->_group->expects($this->never())
                      ->method('installPackage');
@@ -448,16 +445,16 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                                      ->with($postData);
         $this->_packageAssignmentForm->expects($this->never())
                                      ->method('getData');
-        $this->dispatch('/console/group/installpackage/?id=42', 'POST', $postData);
-        $this->assertRedirectTo('/console/group/packages/?id=42');
+        $this->dispatch('/console/group/installpackage/?name=test', 'POST', $postData);
+        $this->assertRedirectTo('/console/group/packages/?name=test');
     }
 
     public function testInstallpackageActionPostValid()
     {
         $postData = array('Packages' => array('package1' => '0', 'package2' => '1'));
         $this->_group->expects($this->once())
-                     ->method('fetchById')
-                     ->with('42')
+                     ->method('fetchByName')
+                     ->with('test')
                      ->will($this->returnSelf());
         $this->_group->expects($this->once())
                      ->method('installPackage')
@@ -471,8 +468,8 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_packageAssignmentForm->expects($this->once())
                                      ->method('getData')
                                      ->will($this->returnValue($postData));
-        $this->dispatch('/console/group/installpackage/?id=42', 'POST', $postData);
-        $this->assertRedirectTo('/console/group/packages/?id=42');
+        $this->dispatch('/console/group/installpackage/?name=test', 'POST', $postData);
+        $this->assertRedirectTo('/console/group/packages/?name=test');
     }
 
     public function testAddActionGet()
@@ -532,8 +529,8 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
               ->method('excludeComputers');
         $group->expects($this->once())
               ->method('offsetGet')
-              ->with('Id')
-              ->will($this->returnValue(42));
+              ->with('Name')
+              ->will($this->returnValue('test'));
         $this->_computer->expects($this->once())
                         ->method('fetch')
                         ->with(
@@ -567,7 +564,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
             'POST',
             $postData
         );
-        $this->assertRedirectTo('/console/group/members/?id=42');
+        $this->assertRedirectTo('/console/group/members/?name=test');
     }
 
     public function testAddActionPostValidStoreResult()
@@ -584,8 +581,8 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
               ->method('excludeComputers');
         $group->expects($this->once())
               ->method('offsetGet')
-              ->with('Id')
-              ->will($this->returnValue(42));
+              ->with('Name')
+              ->will($this->returnValue('test'));
         $this->_computer->expects($this->once())
                         ->method('fetch')
                         ->with(
@@ -619,7 +616,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
             'POST',
             $postData
         );
-        $this->assertRedirectTo('/console/group/members/?id=42');
+        $this->assertRedirectTo('/console/group/members/?name=test');
     }
 
     public function testAddActionPostValidStoreExcluded()
@@ -636,8 +633,8 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
               ->with($members);
         $group->expects($this->once())
               ->method('offsetGet')
-              ->with('Id')
-              ->will($this->returnValue(42));
+              ->with('Name')
+              ->will($this->returnValue('test'));
         $this->_computer->expects($this->once())
                         ->method('fetch')
                         ->with(
@@ -671,15 +668,15 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
             'POST',
             $postData
         );
-        $this->assertRedirectTo('/console/group/members/?id=42');
+        $this->assertRedirectTo('/console/group/members/?name=test');
     }
 
     public function testConfigurationActionGet()
     {
-        $url = '/console/group/configuration/?id=42';
+        $url = '/console/group/configuration/?name=test';
         $this->_group->expects($this->once())
-                     ->method('fetchById')
-                     ->with('42')
+                     ->method('fetchByName')
+                     ->with('test')
                      ->will($this->returnSelf());
         $this->_clientConfigForm->expects($this->once())
                                 ->method('setObject')
@@ -703,8 +700,8 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     {
         $postData = array('key' => 'value');
         $this->_group->expects($this->once())
-                     ->method('fetchById')
-                     ->with('42')
+                     ->method('fetchByName')
+                     ->with('test')
                      ->will($this->returnSelf());
         $this->_clientConfigForm->expects($this->once())
                                 ->method('setObject')
@@ -718,7 +715,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_clientConfigForm->expects($this->once())
                                 ->method('__toString')
                                 ->will($this->returnValue(''));
-        $this->dispatch('/console/group/configuration/?id=42', 'POST', $postData);
+        $this->dispatch('/console/group/configuration/?name=test', 'POST', $postData);
         $this->assertResponseStatusCode(200);
     }
 
@@ -726,13 +723,13 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     {
         $postData = array('key' => 'value');
         $this->_group->expects($this->once())
-                     ->method('fetchById')
-                     ->with('42')
+                     ->method('fetchByName')
+                     ->with('test')
                      ->will($this->returnSelf());
         $this->_group->expects($this->once())
                      ->method('offsetGet')
-                     ->with('Id')
-                     ->will($this->returnValue(42));
+                     ->with('Name')
+                     ->will($this->returnValue('test'));
         $this->_clientConfigForm->expects($this->once())
                                 ->method('setObject')
                                 ->with($this->_group);
@@ -744,18 +741,18 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                                 ->method('process');
         $this->_clientConfigForm->expects($this->never())
                                 ->method('__toString');
-        $this->dispatch('/console/group/configuration/?id=42', 'POST', $postData);
-        $this->assertRedirectTo('/console/group/configuration/?id=42');
+        $this->dispatch('/console/group/configuration/?name=test', 'POST', $postData);
+        $this->assertRedirectTo('/console/group/configuration/?name=test');
     }
 
     public function testDeleteActionGet()
     {
         $group = array('Name' => 'groupName');
         $this->_group->expects($this->once())
-                     ->method('fetchById')
-                     ->with('42')
+                     ->method('fetchByName')
+                     ->with('test')
                      ->will($this->returnValue($group));
-        $this->dispatch('/console/group/delete/?id=42');
+        $this->dispatch('/console/group/delete/?name=test');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//p[contains(text(), "\'groupName\'")]');
     }
@@ -763,30 +760,29 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     public function testDeleteActionPostNo()
     {
         $this->_group->expects($this->once())
-                     ->method('fetchById')
-                     ->with('42')
+                     ->method('fetchByName')
+                     ->with('test')
                      ->will($this->returnSelf());
         $this->_group->expects($this->exactly(2))
                      ->method('offsetGet')
                      ->will(
                          $this->returnValueMap(
                              array(
-                                 array('Id', 42),
-                                 array('Name', 'groupName'),
+                                 array('Name', 'test'),
                              )
                          )
                      );
         $this->_group->expects($this->never())
                      ->method('delete');
-        $this->dispatch('/console/group/delete/?id=42', 'POST', array('no' => 'No'));
-        $this->assertRedirectTo('/console/group/general/?id=42');
+        $this->dispatch('/console/group/delete/?name=test', 'POST', array('no' => 'No'));
+        $this->assertRedirectTo('/console/group/general/?name=test');
     }
 
     public function testDeleteActionPostYesSuccess()
     {
         $this->_group->expects($this->once())
-                     ->method('fetchById')
-                     ->with('42')
+                     ->method('fetchByName')
+                     ->with('test')
                      ->will($this->returnSelf());
         $this->_group->expects($this->once())
                      ->method('offsetGet')
@@ -795,7 +791,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_group->expects($this->once())
                      ->method('delete')
                      ->will($this->returnValue(true));
-        $this->dispatch('/console/group/delete/?id=42', 'POST', array('yes' => 'Yes'));
+        $this->dispatch('/console/group/delete/?name=test', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/group/index/');
         $this->assertEquals(
             array(array('Group \'%s\' was successfully deleted.' => 'groupName')),
@@ -810,8 +806,8 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     public function testDeleteActionPostYesError()
     {
         $this->_group->expects($this->once())
-                     ->method('fetchById')
-                     ->with('42')
+                     ->method('fetchByName')
+                     ->with('test')
                      ->will($this->returnSelf());
         $this->_group->expects($this->once())
                      ->method('offsetGet')
@@ -820,7 +816,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_group->expects($this->once())
                      ->method('delete')
                      ->will($this->returnValue(false));
-        $this->dispatch('/console/group/delete/?id=42', 'POST', array('yes' => 'Yes'));
+        $this->dispatch('/console/group/delete/?name=test', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/group/index/');
         $this->assertEquals(
             array(),
