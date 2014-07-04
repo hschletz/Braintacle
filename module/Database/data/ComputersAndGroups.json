@@ -324,6 +324,14 @@
             "columns": [
                 "checksum"
             ]
+        },
+        {
+            "name": "hardware_name_clientid_unique_idx",
+            "unique": true,
+            "columns": [
+                "name",
+                "deviceid"
+            ]
         }
     ],
     "mysql": {
