@@ -53,6 +53,7 @@ return array(
             'Console\Form\ShowDuplicates' => 'Console\Form\Service\ShowDuplicatesFactory',
         ),
         'invokables' => array(
+            'Console\Form\GroupMemberships' => 'Console\Form\GroupMemberships',
             'Console\Form\Import' => 'Console\Form\Import',
             'Console\Form\Login' => 'Console\Form\Login',
             'Console\Form\Package\Assign' => 'Console\Form\Package\Assign',
@@ -92,7 +93,6 @@ return array(
             'Console\Form\AddToGroup' => 'Form_AddToGroup',
             'Console\Form\ClientConfig' => 'Form_Configuration',
             'Console\Form\DefineFields' => 'Form_DefineFields',
-            'Console\Form\GroupMemberships' => 'Form_ManageGroupMemberships',
             'Console\Form\NetworkDeviceTypes' => 'Form_ManageNetworkDeviceTypes',
             'Console\Form\Package\Build' => 'Form_Package',
             'Console\Form\Package\Edit' => 'Form_Package_Edit',

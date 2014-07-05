@@ -48,18 +48,19 @@ $renderCallbacks = array(
     },
 );
 
-$groups = $computer->getGroups(
-    \Model_GroupMembership::TYPE_INCLUDED,
-    $this->order,
-    $this->direction
-);
-if (count($groups)) {
+$memberships = array();
+foreach ($this->memberships as $membership) {
+    if ($membership['Membership'] != \Model_GroupMembership::TYPE_EXCLUDED) {
+        $memberships[] = $membership;
+    }
+}
+if (count($memberships)) {
     print $this->htmlTag(
         'h2',
         $this->translate('Group memberships')
     );
     print $this->table(
-        $groups,
+        $memberships,
         $headers,
         array('order' => $this->order, 'direction' => $this->direction),
         $renderCallbacks
@@ -71,5 +72,5 @@ if (isset($this->form)) {
         'h2',
         $this->translate('Manage memberships')
     );
-    print $this->form;
+    print $this->form->render($this);
 }

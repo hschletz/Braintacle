@@ -1714,7 +1714,32 @@ class Model_Computer extends Model_ComputerOrGroup
     }
 
     /**
-     * Set group membership information for this computer
+     * Set group membership information for this computer (reference groups by name)
+     *
+     * The $newGroups argument is an array with group names as key and the new
+     * membership type as value. Groups which are not present in this array will
+     * remain unchanged.
+     *
+     * @param array $newGroups
+     */
+    public function setGroupsByName($newGroups)
+    {
+        $groupsById = array();
+        $result = \Library\Application::getService('Db')->query(
+            "SELECT id, name FROM hardware WHERE deviceid='_SYSTEMGROUP_'",
+            \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
+        );
+        foreach ($result as $group) {
+            $name = $group['name'];
+            if (isset($newGroups[$name])) {
+                $groupsById[$group['id']] = $newGroups[$name];
+            }
+        }
+        $this->setGroups($groupsById);
+    }
+
+    /**
+     * Set group membership information for this computer (reference groups by ID)
      *
      * The $newgroups argument is an array with group ID as key and the new
      * membership type as value. Groups which are not present in this array will

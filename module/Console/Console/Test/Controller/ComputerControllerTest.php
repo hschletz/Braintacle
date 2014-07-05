@@ -33,6 +33,12 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
     protected $_computer;
 
     /**
+     * Group mock
+     * @var \Model_Group
+     */
+    protected $_group;
+
+    /**
      * Form manager mock
      * @var \Zend\Form\FormElementManager
      */
@@ -96,9 +102,9 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
     public function setUp()
     {
         $this->_computer = $this->getMockBuilder('Model_Computer')->disableOriginalConstructor()->getMock();
+        $this->_group = $this->getMockBuilder('Model_Group')->disableOriginalConstructor()->getMock();
 
         $legacyFormManager = new \Zend\ServiceManager\ServiceManager;
-        $legacyFormManager->setService('Console\Form\GroupMemberships', $this->getMock('Form_ManageGroupMemberships'));
         $legacyFormManager->setService('Console\Form\ClientConfig', $this->getMock('Form_Configuration'));
 
         $this->_formManager = new \Zend\Form\FormElementManager;
@@ -106,6 +112,10 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_formManager->setService('Console\Form\Package\Assign', $this->getMock('Console\Form\Package\Assign'));
         $this->_formManager->setService('Console\Form\CustomFields', $this->getMock('Console\Form\CustomFields'));
         $this->_formManager->setService('Console\Form\DeleteComputer', $this->getMock('Console\Form\DeleteComputer'));
+        $this->_formManager->setService(
+            'Console\Form\GroupMemberships',
+            $this->getMock('Console\Form\GroupMemberships')
+        );
         $this->_formManager->setService('Console\Form\Import', $this->getMock('Console\Form\Import'));
         $this->_formManager->setService('Console\Form\ProductKey', $this->getMock('Console\Form\ProductKey'));
         $this->_formManager->setService('Console\Form\Search', $this->getMock('Console\Form\Search'));
@@ -123,6 +133,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
     {
         return new \Console\Controller\ComputerController(
             $this->_computer,
+            $this->_group,
             $this->_formManager,
             $this->_config,
             $this->_inventoryUploader
@@ -2006,80 +2017,122 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testGroupsActionNoGroups()
     {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\GroupMemberships');
-        $form->expects($this->once())
-             ->method('addGroups')
-             ->with($this->_computer)
-             ->will($this->returnValue(0));
+        $form = $this->_formManager->get('Console\Form\GroupMemberships');
         $form->expects($this->never())
-             ->method('__toString');
+             ->method('render');
         $this->_computer->expects($this->once())
                         ->method('getGroups')
-                        ->with(\Model_GroupMembership::TYPE_INCLUDED, 'GroupName', 'asc')
+                        ->with(\Model_GroupMembership::TYPE_ALL)
                         ->will($this->returnValue(array()));
+        $this->_group->expects($this->once())
+                     ->method('fetch')
+                     ->with(array('Name'), null, null, 'Name')
+                     ->will($this->returnValue(array()));
         $this->dispatch('/console/computer/groups/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//h2');
         $this->assertNotXpathQuery('//table');
     }
 
-    public function testGroupsActionMember()
+    public function testGroupsActionOnlyExcluded()
     {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\GroupMemberships');
-        $form->expects($this->once())
-             ->method('addGroups')
-             ->with($this->_computer)
-             ->will($this->returnValue(0));
-        $form->expects($this->never())
-             ->method('__toString');
-        $memberships = array(
-            array(
-                'GroupName' => 'group_name',
-                'Membership' => \Model_GroupMembership::TYPE_DYNAMIC,
-            ),
+        $groups = array(
+            array('Name' => 'group1'),
+            array('Name' => 'group2'),
         );
+        $membership = array(
+            'GroupName' => 'group1',
+            'Membership' => \Model_GroupMembership::TYPE_EXCLUDED
+        );
+        $formGroups = array(
+            'group1' => \Model_GroupMembership::TYPE_EXCLUDED,
+            'group2' => \Model_GroupMembership::TYPE_DYNAMIC,
+        );
+        $form = $this->_formManager->get('Console\Form\GroupMemberships');
+        $form->expects($this->once())
+             ->method('render')
+             ->will($this->returnValue('<form></form>'));
+        $form->expects($this->once())
+             ->method('setData')
+             ->with(array('Groups' => $formGroups));
+        $form->expects($this->once())
+             ->method('setAttribute')
+             ->with('action', '/console/computer/managegroups/?id=1');
         $this->_computer->expects($this->once())
                         ->method('getGroups')
-                        ->with(\Model_GroupMembership::TYPE_INCLUDED, 'GroupName', 'asc')
-                        ->will($this->returnValue($memberships));
-        $this->dispatch('/console/computer/groups/?id=1');
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//h2', "\nGroup memberships\n");
-        $this->assertXpathQueryCount('//h2', 1);
-        $this->assertXpathQueryContentContains(
-            '//tr[2]/td[1]/a[@href="/console/group/general/?name=group_name"]',
-            'group_name'
-        );
-        $this->assertXpathQueryContentContains('//tr[2]/td[2]', "\nautomatic\n");
-    }
-
-    public function testGroupsActionManage()
-    {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\GroupMemberships');
-        $form->expects($this->once())
-             ->method('addGroups')
-             ->with($this->_computer)
-             ->will($this->returnValue(1));
-        $form->expects($this->once())
-             ->method('setAction')
-             ->with('/console/computer/managegroups/?id=1');
-        $form->expects($this->once())
-             ->method('__toString')
-             ->will($this->returnValue(''));
-        $map = array(
-            array('Id', 1),
-        );
+                        ->with(\Model_GroupMembership::TYPE_ALL)
+                        ->will($this->returnValue(array($membership)));
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->once())
-                        ->method('getGroups')
-                        ->with(\Model_GroupMembership::TYPE_INCLUDED, 'GroupName', 'asc')
-                        ->will($this->returnValue(array()));
+                        ->will($this->returnValueMap(array(array('Id', 1))));
+        $this->_group->expects($this->once())
+                     ->method('fetch')
+                     ->with(array('Name'), null, null, 'Name')
+                     ->will($this->returnValue($groups));
         $this->dispatch('/console/computer/groups/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//h2', "\nManage memberships\n");
         $this->assertXpathQueryCount('//h2', 1);
+        $this->assertNotXpathQuery('//table');
+        $this->assertXPathQuery('//form');
+    }
+
+    public function testGroupsActionMember()
+    {
+        $groups = array(
+            array('Name' => 'group1'),
+            array('Name' => 'group2'),
+        );
+        $memberships = array(
+            array(
+                'GroupName' => 'group1',
+                'Membership' => \Model_GroupMembership::TYPE_DYNAMIC,
+            ),
+            array(
+                'GroupName' => 'group2',
+                'Membership' => \Model_GroupMembership::TYPE_STATIC,
+            ),
+        );
+        $formGroups = array(
+            'group1' => \Model_GroupMembership::TYPE_DYNAMIC,
+            'group2' => \Model_GroupMembership::TYPE_STATIC,
+        );
+        $form = $this->_formManager->get('Console\Form\GroupMemberships');
+        $form->expects($this->once())
+             ->method('render')
+             ->will($this->returnValue('<form></form>'));
+        $form->expects($this->once())
+             ->method('setData')
+             ->with(array('Groups' => $formGroups));
+        $form->expects($this->once())
+             ->method('setAttribute')
+             ->with('action', '/console/computer/managegroups/?id=1');
+        $this->_computer->expects($this->once())
+                        ->method('getGroups')
+                        ->with(\Model_GroupMembership::TYPE_ALL)
+                        ->will($this->returnValue($memberships));
+        $this->_computer->expects($this->any())
+                        ->method('offsetGet')
+                        ->will($this->returnValueMap(array(array('Id', 1))));
+        $this->_group->expects($this->once())
+                     ->method('fetch')
+                     ->with(array('Name'), null, null, 'Name')
+                     ->will($this->returnValue($groups));
+        $this->dispatch('/console/computer/groups/?id=1');
+        $this->assertResponseStatusCode(200);
+        $this->assertXpathQueryContentContains('//h2', "\nGroup memberships\n");
+        $this->assertXpathQueryContentContains(
+            '//tr[2]/td[1]/a[@href="/console/group/general/?name=group1"]',
+            'group1'
+        );
+        $this->assertXpathQueryContentContains('//tr[2]/td[2]', "\nautomatic\n");
+        $this->assertXpathQueryContentContains(
+            '//tr[3]/td[1]/a[@href="/console/group/general/?name=group2"]',
+            'group2'
+        );
+        $this->assertXpathQueryContentContains('//tr[3]/td[2]', "\nmanual\n");
+        $this->assertXpathQueryContentContains('//h2', "\nManage memberships\n");
+        $this->assertXPathQuery('//form');
     }
 
     public function testConfigurationActionGet()
@@ -2350,13 +2403,13 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testManagegroupsActionGet()
     {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\GroupMemberships');
+        $form = $this->_formManager->get('Console\Form\GroupMemberships');
         $form->expects($this->never())
-             ->method('addGroups');
+             ->method('setData');
+        $form->expects($this->never())
+             ->method('getData');
         $form->expects($this->never())
              ->method('isValid');
-        $form->expects($this->never())
-             ->method('getValues');
         $map = array(
             array('Id', 1),
         );
@@ -2371,17 +2424,18 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testManagegroupsActionPostInvalid()
     {
-        $postData = array('group1' => '1', 'group2' => '2');
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\GroupMemberships');
+        $postData = array(
+            'Groups' => array('group1' => '1', 'group2' => '2')
+        );
+        $form = $this->_formManager->get('Console\Form\GroupMemberships');
         $form->expects($this->once())
-             ->method('addGroups')
-             ->with($this->_computer);
+             ->method('setData')
+             ->with($postData);
+        $form->expects($this->never())
+             ->method('getData');
         $form->expects($this->once())
              ->method('isValid')
-             ->with($postData)
              ->will($this->returnValue(false));
-        $form->expects($this->never())
-             ->method('getValues');
         $map = array(
             array('Id', 1),
         );
@@ -2389,25 +2443,26 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->never())
-                        ->method('setGroups');
+                        ->method('setGroupsByName');
         $this->dispatch('/console/computer/managegroups/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/computer/groups/?id=1');
     }
 
     public function testManagegroupsActionPostValid()
     {
-        $postData = array('group1' => '1', 'group2' => '2');
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\GroupMemberships');
+        $postData = array(
+            'Groups' => array('group1' => '1', 'group2' => '2')
+        );
+        $form = $this->_formManager->get('Console\Form\GroupMemberships');
         $form->expects($this->once())
-             ->method('addGroups')
-             ->with($this->_computer);
+             ->method('setData')
+             ->with($postData);
+        $form->expects($this->once())
+             ->method('getData')
+             ->will($this->returnValue($postData));
         $form->expects($this->once())
              ->method('isValid')
-             ->with($postData)
              ->will($this->returnValue(true));
-        $form->expects($this->once())
-             ->method('getValues')
-             ->will($this->returnValue($postData));
         $map = array(
             array('Id', 1),
         );
@@ -2415,8 +2470,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->once())
-                        ->method('setGroups')
-                        ->with($postData);
+                        ->method('setGroupsByName')
+                        ->with($postData['Groups']);
         $this->dispatch('/console/computer/managegroups/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/computer/groups/?id=1');
     }

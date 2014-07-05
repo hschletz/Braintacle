@@ -35,6 +35,7 @@ class ComputerControllerFactory implements \Zend\ServiceManager\FactoryInterface
         $config = $serviceManager->get('Model\Config');
         return new \Console\Controller\ComputerController(
             $serviceManager->get('Model\Computer\Computer'),
+            $serviceManager->get('Model\Group\Group'),
             $serviceManager->get('FormElementManager'),
             $config,
             new \Library\InventoryUploader($config)

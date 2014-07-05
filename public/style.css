@@ -353,12 +353,15 @@ input[type=text],
 input[type=file] {
     width: 30em;
 }
+input[type=radio] {
+    margin: 0 .5em 0 1.5em;
+}
 textarea {
     width: 30em;
     height: 10ex;
     background-color: #e0f0ff;
 }
-fieldset {
+.zend_form fieldset { /* ZF1 forms */
     margin-left: 30em;
     width: 23em;
     border: 1px inset black;
@@ -458,6 +461,28 @@ td.formElement {
 
 .form_deletecomputer input[type=submit]{
     margin: 4ex 1em;
+}
+
+.form_groupmemberships div {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form_groupmemberships fieldset {
+    border: none;
+    padding: .3ex;
+    text-align: right;
+}
+
+.form_groupmemberships legend {
+    display: inline-block;
+}
+
+.form_groupmemberships input[type=submit] {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .form_login input[type="text"], .form_login input[type="password"] {

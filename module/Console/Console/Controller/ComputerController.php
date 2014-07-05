@@ -33,6 +33,12 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
     protected $_computer;
 
     /**
+     * Group prototype
+     * @var \Model_Group
+     */
+    protected $_group;
+
+    /**
      * Form manager
      * @var \Zend\Form\FormElementManager
      */
@@ -60,18 +66,21 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
      * Constructor
      *
      * @param \Model_Computer $computer
+     * @param \Model_Group $group
      * @param \Zend\Form\FormElementManager $formManager
      * @param \Model\Config $config
      * @param \Library\InventoryUploader $inventoryUploader
      */
     public function __construct(
         \Model_Computer $computer,
+        \Model_Group $group,
         \Zend\Form\FormElementManager $formManager,
         \Model\Config $config,
         \Library\InventoryUploader $inventoryUploader
     )
     {
         $this->_computer = $computer;
+        $this->_group = $group;
         $this->_formManager = $formManager;
         $this->_config = $config;
         $this->_inventoryUploader = $inventoryUploader;
@@ -422,9 +431,23 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
     {
         $vars = $this->getOrder('GroupName');
         $vars['computer'] = $this->_currentComputer;
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\GroupMemberships');
-        if ($form->addGroups($this->_currentComputer)) {
-            $form->setAction(
+        $vars['memberships'] = $this->_currentComputer->getGroups(\Model_GroupMembership::TYPE_ALL);
+
+        $groups = $this->_group->fetch(array('Name'), null, null, 'Name');
+        if ($groups) {
+            $data = array();
+            // Create form data for all groups with default value
+            foreach ($groups as $group) {
+                $data['Groups'][$group['Name']] = \Model_GroupMembership::TYPE_DYNAMIC;
+            }
+            // Overlay with actual memberships
+            foreach ($vars['memberships'] as $membership) {
+                $data['Groups'][$membership['GroupName']] = $membership['Membership'];
+            }
+            $form = $this->_formManager->get('Console\Form\GroupMemberships');
+            $form->setData($data);
+            $form->setAttribute(
+                'action',
                 $this->urlFromRoute(
                     'computer',
                     'managegroups',
@@ -558,10 +581,11 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
     public function managegroupsAction()
     {
         if ($this->getRequest()->isPost()) {
-            $form = $this->_formManager->getServiceLocator()->get('Console\Form\GroupMemberships');
-            $form->addGroups($this->_currentComputer);
-            if ($form->isValid($this->params()->fromPost())) {
-                $this->_currentComputer->setGroups($form->getValues());
+            $form = $this->_formManager->get('Console\Form\GroupMemberships');
+            $form->setData($this->params()->fromPost());
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $this->_currentComputer->setGroupsByName($data['Groups']);
             }
         }
         return $this->redirectToRoute(
