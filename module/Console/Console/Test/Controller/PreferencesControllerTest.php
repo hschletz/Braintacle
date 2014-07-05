@@ -28,7 +28,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
      * Form manager mock
-     * @var \Zend\ServiceManager\ServiceManager
+     * @var \Zend\Form\FormElementManager
      */
     protected $_formManager;
 
@@ -55,7 +55,11 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
      */
     public function setUp()
     {
-        $this->_formManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $this->_legacyFormManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $this->_formManager = $this->getMock('Zend\Form\FormElementManager');
+        $this->_formManager->expects($this->any())
+                           ->method('getServiceLocator')
+                           ->will($this->returnValue($this->_legacyFormManager));
         $this->_customFields = $this->getMockBuilder('Model_UserDefinedInfo')->disableOriginalConstructor()->getMock();
         $this->_deviceType = $this->getMock('Model_NetworkDeviceType');
         $this->_registryValue = $this->getMock('Model_RegistryValue');
@@ -203,7 +207,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('__toString')
              ->will($this->returnValue(''));
-        $this->_formManager->expects($this->once())
+        $this->_legacyFormManager->expects($this->once())
                            ->method('get')
                            ->with("Console\Form\Preferences\\$formClass")
                            ->will($this->returnValue($form));
@@ -227,7 +231,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('__toString')
              ->will($this->returnValue(''));
-        $this->_formManager->expects($this->once())
+        $this->_legacyFormManager->expects($this->once())
                            ->method('get')
                            ->with("Console\Form\Preferences\\$formClass")
                            ->will($this->returnValue($form));
@@ -242,7 +246,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
              ->method('process');
         $form->expects($this->once())
              ->method('toHtml');
-        $this->_formManager->expects($this->once())
+        $this->_legacyFormManager->expects($this->once())
                            ->method('get')
                            ->with('Console\Form\DefineFields')
                            ->will($this->returnValue($form));
@@ -263,7 +267,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
              ->will($this->returnValue(false));
         $form->expects($this->once())
              ->method('toHtml');
-        $this->_formManager->expects($this->once())
+        $this->_legacyFormManager->expects($this->once())
                            ->method('get')
                            ->with('Console\Form\DefineFields')
                            ->will($this->returnValue($form));
@@ -281,7 +285,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
              ->method('isValid')
              ->with($postData)
              ->will($this->returnValue(true));
-        $this->_formManager->expects($this->once())
+        $this->_legacyFormManager->expects($this->once())
                            ->method('get')
                            ->with('Console\Form\DefineFields')
                            ->will($this->returnValue($form));
@@ -322,7 +326,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
              ->method('process');
         $form->expects($this->once())
              ->method('toHtml');
-        $this->_formManager->expects($this->once())
+        $this->_legacyFormManager->expects($this->once())
                            ->method('get')
                            ->with('Console\Form\NetworkDeviceTypes')
                            ->will($this->returnValue($form));
@@ -343,7 +347,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
              ->will($this->returnValue(false));
         $form->expects($this->once())
              ->method('toHtml');
-        $this->_formManager->expects($this->once())
+        $this->_legacyFormManager->expects($this->once())
                            ->method('get')
                            ->with('Console\Form\NetworkDeviceTypes')
                            ->will($this->returnValue($form));
@@ -361,7 +365,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
              ->method('isValid')
              ->with($postData)
              ->will($this->returnValue(true));
-        $this->_formManager->expects($this->once())
+        $this->_legacyFormManager->expects($this->once())
                            ->method('get')
                            ->with('Console\Form\NetworkDeviceTypes')
                            ->will($this->returnValue($form));
@@ -408,15 +412,10 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
              ->method('process');
         $form->expects($this->once())
              ->method('render');
-        $formManager = $this->getMock('Zend\Form\FormElementManager');
-        $formManager->expects($this->once())
-                    ->method('get')
-                    ->with('Console\Form\ManageRegistryValues')
-                    ->will($this->returnValue($form));
         $this->_formManager->expects($this->once())
                            ->method('get')
-                           ->with('FormElementManager')
-                           ->will($this->returnValue($formManager));
+                           ->with('Console\Form\ManageRegistryValues')
+                           ->will($this->returnValue($form));
         $this->dispatch('/console/preferences/registryvalues/');
         $this->assertResponseStatusCode(200);
     }
@@ -435,15 +434,10 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
              ->will($this->returnValue(false));
         $form->expects($this->once())
              ->method('render');
-        $formManager = $this->getMock('Zend\Form\FormElementManager');
-        $formManager->expects($this->once())
-                    ->method('get')
-                    ->with('Console\Form\ManageRegistryValues')
-                    ->will($this->returnValue($form));
         $this->_formManager->expects($this->once())
                            ->method('get')
-                           ->with('FormElementManager')
-                           ->will($this->returnValue($formManager));
+                           ->with('Console\Form\ManageRegistryValues')
+                           ->will($this->returnValue($form));
         $this->dispatch('/console/preferences/registryvalues/', 'POST', $postData);
         $this->assertResponseStatusCode(200);
     }
@@ -462,16 +456,10 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
              ->will($this->returnValue(true));
         $form->expects($this->never())
              ->method('render');
-        $formManager = $this->getMock('Zend\Form\FormElementManager');
-        $formManager->expects($this->once())
-                    ->method('get')
-                    ->with('Console\Form\ManageRegistryValues')
-                    ->will($this->returnValue($form));
-        $this->_formManager = $this->getMock('Zend\ServiceManager\ServiceManager');
         $this->_formManager->expects($this->once())
                            ->method('get')
-                           ->with('FormElementManager')
-                           ->will($this->returnValue($formManager));
+                           ->with('Console\Form\ManageRegistryValues')
+                           ->will($this->returnValue($form));
         $this->dispatch('/console/preferences/registryvalues/', 'POST', $postData);
         $this->assertRedirectTo('/console/preferences/registryvalues/');
     }

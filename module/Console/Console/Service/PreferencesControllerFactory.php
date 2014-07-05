@@ -33,7 +33,7 @@ class PreferencesControllerFactory implements \Zend\ServiceManager\FactoryInterf
     {
         $serviceManager = $serviceLocator->getServiceLocator();
         return new \Console\Controller\PreferencesController(
-            $serviceManager,
+            $serviceManager->get('FormElementManager'),
             $serviceManager->get('Model\Computer\CustomFields'),
             $serviceManager->get('Model\Network\DeviceType'),
             $serviceManager->get('Model\RegistryValue')

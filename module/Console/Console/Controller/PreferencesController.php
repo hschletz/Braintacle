@@ -28,7 +28,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
 {
     /**
      * Form manager
-     * @var \Zend\ServiceManager\ServiceManager
+     * @var \Zend\Form\FormElementManager
      */
     protected $_formManager;
 
@@ -53,13 +53,13 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Constructor
      *
-     * @param \Zend\ServiceManager\ServiceManager $formManager
+     * @param \Zend\Form\FormElementManager $formManager
      * @param \Model_UserDefinedInfo $customFields
      * @param \Model_NetworkDeviceType $deviceType
      * @param \Model_RegistryValue $registryValue
      */
     public function __construct(
-        \Zend\ServiceManager\ServiceManager $formManager,
+        \Zend\Form\FormElementManager $formManager,
         \Model_UserDefinedInfo $customFields,
         \Model_NetworkDeviceType $deviceType,
         \Model_RegistryValue $registryValue
@@ -188,7 +188,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     public function customfieldsAction()
     {
-        $form = $this->_formManager->get('Console\Form\DefineFields');
+        $form = $this->_formManager->getServiceLocator()->get('Console\Form\DefineFields');
         if ($this->getRequest()->isPost() and $form->isValid($this->params()->fromPost())) {
             $form->process();
             return $this->redirectToRoute('preferences', 'customfields');
@@ -223,7 +223,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     public function networkdevicesAction()
     {
-        $form = $this->_formManager->get('Console\Form\NetworkDeviceTypes');
+        $form = $this->_formManager->getServiceLocator()->get('Console\Form\NetworkDeviceTypes');
         if ($this->getRequest()->isPost() and $form->isValid($this->params()->fromPost())) {
             $form->process();
             return $this->redirectToRoute('network', 'index');
@@ -258,7 +258,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     public function registryvaluesAction()
     {
-        $form = $this->_formManager->get('FormElementManager')->get('Console\Form\ManageRegistryValues');
+        $form = $this->_formManager->get('Console\Form\ManageRegistryValues');
         if ($this->getRequest()->isPost()) {
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
@@ -296,7 +296,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     protected function _useForm($name)
     {
-        $form = $this->_formManager->get($name);
+        $form = $this->_formManager->getServiceLocator()->get($name);
         if ($this->getRequest()->isGet()) {
             $form->loadDefaults();
         } else {
