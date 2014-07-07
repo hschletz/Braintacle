@@ -1,6 +1,6 @@
 <?php
 /**
- * Display form for managing network device types
+ * Factory for NetworkDeviceTypes
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,11 +17,24 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-print $this->htmlTag(
-    'h1',
-    $this->translate('Manage device types')
-);
-print $this->form->render($this);
+namespace Console\Form\Service;
+
+/**
+ * Factory for NetworkDeviceTypes
+ * @codeCoverageIgnore
+ */
+class NetworkDeviceTypesFactory implements \Zend\ServiceManager\FactoryInterface
+{
+    /**
+     * @internal
+     */
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    {
+        return new \Console\Form\NetworkDeviceTypes(
+            null,
+            array('DeviceTypeModel' => $serviceLocator->getServiceLocator()->get('Model\Network\DeviceType'))
+        );
+    }
+}

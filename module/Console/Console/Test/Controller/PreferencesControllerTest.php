@@ -321,51 +321,65 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testNetworkdevicesActionGet()
     {
-        $form = $this->getMock('Form_ManageNetworkDeviceTypes');
+        $form = $this->getMock('Console\Form\NetworkDeviceTypes');
+        $form->expects($this->never())
+             ->method('setData');
+        $form->expects($this->never())
+             ->method('isValid');
         $form->expects($this->never())
              ->method('process');
         $form->expects($this->once())
-             ->method('toHtml');
-        $this->_legacyFormManager->expects($this->once())
+             ->method('render')
+             ->will($this->returnValue('<form></form>'));
+        $this->_formManager->expects($this->once())
                            ->method('get')
                            ->with('Console\Form\NetworkDeviceTypes')
                            ->will($this->returnValue($form));
         $this->dispatch('/console/preferences/networkdevices');
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains('h1', "\nManage device types\n");
+        $this->assertXPathQuery('//form');
     }
 
     public function testNetworkdevicesActionPostInvalid()
     {
         $postData = array('key' => 'value');
-        $form = $this->getMock('Form_ManageNetworkDeviceTypes');
+        $form = $this->getMock('Console\Form\NetworkDeviceTypes');
+        $form->expects($this->once())
+             ->method('setData')
+             ->with($postData);
+        $form->expects($this->once())
+             ->method('isValid')
+             ->will($this->returnValue(false));
         $form->expects($this->never())
              ->method('process');
         $form->expects($this->once())
-             ->method('isValid')
-             ->with($postData)
-             ->will($this->returnValue(false));
-        $form->expects($this->once())
-             ->method('toHtml');
-        $this->_legacyFormManager->expects($this->once())
+             ->method('render')
+             ->will($this->returnValue('<form></form>'));
+        $this->_formManager->expects($this->once())
                            ->method('get')
                            ->with('Console\Form\NetworkDeviceTypes')
                            ->will($this->returnValue($form));
         $this->dispatch('/console/preferences/networkdevices', 'POST', $postData);
         $this->assertResponseStatusCode(200);
+        $this->assertXPathQuery('//form');
     }
 
     public function testNetworkdevicesActionPostValid()
     {
         $postData = array('key' => 'value');
-        $form = $this->getMock('Form_ManageNetworkDeviceTypes');
+        $form = $this->getMock('Console\Form\NetworkDeviceTypes');
         $form->expects($this->once())
-             ->method('process');
+             ->method('setData')
+             ->with($postData);
         $form->expects($this->once())
              ->method('isValid')
-             ->with($postData)
              ->will($this->returnValue(true));
-        $this->_legacyFormManager->expects($this->once())
+        $form->expects($this->once())
+             ->method('process');
+        $form->expects($this->never())
+             ->method('render');
+        $this->_formManager->expects($this->once())
                            ->method('get')
                            ->with('Console\Form\NetworkDeviceTypes')
                            ->will($this->returnValue($form));
@@ -376,12 +390,12 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     public function testDeletedevicetypeActionGet()
     {
         $this->_deviceType->expects($this->any())
-                          ->method('fetchById')
-                          ->with('1')
+                          ->method('fetchByName')
+                          ->with('test')
                           ->will($this->returnValue(array('Description' => 'description')));
         $this->_deviceType->expects($this->never())
                           ->method('delete');
-        $this->dispatch('/console/preferences/deletedevicetype/?id=1');
+        $this->dispatch('/console/preferences/deletedevicetype/?name=test');
         $this->assertResponseStatusCode(200);
         $this->assertContains("'description'", $this->getResponse()->getContent());
     }
@@ -390,18 +404,19 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     {
         $this->_deviceType->expects($this->never())
                           ->method('delete');
-        $this->dispatch('/console/preferences/deletedevicetype/?id=1', 'POST', array('no' => 'No'));
+        $this->dispatch('/console/preferences/deletedevicetype/?name=test', 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/preferences/networkdevices/');
     }
 
     public function testDeletedevicetypeActionPostYes()
     {
         $this->_deviceType->expects($this->any())
-                          ->method('fetchById')
+                          ->method('fetchByName')
+                          ->with('test')
                           ->will($this->returnSelf());
         $this->_deviceType->expects($this->once())
                           ->method('delete');
-        $this->dispatch('/console/preferences/deletedevicetype/?id=1', 'POST', array('yes' => 'Yes'));
+        $this->dispatch('/console/preferences/deletedevicetype/?name=test', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/preferences/networkdevices/');
     }
 

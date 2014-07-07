@@ -223,13 +223,15 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     public function networkdevicesAction()
     {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\NetworkDeviceTypes');
-        if ($this->getRequest()->isPost() and $form->isValid($this->params()->fromPost())) {
-            $form->process();
-            return $this->redirectToRoute('network', 'index');
-        } else {
-            return array('form' => $form);
+        $form = $this->_formManager->get('Console\Form\NetworkDeviceTypes');
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->params()->fromPost());
+            if ($form->isValid()) {
+                $form->process();
+                return $this->redirectToRoute('network', 'index');
+            }
         }
+        return array('form' => $form);
     }
 
     /**
@@ -240,7 +242,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     public function deletedevicetypeAction()
     {
-        $type = $this->_deviceType->fetchById($this->params()->fromQuery('id'));
+        $type = $this->_deviceType->fetchByName($this->params()->fromQuery('name'));
         if ($this->getRequest()->isPost()) {
             if ($this->params()->fromPost('yes')) {
                 $type->delete();

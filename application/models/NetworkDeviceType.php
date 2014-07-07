@@ -54,15 +54,15 @@ class Model_NetworkDeviceType extends Model_Abstract
     /**
      * Instantiate a new object with data for the given ID
      *
-     * @param integer $id ID of an existing type definition
+     * @param string $name Name of an existing type definition
      * @return Model_NetworkDeviceType
-     * @throws RuntimeException if given ID id invalid
+     * @throws RuntimeException if given name does not exist
      **/
-    public function fetchById($id)
+    public function fetchByName($name)
     {
-        $type = self::createStatementStatic($id)->fetchObject(__CLASS__);
+        $type = self::createStatementStatic($name)->fetchObject(__CLASS__);
         if (!$type) {
-            throw new RuntimeException('Invalid device type ID: ' . $id);
+            throw new RuntimeException('Invalid device type: ' . $name);
         }
         return $type;
     }
@@ -83,7 +83,7 @@ class Model_NetworkDeviceType extends Model_Abstract
      * @param integer $id Return only given type. Default: return all types.
      * @return Zend_Db_Statement Statement
      **/
-    public static function CreateStatementStatic($id=null)
+    public static function createStatementStatic($name=null)
     {
         $db = Model_Database::getAdapter();
 
@@ -115,9 +115,9 @@ class Model_NetworkDeviceType extends Model_Abstract
             ->group('devicetype.id')
             ->group('devicetype.name');
 
-        if ($id) {
+        if ($name) {
             $select = $definedTypes;
-            $select->where('devicetype.id = ?', $id);
+            $select->where('devicetype.name = ?', $name);
         } else {
             // Get all types that are assigned to a device. This may include
             // undefined types in which case 'id' will be NULL.
@@ -158,7 +158,7 @@ class Model_NetworkDeviceType extends Model_Abstract
      * @param string $description Description of new type
      * @throws RuntimeException if a definition with the same description already exists.
      **/
-    public static function add($description)
+    public function add($description)
     {
         $db = Model_Database::getAdapter();
         if ($db->fetchOne('SELECT name FROM devicetype WHERE name = ?', $description)) {
