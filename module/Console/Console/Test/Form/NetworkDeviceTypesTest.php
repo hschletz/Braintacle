@@ -259,6 +259,62 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         $this->assertEquals($messages, $this->_form->getMessages());
     }
 
+    public function testInputFilterRenamedEmpty()
+    {
+        $data = array(
+            '_csrf' => $this->_form->get('_csrf')->getValue(),
+            'Add' => '',
+            'Types' => array(
+                'name0' => '',
+                'name1' => ' ',
+            ),
+        );
+        $this->_form->setData($data);
+        $this->assertFalse($this->_form->isValid());
+        $messages = array(
+            'Types' => array(
+                'name0' => array('isEmpty' => "Value is required and can't be empty"),
+                'name1' => array('isEmpty' => "Value is required and can't be empty"),
+            ),
+        );
+        $this->assertEquals($messages, $this->_form->getMessages());
+    }
+
+    public function testInputFilterStringLengthMax()
+    {
+        $data = array(
+            '_csrf' => $this->_form->get('_csrf')->getValue(),
+            'Add' => str_repeat("\xC3\x84", 255),
+            'Types' => array(
+                'name0' => str_repeat("\xC3\x96", 255),
+                'name1' => 'name1',
+            ),
+        );
+        $this->_form->setData($data);
+        $this->assertTrue($this->_form->isValid());
+    }
+
+    public function testInputFilterStringLengthTooLong()
+    {
+        $data = array(
+            '_csrf' => $this->_form->get('_csrf')->getValue(),
+            'Add' => str_repeat("\xC3\x84", 256),
+            'Types' => array(
+                'name0' => str_repeat("\xC3\x96", 256),
+                'name1' => 'name1',
+            ),
+        );
+        $this->_form->setData($data);
+        $this->assertFalse($this->_form->isValid());
+        $messages = array(
+            'Types' => array(
+                'name0' => array('stringLengthTooLong' => 'The input is more than 255 characters long'),
+            ),
+            'Add' => array('stringLengthTooLong' => 'The input is more than 255 characters long'),
+        );
+        $this->assertEquals($messages, $this->_form->getMessages());
+    }
+
     public function testRenderFieldsetNoMessages()
     {
         $html = $this->_form->renderFieldset($this->_createView(), $this->_form);
