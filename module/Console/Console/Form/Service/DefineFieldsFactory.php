@@ -1,6 +1,6 @@
 <?php
 /**
- * Display form for managing userdefined fields
+ * Factory for DefineFields form
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,11 +17,25 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-print $this->htmlTag(
-    'h1',
-    $this->translate('Manage custom fields')
-);
-print $this->form->render($this);
+namespace Console\Form\Service;
+
+/**
+ * Factory for DefineFields form
+ * @codeCoverageIgnore
+ */
+class DefineFieldsFactory implements \Zend\ServiceManager\FactoryInterface
+{
+    /**
+     * @internal
+     */
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    {
+        $serviceManager = $serviceLocator->getServiceLocator();
+        return new \Console\Form\DefineFields(
+            null,
+            array('CustomFieldsModel' => $serviceManager->get('Model\Computer\CustomFields'))
+        );
+    }
+}

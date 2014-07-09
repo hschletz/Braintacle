@@ -223,6 +223,10 @@ th a {
     display: table-cell;
 }
 
+.row {
+    display: table-row;
+}
+
 .textright {
     text-align: right;
 }
@@ -402,7 +406,7 @@ input[size="8"]
     font-size: 80%;
 }
 
-.Form_AddToGroup td, .table_registry_values td, .form_definefields td {
+.Form_AddToGroup td, .table_registry_values td {
     padding-top: 2ex;
 }
 
@@ -448,6 +452,27 @@ td.formElement {
 
 .form_package_assign input[type="submit"] {
     margin-left: 0;
+}
+
+.form_definefields .cell {
+    vertical-align: middle;
+    padding-right: 1em;
+}
+
+.form_definefields input, .form_definefields select {
+    margin-left: 0;
+}
+
+.form_definefields label, .form_definefields select {
+    display: table-cell;
+    vertical-align: bottom;
+    margin-top: 7ex;
+}
+
+.form_definefields .error {
+    text-align: left;
+    margin: 0;
+    padding: 0;
 }
 
 .form_deletecomputer {

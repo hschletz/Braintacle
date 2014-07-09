@@ -288,11 +288,12 @@ class Model_UserDefinedInfo extends Model_Abstract
 
     /**
      * Add a field
+     *
      * @param string $name Field name
      * @param string $type One of text, clob, integer, float or date
      * @throws InvalidArgumentException if column exists or is a system column
      **/
-    static function addField($name, $type)
+    public function add($name, $type)
     {
         if (self::fieldExists($name)) {
             throw new InvalidArgumentException("Column '$name' already exists.");
@@ -380,11 +381,12 @@ class Model_UserDefinedInfo extends Model_Abstract
 
     /**
      * Rename field
+     *
      * @param string $oldName Existing field name
      * @param string $newName New field name
      * @throws InvalidArgumentException if column does not exist or is a system column or new name exists
      **/
-    static function renameField($oldName, $newName)
+    public function rename($oldName, $newName)
     {
         if ($oldName == 'TAG') {
             throw new InvalidArgumentException("System column 'TAG' cannot be renamed.");
@@ -399,6 +401,9 @@ class Model_UserDefinedInfo extends Model_Abstract
         // changing the case of one or more characters.
         if (!self::isNameEqual($oldName, $newName) and self::fieldExists($newName)) {
             throw new InvalidArgumentException("Column '$newName' already exists.");
+        }
+        if ($newName == $oldName) {
+            return;
         }
 
         $db = Model_Database::getAdapter();

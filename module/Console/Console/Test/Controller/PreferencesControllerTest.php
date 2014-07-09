@@ -241,51 +241,65 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testCustomfieldsActionGet()
     {
-        $form = $this->getMock('Form_DefineFields');
+        $form = $this->getMock('Console\Form\DefineFields');
+        $form->expects($this->never())
+             ->method('setData');
+        $form->expects($this->never())
+             ->method('isValid');
         $form->expects($this->never())
              ->method('process');
         $form->expects($this->once())
-             ->method('toHtml');
-        $this->_legacyFormManager->expects($this->once())
+             ->method('render')
+             ->will($this->returnValue('<form></form'));
+        $this->_formManager->expects($this->once())
                            ->method('get')
                            ->with('Console\Form\DefineFields')
                            ->will($this->returnValue($form));
         $this->dispatch('/console/preferences/customfields');
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains('h1', "\nManage custom fields\n");
+        $this->assertXPathQuery('//form');
     }
 
     public function testCustomfieldsActionPostInvalid()
     {
         $postData = array('key' => 'value');
-        $form = $this->getMock('Form_DefineFields');
+        $form = $this->getMock('Console\Form\DefineFields');
+        $form->expects($this->once())
+             ->method('setData')
+             ->with($postData);
+        $form->expects($this->once())
+             ->method('isValid')
+             ->will($this->returnValue(false));
         $form->expects($this->never())
              ->method('process');
         $form->expects($this->once())
-             ->method('isValid')
-             ->with($postData)
-             ->will($this->returnValue(false));
-        $form->expects($this->once())
-             ->method('toHtml');
-        $this->_legacyFormManager->expects($this->once())
+             ->method('render')
+             ->will($this->returnValue('<form></form'));
+        $this->_formManager->expects($this->once())
                            ->method('get')
                            ->with('Console\Form\DefineFields')
                            ->will($this->returnValue($form));
         $this->dispatch('/console/preferences/customfields', 'POST', $postData);
         $this->assertResponseStatusCode(200);
+        $this->assertXPathQuery('//form');
     }
 
     public function testCustomfieldsActionPostValid()
     {
         $postData = array('key' => 'value');
-        $form = $this->getMock('Form_DefineFields');
+        $form = $this->getMock('Console\Form\DefineFields');
         $form->expects($this->once())
-             ->method('process');
+             ->method('setData')
+             ->with($postData);
         $form->expects($this->once())
              ->method('isValid')
-             ->with($postData)
              ->will($this->returnValue(true));
-        $this->_legacyFormManager->expects($this->once())
+        $form->expects($this->once())
+             ->method('process');
+        $form->expects($this->never())
+             ->method('render');
+        $this->_formManager->expects($this->once())
                            ->method('get')
                            ->with('Console\Form\DefineFields')
                            ->will($this->returnValue($form));

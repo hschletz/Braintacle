@@ -188,13 +188,15 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     public function customfieldsAction()
     {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\DefineFields');
-        if ($this->getRequest()->isPost() and $form->isValid($this->params()->fromPost())) {
-            $form->process();
-            return $this->redirectToRoute('preferences', 'customfields');
-        } else {
-            return array('form' => $form);
+        $form = $this->_formManager->get('Console\Form\DefineFields');
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->params()->fromPost());
+            if ($form->isValid()) {
+                $form->process();
+                return $this->redirectToRoute('preferences', 'customfields');
+            }
         }
+        return array('form' => $form);
     }
 
     /**
