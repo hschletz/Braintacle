@@ -339,7 +339,8 @@ class Duplicates
                         array('hardware_id' => $newest['Id']),
                         array(
                             'hardware_id' => $computer['Id'],
-                            'name' => 'DOWNLOAD',
+                            "name != 'DOWNLOAD_SWITCH'",
+                            "name LIKE 'DOWNLOAD%'",
                             $subQuery => $newest['Id'],
                         )
                     );

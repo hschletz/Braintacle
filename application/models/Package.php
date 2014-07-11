@@ -750,7 +750,7 @@ class Model_Package extends Model_Abstract
         Model_Database::getAdapter()->delete(
             'devices',
             array(
-                'name=\'DOWNLOAD\' AND ivalue IN'
+                "name LIKE 'DOWNLOAD%' AND ivalue IN"
                 . '(SELECT id FROM download_enable WHERE fileid=?)'
                 => $this->getTimestamp()->get(Zend_Date::TIMESTAMP)
             )
@@ -791,10 +791,7 @@ class Model_Package extends Model_Abstract
             return; // nothing to do
         }
 
-        $where = array(
-            'name=?' => 'DOWNLOAD',
-            'ivalue=?' => $oldPackage->getEnabledId()
-        );
+        $where = array('ivalue = ?' => $oldPackage->getEnabledId());
 
         // Additional filters are only necessary if not all conditions are set
         if (!($deployNonnotified and $deploySuccess and $deployNotified and $deployError and $deployGroups)) {
@@ -816,14 +813,24 @@ class Model_Package extends Model_Abstract
             $where['(' . implode(' OR ', $whereOr) . ')'] = null;
         }
 
-        Model_Database::getAdapter()->update(
+        $db = Model_Database::getAdapter();
+        // Remove DOWNLOAD_FORCE option - not necessary for a new package
+        $db->delete('devices', array('name = ?' => 'DOWNLOAD_FORCE') + $where);
+        // Update package ID for other download options
+        $db->update(
+            'devices',
+            array('ivalue' => $this->getEnabledId()),
+            array('name != ?' => 'DOWNLOAD_SWITCH', 'name LIKE ?' => 'DOWNLOAD_%') + $where
+        );
+        // Update package ID and reset download entry
+        $db->update(
             'devices',
             array(
                 'ivalue' => $this->getEnabledId(),
                 'tvalue' => null, // always set new package status to 'not notified'
                 'comments' => $this->getLocaltimeCompat(),
             ),
-            $where
+            array('name=?' => 'DOWNLOAD') + $where
         );
     }
 

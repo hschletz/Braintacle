@@ -37,6 +37,11 @@ devices:
     name: "DOWNLOAD"
     ivalue: 3
     tvalue: "SUCCESS"
+  -
+    hardware_id: 3
+    name: "DOWNLOAD_FORCE"
+    ivalue: 1
+    tvalue: null
 
 # Group memberships should not be merged
 groups_cache:

@@ -133,7 +133,6 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
             'SELECT since, CURRENT_TIMESTAMP AS current FROM locks WHERE hardware_id=?',
             $id
         );
-
         if ($lock) {
             // A lock already exists. Check its timestamp.
             $since = new Zend_Date($lock['since']);
@@ -317,7 +316,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
                 array(
                     'hardware_id=?' => $this->getId(),
                     'ivalue=?' => $package->getEnabledId(),
-                    'name = \'DOWNLOAD\''
+                    "name LIKE 'DOWNLOAD%'"
                 )
             );
         }

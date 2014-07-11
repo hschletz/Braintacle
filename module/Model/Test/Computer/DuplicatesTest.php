@@ -115,7 +115,7 @@ class DuplicatesTest extends \Model\Test\AbstractTest
             $dataSet->getTable('devices'),
             $connection->createQueryTable(
                 'devices',
-                'SELECT hardware_id, name, ivalue, tvalue FROM devices ORDER BY hardware_id, ivalue'
+                'SELECT hardware_id, name, ivalue, tvalue FROM devices ORDER BY hardware_id, name, ivalue'
             )
         );
         $this->assertTablesEqual(

@@ -60,6 +60,16 @@ devices:
     name: "DOWNLOAD"
     ivalue: 1
     tvalue: "NOTIFIED"
+  - # Should be merged too
+    hardware_id: 2
+    name: "DOWNLOAD_FORCE"
+    ivalue: 1
+    tvalue: null
+  - # Should not be merged
+    hardware_id: 2
+    name: "DOWNLOAD_SWITCH"
+    ivalue: 0
+    tvalue: null
   -
     hardware_id: 2
     name: "DOWNLOAD"
