@@ -311,7 +311,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
                 array(
                     'hardware_id=?' => $this->getId(),
                     'ivalue=?' => $package->getEnabledId(),
-                    'name = \'DOWNLOAD\''
+                    "name LIKE 'DOWNLOAD%'"
                 )
             );
         }

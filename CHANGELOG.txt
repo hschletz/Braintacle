@@ -17,6 +17,13 @@ Upgrading from previous versions:
   contains a security fix, as well as a backwards incompatible change that
   causes a PHP warning on some forms.
 
+New features:
+
+- Console: Partial support for extended download options (forced/scheduled
+  download etc.) introduced by new server version. There is no user interface
+  yet to set these options, but they are gracefully handled when updating/
+  assigning/deleting packages.
+
 Fixed bugs:
 
 - Console: Fixed possible XSS.

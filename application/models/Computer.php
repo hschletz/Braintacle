@@ -1786,7 +1786,8 @@ class Model_Computer extends Model_ComputerOrGroup
                         array('hardware_id' => $newest->getId()),
                         array(
                             'hardware_id=?' => $computer->getId(),
-                            'name=\'DOWNLOAD\'',
+                            "name != 'DOWNLOAD_SWITCH'",
+                            "name LIKE 'DOWNLOAD%'",
                             'ivalue NOT IN ' . $subquery
                         )
                     );
