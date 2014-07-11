@@ -23,6 +23,7 @@
 /**
  * Includes
  */
+Braintacle_MDB2::setErrorReporting();
 require_once('MDB2/Schema.php');
 /**
  * Interface for database schema management

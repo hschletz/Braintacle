@@ -107,24 +107,26 @@ foreach (Query::execute('//div[@class="package-contents"]/a', $errorDocument) as
     // Iterate over messages for current file/class.
     $rowsToRemove = array();
     foreach (Query::execute($baseNode->getNodePath() . '/div/table/tbody/tr', $errorDocument) as $row) {
-        $isInherited = false;
+        $ignoreError = false;
         $message = $row->childNodes->item(4)->nodeValue;
         if (preg_match('/^Argument .* is missing from the Docblock of (.*)\(\)$/', $message, $matches)) {
             $method = $matches[1];
             if ($parentClass) {
-                $isInherited = $parentClass->hasMethod($method);
+                $ignoreError = $parentClass->hasMethod($method);
             }
-            if (!$isInherited) {
+            if (!$ignoreError) {
                 foreach ($interfaces as $interface) {
                     if ($interface->hasMethod($method)) {
-                        $isInherited = true;
+                        $ignoreError = true;
                         break;
                     }
                 }
             }
+        } elseif ($message == 'Only one @package tag is allowed') {
+            $ignoreError = true; // TODO remove workaround when no @package tags are used anymore
         }
 
-        if ($isInherited) {
+        if ($ignoreError) {
             $rowsToRemove[] = $row;
         } else {
             // Print message to console - phpdoc only does this for uncached files.

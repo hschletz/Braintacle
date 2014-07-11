@@ -76,7 +76,6 @@ $logger = \Library\Application::getService('Library\Logger');
 $logger->addWriter($writer);
 
 // Create Schema manager object
-Braintacle_MDB2::setErrorReporting();
 $manager = new Braintacle_SchemaManager($oldLogger);
 $schemaManager = new \Database\SchemaManager($manager);
 
