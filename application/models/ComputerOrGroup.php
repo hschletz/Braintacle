@@ -131,7 +131,8 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
         // database to ensure that the same timezone is used for comparisions.
         $lock = $db->fetchRow(
             'SELECT since, CURRENT_TIMESTAMP AS current FROM locks WHERE hardware_id=?',
-            $id
+            $id,
+            \Zend_Db::FETCH_ASSOC
         );
         if ($lock) {
             // A lock already exists. Check its timestamp.
