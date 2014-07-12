@@ -33,6 +33,9 @@ Fixed bugs:
 - Console: When deleting a computer, unchecking the "Delete interfaces from
   network listing" checkbox had no effect.
 
+- Console: Ultimate fix for the locking problem insufficiently addressed in the
+  previous release.
+
 Misc:
 
 - Server: Updated server to version 2.1.1.
