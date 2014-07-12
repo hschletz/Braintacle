@@ -1600,7 +1600,6 @@ class Model_Computer extends Model_ComputerOrGroup
         // Additional tables without associated Model_ChildObject class
         $tables[] = 'accountinfo';
         $tables[] = 'bios';
-        $tables[] = 'devices';
         $tables[] = 'download_history';
         $tables[] = 'download_servers';
         $tables[] = 'groups_cache';
@@ -1650,6 +1649,11 @@ class Model_Computer extends Model_ComputerOrGroup
                     'id_dde=?' => $id,
                     'table_name=?' => 'accountinfo'
                 )
+            );
+
+            // Delete config via ZF2 adapter to avoid deadlock on duplicate merge
+            \Library\Application::getService('Database\Table\ItemConfig')->delete(
+                array('hardware_id' => $id)
             );
 
             // Delete row in hardware table itself
