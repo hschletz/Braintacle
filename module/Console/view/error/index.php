@@ -48,6 +48,9 @@ if (\Library\Application::isDevelopment() and isset($this->exception)) {
                 $this->escapeHtml($exception->getLine())
             )
         );
+        print "<h4>Stack trace:</h4>\n";
+        print $this->htmlTag('pre', $this->escapeHtml($exception->getTraceAsString()));
+
         $exception = $exception->getPrevious();
     }
 
@@ -56,9 +59,6 @@ if (\Library\Application::isDevelopment() and isset($this->exception)) {
         print 'Details hidden for security reasons.';
         return;
     }
-
-    print "<h3>Stack trace:</h3>\n";
-    print $this->htmlTag('pre', $this->escapeHtml($this->exception->getTraceAsString()));
 
     $request = $this->request;
     print "<h3>Request Parameters:</h3>\n";
