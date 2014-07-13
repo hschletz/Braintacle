@@ -1,6 +1,6 @@
 <?php
 /**
- * Display form for adding search results to a group
+ * Factory for AddToGroup form
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,8 +19,23 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-print $this->htmlTag(
-    'h1',
-    $this->translate('Save to group')
-);
-print $this->form->render($this);
+namespace Console\Form\Service;
+
+/**
+ * Factory for AddToGroup form
+ * @codeCoverageIgnore
+ */
+class AddToGroupFactory implements \Zend\ServiceManager\FactoryInterface
+{
+    /**
+     * @internal
+     */
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    {
+        $serviceManager = $serviceLocator->getServiceLocator();
+        return new \Console\Form\AddToGroup(
+            null,
+            array('GroupModel' => $serviceManager->get('Model\Group\Group'))
+        );
+    }
+}

@@ -380,37 +380,36 @@ class Model_Group extends Model_ComputerOrGroup
     }
 
     /**
-     * Add computers statically
+     * Set group members based on query
      *
-     * @param mixed $computers Computer ID or object or array of these
-     *                         (this is recommended when adding multiple computers)
-     **/
-    public function addComputers($computers)
-    {
-        $this->_setMemberships($computers, Model_GroupMembership::TYPE_STATIC);
-    }
-
-    /**
-     * Exclude computers from group
+     * If $type is \Model_GroupMembership::TYPE_DYNAMIC, the DynamicMembersSql
+     * property will be set to the resulting query. For other values, the query
+     * will be executed and $type is stored as manual membership/exclusion on
+     * the results.
      *
-     * @param mixed $computers Computer ID or object or array of these
-     *                         (this is recommended when excluding multiple computers)
-     **/
-    public function excludeComputers($computers)
+     * @param integer $type Membership type
+     * @param string|array $filter Name or array of names of a pre-defined filter routine
+     * @param string|array $search Search parameter(s) passed to the filter. May be case sensitive depending on DBMS.
+     * @param string|array $operator Comparision operator
+     * @param bool|array $invert Invert query results (return all computers NOT matching criteria)
+     */
+    public function setMembersFromQuery($type, $filter, $search, $operator, $invert)
     {
-        $this->_setMemberships($computers, Model_GroupMembership::TYPE_EXCLUDED);
-    }
-
-    /**
-     * Set a membership type on computers
-     *
-     * @param mixed $computers Computer ID or object or array of these
-     * @param integer $type Membership type (TYPE_STATIC or TYPE_EXCLUDED)
-     **/
-    protected function _setMemberships($computers, $type)
-    {
-        if (!is_array($computers)) {
-            $computers = array($computers);
+        $computers = \Library\Application::getService('Model\Computer\Computer')->fetch(
+            array('Id'),
+            null,
+            null,
+            $filter,
+            $search,
+            $operator,
+            $invert,
+            false,
+            true,
+            ($type != \Model_GroupMembership::TYPE_DYNAMIC)
+        );
+        if ($type == \Model_GroupMembership::TYPE_DYNAMIC) {
+            $this->setProperty('DynamicMembersSql', $computers);
+            return;
         }
 
         // Wait until lock can be obtained
@@ -639,7 +638,7 @@ class Model_Group extends Model_ComputerOrGroup
      * @throws UnexpectedValueException if group name is empty
      * @throws RuntimeException if a group with the given name already exists
      **/
-    public static function create($name, $description=null)
+    public function create($name, $description=null)
     {
         if ($name == '') {
             throw new UnexpectedValueException('Group name is empty');

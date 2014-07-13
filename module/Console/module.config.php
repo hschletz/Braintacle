@@ -45,6 +45,7 @@ return array(
     ),
     'form_elements' => array(
         'factories' => array(
+            'Console\Form\AddToGroup' => 'Console\Form\Service\AddToGroupFactory',
             'Console\Form\CustomFields' => 'Console\Form\Service\CustomFieldsFactory',
             'Console\Form\DefineFields' => 'Console\Form\Service\DefineFieldsFactory',
             'Console\Form\DeleteComputer' => 'Console\Form\Service\DeleteComputerFactory',
@@ -92,7 +93,6 @@ return array(
         ),
         'invokables' => array(
             'Console\Form\Account\New' => 'Form_Account_New',
-            'Console\Form\AddToGroup' => 'Form_AddToGroup',
             'Console\Form\ClientConfig' => 'Form_Configuration',
             'Console\Form\Package\Build' => 'Form_Package',
             'Console\Form\Package\Edit' => 'Form_Package_Edit',

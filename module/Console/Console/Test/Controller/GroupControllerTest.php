@@ -64,7 +64,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_group = $this->getMockBuilder('Model_Group')->disableOriginalConstructor()->getMock();
         $this->_computer = $this->getMockBuilder('Model_Computer')->disableOriginalConstructor()->getMock();
         $this->_packageAssignmentForm = $this->getMock('Console\Form\Package\Assign');
-        $this->_addToGroupForm = $this->getMockBuilder('Form_AddToGroup')->disableOriginalConstructor()->getMock();
+        $this->_addToGroupForm = $this->getMock('Console\Form\AddToGroup');
         $this->_clientConfigForm = $this->getMock('Form_Configuration');
         parent::setUp();
     }
@@ -474,195 +474,60 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testAddActionGet()
     {
-        $this->_computer->expects($this->never())
-                        ->method('fetch');
+        $this->_addToGroupForm->expects($this->never())
+                              ->method('setData');
         $this->_addToGroupForm->expects($this->never())
                               ->method('isValid');
         $this->_addToGroupForm->expects($this->never())
-                              ->method('getGroup');
-        $this->_addToGroupForm->expects($this->never())
-                              ->method('getValue');
+                              ->method('process');
         $this->_addToGroupForm->expects($this->once())
-                              ->method('__toString')
-                              ->will($this->returnValue(''));
+                              ->method('render')
+                              ->will($this->returnValue('<form></form>'));
         $this->dispatch(
             '/console/group/add?filter=filter&search=search&invert=invert&operator=operator'
         );
         $this->assertResponseStatusCode(200);
+        $this->assertXpathQuery('//form');
     }
 
     public function testAddActionPostInvalid()
     {
-        $postData = array();
-        $this->_computer->expects($this->never())
-                        ->method('fetch');
+        $postData = array('key' => 'value');
+        $this->_addToGroupForm->expects($this->once())
+                              ->method('setData')
+                              ->with($postData);
         $this->_addToGroupForm->expects($this->once())
                               ->method('isValid')
-                              ->with($postData)
                               ->will($this->returnValue(false));
         $this->_addToGroupForm->expects($this->never())
-                              ->method('getGroup');
-        $this->_addToGroupForm->expects($this->never())
-                              ->method('getValue');
+                              ->method('process');
         $this->_addToGroupForm->expects($this->once())
-                              ->method('__toString')
-                              ->will($this->returnValue(''));
+                              ->method('render')
+                              ->will($this->returnValue('<form></form>'));
         $this->dispatch(
             '/console/group/add?filter=filter&search=search&invert=invert&operator=operator',
             'POST',
             $postData
         );
         $this->assertResponseStatusCode(200);
+        $this->assertXpathQuery('//form');
     }
 
-    public function testAddActionPostValidStoreFilter()
+    public function testAddActionPostValid()
     {
-        $postData = array('What' => \Form_AddToGroup::STORE_FILTER);
-        $members = $this->getMockBuilder('Zend_Db_Select')->disableOriginalConstructor()->getMock();
-        $group = $this->getMockBuilder('Model_Group')->disableOriginalConstructor()->getMock();
-        $group->expects($this->once())
-              ->method('__call')
-              ->with('setDynamicMembersSql', array($members));
-        $group->expects($this->never())
-              ->method('addComputers');
-        $group->expects($this->never())
-              ->method('excludeComputers');
-        $group->expects($this->once())
-              ->method('offsetGet')
-              ->with('Name')
-              ->will($this->returnValue('test'));
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->with(
-                            array('Id'),
-                            null,
-                            null,
-                            'filter',
-                            'search',
-                            'operator',
-                            'invert',
-                            false,
-                            true,
-                            false
-                        )
-                        ->will($this->returnValue($members));
+        $postData = array('key' => 'value');
+        $this->_addToGroupForm->expects($this->once())
+                              ->method('setData')
+                              ->with($postData);
         $this->_addToGroupForm->expects($this->once())
                               ->method('isValid')
-                              ->with($postData)
                               ->will($this->returnValue(true));
         $this->_addToGroupForm->expects($this->once())
-                              ->method('getGroup')
-                              ->will($this->returnValue($group));
-        $this->_addToGroupForm->expects($this->once())
-                              ->method('getValue')
-                              ->with('What')
-                              ->will($this->returnValue($postData['What']));
+                              ->method('process')
+                              ->with('filter', 'search', 'operator', 'invert')
+                              ->will($this->returnValue(array('Name' => 'test')));
         $this->_addToGroupForm->expects($this->never())
-                              ->method('__toString');
-        $this->dispatch(
-            '/console/group/add?filter=filter&search=search&invert=invert&operator=operator',
-            'POST',
-            $postData
-        );
-        $this->assertRedirectTo('/console/group/members/?name=test');
-    }
-
-    public function testAddActionPostValidStoreResult()
-    {
-        $postData = array('What' => \Form_AddToGroup::STORE_RESULT);
-        $members = array(1, 2);
-        $group = $this->getMockBuilder('Model_Group')->disableOriginalConstructor()->getMock();
-        $group->expects($this->never())
-              ->method('__call');
-        $group->expects($this->once())
-              ->method('addComputers')
-              ->with($members);
-        $group->expects($this->never())
-              ->method('excludeComputers');
-        $group->expects($this->once())
-              ->method('offsetGet')
-              ->with('Name')
-              ->will($this->returnValue('test'));
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->with(
-                            array('Id'),
-                            null,
-                            null,
-                            'filter',
-                            'search',
-                            'operator',
-                            'invert',
-                            false,
-                            true,
-                            true
-                        )
-                        ->will($this->returnValue($members));
-        $this->_addToGroupForm->expects($this->once())
-                              ->method('isValid')
-                              ->with($postData)
-                              ->will($this->returnValue(true));
-        $this->_addToGroupForm->expects($this->once())
-                              ->method('getGroup')
-                              ->will($this->returnValue($group));
-        $this->_addToGroupForm->expects($this->once())
-                              ->method('getValue')
-                              ->with('What')
-                              ->will($this->returnValue($postData['What']));
-        $this->_addToGroupForm->expects($this->never())
-                              ->method('__toString');
-        $this->dispatch(
-            '/console/group/add?filter=filter&search=search&invert=invert&operator=operator',
-            'POST',
-            $postData
-        );
-        $this->assertRedirectTo('/console/group/members/?name=test');
-    }
-
-    public function testAddActionPostValidStoreExcluded()
-    {
-        $postData = array('What' => \Form_AddToGroup::STORE_EXCLUDED);
-        $members = array(1, 2);
-        $group = $this->getMockBuilder('Model_Group')->disableOriginalConstructor()->getMock();
-        $group->expects($this->never())
-              ->method('__call');
-        $group->expects($this->never())
-              ->method('addComputers');
-        $group->expects($this->once())
-              ->method('excludeComputers')
-              ->with($members);
-        $group->expects($this->once())
-              ->method('offsetGet')
-              ->with('Name')
-              ->will($this->returnValue('test'));
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->with(
-                            array('Id'),
-                            null,
-                            null,
-                            'filter',
-                            'search',
-                            'operator',
-                            'invert',
-                            false,
-                            true,
-                            true
-                        )
-                        ->will($this->returnValue($members));
-        $this->_addToGroupForm->expects($this->once())
-                              ->method('isValid')
-                              ->with($postData)
-                              ->will($this->returnValue(true));
-        $this->_addToGroupForm->expects($this->once())
-                              ->method('getGroup')
-                              ->will($this->returnValue($group));
-        $this->_addToGroupForm->expects($this->once())
-                              ->method('getValue')
-                              ->with('What')
-                              ->will($this->returnValue($postData['What']));
-        $this->_addToGroupForm->expects($this->never())
-                              ->method('__toString');
+                              ->method('render');
         $this->dispatch(
             '/console/group/add?filter=filter&search=search&invert=invert&operator=operator',
             'POST',

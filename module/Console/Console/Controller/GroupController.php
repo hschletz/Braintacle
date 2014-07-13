@@ -46,7 +46,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
 
     /**
      * Add to group form
-     * @var \Form_AddToGroup
+     * @var \Console\Form\AddToGroup
      */
     protected $_addToGroupForm;
 
@@ -68,14 +68,14 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
      * @param \Model_Group $group
      * @param \Model_Computer $computer
      * @param \Console\Form\Package\Assign $packageAssignmentForm
-     * @param \Form_AddToGroup $addToGroupForm
+     * @param \Console\Form\AddToGroup $addToGroupForm
      * @param \Form_Configuration $clientConfigForm
      */
     public function __construct(
         \Model_Group $group,
         \Model_Computer $computer,
         \Console\Form\Package\Assign $packageAssignmentForm,
-        \Form_AddToGroup $addToGroupForm,
+        \Console\Form\AddToGroup $addToGroupForm,
         \Form_Configuration $clientConfigForm
     )
     {
@@ -267,40 +267,23 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function addAction()
     {
-        if ($this->getRequest()->isPost() and $this->_addToGroupForm->isValid($this->params()->fromPost())) {
-            $group = $this->_addToGroupForm->getGroup();
-            $what = $this->_addToGroupForm->getValue('What');
-            $members = $this->_computer->fetch(
-                array('Id'),
-                null,
-                null,
-                $this->params()->fromQuery('filter'),
-                $this->params()->fromQuery('search'),
-                $this->params()->fromQuery('operator'),
-                $this->params()->fromQuery('invert'),
-                false,
-                true,
-                ($what == \Form_AddToGroup::STORE_FILTER) ? false : true
-            );
-            switch ($what) {
-                case \Form_AddToGroup::STORE_FILTER:
-                    $group->setDynamicMembersSql($members);
-                    break;
-                case \Form_AddToGroup::STORE_RESULT:
-                    $group->addComputers($members);
-                    break;
-                case \Form_AddToGroup::STORE_EXCLUDED:
-                    $group->excludeComputers($members);
-                    break;
+        if ($this->getRequest()->isPost()) {
+            $this->_addToGroupForm->setData($this->params()->fromPost());
+            if ($this->_addToGroupForm->isValid()) {
+                $group = $this->_addToGroupForm->process(
+                    $this->params()->fromQuery('filter'),
+                    $this->params()->fromQuery('search'),
+                    $this->params()->fromQuery('operator'),
+                    $this->params()->fromQuery('invert')
+                );
+                return $this->redirectToRoute(
+                    'group',
+                    'members',
+                    array('name' => $group['Name'])
+                );
             }
-            return $this->redirectToRoute(
-                'group',
-                'members',
-                array('name' => $group['Name'])
-            );
-        } else {
-            return array('form' => $this->_addToGroupForm);
         }
+        return array('form' => $this->_addToGroupForm);
     }
 
     /**
