@@ -69,7 +69,7 @@ Fixed bugs:
 
 Misc:
 
--Server: Updated server to version 2.1.1.
+- Server: Updated server to version 2.1.2.
 
 - General: Minimum ZF version is now 1.12.7.
 
