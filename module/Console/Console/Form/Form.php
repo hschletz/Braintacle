@@ -208,7 +208,22 @@ class Form extends \Zend\Form\Form
                 $validator = new \Zend\I18n\Validator\DateTime;
                 $validator->setDateType(\IntlDateFormatter::SHORT);
                 if ($validator->isValid($value)) {
-                    $value = new \Zend_Date($value);
+                    // Some systems accept invalid date separators, like '/'
+                    // with a de_DE locale which should accept only '.'.
+                    // An extra comparision of the locale-specific pattern and
+                    // the input string is necessary.
+                    // This also enforces 4-digit years to avoid any confusion
+                    // with 2-digit year input.
+                    $pattern = preg_quote($validator->getPattern(), '#');
+                    // Get the year part out of the way first.
+                    $pattern = preg_replace('/y+/', '§', $pattern);
+                    // Remaining letters are placeholders for digits.
+                    $pattern = preg_replace('/[a-zA-Z]+/', '\d+', $pattern);
+                    // Set the year pattern.
+                    $pattern = str_replace('§', '\d{4}', $pattern);
+                    if (preg_match("#^$pattern$#", $value)) {
+                        $value = new \Zend_Date($value);
+                    }
                 }
                 break;
         }

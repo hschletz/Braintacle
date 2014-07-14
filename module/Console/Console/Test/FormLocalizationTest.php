@@ -150,6 +150,8 @@ class FormLocalizationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('31.2.2014', $this->_form->normalize('date', ' 31.2.2014 '));
         $this->assertEquals('2.5.2014 17:25:23', $this->_form->normalize('date', ' 2.5.2014 17:25:23 '));
         $this->assertEquals('2014-05-02', $this->_form->normalize('date', ' 2014-05-02 '));
+        $this->assertEquals('05/01/2014', $this->_form->normalize('date', ' 05/01/2014 '));
+        $this->assertEquals('05.01.14', $this->_form->normalize('date', ' 05.01.14 '));
         $this->assertEquals('', $this->_form->normalize('date', ' '));
     }
 
