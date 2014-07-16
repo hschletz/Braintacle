@@ -37,11 +37,9 @@ class NetworkDevice extends Form
     /** {@inheritdoc} */
     public function init()
     {
-        $categories = $this->getOption('NetworkDeviceModel')->getCategories();
-
-        $type = new \Zend\Form\Element\Select('Type');
+        $type = new \Library\Form\Element\SelectSimple('Type');
         $type->setLabel('Type')
-             ->setValueOptions(array_combine($categories, $categories)); // Use as both value and label
+             ->setValueOptions($this->getOption('NetworkDeviceModel')->getCategories());
         $this->add($type);
 
         $description = new \Zend\Form\Element\Text('Description');

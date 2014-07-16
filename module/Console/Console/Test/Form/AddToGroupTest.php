@@ -76,9 +76,9 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
         $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('Description'));
 
         $existingGroup = $this->_form->get('ExistingGroup');
-        $this->assertInstanceOf('Zend\Form\Element\Select', $existingGroup);
+        $this->assertInstanceOf('Library\Form\Element\SelectSimple', $existingGroup);
         $this->assertEquals(
-            array('group1' => 'group1', 'group2' => 'group2'),
+            array('group1', 'group2'),
             $existingGroup->getValueOptions()
         );
 

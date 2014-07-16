@@ -70,11 +70,11 @@ class AddToGroup extends Form
         $description->setLabel('Description');
         $this->add($description);
 
-        $existingGroup = new \Zend\Form\Element\Select('ExistingGroup');
+        $existingGroup = new \Library\Form\Element\SelectSimple('ExistingGroup');
         $existingGroup->setLabel('Group');
         $groups = array();
         foreach ($this->getOption('GroupModel')->fetch(array('Name'), null, null, 'Name') as $group) {
-            $groups[$group['Name']] = $group['Name'];
+            $groups[] = $group['Name'];
         }
         $existingGroup->setValueOptions($groups);
         $this->add($existingGroup);

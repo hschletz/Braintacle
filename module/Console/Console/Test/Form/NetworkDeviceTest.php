@@ -51,11 +51,8 @@ class NetworkDeviceTest extends \Console\Test\AbstractFormTest
         $form->init();
 
         $type = $form->get('Type');
-        $this->assertInstanceOf('Zend\Form\Element\Select', $type);
-        $this->assertEquals(
-            array('cat1' => 'cat1', 'cat2' => 'cat2'),
-            $type->getValueOptions()
-        );
+        $this->assertInstanceOf('Library\Form\Element\SelectSimple', $type);
+        $this->assertEquals(array('cat1', 'cat2'), $type->getValueOptions());
         $this->assertInstanceOf('Zend\Form\Element\Text', $form->get('Description'));
         $this->assertInstanceOf('\Library\Form\Element\Submit', $form->get('Submit'));
     }

@@ -74,6 +74,9 @@ Feature\InitProviderInterface
                     'htmlTag' => 'Library\View\Helper\Service\HtmlTagFactory',
                     'membershipType' => 'Library\View\Helper\Service\MembershipTypeFactory',
                 ),
+                'invokables' => array(
+                    'formSelectSimple' => 'Library\View\Helper\FormSelectSimple',
+                ),
             ),
         );
     }
@@ -100,6 +103,10 @@ Feature\InitProviderInterface
         \Zend\Filter\StaticFilter::getPluginManager()->setInvokableClass(
             'Library\FixEncodingErrors',
             'Library\Filter\FixEncodingErrors'
+        );
+        $e->getApplication()->getServiceManager()->get('ViewHelperManager')->get('formElement')->addClass(
+            'Library\Form\Element\SelectSimple',
+            'formselectsimple'
         );
     }
 

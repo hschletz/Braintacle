@@ -392,7 +392,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                       ->will($this->returnValue($device));
         $this->_device->expects($this->once())
                       ->method('getCategories')
-                      ->will($this->returnValue(array()));
+                      ->will($this->returnValue(array('type')));
         // Since form elements are rendered manually, mocking the entire form
         // would be very complicated. Just stub the pivotal methods and leave
         // elements as is.
@@ -418,7 +418,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXPathQuery(sprintf($query, 'Hostname', 'host.example.net'));
         $this->assertXPathQuery(sprintf($query, 'Date', '24.02.2014 13:21:32'));
         $this->assertXpathQueryContentContains('//tr[6]/td[1]', $this->_deviceForm->get('Type')->getLabel());
-        $this->assertXpathQuery('//tr[6]/td[2]/select[@name="Type"]');
+        $this->assertXpathQuery('//tr[6]/td[2]/select[@name="Type"]/option[not(@value)]');
         $this->assertXpathQueryContentContains('//tr[7]/td[1]', $this->_deviceForm->get('Description')->getLabel());
         $this->assertXpathQuery('//tr[7]/td[2]/input[@type="text"][@name="Description"]');
         $this->assertXpathQuery('//input[@type="hidden"][@name="_csrf"]');
