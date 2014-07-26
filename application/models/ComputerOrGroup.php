@@ -360,7 +360,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
 
         $column = 'ivalue';
         switch ($option) {
-            case 'PackageDeployment':
+            case 'packageDeployment':
                 $name = 'DOWNLOAD_SWITCH'; // differs from global option
                 break;
             case 'allowScan':
