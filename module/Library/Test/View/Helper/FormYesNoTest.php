@@ -21,6 +21,8 @@
 
 namespace Library\Test\View\Helper;
 
+use \Zend\Dom\Document\Query as Query;
+
 /**
  * Tests for the FormYesNo helper
  */
@@ -33,61 +35,15 @@ class FormYesNoTest extends AbstractTest
     {
         $helper = $this->_getHelper();
         $result = $helper('TestCaption', array('hiddenName' => 'hiddenValue'));
+        $document = new \Zend\Dom\Document($result);
 
-        $this->assertTag(
-            array(
-                'tag' => 'p',
-                'content' => 'TestCaption',
-            ),
-            $result,
-            'Expected <p>TestCaption</p>'
+        $this->assertCount(1, Query::execute('//p[text()="TestCaption"]', $document));
+        $this->assertCount(1, Query::execute('//form[@action=""][@method="POST"]', $document));
+        $this->assertCount(
+            1,
+            Query::execute('//input[@type="hidden"][@name="hiddenName"][@value="hiddenValue"]', $document)
         );
-        $this->assertTag(
-            array(
-                'tag' => 'form',
-                'attributes' => array(
-                    'action' => '',
-                    'method' => 'POST',
-                ),
-            ),
-            $result,
-            'Expected <form action="" method="POST">'
-        );
-        $this->assertTag(
-            array(
-                'tag' => 'input',
-                'attributes' => array(
-                    'type' => 'hidden',
-                    'name' => 'hiddenName',
-                    'value' => 'hiddenValue',
-                ),
-            ),
-            $result,
-            'Expected <input type="hidden" name="hiddenName" value="hiddenValue">'
-        );
-        $this->assertTag(
-            array(
-                'tag' => 'input',
-                'attributes' => array(
-                    'type' => 'submit',
-                    'name' => 'yes',
-                    'value' => 'Yes',
-                ),
-            ),
-            $result,
-            'Expected <input type="submit" name="yes" value="Yes">'
-        );
-        $this->assertTag(
-            array(
-                'tag' => 'input',
-                'attributes' => array(
-                    'type' => 'submit',
-                    'name' => 'no',
-                    'value' => 'No',
-                ),
-            ),
-            $result,
-            'Expected <input type="submit" name="no" value="No">'
-        );
+        $this->assertCount(1, Query::execute('//input[@type="submit"][@name="yes"][@value="Yes"]', $document));
+        $this->assertCount(1, Query::execute('//input[@type="submit"][@name="no"][@value="No"]', $document));
     }
 }
