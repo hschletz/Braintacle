@@ -466,10 +466,11 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function configurationAction()
     {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\ClientConfig');
-        $form->setObject($this->_currentComputer);
+        $form = $this->_formManager->get('Console\Form\ClientConfig');
+        $form->setClientObject($this->_currentComputer);
         if ($this->getRequest()->isPost()) {
-            if ($form->isValid($this->params()->fromPost())) {
+            $form->setData($this->params()->fromPost());
+            if ($form->isValid()) {
                 $form->process();
                 return $this->redirectToRoute(
                     'computer',
@@ -477,6 +478,8 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
                     array('id' => $this->_currentComputer['Id'])
                 );
             }
+        } else {
+            $form->setData($this->_currentComputer->getAllConfig());
         }
         return array(
             'computer' => $this->_currentComputer,

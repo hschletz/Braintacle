@@ -38,7 +38,7 @@ class GroupControllerFactory implements \Zend\ServiceManager\FactoryInterface
             $serviceManager->get('Model\Computer\Computer'),
             $formManager->get('Console\Form\Package\Assign'),
             $formManager->get('Console\Form\AddToGroup'),
-            $serviceManager->get('Console\Form\ClientConfig')
+            $formManager->get('Console\Form\ClientConfig')
         );
     }
 }

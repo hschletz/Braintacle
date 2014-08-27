@@ -52,7 +52,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     /**
      * Client configuration form mock
-     * @var \Form_Configuration
+     * @var \Console\Form\ClientConfig
      */
     protected $_clientConfigForm;
 
@@ -65,7 +65,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer = $this->getMockBuilder('Model_Computer')->disableOriginalConstructor()->getMock();
         $this->_packageAssignmentForm = $this->getMock('Console\Form\Package\Assign');
         $this->_addToGroupForm = $this->getMock('Console\Form\AddToGroup');
-        $this->_clientConfigForm = $this->getMock('Form_Configuration');
+        $this->_clientConfigForm = $this->getMock('Console\Form\ClientConfig');
         parent::setUp();
     }
 
@@ -538,55 +538,62 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testConfigurationActionGet()
     {
-        $url = '/console/group/configuration/?name=test';
+        $config = array('name' => 'value');
         $this->_group->expects($this->once())
                      ->method('fetchByName')
                      ->with('test')
                      ->will($this->returnSelf());
-        $this->_clientConfigForm->expects($this->once())
-                                ->method('setObject')
-                                ->with($this->_group);
-        $this->_clientConfigForm->expects($this->never())
-                                ->method('isValid');
-        $this->_clientConfigForm->expects($this->never())
-                                ->method('process');
-        $this->_clientConfigForm->expects($this->once())
-                                ->method('__toString')
-                                ->will($this->returnValue(''));
-        $this->dispatch($url);
+        $this->_group->expects($this->once())
+                     ->method('getAllConfig')
+                     ->will($this->returnValue($config));
+        $form = $this->_clientConfigForm;
+        $form->expects($this->once())
+             ->method('setClientObject')
+             ->with($this->_group);
+        $form->expects($this->once())
+             ->method('setData')
+             ->with($config);
+        $form->expects($this->never())
+             ->method('isValid');
+        $form->expects($this->never())
+             ->method('process');
+        $form->expects($this->once())
+             ->method('render')
+             ->will($this->returnValue('<form></form>'));
+        $this->dispatch('/console/group/configuration/?name=test');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains(
-            "//ul[@class='navigation navigation_details']/li[@class='active']/a[@href='$url']",
-            'Configuration'
-        );
+        $this->assertXPathQuery('//form');
     }
 
-    public function testConfigurationPostInvalid()
+    public function testConfigurationActionPostInvalid()
     {
-        $postData = array('key' => 'value');
         $this->_group->expects($this->once())
                      ->method('fetchByName')
                      ->with('test')
                      ->will($this->returnSelf());
-        $this->_clientConfigForm->expects($this->once())
-                                ->method('setObject')
-                                ->with($this->_group);
-        $this->_clientConfigForm->expects($this->once())
-                                ->method('isValid')
-                                ->with($postData)
-                                ->will($this->returnValue(false));
-        $this->_clientConfigForm->expects($this->never())
-                                ->method('process');
-        $this->_clientConfigForm->expects($this->once())
-                                ->method('__toString')
-                                ->will($this->returnValue(''));
+        $postData = array('key' => 'value');
+        $form = $this->_clientConfigForm;
+        $form->expects($this->once())
+             ->method('setClientObject')
+             ->with($this->_group);
+        $form->expects($this->once())
+             ->method('setData')
+             ->with($postData);
+        $form->expects($this->once())
+             ->method('isValid')
+             ->will($this->returnValue(false));
+        $form->expects($this->never())
+             ->method('process');
+        $form->expects($this->once())
+             ->method('render')
+             ->will($this->returnValue('<form></form>'));
         $this->dispatch('/console/group/configuration/?name=test', 'POST', $postData);
         $this->assertResponseStatusCode(200);
+        $this->assertXPathQuery('//form');
     }
 
-    public function testConfigurationPostValid()
+    public function testConfigurationActionPostValid()
     {
-        $postData = array('key' => 'value');
         $this->_group->expects($this->once())
                      ->method('fetchByName')
                      ->with('test')
@@ -595,17 +602,27 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                      ->method('offsetGet')
                      ->with('Name')
                      ->will($this->returnValue('test'));
-        $this->_clientConfigForm->expects($this->once())
-                                ->method('setObject')
-                                ->with($this->_group);
-        $this->_clientConfigForm->expects($this->once())
-                                ->method('isValid')
-                                ->with($postData)
-                                ->will($this->returnValue(true));
-        $this->_clientConfigForm->expects($this->once())
-                                ->method('process');
-        $this->_clientConfigForm->expects($this->never())
-                                ->method('__toString');
+        $postData = array('key' => 'value');
+        $form = $this->_clientConfigForm;
+        $form->expects($this->once())
+             ->method('setClientObject')
+             ->with($this->_group);
+        $form->expects($this->once())
+             ->method('setData')
+             ->with($postData);
+        $form->expects($this->once())
+             ->method('isValid')
+             ->will($this->returnValue(true));
+        $form->expects($this->once())
+             ->method('process');
+        $form->expects($this->never())
+             ->method('render');
+        $map = array(
+            array('Id', 1),
+        );
+        $this->_computer->expects($this->any())
+                        ->method('offsetGet')
+                        ->will($this->returnValueMap($map));
         $this->dispatch('/console/group/configuration/?name=test', 'POST', $postData);
         $this->assertRedirectTo('/console/group/configuration/?name=test');
     }

@@ -76,7 +76,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
         \Model_Computer $computer,
         \Console\Form\Package\Assign $packageAssignmentForm,
         \Console\Form\AddToGroup $addToGroupForm,
-        \Form_Configuration $clientConfigForm
+        \Console\Form\ClientConfig $clientConfigForm
     )
     {
         $this->_group = $group;
@@ -294,14 +294,19 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
     public function configurationAction()
     {
         $this->setActiveMenu('Groups');
-        $this->_clientConfigForm->setObject($this->_currentGroup);
-        if ($this->getRequest()->isPost() and $this->_clientConfigForm->isValid($this->params()->fromPost())) {
-            $this->_clientConfigForm->process();
-            return $this->redirectToRoute(
-                'group',
-                'configuration',
-                array('name' => $this->_currentGroup['Name'])
-            );
+        $this->_clientConfigForm->setClientObject($this->_currentGroup);
+        if ($this->getRequest()->isPost()) {
+            $this->_clientConfigForm->setData($this->params()->fromPost());
+            if ($this->_clientConfigForm->isValid()) {
+                $this->_clientConfigForm->process();
+                return $this->redirectToRoute(
+                    'group',
+                    'configuration',
+                    array('name' => $this->_currentGroup['Name'])
+                );
+            }
+        } else {
+            $this->_clientConfigForm->setData($this->_currentGroup->getAllConfig());
         }
         return array(
             'group' => $this->_currentGroup,

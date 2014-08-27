@@ -56,6 +56,7 @@ return array(
             'Console\Form\ShowDuplicates' => 'Console\Form\Service\ShowDuplicatesFactory',
         ),
         'invokables' => array(
+            'Console\Form\ClientConfig' => 'Console\Form\ClientConfig',
             'Console\Form\GroupMemberships' => 'Console\Form\GroupMemberships',
             'Console\Form\Import' => 'Console\Form\Import',
             'Console\Form\Login' => 'Console\Form\Login',
@@ -93,7 +94,6 @@ return array(
         ),
         'invokables' => array(
             'Console\Form\Account\New' => 'Form_Account_New',
-            'Console\Form\ClientConfig' => 'Form_Configuration',
             'Console\Form\Package\Build' => 'Form_Package',
             'Console\Form\Package\Edit' => 'Form_Package_Edit',
             'Console\Form\Preferences\Agent' => 'Form_Preferences_Agent',

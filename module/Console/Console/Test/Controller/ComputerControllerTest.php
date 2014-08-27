@@ -104,12 +104,9 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer = $this->getMockBuilder('Model_Computer')->disableOriginalConstructor()->getMock();
         $this->_group = $this->getMockBuilder('Model_Group')->disableOriginalConstructor()->getMock();
 
-        $legacyFormManager = new \Zend\ServiceManager\ServiceManager;
-        $legacyFormManager->setService('Console\Form\ClientConfig', $this->getMock('Form_Configuration'));
-
         $this->_formManager = new \Zend\Form\FormElementManager;
-        $this->_formManager->setServiceLocator($legacyFormManager);
         $this->_formManager->setService('Console\Form\Package\Assign', $this->getMock('Console\Form\Package\Assign'));
+        $this->_formManager->setService('Console\Form\ClientConfig', $this->getMock('Console\Form\ClientConfig'));
         $this->_formManager->setService('Console\Form\CustomFields', $this->getMock('Console\Form\CustomFields'));
         $this->_formManager->setService('Console\Form\DeleteComputer', $this->getMock('Console\Form\DeleteComputer'));
         $this->_formManager->setService(
@@ -2137,56 +2134,69 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testConfigurationActionGet()
     {
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\ClientConfig');
+        $config = array('name' => 'value');
+        $this->_computer->expects($this->once())
+                        ->method('getAllConfig')
+                        ->will($this->returnValue($config));
+        $form = $this->_formManager->get('Console\Form\ClientConfig');
         $form->expects($this->once())
-             ->method('setObject')
+             ->method('setClientObject')
              ->with($this->_computer);
+        $form->expects($this->once())
+             ->method('setData')
+             ->with($config);
         $form->expects($this->never())
              ->method('isValid');
         $form->expects($this->never())
              ->method('process');
         $form->expects($this->once())
-             ->method('__toString')
-             ->will($this->returnValue(''));
+             ->method('render')
+             ->will($this->returnValue('<form></form>'));
         $this->dispatch('/console/computer/configuration/?id=1');
         $this->assertResponseStatusCode(200);
+        $this->assertXPathQuery('//form');
     }
 
     public function testConfigurationActionPostInvalid()
     {
         $postData = array('key' => 'value');
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\ClientConfig');
+        $form = $this->_formManager->get('Console\Form\ClientConfig');
         $form->expects($this->once())
-             ->method('setObject')
+             ->method('setClientObject')
              ->with($this->_computer);
         $form->expects($this->once())
+             ->method('setData')
+             ->with($postData);
+        $form->expects($this->once())
              ->method('isValid')
-             ->with($postData)
              ->will($this->returnValue(false));
         $form->expects($this->never())
              ->method('process');
         $form->expects($this->once())
-             ->method('__toString')
-             ->will($this->returnValue(''));
+             ->method('render')
+             ->will($this->returnValue('<form></form>'));
         $this->dispatch('/console/computer/configuration/?id=1', 'POST', $postData);
         $this->assertResponseStatusCode(200);
+        $this->assertXPathQuery('//form');
     }
 
     public function testConfigurationActionPostValid()
     {
         $postData = array('key' => 'value');
-        $form = $this->_formManager->getServiceLocator()->get('Console\Form\ClientConfig');
+        $form = $this->_formManager->get('Console\Form\ClientConfig');
         $form->expects($this->once())
-             ->method('setObject')
+             ->method('setClientObject')
              ->with($this->_computer);
         $form->expects($this->once())
+             ->method('setData')
+             ->with($postData);
+        $form->expects($this->once())
              ->method('isValid')
-             ->with($postData)
              ->will($this->returnValue(true));
         $form->expects($this->once())
              ->method('process');
         $form->expects($this->never())
-             ->method('__toString');
+             ->method('render');
         $map = array(
             array('Id', 1),
         );

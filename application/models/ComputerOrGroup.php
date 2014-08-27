@@ -506,4 +506,34 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
         }
         return $value;
     }
+
+    /**
+     * Get all stored item-specific configuration values
+     *
+     * The returned array has 3 elements: 'Agent', 'Download' and 'Scan'. Each
+     * of these is an array with name/value pairs of configured values.
+     *
+     * @return array[]
+     */
+    public function getAllConfig()
+    {
+        return array(
+            'Agent' => array(
+                'contactInterval' => $this->getConfig('contactInterval'),
+                'inventoryInterval' => $this->getConfig('inventoryInterval'),
+            ),
+            'Download' => array(
+                'packageDeployment' => $this->getConfig('packageDeployment') === null,
+                'downloadPeriodDelay' => $this->getConfig('downloadPeriodDelay'),
+                'downloadCycleDelay' => $this->getConfig('downloadCycleDelay'),
+                'downloadFragmentDelay' => $this->getConfig('downloadFragmentDelay'),
+                'downloadMaxPriority' => $this->getConfig('downloadMaxPriority'),
+                'downloadTimeout' => $this->getConfig('downloadTimeout'),
+            ),
+            'Scan' => array(
+                'allowScan' => $this->getConfig('allowScan') === null,
+                'scanSnmp' => $this->getConfig('scanSnmp') === null,
+            ),
+        );
+    }
 }

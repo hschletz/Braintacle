@@ -328,19 +328,6 @@ fieldset dd {
     float: right;
     clear: left;
 }
-.fieldset-fullwidth dt {
-    max-width: 30em;
-    margin-top: 1.5ex;
-    float: left;
-    clear: both;
-    text-align: right;
-}
-.fieldset-fullwidth dd {
-    margin-left: 1em;
-    margin-top: 1.5ex;
-    float: left;
-    clear: right;
-}
 ul.errors {
     margin-top: 0;
     margin-bottom: 0.8ex;
@@ -369,16 +356,6 @@ textarea {
     margin-left: 30em;
     width: 23em;
     border: 1px inset black;
-}
-.fieldset-fullwidth {
-    margin-left: 5%;
-    margin-top: 1.5ex;
-    width: 90%;
-}
-.fieldset-fullwidth legend {
-    /* Center legend */
-    margin-left: auto;
-    margin-right: auto;
 }
 
 /* special formats */
@@ -485,6 +462,42 @@ td.formElement {
     margin: 0;
     padding: 0;
     text-align: left;
+}
+
+.form_clientconfig .label {
+    width: 50%;
+}
+
+.form_clientconfig .values {
+    text-align: left;
+    white-space: nowrap;
+}
+
+.form_clientconfig > .table {
+    width: 90%;
+    text-align: center;
+    font-size: 90%;
+}
+
+.form_clientconfig input {
+    display: inline;
+}
+
+.form_clientconfig fieldset {
+    margin-top: 2ex;
+}
+
+.form_clientconfig .error {
+    margin: 0;
+    text-align: left;
+    padding-left: 1em;
+}
+
+.form_clientconfig legend {
+    margin: auto;
+    padding-left: .5em;
+    padding-right: .5em;
+    font-weight: bold;
 }
 
 .form_definefields .cell {

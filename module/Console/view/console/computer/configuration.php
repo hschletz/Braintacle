@@ -21,4 +21,4 @@
 
 require 'header.php';
 
-print $this->form;
+print $this->form->render($this);

@@ -2055,4 +2055,12 @@ class Model_Computer extends Model_ComputerOrGroup
         }
         return self::$_configGroups[$id];
     }
+
+    /** {@inheritdoc} */
+    public function getAllConfig()
+    {
+        $config = parent::getAllConfig();
+        $config['Scan']['scanThisNetwork'] = $this->getConfig('scanThisNetwork');
+        return $config;
+    }
 }
