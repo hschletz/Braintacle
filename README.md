@@ -41,7 +41,7 @@ Requirements
   <http://framework.zend.com/manual/1.12/en/zend.db.adapter.html>. There are
   also some PHP libraries required in the include path:
 
-  - [Zend Framework](http://framework.zend.com) 1.12.7 or later (2.x is not
+  - [Zend Framework](http://framework.zend.com) 1.12.8 or later (2.x is not
     supported).
 
   - [NADA](https://github.com/hschletz/NADA)

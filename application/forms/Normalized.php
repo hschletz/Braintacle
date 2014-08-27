@@ -122,7 +122,7 @@ abstract class Form_Normalized extends Zend_Form
      * @param array $defaults
      * @return Zend_Form
      */
-    public function setDefaults($defaults)
+    public function setDefaults(array $defaults)
     {
         foreach ($defaults as $name => $value) {
             $defaults[$name] = $this->localize($name, $value);
