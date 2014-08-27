@@ -399,7 +399,6 @@ class SearchTest extends \Console\Test\AbstractFormTest
     {
         $view = $this->_createView();
         $this->_form->render($view);
-        $headScript = $view->headScript();
         $this->assertNotContains(
             'document.getElementById("form_search").elements["operator"].value = "eq"',
             $view->placeholder('BodyOnLoad')->getValue()
