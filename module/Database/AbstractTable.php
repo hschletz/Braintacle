@@ -51,6 +51,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
             $this->table = strtolower($this->_getClassName());
         }
         $this->adapter = $serviceLocator->get('Db');
+        $this->initialize();
     }
 
     /**
@@ -61,15 +62,6 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
     protected function _getClassName()
     {
         return substr(get_class($this), strrpos(get_class($this), '\\') + 1);
-    }
-
-    /** {@inheritdoc} */
-    public function getSql()
-    {
-        if (!$this->isInitialized) {
-            $this->initialize();
-        }
-        return parent::getSql();
     }
 
     /**
