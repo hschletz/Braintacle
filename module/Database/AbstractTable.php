@@ -27,8 +27,6 @@ Namespace Database;
  * Table objects should be pulled from the service manager which provides the
  * Database\Table\ClassName services which will create and set up object
  * instances.
- *
- * @codeCoverageIgnore
  */
 abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
 {
@@ -42,6 +40,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
      * Constructor
      *
      * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator Service manager instance
+     * @codeCoverageIgnore
      */
     public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
@@ -58,6 +57,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
      * Helper method to get class name without namespace
      * @internal
      * @return string Class name
+     * @codeCoverageIgnore
      */
     protected function _getClassName()
     {
@@ -69,6 +69,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
      *
      * The schema file is located in ./data/ClassName.json and contains all
      * information required to create or alter the table.
+     * @codeCoverageIgnore
      */
     public function setSchema()
     {
@@ -124,8 +125,26 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
 
     /**
      * Hook to be called after creating/altering table schema
+     * @codeCoverageIgnore
      */
     protected function _postSetSchema()
     {
+    }
+
+    /**
+     * Fetch a single column as a flat array
+     * 
+     * @param string $name Column name
+     * @return array
+     */
+    public function fetchCol($name)
+    {
+        $select = $this->sql->select();
+        $select->columns(array($name), false);
+        $col = array();
+        foreach ($this->selectWith($select) as $row) {
+            $col[] = $row[$name];
+        }
+        return $col;
     }
 }
