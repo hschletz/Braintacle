@@ -37,6 +37,14 @@ Misc:
   longer has to be "download".
 
 
+CHANGES IN VERSION 0.16
+=======================
+
+Fixed bugs:
+
+- Console: Fixed errors and warnings with ZF 1.12.8.
+
+
 CHANGES IN VERSION 0.15
 =======================
 
