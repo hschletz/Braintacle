@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for Account\Edit
+ * Add Braintacle user account
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,21 +19,34 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Console\Form\Service\Account;
+namespace Console\Form\Account;
 
 /**
- * Factory for Account\Edit
- * @codeCoverageIgnore
+ * Add Braintacle user account
  */
-class EditFactory implements \Zend\ServiceManager\FactoryInterface
+class Add extends AbstractForm
 {
-    /**
-     * @internal
-     */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    /** {@inheritdoc} */
+    public function init()
     {
-        return new \Form_Account_Edit(
-            array('operators' => $serviceLocator->get('Model\Operator'))
+        parent::init();
+
+        $inputFilter = $this->getInputFilter();
+
+        // User name must not exist
+        $idNotExistsValidator = new \Library\Validator\NotInArray(
+            array(
+                'haystack' => $this->getOption('operators')->getAllIds(),
+                'caseSensitivity' => \Library\Validator\NotInArray::CASE_INSENSITIVE,
+            )
         );
+        $inputFilter->add(
+            array(
+                'name' => 'Id',
+                'validators' => array($idNotExistsValidator),
+            )
+        );
+
+        $this->get('Submit')->setText('Add');
     }
 }

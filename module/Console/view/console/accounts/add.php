@@ -25,4 +25,4 @@ print $this->htmlTag(
     $this->translate('Create new account')
 );
 
-print $this->form;
+print $this->form->render($this);

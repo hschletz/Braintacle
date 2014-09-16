@@ -44,6 +44,9 @@ return array(
         ),
     ),
     'form_elements' => array(
+        'abstract_factories' => array(
+            'Console\Form\Service\AccountFactory',
+        ),
         'factories' => array(
             'Console\Form\AddToGroup' => 'Console\Form\Service\AddToGroupFactory',
             'Console\Form\CustomFields' => 'Console\Form\Service\CustomFieldsFactory',
@@ -90,10 +93,8 @@ return array(
             'Console\Navigation\ComputerMenu' => 'Console\Navigation\ComputerMenuFactory',
             'Console\Navigation\GroupMenu' => 'Console\Navigation\GroupMenuFactory',
             'Console\Navigation\MainMenu' => 'Console\Navigation\MainMenuFactory',
-            'Console\Form\Account\Edit' => 'Console\Form\Service\Account\EditFactory',
         ),
         'invokables' => array(
-            'Console\Form\Account\New' => 'Form_Account_New',
             'Console\Form\Package\Build' => 'Form_Package',
             'Console\Form\Package\Edit' => 'Form_Package_Edit',
             'Console\Form\Preferences\Agent' => 'Form_Preferences_Agent',

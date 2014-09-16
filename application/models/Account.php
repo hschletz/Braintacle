@@ -145,6 +145,16 @@ class Model_Account extends Model_Abstract
     }
 
     /**
+     * Get all login IDs
+     *
+     * @return string[]
+     */
+    public function getAllIds()
+    {
+        return \Library\Application::getService('Database\Table\Operators')->fetchCol('id');
+    }
+
+    /**
      * Create new account
      * @param array $data List of properties to set. Unknown keys will be ignored.
      * @param string $password Password for the new account, must not be empty.

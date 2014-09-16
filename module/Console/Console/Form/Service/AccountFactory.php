@@ -1,6 +1,6 @@
 <?php
 /**
- * Form for adding Braintacle user accounts
+ * Abstract factory for Account forms
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,32 +17,39 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Forms
  */
+
+namespace Console\Form\Service;
+
 /**
- * Form adding Braintacle user accounts
- * @package Forms
+ * Abstract factory for Account forms
+ * @codeCoverageIgnore
  */
-class Form_Account_New extends Form_Account
+class AccountFactory implements \Zend\ServiceManager\AbstractFactoryInterface
 {
-
     /**
-     * Create elements
+     * @internal
      */
-    public function init()
+    public function canCreateServiceWithName(
+        \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
+        $name,
+        $requestedName
+    )
     {
-        parent::init();
-
-        // New accounts must not have an existing ID.
-        $this->getElement('Id')->addValidator(
-            'Db_NoRecordExists', false, array(
-                'table' => 'operators',
-                'field' => 'id'
-            )
-        );
-
-        $this->getElement('submit')->setLabel('Add');
+        return (strpos($requestedName, 'Console\Form\Account\\') === 0);
     }
 
+    /**
+     * @internal
+     */
+    public function createServiceWithName(
+        \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
+        $name,
+        $requestedName
+    )
+    {
+        $form = new $requestedName;
+        $form->setOption('operators', $serviceLocator->getServiceLocator()->get('Model\Operator'));
+        return $form;
+    }
 }

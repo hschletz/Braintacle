@@ -36,7 +36,7 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
      * Account creation form
      * @var \Form_Account_New
      */
-    protected $_formAccountNew;
+    protected $_formAccountAdd;
 
     /**
      * Account edit form
@@ -48,17 +48,17 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
      * Constructor
      *
      * @param \Model_Account $operators operator prototype
-     * @param \Form_Account_New $formAccountNew Account creation form
-     * @param \Form_Account_Edit $formAccountEdit Account edit form
+     * @param \Console\Form\Account\Add $formAccountAdd Account creation form
+     * @param \Console\Form\Account\Edit $formAccountEdit Account edit form
      */
     public function __construct(
         \Model_Account $operators,
-        \Form_Account_New $formAccountNew,
-        \Form_Account_Edit $formAccountEdit
+        \Console\Form\Account\Add $formAccountAdd,
+        \Console\Form\Account\Edit $formAccountEdit
     )
     {
         $this->_operators = $operators;
-        $this->_formAccountNew = $formAccountNew;
+        $this->_formAccountAdd = $formAccountAdd;
         $this->_formAccountEdit = $formAccountEdit;
     }
 
@@ -85,18 +85,20 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function addAction()
     {
-        $form = $this->_formAccountNew;
+        $form = $this->_formAccountAdd;
 
-        if ($this->getRequest()->isPost() and $form->isValid($this->params()->fromPost())) {
-            $data = $form->getValues();
-            $this->_operators->create($data, $data['Password']);
-            return $this->redirectToRoute('accounts', 'index');
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->params()->fromPost());
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $this->_operators->create($data, $data['Password']);
+                return $this->redirectToRoute('accounts', 'index');
+            }
         }
 
         $this->setActiveMenu('Preferences', 'Users');
         return array ('form' => $form);
     }
-
 
     /**
      * Edit account
@@ -107,14 +109,22 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
     {
         $form = $this->_formAccountEdit;
 
-        if ($this->getRequest()->isPost() and $form->isValid($this->params()->fromPost())) {
-            $data = $form->getValues();
-            $this->_operators->update($data['OriginalId'], $data, $data['Password']);
-            return $this->redirectToRoute('accounts', 'index');
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->params()->fromPost());
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $this->_operators->update($data['OriginalId'], $data, $data['Password']);
+                return $this->redirectToRoute('accounts', 'index');
+            }
+        } else {
+            $account = clone $this->_operators;
+            $account->fetch($this->params()->fromQuery('id'));
+            $data = $account->getArrayCopy();
+            $data['OriginalId'] = $data['Id'];
+            $form->setData($data);
         }
 
         $this->setActiveMenu('Preferences', 'Users');
-        $form->setId($this->params()->fromQuery('id'));
         return array ('form' => $form);
     }
 
