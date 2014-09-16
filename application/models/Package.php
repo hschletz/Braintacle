@@ -298,10 +298,10 @@ class Model_Package extends Model_Abstract
                     'pack_loc',
                     'cert_path',
                     'cert_file',
-                    'num_nonnotified' => "($subqueryNonnotified)",
-                    'num_success' => "($subquerySuccess)",
-                    'num_notified' => "($subqueryNotified)",
-                    'num_error' => "($subqueryError)",
+                    'num_nonnotified' => new \Zend_Db_Expr("($subqueryNonnotified)"),
+                    'num_success' => new \Zend_Db_Expr("($subquerySuccess)"),
+                    'num_notified' => new \Zend_Db_Expr("($subqueryNotified)"),
+                    'num_error' => new \Zend_Db_Expr("($subqueryError)"),
                 )
             )
             ->order(self::getOrder($order, $direction, $map));

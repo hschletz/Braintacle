@@ -126,7 +126,7 @@ class Form_UserDefinedInfo extends Form_Normalized
     }
 
     /** {@inheritdoc} */
-    public function setDefaults($defaults)
+    public function setDefaults(array $defaults)
     {
         $values = array();
         foreach ($defaults as $name => $value) {

@@ -312,7 +312,7 @@ class Form_Search extends Form_Normalized
     }
 
     /** {@inheritdoc} */
-    public function setDefaults($defaults)
+    public function setDefaults(array $defaults)
     {
         if (isset($defaults['filter'])) {
             // Set filter explicitly because it must be initialized to make type detection work
