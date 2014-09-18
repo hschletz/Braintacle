@@ -101,11 +101,18 @@ class Form extends \Zend\Form\Form
                 $output .= "<span class='cell'></span>\n";
                 $output .= $view->formSubmit($element) . "\n";
             } elseif (!$element instanceof \Zend\Form\Element\Csrf) {
-                $output .= $view->formRow($element, 'prepend', false) . "\n";
+                $row = $view->formRow($element, 'prepend', false);
                 if ($element->getMessages()) {
-                    $output .= "<span class='cell'></span>\n";
-                    $output .= $view->formElementErrors($element, array('class' => 'errors')) . "\n";
+                    $row .= "\n<span class='cell'></span>\n";
+                    $row .= $view->formElementErrors($element, array('class' => 'errors'));
                 }
+                if ($element->hasAttribute('id')) {
+                    // The FormRow helper renders the label differently: It
+                    // precedes the element instead of encapsulating it.
+                    // Add a div wrapper to achieve the same appearance.
+                    $row = "<div class='row'>\n$row\n</div>";
+                }
+                $output .= $row . "\n";
             }
         }
         $output .= "</div>\n";

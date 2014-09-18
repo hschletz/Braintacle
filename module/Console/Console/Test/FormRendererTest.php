@@ -87,10 +87,7 @@ EOT;
         $this->assertEquals($expected, $form->render($view));
     }
 
-    /**
-     * Test Fieldset renderer to generate markup covered by stylesheet
-     */
-    public function testRenderFieldset()
+    public function testRenderFieldsetWithoutId()
     {
         $view = \Library\Application::getService('ViewManager')->getRenderer();
 
@@ -112,6 +109,40 @@ EOT;
 <label><span>Text2</span><input type="text" name="text2" class="input-error" value=""></label>
 <span class='cell'></span>
 <ul class="errors"><li>message</li></ul>
+<span class='cell'></span>
+<input type="submit" name="submit" value="">
+</div>
+
+EOT;
+        $this->assertEquals($expected, $form->renderFieldset($view, $form));
+    }
+
+    public function testRenderFieldsetWithId()
+    {
+        $view = \Library\Application::getService('ViewManager')->getRenderer();
+
+        $text1 = new \Zend\Form\Element\Text('text1');
+        $text1->setLabel('Text1')->setAttribute('id', 'text1');
+        $text2 = new \Zend\Form\Element\Text('text2');
+        $text2->setLabel('Text2')->setAttribute('id', 'text2');
+        $text2->setMessages(array('message'));
+        $submit = new \Zend\Form\Element\Submit('submit');
+
+        $form = new \Console\Form\Form;
+        $form->add($text1);
+        $form->add($text2);
+        $form->add($submit);
+
+        $expected = <<<EOT
+<div class='table'>
+<div class='row'>
+<label for="text1">Text1</label><input type="text" name="text1" id="text1" value="">
+</div>
+<div class='row'>
+<label for="text2">Text2</label><input type="text" name="text2" id="text2" class="input-error" value="">
+<span class='cell'></span>
+<ul class="errors"><li>message</li></ul>
+</div>
 <span class='cell'></span>
 <input type="submit" name="submit" value="">
 </div>
