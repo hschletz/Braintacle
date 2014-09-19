@@ -36,6 +36,11 @@ Misc:
 - Packages can now be stored in an arbitrary directory. The directory name no
   longer has to be "download".
 
+- Console: The download URLs and certificate path can no longer be set per
+  package. The global options are always used for package creation. Multiple
+  download locations have never been supported, and multiple URLs/certificates
+  are not very useful with a single location.
+
 - Console: The package download is no longer tested after building a package.
   This test has never been reliable, and failure would be a global
   configuration issue, not a problem with individual packages.

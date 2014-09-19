@@ -35,9 +35,6 @@
  * - <b>FileType</b> MIME type of uploaded file (read only)
  * - <b>Priority</b> Priority (0-10)
  * - <b>MaxFragmentSize</b> Maximum fragment size in kB
- * - <b>InfoFileUrlPath</b> HTTPS base URL
- * - <b>DownloadUrlPath</b> HTTP base URL
- * - <b>CertFile</b> Full path to HTTPS certificate
  * - <b>Warn</b> TRUE if a dialog should be displayed before installation
  * - <b>WarnMessage</b> Message to display
  * - <b>WarnCountdown</b> Timeout in seconds before installation continues
@@ -177,65 +174,6 @@ class Form_Package extends Zend_Form
                         ->setAttrib('size', '8')
                         ->setLabel('Maximum fragment size (kB), enter 0 for no fragmentation');
         $this->addElement($maxFragmentSize);
-
-        // HTTPS path to package metafile
-        $infoFileUrl = new Zend_Form_Element_Text('InfoFileUrlPath');
-        $infoFileUrl->addFilter('StringTrim')
-                    ->addFilter(
-                        'PregReplace',
-                        array(
-                            array(
-                                'match' => '/^.*:\/\//', // strip URI scheme
-                                'replace' => '',
-                            ),
-                            ''
-                        )
-                    )
-                    ->addFilter('StringTrim', array('charlist' => '/'))
-                    ->addValidator('StringLength', false, array(1, 255))
-                    ->addValidator(new Braintacle_Validate_Uri('https'))
-                    ->setRequired(true)
-                    ->setValue($config->defaultInfoFileLocation)
-                    ->setLabel('hostname/path for info file (HTTPS)');
-        $this->addElement($infoFileUrl);
-
-        // HTTP path to package download
-        $downloadUrl = new Zend_Form_Element_Text('DownloadUrlPath');
-        $downloadUrl->addFilter('StringTrim')
-                    ->addFilter(
-                        'PregReplace',
-                        array(
-                            array(
-                                'match' => '/^.*:\/\//', // strip URI scheme
-                                'replace' => '',
-                            ),
-                            ''
-                        )
-                    )
-                    ->addFilter('StringTrim', array('charlist' => '/'))
-                    ->addValidator('StringLength', false, array(1, 255))
-                    ->addValidator(new Braintacle_Validate_Uri('http'))
-                    ->setRequired(true)
-                    ->setValue($config->defaultDownloadLocation)
-                    ->setLabel('hostname/path for package download (HTTP)');
-        $this->addElement($downloadUrl);
-
-        // Local path to HTTPS Certificate
-        $cert = new Zend_Form_Element_Text('CertFile');
-        $cert->addFilter('StringTrim')
-             ->addFilter(
-                 'PregReplace',
-                 array(
-                      'match' => '/\\\\/',
-                      'replace' => '/'
-                      )
-             ) // replace backslashes
-             ->addValidator('StringLength', false, array(1, 255))
-             ->addValidator('Regex', false, array('/\//')) // at least 1 /
-             ->setRequired(true)
-             ->setValue($config->defaultCertificate)
-             ->setLabel('Certificate');
-        $this->addElement($cert);
 
         // The next elements are only relevant and displayed when this one is checked.
         $warn = new Zend_Form_Element_Checkbox('Warn');

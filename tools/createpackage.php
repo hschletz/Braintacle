@@ -75,9 +75,6 @@ $package->fromArray(
         'UserActionRequired' => $config->defaultUserActionRequired,
         'UserActionMessage' => $config->defaultUserActionMessage,
         'MaxFragmentSize' => $config->defaultMaxFragmentSize,
-        'InfoFileUrlPath' => $config->defaultInfoFileLocation,
-        'DownloadUrlPath' => $config->defaultDownloadLocation,
-        'CertFile' => $config->defaultCertificate,
     )
 );
 if ($package->build(false)) {
