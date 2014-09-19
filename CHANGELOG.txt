@@ -13,6 +13,8 @@ Fixed bugs:
 
 - Console: Fixed errors and warnings with ZF 1.12.8.
 
+- Console: Fixed bug in package builder error cleanup.
+
 
 CHANGES IN VERSION 0.15
 =======================

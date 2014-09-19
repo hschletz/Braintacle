@@ -875,15 +875,14 @@ class Model_Package extends Model_Abstract
         }
 
         if ($this->_activated) {
-            $db = Model_Database::getAdapter();
-            $db->delete(
+            Model_Database::getAdapter()->delete(
                 'download_enable',
                 array("fileid=?" => $this->getTimestamp()->get(Zend_Date::TIMESTAMP))
             );
             $this->_activated = false;
         }
         if ($this->_writtenToDb) {
-            $db->delete(
+            Model_Database::getAdapter()->delete(
                 'download_available',
                 array("fileid=?" => $this->getTimestamp()->get(Zend_Date::TIMESTAMP))
             );
