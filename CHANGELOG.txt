@@ -36,6 +36,10 @@ Misc:
 - Packages can now be stored in an arbitrary directory. The directory name no
   longer has to be "download".
 
+- Console: The package download is no longer tested after building a package.
+  This test has never been reliable, and failure would be a global
+  configuration issue, not a problem with individual packages.
+
 
 CHANGES IN VERSION 0.16
 =======================

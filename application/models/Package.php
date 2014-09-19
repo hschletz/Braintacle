@@ -726,9 +726,6 @@ class Model_Package extends Model_Abstract
 
         $this->_needCleanup = false; // Package finished. Do not clean up.
 
-        // Test connection. Failure is not fatal; only a warning will be issued.
-        $this->testConnection();
-
         return true;
     }
 
@@ -925,75 +922,6 @@ class Model_Package extends Model_Abstract
     {
         return count($this->_errors);
     }
-
-    /**
-     * Test download links for this package
-     *
-     * This method tries to establish a connection to the package's metafile
-     * (via HTTPS) and, if available, to the first fragment (via HTTP).
-     *
-     * The Timestamp, InfoFileUrlPath and DownloadUrlPath properties must be set.
-     *
-     * The result does not necessarily mean that the download will or will not
-     * work. Different proxy configuration, firewalls and name resolution may
-     * give a different result on the client. The return value only indicates
-     * success or failure on the server that runs Braintacle. It's only a helpful
-     * hint and failure should not be regarded fatal.
-     *
-     * Errors can be retrieved via {@link getErrors()}.
-     * @return bool TRUE if all necessary connections succeeded, FALSE otherwise.
-     */
-    public function testConnection()
-    {
-        $this->_errors = array();
-
-        $connection = new \Zend\Http\Client;
-        $connection->setMethod('HEAD');
-        $connection->setOptions(
-            array(
-                'strictredirects' => true,
-                'sslverifypeer' => false, // The certificate may not be installed on this server
-            )
-        );
-
-        $timestamp = $this->getTimestamp()->get(Zend_Date::TIMESTAMP);
-        $httpsPath = $this->getInfoFileUrlPath();
-        $connection->setUri("https://$httpsPath/$timestamp/info");
-        $result = $this->_testConnection($connection);
-
-        // Do not try to check for nonexistent fragments
-        if ($this->getNumFragments() == 0) {
-            return $result;
-        }
-
-        $httpPath = $this->getDownloadUrlPath();
-        $connection->setUri("http://$httpPath/$timestamp/$timestamp-1");
-        return $this->_testConnection($connection) && $result;
-    }
-
-    /**
-     * Test a single HTTP or HTTPS connection
-     *
-     * Exceptions are caught and the HTTP status code is checked.
-     * @param \Zend\Http\Client $connection must be fully set up to execute request.
-     * @return bool result of connection attempt
-     */
-    protected function _testConnection(\Zend\Http\Client $connection)
-    {
-        $response = $connection->send();
-        if (!$response->isSuccess()) {
-            $this->_setError(
-                'Connection to %1$s failed with HTTP status code %2$d',
-                array(
-                    $connection->getUri(true),
-                    $response->getStatusCode()
-                )
-            );
-            return false;
-        }
-        return true;
-    }
-
 
     /**
      * Get a timestamp in the format used in the 'devices' table
