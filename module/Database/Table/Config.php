@@ -236,6 +236,7 @@ class Config extends \Database\AbstractTable
      *
      * @param string $option Option name
      * @param mixed $value Option value
+     * @throws \InvalidArgumentException if $value is not an integer for an integer option
      */
     public function set($option, $value)
     {
