@@ -40,7 +40,6 @@ namespace Model;
  * @property string $communicationServerUri  URI of communication server. Default: http://localhost/ocsinventory
  * @property string $defaultAction  Default action for new packages (one of store, execute, launch). Default: launch
  * @property string $defaultActionParam  Default action parameter for new packages
- * @property string $defaultCertificate  Default certificate path for new packages. Default: INSTALL_PATH/cacert.pem
  * @property bool $defaultDeleteInterfaces  Default for deleting network interfaces along with computer. Default: true
  * @property bool $defaultDeployError  Default to deploy updated packages with state "error". Default: true
  * @property bool $defaultDeployGroups  Default to deploy updated packages to groups. Default: true
@@ -48,8 +47,6 @@ namespace Model;
  *                                            Default: true
  * @property bool $defaultDeployNotified  Default to deploy updated packages with state "notified". Default: true
  * @property bool $defaultDeploySuccess  Default to deploy updated packages with state "success". Default: true
- * @property string $defaultDownloadLocation  Default URL path for fragments for new packages
- * @property string $defaultInfoFileLocation  Default URL path for metadata for new packages
  * @property integer $defaultMaxFragmentSize  Default maximum fragment size (in kB) for new packages. Default: 0
  * @property bool $defaultMergeGroups  Default for merging manual group memberships along with computers. Default: true
  * @property bool $defaultMergePackages  Default for merging package assignments along with computers. Default: true
@@ -73,6 +70,9 @@ namespace Model;
  * @property integer $lockValidity  Seconds before a computer's lock expires. Default: 600
  * @property integer $logLevel  Server logging verbosity (0-2). Default: 0
  * @property string $logPath  Path to server logfiles or "syslog". Default: /var/log/ocsinventory-server
+ * @property string $packageBaseUriHttp  Base URI for package download (HTTP)
+ * @property string $packageBaseUriHttps  Base URI for package download (HTTPS)
+ * @property string $packageCertificate  Certificate path for packages. Default: INSTALL_PATH/cacert.pem
  * @property string $packagePath  Server-side directory where packages are stored
  * @property string $saveDir  Directory where a copy of incoming inventory data is stored
  * @property string $saveFormat  File format for saving: XML (uncompressed) or OCS (zlib). Default: OCS
@@ -111,7 +111,6 @@ class Config
     protected $_defaults = array(
         'communicationServerUri' => 'http://localhost/ocsinventory',
         'defaultAction' => 'launch',
-        'defaultCertificate' => 'INSTALL_PATH/cacert.pem',
         'defaultDeleteInterfaces' => '1',
         'defaultDeployError' => '1',
         'defaultDeployGroups' => '1',
@@ -144,6 +143,7 @@ class Config
         'lockValidity' => 600,
         'logLevel' => 0,
         'logPath' => '/var/log/ocsinventory-server',
+        'packageCertificate' => 'INSTALL_PATH/cacert.pem',
         'packageDeployment' => 0,
         'saveDir' => '/tmp',
         'saveFormat' => 'OCS',

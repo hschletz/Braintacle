@@ -44,9 +44,9 @@ class Form_Preferences_Packages extends Form_Preferences
         'defaultActionParam' => 'text',
         'defaultPackagePriority' => array(), // Translated content provided by init()
         'defaultMaxFragmentSize' => 'integer',
-        'defaultInfoFileLocation' => 'text',
-        'defaultDownloadLocation' => 'text',
-        'defaultCertificate' => 'text',
+        'packageBaseUriHttps' => 'text',
+        'packageBaseUriHttp' => 'text',
+        'packageCertificate' => 'text',
         'defaultWarn' => 'bool',
         'defaultWarnMessage' => 'clob',
         'defaultWarnCountdown' => 'integer',
@@ -112,13 +112,13 @@ class Form_Preferences_Packages extends Form_Preferences
             'defaultMaxFragmentSize' => $translate->_(
                 'Default maximum fragment size (kB), 0 for no fragmentation'
             ),
-            'defaultInfoFileLocation' => $translate->_(
+            'packageBaseUriHttps' => $translate->_(
                 'Default hostname/path for info file (HTTPS)'
             ),
-            'defaultDownloadLocation' => $translate->_(
+            'packageBaseUriHttp' => $translate->_(
                 'Default hostname/path for package download (HTTP)'
             ),
-            'defaultCertificate' => $translate->_(
+            'packageCertificate' => $translate->_(
                 'Default certificate'
             ),
             'defaultWarn' => $translate->_(
@@ -173,7 +173,7 @@ class Form_Preferences_Packages extends Form_Preferences
         $this->getElement('packagePath')
             ->addFilter('StringTrim')
             ->addValidator(new Braintacle_Validate_DirectoryWritable);
-        $this->getElement('defaultInfoFileLocation')
+        $this->getElement('packageBaseUriHttps')
             ->addFilter(
                 'PregReplace',
                 array(
@@ -186,7 +186,7 @@ class Form_Preferences_Packages extends Form_Preferences
             )
             ->addFilter('StringTrim', array('charlist' => '/'))
             ->addValidator(new Braintacle_Validate_Uri('https'));
-        $this->getElement('defaultDownloadLocation')
+        $this->getElement('packageBaseUriHttp')
             ->addFilter(
                 'PregReplace',
                 array(

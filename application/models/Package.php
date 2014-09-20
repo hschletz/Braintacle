@@ -688,10 +688,10 @@ class Model_Package extends Model_Abstract
                 $table,
                 array(
                     'fileid' => $timestamp,
-                    'info_loc' => $config->defaultInfoFileLocation,
-                    'pack_loc' => $config->defaultDownloadLocation,
-                    'cert_path' => dirname($config->defaultCertificate),
-                    'cert_file' => $config->defaultCertificate,
+                    'info_loc' => $config->packageBaseUriHttps,
+                    'pack_loc' => $config->packageBaseUriHttp,
+                    'cert_path' => dirname($config->packageCertificate),
+                    'cert_file' => $config->packageCertificate,
                 )
             );
             $this->_activated = true;
