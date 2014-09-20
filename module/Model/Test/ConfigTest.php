@@ -45,7 +45,7 @@ class ConfigTest extends AbstractTest
      */
     public function testMagicGet()
     {
-        $config = clone $this->_getModel();
+        $config = $this->_getModel();
 
         // Test populated ivalue and tvalue options
         $this->assertEquals(42, $config->inventoryInterval);
@@ -59,7 +59,7 @@ class ConfigTest extends AbstractTest
 
     public function testMagicSet()
     {
-        $config = clone $this->_getModel();
+        $config = $this->_getModel();
 
         $config->inventoryInterval = 42; // unchanged
         $config->contactInterval = 10; // new
@@ -77,8 +77,7 @@ class ConfigTest extends AbstractTest
     public function testMagicSetInvalidOption()
     {
         $this->setExpectedException('InvalidArgumentException', 'Invalid option: invalid');
-        $config = clone $this->_getModel();
-        $config->invalid = 0;
+        $this->_getModel()->invalid = 0;
     }
 
     public function testMagicSetInvalidValue()
@@ -87,7 +86,6 @@ class ConfigTest extends AbstractTest
             'InvalidArgumentException',
             'Tried to set non-integer value "invalid" to integer option "inventoryInterval"'
         );
-        $config = clone $this->_getModel();
-        $config->inventoryInterval = 'invalid';
+        $this->_getModel()->inventoryInterval = 'invalid';
     }
 }

@@ -132,7 +132,7 @@ class DuplicatesTest extends \Model\Test\AbstractTest
      */
     public function testCount()
     {
-        $duplicates = clone $this->_getModel();
+        $duplicates = $this->_getModel();
 
         // These criteria are initially allowed duplicate.
         $this->assertEquals(0, $duplicates->count('MacAddress'));
@@ -160,7 +160,7 @@ class DuplicatesTest extends \Model\Test\AbstractTest
      */
     public function testFind()
     {
-        $duplicates = clone $this->_getModel();
+        $duplicates = $this->_getModel();
 
         $expectedResult = array(
             array (

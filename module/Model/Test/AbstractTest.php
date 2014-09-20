@@ -107,7 +107,7 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
     }
 
     /**
-     * Get model instance from service manager
+     * Get new model instance via service manager
      *
      * This method allows temporarily overriding services with manually supplied
      * instances. This is useful for injecting mock objects which will be passed
@@ -142,7 +142,7 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
             $config->configureServiceManager($serviceManager);
         }
 
-        return $model;
+        return clone $model;
     }
 
     /**
