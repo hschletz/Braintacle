@@ -57,9 +57,6 @@ class ConfigTest extends AbstractTest
         $config->invalid;
     }
 
-    /**
-     * Tests for __set()
-     */
     public function testMagicSet()
     {
         $config = clone $this->_getModel();
@@ -75,22 +72,22 @@ class ConfigTest extends AbstractTest
             $this->_loadDataSet('MagicSet')->getTable('config'),
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
         );
+    }
 
-        try {
-            $config->invalid = 0;
-            $this->fail('Invalid option should have thrown an exception');
-        } catch(\Exception $e) {
-            $this->assertEquals('Invalid option: invalid', $e->getMessage());
-        }
+    public function testMagicSetInvalidOption()
+    {
+        $this->setExpectedException('InvalidArgumentException', 'Invalid option: invalid');
+        $config = clone $this->_getModel();
+        $config->invalid = 0;
+    }
 
-        try {
-            /**/$config->inventoryInterval = 'invalid';
-            $this->fail('Invalid value should have thrown an exception');
-        } catch(\Exception $e) {
-            $this->assertEquals(
-                'Tried to set non-integer value "invalid" to integer option "inventoryInterval"',
-                $e->getMessage()
-            );
-        }
+    public function testMagicSetInvalidValue()
+    {
+        $this->setExpectedException(
+            'InvalidArgumentException',
+            'Tried to set non-integer value "invalid" to integer option "inventoryInterval"'
+        );
+        $config = clone $this->_getModel();
+        $config->inventoryInterval = 'invalid';
     }
 }
