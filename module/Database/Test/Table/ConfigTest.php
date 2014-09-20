@@ -51,10 +51,7 @@ class ConfigTest extends AbstractTest
         static::$_table->get('invalid');
     }
 
-    /**
-     * Tests for set()
-     */
-    public function testSet()
+    public function testSetValid()
     {
         static::$_table->set('inventoryInterval', 42); // unchanged
         static::$_table->set('contactInterval', 10); // new
@@ -67,22 +64,20 @@ class ConfigTest extends AbstractTest
             $this->_loadDataSet('Set')->getTable('config'),
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
         );
+    }
 
-        try {
-            static::$_table->set('invalid', 0);
-            $this->fail('Invalid option should have thrown an exception');
-        } catch(\Exception $e) {
-            $this->assertEquals('Invalid option: invalid', $e->getMessage());
-        }
+    public function testSetInvalidOption()
+    {
+        $this->setExpectedException('InvalidArgumentException', 'Invalid option: invalid');
+        static::$_table->set('invalid', 0);
+    }
 
-        try {
-            static::$_table->set('inventoryInterval', 'invalid');
-            $this->fail('Invalid value should have thrown an exception');
-        } catch(\Exception $e) {
-            $this->assertEquals(
-                'Tried to set non-integer value "invalid" to integer option "inventoryInterval"',
-                $e->getMessage()
-            );
-        }
+    public function testSetInvalidValue()
+    {
+        $this->setExpectedException(
+            'InvalidArgumentException',
+            'Tried to set non-integer value "invalid" to integer option "inventoryInterval"'
+        );
+        static::$_table->set('inventoryInterval', 'invalid');
     }
 }
