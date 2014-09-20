@@ -236,6 +236,7 @@ class Config extends \Database\AbstractTable
      *
      * @param string $option Option name
      * @param mixed $value Option value
+     * @return bool TRUE if value changed
      * @throws \InvalidArgumentException if $value is not an integer for an integer option
      */
     public function set($option, $value)
@@ -253,9 +254,12 @@ class Config extends \Database\AbstractTable
         }
         $this->columns = array($column);
         $row = $this->select(array('name' => $this->getDbIdentifier($option)))->current();
+        $valueChanged = true;
         if ($row) {
             $oldValue = $row->$column;
-            if ($oldValue !== (string) $value) {
+            if ($oldValue === (string) $value) {
+                $valueChanged = false;
+            } else {
                 $this->update(
                     array($column => $value),
                     array('name' => $name)
@@ -269,6 +273,7 @@ class Config extends \Database\AbstractTable
                 )
             );
         }
+        return $valueChanged;
     }
 
     /**

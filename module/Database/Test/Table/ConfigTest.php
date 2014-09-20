@@ -53,13 +53,13 @@ class ConfigTest extends AbstractTest
 
     public function testSetValid()
     {
-        static::$_table->set('inventoryInterval', 42); // unchanged
-        static::$_table->set('contactInterval', 10); // new
-        static::$_table->set('logPath', '/other/log/path'); // updated
-        static::$_table->set('inspectRegistry', true); // ivalue true, updated
-        static::$_table->set('scanAlways', false); // ivalue false, updated
-        static::$_table->set('sessionRequired', true); // ivalue true, new
-        static::$_table->set('trustedNetworksOnly', false); // ivalue false, new
+        $this->assertSame(false, static::$_table->set('inventoryInterval', 42)); // unchanged
+        $this->assertSame(true, static::$_table->set('contactInterval', 10)); // new
+        $this->assertSame(true, static::$_table->set('logPath', '/other/log/path')); // updated
+        $this->assertSame(true, static::$_table->set('inspectRegistry', true)); // ivalue true, updated
+        $this->assertSame(true, static::$_table->set('scanAlways', false)); // ivalue false, updated
+        $this->assertSame(true, static::$_table->set('sessionRequired', true)); // ivalue true, new
+        $this->assertSame(true, static::$_table->set('trustedNetworksOnly', false)); // ivalue false, new
         $this->assertTablesEqual(
             $this->_loadDataSet('Set')->getTable('config'),
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
