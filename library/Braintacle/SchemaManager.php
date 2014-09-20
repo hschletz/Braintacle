@@ -375,7 +375,6 @@ class Braintacle_SchemaManager
             'braintacle_windows',
             'controllers',
             'download_available',
-            'download_enable',
             'download_history',
             'drives',
             'inputs',
