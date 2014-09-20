@@ -178,13 +178,24 @@ class Config
     protected $_config;
 
     /**
-     * Constructor
-     * 
-     * @param \Database\Table\Config $config Config table gateway
+     * PackageDownloadInfo table gateway
+     * @var \Database\Table\PackageDownloadInfo
      */
-    public function __construct(\Database\Table\Config $config)
+    protected $_packageDownloadInfo;
+
+    /**
+     * Constructor
+     *
+     * @param \Database\Table\Config $config Config table gateway
+     * @param \Database\Table\PackageDownloadInfo $config PackageDownloadInfo table gateway
+     */
+    public function __construct(
+        \Database\Table\Config $config,
+        \Database\Table\PackageDownloadInfo $packageDownloadInfo
+    )
     {
         $this->_config = $config;
+        $this->_packageDownloadInfo = $packageDownloadInfo;
     }
 
     /**
@@ -213,7 +224,21 @@ class Config
      */
     public function __set($option, $value)
     {
-        $this->_config->set($option, $value);
+        if ($this->_config->set($option, $value)) {
+            switch ($option) {
+                // Communication server reads download info from package table.
+                // Update all package entries.
+                case 'packageBaseUriHttp':
+                    $this->_packageDownloadInfo->update(array('pack_loc' => $value));
+                    break;
+                case 'packageBaseUriHttps':
+                    $this->_packageDownloadInfo->update(array('info_loc' => $value));
+                    break;
+                case 'packageCertificate':
+                    $this->_packageDownloadInfo->update(array('cert_file' => $value, 'cert_path' => dirname($value)));
+                    break;
+            }
+        }
         $this->_cache[$option] = $value;
     }
 

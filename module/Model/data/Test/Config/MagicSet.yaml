@@ -35,3 +35,14 @@ config:
     name: "REGISTRY"
     ivalue: 1
     tvalue: null
+
+# unaffected by the tested options
+download_enable:
+  -
+    id: 1
+    fileid: "12345678"
+    info_loc: "https_old"
+    pack_loc: "http_old"
+    cert_path: "path_old"
+    cert_file: "path_old/file_old"
+    server_id: null

@@ -20,3 +20,12 @@ config:
     name: "IPDISCOVER_NO_POSTPONE"
     ivalue: 1
     tvalue: null
+
+download_enable:
+  -
+    id: 1
+    fileid: "12345678"
+    info_loc: "https_old"
+    pack_loc: "http_old"
+    cert_path: "path_old"
+    cert_file: "path_old/file_old"

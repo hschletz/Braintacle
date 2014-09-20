@@ -27,7 +27,7 @@ namespace Model\Test;
 class ConfigTest extends AbstractTest
 {
     /** {@inheritdoc} */
-    protected static $_tables = array('Config');
+    protected static $_tables = array('Config', 'PackageDownloadInfo');
 
     /**
      * Tests for getDbIdentifier()
@@ -68,9 +68,28 @@ class ConfigTest extends AbstractTest
         $config->scanAlways = false; // ivalue false, updated
         $config->sessionRequired = true; // ivalue true, new
         $config->trustedNetworksOnly = false; // ivalue false, new
+
+        $dataSet = $this->_loadDataSet('MagicSet');
         $this->assertTablesEqual(
-            $this->_loadDataSet('MagicSet')->getTable('config'),
+            $dataSet->getTable('config'),
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
+        );
+        $this->assertTablesEqual(
+            $dataSet->getTable('download_enable'),
+            $this->getConnection()->createQueryTable('download_enable', 'SELECT * FROM download_enable')
+        );
+    }
+
+    public function testMagicSetPackageOptions()
+    {
+        $config = $this->_getModel();
+
+        $config->packageCertificate = 'path_new/file_new';
+        $config->packageBaseUriHttps = 'https_new';
+        $config->packageBaseUriHttp = 'http_new';
+        $this->assertTablesEqual(
+            $this->_loadDataSet('MagicSetPackageOptions')->getTable('download_enable'),
+            $this->getConnection()->createQueryTable('download_enable', 'SELECT * FROM download_enable')
         );
     }
 

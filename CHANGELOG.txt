@@ -26,6 +26,9 @@ Fixed bugs:
 
 - Console: Fixed display of some characters incorrectly encoded by old agents
 
+- Console: Updated package download URLs/certificate did not affect existing
+  packages.
+
 Misc:
 
 - Support for some previously deprecated options has been dropped. They are
