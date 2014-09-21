@@ -7,10 +7,6 @@
 # without any warranty.
 
 
-# The magic_quotes_gpc option cannot be set at runtime, so it's forced off here.
-php_flag magic_quotes_gpc off
-
-
 # Rewrite rules required for the default ZF URL scheme
 
 RewriteEngine On
