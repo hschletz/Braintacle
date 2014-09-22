@@ -374,7 +374,6 @@ class Braintacle_SchemaManager
         $engineInnoDb = array(
             'braintacle_windows',
             'controllers',
-            'download_available',
             'download_history',
             'drives',
             'inputs',
