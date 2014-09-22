@@ -95,13 +95,17 @@ class Form extends \Zend\Form\Form
      */
     public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset)
     {
-        $output = "<div class='table'>\n";
+        $output = '<div class="table">';
         foreach ($fieldset as $element) {
+            $row = '';
             if ($element instanceof \Zend\Form\Element\Submit) {
-                $output .= "<span class='cell'></span>\n";
-                $output .= $view->formSubmit($element) . "\n";
+                $row .= "<span class='cell'></span>\n";
+                $row .= $view->formSubmit($element);
             } elseif (!$element instanceof \Zend\Form\Element\Csrf) {
-                $row = $view->formRow($element, 'prepend', false);
+                $row .= $view->formRow($element, 'prepend', false);
+                if ((string) $element->getLabel() == '') {
+                    $row = "<div class='row'>\n<span class='label'></span>\n$row\n</div>";
+                }
                 if ($element->getMessages()) {
                     $row .= "\n<span class='cell'></span>\n";
                     $row .= $view->formElementErrors($element, array('class' => 'errors'));
@@ -112,8 +116,8 @@ class Form extends \Zend\Form\Form
                     // Add a div wrapper to achieve the same appearance.
                     $row = "<div class='row'>\n$row\n</div>";
                 }
-                $output .= $row . "\n";
             }
+            $output .= $row . "\n";
         }
         $output .= "</div>\n";
         return $output;

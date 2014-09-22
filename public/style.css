@@ -396,13 +396,13 @@ td.formElement {
     display: table-row;
 }
 
-.table label span, .table label[for], .table input, .table select, .table textarea {
+.table label span, .table label[for], .table span.label, .table input, .table select, .table textarea {
     display: table-cell;
     margin: 1.4ex 1em 1.4ex 1em;
     vertical-align: middle;
 }
 
-.table label span, .table label[for] {
+.table label span, .table label[for], .table span.label {
     text-align: right;
 }
 
