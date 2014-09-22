@@ -38,7 +38,7 @@ class NadaFactory implements \Zend\ServiceManager\FactoryInterface
         require_once('Nada.php');
         $database = \Nada::factory($serviceLocator->get('Db'));
         if ($database->isSqlite()) {
-            $database->emulatedDatatypes = array('decimal', 'timestamp');
+            $database->emulatedDatatypes = array('bool', 'decimal', 'timestamp');
         }
         return $database;
     }

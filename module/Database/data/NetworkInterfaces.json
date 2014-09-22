@@ -121,8 +121,8 @@
         },
         {
             "name": "virtualdev",
-            "type": "integer",
-            "length": 8,
+            "type": "bool",
+            "length": null,
             "notnull": false,
             "default": 0,
             "autoincrement": false,
