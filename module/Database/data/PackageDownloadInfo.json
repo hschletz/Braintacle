@@ -13,8 +13,8 @@
         },
         {
             "name": "fileid",
-            "type": "varchar",
-            "length": 255,
+            "type": "integer",
+            "length": 32,
             "notnull": true,
             "default": null,
             "autoincrement": false,
