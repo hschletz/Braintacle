@@ -298,7 +298,7 @@ class ClientConfig extends Form
      */
     public function filterInteger($value)
     {
-        return $this->normalize('integer', $value);
+        return $this->normalize($value, 'integer');
     }
 
     /**
@@ -311,7 +311,7 @@ class ClientConfig extends Form
             // Ignore value if checkbox is unchecked
             return true;
         } else {
-            return $this->validateType('integer', $value);
+            return $this->validateType($value, $context, 'integer');
         }
     }
 

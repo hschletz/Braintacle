@@ -100,7 +100,7 @@ class CustomFields extends Form
     public function setData($data)
     {
         foreach ($data['Fields'] as $name => &$content) {
-            $content = $this->localize($this->_types[$name], $content);
+            $content = $this->localize($content, $this->_types[$name]);
         }
         return parent::setData($data);
     }
@@ -119,7 +119,7 @@ class CustomFields extends Form
         if ($value == '') {
             $value = null;
         } else {
-            $value = $this->normalize($type, $value);
+            $value = $this->normalize($value, $type);
         }
         return $value;
     }
@@ -145,7 +145,7 @@ class CustomFields extends Form
                 case 'integer':
                 case 'float':
                 case 'date':
-                    $result = $this->validateType($type, $value);
+                    $result = $this->validateType($value, $context, $type);
                     break;
                 default:
                     $result = true;

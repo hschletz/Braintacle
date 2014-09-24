@@ -39,145 +39,145 @@ class FormLocalizationTest extends \PHPUnit_Framework_TestCase
 
     public function testLocalizeText()
     {
-        $this->assertEquals('test', $this->_form->localize('text', 'test'));
+        $this->assertEquals('test', $this->_form->localize('test', 'text'));
     }
 
     public function testLocalizeIntegerValid()
     {
-        $this->assertEquals('1.000.000', $this->_form->localize('integer', '1000000'));
+        $this->assertEquals('1.000.000', $this->_form->localize('1000000', 'integer'));
     }
 
     public function testLocalizeIntegerInvalid()
     {
-        $this->assertEquals('1000000.', $this->_form->localize('integer', '1000000.'));
+        $this->assertEquals('1000000.', $this->_form->localize('1000000.', 'integer'));
     }
 
     public function testLocalizeIntegerEmpty()
     {
-        $this->assertEquals('', $this->_form->localize('integer', ''));
+        $this->assertEquals('', $this->_form->localize('', 'integer'));
     }
 
     public function testLocalizeFloatValid()
     {
-        $this->assertEquals('1.000.000', $this->_form->localize('float', '1000000'));
-        $this->assertEquals('1.000.000,1234', $this->_form->localize('float', '1000000.1234'));
-        $this->assertEquals('0,1234', $this->_form->localize('float', '.1234'));
+        $this->assertEquals('1.000.000', $this->_form->localize('1000000', 'float'));
+        $this->assertEquals('1.000.000,1234', $this->_form->localize('1000000.1234', 'float'));
+        $this->assertEquals('0,1234', $this->_form->localize('.1234', 'float'));
     }
 
     public function testLocalizeFloatInvalid()
     {
-        $this->assertEquals('1000000.', $this->_form->localize('float', '1000000.'));
+        $this->assertEquals('1000000.', $this->_form->localize('1000000.', 'float'));
     }
 
     public function testLocalizeFloatEmpty()
     {
-        $this->assertEquals('', $this->_form->localize('float', ''));
+        $this->assertEquals('', $this->_form->localize('', 'float'));
     }
 
     public function testLocalizeDateValid()
     {
-        $this->assertEquals('01.05.2014', $this->_form->localize('date', new \Zend_Date('2014-05-01')));
-        $this->assertEquals('01.05.2014', $this->_form->localize('date', '2014-05-01'));
+        $this->assertEquals('01.05.2014', $this->_form->localize(new \Zend_Date('2014-05-01'), 'date'));
+        $this->assertEquals('01.05.2014', $this->_form->localize('2014-05-01', 'date'));
     }
 
     public function testLocalizeDateInvalid()
     {
-        $this->assertEquals('invalid', $this->_form->localize('date', 'invalid'));
+        $this->assertEquals('invalid', $this->_form->localize('invalid', 'date'));
     }
 
     public function testLocalizeDateEmpty()
     {
-        $this->assertEquals('', $this->_form->localize('date', ''));
+        $this->assertEquals('', $this->_form->localize('', 'date'));
     }
 
     public function testLocalizeNull()
     {
-        $this->assertNull($this->_form->localize('integer', null));
-        $this->assertNull($this->_form->localize('float', null));
-        $this->assertNull($this->_form->localize('date', null));
+        $this->assertNull($this->_form->localize(null, 'integer'));
+        $this->assertNull($this->_form->localize(null, 'float'));
+        $this->assertNull($this->_form->localize(null, 'date'));
     }
 
     public function testNormalizeText()
     {
-        $this->assertEquals('test', $this->_form->normalize('text', 'test'));
+        $this->assertEquals('test', $this->_form->normalize('test', 'text'));
     }
 
     public function testNormalizeIntegerValid()
     {
-        $this->assertEquals(1234, $this->_form->normalize('integer', ' 1234 '));
-        $this->assertEquals(1234, $this->_form->normalize('integer', ' 1.234 '));
-        $this->assertEquals(1000, $this->_form->normalize('integer', ' 1.000 '));
+        $this->assertEquals(1234, $this->_form->normalize(' 1234 ', 'integer'));
+        $this->assertEquals(1234, $this->_form->normalize(' 1.234 ', 'integer'));
+        $this->assertEquals(1000, $this->_form->normalize(' 1.000 ', 'integer'));
     }
 
     public function testNormalizeIntegerInvalid()
     {
-        $this->assertEquals('1,234', $this->_form->normalize('integer', ' 1,234 '));
-        $this->assertEquals('1000.1', $this->_form->normalize('integer', ' 1000.1 '));
-        $this->assertEquals('1000,1', $this->_form->normalize('integer', ' 1000,1 '));
-        $this->assertEquals('1,000', $this->_form->normalize('integer', ' 1,000 '));
-        $this->assertEquals('', $this->_form->normalize('integer', ' '));
+        $this->assertEquals('1,234', $this->_form->normalize(' 1,234 ', 'integer'));
+        $this->assertEquals('1000.1', $this->_form->normalize(' 1000.1 ', 'integer'));
+        $this->assertEquals('1000,1', $this->_form->normalize(' 1000,1 ', 'integer'));
+        $this->assertEquals('1,000', $this->_form->normalize(' 1,000 ', 'integer'));
+        $this->assertEquals('', $this->_form->normalize(' ', 'integer'));
     }
 
     public function testNormalizeFloatValid()
     {
-        $this->assertEquals(1234, $this->_form->normalize('float', ' 1.234 '));
-        $this->assertEquals(1.234, $this->_form->normalize('float', ' 1,234 '));
-        $this->assertEquals(1234.5678, $this->_form->normalize('float', ' 1.234,5678 '));
-        $this->assertEquals(1234.5678, $this->_form->normalize('float', ' 1234,5678 '));
+        $this->assertEquals(1234, $this->_form->normalize(' 1.234 ', 'float'));
+        $this->assertEquals(1.234, $this->_form->normalize(' 1,234 ', 'float'));
+        $this->assertEquals(1234.5678, $this->_form->normalize(' 1.234,5678 ', 'float'));
+        $this->assertEquals(1234.5678, $this->_form->normalize(' 1234,5678 ', 'float'));
     }
 
     public function testNormalizeFloatInvalid()
     {
-        $this->assertEquals('1000.1', $this->_form->normalize('float', ' 1000.1 '));
-        $this->assertEquals('1,234.5678', $this->_form->normalize('float', ' 1,234.5678 '));
-        $this->assertEquals('', $this->_form->normalize('float', ' '));
+        $this->assertEquals('1000.1', $this->_form->normalize(' 1000.1 ', 'float'));
+        $this->assertEquals('1,234.5678', $this->_form->normalize(' 1,234.5678 ', 'float'));
+        $this->assertEquals('', $this->_form->normalize(' ', 'float'));
     }
 
     public function testNormalizeDateValid()
     {
         $this->assertEquals(
             '2014-05-02',
-            $this->_form->normalize('date', ' 2.5.2014 ')->get('yyyy-MM-dd')
+            $this->_form->normalize(' 2.5.2014 ', 'date')->get('yyyy-MM-dd')
         );
         $this->assertEquals(
             '2014-05-02',
-            $this->_form->normalize('date', ' 02.05.2014 ')->get('yyyy-MM-dd')
+            $this->_form->normalize(' 02.05.2014 ', 'date')->get('yyyy-MM-dd')
         );
     }
 
     public function testNormalizeDateInvalid()
     {
-        $this->assertEquals('31.2.2014', $this->_form->normalize('date', ' 31.2.2014 '));
-        $this->assertEquals('2.5.2014 17:25:23', $this->_form->normalize('date', ' 2.5.2014 17:25:23 '));
-        $this->assertEquals('2014-05-02', $this->_form->normalize('date', ' 2014-05-02 '));
-        $this->assertEquals('05/01/2014', $this->_form->normalize('date', ' 05/01/2014 '));
-        $this->assertEquals('05.01.14', $this->_form->normalize('date', ' 05.01.14 '));
-        $this->assertEquals('', $this->_form->normalize('date', ' '));
+        $this->assertEquals('31.2.2014', $this->_form->normalize(' 31.2.2014 ', 'date'));
+        $this->assertEquals('2.5.2014 17:25:23', $this->_form->normalize(' 2.5.2014 17:25:23 ', 'date'));
+        $this->assertEquals('2014-05-02', $this->_form->normalize(' 2014-05-02 ', 'date'));
+        $this->assertEquals('05/01/2014', $this->_form->normalize(' 05/01/2014 ', 'date'));
+        $this->assertEquals('05.01.14', $this->_form->normalize(' 05.01.14 ', 'date'));
+        $this->assertEquals('', $this->_form->normalize(' ', 'date'));
     }
 
     public function testNormalizeNull()
     {
-        $this->assertEquals('', $this->_form->normalize('integer', null));
-        $this->assertEquals('', $this->_form->normalize('float', null));
-        $this->assertEquals('', $this->_form->normalize('date', null));
+        $this->assertEquals('', $this->_form->normalize(null, 'integer'));
+        $this->assertEquals('', $this->_form->normalize(null, 'float'));
+        $this->assertEquals('', $this->_form->normalize(null, 'date'));
     }
 
     public function testValidateType()
     {
-        $this->assertTrue($this->_form->validateType('text', ''));
-        $this->assertTrue($this->_form->validateType('text', 0));
-        $this->assertTrue($this->_form->validateType('text', null));
+        $this->assertTrue($this->_form->validateType('', null, 'text'));
+        $this->assertTrue($this->_form->validateType(0, null, 'text'));
+        $this->assertTrue($this->_form->validateType(null, null, 'text'));
 
-        $this->assertFalse($this->_form->validateType('integer', ''));
-        $this->assertTrue($this->_form->validateType('integer', 0));
-        $this->assertFalse($this->_form->validateType('integer', null));
+        $this->assertFalse($this->_form->validateType('', null, 'integer'));
+        $this->assertTrue($this->_form->validateType(0, null, 'integer'));
+        $this->assertFalse($this->_form->validateType(null, null, 'integer'));
 
-        $this->assertFalse($this->_form->validateType('float', ''));
-        $this->assertTrue($this->_form->validateType('float', 0.0));
-        $this->assertFalse($this->_form->validateType('float', null));
+        $this->assertFalse($this->_form->validateType('', null, 'float'));
+        $this->assertTrue($this->_form->validateType(0.0, null, 'float'));
+        $this->assertFalse($this->_form->validateType(null, null, 'float'));
 
-        $this->assertFalse($this->_form->validateType('date', ''));
-        $this->assertTrue($this->_form->validateType('date', new \Zend_Date));
-        $this->assertFalse($this->_form->validateType('date', null));
+        $this->assertFalse($this->_form->validateType('', null, 'date'));
+        $this->assertTrue($this->_form->validateType(new \Zend_Date, null, 'date'));
+        $this->assertFalse($this->_form->validateType(null, null, 'date'));
     }
 }

@@ -138,11 +138,11 @@ class Form extends \Zend\Form\Form
      * Invalid input data is returned unmodified. The attached input filter
      * should take care of it.
      *
-     * @param string $type Data type (integer, float, date). Any other value will be ignored.
      * @param mixed $value Normalized input value
+     * @param string $type Data type (integer, float, date). Any other value will be ignored.
      * @return mixed Localized or unmodified value
      */
-    public function localize($type, $value)
+    public function localize($value, $type)
     {
         switch ($type) {
             case 'integer':
@@ -184,11 +184,11 @@ class Form extends \Zend\Form\Form
      * The input filter should validate filtered data by checking the datatype
      * via validateType().
      *
-     * @param string $type Data type (integer, float, date). Any other value will be ignored.
      * @param string $value Localized input string
+     * @param string $type Data type (integer, float, date). Any other value will be ignored.
      * @return mixed Normalized value or input string
      */
-    public function normalize($type, $value)
+    public function normalize($value, $type)
     {
         // Integers and floats are validated first to prevent successful parsing
         // of strings containing invalid characters with the invalid part simply
@@ -248,11 +248,12 @@ class Form extends \Zend\Form\Form
      * checks the value's actual datatype (integer, float, \Zend_Date) against
      * the expected type.
      *
-     * @param string $type Expected type (integer, float, date). Any other value will always yield TRUE.
      * @param mixed $value Value to test
+     * @param mixed $context Context for compatibility with callback validator, ignored by this implementation
+     * @param string $type Expected type (integer, float, date). Any other value will always yield TRUE.
      * @return bool
      */
-    public function validateType($type, $value)
+    public function validateType($value, $context, $type)
     {
         switch ($type) {
             case 'integer':

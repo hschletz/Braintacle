@@ -249,8 +249,8 @@ class Search extends Form
     public function filterSearch($value)
     {
         return $this->normalize(
-            $this->_getTypeFromFilter($this->get('filter')->getValue()),
-            $value
+            $value,
+            $this->_getTypeFromFilter($this->get('filter')->getValue())
         );
     }
 
@@ -268,7 +268,7 @@ class Search extends Form
         if (!isset($context['filter'])) {
             throw new \LogicException('No filter submitted');
         }
-        return $this->validateType($this->_getTypeFromFilter($context['filter']), $value);
+        return $this->validateType($value, $context, $this->_getTypeFromFilter($context['filter']));
     }
 
     /**
@@ -296,7 +296,7 @@ class Search extends Form
     /** {@inheritdoc} */
     public function setData($data)
     {
-        $data['search'] = $this->localize($this->_getTypeFromFilter($data['filter']), @$data['search']);
+        $data['search'] = $this->localize(@$data['search'], $this->_getTypeFromFilter($data['filter']));
         return parent::setData($data);
     }
 
