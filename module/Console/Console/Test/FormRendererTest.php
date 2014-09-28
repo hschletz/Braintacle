@@ -184,4 +184,41 @@ EOT;
 EOT;
         $this->assertEquals($expected, $form->renderFieldset($view, $form));
     }
+
+    public function testRenderFieldsetRenderFieldsetAsElement()
+    {
+        $view = \Library\Application::getService('ViewManager')->getRenderer();
+
+        $text1 = new \Zend\Form\Element\Text('text1');
+        $text1->setLabel('Text1');
+        $text2 = new \Zend\Form\Element\Text('text2');
+        $text2->setLabel('Text2');
+        $fieldset = new \Zend\Form\Fieldset('fieldset');
+        $fieldset->setLabel('Fieldset');
+        $text3 = new \Zend\Form\Element\Text('text3');
+        $text3->setLabel('Text3');
+        $fieldset->add($text3);
+
+        $form = new \Console\Form\Form;
+        $form->add($text1);
+        $form->add($fieldset);
+        $form->add($text2);
+
+        $expected = <<<EOT
+<div class="table">
+<label><span>Text1</span><input type="text" name="text1" value=""></label>
+<span class="label">Fieldset</span>
+<fieldset>
+<legend></legend>
+<div class="table"><label><span>Text3</span><input type="text" name="text3" value=""></label>
+</div>
+
+</fieldset>
+
+<label><span>Text2</span><input type="text" name="text2" value=""></label>
+</div>
+
+EOT;
+        $this->assertEquals($expected, $form->renderFieldset($view, $form));
+    }
 }

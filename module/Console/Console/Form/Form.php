@@ -101,6 +101,12 @@ class Form extends \Zend\Form\Form
             if ($element instanceof \Zend\Form\Element\Submit) {
                 $row .= "<span class='cell'></span>\n";
                 $row .= $view->formSubmit($element);
+            } elseif ($element instanceof \Zend\Form\Fieldset) {
+                $row .= $view->htmlTag('span', $element->getLabel(), array('class' => 'label'), true) . "\n";
+                $row .= $view->htmlTag(
+                    'fieldset',
+                    "<legend></legend>\n" . $this->renderFieldset($view, $element)
+                );
             } elseif (!$element instanceof \Zend\Form\Element\Csrf) {
                 $row .= $view->formRow($element, 'prepend', false);
                 if ((string) $element->getLabel() == '') {
