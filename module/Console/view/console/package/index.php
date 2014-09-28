@@ -98,7 +98,7 @@ $renderCallbacks = array(
         $attributes = array(
             'href' => $view->consoleUrl(
                 'package',
-                'edit',
+                'update',
                 array('name' => $package['Name'])
             ),
         );

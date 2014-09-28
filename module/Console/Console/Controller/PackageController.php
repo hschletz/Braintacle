@@ -121,7 +121,7 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
      *
      * @return \Zend\View\Model\ViewModel|\Zend\Http\Response form template or redirect response
      */
-    public function editAction()
+    public function updateAction()
     {
         $flashMessenger = $this->flashMessenger();
 

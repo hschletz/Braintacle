@@ -107,11 +107,11 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
         // Name column
         $this->assertXpathQueryContentContains(
-            '//td/a[@href="/console/package/edit/?name=name1"][@title="comment1"]',
+            '//td/a[@href="/console/package/update/?name=name1"][@title="comment1"]',
             'name1'
         );
         $this->assertXpathQueryContentContains(
-            '//td/a[@href="/console/package/edit/?name=name2"][not(@title)]',
+            '//td/a[@href="/console/package/update/?name=name2"][not(@title)]',
             'name2'
         );
 
@@ -339,7 +339,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/package/index/');
     }
 
-    public function testEditActionGet()
+    public function testUpdateActionGet()
     {
         $this->_package->expects($this->once())
                        ->method('fromName')
@@ -353,11 +353,11 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('setValuesFromPackage');
         $this->_editForm->expects($this->once())
                         ->method('toHtml');
-        $this->dispatch('/console/package/edit/?name=oldName');
+        $this->dispatch('/console/package/update/?name=oldName');
         $this->assertResponseStatusCode(200);
     }
 
-    public function testEditActionGetPostInvalid()
+    public function testUpdateActionGetPostInvalid()
     {
         $postData = array('Name' => 'newName');
         $this->_package->expects($this->once())
@@ -376,11 +376,11 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('setValuesFromPackage');
         $this->_editForm->expects($this->once())
                         ->method('toHtml');
-        $this->dispatch('/console/package/edit/?name=oldName', 'POST', $postData);
+        $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
         $this->assertResponseStatusCode(200);
     }
 
-    public function testEditActionGetPostValidSuccessBuild()
+    public function testUpdateActionGetPostValidSuccessBuild()
     {
         $postData = array('Name' => 'newName');
         $this->_package->expects($this->exactly(2))
@@ -414,7 +414,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_editForm->expects($this->never())
                         ->method('toHtml');
         $this->_testBuildPackage(
-            '/console/package/edit/?name=oldName',
+            '/console/package/update/?name=oldName',
             $postData,
             true,
             array(
@@ -425,7 +425,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/package/index/');
     }
 
-    public function testEditActionGetPostValidSuccessDelete()
+    public function testUpdateActionGetPostValidSuccessDelete()
     {
         $postData = array('Name' => 'newName');
         $this->_package->expects($this->exactly(2))
@@ -457,10 +457,10 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                                 )
                             )
                         );
-        $this->_testDeletePackage('/console/package/edit/?name=oldName', $postData, 'oldName', true);
+        $this->_testDeletePackage('/console/package/update/?name=oldName', $postData, 'oldName', true);
     }
 
-    public function testEditActionGetPostValidBuildError()
+    public function testUpdateActionGetPostValidBuildError()
     {
         $postData = array('Name' => 'newName');
         $this->_package->expects($this->once())
@@ -481,7 +481,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_editForm->expects($this->never())
                          ->method('toHtml');
         $this->_testBuildPackage(
-            '/console/package/edit/?name=oldName',
+            '/console/package/update/?name=oldName',
             $postData,
             false,
             array(array('Error changing Package \'%s\' to \'%s\':' => array('oldName', 'newName')))
@@ -489,7 +489,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/package/index/');
     }
 
-    public function testEditActionGetPostValidReconstructionError()
+    public function testUpdateActionGetPostValidReconstructionError()
     {
         $postData = array('Name' => 'newName');
         $this->_package->expects($this->once())
@@ -502,7 +502,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                        ->method('delete');
         $this->_editForm->expects($this->never())
                         ->method('isValid');
-        $this->dispatch('/console/package/edit/?name=oldName', 'POST', $postData);
+        $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
         $this->assertRedirectTo('/console/package/index/');
         $this->assertEquals(
             array(array("Could not retrieve data from package '%s'." => 'oldName')),
