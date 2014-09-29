@@ -107,4 +107,94 @@ class ConfigTest extends AbstractTest
         );
         $this->_getModel()->inventoryInterval = 'invalid';
     }
+
+    public function testSetOptionsBooleanFalse()
+    {
+        $options = array(
+            'defaultWarn' => false, // String storage, default 0
+            'defaultMergeGroups' => false, // String storage, default 1
+            'limitInventory' => false, // Integer storage, default 0
+            'scanSnmp' => false, // Integer storage, default 1
+        );
+        $this->_getModel()->setOptions($options);
+        $this->assertTablesEqual(
+            $this->_loadDataSet('SetOptionsFalse')->getTable('config'),
+            $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
+        );
+    }
+
+    public function testSetOptionsBooleanTrue()
+    {
+        $options = array(
+            'defaultWarn' => true, // String storage, default 0
+            'defaultMergeGroups' => true, // String storage, default 1
+            'limitInventory' => true, // Integer storage, default 0
+            'scanSnmp' => true, // Integer storage, default 1
+        );
+        $this->_getModel()->setOptions($options);
+        $this->assertTablesEqual(
+            $this->_loadDataSet('SetOptionsTrue')->getTable('config'),
+            $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
+        );
+    }
+
+    public function testSetOptionsInteger0()
+    {
+        $options = array(
+            'defaultWarn' => 0, // String storage, default 0
+            'defaultMergeGroups' => 0, // String storage, default 1
+            'limitInventory' => 0, // Integer storage, default 0
+            'scanSnmp' => 0, // Integer storage, default 1
+        );
+        $this->_getModel()->setOptions($options);
+        $this->assertTablesEqual(
+            $this->_loadDataSet('SetOptionsFalse')->getTable('config'),
+            $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
+        );
+    }
+
+    public function testSetOptionsInteger1()
+    {
+        $options = array(
+            'defaultWarn' => 1, // String storage, default 0
+            'defaultMergeGroups' => 1, // String storage, default 1
+            'limitInventory' => 1, // Integer storage, default 0
+            'scanSnmp' => 1, // Integer storage, default 1
+        );
+        $this->_getModel()->setOptions($options);
+        $this->assertTablesEqual(
+            $this->_loadDataSet('SetOptionsTrue')->getTable('config'),
+            $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
+        );
+    }
+
+    public function testSetOptionsString0()
+    {
+        $options = array(
+            'defaultWarn' => '0', // String storage, default 0
+            'defaultMergeGroups' => '0', // String storage, default 1
+            'limitInventory' => '0', // Integer storage, default 0
+            'scanSnmp' => '0', // Integer storage, default 1
+        );
+        $this->_getModel()->setOptions($options);
+        $this->assertTablesEqual(
+            $this->_loadDataSet('SetOptionsFalse')->getTable('config'),
+            $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
+        );
+    }
+
+    public function testSetOptionsString1()
+    {
+        $options = array(
+            'defaultWarn' => '1', // String storage, default 0
+            'defaultMergeGroups' => '1', // String storage, default 1
+            'limitInventory' => '1', // Integer storage, default 0
+            'scanSnmp' => '1', // Integer storage, default 1
+        );
+        $this->_getModel()->setOptions($options);
+        $this->assertTablesEqual(
+            $this->_loadDataSet('SetOptionsTrue')->getTable('config'),
+            $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
+        );
+    }
 }

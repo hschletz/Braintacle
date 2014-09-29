@@ -1,0 +1,31 @@
+config:
+  -
+    # tvalue, default "1"
+    name: "BRAINTACLE_DEFAULT_MERGE_GROUPS"
+    ivalue: null
+    tvalue: "0"
+  -
+    # not affected by test
+    name: "FREQUENCY"
+    ivalue: 42
+    tvalue: null
+  -
+    # not affected by test
+    name: "IPDISCOVER_NO_POSTPONE"
+    ivalue: 1
+    tvalue: null
+  -
+    # not affected by test
+    name: "LOGPATH"
+    ivalue: null
+    tvalue: "/example/log/path"
+  -
+    # not affected by test
+    name: "REGISTRY"
+    ivalue: 0
+    tvalue: null
+  -
+    # ivalue, default 1
+    name: "SNMP"
+    ivalue: 0
+    tvalue: null

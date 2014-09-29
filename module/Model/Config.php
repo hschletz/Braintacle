@@ -241,6 +241,24 @@ class Config
     }
 
     /**
+     * Set multiple options at once
+     *
+     * Values are written to the database only if different from the current
+     * value, including defaults. This allows future changes to defaults to take
+     * effect unless manually overridden.
+     *
+     * @param array $options Associative array of option names and values
+     */
+    public function setOptions($options)
+    {
+        foreach ($options as $name => $value) {
+            if ($value != $this->$name) {
+                $this->$name = $value;
+            }
+        }
+    }
+
+    /**
      * Return internal database identifier for given option
      *
      * @param string $option Option name

@@ -1,0 +1,31 @@
+config:
+  -
+    # tvalue, default "0"
+    name: "BRAINTACLE_DEFAULT_WARN"
+    ivalue: null
+    tvalue: "1"
+  -
+    # not affected by test
+    name: "FREQUENCY"
+    ivalue: 42
+    tvalue: null
+  -
+    # ivalue, default 0
+    name: "INVENTORY_FILTER_FLOOD_IP"
+    ivalue: 1
+    tvalue: null
+  -
+    # not affected by test
+    name: "IPDISCOVER_NO_POSTPONE"
+    ivalue: 1
+    tvalue: null
+  -
+    # not affected by test
+    name: "LOGPATH"
+    ivalue: null
+    tvalue: "/example/log/path"
+  -
+    # not affected by test
+    name: "REGISTRY"
+    ivalue: 0
+    tvalue: null
