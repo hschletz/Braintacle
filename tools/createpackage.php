@@ -72,7 +72,7 @@ $package->fromArray(
         'WarnCountdown' => $config->defaultWarnCountdown,
         'WarnAllowAbort' => $config->defaultWarnAllowAbort,
         'WarnAllowDelay' => $config->defaultWarnAllowDelay,
-        'UserActionRequired' => $config->defaultUserActionRequired,
+        'UserActionRequired' => ($config->defaultUserActionMessage != ''),
         'UserActionMessage' => $config->defaultUserActionMessage,
         'MaxFragmentSize' => $config->defaultMaxFragmentSize,
     )

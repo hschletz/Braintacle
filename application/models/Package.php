@@ -303,6 +303,16 @@ class Model_Package extends Model_Abstract
     }
 
     /**
+     * Get all package names
+     *
+     * @return string[]
+     */
+    public function getAllNames()
+    {
+        return \Library\Application::getService('Database\Table\Packages')->fetchCol('name');
+    }
+
+    /**
      * Populate object with values from an array
      *
      * Unknown keys are ignored. The data is not validated!

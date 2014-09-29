@@ -48,6 +48,9 @@ Misc:
   This test has never been reliable, and failure would be a global
   configuration issue, not a problem with individual packages.
 
+- Console: The display of the maximum file size in the package builder form has
+  been removed as it was generally unreliable.
+
 
 CHANGES IN VERSION 0.16
 =======================

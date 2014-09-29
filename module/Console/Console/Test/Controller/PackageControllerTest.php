@@ -33,16 +33,22 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
     protected $_package;
 
     /**
+     * Config mock
+     * @var \Model\Config
+     */
+    protected $_config;
+
+    /**
      * Build form mock
-     * @var \Form_Package
+     * @var \Console\Form\Package\Build
      */
     protected $_buildForm;
 
     /**
-     * Edit form mock
-     * @var \Form_Package_Edit
+     * Update form mock
+     * @var \Console\Form\Package\Update
      */
-    protected $_editForm;
+    protected $_updateForm;
 
     /**
      * Set up mock objects
@@ -50,8 +56,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
     public function setUp()
     {
         $this->_package = $this->getMock('Model_Package');
-        $this->_buildForm = $this->getMockBuilder('Form_Package')->disableOriginalConstructor()->getMock();
-        $this->_editForm = $this->getMockBuilder('Form_Package_Edit')->disableOriginalConstructor()->getMock();
+        $this->_config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $this->_buildForm = $this->getMock('Console\Form\Package\Build');
+        $this->_updateForm = $this->getMock('Console\Form\Package\Update');
         parent::setUp();
     }
 
@@ -60,8 +67,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
     {
         return new \Console\Controller\PackageController(
             $this->_package,
+            $this->_config,
             $this->_buildForm,
-            $this->_editForm
+            $this->_updateForm
         );
     }
 
@@ -69,7 +77,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
     public function testService()
     {
         $this->_overrideService('Console\Form\Package\Build', $this->_buildForm);
-        $this->_overrideService('Console\Form\Package\Edit', $this->_editForm);
+        $this->_overrideService('Console\Form\Package\Update', $this->_updateForm);
         parent::testService();
     }
 
@@ -243,58 +251,141 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testBuildActionGet()
     {
+        $data = array(
+            'Platform' => 'defaultPlatform',
+            'DeployAction' => 'defaultAction',
+            'ActionParam' => 'defaultActionParam',
+            'Priority' => 'defaultPackagePriority',
+            'MaxFragmentSize' => 'defaultMaxFragmentSize',
+            'Warn' => 'defaultWarn',
+            'WarnMessage' => 'defaultWarnMessage',
+            'WarnCountdown' => 'defaultWarnCountdown',
+            'WarnAllowAbort' => 'defaultWarnAllowAbort',
+            'WarnAllowDelay' => 'defaultWarnAllowDelay',
+            'UserActionMessage' => 'defaultUserActionMessage',
+        );
+        $this->_config->expects($this->exactly(11))
+                      ->method('__get')
+                      ->will($this->returnArgument(0));
         $this->_buildForm->expects($this->once())
-                         ->method('toHtml');
+                         ->method('setData')
+                         ->with($data);
+        $this->_buildForm->expects($this->never())
+                         ->method('getData');
+        $this->_buildForm->expects($this->never())
+                         ->method('isValid');
+        $this->_buildForm->expects($this->once())
+                         ->method('render')
+                         ->willReturn('<form></form>');
         $this->_package->expects($this->never())
                        ->method('build');
         $this->dispatch('/console/package/build');
         $this->assertResponseStatusCode(200);
+        $this->assertXpathQuery('//form');
     }
 
     public function testBuildActionPostInvalid()
     {
         $postData = array('Name' => 'packageName');
         $this->_buildForm->expects($this->once())
-                         ->method('isValid')
-                         ->with($postData)
-                         ->will($this->returnValue(false));
+                         ->method('setData')
+                         ->with($postData);
+        $this->_buildForm->expects($this->never())
+                         ->method('getData');
         $this->_buildForm->expects($this->once())
-                         ->method('toHtml');
+                         ->method('isValid')
+                         ->willReturn(false);
+        $this->_buildForm->expects($this->once())
+                         ->method('render')
+                         ->willReturn('<form></form>');
+        $this->_package->expects($this->never())
+                       ->method('build');
         $this->_package->expects($this->never())
                        ->method('build');
         $this->dispatch('/console/package/build', 'POST', $postData);
         $this->assertResponseStatusCode(200);
+        $this->assertXpathQuery('//form');
     }
 
-    public function testBuildActionPostValidSuccess()
+    public function testBuildActionPostValidSuccessWithPostinst()
     {
-        $postData = array('Name' => 'packageName');
+        $postData = array(
+            'Name' => 'packageName',
+            'UserActionMessage' => 'postinst',
+        );
+        $fileSpec = array(
+            'name' => 'file_name',
+            'tmp_name' => 'file_tmp_name',
+            'type' => 'file_type',
+        );
+        $packageData = array(
+            'Name' => 'packageName',
+            'UserActionMessage' => 'postinst',
+            'UserActionRequired' => true,
+            'File' => array(
+                'name' => 'file_name',
+                'tmp_name' => 'file_tmp_name',
+                'type' => 'file_type',
+            ),
+            'FileName' => 'file_name',
+            'FileLocation' => 'file_tmp_name',
+            'FileType' => 'file_type',
+        );
+        $this->getRequest()->getFiles()->set('File', $fileSpec);
+        $formData = $postData + array('File' => $fileSpec);
+        $this->_buildForm->expects($this->once())
+                         ->method('setData')
+                         ->with($formData);
+        $this->_buildForm->expects($this->once())
+                         ->method('getData')
+                         ->willReturn($formData);
         $this->_buildForm->expects($this->once())
                          ->method('isValid')
-                         ->with($postData)
-                         ->will($this->returnValue(true));
-        $this->_buildForm->expects($this->once())
-                         ->method('getValues')
-                         ->will($this->returnValue($postData));
+                         ->willReturn(true);
         $this->_buildForm->expects($this->never())
-                         ->method('toHtml');
-        $this->_testBuildPackage('/console/package/build', $postData, true);
+                         ->method('render');
+        $this->_testBuildPackage('/console/package/build', $postData, $packageData, true);
         $this->assertRedirectTo('/console/package/index/');
     }
 
-    public function testBuildActionPostValidError()
+    public function testBuildActionPostValidErrorWithoutPostinst()
     {
-        $postData = array('Name' => 'packageName');
+        $postData = array(
+            'Name' => 'packageName',
+            'UserActionMessage' => '',
+        );
+        $fileSpec = array(
+            'name' => 'file_name',
+            'tmp_name' => 'file_tmp_name',
+            'type' => 'file_type',
+        );
+        $packageData = array(
+            'Name' => 'packageName',
+            'UserActionMessage' => '',
+            'UserActionRequired' => false,
+            'File' => array(
+                'name' => 'file_name',
+                'tmp_name' => 'file_tmp_name',
+                'type' => 'file_type',
+            ),
+            'FileName' => 'file_name',
+            'FileLocation' => 'file_tmp_name',
+            'FileType' => 'file_type',
+        );
+        $this->getRequest()->getFiles()->set('File', $fileSpec);
+        $formData = $postData + array('File' => $fileSpec);
+        $this->_buildForm->expects($this->once())
+                         ->method('setData')
+                         ->with($formData);
+        $this->_buildForm->expects($this->once())
+                         ->method('getData')
+                         ->willReturn($formData);
         $this->_buildForm->expects($this->once())
                          ->method('isValid')
-                         ->with($postData)
-                         ->will($this->returnValue(true));
-        $this->_buildForm->expects($this->once())
-                         ->method('getValues')
-                         ->will($this->returnValue($postData));
+                         ->willReturn(true);
         $this->_buildForm->expects($this->never())
-                         ->method('toHtml');
-        $this->_testBuildPackage('/console/package/build', $postData, false);
+                         ->method('render');
+        $this->_testBuildPackage('/console/package/build', $postData, $packageData, false);
         $this->assertRedirectTo('/console/package/index/');
     }
 
@@ -341,25 +432,73 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testUpdateActionGet()
     {
+        $formData = array(
+            'Deploy' => array(
+                'Nonnotified' => 'defaultDeployNonnotified',
+                'Success' => 'defaultDeploySuccess',
+                'Notified' => 'defaultDeployNotified',
+                'Error' => 'defaultDeployError',
+                'Groups' => 'defaultDeployGroups',
+            ),
+            'Name' => 'Name',
+            'Comment' => 'Comment',
+            'Platform' => 'Platform',
+            'DeployAction' => 'DeployAction',
+            'ActionParam' => 'ActionParam',
+            'Priority' => 'Priority',
+            'MaxFragmentSize' => 'defaultMaxFragmentSize',
+            'Warn' => 'Warn',
+            'WarnMessage' => 'WarnMessage',
+            'WarnCountdown' => 'WarnCountdown',
+            'WarnAllowAbort' => 'WarnAllowAbort',
+            'WarnAllowDelay' => 'WarnAllowDelay',
+            'UserActionMessage' => 'UserActionMessage',
+        );
+        $this->_config->expects($this->exactly(6))
+                      ->method('__get')
+                      ->will($this->returnArgument(0));
+        $this->_updateForm->expects($this->once())
+                          ->method('setData')
+                          ->with($formData);
+        $this->_updateForm->expects($this->never())
+                          ->method('getData');
+        $this->_updateForm->expects($this->never())
+                          ->method('isValid');
+        $this->_updateForm->expects($this->once())
+                          ->method('render')
+                          ->willReturn('<form></form>');
         $this->_package->expects($this->once())
                        ->method('fromName')
                        ->with('oldName')
-                       ->will($this->returnValue(true));
+                       ->willReturn(true);
+        $this->_package->expects($this->exactly(12))
+                       ->method('offsetGet')
+                       ->will($this->returnArgument(0));
         $this->_package->expects($this->never())
                        ->method('build');
         $this->_package->expects($this->never())
+                       ->method('updateComputers');
+        $this->_package->expects($this->never())
                        ->method('delete');
-        $this->_editForm->expects($this->once())
-                        ->method('setValuesFromPackage');
-        $this->_editForm->expects($this->once())
-                        ->method('toHtml');
         $this->dispatch('/console/package/update/?name=oldName');
         $this->assertResponseStatusCode(200);
+        $this->assertXpathQuery('//form');
     }
 
-    public function testUpdateActionGetPostInvalid()
+    public function testUpdateActionPostInvalid()
     {
         $postData = array('Name' => 'newName');
+        $this->_updateForm->expects($this->once())
+                          ->method('setData')
+                          ->with($postData);
+        $this->_updateForm->expects($this->never())
+                          ->method('getData');
+        $this->_updateForm->expects($this->once())
+                          ->method('isValid')
+                          ->willReturn(false);
+        $this->_updateForm->expects($this->once())
+                          ->method('render')
+                          ->willReturn('<form></form>');
         $this->_package->expects($this->once())
                        ->method('fromName')
                        ->with('oldName')
@@ -367,55 +506,79 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_package->expects($this->never())
                        ->method('build');
         $this->_package->expects($this->never())
+                       ->method('updateComputers');
+        $this->_package->expects($this->never())
                        ->method('delete');
-        $this->_editForm->expects($this->once())
-                        ->method('isValid')
-                        ->with($postData)
-                        ->will($this->returnValue(false));
-        $this->_editForm->expects($this->once())
-                        ->method('setValuesFromPackage');
-        $this->_editForm->expects($this->once())
-                        ->method('toHtml');
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
         $this->assertResponseStatusCode(200);
+        $this->assertXpathQuery('//form');
     }
 
-    public function testUpdateActionGetPostValidSuccessBuild()
+    public function testUpdateActionPostValidBuildSuccess()
     {
-        $postData = array('Name' => 'newName');
+        $postData = array(
+            'Deploy' => array(
+                'Nonnotified' => '1',
+                'Success' => '0',
+                'Notified' => '1',
+                'Error' => '0',
+                'Groups' => '1',
+            ),
+            'Name' => 'newName',
+            'UserActionMessage' => '',
+        );
+        $fileSpec = array(
+            'name' => 'file_name',
+            'tmp_name' => 'file_tmp_name',
+            'type' => 'file_type',
+        );
+        $packageData = array(
+            'Deploy' => array(
+                'Nonnotified' => '1',
+                'Success' => '0',
+                'Notified' => '1',
+                'Error' => '0',
+                'Groups' => '1',
+            ),
+            'Name' => 'newName',
+            'UserActionMessage' => '',
+            'File' => array(
+                'name' => 'file_name',
+                'tmp_name' => 'file_tmp_name',
+                'type' => 'file_type',
+            ),
+            'UserActionRequired' => false,
+            'FileName' => 'file_name',
+            'FileLocation' => 'file_tmp_name',
+            'FileType' => 'file_type',
+        );
+        $this->getRequest()->getFiles()->set('File', $fileSpec);
+        $formData = $postData + array('File' => $fileSpec);
+        $this->_updateForm->expects($this->once())
+                          ->method('setData')
+                          ->with($formData);
+        $this->_updateForm->expects($this->once())
+                          ->method('getData')
+                          ->willReturn($formData);
+        $this->_updateForm->expects($this->once())
+                          ->method('isValid')
+                          ->willReturn(true);
+        $this->_updateForm->expects($this->never())
+                          ->method('render');
         $this->_package->expects($this->exactly(2))
                        ->method('fromName')
                        ->with('oldName')
                        ->will($this->returnValue(true));
         $this->_package->expects($this->once())
+                       ->method('updateComputers')
+                       ->with($this->isInstanceOf('Model_Package', true, false, true, false, true));
+        $this->_package->expects($this->once())
                        ->method('delete')
                        ->will($this->returnValue(true));
-        $this->_editForm->expects($this->once())
-                        ->method('isValid')
-                        ->with($postData)
-                        ->will($this->returnValue(true));
-        $this->_editForm->expects($this->once())
-                        ->method('getValues')
-                        ->will($this->returnValue($postData));
-        $this->_editForm->expects($this->exactly(6))
-                        ->method('getValue')
-                        ->will(
-                            $this->returnValueMap(
-                                array(
-                                    array('Name', 'newName'),
-                                    array('DeployNonnotified', '0'),
-                                    array('DeploySuccess', '1'),
-                                    array('DeployNotified', '1'),
-                                    array('DeployError', '0'),
-                                    array('DeployGroups', '0'),
-                                )
-                            )
-                        );
-        $this->_editForm->expects($this->never())
-                        ->method('toHtml');
         $this->_testBuildPackage(
             '/console/package/update/?name=oldName',
             $postData,
+            $packageData,
             true,
             array(
                 array("Package '%s' was successfully deleted." => 'oldName'),
@@ -425,9 +588,35 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/package/index/');
     }
 
-    public function testUpdateActionGetPostValidSuccessDelete()
+    public function testUpdateActionPostValidSuccessDelete()
     {
-        $postData = array('Name' => 'newName');
+        $postData = array(
+            'Deploy' => array(
+                'Nonnotified' => '0',
+                'Success' => '1',
+                'Notified' => '0',
+                'Error' => '1',
+                'Groups' => '0',
+            ),
+            'Name' => 'newName',
+            'File' => array(
+                'name' => 'file_name',
+                'tmp_name' => 'file_path',
+                'type' => 'file_type',
+            ),
+            'UserActionMessage' => '',
+        );
+        $this->_updateForm->expects($this->once())
+                          ->method('setData')
+                          ->with($postData);
+        $this->_updateForm->expects($this->once())
+                          ->method('getData')
+                          ->willReturn($postData);
+        $this->_updateForm->expects($this->once())
+                          ->method('isValid')
+                          ->willReturn(true);
+        $this->_updateForm->expects($this->never())
+                          ->method('render');
         $this->_package->expects($this->exactly(2))
                        ->method('fromName')
                        ->with('oldName')
@@ -436,62 +625,92 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                        ->method('build')
                        ->with(true)
                        ->will($this->returnValue(true));
-        $this->_editForm->expects($this->once())
-                        ->method('isValid')
-                        ->with($postData)
-                        ->will($this->returnValue(true));
-        $this->_editForm->expects($this->once())
-                        ->method('getValues')
-                        ->will($this->returnValue($postData));
-        $this->_editForm->expects($this->exactly(6))
-                        ->method('getValue')
-                        ->will(
-                            $this->returnValueMap(
-                                array(
-                                    array('Name', 'newName'),
-                                    array('DeployNonnotified', '0'),
-                                    array('DeploySuccess', '1'),
-                                    array('DeployNotified', '1'),
-                                    array('DeployError', '0'),
-                                    array('DeployGroups', '0'),
-                                )
-                            )
-                        );
+        $this->_package->expects($this->once())
+                       ->method('updateComputers')
+                       ->with($this->isInstanceOf('Model_Package', false, true, false, true, false));
         $this->_testDeletePackage('/console/package/update/?name=oldName', $postData, 'oldName', true);
     }
 
-    public function testUpdateActionGetPostValidBuildError()
+    public function testUpdateActionPostValidBuildError()
     {
-        $postData = array('Name' => 'newName');
+        $postData = array(
+            'Deploy' => array(
+                'Nonnotified' => '1',
+                'Success' => '0',
+                'Notified' => '1',
+                'Error' => '0',
+                'Groups' => '1',
+            ),
+            'Name' => 'newName',
+            'UserActionMessage' => '',
+        );
+        $fileSpec = array(
+            'name' => 'file_name',
+            'tmp_name' => 'file_tmp_name',
+            'type' => 'file_type',
+        );
+        $packageData = array(
+            'Deploy' => array(
+                'Nonnotified' => '1',
+                'Success' => '0',
+                'Notified' => '1',
+                'Error' => '0',
+                'Groups' => '1',
+            ),
+            'Name' => 'newName',
+            'UserActionMessage' => '',
+            'File' => array(
+                'name' => 'file_name',
+                'tmp_name' => 'file_tmp_name',
+                'type' => 'file_type',
+            ),
+            'UserActionRequired' => false,
+            'FileName' => 'file_name',
+            'FileLocation' => 'file_tmp_name',
+            'FileType' => 'file_type',
+        );
+        $this->getRequest()->getFiles()->set('File', $fileSpec);
+        $formData = $postData + array('File' => $fileSpec);
+        $this->_updateForm->expects($this->once())
+                          ->method('setData')
+                          ->with($formData);
+        $this->_updateForm->expects($this->once())
+                          ->method('getData')
+                          ->willReturn($formData);
+        $this->_updateForm->expects($this->once())
+                          ->method('isValid')
+                          ->willReturn(true);
+        $this->_updateForm->expects($this->never())
+                          ->method('render');
         $this->_package->expects($this->once())
                        ->method('fromName')
                        ->with('oldName')
                        ->will($this->returnValue(true));
-        $this->_editForm->expects($this->once())
-                        ->method('isValid')
-                        ->with($postData)
-                        ->will($this->returnValue(true));
-        $this->_editForm->expects($this->once())
-                        ->method('getValues')
-                        ->will($this->returnValue($postData));
-        $this->_editForm->expects($this->once())
-                        ->method('getValue')
-                        ->with('Name')
-                        ->will($this->returnValue('newName'));
-        $this->_editForm->expects($this->never())
-                         ->method('toHtml');
+        $this->_package->expects($this->never())
+                       ->method('updateComputers');
+        $this->_package->expects($this->never())
+                       ->method('delete');
         $this->_testBuildPackage(
             '/console/package/update/?name=oldName',
             $postData,
+            $packageData,
             false,
             array(array('Error changing Package \'%s\' to \'%s\':' => array('oldName', 'newName')))
         );
         $this->assertRedirectTo('/console/package/index/');
     }
 
-    public function testUpdateActionGetPostValidReconstructionError()
+    public function testUpdateActionPostValidReconstructionError()
     {
         $postData = array('Name' => 'newName');
+        $this->_updateForm->expects($this->never())
+                          ->method('setData');
+        $this->_updateForm->expects($this->never())
+                          ->method('getData');
+        $this->_updateForm->expects($this->never())
+                          ->method('isValid');
+        $this->_updateForm->expects($this->never())
+                          ->method('render');
         $this->_package->expects($this->once())
                        ->method('fromName')
                        ->with('oldName')
@@ -499,9 +718,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_package->expects($this->never())
                        ->method('build');
         $this->_package->expects($this->never())
+                       ->method('updateComputers');
+        $this->_package->expects($this->never())
                        ->method('delete');
-        $this->_editForm->expects($this->never())
-                        ->method('isValid');
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
         $this->assertRedirectTo('/console/package/index/');
         $this->assertEquals(
@@ -514,14 +733,15 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
      * Common tests for actions invoking _buildPackage()
      *
      * @param string $url URL to dispatch to
-     * @param array $packageData Package data (injected via POST)
+     * @param array $postData POST data
+     * @param array $packageData Expected package data
      * @param bool $success Build success to test
      * @param mixed[] $extraMessages Success/error messages appended by tested action
      */
-    protected function _testBuildPackage($url, $packageData, $success, $extraMessages=array())
+    protected function _testBuildPackage($url, $postData, $packageData, $success, $extraMessages=array())
     {
         $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
-        $name = $packageData['Name'];
+        $name = $postData['Name'];
         $errors = array(
             array('format1' => array('arg1', 'arg2')),
             array('format2' => array('arg3', 'arg4')),
@@ -538,7 +758,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                        ->method('getErrors')
                        ->will($this->returnValue($errors));
 
-        $this->dispatch($url, 'POST', $packageData);
+        $this->dispatch($url, 'POST', $postData);
         if ($success) {
             $this->assertEquals(
                 array_merge(

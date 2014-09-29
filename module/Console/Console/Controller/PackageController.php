@@ -33,31 +33,42 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
     protected $_package;
 
     /**
+     * Application config
+     * @var \Model\Config
+     */
+    protected $_config;
+
+    /**
      * Package build form
-     * @var \Form_Package
+     * @var \Console\Form\Package\Build
      */
     protected $_buildForm;
 
     /**
-     * Package edit form
-     * @var \Form_Package_Edit
+     * Package update form
+     * @var \Console\Form\Package\Update
      */
-    protected $_editForm;
+    protected $_updateForm;
 
     /**
      * Constructor
      *
      * @param \Model_Package $package
+     * @param \Model\Config $config
+     * @param \Console\Form\Package\Build $buildForm
+     * @param \Console\Form\Package\Update $updateForm
      */
     public function __construct(
         \Model_Package $package,
-        \Form_Package $packageBuild,
-        \Form_Package_Edit $packageEdit
+        \Model\Config $config,
+        \Console\Form\Package\Build $buildForm,
+        \Console\Form\Package\Update $updateForm
     )
     {
         $this->_package = $package;
-        $this->_buildForm = $packageBuild;
-        $this->_editForm = $packageEdit;
+        $this->_config = $config;
+        $this->_buildForm = $buildForm;
+        $this->_updateForm = $updateForm;
     }
 
     /**
@@ -84,12 +95,30 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function buildAction()
     {
-        if ($this->getRequest()->isPost() and $this->_buildForm->isValid($this->params()->fromPost())) {
-            $this->_buildPackage($this->_buildForm->getValues());
-            return $this->redirectToRoute('package', 'index');
+        if ($this->getRequest()->isPost()) {
+            $this->_buildForm->setData($this->params()->fromPost() + $this->params()->fromFiles());
+            if ($this->_buildForm->isValid()) {
+                $this->_buildPackage($this->_buildForm->getData());
+                return $this->redirectToRoute('package', 'index');
+            }
         } else {
-            return $this->printForm($this->_buildForm);
+            $this->_buildForm->setData(
+                array(
+                    'Platform' => $this->_config->defaultPlatform,
+                    'DeployAction' => $this->_config->defaultAction,
+                    'ActionParam' => $this->_config->defaultActionParam,
+                    'Priority' => $this->_config->defaultPackagePriority,
+                    'MaxFragmentSize' => $this->_config->defaultMaxFragmentSize,
+                    'Warn' => $this->_config->defaultWarn,
+                    'WarnMessage' => $this->_config->defaultWarnMessage,
+                    'WarnCountdown' => $this->_config->defaultWarnCountdown,
+                    'WarnAllowAbort' => $this->_config->defaultWarnAllowAbort,
+                    'WarnAllowDelay' => $this->_config->defaultWarnAllowDelay,
+                    'UserActionMessage' => $this->_config->defaultUserActionMessage,
+                )
+            );
         }
+        return $this->printForm($this->_buildForm);
     }
 
     /**
@@ -134,38 +163,65 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
             return $this->redirectToRoute('package', 'index');
         }
 
-        $form = $this->_editForm;
-        if ($this->getRequest()->isPost() and $form->isValid($this->params()->fromPost())) {
-            $names = array($oldName, $form->getValue('Name'));
-            $newPackage = $this->_buildPackage($form->getValues());
-            if ($newPackage) {
-                $newPackage->updateComputers(
-                    $oldPackage,
-                    $form->getValue('DeployNonnotified'),
-                    $form->getValue('DeploySuccess'),
-                    $form->getValue('DeployNotified'),
-                    $form->getValue('DeployError'),
-                    $form->getValue('DeployGroups')
-                );
-                $success = $this->_deletePackage($oldName);
-            } else {
-                $success = false;
+        $form = $this->_updateForm;
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->params()->fromPost() + $this->params()->fromFiles());
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $names = array($oldName, $data['Name']);
+                $newPackage = $this->_buildPackage($data);
+                if ($newPackage) {
+                    $newPackage->updateComputers(
+                        $oldPackage,
+                        $data['Deploy']['Nonnotified'],
+                        $data['Deploy']['Success'],
+                        $data['Deploy']['Notified'],
+                        $data['Deploy']['Error'],
+                        $data['Deploy']['Groups']
+                    );
+                    $success = $this->_deletePackage($oldName);
+                } else {
+                    $success = false;
+                }
+                if ($success) {
+                    $flashMessenger->addSuccessMessage(
+                        array('Package \'%s\' was successfully changed to \'%s\'.' => $names)
+                    );
+                } else {
+                    $flashMessenger->addErrorMessage(
+                        array('Error changing Package \'%s\' to \'%s\':' => $names)
+                    );
+                }
+                return $this->redirectToRoute('package', 'index');
             }
-            if ($success) {
-                $flashMessenger->addSuccessMessage(
-                    array('Package \'%s\' was successfully changed to \'%s\'.' => $names)
-                );
-            } else {
-                $flashMessenger->addErrorMessage(
-                    array('Error changing Package \'%s\' to \'%s\':' => $names)
-                );
-            }
-            return $this->redirectToRoute('package', 'index');
         } else {
             $this->setActiveMenu('Packages');
-            $form->setValuesFromPackage($oldPackage);
-            return $this->printForm($form);
+            $form->setData(
+                array(
+                    'Deploy' => array(
+                        'Nonnotified' => $this->_config->defaultDeployNonnotified,
+                        'Success' => $this->_config->defaultDeploySuccess,
+                        'Notified' => $this->_config->defaultDeployNotified,
+                        'Error' => $this->_config->defaultDeployError,
+                        'Groups' => $this->_config->defaultDeployGroups,
+                    ),
+                    'Name' => $oldPackage['Name'],
+                    'Comment' => $oldPackage['Comment'],
+                    'Platform' => $oldPackage['Platform'],
+                    'DeployAction' => $oldPackage['DeployAction'],
+                    'ActionParam' => $oldPackage['ActionParam'],
+                    'Priority' => $oldPackage['Priority'],
+                    'MaxFragmentSize' => $this->_config->defaultMaxFragmentSize,
+                    'Warn' => $oldPackage['Warn'],
+                    'WarnMessage' => $oldPackage['WarnMessage'],
+                    'WarnCountdown' => $oldPackage['WarnCountdown'],
+                    'WarnAllowAbort' => $oldPackage['WarnAllowAbort'],
+                    'WarnAllowDelay' => $oldPackage['WarnAllowDelay'],
+                    'UserActionMessage' => $oldPackage['UserActionMessage'],
+                )
+            );
         }
+        return $this->printForm($form);
     }
 
     /**
@@ -176,6 +232,11 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
      */
     protected function _buildPackage($data)
     {
+        $data['UserActionRequired'] = ($data['UserActionMessage'] != '');
+        $data['FileName'] = $data['File']['name'];
+        $data['FileLocation'] = $data['File']['tmp_name'];
+        $data['FileType'] = $data['File']['type'];
+
         $flashMessenger = $this->flashMessenger();
 
         $package = clone $this->_package;

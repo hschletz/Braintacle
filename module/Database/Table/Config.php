@@ -51,7 +51,6 @@ class Config extends \Database\AbstractTable
         'defaultPackagePriority' => 'BRAINTACLE_DEFAULT_PACKAGE_PRIORITY',
         'defaultPlatform' => 'BRAINTACLE_DEFAULT_PLATFORM',
         'defaultUserActionMessage' => 'BRAINTACLE_DEFAULT_USER_ACTION_MESSAGE',
-        'defaultUserActionRequired' => 'BRAINTACLE_DEFAULT_USER_ACTION_REQUIRED',
         'defaultWarn' => 'BRAINTACLE_DEFAULT_WARN',
         'defaultWarnAllowAbort' => 'BRAINTACLE_DEFAULT_WARN_ALLOW_ABORT',
         'defaultWarnAllowDelay' => 'BRAINTACLE_DEFAULT_WARN_ALLOW_DELAY',

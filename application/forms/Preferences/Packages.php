@@ -52,7 +52,6 @@ class Form_Preferences_Packages extends Form_Preferences
         'defaultWarnCountdown' => 'integer',
         'defaultWarnAllowAbort' => 'bool',
         'defaultWarnAllowDelay' => 'bool',
-        'defaultUserActionRequired' => 'bool',
         'defaultUserActionMessage' => 'clob',
     );
 
@@ -135,9 +134,6 @@ class Form_Preferences_Packages extends Form_Preferences
             ),
             'defaultWarnAllowDelay' => $translate->_(
                 'Allow user delay by default'
-            ),
-            'defaultUserActionRequired' => $translate->_(
-                'User action required by default'
             ),
             'defaultUserActionMessage' => $translate->_(
                 'Default user action message'

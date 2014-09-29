@@ -46,6 +46,7 @@ return array(
     'form_elements' => array(
         'abstract_factories' => array(
             'Console\Form\Service\AccountFactory',
+            'Console\Form\Service\PackageFactory',
         ),
         'factories' => array(
             'Console\Form\AddToGroup' => 'Console\Form\Service\AddToGroupFactory',
@@ -63,7 +64,6 @@ return array(
             'Console\Form\GroupMemberships' => 'Console\Form\GroupMemberships',
             'Console\Form\Import' => 'Console\Form\Import',
             'Console\Form\Login' => 'Console\Form\Login',
-            'Console\Form\Package\Assign' => 'Console\Form\Package\Assign',
             'Console\Form\ProductKey' => 'Console\Form\ProductKey',
             'Console\Form\SoftwareFilter' => 'Console\Form\SoftwareFilter',
             'Console\Form\Subnet' => 'Console\Form\Subnet',
@@ -95,8 +95,6 @@ return array(
             'Console\Navigation\MainMenu' => 'Console\Navigation\MainMenuFactory',
         ),
         'invokables' => array(
-            'Console\Form\Package\Build' => 'Form_Package',
-            'Console\Form\Package\Edit' => 'Form_Package_Edit',
             'Console\Form\Preferences\Agent' => 'Form_Preferences_Agent',
             'Console\Form\Preferences\Display' => 'Form_Preferences_Display',
             'Console\Form\Preferences\Download' => 'Form_Preferences_Download',

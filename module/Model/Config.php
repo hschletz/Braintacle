@@ -54,7 +54,6 @@ namespace Model;
  * @property integer $defaultPackagePriority  Default priority (0-10) for new packages. Default: 5
  * @property string $defaultPlatform  Default platform for new packages (one of windows, linux, mac). Default: windows
  * @property string $defaultUserActionMessage  Default user action message for new packages
- * @property bool $defaultUserActionRequired  Default user action requirement for new packages. Default: false
  * @property bool $defaultWarn  Default user warning for new packages. Default: false
  * @property bool $defaultWarnAllowAbort  Default to allow abort by user for new packages
  * @property bool $defaultWarnAllowDelay  Default to allow delay by user for new packages
@@ -122,7 +121,6 @@ class Config
         'defaultMergeCustomFields' => '1',
         'defaultPackagePriority' => '5',
         'defaultPlatform' => 'windows',
-        'defaultUserActionRequired' => '0',
         'defaultWarn' => '0',
         // Defaults below this point are defined by communication server.
         'acceptNonZlib' => 0,
