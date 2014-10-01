@@ -277,7 +277,7 @@ Braintacle:
         <element name="HARDWARE" braintacle:model="Computer">
             <interleave>
                 <optional>
-                    <ref name="ARCH" /><!-- not available in database -->
+                    <ref name="ARCH" />
                 </optional>
                 <optional>
                     <ref name="ARCHNAME" /><!-- not available in database -->
@@ -325,7 +325,9 @@ Braintacle:
                 <optional>
                     <ref name="USERDOMAIN" braintacle:model="Windows" braintacle:property="UserDomain" />
                 </optional>
-                <ref name="USERID" braintacle:property="UserName" />
+                <optional>
+                    <ref name="USERID" braintacle:property="UserName" />
+                </optional>
                 <optional>
                     <ref name="UUID" braintacle:property="Uuid" />
                 </optional>
@@ -377,7 +379,9 @@ Braintacle:
                     <ref name="CAPACITY" braintacle:property="Size" />
                 </optional>
                 <ref name="CAPTION" braintacle:property="Caption" />
-                <ref name="DESCRIPTION" braintacle:property="Description" />
+                <optional>
+                    <ref name="DESCRIPTION" braintacle:property="Description" />
+                </optional>
                 <ref name="NUMSLOTS" braintacle:property="SlotNumber" />
                 <optional>
                     <ref name="PURPOSE" braintacle:property="Purpose" />
@@ -511,9 +515,13 @@ Braintacle:
                 <optional>
                     <ref name="DESCRIPTION" braintacle:property="Description" />
                 </optional>
-                <ref name="DRIVER" braintacle:property="Driver" />
+                <optional>
+                    <ref name="DRIVER" braintacle:property="Driver" />
+                </optional>
                 <ref name="NAME" braintacle:property="Name" />
-                <ref name="PORT" braintacle:property="Port" />
+                <optional>
+                    <ref name="PORT" braintacle:property="Port" />
+                </optional>
             </interleave>
         </element>
     </define>
@@ -543,7 +551,9 @@ Braintacle:
         <element name="SLOTS" braintacle:model="ExtensionSlot">
             <interleave>
                 <ref name="DESCRIPTION" braintacle:property="Description" />
-                <ref name="DESIGNATION" braintacle:property="Name" />
+                <optional>
+                    <ref name="DESIGNATION" braintacle:property="Name" />
+                </optional>
                 <ref name="NAME" braintacle:property="Type" />
                 <optional>
                     <ref name="PSHARE" /><!-- obsolete -->
@@ -605,7 +615,9 @@ Braintacle:
     <define name="SOUNDS">
         <element name="SOUNDS" braintacle:model="AudioDevice">
             <interleave>
-                <ref name="DESCRIPTION" braintacle:property="Description" />
+                <optional>
+                    <ref name="DESCRIPTION" braintacle:property="Description" />
+                </optional>
                 <ref name="MANUFACTURER" braintacle:property="Manufacturer" />
                 <ref name="NAME" braintacle:property="Name" />
             </interleave>
