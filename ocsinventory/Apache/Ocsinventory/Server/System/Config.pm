@@ -73,7 +73,7 @@ our %CONFIG = (
   },
   AUTO_DUPLICATE_LVL => { 
     type => 'IVALUE',
-    default => 15,
+    default => 0,
     unit => 'NA',
     description => 'Configure the duplicates detection system',
     level => IMPORTANT,
