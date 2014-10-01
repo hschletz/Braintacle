@@ -409,7 +409,7 @@ our %CONFIG = (
   },
   COMPRESS_TRY_OTHERS => {
     type => 'IVALUE',
-    default => 0,
+    default => 1,
     unit => 'NA',
     description => 'Configure engine to try other compress algorythm than raw zlib',
     level => CANSKIP,

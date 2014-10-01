@@ -37,15 +37,11 @@ class Form_Preferences_System extends Form_Preferences
         'logPath' => 'text',
         'logLevel' => array(0, 1, 2),
         'autoDuplicateCriteria' => 'integer',
-        'useTransactions' => 'bool',
-        'acceptNonZlib' => 'bool',
     );
 
     /** {@inheritdoc} */
     protected $_goodValues = array(
         'autoDuplicateCriteria' => 0,
-        'useTransactions' => true,
-        'acceptNonZlib' => true,
     );
 
     /**
@@ -78,12 +74,6 @@ class Form_Preferences_System extends Form_Preferences
             ),
             'autoDuplicateCriteria' => $translate->_(
                 'Bitmask for automatic resolution of duplicates (should be 0)'
-            ),
-            'useTransactions' => $translate->_(
-                'Use database transactions (recommended)'
-            ),
-            'acceptNonZlib' => $translate->_(
-                'Accept requests other than raw zlib compressed'
             ),
         );
         parent::init();

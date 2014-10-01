@@ -34,7 +34,6 @@ namespace Model;
  * The documented datatypes of the properties are only a hint about expected
  * values. They may actually be set and retrieved as strings.
  *
- * @property bool $acceptNonZlib  Accept agent requests other than raw zlib. Default: false, recommended: true
  * @property string $agentWhitelistFile  Server-side path to file with allowed non-OCS agents (FusionInventory etc.)
  * @property integer $autoDuplicateCriteria  Bitmask for automatic duplicate resolution. Default: 15, recommended: 0
  * @property string $communicationServerUri  URI of communication server. Default: http://localhost/ocsinventory
@@ -89,7 +88,6 @@ namespace Model;
  * @property integer $sessionValidity  Maximum server session duration. Default: 3600
  * @property bool $setGroupPackageStatus  Set computer status for group-assigned packages. Default: true
  * @property bool $trustedNetworksOnly  Let server reject clients from untrusted networks. Default: false
- * @property bool $useTransactions  Let server use database transactions. Default: true (recommended)
 
  * @property integer $contactInterval  Default hours between agent contacts. Default: 12
  * @property integer $downloadCycleDelay  Default delay in seconds between download cycles. Default: 60
@@ -123,7 +121,6 @@ class Config
         'defaultPlatform' => 'windows',
         'defaultWarn' => '0',
         // Defaults below this point are defined by communication server.
-        'acceptNonZlib' => 0,
         'autoDuplicateCriteria' => 15,
         'contactInterval' => 12,
         'downloadCycleDelay' => 60,
@@ -158,7 +155,6 @@ class Config
         'sessionValidity' => 3600,
         'setGroupPackageStatus' => 1,
         'trustedNetworksOnly' => 0,
-        'useTransactions' => 1,
     );
 
     /**

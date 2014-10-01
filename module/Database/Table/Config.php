@@ -31,7 +31,6 @@ class Config extends \Database\AbstractTable
      * @var array
      */
     protected $_optionMap = array(
-        'acceptNonZlib' => 'COMPRESS_TRY_OTHERS',
         'agentWhitelistFile' => 'EXT_USERAGENTS_FILE_PATH',
         'autoDuplicateCriteria' => 'AUTO_DUPLICATE_LVL',
         'communicationServerUri' => 'LOCAL_URI_SERVER',
@@ -93,7 +92,6 @@ class Config extends \Database\AbstractTable
         'sessionValidity' => 'SESSION_VALIDITY_TIME',
         'setGroupPackageStatus' => 'DOWNLOAD_GROUPS_TRACE_EVENTS',
         'trustedNetworksOnly' => 'PROLOG_FILTER_ON',
-        'useTransactions' => 'INVENTORY_TRANSACTION',
     );
 
     /**
@@ -101,7 +99,6 @@ class Config extends \Database\AbstractTable
      * @var array
      */
     protected $_iValues = array(
-        'acceptNonZlib',
         'agentDeployment',
         'agentUpdate',
         'autoDuplicateCriteria',
@@ -134,7 +131,6 @@ class Config extends \Database\AbstractTable
         'sessionValidity',
         'setGroupPackageStatus',
         'trustedNetworksOnly',
-        'useTransactions',
     );
 
     /**
@@ -188,6 +184,7 @@ class Config extends \Database\AbstractTable
         $count = $this->delete(
             array(
                 'name' => array(
+                    'COMPRESS_TRY_OTHERS', // default: 1
                     'DEPLOY', // default: 0
                     'ENABLE_GROUPS', // default: 1
                     'INVENTORY_CACHE_ENABLED', // default: 0
@@ -195,6 +192,7 @@ class Config extends \Database\AbstractTable
                     'INVENTORY_CACHE_REVALIDATE', //unused
                     'INVENTORY_DIFF', // default: 1
                     'INVENTORY_FILTER_ENABLED', // default: 0
+                    'INVENTORY_TRANSACTION', // default: 1
                     'INVENTORY_WRITE_DIFF', // default: 1
                     'IPDISCOVER_USE_GROUPS', // default: 1
                     'LOCAL_PORT', // unused
