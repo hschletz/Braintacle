@@ -1,0 +1,26 @@
+config:
+  -
+    # equivalent to TRUE
+    name: "AUTO_DUPLICATE_LVL"
+    ivalue: 63
+    tvalue: null
+  -
+    # unchanged
+    name: "FREQUENCY"
+    ivalue: 42
+    tvalue: null
+  -
+    # unchanged
+    name: "IPDISCOVER_NO_POSTPONE"
+    ivalue: 1
+    tvalue: null
+  -
+    # unchanged
+    name: "LOGPATH"
+    ivalue: null
+    tvalue: "/example/log/path"
+  -
+    # unchanged
+    name: "REGISTRY"
+    ivalue: 0
+    tvalue: null

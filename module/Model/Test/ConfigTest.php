@@ -197,4 +197,26 @@ class ConfigTest extends AbstractTest
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
         );
     }
+
+    public function testAutoMergeDuplicatesTrue()
+    {
+        $this->_getModel()->autoMergeDuplicates = '1';
+        $this->assertTablesEqual(
+            $this->_loadDataSet('AutoMergeDuplicatesTrue')->getTable('config'),
+            $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
+        );
+        // Read value from new clone to test conversion from database content
+        $this->assertTrue($this->_getModel()->autoMergeDuplicates);
+    }
+
+    public function testAutoMergeDuplicatesFalse()
+    {
+        $this->_getModel()->autoMergeDuplicates = '0';
+        $this->assertTablesEqual(
+            $this->_loadDataSet('AutoMergeDuplicatesFalse')->getTable('config'),
+            $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
+        );
+        // Read value from new clone to test conversion from database content
+        $this->assertFalse($this->_getModel()->autoMergeDuplicates);
+    }
 }

@@ -32,7 +32,7 @@ class Config extends \Database\AbstractTable
      */
     protected $_optionMap = array(
         'agentWhitelistFile' => 'EXT_USERAGENTS_FILE_PATH',
-        'autoDuplicateCriteria' => 'AUTO_DUPLICATE_LVL',
+        'autoMergeDuplicates' => 'AUTO_DUPLICATE_LVL',
         'communicationServerUri' => 'LOCAL_URI_SERVER',
         'contactInterval' => 'PROLOG_FREQ',
         'defaultAction' => 'BRAINTACLE_DEFAULT_ACTION',
@@ -99,7 +99,7 @@ class Config extends \Database\AbstractTable
      * @var array
      */
     protected $_iValues = array(
-        'autoDuplicateCriteria',
+        'autoMergeDuplicates',
         'contactInterval',
         'downloadCycleDelay',
         'downloadFragmentDelay',
@@ -175,6 +175,13 @@ class Config extends \Database\AbstractTable
                     'tvalue' => $uri
                 )
             );
+        }
+
+        $autoMergeDuplicates = $this->get('autoMergeDuplicates');
+        if ($autoMergeDuplicates != 0 and $autoMergeDuplicates != 63) {
+            // Set nonzero bitmask to 63 (all criteria), making it an all-or-nothing option.
+            $logger->info('Changing criteria for automatic duplicate removal; use all criteria');
+            $this->set('autoMergeDuplicates', 63);
         }
 
         // Delete deprecated options, causing the communication server to use

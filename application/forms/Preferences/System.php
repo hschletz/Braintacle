@@ -36,12 +36,12 @@ class Form_Preferences_System extends Form_Preferences
         'sessionRequired' => 'bool',
         'logPath' => 'text',
         'logLevel' => array(0, 1, 2),
-        'autoDuplicateCriteria' => 'integer',
+        'autoMergeDuplicates' => 'bool',
     );
 
     /** {@inheritdoc} */
     protected $_goodValues = array(
-        'autoDuplicateCriteria' => 0,
+        'autoMergeDuplicates' => 0,
     );
 
     /**
@@ -72,7 +72,7 @@ class Form_Preferences_System extends Form_Preferences
             'logLevel' => $translate->_(
                 'Log level'
             ),
-            'autoDuplicateCriteria' => $translate->_(
+            'autoMergeDuplicates' => $translate->_(
                 'Bitmask for automatic resolution of duplicates (should be 0)'
             ),
         );
@@ -90,9 +90,6 @@ class Form_Preferences_System extends Form_Preferences
             ->setAttrib('size', '5');
         $this->getElement('logPath')
             ->addValidator(new Braintacle_Validate_DirectoryWritable);
-        $this->getElement('autoDuplicateCriteria')
-            ->addValidator('GreaterThan', false, array('min' => -1))
-            ->setAttrib('size', '5');
     }
 
     /**

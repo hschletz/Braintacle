@@ -35,7 +35,7 @@ namespace Model;
  * values. They may actually be set and retrieved as strings.
  *
  * @property string $agentWhitelistFile  Server-side path to file with allowed non-OCS agents (FusionInventory etc.)
- * @property integer $autoDuplicateCriteria  Bitmask for automatic duplicate resolution. Default: 0, recommended: 0
+ * @property integer $autoMergeDuplicates  Detect and merge duplicates automatically. Default: FALSE (recommended)
  * @property string $communicationServerUri  URI of communication server. Default: http://localhost/ocsinventory
  * @property string $defaultAction  Default action for new packages (one of store, execute, launch). Default: launch
  * @property string $defaultActionParam  Default action parameter for new packages
@@ -121,7 +121,7 @@ class Config
         'defaultPlatform' => 'windows',
         'defaultWarn' => '0',
         // Defaults below this point are defined by communication server.
-        'autoDuplicateCriteria' => 0,
+        'autoMergeDuplicates' => false,
         'contactInterval' => 12,
         'downloadCycleDelay' => 60,
         'downloadFragmentDelay' => 60,
@@ -205,6 +205,10 @@ class Config
             if ($value === null and isset($this->_defaults[$option])) {
                 $value = $this->_defaults[$option];
             }
+            if ($option == 'autoMergeDuplicates') {
+                // Convert bitmask to boolean
+                $value = (bool) $value;
+            }
             $this->_cache[$option] = $value;
         }
         return $this->_cache[$option];
@@ -218,6 +222,11 @@ class Config
      */
     public function __set($option, $value)
     {
+        $this->_cache[$option] = $value;
+        if ($option == 'autoMergeDuplicates') {
+            // Convert boolean to bitmask
+            $value = $value ? 63 : 0;
+        }
         if ($this->_config->set($option, $value)) {
             switch ($option) {
                 // Communication server reads download info from package table.
@@ -233,7 +242,6 @@ class Config
                     break;
             }
         }
-        $this->_cache[$option] = $value;
     }
 
     /**
