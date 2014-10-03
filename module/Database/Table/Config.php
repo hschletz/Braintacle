@@ -99,8 +99,6 @@ class Config extends \Database\AbstractTable
      * @var array
      */
     protected $_iValues = array(
-        'agentDeployment',
-        'agentUpdate',
         'autoDuplicateCriteria',
         'contactInterval',
         'downloadCycleDelay',
