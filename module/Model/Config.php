@@ -68,8 +68,8 @@ namespace Model;
  * @property integer $lockValidity  Seconds before a computer's lock expires. Default: 600
  * @property integer $logLevel  Server logging verbosity (0-2). Default: 0
  * @property string $logPath  Path to server logfiles or "syslog". Default: /var/log/ocsinventory-server
- * @property string $packageBaseUriHttp  Base URI for package download (HTTP)
- * @property string $packageBaseUriHttps  Base URI for package download (HTTPS)
+ * @property string $packageBaseUriHttp  Base URI for package download (HTTP), without http:// prefix
+ * @property string $packageBaseUriHttps  Base URI for package download (HTTPS), without https:// prefix
  * @property string $packageCertificate  Certificate path for packages. Default: INSTALL_PATH/cacert.pem
  * @property string $packagePath  Server-side directory where packages are stored
  * @property string $saveDir  Directory where a copy of incoming inventory data is stored
