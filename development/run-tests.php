@@ -35,7 +35,7 @@ function testModule($module, $filter=null)
     }
     system(
         "phpunit -c module/$module/phpunit.xml --strict --colors " .
-        "--coverage-text --coverage-html=doc/CodeCoverage/$module " .
+        "--coverage-html=doc/CodeCoverage/$module " .
         "-d include_path=" . get_include_path() . $filter,
         $exitCode
     );

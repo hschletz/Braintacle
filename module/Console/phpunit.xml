@@ -35,4 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
             <directory suffix=".php">view</directory>
         </whitelist>
     </filter>
+    <logging>
+        <log type="coverage-text" target="php://stdout" showOnlySummary="true" />
+    </logging>
 </phpunit>
