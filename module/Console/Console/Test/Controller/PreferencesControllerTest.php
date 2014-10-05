@@ -93,102 +93,102 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/preferences/display/');
     }
 
-    public function testDisplayActionTestGet()
+    public function testDisplayActionGet()
     {
         $this->_testUseFormGet('display', 'Display');
     }
 
-    public function testDisplayActionTestPost()
+    public function testDisplayActionPost()
     {
         $this->_testUseFormPost('display', 'Display');
     }
 
-    public function testInventoryActionTestGet()
+    public function testInventoryActionGet()
     {
         $this->_testUseFormGet('inventory', 'Inventory');
     }
 
-    public function testInventoryActionTestPost()
+    public function testInventoryActionPost()
     {
         $this->_testUseFormPost('inventory', 'Inventory');
     }
 
-    public function testAgentActionTestGet()
+    public function testAgentActionGet()
     {
         $this->_testUseFormGet('agent', 'Agent');
     }
 
-    public function testAgentActionTestPost()
+    public function testAgentActionPost()
     {
         $this->_testUseFormPost('agent', 'Agent');
     }
 
-    public function testPackagesActionTestGet()
+    public function testPackagesActionGet()
     {
         $this->_testUseFormGet('packages', 'Packages');
     }
 
-    public function testPackagesActionTestPost()
+    public function testPackagesActionPost()
     {
         $this->_testUseFormPost('packages', 'Packages');
     }
 
-    public function testDownloadActionTestGet()
+    public function testDownloadActionGet()
     {
         $this->_testUseFormGet('download', 'Download');
     }
 
-    public function testDownloadActionTestPost()
+    public function testDownloadActionPost()
     {
         $this->_testUseFormPost('download', 'Download');
     }
 
-    public function testNetworkscanningActionTestGet()
+    public function testNetworkscanningActionGet()
     {
         $this->_testUseFormGet('networkscanning', 'NetworkScanning');
     }
 
-    public function testNetworkscanningActionTestPost()
+    public function testNetworkscanningActionPost()
     {
         $this->_testUseFormPost('networkscanning', 'NetworkScanning');
     }
 
-    public function testGroupsActionTestGet()
+    public function testGroupsActionGet()
     {
         $this->_testUseFormGet('groups', 'Groups');
     }
 
-    public function testGroupsActionTestPost()
+    public function testGroupsActionPost()
     {
         $this->_testUseFormPost('groups', 'Groups');
     }
 
-    public function testRawdataActionTestGet()
+    public function testRawdataActionGet()
     {
         $this->_testUseFormGet('rawdata', 'RawData');
     }
 
-    public function testRawdataActionTestPost()
+    public function testRawdataActionPost()
     {
         $this->_testUseFormPost('rawdata', 'RawData');
     }
 
-    public function testFiltersActionTestGet()
+    public function testFiltersActionGet()
     {
         $this->_testUseFormGet('filters', 'Filters');
     }
 
-    public function testFiltersActionTestPost()
+    public function testFiltersActionPost()
     {
         $this->_testUseFormPost('filters', 'Filters');
     }
 
-    public function testSystemActionTestGet()
+    public function testSystemActionGet()
     {
         $this->_testUseFormGet('system', 'System');
     }
 
-    public function testSystemActionTestPost()
+    public function testSystemActionPost()
     {
         $this->_testUseFormPost('system', 'System');
     }
