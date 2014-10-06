@@ -198,6 +198,21 @@ class ConfigTest extends AbstractTest
         );
     }
 
+    public function testSetOptionsAcceptsIterator()
+    {
+        $options = array(
+            'defaultWarn' => '1',
+            'defaultMergeGroups' => '1',
+            'limitInventory' => '1',
+            'scanSnmp' => '1',
+        );
+        $this->_getModel()->setOptions(new \IteratorIterator(new \ArrayIterator($options)));
+        $this->assertTablesEqual(
+            $this->_loadDataSet('SetOptionsTrue')->getTable('config'),
+            $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
+        );
+    }
+
     public function testAutoMergeDuplicatesTrue()
     {
         $this->_getModel()->autoMergeDuplicates = '1';

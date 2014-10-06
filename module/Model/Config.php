@@ -251,7 +251,7 @@ class Config
      * value, including defaults. This allows future changes to defaults to take
      * effect unless manually overridden.
      *
-     * @param array $options Associative array of option names and values
+     * @param array|\Traversable $options Associative array or iterator of option names and values
      */
     public function setOptions($options)
     {
