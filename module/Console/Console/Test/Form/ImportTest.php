@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for ProductKey form
+ * Tests for Import form
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
