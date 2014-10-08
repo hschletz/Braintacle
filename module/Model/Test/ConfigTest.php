@@ -49,7 +49,7 @@ class ConfigTest extends AbstractTest
 
         // Test populated ivalue and tvalue options
         $this->assertEquals(42, $config->inventoryInterval);
-        $this->assertEquals('/example/log/path', $config->logPath);
+        $this->assertEquals('/example/package/path', $config->packagePath);
         // Test default for unpopulated option
         $this->assertEquals(12, $config->contactInterval);
         // Test invalid option
@@ -63,7 +63,7 @@ class ConfigTest extends AbstractTest
 
         $config->inventoryInterval = 42; // unchanged
         $config->contactInterval = 10; // new
-        $config->logPath = '/other/log/path'; // updated
+        $config->packagePath = '/other/package/path'; // updated
         $config->inspectRegistry = true; // ivalue true, updated
         $config->saveRawData = false; // ivalue false, updated
         $config->sessionRequired = true; // ivalue true, new

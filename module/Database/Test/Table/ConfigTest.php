@@ -43,7 +43,7 @@ class ConfigTest extends AbstractTest
     {
         // Test populated ivalue and tvalue options
         $this->assertEquals(42, static::$_table->get('inventoryInterval'));
-        $this->assertEquals('/example/log/path', static::$_table->get('logPath'));
+        $this->assertEquals('/example/package/path', static::$_table->get('packagePath'));
         // Test unpopulated option
         $this->assertNull(static::$_table->get('contactInterval'));
         // Test invalid option
@@ -55,7 +55,7 @@ class ConfigTest extends AbstractTest
     {
         $this->assertSame(false, static::$_table->set('inventoryInterval', 42)); // unchanged
         $this->assertSame(true, static::$_table->set('contactInterval', 10)); // new
-        $this->assertSame(true, static::$_table->set('logPath', '/other/log/path')); // updated
+        $this->assertSame(true, static::$_table->set('packagePath', '/other/package/path')); // updated
         $this->assertSame(true, static::$_table->set('inspectRegistry', true)); // ivalue true, updated
         $this->assertSame(true, static::$_table->set('saveRawData', false)); // ivalue false, updated
         $this->assertSame(true, static::$_table->set('sessionRequired', true)); // ivalue true, new

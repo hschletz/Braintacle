@@ -24,9 +24,8 @@
 
 
 # Directory where log files are written. Must be writable for web server.
-# If set to "syslog", messages get logged via Sys::Syslog instead.
-# No extra logfile needs to be maintained in that case.
-PerlSetEnv OCS_OPT_LOGPATH "syslog"
+# If set to "syslog" (the default), messages get logged via Sys::Syslog instead.
+PerlSetEnv OCS_OPT_LOGPATH syslog
 
 # Name of the DBD driver (mysql,Pg...). This is case sensitive!
 PerlSetEnv OCS_DB_TYPE Pg

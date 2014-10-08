@@ -1,6 +1,11 @@
 # Result set for testSet(), ordered by name
 config:
   -
+    # updated
+    name: "DOWNLOAD_PACK_DIR"
+    ivalue: null
+    tvalue: "/other/package/path"
+  -
     # unchanged
     name: "FREQUENCY"
     ivalue: 42
@@ -15,11 +20,6 @@ config:
     name: "INVENTORY_SESSION_ONLY"
     ivalue: 1
     tvalue: null
-  -
-    # updated
-    name: "LOGPATH"
-    ivalue: null
-    tvalue: "/other/log/path"
   -
     # boolean false, new
     name: "PROLOG_FILTER_ON"

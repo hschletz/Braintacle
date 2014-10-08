@@ -12,9 +12,9 @@ config:
     tvalue: null
   -
     # Example for tvalue with non-default content
-    name: "LOGPATH"
+    name: "DOWNLOAD_PACK_DIR"
     ivalue: null
-    tvalue: "/example/log/path"
+    tvalue: "/example/package/path"
   -
     # Example for ivalue with boolean false
     name: "REGISTRY"

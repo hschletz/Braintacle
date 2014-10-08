@@ -67,7 +67,6 @@ namespace Model;
  * @property integer $limitInventoryInterval  Minimum seconds between connections. Default: 300
  * @property integer $lockValidity  Seconds before a computer's lock expires. Default: 600
  * @property integer $logLevel  Server logging verbosity (0-2). Default: 0
- * @property string $logPath  Path to server logfiles or "syslog". Default: /var/log/ocsinventory-server
  * @property string $packageBaseUriHttp  Base URI for package download (HTTP), without http:// prefix
  * @property string $packageBaseUriHttps  Base URI for package download (HTTPS), without https:// prefix
  * @property string $packageCertificate  Certificate path for packages. Default: INSTALL_PATH/cacert.pem
@@ -136,7 +135,6 @@ class Config
         'limitInventoryInterval' => 300,
         'lockValidity' => 600,
         'logLevel' => 0,
-        'logPath' => '/var/log/ocsinventory-server',
         'packageCertificate' => 'INSTALL_PATH/cacert.pem',
         'packageDeployment' => 0,
         'saveDir' => '/tmp',

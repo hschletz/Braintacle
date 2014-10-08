@@ -6,6 +6,11 @@ config:
     tvalue: null
   -
     # unchanged
+    name: "DOWNLOAD_PACK_DIR"
+    ivalue: null
+    tvalue: "/example/package/path"
+  -
+    # unchanged
     name: "FREQUENCY"
     ivalue: 42
     tvalue: null
@@ -14,11 +19,6 @@ config:
     name: "GENERATE_OCS_FILES"
     ivalue: 1
     tvalue: null
-  -
-    # unchanged
-    name: "LOGPATH"
-    ivalue: null
-    tvalue: "/example/log/path"
   -
     # unchanged
     name: "REGISTRY"

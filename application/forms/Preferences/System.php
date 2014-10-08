@@ -34,7 +34,6 @@ class Form_Preferences_System extends Form_Preferences
         'sessionValidity' => 'integer',
         'sessionCleanupInterval' => 'integer',
         'sessionRequired' => 'bool',
-        'logPath' => 'text',
         'logLevel' => array(0, 1, 2),
         'autoMergeDuplicates' => 'bool',
     );
@@ -66,9 +65,6 @@ class Form_Preferences_System extends Form_Preferences
             'sessionRequired' => $translate->_(
                 'Session required for inventory'
             ),
-            'logPath' => $translate->_(
-                'Path to logfiles'
-            ),
             'logLevel' => $translate->_(
                 'Log level'
             ),
@@ -88,8 +84,6 @@ class Form_Preferences_System extends Form_Preferences
         $this->getElement('sessionCleanupInterval')
             ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');
-        $this->getElement('logPath')
-            ->addValidator(new Braintacle_Validate_DirectoryWritable);
     }
 
     /**

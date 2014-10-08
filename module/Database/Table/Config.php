@@ -70,7 +70,6 @@ class Config extends \Database\AbstractTable
         'limitInventoryInterval' => 'INVENTORY_FILTER_FLOOD_IP_CACHE_TIME',
         'lockValidity' => 'LOCK_REUSE_TIME',
         'logLevel' => 'LOGLEVEL',
-        'logPath' => 'LOGPATH',
         'packageBaseUriHttp' => 'BRAINTACLE_DEFAULT_DOWNLOAD_LOCATION',
         'packageBaseUriHttps' => 'BRAINTACLE_DEFAULT_INFOFILE_LOCATION',
         'packageCertificate' => 'BRAINTACLE_DEFAULT_CERTIFICATE',
@@ -201,6 +200,7 @@ class Config extends \Database\AbstractTable
                     'IPDISCOVER_USE_GROUPS', // default: 1
                     'LOCAL_PORT', // unused
                     'LOCAL_SERVER', // unused
+                    'LOGPATH', // set in server config file only
                     'SNMP_INVENTORY_DIFF', // default: 1
                     'TRACE_DELETED', // default: 0
                     'UPDATE', // default: 0

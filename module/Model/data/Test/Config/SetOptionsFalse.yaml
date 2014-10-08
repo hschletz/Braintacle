@@ -6,6 +6,11 @@ config:
     tvalue: "0"
   -
     # not affected by test
+    name: "DOWNLOAD_PACK_DIR"
+    ivalue: null
+    tvalue: "/example/package/path"
+  -
+    # not affected by test
     name: "FREQUENCY"
     ivalue: 42
     tvalue: null
@@ -14,11 +19,6 @@ config:
     name: "GENERATE_OCS_FILES"
     ivalue: 1
     tvalue: null
-  -
-    # not affected by test
-    name: "LOGPATH"
-    ivalue: null
-    tvalue: "/example/log/path"
   -
     # not affected by test
     name: "REGISTRY"
