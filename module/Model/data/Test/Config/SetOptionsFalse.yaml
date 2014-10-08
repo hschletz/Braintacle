@@ -11,7 +11,7 @@ config:
     tvalue: null
   -
     # not affected by test
-    name: "IPDISCOVER_NO_POSTPONE"
+    name: "GENERATE_OCS_FILES"
     ivalue: 1
     tvalue: null
   -

@@ -273,7 +273,7 @@ our %CONFIG = (
   },
   IPDISCOVER_NO_POSTPONE => {
     type => 'IVALUE',
-    default => 0,
+    default => 1,
     unit => 'NA',
     description => 'Disable the time before a first election (not recommended)',
     level => CANSKIP,

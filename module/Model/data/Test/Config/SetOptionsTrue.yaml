@@ -10,13 +10,13 @@ config:
     ivalue: 42
     tvalue: null
   -
-    # ivalue, default 0
-    name: "INVENTORY_FILTER_FLOOD_IP"
+    # not affected by test
+    name: "GENERATE_OCS_FILES"
     ivalue: 1
     tvalue: null
   -
-    # not affected by test
-    name: "IPDISCOVER_NO_POSTPONE"
+    # ivalue, default 0
+    name: "INVENTORY_FILTER_FLOOD_IP"
     ivalue: 1
     tvalue: null
   -

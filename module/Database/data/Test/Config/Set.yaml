@@ -6,14 +6,14 @@ config:
     ivalue: 42
     tvalue: null
   -
+    # boolean false, updated
+    name: "GENERATE_OCS_FILES"
+    ivalue: 0
+    tvalue: null
+  -
     # boolean true, new
     name: "INVENTORY_SESSION_ONLY"
     ivalue: 1
-    tvalue: null
-  -
-    # boolean false, updated
-    name: "IPDISCOVER_NO_POSTPONE"
-    ivalue: 0
     tvalue: null
   -
     # updated

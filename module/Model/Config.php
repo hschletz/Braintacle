@@ -76,7 +76,6 @@ namespace Model;
  * @property string $saveFormat  File format for saving: XML (uncompressed) or OCS (zlib). Default: OCS
  * @property bool $saveOverwrite  Overwrite existing files (otherwise, append version to filename). Default: false
  * @property bool $saveRawData  Evaluate saveDir, saveFormat and saveOverwrite options. default: false
- * @property bool $scanAlways  Immediate network scans, even if no computer qualifies for scanning. Default: false
  * @property integer $scanArpDelay  Delay in milliseconds (>=10) between single ARP scans. Default: 100
  * @property integer $scannerMaxDays  Maximum days before a computer is replaced for scanning. Default: 14
  * @property integer $scannerMinDays  Minimum days before a scanning computer is replaced. Default: 1
@@ -144,7 +143,6 @@ class Config
         'saveFormat' => 'OCS',
         'saveOverwrite' => 0,
         'saveRawData' => 0,
-        'scanAlways' => 0,
         'scanArpDelay' => 100,
         'scannerMaxDays' => 14,
         'scannerMinDays' => 1,

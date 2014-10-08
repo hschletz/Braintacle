@@ -80,7 +80,6 @@ class Config extends \Database\AbstractTable
         'saveFormat' => 'OCS_FILES_FORMAT',
         'saveOverwrite' => 'OCS_FILES_OVERWRITE',
         'saveRawData' => 'GENERATE_OCS_FILES',
-        'scanAlways' => 'IPDISCOVER_NO_POSTPONE',
         'scanArpDelay' => 'IPDISCOVER_LATENCY',
         'scannerMaxDays' => 'IPDISCOVER_MAX_ALIVE',
         'scannerMinDays' => 'IPDISCOVER_BETTER_THRESHOLD',
@@ -121,7 +120,6 @@ class Config extends \Database\AbstractTable
         'scannersPerSubnet',
         'scannerMinDays',
         'scannerMaxDays',
-        'scanAlways',
         'scanArpDelay',
         'scanSnmp',
         'sessionCleanupInterval',
@@ -199,6 +197,7 @@ class Config extends \Database\AbstractTable
                     'INVENTORY_FILTER_ENABLED', // default: 0
                     'INVENTORY_TRANSACTION', // default: 1
                     'INVENTORY_WRITE_DIFF', // default: 1
+                    'IPDISCOVER_NO_POSTPONE', // default: 1
                     'IPDISCOVER_USE_GROUPS', // default: 1
                     'LOCAL_PORT', // unused
                     'LOCAL_SERVER', // unused

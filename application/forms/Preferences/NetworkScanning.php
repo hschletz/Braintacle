@@ -33,7 +33,6 @@ class Form_Preferences_NetworkScanning extends Form_Preferences
         'scanSnmp' => 'bool',
         'scannerMinDays' => 'integer',
         'scannerMaxDays' => 'integer',
-        'scanAlways' => 'bool',
         'scanArpDelay' => 'integer',
     );
 
@@ -55,9 +54,6 @@ class Form_Preferences_NetworkScanning extends Form_Preferences
             ),
             'scannerMaxDays' => $translate->_(
                 'Maximum days before a scanning computer is replaced'
-            ),
-            'scanAlways' => $translate->_(
-                'Always scan, even if no computer meets quality criteria'
             ),
             'scanArpDelay' => $translate->_(
                 'Delay (in milliseconds) between ARP requests'

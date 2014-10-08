@@ -57,7 +57,7 @@ class ConfigTest extends AbstractTest
         $this->assertSame(true, static::$_table->set('contactInterval', 10)); // new
         $this->assertSame(true, static::$_table->set('logPath', '/other/log/path')); // updated
         $this->assertSame(true, static::$_table->set('inspectRegistry', true)); // ivalue true, updated
-        $this->assertSame(true, static::$_table->set('scanAlways', false)); // ivalue false, updated
+        $this->assertSame(true, static::$_table->set('saveRawData', false)); // ivalue false, updated
         $this->assertSame(true, static::$_table->set('sessionRequired', true)); // ivalue true, new
         $this->assertSame(true, static::$_table->set('trustedNetworksOnly', false)); // ivalue false, new
         $this->assertTablesEqual(

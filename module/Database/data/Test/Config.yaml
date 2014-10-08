@@ -6,6 +6,11 @@ config:
     ivalue: 42
     tvalue: null
   -
+    # Example for ivalue with boolean true
+    name: "GENERATE_OCS_FILES"
+    ivalue: 1
+    tvalue: null
+  -
     # Example for tvalue with non-default content
     name: "LOGPATH"
     ivalue: null
@@ -14,9 +19,4 @@ config:
     # Example for ivalue with boolean false
     name: "REGISTRY"
     ivalue: 0
-    tvalue: null
-  -
-    # Example for ivalue with boolean true
-    name: "IPDISCOVER_NO_POSTPONE"
-    ivalue: 1
     tvalue: null
