@@ -41,7 +41,6 @@ class UpdateTest extends \Console\Test\AbstractFormTest
     {
         $fieldset = $this->_form->get('Deploy');
         $this->assertInstanceOf('Zend\Form\Fieldset', $fieldset);
-        $this->assertInstanceOf('Zend\Form\Fieldset', $fieldset);
         $this->assertInstanceOf('Zend\Form\Element\Checkbox', $fieldset->get('Nonnotified'));
         $this->assertInstanceOf('Zend\Form\Element\Checkbox', $fieldset->get('Success'));
         $this->assertInstanceOf('Zend\Form\Element\Checkbox', $fieldset->get('Notified'));
