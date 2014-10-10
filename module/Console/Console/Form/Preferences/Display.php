@@ -17,33 +17,22 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Forms
  */
+
+namespace Console\Form\Preferences;
+
 /**
  * Form for display/setting of 'display' preferences
- * @package Forms
  */
-class Form_Preferences_Display extends Form_Preferences
+class Display extends AbstractForm
 {
-
     /** {@inheritdoc} */
-    protected $_types = array(
-        'displayBlacklistedSoftware' => 'bool',
-    );
-
-    /**
-     * Translate labels before calling parent implementation
-     */
     public function init()
     {
-        $translate = Zend_Registry::get('Zend_Translate');
-        $this->_labels = array(
-            'displayBlacklistedSoftware' => $translate->_(
-                'Display ignored software'
-            ),
-        );
         parent::init();
-    }
 
+        $displayBlacklistedSoftware = new \Zend\Form\Element\Checkbox('displayBlacklistedSoftware');
+        $displayBlacklistedSoftware->setLabel('Display ignored software');
+        $this->get('Preferences')->add($displayBlacklistedSoftware);
+    }
 }

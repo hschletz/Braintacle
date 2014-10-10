@@ -51,24 +51,33 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     protected $_registryValue;
 
     /**
+     * Application config
+     * @var \Model\Config
+     */
+    protected $_config;
+
+    /**
      * Constructor
      *
      * @param \Zend\Form\FormElementManager $formManager
      * @param \Model_UserDefinedInfo $customFields
      * @param \Model_NetworkDeviceType $deviceType
      * @param \Model_RegistryValue $registryValue
+     * @param \Model\Config $config
      */
     public function __construct(
         \Zend\Form\FormElementManager $formManager,
         \Model_UserDefinedInfo $customFields,
         \Model_NetworkDeviceType $deviceType,
-        \Model_RegistryValue $registryValue
+        \Model_RegistryValue $registryValue,
+        \Model\Config $config
     )
     {
         $this->_formManager = $formManager;
         $this->_customFields = $customFields;
         $this->_deviceType = $deviceType;
         $this->_registryValue = $registryValue;
+        $this->_config = $config;
     }
 
     /**
@@ -84,7 +93,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "Display" page
      *
-     * @return \Zend\View\Model\ViewModel View model for "form.php" template
+     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
      */
     public function displayAction()
     {
@@ -94,7 +103,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "Inventory" page
      *
-     * @return \Zend\View\Model\ViewModel View model for "form.php" template
+     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
      */
     public function inventoryAction()
     {
@@ -104,7 +113,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "Agent" page
      *
-     * @return \Zend\View\Model\ViewModel View model for "form.php" template
+     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
      */
     public function agentAction()
     {
@@ -114,7 +123,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "Packages" page
      *
-     * @return \Zend\View\Model\ViewModel View model for "form.php" template
+     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
      */
     public function packagesAction()
     {
@@ -124,7 +133,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "Download" page
      *
-     * @return \Zend\View\Model\ViewModel View model for "form.php" template
+     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
      */
     public function downloadAction()
     {
@@ -134,7 +143,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "Network scanning" page
      *
-     * @return \Zend\View\Model\ViewModel View model for "form.php" template
+     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
      */
     public function networkscanningAction()
     {
@@ -144,7 +153,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "Groups" page
      *
-     * @return \Zend\View\Model\ViewModel View model for "form.php" template
+     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
      */
     public function groupsAction()
     {
@@ -154,7 +163,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "Raw data" page
      *
-     * @return \Zend\View\Model\ViewModel View model for "form.php" template
+     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
      */
     public function rawdataAction()
     {
@@ -164,7 +173,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "Filters" page
      *
-     * @return \Zend\View\Model\ViewModel View model for "form.php" template
+     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
      */
     public function filtersAction()
     {
@@ -174,7 +183,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "System" page
      *
-     * @return \Zend\View\Model\ViewModel View model for "form.php" template
+     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
      */
     public function systemAction()
     {
@@ -296,15 +305,40 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      * Standard preferences handling via preferences form subclass
      *
      * @param string $name Name of the form service
-     * @return \Zend\View\Model\ViewModel View model for "form.php" template
+     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
      */
     protected function _useForm($name)
     {
-        $form = $this->_formManager->getServiceLocator()->get($name);
-        if ($this->getRequest()->isGet()) {
-            $form->loadDefaults();
+        $form = $this->_formManager->get($name);
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->params()->fromPost());
+            if ($form->isValid()) {
+                // Flatten Preferences array, i.e. incorporate fields from a
+                // fieldset into a single array.
+                $this->_config->setOptions(
+                    new \RecursiveIteratorIterator(
+                        new \RecursiveArrayIterator($form->getData()['Preferences'])
+                    )
+                );
+                return $this->redirectToRoute(
+                    'preferences',
+                    $this->getEvent()->getRouteMatch()->getParams()['action']
+                );
+            }
         } else {
-            $form->process($this->params()->fromPost());
+            $preferences = array();
+            foreach ($form->get('Preferences') as $element) {
+                $name = $element->getName();
+                if ($element instanceof \Zend\Form\Fieldset) {
+                    foreach ($element as $subElement) {
+                        $subElementName = $subElement->getName();
+                        $preferences[$name][$subElementName] = $this->_config->$subElementName;
+                    }
+                } else {
+                    $preferences[$name] = $this->_config->$name;
+                }
+            }
+            $form->setData(array('Preferences' => $preferences));
         }
         return $this->printForm($form);
     }

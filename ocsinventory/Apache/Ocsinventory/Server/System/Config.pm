@@ -385,7 +385,7 @@ our %CONFIG = (
   },
   INVENTORY_FILTER_FLOOD_IP_CACHE_TIME => {
     type => 'IVALUE',
-    default => 300,
+    default => 0,
     unit => 'second',
     description => 'Period definition for INVENTORY_FILTER_FLOOD_IP',
     level => CANSKIP,

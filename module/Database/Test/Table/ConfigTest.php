@@ -66,6 +66,15 @@ class ConfigTest extends AbstractTest
         );
     }
 
+    public function testSetIntegerEmptyStringToNull()
+    {
+        static::$_table->set('scannersPerSubnet', '');
+        $this->assertTablesEqual(
+            $this->_loadDataSet('SetIntegerEmptyStringToNull')->getTable('config'),
+            $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
+        );
+    }
+
     public function testSetInvalidOption()
     {
         $this->setExpectedException('InvalidArgumentException', 'Invalid option: invalid');
@@ -79,5 +88,57 @@ class ConfigTest extends AbstractTest
             'Tried to set non-integer value "invalid" to integer option "inventoryInterval"'
         );
         static::$_table->set('inventoryInterval', 'invalid');
+    }
+
+    public function testGetLimitInventoryIntervalDisabled()
+    {
+        static::$_table->insert(
+            array(
+                'name' => 'INVENTORY_FILTER_FLOOD_IP',
+                'ivalue' => 0,
+            )
+        );
+        static::$_table->insert(
+            array(
+                'name' => 'INVENTORY_FILTER_FLOOD_IP_CACHE_TIME',
+                'ivalue' => 42,
+            )
+        );
+        $this->assertNull(static::$_table->get('limitInventoryInterval'));
+    }
+
+    public function testGetLimitInventoryIntervalEnabled()
+    {
+        static::$_table->insert(
+            array(
+                'name' => 'INVENTORY_FILTER_FLOOD_IP',
+                'ivalue' => 1,
+            )
+        );
+        static::$_table->insert(
+            array(
+                'name' => 'INVENTORY_FILTER_FLOOD_IP_CACHE_TIME',
+                'ivalue' => 42,
+            )
+        );
+        $this->assertEquals(42, static::$_table->get('limitInventoryInterval'));
+    }
+
+    public function testSetLimitInventoryIntervalDisabled()
+    {
+        static::$_table->set('limitInventoryInterval', '0');
+        $this->assertSame(
+            '0',
+            static::$_table->select(array('name' => 'INVENTORY_FILTER_FLOOD_IP'))->current()['ivalue']
+        );
+    }
+
+    public function testSetLimitInventoryIntervalEnabled()
+    {
+        static::$_table->set('limitInventoryInterval', '42');
+        $this->assertSame(
+            '1',
+            static::$_table->select(array('name' => 'INVENTORY_FILTER_FLOOD_IP'))->current()['ivalue']
+        );
     }
 }

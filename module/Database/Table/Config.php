@@ -66,7 +66,6 @@ class Config extends \Database\AbstractTable
         'inspectRegistry' => 'REGISTRY',
         'inventoryFilter' => 'INVENTORY_FILTER_ON',
         'inventoryInterval' => 'FREQUENCY',
-        'limitInventory' => 'INVENTORY_FILTER_FLOOD_IP',
         'limitInventoryInterval' => 'INVENTORY_FILTER_FLOOD_IP_CACHE_TIME',
         'lockValidity' => 'LOCK_REUSE_TIME',
         'logLevel' => 'LOGLEVEL',
@@ -109,7 +108,6 @@ class Config extends \Database\AbstractTable
         'inspectRegistry',
         'inventoryFilter',
         'inventoryInterval',
-        'limitInventory',
         'limitInventoryInterval',
         'lockValidity',
         'logLevel',
@@ -220,6 +218,12 @@ class Config extends \Database\AbstractTable
      */
     public function get($option)
     {
+        // limitInventoryInterval is only meaningful if enabled.
+        if ($option == 'limitInventoryInterval' and
+            !$this->select(array('name' => 'INVENTORY_FILTER_FLOOD_IP'))->current()['ivalue']
+        ) {
+            return null;
+        }
         $name = $this->getDbIdentifier($option);
         $column = $this->_getColumnName($option);
         $this->columns = array($column);
@@ -248,14 +252,35 @@ class Config extends \Database\AbstractTable
             // Would otherwise be cast to empty string
             $value = 0;
         }
-        if ($column == 'ivalue' and !preg_match('/^-?[0-9]+$/', $value)) {
-            throw new \InvalidArgumentException(
-                sprintf('Tried to set non-integer value "%s" to integer option "%s"', $value, $option)
-            );
+        if ($column == 'ivalue') {
+            if ($value === '') {
+                $value = null;
+            } elseif (!preg_match('/^-?[0-9]+$/', $value)) {
+                throw new \InvalidArgumentException(
+                    sprintf('Tried to set non-integer value "%s" to integer option "%s"', $value, $option)
+                );
+            }
         }
-        $this->columns = array($column);
-        $row = $this->select(array('name' => $this->getDbIdentifier($option)))->current();
+        $valueChanged = $this->_set($name, $column, $value);
+        if ($valueChanged and $option == 'limitInventoryInterval') {
+            $this->_set('INVENTORY_FILTER_FLOOD_IP', 'ivalue', (integer) (bool) $value);
+        }
+        return $valueChanged;
+    }
+
+    /**
+     * Write option value to the database using raw names
+     *
+     * @param string $name DB identifier
+     * @param string $column column name (ivalue|tvalue)
+     * @param mixed $value Option value
+     * @return bool TRUE if value changed
+     */
+    protected function _set($name, $column, $value)
+    {
         $valueChanged = true;
+        $this->columns = array($column);
+        $row = $this->select(array('name' => $name))->current();
         if ($row) {
             $oldValue = $row->$column;
             if ($oldValue === (string) $value) {

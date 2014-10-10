@@ -63,8 +63,7 @@ namespace Model;
  * @property integer $groupCacheExpirationInterval  Seconds between group cache rebuilds. Default: 43200
  * @property bool $inspectRegistry  Let windows agent inspect configured registry values. Default: true
  * @property bool $inventoryFilter  Evaluate the limitInventory and limitInventoryInterval options. Default: false
- * @property bool $limitInventory  Limit inventory processing from a particular IP address. Default: false
- * @property integer $limitInventoryInterval  Minimum seconds between connections. Default: 300
+ * @property integer $limitInventoryInterval  Minimum seconds between connections.
  * @property integer $lockValidity  Seconds before a computer's lock expires. Default: 600
  * @property integer $logLevel  Server logging verbosity (0-2). Default: 0
  * @property string $packageBaseUriHttp  Base URI for package download (HTTP), without http:// prefix
@@ -112,7 +111,6 @@ class Config
         'defaultDeployNonnotified' => '1',
         'defaultDeployNotified' => '1',
         'defaultDeploySuccess' => '1',
-        'defaultMaxFragmentSize' => '0',
         'defaultMergeGroups' => '1',
         'defaultMergeCustomFields' => '1',
         'defaultPackagePriority' => '5',
@@ -131,13 +129,10 @@ class Config
         'inspectRegistry' => 1,
         'inventoryFilter' => 0,
         'inventoryInterval' => 0,
-        'limitInventory' => 0,
-        'limitInventoryInterval' => 300,
         'lockValidity' => 600,
         'logLevel' => 0,
         'packageCertificate' => 'INSTALL_PATH/cacert.pem',
         'packageDeployment' => 0,
-        'saveDir' => '/tmp',
         'saveFormat' => 'OCS',
         'saveOverwrite' => 0,
         'saveRawData' => 0,

@@ -29,3 +29,14 @@ require_once('Zend/Console/Console.php');
 \Library\Application::init('Console', false);
 
 \Locale::setDefault('de_DE'); // Force environment-independent locale
+
+// Get absolute path to vfsStream library
+\Zend\Loader\AutoloaderFactory::factory(
+    array(
+        '\Zend\Loader\StandardAutoloader' => array(
+            'namespaces' => array(
+                'org\bovigo\vfs' => stream_resolve_include_path('org/bovigo/vfs'),
+            ),
+        )
+    )
+);

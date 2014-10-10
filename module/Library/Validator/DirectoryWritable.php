@@ -17,47 +17,49 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Library
  */
+
+namespace Library\Validator;
+
 /**
  * Validate string to be a path to a writable directory
- * @package Library
  */
-class Braintacle_Validate_DirectoryWritable extends Zend_Validate_Abstract
+class DirectoryWritable extends \Zend\Validator\AbstractValidator
 {
     const DIRECTORY = 'directory';
     const WRITABLE = 'writable';
 
+    // @codingStandardsIgnoreStart
     /**
      * Validation failure message template definitions
-     * @var array
+     * @var string[]
      */
-    protected $_messageTemplates = array(
+    protected $messageTemplates = array(
         self::DIRECTORY => "'%value%' is not a directory or inaccessible",
         self::WRITABLE => "Directory '%value%' is not writable",
     );
+    // @codingStandardsIgnoreEnd
 
     /**
      * Returns true if $value is a directory and writable
+     *
      * @param string $value String to be validated
      * @return bool
      */
     public function isValid($value)
     {
-        $this->_setValue($value);
+        $this->setValue($value);
 
         if (is_dir($value)) {
             if (is_writable($value)) {
                 return true;
             } else {
-                $this->_error(self::WRITABLE);
+                $this->error(self::WRITABLE);
                 return false;
             }
         } else {
-            $this->_error(self::DIRECTORY);
+            $this->error(self::DIRECTORY);
             return false;
         }
     }
-
 }

@@ -371,13 +371,6 @@ input[size="8"]
 {
     width: 8em;
 }
-#Deploy-label
-{
-    display: none;
-}
-.badValue {
-    background-color: red;
-}
 
 .table_network_devices, .form_manageregistryvalues table {
     font-size: 80%;
@@ -585,15 +578,15 @@ td.formElement {
     max-width: 20em;
 }
 
-.form_package_update fieldset label span {
+.form_package_update fieldset label span, .form_preferences_packages fieldset label span {
     text-align: left;
 }
 
-.form_package_update fieldset {
+.form_package_update fieldset, .form_preferences_packages fieldset {
     margin: 1.4ex .9em 1.4ex .9em;
 }
 
-.form_package_update legend {
+.form_package_update legend, .form_preferences_packages legend {
     display: none;
 }
 

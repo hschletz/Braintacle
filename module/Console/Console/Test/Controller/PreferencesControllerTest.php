@@ -51,18 +51,21 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     protected $_registryValue;
 
     /**
+     * Config mock
+     * @var \Model\Config
+     */
+    protected $_config;
+
+    /**
      * Set up mock objects
      */
     public function setUp()
     {
-        $this->_legacyFormManager = $this->getMock('Zend\ServiceManager\ServiceManager');
         $this->_formManager = $this->getMock('Zend\Form\FormElementManager');
-        $this->_formManager->expects($this->any())
-                           ->method('getServiceLocator')
-                           ->will($this->returnValue($this->_legacyFormManager));
         $this->_customFields = $this->getMockBuilder('Model_UserDefinedInfo')->disableOriginalConstructor()->getMock();
         $this->_deviceType = $this->getMock('Model_NetworkDeviceType');
         $this->_registryValue = $this->getMock('Model_RegistryValue');
+        $this->_config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
         parent::setUp();
     }
 
@@ -73,7 +76,8 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
             $this->_formManager,
             $this->_customFields,
             $this->_deviceType,
-            $this->_registryValue
+            $this->_registryValue,
+            $this->_config
         );
     }
 
@@ -98,9 +102,14 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_testUseFormGet('display', 'Display');
     }
 
-    public function testDisplayActionPost()
+    public function testDisplayActionPostInvalid()
     {
-        $this->_testUseFormPost('display', 'Display');
+        $this->_testUseFormPostInvalid('display', 'Display');
+    }
+
+    public function testDisplayActionPostValid()
+    {
+        $this->_testUseFormPostValid('display', 'Display');
     }
 
     public function testInventoryActionGet()
@@ -108,9 +117,14 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_testUseFormGet('inventory', 'Inventory');
     }
 
-    public function testInventoryActionPost()
+    public function testInventoryActionPostInvalid()
     {
-        $this->_testUseFormPost('inventory', 'Inventory');
+        $this->_testUseFormPostInvalid('inventory', 'Inventory');
+    }
+
+    public function testInventoryActionPostValid()
+    {
+        $this->_testUseFormPostValid('inventory', 'Inventory');
     }
 
     public function testAgentActionGet()
@@ -118,19 +132,97 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_testUseFormGet('agent', 'Agent');
     }
 
-    public function testAgentActionPost()
+    public function testAgentActionPostInvalid()
     {
-        $this->_testUseFormPost('agent', 'Agent');
+        $this->_testUseFormPostInvalid('agent', 'Agent');
+    }
+
+    public function testAgentActionPostValid()
+    {
+        $this->_testUseFormPostValid('agent', 'Agent');
     }
 
     public function testPackagesActionGet()
     {
-        $this->_testUseFormGet('packages', 'Packages');
+        $deploy = new \Zend\Form\Fieldset('Deploy');
+        $deploy->add(new \Zend\Form\Element\Text('pref1'));
+        $preferences = new \Zend\Form\Fieldset('Preferences');
+        $preferences->add($deploy);
+        $preferences->add(new \Zend\Form\Element\Text('pref2'));
+        $formData = array(
+            'Preferences' => array(
+                'Deploy' => array('pref1' => 'value1'),
+                'pref2' => 'value2',
+            ),
+        );
+        $form = $this->getMock("Console\Form\Preferences\Packages");
+        $form->method('get')
+             ->willReturn($preferences);
+        $form->expects($this->once())
+             ->method('setData')
+             ->with($formData);
+        $form->expects($this->never())
+             ->method('getData');
+        $form->expects($this->never())
+             ->method('isValid');
+        $form->expects($this->once())
+             ->method('render')
+             ->willReturn('<form></form>');
+        $this->_formManager->expects($this->once())
+                           ->method('get')
+                           ->with("Console\Form\Preferences\Packages")
+                           ->will($this->returnValue($form));
+        $this->_config->method('__get')
+                      ->will($this->returnValueMap(array(array('pref1', 'value1'), array('pref2', 'value2'))));
+        $this->_config->expects($this->never())
+                      ->method('setOptions');
+        $this->dispatch("/console/preferences/packages");
+        $this->assertResponseStatusCode(200);
+        $this->assertXPathQuery('//form');
     }
 
-    public function testPackagesActionPost()
+    public function testPackagesActionPostInvalid()
     {
-        $this->_testUseFormPost('packages', 'Packages');
+        // No special test because form data is not evaluated in this test
+        $this->_testUseFormPostInvalid('packages', 'Packages');
+    }
+
+    public function testPackagesActionPostValid()
+    {
+        $postData = array(
+            'Preferences' => array(
+                'Deploy' => array('pref1' => 'value1'),
+                'pref2' => 'value2',
+            )
+        );
+        $form = $this->getMock("Console\Form\Preferences\Packages");
+        $form->expects($this->once())
+             ->method('setData')
+             ->with($postData);
+        $form->expects($this->once())
+             ->method('getData')
+             ->willReturn($postData);
+        $form->expects($this->once())
+             ->method('isValid')
+             ->willReturn(true);
+        $form->expects($this->never())
+             ->method('render');
+        $this->_formManager->expects($this->once())
+                           ->method('get')
+                           ->with("Console\Form\Preferences\Packages")
+                           ->will($this->returnValue($form));
+        $this->_config->expects($this->once())
+                      ->method('setOptions')
+                      ->with(
+                          $this->callback(
+                              function($options) {
+                                    $options = iterator_to_array($options);
+                                    return ($options == array('pref1' => 'value1', 'pref2' => 'value2'));
+                              }
+                          )
+                      );
+        $this->dispatch("/console/preferences/packages", 'POST', $postData);
+        $this->assertRedirectTo("/console/preferences/packages/");
     }
 
     public function testDownloadActionGet()
@@ -138,9 +230,14 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_testUseFormGet('download', 'Download');
     }
 
-    public function testDownloadActionPost()
+    public function testDownloadActionPostInvalid()
     {
-        $this->_testUseFormPost('download', 'Download');
+        $this->_testUseFormPostInvalid('download', 'Download');
+    }
+
+    public function testDownloadActionPostValid()
+    {
+        $this->_testUseFormPostValid('download', 'Download');
     }
 
     public function testNetworkscanningActionGet()
@@ -148,9 +245,14 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_testUseFormGet('networkscanning', 'NetworkScanning');
     }
 
-    public function testNetworkscanningActionPost()
+    public function testNetworkscanningActionPostInvalid()
     {
-        $this->_testUseFormPost('networkscanning', 'NetworkScanning');
+        $this->_testUseFormPostInvalid('networkscanning', 'NetworkScanning');
+    }
+
+    public function testNetworkscanningActionPostValid()
+    {
+        $this->_testUseFormPostValid('networkscanning', 'NetworkScanning');
     }
 
     public function testGroupsActionGet()
@@ -158,9 +260,14 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_testUseFormGet('groups', 'Groups');
     }
 
-    public function testGroupsActionPost()
+    public function testGroupsActionPostInvalid()
     {
-        $this->_testUseFormPost('groups', 'Groups');
+        $this->_testUseFormPostInvalid('groups', 'Groups');
+    }
+
+    public function testGroupsActionPostValid()
+    {
+        $this->_testUseFormPostValid('groups', 'Groups');
     }
 
     public function testRawdataActionGet()
@@ -168,9 +275,14 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_testUseFormGet('rawdata', 'RawData');
     }
 
-    public function testRawdataActionPost()
+    public function testRawdataActionPostInvalid()
     {
-        $this->_testUseFormPost('rawdata', 'RawData');
+        $this->_testUseFormPostInvalid('rawdata', 'RawData');
+    }
+
+    public function testRawdataActionPostValid()
+    {
+        $this->_testUseFormPostValid('rawdata', 'RawData');
     }
 
     public function testFiltersActionGet()
@@ -178,9 +290,14 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_testUseFormGet('filters', 'Filters');
     }
 
-    public function testFiltersActionPost()
+    public function testFiltersActionPostInvalid()
     {
-        $this->_testUseFormPost('filters', 'Filters');
+        $this->_testUseFormPostInvalid('filters', 'Filters');
+    }
+
+    public function testFiltersActionPostValid()
+    {
+        $this->_testUseFormPostValid('filters', 'Filters');
     }
 
     public function testSystemActionGet()
@@ -188,9 +305,14 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_testUseFormGet('system', 'System');
     }
 
-    public function testSystemActionPost()
+    public function testSystemActionPostInvalid()
     {
-        $this->_testUseFormPost('system', 'System');
+        $this->_testUseFormPostInvalid('system', 'System');
+    }
+
+    public function testSystemActionPostValid()
+    {
+        $this->_testUseFormPostValid('system', 'System');
     }
 
     /**
@@ -201,42 +323,111 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
      */
     protected function _testUseFormGet($action, $formClass)
     {
-        $form = $this->getMock("Form_Preferences_$formClass");
+        $preferences = new \Zend\Form\Fieldset('Preferences');
+        $preferences->add(new \Zend\Form\Element\Text('pref1'));
+        $preferences->add(new \Zend\Form\Element\Text('pref2'));
+        $formData = array(
+            'Preferences' => array('pref1' => 'value1', 'pref2' => 'value2')
+        );
+        $form = $this->getMock("Console\Form\Preferences\\$formClass");
+        $form->method('get')
+             ->willReturn($preferences);
         $form->expects($this->once())
-             ->method('loadDefaults');
+             ->method('setData')
+             ->with($formData);
+        $form->expects($this->never())
+             ->method('getData');
+        $form->expects($this->never())
+             ->method('isValid');
         $form->expects($this->once())
-             ->method('__toString')
-             ->will($this->returnValue(''));
-        $this->_legacyFormManager->expects($this->once())
+             ->method('render')
+             ->willReturn('<form></form>');
+        $this->_formManager->expects($this->once())
                            ->method('get')
                            ->with("Console\Form\Preferences\\$formClass")
                            ->will($this->returnValue($form));
+        $this->_config->method('__get')
+                      ->will($this->returnValueMap(array(array('pref1', 'value1'), array('pref2', 'value2'))));
+        $this->_config->expects($this->never())
+                      ->method('setOptions');
         $this->dispatch("/console/preferences/$action");
         $this->assertResponseStatusCode(200);
+        $this->assertXPathQuery('//form');
     }
 
     /**
-     * Base tests for all _useform()-based actions (POST method)
+     * Base tests for all _useform()-based actions (POST method, invalid data)
      *
      * @param string $action "action" part of URI
      * @param string $formClass Form name without namespace
      */
-    protected function _testUseFormPost($action, $formClass)
+    protected function _testUseFormPostInvalid($action, $formClass)
     {
-        $postData = array('key' => 'value');
-        $form = $this->getMock("Form_Preferences_$formClass");
+        $postData = array(
+            'Preferences' => array('pref1' => 'value1', 'pref2' => 'value2')
+        );
+        $form = $this->getMock("Console\Form\Preferences\\$formClass");
         $form->expects($this->once())
-             ->method('process')
+             ->method('setData')
              ->with($postData);
+        $form->expects($this->never())
+             ->method('getData');
         $form->expects($this->once())
-             ->method('__toString')
-             ->will($this->returnValue(''));
-        $this->_legacyFormManager->expects($this->once())
+             ->method('isValid')
+             ->willReturn(false);
+        $form->expects($this->once())
+             ->method('render')
+             ->willReturn('<form></form>');
+        $this->_formManager->expects($this->once())
                            ->method('get')
                            ->with("Console\Form\Preferences\\$formClass")
                            ->will($this->returnValue($form));
+        $this->_config->expects($this->never())
+                      ->method('setOptions');
         $this->dispatch("/console/preferences/$action", 'POST', $postData);
         $this->assertResponseStatusCode(200);
+        $this->assertXPathQuery('//form');
+    }
+
+    /**
+     * Base tests for all _useform()-based actions (POST method, valid data)
+     *
+     * @param string $action "action" part of URI
+     * @param string $formClass Form name without namespace
+     */
+    protected function _testUseFormPostValid($action, $formClass)
+    {
+        $postData = array(
+            'Preferences' => array('pref1' => 'value1', 'pref2' => 'value2')
+        );
+        $form = $this->getMock("Console\Form\Preferences\\$formClass");
+        $form->expects($this->once())
+             ->method('setData')
+             ->with($postData);
+        $form->expects($this->once())
+             ->method('getData')
+             ->willReturn($postData);
+        $form->expects($this->once())
+             ->method('isValid')
+             ->willReturn(true);
+        $form->expects($this->never())
+             ->method('render');
+        $this->_formManager->expects($this->once())
+                           ->method('get')
+                           ->with("Console\Form\Preferences\\$formClass")
+                           ->will($this->returnValue($form));
+        $this->_config->expects($this->once())
+                      ->method('setOptions')
+                      ->with(
+                          $this->callback(
+                              function($options) {
+                                    $options = iterator_to_array($options);
+                                    return ($options == array('pref1' => 'value1', 'pref2' => 'value2'));
+                              }
+                          )
+                      );
+        $this->dispatch("/console/preferences/$action", 'POST', $postData);
+        $this->assertRedirectTo("/console/preferences/$action/");
     }
 
     public function testCustomfieldsActionGet()

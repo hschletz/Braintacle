@@ -113,7 +113,7 @@ class ConfigTest extends AbstractTest
         $options = array(
             'defaultWarn' => false, // String storage, default 0
             'defaultMergeGroups' => false, // String storage, default 1
-            'limitInventory' => false, // Integer storage, default 0
+            'packageDeployment' => false, // Integer storage, default 0
             'scanSnmp' => false, // Integer storage, default 1
         );
         $this->_getModel()->setOptions($options);
@@ -128,7 +128,7 @@ class ConfigTest extends AbstractTest
         $options = array(
             'defaultWarn' => true, // String storage, default 0
             'defaultMergeGroups' => true, // String storage, default 1
-            'limitInventory' => true, // Integer storage, default 0
+            'packageDeployment' => true, // Integer storage, default 0
             'scanSnmp' => true, // Integer storage, default 1
         );
         $this->_getModel()->setOptions($options);
@@ -143,7 +143,7 @@ class ConfigTest extends AbstractTest
         $options = array(
             'defaultWarn' => 0, // String storage, default 0
             'defaultMergeGroups' => 0, // String storage, default 1
-            'limitInventory' => 0, // Integer storage, default 0
+            'packageDeployment' => 0, // Integer storage, default 0
             'scanSnmp' => 0, // Integer storage, default 1
         );
         $this->_getModel()->setOptions($options);
@@ -158,7 +158,7 @@ class ConfigTest extends AbstractTest
         $options = array(
             'defaultWarn' => 1, // String storage, default 0
             'defaultMergeGroups' => 1, // String storage, default 1
-            'limitInventory' => 1, // Integer storage, default 0
+            'packageDeployment' => 1, // Integer storage, default 0
             'scanSnmp' => 1, // Integer storage, default 1
         );
         $this->_getModel()->setOptions($options);
@@ -173,7 +173,7 @@ class ConfigTest extends AbstractTest
         $options = array(
             'defaultWarn' => '0', // String storage, default 0
             'defaultMergeGroups' => '0', // String storage, default 1
-            'limitInventory' => '0', // Integer storage, default 0
+            'packageDeployment' => '0', // Integer storage, default 0
             'scanSnmp' => '0', // Integer storage, default 1
         );
         $this->_getModel()->setOptions($options);
@@ -188,7 +188,7 @@ class ConfigTest extends AbstractTest
         $options = array(
             'defaultWarn' => '1', // String storage, default 0
             'defaultMergeGroups' => '1', // String storage, default 1
-            'limitInventory' => '1', // Integer storage, default 0
+            'packageDeployment' => '1', // Integer storage, default 0
             'scanSnmp' => '1', // Integer storage, default 1
         );
         $this->_getModel()->setOptions($options);
@@ -203,7 +203,7 @@ class ConfigTest extends AbstractTest
         $options = array(
             'defaultWarn' => '1',
             'defaultMergeGroups' => '1',
-            'limitInventory' => '1',
+            'packageDeployment' => '1',
             'scanSnmp' => '1',
         );
         $this->_getModel()->setOptions(new \IteratorIterator(new \ArrayIterator($options)));

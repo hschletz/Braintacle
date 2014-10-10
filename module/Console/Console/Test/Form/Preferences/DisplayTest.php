@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for PreferencesController
+ * Tests for Display form
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,25 +19,14 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Console\Service;
+namespace Console\Test\Form\Preferences;
 
-/**
- * Factory for PreferencesController
- */
-class PreferencesControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class DisplayTest extends \Console\Test\AbstractFormTest
 {
-    /**
-     * @internal
-     */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function testInit()
     {
-        $serviceManager = $serviceLocator->getServiceLocator();
-        return new \Console\Controller\PreferencesController(
-            $serviceManager->get('FormElementManager'),
-            $serviceManager->get('Model\Computer\CustomFields'),
-            $serviceManager->get('Model\Network\DeviceType'),
-            $serviceManager->get('Model\RegistryValue'),
-            $serviceManager->get('Model\Config')
-        );
+        $preferences = $this->_form->get('Preferences');
+        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('displayBlacklistedSoftware'));
+        $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
 }
