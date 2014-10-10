@@ -26,30 +26,6 @@ namespace Console\Test\Mvc\Controller\Plugin;
  */
 class PrintFormTest extends \Library\Test\Mvc\Controller\Plugin\AbstractTest
 {
-    public function testInvokeWithZf1Form()
-    {
-        $plugin = $this->_getPlugin(false);
-
-        // Set up \Zend_Form using default renderer
-        $this->form = $this->getMock('Zend_Form');
-        $this->form->expects($this->once())
-                   ->method('__toString')
-                   ->will($this->returnValue('\Zend_Form default renderer'));
-
-        // Evaluate plugin return value
-        $view = $plugin($this->form);
-        $this->assertInstanceOf('Zend\View\Model\ViewModel', $view);
-        $template = $view->getTemplate();
-        $this->assertEquals('plugin/PrintForm.php', $template);
-
-        // Invoke template and test output
-        ob_start();
-        require(\Console\Module::getPath('view/' . $template));
-        $output = ob_get_contents();
-        ob_end_clean();
-        $this->assertEquals('\Zend_Form default renderer', $output);
-    }
-
     public function testInvokeWithConsoleForm()
     {
         $plugin = $this->_getPlugin(false);

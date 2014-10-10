@@ -20,14 +20,6 @@
  *
  */
 
-if ($this->form instanceof \Zend_Form) {
-    if (method_exists($this->form, 'toHtml')) {
-        // @codeCoverageIgnoreStart
-        print $this->form->toHtml($this); // ZF1 glue method
-    } else {
-        // @codeCoverageIgnoreEnd
-        print $this->form; // Default renderer without ZF1 glue method
-    }
-} elseif ($this->form instanceof \Console\Form\Form) {
+if ($this->form instanceof \Console\Form\Form) {
     print $this->form->render($this);
 }

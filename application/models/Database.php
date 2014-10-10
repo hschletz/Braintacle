@@ -56,22 +56,6 @@ class Model_Database
     }
 
     /**
-     * Return status of asset tag blacklisting support
-     *
-     * Blacklisting asset tags for duplicates search (in addition to serials and
-     * MAC addresses) is a Braintacle-specific extension that requires the
-     * presence of a table which is not part of an original OCS Inventory
-     * database. To support these databases, the presence of the table should be
-     * queried via this method and the blacklist should only be applied if
-     * available.
-     * @return bool TRUE if table exists
-     */
-    public static function supportsAssetTagBlacklist()
-    {
-        return in_array('braintacle_blacklist_assettags', self::_listTables());
-    }
-
-    /**
      * Return status of manual Windows product key support
      *
      * The ability to manually enter a Windows product key that differs from the

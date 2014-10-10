@@ -83,21 +83,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Registry::set('Zend_Translate', $translate);
     }
 
-    protected function _initViewHelpers()
-    {
-        if (Application::isCli() and !Application::isTest()) {
-            return;
-        }
-        $layout = Zend_Layout::startMvc();
-        $view = $layout->getView();
-        $pluginLoader = new Zend_Loader_PluginLoader;
-        $pluginLoader->addPrefixPath(
-            'Zend_View_Helper',
-            Application::$zf1Path . '/View/Helper'
-        );
-        $view->setPluginLoader($pluginLoader, 'helper');
-    }
-
     protected function _initAutoload()
     {
         // Autoloader for old library code
@@ -106,18 +91,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 '\Zend\Loader\StandardAutoloader' => array(
                     'prefixes' => array(
                         'Zend' => Application::$zf1Path,
+                        'Model' => Application::getPath('application/models'),
                         'Braintacle' => Application::getPath('library/Braintacle'),
                     )
                 ),
             )
         );
-        // ZF1 module autoloader
-        $moduleLoader = new Zend_Application_Module_Autoloader(
-            array(
-                'namespace' => '',
-                'basePath' => __DIR__
-            )
-        );
-        return $moduleLoader;
     }
 }

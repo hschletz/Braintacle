@@ -52,7 +52,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
 
     /**
      * Client configuration form
-     * @var \Form_Configuration
+     * @var \Console\Form\ClientConfig
      */
     protected $_clientConfigForm;
 
@@ -69,7 +69,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
      * @param \Model_Computer $computer
      * @param \Console\Form\Package\Assign $packageAssignmentForm
      * @param \Console\Form\AddToGroup $addToGroupForm
-     * @param \Form_Configuration $clientConfigForm
+     * @param \Console\Form\ClientConfig $clientConfigForm
      */
     public function __construct(
         \Model_Group $group,

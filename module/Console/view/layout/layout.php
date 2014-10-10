@@ -37,8 +37,6 @@ print $this->headScript();
 print "</head>\n";
 print "<body";
 $onLoad = $this->placeholder('BodyOnLoad');
-// TODO: Replace all init() functions with direct placeholder access and remove invoking handler
-$onLoad->append('if (typeof(init) == "function") init()');
 if ($onLoad->count()) {
     $onLoad->setSeparator('; ');
     printf(' onload="%s"', $this->escapeHtmlAttr($onLoad));

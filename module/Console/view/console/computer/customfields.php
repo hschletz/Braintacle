@@ -31,5 +31,5 @@ print $this->htmlTag(
         array('href' => $this->consoleUrl('preferences', 'customfields')),
         true
     ),
-    array('class' => 'textcenter clearboth')
+    array('class' => 'textcenter')
 );

@@ -201,10 +201,6 @@ td,th {
     padding: .3ex .5em .3ex .5em;
 }
 
-tr.bgcolor {
-    background-color: #e0f0ff;
-}
-
 tr.highlight {
     font-weight: bold;
 }
@@ -237,10 +233,6 @@ th a {
 
 .textnormalsize {
     font-size: 100%;
-}
-
-.clearboth {
-    clear:both;
 }
 
 .nowrap {
@@ -315,19 +307,6 @@ dd {
     float: left;
     clear: right;
 }
-fieldset dt {
-    max-width: 21.7em;
-    margin-left: .5em;
-    margin-bottom: 0;
-    float: right;
-    clear: both;
-    text-align: left;
-}
-fieldset dd {
-    margin: 0;
-    float: right;
-    clear: left;
-}
 ul.errors {
     margin-top: 0;
     margin-bottom: 0.8ex;
@@ -352,11 +331,6 @@ textarea {
     height: 10ex;
     background-color: #e0f0ff;
 }
-.zend_form fieldset { /* ZF1 forms */
-    margin-left: 30em;
-    width: 23em;
-    border: 1px inset black;
-}
 
 /* special formats */
 
@@ -378,11 +352,6 @@ input[size="8"]
 
 .table_registry_values td {
     padding-top: 2ex;
-}
-
-td.formElement {
-    padding-top: 2ex;
-    width: 87%;
 }
 
 .table label {

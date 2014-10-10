@@ -81,8 +81,7 @@ class Application
         // PEAR libraries are not suitable for autoloading. Add them to include path instead.
         set_include_path(get_include_path() . PATH_SEPARATOR . self::getPath('library/PEAR'));
 
-        // Bootstrap ZF1 application part, but don't run it yet.
-        // It is run at a later point if required.
+        // Bootstrap ZF1 application part.
         // TODO: remove APPLICATION_PATH and APPLICATION_ENV when no longer used
         define('APPLICATION_PATH', self::getPath('application'));
         $environment = self::getEnvironment();
@@ -196,16 +195,6 @@ class Application
     static function isTest()
     {
         return self::getEnvironment() == 'test';
-    }
-
-    /**
-     * Check for CLI SAPI
-     *
-     * @return bool
-     */
-    static function isCli()
-    {
-        return PHP_SAPI == 'cli';
     }
 
     /**

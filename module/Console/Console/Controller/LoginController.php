@@ -68,7 +68,7 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Handle login form
      *
-     * @return array|\Zend\Http\Response array (form => \Form_Login) or redirect response
+     * @return array|\Zend\Http\Response array (form => \Console\Form\Login) or redirect response
      */
     public function loginAction()
     {

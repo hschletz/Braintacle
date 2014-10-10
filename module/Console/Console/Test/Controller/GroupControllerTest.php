@@ -46,7 +46,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     /**
      * Add to group form mock
-     * @var \Form_AddToGroup
+     * @var \Console\Form\AddToGroup
      */
     protected $_addToGroupForm;
 

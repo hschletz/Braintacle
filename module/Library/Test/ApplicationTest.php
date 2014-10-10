@@ -77,12 +77,4 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
             $this->fail('Invalid environment was undetected.');
         }
     }
-
-    /**
-     * Test for isCli(), assuming that the tests are run from an interactive shell.
-     */
-    public function testCli()
-    {
-        $this->assertTrue(Application::isCli());
-    }
 }

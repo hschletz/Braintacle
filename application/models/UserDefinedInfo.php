@@ -250,15 +250,6 @@ class Model_UserDefinedInfo extends Model_Abstract
     }
 
     /**
-     * Return array of all defined fields
-     * @return array
-     **/
-    static function getFields()
-    {
-        return array_keys(self::getTypes());
-    }
-
-    /**
      * Compare 2 field names for equality (case insensitive)
      *
      * @param string $name1 First name to check

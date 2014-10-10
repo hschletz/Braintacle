@@ -34,13 +34,13 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
 
     /**
      * Account creation form
-     * @var \Form_Account_New
+     * @var \Console\Form\Account\Add
      */
     protected $_formAccountAdd;
 
     /**
      * Account edit form
-     * @var \Form_Account_Edit
+     * @var \Console\Form\Account\Edit
      */
     protected $_formAccountEdit;
 
