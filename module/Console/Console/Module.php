@@ -73,6 +73,7 @@ Feature\BootstrapListenerInterface
         $eventManager = $e->getParam('application')->getEventManager();
         $eventManager->attach(MvcEvent::EVENT_ROUTE, array($this, 'forceLogin'));
         $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'setStrictVars'));
+        $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'setMenu'));
         $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'setLayoutTitle'));
         $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onError'));
         $eventManager->attach(MvcEvent::EVENT_RENDER_ERROR, array($this, 'onError'));
@@ -136,6 +137,18 @@ Feature\BootstrapListenerInterface
         foreach ($model->getChildren() as $child) {
             $this->_setStrictVars($child);
         }
+    }
+
+    /**
+     * Hook to inject the main menu
+     *
+     * This is invoked by the "render" event.
+     *
+     * @param \Zend\Mvc\MvcEvent $e MVC event
+     */
+    public function setMenu(\Zend\EventManager\EventInterface $e)
+    {
+        $e->getViewModel()->menu = 'Console\Navigation\MainMenu';
     }
 
     /**
