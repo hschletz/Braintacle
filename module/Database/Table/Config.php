@@ -49,7 +49,7 @@ class Config extends \Database\AbstractTable
         'defaultMergeCustomFields' => 'BRAINTACLE_DEFAULT_MERGE_USERDEFINED',
         'defaultPackagePriority' => 'BRAINTACLE_DEFAULT_PACKAGE_PRIORITY',
         'defaultPlatform' => 'BRAINTACLE_DEFAULT_PLATFORM',
-        'defaultUserActionMessage' => 'BRAINTACLE_DEFAULT_USER_ACTION_MESSAGE',
+        'defaultPostInstMessage' => 'BRAINTACLE_DEFAULT_USER_ACTION_MESSAGE',
         'defaultWarn' => 'BRAINTACLE_DEFAULT_WARN',
         'defaultWarnAllowAbort' => 'BRAINTACLE_DEFAULT_WARN_ALLOW_ABORT',
         'defaultWarnAllowDelay' => 'BRAINTACLE_DEFAULT_WARN_ALLOW_DELAY',

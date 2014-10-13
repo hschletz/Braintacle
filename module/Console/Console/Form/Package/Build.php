@@ -200,12 +200,12 @@ class Build extends \Console\Form\Form
         $this->add($warnAllowDelay);
 
         // Message to display to user after deployment
-        $userActionMessage = new Element\Textarea('UserActionMessage');
-        $userActionMessage->setLabel('Post-installation message');
-        $this->add($userActionMessage);
+        $postInstMessage = new Element\Textarea('PostInstMessage');
+        $postInstMessage->setLabel('Post-installation message');
+        $this->add($postInstMessage);
         $inputFilter->add(
             array(
-                'name' => 'UserActionMessage',
+                'name' => 'PostInstMessage',
                 'required' => false,
                 'filters' => array(
                     array('name' => 'StringTrim'),

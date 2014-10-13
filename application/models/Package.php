@@ -63,7 +63,7 @@
  * - <b>WarnAllowAbort:</b> Whether the user should be allowed to abort
  * - <b>WarnAllowDelay:</b> Whether the user should be allowed to delay
  * - <b>UserActionRequired:</b> Whether the user should be notified after deployment
- * - <b>UserActionMessage:</b> Message to display after deployment
+ * - <b>PostInstMessage:</b> Message to display after deployment
  *
  * The following Attributes are only used by {@link build()}.
  *
@@ -99,7 +99,7 @@ class Model_Package extends Model_Abstract
         'WarnAllowAbort' => 'NOTIFY_CAN_ABORT',
         'WarnAllowDelay' => 'NOTIFY_CAN_DELAY',
         'UserActionRequired' => 'NEED_DONE_ACTION',
-        'UserActionMessage' => 'NEED_DONE_ACTION_TEXT',
+        'PostInstMessage' => 'NEED_DONE_ACTION_TEXT',
         'MaxFragmentSize' => 'maxFragmentSize',
         'FileName' => 'fileName',
         'FileLocation' => 'fileLocation',
@@ -202,7 +202,7 @@ class Model_Package extends Model_Abstract
                     $value = null;
                 }
                 break;
-            case 'UserActionMessage':
+            case 'PostInstMessage':
                 if (!$this->getUserActionRequired()) {
                     $value = null;
                 }
@@ -382,7 +382,7 @@ class Model_Package extends Model_Abstract
         $this->setWarnAllowAbort($xmlData->get('NOTIFY_CAN_ABORT'));
         $this->setWarnAllowDelay($xmlData->get('NOTIFY_CAN_DELAY'));
         $this->setUserActionRequired($xmlData->get('NEED_DONE_ACTION'));
-        $this->setUserActionMessage($xmlData->get('NEED_DONE_ACTION_TEXT'));
+        $this->setPostInstMessage($xmlData->get('NEED_DONE_ACTION_TEXT'));
         switch ($this->getDeployAction()) {
             case 'store':
                 $this->setActionParam($xmlData->get('PATH'));
@@ -646,7 +646,7 @@ class Model_Package extends Model_Abstract
             'NEED_DONE_ACTION_TEXT' => str_replace(
                 array("\r\n", "\n", "\r"),
                 ' ',
-                $this->getUserActionMessage()
+                $this->getPostInstMessage()
             ),
             'GARDEFOU' => 'rien',
         );

@@ -62,7 +62,7 @@ class PackagesTest extends \Console\Test\AbstractFormTest
         $this->assertInstanceOf('\Zend\Form\Element\Text', $preferences->get('defaultWarnCountdown'));
         $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $preferences->get('defaultWarnAllowAbort'));
         $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $preferences->get('defaultWarnAllowDelay'));
-        $this->assertInstanceOf('\Zend\Form\Element\Textarea', $preferences->get('defaultUserActionMessage'));
+        $this->assertInstanceOf('\Zend\Form\Element\Textarea', $preferences->get('defaultPostInstMessage'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
 
@@ -80,7 +80,7 @@ class PackagesTest extends \Console\Test\AbstractFormTest
             'defaultWarnCountdown' => ' ',
             'defaultWarnAllowAbort' => '0',
             'defaultWarnAllowDelay' => '0',
-            'defaultUserActionMessage' => '',
+            'defaultPostInstMessage' => '',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setValidationGroup('Preferences');
@@ -105,7 +105,7 @@ class PackagesTest extends \Console\Test\AbstractFormTest
             'defaultWarnCountdown' => ' 5.678 ',
             'defaultWarnAllowAbort' => '0',
             'defaultWarnAllowDelay' => '0',
-            'defaultUserActionMessage' => '',
+            'defaultPostInstMessage' => '',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setValidationGroup('Preferences');
@@ -130,7 +130,7 @@ class PackagesTest extends \Console\Test\AbstractFormTest
             'defaultWarnCountdown' => '2a',
             'defaultWarnAllowAbort' => '0',
             'defaultWarnAllowDelay' => '0',
-            'defaultUserActionMessage' => '',
+            'defaultPostInstMessage' => '',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setValidationGroup('Preferences');
@@ -156,7 +156,7 @@ class PackagesTest extends \Console\Test\AbstractFormTest
             'defaultWarnCountdown' => '5678',
             'defaultWarnAllowAbort' => '0',
             'defaultWarnAllowDelay' => '0',
-            'defaultUserActionMessage' => '',
+            'defaultPostInstMessage' => '',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setValidationGroup('Preferences');

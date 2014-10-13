@@ -146,9 +146,9 @@ class Packages extends AbstractForm
         $defaultWarnAllowDelay->setLabel('Allow user delay by default');
         $preferences->add($defaultWarnAllowDelay);
 
-        $defaultUserActionMessage = new \Zend\Form\Element\Textarea('defaultUserActionMessage');
-        $defaultUserActionMessage->setLabel('Default post-installation message');
-        $preferences->add($defaultUserActionMessage);
+        $defaultPostInstMessage = new \Zend\Form\Element\Textarea('defaultPostInstMessage');
+        $defaultPostInstMessage->setLabel('Default post-installation message');
+        $preferences->add($defaultPostInstMessage);
 
         $parentFilter = new \Zend\InputFilter\InputFilter;
         $parentFilter->add($inputFilter, 'Preferences');

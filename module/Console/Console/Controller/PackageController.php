@@ -114,7 +114,7 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
                     'WarnCountdown' => $this->_config->defaultWarnCountdown,
                     'WarnAllowAbort' => $this->_config->defaultWarnAllowAbort,
                     'WarnAllowDelay' => $this->_config->defaultWarnAllowDelay,
-                    'UserActionMessage' => $this->_config->defaultUserActionMessage,
+                    'PostInstMessage' => $this->_config->defaultPostInstMessage,
                 )
             );
         }
@@ -217,7 +217,7 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
                     'WarnCountdown' => $oldPackage['WarnCountdown'],
                     'WarnAllowAbort' => $oldPackage['WarnAllowAbort'],
                     'WarnAllowDelay' => $oldPackage['WarnAllowDelay'],
-                    'UserActionMessage' => $oldPackage['UserActionMessage'],
+                    'PostInstMessage' => $oldPackage['PostInstMessage'],
                 )
             );
         }
@@ -232,7 +232,7 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
      */
     protected function _buildPackage($data)
     {
-        $data['UserActionRequired'] = ($data['UserActionMessage'] != '');
+        $data['UserActionRequired'] = ($data['PostInstMessage'] != '');
         $data['FileName'] = $data['File']['name'];
         $data['FileLocation'] = $data['File']['tmp_name'];
         $data['FileType'] = $data['File']['type'];

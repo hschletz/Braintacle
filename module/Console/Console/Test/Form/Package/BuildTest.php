@@ -62,7 +62,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
         $this->assertInstanceOf('\Zend\Form\Element\Text', $this->_form->get('WarnCountdown'));
         $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $this->_form->get('WarnAllowAbort'));
         $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $this->_form->get('WarnAllowDelay'));
-        $this->assertInstanceOf('\Zend\Form\Element\Textarea', $this->_form->get('UserActionMessage'));
+        $this->assertInstanceOf('\Zend\Form\Element\Textarea', $this->_form->get('PostInstMessage'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
 
@@ -90,7 +90,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
             'WarnCountdown' => '',
             'WarnAllowAbort' => '0',
             'WarnAllowDelay' => '0',
-            'UserActionMessage' => '',
+            'PostInstMessage' => '',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setData($data);
@@ -113,7 +113,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
             'WarnCountdown' => ' 34 ',
             'WarnAllowAbort' => '0',
             'WarnAllowDelay' => '0',
-            'UserActionMessage' => ' PostInstMessage ',
+            'PostInstMessage' => ' PostInstMessage ',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setData($data);
@@ -125,7 +125,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
         $this->assertEquals('12', $data['MaxFragmentSize']);
         $this->assertEquals('WarnMessage', $data['WarnMessage']);
         $this->assertEquals('34', $data['WarnCountdown']);
-        $this->assertEquals('PostInstMessage', $data['UserActionMessage']);
+        $this->assertEquals('PostInstMessage', $data['PostInstMessage']);
     }
 
     public function testInputFilterStringTrimWhitespaceOnly()
@@ -144,7 +144,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
             'WarnCountdown' => ' ',
             'WarnAllowAbort' => '0',
             'WarnAllowDelay' => '0',
-            'UserActionMessage' => ' ',
+            'PostInstMessage' => ' ',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setData($data);
@@ -154,7 +154,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
         $this->assertSame('', $data['MaxFragmentSize']);
         $this->assertSame('', $data['WarnMessage']);
         $this->assertSame('', $data['WarnCountdown']);
-        $this->assertSame('', $data['UserActionMessage']);
+        $this->assertSame('', $data['PostInstMessage']);
     }
 
     public function testInputFilterInvalidRequiredFieldsMissing()
@@ -173,7 +173,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
             'WarnCountdown' => '',
             'WarnAllowAbort' => '0',
             'WarnAllowDelay' => '0',
-            'UserActionMessage' => '',
+            'PostInstMessage' => '',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setData($data);
@@ -201,7 +201,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
             'WarnCountdown' => '',
             'WarnAllowAbort' => '0',
             'WarnAllowDelay' => '0',
-            'UserActionMessage' => '',
+            'PostInstMessage' => '',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setData($data);
@@ -225,7 +225,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
             'WarnCountdown' => '',
             'WarnAllowAbort' => '0',
             'WarnAllowDelay' => '0',
-            'UserActionMessage' => $string, // OK
+            'PostInstMessage' => $string, // OK
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setData($data);
@@ -251,7 +251,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
             'WarnCountdown' => '',
             'WarnAllowAbort' => '0',
             'WarnAllowDelay' => '0',
-            'UserActionMessage' => '',
+            'PostInstMessage' => '',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setData($data);
@@ -277,7 +277,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
             'WarnCountdown' => '',
             'WarnAllowAbort' => '0',
             'WarnAllowDelay' => '0',
-            'UserActionMessage' => '',
+            'PostInstMessage' => '',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setData($data);
@@ -303,7 +303,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
             'WarnCountdown' => '',
             'WarnAllowAbort' => '0',
             'WarnAllowDelay' => '0',
-            'UserActionMessage' => '',
+            'PostInstMessage' => '',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setData($data);
@@ -337,7 +337,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
             'WarnCountdown' => '',
             'WarnAllowAbort' => '0',
             'WarnAllowDelay' => '0',
-            'UserActionMessage' => '',
+            'PostInstMessage' => '',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setData($data);
@@ -366,7 +366,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
             'WarnCountdown' => ' 5.678 ',
             'WarnAllowAbort' => '0',
             'WarnAllowDelay' => '0',
-            'UserActionMessage' => '',
+            'PostInstMessage' => '',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setData($data);
@@ -392,7 +392,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
             'WarnCountdown' => '2a',
             'WarnAllowAbort' => '0',
             'WarnAllowDelay' => '0',
-            'UserActionMessage' => '',
+            'PostInstMessage' => '',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setData($data);
@@ -419,7 +419,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
             'WarnCountdown' => '5678',
             'WarnAllowAbort' => '0',
             'WarnAllowDelay' => '0',
-            'UserActionMessage' => '',
+            'PostInstMessage' => '',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setData($data);

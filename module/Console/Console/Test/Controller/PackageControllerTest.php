@@ -262,7 +262,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             'WarnCountdown' => 'defaultWarnCountdown',
             'WarnAllowAbort' => 'defaultWarnAllowAbort',
             'WarnAllowDelay' => 'defaultWarnAllowDelay',
-            'UserActionMessage' => 'defaultUserActionMessage',
+            'PostInstMessage' => 'defaultPostInstMessage',
         );
         $this->_config->expects($this->exactly(11))
                       ->method('__get')
@@ -311,7 +311,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
     {
         $postData = array(
             'Name' => 'packageName',
-            'UserActionMessage' => 'postinst',
+            'PostInstMessage' => 'postinst',
         );
         $fileSpec = array(
             'name' => 'file_name',
@@ -320,7 +320,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
         $packageData = array(
             'Name' => 'packageName',
-            'UserActionMessage' => 'postinst',
+            'PostInstMessage' => 'postinst',
             'UserActionRequired' => true,
             'File' => array(
                 'name' => 'file_name',
@@ -352,7 +352,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
     {
         $postData = array(
             'Name' => 'packageName',
-            'UserActionMessage' => '',
+            'PostInstMessage' => '',
         );
         $fileSpec = array(
             'name' => 'file_name',
@@ -361,7 +361,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
         $packageData = array(
             'Name' => 'packageName',
-            'UserActionMessage' => '',
+            'PostInstMessage' => '',
             'UserActionRequired' => false,
             'File' => array(
                 'name' => 'file_name',
@@ -452,7 +452,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             'WarnCountdown' => 'WarnCountdown',
             'WarnAllowAbort' => 'WarnAllowAbort',
             'WarnAllowDelay' => 'WarnAllowDelay',
-            'UserActionMessage' => 'UserActionMessage',
+            'PostInstMessage' => 'PostInstMessage',
         );
         $this->_config->expects($this->exactly(6))
                       ->method('__get')
@@ -525,7 +525,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'Groups' => '1',
             ),
             'Name' => 'newName',
-            'UserActionMessage' => '',
+            'PostInstMessage' => '',
         );
         $fileSpec = array(
             'name' => 'file_name',
@@ -541,7 +541,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'Groups' => '1',
             ),
             'Name' => 'newName',
-            'UserActionMessage' => '',
+            'PostInstMessage' => '',
             'File' => array(
                 'name' => 'file_name',
                 'tmp_name' => 'file_tmp_name',
@@ -604,7 +604,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'tmp_name' => 'file_path',
                 'type' => 'file_type',
             ),
-            'UserActionMessage' => '',
+            'PostInstMessage' => '',
         );
         $this->_updateForm->expects($this->once())
                           ->method('setData')
@@ -642,7 +642,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'Groups' => '1',
             ),
             'Name' => 'newName',
-            'UserActionMessage' => '',
+            'PostInstMessage' => '',
         );
         $fileSpec = array(
             'name' => 'file_name',
@@ -658,7 +658,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'Groups' => '1',
             ),
             'Name' => 'newName',
-            'UserActionMessage' => '',
+            'PostInstMessage' => '',
             'File' => array(
                 'name' => 'file_name',
                 'tmp_name' => 'file_tmp_name',

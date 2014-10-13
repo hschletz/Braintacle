@@ -52,7 +52,7 @@ namespace Model;
  * @property bool $defaultMergeCustomFields  Default for merging userdefined fields along with computers. Default: true
  * @property integer $defaultPackagePriority  Default priority (0-10) for new packages. Default: 5
  * @property string $defaultPlatform  Default platform for new packages (one of windows, linux, mac). Default: windows
- * @property string $defaultUserActionMessage  Default user action message for new packages
+ * @property string $defaultPostInstMessage  Default post-installation message for new packages
  * @property bool $defaultWarn  Default user warning for new packages. Default: false
  * @property bool $defaultWarnAllowAbort  Default to allow abort by user for new packages
  * @property bool $defaultWarnAllowDelay  Default to allow delay by user for new packages
