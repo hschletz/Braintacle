@@ -110,7 +110,9 @@ class Model_Software extends Model_ChildObject
                 switch ($filter) {
                     case 'Unique':
                         if (in_array('NumComputers', $columns)) {
-                            $select->columns(array('num_computers' => '(COUNT(DISTINCT hardware_id))'));
+                            $select->columns(
+                                array('num_computers' => new \Zend_Db_Expr('COUNT(DISTINCT hardware_id)'))
+                            );
                             $select->group('softwares.name');
                         } else {
                             $select->distinct();
