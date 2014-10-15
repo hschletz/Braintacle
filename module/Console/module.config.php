@@ -111,6 +111,9 @@ return array(
             'formatMessages' => 'Console\View\Helper\Service\FormatMessagesFactory',
             'table' => 'Console\View\Helper\Service\TableFactory',
         ),
+        'invokables' => array(
+            'filterDescription' => 'Console\View\Helper\FilterDescription',
+        ),
     ),
     'view_manager' => array(
         'doctype' => 'HTML4_STRICT',

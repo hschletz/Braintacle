@@ -177,7 +177,7 @@ if ($filter) {
         if ($filter == 'Software') {
             $search = \Zend\Filter\StaticFilter::execute($search, 'Library\FixEncodingErrors');
         }
-        $header = \Model_Computer::getFilterDescription($filter, $search, $count);
+        $header = $this->filterDescription($filter, $search, $count);
     }
 } else {
     $header = sprintf(
