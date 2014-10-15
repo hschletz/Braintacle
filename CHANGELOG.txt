@@ -66,6 +66,8 @@ Fixed bugs:
 
 - Console: Fixed bug in package builder error cleanup.
 
+- Console: Fixed OS detection for computers imported via the injector script.
+
 
 CHANGES IN VERSION 0.15
 =======================
