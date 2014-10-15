@@ -960,7 +960,7 @@ class Model_Computer extends Model_ComputerOrGroup
         $agent = $this->getOcsAgent();
 
         // Check for suitable user agent identifier.
-        if (stripos($agent, 'local') === false) {
+        if (stripos($agent, 'local') === false and strpos($agent, 'OCS-NG_INJECTOR_PL_v') !== 0) {
             // Inventory was submitted directly by agent.
             // The agent identifier gives a reliable hint about OS type.
             return (stripos($agent, 'windows') !== false);
