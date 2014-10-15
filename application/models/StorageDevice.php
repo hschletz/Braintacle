@@ -83,17 +83,31 @@ class Model_StorageDevice extends Model_ChildObject
         if ($computer->isWindows()) {
             switch ($property) {
                 case 'Type':
-                    $translate = Zend_Registry::get('Zend_Translate');
-
-                    switch (substr($this->getRawType(), 0, 5)) {
-                        case 'Fixed':
-                            $value = $translate->_('Hard disk');
-                            break;
-                        case 'Remov':
-                            $value = $translate->_('Removable media');
+                    // Depending on the device, OS version/language and the
+                    // detecting agent, either the 'type' or 'description'
+                    // column contains the desired information, while the other
+                    // one is usually rubbish. Sometimes neither one contains
+                    // presentable information.
+                    // There is no ultimate rule to gain good information in
+                    // every case. The following rules were collected from
+                    // real-world samples provided by various agent versions.
+                    $rawType = $this['RawType'];
+                    switch ($rawType) {
+                        case 'CD-ROM':
+                        case 'DVD-ROM':
+                        case 'DVD Writer':
+                            $value = $rawType;
                             break;
                         default:
-                            $value = $this->getRawDescription();
+                            if (substr($rawType, 0, 5) == 'Fixed') {
+                                // Several variants exist, 'description' is unusable
+                                $value = 'Hard disk';
+                            } elseif (substr($rawType, 0, 9) == 'Removable') {
+                                // Several variants exist, 'description' is unusable
+                                $value = 'Removable medium';
+                            } else {
+                                $value = $this['RawDescription'];
+                            }
                     }
                     break;
                 case 'Name':

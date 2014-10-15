@@ -1003,7 +1003,27 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
     {
         $devices = array(
             array(
-                'Type' => 'type',
+                'Type' => 'DVD Writer', // translated
+                'Name' => 'name',
+                'Size' => 1024,
+            ),
+            array(
+                'Type' => 'Hard disk', // translated
+                'Name' => 'name',
+                'Size' => 1024,
+            ),
+            array(
+                'Type' => 'Removable medium', // translated
+                'Name' => 'name',
+                'Size' => 1024,
+            ),
+            array(
+                'Type' => 'Floppy disk drive', // translated
+                'Name' => 'name',
+                'Size' => 1024,
+            ),
+            array(
+                'Type' => '<other>', // not translated, but escaped
                 'Name' => 'name',
                 'Size' => 1024,
             ),
@@ -1040,6 +1060,11 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         // Devices
         $this->assertXpathQueryCount('//table[1]//th', 3);
+        $this->assertXpathQueryContentContains('//table[1]/tr[2]/td[1]', "\nDVD writer\n");
+        $this->assertXpathQueryContentContains('//table[1]/tr[3]/td[1]', "\nHard disk\n");
+        $this->assertXpathQueryContentContains('//table[1]/tr[4]/td[1]', "\nRemovable medium\n");
+        $this->assertXpathQueryContentContains('//table[1]/tr[5]/td[1]', "\nFloppy disk drive\n");
+        $this->assertXpathQueryContentContains('//table[1]/tr[6]/td[1]', "\n<other>\n");
         $this->assertXpathQueryContentContains('//table[1]/tr[2]/td[3]', "\n1,0 GB\n");
         // Filesystem 1
         $this->assertXpathQuery("//table[2]//th[text()='\nLetter\n']");

@@ -31,12 +31,6 @@ $headers = array(
     'Name' => $this->translate('Name'),
     'Size' => $this->translate('Size'),
 );
-// Additional Columns for UNIX systems
-if (!$computer['Windows']) {
-    $headers['Device'] = $this->translate('Device');
-    $headers['Serial'] = $this->translate('Serial number');
-    $headers['Firmware'] = $this->translate('Firmware version');
-}
 
 $renderSize = function($view, $object, $property) {
     $size = $object[$property];
@@ -51,6 +45,33 @@ $renderSize = function($view, $object, $property) {
 };
 
 $renderCallbacks = array('Size' => $renderSize);
+
+if ($computer['Windows']) {
+    $renderCallbacks['Type'] = function($view, $computer, $property) {
+        $type = $computer['Type'];
+        // Some generic device types can be translated.
+        switch ($type) {
+            case 'DVD Writer':
+                $type = $view->translate('DVD writer');
+                break;
+            case 'Hard disk':
+                $type = $view->translate('Hard disk');
+                break;
+            case 'Removable medium':
+                $type = $view->translate('Removable medium');
+                break;
+            case 'Floppy disk drive':
+                $type = $view->translate('Floppy disk drive');
+                break;
+        }
+        return $view->escapeHtml($type);
+    };
+} else {
+    // Additional Columns for UNIX systems
+    $headers['Device'] = $this->translate('Device');
+    $headers['Serial'] = $this->translate('Serial number');
+    $headers['Firmware'] = $this->translate('Firmware version');
+}
 
 print $this->htmlTag(
     'h2',
