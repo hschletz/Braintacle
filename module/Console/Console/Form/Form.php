@@ -276,4 +276,19 @@ class Form extends \Zend\Form\Form
         }
         return $valid;
     }
+
+    /**
+     * Translation helper
+     *
+     * This is a dummy method that can be used to mark label and value strings
+     * translatable. It does not do anything (it returns the string unchanged),
+     * but allows xgettext to detect and extract translatable strings.
+     *
+     * @param string $string Translatable string
+     * @return string same as $string
+     */
+    protected function _($string)
+    {
+        return $string;
+    }
 }

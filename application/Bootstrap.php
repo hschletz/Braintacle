@@ -57,32 +57,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
     }
 
-    protected function _initTranslate()
-    {
-        $locale = new Zend_Locale();
-        Zend_Registry::set('Zend_Locale', $locale);
-
-        $language = $locale->getLanguage();
-        if ($language == 'en') {
-            $translate = new Zend_Translate(
-                'Braintacle_Translate_Adapter_Null'
-            );
-        } else {
-            $translate = new Zend_Translate(
-                'Braintacle_Translate_Adapter_Po',
-                realpath(dirname(APPLICATION_PATH) . DIRECTORY_SEPARATOR . 'languages'),
-                $language,
-                array(
-                    'scan' => Zend_Translate::LOCALE_DIRECTORY,
-                    'ignore' => array('regex' => '/pot$/'),
-                    'logUntranslated' => (APPLICATION_ENV != 'production'),
-                    'disableNotices' => (APPLICATION_ENV == 'production')
-                )
-            );
-        }
-        Zend_Registry::set('Zend_Translate', $translate);
-    }
-
     protected function _initAutoload()
     {
         // Autoloader for old library code

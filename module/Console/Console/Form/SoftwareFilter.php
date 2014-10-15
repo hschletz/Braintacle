@@ -33,18 +33,16 @@ class SoftwareFilter extends Form
     /** {@inheritdoc} */
     public function init()
     {
-        $translate = \Zend_Registry::get('Zend_Translate');
-
         $this->setAttribute('method', 'GET');
 
         $filter = new \Zend\Form\Element\Select('filter');
         $filter->setLabel('Filter')
                ->setValueOptions(
                    array(
-                       'accepted' => $translate->_('selected for display'),
-                       'ignored' => $translate->_('ignored for display'),
-                       'new' => $translate->_('new or not categorized'),
-                       'all' => $translate->_('all'),
+                       'accepted' => $this->_('selected for display'),
+                       'ignored' => $this->_('ignored for display'),
+                       'new' => $this->_('new or not categorized'),
+                       'all' => $this->_('all'),
                    )
                )
                ->setAttribute('onchange', 'this.form.submit();');

@@ -103,11 +103,10 @@ class GroupMemberships extends Form
         $fieldset= new \Zend\Form\Fieldset('Groups');
         $this->add($fieldset);
 
-        $translate = \Zend_Registry::get('Zend_Translate');
         $buttons = array(
-            \Model_GroupMembership::TYPE_DYNAMIC => $translate->_('automatic'),
-            \Model_GroupMembership::TYPE_STATIC => $translate->_('always'),
-            \Model_GroupMembership::TYPE_EXCLUDED => $translate->_('never'),
+            \Model_GroupMembership::TYPE_DYNAMIC => $this->_('automatic'),
+            \Model_GroupMembership::TYPE_STATIC => $this->_('always'),
+            \Model_GroupMembership::TYPE_EXCLUDED => $this->_('never'),
         );
         foreach ($groups as $group) {
             $element = new \Zend\Form\Element\Radio($group);

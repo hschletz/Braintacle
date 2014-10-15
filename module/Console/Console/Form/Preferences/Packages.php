@@ -31,7 +31,6 @@ class Packages extends AbstractForm
     {
         parent::init();
 
-        $translator = \Zend_Registry::get('Zend_Translate');
         $preferences = $this->get('Preferences');
         $inputFilter = new \Zend\InputFilter\InputFilter;
         $integerFilter = array(
@@ -88,9 +87,9 @@ class Packages extends AbstractForm
         $defaultAction->setLabel('Default action')
                       ->setValueOptions(
                           array(
-                            'launch' => $translator->_('Download package, execute command, retrieve result'),
-                            'execute' => $translator->_('Optionally download package, execute command'),
-                            'store' => $translator->_('Just download package to target path'),
+                            'launch' => $this->_('Download package, execute command, retrieve result'),
+                            'execute' => $this->_('Optionally download package, execute command'),
+                            'store' => $this->_('Just download package to target path'),
                           )
                       );
         $preferences->add($defaultAction);

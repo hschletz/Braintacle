@@ -31,8 +31,7 @@ class Inventory extends AbstractForm
     {
         parent::init();
         $preferences = $this->get('Preferences');
-        $translator = \Zend_Registry::get('Zend_Translate');
-        $template = $translator->_("Mark '%s' by default");
+        $template = $this->_("Mark '%s' by default");
 
         $inspectRegistry = new \Zend\Form\Element\Checkbox('inspectRegistry');
         $inspectRegistry->setLabel('Inspect registry');
@@ -40,25 +39,25 @@ class Inventory extends AbstractForm
 
         $defaultMergeCustomFields = new \Zend\Form\Element\Checkbox('defaultMergeCustomFields');
         $defaultMergeCustomFields->setLabel(
-            sprintf($template, $translator->_('Merge user supplied information'))
+            sprintf($template, $this->_('Merge user supplied information'))
         );
         $preferences->add($defaultMergeCustomFields);
 
         $defaultMergeGroups = new \Zend\Form\Element\Checkbox('defaultMergeGroups');
         $defaultMergeGroups->setLabel(
-            sprintf($template, $translator->_('Merge manual group assignments'))
+            sprintf($template, $this->_('Merge manual group assignments'))
         );
         $preferences->add($defaultMergeGroups);
 
         $defaultMergePackages = new \Zend\Form\Element\Checkbox('defaultMergePackages');
         $defaultMergePackages->setLabel(
-            sprintf($template, $translator->_('Merge missing package assignments'))
+            sprintf($template, $this->_('Merge missing package assignments'))
         );
         $preferences->add($defaultMergePackages);
 
         $defaultDeleteInterfaces = new \Zend\Form\Element\Checkbox('defaultDeleteInterfaces');
         $defaultDeleteInterfaces->setLabel(
-            sprintf($template, $translator->_('Delete interfaces from network listing'))
+            sprintf($template, $this->_('Delete interfaces from network listing'))
         );
         $preferences->add($defaultDeleteInterfaces);
     }

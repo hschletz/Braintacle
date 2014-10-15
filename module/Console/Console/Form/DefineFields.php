@@ -38,13 +38,12 @@ class DefineFields extends Form
     /** {@inheritdoc} */
     public function init()
     {
-        $translator = \Zend_Registry::get('Zend_Translate');
         $translatedTypes = array(
-            'text' => $translator->_('Text'),
-            'clob' => $translator->_('Long text'),
-            'integer' => $translator->_('Integer'),
-            'float' => $translator->_('Float'),
-            'date' => $translator->_('Date'),
+            'text' => $this->_('Text'),
+            'clob' => $this->_('Long text'),
+            'integer' => $this->_('Integer'),
+            'float' => $this->_('Float'),
+            'date' => $this->_('Date'),
         );
 
         $fields = new \Zend\Form\Fieldset('Fields');

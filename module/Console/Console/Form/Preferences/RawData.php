@@ -33,8 +33,6 @@ class RawData extends AbstractForm
         $preferences = $this->get('Preferences');
         $inputFilter = new \Zend\InputFilter\InputFilter;
 
-        $translator = \Zend_Registry::get('Zend_Translate');
-
         $saveRawData = new \Zend\Form\Element\Checkbox('saveRawData');
         $saveRawData->setLabel('Save incoming raw inventory data');
         $preferences->add($saveRawData);
@@ -47,8 +45,8 @@ class RawData extends AbstractForm
         $saveFormat->setLabel('File format')
                    ->setValueOptions(
                        array(
-                        'XML' => $translator->_('uncompressed XML'),
-                        'OCS' => $translator->_('zlib compressed XML')
+                        'XML' => $this->_('uncompressed XML'),
+                        'OCS' => $this->_('zlib compressed XML')
                        )
                    );
         $preferences->add($saveFormat);

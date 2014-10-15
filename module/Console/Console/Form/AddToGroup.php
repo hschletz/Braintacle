@@ -32,18 +32,16 @@ class AddToGroup extends Form
     /** {@inheritdoc} */
     public function init()
     {
-        $translate = \Zend_Registry::get('Zend_Translate');
-
         $what = new \Zend\Form\Element\Radio('What');
         $what->setValueOptions(
             array(
-                \Model_GroupMembership::TYPE_DYNAMIC => $translate->_(
+                \Model_GroupMembership::TYPE_DYNAMIC => $this->_(
                     'Store search parameters. Group memberships will be updated automatically.'
                 ),
-                \Model_GroupMembership::TYPE_STATIC => $translate->_(
+                \Model_GroupMembership::TYPE_STATIC => $this->_(
                     'Add current search results. Group memberships will be set only this time.'
                 ),
-                \Model_GroupMembership::TYPE_EXCLUDED => $translate->_(
+                \Model_GroupMembership::TYPE_EXCLUDED => $this->_(
                     'Exclude search results from a group.'
                 )
             )
@@ -54,8 +52,8 @@ class AddToGroup extends Form
         $where = new \Zend\Form\Element\Radio('Where');
         $where->setValueOptions(
             array(
-                'new' => $translate->_('Store in new group'),
-                'existing' => $translate->_('Store in existing group')
+                'new' => $this->_('Store in new group'),
+                'existing' => $this->_('Store in existing group')
             )
         );
         $where->setValue('new')
