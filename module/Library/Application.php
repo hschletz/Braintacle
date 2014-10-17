@@ -215,4 +215,41 @@ class Application
     {
         return self::$_serviceManager->get($name);
     }
+
+    /**
+     * Get config fragment to load appropriate translation file
+     *
+     * If the default locale is for example de_DE, the file $basePath/de_DE.po
+     * is tried first. If it does not exist, it is shortened to the base
+     * language (i.e. $basePath/de.po). If that file does not exist either, an
+     * empty array is returned. Otherwise the returned array can be merged with
+     * the module's config to load the translations from the file.
+     *
+     * @param string $basePath
+     * @return array
+     */
+    public static function getTranslationConfig($basePath)
+    {
+        $config = array();
+        $locale = \Locale::getDefault();
+        $translationFile = "$basePath/$locale.po";
+        if (!is_file($translationFile)) {
+            $locale = \Locale::getPrimaryLanguage($locale);
+            $translationFile = "$basePath/$locale.po";
+            if (!is_file($translationFile)) {
+                $translationFile = null;
+            }
+        }
+        if ($translationFile) {
+            $config['translator'] = array(
+                'translation_files' => array(
+                    array(
+                        'type' => 'Po',
+                        'filename' => $translationFile,
+                    ),
+                ),
+            );
+        }
+        return $config;
+    }
 }

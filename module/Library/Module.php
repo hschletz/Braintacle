@@ -50,7 +50,7 @@ Feature\InitProviderInterface
      */
     public function getConfig()
     {
-        return array(
+        $config = array(
             'controller_plugins' => array(
                 'invokables' => array(
                     'RedirectToRoute' => 'Library\Mvc\Controller\Plugin\RedirectToRoute',
@@ -79,6 +79,8 @@ Feature\InitProviderInterface
                 ),
             ),
         );
+        $config += Application::getTranslationConfig(static::getPath('data/i18n'));
+        return $config;
     }
 
     /**
@@ -104,10 +106,18 @@ Feature\InitProviderInterface
             'Library\FixEncodingErrors',
             'Library\Filter\FixEncodingErrors'
         );
-        $e->getApplication()->getServiceManager()->get('ViewHelperManager')->get('formElement')->addClass(
+        $serviceManager = $e->getApplication()->getServiceManager();
+        $serviceManager->get('ViewHelperManager')->get('formElement')->addClass(
             'Library\Form\Element\SelectSimple',
             'formselectsimple'
         );
+        $mvcTranslator = $serviceManager->get('MvcTranslator');
+        $translator = $mvcTranslator->getTranslator();
+        $translator->getPluginManager()->setInvokableClass(
+            'Po',
+            'Library\I18n\Translator\Loader\Po'
+        );
+        \Zend\Validator\AbstractValidator::setDefaultTranslator($mvcTranslator);
     }
 
     /**

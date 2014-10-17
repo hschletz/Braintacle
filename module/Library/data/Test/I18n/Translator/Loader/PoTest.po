@@ -1,0 +1,36 @@
+# comment
+msgid ""
+msgstr ""
+"header"
+"ignored"
+
+# comment
+
+msgid "untranslated"
+msgstr ""
+
+msgid "single2single"
+msgstr "single to single"
+
+msgid "single2multi"
+msgstr "single"
+" to multi"
+
+msgid "multi"
+"2single"
+msgstr "multi to single"
+
+msgid "multi"
+"2"
+"multi"
+msgstr "multi"
+" to"
+" multi"
+
+#, fuzzy
+msgid "fuzzy1"
+msgstr "fuzzy 1"
+
+# Escaped characters
+msgid "\\\n\""
+msgstr "\"\n\\"

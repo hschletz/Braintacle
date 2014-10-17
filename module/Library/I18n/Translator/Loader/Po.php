@@ -1,7 +1,6 @@
 <?php
 /**
- * Translation adapter that parses gettext .po files directly without a need for
- * compiling .mo files
+ * Translation loader that parses gettext .po files
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -18,40 +17,35 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Library
  */
+
+namespace Library\I18n\Translator\Loader;
+use Library\FileObject;
+
 /**
- * Translation adapter that parses gettext .po files directly without a need for
- * compiling .mo files. Fuzzy translations will be treated as untranslated.
- * @package Library
+ * Translation loader that parses gettext .po files
+ *
+ * This loader allows using gettext without a need for compiling .mo files.
+ * Fuzzy translations will be treated as untranslated.
  */
-class Braintacle_Translate_Adapter_Po extends Zend_Translate_Adapter
+class Po implements \Zend\I18n\Translator\Loader\FileLoaderInterface
 {
-
-    /**
-     * List of escape sequences that need unescaping in message strings.
-     * @var array
-     **/
-    protected static $_escapeSequences = array(
-        '\\\\' => '\\',
-        '\\"' => '"',
-        '\\n' => "\n",
-    );
-
-    /**
-     * @ignore
-     */
-    protected function _loadTranslationData($data, $locale, array $options = array())
+    /** {@inheritdoc} */
+    public function load($locale, $filename)
     {
-        $file = new SplFileObject($data);
-        $file->setFlags(SplFileObject::DROP_NEW_LINE | SplFileObject::READ_AHEAD | SplFileObject::SKIP_EMPTY);
+        $file = new FileObject($filename);
+        $file->setFlags(FileObject::DROP_NEW_LINE | FileObject::READ_AHEAD | FileObject::SKIP_EMPTY);
 
-        $translations = array();
+        $textDomain = new \Zend\I18n\Translator\TextDomain;
         $state = 0; // Parser state; 0 := everything else; 1 := msgid; 2 := msgstr
         $msgid = ''; // current msgid
         $msgstr = ''; // current msgstr
         $fuzzy = false; // TRUE if current message is marked as fuzzy
+        $escapeSequences = array( // List of escape sequences that need unescaping in message strings.
+            '\\\\' => '\\',
+            '\\"' => '"',
+            '\\n' => "\n",
+        );
 
         foreach ($file as $line) {
             if ($state == 0 or $state == 2) {
@@ -59,7 +53,7 @@ class Braintacle_Translate_Adapter_Po extends Zend_Translate_Adapter
                     // Begin new message. Add last message to result list except
                     // for empty msgid and untranslated messages.
                     if ($msgid != '' and $msgstr != '') {
-                        $translations[$locale][$msgid] = $msgstr;
+                        $textDomain[$msgid] = $msgstr;
                     }
                     $line = $matches[1];
                     $state = 1;
@@ -85,7 +79,7 @@ class Braintacle_Translate_Adapter_Po extends Zend_Translate_Adapter
                 }
             }
             if (preg_match('/^"(.*)"$/', $line, $matches)) {
-                $line = strtr($matches[1], self::$_escapeSequences);
+                $line = strtr($matches[1], $escapeSequences);
                 // Append string to msgid or msgstr, depending on parser state.
                 // This supports strings that spans multiple lines.
                 if ($state == 1) {
@@ -99,17 +93,8 @@ class Braintacle_Translate_Adapter_Po extends Zend_Translate_Adapter
         }
         // The last entry is not added inside the loop.
         if ($msgid != '' and $msgstr != '') {
-            $translations[$locale][$msgid] = $msgstr;
+            $textDomain[$msgid] = $msgstr;
         }
-        return $translations;
+        return $textDomain;
     }
-
-    /**
-     * @ignore
-     */
-    public function toString()
-    {
-        return 'Po';
-    }
-
 }

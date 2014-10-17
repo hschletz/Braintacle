@@ -22,6 +22,7 @@
 namespace Library\Test;
 
 use \Library\Application;
+use \org\bovigo\vfs\vfsStream;
 
 /**
  * Tests for the Application class
@@ -76,5 +77,61 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         if (!isset($invalidEnvironmmentDetected)) {
             $this->fail('Invalid environment was undetected.');
         }
+    }
+
+    public function testGetTranslationConfigFullLocale()
+    {
+        $locale = \Locale::getDefault();
+        \Locale::setDefault('de_DE');
+        $basePath = vfsStream::setup('root');
+        $filename = vfsStream::newFile('de_DE.po')->at($basePath)->url();
+        $this->assertEquals(
+            array(
+                'translator' => array(
+                    'translation_files' => array(
+                        array(
+                            'type' => 'Po',
+                            'filename' => $filename,
+                        ),
+                    ),
+                ),
+            ),
+            Application::getTranslationConfig($basePath->url())
+        );
+        \Locale::setDefault($locale);
+    }
+
+    public function testGetTranslationConfigBaseLanguage()
+    {
+        $locale = \Locale::getDefault();
+        \Locale::setDefault('de_DE');
+        $basePath = vfsStream::setup('root');
+        $filename = vfsStream::newFile('de.po')->at($basePath)->url();
+        $this->assertEquals(
+            array(
+                'translator' => array(
+                    'translation_files' => array(
+                        array(
+                            'type' => 'Po',
+                            'filename' => $filename,
+                        ),
+                    ),
+                ),
+            ),
+            Application::getTranslationConfig($basePath->url())
+        );
+        \Locale::setDefault($locale);
+    }
+
+    public function testGetTranslationConfigNoFile()
+    {
+        $locale = \Locale::getDefault();
+        \Locale::setDefault('de_DE');
+        $basePath = vfsStream::setup('root');
+        $this->assertEquals(
+            array(),
+            Application::getTranslationConfig($basePath->url())
+        );
+        \Locale::setDefault($locale);
     }
 }

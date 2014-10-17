@@ -16,38 +16,21 @@
 # this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-# This file was manually created.
-#, fuzzy
-msgid ""
-msgstr ""
-"Project-Id-Version: braintacle\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-11-08 11:06+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: 8bit\n"
 
-#: Validate/Date.php
-msgid "'%value%' is not a valid date"
-msgstr ""
+# This file is maintained manually.
 
-#: Validate/Date.php
-msgid "Only date can be given, not time of day"
-msgstr ""
-
-#: Validate/NotInArray.php
+#: Validator/NotInArray.php
 msgid "'%value%' is in the list of invalid values."
 msgstr ""
 
-#: Validate/ProductKey
+#: Validator/ProductKey.php
 msgid "'%value%' is not a valid product key."
 msgstr ""
 
-#: Validate/URI.php
-msgid "'%value%' is not a valid URI (without '%scheme%://')"
+#: View/Helper/MembershipType.php
+msgid "automatic"
+msgstr ""
+
+#: View/Helper/MembershipType.php
+msgid "manual"
 msgstr ""
