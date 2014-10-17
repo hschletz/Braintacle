@@ -41,7 +41,8 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Constructor
      *
-     * @param \Model\Computer\Duplicates
+     * @param \Model\Computer\Duplicates $duplicates
+     * @param \Console\Form\ShowDuplicates $showDuplicates
      */
     public function __construct(
         \Model\Computer\Duplicates $duplicates,

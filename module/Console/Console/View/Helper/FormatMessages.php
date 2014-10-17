@@ -88,7 +88,7 @@ class FormatMessages extends \Zend\View\Helper\AbstractHelper
      * All strings and arguments get escaped. \Zend\Uri\Http arguments are
      * converted to hyperlinks.
      *
-     * @param mixed[]
+     * @param mixed[] $messages
      * @return string[]
      */
     public function __invoke(array $messages)

@@ -80,7 +80,7 @@ class Model_NetworkDeviceType extends Model_Abstract
     /**
      * Generate statement to retrieve all network device types
      *
-     * @param integer $id Return only given type. Default: return all types.
+     * @param string $name Return only given type. Default: return all types.
      * @return Zend_Db_Statement Statement
      **/
     public static function createStatementStatic($name=null)

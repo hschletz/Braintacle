@@ -1103,7 +1103,7 @@ class Model_Computer extends Model_ComputerOrGroup
 
     /** Apply a package filter.
      *
-     * @param Zend_Db_Select Object to apply the filter to
+     * @param \Zend_Db_Select $select Object to apply the filter to
      * @param string $filter Name of a pre-defined filter routine
      * @param string $search Search parameter passed to the filter
      * @param bool $addSearchColumns Add columns with search criteria (Package.Status)

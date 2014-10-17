@@ -54,7 +54,7 @@ class Table extends \Zend\View\Helper\AbstractHelper
      * Constructor
      *
      * @param \Zend\View\Helper\EscapeHtml $escapeHtml
-     * @param \Library\View\Helper\HtmlTag $HtmlTag
+     * @param \Library\View\Helper\HtmlTag $htmlTag
      * @param \Console\View\Helper\ConsoleUrl $consoleUrl
      * @param \Zend\I18n\View\Helper\DateFormat $dateFormat
      */

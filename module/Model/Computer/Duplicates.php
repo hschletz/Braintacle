@@ -103,14 +103,14 @@ class Duplicates
     /**
      * Constructor
      *
-     * @param \Database\Table\ComputersAndGroups ComputersAndGroups prototype
-     * @param \Database\Table\ComputerSystemInfo ComputerSystemInfo prototype
-     * @param \Database\Table\NetworkInterfaces NetworkInterfaces prototype
-     * @param \Database\Table\DuplicateAssetTags DuplicateAssetTags prototype
-     * @param \Database\Table\DuplicateSerials DuplicateSerials prototype
-     * @param \Database\Table\DuplicateMacAddresses DuplicateMacAddresses prototype
-     * @param \Database\Table\ItemConfig ItemConfig prototype
-     * @param \Model_Computer \Model_Computer prototype
+     * @param \Database\Table\ComputersAndGroups $computersAndGroups
+     * @param \Database\Table\ComputerSystemInfo $computerSystemInfo
+     * @param \Database\Table\NetworkInterfaces $networkInterfaces
+     * @param \Database\Table\DuplicateAssetTags $duplicateAssetTags
+     * @param \Database\Table\DuplicateSerials $duplicateSerials
+     * @param \Database\Table\DuplicateMacAddresses $duplicateMacAddresses
+     * @param \Database\Table\ItemConfig $itemConfig
+     * @param \Model_Computer $computer
      */
     public function __construct(
         Table\ComputersAndGroups $computersAndGroups,

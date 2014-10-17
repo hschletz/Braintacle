@@ -171,8 +171,8 @@ class Config
     /**
      * Constructor
      *
-     * @param \Database\Table\Config $config Config table gateway
-     * @param \Database\Table\PackageDownloadInfo $config PackageDownloadInfo table gateway
+     * @param \Database\Table\Config $config
+     * @param \Database\Table\PackageDownloadInfo $packageDownloadInfo
      */
     public function __construct(
         \Database\Table\Config $config,

@@ -39,8 +39,8 @@ class SetActiveMenu extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
 
     /**
      * Constructor
-     * 
-     * @param \Zend\Navigation\Navigation
+     *
+     * @param \Zend\Navigation\Navigation $navigation
      */
     public function __construct(\Zend\Navigation\Navigation $navigation)
     {

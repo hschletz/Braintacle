@@ -42,6 +42,7 @@ class ConsoleUrl extends \Zend\View\Helper\AbstractHelper
      * Constructor
      *
      * @param mixed $request If \Zend\Http\Request, its query parameters are evaluated (see $inheritParams)
+     * @param \Zend\View\Helper\Url $url
      */
     public function __construct($request, \Zend\View\Helper\Url $url)
     {
