@@ -60,6 +60,7 @@ $cmd = array(
     '--config',
     realpath("$basePath/doc/api/phpdoc.xml"),
     '--sourcecode',
+    '-m TODO',
 );
 $cmd = implode(' ', $cmd);
 system($cmd, $result);
