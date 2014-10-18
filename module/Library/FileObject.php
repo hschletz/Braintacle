@@ -51,4 +51,31 @@ class FileObject extends \SplFileObject
             return $content;
         }
     }
+
+    /**
+     * Reads entire file into an array
+     *
+     * This is a wrapper for \file() which throws an exception when an error is
+     * encountered.
+     *
+     * @param string $filename Name of the file to read
+     * @param integer $flags Flags for \file()
+     * @return string[] File content
+     * @throws \RuntimeException if an error occurs during reading.
+     */
+    public static function fileGetContentsAsArray($filename, $flags=0)
+    {
+        // Catch possible exceptions from stream wrappers
+        $exception = null;
+        try {
+            $content = file($filename, $flags);
+        } catch (\Exception $exception) {
+            $content = false;
+        }
+        if ($content === false) {
+            throw new \RuntimeException("Error reading from file $filename", 0, $exception);
+        } else {
+            return $content;
+        }
+    }
 }

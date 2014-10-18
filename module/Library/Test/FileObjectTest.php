@@ -60,4 +60,38 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         // Force error by requesting nonexistent file
         FileObject::fileGetContents('vfs://root/test.txt');
     }
+
+    public function testFileGetContentsAsArraySuccess()
+    {
+        $content = "line1\nline2\n";
+        $url = vfsStream::newFile('test.txt')->withContent($content)->at($this->_root)->url();
+        $this->assertEquals(
+            array("line1\n", "line2\n"),
+            FileObject::fileGetContentsAsArray($url)
+        );
+    }
+
+    public function testFileGetContentsAsArraySuccessWithFlags()
+    {
+        $content = "line1\nline2\n";
+        $url = vfsStream::newFile('test.txt')->withContent($content)->at($this->_root)->url();
+        $this->assertEquals(
+            array('line1', 'line2'),
+            FileObject::fileGetContentsAsArray($url, \FILE_IGNORE_NEW_LINES)
+        );
+    }
+
+    public function testFileGetContentsAsArrayEmptyFile()
+    {
+        $content = '';
+        $url = vfsStream::newFile('test.txt')->withContent($content)->at($this->_root)->url();
+        $this->assertEquals(array(), FileObject::fileGetContentsAsArray($url));
+    }
+
+    public function testFileGetContentsAsArrayError()
+    {
+        $this->setExpectedException('RuntimeException', 'Error reading from file vfs://root/test.txt');
+        // Force error by requesting nonexistent file
+        FileObject::fileGetContentsAsArray('vfs://root/test.txt');
+    }
 }
