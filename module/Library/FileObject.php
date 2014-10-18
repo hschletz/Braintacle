@@ -78,4 +78,28 @@ class FileObject extends \SplFileObject
             return $content;
         }
     }
+
+    /**
+     * Write a string to a file
+     *
+     * This is a wrapper for \file_put_contents() which throws an exception when
+     * an error is encountered.
+     *
+     * @param string $filename Name of the file to write to
+     * @param string $content File content
+     * @throws \RuntimeException if an error occurs during writing.
+     */
+    public static function filePutContents($filename, $content)
+    {
+        // Catch possible exceptions from stream wrappers
+        $exception = null;
+        try {
+            $result = file_put_contents($filename, $content);
+        } catch (\Exception $exception) {
+            $result = false;
+        }
+        if ($result === false) {
+            throw new \RuntimeException("Error writing to file $filename", 0, $exception);
+        }
+    }
 }

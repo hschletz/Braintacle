@@ -94,4 +94,20 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         // Force error by requesting nonexistent file
         FileObject::fileGetContentsAsArray('vfs://root/test.txt');
     }
+
+    public function testFilePutContentsSuccess()
+    {
+        $content = "line1\nline2\n";
+        $filename = $this->_root->url() . '/test.txt';
+        FileObject::filePutContents($filename, $content);
+        $this->assertEquals($content, file_get_contents($filename));
+    }
+
+    public function testFilePutContentsError()
+    {
+        $this->setExpectedException('RuntimeException', 'Error writing to file vfs://root/test.txt');
+        // Force error by writing to write-protected file
+        $filename = vfsStream::newFile('test.txt', 0000)->at($this->_root)->url();
+        FileObject::filePutContents($filename, 'content');
+    }
 }
