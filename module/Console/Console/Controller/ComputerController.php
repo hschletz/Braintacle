@@ -505,11 +505,11 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
                     )
                 ) {
                     $this->flashMessenger()->addSuccessMessage(
-                        array("Computer '%s' was successfully deleted." => $name)
+                        array($this->_("Computer '%s' was successfully deleted.") => $name)
                     );
                 } else {
                     $this->flashMessenger()->addErrorMessage(
-                        array("Computer '%s' could not be deleted." => $name)
+                        array($this->_("Computer '%s' could not be deleted.") => $name)
                     );
                 }
                 return $this->redirectToRoute('computer', 'index');

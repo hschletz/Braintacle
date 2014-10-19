@@ -326,11 +326,11 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
             if ($this->params()->fromPost('yes')) {
                 if ($this->_currentGroup->delete()) {
                     $this->flashMessenger()->addSuccessMessage(
-                        array('Group \'%s\' was successfully deleted.' => $name)
+                        array($this->_('Group \'%s\' was successfully deleted.') => $name)
                     );
                 } else {
                     $this->flashMessenger()->addErrorMessage(
-                        array('Group \'%s\' could not be deleted.' => $name)
+                        array($this->_('Group \'%s\' could not be deleted.') => $name)
                     );
                 }
                 return $this->redirectToRoute('group', 'index');

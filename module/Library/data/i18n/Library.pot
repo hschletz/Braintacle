@@ -1,4 +1,4 @@
-# Translation file for Braintacle library
+# Translation file for Library module
 #
 # Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
 #
@@ -16,8 +16,27 @@
 # this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-
 # This file is maintained manually.
+#
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#: Validator/DirectoryWritable.php
+msgid "'%value%' is not a directory or inaccessible"
+msgstr ""
+
+#: Validator/DirectoryWritable.php
+msgid "Directory '%value%' is not writable"
+msgstr ""
+
+#: Validator/FileReadable.php
+msgid "'%value%' is not a file or inaccessible"
+msgstr ""
+
+#: Validator/FileReadable.php
+msgid "File '%value%' is not readable"
+msgstr ""
 
 #: Validator/NotInArray.php
 msgid "'%value%' is in the list of invalid values."

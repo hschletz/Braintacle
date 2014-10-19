@@ -53,6 +53,7 @@ Feature\InitProviderInterface
         $config = array(
             'controller_plugins' => array(
                 'invokables' => array(
+                    '_' => 'Library\Mvc\Controller\Plugin\TranslationHelper',
                     'RedirectToRoute' => 'Library\Mvc\Controller\Plugin\RedirectToRoute',
                     'UrlFromRoute' => 'Library\Mvc\Controller\Plugin\UrlFromRoute',
                 )

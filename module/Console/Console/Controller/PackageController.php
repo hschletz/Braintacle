@@ -158,7 +158,7 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
         $oldPackage = clone $this->_package;
         if (!$oldPackage->fromName($oldName)) {
             $flashMessenger->addErrorMessage(
-                array("Could not retrieve data from package '%s'." => $oldName)
+                array($this->_("Could not retrieve data from package '%s'.") => $oldName)
             );
             return $this->redirectToRoute('package', 'index');
         }
@@ -185,11 +185,11 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
                 }
                 if ($success) {
                     $flashMessenger->addSuccessMessage(
-                        array('Package \'%s\' was successfully changed to \'%s\'.' => $names)
+                        array($this->_('Package \'%s\' was successfully changed to \'%s\'.') => $names)
                     );
                 } else {
                     $flashMessenger->addErrorMessage(
-                        array('Error changing Package \'%s\' to \'%s\':' => $names)
+                        array($this->_('Error changing Package \'%s\' to \'%s\':') => $names)
                     );
                 }
                 return $this->redirectToRoute('package', 'index');
@@ -245,14 +245,14 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
 
         if ($package->build(true)) {
             $flashMessenger->addSuccessMessage(
-                array('Package \'%s\' was successfully created.' => $name)
+                array($this->_('Package \'%s\' was successfully created.') => $name)
             );
             $flashMessenger->setNamespace('packageName');
             $flashMessenger->addMessage($name);
             $returnValue = $package;
         } else {
             $flashMessenger->addErrorMessage(
-                array('Error creating Package \'%s\':' => $name)
+                array($this->_('Error creating Package \'%s\':') => $name)
             );
             $returnValue = null;
         }
@@ -283,11 +283,11 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
         }
         if ($success) {
             $flashMessenger->addSuccessMessage(
-                array('Package \'%s\' was successfully deleted.' => $name)
+                array($this->_('Package \'%s\' was successfully deleted.') => $name)
             );
         } else {
             $flashMessenger->addErrorMessage(
-                array('Package \'%s\' could not be deleted.' => $name)
+                array($this->_('Package \'%s\' could not be deleted.') => $name)
             );
         }
         foreach ($package->getErrors() as $message) {
