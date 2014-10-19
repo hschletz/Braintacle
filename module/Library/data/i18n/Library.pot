@@ -39,11 +39,11 @@ msgid "File '%value%' is not readable"
 msgstr ""
 
 #: Validator/NotInArray.php
-msgid "'%value%' is in the list of invalid values."
+msgid "'%value%' is in the list of invalid values"
 msgstr ""
 
 #: Validator/ProductKey.php
-msgid "'%value%' is not a valid product key."
+msgid "'%value%' is not a valid product key"
 msgstr ""
 
 #: View/Helper/MembershipType.php

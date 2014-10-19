@@ -127,7 +127,7 @@ msgstr "Passwort wiederholen"
 
 #: Console/Form/Account/AbstractForm.php
 msgid "The passwords do not match"
-msgstr "Die Passwörter stimmen nicht überein."
+msgstr "Die Passwörter stimmen nicht überein"
 
 #: Console/Form/Account/Add.php Console/Form/DefineFields.php
 #: Console/Form/ManageRegistryValues.php Console/Form/NetworkDeviceTypes.php
@@ -206,7 +206,7 @@ msgstr "Die Eingabe ist länger als 255 Zeichen"
 #: Console/Form/AddToGroup.php Console/Form/DefineFields.php
 #: Console/Form/NetworkDeviceTypes.php
 msgid "The name already exists"
-msgstr "Der Name existiert bereits."
+msgstr "Der Name existiert bereits"
 
 #: Console/Form/AddToGroup.php Console/Form/ManageRegistryValues.php
 msgid "Value is required and can't be empty"
@@ -948,8 +948,8 @@ msgid "Workgroup"
 msgstr "Arbeitsgruppe"
 
 #: Console/Form/ShowDuplicates.php
-msgid "At least 2 different computers have to be selected."
-msgstr "Es müssen mindestens 2 verschiedene Computer ausgewählt werden."
+msgid "At least 2 different computers have to be selected"
+msgstr "Es müssen mindestens 2 verschiedene Computer ausgewählt werden"
 
 #: Console/Form/ShowDuplicates.php
 msgid "Merge selected computers"

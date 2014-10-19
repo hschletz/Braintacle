@@ -55,7 +55,7 @@ class NotInArray extends \Zend\Validator\AbstractValidator
      * @var array
      */
     protected $messageTemplates = array(
-        self::IN_ARRAY => "'%value%' is in the list of invalid values.",
+        self::IN_ARRAY => "'%value%' is in the list of invalid values",
     );
     // @codingStandardsIgnoreEnd
 

@@ -40,7 +40,7 @@ class ProductKey extends \Zend\Validator\AbstractValidator
      * @var string[]
      */
     protected $messageTemplates = array(
-        self::PRODUCT_KEY => "'%value%' is not a valid product key.",
+        self::PRODUCT_KEY => "'%value%' is not a valid product key",
     );
     // @codingStandardsIgnoreEnd
 

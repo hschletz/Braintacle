@@ -36,12 +36,12 @@ msgid "File '%value%' is not readable"
 msgstr "Datei '%value%' ist nicht lesbar"
 
 #: Validator/NotInArray.php
-msgid "'%value%' is in the list of invalid values."
-msgstr "'%value%' ist in der Liste ungültiger Werte."
+msgid "'%value%' is in the list of invalid values"
+msgstr "'%value%' ist in der Liste ungültiger Werte"
 
 #: Validator/ProductKey.php
-msgid "'%value%' is not a valid product key."
-msgstr "'%value%' ist kein gültiger Lizenzschlüssel."
+msgid "'%value%' is not a valid product key"
+msgstr "'%value%' ist kein gültiger Lizenzschlüssel"
 
 #: View/Helper/MembershipType.php
 msgid "automatic"

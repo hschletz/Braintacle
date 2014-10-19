@@ -66,7 +66,7 @@ class ShowDuplicates extends Form
         $arrayCount = new \Zend\Validator\Callback;
         $arrayCount->setCallback(array($this, 'validateArrayCount'))
                    ->setMessage(
-                       'At least 2 different computers have to be selected.',
+                       'At least 2 different computers have to be selected',
                        \Zend\Validator\Callback::INVALID_VALUE
                    );
         $inputFilter = new \Zend\InputFilter\InputFilter;

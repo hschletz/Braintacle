@@ -946,7 +946,7 @@ msgid "Merge selected computers"
 msgstr ""
 
 #: Console/Form/ShowDuplicates.php
-msgid "At least 2 different computers have to be selected."
+msgid "At least 2 different computers have to be selected"
 msgstr ""
 
 #: Console/Form/SoftwareFilter.php
