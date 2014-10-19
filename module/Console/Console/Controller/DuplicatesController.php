@@ -143,7 +143,7 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
                 $this->_duplicates->allow($criteria, $value);
                 $this->flashMessenger()->addSuccessMessage(
                     sprintf(
-                        $this->_('"%s" is no longer considered duplicate.'),
+                        $this->_("'%s' is no longer considered duplicate."),
                         $value
                     )
                 );

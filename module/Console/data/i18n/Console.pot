@@ -44,7 +44,7 @@ msgstr ""
 
 #: Console/Controller/DuplicatesController.php
 #, php-format
-msgid "\"%s\" is no longer considered duplicate."
+msgid "'%s' is no longer considered duplicate."
 msgstr ""
 
 #: Console/Controller/GroupController.php
@@ -934,7 +934,7 @@ msgid "Search"
 msgstr ""
 
 #: Console/Form/Search.php
-msgid "Substring match, wildcards \"?\" and \"*\" allowed"
+msgid "Substring match, wildcards '?' and '*' allowed"
 msgstr ""
 
 #: Console/Form/Search.php
@@ -1130,7 +1130,7 @@ msgstr ""
 
 #: view/console/accounts/delete.php
 #, php-format
-msgid "Account \"%s\" will be permanently deleted. Continue?"
+msgid "Account '%s' will be permanently deleted. Continue?"
 msgstr ""
 
 #: view/console/accounts/edit.php
@@ -1458,7 +1458,7 @@ msgstr ""
 
 #: view/console/computer/removepackage.php
 #, php-format
-msgid "Package \"%s\" will no longer be assigned to this computer. Continue?"
+msgid "Package '%s' will no longer be assigned to this computer. Continue?"
 msgstr ""
 
 #: view/console/computer/software.php
@@ -1630,7 +1630,7 @@ msgstr ""
 
 #: view/console/group/removepackage.php
 #, php-format
-msgid "Package \"%s\" will no longer be assigned to this group. Continue?"
+msgid "Package '%s' will no longer be assigned to this group. Continue?"
 msgstr ""
 
 #: view/console/licenses/index.php

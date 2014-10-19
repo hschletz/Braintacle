@@ -40,8 +40,8 @@ msgstr "Der angeforderte Computer existiert nicht."
 
 #: Console/Controller/DuplicatesController.php
 #, php-format
-msgid "\"%s\" is no longer considered duplicate."
-msgstr "\"%s\" wird nicht mehr als Duplikat betrachtet."
+msgid "'%s' is no longer considered duplicate."
+msgstr "'%s' wird nicht mehr als Duplikat betrachtet."
 
 #: Console/Controller/DuplicatesController.php
 msgid "The selected computers have been merged."
@@ -549,7 +549,7 @@ msgstr "Inventarisierte Registry-Werte verwalten"
 #: Console/Form/Preferences/Inventory.php
 #, php-format
 msgid "Mark '%s' by default"
-msgstr "\"%s\" als Vorgabe setzen"
+msgstr "'%s' als Vorgabe setzen"
 
 #: Console/Form/Preferences/Inventory.php Console/Form/ShowDuplicates.php
 msgid "Merge manual group assignments"
@@ -581,11 +581,11 @@ msgstr "Anzahl der Scan-Computer pro Subnetz"
 
 #: Console/Form/Preferences/Packages.php
 msgid "Allow user abort by default"
-msgstr "Vorgabe für \"Erlaube Abbruch durch Benutzer\""
+msgstr "Vorgabe für 'Erlaube Abbruch durch Benutzer'"
 
 #: Console/Form/Preferences/Packages.php
 msgid "Allow user delay by default"
-msgstr "Vorgabe für \"Erlaube Aufschub durch Benutzer\""
+msgstr "Vorgabe für 'Erlaube Aufschub durch Benutzer'"
 
 #: Console/Form/Preferences/Packages.php
 msgid "Default action"
@@ -625,7 +625,7 @@ msgstr "Vorgaben für Zuweisung aktualisierter Pakete"
 
 #: Console/Form/Preferences/Packages.php
 msgid "Warn user by default"
-msgstr "Vorgabe für \"Benutzer warnen\""
+msgstr "Vorgabe für 'Benutzer warnen'"
 
 #: Console/Form/Preferences/RawData.php
 msgid "File format"
@@ -903,8 +903,8 @@ msgid "Software: Version"
 msgstr "Software: Version"
 
 #: Console/Form/Search.php
-msgid "Substring match, wildcards \"?\" and \"*\" allowed"
-msgstr "Teilzeichenfolge, Platzhalter \"?\" und \"*\" erlaubt"
+msgid "Substring match, wildcards '?' and '*' allowed"
+msgstr "Teilzeichenfolge, Platzhalter '?' und '*' erlaubt"
 
 #: Console/Form/Search.php view/console/computer/general.php
 msgid "Swap memory"
@@ -1137,8 +1137,8 @@ msgstr "Neuen Account erstellen"
 
 #: view/console/accounts/delete.php
 #, php-format
-msgid "Account \"%s\" will be permanently deleted. Continue?"
-msgstr "Account \"%s\" wird dauerhaft gelöscht. Fortfahren?"
+msgid "Account '%s' will be permanently deleted. Continue?"
+msgstr "Account '%s' wird dauerhaft gelöscht. Fortfahren?"
 
 #: view/console/accounts/edit.php
 msgid "Edit account"
@@ -1465,9 +1465,9 @@ msgstr "Registry-Schlüssel"
 
 #: view/console/computer/removepackage.php
 #, php-format
-msgid "Package \"%s\" will no longer be assigned to this computer. Continue?"
+msgid "Package '%s' will no longer be assigned to this computer. Continue?"
 msgstr ""
-"Paket \"%s\" wird nicht mehr diesem Computer zugewiesen sein. Fortfahren?"
+"Paket '%s' wird nicht mehr diesem Computer zugewiesen sein. Fortfahren?"
 
 #: view/console/computer/software.php
 msgid "Location"
@@ -1638,9 +1638,9 @@ msgstr "Nächstes Update:"
 
 #: view/console/group/removepackage.php
 #, php-format
-msgid "Package \"%s\" will no longer be assigned to this group. Continue?"
+msgid "Package '%s' will no longer be assigned to this group. Continue?"
 msgstr ""
-"Paket \"%s\" wird nicht mehr dieser Gruppe zugewiesen sein. Fortfahren?"
+"Paket '%s' wird nicht mehr dieser Gruppe zugewiesen sein. Fortfahren?"
 
 #: view/console/licenses/index.php
 msgid "Manually entered Windows product keys"

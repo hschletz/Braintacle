@@ -23,7 +23,7 @@
 print $this->formYesNo(
     sprintf(
         $this->translate(
-            'Package "%s" will no longer be assigned to this group. Continue?'
+            "Package '%s' will no longer be assigned to this group. Continue?"
         ),
         $this->escapeHtml($this->package)
     )

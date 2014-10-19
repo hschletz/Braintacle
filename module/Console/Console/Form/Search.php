@@ -234,7 +234,7 @@ class Search extends Form
         $this->setInputFilter($inputFilter);
 
         $this->_operatorsText = array(
-            'like' => $translator->translate('Substring match, wildcards "?" and "*" allowed'),
+            'like' => $translator->translate("Substring match, wildcards '?' and '*' allowed"),
             'eq' => $translator->translate('Exact match'),
         );
     }

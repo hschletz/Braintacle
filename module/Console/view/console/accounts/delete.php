@@ -23,7 +23,7 @@
 print $this->formYesNo(
     sprintf(
         $this->translate(
-            'Account "%s" will be permanently deleted. Continue?'
+            "Account '%s' will be permanently deleted. Continue?"
         ),
         $this->escapeHtml($this->id)
     )

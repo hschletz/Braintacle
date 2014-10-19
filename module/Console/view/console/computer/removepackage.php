@@ -21,7 +21,7 @@
 
 print $this->formYesNo(
     sprintf(
-        $this->translate('Package "%s" will no longer be assigned to this computer. Continue?'),
+        $this->translate("Package '%s' will no longer be assigned to this computer. Continue?"),
         $this->escapeHtml($this->packageName)
     )
 );
