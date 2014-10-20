@@ -315,7 +315,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: Console/Form/DeleteComputer.php Console/Form/Preferences/Inventory.php
+#: Console/Form/DeleteComputer.php
 msgid "Delete interfaces from network listing"
 msgstr ""
 
@@ -537,20 +537,19 @@ msgid "Set package status on computers for group-assigned packages"
 msgstr ""
 
 #: Console/Form/Preferences/Inventory.php
-#, php-format
-msgid "Mark '%s' by default"
+msgid "Merge user supplied information by default"
 msgstr ""
 
-#: Console/Form/Preferences/Inventory.php Console/Form/ShowDuplicates.php
-msgid "Merge user supplied information"
+#: Console/Form/Preferences/Inventory.php
+msgid "Merge manual group assignments by default"
 msgstr ""
 
-#: Console/Form/Preferences/Inventory.php Console/Form/ShowDuplicates.php
-msgid "Merge manual group assignments"
+#: Console/Form/Preferences/Inventory.php
+msgid "Merge missing package assignments by default"
 msgstr ""
 
-#: Console/Form/Preferences/Inventory.php Console/Form/ShowDuplicates.php
-msgid "Merge missing package assignments"
+#: Console/Form/Preferences/Inventory.php
+msgid "Delete interfaces from network listing by default"
 msgstr ""
 
 #: Console/Form/Preferences/Inventory.php
@@ -942,6 +941,18 @@ msgid "Exact match"
 msgstr ""
 
 #: Console/Form/ShowDuplicates.php
+msgid "Merge user supplied information"
+msgstr ""
+
+#: Console/Form/ShowDuplicates.php
+msgid "Merge manual group assignments"
+msgstr ""
+
+#: Console/Form/ShowDuplicates.php
+msgid "Merge missing package assignments"
+msgstr ""
+
+#: Console/Form/ShowDuplicates.php
 msgid "Merge selected computers"
 msgstr ""
 
@@ -1091,7 +1102,7 @@ msgstr ""
 
 #: Console/View/Helper/FilterDescription.php
 #, php-format
-msgid "%1$d computers with an interface in network '%2$s'"
+msgid "%1$d computers with an interface in network %2$s"
 msgstr ""
 
 #: Console/View/Helper/FilterDescription.php

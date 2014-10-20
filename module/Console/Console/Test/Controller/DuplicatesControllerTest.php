@@ -66,7 +66,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
                           ->will($this->returnValue(0));
         $this->dispatch('/console/duplicates/index/');
         $this->assertResponseStatusCode(200);
-        $this->assertQueryContentContains('p', 'No duplicates present.');
+        $this->assertQueryContentContains('p', 'Keine Duplikate vorhanden.');
     }
 
     public function testIndexActionShowDuplicates()
@@ -79,6 +79,39 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         // List with 4 hyperlinks.
         $this->assertQueryCount('td a[href*="/console/duplicates/show/?criteria="]', 4);
         $this->assertQueryContentContains('td a[href*="/console/duplicates/show/?criteria="]', "\n2\n");
+    }
+
+    public function testIndexActionNoFlashMessages()
+    {
+        $this->_duplicates->method('count')
+                          ->will($this->returnValue(0));
+        $this->dispatch('/console/duplicates/index/');
+        $this->assertResponseStatusCode(200);
+        $this->assertNotXpathQuery('//ul');
+    }
+
+    public function testIndexActionRenderFlashMessages()
+    {
+        $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
+        $flashMessenger->addInfoMessage(
+            'At least 2 different computers have to be selected'
+        );
+        $flashMessenger->addSuccessMessage(
+            array("'%s' is no longer considered duplicate." => 'abc')
+        );
+        $this->_duplicates->method('count')
+                          ->will($this->returnValue(0));
+        $this->dispatch('/console/duplicates/index/');
+        $this->assertResponseStatusCode(200);
+        $this->assertXpathQueryCount('//ul', 2);
+        $this->assertXPathQueryContentContains(
+            '//ul[@class="info"]/li',
+            'Es müssen mindestens 2 verschiedene Computer ausgewählt werden'
+        );
+        $this->assertXPathQueryContentContains(
+            '//ul[@class="success"]/li',
+            "'abc' wird nicht mehr als Duplikat betrachtet."
+        );
     }
 
     public function testShowActionMissingCriteria()
@@ -194,7 +227,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/duplicates/allow/?criteria=Serial&value=12345678', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/duplicates/index/');
         $this->assertContains(
-            '"12345678" is no longer considered duplicate.',
+            array("'%s' is no longer considered duplicate." => '12345678'),
             $this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
         );
     }

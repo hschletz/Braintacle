@@ -92,11 +92,11 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertNotQueryContentContains(
             'td a',
-            'Accept'
+            'Akzeptieren'
         );
         $this->assertQueryContentContains(
             'td a[href="/console/software/ignore/?name=raw_name2"]',
-            'Ignore'
+            'Ignorieren'
         );
         $this->assertQueryContentContains(
             'td',
@@ -133,11 +133,11 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains(
             'td a[href="/console/software/accept/?name=raw_name2"]',
-            'Accept'
+            'Akzeptieren'
         );
         $this->assertNotQueryContentContains(
             'td a',
-            'Ignore'
+            'Ignorieren'
         );
     }
 
@@ -166,11 +166,11 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains(
             'td a[href="/console/software/accept/?name=raw_name2"]',
-            'Accept'
+            'Akzeptieren'
         );
         $this->assertQueryContentContains(
             'td a[href="/console/software/ignore/?name=raw_name2"]',
-            'Ignore'
+            'Ignorieren'
         );
     }
 
@@ -200,11 +200,11 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertNotQueryContentContains(
             'td a',
-            'Accept'
+            'Akzeptieren'
         );
         $this->assertNotQueryContentContains(
             'td a',
-            'Ignore'
+            'Ignorieren'
         );
     }
 

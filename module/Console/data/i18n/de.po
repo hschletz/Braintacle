@@ -319,7 +319,7 @@ msgstr "Langer Text"
 msgid "Text"
 msgstr "Text"
 
-#: Console/Form/DeleteComputer.php Console/Form/Preferences/Inventory.php
+#: Console/Form/DeleteComputer.php
 msgid "Delete interfaces from network listing"
 msgstr "Interfaces aus Netzwerkliste löschen"
 
@@ -543,25 +543,24 @@ msgid "Set package status on computers for group-assigned packages"
 msgstr "Status von durch Gruppe zugewiesenen Paketen bei Computern setzen "
 
 #: Console/Form/Preferences/Inventory.php
+msgid "Delete interfaces from network listing by default"
+msgstr "'Interfaces aus Netzwerkliste löschen' als Vorgabe"
+
+#: Console/Form/Preferences/Inventory.php
 msgid "Manage inventoried registry values"
 msgstr "Inventarisierte Registry-Werte verwalten"
 
 #: Console/Form/Preferences/Inventory.php
-#, php-format
-msgid "Mark '%s' by default"
-msgstr "'%s' als Vorgabe setzen"
+msgid "Merge manual group assignments by default"
+msgstr "'Manuelle Gruppenzuweisungen übernehmen' als Vorgabe"
 
-#: Console/Form/Preferences/Inventory.php Console/Form/ShowDuplicates.php
-msgid "Merge manual group assignments"
-msgstr "Manuelle Gruppenzuweisungen übernehmen"
+#: Console/Form/Preferences/Inventory.php
+msgid "Merge missing package assignments by default"
+msgstr "'Fehlende Paketzuweisungen übernehmen' als Vorgabe"
 
-#: Console/Form/Preferences/Inventory.php Console/Form/ShowDuplicates.php
-msgid "Merge missing package assignments"
-msgstr "Fehlende Paketzuweisungen übernehmen"
-
-#: Console/Form/Preferences/Inventory.php Console/Form/ShowDuplicates.php
-msgid "Merge user supplied information"
-msgstr "Benutzerdefinierte Informationen übernehmen"
+#: Console/Form/Preferences/Inventory.php
+msgid "Merge user supplied information by default"
+msgstr "'Benutzerdefinierte Informationen übernehmen' als Vorgabe"
 
 #: Console/Form/Preferences/NetworkScanning.php
 msgid "Delay (in milliseconds) between ARP requests"
@@ -762,7 +761,7 @@ msgstr "Ergebnisse invertieren"
 #: Console/Form/Search.php Console/Form/ShowDuplicates.php
 #: view/console/computer/general.php view/console/computer/index.php
 msgid "Last contact"
-msgstr "Letzer Kontakt"
+msgstr "Letzter Kontakt"
 
 #: Console/Form/Search.php view/console/computer/index.php
 #: view/console/group/excluded.php view/console/group/members.php
@@ -952,8 +951,20 @@ msgid "At least 2 different computers have to be selected"
 msgstr "Es müssen mindestens 2 verschiedene Computer ausgewählt werden"
 
 #: Console/Form/ShowDuplicates.php
+msgid "Merge manual group assignments"
+msgstr "Manuelle Gruppenzuweisungen übernehmen"
+
+#: Console/Form/ShowDuplicates.php
+msgid "Merge missing package assignments"
+msgstr "Fehlende Paketzuweisungen übernehmen"
+
+#: Console/Form/ShowDuplicates.php
 msgid "Merge selected computers"
 msgstr "Ausgewählte Computer zusammenführen"
+
+#: Console/Form/ShowDuplicates.php
+msgid "Merge user supplied information"
+msgstr "Benutzerdefinierte Informationen übernehmen"
 
 #: Console/Form/SoftwareFilter.php
 msgid "Filter"
@@ -1113,7 +1124,7 @@ msgstr "%1$d Computer, auf denen die Software '%2$s' installiert ist"
 
 #: Console/View/Helper/FilterDescription.php
 #, php-format
-msgid "%1$d computers with an interface in network '%2$s'"
+msgid "%1$d computers with an interface in network %2$s"
 msgstr "%1$d Computer mit Interface in Netzwerk %2$s"
 
 #: Console/View/Helper/FilterDescription.php
@@ -1212,7 +1223,7 @@ msgstr "Datum der Inventarinformationen"
 
 #: view/console/computer/general.php
 msgid "Last user logged in"
-msgstr "Letzer angemeldeter Benutzer"
+msgstr "Letzter angemeldeter Benutzer"
 
 #: view/console/computer/general.php
 msgid "Number of CPU cores"
@@ -1228,7 +1239,7 @@ msgstr "Vom Agenten entdeckter Arbeitsspeicher"
 
 #: view/console/computer/general.php
 msgid "RAM reported by OS"
-msgstr "Arbeitsspeicher lt. Betriebsystem"
+msgstr "Arbeitsspeicher lt. Betriebssystem"
 
 #: view/console/computer/general.php view/console/computer/index.php
 #: view/console/computer/virtualmachines.php

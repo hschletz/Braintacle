@@ -50,7 +50,7 @@ class DirectoryWritableTest extends \PHPUnit_Framework_TestCase
         $validator = new DirectoryWritable;
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(
-            array(DirectoryWritable::WRITABLE => "Directory '$url' is not writable"),
+            array(DirectoryWritable::WRITABLE => "Verzeichnis '$url' ist nicht schreibbar"),
             $validator->getMessages()
         );
     }
@@ -61,7 +61,7 @@ class DirectoryWritableTest extends \PHPUnit_Framework_TestCase
         $validator = new DirectoryWritable;
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(
-            array(DirectoryWritable::DIRECTORY => "'$url' is not a directory or inaccessible"),
+            array(DirectoryWritable::DIRECTORY => "'$url' ist kein Verzeichnis oder nicht zugänglich"),
             $validator->getMessages()
         );
     }
@@ -72,7 +72,7 @@ class DirectoryWritableTest extends \PHPUnit_Framework_TestCase
         $validator = new DirectoryWritable;
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(
-            array(DirectoryWritable::DIRECTORY => "'$url' is not a directory or inaccessible"),
+            array(DirectoryWritable::DIRECTORY => "'$url' ist kein Verzeichnis oder nicht zugänglich"),
             $validator->getMessages()
         );
     }
@@ -83,7 +83,7 @@ class DirectoryWritableTest extends \PHPUnit_Framework_TestCase
         $validator = new DirectoryWritable;
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(
-            array(DirectoryWritable::DIRECTORY => "'$url' is not a directory or inaccessible"),
+            array(DirectoryWritable::DIRECTORY => "'$url' ist kein Verzeichnis oder nicht zugänglich"),
             $validator->getMessages()
         );
     }
@@ -94,7 +94,7 @@ class DirectoryWritableTest extends \PHPUnit_Framework_TestCase
         $validator = new DirectoryWritable;
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(
-            array(DirectoryWritable::DIRECTORY => "'$url' is not a directory or inaccessible"),
+            array(DirectoryWritable::DIRECTORY => "'$url' ist kein Verzeichnis oder nicht zugänglich"),
             $validator->getMessages()
         );
     }

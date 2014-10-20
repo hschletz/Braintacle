@@ -20,8 +20,17 @@
  *
  */
 
-print $this->flashMessenger()->render('info');
-print $this->flashMessenger()->render('success');
+foreach (array('error', 'info', 'success') as $namespace) {
+    $messages = $this->flashMessenger()->getMessagesFromNamespace($namespace);
+    if ($messages) {
+        print $this->htmlList(
+            $this->formatMessages($messages),
+            false,
+            array('class' => $namespace),
+            false
+        );
+    }
+}
 
 $labels = array(
     'Name' => $this->translate('Name'),

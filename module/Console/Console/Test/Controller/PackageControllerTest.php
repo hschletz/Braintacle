@@ -172,7 +172,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         // 'Delete' column
         $this->assertXpathQueryContentContains(
             '//td/a[@href="/console/package/delete/?name=name1"]',
-            'Delete'
+            'Löschen'
         );
 
         // No flash messages

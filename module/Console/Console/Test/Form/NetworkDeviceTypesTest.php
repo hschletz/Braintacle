@@ -123,8 +123,8 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
         $messages = array(
             'Types' => array(
-                'name0' => array('callbackValue' => 'The name already exists'),
-                'name1' => array('callbackValue' => 'The name already exists'),
+                'name0' => array('callbackValue' => 'Der Name existiert bereits'),
+                'name1' => array('callbackValue' => 'Der Name existiert bereits'),
             ),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
@@ -144,7 +144,7 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
         $messages = array(
             'Types' => array(
-                'name1' => array('callbackValue' => 'The name already exists'),
+                'name1' => array('callbackValue' => 'Der Name existiert bereits'),
             ),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
@@ -164,7 +164,7 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
         $messages = array(
             'Types' => array(
-                'name1' => array('callbackValue' => 'The name already exists'),
+                'name1' => array('callbackValue' => 'Der Name existiert bereits'),
             ),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
@@ -184,8 +184,8 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
         $messages = array(
             'Types' => array(
-                'name0' => array('callbackValue' => 'The name already exists'),
-                'name1' => array('callbackValue' => 'The name already exists'),
+                'name0' => array('callbackValue' => 'Der Name existiert bereits'),
+                'name1' => array('callbackValue' => 'Der Name existiert bereits'),
             ),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
@@ -236,7 +236,7 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = array(
-            'Add' => array('callbackValue' => 'The name already exists'),
+            'Add' => array('callbackValue' => 'Der Name existiert bereits'),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
     }
@@ -254,7 +254,7 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = array(
-            'Add' => array('callbackValue' => 'The name already exists'),
+            'Add' => array('callbackValue' => 'Der Name existiert bereits'),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
     }
@@ -271,13 +271,13 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         );
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
-        $messages = array(
-            'Types' => array(
-                'name0' => array('isEmpty' => "Value is required and can't be empty"),
-                'name1' => array('isEmpty' => "Value is required and can't be empty"),
-            ),
-        );
-        $this->assertEquals($messages, $this->_form->getMessages());
+        $messages = $this->_form->getMessages();
+        $this->assertCount(1, $messages);
+        $this->assertCount(2, $messages['Types']);
+        $this->assertCount(1, $messages['Types']['name0']);
+        $this->assertCount(1, $messages['Types']['name1']);
+        $this->assertArrayHasKey('isEmpty', $messages['Types']['name0']);
+        $this->assertArrayHasKey('isEmpty', $messages['Types']['name1']);
     }
 
     public function testInputFilterStringLengthMax()
@@ -318,13 +318,13 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
     public function testRenderFieldsetNoMessages()
     {
         $html = $this->_form->renderFieldset($this->_createView(), $this->_form);
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Zend\Dom\Document(static::HTML_HEADER . $html);
         $this->assertCount(1, Query::execute('//div[@class="table"]', $document));
         $this->assertCount(
             1,
             Query::execute(
                 '//input[@name="name0"]/following-sibling::a' .
-                '[@href="/console/preferences/deletedevicetype/?name=name0"][text()="Delete"]',
+                '[@href="/console/preferences/deletedevicetype/?name=name0"][text()="Löschen"]',
                 $document
             )
         );

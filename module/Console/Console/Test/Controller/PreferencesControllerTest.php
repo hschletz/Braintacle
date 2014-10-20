@@ -448,7 +448,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
                            ->will($this->returnValue($form));
         $this->dispatch('/console/preferences/customfields');
         $this->assertResponseStatusCode(200);
-        $this->assertQueryContentContains('h1', "\nManage custom fields\n");
+        $this->assertQueryContentContains('h1', "\nBenutzerdefinierte Felder verwalten\n");
         $this->assertXPathQuery('//form');
     }
 
@@ -542,7 +542,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
                            ->will($this->returnValue($form));
         $this->dispatch('/console/preferences/networkdevices');
         $this->assertResponseStatusCode(200);
-        $this->assertQueryContentContains('h1', "\nManage device types\n");
+        $this->assertQueryContentContains('h1', "\nGerätetypen verwalten\n");
         $this->assertXPathQuery('//form');
     }
 

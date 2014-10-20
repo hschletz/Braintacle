@@ -21,6 +21,7 @@
 
 namespace Console\Test\Form\Preferences;
 use \org\bovigo\vfs\vfsStream;
+use Zend\Dom\Document\Query;
 
 class RawDataTest extends \Console\Test\AbstractFormTest
 {
@@ -29,15 +30,7 @@ class RawDataTest extends \Console\Test\AbstractFormTest
         $preferences = $this->_form->get('Preferences');
         $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('saveRawData'));
         $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('saveDir'));
-        $saveFormat = $preferences->get('saveFormat');
-        $this->assertInstanceOf('Zend\Form\Element\Select', $saveFormat);
-        $this->assertEquals(
-            array(
-                'XML' => 'XML, unkomprimiert',
-                'OCS' => 'XML, zlib-komprimiert',
-            ),
-            $saveFormat->getValueOptions()
-        );
+        $this->assertInstanceOf('Zend\Form\Element\Select', $preferences->get('saveFormat'));
         $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('saveOverwrite'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
@@ -100,5 +93,28 @@ class RawDataTest extends \Console\Test\AbstractFormTest
         $this->_form->setValidationGroup('Preferences');
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertTrue($this->_form->isValid());
+    }
+
+    public function testSelectOptionsTranslated()
+    {
+        $view = $this->_createView();
+        $preferences = $this->_form->get('Preferences');
+        $html = $this->_form->renderFieldset($view, $preferences);
+        $document = new \Zend\Dom\Document($html);
+        $this->assertCount(2, Query::execute('//select[@name="saveFormat"]/option', $document));
+        $this->assertCount(
+            1,
+            Query::execute(
+                '//select[@name="saveFormat"]/option[@value="XML"][text()="XML, unkomprimiert"]',
+                $document
+            )
+        );
+        $this->assertCount(
+            1,
+            Query::execute(
+                '//select[@name="saveFormat"]/option[@value="OCS"][text()="XML, zlib-komprimiert"]',
+                $document
+            )
+        );
     }
 }

@@ -30,6 +30,17 @@ namespace Console\Test;
 abstract class AbstractFormTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * HTML header to declare document encoding
+     *
+     * \DomDocument parses HTML input as ISO 8859-1 by default. This is a
+     * problem when XPath queries test on non-ASCII-characters. The only way to
+     * specify another encoding is a meta tag within the HTML code itself.
+     * For HTML fragments, this header can be prepended to trick \DomDocument
+     * (and \Zend\Dom\Document) to parse the fragment as UTF-8.
+     */
+    const HTML_HEADER = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">';
+
+    /**
      * Form instance provided by setUp()
      * @var \Console\Form\Form
      */

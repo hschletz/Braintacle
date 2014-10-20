@@ -141,7 +141,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
         $html = $this->_form->renderFieldset($view, $this->_form->get('Agent'));
         $document = new \Zend\Dom\Document($html);
 
-        $query = "//input[@name='Agent[%s]']/following-sibling::text()[string()='(Default: %s)\n']";
+        $query = "//input[@name='Agent[%s]']/following-sibling::text()[string()='(Standard: %s)\n']";
         $this->assertCount(1, Query::execute(sprintf($query, 'contactInterval', 'default&1'), $document));
         $this->assertCount(1, Query::execute(sprintf($query, 'inventoryInterval', 'default&2'), $document));
     }
@@ -173,7 +173,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
         $html = $this->_form->renderFieldset($view, $this->_form->get('Agent'));
         $document = new \Zend\Dom\Document($html);
 
-        $query = "//input[@name='Agent[%s]']/following-sibling::text()[string()='(Default: %s, Effective: %s)\n']";
+        $query = "//input[@name='Agent[%s]']/following-sibling::text()[string()='(Standard: %s, Effektiv: %s)\n']";
         $this->assertCount(
             1,
             Query::execute(sprintf($query, 'contactInterval', 'default&1', 'effective&1'), $document)
@@ -201,9 +201,9 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
         $html = $this->_form->renderFieldset($view, $this->_form->get('Scan'));
         $document = new \Zend\Dom\Document($html);
 
-        $query = "//input[@name='Scan[%s]']/following-sibling::text()[string()='(Default: %s)\n']";
-        $this->assertCount(1, Query::execute(sprintf($query, 'allowScan', 'Yes'), $document));
-        $this->assertCount(1, Query::execute(sprintf($query, 'scanSnmp', 'No'), $document));
+        $query = "//input[@name='Scan[%s]']/following-sibling::text()[string()='(Standard: %s)\n']";
+        $this->assertCount(1, Query::execute(sprintf($query, 'allowScan', 'Ja'), $document));
+        $this->assertCount(1, Query::execute(sprintf($query, 'scanSnmp', 'Nein'), $document));
     }
 
     public function testRenderFieldsetCheckboxDefaultsForComputer()
@@ -233,9 +233,9 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
         $html = $this->_form->renderFieldset($view, $this->_form->get('Scan'));
         $document = new \Zend\Dom\Document($html);
 
-        $query = "//input[@name='Scan[%s]']/following-sibling::text()[string()='(Default: %s, Effective: %s)\n']";
-        $this->assertCount(1, Query::execute(sprintf($query, 'allowScan', 'Yes', 'No'), $document));
-        $this->assertCount(1, Query::execute(sprintf($query, 'scanSnmp', 'No', 'Yes'), $document));
+        $query = "//input[@name='Scan[%s]']/following-sibling::text()[string()='(Standard: %s, Effektiv: %s)\n']";
+        $this->assertCount(1, Query::execute(sprintf($query, 'allowScan', 'Ja', 'Nein'), $document));
+        $this->assertCount(1, Query::execute(sprintf($query, 'scanSnmp', 'Nein', 'Ja'), $document));
     }
 
     public function testRenderFieldsetWithNetworks()
@@ -294,7 +294,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
         $this->assertCount(3, Query::execute('//div[@class="table"]/fieldset', $document));
         $this->assertCount(1, Query::execute("//fieldset[1]/legend[text()='\nAgent\n']", $document));
         $this->assertCount(1, Query::execute("//fieldset[2]/legend[text()='\nDownload\n']", $document));
-        $this->assertCount(1, Query::execute("//fieldset[3]/legend[text()='\nNetwork scanning\n']", $document));
+        $this->assertCount(1, Query::execute("//fieldset[3]/legend[text()='\nNetzwerk-Scans\n']", $document));
         $this->assertCount(1, Query::execute('//div[@class="table"]/input[@type="submit"]', $document));
     }
 

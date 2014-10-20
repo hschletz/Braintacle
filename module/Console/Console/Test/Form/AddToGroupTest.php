@@ -116,7 +116,7 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = array(
-            'NewGroup' => array('callbackValue' => "Value is required and can't be empty")
+            'NewGroup' => array('callbackValue' => "Eingabe erforderlich")
         );
         $this->assertEquals($messages, $this->_form->getMessages());
     }
@@ -134,7 +134,7 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = array(
-            'NewGroup' => array('callbackValue' => "Value is required and can't be empty")
+            'NewGroup' => array('callbackValue' => "Eingabe erforderlich")
         );
         $this->assertEquals($messages, $this->_form->getMessages());
     }
@@ -152,7 +152,7 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = array(
-            'NewGroup' => array('callbackValue' => 'The input is more than 255 characters long')
+            'NewGroup' => array('callbackValue' => 'Die Eingabe ist länger als 255 Zeichen')
         );
         $this->assertEquals($messages, $this->_form->getMessages());
     }
@@ -170,7 +170,7 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = array(
-            'NewGroup' => array('callbackValue' => 'The name already exists')
+            'NewGroup' => array('callbackValue' => 'Der Name existiert bereits')
         );
         $this->assertEquals($messages, $this->_form->getMessages());
     }
@@ -220,7 +220,7 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = array(
-            'Description' => array('callbackValue' => 'The input is more than 255 characters long')
+            'Description' => array('callbackValue' => 'Die Eingabe ist länger als 255 Zeichen')
         );
         $this->assertEquals($messages, $this->_form->getMessages());
     }

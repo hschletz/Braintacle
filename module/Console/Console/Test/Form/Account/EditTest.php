@@ -222,7 +222,7 @@ class EditTest extends \Console\Test\AbstractFormTest
         $messages = $this->_form->getMessages();
         $this->assertCount(1, $messages);
         $this->assertCount(1, $messages['PasswordRepeat']);
-        $this->assertEquals('The passwords do not match', $messages['PasswordRepeat']['notSame']);
+        $this->assertEquals('Die Passwörter stimmen nicht überein', $messages['PasswordRepeat']['notSame']);
     }
 
     public function testInputFilterInvalidPasswordEmptyRepeatNonEmpty()
@@ -243,7 +243,7 @@ class EditTest extends \Console\Test\AbstractFormTest
         $messages = $this->_form->getMessages();
         $this->assertCount(1, $messages);
         $this->assertCount(1, $messages['PasswordRepeat']);
-        $this->assertEquals('The passwords do not match', $messages['PasswordRepeat']['notSame']);
+        $this->assertEquals('Die Passwörter stimmen nicht überein', $messages['PasswordRepeat']['notSame']);
     }
 
     public function testInputFilterInvalidPasswordNonEmptyRepeatEmpty()
@@ -264,7 +264,7 @@ class EditTest extends \Console\Test\AbstractFormTest
         $messages = $this->_form->getMessages();
         $this->assertCount(1, $messages);
         $this->assertCount(1, $messages['PasswordRepeat']);
-        $this->assertEquals('The passwords do not match', $messages['PasswordRepeat']['notSame']);
+        $this->assertEquals('Die Passwörter stimmen nicht überein', $messages['PasswordRepeat']['notSame']);
     }
 
     public function testInputFilterInvalidEmail()

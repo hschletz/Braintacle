@@ -50,7 +50,7 @@ class FileReadableTest extends \PHPUnit_Framework_TestCase
         $validator = new FileReadable;
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(
-            array(FileReadable::READABLE => "File '$url' is not readable"),
+            array(FileReadable::READABLE => "Datei '$url' ist nicht lesbar"),
             $validator->getMessages()
         );
     }
@@ -61,7 +61,7 @@ class FileReadableTest extends \PHPUnit_Framework_TestCase
         $validator = new FileReadable;
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(
-            array(FileReadable::FILE => "'$url' is not a file or inaccessible"),
+            array(FileReadable::FILE => "'$url' ist keine Datei oder nicht zugänglich"),
             $validator->getMessages()
         );
     }
@@ -72,7 +72,7 @@ class FileReadableTest extends \PHPUnit_Framework_TestCase
         $validator = new FileReadable;
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(
-            array(FileReadable::FILE => "'$url' is not a file or inaccessible"),
+            array(FileReadable::FILE => "'$url' ist keine Datei oder nicht zugänglich"),
             $validator->getMessages()
         );
     }
@@ -83,7 +83,7 @@ class FileReadableTest extends \PHPUnit_Framework_TestCase
         $validator = new FileReadable;
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(
-            array(FileReadable::FILE => "'$url' is not a file or inaccessible"),
+            array(FileReadable::FILE => "'$url' ist keine Datei oder nicht zugänglich"),
             $validator->getMessages()
         );
     }
@@ -94,7 +94,7 @@ class FileReadableTest extends \PHPUnit_Framework_TestCase
         $validator = new FileReadable;
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(
-            array(FileReadable::FILE => "'$url' is not a file or inaccessible"),
+            array(FileReadable::FILE => "'$url' ist keine Datei oder nicht zugänglich"),
             $validator->getMessages()
         );
     }

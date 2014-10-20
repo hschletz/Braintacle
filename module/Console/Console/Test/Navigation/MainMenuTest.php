@@ -77,6 +77,6 @@ class MainMenuTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerT
         // Dispatch arbitrary action and test corresponding menu entry
         $this->dispatch('/console/licenses/index/');
         $this->assertResponseStatusCode(200);
-        $this->assertQueryContentContains('li.active a', 'Licenses');
+        $this->assertQueryContentContains('li.active a', 'Lizenzen');
     }
 }

@@ -30,7 +30,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     {
         // Escaped characters should not occur, but are theoretically possible.
         $this->assertEquals(
-            "42 computers with an interface in network &#039;&gt;192.0.2.0/24&#039;",
+            "42 Computer mit Interface in Netzwerk &gt;192.0.2.0/24",
             $this->_getHelper()->__invoke(
                 array('NetworkInterface.Subnet', 'NetworkInterface.Netmask'),
                 array('>192.0.2.0', '255.255.255.0'),
@@ -42,7 +42,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     public function testPackageNonnotified()
     {
         $this->assertEquals(
-            "42 computers waiting for notification of package &#039;&gt;Name&#039;",
+            "42 Computer, die auf Installation von Paket &#039;&gt;Name&#039; warten",
             $this->_getHelper()->__invoke('PackageNonnotified', '>Name', 42)
         );
     }
@@ -50,7 +50,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     public function testPackageSuccess()
     {
         $this->assertEquals(
-            "42 computers with package &#039;&gt;Name&#039; successfully deployed",
+            "42 Computer mit erfolgreich installiertem Paket &#039;&gt;Name&#039;",
             $this->_getHelper()->__invoke('PackageSuccess', '>Name', 42)
         );
     }
@@ -58,7 +58,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     public function testPackageNotified()
     {
         $this->assertEquals(
-            "42 computers with deployment of package &#039;&gt;Name&#039; in progress",
+            "42 Computer mit laufender Installation von Paket &#039;&gt;Name&#039;",
             $this->_getHelper()->__invoke('PackageNotified', '>Name', 42)
         );
     }
@@ -66,7 +66,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     public function testPackageError()
     {
         $this->assertEquals(
-            "42 computers where deployment of package &#039;&gt;Name&#039; failed",
+            "42 Computer, bei denen die Installation von Paket &#039;&gt;Name&#039; fehlgeschlagen ist",
             $this->_getHelper()->__invoke('PackageError', '>Name', 42)
         );
     }
@@ -74,7 +74,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     public function testSoftware()
     {
         $this->assertEquals(
-            "42 computers where software &#039;&gt;Name&#039; is installed",
+            "42 Computer, auf denen die Software &#039;&gt;Name&#039; installiert ist",
             $this->_getHelper()->__invoke('Software', '>Name', 42)
         );
     }
@@ -82,7 +82,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     public function testManualProductKey()
     {
         $this->assertEquals(
-            '42 computers with manually entered product key',
+            '42 Computer mit manuell eingegebenem Windows-Lizenzschlüssel',
             $this->_getHelper()->__invoke('Windows.ManualProductKey', 'dummy', 42)
         );
     }

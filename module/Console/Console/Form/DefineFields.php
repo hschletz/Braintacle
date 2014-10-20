@@ -164,7 +164,7 @@ class DefineFields extends Form
                 $element->setAttribute('class', 'input-error');
             }
             $row = $view->formText($element) . "\n";
-            $row .= $view->htmlTag('span', $type, array('class' => 'cell'));
+            $row .= $view->htmlTag('span', $view->translate($type), array('class' => 'cell'));
             $row .= $view->htmlTag(
                 'span',
                 $view->htmlTag(

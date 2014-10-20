@@ -146,7 +146,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
         $this->assertCount(2, $this->_form->getMessages());
         $this->assertCount(1, $this->_form->getMessages('mergeGroups'));
         $this->assertEquals(
-            array('callbackValue' => 'At least 2 different computers have to be selected.'),
+            array('callbackValue' => 'Es müssen mindestens 2 verschiedene Computer ausgewählt werden'),
             $this->_form->getMessages('computers')
         );
     }

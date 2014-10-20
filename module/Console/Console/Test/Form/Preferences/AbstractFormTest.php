@@ -59,7 +59,7 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
 </div>
 <div class='row'>
 <span class='cell'></span>
-<input type="submit" name="Submit" value="Set">
+<input type="submit" name="Submit" value="Setzen">
 </div>
 </div>
 
@@ -104,7 +104,7 @@ EOT;
 <label><span>Text2</span><input type="text" name="text2" value=""></label>
 <div class='row'>
 <span class='cell'></span>
-<input type="submit" name="Submit" value="Set">
+<input type="submit" name="Submit" value="Setzen">
 </div>
 </div>
 

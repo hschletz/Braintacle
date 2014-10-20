@@ -63,19 +63,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
     {
         $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('NewName'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
-
-        $newType = $this->_form->get('NewType');
-        $this->assertInstanceOf('Zend\Form\Element\Select', $newType);
-        $this->assertEquals(
-            array(
-                'text' => 'Text',
-                'clob' => 'Langer Text',
-                'integer' => 'Ganzzahl',
-                'float' => 'Kommazahl',
-                'date' => 'Datum',
-            ),
-            $newType->getValueOptions()
-        );
+        $this->assertInstanceOf('Zend\Form\Element\Select', $this->_form->get('NewType'));
 
         $fields = $this->_form->get('Fields');
         $this->assertCount(2, $fields);
@@ -140,8 +128,8 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
         $messages = array(
             'Fields' => array(
-                'name0' => array('callbackValue' => 'The name already exists'),
-                'name1' => array('callbackValue' => 'The name already exists'),
+                'name0' => array('callbackValue' => 'Der Name existiert bereits'),
+                'name1' => array('callbackValue' => 'Der Name existiert bereits'),
             ),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
@@ -162,7 +150,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
         $messages = array(
             'Fields' => array(
-                'name1' => array('callbackValue' => 'The name already exists'),
+                'name1' => array('callbackValue' => 'Der Name existiert bereits'),
             ),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
@@ -183,7 +171,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
         $messages = array(
             'Fields' => array(
-                'name1' => array('callbackValue' => 'The name already exists'),
+                'name1' => array('callbackValue' => 'Der Name existiert bereits'),
             ),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
@@ -204,8 +192,8 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
         $messages = array(
             'Fields' => array(
-                'name0' => array('callbackValue' => 'The name already exists'),
-                'name1' => array('callbackValue' => 'The name already exists'),
+                'name0' => array('callbackValue' => 'Der Name existiert bereits'),
+                'name1' => array('callbackValue' => 'Der Name existiert bereits'),
             ),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
@@ -259,7 +247,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = array(
-            'NewName' => array('callbackValue' => 'The name already exists'),
+            'NewName' => array('callbackValue' => 'Der Name existiert bereits'),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
     }
@@ -278,7 +266,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = array(
-            'NewName' => array('callbackValue' => 'The name already exists'),
+            'NewName' => array('callbackValue' => 'Der Name existiert bereits'),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
     }
@@ -296,12 +284,13 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         );
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
-        $messages = array(
-            'Fields' => array(
-                'name0' => array('isEmpty' => "Value is required and can't be empty"),
-                'name1' => array('isEmpty' => "Value is required and can't be empty"),
-            ),
-        );
+        $messages = $this->_form->getMessages();
+        $this->assertCount(1, $messages);
+        $this->assertCount(2, $messages['Fields']);
+        $this->assertCount(1, $messages['Fields']['name0']);
+        $this->assertCount(1, $messages['Fields']['name1']);
+        $this->assertArrayHasKey('isEmpty', $messages['Fields']['name0']);
+        $this->assertArrayHasKey('isEmpty', $messages['Fields']['name1']);
         $this->assertEquals($messages, $this->_form->getMessages());
     }
 
@@ -342,12 +331,39 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         $this->assertEquals($messages, $this->_form->getMessages());
     }
 
+    public function testSelectOptionsTranslated()
+    {
+        $view = $this->_createView();
+        $html = $this->_form->renderFieldset($view, $this->_form);
+        $document = new \Zend\Dom\Document($html);
+        $this->assertCount(5, Query::execute('//select[@name="NewType"]/option', $document));
+        $this->assertCount(
+            1,
+            Query::execute('//select[@name="NewType"]/option[@value="text"][text()="Text"]', $document)
+        );
+        $this->assertCount(
+            1,
+            Query::execute('//select[@name="NewType"]/option[@value="clob"][text()="Langer Text"]', $document)
+        );
+        $this->assertCount(
+            1,
+            Query::execute('//select[@name="NewType"]/option[@value="integer"][text()="Ganzzahl"]', $document)
+        );
+        $this->assertCount(
+            1,
+            Query::execute('//select[@name="NewType"]/option[@value="float"][text()="Kommazahl"]', $document)
+        );
+        $this->assertCount(
+            1,
+            Query::execute('//select[@name="NewType"]/option[@value="date"][text()="Datum"]', $document)
+        );
+    }
+
     public function testRenderFieldsetNoMessages()
     {
         $html = $this->_form->renderFieldset($this->_createView(), $this->_form);
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Zend\Dom\Document(static::HTML_HEADER . $html);
         $this->assertCount(1, Query::execute('//div[@class="table"]', $document));
-//         var_dump($html);
         $this->assertCount(
             1,
             Query::execute(
@@ -366,7 +382,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
             1,
             Query::execute(
                 '//input[@name="name0"]/following-sibling::span[2]/a' .
-                '[@href="/console/preferences/deletefield/?name=name0"][text()="Delete"]',
+                '[@href="/console/preferences/deletefield/?name=name0"][text()="Löschen"]',
                 $document
             )
         );

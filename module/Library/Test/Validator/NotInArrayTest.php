@@ -47,7 +47,7 @@ class NotInArrayTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($validator->isValid('One'));
         $this->assertFalse($validator->isValid('one'));
         $this->assertEquals(
-            array('inArray' => "'one' is in the list of invalid values."),
+            array('inArray' => "'one' ist in der Liste ungültiger Werte"),
             $validator->getMessages()
         );
 

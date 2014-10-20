@@ -94,7 +94,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertNotQuery('td a[href*="mailto:test"]');
         $this->assertNotQueryContentContains('td a', 'Delete');
-        $this->assertQueryContentContains('td a[href="/console/accounts/edit/?id=testId"]', 'Edit');
+        $this->assertQueryContentContains('td a[href="/console/accounts/edit/?id=testId"]', 'Bearbeiten');
 
     }
 
@@ -120,7 +120,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
 
         $this->dispatch('/console/accounts/index/');
         $this->assertResponseStatusCode(200);
-        $this->assertQueryContentContains('td a[href="/console/accounts/delete/?id=testId"]', 'Delete');
+        $this->assertQueryContentContains('td a[href="/console/accounts/delete/?id=testId"]', 'Löschen');
     }
 
     public function testIndexActionMailAddress()
@@ -290,7 +290,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/accounts/delete/?id=testId');
         $this->assertResponseStatusCode(200);
         $this->assertContains(
-            'Account "testId" will be permanently deleted. Continue?',
+            "Account 'testId' wird dauerhaft gelöscht. Fortfahren?",
             $this->getResponse()->getContent()
         );
         $this->assertQuery('form');

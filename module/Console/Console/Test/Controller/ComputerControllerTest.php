@@ -213,7 +213,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValue($this->_sampleComputers));
         $this->dispatch('/console/computer/index/');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//p[@class="textcenter"]', "\nNumber of computers: 2\n");
+        $this->assertXpathQueryContentContains('//p[@class="textcenter"]', "\nAnzahl Computer: 2\n");
         $this->assertXpathQueryCount('//th', 7);
         $this->assertXpathQueryCount('//th[@class="textright"]', 2); // CpuClock and PhysicalMemory
         $this->assertXpathQueryContentContains(
@@ -390,13 +390,13 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch("/console/computer/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery(
-            '//p[@class="textcenter"][contains(text(), "2 matches")]'
+            '//p[@class="textcenter"][contains(text(), "2 Treffer")]'
         );
         $this->assertXpathQuery(
-            "//p[@class='textcenter']/a[@href='/console/computer/search/?$query'][text()='Edit filter']"
+            "//p[@class='textcenter']/a[@href='/console/computer/search/?$query'][text()='Filter bearbeiten']"
         );
         $this->assertXpathQuery(
-            "//p[@class='textcenter']/a[@href='/console/group/add/?$query'][text()='Save to group']"
+            "//p[@class='textcenter']/a[@href='/console/group/add/?$query'][text()='In Gruppe speichern']"
         );
     }
 
@@ -446,7 +446,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch("/console/computer/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery(
-            "//p[@class='textcenter']/a[@href='/console/group/add/?$query'][text()='Save to group']"
+            "//p[@class='textcenter']/a[@href='/console/group/add/?$query'][text()='In Gruppe speichern']"
         );
     }
 
@@ -669,7 +669,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $query = 'filter=UserDefinedInfo.TAG&search=test&operator=like&invert=0';
         $this->dispatch("/console/computer/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//th/a', "Category");
+        $this->assertXpathQueryContentContains('//th/a', "Kategorie");
     }
 
     public function testIndexActionWithInvalidCustomSearch()
@@ -739,23 +739,23 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
 
         $query = "//dl/dt[text()='\n%s\n']/following::dd[1][text()='\n%s\n']";
         $this->assertXPathQuery(sprintf($query, 'ID', 1));
-        $this->assertXPathQuery(sprintf($query, 'Client ID', 'client_id'));
-        $this->assertXPathQuery(sprintf($query, 'Inventory date', '29.05.2014 11:16:15'));
-        $this->assertXPathQuery(sprintf($query, 'Last contact', '29.05.2014 11:17:34'));
-        $this->assertXPathQuery(sprintf($query, 'User Agent', 'user_agent'));
-        $this->assertXPathQuery(sprintf($query, 'Model', 'manufacturer model'));
-        $this->assertXPathQuery(sprintf($query, 'Serial number', 'serial'));
+        $this->assertXPathQuery(sprintf($query, 'Client-ID', 'client_id'));
+        $this->assertXPathQuery(sprintf($query, 'Datum der Inventarinformationen', '29.05.2014 11:16:15'));
+        $this->assertXPathQuery(sprintf($query, 'Letzter Kontakt', '29.05.2014 11:17:34'));
+        $this->assertXPathQuery(sprintf($query, 'User-Agent', 'user_agent'));
+        $this->assertXPathQuery(sprintf($query, 'Modell', 'manufacturer model'));
+        $this->assertXPathQuery(sprintf($query, 'Seriennummer', 'serial'));
         $this->assertXPathQuery(sprintf($query, 'Asset tag', 'asset_tag'));
-        $this->assertXPathQuery(sprintf($query, 'Type', 'type'));
-        $this->assertXPathQuery(sprintf($query, 'Operating System', 'os_name os_version_string (os_version_number)'));
-        $this->assertXPathQuery(sprintf($query, 'Comment', 'os_comment'));
-        $this->assertXPathQuery(sprintf($query, 'CPU type', 'cpu_type'));
-        $this->assertXPathQuery(sprintf($query, 'CPU clock', "1234\xC2\xA0MHz"));
-        $this->assertXPathQuery(sprintf($query, 'Number of CPU cores', 2));
-        $this->assertXPathQuery(sprintf($query, 'RAM detected by agent', "5\xC2\xA0MB"));
-        $this->assertXPathQuery(sprintf($query, 'RAM reported by OS', "1234\xC2\xA0MB"));
-        $this->assertXPathQuery(sprintf($query, 'Swap memory', "5678\xC2\xA0MB"));
-        $this->assertXPathQuery(sprintf($query, 'Last user logged in', 'user_name'));
+        $this->assertXPathQuery(sprintf($query, 'Typ', 'type'));
+        $this->assertXPathQuery(sprintf($query, 'Betriebssystem', 'os_name os_version_string (os_version_number)'));
+        $this->assertXPathQuery(sprintf($query, 'Kommentar', 'os_comment'));
+        $this->assertXPathQuery(sprintf($query, 'CPU Typ', 'cpu_type'));
+        $this->assertXPathQuery(sprintf($query, 'CPU Takt', "1234\xC2\xA0MHz"));
+        $this->assertXPathQuery(sprintf($query, 'Anzahl der CPU-Kerne', 2));
+        $this->assertXPathQuery(sprintf($query, 'Vom Agenten entdeckter Arbeitsspeicher', "5\xC2\xA0MB"));
+        $this->assertXPathQuery(sprintf($query, 'Arbeitsspeicher lt. Betriebssystem', "1234\xC2\xA0MB"));
+        $this->assertXPathQuery(sprintf($query, 'Auslagerungsspeicher', "5678\xC2\xA0MB"));
+        $this->assertXPathQuery(sprintf($query, 'Letzter angemeldeter Benutzer', 'user_name'));
         $this->assertXPathQuery(sprintf($query, 'UUID', 'uuid'));
         $this->assertXpathQuery("//dd[text()='\nserial\n'][not(@class)]");
         $this->assertXpathQuery("//dd[text()='\nasset_tag\n'][not(@class)]");
@@ -847,11 +847,11 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertXPathQuery('//form[@action=""][@method="POST"]');
         $query = '//td[@class="label"][text()="%s"]/following::td[1][text()="%s"]';
-        $this->assertXPathQuery(sprintf($query, 'Company', 'company'));
-        $this->assertXPathQuery(sprintf($query, 'Owner', 'owner'));
-        $this->assertXPathQuery(sprintf($query, 'Product ID', 'product_id'));
-        $this->assertXPathQuery(sprintf($query, 'Product key (reported by agent)', 'product_key'));
-        $this->assertXpathQueryContentContains('//tr[5]/td[1]', $form->get('Key')->getLabel());
+        $this->assertXPathQuery(sprintf($query, 'Firma', 'company'));
+        $this->assertXPathQuery(sprintf($query, 'Besitzer', 'owner'));
+        $this->assertXPathQuery(sprintf($query, 'Produkt-ID', 'product_id'));
+        $this->assertXPathQuery(sprintf($query, 'Lizenzschlüssel (vom Agenten ermittelt)', 'product_key'));
+        $this->assertXpathQueryContentContains('//tr[5]/td[1]', 'Lizenzschlüssel (falls verschieden)');
         $this->assertXpathQuery('//tr[5]/td[2]/input[@type="text"][@name="Key"]');
         $this->assertXpathQuery('//input[@type="hidden"][@name="_csrf"]');
         $this->assertXpathQuery('//input[@type="submit"]');
@@ -931,11 +931,11 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->dispatch('/console/computer/network/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery("//h2[text()='\nGlobal network configuration\n']");
+        $this->assertXpathQuery("//h2[text()='\nGlobale Netzwerkkonfiguration\n']");
         $query = "//td[text()='\n%s\n']/following::td[1][text()='\n%s\n']";
-        $this->assertXPathQuery(sprintf($query, 'DNS server', 'dns_server'));
-        $this->assertXPathQuery(sprintf($query, 'Default gateway', 'default_gateway'));
-        $this->assertNotXpathQuery("//h2[text()='\nNetwork interfaces\n']");
+        $this->assertXPathQuery(sprintf($query, 'DNS-Server', 'dns_server'));
+        $this->assertXPathQuery(sprintf($query, 'Standardgateway', 'default_gateway'));
+        $this->assertNotXpathQuery("//h2[text()='\nNetzwerkschnittstellen\n']");
         $this->assertNotXpathQuery("//h2[text()='\nModems\n']");
     }
 
@@ -971,8 +971,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->dispatch('/console/computer/network/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertNotXpathQuery("//h2[text()='\nGlobal network configuration\n']");
-        $this->assertXpathQuery("//h2[text()='\nNetwork interfaces\n']");
+        $this->assertNotXpathQuery("//h2[text()='\nGlobale Netzwerkkonfiguration\n']");
+        $this->assertXpathQuery("//h2[text()='\nNetzwerkschnittstellen\n']");
         $this->assertXpathQuery("//td[text()='\nmac_address_regular (vendor1)\n'][not(@class)]");
         $this->assertXpathQuery("//td/span[text()='mac_address_blacklisted'][@class='blacklisted']");
         $this->assertNotXpathQuery("//h2[text()='\nModems\n']");
@@ -993,8 +993,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->dispatch('/console/computer/network/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertNotXpathQuery("//h2[text()='\nGlobal network configuration\n']");
-        $this->assertNotXpathQuery("//h2[text()='\nNetwork interfaces\n']");
+        $this->assertNotXpathQuery("//h2[text()='\nGlobale Netzwerkkonfiguration\n']");
+        $this->assertNotXpathQuery("//h2[text()='\nNetzwerkschnittstellen\n']");
         $this->assertXpathQuery("//h2[text()='\nModems\n']");
         $this->assertXpathQueryCount('//td', 2);
     }
@@ -1008,17 +1008,17 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                 'Size' => 1024,
             ),
             array(
-                'Type' => 'Hard disk', // translated
+                'Type' => 'Festplatte', // translated
                 'Name' => 'name',
                 'Size' => 1024,
             ),
             array(
-                'Type' => 'Removable medium', // translated
+                'Type' => 'Wechselmedium', // translated
                 'Name' => 'name',
                 'Size' => 1024,
             ),
             array(
-                'Type' => 'Floppy disk drive', // translated
+                'Type' => 'Diskettenlaufwerk', // translated
                 'Name' => 'name',
                 'Size' => 1024,
             ),
@@ -1060,14 +1060,14 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         // Devices
         $this->assertXpathQueryCount('//table[1]//th', 3);
-        $this->assertXpathQueryContentContains('//table[1]/tr[2]/td[1]', "\nDVD writer\n");
-        $this->assertXpathQueryContentContains('//table[1]/tr[3]/td[1]', "\nHard disk\n");
-        $this->assertXpathQueryContentContains('//table[1]/tr[4]/td[1]', "\nRemovable medium\n");
-        $this->assertXpathQueryContentContains('//table[1]/tr[5]/td[1]', "\nFloppy disk drive\n");
+        $this->assertXpathQueryContentContains('//table[1]/tr[2]/td[1]', "\nDVD-Brenner\n");
+        $this->assertXpathQueryContentContains('//table[1]/tr[3]/td[1]', "\nFestplatte\n");
+        $this->assertXpathQueryContentContains('//table[1]/tr[4]/td[1]', "\nWechselmedium\n");
+        $this->assertXpathQueryContentContains('//table[1]/tr[5]/td[1]', "\nDiskettenlaufwerk\n");
         $this->assertXpathQueryContentContains('//table[1]/tr[6]/td[1]', "\n<other>\n");
         $this->assertXpathQueryContentContains('//table[1]/tr[2]/td[3]', "\n1,0 GB\n");
         // Filesystem 1
-        $this->assertXpathQuery("//table[2]//th[text()='\nLetter\n']");
+        $this->assertXpathQuery("//table[2]//th[text()='\nBuchstabe\n']");
         $this->assertXpathQueryContentContains('//table[2]/tr[2]/td[5]', "\n9,8 GB\n");
         $this->assertXpathQueryContentContains('//table[2]/tr[2]/td[6]', "\n5,9 GB (60%)\n");
         $this->assertXpathQueryContentContains('//table[2]/tr[2]/td[7]', "\n3,9 GB (40%)\n");
@@ -1152,7 +1152,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->dispatch('/console/computer/display/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery("//h2[text()='\nDisplay controllers\n']");
+        $this->assertXpathQuery("//h2[text()='\nDisplay-Controller\n']");
         $this->assertXpathQueryContentContains('//table/tr[2]/td[3]', "\n32\xC2\xA0MB\n");
         $this->assertXpathQueryContentContains('//table/tr[3]/td[3]', '');
         $this->assertNotXpathQuery("//h2[text()='\nDisplays\n']");
@@ -1176,7 +1176,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->dispatch('/console/computer/display/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery("//h2[text()='\nDisplays\n']");
+        $this->assertXpathQuery("//h2[text()='\nAnzeigegeräte\n']");
         $this->assertXpathQueryCount('//th', 5);
     }
 
@@ -1193,8 +1193,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/computer/bios/?id=1');
         $this->assertResponseStatusCode(200);
         $query = "//dl/dt[text()='\n%s\n']/following::dd[1][text()='\n%s\n']";
-        $this->assertXPathQuery(sprintf($query, 'Manufacturer', 'manufacturer'));
-        $this->assertXPathQuery(sprintf($query, 'Date', 'date'));
+        $this->assertXPathQuery(sprintf($query, 'Hersteller', 'manufacturer'));
+        $this->assertXPathQuery(sprintf($query, 'Datum', 'date'));
         $this->assertXpathQueryContentContains('//dd[3][name(node()[2])="br"]', "\nline1\nline2\n");
     }
 
@@ -1225,10 +1225,10 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->dispatch('/console/computer/system/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertNotXpathQuery("//h2[text()='\nMemory slots\n']");
-        $this->assertNotXpathQuery("//h2[text()='\nExtension slots\n']");
-        $this->assertXpathQuery("//h2[text()='\nControllers\n']");
-        $this->assertNotXpathQuery("//th[text()='\nDriver version\n']");
+        $this->assertNotXpathQuery("//h2[text()='\nRAM-Steckplätze\n']");
+        $this->assertNotXpathQuery("//h2[text()='\nErweiterungssteckplätze\n']");
+        $this->assertXpathQuery("//h2[text()='\nController\n']");
+        $this->assertNotXpathQuery("//th[text()='\nTreiber-Version\n']");
         $this->assertXpathQueryCount('//span[@title]', 1);
         $this->assertXpathQuery("//span[@title='comment'][text()='\nname\n']");
     }
@@ -1255,7 +1255,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->dispatch('/console/computer/system/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery("//th[text()='\nDriver version\n']");
+        $this->assertXpathQuery("//th[text()='\nTreiber-Version\n']");
         $this->assertXpathQuery("//td[text()='\ndriver\n']");
     }
 
@@ -1293,7 +1293,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->dispatch('/console/computer/system/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery("//h2[text()='\nMemory slots\n']");
+        $this->assertXpathQuery("//h2[text()='\nRAM-Steckplätze\n']");
         $this->assertXPathQuery("//tr[2]/td[2][text()='\n1024\xC2\xA0MB\n']");
         $this->assertXPathQuery("//tr[2]/td[4][text()='\n333\xC2\xA0MHz\n']");
         $this->assertXPathQuery("//tr[3]/td[2][text()='\n\n']");
@@ -1320,7 +1320,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->dispatch('/console/computer/system/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery("//h2[text()='\nExtension slots\n']");
+        $this->assertXpathQuery("//h2[text()='\nErweiterungssteckplätze\n']");
         $this->assertXpathQueryCount('//tr', 2);
     }
 
@@ -1379,10 +1379,10 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/computer/software/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//th/a[text()='Version']");
-        $this->assertXpathQuery("//th/a[text()='Publisher']");
-        $this->assertXpathQuery("//th/a[text()='Location']");
-        $this->assertXpathQuery("//th/a[text()='Architecture']");
-        $this->assertNotXpathQuery("//th/a[text()='Size']");
+        $this->assertXpathQuery("//th/a[text()='Herausgeber']");
+        $this->assertXpathQuery("//th/a[text()='Ort']");
+        $this->assertXpathQuery("//th/a[text()='Architektur']");
+        $this->assertNotXpathQuery("//th/a[text()='Größe']");
         $this->assertXpathQuery("//tr[2]/td[5][text()='\n32 Bit\n']");
         $this->assertXpathQuery("//tr[3]/td[5][text()='\n\n']");
     }
@@ -1411,10 +1411,10 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/computer/software/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//th/a[text()='Version']");
-        $this->assertNotXpathQuery("//th/a[text()='Publisher']");
-        $this->assertNotXpathQuery("//th/a[text()='Location']");
-        $this->assertNotXpathQuery("//th/a[text()='Architecture']");
-        $this->assertXpathQuery("//th/a[text()='Size']");
+        $this->assertNotXpathQuery("//th/a[text()='Herausgeber']");
+        $this->assertNotXpathQuery("//th/a[text()='Ort']");
+        $this->assertNotXpathQuery("//th/a[text()='Architektur']");
+        $this->assertXpathQuery("//th/a[text()='Größe']");
         $this->assertXpathQuery("//tr[2]/td[3][text()='\n42 kB\n']");
     }
 
@@ -1535,8 +1535,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->onConsecutiveCalls($products, array()));
         $this->dispatch('/console/computer/msoffice/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery("//h2[text()='\nInstalled Microsoft Office products\n']");
-        $this->assertNotXpathQuery("//h2[text()='\nUnused Microsoft Office licenses\n']");
+        $this->assertXpathQuery("//h2[text()='\nInstallierte Microsoft Office-Produkte\n']");
+        $this->assertNotXpathQuery("//h2[text()='\nUngenutzte Microsoft Office-Lizenzen\n']");
         $this->assertXpathQueryContentContains('//tr[2]/td[2]', "\n32 Bit\n");
     }
 
@@ -1557,8 +1557,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->onConsecutiveCalls(array(), $products));
         $this->dispatch('/console/computer/msoffice/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertNotXpathQuery("//h2[text()='\nInstalled Microsoft Office products\n']");
-        $this->assertXpathQuery("//h2[text()='\nUnused Microsoft Office licenses\n']");
+        $this->assertNotXpathQuery("//h2[text()='\nInstallierte Microsoft Office-Produkte\n']");
+        $this->assertXpathQuery("//h2[text()='\nUngenutzte Microsoft Office-Lizenzen\n']");
         $this->assertXpathQueryContentContains('//tr[2]/td[2]', "\n32 Bit\n");
     }
 
@@ -1712,9 +1712,9 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->dispatch('/console/computer/misc/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery("//h2[text()='\nAudio devices\n']");
-        $this->assertNotXpathQuery("//h2[text()='\nInput devices\n']");
-        $this->assertNotXpathQuery("//h2[text()='\nPorts\n']");
+        $this->assertXpathQuery("//h2[text()='\nAudiogeräte\n']");
+        $this->assertNotXpathQuery("//h2[text()='\nEingabegeräte\n']");
+        $this->assertNotXpathQuery("//h2[text()='\nAnschlüsse\n']");
         $this->assertXpathQueryCount('//table', 1);
         $this->assertXpathQueryCount('//tr', 2);
     }
@@ -1730,7 +1730,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                 'Interface' => 'interface1',
             ),
             array(
-                'Type' => 'Keyboard',
+                'Type' => 'Tastatur',
                 'Manufacturer' => 'manufacturer1',
                 'Description' => 'description1',
                 'Comment' => 'comment1',
@@ -1754,14 +1754,13 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->dispatch('/console/computer/misc/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertNotXpathQuery("//h2[text()='\nAudio devices\n']");
-        $this->assertXpathQuery("//h2[text()='\nInput devices\n']");
-        $this->assertNotXpathQuery("//h2[text()='\nPorts\n']");
+        $this->assertNotXpathQuery("//h2[text()='\nAudiogeräte\n']");
+        $this->assertXpathQuery("//h2[text()='\nEingabegeräte\n']");
+        $this->assertNotXpathQuery("//h2[text()='\nAnschlüsse\n']");
         $this->assertXpathQueryCount('//table', 1);
         $this->assertXpathQueryContentContains('//tr[2]/td[1]', "\ntype\n");
-        // TODO: test that "Keyboard" is actually a translated string
-        $this->assertXpathQueryContentContains('//tr[3]/td[1]', "\nKeyboard\n");
-        $this->assertXpathQueryContentContains('//tr[4]/td[1]', "\nPointing device\n");
+        $this->assertXpathQueryContentContains('//tr[3]/td[1]', "\nTastatur\n");
+        $this->assertXpathQueryContentContains('//tr[4]/td[1]', "\nZeigegerät\n");
     }
 
     public function testMiscActionPortsWindows()
@@ -1781,12 +1780,12 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->dispatch('/console/computer/misc/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertNotXpathQuery("//h2[text()='\nAudio devices\n']");
-        $this->assertNotXpathQuery("//h2[text()='\nInput devices\n']");
-        $this->assertXpathQuery("//h2[text()='\nPorts\n']");
+        $this->assertNotXpathQuery("//h2[text()='\nAudiogeräte\n']");
+        $this->assertNotXpathQuery("//h2[text()='\nEingabegeräte\n']");
+        $this->assertXpathQuery("//h2[text()='\nAnschlüsse\n']");
         $this->assertXpathQueryCount('//table', 1);
         $this->assertXpathQueryCount('//tr', 2);
-        $this->assertNotXpathQueryContentContains('//th', "\nConnector\n");
+        $this->assertNotXpathQueryContentContains('//th', "\nVerbinder\n");
     }
 
     public function testMiscActionPortsUnix()
@@ -1807,12 +1806,12 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->dispatch('/console/computer/misc/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertNotXpathQuery("//h2[text()='\nAudio devices\n']");
-        $this->assertNotXpathQuery("//h2[text()='\nInput devices\n']");
-        $this->assertXpathQuery("//h2[text()='\nPorts\n']");
+        $this->assertNotXpathQuery("//h2[text()='\nAudiogeräte\n']");
+        $this->assertNotXpathQuery("//h2[text()='\nEingabegeräte\n']");
+        $this->assertXpathQuery("//h2[text()='\nAnschlüsse\n']");
         $this->assertXpathQueryCount('//table', 1);
         $this->assertXpathQueryCount('//tr', 2);
-        $this->assertXpathQueryContentContains('//th', "\nConnector\n");
+        $this->assertXpathQueryContentContains('//th', "\nVerbinder\n");
     }
 
     public function testCustomfieldsActionFlashMessage()
@@ -1864,7 +1863,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertEmpty($this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages());
         $this->assertXpathQueryContentContains(
             '//p/a[@href="/console/preferences/customfields/"]',
-            'Define fields'
+            'Felder definieren'
         );
         $this->assertXpathQuery('//form');
     }
@@ -1891,7 +1890,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertEmpty($this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages());
         $this->assertXpathQueryContentContains(
             '//p/a[@href="/console/preferences/customfields/"]',
-            'Define fields'
+            'Felder definieren'
         );
     }
 
@@ -1994,13 +1993,13 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//h2', "\nAssigned packages\n");
         $this->assertXpathQueryCount('//h2', 1);
-        $this->assertXpathQueryContentContains('//tr[2]/td[2]/span[@class="package_notnotified"]', 'not notified');
-        $this->assertXpathQueryContentContains('//tr[3]/td[2]/span[@class="package_inprogress"]', 'in progress');
-        $this->assertXpathQueryContentContains('//tr[4]/td[2]/span[@class="package_success"]', 'installed');
+        $this->assertXpathQueryContentContains('//tr[2]/td[2]/span[@class="package_notnotified"]', 'nicht benachrichtigt');
+        $this->assertXpathQueryContentContains('//tr[3]/td[2]/span[@class="package_inprogress"]', 'läuft');
+        $this->assertXpathQueryContentContains('//tr[4]/td[2]/span[@class="package_success"]', 'installiert');
         $this->assertXpathQueryContentContains('//tr[5]/td[2]/span[@class="package_error"]', '<ERROR>');
         $this->assertXpathQueryContentContains(
             '//tr[3]/td[4]/a[@href="/console/computer/removepackage/?id=1&package=package2"]',
-            'remove'
+            'entfernen'
         );
     }
 
@@ -2032,7 +2031,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValue($packages));
         $this->dispatch('/console/computer/packages/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//h2', "\nInstall packages\n");
+        $this->assertXpathQueryContentContains('//h2', "\nPakete installieren\n");
         $this->assertXpathQueryCount('//h2', 1);
         $this->assertXPathQuery('//form');
     }
@@ -2093,7 +2092,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                      ->will($this->returnValue($groups));
         $this->dispatch('/console/computer/groups/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//h2', "\nManage memberships\n");
+        $this->assertXpathQueryContentContains('//h2', "\nMitgliedschaften verwalten\n");
         $this->assertXpathQueryCount('//h2', 1);
         $this->assertNotXpathQuery('//table');
         $this->assertXPathQuery('//form');
@@ -2142,18 +2141,18 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                      ->will($this->returnValue($groups));
         $this->dispatch('/console/computer/groups/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//h2', "\nGroup memberships\n");
+        $this->assertXpathQueryContentContains('//h2', "\nGruppenmitgliedschaften\n");
         $this->assertXpathQueryContentContains(
             '//tr[2]/td[1]/a[@href="/console/group/general/?name=group1"]',
             'group1'
         );
-        $this->assertXpathQueryContentContains('//tr[2]/td[2]', "\nautomatic\n");
+        $this->assertXpathQueryContentContains('//tr[2]/td[2]', "\nautomatisch\n");
         $this->assertXpathQueryContentContains(
             '//tr[3]/td[1]/a[@href="/console/group/general/?name=group2"]',
             'group2'
         );
-        $this->assertXpathQueryContentContains('//tr[3]/td[2]', "\nmanual\n");
-        $this->assertXpathQueryContentContains('//h2', "\nManage memberships\n");
+        $this->assertXpathQueryContentContains('//tr[3]/td[2]', "\nmanuell\n");
+        $this->assertXpathQueryContentContains('//h2', "\nMitgliedschaften verwalten\n");
         $this->assertXPathQuery('//form');
     }
 
@@ -2250,7 +2249,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
             '//p[@class="textcenter"]',
-            "\nComputer 'name' will be permanently deleted. Continue?\n"
+            "\nComputer 'name' wird dauerhaft gelöscht. Fortfahren?\n"
         );
         $this->assertXPathQuery('//form');
     }
@@ -2332,7 +2331,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
             '//p',
-            'Package "name" will no longer be assigned to this computer. Continue?'
+            "Paket 'name' wird nicht mehr diesem Computer zugewiesen sein. Fortfahren?"
         );
     }
 
@@ -2573,7 +2572,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/computer/import/');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//p[@class="error"]');
-        $this->assertXpathQueryContentContains('//h1', "\nImport locally generated inventory data\n");
+        $this->assertXpathQueryContentContains('//h1', "\nImport lokal erzeugter Inventardaten\n");
         $this->assertXPathQuery('//form');
     }
 
@@ -2596,7 +2595,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/computer/import/', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//p[@class="error"]');
-        $this->assertXpathQueryContentContains('//h1', "\nImport locally generated inventory data\n");
+        $this->assertXpathQueryContentContains('//h1', "\nImport lokal erzeugter Inventardaten\n");
     }
 
     public function testImportActionPostValidError()
@@ -2636,9 +2635,9 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
             '//p[@class="error"]',
-            "\nUpload error. Server http://example.net/server responded with error 500: reason_phrase\n"
+            "\nFehler beim Hochladen. Server http://example.net/server antwortete mit Fehler 500: reason_phrase\n"
         );
-        $this->assertXpathQueryContentContains('//h1', "\nImport locally generated inventory data\n");
+        $this->assertXpathQueryContentContains('//h1', "\nImport lokal erzeugter Inventardaten\n");
     }
 
     public function testImportActionPostValidSuccess()

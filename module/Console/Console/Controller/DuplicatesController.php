@@ -142,10 +142,7 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
             if ($params->fromPost('yes')) {
                 $this->_duplicates->allow($criteria, $value);
                 $this->flashMessenger()->addSuccessMessage(
-                    sprintf(
-                        $this->_("'%s' is no longer considered duplicate."),
-                        $value
-                    )
+                    array($this->_("'%s' is no longer considered duplicate.") => $value)
                 );
                 return $this->redirectToRoute('duplicates', 'index');
             } else {

@@ -123,7 +123,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
 
         // Network device section
-        $this->assertQueryContentContains('h2', "\nIdentified network devices\n");
+        $this->assertQueryContentContains('h2', "\nIdentifizierte Netzwerkgeräte\n");
         $this->assertQueryContentContains('td', "\ntype1\n");
         $this->assertQueryContentContains('td', "\n0\n");
         $this->assertQueryContentContains(
@@ -132,11 +132,11 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->assertQueryContentContains(
             'p a[href="/console/preferences/networkdevices/"]',
-            'Manage device types'
+            'Gerätetypen verwalten'
         );
 
         // Subnet section
-        $this->assertQueryContentContains('h2', "\nSubnets\n");
+        $this->assertQueryContentContains('h2', "\nSubnetze\n");
 
         // First row: named subnet, no uninventoried devices
         $this->assertQueryContentContains(
@@ -156,7 +156,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         // AddressWithMask and NumInventoried columns are not tested again
         $this->assertQueryContentContains(
             'td a[href="/console/network/properties/?subnet=198.51.100.0&mask=255.255.255.0"][class="blur"]',
-            'Edit'
+            'Bearbeiten'
         );
         $this->assertQueryContentContains(
             'td a[href="/console/network/showidentified/?subnet=198.51.100.0&mask=255.255.255.0"]',
@@ -195,11 +195,11 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertQueryContentContains('td', "\nidendified_by\n");
         $this->assertQueryContentContains(
             'td a[href="/console/network/edit/?macaddress=00:00:5E:00:53:00"]',
-            'Edit'
+            'Bearbeiten'
         );
         $this->assertQueryContentContains(
             'td a[href="/console/network/delete/?macaddress=00:00:5E:00:53:00"]',
-            'Delete'
+            'Löschen'
         );
     }
 
@@ -253,11 +253,11 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertQueryContentContains('td', "\n23.02.14 18:43\n");
         $this->assertQueryContentContains(
             'td a[href="/console/network/edit/?macaddress=00:00:5E:00:53:00"]',
-            'Edit'
+            'Bearbeiten'
         );
         $this->assertQueryContentContains(
             'td a[href="/console/network/delete/?macaddress=00:00:5E:00:53:00"]',
-            'Delete'
+            'Löschen'
         );
     }
 
@@ -311,7 +311,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains(
             'h1',
-            "\nProperties of subnet 192.0.2.0/24\n"
+            "\nEigenschaften von Subnetz 192.0.2.0/24\n"
         );
         $this->assertXPathQuery('//form');
     }
@@ -412,14 +412,14 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertXPathQuery('//form[@action=""][@method="POST"]');
         $query = '//td[@class="label"][text()="%s"]/following::td[1][text()="%s"]';
-        $this->assertXPathQuery(sprintf($query, 'MAC address', '00:00:5E:00:53:00'));
-        $this->assertXPathQuery(sprintf($query, 'Vendor', 'vendor'));
-        $this->assertXPathQuery(sprintf($query, 'IP address', '192.0.2.1'));
+        $this->assertXPathQuery(sprintf($query, 'MAC-Adresse', '00:00:5E:00:53:00'));
+        $this->assertXPathQuery(sprintf($query, 'Hersteller', 'vendor'));
+        $this->assertXPathQuery(sprintf($query, 'IP-Adresse', '192.0.2.1'));
         $this->assertXPathQuery(sprintf($query, 'Hostname', 'host.example.net'));
-        $this->assertXPathQuery(sprintf($query, 'Date', '24.02.2014 13:21:32'));
-        $this->assertXpathQueryContentContains('//tr[6]/td[1]', $this->_deviceForm->get('Type')->getLabel());
+        $this->assertXPathQuery(sprintf($query, 'Datum', '24.02.2014 13:21:32'));
+        $this->assertXpathQueryContentContains('//tr[6]/td[1]', 'Typ');
         $this->assertXpathQuery('//tr[6]/td[2]/select[@name="Type"]/option[not(@value)]');
-        $this->assertXpathQueryContentContains('//tr[7]/td[1]', $this->_deviceForm->get('Description')->getLabel());
+        $this->assertXpathQueryContentContains('//tr[7]/td[1]', 'Beschreibung');
         $this->assertXpathQuery('//tr[7]/td[2]/input[@type="text"][@name="Description"]');
         $this->assertXpathQuery('//input[@type="hidden"][@name="_csrf"]');
         $this->assertXpathQuery('//input[@type="submit"]');

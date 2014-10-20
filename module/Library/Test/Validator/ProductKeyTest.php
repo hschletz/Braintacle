@@ -63,7 +63,7 @@ class ProductKeyTest extends \PHPUnit_Framework_TestCase
         $validator = new ProductKey;
         $validator->isValid('invalid');
         $this->assertEquals(
-            array(ProductKey::PRODUCT_KEY => "'invalid' is not a valid product key."),
+            array(ProductKey::PRODUCT_KEY => "'invalid' ist kein gültiger Lizenzschlüssel"),
             $validator->getMessages()
         );
     }

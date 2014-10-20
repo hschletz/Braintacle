@@ -51,7 +51,7 @@ class FilterDescription extends \Zend\View\Helper\AbstractHelper
         if (is_array($filter)) {
             if ($filter === array('NetworkInterface.Subnet', 'NetworkInterface.Netmask')) {
                 $description = $this->view->translate(
-                    '%1$d computers with an interface in network \'%2$s\''
+                    '%1$d computers with an interface in network %2$s'
                 );
                 $network = $search[0] . \Model_Subnet::getCidrSuffix($search[1]);
                 return $this->view->escapeHtml(sprintf($description, $count, $network));

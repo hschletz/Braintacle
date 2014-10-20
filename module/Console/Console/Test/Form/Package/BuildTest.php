@@ -435,7 +435,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
 
         $headScript = $view->headScript()->toString();
         $this->assertContains(
-            'var actionParamLabels = {"launch":"Command line","execute":"Command line","store":"Target Path"};',
+            'var actionParamLabels = {"launch":"Befehlszeile","execute":"Befehlszeile","store":"Zielpfad"};',
             $headScript
         );
         $this->assertContains('function changeParam()', $headScript);

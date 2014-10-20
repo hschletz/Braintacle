@@ -118,7 +118,7 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
                     ->method('render');
         $this->dispatch('/console/login/login', 'POST', $postData);
         $this->assertResponseStatusCode(200);
-        $this->assertXPathQueryContentContains('//p[@class="error"]', "\nInvalid username or password\n");
+        $this->assertXPathQueryContentContains('//p[@class="error"]', "\nBenutzername und/oder Passwort ungültig.\n");
     }
 
     public function testLoginActionWithoutIdentityPostInvalid()
@@ -135,7 +135,7 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
                     ->method('render');
         $this->dispatch('/console/login/login', 'POST', $postData);
         $this->assertResponseStatusCode(200);
-        $this->assertXPathQueryContentContains('//p[@class="error"]', "\nInvalid username or password\n");
+        $this->assertXPathQueryContentContains('//p[@class="error"]', "\nBenutzername und/oder Passwort ungültig.\n");
     }
 
     public function testLoginActionWithoutIdentityGet()

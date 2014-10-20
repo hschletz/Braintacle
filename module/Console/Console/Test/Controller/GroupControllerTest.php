@@ -119,7 +119,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/group/index/');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//table');
-        $this->assertXpathQuery("//p[@class='textcenter'][text()='\nNo groups defined.\n']");
+        $this->assertXpathQuery("//p[@class='textcenter'][text()='\nKeine Gruppen definiert.\n']");
     }
 
     public function testIndexActionWithData()
@@ -158,7 +158,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
             '//td',
             "\ndescription\n"
         );
-        $this->assertNotXpathQuery("//p[@class='textcenter'][text()='\nNo groups defined.\n']");
+        $this->assertNotXpathQuery("//p[@class='textcenter'][text()='\nKeine Gruppen definiert.\n']");
     }
 
     public function testIndexActionMessages()
@@ -193,15 +193,15 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
             "//ul[@class='navigation navigation_details']/li[@class='active']/a[@href='$url']",
-            'General'
+            'Allgemein'
         );
         $this->assertXpathQuery('//td[text()="Name"]/following::td[text()="groupName"]');
         $this->assertXpathQuery('//td[text()="ID"]/following::td[text()="groupID"]');
-        $this->assertXpathQuery('//td[text()="Description"]/following::td[text()="groupDescription"]');
+        $this->assertXpathQuery('//td[text()="Beschreibung"]/following::td[text()="groupDescription"]');
         $this->assertXpathQuery(
-            '//td[text()="Creation date"]/following::td[text()="Dienstag, 8. April 2014 20:12:21"]'
+            '//td[text()="Erstellungsdatum"]/following::td[text()="Dienstag, 8. April 2014 20:12:21"]'
         );
-        $this->assertXpathQuery("//td[text()='SQL query']/following::td/code[text()='\ngroupSql\n']");
+        $this->assertXpathQuery("//td[text()='SQL-Abfrage']/following::td/code[text()='\ngroupSql\n']");
     }
 
     public function testMembersAction()
@@ -239,12 +239,12 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
             "//ul[@class='navigation navigation_details']/li[@class='active']/a[@href='$url']",
-            'Members'
+            'Mitglieder'
         );
-        $this->assertXpathQuery('//td[text()="Last update:"]/following::td[text()="Dienstag, 8. April 2014 20:12:21"]');
-        $this->assertXpathQuery('//td[text()="Next update:"]/following::td[text()="Mittwoch, 9. April 2014 18:53:21"]');
-        $this->assertXpathQuery("//p[@class='textcenter'][text()='\nNumber of computers: 1\n']");
-        $this->assertXpathQuery("//td[text()='\nmanual\n']");
+        $this->assertXpathQuery('//td[text()="Letztes Update:"]/following::td[text()="Dienstag, 8. April 2014 20:12:21"]');
+        $this->assertXpathQuery('//td[text()="Nächstes Update:"]/following::td[text()="Mittwoch, 9. April 2014 18:53:21"]');
+        $this->assertXpathQuery("//p[@class='textcenter'][text()='\nAnzahl Computer: 1\n']");
+        $this->assertXpathQuery("//td[text()='\nmanuell\n']");
         $this->assertXpathQuery("//td/a[@href='/console/computer/groups/?id=1'][text()='computerName']");
     }
 
@@ -276,9 +276,9 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
             "//ul[@class='navigation navigation_details']/li[@class='active']/a[@href='$url']",
-            'Excluded'
+            'Ausgeschlossen'
         );
-        $this->assertXpathQuery("//p[@class='textcenter'][text()='\nNumber of computers: 1\n']");
+        $this->assertXpathQuery("//p[@class='textcenter'][text()='\nAnzahl Computer: 1\n']");
         $this->assertXpathQuery("//td/a[@href='/console/computer/groups/?id=1'][text()='computerName']");
     }
 
@@ -314,11 +314,11 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
             "//ul[@class='navigation navigation_details']/li[@class='active']/a[@href='$url']",
-            'Packages'
+            'Pakete'
         );
         $this->assertXpathQuery("//td[text()='\npackage2\n']");
         $this->assertXpathQuery(
-            "//td/a[@href='/console/group/removepackage/?package=package2&name=test'][text()='remove']"
+            "//td/a[@href='/console/group/removepackage/?package=package2&name=test'][text()='entfernen']"
         );
     }
 
@@ -372,7 +372,9 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                      ->method('unaffectPackage');
         $this->dispatch('/console/group/removepackage/?package=package&name=test');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery('//p[contains(text(), \'"package"\')]');
+        $this->assertXpathQuery(
+            '//p[text()="Paket \'package\' wird nicht mehr dieser Gruppe zugewiesen sein. Fortfahren?"]'
+        );
     }
 
     public function testRemovepackageActionPostNo()

@@ -26,38 +26,11 @@ class InventoryTest extends \Console\Test\AbstractFormTest
     public function testInit()
     {
         $preferences = $this->_form->get('Preferences');
-
-        $inspectRegistry = $preferences->get('inspectRegistry');
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $inspectRegistry);
-
-        $defaultMergeCustomFields = $preferences->get('defaultMergeCustomFields');
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $defaultMergeCustomFields);
-        $this->assertEquals(
-            '"Benutzerdefinierte Informationen übernehmen" als Vorgabe setzen',
-            $defaultMergeCustomFields->getLabel()
-        );
-
-        $defaultMergeGroups = $preferences->get('defaultMergeGroups');
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $defaultMergeGroups);
-        $this->assertEquals(
-            '"Manuelle Gruppenzuweisungen übernehmen" als Vorgabe setzen',
-            $defaultMergeGroups->getLabel()
-        );
-
-        $defaultMergePackages = $preferences->get('defaultMergePackages');
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $defaultMergePackages);
-        $this->assertEquals(
-            '"Fehlende Paketzuweisungen übernehmen" als Vorgabe setzen',
-            $defaultMergePackages->getLabel()
-        );
-
-        $defaultDeleteInterfaces = $preferences->get('defaultDeleteInterfaces');
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $defaultDeleteInterfaces);
-        $this->assertEquals(
-            '"Interfaces aus Netzwerkliste löschen" als Vorgabe setzen',
-            $defaultDeleteInterfaces->getLabel()
-        );
-
+        $this->assertInstanceOf('Zend\Form\Element\Checkbox',  $preferences->get('inspectRegistry'));
+        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('defaultMergeCustomFields'));
+        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('defaultMergeGroups'));
+        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('defaultMergePackages'));
+        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('defaultDeleteInterfaces'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
 
@@ -69,7 +42,8 @@ class InventoryTest extends \Console\Test\AbstractFormTest
         $this->assertCount(
             1,
             \Zend\Dom\Document\Query::execute(
-                "//a[@href='/console/preferences/registryvalues/'][text()='\n[Manage inventoried registry values]\n']",
+                "//a[@href='/console/preferences/registryvalues/']" .
+                "[text()='\n[Inventarisierte Registry-Werte verwalten]\n']",
                 $document
             )
         );
