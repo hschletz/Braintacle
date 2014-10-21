@@ -1008,17 +1008,17 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                 'Size' => 1024,
             ),
             array(
-                'Type' => 'Festplatte', // translated
+                'Type' => 'Hard disk', // translated
                 'Name' => 'name',
                 'Size' => 1024,
             ),
             array(
-                'Type' => 'Wechselmedium', // translated
+                'Type' => 'Removable medium', // translated
                 'Name' => 'name',
                 'Size' => 1024,
             ),
             array(
-                'Type' => 'Diskettenlaufwerk', // translated
+                'Type' => 'Floppy disk drive', // translated
                 'Name' => 'name',
                 'Size' => 1024,
             ),
@@ -1730,7 +1730,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                 'Interface' => 'interface1',
             ),
             array(
-                'Type' => 'Tastatur',
+                'Type' => 'Keyboard',
                 'Manufacturer' => 'manufacturer1',
                 'Description' => 'description1',
                 'Comment' => 'comment1',
