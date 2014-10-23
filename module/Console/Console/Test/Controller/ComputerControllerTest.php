@@ -1993,7 +1993,10 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//h2', "\nAssigned packages\n");
         $this->assertXpathQueryCount('//h2', 1);
-        $this->assertXpathQueryContentContains('//tr[2]/td[2]/span[@class="package_notnotified"]', 'nicht benachrichtigt');
+        $this->assertXpathQueryContentContains(
+            '//tr[2]/td[2]/span[@class="package_notnotified"]',
+            'nicht benachrichtigt'
+        );
         $this->assertXpathQueryContentContains('//tr[3]/td[2]/span[@class="package_inprogress"]', 'läuft');
         $this->assertXpathQueryContentContains('//tr[4]/td[2]/span[@class="package_success"]', 'installiert');
         $this->assertXpathQueryContentContains('//tr[5]/td[2]/span[@class="package_error"]', '<ERROR>');

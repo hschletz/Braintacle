@@ -241,8 +241,12 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
             "//ul[@class='navigation navigation_details']/li[@class='active']/a[@href='$url']",
             'Mitglieder'
         );
-        $this->assertXpathQuery('//td[text()="Letztes Update:"]/following::td[text()="Dienstag, 8. April 2014 20:12:21"]');
-        $this->assertXpathQuery('//td[text()="Nächstes Update:"]/following::td[text()="Mittwoch, 9. April 2014 18:53:21"]');
+        $this->assertXpathQuery(
+            '//td[text()="Letztes Update:"]/following::td[text()="Dienstag, 8. April 2014 20:12:21"]'
+        );
+        $this->assertXpathQuery(
+            '//td[text()="Nächstes Update:"]/following::td[text()="Mittwoch, 9. April 2014 18:53:21"]'
+        );
         $this->assertXpathQuery("//p[@class='textcenter'][text()='\nAnzahl Computer: 1\n']");
         $this->assertXpathQuery("//td[text()='\nmanuell\n']");
         $this->assertXpathQuery("//td/a[@href='/console/computer/groups/?id=1'][text()='computerName']");
