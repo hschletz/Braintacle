@@ -112,13 +112,32 @@ Feature\InitProviderInterface
             'Library\Form\Element\SelectSimple',
             'formselectsimple'
         );
-        $mvcTranslator = $serviceManager->get('MvcTranslator');
-        $translator = $mvcTranslator->getTranslator();
-        $translator->getPluginManager()->setInvokableClass(
-            'Po',
-            'Library\I18n\Translator\Loader\Po'
-        );
-        \Zend\Validator\AbstractValidator::setDefaultTranslator($mvcTranslator);
+        if (\Locale::getPrimaryLanguage(\Locale::getDefault()) != 'en') {
+            $mvcTranslator = $serviceManager->get('MvcTranslator');
+            $translator = $mvcTranslator->getTranslator();
+            $translator->getPluginManager()->setInvokableClass(
+                'Po',
+                'Library\I18n\Translator\Loader\Po'
+            );
+            if (Application::isDevelopment()) {
+                $translator->enableEventManager();
+                $translator->getEventManager()->attach(
+                    \Zend\I18n\Translator\Translator::EVENT_MISSING_TRANSLATION,
+                    array($this, 'onMissingTranslation')
+                );
+            }
+            \Zend\Validator\AbstractValidator::setDefaultTranslator($mvcTranslator);
+        }
+    }
+
+    /**
+     * Event handler for missing translations
+     * @param \Zend\EventManager\EventInterface $e
+     * @internal
+     */
+    public function onMissingTranslation(\Zend\EventManager\EventInterface $e)
+    {
+        trigger_error('Missing translation: ' . $e->getParam('message'), E_USER_NOTICE);
     }
 
     /**

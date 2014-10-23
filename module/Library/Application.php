@@ -83,7 +83,7 @@ class Application
 
         // Bootstrap ZF1 application part.
         // TODO: remove APPLICATION_PATH and APPLICATION_ENV when no longer used
-        define('APPLICATION_PATH', self::getPath('application'));
+        @define('APPLICATION_PATH', self::getPath('application'));
         $environment = self::getEnvironment();
 
         // Get absolute path to ZF1 library
