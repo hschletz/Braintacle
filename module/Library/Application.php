@@ -63,7 +63,6 @@ class Application
     {
         // Set up PHP environment.
         session_cache_limiter('nocache'); // Default headers to prevent caching
-        ini_set('magic_quotes_runtime', false);
 
         // Evaluate locale from HTTP header. Affects translations, date/time rendering etc.
         \Locale::setDefault(\Locale::acceptFromHttp(@$_SERVER['HTTP_ACCEPT_LANGUAGE']));
