@@ -59,7 +59,7 @@ class Application
      * @param bool $run Run the application after initialization.
      * @codeCoverageIgnore
      */
-    static function init($module, $run=null)
+    public static function init($module, $run=null)
     {
         // Set up PHP environment.
         session_cache_limiter('nocache'); // Default headers to prevent caching
@@ -130,7 +130,7 @@ class Application
      * @throws \LogicException if the requested path component does not exist
      * @codeCoverageIgnore
      */
-    static function getPath($path='')
+    public static function getPath($path='')
     {
         $realPath = realpath(__DIR__ . '/../../' . $path);
         if (!$realPath) {
@@ -148,7 +148,7 @@ class Application
      * @return string Either the APPLICATION_ENV environment variable or 'production' if this is undefined.
      * @throws \DomainException if the value is invalid
      */
-    static function getEnvironment()
+    public static function getEnvironment()
     {
         $environment = getenv('APPLICATION_ENV') ?: 'production';
         if ($environment != 'production' and $environment != 'development' and $environment != 'test') {
@@ -167,7 +167,7 @@ class Application
      *
      * @return bool
      */
-    static function isProduction()
+    public static function isProduction()
     {
         return self::getEnvironment() == 'production';
     }
@@ -180,7 +180,7 @@ class Application
      * to check for "development" explicitly.
      * @return bool
      */
-    static function isDevelopment()
+    public static function isDevelopment()
     {
         $environment = self::getEnvironment();
         return ($environment == 'development' or $environment == 'test');
@@ -191,7 +191,7 @@ class Application
      *
      * @return bool
      */
-    static function isTest()
+    public static function isTest()
     {
         return self::getEnvironment() == 'test';
     }
