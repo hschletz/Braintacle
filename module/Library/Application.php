@@ -42,6 +42,12 @@ class Application
     public static $zf1Path;
 
     /**
+     * Cached content of config file, managed and accessed via getConfig()
+     * @var array
+     */
+    protected static $_config;
+
+    /**
      * The application's service manager instance
      * @var \Zend\ServiceManager\ServiceManager
      */
@@ -137,6 +143,28 @@ class Application
             throw new \LogicException("Invalid application path: $path");
         }
         return $realPath;
+    }
+
+    /**
+     * Get application configuration from config file
+     *
+     * Loads and caches the config file. By default, the config file is expected
+     * at config/braintacle.ini, but a different file name and path can be set
+     * via the BRAINTACLE_CONFIG environment variable.
+     *
+     * @throws \RuntimeException if file cannot be parsed
+     * @codeCoverageIgnore
+     */
+    public static function getConfig()
+    {
+        if (!static::$_config) {
+            $filename = getenv('BRAINTACLE_CONFIG') ?: static::getPath('config/braintacle.ini');
+            static::$_config = parse_ini_file($filename, true);
+            if (!static::$_config) {
+                throw new \RuntimeException('Could not read config file ' . $filename);
+            }
+        }
+        return static::$_config;
     }
 
     /**

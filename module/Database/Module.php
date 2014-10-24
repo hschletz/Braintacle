@@ -63,9 +63,12 @@ Feature\InitProviderInterface
             ),
         );
 
-        // Merge database configuration from /config/braintacle.ini
-        $ini = \Zend\Config\Factory::fromFile(\Library\Application::getPath('config/braintacle.ini'));
-        $config['db'] = $ini['database'];
+        // Merge database configuration from config file
+        $configFileContent = \Library\Application::getConfig();
+        if (!is_array($configFileContent['database'])) {
+            throw new \RuntimeException('Config file has no "database" section');
+        }
+        $config['db'] = $configFileContent['database'];
         $config['db']['charset'] = 'utf8';
 
         return $config;
