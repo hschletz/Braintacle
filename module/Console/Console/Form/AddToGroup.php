@@ -84,13 +84,16 @@ class AddToGroup extends Form
         $lengthValidator = new \Zend\Validator\Callback;
         $lengthValidator->setCallback(array($this, 'validateLength'))
                         ->setCallbackOptions(array(0, 255))
+                        ->setTranslatorTextDomain('default')
                         ->setMessage('The input is more than 255 characters long');
         $requiredValidator = new \Zend\Validator\Callback;
         $requiredValidator->setCallback(array($this, 'validateLength'))
                           ->setCallbackOptions(array(1, 255))
+                          ->setTranslatorTextDomain('default')
                           ->setMessage("Value is required and can't be empty");
         $existsValidator = new \Zend\Validator\Callback;
         $existsValidator->setCallback(array($this, 'validateGroupExists'))
+                        ->setTranslatorTextDomain('default')
                         ->setMessage('The name already exists');
         $validatorChain = new \Zend\Validator\ValidatorChain;
         $validatorChain->attach($lengthValidator, true)
@@ -110,6 +113,7 @@ class AddToGroup extends Form
         $lengthValidator = new \Zend\Validator\Callback;
         $lengthValidator->setCallback(array($this, 'validateLength'))
                         ->setCallbackOptions(array(0, 255))
+                        ->setTranslatorTextDomain('default')
                         ->setMessage('The input is more than 255 characters long');
         $inputFilter->add(
             array(

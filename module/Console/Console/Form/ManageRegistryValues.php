@@ -137,6 +137,7 @@ class ManageRegistryValues extends Form
         );
         $subkeysValidator = new \Zend\Validator\Callback;
         $subkeysValidator->setCallback(array($this, 'validateEmptySubkeys'))
+                         ->setTranslatorTextDomain('default')
                          ->setMessage(
                              "Value is required and can't be empty",
                              \Zend\Validator\Callback::INVALID_VALUE

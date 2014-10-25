@@ -72,7 +72,8 @@ abstract class AbstractForm extends \Console\Form\Form
         $this->add($password2);
         $identicalValidator = new \Zend\Validator\Identical;
         $identicalValidator->setToken('Password');
-        $identicalValidator->setMessage('The passwords do not match');
+        $identicalValidator->setTranslatorTextDomain('default')
+                           ->setMessage('The passwords do not match');
         $inputFilter->add(
             array(
                 'name' => 'PasswordRepeat',

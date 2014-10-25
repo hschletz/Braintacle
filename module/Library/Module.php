@@ -126,7 +126,12 @@ Feature\InitProviderInterface
                     array($this, 'onMissingTranslation')
                 );
             }
+            // Validators have no translator by default. Attach translator, but
+            // use a different text domain to avoid warnings if the Zend
+            // translations are not loaded. For custom messages, the text domain
+            // must be reset manually to 'default' for individual validators.
             \Zend\Validator\AbstractValidator::setDefaultTranslator($mvcTranslator);
+            \Zend\Validator\AbstractValidator::setDefaultTranslatorTextDomain('Zend');
         }
     }
 
@@ -137,7 +142,13 @@ Feature\InitProviderInterface
      */
     public function onMissingTranslation(\Zend\EventManager\EventInterface $e)
     {
-        trigger_error('Missing translation: ' . $e->getParam('message'), E_USER_NOTICE);
+        // Issue warning about missing translation for the 'default' text
+        // domain. This warning will indicate either a message string missing in
+        // the translation file, or accidental translator invokation when a
+        // string should not actually be translated.
+        if ($e->getParam('text_domain') == 'default') {
+            trigger_error('Missing translation: ' . $e->getParam('message'), E_USER_NOTICE);
+        }
     }
 
     /**

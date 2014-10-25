@@ -62,6 +62,7 @@ class DefineFields extends Form
             $callback = new \Zend\Validator\Callback;
             $callback->setCallback(array($this, 'validateName'))
                      ->setCallbackOptions($name)
+                     ->setTranslatorTextDomain('default')
                      ->setMessage('The name already exists');
             $filter = array(
                 'name' => $name,
@@ -96,6 +97,7 @@ class DefineFields extends Form
 
         $callback = new \Zend\Validator\Callback;
         $callback->setCallback(array($this, 'validateName'))
+                 ->setTranslatorTextDomain('default')
                  ->setMessage('The name already exists');
         $inputFilter = new \Zend\InputFilter\InputFilter;
         $inputFilter->add($inputFilterFields, 'Fields');

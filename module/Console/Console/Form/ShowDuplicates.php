@@ -65,6 +65,7 @@ class ShowDuplicates extends Form
         // \Zend\Form\Element. Define an input filter to have them processed.
         $arrayCount = new \Zend\Validator\Callback;
         $arrayCount->setCallback(array($this, 'validateArrayCount'))
+                   ->setTranslatorTextDomain('default')
                    ->setMessage(
                        'At least 2 different computers have to be selected',
                        \Zend\Validator\Callback::INVALID_VALUE

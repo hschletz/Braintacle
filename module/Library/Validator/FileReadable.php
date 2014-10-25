@@ -39,6 +39,9 @@ class FileReadable extends \Zend\Validator\AbstractValidator
         self::FILE => "'%value%' is not a file or inaccessible",
         self::READABLE => "File '%value%' is not readable",
     );
+
+    /** {@inheritdoc} */
+    protected static $defaultTranslatorTextDomain = 'default';
     // @codingStandardsIgnoreEnd
 
     /**
