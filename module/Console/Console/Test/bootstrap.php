@@ -20,7 +20,7 @@
  */
 
 error_reporting(-1);
-ini_set('memory_limit', '256M');
+ini_set('memory_limit', '300M');
 require_once(__DIR__ . '/../../../Library/Application.php');
 require_once('Zend/Console/Console.php');
 
