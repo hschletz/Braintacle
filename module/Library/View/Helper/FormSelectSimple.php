@@ -23,6 +23,9 @@ namespace Library\View\Helper;
 
 /**
  * Render a SelectSimple element
+ *
+ * The option values are not translated, just like the "value" attributes of
+ * Select elements.
  */
 class FormSelectSimple extends \Zend\Form\View\Helper\FormSelect
 {
