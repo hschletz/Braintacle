@@ -46,6 +46,14 @@ msgstr ""
 msgid "'%value%' is not a valid product key"
 msgstr ""
 
+#: View/Helper/FormYesNo.php
+msgid "Yes"
+msgstr ""
+
+#: View/Helper/FormYesNo.php
+msgid "No"
+msgstr ""
+
 #: View/Helper/MembershipType.php
 msgid "automatic"
 msgstr ""

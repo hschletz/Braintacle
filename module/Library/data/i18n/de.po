@@ -43,6 +43,14 @@ msgstr "'%value%' ist in der Liste ungültiger Werte"
 msgid "'%value%' is not a valid product key"
 msgstr "'%value%' ist kein gültiger Lizenzschlüssel"
 
+#: View/Helper/FormYesNo.php
+msgid "No"
+msgstr "Nein"
+
+#: View/Helper/FormYesNo.php
+msgid "Yes"
+msgstr "Ja"
+
 #: View/Helper/MembershipType.php
 msgid "automatic"
 msgstr "automatisch"

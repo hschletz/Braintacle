@@ -43,7 +43,7 @@ class FormYesNoTest extends AbstractTest
             1,
             Query::execute('//input[@type="hidden"][@name="hiddenName"][@value="hiddenValue"]', $document)
         );
-        $this->assertCount(1, Query::execute('//input[@type="submit"][@name="yes"][@value="Yes"]', $document));
-        $this->assertCount(1, Query::execute('//input[@type="submit"][@name="no"][@value="No"]', $document));
+        $this->assertCount(1, Query::execute('//input[@type="submit"][@name="yes"][@value="Ja"]', $document));
+        $this->assertCount(1, Query::execute('//input[@type="submit"][@name="no"][@value="Nein"]', $document));
     }
 }
