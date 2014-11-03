@@ -322,13 +322,12 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         );
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
-        $messages = array(
-            'Fields' => array(
-                'name0' => array('stringLengthTooLong' => 'The input is more than 255 characters long'),
-            ),
-            'NewName' => array('stringLengthTooLong' => 'The input is more than 255 characters long'),
-        );
-        $this->assertEquals($messages, $this->_form->getMessages());
+        $messages = $this->_form->getMessages();
+        $this->assertCount(2, $messages);
+        $this->assertCount(1, $messages['Fields']['name0']);
+        $this->assertArrayHasKey('stringLengthTooLong', $messages['Fields']['name0']);
+        $this->assertCount(1, $messages['NewName']);
+        $this->assertArrayHasKey('stringLengthTooLong', $messages['NewName']);
     }
 
     public function testSelectOptionsTranslated()

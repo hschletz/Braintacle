@@ -420,11 +420,12 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
         $this->_form->setValidationGroup('Agent');
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
-        $messages = array(
-            'contactInterval' => array('callbackValue' => 'The input is not valid'),
-            'inventoryInterval' => array('callbackValue' => 'The input is not valid'),
-        );
-        $this->assertEquals($messages, $this->_form->getMessages()['Agent']);
+        $messages = $this->_form->getMessages()['Agent'];
+        $this->assertCount(2, $messages);
+        $this->assertCount(1, $messages['contactInterval']);
+        $this->assertArrayHasKey('callbackValue', $messages['contactInterval']);
+        $this->assertCount(1, $messages['inventoryInterval']);
+        $this->assertArrayHasKey('callbackValue', $messages['inventoryInterval']);
     }
 
     public function testInputFilterDownloadEmpty()
@@ -535,15 +536,18 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
         $this->_form->setValidationGroup('Download');
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
-        $message = array('callbackValue' => 'The input is not valid');
-        $messages = array(
-            'downloadPeriodDelay' => $message,
-            'downloadCycleDelay' => $message,
-            'downloadFragmentDelay' => $message,
-            'downloadMaxPriority' => $message,
-            'downloadTimeout' => $message,
-        );
-        $this->assertEquals($messages, $this->_form->getMessages()['Download']);
+        $messages = $this->_form->getMessages()['Download'];
+        $this->assertCount(5, $messages);
+        $this->assertCount(1, $messages['downloadPeriodDelay']);
+        $this->assertArrayHasKey('callbackValue', $messages['downloadPeriodDelay']);
+        $this->assertCount(1, $messages['downloadCycleDelay']);
+        $this->assertArrayHasKey('callbackValue', $messages['downloadCycleDelay']);
+        $this->assertCount(1, $messages['downloadFragmentDelay']);
+        $this->assertArrayHasKey('callbackValue', $messages['downloadFragmentDelay']);
+        $this->assertCount(1, $messages['downloadMaxPriority']);
+        $this->assertArrayHasKey('callbackValue', $messages['downloadMaxPriority']);
+        $this->assertCount(1, $messages['downloadTimeout']);
+        $this->assertArrayHasKey('callbackValue', $messages['downloadTimeout']);
     }
 
     public function testInputFilterDownloadValuesTooSmallIgnored()

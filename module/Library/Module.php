@@ -82,6 +82,29 @@ Feature\InitProviderInterface
             ),
         );
         $config += Application::getTranslationConfig(static::getPath('data/i18n'));
+
+        if (\Locale::getPrimaryLanguage(\Locale::getDefault()) != 'en') {
+            $zfTranslations = @$appConfig = Application::getConfig()['paths']['Zend translations'];
+            if (is_dir($zfTranslations)) {
+                $locale = \Locale::getDefault();
+                $translationFile = "$zfTranslations/$locale/Zend_Validate.php";
+                if (!is_file($translationFile)) {
+                    $locale = \Locale::getPrimaryLanguage($locale);
+                    $translationFile = "$zfTranslations/$locale/Zend_Validate.php";
+                    if (!is_file($translationFile)) {
+                        $translationFile = null;
+                    }
+                }
+                if ($translationFile) {
+                    $config['translator']['translation_files'][] = array(
+                        'type' => 'phparray',
+                        'filename' => $translationFile,
+                        'text_domain' => 'Zend',
+                    );
+                }
+            }
+        }
+
         return $config;
     }
 

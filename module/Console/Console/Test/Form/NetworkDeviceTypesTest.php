@@ -306,13 +306,12 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         );
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
-        $messages = array(
-            'Types' => array(
-                'name0' => array('stringLengthTooLong' => 'The input is more than 255 characters long'),
-            ),
-            'Add' => array('stringLengthTooLong' => 'The input is more than 255 characters long'),
-        );
-        $this->assertEquals($messages, $this->_form->getMessages());
+        $messages = $this->_form->getMessages();
+        $this->assertCount(2, $messages);
+        $this->assertCount(1, $messages['Types']['name0']);
+        $this->assertArrayHasKey('stringLengthTooLong', $messages['Types']['name0']);
+        $this->assertCount(1, $messages['Add']);
+        $this->assertArrayHasKey('stringLengthTooLong', $messages['Add']);
     }
 
     public function testRenderFieldsetNoMessages()
