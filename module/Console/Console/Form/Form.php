@@ -39,6 +39,9 @@ namespace Console\Form;
  * - Default rendering methods.
  *
  * - Helper methods for dealing with localized integer, float and date formats.
+ *
+ * - Top-level submit buttons are protected from having their text being
+ *   overwritten by setData().
  */
 class Form extends \Zend\Form\Form
 {
@@ -57,6 +60,17 @@ class Form extends \Zend\Form\Form
         $csrf = new \Zend\Form\Element\Csrf('_csrf');
         $csrf->setCsrfValidatorOptions(array('timeout' => null)); // Rely on session cleanup
         $this->add($csrf);
+    }
+
+    /** {@inheritdoc} */
+    public function setData($data)
+    {
+        foreach ($this as $element) {
+            if ($element instanceof \Zend\Form\Element\Submit) {
+                unset($data[$element->getName()]);
+            }
+        }
+        return parent::setData($data);
     }
 
     /**
