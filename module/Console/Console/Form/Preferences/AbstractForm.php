@@ -51,7 +51,12 @@ abstract class AbstractForm extends \Console\Form\Form
         $output = "<div class='table'>\n";
         foreach ($this->get('Preferences') as $element) {
             if ($element instanceof \Zend\Form\Fieldset) {
-                $output .= $view->htmlTag('span', $element->getLabel(), array('class' => 'label'), true) . "\n";
+                $output .= $view->htmlTag(
+                    'span',
+                    $view->translate($element->getLabel()),
+                    array('class' => 'label'),
+                    true
+                ) . "\n";
                 $output .= $view->htmlTag(
                     'fieldset',
                     "<legend></legend>\n" . $this->renderFieldset($view, $element)

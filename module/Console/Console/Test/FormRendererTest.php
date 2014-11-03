@@ -205,7 +205,17 @@ EOT;
 
     public function testRenderFieldsetRenderFieldsetAsElement()
     {
+        $translator = $this->getMock('Zend\I18n\Translator\Translator');
+        $translator->method('translate')
+                   ->will(
+                       $this->returnCallback(
+                           function($string) {
+                                return "$string-translated";
+                           }
+                       )
+                   );
         $view = $this->_createView();
+        $view->plugin('translate')->setTranslator($translator);
         $view->plugin('FormRow')->setTranslatorEnabled(false);
 
         $text1 = new \Zend\Form\Element\Text('text1');
@@ -226,7 +236,7 @@ EOT;
         $expected = <<<EOT
 <div class="table">
 <label><span>Text1</span><input type="text" name="text1" value=""></label>
-<span class="label">Fieldset</span>
+<span class="label">Fieldset-translated</span>
 <fieldset>
 <legend></legend>
 <div class="table"><label><span>Text3</span><input type="text" name="text3" value=""></label>

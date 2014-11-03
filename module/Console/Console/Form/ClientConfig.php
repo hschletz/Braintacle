@@ -234,7 +234,7 @@ class ClientConfig extends Form
                     $element->setAttribute('class', 'input-error');
                 }
                 $row = $view->htmlTag('span', $view->formElement($element) . $row, array('class' => 'values'));
-                $row = $view->htmlTag('span', $element->getLabel(), array('class' => 'label')) . $row;
+                $row = $view->htmlTag('span', $view->translate($element->getLabel()), array('class' => 'label')) . $row;
                 $output .= $view->htmlTag('label', $row);
                 if ($element->getMessages()) {
                     $output .= $view->htmlTag('span', null, array('class' => 'cell'));

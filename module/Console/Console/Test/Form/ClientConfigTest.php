@@ -122,6 +122,12 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
         $document = new \Zend\Dom\Document($html);
 
         $this->assertCount(2, Query::execute('//fieldset/div[@class="table"]//input[@type="text"]', $document));
+        $queryResult = Query::execute(
+            "//fieldset/div[@class='table']/label/span[@class='label']" .
+            "[text()='\nAgenten-Kontaktintervall (in Stunden)\n']",
+            $document
+        );
+        $this->assertCount(1, $queryResult);
     }
 
     public function testRenderFieldsetTextDefaultsForGroup()

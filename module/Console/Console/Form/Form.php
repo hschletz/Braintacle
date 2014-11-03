@@ -116,7 +116,12 @@ class Form extends \Zend\Form\Form
                 $row .= "<span class='cell'></span>\n";
                 $row .= $view->formSubmit($element);
             } elseif ($element instanceof \Zend\Form\Fieldset) {
-                $row .= $view->htmlTag('span', $element->getLabel(), array('class' => 'label'), true) . "\n";
+                $row .= $view->htmlTag(
+                    'span',
+                    $view->translate($element->getLabel()),
+                    array('class' => 'label'),
+                    true
+                ) . "\n";
                 $row .= $view->htmlTag(
                     'fieldset',
                     "<legend></legend>\n" . $this->renderFieldset($view, $element)
