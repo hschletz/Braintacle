@@ -78,6 +78,9 @@ class Assign extends \Console\Form\Form
         if ($fieldset->has('Packages')) {
             $packages = $fieldset->get('Packages');
             if ($packages->count()) {
+                $formRow = $view->plugin('FormRow');
+                $translatorEnabled = $formRow->isTranslatorEnabled();
+                $formRow->setTranslatorEnabled(false);
                 $output = "<div class='table'>\n";
                 foreach ($packages as $package) {
                     $output .= $view->formRow($package, 'append') . "\n\n";
@@ -85,6 +88,7 @@ class Assign extends \Console\Form\Form
                 $output .= "<span class='cell'></span>\n";
                 $output .= $view->formSubmit($fieldset->get('Submit')) . "\n";
                 $output .= "</div>\n";
+                $formRow->setTranslatorEnabled($translatorEnabled);
             }
         }
         return $output;
