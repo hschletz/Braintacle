@@ -131,4 +131,15 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
     {
         return \Library\Application::getService('ControllerPluginManager')->get($name);
     }
+
+    /**
+     * Replace MvcTranslator service with a dummy translator to allow injecting test messages without warning
+     */
+    protected function _disableTranslator()
+    {
+        $this->getApplication()->getServiceManager()->setService(
+            'MvcTranslator',
+            new \Zend\Mvc\I18n\Translator(new \Zend\I18n\Translator\Translator)
+        );
+    }
 }

@@ -190,6 +190,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_package->expects($this->once())
                        ->method('fetchAll')
                        ->will($this->returnValue(array()));
+        $this->_disableTranslator();
         $this->dispatch('/console/package/index/');
         $this->assertResponseStatusCode(200);
 

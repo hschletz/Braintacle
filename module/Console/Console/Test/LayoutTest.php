@@ -68,7 +68,7 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 
     public function testTitle()
     {
-        $this->_view->headTitle()->append('title');
+        $this->_view->headTitle()->setTranslatorEnabled(false)->append('title');
         $html = $this->_view->render('layout');
         $document = new \Zend\Dom\Document($html);
         $this->assertCount(1, Query::execute('/html/head/title[text()="title"]', $document));
@@ -137,6 +137,7 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
         $authService->method('hasIdentity')->willReturn(true);
         $authService->method('getIdentity')->willReturn('identity');
         $this->_view->plugin('identity')->setAuthenticationService($authService);
+        $this->_view->plugin('navigation')->setInjectTranslator(false);
 
         $menu = \Zend\Navigation\Page\AbstractPage::factory(
             array(

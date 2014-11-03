@@ -74,6 +74,7 @@ class Packages extends AbstractForm
 
         $defaultPlatform = new \Zend\Form\Element\Select('defaultPlatform');
         $defaultPlatform->setLabel('Default platform')
+                        ->setAttribute('type', 'select_untranslated')
                         ->setValueOptions(
                             array(
                                 'windows' => 'Windows',

@@ -26,6 +26,20 @@ namespace Console\Test\Form\Preferences;
  */
 class AbstractFormTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * Create a new view renderer
+     *
+     * @return \Zend\View\Renderer\PhpRenderer
+     */
+    protected function _createView()
+    {
+        // Clone helper plugin manager to prevent state changes leaking into other tests
+        $plugins = clone \Library\Application::getService('ViewHelperManager');
+        $view = new \Zend\View\Renderer\PhpRenderer;
+        $view->setHelperPluginManager($plugins);
+        return $view;
+    }
+
     public function testInit()
     {
         $form = $this->getMockForAbstractClass('Console\Form\Preferences\AbstractForm');
@@ -64,7 +78,8 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
 </div>
 
 EOT;
-        $view = \Library\Application::getService('ViewManager')->getRenderer();
+        $view = $this->_createView();
+        $view->plugin('FormRow')->setTranslatorEnabled(false);
         $this->assertEquals($expected, $form->renderFieldset($view, $form));
     }
 
@@ -109,7 +124,8 @@ EOT;
 </div>
 
 EOT;
-        $view = \Library\Application::getService('ViewManager')->getRenderer();
+        $view = $this->_createView();
+        $view->plugin('FormRow')->setTranslatorEnabled(false);
         $this->assertEquals($expected, $form->renderFieldset($view, $form));
     }
 }

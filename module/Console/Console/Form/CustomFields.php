@@ -158,7 +158,13 @@ class CustomFields extends Form
     public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset)
     {
         if ($fieldset->getName() == 'Fields') {
+            // Labels (except "Category") are user defined and must not be translated.
+            $fieldset->get('TAG')->setLabel($view->translate('Category'));
+            $formRow = $view->plugin('FormRow');
+            $translatorEnabled = $formRow->isTranslatorEnabled();
+            $formRow->setTranslatorEnabled(false);
             $output = parent::renderFieldset($view, $fieldset);
+            $formRow->setTranslatorEnabled($translatorEnabled);
         } else {
             $output = $this->renderFieldset($view, $this->get('Fields'));
             $output .= "<div class='table'>\n";

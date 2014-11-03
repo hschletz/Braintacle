@@ -93,6 +93,7 @@ class Build extends \Console\Form\Form
         // Platform combobox
         $platform = new Element\Select('Platform');
         $platform->setLabel('Platform')
+                 ->setAttribute('type', 'select_untranslated')
                  ->setValueOptions(
                      array(
                         'windows' => 'Windows',

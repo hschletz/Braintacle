@@ -28,6 +28,21 @@ namespace Console\Test;
  */
 class FormRendererTest extends \PHPUnit_Framework_TestCase
 {
+
+    /**
+     * Create a new view renderer
+     *
+     * @return \Zend\View\Renderer\PhpRenderer
+     */
+    protected function _createView()
+    {
+        // Clone helper plugin manager to prevent state changes leaking into other tests
+        $plugins = clone \Library\Application::getService('ViewHelperManager');
+        $view = new \Zend\View\Renderer\PhpRenderer;
+        $view->setHelperPluginManager($plugins);
+        return $view;
+    }
+
     /**
      * Test default form tags
      */
@@ -89,7 +104,8 @@ EOT;
 
     public function testRenderFieldsetWithoutId()
     {
-        $view = \Library\Application::getService('ViewManager')->getRenderer();
+        $view = $this->_createView();
+        $view->plugin('FormRow')->setTranslatorEnabled(false);
 
         $text1 = new \Zend\Form\Element\Text('text1');
         $text1->setLabel('Text1');
@@ -119,7 +135,9 @@ EOT;
 
     public function testRenderFieldsetWithId()
     {
-        $view = \Library\Application::getService('ViewManager')->getRenderer();
+        $view = $this->_createView();
+        $view->plugin('FormRow')->setTranslatorEnabled(false);
+        $view->plugin('FormLabel')->setTranslatorEnabled(false);
 
         $text1 = new \Zend\Form\Element\Text('text1');
         $text1->setLabel('Text1')->setAttribute('id', 'text1');
@@ -187,7 +205,8 @@ EOT;
 
     public function testRenderFieldsetRenderFieldsetAsElement()
     {
-        $view = \Library\Application::getService('ViewManager')->getRenderer();
+        $view = $this->_createView();
+        $view->plugin('FormRow')->setTranslatorEnabled(false);
 
         $text1 = new \Zend\Form\Element\Text('text1');
         $text1->setLabel('Text1');

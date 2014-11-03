@@ -697,6 +697,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->once())
                         ->method('fetch')
                         ->will($this->returnValue(array()));
+        $this->_disableTranslator();
         $this->dispatch('/console/computer/index/');
         $this->assertXpathQuery('//ul[@class="error"]/li[text()="error"]');
         $this->assertXpathQuery('//ul[@class="success"]/li[text()="success 42"]');
@@ -1827,6 +1828,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
         $this->_getControllerPlugin('FlashMessenger')->addSuccessMessage('successMessage');
+        $this->_disableTranslator();
         $this->dispatch('/console/computer/customfields/?id=1');
         $this->assertXpathQueryContentContains(
             '//ul[@class="success"]/li',

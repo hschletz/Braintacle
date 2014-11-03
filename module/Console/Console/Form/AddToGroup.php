@@ -230,11 +230,11 @@ class AddToGroup extends Form
     {
         $output = "<div class='table'>\n";
 
-        $output .= "<fieldset><legend><span>{$view->translate('What to save')}</span></legend>\n";
+        $output .= "<fieldset><legend><span>What to save</span></legend>\n";
         $output .= $view->formRow($fieldset->get('What'));
         $output .= "</fieldset>\n";
 
-        $output .= "<fieldset><legend><span>{$view->translate('Where to save')}</span></legend>\n";
+        $output .= "<fieldset><legend><span>Where to save</span></legend>\n";
         $output .= $view->formRow($fieldset->get('Where'));
         foreach (array('NewGroup', 'Description') as $name) {
             $element = $fieldset->get($name);

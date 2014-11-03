@@ -89,6 +89,7 @@ class AssignTest extends \Console\Test\AbstractFormTest
     {
         $this->_form->setPackages(array('package1', 'package2'));
         $view = $this->_createView();
+        $view->plugin('FormRow')->setTranslatorEnabled(false);
         $html = $this->_form->renderFieldset($view, $this->_form);
         $document = new \Zend\Dom\Document($html);
         $this->assertCount(1, Query::execute('//div[@class="table"]', $document));

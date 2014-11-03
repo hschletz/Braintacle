@@ -77,6 +77,7 @@ Feature\InitProviderInterface
                 ),
                 'invokables' => array(
                     'formSelectSimple' => 'Library\View\Helper\FormSelectSimple',
+                    'formSelectUntranslated' => 'Library\View\Helper\FormSelectUntranslated',
                 ),
             ),
         );
@@ -108,10 +109,12 @@ Feature\InitProviderInterface
             'Library\Filter\FixEncodingErrors'
         );
         $serviceManager = $e->getApplication()->getServiceManager();
-        $serviceManager->get('ViewHelperManager')->get('formElement')->addClass(
-            'Library\Form\Element\SelectSimple',
-            'formselectsimple'
-        );
+
+        // Register form element view helpers
+        $formElementHelper = $serviceManager->get('ViewHelperManager')->get('formElement');
+        $formElementHelper->addClass('Library\Form\Element\SelectSimple', 'formselectsimple');
+        $formElementHelper->addType('select_untranslated', 'formselectuntranslated');
+
         if (\Locale::getPrimaryLanguage(\Locale::getDefault()) != 'en') {
             $mvcTranslator = $serviceManager->get('MvcTranslator');
             $translator = $mvcTranslator->getTranslator();

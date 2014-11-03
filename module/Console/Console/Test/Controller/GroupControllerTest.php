@@ -170,6 +170,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
         $flashMessenger->addErrorMessage('error');
         $flashMessenger->addSuccessMessage('success');
+        $this->_disableTranslator();
         $this->dispatch('/console/group/index/');
         $this->assertXpathQuery('//ul[@class="error"]/li[text()="error"]');
         $this->assertXpathQuery('//ul[@class="success"]/li[text()="success"]');

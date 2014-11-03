@@ -99,6 +99,7 @@ class ManageRegistryValues extends Form
 
         $newRootKey = new Element\Select('root_key');
         $newRootKey->setLabel('Root key')
+                   ->setAttribute('type', 'select_untranslated')
                    ->setValueOptions(\Model_RegistryValue::rootKeys())
                    ->setValue(\Model_RegistryValue::HKEY_LOCAL_MACHINE);
         $fieldsetNew->add($newRootKey);

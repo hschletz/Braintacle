@@ -184,5 +184,7 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
         $this->assertCount(4, Query::execute('//input[@type="text"]', $document));
         $this->assertCount(1, Query::execute('//textarea', $document));
         $this->assertCount(1, Query::execute('//input[@type="submit"]', $document));
+        // Check for manual translation
+        $this->assertCount(1, Query::execute('//label/span[text()="Kategorie"]', $document));
     }
 }

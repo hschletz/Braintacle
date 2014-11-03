@@ -171,6 +171,7 @@ class Search extends Form
 
         $filter = new Element\Select('filter');
         $filter->setLabel('Search for')
+               ->setAttribute('type', 'select_untranslated')
                ->setAttribute('onchange', 'filterChanged();') // Set operators for selected filter
                ->setValueOptions($this->_filters);
         $this->add($filter);
