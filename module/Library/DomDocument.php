@@ -1,6 +1,6 @@
 <?php
 /**
- * Interface to XML documents
+ * DOM document
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,24 +17,24 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Models
  */
-/**
- * Interface to XML documents
- *
- * This class extends the DOMDocument class with application specific
- * functionality. It is a base class for document type specific subclasses.
- * @package Models
- */
-abstract class Model_DomDocument extends DOMDocument
-{
 
+namespace Library;
+
+/**
+ * DOM document
+ *
+ * This class extends \DOMDocument with some convenience functions.
+ */
+class DomDocument extends \DOMDocument
+{
     /**
      * Constructor
      *
-     * This constructor provides reasonable defaults, so it can be typically
-     * invoked without arguments and subsequent initilaization.
+     * This constructor provides reasonable defaults, so that it can typically
+     * be invoked without arguments and subsequent initialization. String output
+     * is formatted by default (formatOutput property).
+     *
      * @param string $version Default: 1.0
      * @param string $encoding Default: UTF-8
      */
@@ -46,23 +46,25 @@ abstract class Model_DomDocument extends DOMDocument
 
     /**
      * Retrieve full path to the RELAX NG schema file defining this document type
+     *
+     * This is not implemented (throws an exception). Subclasses can override
+     * this method to support validation.
+     *
      * @return string
+     * @throws \LogicException if not implemented
      */
     public function getSchemaFilename()
     {
-        $schema = get_class($this); // Will yield the name of the subclass
-        $schema = substr(
-            $schema,
-            strrpos($schema, '_') + 1
-        );
-        return realpath(APPLICATION_PATH . "/../xml/$schema.rng");
+        throw new \LogicException(get_class($this) . ' has no schema defined');
     }
 
     /**
      * Validate document, return status
      *
-     * The document gets validated against the matching RELAX NG schema file in
-     * the xml/ directory. Details are available from the generated warnings.
+     * The document is validated against the RELAX NG schema defined by
+     * getSchemaFilename() which must be implemented by a subclass. Details are
+     * available from the generated warnings.
+     *
      * @return bool Validation result
      */
     public function isValid()
@@ -73,32 +75,37 @@ abstract class Model_DomDocument extends DOMDocument
     /**
      * Validate document, throw exception on error
      *
-     * The document gets validated against the matching RELAX NG schema file in
-     * the xml/ directory. A RuntimeException is thrown on error. Details are
-     * available from the generated warnings.
+     * The document gets validated against the RELAX NG schema defined by
+     * getSchemaFilename() which must be implemented by a subclass.
+     * A \RuntimeException is thrown on error. Details are available from the
+     * generated warnings.
+     *
+     * @throws \RuntimeException if document is not valid
      */
     public function forceValid()
     {
         if (!$this->isValid()) {
-            throw new RuntimeException('Validation of XML document failed');
+            throw new \RuntimeException('Validation of XML document failed');
         }
     }
 
     /**
      * Create element with text content
      *
-     * This is similar to the 2-argument-variant of createElement(), but the
+     * This is similar to the 2-argument variant of createElement(), but the
      * text gets properly escaped.
+     *
      * @param string $name Element name
      * @param mixed $content Element content
-     * @return DOMElement
+     * @return \DOMElement
+     * @throws \InvalidArgumentException if $content has non-scalar type
      */
     public function createElementWithContent($name, $content)
     {
         if (is_scalar($content) or is_null($content)) {
             $content = $this->createTextNode($content);
         } else {
-            throw new InvalidArgumentException('Unsupported content type');
+            throw new \InvalidArgumentException('Unsupported content type');
         }
         $element = $this->createElement($name);
         $element->appendChild($content);

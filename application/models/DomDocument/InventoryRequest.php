@@ -24,7 +24,7 @@
  * Interface to inventory XML documents
  * @package Models
  */
-class Model_DomDocument_InventoryRequest extends Model_DomDocument
+class Model_DomDocument_InventoryRequest extends \Library\DomDocument
 {
     /**
      * Global cache for element=>model mappings
@@ -51,6 +51,17 @@ class Model_DomDocument_InventoryRequest extends Model_DomDocument
      * @var array
      */
     private static $_formats;
+
+    /** {@inheritdoc} */
+    public function getSchemaFilename()
+    {
+        $schema = get_class($this); // Will yield the name of the subclass
+        $schema = substr(
+            $schema,
+            strrpos($schema, '_') + 1
+        );
+        return realpath(APPLICATION_PATH . "/../xml/$schema.rng");
+    }
 
     /**
      * Load document tree from a computer
