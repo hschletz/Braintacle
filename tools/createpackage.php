@@ -80,7 +80,6 @@ $package->fromArray(
 if ($package->build(false)) {
     $errType = 'WARNING: ';
     $message = "Package successfully built.\n";
-    $path = $package->getPath();
 } else {
     $errType = 'ERROR: ';
     $message = "The package has not been built.\n";
