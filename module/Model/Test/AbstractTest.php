@@ -33,7 +33,7 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
      * Array of tables to set up (table class names without Database\Table prefix)
      * @var string[]
      */
-    protected static $_tables;
+    protected static $_tables = array();
 
     /**
      * Connection used by DbUnit
