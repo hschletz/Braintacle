@@ -111,4 +111,22 @@ class DomDocument extends \DOMDocument
         $element->appendChild($content);
         return $element;
     }
+
+    /**
+     * Write XML content to file
+     *
+     * This is a reimplementation of \DomDocument::save() with improved error
+     * handling. An exception is thrown on error, and no file remains on disk.
+     *
+     * @param string $filename
+     * @param integer $options
+     * @retutn integer number of bytes written
+     * @throws \RuntimeException if a write error occurs
+     */
+    public function save($filename, $options=0)
+    {
+        $xml = $this->saveXml(null, $options);
+        \Library\FileObject::filePutContents($filename, $xml);
+        return strlen($xml);
+    }
 }

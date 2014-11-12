@@ -21,6 +21,7 @@
 
 namespace Library\Test;
 use Library\DomDocument;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * Tests for DomDocument
@@ -112,5 +113,33 @@ class DomDocumentTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('InvalidArgumentException', 'Unsupported content type');
         $document = new DomDocument;
         $element = $document->createElementWithContent('name', new \stdClass);
+    }
+
+    public function testSaveDefaultOptions()
+    {
+        $root = vfsStream::setup('root');
+        $filename = $root->url() . '/test.xml';
+        $document = new DomDocument;
+        $node = $document->createElement('test');
+        $document->appendChild($node);
+        $document->save($filename);
+        $this->assertEquals(
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<test/>\n",
+            file_get_contents($filename)
+        );
+    }
+
+    public function testSaveExplicitOptions()
+    {
+        $root = vfsStream::setup('root');
+        $filename = $root->url() . '/test.xml';
+        $document = new DomDocument;
+        $node = $document->createElement('test');
+        $document->appendChild($node);
+        $document->save($filename, LIBXML_NOEMPTYTAG);
+        $this->assertEquals(
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<test></test>\n",
+            file_get_contents($filename)
+        );
     }
 }
