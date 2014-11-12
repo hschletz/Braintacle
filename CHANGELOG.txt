@@ -29,6 +29,13 @@ Fixed bugs:
 - Console: Updated package download URLs/certificate did not affect existing
   packages.
 
+- Console: Package notification messages (pre- and postinstall) were not
+  displayed properly under certain circumstances. The package builder now
+  prepares messages for correct interpretation by the agent. There is one
+  limitation in the agent itself: Messages can contain arbitrary HTML markup
+  which is parsed and displayed correctly, but attribute values must be enclosed
+  in single quotes. HTML attributes in double quotes may not work as expected.
+
 Misc:
 
 - Support for some previously deprecated options has been dropped. They are

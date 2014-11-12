@@ -1,0 +1,188 @@
+<?php
+/**
+ * Tests for Model\Package\Metadata
+ *
+ * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+namespace Model\Test\Package;
+use Model\Package\Metadata;
+
+/**
+ * Tests for Model\Package\Metadata
+ */
+class MetadataTest extends \Model\Test\AbstractTest
+{
+    /** {@inheritdoc} */
+    public function getDataSet()
+    {
+        return new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet;
+    }
+
+    public function testsetPackageData()
+    {
+        $data = array(
+            'Timestamp' => new \Zend_Date(1415610660, \Zend_Date::TIMESTAMP),
+            'Priority' => '5',
+            'DeployAction' => 'store',
+            'ActionParam' => '',
+            'Hash' => 'hash',
+            'NumFragments' => '42',
+            'Warn' => '0',
+            'WarnMessage' => "warn_message\"\n\r\r\n",
+            'WarnCountdown' => '23',
+            'WarnAllowAbort' => '0',
+            'WarnAllowDelay' => '0',
+            'UserActionRequired' => '0',
+            'PostInstMessage' => "post_inst_message\r\"\n",
+        );
+        $model = new Metadata;
+        $model->setPackageData($data);
+
+        $this->assertEquals(1, $model->childNodes->length);
+        $node = $model->firstChild;
+        $this->assertEquals('DOWNLOAD', $node->tagName);
+        $this->assertFalse($node->hasChildNodes());
+
+        $this->assertEquals('1415610660', $node->getAttribute('ID'));
+        $this->assertEquals('5', $node->getAttribute('PRI'));
+        $this->assertEquals('hash', $node->getAttribute('DIGEST'));
+        $this->assertEquals('HTTP', $node->getAttribute('PROTO'));
+        $this->assertEquals('42', $node->getAttribute('FRAGS'));
+        $this->assertEquals('SHA1', $node->getAttribute('DIGEST_ALGO'));
+        $this->assertEquals('Hexa', $node->getAttribute('DIGEST_ENCODE'));
+        $this->assertEquals('warn_message&quot;<br><br>', $node->getAttribute('NOTIFY_TEXT'));
+        $this->assertEquals('23', $node->getAttribute('NOTIFY_COUNTDOWN'));
+        $this->assertEquals('post_inst_message<br>&quot;<br>', $node->getAttribute('NEED_DONE_ACTION_TEXT'));
+        $this->assertEquals('rien', $node->getAttribute('GARDEFOU'));
+    }
+
+    public function setPackageDataActionParamsProvider()
+    {
+        return array(
+            array('store', 'STORE', 'action_param', '', ''),
+            array('launch', 'LAUNCH', '', 'action_param', ''),
+            array('execute', 'EXECUTE', '', '', 'action_param'),
+        );
+    }
+
+    /**
+     * Test setPackageData()
+     * @dataProvider setPackageDataActionParamsProvider
+     * @param string $action Action to test
+     * @param string $act Expected value for "ACT" attribute
+     * @param string $path Expected value for "PATH" attribute
+     * @param string $name Expected value for "NAME" attribute
+     * @param string $command Expected value for "COMMAND" attribute
+     */
+    public function testsetPackageDataActionParams($action, $act, $path, $name, $command)
+    {
+        $data = array(
+            'Timestamp' => new \Zend_Date,
+            'Priority' => '5',
+            'DeployAction' => $action,
+            'ActionParam' => 'action_param',
+            'Hash' => 'hash',
+            'NumFragments' => '0',
+            'Warn' => '0',
+            'WarnMessage' => '',
+            'WarnCountdown' => '',
+            'WarnAllowAbort' => '0',
+            'WarnAllowDelay' => '0',
+            'UserActionRequired' => '0',
+            'PostInstMessage' => '',
+        );
+        $model = new Metadata;
+        $model->setPackageData($data);
+        $node = $model->firstChild;
+
+        $this->assertEquals($act, $node->getAttribute('ACT'));
+        $this->assertEquals($path, $node->getAttribute('PATH'));
+        $this->assertEquals($name, $node->getAttribute('NAME'));
+        $this->assertEquals($command, $node->getAttribute('COMMAND'));
+    }
+
+    public function setPackageDataBooleanValuesProvider()
+    {
+        return array(
+            array('', '0'),
+            array('0', '0'),
+            array(0, '0'),
+            array(false, '0'),
+            array(null, '0'),
+            array('1', '1'),
+            array(1, '1'),
+            array(true, '1'),
+        );
+    }
+
+    /**
+     * Test setPackageData() with boolean values
+     * @dataProvider setPackageDataBooleanValuesProvider
+     * @param mixed $input
+     * @param string $expected
+     */
+    public function testSetPackageDataBooleanValues($input, $expected)
+    {
+        $data = array(
+            'Timestamp' => new \Zend_Date,
+            'Priority' => '5',
+            'DeployAction' => 'store',
+            'ActionParam' => '',
+            'Hash' => '',
+            'NumFragments' => '0',
+            'Warn' => $input,
+            'WarnMessage' => '',
+            'WarnCountdown' => '',
+            'WarnAllowAbort' => $input,
+            'WarnAllowDelay' => $input,
+            'UserActionRequired' => $input,
+            'PostInstMessage' => '',
+        );
+        $model = new Metadata;
+        $model->setPackageData($data);
+        $node = $model->firstChild;
+        $this->assertSame($expected, $node->getAttribute('NOTIFY_USER'));
+        $this->assertSame($expected, $node->getAttribute('NOTIFY_CAN_ABORT'));
+        $this->assertSame($expected, $node->getAttribute('NOTIFY_CAN_DELAY'));
+        $this->assertSame($expected, $node->getAttribute('NEED_DONE_ACTION'));
+    }
+
+    public function testsetPackageDataOverwrite()
+    {
+        $data = array(
+            'Timestamp' => new \Zend_Date,
+            'Priority' => '5',
+            'DeployAction' => 'store',
+            'ActionParam' => '',
+            'Hash' => '',
+            'NumFragments' => '0',
+            'Warn' => '0',
+            'WarnMessage' => '',
+            'WarnCountdown' => '',
+            'WarnAllowAbort' => '0',
+            'WarnAllowDelay' => '0',
+            'UserActionRequired' => '0',
+            'PostInstMessage' => '',
+        );
+        $model = new Metadata;
+        $model->setPackageData($data);
+        $data['Priority'] = 7;
+        $model->setPackageData($data);
+        $this->assertEquals(7, $model->firstChild->getAttribute('PRI'));
+    }
+}

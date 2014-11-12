@@ -63,6 +63,7 @@ Feature\InitProviderInterface
                     'Model\Network\Device' => 'Model_NetworkDevice',
                     'Model\Network\DeviceType' => 'Model_NetworkDeviceType',
                     'Model\Network\Subnet' => 'Model_Subnet',
+                    'Model\Package\Metadata' => 'Model\Package\Metadata',
                     'Model\Package\Package' => 'Model_Package',
                     'Model\RegistryValue' => 'Model_RegistryValue',
                 ),
@@ -70,6 +71,16 @@ Feature\InitProviderInterface
                     'Model\Computer\Duplicates' => 'Model\Service\Computer\DuplicatesFactory',
                     'Model\Config' => 'Model\Service\ConfigFactory',
                     'Model\Operator' => 'Model\Service\OperatorFactory',
+                    'Model\Package\Storage\Direct' => function($serviceManager) {
+                        return new \Model\Package\Storage\Direct(
+                            $serviceManager->get('Model\Config'),
+                            $serviceManager->get('Model\Package\Metadata')
+                        );
+                    },
+                ),
+                'shared' => array(
+                    'Model\Package\Metadata' => false,
+                    'Model\Package\Storage\Direct' => false,
                 ),
             ),
         );

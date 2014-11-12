@@ -414,6 +414,7 @@ class Model_Package extends Model_Abstract
     /**
      * Get path to downloadable file
      * @return string
+     * @deprecated Functionality moved to Storage class
      */
     public function getPath()
     {
@@ -461,6 +462,7 @@ class Model_Package extends Model_Abstract
     protected function _build($deleteSource)
     {
         $config = \Library\Application::getService('Model\Config');
+        $storage = \Library\Application::getService('Model\Package\Storage\Direct');
 
         // Reset object's state
         $this->_errors = array();
@@ -620,62 +622,12 @@ class Model_Package extends Model_Abstract
             $this->setNumFragments($numFragments);
         }
 
-        // Write XML metafile.
-        $xmlData = array(
-            'ID' => $timestamp,
-            'PRI' => $this->getPriority(),
-            'ACT' => strtoupper($this->getDeployAction()),
-            'DIGEST' => $hash,
-            'PROTO' => 'HTTP',
-            'FRAGS' => $this->getNumFragments(),
-            'DIGEST_ALGO' => 'SHA1',
-            'DIGEST_ENCODE' => 'Hexa',
-            'PATH' => '', // used by 'store' action
-            'NAME' => '', // used by 'launch' action
-            'COMMAND' => '', // used by 'execute' action
-            'NOTIFY_USER' => $this->getWarn(),
-            'NOTIFY_TEXT' => str_replace(
-                array("\r\n", "\n", "\r"),
-                ' ',
-                $this->getWarnMessage()
-            ),
-            'NOTIFY_COUNTDOWN' => $this->getWarnCountdown(),
-            'NOTIFY_CAN_ABORT' => $this->getWarnAllowAbort(),
-            'NOTIFY_CAN_DELAY' => $this->getWarnAllowDelay(),
-            'NEED_DONE_ACTION' => $this->getUserActionRequired(),
-            'NEED_DONE_ACTION_TEXT' => str_replace(
-                array("\r\n", "\n", "\r"),
-                ' ',
-                $this->getPostInstMessage()
-            ),
-            'GARDEFOU' => 'rien',
-        );
-        switch ($this->getDeployAction()) {
-            case 'store':
-                $xmlData['PATH'] = $this->getActionParam();
-                break;
-            case 'launch':
-                $xmlData['NAME'] = $this->getActionParam();
-                break;
-            case 'execute':
-                $xmlData['COMMAND'] = $this->getActionParam();
-                break;
-        }
-        $xml = '<DOWNLOAD ';
-        foreach ($xmlData as $attribute => $value) {
-            $xml .= $attribute
-                  . '="'
-                  . htmlspecialchars($value, ENT_QUOTES)
-                  . '" ';
-        }
-        $xml .= "/>\n";
-
-        $metaFile = $path . DIRECTORY_SEPARATOR . 'info';
-        if (!file_put_contents($metaFile, $xml)) {
-            $this->_setError('Could not write to file \'%s\'.', $metaFile);
+        try {
+            $storage->writeMetadata($this);
+        } catch (\Exception $e) {
+            $this->_errors[] = $e->getMessage();
             return false;
         }
-
         // Create package in database
         try {
             $table = 'download_available';
