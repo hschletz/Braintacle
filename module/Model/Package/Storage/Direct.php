@@ -56,12 +56,12 @@ class Direct
     /**
      * Get base directory for package storage
      *
-     * @param array $data Package data
+     * @param \Zend_Date $timestamp Package timestamp
      * @return string Directory composed from application config and package timestamp
      */
-    public function getPath($data)
+    public function getPath($timestamp)
     {
-        return $this->_config->packagePath . '/' . $data['Timestamp']->get(\Zend_Date::TIMESTAMP);
+        return $this->_config->packagePath . '/' . $timestamp->get(\Zend_Date::TIMESTAMP);
     }
 
     /**
@@ -72,6 +72,6 @@ class Direct
     public function writeMetadata($data)
     {
         $this->_metadata->setPackageData($data);
-        $this->_metadata->save($this->getPath($data) . '/info');
+        $this->_metadata->save($this->getPath($data['Timestamp']) . '/info');
     }
 }

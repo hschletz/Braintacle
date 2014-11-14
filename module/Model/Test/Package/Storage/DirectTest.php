@@ -39,13 +39,14 @@ class DirectTest extends \Model\Test\AbstractTest
         $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
         $config->method('__get')->with('packagePath')->willReturn('packagePath');
         $model = new Direct($config, new Metadata);
-        $data = array('Timestamp' => new \Zend_Date(1415610660, \Zend_Date::TIMESTAMP));
-        $this->assertEquals('packagePath/1415610660', $model->getPath($data));
+        $timestamp = new \Zend_Date(1415610660, \Zend_Date::TIMESTAMP);
+        $this->assertEquals('packagePath/1415610660', $model->getPath($timestamp));
     }
 
     public function testWriteMetadata()
     {
-        $data = array('key' => 'value');
+        $timestamp = new \Zend_Date(1415610660, \Zend_Date::TIMESTAMP);
+        $data = array('Timestamp' => $timestamp);
 
         $metadata = $this->getMock('Model\Package\Metadata');
         $metadata->expects($this->once())->method('setPackageData')->with($data);
@@ -56,7 +57,7 @@ class DirectTest extends \Model\Test\AbstractTest
                       ->setMethods(array('getPath'))
                       ->setConstructorArgs(array($config, $metadata))
                       ->getMock();
-        $model->method('getPath')->with($data)->willReturn('/path');
+        $model->method('getPath')->with($timestamp)->willReturn('/path');
 
         $model->writeMetadata($data);
     }
