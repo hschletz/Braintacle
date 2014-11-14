@@ -126,7 +126,14 @@ class DomDocument extends \DOMDocument
     public function save($filename, $options=0)
     {
         $xml = $this->saveXml(null, $options);
-        \Library\FileObject::filePutContents($filename, $xml);
+        try {
+            \Library\FileObject::filePutContents($filename, $xml);
+        } catch (\Exception $e) {
+            if (is_file($filename)) {
+                unlink($filename);
+            }
+            throw $e;
+        }
         return strlen($xml);
     }
 }

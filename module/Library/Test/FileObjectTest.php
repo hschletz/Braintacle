@@ -103,11 +103,27 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($content, file_get_contents($filename));
     }
 
-    public function testFilePutContentsError()
+    public function testFilePutContentsOpenError()
     {
         $this->setExpectedException('RuntimeException', 'Error writing to file vfs://root/test.txt');
         // Force error by writing to write-protected file
         $filename = vfsStream::newFile('test.txt', 0000)->at($this->_root)->url();
         FileObject::filePutContents($filename, 'content');
+    }
+
+    public function testFilePutContentsWriteError()
+    {
+        // Force error by simulating full disk
+        vfsStream::setQuota(3);
+        $filename = $this->_root->url() . '/test.txt';
+        try {
+            FileObject::filePutContents($filename, 'content');
+            $this->fail('Expected exception has not been thrown');
+        } catch (\RuntimeException $e) {
+            $this->assertEquals("Error writing to file $filename", $e->getMessage());
+            // A truncated file should remain on disk
+            $this->assertFileExists($filename);
+            $this->assertEquals('con', file_get_contents($filename));
+        }
     }
 }

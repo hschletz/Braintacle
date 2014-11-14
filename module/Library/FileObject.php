@@ -83,7 +83,7 @@ class FileObject extends \SplFileObject
      * Write a string to a file
      *
      * This is a wrapper for \file_put_contents() which throws an exception when
-     * an error is encountered.
+     * an error is encountered. A truncated file may remain on disk.
      *
      * @param string $filename Name of the file to write to
      * @param string $content File content
