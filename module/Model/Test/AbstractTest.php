@@ -85,8 +85,8 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
     protected function _loadDataSet($testName=null)
     {
         $class = $this->_getClass();
-        $class = substr($class, strrpos($class, '\\') + 1); // Remove namespace
-        $file = "data/Test/$class";
+        $class = substr($class, strpos($class, '\\')); // Remove 'Model' prefix
+        $file = str_replace('\\', '/', "data/Test$class");
         if ($testName) {
             $file .= "/$testName";
         }
