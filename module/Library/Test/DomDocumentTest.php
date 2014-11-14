@@ -122,11 +122,13 @@ class DomDocumentTest extends \PHPUnit_Framework_TestCase
         $document = new DomDocument;
         $node = $document->createElement('test');
         $document->appendChild($node);
-        $document->save($filename);
+        $length = $document->save($filename);
+        $expectedContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<test/>\n";
         $this->assertEquals(
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<test/>\n",
+            $expectedContent,
             file_get_contents($filename)
         );
+        $this->assertEquals(strlen($expectedContent), $length);
     }
 
     public function testSaveExplicitOptions()
@@ -136,11 +138,13 @@ class DomDocumentTest extends \PHPUnit_Framework_TestCase
         $document = new DomDocument;
         $node = $document->createElement('test');
         $document->appendChild($node);
-        $document->save($filename, LIBXML_NOEMPTYTAG);
+        $length = $document->save($filename, LIBXML_NOEMPTYTAG);
+        $expectedContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<test></test>\n";
         $this->assertEquals(
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<test></test>\n",
+            $expectedContent,
             file_get_contents($filename)
         );
+        $this->assertEquals(strlen($expectedContent), $length);
     }
 
     public function testSaveRemovesFileOnError()

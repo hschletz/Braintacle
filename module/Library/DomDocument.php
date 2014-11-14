@@ -120,7 +120,7 @@ class DomDocument extends \DOMDocument
      *
      * @param string $filename
      * @param integer $options
-     * @retutn integer number of bytes written
+     * @return integer number of bytes written
      * @throws \RuntimeException if a write error occurs
      */
     public function save($filename, $options=0)
