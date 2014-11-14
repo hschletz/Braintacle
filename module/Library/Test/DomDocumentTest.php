@@ -161,4 +161,50 @@ class DomDocumentTest extends \PHPUnit_Framework_TestCase
             $this->assertFileNotExists($filename);
         }
     }
+
+    public function testLoadSuccessWithXmlDeclaration()
+    {
+        $root = vfsStream::setup('root');
+        $content = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<test>\xC4</test>\n";
+        $filename = vfsStream::newFile('test.xml')->withContent($content)->at($root)->url();
+        $document = new DomDocument;
+        $this->assertTrue($document->load($filename));
+        $this->assertEquals('ISO-8859-1', $document->xmlEncoding);
+        $this->assertEquals('ISO-8859-1', $document->encoding);
+        $node = $document->firstChild;
+        $this->assertEquals('test', $node->tagName);
+        $this->assertEquals("\xC3\x84", $node->nodeValue);
+    }
+
+    public function testLoadSuccessWithoutXmlDeclaration()
+    {
+        $root = vfsStream::setup('root');
+        $content = "<test>\xC3\x84</test>\n";
+        $filename = vfsStream::newFile('test.xml')->withContent($content)->at($root)->url();
+        $document = new DomDocument;
+        $this->assertTrue($document->load($filename));
+        $node = $document->firstChild;
+        $this->assertEquals('test', $node->tagName);
+        $this->assertEquals("\xC3\x84", $node->nodeValue);
+    }
+
+    public function testLoadInvalidContent()
+    {
+        $root = vfsStream::setup('root');
+        $content = '';
+        $filename = vfsStream::newFile('test.xml')->withContent($content)->at($root)->url();
+        $this->setExpectedException('RuntimeException', "$filename is unreadable or has invalid content");
+        $document = new DomDocument;
+        @$document->load($filename);
+    }
+
+    public function testLoadFileUnreadable()
+    {
+        $root = vfsStream::setup('root');
+        $content = "test";
+        $filename = $root->url() . '/test.xml';
+        $this->setExpectedException('RuntimeException', "$filename is unreadable or has invalid content");
+        $document = new DomDocument;
+        @$document->load($filename);
+    }
 }

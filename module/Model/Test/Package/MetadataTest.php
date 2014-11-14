@@ -71,7 +71,7 @@ class MetadataTest extends \Model\Test\AbstractTest
         $this->assertEquals('rien', $node->getAttribute('GARDEFOU'));
     }
 
-    public function setPackageDataActionParamsProvider()
+    public function packageDataActionParamsProvider()
     {
         return array(
             array('store', 'STORE', 'action_param', '', ''),
@@ -82,7 +82,7 @@ class MetadataTest extends \Model\Test\AbstractTest
 
     /**
      * Test setPackageData()
-     * @dataProvider setPackageDataActionParamsProvider
+     * @dataProvider packageDataActionParamsProvider
      * @param string $action Action to test
      * @param string $act Expected value for "ACT" attribute
      * @param string $path Expected value for "PATH" attribute
@@ -184,5 +184,61 @@ class MetadataTest extends \Model\Test\AbstractTest
         $data['Priority'] = 7;
         $model->setPackageData($data);
         $this->assertEquals(7, $model->firstChild->getAttribute('PRI'));
+    }
+
+    /**
+     * Test getPackageData()
+     * @dataProvider packageDataActionParamsProvider
+     * @param string $action Action to test
+     * @param string $act Value for "ACT" attribute
+     * @param string $path Value for "PATH" attribute
+     * @param string $name Value for "NAME" attribute
+     * @param string $command Value for "COMMAND" attribute
+     */
+    public function testGetPackageData($action, $act, $path, $name, $command)
+    {
+        $messageEscaped = '&quot;<br><br/><br /><BR>';
+        $messageUnescaped = "\"\n\n\n\n";
+        $model = new Metadata;
+        $node = $model->createElement('DOWNLOAD');
+        $node->setAttribute('ID', '1');
+        $node->setAttribute('PRI', '5');
+        $node->setAttribute('ACT', $act);
+        $node->setAttribute('DIGEST', '');
+        $node->setAttribute('PROTO', 'HTTP');
+        $node->setAttribute('FRAGS', '1');
+        $node->setAttribute('DIGEST_ALGO', 'SHA1');
+        $node->setAttribute('DIGEST_ENCODE', 'Hexa');
+        $node->setAttribute('PATH', $path);
+        $node->setAttribute('NAME', $name);
+        $node->setAttribute('COMMAND', $command);
+        $node->setAttribute('NOTIFY_USER', '1');
+        $node->setAttribute('NOTIFY_TEXT', "warn$messageEscaped");
+        $node->setAttribute('NOTIFY_COUNTDOWN', '23');
+        $node->setAttribute('NOTIFY_CAN_ABORT', '0');
+        $node->setAttribute('NOTIFY_CAN_DELAY', '0');
+        $node->setAttribute('NEED_DONE_ACTION', '1');
+        $node->setAttribute('NEED_DONE_ACTION_TEXT', "postinst$messageEscaped");
+        $node->setAttribute('GARDEFOU', 'rien');
+        $model->appendChild($node);
+
+        $result = $model->getPackageData();
+        $this->assertCount(9, $result);
+        $this->assertEquals($action, $result['DeployAction']);
+        $this->assertEquals('action_param', $result['ActionParam']);
+        $this->assertEquals('1', $result['Warn']);
+        $this->assertEquals("warn$messageUnescaped", $result['WarnMessage']);
+        $this->assertEquals('23', $result['WarnCountdown']);
+        $this->assertEquals('0', $result['WarnAllowAbort']);
+        $this->assertEquals('0', $result['WarnAllowDelay']);
+        $this->assertEquals('1', $result['UserActionRequired']);
+        $this->assertEquals("postinst$messageUnescaped", $result['PostInstMessage']);
+    }
+
+    public function testGetPackageDataForcesValidDocument()
+    {
+        $this->setExpectedException('RuntimeException', 'Validation of XML document failed');
+        $model = new Metadata;
+        @$model->getPackageData();
     }
 }

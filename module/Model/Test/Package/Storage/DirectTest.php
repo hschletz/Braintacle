@@ -61,4 +61,22 @@ class DirectTest extends \Model\Test\AbstractTest
 
         $model->writeMetadata($data);
     }
+
+    public function testReadMetadata()
+    {
+        $timestamp = new \Zend_Date(1415610660, \Zend_Date::TIMESTAMP);
+
+        $metadata = $this->getMock('Model\Package\Metadata');
+        $metadata->expects($this->once())->method('load')->with('/path/info');
+        $metadata->expects($this->once())->method('getPackageData')->willReturn('packageData');
+
+        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $model = $this->getMockBuilder('Model\Package\Storage\Direct')
+                      ->setMethods(array('getPath'))
+                      ->setConstructorArgs(array($config, $metadata))
+                      ->getMock();
+        $model->method('getPath')->with($timestamp)->willReturn('/path');
+
+        $this->assertEquals('packageData', $model->readMetadata($timestamp));
+    }
 }

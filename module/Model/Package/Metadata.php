@@ -25,7 +25,7 @@ namespace Model\Package;
  * Package metadata XML
  *
  * The schema defines a single element with all metadata in its attributes.
- * These should be accessed via setPackageData().
+ * These should be accessed via setPackageData() and getPackageData().
  */
 class Metadata extends \Library\DomDocument
 {
@@ -78,6 +78,37 @@ class Metadata extends \Library\DomDocument
     }
 
     /**
+     * Retrieve package data from attributes
+     *
+     * Only action and notification settings are returned. All other relevant
+     * attributes are available from the database. Data is enforced to be valid.
+     *
+     * @return array
+     */
+    public function getPackageData()
+    {
+        $this->forceValid();
+        $node = $this->firstChild;
+        $map = array(
+            'store' => 'PATH',
+            'launch' => 'NAME',
+            'execute' => 'COMMAND'
+        );
+        $action = strtolower($node->getAttribute('ACT'));
+        return array(
+            'DeployAction' => $action,
+            'ActionParam' => $node->getAttribute($map[$action]),
+            'Warn' => $node->getAttribute('NOTIFY_USER'),
+            'WarnMessage' => $this->_unescapeMessage($node->getAttribute('NOTIFY_TEXT')),
+            'WarnCountdown' => $node->getAttribute('NOTIFY_COUNTDOWN'),
+            'WarnAllowAbort' => $node->getAttribute('NOTIFY_CAN_ABORT'),
+            'WarnAllowDelay' => $node->getAttribute('NOTIFY_CAN_DELAY'),
+            'UserActionRequired' => $node->getAttribute('NEED_DONE_ACTION'),
+            'PostInstMessage' => $this->_unescapeMessage($node->getAttribute('NEED_DONE_ACTION_TEXT')),
+        );
+    }
+
+    /**
      * Escape user notification messages
      *
      * The Windows agent interprets user notification messages as HTML. For this
@@ -97,6 +128,23 @@ class Metadata extends \Library\DomDocument
     {
         $message = str_replace('"', '&quot;', $message);
         $message = str_replace(array("\r\n", "\n\r", "\n", "\r"), '<br>', $message);
+        return $message;
+    }
+
+    /**
+     * Unescape string encoded by _escapeMessage()
+     *
+     * The returned string may not be identical to the original string because
+     * _escapeMessage() is not fully reversible, but should sufficiently match
+     * the original content. Line breaks are returned as \n.
+     *
+     * @param string $message Escaped user notification message
+     * @return string Unescaped string
+     */
+    protected function _unescapeMessage($message)
+    {
+        $message = preg_replace('#<br\s*/?>#i', "\n", $message);
+        $message = str_replace('&quot;', '"', $message);
         return $message;
     }
 }

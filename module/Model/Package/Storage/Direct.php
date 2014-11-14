@@ -74,4 +74,16 @@ class Direct
         $this->_metadata->setPackageData($data);
         $this->_metadata->save($this->getPath($data['Timestamp']) . '/info');
     }
+
+    /**
+     * Read metadata XML file
+     *
+     * @param \Zend_Date $timestamp Package timestamp
+     * @return array Package data, see \Model\Package\Metadata::getPackageData()
+     */
+    public function readMetadata($timestamp)
+    {
+        $this->_metadata->load($this->getPath($timestamp) . '/info');
+        return $this->_metadata->getPackageData();
+    }
 }

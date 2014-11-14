@@ -364,35 +364,10 @@ class Model_Package extends Model_Abstract
         }
 
         // Clone properties from metafile
-        $xmlFile = $this->getPath() . DIRECTORY_SEPARATOR . 'info';
-        $xmlData = @file_get_contents($xmlFile);
-        if (!$xmlData) {
-            $this->_setError('Could not open file \'%s\'.', $xmlFile);
-            return false;
-        }
-        // Make metafile parseable by Zend_Config_Xml
-        $xmlData = '<?xml version="1.0"?><data>' . $xmlData . '</data>';
-        $xmlData = new Zend_Config_Xml($xmlData);
-        $xmlData = $xmlData->get('DOWNLOAD');
-
-        $this->setDeployAction(strtolower($xmlData->get('ACT')));
-        $this->setWarn($xmlData->get('NOTIFY_USER'));
-        $this->setWarnMessage($xmlData->get('NOTIFY_TEXT'));
-        $this->setWarnCountdown($xmlData->get('NOTIFY_COUNTDOWN'));
-        $this->setWarnAllowAbort($xmlData->get('NOTIFY_CAN_ABORT'));
-        $this->setWarnAllowDelay($xmlData->get('NOTIFY_CAN_DELAY'));
-        $this->setUserActionRequired($xmlData->get('NEED_DONE_ACTION'));
-        $this->setPostInstMessage($xmlData->get('NEED_DONE_ACTION_TEXT'));
-        switch ($this->getDeployAction()) {
-            case 'store':
-                $this->setActionParam($xmlData->get('PATH'));
-                break;
-            case 'launch':
-                $this->setActionParam($xmlData->get('NAME'));
-                break;
-            case 'execute':
-                $this->setActionParam($xmlData->get('COMMAND'));
-                break;
+        $storage = \Library\Application::getService('Model\Package\Storage\Direct');
+        $metadata = $storage->readMetadata($this['Timestamp']);
+        foreach ($metadata as $property => $value) {
+            $this->setProperty($property, $value);
         }
 
         // Estimate MaxFragmentSize

@@ -136,4 +136,24 @@ class DomDocument extends \DOMDocument
         }
         return strlen($xml);
     }
+
+    /**
+     * Load XML content from file
+     *
+     * This is an extension of \DomDocument::load() with improved error
+     * handling. An exception is thrown on error.
+     *
+     * @param string $filename
+     * @param integer $options
+     * @return bool always TRUE for compatibility with original implementation
+     * @throws \RuntimeException if file is unreadable or has unparseable content
+     */
+    public function load($filename, $options=0)
+    {
+        if (parent::load($filename, $options)) {
+            return true;
+        } else {
+            throw new \RuntimeException($filename . ' is unreadable or has invalid content');
+        }
+    }
 }
