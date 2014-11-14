@@ -463,6 +463,7 @@ class Model_Package extends Model_Abstract
     {
         $config = \Library\Application::getService('Model\Config');
         $storage = \Library\Application::getService('Model\Package\Storage\Direct');
+        $packageManager = \Library\Application::getService('Model\Package\PackageManager');
 
         // Reset object's state
         $this->_errors = array();
@@ -624,38 +625,8 @@ class Model_Package extends Model_Abstract
 
         try {
             $storage->writeMetadata($this);
-        } catch (\Exception $e) {
-            $this->_errors[] = $e->getMessage();
-            return false;
-        }
-        // Create package in database
-        try {
-            $table = 'download_available';
-            $db->insert(
-                $table,
-                array(
-                    'fileid' => $timestamp,
-                    'name' => $this->getName(),
-                    'priority' => $this->getPriority(),
-                    'fragments' => $this->getNumFragments(),
-                    'size' => $this->getSize(),
-                    'osname' => $this->getProperty('Platform', true),
-                    'comment' => $this->getComment(),
-                )
-            );
+            $packageManager->build($this);
             $this->_writtenToDb = true;
-
-            $table = 'download_enable';
-            $db->insert(
-                $table,
-                array(
-                    'fileid' => $timestamp,
-                    'info_loc' => $config->packageBaseUriHttps,
-                    'pack_loc' => $config->packageBaseUriHttp,
-                    'cert_path' => dirname($config->packageCertificate),
-                    'cert_file' => $config->packageCertificate,
-                )
-            );
             $this->_activated = true;
 
             // portable replacement for lastInsertId()
@@ -665,14 +636,8 @@ class Model_Package extends Model_Abstract
                     $this->getTimestamp()->get(Zend_Date::TIMESTAMP)
                 )
             );
-        } catch (Zend_Exception $exception) {
-            $this->_setError(
-                'Could not insert row into table \'%1$s\'. Message: %2$s',
-                array(
-                    $table,
-                    $exception->getMessage(),
-                )
-            );
+        } catch (\Exception $e) {
+            $this->_errors[] = $e->getMessage();
             return false;
         }
 
