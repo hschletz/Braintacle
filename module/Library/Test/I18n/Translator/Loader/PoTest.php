@@ -40,12 +40,4 @@ class PoTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals($translations, $textDomain->getArrayCopy());
     }
-
-    public function testMissingFile()
-    {
-        $this->setExpectedException('RuntimeException');
-        $loader = new \Library\I18n\Translator\Loader\Po;
-        // Don't pass subpath to getPath() to avoid exception thrown by getPath()
-        $loader->load('de', \Library\Module::getPath() . '/data/Test/I18n/Translator/Loader/nonexistent.po');
-    }
 }

@@ -20,6 +20,29 @@
  */
 
 error_reporting(-1);
+
+/**
+ * A minimal stream wrapper to simulate I/O errors
+ *
+ * No stream methods are implemented except stream_open() (so that a stream can
+ * be opened) and stream_eof() (which always returns FALSE to distinct a read
+ * error from a normal EOF). Every other method will cause the calling stream
+ * function to fail, allowing testing the error handling in the application.
+ */
+class StreamWrapperFail
+{
+    public function stream_open($path, $mode, $options, &$openedPath)
+    {
+        return true;
+    }
+
+    public function stream_eof()
+    {
+        return false;
+    }
+}
+stream_wrapper_register('fail', 'StreamWrapperFail');
+
 require_once(__DIR__ . '/../../Library/Application.php');
 \Library\Application::init('Library', false);
 

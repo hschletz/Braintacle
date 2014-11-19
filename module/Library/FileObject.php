@@ -1,6 +1,6 @@
 <?php
 /**
- * Extension to SplFileObject
+ * Replacement for \SplFileObject
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,10 +22,188 @@
 namespace Library;
 
 /**
- * Extension to SplFileObject
+ * Replacement for \SplFileObject
+ *
+ * This is a drop-in replacement for \SplFileObject, reimplemented to throw
+ * exceptions on errors, thus simplifying file operations. There are some
+ * additional static methods for general filesystem operations.
+ *
+ * The Iterator implementation is slightly incompatible with \SplFileObject
+ * which honors the SKIP_EMPTY flag only in a foreach() loop, not for direct
+ * method invocation. This inconsistency cannot be implemented in PHP.
+ *
+ * Not all methods are implemented yet.
  */
-class FileObject extends \SplFileObject
+class FileObject extends \SplFileInfo implements \Iterator
 {
+    /**
+     * The file pointer
+     * @var resource
+     */
+    protected $_file;
+
+    /**
+     * Flags set via setFlags()
+     * @var integer
+     */
+    protected $_flags = 0;
+
+    /**
+     * Current line for iterator
+     * @var string
+     */
+    protected $_currentLine;
+
+    /**
+     * Current key for iterator
+     * @var integer
+     */
+    protected $_currentKey;
+
+    /**
+     * EOF indicator for iterator
+     * @var bool
+     */
+    protected $_iteratorValid;
+
+    /**
+     * Constructor
+     *
+     * @param string $filename
+     * @param string $openMode
+     */
+    public function __construct($filename, $openMode='r')
+    {
+        $this->_file = @fopen($filename, $openMode);
+        if (!$this->_file) {
+            throw new \RuntimeException("Error opening file '$filename', mode '$openMode'");
+        }
+        parent::__construct($filename);
+    }
+
+    /**
+     * Destructor
+     */
+    public function __destruct()
+    {
+        if ($this->_file) {
+            fclose($this->_file);
+        }
+    }
+
+    /**
+     * Set flags
+     *
+     * @param integer $flags Any of the \SplFileObject constants
+     * @throws \LogicException if READ_CSV is set (not implemented yet)
+     */
+    public function setFlags($flags)
+    {
+        if ($flags & \SplFileObject::READ_CSV) {
+            throw new \LogicException('READ_CSV not implemented');
+        }
+        $this->_flags = $flags;
+    }
+
+    /**
+     * Return EOF status
+     *
+     * @return bool
+     */
+    public function eof()
+    {
+        return feof($this->_file);
+    }
+
+    /**
+     * Read a single line
+     *
+     * @return string
+     * @throws \RuntimeException if an error occurs, including reading beyond EOF
+     */
+    public function fgets()
+    {
+        $line = fgets($this->_file);
+        if ($line === false) {
+            throw new \RuntimeException('Error reading from file ' . $this->getPathname());
+        }
+        if ($this->_flags & \SplFileObject::DROP_NEW_LINE) {
+            $line = rtrim($line, "\r\n");
+        }
+        return $line;
+    }
+
+    /**
+     * Get current iterator line
+     *
+     * @return string
+     */
+    public function current()
+    {
+        if ($this->_currentKey == -1) {
+            $this->next();
+        }
+        return $this->_currentLine;
+    }
+
+    /**
+     * Get current iterator line number
+     *
+     * @return integer
+     */
+    public function key()
+    {
+        return $this->_currentKey;
+    }
+
+    /**
+     * Advance iterator
+     *
+     * @throws \RuntimeException if an error occurs
+     */
+    public function next()
+    {
+        try {
+            $this->_currentLine = $this->fgets();
+        } catch (\RuntimeException $e) {
+            if ($this->eof()) {
+                $this->_currentLine = false;
+                $this->_iteratorValid = false;
+            } else {
+                throw $e;
+            }
+        }
+        if ($this->_flags & \SplFileObject::SKIP_EMPTY and $this->_currentLine === '') {
+            $this->next();
+        } else {
+            $this->_currentKey++;
+        }
+    }
+
+    /**
+     * Rewind iterator and file pointer
+     *
+     * @throws \RuntimeException if an error occurs
+     */
+    public function rewind()
+    {
+        if (!rewind($this->_file)) {
+            throw new \RuntimeException('Error rewinding file ' . $this->getPathname());
+        }
+        $this->_currentKey = -1;
+        $this->_iteratorValid = !$this->eof();
+    }
+
+    /**
+     * Return iterator status
+     *
+     * @return bool
+     */
+    public function valid()
+    {
+        return $this->_iteratorValid;
+    }
+
     /**
      * Reads entire file into a string
      *

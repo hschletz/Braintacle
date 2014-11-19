@@ -20,7 +20,6 @@
  */
 
 namespace Library\I18n\Translator\Loader;
-use Library\FileObject;
 
 /**
  * Translation loader that parses gettext .po files
@@ -33,8 +32,8 @@ class Po implements \Zend\I18n\Translator\Loader\FileLoaderInterface
     /** {@inheritdoc} */
     public function load($locale, $filename)
     {
-        $file = new FileObject($filename);
-        $file->setFlags(FileObject::DROP_NEW_LINE | FileObject::READ_AHEAD | FileObject::SKIP_EMPTY);
+        $file = new \Library\FileObject($filename);
+        $file->setFlags(\SplFileObject::DROP_NEW_LINE | \SplFileObject::READ_AHEAD | \SplFileObject::SKIP_EMPTY);
 
         $textDomain = new \Zend\I18n\Translator\TextDomain;
         $state = 0; // Parser state; 0 := everything else; 1 := msgid; 2 := msgstr
