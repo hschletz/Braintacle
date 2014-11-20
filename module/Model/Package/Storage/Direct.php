@@ -86,4 +86,45 @@ class Direct
         $this->_metadata->load($this->getPath($timestamp) . '/info');
         return $this->_metadata->getPackageData();
     }
+
+    /**
+     * Write Package content
+     *
+     * @param array $data Package data
+     * @param string $file Source file
+     * @param bool $deleteSource Delete source file
+     */
+    public function writeContent($data, $file, $deleteSource)
+    {
+        $baseName = $this->getPath($data['Timestamp']) . '/' . $data['Timestamp']->get(\Zend_Date::TIMESTAMP) . '-';
+        $fileSize = @$data['Size'];
+        $maxFragmentSize = @$data['MaxFragmentSize'] * 1024; // Kilobytes => Bytes
+        if (!$data['FileLocation']) {
+            // No file
+            $numFragments = 0;
+        } elseif ($fileSize == 0 or $maxFragmentSize == 0 or $fileSize <= $maxFragmentSize) {
+            // Don't split, just copy/move/rename the file
+            if ($deleteSource) {
+                \Library\FileObject::rename($file, $baseName . '1');
+            } else {
+                \Library\FileObject::copy($file, $baseName . '1');
+            }
+            $numFragments = 1;
+        } else {
+            // Split file into fragments of nearly identical size no bigger than $maxFragmentSize.
+            $fragmentSize = ceil($fileSize / ceil($fileSize / $maxFragmentSize));
+            // Determine number of fragments by files actually written
+            $numFragments = 0;
+            $input = new \Library\FileObject($file, 'rb');
+            while ($fragment = $input->fread($fragmentSize)) {
+                $numFragments++;
+                \Library\FileObject::filePutContents($baseName . $numFragments, $fragment);
+            }
+            unset($input); // Close file before eventually trying to delete it
+            if ($deleteSource) {
+                \Library\FileObject::unlink($file);
+            }
+        }
+        return $numFragments;
+    }
 }

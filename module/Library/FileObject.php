@@ -116,6 +116,28 @@ class FileObject extends \SplFileInfo implements \Iterator
     }
 
     /**
+     * Read a fixed-length chunk of data
+     *
+     * The returned string may be shorter than $length if EOF is reached.
+     * Reading beyond EOF is allowed and yields an empty string.
+     *
+     * @param integer $length Number of bytes to read, must be greater than 0.
+     * @return string
+     * @throws \RuntimeException if an error occurs
+     */
+    public function fread($length)
+    {
+        $data = fread($this->_file, $length);
+        // In contrast to the fread() documentation, runtime errors typically
+        // yield empty or truncated strings instead of FALSE. In case of EOF
+        // this is a valid result.
+        if ($data === false or (strlen($data) != $length and !$this->eof())) {
+            throw new \RuntimeException('Error reading from file ' . $this->getPathname());
+        }
+        return $data;
+    }
+
+    /**
      * Read a single line
      *
      * @return string
@@ -278,6 +300,53 @@ class FileObject extends \SplFileInfo implements \Iterator
         }
         if ($result === false) {
             throw new \RuntimeException("Error writing to file $filename", 0, $exception);
+        }
+    }
+
+    /**
+     * Copy a file or directory
+     *
+     * Existing files are overwritten. Directories can neither be copied nor
+     * overwritten. This is the same behavior as PHP's copy().
+     *
+     * @param string $oldName Existing filename/directory
+     * @param string $newName New filename/directory
+     * @throws \RuntimeException if an error occurs
+     */
+    public static function copy($oldName, $newName)
+    {
+         if (!copy($oldName, $newName)) {
+            throw new \RuntimeException("Error copying '$oldName' to '$newName'");
+         }
+    }
+
+    /**
+     * Rename/move a file or directory
+     *
+     * Existing targets are overwritten regardless of type. This is the same
+     * behavior as PHP's rename().
+     *
+     * @param string $oldName Existing filename/directory
+     * @param string $newName New filename/directory
+     * @throws \RuntimeException if an error occurs
+     */
+    public static function rename($oldName, $newName)
+    {
+         if (!rename($oldName, $newName)) {
+            throw new \RuntimeException("Error renaming '$oldName' to '$newName'");
+         }
+    }
+
+    /**
+     * Delete a file
+     *
+     * @param $filename file to delete
+     * @throws \RuntimeException if an error occurs
+     */
+    public static function unlink($filename)
+    {
+        if (!unlink($filename)) {
+            throw new \RuntimeException("Error deleting file '$filename'");
         }
     }
 }

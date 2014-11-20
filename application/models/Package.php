@@ -534,71 +534,8 @@ class Model_Package extends Model_Abstract
         }
         $this->setSize($fileSize);
 
-        // Determine number of fragments and split file if necessary
-        $baseName = $path . DIRECTORY_SEPARATOR . $timestamp . '-';
-        if (!$this->getFileLocation()) {
-            $this->setNumFragments(0);
-        } elseif ($fileSize == 0 or $this->getMaxFragmentSize() == 0) {
-            // Don't split, just move/rename the file
-            $this->setNumFragments(1);
-            if (!@rename($file, $baseName . '1')) {
-                $this->_setError(
-                    'Could not move/rename file \'%1$s\' to \'%2$s\'',
-                    array(
-                        $file,
-                        $baseName . '1',
-                    )
-                );
-                return false;
-            }
-        } else {
-            // Split file into fragments of nearly identical size.
-            $numFragments = ceil(
-                $fileSize / ($this->getMaxFragmentSize() * 1024)
-            );
-            $fragmentSize = ceil($fileSize / $numFragments);
-            // Determine number of fragments by files actually written
-            // to avoid bad sideeffects of rounding error
-            $numFragments = 0;
-            $input = @fopen($file, 'rb');
-            if (!$input) {
-                $this->_setError('Could not open file \'%s\' for reading.', $file);
-                return false;
-            }
-            $bytesRead = 0;
-            while ($chunk = @fread($input, $fragmentSize)) {
-                $numFragments++;
-                $bytesRead += strlen($chunk);
-                $outputName = $baseName . $numFragments;
-                if (!file_put_contents($outputName, $chunk)) {
-                    fclose($input);
-                    $this->_setError(
-                        'Could not write to file \'%s\'.',
-                        $outputName
-                    );
-                    return false;
-                }
-            }
-            fclose($input);
-
-            // Delete source file
-            if (($deleteSource or $zipFileCreated) and !@unlink($file)) {
-                $this->_setError('Could not delete source file \'%s\'', $file);
-                return false;
-            }
-
-            // Check whether all bytes have been read.
-            if ($bytesRead != $fileSize) {
-                $this->_setError(
-                    'Reading from file \'%s\' was incomplete.',
-                    $file
-                );
-                return false;
-            }
-            $this->setNumFragments($numFragments);
-        }
-
         try {
+            $this->setNumFragments($storage->writeContent($this, $file, $deleteSource || $zipFileCreated));
             $storage->writeMetadata($this);
             $packageManager->build($this);
             $this->_writtenToDb = true;

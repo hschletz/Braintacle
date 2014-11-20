@@ -102,6 +102,54 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($fileObject->eof());
     }
 
+    public function testFreadPartial()
+    {
+        $content = "line1\nline2\n";
+        $url = vfsStream::newFile('test.txt')->withContent($content)->at($this->_root)->url();
+        $fileObject = new FileObject($url, 'r');
+        $this->assertEquals('line1', $fileObject->fread(5));
+    }
+
+    public function testFreadMaxLength()
+    {
+        $content = "line1\nline2\n";
+        $url = vfsStream::newFile('test.txt')->withContent($content)->at($this->_root)->url();
+        $fileObject = new FileObject($url, 'r');
+        $this->assertEquals($content, $fileObject->fread(strlen($content)));
+        $this->assertSame('', $fileObject->fread(1));
+    }
+
+    public function testFreadTruncated()
+    {
+        $content = "line1\nline2\n";
+        $url = vfsStream::newFile('test.txt')->withContent($content)->at($this->_root)->url();
+        $fileObject = new FileObject($url, 'r');
+        $this->assertEquals($content, $fileObject->fread(strlen($content) + 10));
+        $this->assertSame('', $fileObject->fread(1));
+    }
+
+    public function testFreadEmptyFile()
+    {
+        $url = vfsStream::newFile('test.txt')->at($this->_root)->url();
+        $fileObject = new FileObject($url, 'r');
+        $this->assertSame('', $fileObject->fread(10));
+    }
+
+    public function testFreadInvalidLength()
+    {
+        $url = vfsStream::newFile('test.txt')->withContent('test')->at($this->_root)->url();
+        $this->setExpectedException('RuntimeException', 'Error reading from file ' . $url);
+        $fileObject = new FileObject($url, 'r');
+        @$fileObject->fread(0);
+    }
+
+    public function testFreadError()
+    {
+        $this->setExpectedException('RuntimeException', 'Error reading from file fail:');
+        $fileObject = new FileObject('fail://', 'r');
+        @$fileObject->fread(10);
+    }
+
     public function testFgetsRaw()
     {
         $content = "line1\nline2\r\nline3";
@@ -359,5 +407,137 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
             $this->assertFileExists($filename);
             $this->assertEquals('con', file_get_contents($filename));
         }
+    }
+
+    public function testCopySuccess()
+    {
+        $content = '1234';
+        $oldFile = vfsStream::newFile('test.txt')->withContent($content)->at($this->_root)->url();
+        $newFile = $this->_root->url() . '/test2.txt';
+        FileObject::copy($oldFile, $newFile);
+        $this->assertFileExists($newFile);
+        $this->assertEquals($content, file_get_contents($newFile));
+    }
+
+    public function testCopySuccessOverwriteFileWithFile()
+    {
+        $content = '1234';
+        $oldFile = vfsStream::newFile('test.txt')->withContent($content)->at($this->_root)->url();
+        $newFile = vfsStream::newFile('test2.txt')->at($this->_root)->url();
+        FileObject::copy($oldFile, $newFile);
+        $this->assertFileExists($newFile);
+        $this->assertEquals($content, file_get_contents($newFile));
+    }
+
+    public function testCopyErrorDir()
+    {
+        $oldFile = vfsStream::newDirectory('test')->at($this->_root)->url();
+        $newFile = $this->_root->url() . '/test2';
+        $this->setExpectedException('RuntimeException', "Error copying '$oldFile' to '$newFile'");
+        @FileObject::copy($oldFile, $newFile);
+    }
+
+    public function testCopyErrorOverwriteDirWithFile()
+    {
+        $content = '1234';
+        $oldFile = vfsStream::newFile('test.txt')->withContent($content)->at($this->_root)->url();
+        $newFile = vfsStream::newDirectory('test2')->at($this->_root)->url();
+        $this->setExpectedException('RuntimeException', "Error copying '$oldFile' to '$newFile'");
+        @FileObject::copy($oldFile, $newFile);
+    }
+
+    public function testCopyErrorInvalidSource()
+    {
+        $oldFile = $this->_root->url() . '/test1.txt';
+        $newFile = $this->_root->url() . '/test2.txt';
+        $this->setExpectedException('RuntimeException', "Error copying '$oldFile' to '$newFile'");
+        @FileObject::copy($oldFile, $newFile);
+    }
+
+    public function testCopyErrorInvalidTarget()
+    {
+        $oldFile = vfsStream::newFile('test.txt')->at($this->_root)->url();
+        $newFile = $this->_root->url() . '/invalid/test2.txt';
+        $this->setExpectedException('RuntimeException', "Error copying '$oldFile' to '$newFile'");
+        @FileObject::copy($oldFile, $newFile);
+        $this->assertFileExists($oldFile);
+    }
+
+    public function testRenameSuccess()
+    {
+        $content = '1234';
+        $oldFile = vfsStream::newFile('test.txt')->withContent($content)->at($this->_root)->url();
+        $newFile = $this->_root->url() . '/test2.txt';
+        FileObject::rename($oldFile, $newFile);
+        $this->assertFileNotExists($oldFile);
+        $this->assertFileExists($newFile);
+        $this->assertEquals($content, file_get_contents($newFile));
+    }
+
+    public function testRenameSuccessOverwriteFileWithFile()
+    {
+        $content = '1234';
+        $oldFile = vfsStream::newFile('test.txt')->withContent($content)->at($this->_root)->url();
+        $newFile = vfsStream::newFile('test2.txt')->at($this->_root)->url();
+        FileObject::rename($oldFile, $newFile);
+        $this->assertFileNotExists($oldFile);
+        $this->assertFileExists($newFile);
+        $this->assertEquals($content, file_get_contents($newFile));
+    }
+
+    public function testRenameSuccessOverwriteDirWithFile()
+    {
+        $content = '1234';
+        $oldFile = vfsStream::newFile('test.txt')->withContent($content)->at($this->_root)->url();
+        $newFile = vfsStream::newDirectory('test2')->at($this->_root)->url();
+        FileObject::rename($oldFile, $newFile);
+        $this->assertFileNotExists($oldFile);
+        $this->assertFileExists($newFile);
+        $this->assertEquals($content, file_get_contents($newFile));
+    }
+
+    public function testRenameSuccessOverwriteFileWithDir()
+    {
+        $content = '1234';
+        $oldFile = vfsStream::newDirectory('test2')->at($this->_root)->url();
+        $newFile = vfsStream::newFile('test.txt')->withContent($content)->at($this->_root)->url();
+        FileObject::rename($oldFile, $newFile);
+        $this->assertFileNotExists($oldFile);
+        $this->assertFileExists($newFile);
+        $this->assertTrue(is_dir($newFile));
+    }
+
+    public function testRenameErrorInvalidSource()
+    {
+        $oldFile = $this->_root->url() . '/test1.txt';
+        $newFile = $this->_root->url() . '/test2.txt';
+        $this->setExpectedException('RuntimeException', "Error renaming '$oldFile' to '$newFile'");
+        @FileObject::rename($oldFile, $newFile);
+        $this->assertFileExists($oldFile);
+    }
+
+    public function testRenameErrorInvalidTarget()
+    {
+        $content = '1234';
+        $oldFile = vfsStream::newFile('test.txt')->at($this->_root)->url();
+        $newFile = $this->_root->url() . '/invalid/test2.txt';
+        $this->setExpectedException('RuntimeException', "Error renaming '$oldFile' to '$newFile'");
+        @FileObject::rename($oldFile, $newFile);
+        $this->assertFileExists($oldFile);
+    }
+
+    public function testUnlinkSuccess()
+    {
+        $filename = vfsStream::newFile('test.txt')->at($this->_root)->url();
+        FileObject::unlink($filename);
+        $this->assertFileNotExists($filename);
+    }
+
+    public function testUnlinkError()
+    {
+        $filename = vfsStream::newDirectory('test')->at($this->_root)->url();
+        $this->setExpectedException('RuntimeException', "Error deleting file '$filename'");
+        @FileObject::unlink($filename);
+        $this->assertFileExists($filename);
     }
 }
