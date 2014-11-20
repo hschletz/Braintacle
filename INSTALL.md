@@ -137,6 +137,7 @@ DBD::mysql (MySQL only)   | libdbd-mysql-perl         | perl-DBD-MySQL    | perl
 Apache::DBI               | libapache-dbi-perl        | perl-Apache-DBI   | perl-Apache-DBI
 Date::Calc                | libdate-calc-perl         | perl-Date-Calc    | perl-Date-Calc
 XML::Simple               | libxml-simple-perl        | perl-XML-Simple   | perl-XML-Simple
+XML::PARSER               | libxml-parser-perl        | perl-XML-Parser   | perl-XML-Parser
 Sys::Syslog (optional)    | (already present)         | (already present) | (already present)
 SOAP::Lite (optional)     | libsoap-lite-perl         | perl-SOAP-Lite    | perl-SOAP-Lite
 XML::Entities (optional)  | (not available, use CPAN) | perl-XML-Entities | perl-XML-Entities
