@@ -66,6 +66,7 @@ Feature\InitProviderInterface
                     '\Library\Logger' => 'Library\Log\LoggerServiceFactory',
                 ),
                 'invokables' => array(
+                    'Library\ArchiveManager' => 'Library\ArchiveManager',
                     'Library\AuthenticationService' => '\Library\Authentication\AuthenticationService',
                 ),
             ),

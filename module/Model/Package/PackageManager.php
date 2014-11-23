@@ -33,6 +33,12 @@ class PackageManager
     protected $_config;
 
     /**
+     * Archive manager
+     * @var \Library\ArchiveManager
+     */
+    protected $_archiveManager;
+
+    /**
      * Packages table
      * @var \Database\Table\Packages
      */
@@ -48,16 +54,19 @@ class PackageManager
      * Constructor
      *
      * @param \Model\Config $config
+     * @param \Library\ArchiveManager $archiveManager
      * @param \Database\Table\Packages $packages
      * @param \Database\Table\PackageDownloadInfo $packageDownloadInfo
      */
     public function __construct(
         \Model\Config $config,
+        \Library\ArchiveManager $archiveManager,
         \Database\Table\Packages $packages,
         \Database\Table\packageDownloadInfo $packageDownloadInfo
     )
     {
         $this->_config = $config;
+        $this->_archiveManager = $archiveManager;
         $this->_packages = $packages;
         $this->_packageDownloadInfo = $packageDownloadInfo;
     }
@@ -104,5 +113,63 @@ class PackageManager
                 'cert_file' => $this->_config->packageCertificate,
             )
         );
+    }
+
+    /**
+     * Create a platform-specific archive if the source file is not already an
+     * archive of the correct type
+     *
+     * This is currently only supported for the 'windows' platform which expects
+     * a ZIP archive. If the Zip extension is not available, the source file is
+     * assumed to be a ZIP archive and a warning is generated.
+     *
+     * The return value is the path to the archive file - either the source file
+     * or a generated archive.
+     *
+     * @param array $data Package data
+     * @param string $path Path where a new archive will be created
+     * @param bool $deleteSource Delete source file after successfully creating an archive
+     * @return string Path to archive file
+     */
+    public function autoArchive($data, $path, $deleteSource)
+    {
+        $source = $data['FileLocation'];
+        if (!$source) {
+            return $source;
+        }
+
+        switch ($data['Platform']) {
+            case 'windows':
+                $type = \Library\ArchiveManager::ZIP;
+                break;
+            default:
+                // other platforms not implemented yet
+                return $source;
+        }
+        if (!$this->_archiveManager->isSupported($type)) {
+            trigger_error("Support for archive type '$type' not available. Assuming archive.", E_USER_NOTICE);
+            return $source;
+        }
+        if ($this->_archiveManager->isArchive($type, $source)) {
+            // Already an archive of reqired type. Do nothing.
+            return $source;
+        }
+
+        try {
+            $filename = "$path/archive";
+            $archive = $this->_archiveManager->createArchive($type, $filename);
+            $this->_archiveManager->addFile($archive, $source, $data['FileName']);
+            $this->_archiveManager->closeArchive($archive);
+            if ($deleteSource) {
+                \Library\FileObject::unlink($source);
+            }
+        } catch (\Exception $e) {
+            if (isset($archive)) {
+                $this->_archiveManager->closeArchive($archive, true);
+                \Library\FileObject::unlink($filename);
+            }
+            throw $e;
+        }
+        return $filename;
     }
 }

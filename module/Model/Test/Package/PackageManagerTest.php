@@ -21,6 +21,7 @@
 
 namespace Model\Test\Package;
 use Model\Package\PackageManager;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * Tests for Model\Package\PackageManager
@@ -122,5 +123,229 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             )
         );
 
+    }
+
+    public function testAutoArchiveWindowsCreateArchiveKeepSource()
+    {
+        $root = vfsstream::setup('root');
+        $source = vfsStream::newFile('source')->at($root)->url();
+        $data = array('FileLocation' => $source, 'FileName' => 'FileName', 'Platform' => 'windows');
+        $archiveManager = $this->getMock('Library\ArchiveManager');
+        $archiveManager->expects($this->once())
+                       ->method('isSupported')
+                       ->with(\Library\ArchiveManager::ZIP)
+                       ->willReturn(true);
+        $archiveManager->expects($this->once())
+                       ->method('isArchive')
+                       ->with(\Library\ArchiveManager::ZIP, $source)
+                       ->willReturn(false);
+        $archiveManager->expects($this->once())
+                       ->method('createArchive')
+                       ->with(\Library\ArchiveManager::ZIP, 'path/archive')
+                       ->willReturn('archive');
+        $archiveManager->expects($this->once())
+                       ->method('addFile')
+                       ->with('archive', $source, 'FileName');
+        $archiveManager->expects($this->once())
+                       ->method('closeArchive')
+                       ->with('archive', false);
+        $model = $this->_getModel(array('Library\ArchiveManager' => $archiveManager));
+        $this->assertEquals('path/archive', $model->autoArchive($data, 'path', false));
+        $this->assertFileExists($source);
+    }
+
+    public function testAutoArchiveWindowsCreateArchiveDeleteSource()
+    {
+        $root = vfsstream::setup('root');
+        $source = vfsStream::newFile('source')->at($root)->url();
+        $data = array('FileLocation' => $source, 'FileName' => 'FileName', 'Platform' => 'windows');
+        $archiveManager = $this->getMock('Library\ArchiveManager');
+        $archiveManager->expects($this->once())
+                       ->method('isSupported')
+                       ->with(\Library\ArchiveManager::ZIP)
+                       ->willReturn(true);
+        $archiveManager->expects($this->once())
+                       ->method('isArchive')
+                       ->with(\Library\ArchiveManager::ZIP, $source)
+                       ->willReturn(false);
+        $archiveManager->expects($this->once())
+                       ->method('createArchive')
+                       ->with(\Library\ArchiveManager::ZIP, 'path/archive')
+                       ->willReturn('archive');
+        $archiveManager->expects($this->once())
+                       ->method('addFile')
+                       ->with('archive', $source, 'FileName');
+        $archiveManager->expects($this->once())
+                       ->method('closeArchive')
+                       ->with('archive', false);
+        $model = $this->_getModel(array('Library\ArchiveManager' => $archiveManager));
+        $this->assertEquals('path/archive', $model->autoArchive($data, 'path', true));
+        $this->assertFileNotExists($source);
+    }
+
+    public function testAutoArchiveWindowsErrorOnArchiveCreation()
+    {
+        $root = vfsstream::setup('root');
+        $source = vfsStream::newFile('source')->at($root)->url();
+        $data = array('FileLocation' => $source, 'FileName' => 'FileName', 'Platform' => 'windows');
+        $archiveManager = $this->getMock('Library\ArchiveManager');
+        $archiveManager->expects($this->once())
+                       ->method('isSupported')
+                       ->with(\Library\ArchiveManager::ZIP)
+                       ->willReturn(true);
+        $archiveManager->expects($this->once())
+                       ->method('isArchive')
+                       ->with(\Library\ArchiveManager::ZIP, $source)
+                       ->willReturn(false);
+        $archiveManager->expects($this->once())
+                       ->method('createArchive')
+                       ->with(\Library\ArchiveManager::ZIP, 'path/archive')
+                       ->will($this->throwException(new \RuntimeException('createArchive')));
+        $archiveManager->expects($this->never())
+                       ->method('addFile');
+        $archiveManager->expects($this->never())
+                       ->method('closeArchive');
+        $model = $this->_getModel(array('Library\ArchiveManager' => $archiveManager));
+        try {
+            $model->autoArchive($data, 'path', true);
+            $this->fail('Expected exception was not thrown');
+        } catch (\RuntimeException $e) {
+            $this->assertEquals('createArchive', $e->getMessage());
+            $this->assertFileExists($source);
+        }
+    }
+
+    public function testAutoArchiveWindowsErrorAfterArchiveCreation()
+    {
+        $root = vfsstream::setup('root');
+        $source = vfsStream::newFile('source')->at($root)->url();
+        $archive = $root->url() . '/archive';
+        $data = array('FileLocation' => $source, 'FileName' => 'FileName', 'Platform' => 'windows');
+        $archiveManager = $this->getMock('Library\ArchiveManager');
+        $archiveManager->expects($this->once())
+                       ->method('isSupported')
+                       ->with(\Library\ArchiveManager::ZIP)
+                       ->willReturn(true);
+        $archiveManager->expects($this->once())
+                       ->method('isArchive')
+                       ->with(\Library\ArchiveManager::ZIP, $source)
+                       ->willReturn(false);
+        $archiveManager->expects($this->once())
+                       ->method('createArchive')
+                       ->with(\Library\ArchiveManager::ZIP, $archive)
+                       ->will(
+                           $this->returnCallback(
+                               function () use ($root) {
+                                   return vfsStream::newFile('archive')->at($root)->url();
+                               }
+                           )
+                       );
+        $archiveManager->expects($this->once())
+                       ->method('addFile')
+                       ->with($archive, $source, 'FileName');
+        $archiveManager->expects($this->at(4))
+                       ->method('closeArchive')
+                       ->with($archive, false)
+                       ->will($this->throwException(new \RuntimeException('closeArchive')));
+        $archiveManager->expects($this->at(5))
+                       ->method('closeArchive')
+                       ->with($archive, true);
+        $model = $this->_getModel(array('Library\ArchiveManager' => $archiveManager));
+        try {
+            $model->autoArchive($data, $root->url(), true);
+            $this->fail('Expected exception was not thrown');
+        } catch (\RuntimeException $e) {
+            $this->assertEquals('closeArchive', $e->getMessage());
+            $this->assertFileExists($source);
+            $this->assertFileNotExists($archive);
+        }
+    }
+
+    public function testAutoArchiveWindowsAlreadyArchive()
+    {
+        $root = vfsstream::setup('root');
+        $source = vfsStream::newFile('source')->at($root)->url();
+        $data = array('FileLocation' => $source, 'FileName' => 'FileName', 'Platform' => 'windows');
+        $archiveManager = $this->getMock('Library\ArchiveManager');
+        $archiveManager->expects($this->once())
+                       ->method('isSupported')
+                       ->with(\Library\ArchiveManager::ZIP)
+                       ->willReturn(true);
+        $archiveManager->expects($this->once())
+                       ->method('isArchive')
+                       ->with(\Library\ArchiveManager::ZIP, $source)
+                       ->willReturn(true);
+        $archiveManager->expects($this->never())
+                       ->method('createArchive');
+        $archiveManager->expects($this->never())
+                       ->method('addFile');
+        $archiveManager->expects($this->never())
+                       ->method('closeArchive');
+        $model = $this->_getModel(array('Library\ArchiveManager' => $archiveManager));
+        $this->assertEquals($source, $model->autoArchive($data, 'path', true));
+        $this->assertFileExists($source);
+    }
+
+    public function testAutoArchiveWindowsArchiveNotSupported()
+    {
+        $root = vfsstream::setup('root');
+        $source = vfsStream::newFile('source')->at($root)->url();
+        $data = array('FileLocation' => $source, 'FileName' => 'FileName', 'Platform' => 'windows');
+        $archiveManager = $this->getMock('Library\ArchiveManager');
+        $archiveManager->expects($this->once())
+                       ->method('isSupported')
+                       ->with(\Library\ArchiveManager::ZIP)
+                       ->willReturn(false);
+        $archiveManager->expects($this->never())
+                       ->method('isArchive');
+        $archiveManager->expects($this->never())
+                       ->method('createArchive');
+        $archiveManager->expects($this->never())
+                       ->method('addFile');
+        $archiveManager->expects($this->never())
+                       ->method('closeArchive');
+        $model = $this->_getModel(array('Library\ArchiveManager' => $archiveManager));
+        $this->assertEquals($source, @$model->autoArchive($data, 'path', true));
+        $this->assertFileExists($source);
+    }
+
+    public function testAutoArchiveUnsupportedPlatform()
+    {
+        $root = vfsstream::setup('root');
+        $source = vfsStream::newFile('source')->at($root)->url();
+        $data = array('FileLocation' => $source, 'FileName' => 'FileName', 'Platform' => 'linux');
+        $archiveManager = $this->getMock('Library\ArchiveManager');
+        $archiveManager->expects($this->never())
+                       ->method('isSupported');
+        $archiveManager->expects($this->never())
+                       ->method('isArchive');
+        $archiveManager->expects($this->never())
+                       ->method('createArchive');
+        $archiveManager->expects($this->never())
+                       ->method('addFile');
+        $archiveManager->expects($this->never())
+                       ->method('closeArchive');
+        $model = $this->_getModel(array('Library\ArchiveManager' => $archiveManager));
+        $this->assertEquals($source, @$model->autoArchive($data, 'path', true));
+        $this->assertFileExists($source);
+    }
+
+    public function testAutoArchiveNoSourceFile()
+    {
+        $source = '';
+        $data = array('FileLocation' => $source);
+        $archiveManager = $this->getMock('Library\ArchiveManager');
+        $archiveManager->expects($this->never())
+                       ->method('isSupported');
+        $archiveManager->expects($this->never())
+                       ->method('isArchive');
+        $archiveManager->expects($this->never())
+                       ->method('createArchive');
+        $archiveManager->expects($this->never())
+                       ->method('addFile');
+        $archiveManager->expects($this->never())
+                       ->method('closeArchive');
+        $model = $this->_getModel(array('Library\ArchiveManager' => $archiveManager));
+        $this->assertSame($source, @$model->autoArchive($data, 'path', true));
     }
 }

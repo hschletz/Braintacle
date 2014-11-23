@@ -471,41 +471,12 @@ class Model_Package extends Model_Abstract
         $this->_directoryCreated = true;
         $this->_needCleanup = true; // From now on, package is dirty until it's finished.
 
-        // Wrap file into ZIP archive if necessary
-        if ($this->getFileLocation()
-            and $this->getPlatform() == 'windows'
-            and $this->getFileType() != 'application/zip'
-        ) {
-            $zipFileCreated = true;
-            $file = $path . DIRECTORY_SEPARATOR . 'tmp.zip';
-            $zip = new ZipArchive;
-            $result = $zip->open($file, ZIPARCHIVE::CREATE | ZIPARCHIVE::EXCL);
-            if ($result === true) {
-                $result = $zip->addFile(
-                    $this->getFileLocation(),
-                    $this->getFileName()
-                );
-                if ($result === true) {
-                   $result = $zip->close();
-                }
-            }
-            if ($result !== true) {
-                $this->_setError(
-                    'ZIP archive could not be created. Error code: %d',
-                    $result
-                );
-                return false;
-            }
-            if ($deleteSource and !@unlink($this->getFileLocation())) {
-                $this->_setError(
-                    'Could not delete source file \'%s\'',
-                    $this->getFileLocation()
-                );
-                return false;
-            }
-        } else {
-            $zipFileCreated = false;
-            $file = $this->getFileLocation();
+        try {
+            $file = $packageManager->autoArchive($this, $path, $deleteSource);
+            $archiveCreated = ($file != $this['FileLocation']);
+        } catch (\Exception $e) {
+            $this->_errors[] = $e->getMessage();
+            return false;
         }
 
         // Compute SHA1 hash.
@@ -535,7 +506,7 @@ class Model_Package extends Model_Abstract
         $this->setSize($fileSize);
 
         try {
-            $this->setNumFragments($storage->writeContent($this, $file, $deleteSource || $zipFileCreated));
+            $this->setNumFragments($storage->writeContent($this, $file, $deleteSource || $archiveCreated));
             $storage->writeMetadata($this);
             $packageManager->build($this);
             $this->_writtenToDb = true;

@@ -34,6 +34,7 @@ class PackageManagerFactory implements \Zend\ServiceManager\FactoryInterface
     {
         return new \Model\Package\PackageManager(
             $serviceLocator->get('Model\Config'),
+            $serviceLocator->get('Library\ArchiveManager'),
             $serviceLocator->get('Database\Table\Packages'),
             $serviceLocator->get('Database\Table\PackageDownloadInfo')
         );

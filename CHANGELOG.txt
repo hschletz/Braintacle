@@ -36,6 +36,11 @@ Fixed bugs:
   which is parsed and displayed correctly, but attribute values must be enclosed
   in single quotes. HTML attributes in double quotes may not work as expected.
 
+- Console: Detection of ZIP archives by the package builder has become more
+  reliable. This feature and the auomatic archive creation are now optional,
+  though strongly recommended, and a warning is issued if PHP's Zip extension
+  is not available.
+
 Misc:
 
 - Support for some previously deprecated options has been dropped. They are
