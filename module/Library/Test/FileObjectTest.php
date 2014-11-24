@@ -460,7 +460,6 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $newFile = $this->_root->url() . '/invalid/test2.txt';
         $this->setExpectedException('RuntimeException', "Error copying '$oldFile' to '$newFile'");
         @FileObject::copy($oldFile, $newFile);
-        $this->assertFileExists($oldFile);
     }
 
     public function testRenameSuccess()
@@ -513,7 +512,6 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $newFile = $this->_root->url() . '/test2.txt';
         $this->setExpectedException('RuntimeException', "Error renaming '$oldFile' to '$newFile'");
         @FileObject::rename($oldFile, $newFile);
-        $this->assertFileExists($oldFile);
     }
 
     public function testRenameErrorInvalidTarget()
@@ -521,9 +519,13 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $content = '1234';
         $oldFile = vfsStream::newFile('test.txt')->at($this->_root)->url();
         $newFile = $this->_root->url() . '/invalid/test2.txt';
-        $this->setExpectedException('RuntimeException', "Error renaming '$oldFile' to '$newFile'");
-        @FileObject::rename($oldFile, $newFile);
-        $this->assertFileExists($oldFile);
+        try {
+            @FileObject::rename($oldFile, $newFile);
+            $this->fail('Expected exception was not thrown');
+        } catch (\RuntimeException $e) {
+            $this->assertEquals("Error renaming '$oldFile' to '$newFile'", $e->getMessage());
+            $this->assertFileExists($oldFile);
+        }
     }
 
     public function testUnlinkSuccess()
@@ -533,12 +535,16 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $this->assertFileNotExists($filename);
     }
 
-    public function testUnlinkError()
+    public function testUnlinkErrorIsDir()
     {
         $filename = vfsStream::newDirectory('test')->at($this->_root)->url();
-        $this->setExpectedException('RuntimeException', "Error deleting file '$filename'");
-        @FileObject::unlink($filename);
-        $this->assertFileExists($filename);
+        try {
+            @FileObject::unlink($filename);
+            $this->fail('Expected exception was not thrown');
+        } catch (\RuntimeException $e) {
+            $this->assertEquals("Error deleting file '$filename'", $e->getMessage());
+            $this->assertFileExists($filename);
+        }
     }
 
     public function testMkdirSuccess()
