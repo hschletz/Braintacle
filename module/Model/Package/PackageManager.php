@@ -72,6 +72,18 @@ class PackageManager
     }
 
     /**
+     * Check for existing package
+     *
+     * @param string $name Package name
+     * @return bool
+     */
+    public function packageExists($name)
+    {
+        $sql = $this->_packages->getSql()->select()->columns(array('name'))->where(array('name' => $name));
+        return (bool) $this->_packages->selectWith($sql)->count();
+    }
+
+    /**
      * Build a package
      *
      * @param array $data Package data

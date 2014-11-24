@@ -31,6 +31,12 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     /** {@inheritdoc} */
     protected static $_tables = array('Packages', 'PackageDownloadInfo');
 
+    public function testPackageExists()
+    {
+        $this->assertTrue($this->_getModel()->packageExists('package1'));
+        $this->assertFalse($this->_getModel()->packageExists('new_package'));
+    }
+
     public function buildProvider()
     {
         return array(

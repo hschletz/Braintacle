@@ -444,12 +444,7 @@ class Model_Package extends Model_Abstract
         $this->_errors = array();
         $this->_needCleanup = false;
 
-        // Check if the name already exists
-        $db = Model_Database::getAdapter();
-        if ($db->fetchRow(
-            'SELECT name FROM download_available WHERE name=?',
-            $this->getName()
-        )) {
+        if ($packageManager->packageExists($this['Name'])) {
             $this->_setError('Package \'%s\' already exists.', $this->getName());
             return false;
         }
@@ -503,6 +498,7 @@ class Model_Package extends Model_Abstract
             $this->_activated = true;
 
             // portable replacement for lastInsertId()
+            $db = \Model_Database::getAdapter();
             $this->setEnabledId(
                 $db->fetchOne(
                     'SELECT id FROM download_enable WHERE fileid=?',
