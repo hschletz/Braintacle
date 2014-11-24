@@ -28,7 +28,7 @@ namespace Model\Package\Storage;
  * timestamp below the package base directory. The base directory must be made
  * accessible by the webserver to make content downloadable by agents.
  */
-class Direct
+class Direct implements StorageInterface
 {
     /**
      * Application config
@@ -53,6 +53,26 @@ class Direct
         $this->_metadata = $metadata;
     }
 
+    /** {@inheritdoc} */
+    public function prepare($data)
+    {
+        $this->createDirectory($data);
+    }
+
+    /** {@inheritdoc} */
+    public function write($data, $file, $deleteSource)
+    {
+        try {
+            $data['NumFragments'] = $this->writeContent($data, $file, $deleteSource);
+            $this->writeMetadata($data);
+        } catch (\Exception $e) {
+            $this->cleanup($data);
+            throw $e;
+        }
+        return $data['NumFragments'];
+    }
+
+    /** {@inheritdoc} */
     public function cleanup($data)
     {
         $dir = $this->getPath($data['Timestamp']);
@@ -123,6 +143,7 @@ class Direct
      * @param array $data Package data
      * @param string $file Source file
      * @param bool $deleteSource Delete source file
+     * @return integer Number of fragments
      */
     public function writeContent($data, $file, $deleteSource)
     {

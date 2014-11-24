@@ -35,6 +35,88 @@ class DirectTest extends \Model\Test\AbstractTest
         return new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet;
     }
 
+    public function testPrepare()
+    {
+        $data = 'data';
+        $model = $this->getMockBuilder('Model\Package\Storage\Direct')
+                      ->setMethods(array('createDirectory'))
+                      ->disableOriginalConstructor()
+                      ->getMock();
+        $model->expects($this->once())->method('createDirectory')->with($data);
+        $model->prepare($data);
+    }
+
+    public function testWriteSuccess()
+    {
+        $data = array('foo' => 'bar');
+        $file = 'file';
+        $deleteSource = 'deleteSource';
+        $numFragments = 'numFragments';
+        $data2 = array('foo' => 'bar', 'NumFragments' => $numFragments);
+        $model = $this->getMockBuilder('Model\Package\Storage\Direct')
+                      ->setMethods(array('writeContent', 'writeMetadata', 'cleanup'))
+                      ->disableOriginalConstructor()
+                      ->getMock();
+        $model->expects($this->once())
+              ->method('writeContent')
+              ->with($data, $file, $deleteSource)
+              ->willReturn($numFragments);
+        $model->expects($this->once())
+              ->method('writeMetadata')
+              ->with($data2);
+        $model->expects($this->never())
+              ->method('cleanup');
+        $this->assertEquals($numFragments, $model->write($data, $file, $deleteSource));
+    }
+
+    public function testWriteErrorMetadata()
+    {
+        $data = array('foo' => 'bar');
+        $file = 'file';
+        $deleteSource = 'deleteSource';
+        $numFragments = 'numFragments';
+        $data2 = array('foo' => 'bar', 'NumFragments' => $numFragments);
+        $model = $this->getMockBuilder('Model\Package\Storage\Direct')
+                      ->setMethods(array('writeContent', 'writeMetadata', 'cleanup'))
+                      ->disableOriginalConstructor()
+                      ->getMock();
+        $model->expects($this->once())
+              ->method('writeContent')
+              ->with($data, $file, $deleteSource)
+              ->willReturn($numFragments);
+        $model->expects($this->once())
+              ->method('writeMetadata')
+              ->with($data2)
+              ->will($this->throwException(new \RuntimeException('test')));
+        $model->expects($this->once())
+              ->method('cleanup')
+              ->with($data2);
+        $this->setExpectedException('RuntimeException', 'test');
+        $model->write($data, $file, $deleteSource);
+    }
+
+    public function testWriteErrorContent()
+    {
+        $data = array('foo' => 'bar');
+        $file = 'file';
+        $deleteSource = 'deleteSource';
+        $model = $this->getMockBuilder('Model\Package\Storage\Direct')
+                      ->setMethods(array('writeContent', 'writeMetadata', 'cleanup'))
+                      ->disableOriginalConstructor()
+                      ->getMock();
+        $model->expects($this->once())
+              ->method('writeContent')
+              ->with($data, $file, $deleteSource)
+              ->will($this->throwException(new \RuntimeException('test')));
+        $model->expects($this->never())
+              ->method('writeMetadata');
+        $model->expects($this->once())
+              ->method('cleanup')
+              ->with($data);
+        $this->setExpectedException('RuntimeException', 'test');
+        $model->write($data, $file, $deleteSource);
+    }
+
     public function testCleanupNoDir()
     {
         $root = vfsStream::setup('root');

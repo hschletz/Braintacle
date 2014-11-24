@@ -432,7 +432,7 @@ class Model_Package extends Model_Abstract
         $this->setTimestamp($timestamp);
 
         try {
-            $path = $storage->createDirectory($this);
+            $path = $storage->prepare($this);
             $this->_needCleanup = true; // From now on, package is dirty until it's finished.
             $file = $packageManager->autoArchive($this, $path, $deleteSource);
             $archiveCreated = ($file != $this['FileLocation']);
@@ -468,8 +468,7 @@ class Model_Package extends Model_Abstract
         $this->setSize($fileSize);
 
         try {
-            $this->setNumFragments($storage->writeContent($this, $file, $deleteSource || $archiveCreated));
-            $storage->writeMetadata($this);
+            $this->setNumFragments($storage->write($this, $file, $deleteSource || $archiveCreated));
             $packageManager->build($this);
             $this->_writtenToDb = true;
             $this->_activated = true;
