@@ -540,4 +540,25 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         @FileObject::unlink($filename);
         $this->assertFileExists($filename);
     }
+
+    public function testMkdirSuccess()
+    {
+        $pathname = $this->_root->url() . '/test';
+        FileObject::mkdir($pathname);
+        $this->assertTrue(is_dir($pathname));
+    }
+
+    public function testMkdirErrorCantCreateRecursive()
+    {
+        $pathname = $this->_root->url() . '/test/test';
+        $this->setExpectedException('RuntimeException', "Error creating directory '$pathname'");
+        FileObject::mkdir($pathname);
+    }
+
+    public function testMkdirErrorDirectoryExists()
+    {
+        $pathname = vfsStream::newDirectory('test')->at($this->_root)->url();
+        $this->setExpectedException('RuntimeException', "Error creating directory '$pathname': path exists");
+        FileObject::mkdir($pathname);
+    }
 }

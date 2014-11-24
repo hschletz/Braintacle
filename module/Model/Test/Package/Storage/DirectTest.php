@@ -35,6 +35,20 @@ class DirectTest extends \Model\Test\AbstractTest
         return new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet;
     }
 
+    public function testCreateDirectory()
+    {
+        $root = vfsStream::setup('root');
+        $path = $root->url() . '/path';
+        $timestamp = 'timestamp';
+        $model = $this->getMockBuilder('Model\Package\Storage\Direct')
+                      ->setMethods(array('getPath'))
+                      ->disableOriginalConstructor()
+                      ->getMock();
+        $model->method('getPath')->with($timestamp)->willReturn($path);
+        $model->createDirectory(array('Timestamp' => $timestamp));
+        $this->assertTrue(is_dir($path));
+    }
+
     public function testGetPath()
     {
         $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();

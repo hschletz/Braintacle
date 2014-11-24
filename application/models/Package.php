@@ -458,20 +458,10 @@ class Model_Package extends Model_Abstract
         $timestamp = time();
         $this->setTimestamp($timestamp);
 
-        // Create directory
-        $path = $this->getPath();
-        if (@stat($path)) {
-            $this->_setError('Directory \'%s\' already exists.', $path);
-            return false;
-        }
-        if (!@mkdir($path)) {
-            $this->_setError('Directory \'%s\' could not be created.', $path);
-            return false;
-        }
-        $this->_directoryCreated = true;
-        $this->_needCleanup = true; // From now on, package is dirty until it's finished.
-
         try {
+            $path = $storage->createDirectory($this);
+            $this->_directoryCreated = true;
+            $this->_needCleanup = true; // From now on, package is dirty until it's finished.
             $file = $packageManager->autoArchive($this, $path, $deleteSource);
             $archiveCreated = ($file != $this['FileLocation']);
         } catch (\Exception $e) {

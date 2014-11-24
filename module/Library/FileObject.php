@@ -349,4 +349,19 @@ class FileObject extends \SplFileInfo implements \Iterator
             throw new \RuntimeException("Error deleting file '$filename'");
         }
     }
+
+    /**
+     * Create a directory
+     *
+     * @param string $pathname Path to create
+     * @throws \RuntimeException if a filesystem object with the same name exists or an error occurs
+     */
+    public static function mkdir($pathname)
+    {
+        if (file_exists($pathname)) {
+            throw new \RuntimeException("Error creating directory '$pathname': path exists");
+        } elseif (!mkdir($pathname)) {
+            throw new \RuntimeException("Error creating directory '$pathname'");
+        }
+    }
 }

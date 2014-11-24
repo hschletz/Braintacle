@@ -54,6 +54,16 @@ class Direct
     }
 
     /**
+     * Create package directory
+     *
+     * @param array $data Package data
+     */
+    public function createDirectory($data)
+    {
+        \Library\FileObject::mkdir($this->getPath($data['Timestamp']));
+    }
+
+    /**
      * Get base directory for package storage
      *
      * @param \Zend_Date $timestamp Package timestamp
