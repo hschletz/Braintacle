@@ -364,4 +364,17 @@ class FileObject extends \SplFileInfo implements \Iterator
             throw new \RuntimeException("Error creating directory '$pathname'");
         }
     }
+
+    /**
+     * Remove a nonempty directory
+     *
+     * @param string $dirname Directory to remove
+     * @throws \RuntimeException if an error occurs
+     */
+    public static function rmdir($dirname)
+    {
+        if (!rmdir($dirname)) {
+            throw new \RuntimeException("Error removing directory '$dirname'");
+        }
+    }
 }

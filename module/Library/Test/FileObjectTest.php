@@ -567,4 +567,37 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('RuntimeException', "Error creating directory '$pathname': path exists");
         FileObject::mkdir($pathname);
     }
+
+    public function testRmdirSuccess()
+    {
+        $dirname = vfsStream::newDirectory('test')->at($this->_root)->url();
+        FileObject::rmdir($dirname);
+        $this->assertFileNotExists($dirname);
+    }
+
+    public function testRmdirErrorIsFile()
+    {
+        $filename = vfsStream::newFile('test.txt')->at($this->_root)->url();
+        try {
+            FileObject::rmdir($filename);
+            $this->fail('Expected exception was not thrown');
+        } catch (\RuntimeException $e) {
+            $this->assertEquals("Error removing directory '$filename'", $e->getMessage());
+            $this->assertFileExists($filename);
+        }
+    }
+
+    public function testRmdirErrorNotEmpty()
+    {
+        $dir = vfsStream::newDirectory('test')->at($this->_root);
+        $dirname = $dir->url();
+        $filename = vfsStream::newFile('test.txt')->at($dir)->url();
+        try {
+            FileObject::rmdir($dirname);
+            $this->fail('Expected exception was not thrown');
+        } catch (\RuntimeException $e) {
+            $this->assertEquals("Error removing directory '$dirname'", $e->getMessage());
+            $this->assertFileExists($filename);
+        }
+    }
 }

@@ -53,6 +53,26 @@ class Direct
         $this->_metadata = $metadata;
     }
 
+    public function cleanup($data)
+    {
+        $dir = $this->getPath($data['Timestamp']);
+        if (is_dir($dir)) {
+            foreach (new \DirectoryIterator($dir) as $file) {
+                // There should be no subdirectories, no need for recursion.
+                // Every object should be a regular file or "dotfile". Errors
+                // can be ignored because a nonempty directory cannot be
+                // removed, causing an exception in the final step.
+                if (!$file->isDot()) {
+                    try {
+                        \Library\FileObject::unlink($file->getPathname());
+                    } catch (\Exception $e) {
+                    }
+                }
+            }
+            \Library\FileObject::rmdir($dir);
+        }
+    }
+
     /**
      * Create package directory
      *

@@ -35,6 +35,57 @@ class DirectTest extends \Model\Test\AbstractTest
         return new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet;
     }
 
+    public function testCleanupNoDir()
+    {
+        $root = vfsStream::setup('root');
+        $path = $root->url() . '/path';
+        $timestamp = 'timestamp';
+        $model = $this->getMockBuilder('Model\Package\Storage\Direct')
+                      ->setMethods(array('getPath'))
+                      ->disableOriginalConstructor()
+                      ->getMock();
+        $model->expects($this->once())->method('getPath')->with($timestamp)->willReturn($path);
+        $model->cleanup(array('Timestamp' => $timestamp));
+    }
+
+    public function testCleanupRemoveFiles()
+    {
+        $root = vfsStream::setup('root');
+        $dir = vfsStream::newDirectory('path')->at($root);
+        $path = $dir->url();
+        vfsStream::newFile('test')->at($dir);
+        $timestamp = 'timestamp';
+        $model = $this->getMockBuilder('Model\Package\Storage\Direct')
+                      ->setMethods(array('getPath'))
+                      ->disableOriginalConstructor()
+                      ->getMock();
+        $model->method('getPath')->with($timestamp)->willReturn($path);
+        $model->cleanup(array('Timestamp' => $timestamp));
+        $this->assertFileNotExists($path);
+    }
+
+    public function testCleanupError()
+    {
+        $root = vfsStream::setup('root');
+        $dir = vfsStream::newDirectory('path')->at($root);
+        $path = $dir->url();
+        $dirInvalid = vfsStream::newDirectory('test_dir')->at($dir)->url();
+        $fileValid = vfsStream::newFile('test_file')->at($dir)->url();
+        $timestamp = 'timestamp';
+        $model = $this->getMockBuilder('Model\Package\Storage\Direct')
+                      ->setMethods(array('getPath'))
+                      ->disableOriginalConstructor()
+                      ->getMock();
+        $model->method('getPath')->with($timestamp)->willReturn($path);
+        try {
+            $model->cleanup(array('Timestamp' => $timestamp));
+            $this->fail('Expected exception was not thrown');
+        } catch (\Exception $e) {
+            $this->assertFileExists($dirInvalid);
+            $this->assertFileNotExists($fileValid);
+        }
+    }
+
     public function testCreateDirectory()
     {
         $root = vfsStream::setup('root');

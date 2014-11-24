@@ -133,12 +133,6 @@ class Model_Package extends Model_Abstract
     protected $_errors = array();
 
     /**
-     * whether _build() has created the download directory
-     * @var bool
-     */
-    protected $_directoryCreated;
-
-    /**
      * whether _build() has created the package in database
      * @var bool
      */
@@ -387,22 +381,6 @@ class Model_Package extends Model_Abstract
     }
 
     /**
-     * Get path to downloadable file
-     * @return string
-     * @deprecated Functionality moved to Storage class
-     */
-    public function getPath()
-    {
-        return \Zend\Filter\StaticFilter::execute(
-            \Library\Application::getService('Model\Config')->packagePath
-            . DIRECTORY_SEPARATOR
-            . $this->getTimestamp()->get(Zend_Date::TIMESTAMP),
-            'RealPath',
-            array ('exists' => false)
-        );
-    }
-
-    /**
      * Build and activate package (metafile, package files and database entries)
      *
      * The Timestamp property will be set automatically. All other relevant
@@ -455,7 +433,6 @@ class Model_Package extends Model_Abstract
 
         try {
             $path = $storage->createDirectory($this);
-            $this->_directoryCreated = true;
             $this->_needCleanup = true; // From now on, package is dirty until it's finished.
             $file = $packageManager->autoArchive($this, $path, $deleteSource);
             $archiveCreated = ($file != $this['FileLocation']);
@@ -540,7 +517,6 @@ class Model_Package extends Model_Abstract
         );
 
         // Mark package "dirty" and let cleanup() do the rest
-        $this->_directoryCreated = true;
         $this->_writtenToDb = true;
         $this->_activated = true;
         $this->_needCleanup = true;
@@ -628,35 +604,6 @@ class Model_Package extends Model_Abstract
         if (!$this->_needCleanup)
             return true;
 
-        $success = true; // set to false on error
-        if ($this->_directoryCreated) {
-            $path = $this->getPath();
-            $files = @scandir($path);
-            if (is_array($files)) {
-                foreach ($files as $file) {
-                    if ($file != '.' and $file != '..') {
-                        // We don't create subdirectories, so we can just call unlink().
-                        // Errors can be ignored since they will be caught in the next step.
-                        @unlink($path . DIRECTORY_SEPARATOR . $file);
-                    }
-                }
-                if (!@rmdir($path)) {
-                    $this->_setError(
-                        'Directory \'%s\' could not be deleted.',
-                        $path
-                    );
-                    $success = false;
-                }
-            } else {
-                $this->_setError(
-                    'Directory \'%s\' does not exist.',
-                    $path
-                );
-                // not fatal - we just can't clean up what is not there.
-            }
-            $this->_directoryCreated = false;
-        }
-
         if ($this->_activated) {
             Model_Database::getAdapter()->delete(
                 'download_enable',
@@ -671,7 +618,14 @@ class Model_Package extends Model_Abstract
             );
             $this->_writtenToDb = false;
         }
-
+        $storage = \Library\Application::getService('Model\Package\Storage\Direct');
+        try {
+            $storage->cleanup($this);
+            $success = true;
+        } catch (\Exception $e) {
+            $this->_errors[] = $e->getMessage();
+            $success = false;
+        }
         return $success;
     }
 
