@@ -1586,7 +1586,7 @@ class Model_Computer extends Model_ComputerOrGroup
             );
 
             // Delete config via ZF2 adapter to avoid deadlock on duplicate merge
-            \Library\Application::getService('Database\Table\ItemConfig')->delete(
+            \Library\Application::getService('Database\Table\ClientConfig')->delete(
                 array('hardware_id' => $id)
             );
 

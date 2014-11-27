@@ -38,7 +38,7 @@ class DuplicatesTest extends \Model\Test\AbstractTest
         'DuplicateSerials',
         'GroupInfo',
         'GroupMemberships',
-        'ItemConfig',
+        'ClientConfig',
         'Locks',
         'NetworkInterfaces',
     );

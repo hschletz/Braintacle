@@ -24,7 +24,7 @@ Namespace Database\Table;
 /**
  * "devices" table
  */
-class ItemConfig extends \Database\AbstractTable
+class ClientConfig extends \Database\AbstractTable
 {
     /**
      * {@inheritdoc}

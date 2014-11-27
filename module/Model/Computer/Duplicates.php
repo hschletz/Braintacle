@@ -89,10 +89,10 @@ class Duplicates
     protected $_duplicateMacaddresses;
 
     /**
-     * ItemConfig prototype
-     * @var \Database\Table\ItemConfig
+     * ClientConfig prototype
+     * @var \Database\Table\ClientConfig
      */
-    protected $_itemConfig;
+    protected $_clientConfig;
 
     /**
      * Computer prototype
@@ -109,7 +109,7 @@ class Duplicates
      * @param \Database\Table\DuplicateAssetTags $duplicateAssetTags
      * @param \Database\Table\DuplicateSerials $duplicateSerials
      * @param \Database\Table\DuplicateMacAddresses $duplicateMacAddresses
-     * @param \Database\Table\ItemConfig $itemConfig
+     * @param \Database\Table\ClientConfig $clientConfig
      * @param \Model_Computer $computer
      */
     public function __construct(
@@ -119,7 +119,7 @@ class Duplicates
         Table\DuplicateAssetTags $duplicateAssetTags,
         Table\DuplicateSerials $duplicateSerials,
         Table\DuplicateMacAddresses $duplicateMacAddresses,
-        Table\ItemConfig $itemConfig,
+        Table\ClientConfig $clientConfig,
         \Model_Computer $computer
     )
     {
@@ -129,7 +129,7 @@ class Duplicates
         $this->_duplicateAssetTags = $duplicateAssetTags;
         $this->_duplicateSerials = $duplicateSerials;
         $this->_duplicateMacaddresses = $duplicateMacAddresses;
-        $this->_itemConfig = $itemConfig;
+        $this->_clientConfig = $clientConfig;
         $this->_computer = $computer;
     }
 
@@ -335,7 +335,7 @@ class Duplicates
                 // computers are merged. Exclude packages that are already assigned.
                 $subQuery = 'ivalue NOT IN(SELECT ivalue FROM devices WHERE hardware_id = ? AND name = \'DOWNLOAD\')';
                 foreach ($computers as $computer) {
-                    $this->_itemConfig->update(
+                    $this->_clientConfig->update(
                         array('hardware_id' => $newest['Id']),
                         array(
                             'hardware_id' => $computer['Id'],

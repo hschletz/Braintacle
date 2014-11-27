@@ -38,7 +38,7 @@ class DuplicatesFactory implements \Zend\ServiceManager\FactoryInterface
             $serviceLocator->get('Database\Table\DuplicateAssetTags'),
             $serviceLocator->get('Database\Table\DuplicateSerials'),
             $serviceLocator->get('Database\Table\DuplicateMacAddresses'),
-            $serviceLocator->get('Database\Table\ItemConfig'),
+            $serviceLocator->get('Database\Table\ClientConfig'),
             $serviceLocator->get('Model\Computer\Computer')
         );
     }
