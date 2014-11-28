@@ -64,13 +64,16 @@ Misc:
 - Console: The display of the maximum file size in the package builder form has
   been removed as it was generally unreliable.
 
-- Console: The server log path is no longer settable through the console and
-  removed from the database. It must be set in the server configuration file
-  because it may be used before a database connection is established.
-
 
 CHANGES IN VERSION 0.16
 =======================
+
+Upgrading from previous versions:
+
+- Required: The server log path is no longer settable through the console and
+  the config stored in the database is ignored. It must be set in the server
+  configuration file because it may be used before a database connection is
+  established. Check your Apache config for correct log path.
 
 Fixed bugs:
 

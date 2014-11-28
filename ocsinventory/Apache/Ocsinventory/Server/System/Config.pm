@@ -31,14 +31,6 @@ use constant CANSKIP   => 2;
 use constant DEPRECATED=> 3;
 
 our %CONFIG = (
-  LOGPATH => { 
-    type => 'TVALUE',
-    default => 'syslog',
-    unit => 'NA',
-    description => 'Path to log directory (must be writeable)',
-    level => CRITICAL,
-    filter => qr '^(.+)$'
-  },
   FREQUENCY => {
     type => 'IVALUE',
     default => 0,
