@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: braintacle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-09 19:33+0200\n"
+"POT-Creation-Date: 2014-11-28 14:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -771,10 +771,6 @@ msgstr ""
 
 #: forms/Preferences/System.php
 msgid "Keep track of deleted computers"
-msgstr ""
-
-#: forms/Preferences/System.php
-msgid "Path to logfiles"
 msgstr ""
 
 #: forms/Preferences/System.php

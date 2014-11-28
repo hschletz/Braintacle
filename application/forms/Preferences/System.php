@@ -35,7 +35,6 @@ class Form_Preferences_System extends Form_Preferences
         'SessionCleanupInterval' => 'integer',
         'SessionRequired' => 'bool',
         'TraceDeleted' => 'bool',
-        'LogPath' => 'text',
         'LogLevel' => array(0, 1, 2),
         'AutoDuplicateCriteria' => 'integer',
         'UpdateChangedSectionsOnly' => 'bool',
@@ -81,9 +80,6 @@ class Form_Preferences_System extends Form_Preferences
             'TraceDeleted' => $translate->_(
                 'Keep track of deleted computers'
             ),
-            'LogPath' => $translate->_(
-                'Path to logfiles'
-            ),
             'LogLevel' => $translate->_(
                 'Log level'
             ),
@@ -127,8 +123,6 @@ class Form_Preferences_System extends Form_Preferences
         $this->getElement('SessionCleanupInterval')
             ->addValidator('GreaterThan', false, array('min' => 0))
             ->setAttrib('size', '5');
-        $this->getElement('LogPath')
-            ->addValidator(new Braintacle_Validate_DirectoryWritable);
         $this->getElement('AutoDuplicateCriteria')
             ->addValidator('GreaterThan', false, array('min' => -1))
             ->setAttrib('size', '5');

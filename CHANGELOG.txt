@@ -9,6 +9,13 @@ without any warranty.
 CHANGES IN VERSION 0.16
 =======================
 
+Upgrading from previous versions:
+
+- Required: The server log path is no longer settable through the console and
+  the config stored in the database is ignored. It must be set in the server
+  configuration file because it may be used before a database connection is
+  established. Check your Apache config for correct log path.
+
 Fixed bugs:
 
 - Console: Fixed errors and warnings with ZF 1.12.8.
