@@ -29,7 +29,7 @@ use org\bovigo\vfs\vfsStream;
 class PackageManagerTest extends \Model\Test\AbstractTest
 {
     /** {@inheritdoc} */
-    protected static $_tables = array('Packages', 'PackageDownloadInfo');
+    protected static $_tables = array('Packages', 'PackageDownloadInfo', 'ClientConfig');
 
     public function testPackageExists()
     {
@@ -125,7 +125,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             $dataset->getTable('download_enable'),
             $connection->createQueryTable(
                 'download_enable',
-                'SELECT fileid, info_loc, pack_loc, cert_path, cert_file FROM download_enable ORDER BY fileid'
+                'SELECT id, fileid, info_loc, pack_loc, cert_path, cert_file FROM download_enable ORDER BY fileid'
             )
         );
 
@@ -353,5 +353,32 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                        ->method('closeArchive');
         $model = $this->_getModel(array('Library\ArchiveManager' => $archiveManager));
         $this->assertSame($source, @$model->autoArchive($data, 'path', true));
+    }
+
+    public function testDelete()
+    {
+        $data = array('Timestamp' => new \Zend_Date(1415958319, \Zend_Date::TIMESTAMP));
+        $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
+        $storage->expects($this->once())->method('cleanup')->with($data);
+        $model = $this->_getModel(array('Model\Package\Storage\Direct' => $storage));
+        $model->delete($data);
+
+        $connection = $this->getConnection();
+        $dataset = $this->_loadDataSet('Delete');
+        $this->assertTablesEqual(
+            $dataset->getTable('download_available'),
+            $connection->createQueryTable('download_available', 'SELECT * FROM download_available ORDER BY fileid')
+        );
+        $this->assertTablesEqual(
+            $dataset->getTable('download_enable'),
+            $connection->createQueryTable(
+                'download_enable',
+                'SELECT id, fileid, info_loc, pack_loc, cert_path, cert_file FROM download_enable ORDER BY fileid'
+            )
+        );
+        $this->assertTablesEqual(
+            $dataset->getTable('devices'),
+            $connection->createQueryTable('devices', 'SELECT hardware_id, name, ivalue FROM devices ORDER BY ivalue')
+        );
     }
 }

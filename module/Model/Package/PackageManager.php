@@ -27,6 +27,12 @@ namespace Model\Package;
 class PackageManager
 {
     /**
+     * Package storage
+     * @var \Model\Package\Storage\StorageInterface
+     */
+    protected $_storage;
+
+    /**
      * Application config
      * @var \Model\Config
      */
@@ -51,24 +57,36 @@ class PackageManager
     protected $_packageDownloadInfo;
 
     /**
+     * ClientConfig table
+     * @var \Database\Table\ClientConfig
+     */
+    protected $_clientConfig;
+
+    /**
      * Constructor
      *
+     * @param \Model\Package\Storage\StorageInterface $storage
      * @param \Model\Config $config
      * @param \Library\ArchiveManager $archiveManager
      * @param \Database\Table\Packages $packages
      * @param \Database\Table\PackageDownloadInfo $packageDownloadInfo
+     * @param \Database\Table\ClientConfig $clientConfig
      */
     public function __construct(
+        \Model\Package\Storage\StorageInterface $storage,
         \Model\Config $config,
         \Library\ArchiveManager $archiveManager,
         \Database\Table\Packages $packages,
-        \Database\Table\packageDownloadInfo $packageDownloadInfo
+        \Database\Table\packageDownloadInfo $packageDownloadInfo,
+        \Database\Table\ClientConfig $clientConfig
     )
     {
+        $this->_storage = $storage;
         $this->_config = $config;
         $this->_archiveManager = $archiveManager;
         $this->_packages = $packages;
         $this->_packageDownloadInfo = $packageDownloadInfo;
+        $this->_clientConfig = $clientConfig;
     }
 
     /**
@@ -183,5 +201,24 @@ class PackageManager
             throw $e;
         }
         return $filename;
+    }
+
+    /**
+     * Delete a package
+     *
+     * @param array $data Package data
+     */
+    public function delete($data)
+    {
+        $timestamp = $data['Timestamp']->get(\Zend_Date::TIMESTAMP);
+        $this->_clientConfig->delete(
+            array(
+                "name LIKE 'DOWNLOAD%'",
+                'ivalue IN (SELECT id FROM download_enable WHERE fileid = ?)' => $timestamp,
+            )
+        );
+        $this->_packageDownloadInfo->delete(array('fileid' => $timestamp));
+        $this->_packages->delete(array('fileid' => $timestamp));
+        $this->_storage->cleanup($data);
     }
 }

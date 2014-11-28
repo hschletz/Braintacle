@@ -33,10 +33,12 @@ class PackageManagerFactory implements \Zend\ServiceManager\FactoryInterface
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         return new \Model\Package\PackageManager(
+            $serviceLocator->get('Model\Package\Storage\Direct'),
             $serviceLocator->get('Model\Config'),
             $serviceLocator->get('Library\ArchiveManager'),
             $serviceLocator->get('Database\Table\Packages'),
-            $serviceLocator->get('Database\Table\PackageDownloadInfo')
+            $serviceLocator->get('Database\Table\PackageDownloadInfo'),
+            $serviceLocator->get('Database\Table\ClientConfig')
         );
     }
 }

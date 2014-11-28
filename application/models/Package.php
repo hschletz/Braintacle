@@ -133,18 +133,6 @@ class Model_Package extends Model_Abstract
     protected $_errors = array();
 
     /**
-     * whether _build() has created the package in database
-     * @var bool
-     */
-    protected $_writtenToDb;
-
-    /**
-     * whether _build() has activated the package in database
-     * @var bool
-     */
-    protected $_activated;
-
-    /**
      * Set to TRUE when package is in a "dirty" state and needs cleanup
      * @var bool
      */
@@ -470,8 +458,6 @@ class Model_Package extends Model_Abstract
         try {
             $this->setNumFragments($storage->write($this, $file, $deleteSource || $archiveCreated));
             $packageManager->build($this);
-            $this->_writtenToDb = true;
-            $this->_activated = true;
 
             // portable replacement for lastInsertId()
             $db = \Model_Database::getAdapter();
@@ -505,19 +491,6 @@ class Model_Package extends Model_Abstract
             return false;
         }
 
-        // Unaffect package from all computers and groups
-        Model_Database::getAdapter()->delete(
-            'devices',
-            array(
-                "name LIKE 'DOWNLOAD%' AND ivalue IN"
-                . '(SELECT id FROM download_enable WHERE fileid=?)'
-                => $this->getTimestamp()->get(Zend_Date::TIMESTAMP)
-            )
-        );
-
-        // Mark package "dirty" and let cleanup() do the rest
-        $this->_writtenToDb = true;
-        $this->_activated = true;
         $this->_needCleanup = true;
 
         $result = $this->_cleanup();
@@ -603,23 +576,9 @@ class Model_Package extends Model_Abstract
         if (!$this->_needCleanup)
             return true;
 
-        if ($this->_activated) {
-            Model_Database::getAdapter()->delete(
-                'download_enable',
-                array("fileid=?" => $this->getTimestamp()->get(Zend_Date::TIMESTAMP))
-            );
-            $this->_activated = false;
-        }
-        if ($this->_writtenToDb) {
-            Model_Database::getAdapter()->delete(
-                'download_available',
-                array("fileid=?" => $this->getTimestamp()->get(Zend_Date::TIMESTAMP))
-            );
-            $this->_writtenToDb = false;
-        }
-        $storage = \Library\Application::getService('Model\Package\Storage\Direct');
         try {
-            $storage->cleanup($this);
+            $packageManager = \Library\Application::getService('Model\Package\PackageManager');
+            $packageManager->delete($this);
             $success = true;
         } catch (\Exception $e) {
             $this->_errors[] = $e->getMessage();
