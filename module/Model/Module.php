@@ -63,6 +63,7 @@ Feature\InitProviderInterface
                     'Model\Network\Device' => 'Model_NetworkDevice',
                     'Model\Network\DeviceType' => 'Model_NetworkDeviceType',
                     'Model\Network\Subnet' => 'Model_Subnet',
+                    'Model\Package\Assignment' => 'Model_PackageAssignment',
                     'Model\Package\Metadata' => 'Model\Package\Metadata',
                     'Model\Package\Package' => 'Model_Package',
                     'Model\RegistryValue' => 'Model_RegistryValue',

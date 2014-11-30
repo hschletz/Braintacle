@@ -31,6 +31,18 @@
  */
 class Model_PackageAssignment extends Model_ChildObject
 {
+    /**
+     * Database-internal date format
+     *
+     * This format can be passed to \date() and related functions to create a
+     * date string that is used to store the package assignment date in the
+     * database. It is similar to the format created by the server except that
+     * the day is zero-padded instead of space-padded. Code that parses these
+     * date strings should be prepared to handle both variants.
+     *
+     * The date is not timezone-aware and should be assumed to be local time.
+     */
+    const DATEFORMAT = 'D M d H:i:s Y';
 
     /** {@inheritdoc} */
     protected $_propertyMap = array(

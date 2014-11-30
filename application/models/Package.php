@@ -469,7 +469,7 @@ class Model_Package extends Model_Abstract
             array(
                 'ivalue' => $this->getEnabledId(),
                 'tvalue' => null, // always set new package status to 'not notified'
-                'comments' => $this->getLocaltimeCompat(),
+                'comments' => date(\Model_PackageAssignment::DATEFORMAT),
             ),
             array('name=?' => 'DOWNLOAD') + $where
         );
@@ -508,59 +508,4 @@ class Model_Package extends Model_Abstract
     {
         return count($this->_errors);
     }
-
-    /**
-     * Get a timestamp in the format used in the 'devices' table
-     *
-     * The communication server uses perl's localtime() function to store
-     * timestamps as a string in the 'devices' table. The format is almost
-     * identical to strftime('%a %b %e %T %Y'), but not does not use a locale,
-     * i.e. the month names are always abbreviated in english.
-     *
-     * This method provides a string in the same non-localized format.
-     * It should only be used for this special purpose.
-     *
-     * @return string Current timestamp in the special format
-     */
-    static function getLocaltimeCompat()
-    {
-        $weekdays = array(
-            'Sun',
-            'Mon',
-            'Tue',
-            'Wed',
-            'Thu',
-            'Fri',
-            'Sat',
-        );
-        $months = array(
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec'
-        );
-        $date = new Zend_Date;
-        $weekday = $weekdays[$date->get(Zend_Date::WEEKDAY_DIGIT)];
-        $month = $months[$date->get(Zend_Date::MONTH_SHORT) - 1];
-        $day = $date->get(Zend_Date::DAY_SHORT);
-        $hour = $date->get(Zend_Date::HOUR);
-        $minute = $date->get(Zend_Date::MINUTE);
-        $second = $date->get(Zend_Date::SECOND);
-        $year = $date->get(Zend_Date::YEAR);
-
-        if ($day < 10) {
-            $day = ' ' . $day;
-        }
-
-        return "$weekday $month $day $hour:$minute:$second $year";
-    }
-
 }

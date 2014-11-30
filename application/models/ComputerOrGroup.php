@@ -291,7 +291,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
                         'hardware_id' => $this->getId(),
                         'name' => 'DOWNLOAD',
                         'ivalue' => $package->getEnabledId(),
-                        'comments' => Model_Package::getLocaltimeCompat(),
+                        'comments' => date(\Model_PackageAssignment::DATEFORMAT),
                     )
                 );
             }
