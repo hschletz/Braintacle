@@ -105,11 +105,14 @@ class PackageManager
      * Build a package
      *
      * @param array $data Package data
+     * @param bool $deleteSource Delete source file as soon as possible
+     * @throws \RuntimeException if a package with the requested name already exists or an error occurs
      * @throws \InvalidArgumentException if 'Platform' key is not a valid value
+     * @return integer ID of created database entry
      */
-    public function build($data)
+    public function build($data, $deleteSource)
     {
-        $timestamp = $data['Timestamp']->get(\Zend_Date::TIMESTAMP);
+        // Validate input data
         switch ($data['Platform']) {
             case 'windows':
                 $platform = 'WINDOWS';
@@ -123,26 +126,73 @@ class PackageManager
             default:
                 throw new \InvalidArgumentException('Invalid platform: ' . $data['Platform']);
         }
-        $this->_packages->insert(
-            array(
-                'fileid' => $timestamp,
-                'name' => $data['Name'],
-                'priority' => $data['Priority'],
-                'fragments' => $data['NumFragments'],
-                'size' => $data['Size'],
-                'osname' => $platform,
-                'comment' => $data['Comment'],
-            )
-        );
-        $this->_packageDownloadInfo->insert(
-            array(
-                'fileid' => $timestamp,
-                'info_loc' => $this->_config->packageBaseUriHttps,
-                'pack_loc' => $this->_config->packageBaseUriHttp,
-                'cert_path' => dirname($this->_config->packageCertificate),
-                'cert_file' => $this->_config->packageCertificate,
-            )
-        );
+        if ($this->packageExists($data['Name'])) {
+            throw new \RuntimeException("Package '$data[Name]' already exists");
+            return false;
+        }
+
+        // Set package timestamp
+        $data['Timestamp'] = new \Zend_Date;
+        $timestamp = $data['Timestamp']->get(\Zend_Date::TIMESTAMP);
+
+        try {
+            // Obtain archive file
+            $path = $this->_storage->prepare($data);
+            $file = $this->autoArchive($data, $path, $deleteSource);
+            $archiveCreated = ($file != $data['FileLocation']);
+
+            // Determine file size and hash if available
+            if ($data['FileLocation']) {
+                $fileSize = @filesize($file);
+                if (!$fileSize) {
+                    throw new \RuntimeException("Could not determine size of '$file'");
+                }
+                $hash = @sha1_file($file);
+                if (!$hash) {
+                    throw new \RuntimeException("Could not compute SHA1 hash of '$file'");
+                }
+            } else {
+                // No file
+                $fileSize = 0;
+                $hash = null;
+            }
+            $data['Hash'] = $hash;
+            $data['Size'] = $fileSize;
+
+            // Write storage specific data
+            $data['NumFragments'] = $this->_storage->write($data, $file, $deleteSource || $archiveCreated);
+
+            // Create database entries
+            $this->_packages->insert(
+                array(
+                    'fileid' => $timestamp,
+                    'name' => $data['Name'],
+                    'priority' => $data['Priority'],
+                    'fragments' => $data['NumFragments'],
+                    'size' => $data['Size'],
+                    'osname' => $platform,
+                    'comment' => $data['Comment'],
+                )
+            );
+            $this->_packageDownloadInfo->insert(
+                array(
+                    'fileid' => $timestamp,
+                    'info_loc' => $this->_config->packageBaseUriHttps,
+                    'pack_loc' => $this->_config->packageBaseUriHttp,
+                    'cert_path' => dirname($this->_config->packageCertificate),
+                    'cert_file' => $this->_config->packageCertificate,
+                )
+            );
+
+            // Get ID of created record
+            $select = $this->_packageDownloadInfo->getSql()->select();
+            $select->columns(array('id'))->where(array('fileid' => $timestamp));
+            $id = $this->_packageDownloadInfo->selectWith($select)->current()['id'];
+        } catch (\Exception $e) {
+            $this->delete($data);
+            throw $e;
+        }
+        return (integer) $id;
     }
 
     /**

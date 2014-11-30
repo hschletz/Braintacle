@@ -133,22 +133,6 @@ class Model_Package extends Model_Abstract
     protected $_errors = array();
 
     /**
-     * Set to TRUE when package is in a "dirty" state and needs cleanup
-     * @var bool
-     */
-    protected $_needCleanup = false;
-
-    /**
-     * Destructor
-     *
-     * Performs cleanup even when instance gets destroyed prematurely.
-     */
-    function __destruct()
-    {
-        $this->_cleanup();
-    }
-
-    /**
      * Retrieve a property by its logical name
      *
      * Mangles platform names from raw database values to nicer abstract values.
@@ -389,92 +373,15 @@ class Model_Package extends Model_Abstract
      */
     public function build($deleteSource)
     {
-        $result = $this->_build($deleteSource);
-        $this->_cleanup();
-        return $result;
-    }
-
-    /**
-     * Called internally by build(), does all the work
-     *
-     * @param bool $deleteSource If this is TRUE, the source file will be deleted as soon as possible.
-     * @return bool TRUE if package was built and activated successfully, FALSE on error.
-     */
-    protected function _build($deleteSource)
-    {
-        $config = \Library\Application::getService('Model\Config');
-        $storage = \Library\Application::getService('Model\Package\Storage\Direct');
-        $packageManager = \Library\Application::getService('Model\Package\PackageManager');
-
-        // Reset object's state
         $this->_errors = array();
-        $this->_needCleanup = false;
-
-        if ($packageManager->packageExists($this['Name'])) {
-            $this->_setError('Package \'%s\' already exists.', $this->getName());
-            return false;
-        }
-
-        // Set timestamp
-        $timestamp = time();
-        $this->setTimestamp($timestamp);
-
+        $packageManager = \Library\Application::getService('Model\Package\PackageManager');
         try {
-            $path = $storage->prepare($this);
-            $this->_needCleanup = true; // From now on, package is dirty until it's finished.
-            $file = $packageManager->autoArchive($this, $path, $deleteSource);
-            $archiveCreated = ($file != $this['FileLocation']);
+            $this->setEnabledId($packageManager->build($this, $deleteSource));
+            return true;
         } catch (\Exception $e) {
             $this->_errors[] = $e->getMessage();
             return false;
         }
-
-        // Compute SHA1 hash.
-        if ($this->getFileLocation()) {
-            $hash = sha1_file($file);
-            if (!$hash) {
-                $this->_setError(
-                    'Could not compute SHA1 hash of file \'%s\'.',
-                    $file
-                );
-                return false;
-            }
-        } else {
-            $hash = null;
-        }
-        $this->setHash($hash);
-
-        // Determine package size.
-        if ($this->getFileLocation()) {
-            $fileSize = @filesize($file);
-            if (!$fileSize) {
-                $this->_setError('Could not determine size of file \'%s\'.', $file);
-            }
-        } else {
-            $fileSize = 0;
-        }
-        $this->setSize($fileSize);
-
-        try {
-            $this->setNumFragments($storage->write($this, $file, $deleteSource || $archiveCreated));
-            $packageManager->build($this);
-
-            // portable replacement for lastInsertId()
-            $db = \Model_Database::getAdapter();
-            $this->setEnabledId(
-                $db->fetchOne(
-                    'SELECT id FROM download_enable WHERE fileid=?',
-                    $this->getTimestamp()->get(Zend_Date::TIMESTAMP)
-                )
-            );
-        } catch (\Exception $e) {
-            $this->_errors[] = $e->getMessage();
-            return false;
-        }
-
-        $this->_needCleanup = false; // Package finished. Do not clean up.
-
-        return true;
     }
 
     /**
@@ -491,11 +398,14 @@ class Model_Package extends Model_Abstract
             return false;
         }
 
-        $this->_needCleanup = true;
-
-        $result = $this->_cleanup();
-
-        return $result;
+        $packageManager = \Library\Application::getService('Model\Package\PackageManager');
+        try {
+            $packageManager->delete($this);
+            return true;
+        } catch (\Exception $e) {
+            $this->_errors[] = $e->getMessage();
+            return false;
+        }
     }
 
     /**
@@ -563,28 +473,6 @@ class Model_Package extends Model_Abstract
             ),
             array('name=?' => 'DOWNLOAD') + $where
         );
-    }
-
-
-    /**
-     * Clean up any files, directories and database entries that were created
-     * for an unfinished package
-     * @return bool TRUE if everything was cleaned up, FALSE if filesystem objects could not be deleted.
-     */
-    protected function _cleanup()
-    {
-        if (!$this->_needCleanup)
-            return true;
-
-        try {
-            $packageManager = \Library\Application::getService('Model\Package\PackageManager');
-            $packageManager->delete($this);
-            $success = true;
-        } catch (\Exception $e) {
-            $this->_errors[] = $e->getMessage();
-            $success = false;
-        }
-        return $success;
     }
 
     /**

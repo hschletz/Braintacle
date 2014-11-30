@@ -39,10 +39,21 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
     public function buildProvider()
     {
+        $sourceContent = 'abcdef';
+        $sourceHash = sha1($sourceContent);
+        $sourceSize = strlen($sourceContent);
+
+        $archiveContent = 'ghi';
+        $archiveHash = sha1($archiveContent);
+        $archiveSize = strlen($archiveContent);
+
         return array(
-            array('windows', 'WINDOWS'),
-            array('linux', 'LINUX'),
-            array('mac', 'MacOSX'),
+            array('windows', 'WINDOWS', $archiveContent, true, $archiveHash, $archiveSize, true, true),
+            array('windows', 'WINDOWS', $archiveContent, true, $archiveHash, $archiveSize, false, true),
+            array('linux', 'LINUX', $sourceContent, false, $sourceHash, $sourceSize, true, true),
+            array('linux', 'LINUX', $sourceContent, false, $sourceHash, $sourceSize, false, false),
+            array('mac', 'MacOSX',  null, false, null, 0, true, true),
+            array('mac', 'MacOSX',  null, false, null, 0, false, false),
         );
     }
 
@@ -51,19 +62,95 @@ class PackageManagerTest extends \Model\Test\AbstractTest
      *
      * @param string $platform Internal platform descriptor (windows, linux, mac)
      * @param mixed $platformValue Database identifier (WINDOWS, LINUX, MacOSX)
+     * @param string $content File content to validate (NULL to simulate no source file and no archive)
+     * @param bool $createArchive Create archive, otherwise source file is assumed to be archive
+     * @param string $hash Expected hash
+     * @param integer $size Expected size
+     * @param bool $deleteSource Passed to build()
+     * @param bool $deleteArchive Expected argument for StorageInterface::write()
      * @dataProvider buildProvider
      */
-    public function testBuild($platform, $platformValue)
+    public function testBuild(
+        $platform,
+        $platformValue,
+        $content,
+        $createArchive,
+        $hash,
+        $size,
+        $deleteSource,
+        $deleteArchive
+    )
     {
+        // vfsStream is difficult to set up from a data provider, so the files are created here.
+        $root = vfsStream::setup('root');
+        if ($content) {
+            if ($createArchive) {
+                $fileLocation = 'source_file';
+                $archive = vfsStream::newFile('archive')->withContent($content)->at($root)->url();
+            } else {
+                $fileLocation = vfsStream::newFile('test')->withContent($content)->at($root)->url();
+                $archive = $fileLocation;
+            }
+        } else {
+            $fileLocation = '';
+            $archive = '';
+        }
+
+        // Input data. More fields are added and tested internally
         $data = array(
-            'Timestamp' => new \Zend_Date(1415961925, \Zend_Date::TIMESTAMP),
             'Platform' => $platform,
             'Name' => 'package_new',
             'Priority' => '7',
-            'NumFragments' => '23',
-            'Size' => '87654321',
             'Comment' => 'New package',
+            'FileLocation' => $fileLocation,
         );
+
+        // Callback to test the static part of package data (input values)
+        $checkStaticData = function($testData) use ($data) {
+            unset($testData['Timestamp']);
+            unset($testData['Hash']);
+            unset($testData['Size']);
+            return ($testData === $data);
+        };
+
+        // Callback to test the added timestamp with an acceptable delta
+        // Actual timestamp is written to $timestamp
+        $now = time();
+        $checkTimestamp = function($testData) use ($data, $now, &$timestamp) {
+            $timestamp = $testData['Timestamp']->get(\Zend_Date::TIMESTAMP);
+            return ($timestamp - $now <= 1);
+        };
+
+        // Callback to test the added file properties
+        $checkFileProperties = function($testData) use ($hash, $size) {
+            return ($testData['Hash'] === $hash and $testData['Size'] === $size);
+        };
+
+        // Storage mock
+        $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
+        $storage->expects($this->once())
+                ->method('prepare')
+                ->with(
+                    $this->logicalAnd(
+                        $this->callback($checkStaticData),
+                        $this->callback($checkTimestamp)
+                    )
+                )
+                ->willReturn('Path');
+        $storage->expects($this->once())
+                ->method('write')
+                ->with(
+                    $this->logicalAnd(
+                        $this->callback($checkStaticData),
+                        $this->callback($checkTimestamp),
+                        $this->callback($checkFileProperties)
+                    ),
+                    $archive,
+                    $deleteArchive
+                )
+                ->willReturn(23);
+
+        // Config mock
         $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
         $config->method('__get')
                ->will(
@@ -75,14 +162,47 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                        )
                    )
                );
-        $model = $this->_getModel(array('Model\Config' => $config));
-        $model->build($data);
 
+        // Other dependencies
+        $archiveManager = $this->getMock('Library\ArchiveManager');
+        $packages = \Library\Application::getService('Database\Table\Packages');
+        $packageDownloadInfo = \Library\Application::getService('Database\Table\PackageDownloadInfo');
+        $clientConfig = \Library\Application::getService('Database\Table\ClientConfig');
+
+        // Model mock
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethods(array('packageExists', 'autoArchive', 'delete'))
+                      ->setConstructorArgs(
+                          array($storage, $config, $archiveManager, $packages, $packageDownloadInfo, $clientConfig)
+                      )
+                      ->getMock();
+        $model->expects($this->once())->method('packageExists')->willReturn(false);
+        $model->expects($this->once())
+              ->method('autoArchive')
+              ->with(
+                  $this->logicalAnd(
+                      $this->callback($checkStaticData),
+                      $this->callback($checkTimestamp)
+                  ),
+                  'Path',
+                  $deleteSource
+              )
+              ->willReturn($archive);
+        $model->expects($this->never())->method('delete');
+
+        // Invoke build method
+        $id = $model->build($data, $deleteSource);
+        $this->assertInternalType('integer', $id);
+        $this->assertGreaterThan(0, $id);
+
+        // Test database results
         $connection = $this->getConnection();
         $dataset = new \PHPUnit_Extensions_Database_DataSet_ReplacementDataSet(
             $this->_loadDataSet('Build')
         );
+        $dataset->addFullReplacement('#TIMESTAMP#', $timestamp);
         $dataset->addFullReplacement('#PLATFORM#', $platformValue);
+        $dataset->addFullReplacement('#SIZE#', $size);
         $this->assertTablesEqual(
             $dataset->getTable('download_available'),
             $connection->createQueryTable('download_available', 'SELECT * FROM download_available ORDER BY fileid')
@@ -98,37 +218,113 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
     public function testBuildInvalidPlatform()
     {
-        $data = array(
-            'Timestamp' => new \Zend_Date,
-            'Platform' => 'invalid',
-            'Name' => 'package_new',
-            'Priority' => '7',
-            'NumFragments' => '23',
-            'Size' => '87654321',
-            'Comment' => 'New package',
+        $data = array('Platform' => 'invalid');
+        $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
+        $storage->expects($this->never())->method('write');
+        $packages = $this->getMockBuilder('Database\Table\Packages')->disableOriginalConstructor()->getMock();
+        $packages->expects($this->never())->method('insert');
+        $model = $this->_getModel(
+            array('Model\Package\Storage\Direct' => $storage, 'Database\Table\Packages' => $packages)
         );
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
-        $model = $this->_getModel(array('Model\Config' => $config));
         try {
-            $model->build($data);
+            $model->build($data, false);
             $this->fail('Expected exception was not thrown');
         } catch (\InvalidArgumentException $e) {
             $this->assertEquals('Invalid platform: invalid', $e->getMessage());
         }
-        $connection = $this->getConnection();
-        $dataset = $this->_loadDataSet(); // unchanged
-        $this->assertTablesEqual(
-            $dataset->getTable('download_available'),
-            $connection->createQueryTable('download_available', 'SELECT * FROM download_available ORDER BY fileid')
+    }
+
+    public function testBuildPackageExists()
+    {
+        $data = array(
+            'Platform' => 'linux',
+            'Name' => 'package1',
         );
-        $this->assertTablesEqual(
-            $dataset->getTable('download_enable'),
-            $connection->createQueryTable(
-                'download_enable',
-                'SELECT id, fileid, info_loc, pack_loc, cert_path, cert_file FROM download_enable ORDER BY fileid'
-            )
+        $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
+        $storage->expects($this->never())->method('write');
+        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $archiveManager = $this->getMock('Library\ArchiveManager');
+        $packages = $this->getMockBuilder('Database\Table\Packages')->disableOriginalConstructor()->getMock();
+        $packages->expects($this->never())->method('insert');
+        $packageDownloadInfo = $this->getMockBuilder('Database\Table\PackageDownloadInfo')
+                                    ->disableOriginalConstructor()
+                                    ->getMock();
+        $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
+
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethods(array('packageExists'))
+                      ->setConstructorArgs(
+                          array($storage, $config, $archiveManager, $packages, $packageDownloadInfo, $clientConfig)
+                      )
+                      ->getMock();
+        $model->expects($this->once())->method('packageExists')->with('package1')->willReturn(true);
+        try {
+            $model->build($data, false);
+            $this->fail('Expected exception was not thrown');
+        } catch (\RuntimeException $e) {
+            $this->assertEquals("Package 'package1' already exists", $e->getMessage());
+        }
+    }
+
+    public function buildFileErrorProvider()
+    {
+        return array(
+            array(false, "Could not determine size of 'vfs://root/nonexistent'"),
+            array(true, "Could not compute SHA1 hash of 'statonly://'"),
+        );
+    }
+
+    /**
+     * Test runtime errors concerning source file
+     *
+     * @param bool $fileExists Simulate read failure on existing file
+     * @param string $message Expected exception message
+     * @dataProvider buildFileErrorProvider
+     */
+    public function testBuildFileError($fileExists, $message)
+    {
+        if ($fileExists) {
+            $source = 'statonly://';
+        } else {
+            $source = vfsStream::setup('root')->url() . '/nonexistent';
+        }
+
+        $data = array(
+            'Platform' => 'linux',
+            'Name' => 'package_new',
+            'FileLocation' => $source,
         );
 
+        // Callback to test package data passed to delete()
+        $now = time();
+        $checkData = function($testData) use ($data, $now) {
+            $timestamp = $testData['Timestamp']->get(\Zend_Date::TIMESTAMP);
+            unset($testData['Timestamp']);
+            return ($timestamp - $now <= 1 and $testData == $data);
+        };
+
+        $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
+        $storage->expects($this->once())->method('prepare');
+        $storage->expects($this->never())->method('write');
+
+        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $archiveManager = $this->getMock('Library\ArchiveManager');
+        $packages = \Library\Application::getService('Database\Table\Packages');
+        $packageDownloadInfo = \Library\Application::getService('Database\Table\PackageDownloadInfo');
+        $clientConfig = \Library\Application::getService('Database\Table\ClientConfig');
+
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethods(array('packageExists', 'autoArchive', 'delete'))
+                      ->setConstructorArgs(
+                          array($storage, $config, $archiveManager, $packages, $packageDownloadInfo, $clientConfig)
+                      )
+                      ->getMock();
+        $model->expects($this->once())->method('packageExists')->willReturn(false);
+        $model->expects($this->once())->method('autoArchive')->willReturn($source);
+        $model->expects($this->once())->method('delete')->with($this->callback($checkData));
+
+        $this->setExpectedException('RuntimeException', $message);
+        $model->build($data, false);
     }
 
     public function testAutoArchiveWindowsCreateArchiveKeepSource()

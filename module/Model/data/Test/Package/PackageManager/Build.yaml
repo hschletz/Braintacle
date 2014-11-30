@@ -17,11 +17,11 @@ download_available:
     osname: "platform"
     comment: "Existing package 2"
   -
-    fileid: "1415961925"
+    fileid: "#TIMESTAMP#"
     name: "package_new"
     priority: 7
     fragments: 23
-    size: 87654321
+    size: "#SIZE#"
     osname: "#PLATFORM#"
     comment: "New package"
 
@@ -39,7 +39,7 @@ download_enable:
     cert_path: "path"
     cert_file: "path/filename"
   -
-    fileid: "1415961925"
+    fileid: "#TIMESTAMP#"
     info_loc: "HTTPS URL"
     pack_loc: "HTTP URL"
     cert_path: "path"

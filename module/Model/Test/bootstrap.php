@@ -20,6 +20,22 @@
  */
 
 error_reporting(-1);
+
+/**
+ * A minimal stream wrapper to simulate I/O errors
+ *
+ * Only url_stat() is (partially) implemented to simulate file properties.
+ * Files cannot be actually opened.
+ */
+class StreamWrapperStatOnly
+{
+    public function url_stat($path, $flags)
+    {
+        return array('size' => 42);
+    }
+}
+stream_wrapper_register('statonly', 'StreamWrapperStatOnly');
+
 require_once(__DIR__ . '/../../Library/Application.php');
 \Library\Application::init('Model', false);
 
