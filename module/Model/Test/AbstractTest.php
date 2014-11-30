@@ -120,14 +120,13 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
     protected function _getModel(array $overrideServices=array())
     {
         $serviceManager = \Library\Application::getService('ServiceManager');
-        $module = $serviceManager->get('ModuleManager')->getModule('Model');
-        $config = new \Zend\ServiceManager\Config($module->getConfig()['service_manager']);
-
         if (!empty($overrideServices)) {
             // Clone service manager to keep changes local.
             $serviceManager = clone $serviceManager;
             // Reset SM config. This will force a new instance of our model to
             // be created with overriden services.
+            $module = $serviceManager->get('ModuleManager')->getModule('Model');
+            $config = new \Zend\ServiceManager\Config($module->getConfig()['service_manager']);
             $config->configureServiceManager($serviceManager);
             // Override specified services
             $serviceManager->setAllowOverride(true);
