@@ -111,9 +111,8 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
      *
      * This method allows temporarily overriding services with manually supplied
      * instances. This is useful for injecting mock objects which will be passed
-     * to the model's constructor by a factory. The service manager is reset to
-     * its default state after the model is retrieved so that the override does
-     * not interfere with subsequent code execution.
+     * to the model's constructor by a factory. A clone of the service manager is
+     * used to avoid interference with other tests.
      *
      * @param array $overrideServices Optional associative array (name => instance) with services to override
      * @return object Model instance
@@ -125,6 +124,8 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
         $config = new \Zend\ServiceManager\Config($module->getConfig()['service_manager']);
 
         if (!empty($overrideServices)) {
+            // Clone service manager to keep changes local.
+            $serviceManager = clone $serviceManager;
             // Reset SM config. This will force a new instance of our model to
             // be created with overriden services.
             $config->configureServiceManager($serviceManager);
@@ -136,12 +137,6 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
         }
 
         $model = $serviceManager->get($this->_getClass());
-
-        if (!empty($overrideServices)) {
-            // Reset SM config to discard all service overrides
-            $config->configureServiceManager($serviceManager);
-        }
-
         return clone $model;
     }
 
