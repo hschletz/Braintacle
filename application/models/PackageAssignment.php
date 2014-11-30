@@ -137,7 +137,6 @@ class Model_PackageAssignment extends Model_ChildObject
 
         // Example: "Tue Feb  2 13:44:23 2010"
         $date = new Zend_Date;
-        $date->setTimezone('UTC'); // prevents altering of $value by DST calculations
         $months = array(
             'Jan',
             'Feb',
