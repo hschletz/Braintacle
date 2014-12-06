@@ -34,15 +34,15 @@ $renderCallbacks = array(
     'Status' => function($view, $assignment) {
         $status = $assignment['Status'];
         switch ($status) {
-            case null:
+            case \Model_PackageAssignment::NOT_NOTIFIED:
                 $content = $view->translate('not notified');
                 $class = 'package_notnotified';
                 break;
-            case 'NOTIFIED':
+            case \Model_PackageAssignment::NOTIFIED:
                 $content = $view->translate('in progress');
                 $class = 'package_inprogress';
                 break;
-            case 'SUCCESS':
+            case \Model_PackageAssignment::SUCCESS:
                 $content = $view->translate('installed');
                 $class = 'package_success';
                 break;
