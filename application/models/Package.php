@@ -62,7 +62,6 @@
  * - <b>WarnCountdown:</b> Timeout in seconds before deployment starts
  * - <b>WarnAllowAbort:</b> Whether the user should be allowed to abort
  * - <b>WarnAllowDelay:</b> Whether the user should be allowed to delay
- * - <b>UserActionRequired:</b> Whether the user should be notified after deployment
  * - <b>PostInstMessage:</b> Message to display after deployment
  *
  * The following Attributes are only used by {@link build()}.
@@ -97,7 +96,6 @@ class Model_Package extends Model_Abstract
         'WarnCountdown' => 'NOTIFY_COUNTDOWN',
         'WarnAllowAbort' => 'NOTIFY_CAN_ABORT',
         'WarnAllowDelay' => 'NOTIFY_CAN_DELAY',
-        'UserActionRequired' => 'NEED_DONE_ACTION',
         'PostInstMessage' => 'NEED_DONE_ACTION_TEXT',
         'MaxFragmentSize' => 'maxFragmentSize',
         'FileName' => 'fileName',
@@ -121,7 +119,6 @@ class Model_Package extends Model_Abstract
         'WarnCountdown' => 'integer',
         'WarnAllowAbort' => 'boolean',
         'WarnAllowDelay' => 'boolean',
-        'UserActionRequired' => 'boolean',
         'MaxFragmentSize' => 'integer',
     );
 
@@ -164,11 +161,6 @@ class Model_Package extends Model_Abstract
             case 'WarnAllowAbort':
             case 'WarnAllowDelay':
                 if (!$this->getWarn()) {
-                    $value = null;
-                }
-                break;
-            case 'PostInstMessage':
-                if (!$this->getUserActionRequired()) {
                     $value = null;
                 }
                 break;

@@ -322,7 +322,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $packageData = array(
             'Name' => 'packageName',
             'PostInstMessage' => 'postinst',
-            'UserActionRequired' => true,
             'File' => array(
                 'name' => 'file_name',
                 'tmp_name' => 'file_tmp_name',
@@ -363,7 +362,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $packageData = array(
             'Name' => 'packageName',
             'PostInstMessage' => '',
-            'UserActionRequired' => false,
             'File' => array(
                 'name' => 'file_name',
                 'tmp_name' => 'file_tmp_name',
@@ -548,7 +546,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'tmp_name' => 'file_tmp_name',
                 'type' => 'file_type',
             ),
-            'UserActionRequired' => false,
             'FileName' => 'file_name',
             'FileLocation' => 'file_tmp_name',
             'FileType' => 'file_type',
@@ -665,7 +662,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'tmp_name' => 'file_tmp_name',
                 'type' => 'file_type',
             ),
-            'UserActionRequired' => false,
             'FileName' => 'file_name',
             'FileLocation' => 'file_tmp_name',
             'FileType' => 'file_type',

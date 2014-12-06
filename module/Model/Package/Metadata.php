@@ -63,7 +63,7 @@ class Metadata extends \Library\DomDocument
         $node->setAttribute('NOTIFY_COUNTDOWN', $data['WarnCountdown']);
         $node->setAttribute('NOTIFY_CAN_ABORT', $data['WarnAllowAbort'] ? '1' : '0');
         $node->setAttribute('NOTIFY_CAN_DELAY', $data['WarnAllowDelay'] ? '1' : '0');
-        $node->setAttribute('NEED_DONE_ACTION', $data['UserActionRequired'] ? '1' : '0');
+        $node->setAttribute('NEED_DONE_ACTION', $data['PostInstMessage'] ? '1' : '0');
         $node->setAttribute('NEED_DONE_ACTION_TEXT', $this->_escapeMessage($data['PostInstMessage']));
         $node->setAttribute('GARDEFOU', 'rien');
 
@@ -103,8 +103,9 @@ class Metadata extends \Library\DomDocument
             'WarnCountdown' => $node->getAttribute('NOTIFY_COUNTDOWN'),
             'WarnAllowAbort' => $node->getAttribute('NOTIFY_CAN_ABORT'),
             'WarnAllowDelay' => $node->getAttribute('NOTIFY_CAN_DELAY'),
-            'UserActionRequired' => $node->getAttribute('NEED_DONE_ACTION'),
-            'PostInstMessage' => $this->_unescapeMessage($node->getAttribute('NEED_DONE_ACTION_TEXT')),
+            'PostInstMessage' => $node->getAttribute('NEED_DONE_ACTION') ?
+                $this->_unescapeMessage($node->getAttribute('NEED_DONE_ACTION_TEXT')) :
+                ''
         );
     }
 

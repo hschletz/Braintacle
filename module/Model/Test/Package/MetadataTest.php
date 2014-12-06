@@ -47,8 +47,7 @@ class MetadataTest extends \Model\Test\AbstractTest
             'WarnCountdown' => '23',
             'WarnAllowAbort' => '0',
             'WarnAllowDelay' => '0',
-            'UserActionRequired' => '0',
-            'PostInstMessage' => "post_inst_message\r\"\n",
+            'PostInstMessage' => '',
         );
         $model = new Metadata;
         $model->setPackageData($data);
@@ -67,7 +66,6 @@ class MetadataTest extends \Model\Test\AbstractTest
         $this->assertEquals('Hexa', $node->getAttribute('DIGEST_ENCODE'));
         $this->assertEquals('warn_message&quot;<br><br>', $node->getAttribute('NOTIFY_TEXT'));
         $this->assertEquals('23', $node->getAttribute('NOTIFY_COUNTDOWN'));
-        $this->assertEquals('post_inst_message<br>&quot;<br>', $node->getAttribute('NEED_DONE_ACTION_TEXT'));
         $this->assertEquals('rien', $node->getAttribute('GARDEFOU'));
     }
 
@@ -103,7 +101,6 @@ class MetadataTest extends \Model\Test\AbstractTest
             'WarnCountdown' => '',
             'WarnAllowAbort' => '0',
             'WarnAllowDelay' => '0',
-            'UserActionRequired' => '0',
             'PostInstMessage' => '',
         );
         $model = new Metadata;
@@ -150,7 +147,6 @@ class MetadataTest extends \Model\Test\AbstractTest
             'WarnCountdown' => '',
             'WarnAllowAbort' => $input,
             'WarnAllowDelay' => $input,
-            'UserActionRequired' => $input,
             'PostInstMessage' => '',
         );
         $model = new Metadata;
@@ -159,7 +155,47 @@ class MetadataTest extends \Model\Test\AbstractTest
         $this->assertSame($expected, $node->getAttribute('NOTIFY_USER'));
         $this->assertSame($expected, $node->getAttribute('NOTIFY_CAN_ABORT'));
         $this->assertSame($expected, $node->getAttribute('NOTIFY_CAN_DELAY'));
-        $this->assertSame($expected, $node->getAttribute('NEED_DONE_ACTION'));
+    }
+
+    public function setPackageDataPostinstMessageProvider()
+    {
+        $messageEscaped = '&quot;<br><br>';
+        $messageUnescaped = "\"\n\r\r\n";
+        return array(
+            array($messageUnescaped, $messageEscaped, '1'),
+            array('', '', '0'),
+        );
+    }
+
+    /**
+     * Test setPackageData() behavior on PostInstMessage
+     *
+     * @param string $inputMessage Input message
+     * @param string $documentMessage Expected message in the document
+     * @param string$documentFlag Expected value of NEED_DONE_ACTION attribute
+     * @dataProvider setPackageDataPostinstMessageProvider
+     */
+    public function testSetPackageDataPostinstMessage($inputMessage, $documentMessage, $documentFlag)
+    {
+         $data = array(
+            'Timestamp' => new \Zend_Date(),
+            'Priority' => '5',
+            'DeployAction' => 'store',
+            'ActionParam' => '',
+            'Hash' => 'hash',
+            'NumFragments' => '42',
+            'Warn' => '0',
+            'WarnMessage' => '',
+            'WarnCountdown' => '23',
+            'WarnAllowAbort' => '0',
+            'WarnAllowDelay' => '0',
+            'PostInstMessage' => $inputMessage,
+        );
+        $model = new Metadata;
+        $model->setPackageData($data);
+        $node = $model->firstChild;
+        $this->assertSame($documentFlag, $node->getAttribute('NEED_DONE_ACTION'));
+        $this->assertSame($documentMessage, $node->getAttribute('NEED_DONE_ACTION_TEXT'));
     }
 
     public function testsetPackageDataOverwrite()
@@ -176,7 +212,6 @@ class MetadataTest extends \Model\Test\AbstractTest
             'WarnCountdown' => '',
             'WarnAllowAbort' => '0',
             'WarnAllowDelay' => '0',
-            'UserActionRequired' => '0',
             'PostInstMessage' => '',
         );
         $model = new Metadata;
@@ -195,7 +230,7 @@ class MetadataTest extends \Model\Test\AbstractTest
      * @param string $name Value for "NAME" attribute
      * @param string $command Value for "COMMAND" attribute
      */
-    public function testGetPackageData($action, $act, $path, $name, $command)
+    public function testGetPackageDataActionParams($action, $act, $path, $name, $command)
     {
         $messageEscaped = '&quot;<br><br/><br /><BR>';
         $messageUnescaped = "\"\n\n\n\n";
@@ -217,13 +252,13 @@ class MetadataTest extends \Model\Test\AbstractTest
         $node->setAttribute('NOTIFY_COUNTDOWN', '23');
         $node->setAttribute('NOTIFY_CAN_ABORT', '0');
         $node->setAttribute('NOTIFY_CAN_DELAY', '0');
-        $node->setAttribute('NEED_DONE_ACTION', '1');
-        $node->setAttribute('NEED_DONE_ACTION_TEXT', "postinst$messageEscaped");
+        $node->setAttribute('NEED_DONE_ACTION', '0');
+        $node->setAttribute('NEED_DONE_ACTION_TEXT', '');
         $node->setAttribute('GARDEFOU', 'rien');
         $model->appendChild($node);
 
         $result = $model->getPackageData();
-        $this->assertCount(9, $result);
+        $this->assertCount(8, $result);
         $this->assertEquals($action, $result['DeployAction']);
         $this->assertEquals('action_param', $result['ActionParam']);
         $this->assertEquals('1', $result['Warn']);
@@ -231,8 +266,54 @@ class MetadataTest extends \Model\Test\AbstractTest
         $this->assertEquals('23', $result['WarnCountdown']);
         $this->assertEquals('0', $result['WarnAllowAbort']);
         $this->assertEquals('0', $result['WarnAllowDelay']);
-        $this->assertEquals('1', $result['UserActionRequired']);
-        $this->assertEquals("postinst$messageUnescaped", $result['PostInstMessage']);
+    }
+
+    public function packageDataPostinstMessageProvider()
+    {
+        $messageEscaped = '&quot;<br><br/><br /><BR>';
+        $messageUnescaped = "\"\n\n\n\n";
+        return array(
+            array('0', $messageEscaped, ''),
+            array('1', $messageEscaped, $messageUnescaped),
+            array('0', '', ''),
+            array('1', '', ''),
+        );
+    }
+
+    /**
+     * Test getPackageData() behavior on PostInstMessage
+     *
+     * @param string $documentFlag value of NEED_DONE_ACTION attribute
+     * @param mixed $documentMessage value of NEED_DONE_ACTION_TEXT attribute
+     * @param mixed $resultMessage Expected result for PostInstMessage
+     * @dataProvider packageDataPostinstMessageProvider
+     */
+    public function testGetPackageDataPostinstMessage($documentFlag, $documentMessage, $resultMessage)
+    {
+        $model = new Metadata;
+        $node = $model->createElement('DOWNLOAD');
+        $node->setAttribute('ID', '1');
+        $node->setAttribute('PRI', '5');
+        $node->setAttribute('ACT', 'STORE');
+        $node->setAttribute('DIGEST', '');
+        $node->setAttribute('PROTO', 'HTTP');
+        $node->setAttribute('FRAGS', '1');
+        $node->setAttribute('DIGEST_ALGO', 'SHA1');
+        $node->setAttribute('DIGEST_ENCODE', 'Hexa');
+        $node->setAttribute('PATH', 'PATH');
+        $node->setAttribute('NAME', '');
+        $node->setAttribute('COMMAND', '');
+        $node->setAttribute('NOTIFY_USER', '0');
+        $node->setAttribute('NOTIFY_TEXT', '');
+        $node->setAttribute('NOTIFY_COUNTDOWN', '23');
+        $node->setAttribute('NOTIFY_CAN_ABORT', '0');
+        $node->setAttribute('NOTIFY_CAN_DELAY', '0');
+        $node->setAttribute('NEED_DONE_ACTION', $documentFlag);
+        $node->setAttribute('NEED_DONE_ACTION_TEXT', $documentMessage);
+        $node->setAttribute('GARDEFOU', 'rien');
+        $model->appendChild($node);
+        $result = $model->getPackageData();
+        $this->assertEquals($resultMessage, $result['PostInstMessage']);
     }
 
     public function testGetPackageDataForcesValidDocument()

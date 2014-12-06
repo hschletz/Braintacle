@@ -232,7 +232,6 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
      */
     protected function _buildPackage($data)
     {
-        $data['UserActionRequired'] = ($data['PostInstMessage'] != '');
         $data['FileName'] = $data['File']['name'];
         $data['FileLocation'] = $data['File']['tmp_name'];
         $data['FileType'] = $data['File']['type'];
