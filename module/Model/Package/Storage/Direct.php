@@ -56,7 +56,7 @@ class Direct implements StorageInterface
     /** {@inheritdoc} */
     public function prepare($data)
     {
-        $this->createDirectory($data);
+        return $this->createDirectory($data);
     }
 
     /** {@inheritdoc} */
@@ -97,10 +97,13 @@ class Direct implements StorageInterface
      * Create package directory
      *
      * @param array $data Package data
+     * @return string Path to created directory
      */
     public function createDirectory($data)
     {
-        \Library\FileObject::mkdir($this->getPath($data['Timestamp']));
+        $dir = $this->getPath($data['Timestamp']);
+        \Library\FileObject::mkdir($dir);
+        return $dir;
     }
 
     /**

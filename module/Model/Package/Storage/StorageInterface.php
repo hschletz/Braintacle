@@ -32,9 +32,14 @@ interface StorageInterface
      * This is invoked by the package manager as the first step of building a
      * package. Package data is set up except for any content-related fields.
      *
+     * The returned path must exist. It can be the system temp dir, but for
+     * filesystem-based storage it may be better to return the target directory
+     * to reduce the amount of data moved around.
+     *
      * Implementations are responsible for cleanup if an error occurs.
      *
      * @param array $data Package data
+     * @return string Path for temporary file storage
      * @throws \Exception if an error occurs.
      */
     public function prepare($data);

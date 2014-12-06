@@ -42,8 +42,8 @@ class DirectTest extends \Model\Test\AbstractTest
                       ->setMethods(array('createDirectory'))
                       ->disableOriginalConstructor()
                       ->getMock();
-        $model->expects($this->once())->method('createDirectory')->with($data);
-        $model->prepare($data);
+        $model->expects($this->once())->method('createDirectory')->with($data)->willReturn('path');
+        $this->assertEquals('path', $model->prepare($data));
     }
 
     public function testWriteSuccess()
@@ -178,7 +178,7 @@ class DirectTest extends \Model\Test\AbstractTest
                       ->disableOriginalConstructor()
                       ->getMock();
         $model->method('getPath')->with($timestamp)->willReturn($path);
-        $model->createDirectory(array('Timestamp' => $timestamp));
+        $this->assertEquals($path, $model->createDirectory(array('Timestamp' => $timestamp)));
         $this->assertTrue(is_dir($path));
     }
 
