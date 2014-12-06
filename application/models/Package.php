@@ -67,7 +67,6 @@
  *
  * The following Attributes are only used by {@link build()}.
  *
- * - <b>MaxFragmentSize:</b> maximum size of a single fragment
  * - <b>FileName:</b> name of uploaded file, used only for ZIP file creation
  * - <b>FileLocation:</b> full path to uploaded file. May be deleted by build()!
  * - <b>FileType:</b> MIME type of uploaded file
@@ -299,11 +298,6 @@ class Model_Package extends Model_Abstract
      * Only metadata is copied, not the downloadable content. As a consequence,
      * content-related metadata (like the hash value) isn't copied neither.
      *
-     * Since MaxFragmentSize is not stored anywhere, it has to be estimated
-     * from Size and NumFragments. The result will almost certainly be different
-     * from the original value, but still about the same magnitude. In particular,
-     * it will deliver the same number of fragments.
-     *
      * Check the return value: if this method fails, the instance may be in an
      * incostinstent state. Call {@link getErrors()} to retrieve details.
      * @param string $name Name of an existing package to be cloned.
@@ -335,19 +329,6 @@ class Model_Package extends Model_Abstract
         foreach ($metadata as $property => $value) {
             $this->setProperty($property, $value);
         }
-
-        // Estimate MaxFragmentSize
-        $num = $this->getNumFragments();
-        if ($num <= 1) {
-            $max = 0; // no fragmentation
-        } else {
-            $size = $this->getSize();
-            // average (/2) in kilobytes (/1024)
-            $max = ceil(
-                (($size / $num) + ($size / ($num - 1))) / 2048
-            );
-        }
-        $this->setMaxFragmentSize($max);
 
         return true;
     }
