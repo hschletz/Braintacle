@@ -155,38 +155,8 @@ class Model_PackageAssignment extends Model_ChildObject
             return null;
         }
 
-        // Example: "Tue Feb  2 13:44:23 2010"
-        $date = new Zend_Date;
-        $months = array(
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec'
-        );
-        $month = array_search(substr($value, 4, 3), $months);
-        if ($month === false) {
-            throw new UnexpectedValueException(
-                'Invalid month in timestamp: ' . $value
-            );
-        }
-        $value = array(
-            'year' => substr($value, 20, 4),
-            'month' => $month + 1,
-            'day' => substr($value, 8, 2),
-            'hour' => substr($value, 11, 2),
-            'minute' => substr($value, 14, 2),
-            'second' => substr($value, 17, 2),
-        );
-        $date->set($value);
-        return $date;
+        $value = \DateTime::createFromFormat(self::DATEFORMAT, $value);
+        return new \Zend_Date($value->getTimestamp(), \Zend_Date::TIMESTAMP);
     }
 
 }
