@@ -27,3 +27,7 @@ devices:
     hardware_id: 2
     name: "DOWNLOAD"
     ivalue: 2
+  -
+    hardware_id: 2
+    name: "DOWNLOAD_FORCE"
+    ivalue: 2

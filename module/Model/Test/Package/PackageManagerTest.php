@@ -29,7 +29,7 @@ use org\bovigo\vfs\vfsStream;
 class PackageManagerTest extends \Model\Test\AbstractTest
 {
     /** {@inheritdoc} */
-    protected static $_tables = array('Packages', 'PackageDownloadInfo', 'ClientConfig');
+    protected static $_tables = array('Packages', 'PackageDownloadInfo', 'ClientConfig', 'GroupInfo');
 
     public function testPackageExists()
     {
@@ -168,12 +168,21 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $packages = \Library\Application::getService('Database\Table\Packages');
         $packageDownloadInfo = \Library\Application::getService('Database\Table\PackageDownloadInfo');
         $clientConfig = \Library\Application::getService('Database\Table\ClientConfig');
+        $groupInfo = \Library\Application::getService('Database\Table\GroupInfo');
 
         // Model mock
         $model = $this->getMockBuilder($this->_getClass())
                       ->setMethods(array('packageExists', 'autoArchive', 'delete'))
                       ->setConstructorArgs(
-                          array($storage, $config, $archiveManager, $packages, $packageDownloadInfo, $clientConfig)
+                          array(
+                              $storage,
+                              $config,
+                              $archiveManager,
+                              $packages,
+                              $packageDownloadInfo,
+                              $clientConfig,
+                              $groupInfo
+                          )
                       )
                       ->getMock();
         $model->expects($this->once())->method('packageExists')->willReturn(false);
@@ -250,11 +259,20 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                                     ->disableOriginalConstructor()
                                     ->getMock();
         $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
+        $groupInfo = $this->getMockBuilder('Database\Table\GroupInfo')->disableOriginalConstructor()->getMock();
 
         $model = $this->getMockBuilder($this->_getClass())
                       ->setMethods(array('packageExists'))
                       ->setConstructorArgs(
-                          array($storage, $config, $archiveManager, $packages, $packageDownloadInfo, $clientConfig)
+                          array(
+                              $storage,
+                              $config,
+                              $archiveManager,
+                              $packages,
+                              $packageDownloadInfo,
+                              $clientConfig,
+                              $groupInfo
+                          )
                       )
                       ->getMock();
         $model->expects($this->once())->method('packageExists')->with('package1')->willReturn(true);
@@ -312,11 +330,20 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $packages = \Library\Application::getService('Database\Table\Packages');
         $packageDownloadInfo = \Library\Application::getService('Database\Table\PackageDownloadInfo');
         $clientConfig = \Library\Application::getService('Database\Table\ClientConfig');
+        $groupInfo = \Library\Application::getService('Database\Table\GroupInfo');
 
         $model = $this->getMockBuilder($this->_getClass())
                       ->setMethods(array('packageExists', 'autoArchive', 'delete'))
                       ->setConstructorArgs(
-                          array($storage, $config, $archiveManager, $packages, $packageDownloadInfo, $clientConfig)
+                          array(
+                              $storage,
+                              $config,
+                              $archiveManager,
+                              $packages,
+                              $packageDownloadInfo,
+                              $clientConfig,
+                              $groupInfo
+                          )
                       )
                       ->getMock();
         $model->expects($this->once())->method('packageExists')->willReturn(false);
@@ -576,5 +603,82 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             $dataset->getTable('devices'),
             $connection->createQueryTable('devices', 'SELECT hardware_id, name, ivalue FROM devices ORDER BY ivalue')
         );
+    }
+
+    public function testUpdateComputersNoActionRequired()
+    {
+        $this->_getModel()->updateAssignments(1, 3, false, false, false, false, false);
+
+        $this->assertTablesEqual(
+            $this->_loadDataSet()->getTable('devices'),
+            $this->getConnection()->createQueryTable(
+                'devices', 'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices'
+            )
+        );
+    }
+
+    public function updateAssignmentsProvider()
+    {
+        return array(
+            array('UpdateNoFilters', true, true, true, true, true),
+            array('UpdateNonNotified', true, false, false, false, false),
+            array('UpdateSuccess', false, true, false, false, false),
+            array('UpdateNotified', false, false, true, false, false),
+            array('UpdateError', false, false, false, true, false),
+            array('UpdateGroups', false, false, false, false, true),
+            array('UpdateCombined', true, true, false, true, false),
+        );
+    }
+
+    /**
+     * Test updateAssignments() with various filters
+     * @dataProvider updateAssignmentsProvider
+     */
+    public function testUpdateComputers(
+        $datasetName,
+        $deployNonnotified,
+        $deploySuccess,
+        $deployNotified,
+        $deployError,
+        $deployGroups
+    )
+    {
+        $now = time();
+        $this->_getModel()->updateAssignments(
+            1,
+            3,
+            $deployNonnotified,
+            $deploySuccess,
+            $deployNotified,
+            $deployError,
+            $deployGroups
+        );
+
+        // Compare entire table except date column which might differ a bit
+        $dataset = $this->_loadDataSet($datasetName);
+        $datasetNoDate = new \PHPUnit_Extensions_Database_DataSet_DataSetFilter($dataset);
+        $datasetNoDate->setExcludeColumnsForTable('devices', array('comments'));
+        $this->assertTablesEqual(
+            $datasetNoDate->getTable('devices'),
+            $this->getConnection()->createQueryTable(
+                'devices', 'SELECT hardware_id, name, ivalue, tvalue FROM devices'
+            )
+        );
+
+        // Compare date column with adequate delta
+        $result = $this->getConnection()->createQueryTable('devices', 'SELECT comments FROM devices');
+        $count = $result->getRowCount();
+        $expected = $dataset->getTable('devices');
+        $this->assertEquals($expected->getRowCount(), $count);
+        for ($i = 0; $i < $count; $i++) {
+            $expectedDate = $expected->getRow($i)['comments'];
+            $date = $result->getRow($i)['comments'];
+            if ($expectedDate == '#NOW#') {
+                $date = \DateTime::createFromFormat(\Model_PackageAssignment::DATEFORMAT, $date);
+                $this->assertEquals(0, $date->getTimestamp() - $now, '', 1);
+            } else {
+                $this->assertSame($expectedDate, $date);
+            }
+        }
     }
 }

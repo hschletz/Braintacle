@@ -44,6 +44,26 @@ class Model_PackageAssignment extends Model_ChildObject
      */
     const DATEFORMAT = 'D M d H:i:s Y';
 
+    /**
+     * Database value for status "not notified"
+     */
+    const NOT_NOTIFIED = null;
+
+    /**
+     * Database value for status "notified"
+     */
+    const NOTIFIED = 'NOTIFIED';
+
+    /**
+     * Database value for status "success"
+     */
+    const SUCCESS = 'SUCCESS';
+
+    /**
+     * Prefix of database value for error status
+     */
+    const ERROR_PREFIX = 'ERR';
+
     /** {@inheritdoc} */
     protected $_propertyMap = array(
         // Values from query result

@@ -1,49 +1,11 @@
-# Fixture for PackageManagerTest
-download_available:
-  -
-    fileid: "1415958319"
-    name: "package1"
-    priority: 5
-    fragments: 42
-    size: 12345678
-    osname: "platform"
-    comment: "Existing package 1"
-  -
-    fileid: "1415958320"
-    name: "package2"
-    priority: 5
-    fragments: 42
-    size: 12345678
-    osname: "platform"
-    comment: "Existing package 2"
-
-download_enable:
-  -
-    id: 1
-    fileid: "1415958319"
-    info_loc: "HTTPS URL"
-    pack_loc: "HTTP URL"
-    cert_path: "path"
-    cert_file: "path/filename"
-  -
-    id: 2
-    fileid: "1415958320"
-    info_loc: "HTTPS URL"
-    pack_loc: "HTTP URL"
-    cert_path: "path"
-    cert_file: "path/filename"
-
 devices:
-  # All tests are run on package ID (ivalue) 1.
   -
-    # not notified
     hardware_id: 1
     name: "DOWNLOAD"
     ivalue: 1
     tvalue: null
     comments: "Mon Dec 01 11:07:17 2014"
   -
-    # Deleted on update
     hardware_id: 1
     name: "DOWNLOAD_FORCE"
     ivalue: 1
@@ -56,14 +18,12 @@ devices:
     tvalue: "NOTIFIED"
     comments: "Mon Dec 01 11:07:17 2014"
   -
-    # Deleted on update
     hardware_id: 2
     name: "DOWNLOAD_POSTCMD"
     ivalue: 1
     tvalue: "SHUTDOWN"
     comments: null
   -
-    # Deleted on update
     hardware_id: 2
     name: "DOWNLOAD_SCHEDULE"
     ivalue: 1
@@ -82,28 +42,24 @@ devices:
     tvalue: "ERROR"
     comments: "Mon Dec 01 11:07:17 2014"
   -
-    # Group
     hardware_id: 5
     name: "DOWNLOAD"
-    ivalue: 1
+    ivalue: 3
     tvalue: null
-    comments: "Mon Dec 01 11:07:17 2014"
+    comments: "#NOW#"
   -
-    # Not affected by tests
     hardware_id: 1
     name: "OTHER"
     ivalue: 1
     tvalue: null
     comments: null
   -
-    # Not a package status, not affected by tests
     hardware_id: 1
     name: "DOWNLOAD_SWITCH"
     ivalue: 1
     tvalue: null
     comments: null
   -
-    # Other package, not affected by tests
     hardware_id: 2
     name: "DOWNLOAD"
     ivalue: 2
@@ -115,7 +71,3 @@ devices:
     ivalue: 2
     tvalue: "1"
     comments: null
-
-groups:
-  -
-    hardware_id: 5

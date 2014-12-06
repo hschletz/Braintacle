@@ -63,6 +63,12 @@ class PackageManager
     protected $_clientConfig;
 
     /**
+     * GroupInfo table
+     * @var \Database\Table\ClientConfig
+     */
+    protected $_groupInfo;
+
+    /**
      * Constructor
      *
      * @param \Model\Package\Storage\StorageInterface $storage
@@ -71,6 +77,7 @@ class PackageManager
      * @param \Database\Table\Packages $packages
      * @param \Database\Table\PackageDownloadInfo $packageDownloadInfo
      * @param \Database\Table\ClientConfig $clientConfig
+     * @param \Database\Table\GroupInfo $groupInfo
      */
     public function __construct(
         \Model\Package\Storage\StorageInterface $storage,
@@ -78,7 +85,8 @@ class PackageManager
         \Library\ArchiveManager $archiveManager,
         \Database\Table\Packages $packages,
         \Database\Table\packageDownloadInfo $packageDownloadInfo,
-        \Database\Table\ClientConfig $clientConfig
+        \Database\Table\ClientConfig $clientConfig,
+        \Database\Table\GroupInfo $groupInfo
     )
     {
         $this->_storage = $storage;
@@ -87,6 +95,7 @@ class PackageManager
         $this->_packages = $packages;
         $this->_packageDownloadInfo = $packageDownloadInfo;
         $this->_clientConfig = $clientConfig;
+        $this->_groupInfo = $groupInfo;
     }
 
     /**
@@ -270,5 +279,82 @@ class PackageManager
         $this->_packageDownloadInfo->delete(array('fileid' => $timestamp));
         $this->_packages->delete(array('fileid' => $timestamp));
         $this->_storage->cleanup($data);
+    }
+
+    /**
+     * Update package assignments
+     *
+     * Sets a new package on existing assignments. Updated assignments have
+     * their status reset to "not notified" and their options (force, schedule,
+     * post cmd) removed.
+     *
+     * @param integer $oldPackageId package to be replaced
+     * @param integer $newPackageId new package
+     * @param bool $deployNonnotified Update assignments with status 'not notified'
+     * @param bool $deploySuccess Update assignments with status 'success'
+     * @param bool $deployNotified Update assignments with status 'notified'
+     * @param bool $deployError Update assignments with status 'error'
+     * @param bool $deployGroups Update assignments for groups
+     */
+    public function updateAssignments(
+        $oldPackageId,
+        $newPackageId,
+        $deployNonnotified,
+        $deploySuccess,
+        $deployNotified,
+        $deployError,
+        $deployGroups
+    )
+    {
+        if (!($deployNonnotified or $deploySuccess or $deployNotified or $deployError or $deployGroups)) {
+            return; // nothing to do
+        }
+
+        $where = new \Zend\Db\Sql\Where;
+        $where->equalTo('ivalue', $oldPackageId);
+
+        // Additional filters are only necessary if not all conditions are set
+        if (!($deployNonnotified and $deploySuccess and $deployNotified and $deployError and $deployGroups)) {
+            $groups = $this->_groupInfo->getSql()->select()->columns(array('hardware_id'));
+            $filters = new \Zend\Db\Sql\Where(null, \Zend\Db\Sql\Where::COMBINED_BY_OR);
+            if ($deployNonnotified) {
+                $filters->isNull('tvalue')->and->notIn('hardware_id', $groups);
+            }
+            if ($deploySuccess) {
+                $filters->equalTo('tvalue', \Model_PackageAssignment::SUCCESS);
+            }
+            if ($deployNotified) {
+                $filters->equalTo('tvalue', \Model_PackageAssignment::NOTIFIED);
+            }
+            if ($deployError) {
+                $filters->like('tvalue', \Model_PackageAssignment::ERROR_PREFIX . '%');
+            }
+            if ($deployGroups) {
+                $filters->in('hardware_id', $groups);
+            }
+            $where->addPredicate($filters);
+        }
+
+        // Remove DOWNLOAD_* options from updated assignments
+        $subquery = $this->_clientConfig->getSql()
+                                        ->select()
+                                        ->columns(array('hardware_id'))
+                                        ->where(array('name' => 'DOWNLOAD', $where));
+        $delete = new \Zend\Db\Sql\Where;
+        $delete->equalTo('ivalue', $oldPackageId)
+               ->in('hardware_id', $subquery)
+               ->notEqualTo('name', 'DOWNLOAD_SWITCH')
+               ->like('name', 'DOWNLOAD_%');
+        $this->_clientConfig->delete($delete);
+
+        // Update package ID and reset status
+        $this->_clientConfig->update(
+            array(
+                'ivalue' => $newPackageId,
+                'tvalue' => \Model_PackageAssignment::NOT_NOTIFIED,
+                'comments' => date(\Model_PackageAssignment::DATEFORMAT),
+            ),
+            array('name' => 'DOWNLOAD', $where)
+        );
     }
 }

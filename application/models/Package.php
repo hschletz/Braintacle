@@ -428,50 +428,14 @@ class Model_Package extends Model_Abstract
         $deployGroups
     )
     {
-        if (!($deployNonnotified or $deploySuccess or $deployNotified or $deployError or $deployGroups)) {
-            return; // nothing to do
-        }
-
-        $where = array('ivalue = ?' => $oldPackage->getEnabledId());
-
-        // Additional filters are only necessary if not all conditions are set
-        if (!($deployNonnotified and $deploySuccess and $deployNotified and $deployError and $deployGroups)) {
-            if ($deployNonnotified) {
-                $whereOr[] = '(tvalue IS NULL AND hardware_id NOT IN (SELECT hardware_id FROM groups))';
-            }
-            if ($deploySuccess) {
-                $whereOr[] = 'tvalue=\'SUCCESS\'';
-            }
-            if ($deployNotified) {
-                $whereOr[] = 'tvalue=\'NOTIFIED\'';
-            }
-            if ($deployError) {
-                $whereOr[] = 'tvalue LIKE \'ERR%\'';
-            }
-            if ($deployGroups) {
-                $whereOr[] = 'hardware_id IN (SELECT hardware_id FROM groups)';
-            }
-            $where['(' . implode(' OR ', $whereOr) . ')'] = null;
-        }
-
-        $db = Model_Database::getAdapter();
-        // Remove DOWNLOAD_FORCE option - not necessary for a new package
-        $db->delete('devices', array('name = ?' => 'DOWNLOAD_FORCE') + $where);
-        // Update package ID for other download options
-        $db->update(
-            'devices',
-            array('ivalue' => $this->getEnabledId()),
-            array('name != ?' => 'DOWNLOAD_SWITCH', 'name LIKE ?' => 'DOWNLOAD_%') + $where
-        );
-        // Update package ID and reset download entry
-        $db->update(
-            'devices',
-            array(
-                'ivalue' => $this->getEnabledId(),
-                'tvalue' => null, // always set new package status to 'not notified'
-                'comments' => date(\Model_PackageAssignment::DATEFORMAT),
-            ),
-            array('name=?' => 'DOWNLOAD') + $where
+        \Library\Application::getService('Model\Package\PackageManager')->updateAssignments(
+            $oldPackage['EnabledId'],
+            $this['EnabledId'],
+            $deployNonnotified,
+            $deploySuccess,
+            $deployNotified,
+            $deployError,
+            $deployGroups
         );
     }
 
