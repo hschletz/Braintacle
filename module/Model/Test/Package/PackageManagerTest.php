@@ -74,6 +74,65 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $model->getPackage('invalid');
     }
 
+    public function getPackagesProvider()
+    {
+        $package1 =  array (
+            'Timestamp' => new \Zend_Date(1415958319, \Zend_Date::TIMESTAMP),
+            'Name' => 'package1',
+            'Priority' => '5',
+            'NumFragments' => '42',
+            'Size' => '12345678',
+            'Platform' => 'windows',
+            'Comment' => 'Existing package 1',
+            'EnabledId' => '1',
+            'NumNonnotified' => '1',
+            'NumSuccess' => '1',
+            'NumNotified' => '1',
+            'NumError' => '1',
+        );
+        $package2 =  array (
+            'Timestamp' => new \Zend_Date(1415958320, \Zend_Date::TIMESTAMP),
+            'Name' => 'package2',
+            'Priority' => '5',
+            'NumFragments' => '42',
+            'Size' => '12345678',
+            'Platform' => 'linux',
+            'Comment' => 'Existing package 2',
+            'EnabledId' => '2',
+            'NumNonnotified' => '1',
+            'NumSuccess' => '0',
+            'NumNotified' => '0',
+            'NumError' => '0',
+        );
+        return array(
+            array('Timestamp', 'asc', $package1, $package2),
+            array('Timestamp', 'desc', $package2, $package1),
+            array('Name', 'asc', $package1, $package2),
+            array('Name', 'desc', $package2, $package1),
+            array('NumSuccess', 'asc', $package2, $package1),
+            array('NumSuccess', 'desc', $package1, $package2),
+        );
+    }
+
+    /**
+     * Test getPackages()
+     *
+     * @param string $order tested sort order
+     * @param string $direction tested sort direction
+     * @param array $package1 first package in the expected result
+     * @param array $package2 second package in the expected result
+     * @dataProvider getPackagesProvider
+     */
+    public function testGetPackages($order, $direction, $package1, $package2)
+    {
+        $model = $this->_getModel();
+        $packages = $model->getPackages($order, $direction)->buffer();
+        $this->assertContainsOnlyInstancesOf('Model_Package', $packages);
+        $this->assertEquals(
+            array($package1, $package2), $packages->toArray()
+        );
+    }
+
     public function buildProvider()
     {
         $sourceContent = 'abcdef';

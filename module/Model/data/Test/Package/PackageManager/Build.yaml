@@ -6,7 +6,7 @@ download_available:
     priority: 5
     fragments: 42
     size: 12345678
-    osname: "platform"
+    osname: "WINDOWS"
     comment: "Existing package 1"
   -
     fileid: "1415958320"

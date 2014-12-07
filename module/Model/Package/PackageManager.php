@@ -21,6 +21,8 @@
 
 namespace Model\Package;
 
+use Zend\Db\Sql\Predicate;
+
 /**
  * Package manager
  */
@@ -131,6 +133,54 @@ class PackageManager
         $package = $packages->current();
         $package->exchangeArray($this->_storage->readMetadata($package['Timestamp']));
         return $package;
+    }
+
+    /**
+     * Return all packages including deployment statistics
+     *
+     * @param string $order Property to sort by
+     * @param string $direction One of [asc|desc]
+     * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model_Package
+     */
+    public function getPackages($order=null, $direction='asc')
+    {
+        // Subquery prototype for deployment statistics
+        $subquery = $this->_clientConfig->getSql()->select();
+        $subquery->columns(array(new Predicate\Literal('COUNT(hardware_id)')))
+                 ->where(
+                     array('name' => 'DOWNLOAD', 'ivalue' => new \Zend\Db\Sql\Literal('id'))
+                 );
+
+        $groups = $this->_groupInfo->getSql()->select()->columns(array('hardware_id'));
+        $nonNotified = clone $subquery;
+        $nonNotified->where(new Predicate\IsNull('tvalue'))
+                    ->where(new Predicate\NotIn('hardware_id', $groups));
+
+        $success = clone $subquery;
+        $success->where(array('tvalue' => \Model_PackageAssignment::SUCCESS));
+
+        $notified = clone $subquery;
+        $notified->where(array('tvalue' => \Model_PackageAssignment::NOTIFIED));
+
+        $error = clone $subquery;
+        $error->where(new Predicate\Like('tvalue', \Model_PackageAssignment::ERROR_PREFIX . '%'));
+
+        $select = $this->_packages->getSql()->select();
+        $select->columns(
+            array(
+                '*',
+                'num_nonnotified' => new Predicate\Expression('?', array($nonNotified)),
+                'num_success' => new Predicate\Expression('?', array($success)),
+                'num_notified' => new Predicate\Expression('?', array($notified)),
+                'num_error' => new Predicate\Expression('?', array($error)),
+            )
+        );
+        $select->join('download_enable', 'download_available.fileid = download_enable.fileid', 'id');
+
+        $package = new \Model_Package;
+        $select->order(\Model_Package::getOrder($order, $direction, $package->getPropertyMap()));
+
+        return $this->_packages->selectWith($select);
     }
 
     /**

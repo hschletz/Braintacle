@@ -204,55 +204,7 @@ class Model_Package extends Model_Abstract
      */
     public function fetchAll($order=null, $direction='asc')
     {
-        $db = Model_Database::getAdapter();
-
-        $subqueryNonnotified = $db->select()
-            ->from('devices', 'COUNT(devices.hardware_id)')
-            ->joinLeft('hardware', 'devices.hardware_id=hardware.id', array())
-            ->where("devices.name='DOWNLOAD'")
-            ->where('devices.ivalue=download_enable.id')
-            ->where('devices.tvalue IS NULL')
-            ->where("hardware.deviceid != '_SYSTEMGROUP_'");
-        $subquerySuccess = $db->select()
-            ->from('devices', 'COUNT(hardware_id)')
-            ->where("name='DOWNLOAD'")
-            ->where('ivalue=download_enable.id')
-            ->where("tvalue='SUCCESS'");
-        $subqueryNotified = $db->select()
-            ->from('devices', 'COUNT(hardware_id)')
-            ->where("name='DOWNLOAD'")
-            ->where('ivalue=download_enable.id')
-            ->where("tvalue='NOTIFIED'");
-        $subqueryError = $db->select()
-            ->from('devices', 'COUNT(hardware_id)')
-            ->where("name='DOWNLOAD'")
-            ->where('ivalue=download_enable.id')
-            ->where("tvalue LIKE 'ERR%'");
-
-        $select = $db->select()
-            ->from(
-                'download_available', array(
-                    'fileid',
-                    'name',
-                    'priority',
-                    'fragments',
-                    'size',
-                    'osname',
-                    'comment',
-                )
-            )
-            ->joinLeftUsing(
-                'download_enable', 'fileid', array(
-                    'id',
-                    'num_nonnotified' => new \Zend_Db_Expr("($subqueryNonnotified)"),
-                    'num_success' => new \Zend_Db_Expr("($subquerySuccess)"),
-                    'num_notified' => new \Zend_Db_Expr("($subqueryNotified)"),
-                    'num_error' => new \Zend_Db_Expr("($subqueryError)"),
-                )
-            )
-            ->order(self::getOrder($order, $direction, $this->_propertyMap));
-
-        return $this->_fetchAll($select->query());
+        return \Library\Application::getService('Model\Package\PackageManager')->getPackages($order, $direction);
     }
 
     /**
