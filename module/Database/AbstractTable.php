@@ -155,7 +155,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
         $select->columns(array($name), false);
         $col = array();
         foreach ($this->selectWith($select) as $row) {
-            $col[] = $row[$name];
+            $col[] = $row->$name; // TODO switch back to array interface after elimitation of Model_Abstract bridge
         }
         return $col;
     }

@@ -94,6 +94,11 @@
  */
 abstract class Model_Abstract implements Iterator, ArrayAccess
 {
+    /**
+     * Have __set() throw exception when setting unmapped properties instead of ignoring them
+     * @var bool
+     */
+    protected $_forceValidProperties = true;
 
     /**
      * The property map.
@@ -205,7 +210,7 @@ abstract class Model_Abstract implements Iterator, ArrayAccess
     {
         if (in_array($property, $this->_propertyMap)) {
             $this->_data[$property] = $value;
-        } else {
+        } elseif ($this->_forceValidProperties) {
             throw new UnexpectedValueException(
                 'Unknown property: ' . $property
             );

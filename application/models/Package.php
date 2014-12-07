@@ -73,6 +73,8 @@
  */
 class Model_Package extends Model_Abstract
 {
+    /** {@inheritdoc} */
+    protected $_forceValidProperties = false;
 
     /** {@inheritdoc} */
     protected $_propertyMap = array(
@@ -88,15 +90,15 @@ class Model_Package extends Model_Abstract
         'NumSuccess' => 'num_success',
         'NumNotified' => 'num_notified',
         'NumError' => 'num_error',
-        'Hash' => 'DIGEST',
-        'DeployAction' => 'ACT',
-        'ActionParam' => 'actionParam',
-        'Warn' => 'NOTIFY_USER',
-        'WarnMessage' => 'NOTIFY_TEXT',
-        'WarnCountdown' => 'NOTIFY_COUNTDOWN',
-        'WarnAllowAbort' => 'NOTIFY_CAN_ABORT',
-        'WarnAllowDelay' => 'NOTIFY_CAN_DELAY',
-        'PostInstMessage' => 'NEED_DONE_ACTION_TEXT',
+        'Hash' => 'Hash',
+        'DeployAction' => 'DeployAction',
+        'ActionParam' => 'ActionParam',
+        'Warn' => 'Warn',
+        'WarnMessage' => 'WarnMessage',
+        'WarnCountdown' => 'WarnCountdown',
+        'WarnAllowAbort' => 'WarnAllowAbort',
+        'WarnAllowDelay' => 'WarnAllowDelay',
+        'PostInstMessage' => 'PostInstMessage',
         'MaxFragmentSize' => 'maxFragmentSize',
         'FileName' => 'fileName',
         'FileLocation' => 'fileLocation',
@@ -198,11 +200,9 @@ class Model_Package extends Model_Abstract
      *
      * @param string $order Logical property to sort by. Default: null
      * @param string $direction one of [asc|desc].
-     * @param array $conditions additional WHERE conditions
-     * @param array $args arguments which replace placeholders in $conditions
      * @return \Model_Package[]
      */
-    public function fetchAll($order=null, $direction='asc', $conditions=array(), $args=array())
+    public function fetchAll($order=null, $direction='asc')
     {
         $db = Model_Database::getAdapter();
 
@@ -252,11 +252,7 @@ class Model_Package extends Model_Abstract
             )
             ->order(self::getOrder($order, $direction, $this->_propertyMap));
 
-        foreach ($conditions as $condition) {
-            $select->where($condition);
-        }
-
-        return $this->_fetchAll($select->query(null, $args));
+        return $this->_fetchAll($select->query());
     }
 
     /**
@@ -300,29 +296,16 @@ class Model_Package extends Model_Abstract
         $this->_errors = array();
         $this->setName($name); // Set name unconditionally, even on subsequent errors
 
-        // Clone properties from database
-        $packages = $this->fetchAll(
-            null,
-            null,
-            array('name=?'),
-            array($name)
-        );
-        if (!$packages) {
-            $this->_setError('There is no package with name \'%s\'.', $name);
+        try {
+            $package = \Library\Application::getService('Model\Package\PackageManager')->getPackage($name);
+            foreach ($package as $property => $value) {
+                $this->setProperty($property, $value);
+            }
+            return true;
+        } catch (\Exception $e) {
+            $this->_errors[] = $e->getMessage();
             return false;
         }
-        foreach ($packages[0] as $property => $value) {
-            $this->setProperty($property, $value);
-        }
-
-        // Clone properties from metafile
-        $storage = \Library\Application::getService('Model\Package\Storage\Direct');
-        $metadata = $storage->readMetadata($this['Timestamp']);
-        foreach ($metadata as $property => $value) {
-            $this->setProperty($property, $value);
-        }
-
-        return true;
     }
 
     /**

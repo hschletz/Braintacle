@@ -37,6 +37,43 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $this->assertFalse($this->_getModel()->packageExists('new_package'));
     }
 
+    public function testGetPackage()
+    {
+        $timestamp = new \Zend_Date(1415958320, \Zend_Date::TIMESTAMP);
+        $packageData = array(
+            'Timestamp' => $timestamp,
+            'Name' => 'package2',
+            'Priority' => '5',
+            'NumFragments' => '42',
+            'Size' => '12345678',
+            'Platform' => 'linux',
+            'Comment' => 'Existing package 2',
+        );
+        $metadata = array(
+            'DeployAction' => 'DeployAction',
+            'ActionParam' => 'ActionParam',
+            'Warn' => 'Warn',
+            'WarnMessage' => 'WarnMessage',
+            'WarnCountdown' => 'WarnCountdown',
+            'WarnAllowAbort' => 'WarnAllowAbort',
+            'WarnAllowDelay' => 'WarnAllowDelay',
+            'PostInstMessage' => 'PostInstMessage',
+        );
+        $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
+        $storage->expects($this->once())->method('readMetadata')->with($timestamp)->willReturn($metadata);
+        $model = $this->_getModel(array('Model\Package\Storage\Direct' => $storage));
+        $package = $model->getPackage('package2');
+        $this->assertInstanceOf('Model_Package', $package);
+        $this->assertEquals($packageData + $metadata + array('EnabledId' => '2'), $package->getArrayCopy());
+    }
+
+    public function testGetPackageInvalidName()
+    {
+        $this->setExpectedException('RuntimeException', "There is no package with name 'invalid'");
+        $model = $this->_getModel();
+        $model->getPackage('invalid');
+    }
+
     public function buildProvider()
     {
         $sourceContent = 'abcdef';

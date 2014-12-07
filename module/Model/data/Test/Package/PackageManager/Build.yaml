@@ -14,7 +14,7 @@ download_available:
     priority: 5
     fragments: 42
     size: 12345678
-    osname: "platform"
+    osname: "LINUX"
     comment: "Existing package 2"
   -
     fileid: "#TIMESTAMP#"

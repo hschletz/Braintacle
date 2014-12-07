@@ -23,6 +23,8 @@ Namespace Database\Table;
 
 /**
  * "download_available" table
+ *
+ * Produces \Model_Package result sets.
  */
 class Packages extends \Database\AbstractTable
 {
@@ -33,6 +35,9 @@ class Packages extends \Database\AbstractTable
     public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'download_available';
+        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
+            null, $serviceLocator->get('Model\Package\Package')
+        );
         parent::__construct($serviceLocator);
     }
 }
