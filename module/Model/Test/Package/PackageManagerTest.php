@@ -711,7 +711,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $model->delete($data);
     }
 
-    public function testUpdateComputersNoActionRequired()
+    public function testUpdateAssignmentsNoActionRequired()
     {
         $this->_getModel()->updateAssignments(1, 3, false, false, false, false, false);
 
@@ -740,7 +740,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
      * Test updateAssignments() with various filters
      * @dataProvider updateAssignmentsProvider
      */
-    public function testUpdateComputers(
+    public function testUpdateAssignments(
         $datasetName,
         $deployNonnotified,
         $deploySuccess,
