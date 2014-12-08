@@ -195,7 +195,7 @@ class DomDocumentTest extends \PHPUnit_Framework_TestCase
         $filename = vfsStream::newFile('test.xml')->withContent($content)->at($root)->url();
         $this->setExpectedException('RuntimeException', "$filename is unreadable or has invalid content");
         $document = new DomDocument;
-        @$document->load($filename);
+        $document->load($filename);
     }
 
     public function testLoadFileUnreadable()
@@ -205,6 +205,6 @@ class DomDocumentTest extends \PHPUnit_Framework_TestCase
         $filename = $root->url() . '/test.xml';
         $this->setExpectedException('RuntimeException', "$filename is unreadable or has invalid content");
         $document = new DomDocument;
-        @$document->load($filename);
+        $document->load($filename);
     }
 }

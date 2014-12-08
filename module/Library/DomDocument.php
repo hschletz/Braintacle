@@ -150,7 +150,7 @@ class DomDocument extends \DOMDocument
      */
     public function load($filename, $options=0)
     {
-        if (parent::load($filename, $options)) {
+        if (@parent::load($filename, $options)) {
             return true;
         } else {
             throw new \RuntimeException($filename . ' is unreadable or has invalid content');
