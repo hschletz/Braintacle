@@ -117,7 +117,7 @@ class PackageManager
      *
      * @param string $name Package name
      * @return \Model_Package Package object containing all data except content and deployment statistics
-     * @throws RuntimeException if no package with given name exists
+     * @throws RuntimeException if no package with given name exists or an error occurs
      */
     public function getPackage($name)
     {
@@ -125,14 +125,18 @@ class PackageManager
         $select->join('download_enable', 'download_available.fileid = download_enable.fileid', 'id')
                ->where(array('name' => $name));
 
-        $packages = $this->_packages->selectWith($select);
-        if (!$packages->count()) {
-            throw new RuntimeException("There is no package with name '$name'");
-        }
+        try {
+            $packages = $this->_packages->selectWith($select);
+            if (!$packages->count()) {
+                throw new \RuntimeException("There is no package with name '$name'");
+            }
 
-        $package = $packages->current();
-        $package->exchangeArray($this->_storage->readMetadata($package['Timestamp']));
-        return $package;
+            $package = $packages->current();
+            $package->exchangeArray($this->_storage->readMetadata($package['Timestamp']));
+            return $package;
+        } catch (\Exception $e) {
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /**

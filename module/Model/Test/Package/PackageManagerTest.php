@@ -74,6 +74,15 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $model->getPackage('invalid');
     }
 
+    public function testGetPackageError()
+    {
+        $this->setExpectedException('Model\Package\RuntimeException', 'metadata error');
+        $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
+        $storage->method('readMetadata')->will($this->throwException(new \RuntimeException('metadata error')));
+        $model = $this->_getModel(array('Model\Package\Storage\Direct' => $storage));
+        $model->getPackage('package1');
+    }
+
     public function getPackagesProvider()
     {
         $package1 =  array (
