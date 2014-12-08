@@ -27,10 +27,10 @@ namespace Console\Controller;
 class PackageController extends \Zend\Mvc\Controller\AbstractActionController
 {
     /**
-     * Package prototype
-     * @var \Model_Package
+     * Package manager
+     * @var \Model\Package\PackageManager
      */
-    protected $_package;
+    protected $_packageManager;
 
     /**
      * Application config
@@ -53,19 +53,19 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Constructor
      *
-     * @param \Model_Package $package
+     * @param \Model\Package\PackageManager $packageManager
      * @param \Model\Config $config
      * @param \Console\Form\Package\Build $buildForm
      * @param \Console\Form\Package\Update $updateForm
      */
     public function __construct(
-        \Model_Package $package,
+        \Model\Package\PackageManager $packageManager,
         \Model\Config $config,
         \Console\Form\Package\Build $buildForm,
         \Console\Form\Package\Update $updateForm
     )
     {
-        $this->_package = $package;
+        $this->_packageManager = $packageManager;
         $this->_config = $config;
         $this->_buildForm = $buildForm;
         $this->_updateForm = $updateForm;
@@ -80,7 +80,7 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
     {
         $sorting = $this->getOrder('Name');
         return array(
-            'packages' => $this->_package->fetchAll(
+            'packages' => $this->_packageManager->getPackages(
                 $sorting['order'],
                 $sorting['direction']
             ),
@@ -155,8 +155,9 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
         $flashMessenger = $this->flashMessenger();
 
         $oldName = $this->params()->fromQuery('name');
-        $oldPackage = clone $this->_package;
-        if (!$oldPackage->fromName($oldName)) {
+        try {
+            $oldPackage = $this->_packageManager->getPackage($oldName);
+        } catch (\Model\Package\RuntimeException $e) {
             $flashMessenger->addErrorMessage(
                 array($this->_("Could not retrieve data from package '%s'.") => $oldName)
             );
@@ -169,17 +170,18 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
             if ($form->isValid()) {
                 $data = $form->getData();
                 $names = array($oldName, $data['Name']);
-                $newPackage = $this->_buildPackage($data);
-                if ($newPackage) {
-                    $newPackage->updateComputers(
-                        $oldPackage,
+                if ($this->_buildPackage($data)) {
+                    $newPackage = $this->_packageManager->getPackage($data['Name']);
+                    $this->_packageManager->updateAssignments(
+                        $oldPackage['EnabledId'],
+                        $newPackage['EnabledId'],
                         $data['Deploy']['Nonnotified'],
                         $data['Deploy']['Success'],
                         $data['Deploy']['Notified'],
                         $data['Deploy']['Error'],
                         $data['Deploy']['Groups']
                     );
-                    $success = $this->_deletePackage($oldName);
+                    $success = $this->_deletePackage($oldPackage);
                 } else {
                     $success = false;
                 }
@@ -205,13 +207,13 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
                         'Error' => $this->_config->defaultDeployError,
                         'Groups' => $this->_config->defaultDeployGroups,
                     ),
+                    'MaxFragmentSize' => $this->_config->defaultMaxFragmentSize,
                     'Name' => $oldPackage['Name'],
                     'Comment' => $oldPackage['Comment'],
                     'Platform' => $oldPackage['Platform'],
                     'DeployAction' => $oldPackage['DeployAction'],
                     'ActionParam' => $oldPackage['ActionParam'],
                     'Priority' => $oldPackage['Priority'],
-                    'MaxFragmentSize' => $this->_config->defaultMaxFragmentSize,
                     'Warn' => $oldPackage['Warn'],
                     'WarnMessage' => $oldPackage['WarnMessage'],
                     'WarnCountdown' => $oldPackage['WarnCountdown'],
@@ -228,7 +230,7 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
      * Build a package and send feedback via flashMessenger
      *
      * @param array $data Package data
-     * @return \Model_Package New package on success, NULL on failure
+     * @return bool Success
      */
     protected function _buildPackage($data)
     {
@@ -237,62 +239,46 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
         $data['FileType'] = $data['File']['type'];
 
         $flashMessenger = $this->flashMessenger();
-
-        $package = clone $this->_package;
-        $package->fromArray($data);
         $name = $data['Name'];
 
-        if ($package->build(true)) {
+        try {
+            $this->_packageManager->build($data, true);
             $flashMessenger->addSuccessMessage(
                 array($this->_('Package \'%s\' was successfully created.') => $name)
             );
             $flashMessenger->setNamespace('packageName');
             $flashMessenger->addMessage($name);
-            $returnValue = $package;
-        } else {
+            return true;
+        } catch (\Model\Package\RuntimeException $e) {
             $flashMessenger->addErrorMessage(
                 array($this->_('Error creating Package \'%s\':') => $name)
             );
-            $returnValue = null;
+            return false;
         }
-
-        foreach ($package->getErrors() as $message) {
-            $flashMessenger->addInfoMessage($message);
-        }
-
-        return $returnValue;
     }
 
     /**
      * Delete a package and send feedback via flashMessenger
      *
-     * @param string $name Package name
+     * @param string|\Model_Package $package Package or package name
      * @return bool Success
      */
-    protected function _deletePackage($name)
+    protected function _deletePackage($package)
     {
         $flashMessenger = $this->flashMessenger();
-        $package = clone $this->_package;
-
-        // Check package for valid data
-        if ($package->fromName($name)) {
-            $success = $package->delete();
-        } else {
-            $success = false;
-        }
-        if ($success) {
+        try {
+            if (is_string($package)) {
+                $package = $this->_packageManager->getPackage($package);
+            }
+            $name = $package['Name'];
+            $this->_packageManager->delete($package);
             $flashMessenger->addSuccessMessage(
                 array($this->_('Package \'%s\' was successfully deleted.') => $name)
             );
-        } else {
-            $flashMessenger->addErrorMessage(
-                array($this->_('Package \'%s\' could not be deleted.') => $name)
-            );
+            return true;
+        } catch (\Model\Package\RuntimeException $e) {
+            $flashMessenger->addErrorMessage('Package could not be deleted.');
+            return false;
         }
-        foreach ($package->getErrors() as $message) {
-            $flashMessenger->addInfoMessage($message);
-        }
-
-        return $success;
     }
 }

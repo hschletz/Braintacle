@@ -27,10 +27,10 @@ namespace Console\Test\Controller;
 class PackageControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
-     * Package mock
-     * @var \Model_Package
+     * Package manager mock
+     * @var \Model\Package\PackageManager
      */
-    protected $_package;
+    protected $_packageManager;
 
     /**
      * Config mock
@@ -55,7 +55,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
      */
     public function setUp()
     {
-        $this->_package = $this->getMock('Model_Package');
+        $this->_packageManager = $this->getMockBuilder('Model\Package\PackageManager')
+                                      ->disableOriginalConstructor()
+                                      ->getMock();
         $this->_config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
         $this->_buildForm = $this->getMock('Console\Form\Package\Build');
         $this->_updateForm = $this->getMock('Console\Form\Package\Update');
@@ -66,7 +68,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
     protected function _createController()
     {
         return new \Console\Controller\PackageController(
-            $this->_package,
+            $this->_packageManager,
             $this->_config,
             $this->_buildForm,
             $this->_updateForm
@@ -107,9 +109,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'NumError' => 0,
             ),
         );
-        $this->_package->expects($this->once())
-                       ->method('fetchAll')
-                       ->will($this->returnValue($packages));
+        $this->_packageManager->expects($this->once())->method('getPackages')->willReturn($packages);
         $this->dispatch('/console/package/index/');
         $this->assertResponseStatusCode(200);
 
@@ -187,9 +187,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $flashMessenger->addInfoMessage('info');
         $flashMessenger->setNamespace('packageName')->addMessage('<br>');
 
-        $this->_package->expects($this->once())
-                       ->method('fetchAll')
-                       ->will($this->returnValue(array()));
+        $this->_packageManager->expects($this->once())->method('getPackages')->willReturn(array());
         $this->_disableTranslator();
         $this->dispatch('/console/package/index/');
         $this->assertResponseStatusCode(200);
@@ -235,9 +233,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
         $this->_getControllerPlugin('FlashMessenger')->setNamespace('packageName')->addMessage('name1');
-        $this->_package->expects($this->once())
-                       ->method('fetchAll')
-                       ->will($this->returnValue($packages));
+        $this->_packageManager->expects($this->once())->method('getPackages')->willReturn($packages);
         $this->dispatch('/console/package/index/');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryCount(
@@ -278,8 +274,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_buildForm->expects($this->once())
                          ->method('render')
                          ->willReturn('<form></form>');
-        $this->_package->expects($this->never())
-                       ->method('build');
+        $this->_packageManager->expects($this->never())->method('build');
         $this->dispatch('/console/package/build');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//form');
@@ -299,20 +294,16 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_buildForm->expects($this->once())
                          ->method('render')
                          ->willReturn('<form></form>');
-        $this->_package->expects($this->never())
-                       ->method('build');
-        $this->_package->expects($this->never())
-                       ->method('build');
+        $this->_packageManager->expects($this->never())->method('build');
         $this->dispatch('/console/package/build', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//form');
     }
 
-    public function testBuildActionPostValidSuccessWithPostinst()
+    public function testBuildActionPostValidSuccess()
     {
         $postData = array(
             'Name' => 'packageName',
-            'PostInstMessage' => 'postinst',
         );
         $fileSpec = array(
             'name' => 'file_name',
@@ -321,7 +312,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
         $packageData = array(
             'Name' => 'packageName',
-            'PostInstMessage' => 'postinst',
             'File' => array(
                 'name' => 'file_name',
                 'tmp_name' => 'file_tmp_name',
@@ -348,52 +338,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/package/index/');
     }
 
-    public function testBuildActionPostValidErrorWithoutPostinst()
-    {
-        $postData = array(
-            'Name' => 'packageName',
-            'PostInstMessage' => '',
-        );
-        $fileSpec = array(
-            'name' => 'file_name',
-            'tmp_name' => 'file_tmp_name',
-            'type' => 'file_type',
-        );
-        $packageData = array(
-            'Name' => 'packageName',
-            'PostInstMessage' => '',
-            'File' => array(
-                'name' => 'file_name',
-                'tmp_name' => 'file_tmp_name',
-                'type' => 'file_type',
-            ),
-            'FileName' => 'file_name',
-            'FileLocation' => 'file_tmp_name',
-            'FileType' => 'file_type',
-        );
-        $this->getRequest()->getFiles()->set('File', $fileSpec);
-        $formData = $postData + array('File' => $fileSpec);
-        $this->_buildForm->expects($this->once())
-                         ->method('setData')
-                         ->with($formData);
-        $this->_buildForm->expects($this->once())
-                         ->method('getData')
-                         ->willReturn($formData);
-        $this->_buildForm->expects($this->once())
-                         ->method('isValid')
-                         ->willReturn(true);
-        $this->_buildForm->expects($this->never())
-                         ->method('render');
-        $this->_testBuildPackage('/console/package/build', $postData, $packageData, false);
-        $this->assertRedirectTo('/console/package/index/');
-    }
-
     public function testDeleteActionGet()
     {
-        $this->_package->expects($this->never())
-                       ->method('fromName');
-        $this->_package->expects($this->never())
-                       ->method('delete');
+        $this->_packageManager->expects($this->never())->method('delete');
         $this->dispatch('/console/package/delete/?name=Name');
         $this->assertResponseStatusCode(200);
         $this->assertContains("'Name'", $this->getResponse()->getContent());
@@ -401,36 +348,43 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionPostNo()
     {
-        $this->_package->expects($this->never())
-                       ->method('fromName');
-        $this->_package->expects($this->never())
-                       ->method('delete');
+        $this->_packageManager->expects($this->never())->method('delete');
         $this->dispatch('/console/package/delete/?name=Name', 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/package/index/');
     }
 
     public function testDeleteActionPostYesSuccess()
     {
-        $this->_package->expects($this->once())
-                       ->method('fromName')
-                       ->with('Name')
-                       ->will($this->returnValue(true));
-        $this->_testDeletePackage('/console/package/delete/?name=Name', array('yes' => 'Yes'), 'Name', true);
+        $package = array('Name' => 'Name');
+        $this->_packageManager->expects($this->once())->method('getPackage')->with('Name')->willReturn($package);
+        $this->_testDeletePackage('/console/package/delete/?name=Name', array('yes' => 'Yes'), 'Name', $package, true);
         $this->assertRedirectTo('/console/package/index/');
     }
 
     public function testDeleteActionPostYesError()
     {
-        $this->_package->expects($this->once())
-                       ->method('fromName')
-                       ->with('Name')
-                       ->will($this->returnValue(false));
-        $this->_testDeletePackage('/console/package/delete/?name=Name', array('yes' => 'Yes'), 'Name', false);
+        $package = array('Name' => 'Name');
+        $this->_packageManager->expects($this->once())->method('getPackage')->with('Name')->willReturn($package);
+        $this->_testDeletePackage('/console/package/delete/?name=Name', array('yes' => 'Yes'), 'Name', $package, false);
         $this->assertRedirectTo('/console/package/index/');
     }
 
     public function testUpdateActionGet()
     {
+        $packageData = array(
+            'Name' => 'Name',
+            'Comment' => 'Comment',
+            'Platform' => 'Platform',
+            'DeployAction' => 'DeployAction',
+            'ActionParam' => 'ActionParam',
+            'Priority' => 'Priority',
+            'Warn' => 'Warn',
+            'WarnMessage' => 'WarnMessage',
+            'WarnCountdown' => 'WarnCountdown',
+            'WarnAllowAbort' => 'WarnAllowAbort',
+            'WarnAllowDelay' => 'WarnAllowDelay',
+            'PostInstMessage' => 'PostInstMessage',
+        );
         $formData = array(
             'Deploy' => array(
                 'Nonnotified' => 'defaultDeployNonnotified',
@@ -439,20 +393,10 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'Error' => 'defaultDeployError',
                 'Groups' => 'defaultDeployGroups',
             ),
-            'Name' => 'Name',
-            'Comment' => 'Comment',
-            'Platform' => 'Platform',
-            'DeployAction' => 'DeployAction',
-            'ActionParam' => 'ActionParam',
-            'Priority' => 'Priority',
             'MaxFragmentSize' => 'defaultMaxFragmentSize',
-            'Warn' => 'Warn',
-            'WarnMessage' => 'WarnMessage',
-            'WarnCountdown' => 'WarnCountdown',
-            'WarnAllowAbort' => 'WarnAllowAbort',
-            'WarnAllowDelay' => 'WarnAllowDelay',
-            'PostInstMessage' => 'PostInstMessage',
         );
+        $formData += $packageData;
+
         $this->_config->expects($this->exactly(6))
                       ->method('__get')
                       ->will($this->returnArgument(0));
@@ -466,19 +410,13 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_updateForm->expects($this->once())
                           ->method('render')
                           ->willReturn('<form></form>');
-        $this->_package->expects($this->once())
-                       ->method('fromName')
-                       ->with('oldName')
-                       ->willReturn(true);
-        $this->_package->expects($this->exactly(12))
-                       ->method('offsetGet')
-                       ->will($this->returnArgument(0));
-        $this->_package->expects($this->never())
-                       ->method('build');
-        $this->_package->expects($this->never())
-                       ->method('updateComputers');
-        $this->_package->expects($this->never())
-                       ->method('delete');
+        $this->_packageManager->expects($this->once())
+                              ->method('getPackage')
+                              ->with('oldName')
+                              ->willReturn($packageData);
+        $this->_packageManager->expects($this->never())->method('build');
+        $this->_packageManager->expects($this->never())->method('updateAssignments');
+        $this->_packageManager->expects($this->never())->method('delete');
         $this->dispatch('/console/package/update/?name=oldName');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//form');
@@ -498,16 +436,10 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_updateForm->expects($this->once())
                           ->method('render')
                           ->willReturn('<form></form>');
-        $this->_package->expects($this->once())
-                       ->method('fromName')
-                       ->with('oldName')
-                       ->will($this->returnValue(true));
-        $this->_package->expects($this->never())
-                       ->method('build');
-        $this->_package->expects($this->never())
-                       ->method('updateComputers');
-        $this->_package->expects($this->never())
-                       ->method('delete');
+        $this->_packageManager->expects($this->never())->method('build');
+        $this->_packageManager->expects($this->never())->method('updateAssignments');
+        $this->_packageManager->expects($this->never())->method('delete');
+
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//form');
@@ -524,7 +456,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'Groups' => '1',
             ),
             'Name' => 'newName',
-            'PostInstMessage' => '',
         );
         $fileSpec = array(
             'name' => 'file_name',
@@ -540,7 +471,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'Groups' => '1',
             ),
             'Name' => 'newName',
-            'PostInstMessage' => '',
             'File' => array(
                 'name' => 'file_name',
                 'tmp_name' => 'file_tmp_name',
@@ -552,6 +482,8 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->getRequest()->getFiles()->set('File', $fileSpec);
         $formData = $postData + array('File' => $fileSpec);
+        $oldPackage = array('EnabledId' => '1', 'Name' => 'oldName');
+
         $this->_updateForm->expects($this->once())
                           ->method('setData')
                           ->with($formData);
@@ -563,16 +495,23 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                           ->willReturn(true);
         $this->_updateForm->expects($this->never())
                           ->method('render');
-        $this->_package->expects($this->exactly(2))
-                       ->method('fromName')
-                       ->with('oldName')
-                       ->will($this->returnValue(true));
-        $this->_package->expects($this->once())
-                       ->method('updateComputers')
-                       ->with($this->isInstanceOf('Model_Package', true, false, true, false, true));
-        $this->_package->expects($this->once())
-                       ->method('delete')
-                       ->will($this->returnValue(true));
+        $this->_packageManager->expects($this->exactly(2))
+                              ->method('getPackage')
+                              ->withConsecutive(array('oldName'), array('newName'))
+                              ->will(
+                                  $this->onConsecutiveCalls(
+                                      $oldPackage,
+                                      array('EnabledId' => '2')
+                                  )
+                              );
+        $this->_packageManager->expects($this->once())
+                              ->method('build')
+                              ->with($packageData, true);
+        $this->_packageManager->expects($this->once())
+                              ->method('updateAssignments')
+                              ->with('1', '2', '1', '0', '1', '0', '1');
+        $this->_packageManager->expects($this->once())->method('delete');
+
         $this->_testBuildPackage(
             '/console/package/update/?name=oldName',
             $postData,
@@ -597,36 +536,61 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'Groups' => '0',
             ),
             'Name' => 'newName',
+        );
+        $fileSpec = array(
+            'name' => 'file_name',
+            'tmp_name' => 'file_tmp_name',
+            'type' => 'file_type',
+        );
+        $packageData = array(
+            'Deploy' => array(
+                'Nonnotified' => '0',
+                'Success' => '1',
+                'Notified' => '0',
+                'Error' => '1',
+                'Groups' => '0',
+            ),
+            'Name' => 'newName',
             'File' => array(
                 'name' => 'file_name',
-                'tmp_name' => 'file_path',
+                'tmp_name' => 'file_tmp_name',
                 'type' => 'file_type',
             ),
-            'PostInstMessage' => '',
+            'FileName' => 'file_name',
+            'FileLocation' => 'file_tmp_name',
+            'FileType' => 'file_type',
         );
+        $oldPackage = array('EnabledId' => '1', 'Name' => 'oldName');
+        $this->getRequest()->getFiles()->set('File', $fileSpec);
+        $formData = $postData + array('File' => $fileSpec);
+
         $this->_updateForm->expects($this->once())
                           ->method('setData')
-                          ->with($postData);
+                          ->with($formData);
         $this->_updateForm->expects($this->once())
                           ->method('getData')
-                          ->willReturn($postData);
+                          ->willReturn($formData);
         $this->_updateForm->expects($this->once())
                           ->method('isValid')
                           ->willReturn(true);
         $this->_updateForm->expects($this->never())
                           ->method('render');
-        $this->_package->expects($this->exactly(2))
-                       ->method('fromName')
-                       ->with('oldName')
-                       ->will($this->returnValue(true));
-        $this->_package->expects($this->once())
-                       ->method('build')
-                       ->with(true)
-                       ->will($this->returnValue(true));
-        $this->_package->expects($this->once())
-                       ->method('updateComputers')
-                       ->with($this->isInstanceOf('Model_Package', false, true, false, true, false));
-        $this->_testDeletePackage('/console/package/update/?name=oldName', $postData, 'oldName', true);
+        $this->_packageManager->expects($this->exactly(2))
+                              ->method('getPackage')
+                              ->withConsecutive(array('oldName'), array('newName'))
+                              ->will(
+                                  $this->onConsecutiveCalls(
+                                      $oldPackage,
+                                      array('EnabledId' => '2')
+                                  )
+                              );
+        $this->_packageManager->expects($this->once())
+                              ->method('build')
+                              ->with($packageData, true);
+        $this->_packageManager->expects($this->once())
+                              ->method('updateAssignments')
+                              ->with('1', '2', '0', '1', '0', '1', '0');
+        $this->_testDeletePackage('/console/package/update/?name=oldName', $postData, 'oldName', $oldPackage, true);
     }
 
     public function testUpdateActionPostValidBuildError()
@@ -640,7 +604,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'Groups' => '1',
             ),
             'Name' => 'newName',
-            'PostInstMessage' => '',
         );
         $fileSpec = array(
             'name' => 'file_name',
@@ -656,7 +619,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'Groups' => '1',
             ),
             'Name' => 'newName',
-            'PostInstMessage' => '',
             'File' => array(
                 'name' => 'file_name',
                 'tmp_name' => 'file_tmp_name',
@@ -679,14 +641,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                           ->willReturn(true);
         $this->_updateForm->expects($this->never())
                           ->method('render');
-        $this->_package->expects($this->once())
-                       ->method('fromName')
-                       ->with('oldName')
-                       ->will($this->returnValue(true));
-        $this->_package->expects($this->never())
-                       ->method('updateComputers');
-        $this->_package->expects($this->never())
-                       ->method('delete');
+        $this->_packageManager->expects($this->once())->method('getPackage')->with('oldName');
+        $this->_packageManager->expects($this->never())->method('updateAssignments');
+        $this->_packageManager->expects($this->never())->method('delete');
         $this->_testBuildPackage(
             '/console/package/update/?name=oldName',
             $postData,
@@ -708,16 +665,13 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                           ->method('isValid');
         $this->_updateForm->expects($this->never())
                           ->method('render');
-        $this->_package->expects($this->once())
-                       ->method('fromName')
-                       ->with('oldName')
-                       ->will($this->returnValue(false));
-        $this->_package->expects($this->never())
-                       ->method('build');
-        $this->_package->expects($this->never())
-                       ->method('updateComputers');
-        $this->_package->expects($this->never())
-                       ->method('delete');
+        $this->_packageManager->expects($this->once())
+                              ->method('getPackage')
+                              ->with('oldName')
+                              ->will($this->throwException(new \Model\Package\RuntimeException));
+        $this->_packageManager->expects($this->never())->method('build');
+        $this->_packageManager->expects($this->never())->method('updateAssignments');
+        $this->_packageManager->expects($this->never())->method('delete');
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
         $this->assertRedirectTo('/console/package/index/');
         $this->assertEquals(
@@ -744,16 +698,14 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             array('format2' => array('arg3', 'arg4')),
         );
 
-        $this->_package->expects($this->once())
-                       ->method('fromArray')
-                       ->with($packageData);
-        $this->_package->expects($this->once())
-                       ->method('build')
-                       ->with(true)
-                       ->will($this->returnValue($success));
-        $this->_package->expects($this->atLeastOnce())
-                       ->method('getErrors')
-                       ->will($this->returnValue($errors));
+        if ($success) {
+            $this->_packageManager->expects($this->once())->method('build')->with($packageData, true);
+        } else {
+            $this->_packageManager->expects($this->once())
+                                  ->method('build')
+                                  ->with($packageData, true)
+                                  ->will($this->throwException(new \Model\Package\RuntimeException));
+        }
 
         $this->dispatch($url, 'POST', $postData);
         if ($success) {
@@ -789,10 +741,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 $flashMessenger->getCurrentMessagesFromNamespace('packageName')
             );
         }
-        $this->assertEquals(
-            count($extraMessages) == 2 ? array_merge($errors, $errors) : $errors,
-            $flashMessenger->getCurrentInfoMessages()
-        );
     }
 
     /**
@@ -800,25 +748,24 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
      *
      * @param string $url URL to dispatch to
      * @param array $postData $POST data
+     * @param string $name Package name
+     * @param \Model_Package $package package data
      * @param bool $success Deletion success to test
      */
-    protected function _testDeletePackage($url, $postData, $name, $success)
+    protected function _testDeletePackage($url, $postData, $name, $package, $success)
     {
         $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
         $errors = array(
             array('format1' => array('arg1', 'arg2')),
             array('format2' => array('arg3', 'arg4')),
         );
-        $this->_package->expects($this->atLeastOnce())
-                       ->method('getErrors')
-                       ->will($this->returnValue($errors));
         if ($success) {
-            $this->_package->expects($this->once())
-                           ->method('delete')
-                           ->will($this->returnValue(true));
+            $this->_packageManager->expects($this->once())->method('delete')->with($package);
         } else {
-            $this->_package->expects($this->never())
-                           ->method('delete');
+            $this->_packageManager->expects($this->once())
+                                  ->method('delete')
+                                  ->with($package)
+                                  ->will($this->throwException(new \Model\Package\RuntimeException));
         }
         $this->dispatch($url, 'POST', $postData);
         if ($success) {
@@ -836,13 +783,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 $flashMessenger->getCurrentSuccessMessages()
             );
             $this->assertEquals(
-                array(array('Package \'%s\' could not be deleted.' => 'Name')),
+                array('Package could not be deleted.'),
                 $flashMessenger->getCurrentErrorMessages()
             );
         }
-        $this->assertEquals(
-            count($flashMessenger->getCurrentSuccessMessages()) > 1 ? array_merge($errors, $errors) : $errors,
-            $flashMessenger->getCurrentInfoMessages()
-        );
     }
 }

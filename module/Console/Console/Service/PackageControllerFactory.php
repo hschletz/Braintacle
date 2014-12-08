@@ -34,7 +34,7 @@ class PackageControllerFactory implements \Zend\ServiceManager\FactoryInterface
         $serviceManager = $serviceLocator->getServiceLocator();
         $formManager = $serviceManager->get('FormElementManager');
         return new \Console\Controller\PackageController(
-            $serviceManager->get('Model\Package\Package'),
+            $serviceManager->get('Model\Package\PackageManager'),
             $serviceManager->get('Model\Config'),
             $formManager->get('Console\Form\Package\Build'),
             $formManager->get('Console\Form\Package\Update')

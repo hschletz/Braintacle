@@ -267,38 +267,34 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
      */
     public function installPackage($name)
     {
-        $package = new Model_Package;
-        if ($package->fromName($name)) {
-            $db = Model_Database::getAdapter();
+        $package = \Library\Application::getService('Model\Package\PackageManager')->getPackage($name);
+        $db = Model_Database::getAdapter();
 
-            // Check if the package is already installed or in the history
-            $selectInstalled = $db->select()
-                ->from('devices', 'hardware_id')
-                ->where('hardware_id=?', $this->getId())
-                ->where('ivalue=?', $package->getEnabledId())
-                ->where('name=\'DOWNLOAD\'');
-            $selectHistory = $db->select()
-                ->from('download_history', 'hardware_id')
-                ->where('hardware_id=?', $this->getId())
-                ->where('pkg_id=?', $package->getTimestamp()->get(Zend_Date::TIMESTAMP));
-            $select = $db->select()->union(array($selectInstalled, $selectHistory));
+        // Check if the package is already installed or in the history
+        $selectInstalled = $db->select()
+            ->from('devices', 'hardware_id')
+            ->where('hardware_id=?', $this->getId())
+            ->where('ivalue=?', $package['EnabledId'])
+            ->where('name=\'DOWNLOAD\'');
+        $selectHistory = $db->select()
+            ->from('download_history', 'hardware_id')
+            ->where('hardware_id=?', $this->getId())
+            ->where('pkg_id=?', $package['Timestamp']->get(Zend_Date::TIMESTAMP));
+        $select = $db->select()->union(array($selectInstalled, $selectHistory));
 
-            // Only proceed if the query does not deliver any results
-            if (!($select->query()->fetch())) {
-                $db->insert(
-                    'devices',
-                    array(
-                        'hardware_id' => $this->getId(),
-                        'name' => 'DOWNLOAD',
-                        'ivalue' => $package->getEnabledId(),
-                        'comments' => date(\Model_PackageAssignment::DATEFORMAT),
-                    )
-                );
-            }
-            return true;
-        } else {
-            return false;
+        // Only proceed if the query does not deliver any results
+        if (!($select->query()->fetch())) {
+            $db->insert(
+                'devices',
+                array(
+                    'hardware_id' => $this->getId(),
+                    'name' => 'DOWNLOAD',
+                    'ivalue' => $package['EnabledId'],
+                    'comments' => date(\Model_PackageAssignment::DATEFORMAT),
+                )
+            );
         }
+        return true;
     }
 
 
@@ -310,17 +306,15 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
     {
         $db = Model_Database::getAdapter();
 
-        $package = new Model_Package;
-        if ($package->fromName($name)) {
-            $db->delete(
-                'devices',
-                array(
-                    'hardware_id=?' => $this->getId(),
-                    'ivalue=?' => $package->getEnabledId(),
-                    "name LIKE 'DOWNLOAD%'"
-                )
-            );
-        }
+        $package = \Library\Application::getService('Model\Package\PackageManager')->getPackage($name);
+        $db->delete(
+            'devices',
+            array(
+                'hardware_id=?' => $this->getId(),
+                'ivalue=?' => $package['EnabledId'],
+                "name LIKE 'DOWNLOAD%'"
+            )
+        );
     }
 
     /**

@@ -55,38 +55,31 @@ require(__DIR__ . '/../module/Library/Application.php');
 $config = \Library\Application::getService('Model\Config');
 
 // Create Package
-$package = new Model_Package;
-$package->fromArray(
-    array(
-        'Name' => $name,
-        'Comment' => null,
-        'FileName' => basename($file),
-        'FileType' => $type,
-        'FileLocation' => $file,
-        'Priority' => $config->defaultPackagePriority,
-        'Platform' => $config->defaultPlatform,
-        'DeployAction' => $config->defaultAction,
-        'ActionParam' => $config->defaultActionParam,
-        'Warn' => $config->defaultWarn,
-        'WarnMessage' => $config->defaultWarnMessage,
-        'WarnCountdown' => $config->defaultWarnCountdown,
-        'WarnAllowAbort' => $config->defaultWarnAllowAbort,
-        'WarnAllowDelay' => $config->defaultWarnAllowDelay,
-        'PostInstMessage' => $config->defaultPostInstMessage,
-        'MaxFragmentSize' => $config->defaultMaxFragmentSize,
-    )
-);
-if ($package->build(false)) {
-    $errType = 'WARNING: ';
-    $message = "Package successfully built.\n";
-} else {
-    $errType = 'ERROR: ';
-    $message = "The package has not been built.\n";
+$packageManager = \Library\Application::getService('Model\Package\PackageManager');
+try {
+    $packageManager->build(
+        array(
+            'Name' => $name,
+            'Comment' => null,
+            'FileName' => basename($file),
+            'FileType' => $type,
+            'FileLocation' => $file,
+            'Priority' => $config->defaultPackagePriority,
+            'Platform' => $config->defaultPlatform,
+            'DeployAction' => $config->defaultAction,
+            'ActionParam' => $config->defaultActionParam,
+            'Warn' => $config->defaultWarn,
+            'WarnMessage' => $config->defaultWarnMessage,
+            'WarnCountdown' => $config->defaultWarnCountdown,
+            'WarnAllowAbort' => $config->defaultWarnAllowAbort,
+            'WarnAllowDelay' => $config->defaultWarnAllowDelay,
+            'PostInstMessage' => $config->defaultPostInstMessage,
+            'MaxFragmentSize' => $config->defaultMaxFragmentSize,
+        ),
+        false
+    );
+    $message = "Package successfully built.";
+} catch (\Exception $e) {
+    $message = "The package has not been built.\nReason: " . $e->getMessage();
 }
-foreach ($package->getErrors() as $msg) {
-    print $errType;
-    print $msg;
-    print "\n";
-}
-print "\n";
-print $message;
+print "$message\n";
