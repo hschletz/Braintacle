@@ -62,7 +62,6 @@ try {
             'Name' => $name,
             'Comment' => null,
             'FileName' => basename($file),
-            'FileType' => $type,
             'FileLocation' => $file,
             'Priority' => $config->defaultPackagePriority,
             'Platform' => $config->defaultPlatform,

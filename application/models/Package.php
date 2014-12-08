@@ -68,7 +68,6 @@
  *
  * - <b>FileName:</b> name of uploaded file, used only for ZIP file creation
  * - <b>FileLocation:</b> full path to uploaded file. May be deleted by build()!
- * - <b>FileType:</b> MIME type of uploaded file
  * @package Models
  */
 class Model_Package extends Model_Abstract
@@ -99,10 +98,8 @@ class Model_Package extends Model_Abstract
         'WarnAllowAbort' => 'WarnAllowAbort',
         'WarnAllowDelay' => 'WarnAllowDelay',
         'PostInstMessage' => 'PostInstMessage',
-        'MaxFragmentSize' => 'maxFragmentSize',
         'FileName' => 'fileName',
         'FileLocation' => 'fileLocation',
-        'FileType' => 'fileType',
     );
 
     /** {@inheritdoc} */
@@ -121,7 +118,6 @@ class Model_Package extends Model_Abstract
         'WarnCountdown' => 'integer',
         'WarnAllowAbort' => 'boolean',
         'WarnAllowDelay' => 'boolean',
-        'MaxFragmentSize' => 'integer',
     );
 
     /**

@@ -234,7 +234,6 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
     {
         $data['FileName'] = $data['File']['name'];
         $data['FileLocation'] = $data['File']['tmp_name'];
-        $data['FileType'] = $data['File']['type'];
 
         $flashMessenger = $this->flashMessenger();
         $name = $data['Name'];

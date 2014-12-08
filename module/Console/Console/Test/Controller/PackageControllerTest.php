@@ -315,7 +315,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             ),
             'FileName' => 'file_name',
             'FileLocation' => 'file_tmp_name',
-            'FileType' => 'file_type',
         );
         $this->getRequest()->getFiles()->set('File', $fileSpec);
         $formData = $postData + array('File' => $fileSpec);
@@ -474,7 +473,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             ),
             'FileName' => 'file_name',
             'FileLocation' => 'file_tmp_name',
-            'FileType' => 'file_type',
         );
         $this->getRequest()->getFiles()->set('File', $fileSpec);
         $formData = $postData + array('File' => $fileSpec);
@@ -554,7 +552,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             ),
             'FileName' => 'file_name',
             'FileLocation' => 'file_tmp_name',
-            'FileType' => 'file_type',
         );
         $oldPackage = array('EnabledId' => '1', 'Name' => 'oldName');
         $this->getRequest()->getFiles()->set('File', $fileSpec);
@@ -622,7 +619,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             ),
             'FileName' => 'file_name',
             'FileLocation' => 'file_tmp_name',
-            'FileType' => 'file_type',
         );
         $this->getRequest()->getFiles()->set('File', $fileSpec);
         $formData = $postData + array('File' => $fileSpec);
