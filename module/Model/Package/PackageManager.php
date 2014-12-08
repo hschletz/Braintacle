@@ -117,7 +117,7 @@ class PackageManager
      *
      * @param string $name Package name
      * @return \Model_Package Package object containing all data except content and deployment statistics
-     * @throws \RuntimeException if no package with given name exists
+     * @throws RuntimeException if no package with given name exists
      */
     public function getPackage($name)
     {
@@ -127,7 +127,7 @@ class PackageManager
 
         $packages = $this->_packages->selectWith($select);
         if (!$packages->count()) {
-            throw new \RuntimeException("There is no package with name '$name'");
+            throw new RuntimeException("There is no package with name '$name'");
         }
 
         $package = $packages->current();
@@ -188,7 +188,7 @@ class PackageManager
      *
      * @param array $data Package data
      * @param bool $deleteSource Delete source file as soon as possible
-     * @throws \RuntimeException if a package with the requested name already exists or an error occurs
+     * @throws RuntimeException if a package with the requested name already exists or an error occurs
      * @throws \InvalidArgumentException if 'Platform' key is not a valid value
      * @return integer ID of created database entry
      */
@@ -209,7 +209,7 @@ class PackageManager
                 throw new \InvalidArgumentException('Invalid platform: ' . $data['Platform']);
         }
         if ($this->packageExists($data['Name'])) {
-            throw new \RuntimeException("Package '$data[Name]' already exists");
+            throw new RuntimeException("Package '$data[Name]' already exists");
             return false;
         }
 
@@ -272,7 +272,7 @@ class PackageManager
             $id = $this->_packageDownloadInfo->selectWith($select)->current()['id'];
         } catch (\Exception $e) {
             $this->delete($data);
-            throw $e;
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
         return (integer) $id;
     }
@@ -292,6 +292,7 @@ class PackageManager
      * @param string $path Path where a new archive will be created
      * @param bool $deleteSource Delete source file after successfully creating an archive
      * @return string Path to archive file
+     * @throws RuntimeException if an error occurs
      */
     public function autoArchive($data, $path, $deleteSource)
     {
@@ -330,7 +331,7 @@ class PackageManager
                 $this->_archiveManager->closeArchive($archive, true);
                 \Library\FileObject::unlink($filename);
             }
-            throw $e;
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
         return $filename;
     }
@@ -339,19 +340,24 @@ class PackageManager
      * Delete a package
      *
      * @param array $data Package data
+     * @throws RuntimeException if an error occurs
      */
     public function delete($data)
     {
         $timestamp = $data['Timestamp']->get(\Zend_Date::TIMESTAMP);
-        $this->_clientConfig->delete(
-            array(
-                "name LIKE 'DOWNLOAD%'",
-                'ivalue IN (SELECT id FROM download_enable WHERE fileid = ?)' => $timestamp,
-            )
-        );
-        $this->_packageDownloadInfo->delete(array('fileid' => $timestamp));
-        $this->_packages->delete(array('fileid' => $timestamp));
-        $this->_storage->cleanup($data);
+        try {
+            $this->_clientConfig->delete(
+                array(
+                    "name LIKE 'DOWNLOAD%'",
+                    'ivalue IN (SELECT id FROM download_enable WHERE fileid = ?)' => $timestamp,
+                )
+            );
+            $this->_packageDownloadInfo->delete(array('fileid' => $timestamp));
+            $this->_packages->delete(array('fileid' => $timestamp));
+            $this->_storage->cleanup($data);
+        } catch (\Exception $e) {
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /**
@@ -368,6 +374,7 @@ class PackageManager
      * @param bool $deployNotified Update assignments with status 'notified'
      * @param bool $deployError Update assignments with status 'error'
      * @param bool $deployGroups Update assignments for groups
+     * @throws RuntimeException if an error occurs
      */
     public function updateAssignments(
         $oldPackageId,
@@ -408,26 +415,31 @@ class PackageManager
             $where->addPredicate($filters);
         }
 
-        // Remove DOWNLOAD_* options from updated assignments
-        $subquery = $this->_clientConfig->getSql()
-                                        ->select()
-                                        ->columns(array('hardware_id'))
-                                        ->where(array('name' => 'DOWNLOAD', $where));
-        $delete = new \Zend\Db\Sql\Where;
-        $delete->equalTo('ivalue', $oldPackageId)
-               ->in('hardware_id', $subquery)
-               ->notEqualTo('name', 'DOWNLOAD_SWITCH')
-               ->like('name', 'DOWNLOAD_%');
-        $this->_clientConfig->delete($delete);
+        try{
+            // Remove DOWNLOAD_* options from updated assignments
+            $subquery = $this->_clientConfig->getSql()
+                                            ->select()
+                                            ->columns(array('hardware_id'))
+                                            ->where(array('name' => 'DOWNLOAD', $where));
+            $delete = new \Zend\Db\Sql\Where;
+            $delete->equalTo('ivalue', $oldPackageId)
+                   ->in('hardware_id', $subquery)
+                   ->notEqualTo('name', 'DOWNLOAD_SWITCH')
+                   ->like('name', 'DOWNLOAD_%');
 
-        // Update package ID and reset status
-        $this->_clientConfig->update(
-            array(
-                'ivalue' => $newPackageId,
-                'tvalue' => \Model_PackageAssignment::NOT_NOTIFIED,
-                'comments' => date(\Model_PackageAssignment::DATEFORMAT),
-            ),
-            array('name' => 'DOWNLOAD', $where)
-        );
+            $this->_clientConfig->delete($delete);
+
+            // Update package ID and reset status
+            $this->_clientConfig->update(
+                array(
+                    'ivalue' => $newPackageId,
+                    'tvalue' => \Model_PackageAssignment::NOT_NOTIFIED,
+                    'comments' => date(\Model_PackageAssignment::DATEFORMAT),
+                ),
+                array('name' => 'DOWNLOAD', $where)
+            );
+        } catch (\Exception $e) {
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 }

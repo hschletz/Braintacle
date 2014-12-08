@@ -69,7 +69,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
     public function testGetPackageInvalidName()
     {
-        $this->setExpectedException('RuntimeException', "There is no package with name 'invalid'");
+        $this->setExpectedException('Model\Package\RuntimeException', "There is no package with name 'invalid'");
         $model = $this->_getModel();
         $model->getPackage('invalid');
     }
@@ -375,7 +375,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         try {
             $model->build($data, false);
             $this->fail('Expected exception was not thrown');
-        } catch (\RuntimeException $e) {
+        } catch (\Model\Package\RuntimeException $e) {
             $this->assertEquals("Package 'package1' already exists", $e->getMessage());
         }
     }
@@ -446,7 +446,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $model->expects($this->once())->method('autoArchive')->willReturn($source);
         $model->expects($this->once())->method('delete')->with($this->callback($checkData));
 
-        $this->setExpectedException('RuntimeException', $message);
+        $this->setExpectedException('Model\Package\RuntimeException', $message);
         $model->build($data, false);
     }
 
@@ -525,7 +525,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $archiveManager->expects($this->once())
                        ->method('createArchive')
                        ->with(\Library\ArchiveManager::ZIP, 'path/archive')
-                       ->will($this->throwException(new \RuntimeException('createArchive')));
+                       ->will($this->throwException(new \Model\Package\RuntimeException('createArchive')));
         $archiveManager->expects($this->never())
                        ->method('addFile');
         $archiveManager->expects($this->never())
@@ -534,7 +534,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         try {
             $model->autoArchive($data, 'path', true);
             $this->fail('Expected exception was not thrown');
-        } catch (\RuntimeException $e) {
+        } catch (\Model\Package\RuntimeException $e) {
             $this->assertEquals('createArchive', $e->getMessage());
             $this->assertFileExists($source);
         }
@@ -571,7 +571,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $archiveManager->expects($this->at(4))
                        ->method('closeArchive')
                        ->with($archive, false)
-                       ->will($this->throwException(new \RuntimeException('closeArchive')));
+                       ->will($this->throwException(new \Model\Package\RuntimeException('closeArchive')));
         $archiveManager->expects($this->at(5))
                        ->method('closeArchive')
                        ->with($archive, true);
@@ -579,7 +579,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         try {
             $model->autoArchive($data, $root->url(), true);
             $this->fail('Expected exception was not thrown');
-        } catch (\RuntimeException $e) {
+        } catch (\Model\Package\RuntimeException $e) {
             $this->assertEquals('closeArchive', $e->getMessage());
             $this->assertFileExists($source);
             $this->assertFileNotExists($archive);
@@ -701,6 +701,16 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         );
     }
 
+    public function testDeleteException()
+    {
+        $this->setExpectedException('Model\Package\RuntimeException', 'database error');
+        $data = array('Timestamp' => new \Zend_Date(1415958319, \Zend_Date::TIMESTAMP));
+        $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
+        $clientConfig->method('delete')->will($this->throwException(new \RuntimeException('database error')));
+        $model = $this->_getModel(array('Database\Table\ClientConfig' => $clientConfig));
+        $model->delete($data);
+    }
+
     public function testUpdateComputersNoActionRequired()
     {
         $this->_getModel()->updateAssignments(1, 3, false, false, false, false, false);
@@ -776,5 +786,15 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                 $this->assertSame($expectedDate, $date);
             }
         }
+    }
+
+    public function testUpdateAssignmentsException()
+    {
+        $this->setExpectedException('Model\Package\RuntimeException', 'database error');
+        $data = array('Timestamp' => new \Zend_Date(1415958319, \Zend_Date::TIMESTAMP));
+        $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
+        $clientConfig->method('getSql')->will($this->throwException(new \RuntimeException('database error')));
+        $model = $this->_getModel(array('Database\Table\ClientConfig' => $clientConfig));
+        $model->updateAssignments(1, 2, true, true, true, true, true);
     }
 }
