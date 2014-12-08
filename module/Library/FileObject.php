@@ -121,13 +121,17 @@ class FileObject extends \SplFileInfo implements \Iterator
      * The returned string may be shorter than $length if EOF is reached.
      * Reading beyond EOF is allowed and yields an empty string.
      *
-     * @param integer $length Number of bytes to read, must be greater than 0.
+     * @param integer $length Number of bytes to read
      * @return string
+     * @throws \InvalidArgumentException if $length is <= 0
      * @throws \RuntimeException if an error occurs
      */
     public function fread($length)
     {
-        $data = fread($this->_file, $length);
+        if ($length <= 0) {
+            throw new \InvalidArgumentException("fread() length must be > 0, $length given");
+        }
+        $data = @fread($this->_file, $length);
         // In contrast to the fread() documentation, runtime errors typically
         // yield empty or truncated strings instead of FALSE. In case of EOF
         // this is a valid result.
@@ -145,7 +149,7 @@ class FileObject extends \SplFileInfo implements \Iterator
      */
     public function fgets()
     {
-        $line = fgets($this->_file);
+        $line = @fgets($this->_file);
         if ($line === false) {
             throw new \RuntimeException('Error reading from file ' . $this->getPathname());
         }
@@ -209,7 +213,7 @@ class FileObject extends \SplFileInfo implements \Iterator
      */
     public function rewind()
     {
-        if (!rewind($this->_file)) {
+        if (!@rewind($this->_file)) {
             throw new \RuntimeException('Error rewinding file ' . $this->getPathname());
         }
         $this->_currentKey = -1;
@@ -238,15 +242,9 @@ class FileObject extends \SplFileInfo implements \Iterator
      */
     public static function fileGetContents($filename)
     {
-        // Catch possible exceptions from stream wrappers
-        $exception = null;
-        try {
-            $content = file_get_contents($filename);
-        } catch (\Exception $exception) {
-            $content = false;
-        }
+        $content = @file_get_contents($filename);
         if ($content === false) {
-            throw new \RuntimeException("Error reading from file $filename", 0, $exception);
+            throw new \RuntimeException("Error reading from file $filename");
         } else {
             return $content;
         }
@@ -265,15 +263,9 @@ class FileObject extends \SplFileInfo implements \Iterator
      */
     public static function fileGetContentsAsArray($filename, $flags=0)
     {
-        // Catch possible exceptions from stream wrappers
-        $exception = null;
-        try {
-            $content = file($filename, $flags);
-        } catch (\Exception $exception) {
-            $content = false;
-        }
+        $content = @file($filename, $flags);
         if ($content === false) {
-            throw new \RuntimeException("Error reading from file $filename", 0, $exception);
+            throw new \RuntimeException("Error reading from file $filename");
         } else {
             return $content;
         }
@@ -291,15 +283,9 @@ class FileObject extends \SplFileInfo implements \Iterator
      */
     public static function filePutContents($filename, $content)
     {
-        // Catch possible exceptions from stream wrappers
-        $exception = null;
-        try {
-            $result = file_put_contents($filename, $content);
-        } catch (\Exception $exception) {
-            $result = false;
-        }
+        $result = @file_put_contents($filename, $content);
         if ($result === false) {
-            throw new \RuntimeException("Error writing to file $filename", 0, $exception);
+            throw new \RuntimeException("Error writing to file $filename");
         }
     }
 
@@ -315,7 +301,7 @@ class FileObject extends \SplFileInfo implements \Iterator
      */
     public static function copy($oldName, $newName)
     {
-         if (!copy($oldName, $newName)) {
+         if (!@copy($oldName, $newName)) {
             throw new \RuntimeException("Error copying '$oldName' to '$newName'");
          }
     }
@@ -332,7 +318,7 @@ class FileObject extends \SplFileInfo implements \Iterator
      */
     public static function rename($oldName, $newName)
     {
-         if (!rename($oldName, $newName)) {
+         if (!@rename($oldName, $newName)) {
             throw new \RuntimeException("Error renaming '$oldName' to '$newName'");
          }
     }
@@ -345,7 +331,7 @@ class FileObject extends \SplFileInfo implements \Iterator
      */
     public static function unlink($filename)
     {
-        if (!unlink($filename)) {
+        if (!@unlink($filename)) {
             throw new \RuntimeException("Error deleting file '$filename'");
         }
     }
@@ -360,7 +346,7 @@ class FileObject extends \SplFileInfo implements \Iterator
     {
         if (file_exists($pathname)) {
             throw new \RuntimeException("Error creating directory '$pathname': path exists");
-        } elseif (!mkdir($pathname)) {
+        } elseif (!@mkdir($pathname)) {
             throw new \RuntimeException("Error creating directory '$pathname'");
         }
     }
@@ -373,7 +359,7 @@ class FileObject extends \SplFileInfo implements \Iterator
      */
     public static function rmdir($dirname)
     {
-        if (!rmdir($dirname)) {
+        if (!@rmdir($dirname)) {
             throw new \RuntimeException("Error removing directory '$dirname'");
         }
     }

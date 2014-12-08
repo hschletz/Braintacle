@@ -138,16 +138,16 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
     public function testFreadInvalidLength()
     {
         $url = vfsStream::newFile('test.txt')->withContent('test')->at($this->_root)->url();
-        $this->setExpectedException('RuntimeException', 'Error reading from file ' . $url);
+        $this->setExpectedException('InvalidArgumentException', 'fread() length must be > 0, 0 given');
         $fileObject = new FileObject($url, 'r');
-        @$fileObject->fread(0);
+        $fileObject->fread(0);
     }
 
     public function testFreadError()
     {
         $this->setExpectedException('RuntimeException', 'Error reading from file fail:');
         $fileObject = new FileObject('fail://', 'r');
-        @$fileObject->fread(10);
+        $fileObject->fread(10);
     }
 
     public function testFgetsRaw()
@@ -189,21 +189,21 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('RuntimeException', 'Error reading from file fail:');
         $fileObject = new FileObject('fail://', 'r');
-        @$fileObject->fgets();
+        $fileObject->fgets();
     }
 
     public function testNextReadError()
     {
         $this->setExpectedException('RuntimeException', 'Error reading from file fail:');
         $fileObject = new FileObject('fail://', 'r');
-        @$fileObject->next();
+        $fileObject->next();
     }
 
     public function testRewindError()
     {
         $this->setExpectedException('RuntimeException', 'Error rewinding file fail:');
         $fileObject = new FileObject('fail://', 'r');
-        @$fileObject->rewind();
+        $fileObject->rewind();
     }
 
     public function testIteratorInterfaceEmptyFile()
@@ -434,7 +434,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $oldFile = vfsStream::newDirectory('test')->at($this->_root)->url();
         $newFile = $this->_root->url() . '/test2';
         $this->setExpectedException('RuntimeException', "Error copying '$oldFile' to '$newFile'");
-        @FileObject::copy($oldFile, $newFile);
+        FileObject::copy($oldFile, $newFile);
     }
 
     public function testCopyErrorOverwriteDirWithFile()
@@ -443,7 +443,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $oldFile = vfsStream::newFile('test.txt')->withContent($content)->at($this->_root)->url();
         $newFile = vfsStream::newDirectory('test2')->at($this->_root)->url();
         $this->setExpectedException('RuntimeException', "Error copying '$oldFile' to '$newFile'");
-        @FileObject::copy($oldFile, $newFile);
+        FileObject::copy($oldFile, $newFile);
     }
 
     public function testCopyErrorInvalidSource()
@@ -451,7 +451,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $oldFile = $this->_root->url() . '/test1.txt';
         $newFile = $this->_root->url() . '/test2.txt';
         $this->setExpectedException('RuntimeException', "Error copying '$oldFile' to '$newFile'");
-        @FileObject::copy($oldFile, $newFile);
+        FileObject::copy($oldFile, $newFile);
     }
 
     public function testCopyErrorInvalidTarget()
@@ -459,7 +459,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $oldFile = vfsStream::newFile('test.txt')->at($this->_root)->url();
         $newFile = $this->_root->url() . '/invalid/test2.txt';
         $this->setExpectedException('RuntimeException', "Error copying '$oldFile' to '$newFile'");
-        @FileObject::copy($oldFile, $newFile);
+        FileObject::copy($oldFile, $newFile);
     }
 
     public function testRenameSuccess()
@@ -511,7 +511,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $oldFile = $this->_root->url() . '/test1.txt';
         $newFile = $this->_root->url() . '/test2.txt';
         $this->setExpectedException('RuntimeException', "Error renaming '$oldFile' to '$newFile'");
-        @FileObject::rename($oldFile, $newFile);
+        FileObject::rename($oldFile, $newFile);
     }
 
     public function testRenameErrorInvalidTarget()
@@ -520,7 +520,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $oldFile = vfsStream::newFile('test.txt')->at($this->_root)->url();
         $newFile = $this->_root->url() . '/invalid/test2.txt';
         try {
-            @FileObject::rename($oldFile, $newFile);
+            FileObject::rename($oldFile, $newFile);
             $this->fail('Expected exception was not thrown');
         } catch (\RuntimeException $e) {
             $this->assertEquals("Error renaming '$oldFile' to '$newFile'", $e->getMessage());
@@ -539,7 +539,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
     {
         $filename = vfsStream::newDirectory('test')->at($this->_root)->url();
         try {
-            @FileObject::unlink($filename);
+            FileObject::unlink($filename);
             $this->fail('Expected exception was not thrown');
         } catch (\RuntimeException $e) {
             $this->assertEquals("Error deleting file '$filename'", $e->getMessage());

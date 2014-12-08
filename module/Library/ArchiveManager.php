@@ -110,7 +110,7 @@ class ArchiveManager
         switch ($type) {
             case self::ZIP:
                 $archive = new \ZipArchive;
-                $result = $archive->open($filename, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+                $result = @$archive->open($filename, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
                 if ($result !== true) {
                     throw new \RuntimeException("Error creating ZIP archive '$filename', code $result");
                 }
@@ -133,7 +133,7 @@ class ArchiveManager
     public function closeArchive($archive, $ignoreErrors=false)
     {
         if ($archive instanceof \ZipArchive) {
-            if (!$archive->close()) {
+            if (!@$archive->close()) {
                 if (!$ignoreErrors) {
                     throw new \RuntimeException('Error closing ZIP archive');
                 }
@@ -160,7 +160,7 @@ class ArchiveManager
     public function addFile($archive, $file, $name)
     {
         if ($archive instanceof \ZipArchive) {
-            if (!$archive->addFile($file, $name)) {
+            if (!@$archive->addFile($file, $name)) {
                 throw new \RuntimeException("Error adding file '$file' to archive as '$name'");
             }
         } else {

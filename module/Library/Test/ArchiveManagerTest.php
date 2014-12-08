@@ -64,7 +64,7 @@ class ArchiveManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('RuntimeException', "Error creating ZIP archive '', code ");
         $manager = new ArchiveManager;
-        @$manager->createArchive(ArchiveManager::ZIP, '');
+        $manager->createArchive(ArchiveManager::ZIP, '');
     }
 
     public function testCreateArchiveInvalid()
@@ -81,7 +81,7 @@ class ArchiveManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('RuntimeException', 'Error closing ZIP archive');
         $manager = new ArchiveManager;
-        @$manager->closeArchive(new \ZipArchive);
+        $manager->closeArchive(new \ZipArchive);
     }
 
     /**
@@ -109,7 +109,7 @@ class ArchiveManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('RuntimeException', "Error adding file 'file' to archive as 'name'");
         $manager = new ArchiveManager;
-        @$manager->addFile(new \ZipArchive, 'file', 'name');
+        $manager->addFile(new \ZipArchive, 'file', 'name');
     }
 
     public function testAddFileInvalid()
