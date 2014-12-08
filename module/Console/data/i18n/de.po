@@ -17,8 +17,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 msgid ""
-msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
 #: Console/Controller/ComputerController.php
 #, php-format
@@ -60,26 +59,6 @@ msgstr "Gruppe '%s' wurde erfolgreich gelöscht."
 #: Console/Controller/GroupController.php
 msgid "The requested group does not exist."
 msgstr "Die angeforderte Gruppe existiert nicht."
-
-#: Console/Controller/PackageController.php
-#, php-format
-msgid "Could not retrieve data from package '%s'."
-msgstr "Konnte keine Daten von Paket '%s' erhalten."
-
-#: Console/Controller/PackageController.php
-#, php-format
-msgid "Error changing Package '%s' to '%s':"
-msgstr "Fehler bei der Änderung von Paket '%s' zu '%s':"
-
-#: Console/Controller/PackageController.php
-#, php-format
-msgid "Error creating Package '%s':"
-msgstr "Fehler bei Erstellung von Paket '%s':"
-
-#: Console/Controller/PackageController.php
-#, php-format
-msgid "Package '%s' could not be deleted."
-msgstr "Paket '%s' konnte nicht gelöscht werden."
 
 #: Console/Controller/PackageController.php
 #, php-format
@@ -1650,8 +1629,7 @@ msgstr "Nächstes Update:"
 #: view/console/group/removepackage.php
 #, php-format
 msgid "Package '%s' will no longer be assigned to this group. Continue?"
-msgstr ""
-"Paket '%s' wird nicht mehr dieser Gruppe zugewiesen sein. Fortfahren?"
+msgstr "Paket '%s' wird nicht mehr dieser Gruppe zugewiesen sein. Fortfahren?"
 
 #: view/console/licenses/index.php
 msgid "Manually entered Windows product keys"

@@ -158,9 +158,7 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
         try {
             $oldPackage = $this->_packageManager->getPackage($oldName);
         } catch (\Model\Package\RuntimeException $e) {
-            $flashMessenger->addErrorMessage(
-                array($this->_("Could not retrieve data from package '%s'.") => $oldName)
-            );
+            $flashMessenger->addErrorMessage($e->getMessage());
             return $this->redirectToRoute('package', 'index');
         }
 
@@ -191,7 +189,7 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
                     );
                 } else {
                     $flashMessenger->addErrorMessage(
-                        array($this->_('Error changing Package \'%s\' to \'%s\':') => $names)
+                        "Error changing Package '$oldName' to '$data[Name]'"
                     );
                 }
                 return $this->redirectToRoute('package', 'index');
@@ -250,9 +248,7 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
             $flashMessenger->addMessage($name);
             return true;
         } catch (\Model\Package\RuntimeException $e) {
-            $flashMessenger->addErrorMessage(
-                array($this->_('Error creating Package \'%s\':') => $name)
-            );
+            $flashMessenger->addErrorMessage($e->getMessage());
             return false;
         }
     }
@@ -277,7 +273,7 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
             );
             return true;
         } catch (\Model\Package\RuntimeException $e) {
-            $flashMessenger->addErrorMessage('Package could not be deleted.');
+            $flashMessenger->addErrorMessage($e->getMessage());
             return false;
         }
     }

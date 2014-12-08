@@ -200,10 +200,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             '//ul[@class="success"]/li',
             'success'
         );
-        $this->assertXpathQueryContentContains(
-            '//ul[@class="info"]/li',
-            'info'
-        );
     }
 
     public function testIndexActionPackageHighlightCurrentPackage()
@@ -649,7 +645,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             $postData,
             $packageData,
             false,
-            array(array('Error changing Package \'%s\' to \'%s\':' => array('oldName', 'newName')))
+            array("Error changing Package 'oldName' to 'newName'")
         );
         $this->assertRedirectTo('/console/package/index/');
     }
@@ -668,14 +664,14 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_packageManager->expects($this->once())
                               ->method('getPackage')
                               ->with('oldName')
-                              ->will($this->throwException(new \Model\Package\RuntimeException));
+                              ->will($this->throwException(new \Model\Package\RuntimeException('getPackage() error')));
         $this->_packageManager->expects($this->never())->method('build');
         $this->_packageManager->expects($this->never())->method('updateAssignments');
         $this->_packageManager->expects($this->never())->method('delete');
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
         $this->assertRedirectTo('/console/package/index/');
         $this->assertEquals(
-            array(array("Could not retrieve data from package '%s'." => 'oldName')),
+            array('getPackage() error'),
             $this->_getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
         );
     }
@@ -704,7 +700,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             $this->_packageManager->expects($this->once())
                                   ->method('build')
                                   ->with($packageData, true)
-                                  ->will($this->throwException(new \Model\Package\RuntimeException));
+                                  ->will($this->throwException(new \Model\Package\RuntimeException('build error')));
         }
 
         $this->dispatch($url, 'POST', $postData);
@@ -731,7 +727,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             );
             $this->assertEquals(
                 array_merge(
-                    array(array('Error creating Package \'%s\':' => $name)),
+                    array('build error'),
                     $extraMessages
                 ),
                 $flashMessenger->getCurrentErrorMessages()
@@ -765,7 +761,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             $this->_packageManager->expects($this->once())
                                   ->method('delete')
                                   ->with($package)
-                                  ->will($this->throwException(new \Model\Package\RuntimeException));
+                                  ->will($this->throwException(new \Model\Package\RuntimeException('delete error')));
         }
         $this->dispatch($url, 'POST', $postData);
         if ($success) {
@@ -783,7 +779,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 $flashMessenger->getCurrentSuccessMessages()
             );
             $this->assertEquals(
-                array('Package could not be deleted.'),
+                array('delete error'),
                 $flashMessenger->getCurrentErrorMessages()
             );
         }

@@ -63,17 +63,7 @@ msgstr ""
 
 #: Console/Controller/PackageController.php
 #, php-format
-msgid "Could not retrieve data from package '%s'."
-msgstr ""
-
-#: Console/Controller/PackageController.php
-#, php-format
 msgid "Package '%s' was successfully changed to '%s'."
-msgstr ""
-
-#: Console/Controller/PackageController.php
-#, php-format
-msgid "Error changing Package '%s' to '%s':"
 msgstr ""
 
 #: Console/Controller/PackageController.php
@@ -83,17 +73,7 @@ msgstr ""
 
 #: Console/Controller/PackageController.php
 #, php-format
-msgid "Error creating Package '%s':"
-msgstr ""
-
-#: Console/Controller/PackageController.php
-#, php-format
 msgid "Package '%s' was successfully deleted."
-msgstr ""
-
-#: Console/Controller/PackageController.php
-#, php-format
-msgid "Package '%s' could not be deleted."
 msgstr ""
 
 #: Console/Form/Account/AbstractForm.php view/console/accounts/index.php

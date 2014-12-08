@@ -24,16 +24,18 @@ $flashMessenger = $this->flashMessenger();
 $name = $flashMessenger->getMessagesFromNamespace('packageName');
 $currentPackage = @$name[0];
 
-foreach (array('error', 'success', 'info') as $namespace) {
-    $messages = $flashMessenger->getMessagesFromNamespace($namespace);
-    if ($messages) {
-        print $this->htmlList(
-            $this->formatMessages($messages),
-            false,
-            array('class' => $namespace),
-            false
-        );
-    }
+// Error messages are not translated. FormatMessages helper is not affected.
+$flashMessenger->setTranslator(null);
+print $flashMessenger->render('error');
+
+$successMessages = $flashMessenger->getSuccessMessages();
+if ($successMessages) {
+    print $this->htmlList(
+        $this->formatMessages($successMessages),
+        false,
+        array('class' => 'success'),
+        false
+    );
 }
 
 // Column headers
