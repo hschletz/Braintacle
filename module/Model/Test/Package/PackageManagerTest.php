@@ -263,7 +263,6 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                        array(
                            array('packageBaseUriHttps', 'HTTPS URL'),
                            array('packageBaseUriHttp', 'HTTP URL'),
-                           array('packageCertificate', 'path/filename'),
                        )
                    )
                );
@@ -325,7 +324,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             $dataset->getTable('download_enable'),
             $connection->createQueryTable(
                 'download_enable',
-                'SELECT fileid, info_loc, pack_loc, cert_path, cert_file FROM download_enable ORDER BY fileid'
+                'SELECT fileid, info_loc, pack_loc FROM download_enable ORDER BY fileid'
             )
         );
     }
@@ -701,7 +700,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             $dataset->getTable('download_enable'),
             $connection->createQueryTable(
                 'download_enable',
-                'SELECT id, fileid, info_loc, pack_loc, cert_path, cert_file FROM download_enable ORDER BY fileid'
+                'SELECT id, fileid, info_loc, pack_loc FROM download_enable ORDER BY fileid'
             )
         );
         $this->assertTablesEqual(

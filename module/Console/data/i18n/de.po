@@ -475,10 +475,6 @@ msgid "Display ignored software"
 msgstr "Ignorierte Software anzeigen"
 
 #: Console/Form/Preferences/Download.php
-msgid "Client-side path to HTTPS CA certificate"
-msgstr "Client-seitiger Pfad zum HTTPS-CA-Zertifikat"
-
-#: Console/Form/Preferences/Download.php
 msgid "HTTP package base URL"
 msgstr "HTTP-Basis-URL für Pakete"
 

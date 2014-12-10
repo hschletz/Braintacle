@@ -265,8 +265,6 @@ class PackageManager
                     'fileid' => $timestamp,
                     'info_loc' => $this->_config->packageBaseUriHttps,
                     'pack_loc' => $this->_config->packageBaseUriHttp,
-                    'cert_path' => dirname($this->_config->packageCertificate),
-                    'cert_file' => $this->_config->packageCertificate,
                 )
             );
 

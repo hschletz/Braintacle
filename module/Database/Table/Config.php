@@ -71,7 +71,6 @@ class Config extends \Database\AbstractTable
         'logLevel' => 'LOGLEVEL',
         'packageBaseUriHttp' => 'BRAINTACLE_DEFAULT_DOWNLOAD_LOCATION',
         'packageBaseUriHttps' => 'BRAINTACLE_DEFAULT_INFOFILE_LOCATION',
-        'packageCertificate' => 'BRAINTACLE_DEFAULT_CERTIFICATE',
         'packageDeployment' => 'DOWNLOAD',
         'packagePath' => 'DOWNLOAD_PACK_DIR',
         'saveDir' => 'OCS_FILES_PATH',
@@ -184,6 +183,7 @@ class Config extends \Database\AbstractTable
         $count = $this->delete(
             array(
                 'name' => array(
+                    'BRAINTACLE_DEFAULT_CERTIFICATE', // default: INSTALL_PATH/cacert.pem, ignored by recent agents
                     'COMPRESS_TRY_OTHERS', // default: 1
                     'DEPLOY', // default: 0
                     'ENABLE_GROUPS', // default: 1

@@ -31,7 +31,6 @@ class DownloadTest extends \Console\Test\AbstractFormTest
         $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('packagePath'));
         $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('packageBaseUriHttp'));
         $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('packageBaseUriHttps'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('packageCertificate'));
         $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('downloadPeriodDelay'));
         $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('downloadCycleDelay'));
         $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('downloadFragmentDelay'));
@@ -49,7 +48,6 @@ class DownloadTest extends \Console\Test\AbstractFormTest
             'packagePath' => vfsStream::newDirectory('test', 0777)->at(vfsStream::setup('root'))->url(),
             'packageBaseUriHttp' => ' http://example.net/path/ ',
             'packageBaseUriHttps' => ' https://example.net/path/ ',
-            'packageCertificate' => ' cert ',
             'downloadPeriodDelay' => ' 1.234 ',
             'downloadCycleDelay' => ' 2.345 ',
             'downloadFragmentDelay' => ' 3.456 ',
@@ -62,7 +60,6 @@ class DownloadTest extends \Console\Test\AbstractFormTest
         $preferences = $this->_form->getData()['Preferences'];
         $this->assertEquals('example.net/path', $preferences['packageBaseUriHttp']);
         $this->assertEquals('example.net/path', $preferences['packageBaseUriHttps']);
-        $this->assertEquals(' cert ', $preferences['packageCertificate']);
         $this->assertEquals(1234, $preferences['downloadPeriodDelay']);
         $this->assertEquals(2345, $preferences['downloadCycleDelay']);
         $this->assertEquals(3456, $preferences['downloadFragmentDelay']);
@@ -76,7 +73,6 @@ class DownloadTest extends \Console\Test\AbstractFormTest
             'packagePath' => vfsStream::newDirectory('test', 0777)->at(vfsStream::setup('root'))->url(),
             'packageBaseUriHttp' => ' http://example.net/path/ ',
             'packageBaseUriHttps' => ' https://example.net/path/ ',
-            'packageCertificate' => ' cert ',
             'downloadPeriodDelay' => ' 1 ',
             'downloadCycleDelay' => ' 1 ',
             'downloadFragmentDelay' => ' 1 ',
@@ -95,7 +91,6 @@ class DownloadTest extends \Console\Test\AbstractFormTest
             'packagePath' => vfsStream::newDirectory('test', 0777)->at(vfsStream::setup('root'))->url(),
             'packageBaseUriHttp' => ' http://example.net/path/ ',
             'packageBaseUriHttps' => ' https://example.net/path/ ',
-            'packageCertificate' => ' cert ',
             'downloadPeriodDelay' => ' 0 ',
             'downloadCycleDelay' => ' 0 ',
             'downloadFragmentDelay' => ' 0 ',
@@ -124,7 +119,6 @@ class DownloadTest extends \Console\Test\AbstractFormTest
             'packagePath' => vfsStream::newDirectory('test', 0777)->at(vfsStream::setup('root'))->url(),
             'packageBaseUriHttp' => ' http://example.net/path/ ',
             'packageBaseUriHttps' => ' https://example.net/path/ ',
-            'packageCertificate' => ' cert ',
             'downloadPeriodDelay' => ' 1.234a ',
             'downloadCycleDelay' => ' 2.345a ',
             'downloadFragmentDelay' => ' 3.456a ',
@@ -153,7 +147,6 @@ class DownloadTest extends \Console\Test\AbstractFormTest
             'packagePath' => '',
             'packageBaseUriHttp' => ' ',
             'packageBaseUriHttps' => '',
-            'packageCertificate' => '',
             'downloadPeriodDelay' => ' ',
             'downloadCycleDelay' => '',
             'downloadFragmentDelay' => '',
@@ -164,15 +157,13 @@ class DownloadTest extends \Console\Test\AbstractFormTest
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
-        $this->assertCount(8, $messages);
+        $this->assertCount(7, $messages);
         $this->assertCount(1, $messages['packagePath']);
         $this->assertArrayHasKey('isEmpty', $messages['packagePath']);
         $this->assertCount(1, $messages['packageBaseUriHttp']);
         $this->assertArrayHasKey('isEmpty', $messages['packageBaseUriHttp']);
         $this->assertCount(1, $messages['packageBaseUriHttps']);
         $this->assertArrayHasKey('isEmpty', $messages['packageBaseUriHttps']);
-        $this->assertCount(1, $messages['packageCertificate']);
-        $this->assertArrayHasKey('isEmpty', $messages['packageCertificate']);
         $this->assertCount(1, $messages['downloadPeriodDelay']);
         $this->assertArrayHasKey('isEmpty', $messages['downloadPeriodDelay']);
         $this->assertCount(1, $messages['downloadCycleDelay']);
@@ -190,7 +181,6 @@ class DownloadTest extends \Console\Test\AbstractFormTest
             'packagePath' => vfsStream::newDirectory('test', 0777)->at(vfsStream::setup('root'))->url(),
             'packageBaseUriHttp' => ' http://example.net/path/ ',
             'packageBaseUriHttps' => ' https://example.net/path/ ',
-            'packageCertificate' => ' cert ',
             'downloadPeriodDelay' => '1234',
             'downloadCycleDelay' => '2345',
             'downloadFragmentDelay' => '3456',
@@ -223,7 +213,6 @@ class DownloadTest extends \Console\Test\AbstractFormTest
             'packagePath' => vfsStream::newDirectory('test', 0000)->at(vfsStream::setup('root'))->url(),
             'packageBaseUriHttp' => ' http://example.net/path/ ',
             'packageBaseUriHttps' => ' https://example.net/path/ ',
-            'packageCertificate' => ' cert ',
             'downloadPeriodDelay' => ' 1.234 ',
             'downloadCycleDelay' => ' 2.345 ',
             'downloadFragmentDelay' => ' 3.456 ',
@@ -246,7 +235,6 @@ class DownloadTest extends \Console\Test\AbstractFormTest
             'packagePath' => vfsStream::newDirectory('test', 0777)->at(vfsStream::setup('root'))->url(),
             'packageBaseUriHttp' => ' example.net/path ',
             'packageBaseUriHttps' => ' example.net/path ',
-            'packageCertificate' => ' cert ',
             'downloadPeriodDelay' => ' 1.234 ',
             'downloadCycleDelay' => ' 2.345 ',
             'downloadFragmentDelay' => ' 3.456 ',
@@ -268,7 +256,6 @@ class DownloadTest extends \Console\Test\AbstractFormTest
             'packagePath' => vfsStream::newDirectory('test', 0777)->at(vfsStream::setup('root'))->url(),
             'packageBaseUriHttp' => ' example.net path ',
             'packageBaseUriHttps' => ' example.net path ',
-            'packageCertificate' => ' cert ',
             'downloadPeriodDelay' => ' 1.234 ',
             'downloadCycleDelay' => ' 2.345 ',
             'downloadFragmentDelay' => ' 3.456 ',

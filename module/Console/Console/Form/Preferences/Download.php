@@ -103,16 +103,6 @@ class Download extends AbstractForm
             )
         );
 
-        $packageCertificate = new \Zend\Form\Element\Text('packageCertificate');
-        $packageCertificate->setLabel('Client-side path to HTTPS CA certificate');
-        $preferences->add($packageCertificate);
-        $inputFilter->add(
-            array(
-                'name' => 'packageCertificate',
-                'required' => true,
-            )
-        );
-
         $downloadPeriodDelay = new \Zend\Form\Element\Text('downloadPeriodDelay');
         $downloadPeriodDelay->setLabel('Delay (in seconds) between periods')
                             ->setAttribute('size', 5);

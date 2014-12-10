@@ -23,15 +23,11 @@ download_enable:
     fileid: "1415958319"
     info_loc: "HTTPS URL"
     pack_loc: "HTTP URL"
-    cert_path: "path"
-    cert_file: "path/filename"
   -
     id: 2
     fileid: "1415958320"
     info_loc: "HTTPS URL"
     pack_loc: "HTTP URL"
-    cert_path: "path"
-    cert_file: "path/filename"
 
 devices:
   # All tests are run on package ID (ivalue) 1.

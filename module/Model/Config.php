@@ -68,7 +68,6 @@ namespace Model;
  * @property integer $logLevel  Server logging verbosity (0-2). Default: 0
  * @property string $packageBaseUriHttp  Base URI for package download (HTTP), without http:// prefix
  * @property string $packageBaseUriHttps  Base URI for package download (HTTPS), without https:// prefix
- * @property string $packageCertificate  Certificate path for packages. Default: INSTALL_PATH/cacert.pem
  * @property string $packagePath  Server-side directory where packages are stored
  * @property string $saveDir  Directory where a copy of incoming inventory data is stored
  * @property string $saveFormat  File format for saving: XML (uncompressed) or OCS (zlib). Default: OCS
@@ -131,7 +130,6 @@ class Config
         'inventoryInterval' => 0,
         'lockValidity' => 600,
         'logLevel' => 0,
-        'packageCertificate' => 'INSTALL_PATH/cacert.pem',
         'packageDeployment' => 0,
         'saveFormat' => 'OCS',
         'saveOverwrite' => 0,
@@ -227,9 +225,6 @@ class Config
                     break;
                 case 'packageBaseUriHttps':
                     $this->_packageDownloadInfo->update(array('info_loc' => $value));
-                    break;
-                case 'packageCertificate':
-                    $this->_packageDownloadInfo->update(array('cert_file' => $value, 'cert_path' => dirname($value)));
                     break;
             }
         }

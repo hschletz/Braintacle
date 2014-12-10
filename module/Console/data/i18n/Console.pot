@@ -484,10 +484,6 @@ msgid "HTTPS package base URL"
 msgstr ""
 
 #: Console/Form/Preferences/Download.php
-msgid "Client-side path to HTTPS CA certificate"
-msgstr ""
-
-#: Console/Form/Preferences/Download.php
 msgid ""
 "Maximum package priority (packages with higher value will not be downloaded)"
 msgstr ""

@@ -76,7 +76,9 @@ class ConfigTest extends AbstractTest
         );
         $this->assertTablesEqual(
             $dataSet->getTable('download_enable'),
-            $this->getConnection()->createQueryTable('download_enable', 'SELECT * FROM download_enable')
+            $this->getConnection()->createQueryTable(
+                'download_enable', 'SELECT fileid, info_loc, pack_loc FROM download_enable'
+            )
         );
     }
 
@@ -84,12 +86,13 @@ class ConfigTest extends AbstractTest
     {
         $config = $this->_getModel();
 
-        $config->packageCertificate = 'path_new/file_new';
         $config->packageBaseUriHttps = 'https_new';
         $config->packageBaseUriHttp = 'http_new';
         $this->assertTablesEqual(
             $this->_loadDataSet('MagicSetPackageOptions')->getTable('download_enable'),
-            $this->getConnection()->createQueryTable('download_enable', 'SELECT * FROM download_enable')
+            $this->getConnection()->createQueryTable(
+                'download_enable', 'SELECT fileid, info_loc, pack_loc FROM download_enable'
+            )
         );
     }
 
