@@ -233,14 +233,6 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
     public function getInstallablePackages()
     {
         $db = Model_Database::getAdapter();
-
-        /* The CAST(pkg_id AS CHAR(11)) expression is the attempt for a
-         * statement compatible with all DBMS. An integer-to string-cast is
-         * required by PostgreSQL. VARCHAR is not accepted by MySQL. CHAR would
-         * be interpreted as CHAR(1) by PostgreSQL. So we end up with CHAR(11)
-         * which appears to work with both. This should better be fixed in the
-         * schema to avoid the cast alltogether.
-         */
         $select = $db->select()
             ->from('download_available', 'name')
             ->joinLeftUsing('download_enable', 'fileid', array())
@@ -250,7 +242,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
             )
             ->where(
                 'download_available.fileid NOT IN(
-                SELECT CAST(pkg_id AS CHAR(11)) FROM download_history WHERE hardware_id=?)',
+                SELECT pkg_id FROM download_history WHERE hardware_id=?)',
                 $this->getId()
             )
             ->order('name');
