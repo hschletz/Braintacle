@@ -135,7 +135,7 @@ class PackageManager
             $package->exchangeArray($this->_storage->readMetadata($package['Timestamp']));
             return $package;
         } catch (\Exception $e) {
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+            throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
         }
     }
 
@@ -274,7 +274,7 @@ class PackageManager
             $id = $this->_packageDownloadInfo->selectWith($select)->current()['id'];
         } catch (\Exception $e) {
             $this->delete($data);
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+            throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
         }
         return (integer) $id;
     }
@@ -333,7 +333,7 @@ class PackageManager
                 $this->_archiveManager->closeArchive($archive, true);
                 \Library\FileObject::unlink($filename);
             }
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+            throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
         }
         return $filename;
     }
@@ -358,7 +358,7 @@ class PackageManager
             $this->_packages->delete(array('fileid' => $timestamp));
             $this->_storage->cleanup($data);
         } catch (\Exception $e) {
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+            throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
         }
     }
 
@@ -441,7 +441,7 @@ class PackageManager
                 array('name' => 'DOWNLOAD', $where)
             );
         } catch (\Exception $e) {
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+            throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
         }
     }
 }
