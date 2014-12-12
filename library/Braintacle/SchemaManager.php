@@ -78,6 +78,12 @@ class Braintacle_SchemaManager
     protected $_allTables;
 
     /**
+     * Names of tables managed by this class
+     * @var string[]
+     */
+    protected $_managedTables = array();
+
+    /**
      * Array of userdefined columns to convert
      *
      * This is managed by getUserdefinedInfoToConvert(). Do not use directly.
@@ -296,6 +302,7 @@ class Braintacle_SchemaManager
         }
         while (($file = readdir($dir)) !== false ) {
             if (substr($file, -4) == '.xml') {
+                $this->_managedTables[] = str_replace(array('ocs_', 'plugin_', '.xml'), '', $file);
                 $content = file_get_contents("$this->_basepath/schema/$file");
                 if ($content == false) {
                     throw new RuntimeException("Error reading $file");
@@ -399,7 +406,9 @@ class Braintacle_SchemaManager
             'prolog_conntrack',
         );
 
-        foreach ($this->_allTables as $name => $table) {
+        foreach ($this->_managedTables as $name) {
+            $table = $this->_allTables[$name];
+
             // Force UTF-8 for all tables to prevent charset conversion issues.
             $table->setCharset('utf8');
 
