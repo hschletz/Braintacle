@@ -350,6 +350,7 @@ class PackageManager
         try {
             $this->_clientConfig->delete(
                 array(
+                    "name != 'DOWNLOAD_SWITCH'",
                     "name LIKE 'DOWNLOAD%'",
                     'ivalue IN (SELECT id FROM download_enable WHERE fileid = ?)' => $timestamp,
                 )

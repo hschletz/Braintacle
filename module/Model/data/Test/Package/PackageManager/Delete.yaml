@@ -22,6 +22,10 @@ devices:
     name: "OTHER"
     ivalue: 1
   -
+    hardware_id: 1
+    name: "DOWNLOAD_SWITCH"
+    ivalue: 1
+  -
     hardware_id: 2
     name: "DOWNLOAD"
     ivalue: 2
