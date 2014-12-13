@@ -1,6 +1,6 @@
 <?php
 /**
- * "download_enable" table
+ * "download_enable" view
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,10 +19,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-Namespace Database\Table;
+namespace Database\Table;
+
+use Zend\Db\Sql\Literal;
 
 /**
- * "download_enable" table
+ * "download_enable" view
+ * @deprecated provides view for legacy code only
  */
 class PackageDownloadInfo extends \Database\AbstractTable
 {
@@ -34,5 +37,66 @@ class PackageDownloadInfo extends \Database\AbstractTable
     {
         $this->table = 'download_enable';
         parent::__construct($serviceLocator);
+    }
+
+    /**
+     * {@inheritdoc}
+     * @codeCoverageIgnore
+     */
+    public function setSchema()
+    {
+        // Reimplementation to provide a view instead of previous table
+
+        $logger = $this->_serviceLocator->get('Library\Logger');
+        $database = $this->_serviceLocator->get('Database\Nada');
+
+        if (in_array('download_enable', $database->getTableNames())) {
+            // Use value of "fileid" column instead of obsolete "id" for package assignments
+            $logger->info('Transforming package assignment IDs...');
+            $where = new \Zend\Db\Sql\Where;
+            $this->_serviceLocator->get('Database\Table\ClientConfig')->update(
+                array(
+                    'ivalue' => new \Zend\Db\Sql\Expression(
+                        sprintf(
+                            '(SELECT CAST(fileid AS %s) FROM download_enable WHERE id = ivalue)',
+                            $database->getNativeDatatype(\Nada::DATATYPE_INTEGER, 32, true)
+                        )
+                    )
+                ),
+                $where->notEqualTo('name', 'DOWNLOAD_SWITCH')->like('name', 'DOWNLOAD%')
+            );
+            $logger->info('done.');
+
+            $logger->info("Dropping table 'download_enable'...");
+            $database->dropTable('download_enable');
+            $logger->info('done.');
+        }
+
+        if (!in_array('download_enable', $database->getViewNames())) {
+            $logger->info("Creating view 'download_enable'");
+            $typeText =$database->getNativeDatatype(\Nada::DATATYPE_VARCHAR, 255, true);
+            $typeInt = $database->getNativeDatatype(\Nada::DATATYPE_INTEGER, 32, true);
+            $null = 'CAST(NULL AS %s)';
+            $select = new \Zend\Db\Sql\Select;
+            $select->from('download_available')
+                   ->columns(
+                       array(
+                            'id' => 'fileid',
+                            'fileid' => 'fileid',
+                            'info_loc' => new Literal(
+                                "(SELECT tvalue FROM config WHERE name = 'BRAINTACLE_DEFAULT_INFOFILE_LOCATION')"
+                            ),
+                            'pack_loc' => new Literal(
+                                "(SELECT tvalue FROM config WHERE name = 'BRAINTACLE_DEFAULT_DOWNLOAD_LOCATION')"
+                            ),
+                            'cert_path' => new Literal(sprintf($null, $typeText)),
+                            'cert_file' => new Literal(sprintf($null, $typeText)),
+                            'server_id' => new Literal(sprintf($null, $typeInt)),
+                       ),
+                       false
+                   );
+            $database->createView('download_enable', $select->getSqlString($this->adapter->getPlatform()));
+            $logger->info('done.');
+        }
     }
 }

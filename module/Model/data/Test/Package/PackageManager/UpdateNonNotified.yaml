@@ -8,43 +8,43 @@ devices:
   -
     hardware_id: 2
     name: "DOWNLOAD"
-    ivalue: 1
+    ivalue: 1415958319
     tvalue: "NOTIFIED"
     comments: "Mon Dec 01 11:07:17 2014"
   -
     hardware_id: 2
     name: "DOWNLOAD_POSTCMD"
-    ivalue: 1
+    ivalue: 1415958319
     tvalue: "SHUTDOWN"
     comments: null
   -
     hardware_id: 2
     name: "DOWNLOAD_SCHEDULE"
-    ivalue: 1
+    ivalue: 1415958319
     tvalue: "2014/07/15 02:45"
     comments: null
   -
     hardware_id: 3
     name: "DOWNLOAD"
-    ivalue: 1
+    ivalue: 1415958319
     tvalue: "SUCCESS"
     comments: "Mon Dec 01 11:07:17 2014"
   -
     hardware_id: 4
     name: "DOWNLOAD"
-    ivalue: 1
+    ivalue: 1415958319
     tvalue: "ERROR"
     comments: "Mon Dec 01 11:07:17 2014"
   -
     hardware_id: 5
     name: "DOWNLOAD"
-    ivalue: 1
+    ivalue: 1415958319
     tvalue: null
     comments: "Mon Dec 01 11:07:17 2014"
   -
     hardware_id: 1
     name: "OTHER"
-    ivalue: 1
+    ivalue: 1415958319
     tvalue: null
     comments: null
   -
@@ -56,12 +56,12 @@ devices:
   -
     hardware_id: 2
     name: "DOWNLOAD"
-    ivalue: 2
+    ivalue: 1415958320
     tvalue: null
     comments: "Mon Dec 01 11:07:17 2014"
   -
     hardware_id: 2
     name: "DOWNLOAD_FORCE"
-    ivalue: 2
+    ivalue: 1415958320
     tvalue: "1"
     comments: null

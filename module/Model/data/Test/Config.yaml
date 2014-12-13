@@ -20,10 +20,3 @@ config:
     name: "REGISTRY"
     ivalue: 0
     tvalue: null
-
-download_enable:
-  -
-    id: 1
-    fileid: "12345678"
-    info_loc: "https_old"
-    pack_loc: "http_old"

@@ -29,7 +29,7 @@ use org\bovigo\vfs\vfsStream;
 class PackageManagerTest extends \Model\Test\AbstractTest
 {
     /** {@inheritdoc} */
-    protected static $_tables = array('Packages', 'PackageDownloadInfo', 'ClientConfig', 'GroupInfo');
+    protected static $_tables = array('Config', 'Packages', 'PackageDownloadInfo', 'ClientConfig', 'GroupInfo');
 
     public function testPackageExists()
     {
@@ -64,7 +64,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $model = $this->_getModel(array('Model\Package\Storage\Direct' => $storage));
         $package = $model->getPackage('package2');
         $this->assertInstanceOf('Model_Package', $package);
-        $this->assertEquals($packageData + $metadata + array('EnabledId' => '2'), $package->getArrayCopy());
+        $this->assertEquals($packageData + $metadata + array('EnabledId' => '1415958320'), $package->getArrayCopy());
     }
 
     public function testGetPackageInvalidName()
@@ -93,7 +93,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             'Size' => '12345678',
             'Platform' => 'windows',
             'Comment' => 'Existing package 1',
-            'EnabledId' => '1',
+            'EnabledId' => '1415958319',
             'NumNonnotified' => '1',
             'NumSuccess' => '1',
             'NumNotified' => '1',
@@ -107,7 +107,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             'Size' => '12345678',
             'Platform' => 'linux',
             'Comment' => 'Existing package 2',
-            'EnabledId' => '2',
+            'EnabledId' => '1415958320',
             'NumNonnotified' => '1',
             'NumSuccess' => '0',
             'NumNotified' => '0',
@@ -270,7 +270,6 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         // Other dependencies
         $archiveManager = $this->getMock('Library\ArchiveManager');
         $packages = \Library\Application::getService('Database\Table\Packages');
-        $packageDownloadInfo = \Library\Application::getService('Database\Table\PackageDownloadInfo');
         $clientConfig = \Library\Application::getService('Database\Table\ClientConfig');
         $groupInfo = \Library\Application::getService('Database\Table\GroupInfo');
 
@@ -283,7 +282,6 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                               $config,
                               $archiveManager,
                               $packages,
-                              $packageDownloadInfo,
                               $clientConfig,
                               $groupInfo
                           )
@@ -359,9 +357,6 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $archiveManager = $this->getMock('Library\ArchiveManager');
         $packages = $this->getMockBuilder('Database\Table\Packages')->disableOriginalConstructor()->getMock();
         $packages->expects($this->never())->method('insert');
-        $packageDownloadInfo = $this->getMockBuilder('Database\Table\PackageDownloadInfo')
-                                    ->disableOriginalConstructor()
-                                    ->getMock();
         $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
         $groupInfo = $this->getMockBuilder('Database\Table\GroupInfo')->disableOriginalConstructor()->getMock();
 
@@ -373,7 +368,6 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                               $config,
                               $archiveManager,
                               $packages,
-                              $packageDownloadInfo,
                               $clientConfig,
                               $groupInfo
                           )
@@ -432,7 +426,6 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
         $archiveManager = $this->getMock('Library\ArchiveManager');
         $packages = \Library\Application::getService('Database\Table\Packages');
-        $packageDownloadInfo = \Library\Application::getService('Database\Table\PackageDownloadInfo');
         $clientConfig = \Library\Application::getService('Database\Table\ClientConfig');
         $groupInfo = \Library\Application::getService('Database\Table\GroupInfo');
 
@@ -444,7 +437,6 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                               $config,
                               $archiveManager,
                               $packages,
-                              $packageDownloadInfo,
                               $clientConfig,
                               $groupInfo
                           )
@@ -759,7 +751,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     {
         $now = time();
         $this->_getModel()->updateAssignments(
-            1,
+            1415958319,
             3,
             $deployNonnotified,
             $deploySuccess,

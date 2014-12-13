@@ -120,6 +120,16 @@ class Model_Package extends Model_Abstract
         'WarnAllowDelay' => 'boolean',
     );
 
+    /** {@inheritdoc} */
+    public function __set($property, $value)
+    {
+        parent::__set($property, $value);
+        if ($property == 'fileid') {
+            // Clone as EnabledId property
+            $this->id = $value;
+        }
+    }
+
     /**
      * Retrieve a property by its logical name
      *

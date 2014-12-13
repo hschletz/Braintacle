@@ -1,6 +1,0 @@
-# Result set for testMagicSetPackageOptions()
-download_enable:
-  -
-    fileid: "12345678"
-    info_loc: "https_new"
-    pack_loc: "http_new"

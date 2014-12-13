@@ -27,7 +27,7 @@ namespace Model\Test;
 class ConfigTest extends AbstractTest
 {
     /** {@inheritdoc} */
-    protected static $_tables = array('Config', 'PackageDownloadInfo');
+    protected static $_tables = array('Config');
 
     /**
      * Tests for getDbIdentifier()
@@ -73,26 +73,6 @@ class ConfigTest extends AbstractTest
         $this->assertTablesEqual(
             $dataSet->getTable('config'),
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
-        );
-        $this->assertTablesEqual(
-            $dataSet->getTable('download_enable'),
-            $this->getConnection()->createQueryTable(
-                'download_enable', 'SELECT fileid, info_loc, pack_loc FROM download_enable'
-            )
-        );
-    }
-
-    public function testMagicSetPackageOptions()
-    {
-        $config = $this->_getModel();
-
-        $config->packageBaseUriHttps = 'https_new';
-        $config->packageBaseUriHttp = 'http_new';
-        $this->assertTablesEqual(
-            $this->_loadDataSet('MagicSetPackageOptions')->getTable('download_enable'),
-            $this->getConnection()->createQueryTable(
-                'download_enable', 'SELECT fileid, info_loc, pack_loc FROM download_enable'
-            )
         );
     }
 

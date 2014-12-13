@@ -53,12 +53,6 @@ class PackageManager
     protected $_packages;
 
     /**
-     * PackageDownloadInfo table
-     * @var \Database\Table\PackageDownloadInfo
-     */
-    protected $_packageDownloadInfo;
-
-    /**
      * ClientConfig table
      * @var \Database\Table\ClientConfig
      */
@@ -77,7 +71,6 @@ class PackageManager
      * @param \Model\Config $config
      * @param \Library\ArchiveManager $archiveManager
      * @param \Database\Table\Packages $packages
-     * @param \Database\Table\PackageDownloadInfo $packageDownloadInfo
      * @param \Database\Table\ClientConfig $clientConfig
      * @param \Database\Table\GroupInfo $groupInfo
      */
@@ -86,7 +79,6 @@ class PackageManager
         \Model\Config $config,
         \Library\ArchiveManager $archiveManager,
         \Database\Table\Packages $packages,
-        \Database\Table\packageDownloadInfo $packageDownloadInfo,
         \Database\Table\ClientConfig $clientConfig,
         \Database\Table\GroupInfo $groupInfo
     )
@@ -95,7 +87,6 @@ class PackageManager
         $this->_config = $config;
         $this->_archiveManager = $archiveManager;
         $this->_packages = $packages;
-        $this->_packageDownloadInfo = $packageDownloadInfo;
         $this->_clientConfig = $clientConfig;
         $this->_groupInfo = $groupInfo;
     }
@@ -122,8 +113,7 @@ class PackageManager
     public function getPackage($name)
     {
         $select = $this->_packages->getSql()->select();
-        $select->join('download_enable', 'download_available.fileid = download_enable.fileid', 'id')
-               ->where(array('name' => $name));
+        $select->where(array('name' => $name));
 
         try {
             $packages = $this->_packages->selectWith($select);
@@ -152,7 +142,7 @@ class PackageManager
         $subquery = $this->_clientConfig->getSql()->select();
         $subquery->columns(array(new Predicate\Literal('COUNT(hardware_id)')))
                  ->where(
-                     array('name' => 'DOWNLOAD', 'ivalue' => new \Zend\Db\Sql\Literal('id'))
+                     array('name' => 'DOWNLOAD', 'ivalue' => new \Zend\Db\Sql\Literal('fileid'))
                  );
 
         $groups = $this->_groupInfo->getSql()->select()->columns(array('hardware_id'));
@@ -179,7 +169,6 @@ class PackageManager
                 'num_error' => new Predicate\Expression('?', array($error)),
             )
         );
-        $select->join('download_enable', 'download_available.fileid = download_enable.fileid', 'id');
 
         $package = new \Model_Package;
         $select->order(\Model_Package::getOrder($order, $direction, $package->getPropertyMap()));
@@ -260,23 +249,11 @@ class PackageManager
                     'comment' => $data['Comment'],
                 )
             );
-            $this->_packageDownloadInfo->insert(
-                array(
-                    'fileid' => $timestamp,
-                    'info_loc' => $this->_config->packageBaseUriHttps,
-                    'pack_loc' => $this->_config->packageBaseUriHttp,
-                )
-            );
-
-            // Get ID of created record
-            $select = $this->_packageDownloadInfo->getSql()->select();
-            $select->columns(array('id'))->where(array('fileid' => $timestamp));
-            $id = $this->_packageDownloadInfo->selectWith($select)->current()['id'];
         } catch (\Exception $e) {
             $this->delete($data);
             throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
         }
-        return (integer) $id;
+        return (integer) $timestamp;
     }
 
     /**
@@ -350,12 +327,11 @@ class PackageManager
         try {
             $this->_clientConfig->delete(
                 array(
+                    'ivalue' => $timestamp,
                     "name != 'DOWNLOAD_SWITCH'",
                     "name LIKE 'DOWNLOAD%'",
-                    'ivalue IN (SELECT id FROM download_enable WHERE fileid = ?)' => $timestamp,
                 )
             );
-            $this->_packageDownloadInfo->delete(array('fileid' => $timestamp));
             $this->_packages->delete(array('fileid' => $timestamp));
             $this->_storage->cleanup($data);
         } catch (\Exception $e) {

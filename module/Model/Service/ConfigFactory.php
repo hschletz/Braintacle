@@ -31,9 +31,6 @@ class ConfigFactory implements \Zend\ServiceManager\FactoryInterface
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        return new \Model\Config(
-            $serviceLocator->get('Database\Table\Config'),
-            $serviceLocator->get('Database\Table\PackageDownloadInfo')
-        );
+        return new \Model\Config($serviceLocator->get('Database\Table\Config'));
     }
 }

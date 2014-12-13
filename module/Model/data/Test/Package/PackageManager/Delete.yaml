@@ -1,7 +1,7 @@
 # Fixture for PackageManagerTest
 download_available:
   -
-    fileid: "1415958320"
+    fileid: 1415958320
     name: "package2"
     priority: 5
     fragments: 42
@@ -11,25 +11,25 @@ download_available:
 
 download_enable:
   -
-    id: 2
-    fileid: "1415958320"
+    id: 1415958320
+    fileid: 1415958320
     info_loc: "HTTPS URL"
     pack_loc: "HTTP URL"
 
 devices:
   -
     hardware_id: 1
-    name: "OTHER"
-    ivalue: 1
-  -
-    hardware_id: 1
     name: "DOWNLOAD_SWITCH"
     ivalue: 1
   -
+    hardware_id: 1
+    name: "OTHER"
+    ivalue: 1415958319
+  -
     hardware_id: 2
     name: "DOWNLOAD"
-    ivalue: 2
+    ivalue: 1415958320
   -
     hardware_id: 2
     name: "DOWNLOAD_FORCE"
-    ivalue: 2
+    ivalue: 1415958320

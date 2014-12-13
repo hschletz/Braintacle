@@ -161,24 +161,13 @@ class Config
     protected $_config;
 
     /**
-     * PackageDownloadInfo table gateway
-     * @var \Database\Table\PackageDownloadInfo
-     */
-    protected $_packageDownloadInfo;
-
-    /**
      * Constructor
      *
      * @param \Database\Table\Config $config
-     * @param \Database\Table\PackageDownloadInfo $packageDownloadInfo
      */
-    public function __construct(
-        \Database\Table\Config $config,
-        \Database\Table\PackageDownloadInfo $packageDownloadInfo
-    )
+    public function __construct(\Database\Table\Config $config)
     {
         $this->_config = $config;
-        $this->_packageDownloadInfo = $packageDownloadInfo;
     }
 
     /**
@@ -216,18 +205,7 @@ class Config
             // Convert boolean to bitmask
             $value = $value ? 63 : 0;
         }
-        if ($this->_config->set($option, $value)) {
-            switch ($option) {
-                // Communication server reads download info from package table.
-                // Update all package entries.
-                case 'packageBaseUriHttp':
-                    $this->_packageDownloadInfo->update(array('pack_loc' => $value));
-                    break;
-                case 'packageBaseUriHttps':
-                    $this->_packageDownloadInfo->update(array('info_loc' => $value));
-                    break;
-            }
-        }
+        $this->_config->set($option, $value);
     }
 
     /**

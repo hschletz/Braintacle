@@ -88,5 +88,7 @@ class SchemaManager
             $table = \Library\Application::getService('Database\Table\\' . $tableClass);
             $table->setSchema();
         }
+        // Views need manual invocation.
+        \Library\Application::getService('Database\Table\PackageDownloadInfo')->setSchema();
     }
 }
