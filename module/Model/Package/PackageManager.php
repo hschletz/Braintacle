@@ -183,7 +183,6 @@ class PackageManager
      * @param bool $deleteSource Delete source file as soon as possible
      * @throws RuntimeException if a package with the requested name already exists or an error occurs
      * @throws \InvalidArgumentException if 'Platform' key is not a valid value
-     * @return integer ID of created database entry
      */
     public function build($data, $deleteSource)
     {
@@ -253,7 +252,6 @@ class PackageManager
             $this->delete($data);
             throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
         }
-        return (integer) $timestamp;
     }
 
     /**

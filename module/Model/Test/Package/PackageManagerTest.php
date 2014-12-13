@@ -302,9 +302,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $model->expects($this->never())->method('delete');
 
         // Invoke build method
-        $id = $model->build($data, $deleteSource);
-        $this->assertInternalType('integer', $id);
-        $this->assertGreaterThan(0, $id);
+        $model->build($data, $deleteSource);
 
         // Test database results
         $connection = $this->getConnection();
