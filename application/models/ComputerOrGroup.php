@@ -266,7 +266,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
         $selectInstalled = $db->select()
             ->from('devices', 'hardware_id')
             ->where('hardware_id=?', $this->getId())
-            ->where('ivalue=?', $package['EnabledId'])
+            ->where('ivalue=?', $package['Id'])
             ->where('name=\'DOWNLOAD\'');
         $selectHistory = $db->select()
             ->from('download_history', 'hardware_id')
@@ -281,7 +281,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
                 array(
                     'hardware_id' => $this->getId(),
                     'name' => 'DOWNLOAD',
-                    'ivalue' => $package['EnabledId'],
+                    'ivalue' => $package['Id'],
                     'comments' => date(\Model_PackageAssignment::DATEFORMAT),
                 )
             );
@@ -303,7 +303,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
             'devices',
             array(
                 'hardware_id=?' => $this->getId(),
-                'ivalue=?' => $package['EnabledId'],
+                'ivalue=?' => $package['Id'],
                 "name LIKE 'DOWNLOAD%'"
             )
         );

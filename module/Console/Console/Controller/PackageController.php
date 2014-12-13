@@ -171,8 +171,8 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
                 if ($this->_buildPackage($data)) {
                     $newPackage = $this->_packageManager->getPackage($data['Name']);
                     $this->_packageManager->updateAssignments(
-                        $oldPackage['EnabledId'],
-                        $newPackage['EnabledId'],
+                        $oldPackage['Id'],
+                        $newPackage['Id'],
                         $data['Deploy']['Nonnotified'],
                         $data['Deploy']['Success'],
                         $data['Deploy']['Notified'],

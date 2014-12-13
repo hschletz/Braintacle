@@ -476,7 +476,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->getRequest()->getFiles()->set('File', $fileSpec);
         $formData = $postData + array('File' => $fileSpec);
-        $oldPackage = array('EnabledId' => '1', 'Name' => 'oldName');
+        $oldPackage = array('Id' => '1', 'Name' => 'oldName');
 
         $this->_updateForm->expects($this->once())
                           ->method('setData')
@@ -495,7 +495,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                               ->will(
                                   $this->onConsecutiveCalls(
                                       $oldPackage,
-                                      array('EnabledId' => '2')
+                                      array('Id' => '2')
                                   )
                               );
         $this->_packageManager->expects($this->once())
@@ -553,7 +553,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             'FileName' => 'file_name',
             'FileLocation' => 'file_tmp_name',
         );
-        $oldPackage = array('EnabledId' => '1', 'Name' => 'oldName');
+        $oldPackage = array('Id' => '1', 'Name' => 'oldName');
         $this->getRequest()->getFiles()->set('File', $fileSpec);
         $formData = $postData + array('File' => $fileSpec);
 
@@ -574,7 +574,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                               ->will(
                                   $this->onConsecutiveCalls(
                                       $oldPackage,
-                                      array('EnabledId' => '2')
+                                      array('Id' => '2')
                                   )
                               );
         $this->_packageManager->expects($this->once())

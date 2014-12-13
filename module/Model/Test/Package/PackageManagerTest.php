@@ -64,7 +64,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $model = $this->_getModel(array('Model\Package\Storage\Direct' => $storage));
         $package = $model->getPackage('package2');
         $this->assertInstanceOf('Model_Package', $package);
-        $this->assertEquals($packageData + $metadata + array('EnabledId' => '1415958320'), $package->getArrayCopy());
+        $this->assertEquals($packageData + $metadata + array('Id' => '1415958320'), $package->getArrayCopy());
     }
 
     public function testGetPackageInvalidName()
@@ -93,7 +93,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             'Size' => '12345678',
             'Platform' => 'windows',
             'Comment' => 'Existing package 1',
-            'EnabledId' => '1415958319',
+            'Id' => '1415958319',
             'NumNonnotified' => '1',
             'NumSuccess' => '1',
             'NumNotified' => '1',
@@ -107,7 +107,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             'Size' => '12345678',
             'Platform' => 'linux',
             'Comment' => 'Existing package 2',
-            'EnabledId' => '1415958320',
+            'Id' => '1415958320',
             'NumNonnotified' => '1',
             'NumSuccess' => '0',
             'NumNotified' => '0',
