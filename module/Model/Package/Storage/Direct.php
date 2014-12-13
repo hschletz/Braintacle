@@ -56,7 +56,7 @@ class Direct implements StorageInterface
     /** {@inheritdoc} */
     public function prepare($data)
     {
-        return $this->createDirectory($data);
+        return $this->createDirectory($data['Id']);
     }
 
     /** {@inheritdoc} */
@@ -66,16 +66,16 @@ class Direct implements StorageInterface
             $data['NumFragments'] = $this->writeContent($data, $file, $deleteSource);
             $this->writeMetadata($data);
         } catch (\Exception $e) {
-            $this->cleanup($data);
+            $this->cleanup($data['Id']);
             throw $e;
         }
         return $data['NumFragments'];
     }
 
     /** {@inheritdoc} */
-    public function cleanup($data)
+    public function cleanup($id)
     {
-        $dir = $this->getPath($data['Timestamp']);
+        $dir = $this->getPath($id);
         if (is_dir($dir)) {
             foreach (new \DirectoryIterator($dir) as $file) {
                 // There should be no subdirectories, no need for recursion.
@@ -96,12 +96,12 @@ class Direct implements StorageInterface
     /**
      * Create package directory
      *
-     * @param array $data Package data
+     * @param integer $id Package ID
      * @return string Path to created directory
      */
-    public function createDirectory($data)
+    public function createDirectory($id)
     {
-        $dir = $this->getPath($data['Timestamp']);
+        $dir = $this->getPath($id);
         \Library\FileObject::mkdir($dir);
         return $dir;
     }
@@ -109,12 +109,12 @@ class Direct implements StorageInterface
     /**
      * Get base directory for package storage
      *
-     * @param \Zend_Date $timestamp Package timestamp
+     * @param integer $id Package ID
      * @return string Directory composed from application config and package timestamp
      */
-    public function getPath($timestamp)
+    public function getPath($id)
     {
-        return $this->_config->packagePath . '/' . $timestamp->get(\Zend_Date::TIMESTAMP);
+        return $this->_config->packagePath . '/' . $id;
     }
 
     /**
@@ -125,18 +125,18 @@ class Direct implements StorageInterface
     public function writeMetadata($data)
     {
         $this->_metadata->setPackageData($data);
-        $this->_metadata->save($this->getPath($data['Timestamp']) . '/info');
+        $this->_metadata->save($this->getPath($data['Id']) . '/info');
     }
 
     /**
      * Read metadata XML file
      *
-     * @param \Zend_Date $timestamp Package timestamp
+     * @param integer $id Package ID
      * @return array Package data, see \Model\Package\Metadata::getPackageData()
      */
-    public function readMetadata($timestamp)
+    public function readMetadata($id)
     {
-        $this->_metadata->load($this->getPath($timestamp) . '/info');
+        $this->_metadata->load($this->getPath($id) . '/info');
         return $this->_metadata->getPackageData();
     }
 
@@ -150,7 +150,8 @@ class Direct implements StorageInterface
      */
     public function writeContent($data, $file, $deleteSource)
     {
-        $baseName = $this->getPath($data['Timestamp']) . '/' . $data['Timestamp']->get(\Zend_Date::TIMESTAMP) . '-';
+        $id = $data['Id'];
+        $baseName = $this->getPath($id) . "/$id-";
         $fileSize = @$data['Size'];
         $maxFragmentSize = @$data['MaxFragmentSize'] * 1024; // Kilobytes => Bytes
         if (!$data['FileLocation']) {

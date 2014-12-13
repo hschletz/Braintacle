@@ -350,17 +350,13 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionPostYesSuccess()
     {
-        $package = array('Name' => 'Name');
-        $this->_packageManager->expects($this->once())->method('getPackage')->with('Name')->willReturn($package);
-        $this->_testDeletePackage('/console/package/delete/?name=Name', array('yes' => 'Yes'), 'Name', $package, true);
+        $this->_testDeletePackage('/console/package/delete/?name=Name', array('yes' => 'Yes'), 'Name', true);
         $this->assertRedirectTo('/console/package/index/');
     }
 
     public function testDeleteActionPostYesError()
     {
-        $package = array('Name' => 'Name');
-        $this->_packageManager->expects($this->once())->method('getPackage')->with('Name')->willReturn($package);
-        $this->_testDeletePackage('/console/package/delete/?name=Name', array('yes' => 'Yes'), 'Name', $package, false);
+        $this->_testDeletePackage('/console/package/delete/?name=Name', array('yes' => 'Yes'), 'Name', false);
         $this->assertRedirectTo('/console/package/index/');
     }
 
@@ -583,7 +579,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_packageManager->expects($this->once())
                               ->method('updateAssignments')
                               ->with('1', '2', '0', '1', '0', '1', '0');
-        $this->_testDeletePackage('/console/package/update/?name=oldName', $postData, 'oldName', $oldPackage, true);
+        $this->_testDeletePackage('/console/package/update/?name=oldName', $postData, 'oldName', true);
     }
 
     public function testUpdateActionPostValidBuildError()
@@ -741,10 +737,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
      * @param string $url URL to dispatch to
      * @param array $postData $POST data
      * @param string $name Package name
-     * @param \Model_Package $package package data
      * @param bool $success Deletion success to test
      */
-    protected function _testDeletePackage($url, $postData, $name, $package, $success)
+    protected function _testDeletePackage($url, $postData, $name, $success)
     {
         $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
         $errors = array(
@@ -752,11 +747,11 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             array('format2' => array('arg3', 'arg4')),
         );
         if ($success) {
-            $this->_packageManager->expects($this->once())->method('delete')->with($package);
+            $this->_packageManager->expects($this->once())->method('delete')->with($name);
         } else {
             $this->_packageManager->expects($this->once())
                                   ->method('delete')
-                                  ->with($package)
+                                  ->with($name)
                                   ->will($this->throwException(new \Model\Package\RuntimeException('delete error')));
         }
         $this->dispatch($url, 'POST', $postData);

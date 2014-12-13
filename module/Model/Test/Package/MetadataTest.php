@@ -36,7 +36,7 @@ class MetadataTest extends \Model\Test\AbstractTest
     public function testsetPackageData()
     {
         $data = array(
-            'Timestamp' => new \Zend_Date(1415610660, \Zend_Date::TIMESTAMP),
+            'Id' => '12345678',
             'Priority' => '5',
             'DeployAction' => 'store',
             'ActionParam' => '',
@@ -57,7 +57,7 @@ class MetadataTest extends \Model\Test\AbstractTest
         $this->assertEquals('DOWNLOAD', $node->tagName);
         $this->assertFalse($node->hasChildNodes());
 
-        $this->assertEquals('1415610660', $node->getAttribute('ID'));
+        $this->assertEquals('12345678', $node->getAttribute('ID'));
         $this->assertEquals('5', $node->getAttribute('PRI'));
         $this->assertEquals('hash', $node->getAttribute('DIGEST'));
         $this->assertEquals('HTTP', $node->getAttribute('PROTO'));
@@ -90,7 +90,7 @@ class MetadataTest extends \Model\Test\AbstractTest
     public function testsetPackageDataActionParams($action, $act, $path, $name, $command)
     {
         $data = array(
-            'Timestamp' => new \Zend_Date,
+            'Id' => '12345678',
             'Priority' => '5',
             'DeployAction' => $action,
             'ActionParam' => 'action_param',
@@ -136,7 +136,7 @@ class MetadataTest extends \Model\Test\AbstractTest
     public function testSetPackageDataBooleanValues($input, $expected)
     {
         $data = array(
-            'Timestamp' => new \Zend_Date,
+            'Id' => '12345678',
             'Priority' => '5',
             'DeployAction' => 'store',
             'ActionParam' => '',
@@ -178,7 +178,7 @@ class MetadataTest extends \Model\Test\AbstractTest
     public function testSetPackageDataPostinstMessage($inputMessage, $documentMessage, $documentFlag)
     {
          $data = array(
-            'Timestamp' => new \Zend_Date(),
+            'Id' => '12345678',
             'Priority' => '5',
             'DeployAction' => 'store',
             'ActionParam' => '',
@@ -201,7 +201,7 @@ class MetadataTest extends \Model\Test\AbstractTest
     public function testsetPackageDataOverwrite()
     {
         $data = array(
-            'Timestamp' => new \Zend_Date,
+            'Id' => '12345678',
             'Priority' => '5',
             'DeployAction' => 'store',
             'ActionParam' => '',

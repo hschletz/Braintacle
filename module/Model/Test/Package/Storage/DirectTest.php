@@ -37,12 +37,12 @@ class DirectTest extends \Model\Test\AbstractTest
 
     public function testPrepare()
     {
-        $data = 'data';
+        $data = array('Id' => 'id');
         $model = $this->getMockBuilder('Model\Package\Storage\Direct')
                       ->setMethods(array('createDirectory'))
                       ->disableOriginalConstructor()
                       ->getMock();
-        $model->expects($this->once())->method('createDirectory')->with($data)->willReturn('path');
+        $model->expects($this->once())->method('createDirectory')->with('id')->willReturn('path');
         $this->assertEquals('path', $model->prepare($data));
     }
 
@@ -71,11 +71,11 @@ class DirectTest extends \Model\Test\AbstractTest
 
     public function testWriteErrorMetadata()
     {
-        $data = array('foo' => 'bar');
+        $data = array('Id' => 'id');
         $file = 'file';
         $deleteSource = 'deleteSource';
         $numFragments = 'numFragments';
-        $data2 = array('foo' => 'bar', 'NumFragments' => $numFragments);
+        $data2 = $data + array('NumFragments' => $numFragments);
         $model = $this->getMockBuilder('Model\Package\Storage\Direct')
                       ->setMethods(array('writeContent', 'writeMetadata', 'cleanup'))
                       ->disableOriginalConstructor()
@@ -90,14 +90,14 @@ class DirectTest extends \Model\Test\AbstractTest
               ->will($this->throwException(new \RuntimeException('test')));
         $model->expects($this->once())
               ->method('cleanup')
-              ->with($data2);
+              ->with('id');
         $this->setExpectedException('RuntimeException', 'test');
         $model->write($data, $file, $deleteSource);
     }
 
     public function testWriteErrorContent()
     {
-        $data = array('foo' => 'bar');
+        $data = array('Id' => 'id');
         $file = 'file';
         $deleteSource = 'deleteSource';
         $model = $this->getMockBuilder('Model\Package\Storage\Direct')
@@ -112,7 +112,7 @@ class DirectTest extends \Model\Test\AbstractTest
               ->method('writeMetadata');
         $model->expects($this->once())
               ->method('cleanup')
-              ->with($data);
+              ->with('id');
         $this->setExpectedException('RuntimeException', 'test');
         $model->write($data, $file, $deleteSource);
     }
@@ -121,13 +121,12 @@ class DirectTest extends \Model\Test\AbstractTest
     {
         $root = vfsStream::setup('root');
         $path = $root->url() . '/path';
-        $timestamp = 'timestamp';
         $model = $this->getMockBuilder('Model\Package\Storage\Direct')
                       ->setMethods(array('getPath'))
                       ->disableOriginalConstructor()
                       ->getMock();
-        $model->expects($this->once())->method('getPath')->with($timestamp)->willReturn($path);
-        $model->cleanup(array('Timestamp' => $timestamp));
+        $model->expects($this->once())->method('getPath')->with('id')->willReturn($path);
+        $model->cleanup('id');
     }
 
     public function testCleanupRemoveFiles()
@@ -136,13 +135,12 @@ class DirectTest extends \Model\Test\AbstractTest
         $dir = vfsStream::newDirectory('path')->at($root);
         $path = $dir->url();
         vfsStream::newFile('test')->at($dir);
-        $timestamp = 'timestamp';
         $model = $this->getMockBuilder('Model\Package\Storage\Direct')
                       ->setMethods(array('getPath'))
                       ->disableOriginalConstructor()
                       ->getMock();
-        $model->method('getPath')->with($timestamp)->willReturn($path);
-        $model->cleanup(array('Timestamp' => $timestamp));
+        $model->method('getPath')->with('id')->willReturn($path);
+        $model->cleanup('id');
         $this->assertFileNotExists($path);
     }
 
@@ -153,14 +151,13 @@ class DirectTest extends \Model\Test\AbstractTest
         $path = $dir->url();
         $dirInvalid = vfsStream::newDirectory('test_dir')->at($dir)->url();
         $fileValid = vfsStream::newFile('test_file')->at($dir)->url();
-        $timestamp = 'timestamp';
         $model = $this->getMockBuilder('Model\Package\Storage\Direct')
                       ->setMethods(array('getPath'))
                       ->disableOriginalConstructor()
                       ->getMock();
-        $model->method('getPath')->with($timestamp)->willReturn($path);
+        $model->method('getPath')->with('id')->willReturn($path);
         try {
-            $model->cleanup(array('Timestamp' => $timestamp));
+            $model->cleanup('id');
             $this->fail('Expected exception was not thrown');
         } catch (\Exception $e) {
             $this->assertFileExists($dirInvalid);
@@ -172,13 +169,12 @@ class DirectTest extends \Model\Test\AbstractTest
     {
         $root = vfsStream::setup('root');
         $path = $root->url() . '/path';
-        $timestamp = 'timestamp';
         $model = $this->getMockBuilder('Model\Package\Storage\Direct')
                       ->setMethods(array('getPath'))
                       ->disableOriginalConstructor()
                       ->getMock();
-        $model->method('getPath')->with($timestamp)->willReturn($path);
-        $this->assertEquals($path, $model->createDirectory(array('Timestamp' => $timestamp)));
+        $model->method('getPath')->with('id')->willReturn($path);
+        $this->assertEquals($path, $model->createDirectory('id'));
         $this->assertTrue(is_dir($path));
     }
 
@@ -187,14 +183,12 @@ class DirectTest extends \Model\Test\AbstractTest
         $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
         $config->method('__get')->with('packagePath')->willReturn('packagePath');
         $model = new Direct($config, new Metadata);
-        $timestamp = new \Zend_Date(1415610660, \Zend_Date::TIMESTAMP);
-        $this->assertEquals('packagePath/1415610660', $model->getPath($timestamp));
+        $this->assertEquals('packagePath/id', $model->getPath('id'));
     }
 
     public function testWriteMetadata()
     {
-        $timestamp = new \Zend_Date(1415610660, \Zend_Date::TIMESTAMP);
-        $data = array('Timestamp' => $timestamp);
+        $data = array('Id' => 'id');
 
         $metadata = $this->getMock('Model\Package\Metadata');
         $metadata->expects($this->once())->method('setPackageData')->with($data);
@@ -205,15 +199,13 @@ class DirectTest extends \Model\Test\AbstractTest
                       ->setMethods(array('getPath'))
                       ->setConstructorArgs(array($config, $metadata))
                       ->getMock();
-        $model->method('getPath')->with($timestamp)->willReturn('/path');
+        $model->method('getPath')->with('id')->willReturn('/path');
 
         $model->writeMetadata($data);
     }
 
     public function testReadMetadata()
     {
-        $timestamp = new \Zend_Date(1415610660, \Zend_Date::TIMESTAMP);
-
         $metadata = $this->getMock('Model\Package\Metadata');
         $metadata->expects($this->once())->method('load')->with('/path/info');
         $metadata->expects($this->once())->method('getPackageData')->willReturn('packageData');
@@ -223,15 +215,15 @@ class DirectTest extends \Model\Test\AbstractTest
                       ->setMethods(array('getPath'))
                       ->setConstructorArgs(array($config, $metadata))
                       ->getMock();
-        $model->method('getPath')->with($timestamp)->willReturn('/path');
+        $model->method('getPath')->with('id')->willReturn('/path');
 
-        $this->assertEquals('packageData', $model->readMetadata($timestamp));
+        $this->assertEquals('packageData', $model->readMetadata('id'));
     }
 
     public function testWriteContentNoFile()
     {
         $data = array(
-            'Timestamp' => new \Zend_Date(1415610660, \Zend_Date::TIMESTAMP),
+            'Id' => 'id',
             'FileLocation' => '',
         );
         $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
@@ -272,10 +264,8 @@ class DirectTest extends \Model\Test\AbstractTest
         $sourceFile = vfsStream::newFile('test')->withContent($content)->at($root)->url();
         $packageDir = vfsStream::newDirectory('target')->at($root)->url();
 
-        $fileId = 1415610660;
-        $timestamp = new \Zend_Date($fileId, \Zend_Date::TIMESTAMP);
         $data = array(
-            'Timestamp' => $timestamp,
+            'Id' => 'id',
             'FileLocation' => $sourceFile,
             'Size' => $fileSize,
             'MaxFragmentSize' => $maxFragmentSize,
@@ -287,7 +277,7 @@ class DirectTest extends \Model\Test\AbstractTest
                       ->setMethods(array('getPath'))
                       ->setConstructorArgs(array($config, $metadata))
                       ->getMock();
-        $model->method('getPath')->with($timestamp)->willReturn($packageDir);
+        $model->method('getPath')->with('id')->willReturn($packageDir);
 
         $numFragments = $model->writeContent($data, $sourceFile, $deleteSource);
         $this->assertSame($expectedFragments, $numFragments);
@@ -300,14 +290,14 @@ class DirectTest extends \Model\Test\AbstractTest
 
         $targetContent = '';
         for ($i = 1; $i <= $numFragments; $i++) {
-            $targetFile = "$packageDir/$fileId-$i";
+            $targetFile = "$packageDir/id-$i";
             $this->assertFileExists($targetFile);
             if ($maxFragmentSize) {
                 $this->assertLessThanOrEqual($maxFragmentSize * 1024, filesize($targetFile));
             }
             $targetContent .= file_get_contents($targetFile);
         }
-        $this->assertFileNotExists("$packageDir/$fileId-" . ($numFragments + 1));
+        $this->assertFileNotExists("$packageDir/id-" . ($numFragments + 1));
         $this->assertEquals($content, $targetContent);
     }
 }

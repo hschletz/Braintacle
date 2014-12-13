@@ -179,7 +179,7 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
                         $data['Deploy']['Error'],
                         $data['Deploy']['Groups']
                     );
-                    $success = $this->_deletePackage($oldPackage);
+                    $success = $this->_deletePackage($oldName);
                 } else {
                     $success = false;
                 }
@@ -255,18 +255,14 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Delete a package and send feedback via flashMessenger
      *
-     * @param string|\Model_Package $package Package or package name
+     * @param string $name Package name
      * @return bool Success
      */
-    protected function _deletePackage($package)
+    protected function _deletePackage($name)
     {
         $flashMessenger = $this->flashMessenger();
         try {
-            if (is_string($package)) {
-                $package = $this->_packageManager->getPackage($package);
-            }
-            $name = $package['Name'];
-            $this->_packageManager->delete($package);
+            $this->_packageManager->delete($name);
             $flashMessenger->addSuccessMessage(
                 array($this->_('Package \'%s\' was successfully deleted.') => $name)
             );

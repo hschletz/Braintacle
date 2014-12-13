@@ -39,9 +39,8 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
     public function testGetPackage()
     {
-        $timestamp = new \Zend_Date(1415958320, \Zend_Date::TIMESTAMP);
         $packageData = array(
-            'Timestamp' => $timestamp,
+            'Id' => '1415958320',
             'Name' => 'package2',
             'Priority' => '5',
             'NumFragments' => '42',
@@ -60,11 +59,14 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             'PostInstMessage' => 'PostInstMessage',
         );
         $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
-        $storage->expects($this->once())->method('readMetadata')->with($timestamp)->willReturn($metadata);
+        $storage->expects($this->once())->method('readMetadata')->with('1415958320')->willReturn($metadata);
         $model = $this->_getModel(array('Model\Package\Storage\Direct' => $storage));
         $package = $model->getPackage('package2');
         $this->assertInstanceOf('Model_Package', $package);
-        $this->assertEquals($packageData + $metadata + array('Id' => '1415958320'), $package->getArrayCopy());
+        $this->assertEquals(
+            $packageData + $metadata + array('Timestamp' => new \Zend_Date(1415958320, \Zend_Date::TIMESTAMP)),
+            $package->getArrayCopy()
+        );
     }
 
     public function testGetPackageInvalidName()
@@ -212,7 +214,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
         // Callback to test the static part of package data (input values)
         $checkStaticData = function($testData) use ($data) {
-            unset($testData['Timestamp']);
+            unset($testData['Id']);
             unset($testData['Hash']);
             unset($testData['Size']);
             return ($testData === $data);
@@ -222,7 +224,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         // Actual timestamp is written to $timestamp
         $now = time();
         $checkTimestamp = function($testData) use ($data, $now, &$timestamp) {
-            $timestamp = $testData['Timestamp']->get(\Zend_Date::TIMESTAMP);
+            $timestamp = $testData['Id'];
             return ($timestamp - $now <= 1);
         };
 
@@ -409,14 +411,6 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             'FileLocation' => $source,
         );
 
-        // Callback to test package data passed to delete()
-        $now = time();
-        $checkData = function($testData) use ($data, $now) {
-            $timestamp = $testData['Timestamp']->get(\Zend_Date::TIMESTAMP);
-            unset($testData['Timestamp']);
-            return ($timestamp - $now <= 1 and $testData == $data);
-        };
-
         $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
         $storage->expects($this->once())->method('prepare');
         $storage->expects($this->never())->method('write');
@@ -442,7 +436,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                       ->getMock();
         $model->expects($this->once())->method('packageExists')->willReturn(false);
         $model->expects($this->once())->method('autoArchive')->willReturn($source);
-        $model->expects($this->once())->method('delete')->with($this->callback($checkData));
+        $model->expects($this->once())->method('delete')->with('package_new');
 
         $this->setExpectedException('Model\Package\RuntimeException', $message);
         $model->build($data, false);
@@ -674,11 +668,10 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
     public function testDelete()
     {
-        $data = array('Timestamp' => new \Zend_Date(1415958319, \Zend_Date::TIMESTAMP));
         $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
-        $storage->expects($this->once())->method('cleanup')->with($data);
+        $storage->expects($this->once())->method('cleanup')->with('1415958319');
         $model = $this->_getModel(array('Model\Package\Storage\Direct' => $storage));
-        $model->delete($data);
+        $model->delete('package1');
 
         $connection = $this->getConnection();
         $dataset = $this->_loadDataSet('Delete');
@@ -701,12 +694,9 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteException()
     {
-        $this->setExpectedException('Model\Package\RuntimeException', 'database error');
-        $data = array('Timestamp' => new \Zend_Date(1415958319, \Zend_Date::TIMESTAMP));
-        $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
-        $clientConfig->method('delete')->will($this->throwException(new \RuntimeException('database error')));
-        $model = $this->_getModel(array('Database\Table\ClientConfig' => $clientConfig));
-        $model->delete($data);
+        $this->setExpectedException('Model\Package\RuntimeException', "Package 'invalid' does not exist");
+        $model = $this->_getModel();
+        $model->delete('invalid');
     }
 
     public function testUpdateAssignmentsNoActionRequired()

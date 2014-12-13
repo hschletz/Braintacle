@@ -47,7 +47,7 @@ class Metadata extends \Library\DomDocument
     {
         $node = $this->createElement('DOWNLOAD');
 
-        $node->setAttribute('ID', $data['Timestamp']->get(\Zend_Date::TIMESTAMP));
+        $node->setAttribute('ID', $data['Id']);
         $node->setAttribute('PRI', $data['Priority']);
         $node->setAttribute('ACT', strtoupper($data['DeployAction']));
         $node->setAttribute('DIGEST', $data['Hash']);

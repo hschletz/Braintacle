@@ -67,8 +67,8 @@ interface StorageInterface
      * This is invoked by the package manager when a package is deleted or an
      * error occurs in the build process.
      *
-     * @param array $data Package data
+     * @param integer Package ID
      * @throws \Exception if an error occurs.
      */
-    public function cleanup($data);
+    public function cleanup($id);
 }

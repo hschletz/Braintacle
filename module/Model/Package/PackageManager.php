@@ -122,7 +122,7 @@ class PackageManager
             }
 
             $package = $packages->current();
-            $package->exchangeArray($this->_storage->readMetadata($package['Timestamp']));
+            $package->exchangeArray($this->_storage->readMetadata($package['Id']));
             return $package;
         } catch (\Exception $e) {
             throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
@@ -205,9 +205,8 @@ class PackageManager
             return false;
         }
 
-        // Set package timestamp
-        $data['Timestamp'] = new \Zend_Date;
-        $timestamp = $data['Timestamp']->get(\Zend_Date::TIMESTAMP);
+        // Set package ID/timestamp
+        $data['Id'] =time();
 
         try {
             // Obtain archive file
@@ -239,7 +238,7 @@ class PackageManager
             // Create database entries
             $this->_packages->insert(
                 array(
-                    'fileid' => $timestamp,
+                    'fileid' => $data['Id'],
                     'name' => $data['Name'],
                     'priority' => $data['Priority'],
                     'fragments' => $data['NumFragments'],
@@ -249,7 +248,7 @@ class PackageManager
                 )
             );
         } catch (\Exception $e) {
-            $this->delete($data);
+            $this->delete($data['Name']);
             throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
         }
     }
@@ -316,22 +315,27 @@ class PackageManager
     /**
      * Delete a package
      *
-     * @param array $data Package data
+     * @param string $name Package name
      * @throws RuntimeException if an error occurs
      */
-    public function delete($data)
+    public function delete($name)
     {
-        $timestamp = $data['Timestamp']->get(\Zend_Date::TIMESTAMP);
         try {
+            $select = $this->_packages->getSql()->select()->columns(array('fileid'))->where(array('name' => $name));
+            $package = $this->_packages->selectWith($select)->current();
+            if (!$package) {
+                throw new \RuntimeException("Package '$name' does not exist");
+            }
+            $id = $package['Id'];
             $this->_clientConfig->delete(
                 array(
-                    'ivalue' => $timestamp,
+                    'ivalue' => $id,
                     "name != 'DOWNLOAD_SWITCH'",
                     "name LIKE 'DOWNLOAD%'",
                 )
             );
-            $this->_packages->delete(array('fileid' => $timestamp));
-            $this->_storage->cleanup($data);
+            $this->_packages->delete(array('fileid' => $id));
+            $this->_storage->cleanup($id);
         } catch (\Exception $e) {
             throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
         }
