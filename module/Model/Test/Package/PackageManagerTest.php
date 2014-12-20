@@ -144,6 +144,19 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         );
     }
 
+    public function testGetAllNames()
+    {
+        $model = $this->_getModel();
+        $this->assertEquals(array('package1', 'package2'), $model->getAllNames());
+    }
+
+    public function testGetAllNamesEmpty()
+    {
+        $model = $this->_getModel();
+        \Library\Application::getService('Database\Table\Packages')->delete(true);
+        $this->assertEquals(array(), $model->getAllNames());
+    }
+
     public function buildProvider()
     {
         $sourceContent = 'abcdef';

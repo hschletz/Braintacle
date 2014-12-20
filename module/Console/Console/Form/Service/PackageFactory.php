@@ -51,7 +51,7 @@ class PackageFactory implements \Zend\ServiceManager\AbstractFactoryInterface
         $form = new $requestedName;
         if ($form instanceof \Console\Form\Package\Build) {
             $serviceManager = $serviceLocator->getServiceLocator();
-            $form->setOption('packageManager', $serviceManager->get('Model\Package\Package'));
+            $form->setOption('packageManager', $serviceManager->get('Model\Package\PackageManager'));
         }
         return $form;
     }

@@ -177,6 +177,16 @@ class PackageManager
     }
 
     /**
+     * Get all package names
+     *
+     * @return string[]
+     */
+    public function getAllNames()
+    {
+        return $this->_packages->fetchCol('name');
+    }
+
+    /**
      * Build a package
      *
      * @param array $data Package data

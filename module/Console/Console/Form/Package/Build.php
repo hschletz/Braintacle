@@ -27,8 +27,8 @@ use Zend\Form\Element;
  * Form for creating a package
  *
  * The provided fields match the package property names. The packageManager
- * option must be set to a \Model_Package instance before init() is called.
- * The factory does this automatically.
+ * option must be set to a \Model\Package\PackageManager instance before init()
+ * is called. The factory does this automatically.
  */
 class Build extends \Console\Form\Form
 {

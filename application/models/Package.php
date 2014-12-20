@@ -191,14 +191,4 @@ class Model_Package extends Model_Abstract
         }
         parent::setProperty($property, $value);
     }
-
-    /**
-     * Get all package names
-     *
-     * @return string[]
-     */
-    public function getAllNames()
-    {
-        return \Library\Application::getService('Database\Table\Packages')->fetchCol('name');
-    }
 }
