@@ -27,10 +27,10 @@ namespace Console\Test\Controller;
 class AccountsControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
-     * Operator mock
-     * @var \Model_Account
+     * OperatorManager mock
+     * @var \Model\Operator\OperatorManager
      */
-    protected $_operators;
+    protected $_operatorManager;
 
     /**
      * Account creation form mock
@@ -47,7 +47,9 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
     /** {@inheritdoc} */
     public function setUp()
     {
-        $this->_operators = $this->getMockBuilder('Model_Account')->disableOriginalConstructor()->getMock();
+        $this->_operatorManager = $this->getMockBuilder('Model\Operator\OperatorManager')
+                                       ->disableOriginalConstructor()
+                                       ->getMock();
         $this->_formAccountAdd = $this->getMock('Console\Form\Account\Add');
         $this->_formAccountEdit = $this->getMock('Console\Form\Account\Edit');
         parent::setUp();
@@ -57,7 +59,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
     protected function _createController()
     {
         return new \Console\Controller\AccountsController(
-            $this->_operators,
+            $this->_operatorManager,
             $this->_formAccountAdd,
             $this->_formAccountEdit
         );
@@ -79,9 +81,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
             'MailAddress' => '',
             'Comment' => '',
         );
-        $this->_operators->expects($this->once())
-                         ->method('fetchAll')
-                         ->will($this->returnValue(array($account)));
+        $this->_operatorManager->expects($this->once())->method('fetchAll')->will($this->returnValue(array($account)));
 
         $identity = $this->getMock('Zend\View\Helper\Identity');
         $identity->expects($this->atLeastOnce())->method('__invoke')->willReturn('testId');
@@ -103,9 +103,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
             'MailAddress' => '',
             'Comment' => '',
         );
-        $this->_operators->expects($this->once())
-                         ->method('fetchAll')
-                         ->will($this->returnValue(array($account)));
+        $this->_operatorManager->expects($this->once())->method('fetchAll')->will($this->returnValue(array($account)));
 
         $identity = $this->getMock('Zend\View\Helper\Identity');
         $identity->expects($this->atLeastOnce())->method('__invoke')->willReturn('otherId');
@@ -125,9 +123,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
             'MailAddress' => 'test@example.com',
             'Comment' => '',
         );
-        $this->_operators->expects($this->once())
-                         ->method('fetchAll')
-                         ->will($this->returnValue(array($account)));
+        $this->_operatorManager->expects($this->once())->method('fetchAll')->will($this->returnValue(array($account)));
 
         $this->dispatch('/console/accounts/index/');
         $this->assertResponseStatusCode(200);
@@ -141,9 +137,8 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
             'Password' => 'topsecret',
             'PasswordRepeat' => 'topsecret',
         );
-        $this->_operators->expects($this->once())
-                         ->method('create')
-                         ->with($data, 'topsecret');
+        $this->_operatorManager->expects($this->once())->method('create')->with($data, 'topsecret');
+
         $this->_formAccountAdd->expects($this->once())
                               ->method('setData')
                               ->with($data);
@@ -162,8 +157,8 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
     public function testAddActionPostInvalid()
     {
         $data = array('Id' => 'testId');
-        $this->_operators->expects($this->never())
-                         ->method('create');
+        $this->_operatorManager->expects($this->never())->method('create');
+
         $this->_formAccountAdd->expects($this->once())
                               ->method('setData')
                               ->with($data);
@@ -182,8 +177,8 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testAddActionGet()
     {
-        $this->_operators->expects($this->never())
-                         ->method('create');
+        $this->_operatorManager->expects($this->never())->method('create');
+
         $this->_formAccountAdd->expects($this->never())
                               ->method('setData');
         $this->_formAccountAdd->expects($this->never())
@@ -200,14 +195,12 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testEditActionGet()
     {
-        $this->_operators->expects($this->never())
-                         ->method('update');
-        $this->_operators->expects($this->once())
-                         ->method('fetch')
-                         ->with('testId');
-        $this->_operators->expects($this->once())
-                         ->method('getArrayCopy')
-                         ->will($this->returnValue(array('Id' => 'testId')));
+        $operator = $this->getMockBuilder('Model_Account')->disableOriginalConstructor()->getMock();
+        $operator->expects($this->never())->method('update');
+        $operator->expects($this->once())->method('getArrayCopy')->willReturn(array('Id' => 'testId'));
+
+        $this->_operatorManager->expects($this->once())->method('get')->with('testId')->willReturn($operator);
+
         $this->_formAccountEdit->expects($this->once())
                                ->method('setData')
                                ->with(array('Id' => 'testId', 'OriginalId' => 'testId'));
@@ -226,8 +219,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
     public function testEditActionPostInvalid()
     {
         $data = array('OriginalId' => 'testId');
-        $this->_operators->expects($this->never())
-                         ->method('update');
+        $this->_operatorManager->expects($this->never())->method('get');
         $this->_formAccountEdit->expects($this->once())
                                ->method('setData')
                                ->with($data);
@@ -251,9 +243,11 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
             'Password' => 'topsecret',
             'PasswordRepeat' => 'topsecret',
         );
-        $this->_operators->expects($this->once())
-                         ->method('update')
-                         ->with('testId', $data, 'topsecret');
+        $operator = $this->getMockBuilder('Model_Account')->disableOriginalConstructor()->getMock();
+        $operator->expects($this->once())->method('update')->with($data, 'topsecret');
+
+        $this->_operatorManager->expects($this->once())->method('get')->with('testId')->willReturn($operator);
+
         $this->_formAccountEdit->expects($this->once())
                                ->method('setData')
                                ->with($data);
@@ -271,8 +265,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionGet()
     {
-        $this->_operators->expects($this->never())
-                         ->method('delete');
+        $this->_operatorManager->expects($this->never())->method('delete');
         $this->dispatch('/console/accounts/delete/?id=testId');
         $this->assertResponseStatusCode(200);
         $this->assertContains(
@@ -284,17 +277,14 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionPostNo()
     {
-        $this->_operators->expects($this->never())
-                         ->method('delete');
+        $this->_operatorManager->expects($this->never())->method('delete');
         $this->dispatch('/console/accounts/delete/?id=testId', 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/accounts/index/');
     }
 
     public function testDeleteActionPostYes()
     {
-        $this->_operators->expects($this->once())
-                         ->method('delete')
-                         ->with('testId');
+        $this->_operatorManager->expects($this->once())->method('delete')->with('testId');
         $this->dispatch('/console/accounts/delete/?id=testId', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/accounts/index/');
     }

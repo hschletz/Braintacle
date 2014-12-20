@@ -27,10 +27,10 @@ namespace Console\Controller;
 class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
 {
     /**
-     * Operator prototype
-     * @var \Model_Account
+     * Operator manager
+     * @var \Model\Operator\OperatorManager
      */
-    protected $_operators;
+    protected $_operatorManager;
 
     /**
      * Account creation form
@@ -47,17 +47,17 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Constructor
      *
-     * @param \Model_Account $operators operator prototype
+     * @param \Model\Operator\OperatorManager $operatorManager Operator manager
      * @param \Console\Form\Account\Add $formAccountAdd Account creation form
      * @param \Console\Form\Account\Edit $formAccountEdit Account edit form
      */
     public function __construct(
-        \Model_Account $operators,
+        \Model\Operator\OperatorManager $operatorManager,
         \Console\Form\Account\Add $formAccountAdd,
         \Console\Form\Account\Edit $formAccountEdit
     )
     {
-        $this->_operators = $operators;
+        $this->_operatorManager = $operatorManager;
         $this->_formAccountAdd = $formAccountAdd;
         $this->_formAccountEdit = $formAccountEdit;
     }
@@ -70,7 +70,7 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
     public function indexAction()
     {
         $response = $this->getOrder('Id');
-        $response['accounts'] = $this->_operators->fetchAll(
+        $response['accounts'] = $this->_operatorManager->fetchAll(
             $response['order'],
             $response['direction']
         );
@@ -90,7 +90,7 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $data = $form->getData();
-                $this->_operators->create($data, $data['Password']);
+                $this->_operatorManager->create($data, $data['Password']);
                 return $this->redirectToRoute('accounts', 'index');
             }
         }
@@ -112,13 +112,13 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $data = $form->getData();
-                $this->_operators->update($data['OriginalId'], $data, $data['Password']);
+                $operator = $this->_operatorManager->get($data['OriginalId']);
+                $operator->update($data, $data['Password']);
                 return $this->redirectToRoute('accounts', 'index');
             }
         } else {
-            $account = clone $this->_operators;
-            $account->fetch($this->params()->fromQuery('id'));
-            $data = $account->getArrayCopy();
+            $operator = $this->_operatorManager->get($this->params()->fromQuery('id'));
+            $data = $operator->getArrayCopy();
             $data['OriginalId'] = $data['Id'];
             $form->setData($data);
         }
@@ -138,7 +138,7 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
 
         if ($this->getRequest()->isPost()) {
             if ($this->params()->fromPost('yes')) {
-                $this->_operators->delete($id);
+                $this->_operatorManager->delete($id);
             }
             return $this->redirectToRoute('accounts', 'index');
         } else {

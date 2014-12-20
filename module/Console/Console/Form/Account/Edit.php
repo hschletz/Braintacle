@@ -70,7 +70,7 @@ class Edit extends AbstractForm
             // Succeed only if no match is found.
             return !preg_grep(
                 '/^' . preg_quote($value, '/') . '$/ui',
-                $this->getOption('operators')->getAllIds()
+                $this->getOption('operatorManager')->getAllIds()
             );
         }
     }

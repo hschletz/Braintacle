@@ -71,7 +71,8 @@ Feature\InitProviderInterface
                 'factories' => array(
                     'Model\Computer\Duplicates' => 'Model\Service\Computer\DuplicatesFactory',
                     'Model\Config' => 'Model\Service\ConfigFactory',
-                    'Model\Operator' => 'Model\Service\OperatorFactory',
+                    'Model\Operator\Operator' => 'Model\Service\OperatorFactory',
+                    'Model\Operator\OperatorManager' => 'Model\Service\OperatorManagerFactory',
                     'Model\Package\PackageManager' => 'Model\Service\Package\PackageManagerFactory',
                     'Model\Package\Storage\Direct' => 'Model\Service\Package\Storage\DirectFactory',
                 ),

@@ -49,7 +49,10 @@ class AccountFactory implements \Zend\ServiceManager\AbstractFactoryInterface
     )
     {
         $form = new $requestedName;
-        $form->setOption('operators', $serviceLocator->getServiceLocator()->get('Model\Operator'));
+        $form->setOption(
+            'operatorManager',
+            $serviceLocator->getServiceLocator()->get('Model\Operator\OperatorManager')
+        );
         return $form;
     }
 }

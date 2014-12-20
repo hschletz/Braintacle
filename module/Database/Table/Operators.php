@@ -30,6 +30,18 @@ class Operators extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
+    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    {
+        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
+            null, $serviceLocator->get('Model\Operator\Operator')
+        );
+        parent::__construct($serviceLocator);
+    }
+
+    /**
+     * {@inheritdoc}
+     * @codeCoverageIgnore
+     */
     protected function _postSetSchema()
     {
         $logger = $this->_serviceLocator->get('Library\Logger');
@@ -42,7 +54,7 @@ class Operators extends \Database\AbstractTable
                 \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
             )->current()->offsetGet('num') === '0'
         ) {
-            $this->_serviceLocator->get('Model\Operator')->create(array('Id' => 'admin'), 'admin');
+            $this->_serviceLocator->get('Model\Operator\OperatorManager')->create(array('Id' => 'admin'), 'admin');
             $logger->notice(
                 'Default account \'admin\' created with password \'admin\'.'
             );

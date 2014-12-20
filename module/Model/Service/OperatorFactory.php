@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for Model\Operator
+ * Factory for Model\Operator\Operator
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,7 +22,7 @@
 namespace Model\Service;
 
 /**
- * Factory for Model\Operator
+ * Factory for Model\Operator\Operator
  */
 class OperatorFactory implements \Zend\ServiceManager\FactoryInterface
 {

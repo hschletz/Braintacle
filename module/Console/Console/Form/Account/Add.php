@@ -36,7 +36,7 @@ class Add extends AbstractForm
         // User name must not exist
         $idNotExistsValidator = new \Library\Validator\NotInArray(
             array(
-                'haystack' => $this->getOption('operators')->getAllIds(),
+                'haystack' => $this->getOption('operatorManager')->getAllIds(),
                 'caseSensitivity' => \Library\Validator\NotInArray::CASE_INSENSITIVE,
             )
         );

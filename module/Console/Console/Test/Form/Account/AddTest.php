@@ -26,14 +26,14 @@ namespace Console\Test\Form\Account;
  */
 class AddTest extends \Console\Test\AbstractFormTest
 {
-    protected $_operators;
+    protected $_operatorManager;
 
     public function setUp()
     {
-        $this->_operators = $this->getMockBuilder('Model_Account')->disableOriginalConstructor()->getMock();
-        $this->_operators->expects($this->any())
-                         ->method('getAllIds')
-                         ->will($this->returnValue(array('User')));
+        $this->_operatorManager = $this->getMockBuilder('Model\Operator\OperatorManager')
+                                       ->disableOriginalConstructor()
+                                       ->getMock();
+        $this->_operatorManager->method('getAllIds')->willReturn(array('User'));
         parent::setUp();
     }
 
@@ -42,7 +42,7 @@ class AddTest extends \Console\Test\AbstractFormTest
     {
         $form = new \Console\Form\Account\Add(
             null,
-            array('operators' => $this->_operators)
+            array('operatorManager' => $this->_operatorManager)
         );
         $form->init();
         return $form;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for AccountsController
+ * Factory for Model\Operator\OperatorManager
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,24 +19,22 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Console\Service;
+namespace Model\Service;
 
 /**
- * Factory for AccountsController
+ * Factory for Model\Operator\OperatorManager
  */
-class AccountsControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class OperatorManagerFactory implements \Zend\ServiceManager\FactoryInterface
 {
     /**
      * @internal
+     * @codeCoverageIgnore
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $serviceManager = $serviceLocator->getServiceLocator();
-        $formManager = $serviceManager->get('FormElementManager');
-        return new \Console\Controller\AccountsController(
-            $serviceManager->get('Model\Operator\OperatorManager'),
-            $formManager->get('Console\Form\Account\Add'),
-            $formManager->get('Console\Form\Account\Edit')
+        return new \Model\Operator\OperatorManager(
+            $serviceLocator->get('Library\AuthenticationService'),
+            $serviceLocator->get('Database\Table\Operators')
         );
     }
 }
