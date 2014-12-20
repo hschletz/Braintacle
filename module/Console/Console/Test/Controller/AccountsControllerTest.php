@@ -93,7 +93,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/accounts/index/');
         $this->assertResponseStatusCode(200);
         $this->assertNotQuery('td a[href*="mailto:test"]');
-        $this->assertNotQueryContentContains('td a', 'Delete');
+        $this->assertNotQueryContentContains('td a', 'Löschen');
         $this->assertQueryContentContains('td a[href="/console/accounts/edit/?id=testId"]', 'Bearbeiten');
 
     }
