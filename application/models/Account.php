@@ -94,16 +94,6 @@ class Model_Account extends Model_Abstract
     }
 
     /**
-     * Get injected authentication service
-     * 
-     * @return \Zend\Authentication\AuthenticationService
-     */
-    public function getAuthService()
-    {
-        return $this->_authService;
-    }
-
-    /**
      * Populate with data for the given ID
      *
      * @param string $id

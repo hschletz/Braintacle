@@ -79,23 +79,19 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
             'MailAddress' => '',
             'Comment' => '',
         );
-        $auth = $this->getMock('Library\Authentication\AuthenticationService');
-        $auth->expects($this->once())
-             ->method('getIdentity')
-             ->will($this->returnValue('testId'));
-        $this->_operators->expects($this->once())
-                         ->method('getAuthService')
-                         ->will($this->returnValue($auth));
         $this->_operators->expects($this->once())
                          ->method('fetchAll')
                          ->will($this->returnValue(array($account)));
+
+        $identity = $this->getMock('Zend\View\Helper\Identity');
+        $identity->expects($this->atLeastOnce())->method('__invoke')->willReturn('testId');
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('Identity', $identity);
 
         $this->dispatch('/console/accounts/index/');
         $this->assertResponseStatusCode(200);
         $this->assertNotQuery('td a[href*="mailto:test"]');
         $this->assertNotQueryContentContains('td a', 'Löschen');
         $this->assertQueryContentContains('td a[href="/console/accounts/edit/?id=testId"]', 'Bearbeiten');
-
     }
 
     public function testIndexActionOtherAccount()
@@ -107,16 +103,13 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
             'MailAddress' => '',
             'Comment' => '',
         );
-        $auth = $this->getMock('Library\Authentication\AuthenticationService');
-        $auth->expects($this->once())
-             ->method('getIdentity')
-             ->will($this->returnValue('otherId'));
-        $this->_operators->expects($this->once())
-                         ->method('getAuthService')
-                         ->will($this->returnValue($auth));
         $this->_operators->expects($this->once())
                          ->method('fetchAll')
                          ->will($this->returnValue(array($account)));
+
+        $identity = $this->getMock('Zend\View\Helper\Identity');
+        $identity->expects($this->atLeastOnce())->method('__invoke')->willReturn('otherId');
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('Identity', $identity);
 
         $this->dispatch('/console/accounts/index/');
         $this->assertResponseStatusCode(200);
@@ -132,13 +125,6 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
             'MailAddress' => 'test@example.com',
             'Comment' => '',
         );
-        $auth = $this->getMock('Library\Authentication\AuthenticationService');
-        $auth->expects($this->once())
-             ->method('getIdentity')
-             ->will($this->returnValue('otherId'));
-        $this->_operators->expects($this->once())
-                         ->method('getAuthService')
-                         ->will($this->returnValue($auth));
         $this->_operators->expects($this->once())
                          ->method('fetchAll')
                          ->will($this->returnValue(array($account)));

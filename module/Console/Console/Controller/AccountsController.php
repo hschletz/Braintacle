@@ -74,7 +74,6 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
             $response['order'],
             $response['direction']
         );
-        $response['identity'] = $this->_operators->getAuthService()->getIdentity();
         return $response;
     }
 
