@@ -139,7 +139,6 @@ class Braintacle_SchemaManager
         $previousSchema = $this->getSchemaFromDatabase();
         $newSchema = $this->getSchemaFromXml($previousSchema);
         $this->updateSchema($previousSchema, $newSchema);
-        $this->updateData($previousSchema, $newSchema);
         $this->convertUserdefinedInfo();
         $this->_config->schemaVersion = self::SCHEMA_VERSION;
     }
@@ -421,114 +420,6 @@ class Braintacle_SchemaManager
             $table->setEngine($engine);
         }
         $this->_logger->info('done');
-    }
-
-    /**
-     * Initialize and convert content
-     * @param array $previousSchema Current database definition
-     * @param array $newSchema New database definition
-     */
-    public function updateData($previousSchema, $newSchema)
-    {
-        $this->_logger->info('Updating data...');
-
-        // Table initialization is only done when the table is created for the
-        // first time. In case of an upgrade the tables need to be initialized
-        // manually.
-        foreach ($newSchema['tables'] as $name => $table) {
-            if (!array_key_exists($name, $previousSchema['tables'])) {
-                // just created, already initialized
-                continue;
-            }
-            if (empty($table['initialization'])) {
-                // nothing to do for this table
-                continue;
-            }
-
-            // Avoid duplicate entries that would violate primary keys or
-            // unique constraints. Identify existing rows and determine whether
-            // the row to be inserted would violate a constraint.
-            // Detection works only on single-column keys/constraints and simple
-            // inserts (no insert/select - results would be unpredictable!)
-
-            // Some tables with autoincrement fields are initialized with static
-            // data. Autoincrement fields should not be set manually because
-            // this would clash with the internal increment counter. Without a
-            // distinct value in the initialization data there is no way to
-            // reliably identify a row.
-            // These tables will just be skipped here, i.e. they only get
-            // initialized upon creation. This also prevents possible problems
-            // when the automatically generated value is referenced inside the
-            // static initialization of a foreign table. The foreign key might
-            // be incorrect then if a referenced row has been inserted later.
-            if (
-                $name == 'downloadwk_fields'
-                or $name == 'downloadwk_tab_values'
-                or $name == 'downloadwk_statut_request'
-            ) {
-                continue;
-            }
-
-            // Get constraints for this table
-            $constraints = array();
-            foreach ($this->_schema->db->reverse->tableInfo($name) as $column) {
-                if (strpos($column['flags'], 'primary_key') !== false
-                    or strpos($column['flags'], 'unique_key') !== false
-                ) {
-                    $constraints[$column['name']] = $column['mdb2type'];
-                }
-            }
-            if (empty($constraints)) {
-                // Without any constraint more and more entries would be
-                // generated on every upgrade. Bad database design!
-                throw new RuntimeException("FATAL: table '$name' has no constraints.");
-            }
-
-            // Find rows to be inserted that don't already exist.
-            $skipRows = array();
-            foreach ($table['initialization'] as $commandIndex => $command) {
-                if ($command['type'] != 'insert') {
-                    continue;
-                }
-
-                // Build the list of fields to be checked for existent values
-                $fieldlist = array();
-                foreach ($command['data']['field'] as $field) {
-                    if (array_key_exists($field['name'], $constraints)) {
-                        $fieldlist[$field['name']] = $field['group']['data'];
-                    }
-                }
-                $count = count($fieldlist);
-                if ($count == 0) {
-                    throw new RuntimeException("FATAL: Unconstrained data for table '$name'");
-                }
-
-                // Check for existing rows that would prevent successful insertion.
-                $query = $this->_db->select()->from($name, 'COUNT(*)');
-                foreach ($fieldlist as $fieldname => $value) {
-                    $query->orWhere("$fieldname = ?", $value);
-                }
-                if ($query->query()->fetchColumn()) {
-                    // Found existing row.
-                    $skipRows[] = $commandIndex;
-                }
-
-            }
-            // Sort results in reverse order to prevent index shifting while removing them.
-            rsort($skipRows, SORT_NUMERIC);
-            foreach ($skipRows as $index) {
-                unset ($table['initialization'][$index]);
-            }
-            $this->_logger->info("Initializing table '$name'...");
-            $this->_schema->initializeTable($name, $table);
-            $this->_logger->info(
-                'done (' .
-                count($table['initialization']) .
-                ' rows inserted/updated, ' .
-                count($skipRows) .
-                ' rows skipped)'
-            );
-        }
     }
 
     /**
