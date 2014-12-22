@@ -191,16 +191,12 @@ class Braintacle_SchemaManager
         // For the tables listed above plus some additional tables, the bad PK
         // needs to be dropped and recreated the right way.
         $fixTables = array(
-            'blacklist_macaddresses',
-            'blacklist_serials',
             'controllers',
             'drives',
-            'hardware',
             'inputs',
             'memories',
             'modems',
             'monitors',
-            'networks',
             'officepack',
             'ports',
             'printers',

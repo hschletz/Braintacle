@@ -35,4 +35,14 @@ class DuplicateSerials extends \Database\AbstractTable
         $this->table = 'blacklist_serials';
         parent::__construct($serviceLocator);
     }
+
+    /**
+     * {@inheritdoc}
+     * @codeCoverageIgnore
+     */
+    protected function _preSetSchema($logger, $schema, $database)
+    {
+        // Drop obsolete autoincrement column to avoid MySQL error when setting new PK
+        $this->_dropColumnIfExists($logger, $database, 'id');
+    }
 }

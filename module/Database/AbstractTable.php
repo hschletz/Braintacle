@@ -79,6 +79,8 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
         );
         $database = $this->_serviceLocator->get('Database\Nada');
 
+        $this->_preSetSchema($logger, $schema, $database);
+
         if (in_array($this->table, $database->getTableNames())) {
             // Table exists
             // Update table and column comments
@@ -109,6 +111,29 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
                     $logger->info('done.');
                 }
             }
+
+            // Check for altered PK definition
+            $primaryKey = $table->getPrimaryKey();
+            if ($primaryKey) {
+                foreach ($primaryKey as &$column) {
+                    $column = $column->getName();
+                }
+                unset($column);
+            } else {
+                $primaryKey = array();
+            }
+            if ($schema['primary_key'] != $primaryKey) {
+                $logger->info(
+                    sprintf(
+                        'Changing PK of %s from (%s) to (%s)...',
+                        $this->table,
+                        implode(', ', $primaryKey),
+                        implode(', ', $schema['primary_key'])
+                    )
+                );
+                $table->setPrimaryKey($schema['primary_key']);
+                $logger->info('done.');
+            }
         } else {
             // Table does not exist, create it
             $logger->info("Creating table '$this->table...");
@@ -136,11 +161,45 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
     }
 
     /**
+     * Hook to be called before creating/altering table schema
+     *
+     * @param \Zend\Log\Logger $logger Logger instance
+     * @param array $schema Parsed table schema
+     * @param \Nada_Database $database Database object
+     * @codeCoverageIgnore
+     */
+    protected function _preSetSchema($logger, $schema, $database)
+    {
+    }
+
+    /**
      * Hook to be called after creating/altering table schema
      * @codeCoverageIgnore
      */
     protected function _postSetSchema()
     {
+    }
+
+    /**
+     * Drop a column if it exists
+     *
+     * @param \Zend\Log\Logger $logger Logger instance
+     * @param \Nada_Database $database Database object
+     * @param string $column column name
+     * @codeCoverageIgnore
+     */
+    protected function _dropColumnIfExists($logger, $database, $column)
+    {
+        $tables = $database->getTables();
+        if (isset($tables[$this->table])) {
+            $table = $tables[$this->table];
+            $columns = $table->getColumns();
+            if (isset($columns[$column])) {
+                $logger->info("Dropping column $this->table.$column...");
+                $table->dropColumn($column);
+                $logger->info('done.');
+            }
+        }
     }
 
     /**
