@@ -40,10 +40,8 @@ class CustomFieldConfig extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _postSetSchema()
+    protected function _postSetSchema($logger, $schema, $database)
     {
-        $logger = $this->_serviceLocator->get('Library\Logger');
-
         // If table is empty, create default entries
         $logger->debug('Checking for existing custom field config.');
         if (

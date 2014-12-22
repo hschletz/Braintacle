@@ -129,10 +129,8 @@ class Config extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _postSetSchema()
+    protected function _postSetSchema($logger, $schema, $database)
     {
-        $logger = $this->_serviceLocator->get('Library\Logger');
-
         // If packagePath has not been converted yet, append /download directory
         // with had previously been appended automatically.
         if ($this->get('schemaVersion') < 8) {

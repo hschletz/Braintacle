@@ -157,7 +157,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
             }
         }
 
-        $this->_postSetSchema();
+        $this->_postSetSchema($logger, $schema, $database);
     }
 
     /**
@@ -174,9 +174,13 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
 
     /**
      * Hook to be called after creating/altering table schema
+     *
+     * @param \Zend\Log\Logger $logger Logger instance
+     * @param array $schema Parsed table schema
+     * @param \Nada_Database $database Database object
      * @codeCoverageIgnore
      */
-    protected function _postSetSchema()
+    protected function _postSetSchema($logger, $schema, $database)
     {
     }
 
