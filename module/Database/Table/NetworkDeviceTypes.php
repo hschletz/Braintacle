@@ -35,4 +35,22 @@ class NetworkDeviceTypes extends \Database\AbstractTable
         $this->table = 'devicetype';
         parent::__construct($serviceLocator);
     }
+
+    /**
+     * {@inheritdoc}
+     * @codeCoverageIgnore
+     */
+    protected function _postSetSchema($logger, $schema, $database)
+    {
+        if (isset($database->getTables()['network_devices'])) {
+            $definedTypes = $this->fetchCol('name');
+            foreach ($this->adapter->query('SELECT DISTINCT type FROM network_devices')->execute() as $type) {
+                $type = $type['type'];
+                if (!in_array($type, $definedTypes)) {
+                    $logger->notice(sprintf('Creating undefined network device type "%s"', $type));
+                    $this->_serviceLocator->get('Model\Network\DeviceManager')->addType($type);
+                }
+            }
+        }
+    }
 }
