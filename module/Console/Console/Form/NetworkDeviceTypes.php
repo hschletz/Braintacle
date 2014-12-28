@@ -24,14 +24,14 @@ namespace Console\Form;
 /**
  * Define/delete network device types
  *
- * The "DeviceTypeModel" option is required by init() and process(). The factory
- * automatically injects a \Model_NetworkDeviceType instance.
+ * The "DeviceManager" option is required by init() and process(). The factory
+ * automatically injects a \Model\Network\DeviceManager instance.
  */
 class NetworkDeviceTypes extends Form
 {
     /**
      * Array of all types defined in the database
-     * @var \Model_NetworkDeviceType[]
+     * @var array type => count pairs
      **/
     protected $_definedTypes = array();
 
@@ -42,10 +42,8 @@ class NetworkDeviceTypes extends Form
         $this->add($types);
         $inputFilterTypes = new \Zend\InputFilter\InputFilter;
 
-        foreach ($this->getOption('DeviceTypeModel')->fetchAll() as $type) {
-            $name = $type['Description'];
-            $this->_definedTypes[$name] = $type;
-
+        $this->_definedTypes = $this->getOption('DeviceManager')->getTypeCounts();
+        foreach ($this->_definedTypes as $name => $count) {
             $element = new \Zend\Form\Element\Text($name);
             $element->setValue($name);
             $types->add($element);
@@ -145,13 +143,13 @@ class NetworkDeviceTypes extends Form
     {
         $output = "<div class='table'>\n";
         $types = $this->get('Types');
-        foreach ($this->_definedTypes as $name => $type) {
+        foreach ($this->_definedTypes as $name => $count) {
             $element = $types->get($name);
             if ($element->getMessages()) {
                 $element->setAttribute('class', 'input-error');
             }
             $row = $view->formText($element);
-            if ($type['Count'] == 0) {
+            if ($count == 0) {
                 $row .= $view->htmlTag(
                     'a',
                     $view->translate('Delete'),
@@ -187,11 +185,14 @@ class NetworkDeviceTypes extends Form
     public function process()
     {
         $data = $this->getData();
+        $deviceManager = $this->getOption('DeviceManager');
         if ($data['Add']) {
-            $this->getOption('DeviceTypeModel')->add($data['Add']);
+            $deviceManager->addType($data['Add']);
         }
-        foreach ($this->_definedTypes as $name => $type) {
-            $type->rename($data['Types'][$name]);
+        foreach ($data['Types'] as $old => $new) {
+            if ($old != $new) {
+                $deviceManager->renameType($old, $new);
+            }
         }
     }
 }

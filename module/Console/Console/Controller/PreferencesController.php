@@ -39,10 +39,10 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     protected $_customFields;
 
     /**
-     * DeviceType prototype
-     * @var \Model_NetworkDeviceType
+     * Network device manager
+     * @var \Model\Network\DeviceManager
      */
-    protected $_deviceType;
+    protected $_deviceManager;
 
     /**
      * RegistryValue prototype
@@ -61,21 +61,21 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      *
      * @param \Zend\Form\FormElementManager $formManager
      * @param \Model_UserDefinedInfo $customFields
-     * @param \Model_NetworkDeviceType $deviceType
+     * @param \Model\Network\DeviceManager $deviceManager
      * @param \Model_RegistryValue $registryValue
      * @param \Model\Config $config
      */
     public function __construct(
         \Zend\Form\FormElementManager $formManager,
         \Model_UserDefinedInfo $customFields,
-        \Model_NetworkDeviceType $deviceType,
+        \Model\Network\DeviceManager $deviceManager,
         \Model_RegistryValue $registryValue,
         \Model\Config $config
     )
     {
         $this->_formManager = $formManager;
         $this->_customFields = $customFields;
-        $this->_deviceType = $deviceType;
+        $this->_deviceManager = $deviceManager;
         $this->_registryValue = $registryValue;
         $this->_config = $config;
     }
@@ -248,19 +248,18 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Delete a network device type definition
      *
-     * URL parameter: 'id'
+     * URL parameter: 'name'
      * @return array|\Zend\Http\Response Array(description) or redirect response
      */
     public function deletedevicetypeAction()
     {
-        $type = $this->_deviceType->fetchByName($this->params()->fromQuery('name'));
         if ($this->getRequest()->isPost()) {
             if ($this->params()->fromPost('yes')) {
-                $type->delete();
+                $this->_deviceManager->deleteType($this->params()->fromQuery('name'));
             }
             return $this->redirectToRoute('preferences', 'networkdevices');
         } else {
-            return array('description' => $type['Description']);
+            return array('description' => $this->params()->fromQuery('name'));
         }
     }
 

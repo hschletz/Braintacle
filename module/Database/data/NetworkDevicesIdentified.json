@@ -1,0 +1,48 @@
+{
+    "name": "network_devices",
+    "comment": "Identified network devices",
+    "columns": [
+        {
+            "name": "macaddr",
+            "type": "varchar",
+            "length": 17,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "description",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "type",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "references NetworkDeviceTypes table"
+        },
+        {
+            "name": "user",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "deprecated"
+        }
+    ],
+    "primary_key": [
+        "macaddr"
+    ],
+    "mysql": {
+        "engine": "InnoDB"
+    }
+}

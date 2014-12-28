@@ -35,7 +35,7 @@ class NetworkControllerFactory implements \Zend\ServiceManager\FactoryInterface
         $formManager = $serviceManager->get('FormElementManager');
         return new \Console\Controller\NetworkController(
             $serviceManager->get('Model\Network\Device'),
-            $serviceManager->get('Model\Network\DeviceType'),
+            $serviceManager->get('Model\Network\DeviceManager'),
             $serviceManager->get('Model\Network\Subnet'),
             $formManager->get('Console\Form\Subnet'),
             $formManager->get('Console\Form\NetworkDevice')

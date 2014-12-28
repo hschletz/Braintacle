@@ -34,9 +34,9 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
 
     /**
      * DeviceType prototype
-     * @var \Model_NetworkDeviceType
+     * @var \Model\Network\DeviceManager
      */
-    protected $_deviceType;
+    protected $_deviceManager;
 
     /**
      * Subnet prototype
@@ -60,21 +60,21 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
      * Constructor
      *
      * @param \Model_NetworkDevice $device
-     * @param \Model_NetworkDeviceType $deviceType
+     * @param \Model\Network\DeviceManager $deviceManager
      * @param \Model_Subnet $subnet
      * @param \Console\Form\Subnet $subnetForm
      * @param \Console\Form\NetworkDevice $deviceForm
      */
     public function __construct(
         \Model_NetworkDevice $device,
-        \Model_NetworkDeviceType $deviceType,
+        \Model\Network\DeviceManager $deviceManager,
         \Model_Subnet $subnet,
         \Console\Form\Subnet $subnetForm,
         \Console\Form\NetworkDevice $deviceForm
     )
     {
         $this->_device = $device;
-        $this->_deviceType = $deviceType;
+        $this->_deviceManager = $deviceManager;
         $this->_subnet = $subnet;
         $this->_subnetForm = $subnetForm;
         $this->_deviceForm = $deviceForm;
@@ -98,8 +98,12 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
     public function indexAction()
     {
         $ordering = $this->getOrder('Name');
+        $devices = array();
+        foreach ($this->_deviceManager->getTypeCounts() as $description => $count) {
+            $devices[] = array('Description' => $description, 'Count' => $count);
+        }
         return array(
-            'devices' => $this->_deviceType->fetchAll(),
+            'devices' => $devices,
             'subnets' => $this->_subnet->fetchAll($ordering['order'], $ordering['direction']),
             'subnetOrder' => $ordering,
         );

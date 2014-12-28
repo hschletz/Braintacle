@@ -39,10 +39,10 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     protected $_customFields;
 
     /**
-     * DeviceType mock
-     * @var \Model_NetworkDeviceType
+     * DeviceManager mock
+     * @var \Model\Network\DeviceManager
      */
-    protected $_deviceType;
+    protected $_deviceManager;
 
     /**
      * RegistryValue mock
@@ -63,7 +63,9 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     {
         $this->_formManager = $this->getMock('Zend\Form\FormElementManager');
         $this->_customFields = $this->getMockBuilder('Model_UserDefinedInfo')->disableOriginalConstructor()->getMock();
-        $this->_deviceType = $this->getMock('Model_NetworkDeviceType');
+        $this->_deviceManager = $this->getMockBuilder('Model\Network\DeviceManager')
+                                     ->disableOriginalConstructor()
+                                     ->getMock();
         $this->_registryValue = $this->getMock('Model_RegistryValue');
         $this->_config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
         parent::setUp();
@@ -75,7 +77,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         return new \Console\Controller\PreferencesController(
             $this->_formManager,
             $this->_customFields,
-            $this->_deviceType,
+            $this->_deviceManager,
             $this->_registryValue,
             $this->_config
         );
@@ -594,33 +596,22 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeletedevicetypeActionGet()
     {
-        $this->_deviceType->expects($this->any())
-                          ->method('fetchByName')
-                          ->with('test')
-                          ->will($this->returnValue(array('Description' => 'description')));
-        $this->_deviceType->expects($this->never())
-                          ->method('delete');
+        $this->_deviceManager->expects($this->never())->method('deleteType');
         $this->dispatch('/console/preferences/deletedevicetype/?name=test');
         $this->assertResponseStatusCode(200);
-        $this->assertContains("'description'", $this->getResponse()->getContent());
+        $this->assertContains("'test'", $this->getResponse()->getContent());
     }
 
     public function testDeletedevicetypeActionPostNo()
     {
-        $this->_deviceType->expects($this->never())
-                          ->method('delete');
+        $this->_deviceManager->expects($this->never())->method('deleteType');
         $this->dispatch('/console/preferences/deletedevicetype/?name=test', 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/preferences/networkdevices/');
     }
 
     public function testDeletedevicetypeActionPostYes()
     {
-        $this->_deviceType->expects($this->any())
-                          ->method('fetchByName')
-                          ->with('test')
-                          ->will($this->returnSelf());
-        $this->_deviceType->expects($this->once())
-                          ->method('delete');
+        $this->_deviceManager->expects($this->once())->method('deleteType')->with('test');
         $this->dispatch('/console/preferences/deletedevicetype/?name=test', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/preferences/networkdevices/');
     }

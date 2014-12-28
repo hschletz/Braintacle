@@ -33,10 +33,10 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     protected $_device;
 
     /**
-     * DeviceType mock
-     * @var \Model_NetworkDeviceType
+     * DeviceManager mock
+     * @var \Model\Network\DeviceManager
      */
-    protected $_deviceType;
+    protected $_deviceManager;
 
     /**
      * Subnet mock
@@ -62,7 +62,9 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     public function setUp()
     {
         $this->_device = $this->getMock('Model_NetworkDevice');
-        $this->_deviceType = $this->getMock('Model_NetworkDeviceType');
+        $this->_deviceManager = $this->getMockBuilder('Model\Network\DeviceManager')
+                                     ->disableOriginalConstructor()
+                                     ->getMock();
         $this->_subnet = $this->getMock('Model_Subnet');
         $this->_subnetForm = $this->getMock('Console\Form\Subnet');
         $this->_deviceForm = $this->getMock('Console\Form\NetworkDevice');
@@ -74,7 +76,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     {
         return new \Console\Controller\NetworkController(
             $this->_device,
-            $this->_deviceType,
+            $this->_deviceManager,
             $this->_subnet,
             $this->_subnetForm,
             $this->_deviceForm
@@ -90,8 +92,8 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     public function testIndexAction()
     {
         $devices = array(
-            array('Description' => 'type1', 'Count' => 0),
-            array('Description' => 'type2', 'Count' => 1),
+            'type1' => 0,
+            'type2' => 1,
         );
         $subnets = array(
             array(
@@ -113,9 +115,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                 'NumUnknown' => 3,
             ),
         );
-        $this->_deviceType->expects($this->once())
-                          ->method('fetchAll')
-                          ->will($this->returnValue($devices));
+        $this->_deviceManager->expects($this->once())->method('getTypeCounts')->willReturn($devices);
         $this->_subnet->expects($this->once())
                       ->method('fetchAll')
                       ->will($this->returnValue($subnets));

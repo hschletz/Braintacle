@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for PreferencesController
+ * Factory for Model\Network\DeviceManager
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,25 +19,22 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Console\Service;
+namespace Model\Service\Network;
 
 /**
- * Factory for PreferencesController
+ * Factory for Model\Network\DeviceManager
  */
-class PreferencesControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class DeviceManagerFactory implements \Zend\ServiceManager\FactoryInterface
 {
     /**
      * @internal
+     * @codeCoverageIgnore
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $serviceManager = $serviceLocator->getServiceLocator();
-        return new \Console\Controller\PreferencesController(
-            $serviceManager->get('FormElementManager'),
-            $serviceManager->get('Model\Computer\CustomFields'),
-            $serviceManager->get('Model\Network\DeviceManager'),
-            $serviceManager->get('Model\RegistryValue'),
-            $serviceManager->get('Model\Config')
+        return new \Model\Network\DeviceManager(
+            $serviceLocator->get('Database\Table\NetworkDeviceTypes'),
+            $serviceLocator->get('Database\Table\NetworkDevicesIdentified')
         );
     }
 }

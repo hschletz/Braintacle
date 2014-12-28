@@ -29,21 +29,19 @@ use \Zend\Dom\Document\Query as Query;
 class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
 {
     /**
-     * NetworkDeviceType mock object
-     * @var \Model_NetworkDeviceType
+     * DeviceManager mock
+     * @var \Model\Network\DeviceManager
      */
-    protected $_types;
+    protected $_deviceManager;
 
     public function setUp()
     {
-        $types = array(
-            array('Description' => 'name0', 'Count' => 0),
-            array('Description' => 'name1', 'Count' => 1),
-        );
-        $this->_types = $this->getMock('Model_NetworkDeviceType');
-        $this->_types->expects($this->once())
-                     ->method('fetchAll')
-                     ->will($this->returnValue($types));
+        $this->_deviceManager = $this->getMockBuilder('Model\Network\DeviceManager')
+                                     ->disableOriginalConstructor()
+                                     ->getMock();
+        $this->_deviceManager->expects($this->once())
+                             ->method('getTypeCounts')
+                             ->willReturn(array('name0' => 0, 'name1' => 1));
         parent::setUp();
     }
 
@@ -52,7 +50,7 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
     {
         $form = new \Console\Form\NetworkDeviceTypes(
             null,
-            array('DeviceTypeModel' => $this->_types)
+            array('DeviceManager' => $this->_deviceManager)
         );
         $form->init();
         return $form;
@@ -361,54 +359,44 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
 
     public function testProcessRenameNoAdd()
     {
-        $types = $this->getMock('Model_NetworkDeviceType');
-        $types->expects($this->once())
-              ->method('fetchAll')
-              ->will($this->returnValue(array($types)));
-        $types->expects($this->any())
-              ->method('offsetGet')
-              ->with('Description')
-              ->will($this->returnValue('name'));
-        $types->expects($this->never())
-              ->method('add');
-        $types->expects($this->once())
-              ->method('rename')
-              ->with('new_name');
+        $deviceManager = $this->getMockBuilder('Model\Network\DeviceManager')->disableOriginalConstructor()->getMock();
+        $deviceManager->expects($this->once())->method('getTypeCounts')->willReturn(array('name0' => 0, 'name1' => 1));
+        $deviceManager->expects($this->never())->method('addType');
+        $deviceManager->expects($this->once())->method('renameType')->with('name1', 'new_name');
         $data = array(
             'Add' => '',
             'Types' => array(
-                'name' => 'new_name',
+                'name0' => 'name0',
+                'name1' => 'new_name',
             ),
         );
         $form = $this->getMockBuilder('Console\Form\NetworkDeviceTypes')->setMethods(array('getData'))->getMock();
         $form->expects($this->once())
              ->method('getData')
              ->will($this->returnValue($data));
-        $form->setOption('DeviceTypeModel', $types);
+        $form->setOption('DeviceManager', $deviceManager);
         $form->init();
         $form->process();
     }
 
     public function testProcessAdd()
     {
-        $types = $this->getMock('Model_NetworkDeviceType');
-        $types->expects($this->once())
-              ->method('fetchAll')
-              ->will($this->returnValue(array()));
-        $types->expects($this->once())
-              ->method('add')
-              ->with('new_name');
-        $types->expects($this->never())
-              ->method('rename');
+        $deviceManager = $this->getMockBuilder('Model\Network\DeviceManager')->disableOriginalConstructor()->getMock();
+        $deviceManager->expects($this->once())->method('getTypeCounts')->willReturn(array('name0' => 0, 'name1' => 1));
+        $deviceManager->expects($this->once())->method('addType')->with('new_name');
+        $deviceManager->expects($this->never())->method('renameType');
         $data = array(
             'Add' => 'new_name',
-            'Types' => array(),
+            'Types' => array(
+                'name0' => 'name0',
+                'name1' => 'name1',
+            ),
         );
         $form = $this->getMockBuilder('Console\Form\NetworkDeviceTypes')->setMethods(array('getData'))->getMock();
         $form->expects($this->once())
              ->method('getData')
              ->will($this->returnValue($data));
-        $form->setOption('DeviceTypeModel', $types);
+        $form->setOption('DeviceManager', $deviceManager);
         $form->init();
         $form->process();
     }

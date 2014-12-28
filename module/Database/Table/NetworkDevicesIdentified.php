@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for PreferencesController
+ * "network_devices" table
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,25 +19,30 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Console\Service;
+Namespace Database\Table;
 
 /**
- * Factory for PreferencesController
+ * "network_devices" table
  */
-class PreferencesControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class NetworkDevicesIdentified extends \Database\AbstractTable
 {
     /**
-     * @internal
+     * {@inheritdoc}
+     * @codeCoverageIgnore
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $serviceManager = $serviceLocator->getServiceLocator();
-        return new \Console\Controller\PreferencesController(
-            $serviceManager->get('FormElementManager'),
-            $serviceManager->get('Model\Computer\CustomFields'),
-            $serviceManager->get('Model\Network\DeviceManager'),
-            $serviceManager->get('Model\RegistryValue'),
-            $serviceManager->get('Model\Config')
-        );
+        $this->table = 'network_devices';
+        parent::__construct($serviceLocator);
+    }
+
+    /**
+     * {@inheritdoc}
+     * @codeCoverageIgnore
+     */
+    protected function _preSetSchema($logger, $schema, $database)
+    {
+        // Drop obsolete autoincrement column to avoid MySQL error when setting new PK
+        $this->_dropColumnIfExists($logger, $database, 'id');
     }
 }
