@@ -34,7 +34,7 @@ class NetworkDeviceFactory implements \Zend\ServiceManager\FactoryInterface
     {
         return new \Console\Form\NetworkDevice(
             null,
-            array('NetworkDeviceModel' => $serviceLocator->getServiceLocator()->get('Model\Network\Device'))
+            array('DeviceManager' => $serviceLocator->getServiceLocator()->get('Model\Network\DeviceManager'))
         );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for Model\Network\DeviceManager
+ * "netmap" table
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,23 +19,23 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Model\Service\Network;
+Namespace Database\Table;
 
 /**
- * Factory for Model\Network\DeviceManager
+ * "netmap" table
  */
-class DeviceManagerFactory implements \Zend\ServiceManager\FactoryInterface
+class NetworkDevicesScanned extends \Database\AbstractTable
 {
     /**
-     * @internal
+     * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        return new \Model\Network\DeviceManager(
-            $serviceLocator->get('Database\Table\NetworkDeviceTypes'),
-            $serviceLocator->get('Database\Table\NetworkDevicesScanned'),
-            $serviceLocator->get('Database\Table\NetworkDevicesIdentified')
+        $this->table = 'netmap';
+        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
+            null, $serviceLocator->get('Model\Network\Device')
         );
+        parent::__construct($serviceLocator);
     }
 }

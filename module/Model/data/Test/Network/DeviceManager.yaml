@@ -12,25 +12,39 @@ devicetype:
 network_devices:
   -
     macaddr: "00:00:5E:00:53:01"
+    description: "device1"
     type: "present, inventoried interfaces"
+    user: "user1"
   -
     macaddr: "00:00:5E:00:53:02"
+    description: "device2"
     type: "present, inventoried interfaces"
+    user: "user2"
   -
     macaddr: "00:00:5E:00:53:03"
+    description: "device3"
     type: "present, inventoried interfaces"
+    user: "user3"
   -
     macaddr: "00:00:5E:00:53:04"
+    description: "device4"
     type: "not present, inventoried interfaces"
+    user: "user4"
   -
     macaddr: "00:00:5E:00:53:05"
+    description: "device5"
     type: "present, no inventoried interfaces"
+    user: "user5"
   -
     macaddr: "00:00:5E:00:53:06"
+    description: "device6"
     type: "present, no inventoried interfaces"
+    user: "user6"
   -
     macaddr: "00:00:5E:00:53:07"
+    description: "device7"
     type: "present, no inventoried interfaces"
+    user: "user7"
 
 networks:
  -
@@ -39,3 +53,76 @@ networks:
  -
     macaddr: "00:00:5E:00:53:04"
     hardware_id: 2
+ -
+    # Scanned, not identified
+    macaddr: "00:00:5E:00:53:08"
+    hardware_id: 3
+ -
+    # Not scanned
+    macaddr: "00:00:5E:00:53:0A"
+    hardware_id: 4
+
+netmap:
+  -
+    mac: "00:00:5E:00:53:01"
+    ip: "192.0.2.1"
+    netid: "192.0.2.0"
+    mask: "255.255.255.0"
+    name: "name1"
+    date: "2014-12-28T16:40:00"
+  -
+    mac: "00:00:5E:00:53:02"
+    ip: "192.0.2.2"
+    netid: "192.0.2.0"
+    mask: "255.255.255.0"
+    name: "name2"
+    date: "2014-12-28T16:40:00"
+  -
+    mac: "00:00:5E:00:53:03"
+    ip: "192.0.2.3"
+    netid: "192.0.2.0"
+    mask: "255.255.255.128"
+    name: "name3"
+    date: "2014-12-28T16:40:00"
+  -
+    mac: "00:00:5E:00:53:04"
+    ip: "198.51.100.4"
+    netid: "198.51.100.0"
+    mask: "255.255.255.0"
+    name: "name4"
+    date: "2014-12-28T16:40:00"
+  -
+    mac: "00:00:5E:00:53:05"
+    ip: "198.51.100.5"
+    netid: "198.51.100.0"
+    mask: "255.255.255.0"
+    name: "name5"
+    date: "2014-12-28T16:40:00"
+  -
+    mac: "00:00:5E:00:53:06"
+    ip: "198.51.100.6"
+    netid: "198.51.100.6"
+    mask: "255.255.255.128"
+    name: "name6"
+    date: "2014-12-28T16:40:00"
+  -
+    mac: "00:00:5E:00:53:07"
+    ip: "198.51.100.7"
+    netid: "198.51.100.0"
+    mask: "255.255.255.0"
+    name: "name7"
+    date: "2014-12-28T16:40:00"
+  -
+    mac: "00:00:5E:00:53:08"
+    ip: "192.0.2.8"
+    netid: "192.0.2.0"
+    mask: "255.255.255.0"
+    name: "name8"
+    date: "2014-12-28T16:40:00"
+  -
+    mac: "00:00:5E:00:53:09"
+    ip: "192.0.2.9"
+    netid: "192.0.2.0"
+    mask: "255.255.255.0"
+    name: "name9"
+    date: "2014-12-28T16:40:00"

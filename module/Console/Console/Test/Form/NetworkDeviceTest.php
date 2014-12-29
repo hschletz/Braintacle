@@ -26,28 +26,28 @@ namespace Console\Test\Form;
  */
 class NetworkDeviceTest extends \Console\Test\AbstractFormTest
 {
-    protected $_networkDevice;
+    protected $_deviceManager;
 
     protected function _getForm()
     {
-        $this->_networkDevice = $this->getMock('Model_NetworkDevice');
-        $this->_networkDevice->expects($this->any())
-                             ->method('getCategories')
+        $this->_deviceManager = $this->getMockBuilder('Model\Network\DeviceManager')
+                                     ->disableOriginalConstructor()
+                                     ->getMock();
+        $this->_deviceManager->method('getTypes')
                              ->will($this->returnValue(array()));
         $form = new \Console\Form\NetworkDevice;
-        $form->setOption('NetworkDeviceModel', $this->_networkDevice);
+        $form->setOption('DeviceManager', $this->_deviceManager);
         $form->init();
         return $form;
     }
 
     public function testInit()
     {
-        $networkDevice = $this->getMock('Model_NetworkDevice');
-        $networkDevice->expects($this->any())
-                      ->method('getCategories')
+        $deviceManager = $this->getMockBuilder('Model\Network\DeviceManager')->disableOriginalConstructor()->getMock();
+        $deviceManager->method('getTypes')
                       ->will($this->returnValue(array('cat1', 'cat2')));
         $form = new \Console\Form\NetworkDevice;
-        $form->setOption('NetworkDeviceModel', $networkDevice);
+        $form->setOption('DeviceManager', $deviceManager);
         $form->init();
 
         $type = $form->get('Type');

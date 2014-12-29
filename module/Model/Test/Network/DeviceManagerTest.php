@@ -27,7 +27,180 @@ namespace Model\Test\Network;
 class DeviceManagerTest extends \Model\Test\AbstractTest
 {
     /** {@inheritdoc} */
-    protected static $_tables = array('NetworkDeviceTypes', 'NetworkDevicesIdentified', 'NetworkInterfaces');
+    protected static $_tables = array(
+        'NetworkDevicesIdentified',
+        'NetworkDevicesScanned',
+        'NetworkDeviceTypes',
+        'NetworkInterfaces',
+    );
+
+    public function testGetDevicesNoFilterDescendingOrder()
+    {
+        $model = $this->_getModel();
+        $devices = $model->getDevices(array(), 'Hostname', 'desc')->buffer();
+        $this->assertCount(6, $devices);
+        $this->assertContainsOnlyInstancesOf('Model_NetworkDevice', $devices);
+        $devices = $devices->toArray();
+        $allDevices = $this->_loadDataSet()->getTable('netmap');
+        $this->assertEquals($allDevices->getRow(8)['mac'], $devices[0]['MacAddress']);
+        $this->assertEquals($allDevices->getRow(6)['mac'], $devices[1]['MacAddress']);
+        $this->assertEquals($allDevices->getRow(5)['mac'], $devices[2]['MacAddress']);
+        $this->assertEquals($allDevices->getRow(4)['mac'], $devices[3]['MacAddress']);
+        $this->assertEquals($allDevices->getRow(2)['mac'], $devices[4]['MacAddress']);
+        $this->assertEquals($allDevices->getRow(0)['mac'], $devices[5]['MacAddress']);
+    }
+
+    public function testGetDevicesFilterByNetwork()
+    {
+        $model = $this->_getModel();
+        $devices = $model->getDevices(
+            array('Subnet' => '198.51.100.0', 'Mask' => '255.255.255.0'), 'Hostname'
+        )->buffer();
+        $this->assertCount(2, $devices);
+        $this->assertContainsOnlyInstancesOf('Model_NetworkDevice', $devices);
+        $devices = $devices->toArray();
+        $allDevices = $this->_loadDataSet()->getTable('netmap');
+        $this->assertEquals($allDevices->getRow(4)['mac'], $devices[0]['MacAddress']);
+        $this->assertEquals($allDevices->getRow(6)['mac'], $devices[1]['MacAddress']);
+    }
+
+    public function testGetDevicesFilterByType()
+    {
+        $model = $this->_getModel();
+        $devices = $model->getDevices(array('Type' => 'present, inventoried interfaces'), 'Hostname')->buffer();
+        $this->assertCount(2, $devices);
+        $this->assertContainsOnlyInstancesOf('Model_NetworkDevice', $devices);
+        $devices = $devices->toArray();
+        $allDevices = $this->_loadDataSet()->getTable('netmap');
+        $this->assertEquals($allDevices->getRow(0)['mac'], $devices[0]['MacAddress']);
+        $this->assertEquals($allDevices->getRow(2)['mac'], $devices[1]['MacAddress']);
+        $this->assertEquals('device1', $devices[0]['Description']);
+        $this->assertEquals('user1', $devices[0]['IdentifiedBy']);
+        $this->assertEquals('device3', $devices[1]['Description']);
+        $this->assertEquals('user3', $devices[1]['IdentifiedBy']);
+    }
+
+    public function testGetDevicesFilterByIdentifiedTrue()
+    {
+        $model = $this->_getModel();
+        $devices = $model->getDevices(array('Identified' => true), 'Hostname')->buffer();
+        $this->assertCount(5, $devices);
+        $this->assertContainsOnlyInstancesOf('Model_NetworkDevice', $devices);
+        $devices = $devices->toArray();
+        $allDevices = $this->_loadDataSet()->getTable('netmap');
+        $this->assertEquals($allDevices->getRow(0)['mac'], $devices[0]['MacAddress']);
+        $this->assertEquals($allDevices->getRow(2)['mac'], $devices[1]['MacAddress']);
+        $this->assertEquals($allDevices->getRow(4)['mac'], $devices[2]['MacAddress']);
+        $this->assertEquals($allDevices->getRow(5)['mac'], $devices[3]['MacAddress']);
+        $this->assertEquals($allDevices->getRow(6)['mac'], $devices[4]['MacAddress']);
+        $this->assertEquals('device1', $devices[0]['Description']);
+        $this->assertEquals('user1', $devices[0]['IdentifiedBy']);
+        $this->assertEquals('device3', $devices[1]['Description']);
+        $this->assertEquals('user3', $devices[1]['IdentifiedBy']);
+        // Extra properties from other devices should be OK too
+    }
+
+    public function testGetDevicesFilterByIdentifiedFalse()
+    {
+        $model = $this->_getModel();
+        $devices = $model->getDevices(array('Identified' => false), 'Hostname')->buffer();
+        $this->assertCount(1, $devices);
+        $this->assertContainsOnlyInstancesOf('Model_NetworkDevice', $devices);
+        $devices = $devices->toArray();
+        $allDevices = $this->_loadDataSet()->getTable('netmap');
+        $this->assertEquals($allDevices->getRow(8)['mac'], $devices[0]['MacAddress']);
+    }
+
+    public function testGetDeviceByMacAddressIdentified()
+    {
+        $model = $this->_getModel();
+        $device = $model->getDevice(new \Library\MacAddress('00:00:5E:00:53:03'));
+        $this->assertInstanceOf('Model_NetworkDevice', $device);
+        $this->assertEquals(
+            array (
+                'IpAddress' => '192.0.2.3',
+                'MacAddress' => '00:00:5E:00:53:03',
+                'Hostname' => 'name3',
+                'DiscoveryDate' => new \Zend_Date('2014-12-28T16:40:00'),
+                'Description' => 'device3',
+                'Type' => 'present, inventoried interfaces',
+                'IdentifiedBy' => 'user3',
+            ),
+            $device->getArrayCopy()
+        );
+    }
+
+    public function testGetDeviceByStringNotIdentified()
+    {
+        $model = $this->_getModel();
+        $device = $model->getDevice('00:00:5E:00:53:09');
+        $this->assertInstanceOf('Model_NetworkDevice', $device);
+        $this->assertEquals(
+            array (
+                'IpAddress' => '192.0.2.9',
+                'MacAddress' => '00:00:5E:00:53:09',
+                'Hostname' => 'name9',
+                'DiscoveryDate' => new \Zend_Date('2014-12-28T16:40:00'),
+                'Description' => null,
+                'Type' => null,
+                'IdentifiedBy' => null,
+            ),
+            $device->getArrayCopy()
+        );
+    }
+
+    public function testGetDeviceUnknownAddress()
+    {
+        $this->setExpectedException('Model\Network\RuntimeException', 'Unknown MAC address: 00:00:5E:00:53:00');
+        $model = $this->_getModel();
+        $device = $model->getDevice('00:00:5E:00:53:00');
+    }
+
+    public function testDeleteDeviceByMacAddress()
+    {
+        $model = $this->_getModel();
+        $model->deleteDevice(new \Library\MacAddress('00:00:5E:00:53:01'));
+        $dataSet = $this->_loadDataSet('DeleteDevice');
+        $connection = $this->getConnection();
+        $this->assertTablesEqual(
+            $dataSet->getTable('network_devices'),
+            $connection->createQueryTable('network_devices', 'SELECT macaddr FROM network_devices')
+        );
+        $this->assertTablesEqual(
+            $dataSet->getTable('netmap'),
+            $connection->createQueryTable('netmap', 'SELECT mac FROM netmap')
+        );
+    }
+
+    public function testDeleteDeviceByString()
+    {
+        $model = $this->_getModel();
+        $model->deleteDevice('00:00:5E:00:53:01');
+        $dataSet = $this->_loadDataSet('DeleteDevice');
+        $connection = $this->getConnection();
+        $this->assertTablesEqual(
+            $dataSet->getTable('network_devices'),
+            $connection->createQueryTable('network_devices', 'SELECT macaddr FROM network_devices')
+        );
+        $this->assertTablesEqual(
+            $dataSet->getTable('netmap'),
+            $connection->createQueryTable('netmap', 'SELECT mac FROM netmap')
+        );
+    }
+
+    public function testGetTypes()
+    {
+        $model = $this->_getModel();
+        $this->assertEquals(
+            array(
+                'not present, inventoried interfaces',
+                'not present, no inventoried interfaces',
+                'present, inventoried interfaces',
+                'present, no inventoried interfaces',
+            ),
+            $model->getTypes()
+        );
+    }
 
     public function testGetTypeCounts()
     {
@@ -104,7 +277,9 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
             );
             $this->assertTablesEqual(
                 $dataSet->getTable('network_devices'),
-                $this->getConnection()->createQueryTable('network_devices', 'SELECT macaddr, type FROM network_devices')
+                $this->getConnection()->createQueryTable(
+                    'network_devices', 'SELECT macaddr, description, type, user FROM network_devices'
+                )
             );
         }
     }
@@ -127,7 +302,9 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
             );
             $this->assertTablesEqual(
                 $dataSet->getTable('network_devices'),
-                $this->getConnection()->createQueryTable('network_devices', 'SELECT macaddr, type FROM network_devices')
+                $this->getConnection()->createQueryTable(
+                    'network_devices', 'SELECT macaddr, description, type, user FROM network_devices'
+                )
             );
         }
     }
@@ -165,7 +342,9 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
             );
             $this->assertTablesEqual(
                 $dataSet->getTable('network_devices'),
-                $this->getConnection()->createQueryTable('network_devices', 'SELECT macaddr, type FROM network_devices')
+                $this->getConnection()->createQueryTable(
+                    'network_devices', 'SELECT macaddr, description, type, user FROM network_devices'
+                )
             );
         }
     }
@@ -188,7 +367,9 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
             );
             $this->assertTablesEqual(
                 $dataSet->getTable('network_devices'),
-                $this->getConnection()->createQueryTable('network_devices', 'SELECT macaddr, type FROM network_devices')
+                $this->getConnection()->createQueryTable(
+                    'network_devices', 'SELECT macaddr, description, type, user FROM network_devices'
+                )
             );
         }
     }

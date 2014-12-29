@@ -29,8 +29,8 @@ namespace Console\Form;
  * - Type
  * - Description
  *
- * The init() method requires a \Model_NetworkDevice instance injected via the
- * NetworkDeviceModel option. The factory does this automatically.
+ * The init() method requires a \ModelNetwork\DeviceManager instance injected
+ * via the DeviceManager option. The factory does this automatically.
  */
 class NetworkDevice extends Form
 {
@@ -39,7 +39,7 @@ class NetworkDevice extends Form
     {
         $type = new \Library\Form\Element\SelectSimple('Type');
         $type->setLabel('Type')
-             ->setValueOptions($this->getOption('NetworkDeviceModel')->getCategories());
+             ->setValueOptions($this->getOption('DeviceManager')->getTypes());
         $this->add($type);
 
         $description = new \Zend\Form\Element\Text('Description');

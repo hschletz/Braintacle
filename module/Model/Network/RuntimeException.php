@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for Model\Network\DeviceManager
+ * Exception thrown by DeviceManager on runtime errors
  *
  * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,23 +19,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Model\Service\Network;
+namespace Model\Network;
 
 /**
- * Factory for Model\Network\DeviceManager
+ * Exception thrown by DeviceManager on runtime errors
  */
-class DeviceManagerFactory implements \Zend\ServiceManager\FactoryInterface
+class RuntimeException extends \RuntimeException
 {
-    /**
-     * @internal
-     * @codeCoverageIgnore
-     */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        return new \Model\Network\DeviceManager(
-            $serviceLocator->get('Database\Table\NetworkDeviceTypes'),
-            $serviceLocator->get('Database\Table\NetworkDevicesScanned'),
-            $serviceLocator->get('Database\Table\NetworkDevicesIdentified')
-        );
-    }
 }

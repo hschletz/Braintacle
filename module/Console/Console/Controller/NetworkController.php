@@ -27,13 +27,7 @@ namespace Console\Controller;
 class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
 {
     /**
-     * Device prototype
-     * @var \Model_NetworkDevice
-     */
-    protected $_device;
-
-    /**
-     * DeviceType prototype
+     * DeviceManager prototype
      * @var \Model\Network\DeviceManager
      */
     protected $_deviceManager;
@@ -59,21 +53,18 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Constructor
      *
-     * @param \Model_NetworkDevice $device
      * @param \Model\Network\DeviceManager $deviceManager
      * @param \Model_Subnet $subnet
      * @param \Console\Form\Subnet $subnetForm
      * @param \Console\Form\NetworkDevice $deviceForm
      */
     public function __construct(
-        \Model_NetworkDevice $device,
         \Model\Network\DeviceManager $deviceManager,
         \Model_Subnet $subnet,
         \Console\Form\Subnet $subnetForm,
         \Console\Form\NetworkDevice $deviceForm
     )
     {
-        $this->_device = $device;
         $this->_deviceManager = $deviceManager;
         $this->_subnet = $subnet;
         $this->_subnetForm = $subnetForm;
@@ -132,7 +123,7 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
         }
         $ordering = $this->getOrder('DiscoveryDate', 'desc');
         return array(
-            'devices' => $this->_device->fetch(
+            'devices' => $this->_deviceManager->getDevices(
                 $filters,
                 $ordering['order'],
                 $ordering['direction']
@@ -161,7 +152,7 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
         }
         $ordering = $this->getOrder('DiscoveryDate', 'desc');
         return array(
-            'devices' => $this->_device->fetch(
+            'devices' => $this->_deviceManager->getDevices(
                 $filters,
                 $ordering['order'],
                 $ordering['direction']
@@ -211,33 +202,33 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
     public function editAction()
     {
         $params = $this->params();
-        $device = $this->_device->fetchByMacAddress($params->fromQuery('macaddress'));
-        if ($device) {
-            if ($this->getRequest()->isPost()) {
-                $this->_deviceForm->setData($params->fromPost());
-                if ($this->_deviceForm->isValid()) {
-                    $data = $this->_deviceForm->getData();
-                    unset($data['_csrf']);
-                    unset($data['Submit']);
-                    $device->fromArray($data);
-                    $device->save();
-                    return $this->redirectToRoute('network', 'index');
-                }
-            } else {
-                $this->_deviceForm->setData(
-                    array(
-                        'Type' => $device['Type'],
-                        'Description' => $device['Description'],
-                    )
-                );
-            }
-            return array(
-                'device' => $device,
-                'form' => $this->_deviceForm,
-            );
-        } else {
+        try {
+            $device = $this->_deviceManager->getDevice($params->fromQuery('macaddress'));
+        } catch (\Model\Network\RuntimeException $e) {
             return $this->redirectToRoute('network', 'index');
         }
+        if ($this->getRequest()->isPost()) {
+            $this->_deviceForm->setData($params->fromPost());
+            if ($this->_deviceForm->isValid()) {
+                $data = $this->_deviceForm->getData();
+                unset($data['_csrf']);
+                unset($data['Submit']);
+                $device->fromArray($data);
+                $device->save();
+                return $this->redirectToRoute('network', 'index');
+            }
+        } else {
+            $this->_deviceForm->setData(
+                array(
+                    'Type' => $device['Type'],
+                    'Description' => $device['Description'],
+                )
+            );
+        }
+        return array(
+            'device' => $device,
+            'form' => $this->_deviceForm,
+        );
     }
 
     /**
@@ -250,14 +241,15 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
     public function deleteAction()
     {
         $params = $this->params();
-        $device = $this->_device->fetchByMacAddress($params->fromQuery('macaddress'));
-        if ($device) {
-            if ($this->getRequest()->isGet()) {
+        if ($this->getRequest()->isGet()) {
+            try {
+                $device = $this->_deviceManager->getDevice($params->fromQuery('macaddress'));
                 return array('device' => $device);
-            } else {
-                if ($params->fromPost('yes')) {
-                    $device->delete();
-                }
+            } catch (\Model\Network\RuntimeException $e) {
+            }
+        } else {
+            if ($params->fromPost('yes')) {
+                $this->_deviceManager->deleteDevice($params->fromQuery('macaddress'));
             }
         }
         return $this->redirectToRoute('network', 'index');

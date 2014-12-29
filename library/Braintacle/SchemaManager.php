@@ -382,7 +382,6 @@ class Braintacle_SchemaManager
             'memories',
             'modems',
             'monitors',
-            'netmap',
             'ports',
             'printers',
             'registry',
