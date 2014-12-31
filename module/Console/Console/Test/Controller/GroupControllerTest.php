@@ -334,7 +334,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                          $this->returnValueMap(
                              array(
                                 array('Name', 'test')
-                            )
+                             )
                          )
                      );
         $this->_group->expects($this->once())
@@ -374,7 +374,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                          $this->returnValueMap(
                              array(
                                 array('Name', 'test')
-                            )
+                             )
                          )
                      );
         $this->_group->expects($this->once())

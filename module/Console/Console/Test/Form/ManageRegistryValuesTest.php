@@ -341,7 +341,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
                                 'config' => $this->_config,
                                 'registryValue' => $registryValue,
                             ),
-                        )
+                         )
                      )->getMock();
         // Deliver different data in each run
         $form->expects($this->exactly(2))
