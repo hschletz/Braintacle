@@ -177,11 +177,19 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                              ->method('getDevices')
                              ->with($filters, 'DiscoveryDate', 'desc')
                              ->willReturn($result);
+
+        $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat->expects($this->once())
+                   ->method('__invoke')
+                   ->with(1393177422, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
+                   ->willReturn('date1');
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
+
         $this->dispatch('/console/network/showidentified/');
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains('td', "\n00:00:5E:00:53:00\n");
         $this->assertQueryContentContains('td', "\n192.0.2.1\n");
-        $this->assertQueryContentContains('td', "\n23.02.14 18:43\n");
+        $this->assertQueryContentContains('td', "\ndate1\n");
         $this->assertQueryContentContains('td', "\ntype\n");
         $this->assertQueryContentContains('td', "\ndescription\n");
         $this->assertQueryContentContains('td', "\nidendified_by\n");
@@ -236,13 +244,21 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                              ->method('getDevices')
                              ->with($filters, 'DiscoveryDate', 'desc')
                              ->willReturn($result);
+
+        $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat->expects($this->once())
+                   ->method('__invoke')
+                   ->with(1393177422, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
+                   ->willReturn('date1');
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
+
         $this->dispatch('/console/network/showunknown/');
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains('td', "\n00:00:5E:00:53:00\n");
         $this->assertQueryContentContains('td', "\nvendor\n");
         $this->assertQueryContentContains('td', "\n192.0.2.1\n");
         $this->assertQueryContentContains('td', "\nhost.example.net\n");
-        $this->assertQueryContentContains('td', "\n23.02.14 18:43\n");
+        $this->assertQueryContentContains('td', "\ndate1\n");
         $this->assertQueryContentContains(
             'td a[href="/console/network/edit/?macaddress=00:00:5E:00:53:00"]',
             'Bearbeiten'

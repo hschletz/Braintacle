@@ -110,7 +110,19 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
         $this->_packageManager->expects($this->once())->method('getPackages')->willReturn($packages);
+
+        $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat->expects($this->exactly(2))
+                   ->method('__invoke')
+                   ->withConsecutive(
+                       array(1396119825, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT),
+                       array(1396120543, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
+                   )
+                   ->will($this->onConsecutiveCalls('date1', 'date2'));
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
+
         $this->dispatch('/console/package/index/');
+
         $this->assertResponseStatusCode(200);
 
         // Name column
@@ -126,7 +138,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         // Timestamp column
         $this->assertXpathQueryContentContains(
             '//td',
-            "\n29.03.14 20:03\n"
+            "\ndate1\n"
         );
 
         // Size column

@@ -144,6 +144,14 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                              )
                          )
                      );
+
+        $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat->expects($this->once())
+                   ->method('__invoke')
+                   ->with(1396778133, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
+                   ->willReturn('date_create');
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
+
         $this->dispatch('/console/group/index/');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
@@ -152,7 +160,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->assertXpathQueryContentContains(
             '//td',
-            "\n06.04.14 11:55\n"
+            "\ndate_create\n"
         );
         $this->assertXpathQueryContentContains(
             '//td',
@@ -190,6 +198,14 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                      ->method('fetchByName')
                      ->with('test')
                      ->will($this->returnValue($group));
+
+        $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat->expects($this->once())
+                   ->method('__invoke')
+                   ->with(1396980741, \IntlDateFormatter::FULL, \IntlDateFormatter::MEDIUM)
+                   ->willReturn('date_create');
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
+
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
@@ -200,7 +216,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXpathQuery('//td[text()="ID"]/following::td[text()="groupID"]');
         $this->assertXpathQuery('//td[text()="Beschreibung"]/following::td[text()="groupDescription"]');
         $this->assertXpathQuery(
-            '//td[text()="Erstellungsdatum"]/following::td[text()="Dienstag, 8. April 2014 20:12:21"]'
+            '//td[text()="Erstellungsdatum"]/following::td[text()="date_create"]'
         );
         $this->assertXpathQuery("//td[text()='SQL-Abfrage']/following::td/code[text()='\ngroupSql\n']");
     }
@@ -236,17 +252,30 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                             $group
                         )
                         ->will($this->returnValue($computers));
+
+        $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat->expects($this->exactly(3))
+                   ->method('__invoke')
+                   ->withConsecutive(
+                       array(1396980741, \IntlDateFormatter::FULL, \IntlDateFormatter::MEDIUM),
+                       array(1397062401, \IntlDateFormatter::FULL, \IntlDateFormatter::MEDIUM),
+                       array(1397062572, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
+                   )
+                   ->will($this->onConsecutiveCalls('date_create', 'date_expire', 'date_computer'));
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
+
         $this->dispatch($url);
+
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
             "//ul[@class='navigation navigation_details']/li[@class='active']/a[@href='$url']",
             'Mitglieder'
         );
         $this->assertXpathQuery(
-            '//td[text()="Letztes Update:"]/following::td[text()="Dienstag, 8. April 2014 20:12:21"]'
+            '//td[text()="Letztes Update:"]/following::td[text()="date_create"]'
         );
         $this->assertXpathQuery(
-            '//td[text()="Nächstes Update:"]/following::td[text()="Mittwoch, 9. April 2014 18:53:21"]'
+            '//td[text()="Nächstes Update:"]/following::td[text()="date_expire"]'
         );
         $this->assertXpathQuery("//p[@class='textcenter'][text()='\nAnzahl Computer: 1\n']");
         $this->assertXpathQuery("//td[text()='\nmanuell\n']");
