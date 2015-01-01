@@ -59,7 +59,7 @@ function renderName($view, $software)
 
 function renderSize($view, $software)
 {
-    $measure = new Zend_Measure_Binary($software->getSize() / 1024, 'KILOBYTE');
+    $measure = new Zend_Measure_Binary($software->getSize(), 'KILOBYTE');
     return $view->escape($measure->convertTo('KILOBYTE', 0));
 }
 
