@@ -60,7 +60,7 @@ $renderCallbacks = array(
         return $content;
     },
     'Size' => function($view, $software) {
-        $measure = new Zend_Measure_Binary($software['Size'] / 1024, 'KILOBYTE');
+        $measure = new Zend_Measure_Binary($software['Size'], 'KILOBYTE');
         return $view->escapeHtml($measure->convertTo('KILOBYTE', 0));
     },
     'Architecture' => function($view, $software) {

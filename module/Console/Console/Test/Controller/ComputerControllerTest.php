@@ -1394,7 +1394,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
             'Name' => 'name1',
             'Comment' => '',
             'Version' => 'version1',
-            'Size' => 42 * 1024,
+            'Size' => 42,
         );
         $softwareModel = $this->getMock('Model_Software');
         $softwareModel->expects($this->any())

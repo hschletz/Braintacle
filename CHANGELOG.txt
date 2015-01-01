@@ -85,6 +85,8 @@ Fixed bugs:
 
 - Console: Fixed OS detection for computers imported via the injector script.
 
+- Console: Fixed display of software size for Unix machines (wrong magnitude).
+
 
 CHANGES IN VERSION 0.15
 =======================
