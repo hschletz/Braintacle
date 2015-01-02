@@ -35,6 +35,10 @@ if ($computer['Windows']) {
     $headers['Size'] = $this->translate('Size');
 }
 
+$columnClasses = array(
+    'Size' => 'textright',
+);
+
 $renderCallbacks = array(
     'Name' => function($view, $software) {
         $content = $view->escapeHtml($software['Name']);
@@ -60,8 +64,11 @@ $renderCallbacks = array(
         return $content;
     },
     'Size' => function($view, $software) {
-        $measure = new Zend_Measure_Binary($software['Size'], 'KILOBYTE');
-        return $view->escapeHtml($measure->convertTo('KILOBYTE', 0));
+        $size = $view->numberFormat(
+            $software['Size'], \NumberFormatter::DECIMAL, \NumberFormatter::TYPE_DOUBLE, null, 0
+        );
+        $size .= "\xC2\xA0kB";
+        return $view->escapeHtml($size);
     },
     'Architecture' => function($view, $software) {
         $architecture = $software['Architecture'];
@@ -94,5 +101,6 @@ print $this->table(
     $list,
     $headers,
     array('order' => $this->order, 'direction' => $this->direction),
-    $renderCallbacks
+    $renderCallbacks,
+    $columnClasses
 );

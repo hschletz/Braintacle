@@ -1066,12 +1066,12 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXpathQueryContentContains('//table[1]/tr[4]/td[1]', "\nWechselmedium\n");
         $this->assertXpathQueryContentContains('//table[1]/tr[5]/td[1]', "\nDiskettenlaufwerk\n");
         $this->assertXpathQueryContentContains('//table[1]/tr[6]/td[1]', "\n<other>\n");
-        $this->assertXpathQueryContentContains('//table[1]/tr[2]/td[3]', "\n1,0 GB\n");
+        $this->assertXpathQueryContentContains('//table[1]/tr[2]/td[3]', "\n1,0\xC2\xA0GB\n");
         // Filesystem 1
         $this->assertXpathQuery("//table[2]//th[text()='\nBuchstabe\n']");
-        $this->assertXpathQueryContentContains('//table[2]/tr[2]/td[5]', "\n9,8 GB\n");
-        $this->assertXpathQueryContentContains('//table[2]/tr[2]/td[6]', "\n5,9 GB (60%)\n");
-        $this->assertXpathQueryContentContains('//table[2]/tr[2]/td[7]', "\n3,9 GB (40%)\n");
+        $this->assertXpathQueryContentContains('//table[2]/tr[2]/td[5]', "\n9,8\xC2\xA0GB\n");
+        $this->assertXpathQueryContentContains('//table[2]/tr[2]/td[6]', "\n5,9\xC2\xA0GB (60\xC2\xA0%)\n");
+        $this->assertXpathQueryContentContains('//table[2]/tr[2]/td[7]', "\n3,9\xC2\xA0GB (40\xC2\xA0%)\n");
         // Filesystem 2
         $this->assertXpathQueryContentContains('//table[2]/tr[3]/td[5]', '');
         $this->assertXpathQueryContentContains('//table[2]/tr[3]/td[6]', '');
@@ -1416,7 +1416,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertNotXpathQuery("//th/a[text()='Ort']");
         $this->assertNotXpathQuery("//th/a[text()='Architektur']");
         $this->assertXpathQuery("//th/a[text()='Größe']");
-        $this->assertXpathQuery("//tr[2]/td[3][text()='\n42 kB\n']");
+        $this->assertXpathQuery("//tr[2]/td[3][@class='textright'][text()='\n42\xC2\xA0kB\n']");
     }
 
     public function testSoftwareActionComments()

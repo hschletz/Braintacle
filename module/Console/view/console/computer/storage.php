@@ -35,10 +35,15 @@ $headers = array(
 $renderSize = function($view, $object, $property) {
     $size = $object[$property];
     if ($object['Size']) { // Ignore objects with no total size
-        $measure = new \Zend_Measure_Binary($size / 1024, 'GIGABYTE');
-        $output = $measure->convertTo('GIGABYTE', 1);
+        $output = $view->numberFormat($size / 1024, \NumberFormatter::DECIMAL, \NumberFormatter::TYPE_DOUBLE, null, 1);
+        $output .= "\xC2\xA0GB";
         if ($property != 'Size') {
-            $output .= sprintf(' (%.0f%%)', 100 * $size / $object['Size']);
+            $output .= sprintf(
+                ' (%s)',
+                $view->numberFormat(
+                    $size / $object['Size'], \NumberFormatter::PERCENT, \NumberFormatter::TYPE_DOUBLE, null, 0
+                )
+            );
         }
         return $view->escapeHtml($output);
     }

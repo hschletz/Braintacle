@@ -115,17 +115,11 @@ $renderCallbacks = array(
         );
     },
     'Size' => function($view, $package) {
-        $size = new Zend_Measure_Binary(
-            $package['Size'] / 1048576,
-            'MEGABYTE'
+        $size = $view->numberFormat(
+            $package['Size'] / 1048576, \NumberFormatter::DECIMAL, \NumberFormatter::TYPE_DOUBLE, null, 1
         );
-        return str_replace(
-            ' ',
-            '&nbsp;',
-            $view->escapeHtml(
-                $size->convertTo('MEGABYTE', 1)
-            )
-        );
+        $size .= "\xC2\xA0MB";
+        return $view->escapeHtml($size);
     },
     'Platform' => function($view, $package) {
         return $view->escapeHtml(ucfirst($package['Platform']));
