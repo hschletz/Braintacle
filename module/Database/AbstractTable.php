@@ -105,6 +105,15 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
                         $columnObj->setDatatype($column['type'], $column['length']);
                         $logger->info('done.');
                     }
+                    // Change constraints if different.
+                    if ($columnObj->getNotNull() != $column['notnull']) {
+                        $logger->info(
+                            ($column['notnull'] ? 'Setting' : 'Removing') .
+                            " NOT NULL constraint on column $this->table.$column[name]..."
+                        );
+                        $columnObj->setNotNull($column['notnull']);
+                        $logger->info('done.');
+                    }
                 } else {
                     $logger->info("Creating column $this->table.$column[name]...");
                     $table->addColumnObject($database->createColumnFromArray($column));
