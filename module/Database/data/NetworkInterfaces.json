@@ -24,7 +24,7 @@
             "name": "description",
             "type": "varchar",
             "length": 255,
-            "notnull": false,
+            "notnull": true,
             "default": null,
             "autoincrement": false,
             "comment": null
