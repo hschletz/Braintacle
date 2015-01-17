@@ -50,17 +50,21 @@ networks:
  -
     macaddr: "00:00:5E:00:53:02"
     hardware_id: 1
+    description: ""
  -
     macaddr: "00:00:5E:00:53:04"
     hardware_id: 2
+    description: ""
  -
     # Scanned, not identified
     macaddr: "00:00:5E:00:53:08"
     hardware_id: 3
+    description: ""
  -
     # Not scanned
     macaddr: "00:00:5E:00:53:0A"
     hardware_id: 4
+    description: ""
 
 netmap:
   -

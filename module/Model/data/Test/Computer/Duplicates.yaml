@@ -103,12 +103,15 @@ networks:
   -
     hardware_id: 1
     macaddr: "00:00:5E:00:53:00"
+    description: ""
   -
     hardware_id: 2
     macaddr: "00:00:5E:00:53:01"
+    description: ""
   -
     hardware_id: 3
     macaddr: "00:00:5E:00:53:01"
+    description: ""
 
 # Blacklists for duplicate criteria used above
 blacklist_macaddresses:
