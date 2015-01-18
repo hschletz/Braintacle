@@ -71,6 +71,7 @@ Feature\InitProviderInterface
                     'Model\Computer\Duplicates' => 'Model\Service\Computer\DuplicatesFactory',
                     'Model\Config' => 'Model\Service\ConfigFactory',
                     'Model\Network\DeviceManager' => 'Model\Service\Network\DeviceManagerFactory',
+                    'Model\Network\SubnetManager' => 'Model\Service\Network\SubnetManagerFactory',
                     'Model\Operator\Operator' => 'Model\Service\OperatorFactory',
                     'Model\Operator\OperatorManager' => 'Model\Service\OperatorManagerFactory',
                     'Model\Package\PackageManager' => 'Model\Service\Package\PackageManagerFactory',

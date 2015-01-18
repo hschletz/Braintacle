@@ -33,10 +33,10 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     protected $_deviceManager;
 
     /**
-     * Subnet mock
-     * @var \Model_Subnet
+     * SubnetManager mock
+     * @var \Model\Network\SubnetManager
      */
-    protected $_subnet;
+    protected $_subnetManager;
 
     /**
      * Subnet form mock
@@ -58,7 +58,9 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->_deviceManager = $this->getMockBuilder('Model\Network\DeviceManager')
                                      ->disableOriginalConstructor()
                                      ->getMock();
-        $this->_subnet = $this->getMock('Model_Subnet');
+        $this->_subnetManager = $this->getMockBuilder('Model\Network\SubnetManager')
+                                     ->disableOriginalConstructor()
+                                     ->getMock();
         $this->_subnetForm = $this->getMock('Console\Form\Subnet');
         $this->_deviceForm = $this->getMock('Console\Form\NetworkDevice');
         parent::setUp();
@@ -69,7 +71,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     {
         return new \Console\Controller\NetworkController(
             $this->_deviceManager,
-            $this->_subnet,
+            $this->_subnetManager,
             $this->_subnetForm,
             $this->_deviceForm
         );
@@ -108,9 +110,9 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
         $this->_deviceManager->expects($this->once())->method('getTypeCounts')->willReturn($devices);
-        $this->_subnet->expects($this->once())
-                      ->method('fetchAll')
-                      ->will($this->returnValue($subnets));
+        $this->_subnetManager->expects($this->once())
+                             ->method('getSubnets')
+                             ->willReturn($subnets);
         $this->dispatch('/console/network/index/');
         $this->assertResponseStatusCode(200);
 
@@ -294,21 +296,21 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testPropertiesActionGet()
     {
-        $subnet = array(
+        $map = array(
             array('Address', '192.0.2.0'),
             array('Mask', '255.255.255.0'),
             array('AddressWithMask', '192.0.2.0/24'),
             array('Name', 'name'),
         );
-        $this->_subnet->expects($this->once())
-                      ->method('create')
-                      ->with('192.0.2.0', '255.255.255.0')
-                      ->will($this->returnSelf());
-        $this->_subnet->expects($this->never())
-                      ->method('offsetSet');
-        $this->_subnet->expects($this->any())
-                      ->method('offsetGet')
-                      ->will($this->returnValueMap($subnet));
+        $subnet = $this->getMock('Model_Subnet');
+        $subnet->expects($this->never())->method('offsetSet');
+        $subnet->method('offsetGet')->will($this->returnValueMap($map));
+
+        $this->_subnetManager->expects($this->once())
+                             ->method('getSubnet')
+                             ->with('192.0.2.0', '255.255.255.0')
+                             ->willReturn($subnet);
+
         $this->_subnetForm->expects($this->once())
                           ->method('setData')
                           ->with(array('Name' => 'name'));
@@ -327,6 +329,15 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     public function testPropertiesActionPostInvalid()
     {
         $postData = array('Name' => 'new_name');
+
+        $subnet = $this->getMock('Model_Subnet');
+        $subnet->expects($this->never())->method('offsetSet');
+
+        $this->_subnetManager->expects($this->once())
+                             ->method('getSubnet')
+                             ->with('192.0.2.0', '255.255.255.0')
+                             ->willReturn($subnet);
+
         $this->_subnetForm->expects($this->once())
                           ->method('setData')
                           ->with($postData);
@@ -335,12 +346,6 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                           ->will($this->returnValue(false));
         $this->_subnetForm->expects($this->once())
                           ->method('render');
-        $this->_subnet->expects($this->once())
-                      ->method('create')
-                      ->with('192.0.2.0', '255.255.255.0')
-                      ->will($this->returnSelf());
-        $this->_subnet->expects($this->never())
-                      ->method('offsetSet');
         $this->dispatch('/console/network/properties/?subnet=192.0.2.0&mask=255.255.255.0', 'POST', $postData);
         $this->assertResponseStatusCode(200);
     }
@@ -348,6 +353,15 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     public function testPropertiesActionPostValid()
     {
         $postData = array('Name' => 'new_name');
+
+        $subnet = $this->getMock('Model_Subnet');
+        $subnet->expects($this->once())->method('offsetSet')->with('Name', 'new_name');
+
+        $this->_subnetManager->expects($this->once())
+                             ->method('getSubnet')
+                             ->with('192.0.2.0', '255.255.255.0')
+                             ->willReturn($subnet);
+
         $this->_subnetForm->expects($this->once())
                           ->method('setData')
                           ->with($postData);
@@ -359,20 +373,17 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                           ->will($this->returnValue($postData));
         $this->_subnetForm->expects($this->never())
                           ->method('render');
-        $this->_subnet->expects($this->once())
-                      ->method('create')
-                      ->with('192.0.2.0', '255.255.255.0')
-                      ->will($this->returnSelf());
-        $this->_subnet->expects($this->once())
-                      ->method('offsetSet')
-                      ->with('Name', 'new_name');
+
         $this->dispatch('/console/network/properties/?subnet=192.0.2.0&mask=255.255.255.0', 'POST', $postData);
         $this->assertRedirectTo('/console/network/index/');
     }
 
     public function testPropertiesActionMissingParams()
     {
-        $this->_subnet = $this->getMockBuilder('Model_Subnet')->setMethods(null)->getMock();
+        $this->_subnetManager = $this->getMockBuilder('Model\Network\SubnetManager')
+                                     ->disableOriginalConstructor()
+                                     ->setMethods(null)
+                                     ->getMock();
         $this->dispatch('/console/network/properties');
         $this->assertApplicationException('InvalidArgumentException');
     }

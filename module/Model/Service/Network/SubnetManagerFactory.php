@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for NetworkController
+ * Factory for Model\Network\SubnetManager
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,25 +19,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Console\Service;
+namespace Model\Service\Network;
 
 /**
- * Factory for NetworkController
+ * Factory for Model\Network\SubnetManager
  */
-class NetworkControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class SubnetManagerFactory implements \Zend\ServiceManager\FactoryInterface
 {
     /**
      * @internal
+     * @codeCoverageIgnore
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $serviceManager = $serviceLocator->getServiceLocator();
-        $formManager = $serviceManager->get('FormElementManager');
-        return new \Console\Controller\NetworkController(
-            $serviceManager->get('Model\Network\DeviceManager'),
-            $serviceManager->get('Model\Network\SubnetManager'),
-            $formManager->get('Console\Form\Subnet'),
-            $formManager->get('Console\Form\NetworkDevice')
+        return new \Model\Network\SubnetManager(
+            $serviceLocator->get('Database\Table\Subnets')
         );
     }
 }

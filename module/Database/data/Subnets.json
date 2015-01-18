@@ -1,0 +1,40 @@
+{
+    "name": "subnet",
+    "comment": "Subnet config",
+    "columns": [
+        {
+            "name": "netid",
+            "type": "varchar",
+            "length": 15,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Network address"
+        },
+        {
+            "name": "mask",
+            "type": "varchar",
+            "length": 15,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "name",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        }
+    ],
+    "primary_key": [
+        "netid",
+        "mask"
+    ],
+    "mysql": {
+        "engine": "MyISAM"
+    }
+}

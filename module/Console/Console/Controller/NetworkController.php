@@ -33,10 +33,10 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
     protected $_deviceManager;
 
     /**
-     * Subnet prototype
-     * @var \Model_Subnet
+     * Subnet manager
+     * @var \Model\Network\SubnetManager
      */
-    protected $_subnet;
+    protected $_subnetManager;
 
     /**
      * Subnet form prototype
@@ -54,19 +54,19 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
      * Constructor
      *
      * @param \Model\Network\DeviceManager $deviceManager
-     * @param \Model_Subnet $subnet
+     * @param \Model\Network\SubnetManager $subnetManager
      * @param \Console\Form\Subnet $subnetForm
      * @param \Console\Form\NetworkDevice $deviceForm
      */
     public function __construct(
         \Model\Network\DeviceManager $deviceManager,
-        \Model_Subnet $subnet,
+        \Model\Network\SubnetManager $subnetManager,
         \Console\Form\Subnet $subnetForm,
         \Console\Form\NetworkDevice $deviceForm
     )
     {
         $this->_deviceManager = $deviceManager;
-        $this->_subnet = $subnet;
+        $this->_subnetManager = $subnetManager;
         $this->_subnetForm = $subnetForm;
         $this->_deviceForm = $deviceForm;
     }
@@ -95,7 +95,7 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
         }
         return array(
             'devices' => $devices,
-            'subnets' => $this->_subnet->fetchAll($ordering['order'], $ordering['direction']),
+            'subnets' => $this->_subnetManager->getSubnets($ordering['order'], $ordering['direction']),
             'subnetOrder' => $ordering,
         );
     }
@@ -171,7 +171,7 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
     public function propertiesAction()
     {
         $params = $this->params();
-        $subnet = $this->_subnet->create(
+        $subnet = $this->_subnetManager->getSubnet(
             $params->fromQuery('subnet'),
             $params->fromQuery('mask')
         );

@@ -59,62 +59,6 @@ class Model_Subnet extends Model_Abstract
         'NumUnknown' => 'integer',
     );
 
-    /**
-     * Return all subnets, including statistics
-     *
-     * @param string $order Property to sort by, default: null
-     * @param string $direction One of [asc|desc].
-     * @return \Model_Subnet[]
-     */
-    public function fetchAll($order=null, $direction='asc')
-    {
-        $db = Model_Database::getAdapter();
-
-        $numIdentified = $db->select()
-            ->from(
-                'netmap',
-                new Zend_Db_Expr('COUNT(mac)')
-            )
-            ->where('netid = networks.ipsubnet')
-            ->where('mask = networks.ipmask')
-            ->where('mac NOT IN(SELECT macaddr FROM networks)')
-            ->where('mac IN(SELECT macaddr FROM network_devices)');
-
-        $numUnknown = $db->select()
-            ->from(
-                'netmap',
-                new Zend_Db_Expr('COUNT(mac)')
-            )
-            ->where('netid = networks.ipsubnet')
-            ->where('mask = networks.ipmask')
-            ->where('mac NOT IN(SELECT macaddr FROM networks)')
-            ->where('mac NOT IN(SELECT macaddr FROM network_devices)');
-
-        $select = $db->select()
-            ->from(
-                'networks',
-                array(
-                    'ipsubnet',
-                    'ipmask',
-                    'num_inventoried' => new Zend_Db_Expr('COUNT(ipmask)'),
-                    'num_identified' => "($numIdentified)",
-                    'num_unknown' => "($numUnknown)",
-                )
-            )
-            ->joinLeft(
-                'subnet',
-                'networks.ipsubnet=subnet.netid AND networks.ipmask=subnet.mask',
-                'name'
-            )
-            ->where('ipsubnet != \'0.0.0.0\'')
-            ->where('ipsubnet != \'127.0.0.0\'')
-            ->where('description NOT LIKE \'%PPP%\'')
-            ->group(array('ipsubnet', 'ipmask', 'name'))
-            ->order(self::getOrder($order, $direction, $this->_propertyMap));
-
-        return $this->_fetchAll($select->query());
-    }
-
     /** {@inheritdoc} */
     public function getProperty($property, $rawValue=false)
     {
@@ -213,36 +157,5 @@ class Model_Subnet extends Model_Abstract
             $mask = 32 - log(($mask ^ 0xffffffff) + 1, 2);
         }
         return '/' . $mask;
-    }
-
-    /**
-     * Create a Model_Subnet object with given properties
-     *
-     * Use this method to access a subnet with given address and mask. If a name
-     * is defined for this subnet, it is set up for the returned object.
-     *
-     * @param string $address Network address
-     * @param string $mask Netmask
-     * @return Model_Subnet
-     **/
-    public function create($address, $mask)
-    {
-        $subnet = clone $this;
-        $subnet['Address'] = $address;
-        $subnet['Mask'] = $mask;
-        $name = Model_Database::getAdapter()->fetchOne(
-            'SELECT name FROM subnet WHERE netid = ? AND mask = ?',
-            array($address, $mask)
-        );
-        if ($name === false) {
-            $subnet->name = null;
-        } else {
-            $subnet->name = $name;
-        }
-        unset($subnet['NumInventoried']);
-        unset($subnet['NumIdentified']);
-        unset($subnet['NumUnknown']);
-
-        return $subnet;
     }
 }
