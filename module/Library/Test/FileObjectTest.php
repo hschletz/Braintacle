@@ -276,11 +276,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
     {
         $url = vfsStream::newFile('test.txt')->at($this->_root)->url();
         $fileObject = new FileObject($url);
-        $content = array();
-        foreach ($fileObject as $line) {
-            $content[] = $line;
-        }
-        $this->assertEquals(array(), $content);
+        $this->assertEquals(array(), iterator_to_array($fileObject));
     }
 
     public function testIteratorRaw()
@@ -288,11 +284,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $expectedContent = array("\n", "line1\n", "line2\n", 'line3');
         $url = vfsStream::newFile('test.txt')->withContent(implode('', $expectedContent))->at($this->_root)->url();
         $fileObject = new FileObject($url);
-        $content = array();
-        foreach ($fileObject as $line) {
-            $content[] = $line;
-        }
-        $this->assertEquals($expectedContent, $content);
+        $this->assertEquals($expectedContent, iterator_to_array($fileObject));
     }
 
     public function testIteratorDropNewLine()
@@ -301,25 +293,17 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $url = vfsStream::newFile('test.txt')->withContent(implode("\n", $expectedContent))->at($this->_root)->url();
         $fileObject = new FileObject($url);
         $fileObject->setFlags(\SplFileObject::DROP_NEW_LINE);
-        $content = array();
-        foreach ($fileObject as $line) {
-            $content[] = $line;
-        }
-        $this->assertEquals($expectedContent, $content);
+        $this->assertEquals($expectedContent, iterator_to_array($fileObject));
     }
 
     public function testIteratorSkipEmpty()
     {
+        $expectedContent = array("line1", "line2", "line3");
         $content = "\nline1\n\nline2\nline3";
         $url = vfsStream::newFile('test.txt')->withContent($content)->at($this->_root)->url();
         $fileObject = new FileObject($url);
         $fileObject->setFlags(\SplFileObject::DROP_NEW_LINE | \SplFileObject::SKIP_EMPTY | \SplFileObject::READ_AHEAD);
-        $content = array();
-        foreach ($fileObject as $lineNo => $line) {
-            $content[$lineNo] = $line;
-        }
-        $expectedContent = array("line1", "line2", "line3");
-        $this->assertEquals($expectedContent, $content);
+        $this->assertEquals($expectedContent, iterator_to_array($fileObject));
     }
 
     public function testFileGetContentsSuccess()
