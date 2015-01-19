@@ -115,49 +115,6 @@ class Model_RegistryValue extends Model_Abstract
     );
 
     /**
-     * Instantiate a new object with data for the given ID
-     *
-     * @param integer $id ID of an existing value definition
-     * @return \Model_RegistryValue
-     * @throws \RuntimeException if given ID id invalid
-     **/
-    public function fetchById($id)
-    {
-        $value = self::createStatementStatic($id)->fetchObject(__CLASS__);
-        if (!$value) {
-            throw new \RuntimeException('Invalid registry value ID: ' . $id);
-        }
-        return $value;
-    }
-
-    /**
-     * Fetch all registry value definitions
-     *
-     * @return \Model_RegistryValue[]
-     */
-    public function fetchAll()
-    {
-        return $this->_fetchAll(self::createStatementStatic());
-    }
-
-    /**
-     * Generate statement to retrieve all value definitions
-     *
-     * @param integer $id Return only given value. Default: return all values.
-     * @return Zend_Db_Statement Statement
-     **/
-    public static function createStatementStatic($id=null)
-    {
-        $select = Model_Database::getAdapter()->select()
-            ->from('regconfig')
-            ->order('name');
-        if ($id) {
-            $select->where('id = ?', $id);
-        }
-        return $select->query();
-    }
-
-    /**
      * {@inheritdoc}
      **/
     public function getProperty($property, $rawValue=false)
@@ -227,6 +184,7 @@ class Model_RegistryValue extends Model_Abstract
      * Retrieve textual representation of a given root key
      * @param integer $root One of the HKEY_* constants
      * @return string
+     * @deprecated use $_rootKeys[$root]
      */
     public static function rootKey($root)
     {
@@ -234,43 +192,6 @@ class Model_RegistryValue extends Model_Abstract
             throw new UnexpectedValueException('Invalid root key: ' . $root);
         }
         return self::$_rootKeys[$root];
-    }
-
-    /**
-     * Add a value definition
-     *
-     * @param string $name Name of new value
-     * @param integer $rootKey One of the HKEY_* constants
-     * @param string $subKeys Path to the key that contains the value, with components separated by backslashes
-     * @param string $value Inventory only given value (default: all values for the given key)
-     * @throws RuntimeException if a value with the same name already exists.
-     * @throws DomainException if $rootkey is not one of the HKEY_* constants or $subKeys is empty
-     **/
-    public function add($name, $rootKey, $subKeys, $value=null)
-    {
-        $db = Model_Database::getAdapter();
-        if ($db->fetchOne('SELECT name FROM regconfig WHERE name = ?', $name)) {
-            throw new RuntimeException('Value already exists: ' . $name);
-        }
-        if (!isset(self::$_rootKeys[$rootKey])) {
-            throw new DomainException('Invalid root key: ' . $rootKey);
-        }
-        if (empty($subKeys)) {
-            throw new DomainException('Subkeys must not be empty');
-        }
-
-        if (!$value) {
-            $value = '*';
-        }
-        $db->insert(
-            'regconfig',
-            array(
-                'name' => $name,
-                'regtree' => $rootKey,
-                'regkey' => $subKeys,
-                'regvalue' => $value
-            )
-        );
     }
 
     /**
@@ -308,17 +229,4 @@ class Model_RegistryValue extends Model_Abstract
         $db->commit();
         $this->setName($name);
     }
-
-    /**
-     * Delete this value definition and its inventoried data
-     **/
-    public function delete()
-    {
-        $db = Model_Database::getAdapter();
-        $db->beginTransaction();
-        $db->delete('registry', array('name = ?' => $this->getName()));
-        $db->delete('regconfig', array('id = ?' => $this->getId()));
-        $db->commit();
-    }
-
 }

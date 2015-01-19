@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for ManageRegistryValues
+ * Exception thrown by RegistryManager on runtime errors
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,26 +19,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Console\Form\Service;
+namespace Model\Registry;
 
 /**
- * Factory for ManageRegistryValues
- * @codeCoverageIgnore
+ * Exception thrown by RegistryManager on runtime errors
  */
-class ManageRegistryValuesFactory implements \Zend\ServiceManager\FactoryInterface
+class RuntimeException extends \RuntimeException
 {
-    /**
-     * @internal
-     */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $serviceManager = $serviceLocator->getServiceLocator();
-        return new \Console\Form\ManageRegistryValues(
-            null,
-            array(
-                'config' => $serviceManager->get('Model\Config'),
-                'registryManager' => $serviceManager->get('Model\Registry\RegistryManager'),
-            )
-        );
-    }
 }

@@ -45,10 +45,10 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     protected $_deviceManager;
 
     /**
-     * RegistryValue prototype
-     * @var \Model_RegistryValue
+     * Registry manager
+     * @var \Model\Registry\RegistryManager
      */
-    protected $_registryValue;
+    protected $_registryManager;
 
     /**
      * Application config
@@ -62,21 +62,21 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      * @param \Zend\Form\FormElementManager $formManager
      * @param \Model_UserDefinedInfo $customFields
      * @param \Model\Network\DeviceManager $deviceManager
-     * @param \Model_RegistryValue $registryValue
+     * @param \Model\Registry\RegistryManager $registryManager
      * @param \Model\Config $config
      */
     public function __construct(
         \Zend\Form\FormElementManager $formManager,
         \Model_UserDefinedInfo $customFields,
         \Model\Network\DeviceManager $deviceManager,
-        \Model_RegistryValue $registryValue,
+        \Model\Registry\RegistryManager $registryManager,
         \Model\Config $config
     )
     {
         $this->_formManager = $formManager;
         $this->_customFields = $customFields;
         $this->_deviceManager = $deviceManager;
-        $this->_registryValue = $registryValue;
+        $this->_registryManager = $registryManager;
         $this->_config = $config;
     }
 
@@ -289,13 +289,13 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      */
     public function deleteregistryvalueAction()
     {
-        $value = $this->_registryValue->fetchById($this->params()->fromQuery('id'));
         if ($this->getRequest()->isPost()) {
             if ($this->params()->fromPost('yes')) {
-                $value->delete();
+                $this->_registryManager->deleteValueDefinition($this->params()->fromQuery('id'));
             }
             return $this->redirectToRoute('preferences', 'registryvalues');
         } else {
+            $value = $this->_registryManager->getValueDefinition($this->params()->fromQuery('id'));
             return array('name' => $value['Name']);
         }
     }

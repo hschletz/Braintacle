@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for ManageRegistryValues
+ * "registry" table
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,26 +19,20 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Console\Form\Service;
+Namespace Database\Table;
 
 /**
- * Factory for ManageRegistryValues
- * @codeCoverageIgnore
+ * "registry" table
  */
-class ManageRegistryValuesFactory implements \Zend\ServiceManager\FactoryInterface
+class RegistryData extends \Database\AbstractTable
 {
     /**
-     * @internal
+     * {@inheritdoc}
+     * @codeCoverageIgnore
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $serviceManager = $serviceLocator->getServiceLocator();
-        return new \Console\Form\ManageRegistryValues(
-            null,
-            array(
-                'config' => $serviceManager->get('Model\Config'),
-                'registryManager' => $serviceManager->get('Model\Registry\RegistryManager'),
-            )
-        );
+        $this->table = 'registry';
+        parent::__construct($serviceLocator);
     }
 }

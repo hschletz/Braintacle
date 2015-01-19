@@ -29,8 +29,8 @@ use Zend\Form\Element;
  * The form requires the following options to be set:
  *
  * - **config:** \Model\Config instance, required by init().
- * - **registryValue:** \Model_RegistryValue prototype, required by init() and
- *   process()
+ * - **registryManager:** \Model\Registry\RegistryManager instance, required by
+ *   init() and process()
  *
  * The factory injects these automatically.
  */
@@ -47,8 +47,8 @@ class ManageRegistryValues extends Form
     {
         $inputFilter = new \Zend\InputFilter\InputFilter;
 
-        // Create list of values
-        $this->_definedValues = $this->getOption('registryValue')->fetchAll();
+        // Create list of values as array because nested iteration does not work with ResultSet objects.
+        $this->_definedValues = iterator_to_array($this->getOption('registryManager')->getValueDefinitions());
 
         // Subform for enabling/disabling registry inspection, in addition to
         // the same setting in preferences.
@@ -63,7 +63,7 @@ class ManageRegistryValues extends Form
         $fieldsetExisting = new \Zend\Form\Fieldset('existing');
         $inputFilterExisting = new \Zend\InputFilter\InputFilter;
         // Create text elements for existing values to rename them
-        foreach ($this->_definedValues as $index => $value) {
+        foreach ($this->_definedValues as $value) {
             $name = $value['Name'];
             $elementName = "value_$value[Id]_name";
             $element = new Element\Text($elementName);
@@ -289,7 +289,7 @@ class ManageRegistryValues extends Form
 
         $name = $data['new_value']['name'];
         if ($name) {
-            $this->getOption('registryValue')->add(
+            $this->getOption('registryManager')->addValueDefinition(
                 $name,
                 $data['new_value']['root_key'],
                 $data['new_value']['subkeys'],

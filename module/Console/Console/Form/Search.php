@@ -29,7 +29,7 @@ use Zend\Form\Element;
  * The form requires the following options to be set before invoking init():
  *
  * - **translator:** Translator
- * - **registryValue:** \Model_RegistryValue prototype
+ * - **registryManager:** \Model\Registry\RegistryManager instance
  * - **customFields:** \Model_UserDefinedInfo prototype
  *
  * The factory injects these automatically.
@@ -140,7 +140,7 @@ class Search extends Form
         );
 
         // Append filters and labels for registry values/data
-        foreach ($this->getOption('registryValue')->fetchAll() as $regValue) {
+        foreach ($this->getOption('registryManager')->getValueDefinitions() as $regValue) {
             $name = $regValue['Name'];
             $this->_filters["Registry.$name"] = "Registry: $name";
         }

@@ -41,6 +41,7 @@ class DuplicatesTest extends \Model\Test\AbstractTest
         'ClientConfig',
         'Locks',
         'NetworkInterfaces',
+        'RegistryData',
     );
 
     /** {@inheritdoc} */
@@ -65,7 +66,6 @@ class DuplicatesTest extends \Model\Test\AbstractTest
             'monitors',
             'ports',
             'printers',
-            'registry',
             'slots',
             'softwares',
             'sounds',

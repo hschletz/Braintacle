@@ -29,10 +29,10 @@ use \Zend\Dom\Document\Query as Query;
 class SearchTest extends \Console\Test\AbstractFormTest
 {
     /**
-     * RegistryValue mock object
-     * @var \Model_RegistryValue
+     * RegistryManager mock object
+     * @var \Model\Registry\RegistryManager
      */
-    protected $_registryValue;
+    protected $_registryManager;
 
     /**
      * CustonFields mock object
@@ -42,10 +42,14 @@ class SearchTest extends \Console\Test\AbstractFormTest
 
     public function setUp()
     {
-        $this->_registryValue = $this->getMock('Model_RegistryValue');
-        $this->_registryValue->expects($this->once())
-                             ->method('fetchAll')
-                             ->will($this->returnValue(array(array('Name' => 'RegValue'))));
+        $resultSet = new \Zend\Db\ResultSet\ResultSet();
+        $resultSet->initialize(array(array('Name' => 'RegValue')));
+        $this->_registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')
+                                       ->disableOriginalConstructor()
+                                       ->getMock();
+        $this->_registryManager->expects($this->once())
+                               ->method('getValueDefinitions')
+                               ->willReturn($resultSet);
         $this->_customFields = $this->getMockBuilder('Model_UserDefinedInfo')->disableOriginalConstructor()->getMock();
         $this->_customFields->expects($this->once())
                             ->method('getPropertyTypes')
@@ -70,7 +74,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
             null,
             array(
                 'translator' => new \Zend\Mvc\I18n\Translator(new \Zend\Mvc\I18n\DummyTranslator),
-                'registryValue' => $this->_registryValue,
+                'registryManager' => $this->_registryManager,
                 'customFields' => $this->_customFields,
             )
         );
@@ -95,10 +99,12 @@ class SearchTest extends \Console\Test\AbstractFormTest
 
     public function testInitInvalidDatatype()
     {
-        $registryValue = $this->getMock('Model_RegistryValue');
-        $registryValue->expects($this->any())
-                      ->method('fetchAll')
-                      ->will($this->returnValue(array()));
+        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet->initialize(array());
+        $registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')
+                                ->disableOriginalConstructor()
+                                ->getMock();
+        $registryManager->method('getValueDefinitions')->willReturn($resultSet);
         $customFields = $this->getMockBuilder('Model_UserDefinedInfo')->disableOriginalConstructor()->getMock();
         $customFields->expects($this->once())
                      ->method('getPropertyTypes')
@@ -107,7 +113,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
             null,
             array(
                 'translator' => new \Zend\Mvc\I18n\Translator(new \Zend\Mvc\I18n\DummyTranslator),
-                'registryValue' => $registryValue,
+                'registryManager' => $registryManager,
                 'customFields' => $customFields,
             )
         );

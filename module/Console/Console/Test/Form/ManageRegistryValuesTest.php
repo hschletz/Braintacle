@@ -35,10 +35,10 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
     protected $_config;
 
     /**
-     * RegistryValue mock object
-     * @var \Model_RegistryValue
+     * RegistryManager mock object
+     * @var \Model\Registry\RegistryManager
      */
-    protected $_registryValue;
+    protected $_registryManager;
 
     /**
      * Mock registry values
@@ -69,10 +69,14 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
                       ->method('__get')
                       ->with('inspectRegistry')
                       ->will($this->returnValue('1'));
-        $this->_registryValue = $this->getMock('Model_RegistryValue');
-        $this->_registryValue->expects($this->once())
-                             ->method('fetchAll')
-                             ->will($this->returnValue($this->_values));
+        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet->initialize($this->_values);
+        $this->_registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')
+                                       ->disableOriginalconstructor()
+                                       ->getMock();
+        $this->_registryManager->expects($this->once())
+                               ->method('getValueDefinitions')
+                               ->willReturn($resultSet);
         parent::setUp();
     }
 
@@ -83,7 +87,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
             null,
             array(
                 'config' => $this->_config,
-                'registryValue' => $this->_registryValue,
+                'registryManager' => $this->_registryManager,
             )
         );
         $form->init();
@@ -316,15 +320,19 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
                    )
                );
 
-        // Mock registryValue prototype: delivers the 2 values above
-        $registryValue = $this->getMock('Model_RegistryValue');
-        $registryValue->expects($this->once())
-                      ->method('fetchAll')
-                      ->will($this->returnValue(array($value1, $value2)));
+        // Mock registryManager to deliver the 2 values above
+        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet->initialize(array($value1, $value2));
+        $registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')
+                                ->disableOriginalconstructor()
+                                ->getMock();
+        $registryManager->expects($this->once())
+                        ->method('getValueDefinitions')
+                        ->willReturn($resultSet);
         // Value will be added only once (in the second run)
-        $registryValue->expects($this->once())
-                      ->method('add')
-                      ->with('name', 'root_key', 'subkeys', 'value');
+        $registryManager->expects($this->once())
+                        ->method('addValueDefinition')
+                        ->with('name', 'root_key', 'subkeys', 'value');
 
         // Test set config value
         $this->_config->expects($this->exactly(2))
@@ -339,7 +347,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
                             null,
                             array(
                                 'config' => $this->_config,
-                                'registryValue' => $registryValue,
+                                'registryManager' => $registryManager,
                             ),
                          )
                      )->getMock();

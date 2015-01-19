@@ -45,10 +45,10 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     protected $_deviceManager;
 
     /**
-     * RegistryValue mock
-     * @var \Model_RegistryValue
+     * RegistryManager mock
+     * @var \Model\Registry\RegistryManager
      */
-    protected $_registryValue;
+    protected $_registryManager;
 
     /**
      * Config mock
@@ -66,7 +66,9 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_deviceManager = $this->getMockBuilder('Model\Network\DeviceManager')
                                      ->disableOriginalConstructor()
                                      ->getMock();
-        $this->_registryValue = $this->getMock('Model_RegistryValue');
+        $this->_registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')
+                                       ->disableOriginalConstructor()
+                                       ->getMock();
         $this->_config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
         parent::setUp();
     }
@@ -78,7 +80,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
             $this->_formManager,
             $this->_customFields,
             $this->_deviceManager,
-            $this->_registryValue,
+            $this->_registryManager,
             $this->_config
         );
     }
@@ -677,12 +679,11 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteregistryvalueActionGet()
     {
-        $this->_registryValue->expects($this->any())
-                             ->method('fetchById')
-                             ->with('1')
-                             ->will($this->returnValue(array('Name' => 'name')));
-        $this->_registryValue->expects($this->never())
-                             ->method('delete');
+        $this->_registryManager->expects($this->once())
+                               ->method('getValueDefinition')
+                               ->with('1')
+                               ->willReturn(array('Name' => 'name'));
+        $this->_registryManager->expects($this->never())->method('deleteValueDefinition');
         $this->dispatch('/console/preferences/deleteregistryvalue/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertContains("'name'", $this->getResponse()->getContent());
@@ -690,19 +691,14 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteregistryvalueActionPostNo()
     {
-        $this->_registryValue->expects($this->never())
-                             ->method('delete');
+        $this->_registryManager->expects($this->never())->method('deleteValueDefinition');
         $this->dispatch('/console/preferences/deleteregistryvalue/?id=1', 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/preferences/registryvalues/');
     }
 
     public function testDeleteregistryvalueActionPostYes()
     {
-        $this->_registryValue->expects($this->any())
-                             ->method('fetchById')
-                             ->will($this->returnSelf());
-        $this->_registryValue->expects($this->once())
-                             ->method('delete');
+        $this->_registryManager->expects($this->once())->method('deleteValueDefinition')->with(1);
         $this->dispatch('/console/preferences/deleteregistryvalue/?id=1', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/preferences/registryvalues/');
     }

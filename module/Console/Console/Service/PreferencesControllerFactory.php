@@ -36,7 +36,7 @@ class PreferencesControllerFactory implements \Zend\ServiceManager\FactoryInterf
             $serviceManager->get('FormElementManager'),
             $serviceManager->get('Model\Computer\CustomFields'),
             $serviceManager->get('Model\Network\DeviceManager'),
-            $serviceManager->get('Model\RegistryValue'),
+            $serviceManager->get('Model\Registry\RegistryManager'),
             $serviceManager->get('Model\Config')
         );
     }
