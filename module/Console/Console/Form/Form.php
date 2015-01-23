@@ -65,12 +65,26 @@ class Form extends \Zend\Form\Form
     /** {@inheritdoc} */
     public function setData($data)
     {
-        foreach ($this as $element) {
-            if ($element instanceof \Zend\Form\Element\Submit) {
+        $this->_filterData($data, $this);
+        return parent::setData($data);
+    }
+
+    /**
+     * Remove values from input data
+     *
+     * @param array $data Form data to be modified
+     * @param \Zend\Form\Fieldset $fieldset Fieldset corresponding to the current $data section
+     */
+    protected function _filterData(&$data, \Zend\Form\Fieldset $fieldset)
+    {
+        foreach ($fieldset as $element) {
+            if ($element instanceof \Zend\Form\Fieldset) {
+                $this->_filterData($data[$element->getName()], $element);
+            } elseif ($element instanceof \Zend\Form\Element\Submit) {
+                // Remove data from Submit elements which may otherwise get double-translated
                 unset($data[$element->getName()]);
             }
         }
-        return parent::setData($data);
     }
 
     /**

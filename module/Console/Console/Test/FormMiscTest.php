@@ -28,14 +28,36 @@ class FormMiscTest extends \PHPUnit_Framework_TestCase
 {
     public function testSetDataIgnoresSubmitButtons()
     {
-        $text = new \Zend\Form\Element\Text('text');
-        $submit = new \Zend\Form\Element\Submit('submit');
-        $submit->setValue('this should remain unchanged');
+        $text1 = new \Zend\Form\Element\Text('text');
+        $submit1 = new \Zend\Form\Element\Submit('submit');
+        $submit1->setValue('this should remain unchanged');
+
+        $text2 = new \Zend\Form\Element\Text('text');
+        $submit2 = new \Zend\Form\Element\Submit('submit');
+        $submit2->setValue('this should remain unchanged');
+
+        $fieldset = new \Zend\Form\Fieldset('fieldset');
+        $fieldset->add($text2);
+        $fieldset->add($submit2);
+
         $form = new \Console\Form\Form;
-        $form->add($text);
-        $form->add($submit);
-        $form->setData(array('text' => 'value', 'submit' => 'this should be ignored'));
-        $this->assertEquals('value', $text->getValue());
-        $this->assertEquals('this should remain unchanged', $submit->getValue());
+        $form->add($text1);
+        $form->add($submit1);
+        $form->add($fieldset);
+
+        $form->setData(
+            array(
+                'text' => 'value',
+                'submit' => 'this should be ignored',
+                'fieldset' => array(
+                    'text' => 'value',
+                    'submit' => 'this should be ignored',
+                )
+            )
+        );
+        $this->assertEquals('value', $text1->getValue());
+        $this->assertEquals('value', $text2->getValue());
+        $this->assertEquals('this should remain unchanged', $submit1->getValue());
+        $this->assertEquals('this should remain unchanged', $submit2->getValue());
     }
 }
