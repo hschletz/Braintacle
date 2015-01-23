@@ -21,8 +21,6 @@
 
 namespace Console\Controller;
 
-use \Zend\View\Model\ViewModel;
-
 /**
  * Controller for all login-related actions.
  */
