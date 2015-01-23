@@ -71,60 +71,41 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
     }
 
     /**
-     * Display overview of duplicates of given criteria
+     * Form for displaying and merging duplicate clients
      *
-     * @return array order, direction, criteria, computers
+     * @return array|\Zend\Http\Response array(form) or Redirect response
      */
-    public function showAction()
+    public function manageAction()
     {
+        if ($this->getRequest()->isPost()) {
+            $this->_showDuplicates->setData($this->params()->fromPost());
+            if ($this->_showDuplicates->isValid()) {
+                $data = $this->_showDuplicates->getData();
+                $this->_duplicates->merge(
+                    $data['computers'],
+                    $data['mergeCustomFields'],
+                    $data['mergeGroups'],
+                    $data['mergePackages']
+                );
+                $this->flashMessenger()->addSuccessMessage('The selected computers have been merged.');
+                return $this->redirectToRoute('duplicates', 'index');
+            }
+        }
         $this->setActiveMenu('Inventory', 'Duplicates');
-        $search = $this->getOrder('Id', 'asc');
-        $computers = $this->_duplicates->find(
+        $ordering = $this->getOrder('Id', 'asc');
+        $clients = $this->_duplicates->find(
             $this->params()->fromQuery('criteria'),
-            $search['order'],
-            $search['direction']
+            $ordering['order'],
+            $ordering['direction']
         );
         $this->_showDuplicates->setOptions(
             array(
-                'computers' => $computers,
-                'order' => $search['order'],
-                'direction' => $search['direction'],
+                'computers' => $clients,
+                'order' => $ordering['order'],
+                'direction' => $ordering['direction'],
             )
         );
         return array('form' => $this->_showDuplicates);
-    }
-
-    /**
-     * Merge selected computers
-     *
-     * @return \Zend\Http\Response Redirect response to index page
-     * @throws \RuntimeException if not invoked via POST
-     */
-    public function mergeAction()
-    {
-        if (!$this->getRequest()->isPost()) {
-            throw new \RuntimeException('Action "merge" can only be invoked via POST');
-        }
-        $this->_showDuplicates->setData($this->params()->fromPost());
-        if ($this->_showDuplicates->isValid()) {
-            $data = $this->_showDuplicates->getData();
-            $this->_duplicates->merge(
-                $data['computers'],
-                $data['mergeCustomFields'],
-                $data['mergeGroups'],
-                $data['mergePackages']
-            );
-            $this->flashMessenger()->addSuccessMessage('The selected computers have been merged.');
-        } else {
-            $messages = $this->_showDuplicates->getMessages();
-            array_walk_recursive(
-                $messages,
-                function($message) {
-                    $this->flashMessenger()->addInfoMessage($message);
-                }
-            );
-        }
-        return $this->redirectToRoute('duplicates', 'index');
     }
 
     /**

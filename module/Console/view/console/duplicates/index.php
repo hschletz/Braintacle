@@ -53,7 +53,7 @@ if (count($this->duplicates)) {
                 'a',
                 $num,
                 array(
-                    'href' => $this->consoleUrl('duplicates', 'show', array('criteria' => $type)),
+                    'href' => $this->consoleUrl('duplicates', 'manage', array('criteria' => $type)),
                 )
             ),
             array('class' => 'textright')

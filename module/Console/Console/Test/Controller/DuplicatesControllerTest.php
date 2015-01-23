@@ -77,8 +77,8 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/duplicates/index/');
         $this->assertResponseStatusCode(200);
         // List with 4 hyperlinks.
-        $this->assertQueryCount('td a[href*="/console/duplicates/show/?criteria="]', 4);
-        $this->assertQueryContentContains('td a[href*="/console/duplicates/show/?criteria="]', "\n2\n");
+        $this->assertQueryCount('td a[href*="/console/duplicates/manage/?criteria="]', 4);
+        $this->assertQueryContentContains('td a[href*="/console/duplicates/manage/?criteria="]', "\n2\n");
     }
 
     public function testIndexActionNoFlashMessages()
@@ -114,38 +114,56 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         );
     }
 
-    public function testShowActionMissingCriteria()
+    public function testManageActionMissingCriteria()
     {
-        $this->_duplicates->expects($this->any())
+        $this->_showDuplicates->expects($this->never())->method('setData');
+        $this->_showDuplicates->expects($this->never())->method('isValid');
+        $this->_showDuplicates->expects($this->never())->method('getData');
+        $this->_showDuplicates->expects($this->never())->method('render');
+        $this->_duplicates->expects($this->once())
                           ->method('find')
                           ->with(null)
                           ->will($this->throwException(new \InvalidArgumentException('Invalid criteria')));
-        $this->dispatch('/console/duplicates/show/');
+        $this->_duplicates->expects($this->never())->method('merge');
+        $this->dispatch('/console/duplicates/manage/');
         $this->assertApplicationException('InvalidArgumentException');
     }
 
-    public function testShowActionInvalidCriteria()
+    public function testManageActionInvalidCriteria()
     {
-        $this->_duplicates->expects($this->any())
+        $this->_showDuplicates->expects($this->never())->method('setData');
+        $this->_showDuplicates->expects($this->never())->method('isValid');
+        $this->_showDuplicates->expects($this->never())->method('getData');
+        $this->_showDuplicates->expects($this->never())->method('render');
+        $this->_duplicates->expects($this->once())
                           ->method('find')
                           ->with('invalid')
                           ->will($this->throwException(new \InvalidArgumentException('Invalid criteria')));
-        $this->dispatch('/console/duplicates/show/?criteria=invalid');
+        $this->_duplicates->expects($this->never())->method('merge');
+        $this->dispatch('/console/duplicates/manage/?criteria=invalid');
         $this->assertApplicationException('InvalidArgumentException');
     }
 
-    public function testShowActionValidCriteria()
+    public function testManageActionGet()
     {
         $this->_duplicates->expects($this->once())
                           ->method('find')
-                          ->with('Name', 'Id', 'asc');
+                          ->with('Name', 'Id', 'asc')
+                          ->willReturn('client_list');
+        $this->_duplicates->expects($this->never())->method('merge');
+        $this->_showDuplicates->expects($this->never())->method('setData');
+        $this->_showDuplicates->expects($this->never())->method('isValid');
+        $this->_showDuplicates->expects($this->never())->method('getData');
         $this->_showDuplicates->expects($this->once())
-                              ->method('render');
-        $this->dispatch('/console/duplicates/show/?criteria=Name');
+                              ->method('setOptions')
+                              ->with(array('computers' => 'client_list', 'order' => 'Id', 'direction' => 'asc'));
+        $this->_showDuplicates->expects($this->once())->method('getMessages')->willReturn(array());
+        $this->_showDuplicates->expects($this->once())->method('render')->willReturn('<form></form>');
+        $this->dispatch('/console/duplicates/manage/?criteria=Name');
         $this->assertResponseStatusCode(200);
     }
 
-    public function testMergeActionValid()
+    public function testManageActionPostValid()
     {
         $params = array(
             'computers' => array(1, 2),
@@ -162,10 +180,13 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_showDuplicates->expects($this->once())
                               ->method('getData')
                               ->will($this->returnValue($params));
+        $this->_showDuplicates->expects($this->never())->method('getMessages');
+        $this->_showDuplicates->expects($this->never())->method('render');
+        $this->_duplicates->expects($this->never())->method('find');
         $this->_duplicates->expects($this->once())
                           ->method('merge')
                           ->with(array(1, 2), true, true, '0');
-        $this->dispatch('/console/duplicates/merge/', 'POST', $params);
+        $this->dispatch('/console/duplicates/manage/', 'POST', $params);
         $this->assertRedirectTo('/console/duplicates/index/');
         $this->assertContains(
             'The selected computers have been merged.',
@@ -173,33 +194,35 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         );
     }
 
-    public function testMergeActionInvalid()
+    public function testManageActionPostInvalid()
     {
         $this->_showDuplicates->expects($this->once())
                               ->method('setData');
         $this->_showDuplicates->expects($this->once())
                               ->method('isValid')
                               ->will($this->returnValue(false));
+        $this->_showDuplicates->expects($this->never())->method('getData');
+        $this->_showDuplicates->expects($this->once())
+                              ->method('setOptions')
+                              ->with(array('computers' => 'client_list', 'order' => 'Id', 'direction' => 'asc'));
         $this->_showDuplicates->expects($this->once())
                               ->method('getMessages')
-                              ->with(null)
-                              ->will($this->returnValue(array('computers' => array('invalid'))));
+                              ->willReturn(array('computers' => array('invalid')));
+        $this->_showDuplicates->expects($this->once())
+                              ->method('render')
+                              ->willReturn('<form></form>');
+        $this->_duplicates->expects($this->once())
+                          ->method('find')
+                          ->with('Name', 'Id', 'asc')
+                          ->willReturn('client_list');
         $this->_duplicates->expects($this->never())
                           ->method('merge');
-        $this->dispatch('/console/duplicates/merge/', 'POST');
-        $this->assertRedirectTo('/console/duplicates/index/');
-        $this->assertContains(
-            'invalid',
-            $this->_getControllerPlugin('FlashMessenger')->getCurrentInfoMessages()
-        );
-    }
-
-    public function testMergeActionGet()
-    {
-        $this->_duplicates->expects($this->never())
-                          ->method('merge');
-        $this->dispatch('/console/duplicates/merge/');
-        $this->assertApplicationException('RuntimeException', 'Action "merge" can only be invoked via POST');
+        $this->dispatch('/console/duplicates/manage/?criteria=Name', 'POST');
+        $this->assertResponseStatusCode(200);
+        $this->assertXPathQueryCount('//ul', 1);
+        $this->assertXPathQueryCount('//li', 1);
+        $this->assertXPathQueryContentContains('//ul[@class="error"]/li', 'invalid');
+        $this->assertXpathQuery('//form');
     }
 
     public function testAllowActionGet()

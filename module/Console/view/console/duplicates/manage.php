@@ -20,5 +20,15 @@
  *
  */
 
-$this->form->setAttribute('action', $this->consoleUrl('duplicates', 'merge'));
+$messages = $this->form->getMessages();
+if ($messages) {
+    // Flatten $messages to a single-level list
+    print $this->htmlList(
+        iterator_to_array(new RecursiveIteratorIterator(new RecursiveArrayIterator($messages))),
+        false,
+        array('class' => 'error'),
+        true
+    );
+}
+
 print $this->form->render($this);
