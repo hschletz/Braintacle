@@ -1,6 +1,6 @@
 {
     "name": "hardware",
-    "comment": "Computers and groups",
+    "comment": "Clients and groups",
     "columns": [
         {
             "name": "id",
@@ -36,7 +36,7 @@
             "notnull": false,
             "default": null,
             "autoincrement": false,
-            "comment": "Computer or group name"
+            "comment": "Client or group name"
         },
         {
             "name": "workgroup",
@@ -99,7 +99,7 @@
             "notnull": false,
             "default": null,
             "autoincrement": false,
-            "comment": "OS comment for computers, description for groups"
+            "comment": "OS comment for clients, description for groups"
         },
         {
             "name": "wincompany",

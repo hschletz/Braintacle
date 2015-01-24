@@ -28,8 +28,8 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
 {
     /** {@inheritdoc} */
     protected static $_tables = array(
-        'ComputersAndGroups',
-        'ComputerSystemInfo',
+        'ClientsAndGroups',
+        'ClientSystemInfo',
         'Config',
         'CustomFieldConfig',
         'CustomFields',

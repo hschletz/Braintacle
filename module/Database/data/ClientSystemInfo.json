@@ -1,6 +1,6 @@
 {
     "name": "bios",
-    "comment": "A computer's system information provided by BIOS/UEFI",
+    "comment": "A client's system information provided by BIOS/UEFI",
     "columns": [
         {
             "name": "hardware_id",

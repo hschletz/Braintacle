@@ -24,7 +24,7 @@ Namespace Database\Table;
 /**
  * "hardware" table
  */
-class ComputersAndGroups extends \Database\AbstractTable
+class ClientsAndGroups extends \Database\AbstractTable
 {
     /**
      * {@inheritdoc}

@@ -24,7 +24,7 @@ Namespace Database\Table;
 /**
  * "bios" table
  */
-class ComputerSystemInfo extends \Database\AbstractTable
+class ClientSystemInfo extends \Database\AbstractTable
 {
     /**
      * {@inheritdoc}
