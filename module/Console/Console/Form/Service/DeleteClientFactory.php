@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for DeleteComputer form
+ * Factory for DeleteClient form
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,10 +22,10 @@
 namespace Console\Form\Service;
 
 /**
- * Factory for DeleteComputer form
+ * Factory for DeleteClient form
  * @codeCoverageIgnore
  */
-class DeleteComputerFactory implements \Zend\ServiceManager\FactoryInterface
+class DeleteClientFactory implements \Zend\ServiceManager\FactoryInterface
 {
     /**
      * @internal
@@ -33,7 +33,7 @@ class DeleteComputerFactory implements \Zend\ServiceManager\FactoryInterface
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $serviceManager = $serviceLocator->getServiceLocator();
-        return new \Console\Form\DeleteComputer(
+        return new \Console\Form\DeleteClient(
             null,
             array('config' => $serviceManager->get('Model\Config'))
         );

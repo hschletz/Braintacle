@@ -108,7 +108,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_formManager->setService('Console\Form\Package\Assign', $this->getMock('Console\Form\Package\Assign'));
         $this->_formManager->setService('Console\Form\ClientConfig', $this->getMock('Console\Form\ClientConfig'));
         $this->_formManager->setService('Console\Form\CustomFields', $this->getMock('Console\Form\CustomFields'));
-        $this->_formManager->setService('Console\Form\DeleteComputer', $this->getMock('Console\Form\DeleteComputer'));
+        $this->_formManager->setService('Console\Form\DeleteClient', $this->getMock('Console\Form\DeleteClient'));
         $this->_formManager->setService(
             'Console\Form\GroupMemberships',
             $this->getMock('Console\Form\GroupMemberships')
@@ -2238,7 +2238,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionGet()
     {
-        $form = $this->_formManager->get('Console\Form\DeleteComputer');
+        $form = $this->_formManager->get('Console\Form\DeleteClient');
         $form->expects($this->once())
              ->method('render')
              ->will($this->returnValue('<form></form>'));
@@ -2261,7 +2261,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionPostNo()
     {
-        $form = $this->_formManager->get('Console\Form\DeleteComputer');
+        $form = $this->_formManager->get('Console\Form\DeleteClient');
         $form->expects($this->never())
              ->method('render');
         $map = array(
@@ -2278,7 +2278,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionPostYesDeleteInterfacesSuccess()
     {
-        $form = $this->_formManager->get('Console\Form\DeleteComputer');
+        $form = $this->_formManager->get('Console\Form\DeleteClient');
         $form->expects($this->never())
              ->method('render');
         $map = array(
@@ -2304,7 +2304,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionPostYesKeepInterfacesError()
     {
-        $form = $this->_formManager->get('Console\Form\DeleteComputer');
+        $form = $this->_formManager->get('Console\Form\DeleteClient');
         $form->expects($this->never())
              ->method('render');
         $map = array(

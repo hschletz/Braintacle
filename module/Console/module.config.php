@@ -52,7 +52,7 @@ return array(
             'Console\Form\AddToGroup' => 'Console\Form\Service\AddToGroupFactory',
             'Console\Form\CustomFields' => 'Console\Form\Service\CustomFieldsFactory',
             'Console\Form\DefineFields' => 'Console\Form\Service\DefineFieldsFactory',
-            'Console\Form\DeleteComputer' => 'Console\Form\Service\DeleteComputerFactory',
+            'Console\Form\DeleteClient' => 'Console\Form\Service\DeleteClientFactory',
             'Console\Form\ManageRegistryValues' => 'Console\Form\Service\ManageRegistryValuesFactory',
             'Console\Form\NetworkDevice' => 'Console\Form\Service\NetworkDeviceFactory',
             'Console\Form\NetworkDeviceTypes' => 'Console\Form\Service\NetworkDeviceTypesFactory',

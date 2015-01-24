@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for DeleteComputer
+ * Tests for DeleteClient
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -24,9 +24,9 @@ namespace Console\Test\Form;
 use Zend\Dom\Document\Query as Query;
 
 /**
- * Tests for DeleteComputer
+ * Tests for DeleteClient
  */
-class DeleteComputerTest extends \Console\Test\AbstractFormTest
+class DeleteClientTest extends \Console\Test\AbstractFormTest
 {
     /**
      * Config mock
@@ -43,7 +43,7 @@ class DeleteComputerTest extends \Console\Test\AbstractFormTest
     /** {@inheritdoc} */
     protected function _getForm()
     {
-        $form = new \Console\Form\DeleteComputer(null, array('config' => $this->_config));
+        $form = new \Console\Form\DeleteClient(null, array('config' => $this->_config));
         $form->init();
         return $form;
     }

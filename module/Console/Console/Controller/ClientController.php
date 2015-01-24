@@ -490,11 +490,11 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Delete client, display confirmation form
      *
-     * @return array|\Zend\Http\Response [client, form (Console\Form\DeleteComputer)] or redirect response
+     * @return array|\Zend\Http\Response [client, form (Console\Form\DeleteClient)] or redirect response
      */
     public function deleteAction()
     {
-        $form = $this->_formManager->get('Console\Form\DeleteComputer');
+        $form = $this->_formManager->get('Console\Form\DeleteClient');
         if ($this->getRequest()->isPost()) {
             if ($this->params()->fromPost('yes')) {
                 $name = $this->_currentClient['Name'];
