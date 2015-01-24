@@ -1,6 +1,6 @@
 <?php
 /**
- * Display virtual machines hosted on a computer
+ * Display virtual machines hosted on a client
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -21,7 +21,7 @@
 
 require 'header.php';
 
-$computer = $this->computer;
+$client = $this->client;
 
 $headers = array(
     'Name' => $this->translate('Name'),
@@ -42,11 +42,11 @@ $renderCallbacks = array(
     }
 );
 
-$vms = $computer->getItems('VirtualMachine', $this->order, $this->direction);
+$vms = $client->getItems('VirtualMachine', $this->order, $this->direction);
 if (count($vms)) {
     print $this->htmlTag(
         'h2',
-        $this->translate('Virtual machines hosted on this computer')
+        $this->translate('Virtual machines hosted on this client')
     );
     print $this->table(
         $vms,

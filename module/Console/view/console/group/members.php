@@ -35,7 +35,7 @@ $renderCallbacks = array(
             $view->escapeHtml($computer['Name']),
             array(
                 'href' => $view->consoleUrl(
-                    'computer',
+                    'client',
                     'groups',
                     array('id' => $computer['Id'])
                 ),

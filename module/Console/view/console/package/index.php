@@ -77,7 +77,7 @@ $renderNumPackages = function($view, $package, $property) {
             $num,
             array(
                 'href' => $view->consoleUrl(
-                    'computer',
+                    'client',
                     'index',
                     array(
                         'columns' => 'Name,UserName,LastContactDate,InventoryDate',

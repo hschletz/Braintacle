@@ -1,6 +1,6 @@
 <?php
 /**
- * Display BIOS/UEFI information
+ * Display confirmation form for removing package from client
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,38 +19,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-require 'header.php';
-
-$computer = $this->computer;
-
-print "<dl>\n";
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Manufacturer')
+print $this->formYesNo(
+    sprintf(
+        $this->translate("Package '%s' will no longer be assigned to this client. Continue?"),
+        $this->escapeHtml($this->packageName)
+    )
 );
-print $this->htmlTag(
-    'dd',
-    $this->escapeHtml($computer['BiosManufacturer'])
-);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Date')
-);
-print $this->htmlTag(
-    'dd',
-    $this->escapeHtml($computer['BiosDate'])
-);
-
-$version = strtr($computer['BiosVersion'], ';', "\n");
-print $this->htmlTag(
-    'dt',
-    $this->translate('Version')
-);
-print $this->htmlTag(
-    'dd',
-    nl2br($this->escapeHtml($version), $this->doctype()->isXhtml())
-);
-
-print "</dl>\n";

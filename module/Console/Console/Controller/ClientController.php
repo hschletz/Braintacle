@@ -1,6 +1,6 @@
 <?php
 /**
- * Controller for all computer-related actions.
+ * Controller for all client-related actions.
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,9 +22,9 @@
 namespace Console\Controller;
 
 /**
- * Controller for all computer-related actions.
+ * Controller for all client-related actions.
  */
-class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
+class ClientController extends \Zend\Mvc\Controller\AbstractActionController
 {
     /**
      * Computer prototype
@@ -57,10 +57,10 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
     protected $_inventoryUploader;
 
     /**
-     * Computer selected for computer-specific actions
+     * Client selected for client-specific actions
      * @var \Model_Computer
      */
-    protected $_currentComputer;
+    protected $_currentClient;
 
     /**
      * Constructor
@@ -92,25 +92,25 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
         \Zend\Stdlib\ResponseInterface $response = null
     )
     {
-        // Fetch computer with given ID for actions referring to a particular computer
+        // Fetch client with given ID for actions referring to a particular client
         $action = $this->getEvent()->getRouteMatch()->getParam('action');
         if ($action != 'index' and $action != 'search' and $action != 'import') {
-            $this->_currentComputer = clone $this->_computer;
+            $this->_currentClient = clone $this->_computer;
             try {
-                $this->_currentComputer->fetchById(
+                $this->_currentClient->fetchById(
                     $request->getQuery('id')
                 );
             } catch(\RuntimeException $e) {
-                // Computer does not exist - may happen when URL has become stale.
-                $this->flashMessenger()->addErrorMessage('The requested computer does not exist.');
-                return $this->redirectToRoute('computer', 'index');
+                // Client does not exist - may happen when URL has become stale.
+                $this->flashMessenger()->addErrorMessage('The requested client does not exist.');
+                return $this->redirectToRoute('client', 'index');
             }
         }
         return parent::dispatch($request, $response);
     }
 
     /**
-     * Show list of computers, filtered by various criteria
+     * Show list of clients, filtered by various criteria
      *
      * All query parameters are optional, but the filter, search, operator and
      * invert parameters should match.
@@ -120,7 +120,7 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
      * - operator or operator1, operator2...: (string|array) Operator for filter
      * - invert or invert1, invert2...: (bool|array) Invert filter results
      * - columns: Comma-separated list of columns to display (a default set is available)
-     * - jumpto: Subpage (action) for the computer link (default: general)
+     * - jumpto: Subpage (action) for the client link (default: general)
      *
      * This action also acts as a handler for the search form (via GET method),
      * denoted by the presence of the customSearch parameter.
@@ -152,7 +152,7 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
                     $columns[] = $filter;
                 }
             } else {
-                return $this->redirectToRoute('computer', 'search', $params->fromQuery());
+                return $this->redirectToRoute('client', 'search', $params->fromQuery());
             }
         } else {
             // Direct query via URL with optional builtin filter
@@ -184,7 +184,7 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
         }
 
         $vars = $this->getOrder('InventoryDate', 'desc');
-        $vars['computers'] = $this->_computer->fetch(
+        $vars['clients'] = $this->_computer->fetch(
             $columns,
             $vars['order'],
             $vars['direction'],
@@ -211,23 +211,23 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
     }
 
     /**
-     * General information about a computer
+     * General information about a client
      *
-     * @return array computer
+     * @return array client
      */
     public function generalAction()
     {
-        return array('computer' => $this->_currentComputer);
+        return array('client' => $this->_currentClient);
     }
 
     /**
-     * Information about a computer's Windows installation
+     * Information about a client's Windows installation
      *
-     * @return array computer, windows, form (Product key form)
+     * @return array client, windows, form (Product key form)
      */
     public function windowsAction()
     {
-        $windows = $this->_currentComputer['Windows'];
+        $windows = $this->_currentClient['Windows'];
         $form = $this->_formManager->get('Console\Form\ProductKey');
 
         if ($this->getRequest()->isPost()) {
@@ -236,9 +236,9 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
                 $data = $form->getData();
                 $windows['ManualProductKey'] = $data['Key'];
                 return $this->redirectToRoute(
-                    'computer',
+                    'client',
                     'windows',
-                    array('id' => $this->_currentComputer['Id'])
+                    array('id' => $this->_currentClient['Id'])
                 );
             }
         } else {
@@ -246,129 +246,129 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
         }
 
         return array(
-            'computer' => $this->_currentComputer,
+            'client' => $this->_currentClient,
             'windows' => $windows,
             'form' => $form,
         );
     }
 
     /**
-     * Information about a computer's network settings, interfaces and devices
+     * Information about a client's network settings, interfaces and devices
      *
-     * @return array computer
+     * @return array client
      */
     public function networkAction()
     {
-        return array('computer' => $this->_currentComputer);
+        return array('client' => $this->_currentClient);
     }
 
     /**
-     * Information about a computer's storage devices and filesystems
+     * Information about a client's storage devices and filesystems
      *
-     * @return array computer
+     * @return array client
      */
     public function storageAction()
     {
-        return array('computer' => $this->_currentComputer);
+        return array('client' => $this->_currentClient);
     }
 
     /**
-     * Information about a computer's display controllers and devices
+     * Information about a client's display controllers and devices
      *
-     * @return array computer
+     * @return array client
      */
     public function displayAction()
     {
-        return array('computer' => $this->_currentComputer);
+        return array('client' => $this->_currentClient);
     }
 
     /**
-     * Information about a computer's BIOS/UEFI
+     * Information about a client's BIOS/UEFI
      *
-     * @return array computer
+     * @return array client
      */
     public function biosAction()
     {
-        return array('computer' => $this->_currentComputer);
+        return array('client' => $this->_currentClient);
     }
 
     /**
-     * Information about a computer's RAM, controllers and extension slots
+     * Information about a client's RAM, controllers and extension slots
      *
-     * @return array computer
+     * @return array client
      */
     public function systemAction()
     {
-        return array('computer' => $this->_currentComputer);
+        return array('client' => $this->_currentClient);
     }
 
     /**
-     * Information about a computer's printers
+     * Information about a client's printers
      *
-     * @return array computer
+     * @return array client
      */
     public function printersAction()
     {
-        return array('computer' => $this->_currentComputer);
+        return array('client' => $this->_currentClient);
     }
 
     /**
-     * Information about a computer's software
+     * Information about a client's software
      *
-     * @return array computer, order, direction, displayBlacklistedSoftware
+     * @return array client, order, direction, displayBlacklistedSoftware
      */
     public function softwareAction()
     {
         $vars = $this->getOrder('Name');
-        $vars['computer'] = $this->_currentComputer;
+        $vars['client'] = $this->_currentClient;
         $vars['displayBlacklistedSoftware'] = $this->_config->displayBlacklistedSoftware;
         return $vars;
     }
 
     /**
-     * Information about a computer's MS Office products (Windows only)
+     * Information about a client's MS Office products (Windows only)
      *
-     * @return array computer, order, direction
+     * @return array client, order, direction
      */
     public function msofficeAction()
     {
-        return $this->getOrder('Name') + array('computer' => $this->_currentComputer);
+        return $this->getOrder('Name') + array('client' => $this->_currentClient);
     }
 
     /**
-     * Information about a computer's registry values (Windows only)
+     * Information about a client's registry values (Windows only)
      *
-     * @return array computer, order, direction
+     * @return array client, order, direction
      */
     public function registryAction()
     {
-        return $this->getOrder('Value.Name') + array('computer' => $this->_currentComputer);
+        return $this->getOrder('Value.Name') + array('client' => $this->_currentClient);
     }
 
     /**
-     * Information about virtual machines hosted on a computer
+     * Information about virtual machines hosted on a client
      *
-     * @return array computer, order, direction
+     * @return array client, order, direction
      */
     public function virtualmachinesAction()
     {
-        return $this->getOrder('Name') + array('computer' => $this->_currentComputer);
+        return $this->getOrder('Name') + array('client' => $this->_currentClient);
     }
 
     /**
-     * Information about a computer's audio devices, input devices and ports
+     * Information about a client's audio devices, input devices and ports
      *
-     * @return array computer, order, direction
+     * @return array client, order, direction
      */
     public function miscAction()
     {
-        return array('computer' => $this->_currentComputer);
+        return array('client' => $this->_currentClient);
     }
 
     /**
      * Display/edit custom fields
      *
-     * @return array|\Zend\Http\Response [computer, form (Console\Form\CustomFields) or redirect response]
+     * @return array|\Zend\Http\Response [client, form (Console\Form\CustomFields) or redirect response]
      */
     public function customfieldsAction()
     {
@@ -378,19 +378,19 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $data = $form->getData();
-                $this->_currentComputer->setUserDefinedInfo($data['Fields']);
+                $this->_currentClient->setUserDefinedInfo($data['Fields']);
                 $this->flashMessenger()->addSuccessMessage('The information was successfully updated.');
                 return $this->redirectToRoute(
-                    'computer',
+                    'client',
                     'customfields',
-                    array('id' => $this->_currentComputer['Id'])
+                    array('id' => $this->_currentClient['Id'])
                 );
             }
         } else {
-            $form->setData(array('Fields' => $this->_currentComputer['CustomFields']->getArrayCopy()));
+            $form->setData(array('Fields' => $this->_currentClient['CustomFields']->getArrayCopy()));
         }
         return array(
-            'computer' => $this->_currentComputer,
+            'client' => $this->_currentClient,
             'form' => $form
         );
     }
@@ -398,23 +398,23 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Status and management of assigned packages
      *
-     * @return array computer, order, direction [, form (Console\Form\Package\Assign) if packages are available]
+     * @return array client, order, direction [, form (Console\Form\Package\Assign) if packages are available]
      */
     public function packagesAction()
     {
         $vars = $this->getOrder('Name');
-        $vars['computer'] = $this->_currentComputer;
+        $vars['client'] = $this->_currentClient;
         // Add package installation form if packages are available
-        $packages = $this->_currentComputer->getInstallablePackages();
+        $packages = $this->_currentClient->getInstallablePackages();
         if ($packages) {
             $form = $this->_formManager->get('Console\Form\Package\Assign');
             $form->setPackages($packages);
             $form->setAttribute(
                 'action',
                 $this->urlFromRoute(
-                    'computer',
+                    'client',
                     'installpackage',
-                    array('id' => $this->_currentComputer['Id'])
+                    array('id' => $this->_currentClient['Id'])
                 )
             );
             $vars['form'] = $form;
@@ -425,13 +425,13 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Display and manage group memberships
      *
-     * @return array computer, order, direction [, form (Console\Form\) if groups are available]
+     * @return array client, order, direction [, form (Console\Form\) if groups are available]
      */
     public function groupsAction()
     {
         $vars = $this->getOrder('GroupName');
-        $vars['computer'] = $this->_currentComputer;
-        $vars['memberships'] = $this->_currentComputer->getGroups(\Model_GroupMembership::TYPE_ALL);
+        $vars['client'] = $this->_currentClient;
+        $vars['memberships'] = $this->_currentClient->getGroups(\Model_GroupMembership::TYPE_ALL);
 
         $groups = $this->_group->fetch(array('Name'), null, null, 'Name');
         if ($groups) {
@@ -449,9 +449,9 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
             $form->setAttribute(
                 'action',
                 $this->urlFromRoute(
-                    'computer',
+                    'client',
                     'managegroups',
-                    array('id' => $this->_currentComputer['Id'])
+                    array('id' => $this->_currentClient['Id'])
                 )
             );
             $vars['form'] = $form;
@@ -460,69 +460,69 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
     }
 
     /**
-     * Display/edit computer configuration
+     * Display/edit client configuration
      *
-     * @return array|\Zend\Http\Response [computer, form (Console\Form\ClientConfig)] or redirect response
+     * @return array|\Zend\Http\Response [client, form (Console\Form\ClientConfig)] or redirect response
      */
     public function configurationAction()
     {
         $form = $this->_formManager->get('Console\Form\ClientConfig');
-        $form->setClientObject($this->_currentComputer);
+        $form->setClientObject($this->_currentClient);
         if ($this->getRequest()->isPost()) {
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $form->process();
                 return $this->redirectToRoute(
-                    'computer',
+                    'client',
                     'configuration',
-                    array('id' => $this->_currentComputer['Id'])
+                    array('id' => $this->_currentClient['Id'])
                 );
             }
         } else {
-            $form->setData($this->_currentComputer->getAllConfig());
+            $form->setData($this->_currentClient->getAllConfig());
         }
         return array(
-            'computer' => $this->_currentComputer,
+            'client' => $this->_currentClient,
             'form' => $form
         );
     }
 
     /**
-     * Delete computer, display confirmation form
+     * Delete client, display confirmation form
      *
-     * @return array|\Zend\Http\Response [computer, form (Console\Form\DeleteComputer)] or redirect response
+     * @return array|\Zend\Http\Response [client, form (Console\Form\DeleteComputer)] or redirect response
      */
     public function deleteAction()
     {
         $form = $this->_formManager->get('Console\Form\DeleteComputer');
         if ($this->getRequest()->isPost()) {
             if ($this->params()->fromPost('yes')) {
-                $name = $this->_currentComputer['Name'];
+                $name = $this->_currentClient['Name'];
                 if (
-                    $this->_currentComputer->delete(
+                    $this->_currentClient->delete(
                         false,
                         (bool) $this->params()->fromPost('DeleteInterfaces')
                     )
                 ) {
                     $this->flashMessenger()->addSuccessMessage(
-                        array($this->_("Computer '%s' was successfully deleted.") => $name)
+                        array($this->_("Client '%s' was successfully deleted.") => $name)
                     );
                 } else {
                     $this->flashMessenger()->addErrorMessage(
-                        array($this->_("Computer '%s' could not be deleted.") => $name)
+                        array($this->_("Client '%s' could not be deleted.") => $name)
                     );
                 }
-                return $this->redirectToRoute('computer', 'index');
+                return $this->redirectToRoute('client', 'index');
             } else {
                 return $this->redirectToRoute(
-                    'computer',
+                    'client',
                     'general',
-                    array('id' => $this->_currentComputer['Id'])
+                    array('id' => $this->_currentClient['Id'])
                 );
             }
         } else {
             return array(
-                'computer' => $this->_currentComputer,
+                'client' => $this->_currentClient,
                 'form' => $form
             );
         }
@@ -538,12 +538,12 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
         $params = $this->params();
         if ($this->getRequest()->isPost()) {
             if ($params->fromPost('yes')) {
-                $this->_currentComputer->unaffectPackage($params->fromQuery('package'));
+                $this->_currentClient->unaffectPackage($params->fromQuery('package'));
             }
             return $this->redirectToRoute(
-                'computer',
+                'client',
                 'packages',
-                array('id' => $this->_currentComputer['Id'])
+                array('id' => $this->_currentClient['Id'])
             );
         } else {
             return array('packageName' => $params->fromQuery('package'));
@@ -564,15 +564,15 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
                 $data = $form->getData();
                 foreach ($data['Packages'] as $name => $install) {
                     if ($install) {
-                        $this->_currentComputer->installPackage($name);
+                        $this->_currentClient->installPackage($name);
                     }
                 }
             }
         }
         return $this->redirectToRoute(
-            'computer',
+            'client',
             'packages',
-            array('id' => $this->_currentComputer['Id'])
+            array('id' => $this->_currentClient['Id'])
         );
     }
 
@@ -588,13 +588,13 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $data = $form->getData();
-                $this->_currentComputer->setGroupsByName($data['Groups']);
+                $this->_currentClient->setGroupsByName($data['Groups']);
             }
         }
         return $this->redirectToRoute(
-            'computer',
+            'client',
             'groups',
-            array('id' => $this->_currentComputer['Id'])
+            array('id' => $this->_currentClient['Id'])
         );
     }
 
@@ -615,12 +615,12 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
             $form->isValid(); // Set validation messages
         }
         $form->setAttribute('method', 'GET');
-        $form->setAttribute('action', $this->urlFromRoute('computer', 'index'));
+        $form->setAttribute('action', $this->urlFromRoute('client', 'index'));
         return $this->printForm($form);
     }
 
     /**
-     * Import computer via file upload
+     * Import client via file upload
      *
      * @return array|\Zend\Http\Response array(form [, uri, response]) or redirect response
      */
@@ -634,7 +634,7 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
                 $data = $form->getData();
                 $response = $this->_inventoryUploader->uploadFile($data['File']['tmp_name']);
                 if ($response->isSuccess()) {
-                    return $this->redirectToRoute('computer', 'index');
+                    return $this->redirectToRoute('client', 'index');
                 } else {
                     $vars['response'] = $response;
                     $vars['uri'] = $this->_config->communicationServerUri;
@@ -645,13 +645,13 @@ class ComputerController extends \Zend\Mvc\Controller\AbstractActionController
     }
 
     /**
-     * Download computer as XML file
+     * Download client as XML file
      *
      * @return \Zend\Http\Response Response with downloadable XML content
      */
     public function exportAction()
     {
-        $document = $this->_currentComputer->toDomDocument();
+        $document = $this->_currentClient->toDomDocument();
         if (\Library\Application::isDevelopment()) {
             $document->forceValid();
         }

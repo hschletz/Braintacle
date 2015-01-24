@@ -21,7 +21,7 @@
 
 require 'header.php';
 
-$computer = $this->computer;
+$client = $this->client;
 
 $headers = array(
     'Value.Name' => $this->translate('Key'),
@@ -43,7 +43,7 @@ $renderCallbacks = array(
     },
 );
 
-$data = $computer->getItems('RegistryData', $this->order, $this->direction);
+$data = $client->getItems('RegistryData', $this->order, $this->direction);
 if (count($data)) {
     print $this->htmlTag(
         'h2',

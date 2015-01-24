@@ -21,13 +21,13 @@
 
 require 'header.php';
 
-$computer = $this->computer;
+$client = $this->client;
 
 $headers = array(
     'Name' => $this->translate('Name'),
     'Version' => $this->translate('Version'),
 );
-if ($computer['Windows']) {
+if ($client['Windows']) {
     $headers['Publisher'] = $this->translate('Publisher');
     $headers['InstallLocation'] = $this->translate('Location');
     $headers['Architecture'] = $this->translate('Architecture');
@@ -86,7 +86,7 @@ if (!$this->displayBlacklistedSoftware) {
 
 // Compact list by suppressing duplicate entries, adding the number of instances for each entry.
 $list = array();
-foreach ($computer->getItems('Software', $this->order, $this->direction, $filters) as $software) {
+foreach ($client->getItems('Software', $this->order, $this->direction, $filters) as $software) {
     $software = $software->getArrayCopy();
     $key = implode("\0", $software);
     if (isset($list[$key])) {

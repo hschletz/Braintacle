@@ -1,6 +1,6 @@
 <?php
 /**
- * Display confirmation form for removing package from computer
+ * Included by client templates to render headline and client navigation
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,9 +19,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-print $this->formYesNo(
+print $this->htmlTag(
+    'h1',
     sprintf(
-        $this->translate("Package '%s' will no longer be assigned to this computer. Continue?"),
-        $this->escapeHtml($this->packageName)
+        $this->translate('Details for client \'%s\''),
+        $this->escapeHtml($this->client['Name'])
     )
 );
+
+$menu = $this->navigation('Console\Navigation\ClientMenu')
+             ->menu()
+             ->setUlClass('navigation navigation_details');
+if (!$this->client['Windows']) {
+    foreach ($menu->findAllBy('windowsOnly', true) as $page) {
+        $menu->removePage($page);
+    }
+}
+print $menu;
+print "\n\n";

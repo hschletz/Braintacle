@@ -65,7 +65,7 @@ $renderCallbacks = array (
             $software['NumComputers'],
             array(
                 'href' => $view->consoleUrl(
-                    'computer',
+                    'client',
                     'index',
                     array(
                         'columns' => 'Name,UserName,LastContactDate,InventoryDate,Software.Version',

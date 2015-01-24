@@ -21,7 +21,7 @@
 
 require 'header.php';
 
-$computer = $this->computer;
+$client = $this->client;
 
 
 // Display storage devices
@@ -51,9 +51,9 @@ $renderSize = function($view, $object, $property) {
 
 $renderCallbacks = array('Size' => $renderSize);
 
-if ($computer['Windows']) {
-    $renderCallbacks['Type'] = function($view, $computer, $property) {
-        $type = $computer['Type'];
+if ($client['Windows']) {
+    $renderCallbacks['Type'] = function($view, $client, $property) {
+        $type = $client['Type'];
         // Some generic device types can be translated.
         switch ($type) {
             case 'DVD Writer':
@@ -83,7 +83,7 @@ print $this->htmlTag(
     $this->translate('Storage devices')
 );
 print $this->table(
-    $computer['StorageDevice'],
+    $client['StorageDevice'],
     $headers,
     null,
     $renderCallbacks
@@ -92,7 +92,7 @@ print $this->table(
 
 // Display volumes
 
-if ($computer['Windows']) {
+if ($client['Windows']) {
     $headers = array(
         'Letter' => $this->translate('Letter'),
         'Label' => $this->translate('Label'),
@@ -131,7 +131,7 @@ print $this->htmlTag(
     $this->translate('Volumes')
 );
 print $this->table(
-    $computer['Volume'],
+    $client['Volume'],
     $headers,
     null,
     $renderCallbacks

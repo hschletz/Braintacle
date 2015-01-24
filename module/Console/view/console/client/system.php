@@ -21,7 +21,7 @@
 
 require 'header.php';
 
-$computer = $this->computer;
+$client = $this->client;
 
 
 // Show memory slots
@@ -56,7 +56,7 @@ $renderCallbacks = array (
     },
 );
 
-$memSlots = $computer['MemorySlot'];
+$memSlots = $client['MemorySlot'];
 if (count($memSlots)) {
     print $this->htmlTag(
         'h2',
@@ -78,7 +78,7 @@ $headers = array(
     'Manufacturer' => $this->translate('Manufacturer'),
     'Name' => $this->translate('Name'),
 );
-if ($this->computer['Windows']) { // Not available for other OS
+if ($this->client['Windows']) { // Not available for other OS
     $headers['DriverVersion'] = $this->translate('Driver version');
 }
 
@@ -102,7 +102,7 @@ print $this->htmlTag(
     $this->translate('Controllers')
 );
 print $this->table(
-    $computer['Controller'],
+    $client['Controller'],
     $headers,
     null,
     $renderCallbacks
@@ -118,7 +118,7 @@ $headers = array(
     'Status' => $this->translate('Status'),
 );
 
-$extSlots = $computer['ExtensionSlot'];
+$extSlots = $client['ExtensionSlot'];
 if (count($extSlots)) {
     print $this->htmlTag(
         'h2',

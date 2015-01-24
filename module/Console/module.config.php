@@ -32,7 +32,7 @@ return array(
     'controllers' => array(
         'factories' => array(
             'accounts' => 'Console\Service\AccountsControllerFactory',
-            'computer' => 'Console\Service\ComputerControllerFactory',
+            'client' => 'Console\Service\ClientControllerFactory',
             'duplicates' => 'Console\Service\DuplicatesControllerFactory',
             'group' => 'Console\Service\GroupControllerFactory',
             'licenses' => 'Console\Service\LicensesControllerFactory',
@@ -91,7 +91,7 @@ return array(
                     // Note: a controller cannot be named "console".
                     'route' => '/[console[/]][:controller[/][:action[/]]]',
                     'defaults' => array(
-                        'controller' => 'computer',
+                        'controller' => 'client',
                         'action' => 'index',
                     ),
                 ),
@@ -100,7 +100,7 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
-            'Console\Navigation\ComputerMenu' => 'Console\Navigation\ComputerMenuFactory',
+            'Console\Navigation\ClientMenu' => 'Console\Navigation\ClientMenuFactory',
             'Console\Navigation\GroupMenu' => 'Console\Navigation\GroupMenuFactory',
             'Console\Navigation\MainMenu' => 'Console\Navigation\MainMenuFactory',
         ),

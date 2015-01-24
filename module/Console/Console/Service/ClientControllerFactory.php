@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for ComputerController
+ * Factory for ClientController
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,9 +22,9 @@
 namespace Console\Service;
 
 /**
- * Factory for ComputerController
+ * Factory for ClientController
  */
-class ComputerControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class ClientControllerFactory implements \Zend\ServiceManager\FactoryInterface
 {
     /**
      * @internal
@@ -33,7 +33,7 @@ class ComputerControllerFactory implements \Zend\ServiceManager\FactoryInterface
     {
         $serviceManager = $serviceLocator->getServiceLocator();
         $config = $serviceManager->get('Model\Config');
-        return new \Console\Controller\ComputerController(
+        return new \Console\Controller\ClientController(
             $serviceManager->get('Model\Computer\Computer'),
             $serviceManager->get('Model\Group\Group'),
             $serviceManager->get('FormElementManager'),

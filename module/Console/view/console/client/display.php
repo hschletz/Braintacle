@@ -21,7 +21,7 @@
 
 require 'header.php';
 
-$computer = $this->computer;
+$client = $this->client;
 
 
 // Show display controllers
@@ -51,7 +51,7 @@ print $this->htmlTag(
     $this->translate('Display controllers')
 );
 print $this->table(
-    $computer['DisplayController'],
+    $client['DisplayController'],
     $headers,
     null,
     $renderCallbacks
@@ -60,7 +60,7 @@ print $this->table(
 
 // Show display devices
 
-$displays = $computer['Display'];
+$displays = $client['Display'];
 if (count($displays)) {
     $headers = array(
         'Manufacturer' => $this->translate('Manufacturer'),
@@ -75,7 +75,7 @@ if (count($displays)) {
         $this->translate('Displays')
     );
     print $this->table(
-        $computer['Display'],
+        $client['Display'],
         $headers
     );
 }

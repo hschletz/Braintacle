@@ -1,6 +1,6 @@
 <?php
 /**
- * Display confirmation form for deletion.
+ * Display BIOS/UEFI information
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,15 +19,38 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+require 'header.php';
+
+$client = $this->client;
+
+print "<dl>\n";
+
 print $this->htmlTag(
-    'p',
-    sprintf(
-        $this->translate(
-            'Computer \'%s\' will be permanently deleted. Continue?'
-        ),
-        $this->escapeHtml($this->computer['Name'])
-    ),
-    array('class' => 'textcenter')
+    'dt',
+    $this->translate('Manufacturer')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escapeHtml($client['BiosManufacturer'])
 );
 
-print $this->form->render($this);
+print $this->htmlTag(
+    'dt',
+    $this->translate('Date')
+);
+print $this->htmlTag(
+    'dd',
+    $this->escapeHtml($client['BiosDate'])
+);
+
+$version = strtr($client['BiosVersion'], ';', "\n");
+print $this->htmlTag(
+    'dt',
+    $this->translate('Version')
+);
+print $this->htmlTag(
+    'dd',
+    nl2br($this->escapeHtml($version), $this->doctype()->isXhtml())
+);
+
+print "</dl>\n";

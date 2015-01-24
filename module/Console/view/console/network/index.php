@@ -139,7 +139,7 @@ $renderCallbacks = array(
             $view->escapeHtml($subnet['NumInventoried']),
             array(
                 'href' => $view->consoleUrl(
-                    'computer',
+                    'client',
                     'index',
                     array(
                         'filter1' => 'NetworkInterface.Subnet',

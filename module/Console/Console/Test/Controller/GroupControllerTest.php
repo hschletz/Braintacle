@@ -279,7 +279,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->assertXpathQuery("//p[@class='textcenter'][text()='\nAnzahl Computer: 1\n']");
         $this->assertXpathQuery("//td[text()='\nmanuell\n']");
-        $this->assertXpathQuery("//td/a[@href='/console/computer/groups/?id=1'][text()='computerName']");
+        $this->assertXpathQuery("//td/a[@href='/console/client/groups/?id=1'][text()='computerName']");
     }
 
     public function testExcludedAction()
@@ -313,7 +313,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
             'Ausgeschlossen'
         );
         $this->assertXpathQuery("//p[@class='textcenter'][text()='\nAnzahl Computer: 1\n']");
-        $this->assertXpathQuery("//td/a[@href='/console/computer/groups/?id=1'][text()='computerName']");
+        $this->assertXpathQuery("//td/a[@href='/console/client/groups/?id=1'][text()='computerName']");
     }
 
     public function testPackagesActionOnlyAssigned()

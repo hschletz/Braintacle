@@ -154,7 +154,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
 
         // Hyperlinks and classes for Num* columns
-        $query = '//td[@class="textright"]/a[@href="/console/computer/index/' .
+        $query = '//td[@class="textright"]/a[@href="/console/client/index/' .
                  '?columns=Name,UserName,LastContactDate,InventoryDate&jumpto=software&filter=%s&search=%s' .
                  '"][@class="%s"]';
 

@@ -21,7 +21,7 @@
 
 require 'header.php';
 
-$computer = $this->computer;
+$client = $this->client;
 
 // Display audio devices
 $headers = array(
@@ -29,7 +29,7 @@ $headers = array(
     'Name' => $this->translate('Name'),
     'Description' => $this->translate('Description'),
 );
-$audio = $computer['AudioDevice'];
+$audio = $client['AudioDevice'];
 if (count($audio)) {
     print $this->htmlTag(
         'h2',
@@ -60,7 +60,7 @@ $renderCallbacks = array (
         return $view->escapeHtml($type);
     },
 );
-$input = $computer['InputDevice'];
+$input = $client['InputDevice'];
 if (count($input)) {
     print $this->htmlTag(
         'h2',
@@ -70,13 +70,13 @@ if (count($input)) {
 }
 
 // Display ports
-$ports = $computer['Port'];
+$ports = $client['Port'];
 if (count($ports)) {
     $headers = array(
         'Type' => $this->translate('Type'),
         'Name' => $this->translate('Name'),
     );
-    if (!$computer['Windows']) {
+    if (!$client['Windows']) {
         $headers['Connector'] = $this->translate('Connector');
     }
     print $this->htmlTag(

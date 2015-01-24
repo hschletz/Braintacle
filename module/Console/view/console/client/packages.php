@@ -21,7 +21,7 @@
 
 require 'header.php';
 
-$computer = $this->computer;
+$client = $this->client;
 
 $headers = array(
     'Name' => $this->translate('Name'),
@@ -58,7 +58,7 @@ $renderCallbacks = array(
             $view->translate('remove'),
             array(
                 'href' => $view->consoleUrl(
-                    'computer',
+                    'client',
                     'removepackage',
                     array(
                         'id' => $assignment['Computer'],
@@ -71,7 +71,7 @@ $renderCallbacks = array(
     },
 );
 
-$assignments = $computer->getItems('PackageAssignment', $this->order, $this->direction);
+$assignments = $client->getItems('PackageAssignment', $this->order, $this->direction);
 if (count($assignments)) {
     print $this->htmlTag(
         'h2',

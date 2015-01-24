@@ -21,11 +21,11 @@
 
 require 'header.php';
 
-$computer = $this->computer;
+$client = $this->client;
 
 // Display global network settings if available
-$dnsServer = $computer['DnsServer'];
-$defaultGateway = $computer['DefaultGateway'];
+$dnsServer = $client['DnsServer'];
+$defaultGateway = $client['DefaultGateway'];
 if ($dnsServer or $defaultGateway) {
     print $this->htmlTag('h2', $this->translate('Global network configuration'));
     $table = $this->plugin('table');
@@ -75,7 +75,7 @@ $renderCallbacks = array(
     }
 );
 
-$interfaces = $computer['NetworkInterface'];
+$interfaces = $client['NetworkInterface'];
 if (count($interfaces)) {
     print $this->htmlTag(
         'h2',
@@ -97,7 +97,7 @@ $headers = array(
     'Name' => $this->translate('Name'),
 );
 
-$modems = $computer['Modem'];
+$modems = $client['Modem'];
 if (count($modems)) {
     print $this->htmlTag(
         'h2',

@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for computer navigation menu
+ * Factory for client navigation menu
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,11 +22,11 @@
 namespace Console\Navigation;
 
 /**
- * Factory for computer navigation menu
+ * Factory for client navigation menu
  *
  * Windows-specific pages have a custom property "windowsOnly" set to TRUE.
  */
-class ComputerMenuFactory extends \Library\Navigation\AbstractNavigationFactory
+class ClientMenuFactory extends \Library\Navigation\AbstractNavigationFactory
 {
     /**
      * @internal
@@ -47,100 +47,100 @@ class ComputerMenuFactory extends \Library\Navigation\AbstractNavigationFactory
         return array(
             array(
                 'label' => $this->_('General'),
-                'controller' => 'computer',
+                'controller' => 'client',
                 'action' => 'general',
             ),
             array(
                 'label' => $this->_('Windows'),
-                'controller' =>'computer',
+                'controller' =>'client',
                 'action' => 'windows',
                 'windowsOnly' => true,
             ),
             array(
                 'label' => $this->_('Network'),
-                'controller' =>'computer',
+                'controller' =>'client',
                 'action' => 'network',
             ),
             array(
                 'label' => $this->_('Storage'),
-                'controller' =>'computer',
+                'controller' =>'client',
                 'action' => 'storage',
             ),
             array(
                 'label' => $this->_('Display'),
-                'controller' =>'computer',
+                'controller' =>'client',
                 'action' => 'display',
             ),
             array(
                 'label' => $this->_('BIOS'),
-                'controller' =>'computer',
+                'controller' =>'client',
                 'action' => 'bios',
             ),
             array(
                 'label' => $this->_('System'),
-                'controller' =>'computer',
+                'controller' =>'client',
                 'action' => 'system',
             ),
             array(
                 'label' => $this->_('Printers'),
-                'controller' =>'computer',
+                'controller' =>'client',
                 'action' => 'printers',
             ),
             array(
                 'label' => $this->_('Software'),
-                'controller' =>'computer',
+                'controller' =>'client',
                 'action' => 'software',
             ),
             array(
                 'label' => $this->_('MS Office'),
-                'controller' =>'computer',
+                'controller' =>'client',
                 'action' => 'msoffice',
                 'windowsOnly' => true,
             ),
             array(
                 'label' => $this->_('Registry'),
-                'controller' =>'computer',
+                'controller' =>'client',
                 'action' => 'registry',
                 'windowsOnly' => true,
             ),
             array(
                 'label' => $this->_('Virtual machines'),
-                'controller' =>'computer',
+                'controller' =>'client',
                 'action' => 'virtualmachines',
             ),
             array(
                 'label' => $this->_('Misc'),
-                'controller' =>'computer',
+                'controller' =>'client',
                 'action' => 'misc',
             ),
             array(
                 'label' => $this->_('User defined'),
-                'controller' =>'computer',
+                'controller' =>'client',
                 'action' => 'customfields',
             ),
             array(
                 'label' => $this->_('Packages'),
-                'controller' =>'computer',
+                'controller' =>'client',
                 'action' => 'packages',
             ),
             array(
                 'label' => $this->_('Groups'),
-                'controller' =>'computer',
+                'controller' =>'client',
                 'action' => 'groups',
             ),
             array(
                 'label' => $this->_('Configuration'),
-                'controller' =>'computer',
+                'controller' =>'client',
                 'action' => 'configuration',
             ),
             array(
                 'label' => $this->_('Export'),
-                'controller' =>'computer',
+                'controller' =>'client',
                 'action' => 'export',
             ),
             array(
                 'label' => $this->_('Delete'),
-                'controller' =>'computer',
+                'controller' =>'client',
                 'action' => 'delete',
             )
         );

@@ -1,6 +1,6 @@
 <?php
 /**
- * Included by computer templates to render headline and computer navigation
+ * Display printers
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,21 +19,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-print $this->htmlTag(
-    'h1',
-    sprintf(
-        $this->translate('Details for computer \'%s\''),
-        $this->escapeHtml($this->computer['Name'])
-    )
+require 'header.php';
+
+$client = $this->client;
+
+$headers = array(
+    'Name' => $this->translate('Name'),
+    'Driver' => $this->translate('Driver'),
+    'Port' => $this->translate('Port'),
+    'Description' => $this->translate('Description'),
 );
 
-$menu = $this->navigation('Console\Navigation\ComputerMenu')
-             ->menu()
-             ->setUlClass('navigation navigation_details');
-if (!$this->computer['Windows']) {
-    foreach ($menu->findAllBy('windowsOnly', true) as $page) {
-        $menu->removePage($page);
-    }
-}
-print $menu;
-print "\n\n";
+print $this->table(
+    $client['Printer'],
+    $headers
+);

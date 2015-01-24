@@ -72,7 +72,7 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
     {
         // Don't show the login form if the user is already logged in
         if ($this->_authenticationService->hasIdentity()) {
-            return $this->redirectToRoute('computer');
+            return $this->redirectToRoute('client');
         }
         $vars = array('form' => $this->_form);
         if ($this->getRequest()->isPost()) {
@@ -92,8 +92,8 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
                         // We got redirected here from another page. Redirect to original page.
                         $response = $this->redirect()->toUrl($session->originalUri);
                     } else {
-                        // Redirect to default page (computer listing)
-                        $response = $this->redirectToRoute('computer');
+                        // Redirect to default page (client listing)
+                        $response = $this->redirectToRoute('client');
                     }
                     $session->getManager()->getStorage()->clear('login');
                     return $response;

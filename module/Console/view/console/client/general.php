@@ -1,6 +1,6 @@
 <?php
 /**
- * Display general information about a computer
+ * Display general information about a client
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -21,7 +21,7 @@
 
 require 'header.php';
 
-$computer = $this->computer;
+$client = $this->client;
 
 print "<dl>\n";
 
@@ -31,7 +31,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $computer['Id']
+    $client['Id']
 );
 
 print $this->htmlTag(
@@ -40,7 +40,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escapeHtml($computer['ClientId'])
+    $this->escapeHtml($client['ClientId'])
 );
 
 print $this->htmlTag(
@@ -49,7 +49,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escapeHtml($computer['InventoryDate'])
+    $this->escapeHtml($client['InventoryDate'])
 );
 
 print $this->htmlTag(
@@ -58,7 +58,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escapeHtml($computer['LastContactDate'])
+    $this->escapeHtml($client['LastContactDate'])
 );
 
 print $this->htmlTag(
@@ -67,7 +67,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escapeHtml($computer['OcsAgent'])
+    $this->escapeHtml($client['OcsAgent'])
 );
 
 print $this->htmlTag(
@@ -76,7 +76,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escapeHtml($computer['Manufacturer'] . ' ' . $computer['Model'])
+    $this->escapeHtml($client['Manufacturer'] . ' ' . $client['Model'])
 );
 
 print $this->htmlTag(
@@ -85,8 +85,8 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escapeHtml($computer['Serial']),
-    $computer['IsSerialBlacklisted'] ? array('class' => 'blacklisted') : null
+    $this->escapeHtml($client['Serial']),
+    $client['IsSerialBlacklisted'] ? array('class' => 'blacklisted') : null
 );
 
 print $this->htmlTag(
@@ -95,8 +95,8 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escapeHtml($computer['AssetTag']),
-    $computer['IsAssetTagBlacklisted'] ? array('class' => 'blacklisted') : null
+    $this->escapeHtml($client['AssetTag']),
+    $client['IsAssetTagBlacklisted'] ? array('class' => 'blacklisted') : null
 );
 
 print $this->htmlTag(
@@ -105,7 +105,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escapeHtml($computer['Type'])
+    $this->escapeHtml($client['Type'])
 );
 
 print $this->htmlTag(
@@ -117,9 +117,9 @@ print $this->htmlTag(
     $this->escapeHtml(
         sprintf(
             '%s %s (%s)',
-            $computer['OsName'],
-            $computer['OsVersionString'],
-            $computer['OsVersionNumber']
+            $client['OsName'],
+            $client['OsVersionString'],
+            $client['OsVersionNumber']
         )
     )
 );
@@ -130,7 +130,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escapeHtml($computer['OsComment'])
+    $this->escapeHtml($client['OsComment'])
 );
 
 print $this->htmlTag(
@@ -139,7 +139,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escapeHtml($computer['CpuType'])
+    $this->escapeHtml($client['CpuType'])
 );
 
 print $this->htmlTag(
@@ -148,7 +148,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $computer['CpuClock'] . '&nbsp;MHz'
+    $client['CpuClock'] . '&nbsp;MHz'
 );
 
 print $this->htmlTag(
@@ -157,11 +157,11 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $computer['CpuCores']
+    $client['CpuCores']
 );
 
 $physicalRam = 0;
-foreach ($computer['MemorySlot'] as $slot) {
+foreach ($client['MemorySlot'] as $slot) {
     $physicalRam += $slot['Size'];
 }
 print $this->htmlTag(
@@ -179,7 +179,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $computer['PhysicalMemory'] . '&nbsp;MB'
+    $client['PhysicalMemory'] . '&nbsp;MB'
 );
 
 print $this->htmlTag(
@@ -188,11 +188,11 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $computer['SwapMemory'] . '&nbsp;MB'
+    $client['SwapMemory'] . '&nbsp;MB'
 );
 
-$user = $computer['UserName'];
-$domain = $computer['Windows']['UserDomain'];
+$user = $client['UserName'];
+$domain = $client['Windows']['UserDomain'];
 if ($domain) {
     $user .= ' @ ' . $domain;
 }
@@ -205,14 +205,14 @@ print $this->htmlTag(
     $this->escapeHtml($user)
 );
 
-if ($computer['Uuid']) {
+if ($client['Uuid']) {
     print $this->htmlTag(
         'dt',
         $this->translate('UUID')
     );
     print $this->htmlTag(
         'dd',
-        $this->escapeHtml($computer['Uuid'])
+        $this->escapeHtml($client['Uuid'])
     );
 }
 

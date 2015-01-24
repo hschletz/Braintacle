@@ -81,7 +81,7 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
     {
         $this->_mockAuthenticationService(true);
         $this->dispatch('/console/login/login');
-        $this->assertRedirectTo('/console/computer/index/');
+        $this->assertRedirectTo('/console/client/index/');
     }
 
     public function testLoginActionWithoutIdentityPostValidCorrectCredentials()
@@ -98,7 +98,7 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
                     ->method('getData')
                     ->will($this->returnValue(array('User' => 'gooduser', 'Password' => 'goodpassword')));
         $this->dispatch('/console/login/login', 'POST', $postData);
-        $this->assertRedirectTo('/console/computer/index/');
+        $this->assertRedirectTo('/console/client/index/');
     }
 
     public function testLoginActionWithoutIdentityPostValidIncorrectCredentials()

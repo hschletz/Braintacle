@@ -32,12 +32,12 @@ class MainMenuFactory extends \Library\Navigation\AbstractNavigationFactory
         return array(
             array(
                 'label' => $this->_('Inventory'),
-                'controller' => 'computer',
+                'controller' => 'client',
                 'action' => 'index',
                 'pages' => array(
                     array(
                         'label' => $this->_('Computers'),
-                        'controller' => 'computer',
+                        'controller' => 'client',
                         'action' => 'index',
                     ),
                     array(
@@ -57,7 +57,7 @@ class MainMenuFactory extends \Library\Navigation\AbstractNavigationFactory
                     ),
                     array(
                         'label' => $this->_('Import'),
-                        'controller' => 'computer',
+                        'controller' => 'client',
                         'action' => 'import',
                     ),
                 ),
@@ -91,7 +91,7 @@ class MainMenuFactory extends \Library\Navigation\AbstractNavigationFactory
             ),
             array(
                 'label' => $this->_('Search'),
-                'controller' => 'computer',
+                'controller' => 'client',
                 'action' => 'search',
             ),
             array(

@@ -140,7 +140,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertNotQueryContentContains('td a[class="blur"]', 'subnet1');
         $this->assertQueryContentContains('td', "\n192.0.2.0/24\n"); // AddressWithMask column
         $this->assertQueryContentContains(
-            'td a[href*="/console/computer/index/"][href*="search1=192.0.2.0"][href*="search2=255.255.255.0"]',
+            'td a[href*="/console/client/index/"][href*="search1=192.0.2.0"][href*="search2=255.255.255.0"]',
             '1'
         );
         $this->assertNotQuery('td a[href="/console/network/showidentified/?subnet=192.0.2.0&mask=255.255.255.0"]');

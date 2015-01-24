@@ -34,7 +34,7 @@ if ($this->windowsProductKeys) {
             $this->windowsProductKeys,
             array(
                 'href' => $this->consoleUrl(
-                    'computer',
+                    'client',
                     'index',
                     array(
                         'columns' => 'Name,OsName,Windows.ProductKey,Windows.ManualProductKey',

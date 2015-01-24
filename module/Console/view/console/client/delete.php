@@ -1,6 +1,6 @@
 <?php
 /**
- * Display printers
+ * Display confirmation form for deletion.
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,18 +19,15 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-require 'header.php';
-
-$computer = $this->computer;
-
-$headers = array(
-    'Name' => $this->translate('Name'),
-    'Driver' => $this->translate('Driver'),
-    'Port' => $this->translate('Port'),
-    'Description' => $this->translate('Description'),
+print $this->htmlTag(
+    'p',
+    sprintf(
+        $this->translate(
+            'Client \'%s\' will be permanently deleted. Continue?'
+        ),
+        $this->escapeHtml($this->client['Name'])
+    ),
+    array('class' => 'textcenter')
 );
 
-print $this->table(
-    $computer['Printer'],
-    $headers
-);
+print $this->form->render($this);

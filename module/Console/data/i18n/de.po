@@ -21,21 +21,21 @@ msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
 #: Console/Controller/ComputerController.php
 #, php-format
-msgid "Computer '%s' could not be deleted."
-msgstr "Computer '%s' konnte nicht gelöscht werden."
+msgid "Client '%s' could not be deleted."
+msgstr "Client '%s' konnte nicht gelöscht werden."
 
-#: Console/Controller/ComputerController.php
+#: Console/Controller/ClientController.php
 #, php-format
-msgid "Computer '%s' was successfully deleted."
-msgstr "Computer '%s' wurde erfolgreich gelöscht."
+msgid "Client '%s' was successfully deleted."
+msgstr "Client '%s' wurde erfolgreich gelöscht."
 
-#: Console/Controller/ComputerController.php
+#: Console/Controller/ClientController.php
 msgid "The information was successfully updated."
 msgstr "Die Informationen wurden aktualisiert."
 
-#: Console/Controller/ComputerController.php
-msgid "The requested computer does not exist."
-msgstr "Der angeforderte Computer existiert nicht."
+#: Console/Controller/ClientController.php
+msgid "The requested client does not exist."
+msgstr "Der angeforderte Client existiert nicht."
 
 #: Console/Controller/DuplicatesController.php
 #, php-format
@@ -76,7 +76,7 @@ msgid "Package '%s' was successfully deleted."
 msgstr "Paket '%s' wurde erfolgreich gelöscht."
 
 #: Console/Form/Account/AbstractForm.php Console/Form/Package/Build.php
-#: view/console/computer/general.php view/console/computer/misc.php
+#: view/console/client/general.php view/console/client/misc.php
 msgid "Comment"
 msgstr "Kommentar"
 
@@ -127,9 +127,9 @@ msgstr ""
 "dieses mal gesetzt."
 
 #: Console/Form/AddToGroup.php Console/Form/NetworkDevice.php
-#: view/console/computer/display.php view/console/computer/misc.php
-#: view/console/computer/network.php view/console/computer/printers.php
-#: view/console/computer/system.php view/console/group/general.php
+#: view/console/client/display.php view/console/client/misc.php
+#: view/console/client/network.php view/console/client/printers.php
+#: view/console/client/system.php view/console/group/general.php
 #: view/console/group/index.php view/console/network/showidentified.php
 msgid "Description"
 msgstr "Beschreibung"
@@ -138,18 +138,18 @@ msgstr "Beschreibung"
 msgid "Exclude search results from a group."
 msgstr "Suchergebnisse aus einer Gruppe ausschließen."
 
-#: Console/Form/AddToGroup.php view/console/computer/groups.php
+#: Console/Form/AddToGroup.php view/console/client/groups.php
 msgid "Group"
 msgstr "Gruppe"
 
 #: Console/Form/AddToGroup.php Console/Form/ManageRegistryValues.php
 #: Console/Form/Package/Build.php Console/Form/ShowDuplicates.php
-#: Console/Form/Subnet.php view/console/computer/display.php
-#: view/console/computer/index.php view/console/computer/misc.php
-#: view/console/computer/network.php view/console/computer/packages.php
-#: view/console/computer/printers.php view/console/computer/software.php
-#: view/console/computer/storage.php view/console/computer/system.php
-#: view/console/computer/virtualmachines.php view/console/duplicates/index.php
+#: Console/Form/Subnet.php view/console/client/display.php
+#: view/console/client/index.php view/console/client/misc.php
+#: view/console/client/network.php view/console/client/packages.php
+#: view/console/client/printers.php view/console/client/software.php
+#: view/console/client/storage.php view/console/client/system.php
+#: view/console/client/virtualmachines.php view/console/duplicates/index.php
 #: view/console/group/excluded.php view/console/group/general.php
 #: view/console/group/index.php view/console/group/members.php
 #: view/console/group/packages.php view/console/network/index.php
@@ -264,18 +264,18 @@ msgid "Yes"
 msgstr "Ja"
 
 #: Console/Form/CustomFields.php Console/Form/Search.php
-#: view/console/computer/index.php
+#: view/console/client/index.php
 msgid "Category"
 msgstr "Kategorie"
 
-#: Console/Form/DefineFields.php view/console/computer/bios.php
+#: Console/Form/DefineFields.php view/console/client/bios.php
 #: view/console/network/edit.php view/console/package/index.php
 msgid "Date"
 msgstr "Datum"
 
 #: Console/Form/DefineFields.php Console/Form/ManageRegistryValues.php
 #: Console/Form/NetworkDeviceTypes.php
-#: Console/Navigation/ComputerMenuFactory.php
+#: Console/Navigation/ClientMenuFactory.php
 #: Console/Navigation/GroupMenuFactory.php view/console/accounts/index.php
 #: view/console/network/showidentified.php
 #: view/console/network/showunknown.php view/console/package/index.php
@@ -351,11 +351,11 @@ msgstr "Unterschlüssel"
 msgid "Values"
 msgstr "Werte"
 
-#: Console/Form/NetworkDevice.php view/console/computer/display.php
-#: view/console/computer/general.php view/console/computer/index.php
-#: view/console/computer/misc.php view/console/computer/network.php
-#: view/console/computer/storage.php view/console/computer/system.php
-#: view/console/computer/virtualmachines.php view/console/network/index.php
+#: Console/Form/NetworkDevice.php view/console/client/display.php
+#: view/console/client/general.php view/console/client/index.php
+#: view/console/client/misc.php view/console/client/network.php
+#: view/console/client/storage.php view/console/client/system.php
+#: view/console/client/virtualmachines.php view/console/network/index.php
 #: view/console/network/showidentified.php
 msgid "Type"
 msgstr "Typ"
@@ -442,7 +442,7 @@ msgid "Error"
 msgstr "Fehler"
 
 #: Console/Form/Package/Update.php Console/Form/Preferences/Packages.php
-#: Console/Navigation/ComputerMenuFactory.php
+#: Console/Navigation/ClientMenuFactory.php
 #: Console/Navigation/MainMenuFactory.php
 msgid "Groups"
 msgstr "Gruppen"
@@ -658,20 +658,20 @@ msgid "Product key (if different)"
 msgstr "Lizenzschlüssel (falls verschieden)"
 
 #: Console/Form/Search.php Console/Form/ShowDuplicates.php
-#: view/console/computer/general.php view/console/computer/index.php
+#: view/console/client/general.php view/console/client/index.php
 #: view/console/duplicates/index.php
 msgid "Asset tag"
 msgstr "Asset tag"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Audio device"
 msgstr "Audiogerät"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "BIOS date"
 msgstr "BIOS-Datum"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "BIOS version"
 msgstr "BIOS-Version"
 
@@ -679,12 +679,12 @@ msgstr "BIOS-Version"
 msgid "CPU clock (MHz)"
 msgstr "CPU-Taktfrequenz (MHz)"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "CPU cores"
 msgstr "CPU-Kerne"
 
-#: Console/Form/Search.php view/console/computer/general.php
-#: view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/general.php
+#: view/console/client/index.php
 msgid "CPU type"
 msgstr "CPU Typ"
 
@@ -692,21 +692,21 @@ msgstr "CPU Typ"
 msgid "Computer name"
 msgstr "Computername"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Controller"
 msgstr "Controller"
 
-#: Console/Form/Search.php view/console/computer/index.php
-#: view/console/computer/network.php
+#: Console/Form/Search.php view/console/client/index.php
+#: view/console/client/network.php
 msgid "DNS server"
 msgstr "DNS-Server"
 
-#: Console/Form/Search.php view/console/computer/index.php
-#: view/console/computer/network.php
+#: Console/Form/Search.php view/console/client/index.php
+#: view/console/client/network.php
 msgid "Default gateway"
 msgstr "Standardgateway"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Display controller"
 msgstr "Display-Controller"
 
@@ -714,16 +714,16 @@ msgstr "Display-Controller"
 msgid "Exact match"
 msgstr "Exakte Übereinstimmung"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Extension slot"
 msgstr "Erweiterungssteckplatz"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "GPU memory"
 msgstr "GPU-Speicher"
 
-#: Console/Form/Search.php view/console/computer/index.php
-#: view/console/computer/network.php view/console/network/edit.php
+#: Console/Form/Search.php view/console/client/index.php
+#: view/console/client/network.php view/console/network/edit.php
 #: view/console/network/showidentified.php
 #: view/console/network/showunknown.php
 msgid "IP address"
@@ -734,58 +734,58 @@ msgid "Invert results"
 msgstr "Ergebnisse invertieren"
 
 #: Console/Form/Search.php Console/Form/ShowDuplicates.php
-#: view/console/computer/general.php view/console/computer/index.php
+#: view/console/client/general.php view/console/client/index.php
 msgid "Last contact"
 msgstr "Letzter Kontakt"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 #: view/console/group/excluded.php view/console/group/members.php
 msgid "Last inventory"
 msgstr "Letzte Inventarisierung"
 
 #: Console/Form/Search.php Console/Form/ShowDuplicates.php
-#: view/console/computer/index.php view/console/computer/network.php
+#: view/console/client/index.php view/console/client/network.php
 #: view/console/network/edit.php view/console/network/showidentified.php
 #: view/console/network/showunknown.php
 msgid "MAC address"
 msgstr "MAC-Adresse"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "MS Office product ID"
 msgstr "Microsoft Office-Produkt-ID"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "MS Office product key"
 msgstr "Microsoft Office-Lizenzschlüssel"
 
-#: Console/Form/Search.php view/console/computer/bios.php
-#: view/console/computer/display.php view/console/computer/index.php
-#: view/console/computer/misc.php view/console/computer/system.php
+#: Console/Form/Search.php view/console/client/bios.php
+#: view/console/client/display.php view/console/client/index.php
+#: view/console/client/misc.php view/console/client/system.php
 msgid "Manufacturer"
 msgstr "Hersteller"
 
-#: Console/Form/Search.php view/console/computer/general.php
-#: view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/general.php
+#: view/console/client/index.php
 msgid "Model"
 msgstr "Modell"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Modem"
 msgstr "Modem"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Monitor: description"
 msgstr "Monitor: Beschreibung"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Monitor: manufacturer"
 msgstr "Monitor: Hersteller"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Monitor: production date"
 msgstr "Monitor: Produktionsdatum"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Monitor: serial"
 msgstr "Monitor: Seriennummer"
 
@@ -793,15 +793,15 @@ msgstr "Monitor: Seriennummer"
 msgid "Network Mask"
 msgstr "Netzmaske"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Network address"
 msgstr "Netzwerkadresse"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "OCS agent"
 msgstr "OCS Agent"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "OS comment"
 msgstr "Kommentar"
 
@@ -809,11 +809,11 @@ msgstr "Kommentar"
 msgid "OS name"
 msgstr "Betriebssystem"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "OS version number"
 msgstr "Betriebssystemversionsnummer"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "OS version string"
 msgstr "Betriebssystemversion"
 
@@ -825,19 +825,19 @@ msgstr "Operator"
 msgid "Physical memory"
 msgstr "Arbeitsspeicher"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Port name"
 msgstr "Anschlussname"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Printer driver"
 msgstr "Druckertreiber"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Printer name"
 msgstr "Druckername"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Printer port"
 msgstr "Druckeranschluss"
 
@@ -850,29 +850,29 @@ msgid "Search for"
 msgstr "Suche nach"
 
 #: Console/Form/Search.php Console/Form/ShowDuplicates.php
-#: view/console/computer/display.php view/console/computer/general.php
-#: view/console/computer/index.php view/console/computer/storage.php
-#: view/console/computer/system.php view/console/duplicates/index.php
+#: view/console/client/display.php view/console/client/general.php
+#: view/console/client/index.php view/console/client/storage.php
+#: view/console/client/system.php view/console/duplicates/index.php
 msgid "Serial number"
 msgstr "Seriennummer"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Software: Comment"
 msgstr "Software: Kommentar"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Software: Install location"
 msgstr "Software: Installationsort"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Software: Name"
 msgstr "Software: Name"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Software: Publisher"
 msgstr "Software: Herausgeber"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Software: Version"
 msgstr "Software: Version"
 
@@ -880,7 +880,7 @@ msgstr "Software: Version"
 msgid "Substring match, wildcards '?' and '*' allowed"
 msgstr "Teilzeichenfolge, Platzhalter '?' und '*' erlaubt"
 
-#: Console/Form/Search.php view/console/computer/general.php
+#: Console/Form/Search.php view/console/client/general.php
 msgid "Swap memory"
 msgstr "Auslagerungsspeicher"
 
@@ -889,7 +889,7 @@ msgstr "Auslagerungsspeicher"
 msgid "User defined: %s"
 msgstr "Benutzerdefiniert: %s"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "User domain"
 msgstr "Benutzerdomäne"
 
@@ -897,7 +897,7 @@ msgstr "Benutzerdomäne"
 msgid "User name"
 msgstr "Benutzername"
 
-#: Console/Form/Search.php view/console/computer/registry.php
+#: Console/Form/Search.php view/console/client/registry.php
 msgid "Value"
 msgstr "Wert"
 
@@ -909,15 +909,15 @@ msgstr "Laufwerk: freier Speicherplatz (MB)"
 msgid "Volume size (MB)"
 msgstr "Laufwerk: Größe (MB)"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Windows product key"
 msgstr "Windows-Lizenzschlüssel"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Windows product key (manual)"
 msgstr "Windows-Lizenzschlüssel (manuell)"
 
-#: Console/Form/Search.php view/console/computer/index.php
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Workgroup"
 msgstr "Arbeitsgruppe"
 
@@ -961,79 +961,79 @@ msgstr "neu oder nicht kategorisiert"
 msgid "selected for display"
 msgstr "für Anzeige ausgewählt"
 
-#: Console/Navigation/ComputerMenuFactory.php
+#: Console/Navigation/ClientMenuFactory.php
 msgid "BIOS"
 msgstr "BIOS"
 
-#: Console/Navigation/ComputerMenuFactory.php
+#: Console/Navigation/ClientMenuFactory.php
 #: Console/Navigation/GroupMenuFactory.php
 msgid "Configuration"
 msgstr "Konfiguration"
 
-#: Console/Navigation/ComputerMenuFactory.php
+#: Console/Navigation/ClientMenuFactory.php
 #: Console/Navigation/MainMenuFactory.php
 msgid "Display"
 msgstr "Anzeige"
 
-#: Console/Navigation/ComputerMenuFactory.php
+#: Console/Navigation/ClientMenuFactory.php
 msgid "Export"
 msgstr "Exportieren"
 
-#: Console/Navigation/ComputerMenuFactory.php
+#: Console/Navigation/ClientMenuFactory.php
 #: Console/Navigation/GroupMenuFactory.php
 msgid "General"
 msgstr "Allgemein"
 
-#: Console/Navigation/ComputerMenuFactory.php
+#: Console/Navigation/ClientMenuFactory.php
 msgid "MS Office"
 msgstr "MS Office"
 
-#: Console/Navigation/ComputerMenuFactory.php
+#: Console/Navigation/ClientMenuFactory.php
 msgid "Misc"
 msgstr "Verschiedenes"
 
-#: Console/Navigation/ComputerMenuFactory.php
+#: Console/Navigation/ClientMenuFactory.php
 #: Console/Navigation/MainMenuFactory.php
 msgid "Network"
 msgstr "Netzwerk"
 
-#: Console/Navigation/ComputerMenuFactory.php
+#: Console/Navigation/ClientMenuFactory.php
 #: Console/Navigation/GroupMenuFactory.php
 #: Console/Navigation/MainMenuFactory.php
 msgid "Packages"
 msgstr "Pakete"
 
-#: Console/Navigation/ComputerMenuFactory.php
+#: Console/Navigation/ClientMenuFactory.php
 msgid "Printers"
 msgstr "Drucker"
 
-#: Console/Navigation/ComputerMenuFactory.php
+#: Console/Navigation/ClientMenuFactory.php
 msgid "Registry"
 msgstr "Registry"
 
-#: Console/Navigation/ComputerMenuFactory.php
+#: Console/Navigation/ClientMenuFactory.php
 #: Console/Navigation/MainMenuFactory.php
 msgid "Software"
 msgstr "Software"
 
-#: Console/Navigation/ComputerMenuFactory.php
+#: Console/Navigation/ClientMenuFactory.php
 msgid "Storage"
 msgstr "Massenspeicher"
 
-#: Console/Navigation/ComputerMenuFactory.php
+#: Console/Navigation/ClientMenuFactory.php
 #: Console/Navigation/MainMenuFactory.php
 msgid "System"
 msgstr "System"
 
-#: Console/Navigation/ComputerMenuFactory.php
+#: Console/Navigation/ClientMenuFactory.php
 msgid "User defined"
 msgstr "Benutzerdefiniert"
 
-#: Console/Navigation/ComputerMenuFactory.php
+#: Console/Navigation/ClientMenuFactory.php
 msgid "Virtual machines"
 msgstr "Virtuelle Maschinen"
 
-#: Console/Navigation/ComputerMenuFactory.php
+#: Console/Navigation/ClientMenuFactory.php
 msgid "Windows"
 msgstr "Windows"
 
@@ -1140,436 +1140,433 @@ msgstr "Benutzer hinzufügen"
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: view/console/computer/bios.php view/console/computer/index.php
-#: view/console/computer/software.php
+#: view/console/client/bios.php view/console/client/index.php
+#: view/console/client/software.php
 msgid "Version"
 msgstr "Version"
 
-#: view/console/computer/customfields.php
+#: view/console/client/customfields.php
 msgid "Define fields"
 msgstr "Felder definieren"
 
-#: view/console/computer/delete.php
+#: view/console/client/delete.php
 #, php-format
-msgid "Computer '%s' will be permanently deleted. Continue?"
-msgstr "Computer '%s' wird dauerhaft gelöscht. Fortfahren?"
+msgid "Client '%s' will be permanently deleted. Continue?"
+msgstr "Client '%s' wird dauerhaft gelöscht. Fortfahren?"
 
-#: view/console/computer/display.php
+#: view/console/client/display.php
 msgid "Chipset"
 msgstr "Chipsatz"
 
-#: view/console/computer/display.php
+#: view/console/client/display.php
 msgid "Current resolution"
 msgstr "Gegenwärtige Auflösung"
 
-#: view/console/computer/display.php
+#: view/console/client/display.php
 msgid "Display controllers"
 msgstr "Display-Controller"
 
-#: view/console/computer/display.php
+#: view/console/client/display.php
 msgid "Displays"
 msgstr "Anzeigegeräte"
 
-#: view/console/computer/display.php view/console/computer/index.php
-#: view/console/computer/virtualmachines.php
+#: view/console/client/display.php view/console/client/index.php
+#: view/console/client/virtualmachines.php
 msgid "Memory"
 msgstr "Speicher"
 
-#: view/console/computer/display.php
+#: view/console/client/display.php
 msgid "Production date"
 msgstr "Produktionsdatum"
 
-#: view/console/computer/general.php view/console/computer/index.php
+#: view/console/client/general.php view/console/client/index.php
 msgid "CPU clock"
 msgstr "CPU Takt"
 
-#: view/console/computer/general.php view/console/computer/index.php
+#: view/console/client/general.php view/console/client/index.php
 msgid "Client ID"
 msgstr "Client-ID"
 
-#: view/console/computer/general.php view/console/computer/index.php
+#: view/console/client/general.php view/console/client/index.php
 #: view/console/group/general.php
 msgid "ID"
 msgstr "ID"
 
-#: view/console/computer/general.php
+#: view/console/client/general.php
 msgid "Inventory date"
 msgstr "Datum der Inventarinformationen"
 
-#: view/console/computer/general.php
+#: view/console/client/general.php
 msgid "Last user logged in"
 msgstr "Letzter angemeldeter Benutzer"
 
-#: view/console/computer/general.php
+#: view/console/client/general.php
 msgid "Number of CPU cores"
 msgstr "Anzahl der CPU-Kerne"
 
-#: view/console/computer/general.php
+#: view/console/client/general.php
 msgid "Operating System"
 msgstr "Betriebssystem"
 
-#: view/console/computer/general.php
+#: view/console/client/general.php
 msgid "RAM detected by agent"
 msgstr "Vom Agenten entdeckter Arbeitsspeicher"
 
-#: view/console/computer/general.php
+#: view/console/client/general.php
 msgid "RAM reported by OS"
 msgstr "Arbeitsspeicher lt. Betriebssystem"
 
-#: view/console/computer/general.php view/console/computer/index.php
-#: view/console/computer/virtualmachines.php
+#: view/console/client/general.php view/console/client/index.php
+#: view/console/client/virtualmachines.php
 msgid "UUID"
 msgstr "UUID"
 
-#: view/console/computer/general.php
+#: view/console/client/general.php
 msgid "User Agent"
 msgstr "User-Agent"
 
-#: view/console/computer/groups.php
+#: view/console/client/groups.php
 msgid "Group memberships"
 msgstr "Gruppenmitgliedschaften"
 
-#: view/console/computer/groups.php
+#: view/console/client/groups.php
 msgid "Manage memberships"
 msgstr "Mitgliedschaften verwalten"
 
-#: view/console/computer/groups.php view/console/group/members.php
+#: view/console/client/groups.php view/console/group/members.php
 msgid "Membership"
 msgstr "Mitgliedschaft"
 
-#: view/console/computer/header.php
+#: view/console/client/header.php
 #, php-format
-msgid "Details for computer '%s'"
-msgstr "Einzelheiten für Computer '%s'"
+msgid "Details for client '%s'"
+msgstr "Einzelheiten für Client '%s'"
 
-#: view/console/computer/import.php
+#: view/console/client/import.php
 msgid "Import locally generated inventory data"
 msgstr "Import lokal erzeugter Inventardaten"
 
-#: view/console/computer/import.php
+#: view/console/client/import.php
 #, php-format
 msgid "Upload error. Server %1$s responded with error %2$d: %3$s"
 msgstr "Fehler beim Hochladen. Server %1$s antwortete mit Fehler %2$d: %3$s"
 
-#: view/console/computer/index.php
+#: view/console/client/index.php
 #, php-format
 msgid "%d matches"
 msgstr "%d Treffer"
 
-#: view/console/computer/index.php
+#: view/console/client/index.php
 msgid "BIOS manufacturer"
 msgstr "BIOS-Hersteller"
 
-#: view/console/computer/index.php
+#: view/console/client/index.php
 msgid "Edit filter"
 msgstr "Filter bearbeiten"
 
-#: view/console/computer/index.php
+#: view/console/client/index.php
 msgid "Error code"
 msgstr "Fehlercode"
 
-#: view/console/computer/index.php view/console/computer/storage.php
+#: view/console/client/index.php view/console/client/storage.php
 msgid "Free space"
 msgstr "Frei"
 
-#: view/console/computer/index.php view/console/computer/network.php
+#: view/console/client/index.php view/console/client/network.php
 msgid "Netmask"
 msgstr "Netzmaske"
 
-#: view/console/computer/index.php view/console/group/excluded.php
-#: view/console/group/members.php
+#: view/console/client/index.php
 #, php-format
-msgid "Number of computers: %d"
-msgstr "Anzahl Computer: %d"
+msgid "Number of clients: %d"
+msgstr "Anzahl Clients: %d"
 
-#: view/console/computer/index.php
+#: view/console/client/index.php
 msgid "Operating system"
 msgstr "Betriebssystem"
 
-#: view/console/computer/index.php view/console/group/add.php
+#: view/console/client/index.php view/console/group/add.php
 msgid "Save to group"
 msgstr "In Gruppe speichern"
 
-#: view/console/computer/index.php
+#: view/console/client/index.php
 msgid "Swap"
 msgstr "Auslagerungsspeicher"
 
-#: view/console/computer/index.php view/console/group/excluded.php
+#: view/console/client/index.php view/console/group/excluded.php
 #: view/console/group/members.php
 msgid "User"
 msgstr "Benutzer"
 
-#: view/console/computer/index.php
+#: view/console/client/index.php
 msgid "Volume size"
 msgstr "Laufwerk: Größe"
 
-#: view/console/computer/index.php
+#: view/console/client/index.php
 msgid "Windows company"
 msgstr "Windows/Firma"
 
-#: view/console/computer/index.php
+#: view/console/client/index.php
 msgid "Windows owner"
 msgstr "Windows/Besitzer"
 
-#: view/console/computer/index.php
+#: view/console/client/index.php
 msgid "Windows product ID"
 msgstr "Windows/Produkt-ID"
 
-#: view/console/computer/misc.php
+#: view/console/client/misc.php
 msgid "Audio devices"
 msgstr "Audiogeräte"
 
-#: view/console/computer/misc.php
+#: view/console/client/misc.php
 msgid "Connector"
 msgstr "Verbinder"
 
-#: view/console/computer/misc.php
+#: view/console/client/misc.php
 msgid "Input devices"
 msgstr "Eingabegeräte"
 
-#: view/console/computer/misc.php
+#: view/console/client/misc.php
 msgid "Interface"
 msgstr "Interface"
 
-#: view/console/computer/misc.php
+#: view/console/client/misc.php
 msgid "Keyboard"
 msgstr "Tastatur"
 
-#: view/console/computer/misc.php
+#: view/console/client/misc.php
 msgid "Pointing device"
 msgstr "Zeigegerät"
 
-#: view/console/computer/misc.php
+#: view/console/client/misc.php
 msgid "Ports"
 msgstr "Anschlüsse"
 
-#: view/console/computer/msoffice.php view/console/computer/software.php
+#: view/console/client/msoffice.php view/console/client/software.php
 msgid "Architecture"
 msgstr "Architektur"
 
-#: view/console/computer/msoffice.php
+#: view/console/client/msoffice.php
 msgid "Installed Microsoft Office products"
 msgstr "Installierte Microsoft Office-Produkte"
 
-#: view/console/computer/msoffice.php
-#: view/console/computer/virtualmachines.php
+#: view/console/client/msoffice.php view/console/client/virtualmachines.php
 msgid "Product"
 msgstr "Produkt"
 
-#: view/console/computer/msoffice.php view/console/computer/windows.php
+#: view/console/client/msoffice.php view/console/client/windows.php
 msgid "Product ID"
 msgstr "Produkt-ID"
 
-#: view/console/computer/msoffice.php
+#: view/console/client/msoffice.php
 msgid "Product key"
 msgstr "Lizenzschlüssel"
 
-#: view/console/computer/msoffice.php
+#: view/console/client/msoffice.php
 msgid "Unused Microsoft Office licenses"
 msgstr "Ungenutzte Microsoft Office-Lizenzen"
 
-#: view/console/computer/network.php
+#: view/console/client/network.php
 msgid "DHCP server"
 msgstr "DHCP-Server"
 
-#: view/console/computer/network.php
+#: view/console/client/network.php
 msgid "Data rate"
 msgstr "Datenrate"
 
-#: view/console/computer/network.php
+#: view/console/client/network.php
 msgid "Gateway"
 msgstr "Gateway"
 
-#: view/console/computer/network.php
+#: view/console/client/network.php
 msgid "Global network configuration"
 msgstr "Globale Netzwerkkonfiguration"
 
-#: view/console/computer/network.php
+#: view/console/client/network.php
 msgid "Modems"
 msgstr "Modems"
 
-#: view/console/computer/network.php
+#: view/console/client/network.php
 msgid "Network interfaces"
 msgstr "Netzwerkschnittstellen"
 
-#: view/console/computer/network.php view/console/computer/packages.php
-#: view/console/computer/system.php view/console/computer/virtualmachines.php
+#: view/console/client/network.php view/console/client/packages.php
+#: view/console/client/system.php view/console/client/virtualmachines.php
 msgid "Status"
 msgstr "Status"
 
-#: view/console/computer/packages.php view/console/group/packages.php
+#: view/console/client/packages.php view/console/group/packages.php
 msgid "Assigned packages"
 msgstr "Assigned packages"
 
-#: view/console/computer/packages.php view/console/group/packages.php
+#: view/console/client/packages.php view/console/group/packages.php
 msgid "Install packages"
 msgstr "Pakete installieren"
 
-#: view/console/computer/packages.php
+#: view/console/client/packages.php
 msgid "Timestamp"
 msgstr "Zeitpunkt"
 
-#: view/console/computer/packages.php
+#: view/console/client/packages.php
 msgid "in progress"
 msgstr "läuft"
 
-#: view/console/computer/packages.php
+#: view/console/client/packages.php
 msgid "installed"
 msgstr "installiert"
 
-#: view/console/computer/packages.php
+#: view/console/client/packages.php
 msgid "not notified"
 msgstr "nicht benachrichtigt"
 
-#: view/console/computer/packages.php view/console/group/packages.php
+#: view/console/client/packages.php view/console/group/packages.php
 msgid "remove"
 msgstr "entfernen"
 
-#: view/console/computer/printers.php
+#: view/console/client/printers.php
 msgid "Driver"
 msgstr "Treiber"
 
-#: view/console/computer/printers.php
+#: view/console/client/printers.php
 msgid "Port"
 msgstr "Port"
 
-#: view/console/computer/registry.php
+#: view/console/client/registry.php
 msgid "Content"
 msgstr "Inhalt"
 
-#: view/console/computer/registry.php
+#: view/console/client/registry.php
 msgid "Key"
 msgstr "Schlüssel"
 
-#: view/console/computer/registry.php
+#: view/console/client/registry.php
 msgid "Manage inventoried values"
 msgstr "Inventarisierte Werte verwalten"
 
-#: view/console/computer/registry.php
+#: view/console/client/registry.php
 msgid "Registry Keys"
 msgstr "Registry-Schlüssel"
 
-#: view/console/computer/removepackage.php
+#: view/console/client/removepackage.php
 #, php-format
-msgid "Package '%s' will no longer be assigned to this computer. Continue?"
-msgstr ""
-"Paket '%s' wird nicht mehr diesem Computer zugewiesen sein. Fortfahren?"
+msgid "Package '%s' will no longer be assigned to this client. Continue?"
+msgstr "Paket '%s' wird nicht mehr diesem Client zugewiesen sein. Fortfahren?"
 
-#: view/console/computer/software.php
+#: view/console/client/software.php
 msgid "Location"
 msgstr "Ort"
 
-#: view/console/computer/software.php
+#: view/console/client/software.php
 msgid "Publisher"
 msgstr "Herausgeber"
 
-#: view/console/computer/software.php view/console/computer/storage.php
-#: view/console/computer/system.php view/console/package/index.php
+#: view/console/client/software.php view/console/client/storage.php
+#: view/console/client/system.php view/console/package/index.php
 msgid "Size"
 msgstr "Größe"
 
-#: view/console/computer/storage.php view/console/group/general.php
+#: view/console/client/storage.php view/console/group/general.php
 #: view/console/group/index.php
 msgid "Creation date"
 msgstr "Erstellungsdatum"
 
-#: view/console/computer/storage.php
+#: view/console/client/storage.php
 msgid "DVD writer"
 msgstr "DVD-Brenner"
 
-#: view/console/computer/storage.php
+#: view/console/client/storage.php
 msgid "Device"
 msgstr "Gerät"
 
-#: view/console/computer/storage.php
+#: view/console/client/storage.php
 msgid "Filesystem"
 msgstr "Dateisystem"
 
-#: view/console/computer/storage.php
+#: view/console/client/storage.php
 msgid "Firmware version"
 msgstr "Firmware-Version"
 
-#: view/console/computer/storage.php
+#: view/console/client/storage.php
 msgid "Floppy disk drive"
 msgstr "Diskettenlaufwerk"
 
-#: view/console/computer/storage.php
+#: view/console/client/storage.php
 msgid "Hard disk"
 msgstr "Festplatte"
 
-#: view/console/computer/storage.php
+#: view/console/client/storage.php
 msgid "Label"
 msgstr "Name"
 
-#: view/console/computer/storage.php
+#: view/console/client/storage.php
 msgid "Letter"
 msgstr "Buchstabe"
 
-#: view/console/computer/storage.php
+#: view/console/client/storage.php
 msgid "Mountpoint"
 msgstr "Mountpoint"
 
-#: view/console/computer/storage.php
+#: view/console/client/storage.php
 msgid "Removable medium"
 msgstr "Wechselmedium"
 
-#: view/console/computer/storage.php
+#: view/console/client/storage.php
 msgid "Storage devices"
 msgstr "Speichergeräte"
 
-#: view/console/computer/storage.php
+#: view/console/client/storage.php
 msgid "Used space"
 msgstr "Benutzt"
 
-#: view/console/computer/storage.php
+#: view/console/client/storage.php
 msgid "Volumes"
 msgstr "Dateisysteme"
 
-#: view/console/computer/system.php
+#: view/console/client/system.php
 msgid "Caption"
 msgstr "Titel"
 
-#: view/console/computer/system.php
+#: view/console/client/system.php
 msgid "Clock"
 msgstr "Takt"
 
-#: view/console/computer/system.php
+#: view/console/client/system.php
 msgid "Controllers"
 msgstr "Controller"
 
-#: view/console/computer/system.php
+#: view/console/client/system.php
 msgid "Driver version"
 msgstr "Treiber-Version"
 
-#: view/console/computer/system.php
+#: view/console/client/system.php
 msgid "Extension slots"
 msgstr "Erweiterungssteckplätze"
 
-#: view/console/computer/system.php
+#: view/console/client/system.php
 msgid "Memory slots"
 msgstr "RAM-Steckplätze"
 
-#: view/console/computer/system.php
+#: view/console/client/system.php
 msgid "Purpose"
 msgstr "Zweck"
 
-#: view/console/computer/system.php
+#: view/console/client/system.php
 msgid "Slot number"
 msgstr "Steckplatz"
 
-#: view/console/computer/virtualmachines.php
-msgid "Virtual machines hosted on this computer"
-msgstr "Auf diesem Computer beherbergte virtuelle Maschinen"
+#: view/console/client/virtualmachines.php
+msgid "Virtual machines hosted on this client"
+msgstr "Auf diesem Client beherbergte virtuelle Maschinen"
 
-#: view/console/computer/windows.php
+#: view/console/client/windows.php
 msgid "Company"
 msgstr "Firma"
 
-#: view/console/computer/windows.php
+#: view/console/client/windows.php
 msgid "Owner"
 msgstr "Besitzer"
 
-#: view/console/computer/windows.php
+#: view/console/client/windows.php
 msgid "Product key (reported by agent)"
 msgstr "Lizenzschlüssel (vom Agenten ermittelt)"
 
@@ -1600,6 +1597,11 @@ msgstr "Keine Duplikate vorhanden."
 #, php-format
 msgid "Group '%s' will be permanently deleted. Continue?"
 msgstr "Gruppe '%s' wird dauerhaft gelöscht. Fortfahren?"
+
+#: view/console/group/excluded.php view/console/group/members.php
+#, php-format
+msgid "Number of computers: %d"
+msgstr "Anzahl Computer: %d"
 
 #: view/console/group/general.php
 msgid "SQL query"
@@ -1757,3 +1759,6 @@ msgstr "Ignorieren"
 #: view/layout/layout.php
 msgid "Logout"
 msgstr "Abmelden"
+
+#~ msgid "Computer '%s' will be permanently deleted. Continue?"
+#~ msgstr "Computer '%s' wird dauerhaft gelöscht. Fortfahren?"

@@ -1,6 +1,6 @@
 <?php
 /**
- * Display and manage a computer's group memberships
+ * Display and manage a client's group memberships
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -21,7 +21,7 @@
 
 require 'header.php';
 
-$computer = $this->computer;
+$client = $this->client;
 
 $headers = array(
     'GroupName' => $this->translate('Group'),

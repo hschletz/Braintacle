@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for ComputerController
+ * Tests for ClientController
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,9 +22,9 @@
 namespace Console\Test\Controller;
 
 /**
- * Tests for ComputerController
+ * Tests for ClientController
  */
-class ComputerControllerTest extends \Console\Test\AbstractControllerTest
+class ClientControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
      * Computer mock
@@ -53,10 +53,10 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
     protected $_inventoryUploader;
 
     /**
-     * Sample computer data
+     * Sample client data
      * @var array[]
      */
-    protected $_sampleComputers = array(
+    protected $_sampleClients = array(
         array(
             'Id' => 1,
             'Name' => 'name1',
@@ -128,7 +128,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
     /** {@inheritdoc} */
     protected function _createController()
     {
-        return new \Console\Controller\ComputerController(
+        return new \Console\Controller\ClientController(
             $this->_computer,
             $this->_group,
             $this->_formManager,
@@ -144,21 +144,21 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         parent::testService();
     }
 
-    public function testInvalidComputer()
+    public function testInvalidClient()
     {
         $this->_computer->expects($this->once())
                         ->method('fetchById')
                         ->with(42)
                         ->will($this->throwException(new \RuntimeException));
-        $this->dispatch('/console/computer/general/?id=42');
-        $this->assertRedirectTo('/console/computer/index/');
+        $this->dispatch('/console/client/general/?id=42');
+        $this->assertRedirectTo('/console/client/index/');
         $this->assertContains(
-            'The requested computer does not exist.',
+            'The requested client does not exist.',
             $this->_getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
         );
     }
 
-    public function testMenuForWindowsComputers()
+    public function testMenuForWindowsClients()
     {
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
@@ -169,14 +169,14 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                                 )
                             )
                         );
-        $this->dispatch('/console/computer/printers/?id=1');
+        $this->dispatch('/console/client/printers/?id=1');
         $query = '//ul[contains(concat(" ", normalize-space(@class), " "), " navigation_details ")]/li';
-        $this->assertXpathQuery($query . '/a[@href="/console/computer/windows/?id=1"]');
-        $this->assertXpathQuery($query . '/a[@href="/console/computer/msoffice/?id=1"]');
-        $this->assertXpathQuery($query . '/a[@href="/console/computer/registry/?id=1"]');
+        $this->assertXpathQuery($query . '/a[@href="/console/client/windows/?id=1"]');
+        $this->assertXpathQuery($query . '/a[@href="/console/client/msoffice/?id=1"]');
+        $this->assertXpathQuery($query . '/a[@href="/console/client/registry/?id=1"]');
     }
 
-    public function testMenuForNonWindowsComputers()
+    public function testMenuForNonWindowsClients()
     {
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
@@ -187,11 +187,11 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                                 )
                             )
                         );
-        $this->dispatch('/console/computer/printers/?id=1');
+        $this->dispatch('/console/client/printers/?id=1');
         $query = '//ul[contains(concat(" ", normalize-space(@class), " "), " navigation_details ")]/li';
-        $this->assertNotXpathQuery($query . '/a[@href="/console/computer/windows/?id=1"]');
-        $this->assertNotXpathQuery($query . '/a[@href="/console/computer/msoffice/?id=1"]');
-        $this->assertNotXpathQuery($query . '/a[@href="/console/computer/registry/?id=1"]');
+        $this->assertNotXpathQuery($query . '/a[@href="/console/client/windows/?id=1"]');
+        $this->assertNotXpathQuery($query . '/a[@href="/console/client/msoffice/?id=1"]');
+        $this->assertNotXpathQuery($query . '/a[@href="/console/client/registry/?id=1"]');
     }
 
     public function testIndexActionWithoutParams()
@@ -210,14 +210,14 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                             null,
                             null
                         )
-                        ->will($this->returnValue($this->_sampleComputers));
-        $this->dispatch('/console/computer/index/');
+                        ->will($this->returnValue($this->_sampleClients));
+        $this->dispatch('/console/client/index/');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//p[@class="textcenter"]', "\nAnzahl Computer: 2\n");
+        $this->assertXpathQueryContentContains('//p[@class="textcenter"]', "\nAnzahl Clients: 2\n");
         $this->assertXpathQueryCount('//th', 7);
         $this->assertXpathQueryCount('//th[@class="textright"]', 2); // CpuClock and PhysicalMemory
         $this->assertXpathQueryContentContains(
-            '//td/a[@href="/console/computer/general/?id=2"]',
+            '//td/a[@href="/console/client/general/?id=2"]',
             'name2'
         );
     }
@@ -238,8 +238,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                             null,
                             null
                         )
-                        ->will($this->returnValue($this->_sampleComputers));
-        $this->dispatch('/console/computer/index/?columns=Name,InventoryDate');
+                        ->will($this->returnValue($this->_sampleClients));
+        $this->dispatch('/console/client/index/?columns=Name,InventoryDate');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryCount('//th', 2);
     }
@@ -251,11 +251,11 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
              ->method('setData');
         $this->_computer->expects($this->once())
                         ->method('fetch')
-                        ->will($this->returnValue($this->_sampleComputers));
-        $this->dispatch('/console/computer/index/?jumpto=software');
+                        ->will($this->returnValue($this->_sampleClients));
+        $this->dispatch('/console/client/index/?jumpto=software');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
-            '//td/a[@href="/console/computer/software/?id=2"]',
+            '//td/a[@href="/console/client/software/?id=2"]',
             'name2'
         );
     }
@@ -267,11 +267,11 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
              ->method('setData');
         $this->_computer->expects($this->once())
                         ->method('fetch')
-                        ->will($this->returnValue($this->_sampleComputers));
-        $this->dispatch('/console/computer/index/?jumpto=invalid');
+                        ->will($this->returnValue($this->_sampleClients));
+        $this->dispatch('/console/client/index/?jumpto=invalid');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
-            '//td/a[@href="/console/computer/general/?id=2"]',
+            '//td/a[@href="/console/client/general/?id=2"]',
             'name2'
         );
     }
@@ -292,8 +292,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                             null,
                             null
                         )
-                        ->will($this->returnValue($this->_sampleComputers));
-        $this->dispatch('/console/computer/index/?filter=PackageError&search=packageName');
+                        ->will($this->returnValue($this->_sampleClients));
+        $this->dispatch('/console/client/index/?filter=PackageError&search=packageName');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
             '//p[@class="textcenter"]',
@@ -317,9 +317,9 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                             array(null, null),
                             array(null, null)
                         )
-                        ->will($this->returnValue($this->_sampleComputers));
+                        ->will($this->returnValue($this->_sampleClients));
         $this->dispatch(
-            '/console/computer/index/?' .
+            '/console/client/index/?' .
             'filter1=NetworkInterface.Subnet&search1=192.0.2.0&' .
             'filter2=NetworkInterface.Netmask&search2=255.255.255.0'
         );
@@ -346,8 +346,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                             null,
                             null
                         )
-                        ->will($this->returnValue($this->_sampleComputers));
-        $this->dispatch('/console/computer/index/?filter=Software&search=%C2%99');
+                        ->will($this->returnValue($this->_sampleClients));
+        $this->dispatch('/console/client/index/?filter=Software&search=%C2%99');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
             '//p[@class="textcenter"]',
@@ -385,15 +385,15 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                             'eq',
                             '1'
                         )
-                        ->will($this->returnValue($this->_sampleComputers));
+                        ->will($this->returnValue($this->_sampleClients));
         $query = 'filter=Name&search=test&operator=eq&invert=1';
-        $this->dispatch("/console/computer/index/?customSearch=button&$query");
+        $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery(
             '//p[@class="textcenter"][contains(text(), "2 Treffer")]'
         );
         $this->assertXpathQuery(
-            "//p[@class='textcenter']/a[@href='/console/computer/search/?$query'][text()='Filter bearbeiten']"
+            "//p[@class='textcenter']/a[@href='/console/client/search/?$query'][text()='Filter bearbeiten']"
         );
         $this->assertXpathQuery(
             "//p[@class='textcenter']/a[@href='/console/group/add/?$query'][text()='In Gruppe speichern']"
@@ -441,9 +441,9 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                             'eq',
                             '1'
                         )
-                        ->will($this->returnValue($this->_sampleComputers));
+                        ->will($this->returnValue($this->_sampleClients));
         $query = 'filter=InventoryDate&search=2014-05-12&operator=eq&invert=1';
-        $this->dispatch("/console/computer/index/?customSearch=button&$query");
+        $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery(
             "//p[@class='textcenter']/a[@href='/console/group/add/?$query'][text()='In Gruppe speichern']"
@@ -483,7 +483,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         )
                         ->will($this->returnValue(array()));
         $query = 'filter=CpuType&search=value&operator=eq&invert=0';
-        $this->dispatch("/console/computer/index/?customSearch=button&$query");
+        $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
     }
 
@@ -520,7 +520,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         )
                         ->will($this->returnValue(array()));
         $query = 'filter=CpuType&search=value&operator=ne&invert=0';
-        $this->dispatch("/console/computer/index/?customSearch=button&$query");
+        $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
     }
 
@@ -557,7 +557,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         )
                         ->will($this->returnValue(array()));
         $query = 'filter=CpuType&search=value&operator=eq&invert=1';
-        $this->dispatch("/console/computer/index/?customSearch=button&$query");
+        $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
     }
 
@@ -591,9 +591,9 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                             'like',
                             '0'
                         )
-                        ->will($this->returnValue($this->_sampleComputers));
+                        ->will($this->returnValue($this->_sampleClients));
         $query = 'filter=Registry.value&search=test&operator=like&invert=0';
-        $this->dispatch("/console/computer/index/?customSearch=button&$query");
+        $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//th/a', "value");
     }
@@ -628,9 +628,9 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                             'like',
                             '0'
                         )
-                        ->will($this->returnValue($this->_sampleComputers));
+                        ->will($this->returnValue($this->_sampleClients));
         $query = 'filter=UserDefinedInfo.customField&search=test&operator=like&invert=0';
-        $this->dispatch("/console/computer/index/?customSearch=button&$query");
+        $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//th/a', "customField");
     }
@@ -665,9 +665,9 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                             'like',
                             '0'
                         )
-                        ->will($this->returnValue($this->_sampleComputers));
+                        ->will($this->returnValue($this->_sampleClients));
         $query = 'filter=UserDefinedInfo.TAG&search=test&operator=like&invert=0';
-        $this->dispatch("/console/computer/index/?customSearch=button&$query");
+        $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//th/a', "Kategorie");
     }
@@ -685,8 +685,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->never())
                         ->method('fetch');
         $query = 'filter=CpuClock&search=invalid&operator=lt&invert=1';
-        $this->dispatch("/console/computer/index/?customSearch=button&$query");
-        $this->assertRedirectTo("/console/computer/search/?customSearch=button&$query");
+        $this->dispatch("/console/client/index/?customSearch=button&$query");
+        $this->assertRedirectTo("/console/client/search/?customSearch=button&$query");
     }
 
     public function testIndexActionMessages()
@@ -698,7 +698,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('fetch')
                         ->will($this->returnValue(array()));
         $this->_disableTranslator();
-        $this->dispatch('/console/computer/index/');
+        $this->dispatch('/console/client/index/');
         $this->assertXpathQuery('//ul[@class="error"]/li[text()="error"]');
         $this->assertXpathQuery('//ul[@class="success"]/li[text()="success 42"]');
     }
@@ -735,7 +735,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/general/?id=1');
+        $this->dispatch('/console/client/general/?id=1');
         $this->assertResponseStatusCode(200);
 
         $query = "//dl/dt[text()='\n%s\n']/following::dd[1][text()='\n%s\n']";
@@ -774,7 +774,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/general/?id=1');
+        $this->dispatch('/console/client/general/?id=1');
         $this->assertXpathQuery("//dd[text()='\nserial\n'][@class='blacklisted']");
         $this->assertXpathQuery("//dd[text()='\nasset_tag\n'][not(@class)]");
     }
@@ -791,7 +791,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/general/?id=1');
+        $this->dispatch('/console/client/general/?id=1');
         $this->assertXpathQuery("//dd[text()='\nserial\n'][not(@class)]");
         $this->assertXpathQuery("//dd[text()='\nasset_tag\n'][@class='blacklisted']");
     }
@@ -806,7 +806,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/general/?id=1');
+        $this->dispatch('/console/client/general/?id=1');
         $this->assertXpathQueryContentContains('//dd', "\nuser_name @ user_domain\n");
     }
 
@@ -844,7 +844,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap(array(array('Windows', $windows))));
-        $this->dispatch('/console/computer/windows/?id=1');
+        $this->dispatch('/console/client/windows/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXPathQuery('//form[@action=""][@method="POST"]');
         $query = '//td[@class="label"][text()="%s"]/following::td[1][text()="%s"]';
@@ -884,7 +884,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap(array(array('Windows', $windows))));
-        $this->dispatch('/console/computer/windows/?id=1', 'POST', $postData);
+        $this->dispatch('/console/client/windows/?id=1', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//*[@class="error"]//*[text()="message"]');
     }
@@ -913,8 +913,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/windows/?id=1', 'POST', $postData);
-        $this->assertRedirectTo('/console/computer/windows/?id=1');
+        $this->dispatch('/console/client/windows/?id=1', 'POST', $postData);
+        $this->assertRedirectTo('/console/client/windows/?id=1');
     }
 
     public function testNetworkActionSettingsOnly()
@@ -930,7 +930,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/network/?id=1');
+        $this->dispatch('/console/client/network/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//h2[text()='\nGlobale Netzwerkkonfiguration\n']");
         $query = "//td[text()='\n%s\n']/following::td[1][text()='\n%s\n']";
@@ -970,7 +970,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/network/?id=1');
+        $this->dispatch('/console/client/network/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery("//h2[text()='\nGlobale Netzwerkkonfiguration\n']");
         $this->assertXpathQuery("//h2[text()='\nNetzwerkschnittstellen\n']");
@@ -992,7 +992,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/network/?id=1');
+        $this->dispatch('/console/client/network/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery("//h2[text()='\nGlobale Netzwerkkonfiguration\n']");
         $this->assertNotXpathQuery("//h2[text()='\nNetzwerkschnittstellen\n']");
@@ -1057,7 +1057,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/storage/?id=1');
+        $this->dispatch('/console/client/storage/?id=1');
         $this->assertResponseStatusCode(200);
         // Devices
         $this->assertXpathQueryCount('//table[1]//th', 3);
@@ -1118,7 +1118,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/storage/?id=1');
+        $this->dispatch('/console/client/storage/?id=1');
         $this->assertResponseStatusCode(200);
         // Devices
         $this->assertXpathQueryCount('//table[1]//th', 6);
@@ -1151,7 +1151,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/display/?id=1');
+        $this->dispatch('/console/client/display/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//h2[text()='\nDisplay-Controller\n']");
         $this->assertXpathQueryContentContains('//table/tr[2]/td[3]', "\n32\xC2\xA0MB\n");
@@ -1175,7 +1175,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/display/?id=1');
+        $this->dispatch('/console/client/display/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//h2[text()='\nAnzeigegeräte\n']");
         $this->assertXpathQueryCount('//th', 5);
@@ -1191,7 +1191,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/bios/?id=1');
+        $this->dispatch('/console/client/bios/?id=1');
         $this->assertResponseStatusCode(200);
         $query = "//dl/dt[text()='\n%s\n']/following::dd[1][text()='\n%s\n']";
         $this->assertXPathQuery(sprintf($query, 'Hersteller', 'manufacturer'));
@@ -1224,7 +1224,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/system/?id=1');
+        $this->dispatch('/console/client/system/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery("//h2[text()='\nRAM-Steckplätze\n']");
         $this->assertNotXpathQuery("//h2[text()='\nErweiterungssteckplätze\n']");
@@ -1254,7 +1254,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/system/?id=1');
+        $this->dispatch('/console/client/system/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//th[text()='\nTreiber-Version\n']");
         $this->assertXpathQuery("//td[text()='\ndriver\n']");
@@ -1292,7 +1292,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/system/?id=1');
+        $this->dispatch('/console/client/system/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//h2[text()='\nRAM-Steckplätze\n']");
         $this->assertXPathQuery("//tr[2]/td[2][text()='\n1024\xC2\xA0MB\n']");
@@ -1319,7 +1319,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/system/?id=1');
+        $this->dispatch('/console/client/system/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//h2[text()='\nErweiterungssteckplätze\n']");
         $this->assertXpathQueryCount('//tr', 2);
@@ -1341,7 +1341,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/printers/?id=1');
+        $this->dispatch('/console/client/printers/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryCount('//tr', 2);
     }
@@ -1377,7 +1377,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->once())
                         ->method('getItems')
                         ->will($this->returnValue(array($softwareModel, $softwareModel)));
-        $this->dispatch('/console/computer/software/?id=1');
+        $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//th/a[text()='Version']");
         $this->assertXpathQuery("//th/a[text()='Herausgeber']");
@@ -1409,7 +1409,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->once())
                         ->method('getItems')
                         ->will($this->returnValue(array($softwareModel)));
-        $this->dispatch('/console/computer/software/?id=1');
+        $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//th/a[text()='Version']");
         $this->assertNotXpathQuery("//th/a[text()='Herausgeber']");
@@ -1446,7 +1446,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->once())
                         ->method('getItems')
                         ->will($this->returnValue(array($softwareModel, $softwareModel)));
-        $this->dispatch('/console/computer/software/?id=1');
+        $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//tr[2]/td[1]/span[@title="comment1"]');
         $this->assertNotXpathQuery('//tr[3]/td[1]/span');
@@ -1485,7 +1485,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->once())
                         ->method('getItems')
                         ->will($this->returnValue(array($softwareModel, $softwareModel, $softwareModel)));
-        $this->dispatch('/console/computer/software/?id=1');
+        $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//tr[2]/td[1]/span[@class="duplicate"][text()="(2)"]');
         $this->assertNotXpathQuery('//tr[3]/td[1]/span');
@@ -1501,7 +1501,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('getItems')
                         ->with('Software', 'Name', 'asc', array('Status' => 'notIgnored'))
                         ->will($this->returnValue(array()));
-        $this->dispatch('/console/computer/software/?id=1');
+        $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
     }
 
@@ -1515,7 +1515,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('getItems')
                         ->with('Software', 'Name', 'asc', array())
                         ->will($this->returnValue(array()));
-        $this->dispatch('/console/computer/software/?id=1');
+        $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
     }
 
@@ -1534,7 +1534,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->exactly(2))
                         ->method('getItems')
                         ->will($this->onConsecutiveCalls($products, array()));
-        $this->dispatch('/console/computer/msoffice/?id=1');
+        $this->dispatch('/console/client/msoffice/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//h2[text()='\nInstallierte Microsoft Office-Produkte\n']");
         $this->assertNotXpathQuery("//h2[text()='\nUngenutzte Microsoft Office-Lizenzen\n']");
@@ -1556,7 +1556,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->exactly(2))
                         ->method('getItems')
                         ->will($this->onConsecutiveCalls(array(), $products));
-        $this->dispatch('/console/computer/msoffice/?id=1');
+        $this->dispatch('/console/client/msoffice/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery("//h2[text()='\nInstallierte Microsoft Office-Produkte\n']");
         $this->assertXpathQuery("//h2[text()='\nUngenutzte Microsoft Office-Lizenzen\n']");
@@ -1586,7 +1586,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->exactly(2))
                         ->method('getItems')
                         ->will($this->onConsecutiveCalls($products, array()));
-        $this->dispatch('/console/computer/msoffice/?id=1');
+        $this->dispatch('/console/client/msoffice/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//tr[2]/td[1]', "\nname1\n");
         $this->assertXpathQueryContentContains('//tr[3]/td[1]', "\nname2 (description)\n");
@@ -1615,7 +1615,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->exactly(2))
                         ->method('getItems')
                         ->will($this->onConsecutiveCalls($products, array()));
-        $this->dispatch('/console/computer/msoffice/?id=1');
+        $this->dispatch('/console/client/msoffice/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//tr[2]/td[1]/span');
         $this->assertXpathQueryContentContains('//tr[3]/td[1]/span[@title="GUID: guid"]', 'name2');
@@ -1627,7 +1627,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('getItems')
                         ->with('RegistryData', 'Value.Name', 'asc')
                         ->will($this->returnValue(array()));
-        $this->dispatch('/console/computer/registry/?id=1');
+        $this->dispatch('/console/client/registry/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//table');
         $this->assertXpathQuery('//p/a[@href="/console/preferences/registryvalues/"]');
@@ -1647,7 +1647,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('getItems')
                         ->with('RegistryData', 'Value.Name', 'asc')
                         ->will($this->returnValue(array($data)));
-        $this->dispatch('/console/computer/registry/?id=1');
+        $this->dispatch('/console/client/registry/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//tr[2]/td[1]/span[@title="full_path"]', "\nname\n");
         $this->assertXpathQueryContentContains('//tr[2]/td[2]', "\nvalue_inventoried\n");
@@ -1661,7 +1661,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('getItems')
                         ->with('VirtualMachine', 'Name', 'asc')
                         ->will($this->returnValue(array()));
-        $this->dispatch('/console/computer/virtualmachines/?id=1');
+        $this->dispatch('/console/client/virtualmachines/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//table');
     }
@@ -1690,7 +1690,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('getItems')
                         ->with('VirtualMachine', 'Name', 'asc')
                         ->will($this->returnValue($vms));
-        $this->dispatch('/console/computer/virtualmachines/?id=1');
+        $this->dispatch('/console/client/virtualmachines/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//tr[2]/td[6]', "\n1024 MB\n");
         $this->assertXpathQueryContentContains('//tr[3]/td[6]', "\n\n");
@@ -1711,7 +1711,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/misc/?id=1');
+        $this->dispatch('/console/client/misc/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//h2[text()='\nAudiogeräte\n']");
         $this->assertNotXpathQuery("//h2[text()='\nEingabegeräte\n']");
@@ -1753,7 +1753,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/misc/?id=1');
+        $this->dispatch('/console/client/misc/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery("//h2[text()='\nAudiogeräte\n']");
         $this->assertXpathQuery("//h2[text()='\nEingabegeräte\n']");
@@ -1779,7 +1779,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/misc/?id=1');
+        $this->dispatch('/console/client/misc/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery("//h2[text()='\nAudiogeräte\n']");
         $this->assertNotXpathQuery("//h2[text()='\nEingabegeräte\n']");
@@ -1805,7 +1805,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/misc/?id=1');
+        $this->dispatch('/console/client/misc/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery("//h2[text()='\nAudiogeräte\n']");
         $this->assertNotXpathQuery("//h2[text()='\nEingabegeräte\n']");
@@ -1829,7 +1829,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->_getControllerPlugin('FlashMessenger')->addSuccessMessage('successMessage');
         $this->_disableTranslator();
-        $this->dispatch('/console/computer/customfields/?id=1');
+        $this->dispatch('/console/client/customfields/?id=1');
         $this->assertXpathQueryContentContains(
             '//ul[@class="success"]/li',
             'successMessage'
@@ -1860,7 +1860,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('render')
              ->will($this->returnValue('<form></form>'));
-        $this->dispatch('/console/computer/customfields/?id=1');
+        $this->dispatch('/console/client/customfields/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertEmpty($this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages());
         $this->assertXpathQueryContentContains(
@@ -1887,7 +1887,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
              ->with($postData);
         $form->expects($this->once())
              ->method('render');
-        $this->dispatch('/console/computer/customfields/?id=1', 'POST', $postData);
+        $this->dispatch('/console/client/customfields/?id=1', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertEmpty($this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages());
         $this->assertXpathQueryContentContains(
@@ -1923,8 +1923,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->once())
                         ->method('setUserDefinedInfo')
                         ->with($postData['Fields']);
-        $this->dispatch('/console/computer/customfields/?id=1', 'POST', $postData);
-        $this->assertRedirectTo('/console/computer/customfields/?id=1');
+        $this->dispatch('/console/client/customfields/?id=1', 'POST', $postData);
+        $this->assertRedirectTo('/console/client/customfields/?id=1');
         $this->assertContains(
             'The information was successfully updated.',
             $this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
@@ -1945,7 +1945,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->once())
                         ->method('getInstallablePackages')
                         ->will($this->returnValue(array()));
-        $this->dispatch('/console/computer/packages/?id=1');
+        $this->dispatch('/console/client/packages/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//h2');
         $this->assertNotXpathQuery('//table');
@@ -1991,7 +1991,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->once())
                         ->method('getInstallablePackages')
                         ->will($this->returnValue(array()));
-        $this->dispatch('/console/computer/packages/?id=1');
+        $this->dispatch('/console/client/packages/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//h2', "\nAssigned packages\n");
         $this->assertXpathQueryCount('//h2', 1);
@@ -2003,7 +2003,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXpathQueryContentContains('//tr[4]/td[2]/span[@class="package_success"]', 'installiert');
         $this->assertXpathQueryContentContains('//tr[5]/td[2]/span[@class="package_error"]', '<ERROR>');
         $this->assertXpathQueryContentContains(
-            '//tr[3]/td[4]/a[@href="/console/computer/removepackage/?id=1&package=package2"]',
+            '//tr[3]/td[4]/a[@href="/console/client/removepackage/?id=1&package=package2"]',
             'entfernen'
         );
     }
@@ -2017,7 +2017,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
              ->with($packages);
         $form->expects($this->once())
              ->method('setAttribute')
-             ->with('action', '/console/computer/installpackage/?id=1');
+             ->with('action', '/console/client/installpackage/?id=1');
         $form->expects($this->once())
              ->method('render')
              ->will($this->returnValue('<form></form>'));
@@ -2034,7 +2034,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->once())
                         ->method('getInstallablePackages')
                         ->will($this->returnValue($packages));
-        $this->dispatch('/console/computer/packages/?id=1');
+        $this->dispatch('/console/client/packages/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//h2', "\nPakete installieren\n");
         $this->assertXpathQueryCount('//h2', 1);
@@ -2054,7 +2054,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                      ->method('fetch')
                      ->with(array('Name'), null, null, 'Name')
                      ->will($this->returnValue(array()));
-        $this->dispatch('/console/computer/groups/?id=1');
+        $this->dispatch('/console/client/groups/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//h2');
         $this->assertNotXpathQuery('//table');
@@ -2083,7 +2083,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
              ->with(array('Groups' => $formGroups));
         $form->expects($this->once())
              ->method('setAttribute')
-             ->with('action', '/console/computer/managegroups/?id=1');
+             ->with('action', '/console/client/managegroups/?id=1');
         $this->_computer->expects($this->once())
                         ->method('getGroups')
                         ->with(\Model_GroupMembership::TYPE_ALL)
@@ -2095,7 +2095,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                      ->method('fetch')
                      ->with(array('Name'), null, null, 'Name')
                      ->will($this->returnValue($groups));
-        $this->dispatch('/console/computer/groups/?id=1');
+        $this->dispatch('/console/client/groups/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//h2', "\nMitgliedschaften verwalten\n");
         $this->assertXpathQueryCount('//h2', 1);
@@ -2132,7 +2132,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
              ->with(array('Groups' => $formGroups));
         $form->expects($this->once())
              ->method('setAttribute')
-             ->with('action', '/console/computer/managegroups/?id=1');
+             ->with('action', '/console/client/managegroups/?id=1');
         $this->_computer->expects($this->once())
                         ->method('getGroups')
                         ->with(\Model_GroupMembership::TYPE_ALL)
@@ -2144,7 +2144,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                      ->method('fetch')
                      ->with(array('Name'), null, null, 'Name')
                      ->will($this->returnValue($groups));
-        $this->dispatch('/console/computer/groups/?id=1');
+        $this->dispatch('/console/client/groups/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//h2', "\nGruppenmitgliedschaften\n");
         $this->assertXpathQueryContentContains(
@@ -2181,7 +2181,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('render')
              ->will($this->returnValue('<form></form>'));
-        $this->dispatch('/console/computer/configuration/?id=1');
+        $this->dispatch('/console/client/configuration/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXPathQuery('//form');
     }
@@ -2204,7 +2204,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('render')
              ->will($this->returnValue('<form></form>'));
-        $this->dispatch('/console/computer/configuration/?id=1', 'POST', $postData);
+        $this->dispatch('/console/client/configuration/?id=1', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertXPathQuery('//form');
     }
@@ -2232,8 +2232,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
-        $this->dispatch('/console/computer/configuration/?id=1', 'POST', $postData);
-        $this->assertRedirectTo('/console/computer/configuration/?id=1');
+        $this->dispatch('/console/client/configuration/?id=1', 'POST', $postData);
+        $this->assertRedirectTo('/console/client/configuration/?id=1');
     }
 
     public function testDeleteActionGet()
@@ -2250,11 +2250,11 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->never())
                         ->method('delete');
-        $this->dispatch('/console/computer/delete/?id=1');
+        $this->dispatch('/console/client/delete/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
             '//p[@class="textcenter"]',
-            "\nComputer 'name' wird dauerhaft gelöscht. Fortfahren?\n"
+            "\nClient 'name' wird dauerhaft gelöscht. Fortfahren?\n"
         );
         $this->assertXPathQuery('//form');
     }
@@ -2272,8 +2272,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->never())
                         ->method('delete');
-        $this->dispatch('/console/computer/delete/?id=1', 'POST', array('no' => 'No'));
-        $this->assertRedirectTo('/console/computer/general/?id=1');
+        $this->dispatch('/console/client/delete/?id=1', 'POST', array('no' => 'No'));
+        $this->assertRedirectTo('/console/client/general/?id=1');
     }
 
     public function testDeleteActionPostYesDeleteInterfacesSuccess()
@@ -2292,11 +2292,11 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->with(false, true)
                         ->will($this->returnValue(true));
         $postData = array('yes' => 'Yes', 'DeleteInterfaces' => '1');
-        $this->dispatch('/console/computer/delete/?id=1', 'POST', $postData);
-        $this->assertRedirectTo('/console/computer/index/');
+        $this->dispatch('/console/client/delete/?id=1', 'POST', $postData);
+        $this->assertRedirectTo('/console/client/index/');
         $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
         $this->assertContains(
-            array("Computer '%s' was successfully deleted." => 'name'),
+            array("Client '%s' was successfully deleted." => 'name'),
             $flashMessenger->getCurrentSuccessMessages()
         );
         $this->assertEmpty($flashMessenger->getCurrentErrorMessages());
@@ -2318,12 +2318,12 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->with(false, false)
                         ->will($this->returnValue(false));
         $postData = array('yes' => 'Yes', 'DeleteInterfaces' => '0');
-        $this->dispatch('/console/computer/delete/?id=1', 'POST', $postData);
-        $this->assertRedirectTo('/console/computer/index/');
+        $this->dispatch('/console/client/delete/?id=1', 'POST', $postData);
+        $this->assertRedirectTo('/console/client/index/');
         $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
         $this->assertEmpty($flashMessenger->getCurrentSuccessMessages());
         $this->assertContains(
-            array("Computer '%s' could not be deleted." => 'name'),
+            array("Client '%s' could not be deleted." => 'name'),
             $flashMessenger->getCurrentErrorMessages()
         );
     }
@@ -2332,11 +2332,11 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
     {
         $this->_computer->expects($this->never())
                         ->method('unaffectPackage');
-        $this->dispatch('/console/computer/removepackage/?id=1&package=name');
+        $this->dispatch('/console/client/removepackage/?id=1&package=name');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
             '//p',
-            "Paket 'name' wird nicht mehr diesem Computer zugewiesen sein. Fortfahren?"
+            "Paket 'name' wird nicht mehr diesem Client zugewiesen sein. Fortfahren?"
         );
     }
 
@@ -2350,8 +2350,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->never())
                         ->method('unaffectPackage');
-        $this->dispatch('/console/computer/removepackage/?id=1&package=name', 'POST', array('no' => 'No'));
-        $this->assertRedirectTo('/console/computer/packages/?id=1');
+        $this->dispatch('/console/client/removepackage/?id=1&package=name', 'POST', array('no' => 'No'));
+        $this->assertRedirectTo('/console/client/packages/?id=1');
     }
 
     public function testRemovepackageActionPostYes()
@@ -2365,8 +2365,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->once())
                         ->method('unaffectPackage')
                         ->with('name');
-        $this->dispatch('/console/computer/removepackage/?id=1&package=name', 'POST', array('yes' => 'Yes'));
-        $this->assertRedirectTo('/console/computer/packages/?id=1');
+        $this->dispatch('/console/client/removepackage/?id=1&package=name', 'POST', array('yes' => 'Yes'));
+        $this->assertRedirectTo('/console/client/packages/?id=1');
     }
 
     public function testInstallpackageActionGet()
@@ -2386,8 +2386,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->never())
                         ->method('installPackage');
-        $this->dispatch('/console/computer/installpackage/?id=1');
-        $this->assertRedirectTo('/console/computer/packages/?id=1');
+        $this->dispatch('/console/client/installpackage/?id=1');
+        $this->assertRedirectTo('/console/client/packages/?id=1');
     }
 
     public function testInstallpackageActionPostInvalid()
@@ -2410,8 +2410,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->never())
                         ->method('installPackage');
-        $this->dispatch('/console/computer/installpackage/?id=1', 'POST', $postData);
-        $this->assertRedirectTo('/console/computer/packages/?id=1');
+        $this->dispatch('/console/client/installpackage/?id=1', 'POST', $postData);
+        $this->assertRedirectTo('/console/client/packages/?id=1');
     }
 
     public function testInstallpackageActionPostValid()
@@ -2436,8 +2436,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->once())
                         ->method('installPackage')
                         ->with('package2');
-        $this->dispatch('/console/computer/installpackage/?id=1', 'POST', $postData);
-        $this->assertRedirectTo('/console/computer/packages/?id=1');
+        $this->dispatch('/console/client/installpackage/?id=1', 'POST', $postData);
+        $this->assertRedirectTo('/console/client/packages/?id=1');
     }
 
     public function testManagegroupsActionGet()
@@ -2457,8 +2457,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->never())
                             ->method('setGroups');
-        $this->dispatch('/console/computer/managegroups/?id=1');
-        $this->assertRedirectTo('/console/computer/groups/?id=1');
+        $this->dispatch('/console/client/managegroups/?id=1');
+        $this->assertRedirectTo('/console/client/groups/?id=1');
     }
 
     public function testManagegroupsActionPostInvalid()
@@ -2483,8 +2483,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->never())
                         ->method('setGroupsByName');
-        $this->dispatch('/console/computer/managegroups/?id=1', 'POST', $postData);
-        $this->assertRedirectTo('/console/computer/groups/?id=1');
+        $this->dispatch('/console/client/managegroups/?id=1', 'POST', $postData);
+        $this->assertRedirectTo('/console/client/groups/?id=1');
     }
 
     public function testManagegroupsActionPostValid()
@@ -2511,8 +2511,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->once())
                         ->method('setGroupsByName')
                         ->with($postData['Groups']);
-        $this->dispatch('/console/computer/managegroups/?id=1', 'POST', $postData);
-        $this->assertRedirectTo('/console/computer/groups/?id=1');
+        $this->dispatch('/console/client/managegroups/?id=1', 'POST', $postData);
+        $this->assertRedirectTo('/console/client/groups/?id=1');
     }
 
     public function testSearchActionNoPreset()
@@ -2529,11 +2529,11 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
              ->method('setAttribute')
              ->with(
                  $this->matchesRegularExpression('#^(method|action)$#'),
-                 $this->matchesRegularExpression('#^(GET|/console/computer/index/)$#')
+                 $this->matchesRegularExpression('#^(GET|/console/client/index/)$#')
              );
         $form->expects($this->once())
              ->method('render');
-        $this->dispatch('/console/computer/search/');
+        $this->dispatch('/console/client/search/');
         $this->assertResponseStatusCode(200);
     }
 
@@ -2552,11 +2552,11 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
              ->method('setAttribute')
              ->with(
                  $this->matchesRegularExpression('#^(method|action)$#'),
-                 $this->matchesRegularExpression('#^(GET|/console/computer/index/)$#')
+                 $this->matchesRegularExpression('#^(GET|/console/client/index/)$#')
              );
         $form->expects($this->once())
              ->method('render');
-        $this->dispatch('/console/computer/search/?filter=Name&search=value');
+        $this->dispatch('/console/client/search/?filter=Name&search=value');
         $this->assertResponseStatusCode(200);
     }
 
@@ -2574,7 +2574,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
              ->will($this->returnValue('<form></form>'));
         $this->_inventoryUploader->expects($this->never())
                                  ->method('uploadFile');
-        $this->dispatch('/console/computer/import/');
+        $this->dispatch('/console/client/import/');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//p[@class="error"]');
         $this->assertXpathQueryContentContains('//h1', "\nImport lokal erzeugter Inventardaten\n");
@@ -2597,7 +2597,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
              ->method('render');
         $this->_inventoryUploader->expects($this->never())
                                  ->method('uploadFile');
-        $this->dispatch('/console/computer/import/', 'POST', $postData);
+        $this->dispatch('/console/client/import/', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//p[@class="error"]');
         $this->assertXpathQueryContentContains('//h1', "\nImport lokal erzeugter Inventardaten\n");
@@ -2636,7 +2636,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                                  ->method('uploadFile')
                                  ->with('uploaded_file')
                                  ->will($this->returnValue($response));
-        $this->dispatch('/console/computer/import/', 'POST', $postData);
+        $this->dispatch('/console/client/import/', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
             '//p[@class="error"]',
@@ -2673,8 +2673,8 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                                  ->method('uploadFile')
                                  ->with('uploaded_file')
                                  ->will($this->returnValue($response));
-        $this->dispatch('/console/computer/import/', 'POST', $postData);
-        $this->assertRedirectTo('/console/computer/index/');
+        $this->dispatch('/console/client/import/', 'POST', $postData);
+        $this->assertRedirectTo('/console/client/index/');
     }
 
     public function testExportAction()
@@ -2691,7 +2691,7 @@ class ComputerControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('toDomDocument')
                         ->will($this->returnValue($document));
 
-        $this->dispatch('/console/computer/export/?id=1');
+        $this->dispatch('/console/client/export/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset="utf-8"');
         $this->assertResponseHeaderContains('Content-Disposition', 'attachment; filename="filename.xml"');

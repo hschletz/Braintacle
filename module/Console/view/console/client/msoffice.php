@@ -21,7 +21,7 @@
 
 require 'header.php';
 
-$computer = $this->computer;
+$client = $this->client;
 
 $headers = array(
     'Name' => $this->translate('Product'),
@@ -54,7 +54,7 @@ $renderCallbacks = array(
     },
 );
 
-$installedProducts = $computer->getItems(
+$installedProducts = $client->getItems(
     'MsOfficeProduct',
     $this->order,
     $this->direction,
@@ -73,7 +73,7 @@ if (count($installedProducts)) {
     );
 }
 
-$unusedLicenses = $computer->getItems(
+$unusedLicenses = $client->getItems(
     'MsOfficeProduct',
     $this->order,
     $this->direction,

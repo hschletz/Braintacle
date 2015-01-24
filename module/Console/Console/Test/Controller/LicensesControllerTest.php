@@ -62,7 +62,7 @@ class LicensesControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
         $this->assertXPathQueryContentContains(
-            '//dd/a[@href="/console/computer/index/?' .
+            '//dd/a[@href="/console/client/index/?' .
             'columns=Name,OsName,Windows.ProductKey,Windows.ManualProductKey&' .
             'filter=Windows.ManualProductKey&order=Name&direction=asc"]',
             "\n1\n"

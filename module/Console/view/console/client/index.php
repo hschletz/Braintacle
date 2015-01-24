@@ -1,6 +1,6 @@
 <?php
 /**
- * Display list of computers
+ * Display list of clients
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -125,15 +125,15 @@ foreach ($this->columns as $column) {
 }
 
 $renderCallbacks = array(
-    'Name' => function($view, $computer) {
+    'Name' => function($view, $client) {
         return $view->htmlTag(
             'a',
-            $view->escapeHtml($computer['Name']),
+            $view->escapeHtml($client['Name']),
             array(
                 'href' => $view->consoleUrl(
-                    'computer',
+                    'client',
                     $view->jumpto,
-                    array('id' => $computer['Id'])
+                    array('id' => $client['Id'])
                 )
             ),
             true
@@ -142,7 +142,7 @@ $renderCallbacks = array(
 );
 
 $filter = $this->filter;
-$count = count($this->computers);
+$count = count($this->clients);
 if ($filter) {
     $search = $this->search;
     if ($this->isCustomSearch) {
@@ -162,7 +162,7 @@ if ($filter) {
                 . $this->htmlTag(
                     'a',
                     $this->translate('Edit filter'),
-                    array('href' => $this->consoleUrl('computer', 'search', $params)),
+                    array('href' => $this->consoleUrl('client', 'search', $params)),
                     true
                 )
                 . "\n&nbsp;&nbsp;&nbsp;\n"
@@ -181,7 +181,7 @@ if ($filter) {
     }
 } else {
     $header = sprintf(
-        $this->translate('Number of computers: %d'),
+        $this->translate('Number of clients: %d'),
         $count
     );
 }
@@ -193,7 +193,7 @@ print $this->htmlTag(
 );
 
 print $this->table(
-    $this->computers,
+    $this->clients,
     $headers,
     array('order' => $this->order, 'direction' => $this->direction),
     $renderCallbacks,
