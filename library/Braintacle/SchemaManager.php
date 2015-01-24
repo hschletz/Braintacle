@@ -84,14 +84,6 @@ class Braintacle_SchemaManager
     protected $_managedTables = array();
 
     /**
-     * Array of userdefined columns to convert
-     *
-     * This is managed by getUserdefinedInfoToConvert(). Do not use directly.
-     * @var mixed
-     **/
-    private $_userDefinedInfoToConvert = null;
-
-    /**
      * Path to Braintacle's base directory
      * @var string
      */
@@ -139,7 +131,6 @@ class Braintacle_SchemaManager
         $previousSchema = $this->getSchemaFromDatabase();
         $newSchema = $this->getSchemaFromXml($previousSchema);
         $this->updateSchema($previousSchema, $newSchema);
-        $this->convertUserdefinedInfo();
         $this->_config->schemaVersion = self::SCHEMA_VERSION;
     }
 
@@ -420,147 +411,6 @@ class Braintacle_SchemaManager
     }
 
     /**
-     * Get list of column names from accountinfo table that need conversion.
-     * @return array
-     **/
-    public function getUserdefinedInfoToConvert()
-    {
-        if ($this->_userDefinedInfoToConvert === null) {
-            // Result not cached yet. Build list.
-            if (!isset($this->_allTables['accountinfo'])) {
-                // Database has not been populated yet. Nothing to do.
-                $this->_userDefinedInfoToConvert = array();
-            } else {
-                // Get names of all columns except "hardware_id" and "tag".
-                // These never need conversion.
-                $columns = array();
-                foreach ($this->_allTables['accountinfo']->getColumns() as $column) {
-                    $name = $column->getName();
-                    if ($name != 'hardware_id' and $name != 'tag') {
-                        $columns[] = $name;
-                    }
-                }
-                // If accountinfo_config table does not exist yet, it will be
-                // created later. In that case, all columns need conversion.
-                if (isset($this->_allTables['accountinfo_config'])) {
-                    // Don't convert any column named fields_n where n matches
-                    // an ID in accountinfo_config. These are already converted.
-                    // Exception: fake date columns still need conversion.
-                    $ids = $this->_db->fetchCol(
-                        "SELECT id FROM accountinfo_config WHERE account_type = 'COMPUTERS' AND name != 'TAG'"
-                    );
-                    foreach ($ids as $id) {
-                        $key = array_search("fields_$id", $columns);
-                        if ($key !== false) {
-                            $column = $this->_allTables['accountinfo']->getColumn("fields_$id");
-                            if (!($column->getDatatype() == Nada::DATATYPE_VARCHAR and $column->getLength() == 10)) {
-                                unset($columns[$key]);
-                            }
-                        }
-                    }
-                }
-                // Store remaining list in cache.
-                $this->_userDefinedInfoToConvert = $columns;
-            }
-        }
-        return $this->_userDefinedInfoToConvert;
-    }
-
-    /**
-     * Convert userdefined info to new format
-     *
-     * Old versions of Braintacle and OCS Inventory NG used the name of a
-     * userdefined field directly as a column name in the accountinfo table,
-     * causing unresolvable SQL issues. The names are now managed in the
-     * accountinfo_config table, among some other configuration.
-     **/
-    public function convertUserdefinedInfo()
-    {
-        $db = $this->_db;
-        $table = $this->_allTables['accountinfo'];
-        $order = $db->fetchOne(
-            "SELECT MAX(show_order) FROM accountinfo_config WHERE account_type = 'COMPUTERS'"
-        );
-        foreach ($this->getUserdefinedInfoToConvert() as $name) {
-            $this->_logger->info('Converting userdefined column: ' . ucfirst($name));
-            // Use transaction that can be rolled back should one operation fail
-            $db->beginTransaction();
-            $order += 1; // Append to the end
-            $column = $table->getColumn($name);
-            switch ($column->getDatatype()) {
-                case Nada::DATATYPE_VARCHAR:
-                    if ($column->getLength() == 10) {
-                        // It's actually a date column with a nonstandard
-                        // format. Convert data and change column datatype.
-                        $this->_logger->info("Converting fake date column $name...");
-                        $date = new Zend_Date;
-                        // Use prepared statement for updating. $name is safe
-                        // for SQL because this operation is only done on
-                        // already converted columns where name is 'fields_n'.
-                        $update = $db->prepare("UPDATE accountinfo SET $name = ? WHERE hardware_id = ?");
-                        $result = $db->query("SELECT hardware_id, $name FROM accountinfo WHERE $name IS NOT NULL");
-                        while ($row = $result->fetch(Zend_Db::FETCH_ASSOC)) {
-                            if (empty($row[$name])) { // Empty string, convert to NULL
-                                $newValue = null;
-                            } else {
-                                // Convert via Zend_Date object, causing invalid
-                                // values to throw an exception
-                                $date->set($row[$name], 'MM/dd/yyyy');
-                                $newValue = $date->get('yyyy-MM-dd');
-                            }
-                            $update->execute(array($newValue, $row['hardware_id']));
-                        }
-                        $column->setDatatype(Nada::DATATYPE_DATE);
-                        $this->_logger->info('done');
-                        $type = Model_UserDefinedInfo::INTERNALTYPE_DATE;
-                    } else {
-                        $type = Model_UserDefinedInfo::INTERNALTYPE_TEXT;
-                    }
-                    break;
-                case Nada::DATATYPE_INTEGER:
-                case Nada::DATATYPE_FLOAT:
-                    // These types are marked as text in accountinfo_config.
-                    // They can still be distinguished by the column's datatype.
-                    $type = Model_UserDefinedInfo::INTERNALTYPE_TEXT;
-                    break;
-                case Nada::DATATYPE_CLOB:
-                    $type = Model_UserDefinedInfo::INTERNALTYPE_TEXTAREA;
-                    break;
-                case Nada::DATATYPE_BLOB:
-                    $type = Model_UserDefinedInfo::INTERNALTYPE_BLOB;
-                    break;
-                case Nada::DATATYPE_DATE:
-                    $type = Model_UserDefinedInfo::INTERNALTYPE_DATE;
-                    break;
-                default:
-                    throw new UnexpectedValueException(
-                        'Invalid datatype: ' . $column->getDatatype()
-                    );
-            }
-            // Create entry in accountinfo_config and rename column if necessary
-            // (do not process already converted columns, as can happen with
-            // fake date columns)
-            if (
-                !preg_match('/^fields_([0-9]+)$/', $name, $matches) or
-                $db->fetchOne('SELECT COUNT(id) FROM accountinfo_config WHERE id = ?', $matches[1]) == 0
-            ) {
-                $db->insert(
-                    'accountinfo_config',
-                    array(
-                        'type' => $type,
-                        'name' => ucfirst($name),
-                        'show_order' => $order,
-                        'account_type' => 'COMPUTERS'
-                    )
-                );
-                // Rename column to fields_n
-                $column->setName('fields_' . $db->lastInsertId('accountinfo_config', 'id'));
-            }
-            $db->commit();
-        }
-    }
-
-    /**
      * Check for database update requirement
      *
      * This method evaluates the SchemaVersion option. If it is not present or
@@ -574,15 +424,7 @@ class Braintacle_SchemaManager
     {
         // Check for presence of 'config' table first
         if (isset($this->_allTables['config'])) {
-            $oldSchemaVersion = $this->_config->schemaVersion;
-            if (is_null($oldSchemaVersion) or
-                $oldSchemaVersion < self::SCHEMA_VERSION or
-                count($this->getUserdefinedInfoToConvert()) > 0
-            ) {
-                return true;
-            } else {
-                return false;
-            }
+            return ($this->_config->schemaVersion < self::SCHEMA_VERSION);
         } else {
             // Database is empty
             return true;
