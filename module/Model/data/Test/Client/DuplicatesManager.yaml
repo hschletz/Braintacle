@@ -1,6 +1,6 @@
-# Fixture for DuplicatesTest
+# Fixture for DuplicatesManagerTest
 
-# Computer #1 is unique, computer #2 and #3 are duplicates on all criteria
+# Client #1 is unique, clients #2 and #3 are duplicates on all criteria
 hardware:
   -
     id: 1

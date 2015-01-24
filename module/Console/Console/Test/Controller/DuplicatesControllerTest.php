@@ -28,7 +28,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
      * Duplicates mock
-     * @var \Model\Computer\Duplicates
+     * @var \Model\Client\DuplicatesManager
      */
     protected $_duplicates;
 
@@ -40,7 +40,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function setUp()
     {
-        $this->_duplicates = $this->getMockBuilder('Model\Computer\Duplicates')
+        $this->_duplicates = $this->getMockBuilder('Model\Client\DuplicatesManager')
                                   ->disableOriginalconstructor()
                                   ->getMock();
         $this->_showDuplicates = $this->getMock('Console\Form\ShowDuplicates');
@@ -54,7 +54,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testService()
     {
-        $this->_overrideService('Model\Computer\Duplicates', $this->_duplicates);
+        $this->_overrideService('Model\Client\DuplicatesManager', $this->_duplicates);
         $this->_overrideService('Console\Form\ShowDuplicates', $this->_showDuplicates, 'FormElementManager');
         parent::testService();
     }

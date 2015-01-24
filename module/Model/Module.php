@@ -68,7 +68,7 @@ Feature\InitProviderInterface
                     'Model\RegistryValue' => 'Model_RegistryValue',
                 ),
                 'factories' => array(
-                    'Model\Computer\Duplicates' => 'Model\Service\Computer\DuplicatesFactory',
+                    'Model\Client\DuplicatesManager' => 'Model\Service\Client\DuplicatesManagerFactory',
                     'Model\Config' => 'Model\Service\ConfigFactory',
                     'Model\Network\DeviceManager' => 'Model\Service\Network\DeviceManagerFactory',
                     'Model\Network\SubnetManager' => 'Model\Service\Network\SubnetManagerFactory',

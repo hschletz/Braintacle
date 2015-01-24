@@ -1,6 +1,6 @@
 <?php
 /**
- * Class for managing duplicate computers
+ * Class for managing duplicate clients
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,14 +19,14 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Model\Computer;
+namespace Model\Client;
 
 use Database\Table;
 
 /**
- * Class for managing duplicate computers
+ * Class for managing duplicate clients
  *
- * Duplicates are computers with more than one entry in the database. These occur
+ * Duplicates are clients with more than one entry in the database. These occur
  * when the client's OS is reinstalled and previous agent configuration is lost
  * so that a new client ID is generated. Agent bugs and misconfiguration can
  * cause duplicates, too.
@@ -34,23 +34,21 @@ use Database\Table;
  * This class provides methods to identify duplicates based on various criteria
  * which are supposed to be unique:
  *
- * - Computer name. It is possible to have multiple computers with the same
- *   name, but this is bad and it is recommended to rename affected computers.
- * - MAC address. These are not strictly bound to computers, but to network
- *   interfaces, and can sometimes move to a different computer. Some virtual
+ * - Name. It is possible to have multiple clients with the same name, but this
+ *   is bad and it is recommended to rename affected clients.
+ * - MAC address. These are not strictly bound to clients, but to network
+ *   interfaces, and can sometimes move to a different client. Some virtual
  *   interfaces (like PPP or VPN adapters) may also have non-unique MAC
  *   addresses. For this reason, particular MAC addresses can be blacklisted via
  *   allow() to prevent them from being used as duplicate criteria.
- * - Serial. Usually hardcoded in the computer's BIOS/UEFI configuration. Some
- *   products may have no or non-unique serials which can be blacklisted via
- *   allow().
- * - Asset tag. Usually hardcoded or user provided in the computer's BIOS/UEFI
- *   configuration. May be non-unique and therefore  get blacklisted via
- *   allow().
+ * - Serial. Usually an immutable hardware property. Some products may have no
+ *   or non-unique serials which can be blacklisted via allow().
+ * - Asset tag. Usually hardcoded or user provided in BIOS/UEFI configuration.
+ *   May be non-unique and therefore get blacklisted via allow().
  *
  * Once identified, duplicates can be eliminated via merge().
  */
-class Duplicates
+class DuplicatesManager
 {
     /**
      * ComputersAndGroups prototype
@@ -203,7 +201,7 @@ class Duplicates
         $select = $sql->select();
         $select->columns(
             array(
-                'num_computers' => new \Zend\Db\Sql\Expression("COUNT($column)")
+                'num_clients' => new \Zend\Db\Sql\Expression("COUNT($column)")
             )
         );
         $select->where("$column IN($subQuery)");
@@ -211,11 +209,11 @@ class Duplicates
             $select->where('deviceid NOT IN(\'_SYSTEMGROUP_\', \'_DOWNLOADGROUP_\')');
         }
         $row = $sql->prepareStatementForSqlObject($select)->execute()->current();
-        return $row['num_computers'];
+        return $row['num_clients'];
     }
 
     /**
-     * Retrieve duplicate computers with given criteria
+     * Retrieve duplicate clients with given criteria
      *
      * @param string $criteria One of Name|MacAddress|Serial|AssetTag
      * @param string $order Sorting order (default: 'Id')
@@ -256,7 +254,7 @@ class Duplicates
         }
         if ($order != 'Id') {
             // Additional ordering by ID, to ensure multiple rows for the same
-            // computer are kept together where primary ordering allows
+            // client are kept together where primary ordering allows
             $select->order('hardware.id');
         }
 
@@ -269,60 +267,60 @@ class Duplicates
     }
 
     /**
-     * Merge computers
+     * Merge clients
      *
      * This method is used to eliminate duplicates in the database. Based on the
      * last contact, the newest entry is preserved. All older entries are
      * deleted. Some information from the older entries can be preserved on the
-     * remaining computer.
+     * remaining client.
      *
-     * @param integer[] $computers IDs of computers to merge
-     * @param bool $mergeCustomFields Preserve custom fields from oldest computer
-     * @param bool $mergeGroups Preserve manual group assignments from old computers
-     * @param bool $mergePackages Preserve package assignments from old computers missing on new computer
-     * @throws \RuntimeException if an affected computer cannot be locked
+     * @param integer[] $clients IDs of clients to merge
+     * @param bool $mergeCustomFields Preserve custom fields from oldest client
+     * @param bool $mergeGroups Preserve manual group assignments from old clients
+     * @param bool $mergePackages Preserve package assignments from old clients missing on new client
+     * @throws \RuntimeException if an affected client cannot be locked
      */
-    public function merge(array $computers, $mergeCustomFields, $mergeGroups, $mergePackages)
+    public function merge(array $clients, $mergeCustomFields, $mergeGroups, $mergePackages)
     {
         // Remove duplicate IDs
-        $computers = array_unique($computers);
-        if (count($computers) < 2) {
+        $clients = array_unique($clients);
+        if (count($clients) < 2) {
             return; // Nothing to do
         }
 
         $connection = $this->_computersAndGroups->getAdapter()->getDriver()->getConnection();
         $connection->beginTransaction();
         try {
-            // Lock all given computers and create a list sorted by LastContactDate.
-            foreach ($computers as $id) {
-                $computer = clone $this->_computer;
-                $computer->fetchById($id);
-                if (!$computer->lock()) {
-                    throw new \RuntimeException("Cannot lock computer $id");
+            // Lock all given clients and create a list sorted by LastContactDate.
+            foreach ($clients as $id) {
+                $client = clone $this->_computer;
+                $client->fetchById($id);
+                if (!$client->lock()) {
+                    throw new \RuntimeException("Cannot lock client $id");
                 }
-                $timestamp = $computer['LastContactDate']->get(\Zend_Date::TIMESTAMP);
-                $list[$timestamp] = $computer;
+                $timestamp = $client['LastContactDate']->get(\Zend_Date::TIMESTAMP);
+                $list[$timestamp] = $client;
             }
             ksort($list);
             // Now that the list is sorted, renumber the indices
-            $computers = array_values($list);
+            $clients = array_values($list);
 
-            // Newest computer will be the only one not to be deleted, remove it from the list
-            $newest = array_pop($computers);
+            // Newest client will be the only one not to be deleted, remove it from the list
+            $newest = array_pop($clients);
 
             if ($mergeCustomFields) {
-                // Overwrite custom fields with values from oldest computer
-                $newest->setUserDefinedInfo($computers[0]->getUserDefinedInfo()->getProperties());
+                // Overwrite custom fields with values from oldest client
+                $newest->setUserDefinedInfo($clients[0]->getUserDefinedInfo()->getProperties());
             }
 
             if ($mergeGroups) {
-                // Build list with all manual group assignments from old computers.
-                // If more than 1 old computer is to be merged and the computers
+                // Build list with all manual group assignments from old clients.
+                // If more than 1 old client is to be merged and the clients
                 // have different assignments for the same group, the result is
                 // undefined.
                 $groupList = array();
-                foreach ($computers as $computer) {
-                    $groups = $computer->getGroupMemberships(\Model_GroupMembership::TYPE_MANUAL, null);
+                foreach ($clients as $client) {
+                    $groups = $client->getGroupMemberships(\Model_GroupMembership::TYPE_MANUAL, null);
                     while ($group = $groups->fetchObject('Model_GroupMembership')) {
                         $groupList[$group['GroupId']] = $group['Membership'];
                     }
@@ -331,14 +329,14 @@ class Duplicates
             }
 
             if ($mergePackages) {
-                // Update the computer IDs directly. Assignments from all older
-                // computers are merged. Exclude packages that are already assigned.
+                // Update the client IDs directly. Assignments from all older
+                // clients are merged. Exclude packages that are already assigned.
                 $subQuery = 'ivalue NOT IN(SELECT ivalue FROM devices WHERE hardware_id = ? AND name = \'DOWNLOAD\')';
-                foreach ($computers as $computer) {
+                foreach ($clients as $client) {
                     $this->_clientConfig->update(
                         array('hardware_id' => $newest['Id']),
                         array(
-                            'hardware_id' => $computer['Id'],
+                            'hardware_id' => $client['Id'],
                             "name != 'DOWNLOAD_SWITCH'",
                             "name LIKE 'DOWNLOAD%'",
                             $subQuery => $newest['Id'],
@@ -347,11 +345,11 @@ class Duplicates
                 }
             }
 
-            // Delete all older computers
-            foreach ($computers as $computer) {
-                $computer->delete(true, false);
+            // Delete all older clients
+            foreach ($clients as $client) {
+                $client->delete(true, false);
             }
-            // Unlock remaining computer
+            // Unlock remaining client
             $newest->unlock();
         } catch (\Exception $exception) {
             $connection->rollback();

@@ -1,4 +1,4 @@
-# computer #2 has been merged with #3
+# client #2 has been merged with #3
 hardware:
   -
     id: 1
@@ -20,13 +20,8 @@ accountinfo:
     hardware_id: 3
     tag: "Custom3"
 
-# Package assignments should be merged (aggregated, latest takes precedence)
+# Package assignments should not be merged
 devices:
-  -
-    hardware_id: 3
-    name: "DOWNLOAD"
-    ivalue: 1
-    tvalue: "NOTIFIED"
   -
     hardware_id: 3
     name: "DOWNLOAD"
@@ -37,14 +32,12 @@ devices:
     name: "DOWNLOAD"
     ivalue: 3
     tvalue: "SUCCESS"
-  -
-    hardware_id: 3
-    name: "DOWNLOAD_FORCE"
-    ivalue: 1
-    tvalue: null
 
-# Group memberships should not be merged
+# Group memberships should be merged (aggregated)
 groups_cache:
   - hardware_id: 3
     group_id: 4
+    static: 1
+  - hardware_id: 3
+    group_id: 5
     static: 1

@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for Model\Computer\Duplicates
+ * Factory for Model\Client\DuplicatesManager
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,19 +19,19 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Model\Service\Computer;
+namespace Model\Service\Client;
 
 /**
- * Factory for Model\Computer\Duplicates
+ * Factory for Model\Client\DuplicatesManager
  */
-class DuplicatesFactory implements \Zend\ServiceManager\FactoryInterface
+class DuplicatesManagerFactory implements \Zend\ServiceManager\FactoryInterface
 {
     /**
      * @internal
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        return new \Model\Computer\Duplicates(
+        return new \Model\Client\DuplicatesManager(
             $serviceLocator->get('Database\Table\ComputersAndGroups'),
             $serviceLocator->get('Database\Table\ComputerSystemInfo'),
             $serviceLocator->get('Database\Table\NetworkInterfaces'),

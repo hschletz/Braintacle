@@ -1,4 +1,4 @@
-# computer #2 has been merged with #3
+# client #2 has been merged with #3
 hardware:
   -
     id: 1
@@ -33,11 +33,8 @@ devices:
     ivalue: 3
     tvalue: "SUCCESS"
 
-# Group memberships should be merged (aggregated)
+# Group memberships should not be merged
 groups_cache:
   - hardware_id: 3
     group_id: 4
-    static: 1
-  - hardware_id: 3
-    group_id: 5
     static: 1

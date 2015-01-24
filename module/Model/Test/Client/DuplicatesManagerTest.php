@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for Model\Computer\Duplicates
+ * Tests for Model\Client\DuplicatesManager
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,12 +19,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Model\Test\Computer;
+namespace Model\Test\Client;
 
 /**
- * Tests for Model\Computer\Duplicates
+ * Tests for Model\Client\DuplicatesManager
  */
-class DuplicatesTest extends \Model\Test\AbstractTest
+class DuplicatesManagerTest extends \Model\Test\AbstractTest
 {
     /** {@inheritdoc} */
     protected static $_tables = array(
@@ -87,7 +87,7 @@ class DuplicatesTest extends \Model\Test\AbstractTest
 
     /**
      * Common assertions for testMerge*()
-     * 
+     *
      * @param string $dataSetName Name of the dataset file to compare with merged content
      */
     public function assertTablesMerged($dataSetName)

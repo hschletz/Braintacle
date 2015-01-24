@@ -28,7 +28,7 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
 {
     /**
      * Duplicates prototype
-     * @var \Model\Computer\Duplicates
+     * @var \Model\Client\DuplicatesManager
      */
     protected $_duplicates;
 
@@ -41,11 +41,11 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Constructor
      *
-     * @param \Model\Computer\Duplicates $duplicates
+     * @param \Model\Client\DuplicatesManager $duplicates
      * @param \Console\Form\ShowDuplicates $showDuplicates
      */
     public function __construct(
-        \Model\Computer\Duplicates $duplicates,
+        \Model\Client\DuplicatesManager $duplicates,
         \Console\Form\ShowDuplicates $showDuplicates
     )
     {
