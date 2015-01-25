@@ -80,7 +80,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
 
         $columns = array(
             $database->createColumn('id_dde', \Nada::DATATYPE_INTEGER),
-            $database->createColumn('table_name', \Nada::DATATYPE_VARCHAR),
+            $database->createColumn('table_name', \Nada::DATATYPE_VARCHAR, 255),
         );
         $database->createTable('temp_files', $columns, 'id_dde');
     }
