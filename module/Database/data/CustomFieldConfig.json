@@ -64,6 +64,15 @@
             "default": null,
             "autoincrement": false,
             "comment": null
+        },
+        {
+            "name": "name_accountinfo",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "deprecated"
         }
     ],
     "primary_key": [
