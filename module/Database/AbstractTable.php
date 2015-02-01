@@ -75,7 +75,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
     {
         $logger = $this->_serviceLocator->get('Library\Logger');
         $schema = \Zend\Config\Factory::fromFile(
-            Module::getPath('data/' . $this->_getClassName() . '.json')
+            Module::getPath('data/Tables/' . $this->_getClassName() . '.json')
         );
         $database = $this->_serviceLocator->get('Database\Nada');
 
