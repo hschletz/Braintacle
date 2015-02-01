@@ -33,10 +33,10 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     protected $_formManager;
 
     /**
-     * CustomFields mock
-     * @var \Model_UserDefinedInfo
+     * CustomFieldsManager mock
+     * @var \Model\Client\CustomFieldManager
      */
-    protected $_customFields;
+    protected $_customFieldManager;
 
     /**
      * DeviceManager mock
@@ -62,7 +62,9 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     public function setUp()
     {
         $this->_formManager = $this->getMock('Zend\Form\FormElementManager');
-        $this->_customFields = $this->getMockBuilder('Model_UserDefinedInfo')->disableOriginalConstructor()->getMock();
+        $this->_customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
+                                          ->disableOriginalConstructor()
+                                          ->getMock();
         $this->_deviceManager = $this->getMockBuilder('Model\Network\DeviceManager')
                                      ->disableOriginalConstructor()
                                      ->getMock();
@@ -78,7 +80,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     {
         return new \Console\Controller\PreferencesController(
             $this->_formManager,
-            $this->_customFields,
+            $this->_customFieldManager,
             $this->_deviceManager,
             $this->_registryManager,
             $this->_config
@@ -88,7 +90,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     /** {@inheritdoc} */
     public function testService()
     {
-        $this->_overrideService('Model\Computer\CustomFields', $this->_customFields);
+        $this->_overrideService('Model\Computer\CustomFields', $this->_customFieldManager);
         parent::testService();
     }
 
@@ -504,8 +506,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeletefieldActionGet()
     {
-        $this->_customFields->expects($this->never())
-                            ->method('deleteField');
+        $this->_customFieldManager->expects($this->never())->method('deleteField');
         $this->dispatch('/console/preferences/deletefield/?name=Name');
         $this->assertResponseStatusCode(200);
         $this->assertContains("'Name'", $this->getResponse()->getContent());
@@ -513,17 +514,14 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeletefieldActionPostNo()
     {
-        $this->_customFields->expects($this->never())
-                            ->method('deleteField');
+        $this->_customFieldManager->expects($this->never())->method('deleteField');
         $this->dispatch('/console/preferences/deletefield/?name=Name', 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/preferences/customfields/');
     }
 
     public function testDeletefieldActionPostYes()
     {
-        $this->_customFields->expects($this->once())
-                            ->method('deleteField')
-                            ->with('Name');
+        $this->_customFieldManager->expects($this->once())->method('deleteField')->with('Name');
         $this->dispatch('/console/preferences/deletefield/?name=Name', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/preferences/customfields/');
     }

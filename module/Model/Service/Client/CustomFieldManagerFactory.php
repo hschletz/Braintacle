@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for PreferencesController
+ * Factory for Model\Client\CustomFieldManager
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,25 +19,20 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Console\Service;
+namespace Model\Service\Client;
 
 /**
- * Factory for PreferencesController
+ * Factory for Model\Client\CustomFieldManager
  */
-class PreferencesControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class CustomFieldManagerFactory implements \Zend\ServiceManager\FactoryInterface
 {
     /**
      * @internal
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $serviceManager = $serviceLocator->getServiceLocator();
-        return new \Console\Controller\PreferencesController(
-            $serviceManager->get('FormElementManager'),
-            $serviceManager->get('Model\Client\CustomFieldManager'),
-            $serviceManager->get('Model\Network\DeviceManager'),
-            $serviceManager->get('Model\Registry\RegistryManager'),
-            $serviceManager->get('Model\Config')
+        return new \Model\Client\CustomFieldManager(
+            $serviceLocator->get('Database\Table\CustomFieldConfig')
         );
     }
 }

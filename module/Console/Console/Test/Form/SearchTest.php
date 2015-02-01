@@ -35,10 +35,10 @@ class SearchTest extends \Console\Test\AbstractFormTest
     protected $_registryManager;
 
     /**
-     * CustonFields mock object
-     * @var \Model_UserDefinedInfo
+     * CustomFieldManager mock object
+     * @var \Model\Client\CustomFieldManager
      */
-    protected $_customFields;
+    protected $_customFieldManager;
 
     public function setUp()
     {
@@ -50,9 +50,11 @@ class SearchTest extends \Console\Test\AbstractFormTest
         $this->_registryManager->expects($this->once())
                                ->method('getValueDefinitions')
                                ->willReturn($resultSet);
-        $this->_customFields = $this->getMockBuilder('Model_UserDefinedInfo')->disableOriginalConstructor()->getMock();
-        $this->_customFields->expects($this->once())
-                            ->method('getPropertyTypes')
+        $this->_customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
+                                          ->disableOriginalConstructor()
+                                          ->getMock();
+        $this->_customFieldManager->expects($this->once())
+                            ->method('getFields')
                             ->will(
                                 $this->returnValue(
                                     array(
@@ -75,7 +77,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
             array(
                 'translator' => new \Zend\Mvc\I18n\Translator(new \Zend\Mvc\I18n\DummyTranslator),
                 'registryManager' => $this->_registryManager,
-                'customFields' => $this->_customFields,
+                'customFieldManager' => $this->_customFieldManager,
             )
         );
         $form->init();
@@ -105,16 +107,16 @@ class SearchTest extends \Console\Test\AbstractFormTest
                                 ->disableOriginalConstructor()
                                 ->getMock();
         $registryManager->method('getValueDefinitions')->willReturn($resultSet);
-        $customFields = $this->getMockBuilder('Model_UserDefinedInfo')->disableOriginalConstructor()->getMock();
-        $customFields->expects($this->once())
-                     ->method('getPropertyTypes')
-                     ->will($this->returnValue(array('test' => 'invalid')));
+        $customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
+                                   ->disableOriginalConstructor()
+                                   ->getMock();
+        $customFieldManager->expects($this->once())->method('getFields')->willReturn(array('test' => 'invalid'));
         $form = new \Console\Form\Search(
             null,
             array(
                 'translator' => new \Zend\Mvc\I18n\Translator(new \Zend\Mvc\I18n\DummyTranslator),
                 'registryManager' => $registryManager,
-                'customFields' => $customFields,
+                'customFieldManager' => $customFieldManager,
             )
         );
         $this->setExpectedException('UnexpectedValueException');

@@ -35,45 +35,6 @@
  */
 class Model_UserDefinedInfo extends Model_Abstract
 {
-
-    /**
-     * Internal identifier for text, integer and float columns
-     **/
-    const INTERNALTYPE_TEXT = 0;
-
-    /**
-     * Internal identifier for clob columns
-     **/
-    const INTERNALTYPE_TEXTAREA = 1;
-
-    /**
-     * Internal identifier for blob columns
-     **/
-    const INTERNALTYPE_BLOB = 5;
-
-    /**
-     * Internal identifier for date columns
-     **/
-    const INTERNALTYPE_DATE = 6;
-
-    /**
-     * Datatypes of all properties.
-     *
-     * Initially empty, typically managed by {@link getTypes()}.
-     * Do not use it directly - always call getTypes() or getPropertyTypes().
-     * @var array
-     */
-    static protected $_allTypesStatic = array();
-
-    /**
-     * Map of field names => column names
-     *
-     * This is the static equivalent to the property map. It gets populated by
-     * getTypes().
-     * @var array
-     */
-    static protected $_columnNames = array();
-
     /**
      * Computer this instance is linked to
      *
@@ -94,11 +55,8 @@ class Model_UserDefinedInfo extends Model_Abstract
     {
         parent::__construct();
 
-        // Construct array of datatypes
-        $this->_types = self::getTypes();
-
-        // Set up property map from $_columnNames which got populated by getTypes().
-        $this->_propertyMap = self::$_columnNames;
+        $this->_types = \Library\Application::getService('Model\Client\CustomFieldManager')->getFields();
+        $this->_propertyMap = \Library\Application::getService('Model\Client\CustomFieldManager')->getColumnMap();
 
         // Load values if a computer ID is given
         if (!is_null($computer)) {
@@ -155,258 +113,18 @@ class Model_UserDefinedInfo extends Model_Abstract
     }
 
     /**
-     * Return the datatypes of all user defined fields
-     *
-     * Reimplementation that just proxies {@link getTypes()}.
-     * @return array Associative array with the datatypes.
-     */
-    public function getPropertyTypes()
-    {
-        return Model_UserDefinedInfo::getTypes();
-    }
-
-    /**
-     * Static variant of {@link getPropertyTypes()}
-     * @return array Associative array with the datatypes
-     */
-    static function getTypes()
-    {
-        if (empty(self::$_allTypesStatic)) { // Query database only once
-            $columns = Model_Database::getNada()->getTable('accountinfo')->getColumns();
-            $statement = Model_Database::getAdapter()->query(
-                "SELECT id, type, name FROM accountinfo_config WHERE account_type = 'COMPUTERS' ORDER BY show_order"
-            );
-            // Iterate over result set and determine name and type of each
-            // field. Unsupported field types will be silently ignored.
-            while ($field = $statement->fetchObject()) {
-                $name = $field->name;
-                if ($name == 'TAG') {
-                    $columnName = 'tag';
-                    $type = 'text';
-                } else {
-                    $columnName = 'fields_' . $field->id;
-                    $column = $columns[$columnName];
-                    switch ($field->type) {
-                        case self::INTERNALTYPE_TEXT:
-                            // Can be text, integer or float. Evaluate column
-                            // datatype.
-                            switch ($column->getDatatype()) {
-                                case Nada::DATATYPE_VARCHAR:
-                                    $type = 'text';
-                                    break;
-                                case Nada::DATATYPE_INTEGER:
-                                    $type = 'integer';
-                                    break;
-                                case Nada::DATATYPE_FLOAT:
-                                    $type = 'float';
-                                    break;
-                                default:
-                                    throw new UnexpectedValueException(
-                                        'Invalid datatype: ' . $column->getDatatype()
-                                    );
-                            }
-                            break;
-                        case self::INTERNALTYPE_TEXTAREA:
-                            $type = 'clob';
-                            break;
-                        case self::INTERNALTYPE_DATE:
-                            // ocsreports creates date columns as varchar(10)
-                            // and stores values in a non-ISO format. Silently
-                            // ignore these fields. Only accept real date
-                            // columns.
-                            if ($column->getDatatype() == Nada::DATATYPE_DATE) {
-                                $type = 'date';
-                            } else {
-                                $type = '';
-                            }
-                            break;
-                        default:
-                            // Silently ignore unsupported field types.
-                            $type = '';
-                    }
-                }
-                if ($type) {
-                    self::$_allTypesStatic[$name] = $type;
-                    self::$_columnNames[$name] = $columnName;
-                }
-            }
-        }
-        return self::$_allTypesStatic;
-    }
-
-    /**
      * Static variant of {@link getPropertyType()}
      * @param string $property Property whose datatype to retrieve
      * @return string Datatype (text, integer, float, date)
+     * @deprecated Query CustomFieldManager::getFields() directly
      */
     static function getType($property)
     {
-        $types = self::getTypes();
+        $types = \Library\Application::getService('Model\Client\CustomFieldManager')->getFields();;
         if (isset($types[$property])) {
             return $types[$property];
         } else {
             throw new UnexpectedValueException('Unknown property: ' . $property);
         }
-    }
-
-    /**
-     * Compare 2 field names for equality (case insensitive)
-     *
-     * @param string $name1 First name to check
-     * @param string $name2 Second name to check
-     * @return bool True if both names resolve to the same field name
-     **/
-    public static function isNameEqual($name1, $name2)
-    {
-        return (bool) preg_match('#^' . preg_quote($name1, '#') . '$#ui', $name2);
-    }
-
-    /**
-     * Check for presence of a field with given name (case insensitive)
-     *
-     * @param string $name Field name to check
-     * @return bool True if field exists
-     **/
-    public static function fieldExists($name)
-    {
-        foreach (array_keys(self::getTypes()) as $field) {
-            if (self::isNameEqual($field, $name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Add a field
-     *
-     * @param string $name Field name
-     * @param string $type One of text, clob, integer, float or date
-     * @throws InvalidArgumentException if column exists or is a system column
-     **/
-    public function add($name, $type)
-    {
-        if (self::fieldExists($name)) {
-            throw new InvalidArgumentException("Column '$name' already exists.");
-        }
-
-        switch ($type) {
-            case 'text':
-                $datatype = Nada::DATATYPE_VARCHAR;
-                $internalType = self::INTERNALTYPE_TEXT;
-                break;
-            case 'integer':
-                $datatype = Nada::DATATYPE_INTEGER;
-                $internalType = self::INTERNALTYPE_TEXT;
-                break;
-            case 'float':
-                $datatype = Nada::DATATYPE_FLOAT;
-                $internalType = self::INTERNALTYPE_TEXT;
-                break;
-            case 'date':
-                $datatype = Nada::DATATYPE_DATE;
-                $internalType = self::INTERNALTYPE_DATE;
-                break;
-            case 'clob':
-                $datatype = Nada::DATATYPE_CLOB;
-                $internalType = self::INTERNALTYPE_TEXTAREA;
-                break;
-            default:
-                throw new InvalidArgumentException('Invalid datatype: ' . $type);
-        }
-
-        $db = Model_Database::getAdapter();
-        $nada = Model_Database::getNada();
-
-        $db->beginTransaction();
-        $order = $db->fetchOne(
-            "SELECT MAX(show_order) + 1 FROM accountinfo_config WHERE account_type = 'COMPUTERS'"
-        );
-        $db->insert(
-            'accountinfo_config',
-            array(
-                'type' => $internalType,
-                'name' => $name,
-                'show_order' => $order,
-                'account_type' => 'COMPUTERS'
-            )
-        );
-        $columnName = 'fields_' . $db->lastInsertId('accountinfo_config', 'id');
-        if ($type == 'text') {
-            $column = $nada->createColumn($columnName, $datatype, 255);
-        } else {
-            $column = $nada->createColumn($columnName, $datatype);
-        }
-        $nada->getTable('accountinfo')->addColumnObject($column);
-        $db->commit();
-
-        self::$_allTypesStatic[$name] = $type;
-    }
-
-    /**
-     * Delete a field definition and all its values
-     * @param string $field Field name
-     * @throws InvalidArgumentException if column does not exist or is a system column
-     **/
-    public function deleteField($field)
-    {
-        if ($field == 'TAG') {
-            throw new InvalidArgumentException("Cannot delete system column 'TAG'.");
-        }
-        if (!self::fieldExists($field)) {
-            throw new InvalidArgumentException("Unknown column: $field");
-        }
-
-        $db = Model_Database::getAdapter();
-        $db->beginTransaction();
-        $id = $db->fetchOne(
-            "SELECT id FROM accountinfo_config WHERE name = ? AND account_type = 'COMPUTERS'",
-            $field
-        );
-        $db->delete('accountinfo_config', array('id = ?' => $id));
-        Model_Database::getNada()->getTable('accountinfo')->dropColumn('fields_' . $id);
-        $db->commit();
-
-        unset(self::$_allTypesStatic[$field]);
-    }
-
-    /**
-     * Rename field
-     *
-     * @param string $oldName Existing field name
-     * @param string $newName New field name
-     * @throws InvalidArgumentException if column does not exist or is a system column or new name exists
-     **/
-    public function rename($oldName, $newName)
-    {
-        if ($oldName == 'TAG') {
-            throw new InvalidArgumentException("System column 'TAG' cannot be renamed.");
-        }
-        if ($newName == 'TAG') {
-            throw new InvalidArgumentException("Column cannot be renamed to reserved name 'TAG'.");
-        }
-        if (!self::fieldExists($oldName)) {
-            throw new InvalidArgumentException('Unknown column: ' . $oldName);
-        }
-        // The isNameEqual() check is required to allow renaming a field by just
-        // changing the case of one or more characters.
-        if (!self::isNameEqual($oldName, $newName) and self::fieldExists($newName)) {
-            throw new InvalidArgumentException("Column '$newName' already exists.");
-        }
-        if ($newName == $oldName) {
-            return;
-        }
-
-        $db = Model_Database::getAdapter();
-        $db->update(
-            'accountinfo_config',
-            array('name' => $newName),
-            array(
-                'name = ?' => $oldName,
-                'account_type = ?' => 'COMPUTERS'
-            )
-        );
-
-        self::$_allTypesStatic = array(); // force re-read on next usage
     }
 }

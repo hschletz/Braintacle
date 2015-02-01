@@ -29,10 +29,10 @@ use \Zend\Dom\Document\Query as Query;
 class DefineFieldsTest extends \Console\Test\AbstractFormTest
 {
     /**
-     * CustomFields mock object
-     * @var \Model_UserDefinedInfo
+     * CustomFieldManager mock object
+     * @var \Model\Client\CustomFieldManager
      */
-    protected $_fields;
+    protected $_customFieldManager;
 
     public function setUp()
     {
@@ -41,10 +41,10 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
             'name0' => 'text',
             'name1' => 'integer',
         );
-        $this->_fields = $this->getMockBuilder('Model_UserDefinedInfo')->disableOriginalConstructor()->getMock();
-        $this->_fields->expects($this->once())
-                      ->method('getPropertyTypes')
-                      ->will($this->returnValue($fields));
+        $this->_customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
+                                          ->disableOriginalConstructor()
+                                          ->getMock();
+        $this->_customFieldManager->expects($this->once())->method('getFields')->willReturn($fields);
         parent::setUp();
     }
 
@@ -53,7 +53,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
     {
         $form = new \Console\Form\DefineFields(
             null,
-            array('CustomFieldsModel' => $this->_fields)
+            array('CustomFieldManager' => $this->_customFieldManager)
         );
         $form->init();
         return $form;
@@ -420,15 +420,12 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
 
     public function testProcessRenameNoAdd()
     {
-        $fields = $this->getMockBuilder('Model_UserDefinedInfo')->disableOriginalConstructor()->getMock();
-        $fields->expects($this->once())
-               ->method('getPropertyTypes')
-               ->will($this->returnValue($fields));
-        $fields->expects($this->never())
-               ->method('add');
-        $fields->expects($this->once())
-               ->method('rename')
-               ->with('old_name', 'new_name');
+        $customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
+                                   ->disableOriginalConstructor()
+                                   ->getMock();
+        $customFieldManager->expects($this->once())->method('getFields')->willReturn(array());
+        $customFieldManager->expects($this->never())->method('addField');
+        $customFieldManager->expects($this->once())->method('renameField')->with('old_name', 'new_name');
         $data = array(
             'NewName' => '',
             'Fields' => array(
@@ -439,22 +436,19 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         $form->expects($this->once())
              ->method('getData')
              ->will($this->returnValue($data));
-        $form->setOption('CustomFieldsModel', $fields);
+        $form->setOption('CustomFieldManager', $customFieldManager);
         $form->init();
         $form->process();
     }
 
     public function testProcessAdd()
     {
-        $fields = $this->getMockBuilder('Model_UserDefinedInfo')->disableOriginalConstructor()->getMock();
-        $fields->expects($this->once())
-               ->method('getPropertyTypes')
-               ->will($this->returnValue($fields));
-        $fields->expects($this->once())
-               ->method('add')
-               ->with('new_name', 'text');
-        $fields->expects($this->never())
-               ->method('rename');
+        $customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
+                                   ->disableOriginalConstructor()
+                                   ->getMock();
+        $customFieldManager->expects($this->once())->method('getFields')->willReturn(array());
+        $customFieldManager->expects($this->once())->method('addField')->with('new_name', 'text');
+        $customFieldManager->expects($this->never())->method('renameField');
         $data = array(
             'NewName' => 'new_name',
             'NewType' => 'text',
@@ -464,7 +458,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         $form->expects($this->once())
              ->method('getData')
              ->will($this->returnValue($data));
-        $form->setOption('CustomFieldsModel', $fields);
+        $form->setOption('CustomFieldManager', $customFieldManager);
         $form->init();
         $form->process();
     }

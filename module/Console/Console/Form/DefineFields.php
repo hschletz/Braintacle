@@ -24,8 +24,8 @@ namespace Console\Form;
 /**
  * Define/delete custom fields
  *
- * The "CustomFieldsModel" option is required by init() and process(). The
- * factory automatically injects a \Model_UserDefinedInfo instance.
+ * The "CustomFieldManager" option is required by init() and process(). The
+ * factory automatically injects a \Model\Client\CustomFieldManager instance.
  */
 class DefineFields extends Form
 {
@@ -50,7 +50,7 @@ class DefineFields extends Form
         $this->add($fields);
         $inputFilterFields = new \Zend\InputFilter\InputFilter;
 
-        foreach ($this->getOption('CustomFieldsModel')->getPropertyTypes() as $name => $type) {
+        foreach ($this->getOption('CustomFieldManager')->getFields() as $name => $type) {
             if ($name == 'TAG') { // Static field, can not be edited
                 continue;
             }
@@ -208,13 +208,13 @@ class DefineFields extends Form
      **/
     public function process()
     {
-        $customFields = $this->getOption('CustomFieldsModel');
+        $customFieldManager = $this->getOption('CustomFieldManager');
         $data = $this->getData();
         if ($data['NewName']) {
-            $customFields->add($data['NewName'], $data['NewType']);
+            $customFieldManager->addField($data['NewName'], $data['NewType']);
         }
         foreach ($data['Fields'] as $oldName => $newName) {
-            $customFields->rename($oldName, $newName);
+            $customFieldManager->renameField($oldName, $newName);
         }
     }
 }

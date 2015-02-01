@@ -33,10 +33,10 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     protected $_formManager;
 
     /**
-     * CustomFields prototype
-     * @var \Model_UserDefinedInfo
+     * CustomFields manager
+     * @var \Model\Client\CustomFieldManager
      */
-    protected $_customFields;
+    protected $_customFieldManager;
 
     /**
      * Network device manager
@@ -60,21 +60,21 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      * Constructor
      *
      * @param \Zend\Form\FormElementManager $formManager
-     * @param \Model_UserDefinedInfo $customFields
+     * @param \Model\Client $customFieldManager
      * @param \Model\Network\DeviceManager $deviceManager
      * @param \Model\Registry\RegistryManager $registryManager
      * @param \Model\Config $config
      */
     public function __construct(
         \Zend\Form\FormElementManager $formManager,
-        \Model_UserDefinedInfo $customFields,
+        \Model\Client\CustomFieldManager $customFieldManager,
         \Model\Network\DeviceManager $deviceManager,
         \Model\Registry\RegistryManager $registryManager,
         \Model\Config $config
     )
     {
         $this->_formManager = $formManager;
-        $this->_customFields = $customFields;
+        $this->_customFieldManager = $customFieldManager;
         $this->_deviceManager = $deviceManager;
         $this->_registryManager = $registryManager;
         $this->_config = $config;
@@ -219,7 +219,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
         $field = $this->params()->fromQuery('name');
         if ($this->getRequest()->isPost()) {
             if ($this->params()->fromPost('yes')) {
-                $this->_customFields->deleteField($field);
+                $this->_customFieldManager->deleteField($field);
             }
             return $this->redirectToRoute('preferences', 'customfields');
         } else {

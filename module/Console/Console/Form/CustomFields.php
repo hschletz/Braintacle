@@ -24,8 +24,8 @@ namespace Console\Form;
 /**
  * Display/set values of custom fields for a computer
  *
- * The field names and types are retrieved from the \Model_UserDefinedInfo
- * object passed via the "customFields" option which is required by init().
+ * The field names and types are retrieved from the \Model\Client\CustomFieldManager
+ * object passed via the "customFieldManager" option which is required by init().
  * The factory sets this automatically.
  *
  * Integer, float and date values are formatted with the default locale upon
@@ -44,7 +44,7 @@ class CustomFields extends Form
     /** {@inheritdoc} */
     public function init()
     {
-        $this->_types = $this->getOption('customFields')->getPropertyTypes();
+        $this->_types = $this->getOption('customFieldManager')->getFields();
 
         $fields = new \Zend\Form\Fieldset('Fields');
         $inputFilterField = new \Zend\InputFilter\InputFilter;

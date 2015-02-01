@@ -38,7 +38,7 @@ class SearchFactory implements \Zend\ServiceManager\FactoryInterface
             array(
                 'translator' => $serviceManager->get('MvcTranslator'),
                 'registryManager' => $serviceManager->get('Model\Registry\RegistryManager'),
-                'customFields' => $serviceManager->get('Model\Computer\CustomFields'),
+                'customFieldManager' => $serviceManager->get('Model\Client\CustomFieldManager'),
             )
         );
     }

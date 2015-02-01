@@ -35,7 +35,7 @@ class CustomFieldsFactory implements \Zend\ServiceManager\FactoryInterface
         $serviceManager = $serviceLocator->getServiceLocator();
         return new \Console\Form\CustomFields(
             null,
-            array('customFields' => $serviceManager->get('Model\Computer\CustomFields'))
+            array('customFieldManager' => $serviceManager->get('Model\Client\CustomFieldManager'))
         );
     }
 }

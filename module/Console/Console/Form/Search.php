@@ -30,7 +30,7 @@ use Zend\Form\Element;
  *
  * - **translator:** Translator
  * - **registryManager:** \Model\Registry\RegistryManager instance
- * - **customFields:** \Model_UserDefinedInfo prototype
+ * - **customFieldManager:** \Model\Client\CustomFieldManager instance
  *
  * The factory injects these automatically.
  */
@@ -147,7 +147,7 @@ class Search extends Form
 
         // Append filters and labels for user defined info
         $template = $translator->translate('User defined: %s');
-        foreach ($this->getOption('customFields')->getPropertyTypes() as $name => $type) {
+        foreach ($this->getOption('customFieldManager')->getFields() as $name => $type) {
             $key = "UserDefinedInfo.$name";
             switch ($type) {
                 case 'text':

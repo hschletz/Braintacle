@@ -20,6 +20,7 @@
  */
 
 error_reporting(-1);
+require_once('Nada.php');
 require_once(__DIR__ . '/../../Library/Application.php');
 \Library\Application::init('Database', false);
 

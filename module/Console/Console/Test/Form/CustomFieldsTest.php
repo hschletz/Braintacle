@@ -30,26 +30,26 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
 {
     /**
      * CustomFields mock object
-     * @var \Model_UserDefinedInfo
+     * @var \Model\Client\CustomFieldManager
      */
-    protected $_customFields;
+    protected $_customFieldManager;
 
     public function setUp()
     {
-        $this->_customFields = $this->getMockBuilder('Model_UserDefinedInfo')->disableOriginalConstructor()->getMock();
-        $this->_customFields->expects($this->once())
-                            ->method('getPropertyTypes')
-                            ->will(
-                                $this->returnValue(
-                                    array(
+        $this->_customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
+                                          ->disableOriginalConstructor()
+                                          ->getMock();
+        $this->_customFieldManager->expects($this->once())
+                                  ->method('getFields')
+                                  ->willReturn(
+                                      array(
                                         'TAG' => 'text',
                                         'Clob' => 'clob',
                                         'Integer' => 'integer',
                                         'Float' => 'float',
                                         'Date' => 'date',
-                                    )
-                                )
-                            );
+                                      )
+                                  );
         parent::setUp();
     }
 
@@ -58,7 +58,7 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
     {
         $form = new \Console\Form\CustomFields(
             null,
-            array('customFields' => $this->_customFields)
+            array('customFieldManager' => $this->_customFieldManager)
         );
         $form->init();
         return $form;

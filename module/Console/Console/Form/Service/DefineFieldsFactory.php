@@ -35,7 +35,7 @@ class DefineFieldsFactory implements \Zend\ServiceManager\FactoryInterface
         $serviceManager = $serviceLocator->getServiceLocator();
         return new \Console\Form\DefineFields(
             null,
-            array('CustomFieldsModel' => $serviceManager->get('Model\Computer\CustomFields'))
+            array('CustomFieldManager' => $serviceManager->get('Model\Client\CustomFieldManager'))
         );
     }
 }
