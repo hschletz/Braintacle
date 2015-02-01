@@ -34,14 +34,6 @@ class Model_Database
      */
     protected static $_allTables;
 
-    /**
-     * Global NADA object
-     *
-     * This is managed by {@link getNada()}. Do not use directly.
-     * @var Nada_Database
-     */
-   protected static $_nada;
-
      /**
      * Get a list with all table names
      * @return array
@@ -100,11 +92,7 @@ class Model_Database
      */
     public static function getNada()
     {
-        if (!self::$_nada) {
-            require_once('Nada.php');
-            self::$_nada = Nada::factory(self::getAdapter());
-        }
-        return self::$_nada;
+        return \Library\Application::getService('Database\Nada');
     }
 
 }
