@@ -50,11 +50,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $db->setFetchMode(Zend_Db::FETCH_OBJ);
         Zend_Registry::set('db', $db);
         Zend_Db_Table::setDefaultAdapter($db);
-
-        // Force strict behavior in development mode
-        if (Application::isDevelopment() and !Application::isTest()) {
-            Model_Database::getNada()->setStrictMode();
-        }
     }
 
     protected function _initAutoload()
