@@ -33,14 +33,20 @@ function testModule($module, $filter=null)
     if ($filter) {
         $filter = ' --filter ' .escapeshellarg($filter);
     }
-    system(
-        "phpunit -c module/$module/phpunit.xml --strict --colors " .
-        "--coverage-html=doc/CodeCoverage/$module " .
-        "-d include_path=" . get_include_path() . $filter,
-        $exitCode
-    );
-    if ($exitCode) {
-        printf("\n\nUnit tests for module '%s' failed with status %d. Aborting.\n", $module, $exitCode);
+    $cmd = "phpunit -c module/$module/phpunit.xml --strict --colors " .
+           "--coverage-html=doc/CodeCoverage/$module " .
+           "-d include_path=" . get_include_path() . $filter;
+
+    // Pass descriptors explicitly to make PHPUnit 4.4 recognize a TTY which is
+    // required for color output and terminal size detection.
+    if ($handle = proc_open($cmd, array(STDIN, STDOUT, STDERR), $pipes)) {
+        $exitCode = proc_close($handle);
+        if ($exitCode) {
+            printf("\n\nUnit tests for module '%s' failed with status %d. Aborting.\n", $module, $exitCode);
+            exit(1);
+        }
+    } else {
+        print "Could not invoke PHPUnit. Aborting.\n";
         exit(1);
     }
 }
