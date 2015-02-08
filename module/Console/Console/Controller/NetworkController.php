@@ -133,7 +133,7 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
     }
 
     /**
-     * Show unknows devices
+     * Show unknown devices
      *
      * Result filtering is controlled by the optional url parameters 'subnet'
      * and 'mask'.
