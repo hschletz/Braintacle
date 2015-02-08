@@ -218,6 +218,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
         // Input data. More fields are added and tested internally
         $data = array(
+            'Id' => 1423401452,
             'Platform' => $platform,
             'Name' => 'package_new',
             'Priority' => '7',
@@ -227,18 +228,9 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
         // Callback to test the static part of package data (input values)
         $checkStaticData = function($testData) use ($data) {
-            unset($testData['Id']);
             unset($testData['Hash']);
             unset($testData['Size']);
             return ($testData === $data);
-        };
-
-        // Callback to test the added timestamp with an acceptable delta
-        // Actual timestamp is written to $timestamp
-        $now = time();
-        $checkTimestamp = function($testData) use ($data, $now, &$timestamp) {
-            $timestamp = $testData['Id'];
-            return ($timestamp - $now <= 1);
         };
 
         // Callback to test the added file properties
@@ -250,19 +242,13 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
         $storage->expects($this->once())
                 ->method('prepare')
-                ->with(
-                    $this->logicalAnd(
-                        $this->callback($checkStaticData),
-                        $this->callback($checkTimestamp)
-                    )
-                )
+                ->with($this->callback($checkStaticData))
                 ->willReturn('Path');
         $storage->expects($this->once())
                 ->method('write')
                 ->with(
                     $this->logicalAnd(
                         $this->callback($checkStaticData),
-                        $this->callback($checkTimestamp),
                         $this->callback($checkFileProperties)
                     ),
                     $archive,
@@ -270,46 +256,29 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                 )
                 ->willReturn(23);
 
-        // Config mock
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
-        $config->method('__get')
-               ->will(
-                   $this->returnValueMap(
-                       array(
-                           array('packageBaseUriHttps', 'HTTPS URL'),
-                           array('packageBaseUriHttp', 'HTTP URL'),
-                       )
-                   )
-               );
-
-        // Other dependencies
-        $archiveManager = $this->getMock('Library\ArchiveManager');
         $packages = \Library\Application::getService('Database\Table\Packages');
-        $clientConfig = \Library\Application::getService('Database\Table\ClientConfig');
-        $groupInfo = \Library\Application::getService('Database\Table\GroupInfo');
+
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')->will(
+            $this->returnValueMap(
+                array(
+                    array('Database\Table\Packages', true, $packages),
+                    array('Library\Now', true, new \DateTime('2015-02-08 14:17:32')),
+                    array('Model\Package\Storage\Direct', true, $storage),
+                )
+            )
+        );
 
         // Model mock
         $model = $this->getMockBuilder($this->_getClass())
                       ->setMethods(array('packageExists', 'autoArchive', 'delete'))
-                      ->setConstructorArgs(
-                          array(
-                              $storage,
-                              $config,
-                              $archiveManager,
-                              $packages,
-                              $clientConfig,
-                              $groupInfo
-                          )
-                      )
+                      ->setConstructorArgs(array($serviceManager))
                       ->getMock();
         $model->expects($this->once())->method('packageExists')->willReturn(false);
         $model->expects($this->once())
               ->method('autoArchive')
               ->with(
-                  $this->logicalAnd(
-                      $this->callback($checkStaticData),
-                      $this->callback($checkTimestamp)
-                  ),
+                  $this->callback($checkStaticData),
                   'Path',
                   $deleteSource
               )
@@ -324,7 +293,6 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $dataset = new \PHPUnit_Extensions_Database_DataSet_ReplacementDataSet(
             $this->_loadDataSet('Build')
         );
-        $dataset->addFullReplacement('#TIMESTAMP#', $timestamp);
         $dataset->addFullReplacement('#PLATFORM#', $platformValue);
         $dataset->addFullReplacement('#SIZE#', $size);
         $this->assertTablesEqual(
@@ -366,25 +334,23 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         );
         $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
         $storage->expects($this->never())->method('write');
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
-        $archiveManager = $this->getMock('Library\ArchiveManager');
         $packages = $this->getMockBuilder('Database\Table\Packages')->disableOriginalConstructor()->getMock();
         $packages->expects($this->never())->method('insert');
-        $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
-        $groupInfo = $this->getMockBuilder('Database\Table\GroupInfo')->disableOriginalConstructor()->getMock();
+
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')->will(
+            $this->returnValueMap(
+                array(
+                    array('Database\Table\Packages', true, $packages),
+                    array('Library\Now', true, new \DateTime),
+                    array('Model\Package\Storage\Direct', true, $storage),
+                )
+            )
+        );
 
         $model = $this->getMockBuilder($this->_getClass())
                       ->setMethods(array('packageExists'))
-                      ->setConstructorArgs(
-                          array(
-                              $storage,
-                              $config,
-                              $archiveManager,
-                              $packages,
-                              $clientConfig,
-                              $groupInfo
-                          )
-                      )
+                      ->setConstructorArgs(array($serviceManager))
                       ->getMock();
         $model->expects($this->once())->method('packageExists')->with('package1')->willReturn(true);
         try {
@@ -428,24 +394,23 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $storage->expects($this->once())->method('prepare');
         $storage->expects($this->never())->method('write');
 
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
-        $archiveManager = $this->getMock('Library\ArchiveManager');
-        $packages = \Library\Application::getService('Database\Table\Packages');
-        $clientConfig = \Library\Application::getService('Database\Table\ClientConfig');
-        $groupInfo = \Library\Application::getService('Database\Table\GroupInfo');
+        $packages = $this->getMockBuilder('Database\Table\Packages')->disableOriginalConstructor()->getMock();
+        $packages->expects($this->never())->method('insert');
+
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')->will(
+            $this->returnValueMap(
+                array(
+                    array('Database\Table\Packages', true, $packages),
+                    array('Library\Now', true, new \DateTime),
+                    array('Model\Package\Storage\Direct', true, $storage),
+                )
+            )
+        );
 
         $model = $this->getMockBuilder($this->_getClass())
                       ->setMethods(array('packageExists', 'autoArchive', 'delete'))
-                      ->setConstructorArgs(
-                          array(
-                              $storage,
-                              $config,
-                              $archiveManager,
-                              $packages,
-                              $clientConfig,
-                              $groupInfo
-                          )
-                      )
+                      ->setConstructorArgs(array($serviceManager))
                       ->getMock();
         $model->expects($this->once())->method('packageExists')->willReturn(false);
         $model->expects($this->once())->method('autoArchive')->willReturn($source);
@@ -750,8 +715,8 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $deployGroups
     )
     {
-        $now = time();
-        $this->_getModel()->updateAssignments(
+        $model = $this->_getModel(array('Library\Now' => new \DateTime('2015-02-08 14:17:29')));
+        $model->updateAssignments(
             1415958319,
             3,
             $deployNonnotified,
@@ -761,32 +726,13 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             $deployGroups
         );
 
-        // Compare entire table except date column which might differ a bit
         $dataset = $this->_loadDataSet($datasetName);
-        $datasetNoDate = new \PHPUnit_Extensions_Database_DataSet_DataSetFilter($dataset);
-        $datasetNoDate->setExcludeColumnsForTable('devices', array('comments'));
         $this->assertTablesEqual(
-            $datasetNoDate->getTable('devices'),
+            $dataset->getTable('devices'),
             $this->getConnection()->createQueryTable(
-                'devices', 'SELECT hardware_id, name, ivalue, tvalue FROM devices'
+                'devices', 'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices'
             )
         );
-
-        // Compare date column with adequate delta
-        $result = $this->getConnection()->createQueryTable('devices', 'SELECT comments FROM devices');
-        $count = $result->getRowCount();
-        $expected = $dataset->getTable('devices');
-        $this->assertEquals($expected->getRowCount(), $count);
-        for ($i = 0; $i < $count; $i++) {
-            $expectedDate = $expected->getRow($i)['comments'];
-            $date = $result->getRow($i)['comments'];
-            if ($expectedDate == '#NOW#') {
-                $date = \DateTime::createFromFormat(\Model_PackageAssignment::DATEFORMAT, $date);
-                $this->assertEquals(0, $date->getTimestamp() - $now, '', 1);
-            } else {
-                $this->assertSame($expectedDate, $date);
-            }
-        }
     }
 
     public function testUpdateAssignmentsException()

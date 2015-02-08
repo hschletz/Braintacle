@@ -17,7 +17,7 @@ download_available:
     osname: "LINUX"
     comment: "Existing package 2"
   -
-    fileid: "#TIMESTAMP#"
+    fileid: "1423401452"
     name: "package_new"
     priority: 7
     fragments: 23
@@ -35,6 +35,6 @@ download_enable:
     info_loc: "HTTPS URL"
     pack_loc: "HTTP URL"
   -
-    fileid: "#TIMESTAMP#"
+    fileid: "1423401452"
     info_loc: "HTTPS URL"
     pack_loc: "HTTP URL"

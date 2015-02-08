@@ -68,6 +68,10 @@ Feature\InitProviderInterface
                 'invokables' => array(
                     'Library\ArchiveManager' => 'Library\ArchiveManager',
                     'Library\AuthenticationService' => '\Library\Authentication\AuthenticationService',
+                    'Library\Now' => 'DateTime',
+                ),
+                'shared' => array(
+                    'Library\Now' => false,
                 ),
             ),
             'view_helpers' => array(

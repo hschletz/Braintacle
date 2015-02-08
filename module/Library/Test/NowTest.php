@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for Model\Package\PackageManager
+ * Tests for the Library\Now service
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,19 +19,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Model\Service\Package;
+namespace Library\Test;
 
-/**
- * Factory for Model\Package\PackageManager
- */
-class PackageManagerFactory implements \Zend\ServiceManager\FactoryInterface
+class NowTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @internal
-     * @codeCoverageIgnore
+     * @medium
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function testService()
     {
-        return new \Model\Package\PackageManager($serviceLocator);
+        $serviceManager = \Library\Application::getService('serviceManager');
+        // Service must not be shared so that a different result is returned
+        // each time.
+        $now1 = $serviceManager->get('Library\Now');
+        sleep(1);
+        $now2 = $serviceManager->get('Library\Now');
+        $this->assertGreaterThan($now1->getTimestamp(), $now2->getTimestamp());
     }
 }

@@ -29,66 +29,19 @@ use Zend\Db\Sql\Predicate;
 class PackageManager
 {
     /**
-     * Package storage
-     * @var \Model\Package\Storage\StorageInterface
+     * Service manager
+     * @var \Zend\ServiceManager\ServiceManager
      */
-    protected $_storage;
-
-    /**
-     * Application config
-     * @var \Model\Config
-     */
-    protected $_config;
-
-    /**
-     * Archive manager
-     * @var \Library\ArchiveManager
-     */
-    protected $_archiveManager;
-
-    /**
-     * Packages table
-     * @var \Database\Table\Packages
-     */
-    protected $_packages;
-
-    /**
-     * ClientConfig table
-     * @var \Database\Table\ClientConfig
-     */
-    protected $_clientConfig;
-
-    /**
-     * GroupInfo table
-     * @var \Database\Table\ClientConfig
-     */
-    protected $_groupInfo;
+    protected $_serviceManager;
 
     /**
      * Constructor
      *
-     * @param \Model\Package\Storage\StorageInterface $storage
-     * @param \Model\Config $config
-     * @param \Library\ArchiveManager $archiveManager
-     * @param \Database\Table\Packages $packages
-     * @param \Database\Table\ClientConfig $clientConfig
-     * @param \Database\Table\GroupInfo $groupInfo
+     * @param \Zend\ServiceManager\ServiceManager $serviceManager
      */
-    public function __construct(
-        \Model\Package\Storage\StorageInterface $storage,
-        \Model\Config $config,
-        \Library\ArchiveManager $archiveManager,
-        \Database\Table\Packages $packages,
-        \Database\Table\ClientConfig $clientConfig,
-        \Database\Table\GroupInfo $groupInfo
-    )
+    public function __construct(\Zend\ServiceManager\ServiceManager $serviceManager)
     {
-        $this->_storage = $storage;
-        $this->_config = $config;
-        $this->_archiveManager = $archiveManager;
-        $this->_packages = $packages;
-        $this->_clientConfig = $clientConfig;
-        $this->_groupInfo = $groupInfo;
+        $this->_serviceManager = $serviceManager;
     }
 
     /**
@@ -99,8 +52,9 @@ class PackageManager
      */
     public function packageExists($name)
     {
-        $sql = $this->_packages->getSql()->select()->columns(array('name'))->where(array('name' => $name));
-        return (bool) $this->_packages->selectWith($sql)->count();
+        $packages = $this->_serviceManager->get('Database\Table\Packages');
+        $sql = $packages->getSql()->select()->columns(array('name'))->where(array('name' => $name));
+        return (bool) $packages->selectWith($sql)->count();
     }
 
     /**
@@ -112,17 +66,20 @@ class PackageManager
      */
     public function getPackage($name)
     {
-        $select = $this->_packages->getSql()->select();
+        $packages = $this->_serviceManager->get('Database\Table\Packages');
+        $storage = $this->_serviceManager->get('Model\Package\Storage\Direct');
+
+        $select = $packages->getSql()->select();
         $select->where(array('name' => $name));
 
         try {
-            $packages = $this->_packages->selectWith($select);
+            $packages = $packages->selectWith($select);
             if (!$packages->count()) {
                 throw new \RuntimeException("There is no package with name '$name'");
             }
 
             $package = $packages->current();
-            $package->exchangeArray($this->_storage->readMetadata($package['Id']));
+            $package->exchangeArray($storage->readMetadata($package['Id']));
             return $package;
         } catch (\Exception $e) {
             throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
@@ -138,14 +95,18 @@ class PackageManager
      */
     public function getPackages($order=null, $direction='asc')
     {
+        $clientConfig = $this->_serviceManager->get('Database\Table\ClientConfig');
+        $groupInfo = $this->_serviceManager->get('Database\Table\GroupInfo');
+        $packages = $this->_serviceManager->get('Database\Table\Packages');
+
         // Subquery prototype for deployment statistics
-        $subquery = $this->_clientConfig->getSql()->select();
+        $subquery = $clientConfig->getSql()->select();
         $subquery->columns(array(new Predicate\Literal('COUNT(hardware_id)')))
                  ->where(
                      array('name' => 'DOWNLOAD', 'ivalue' => new \Zend\Db\Sql\Literal('fileid'))
                  );
 
-        $groups = $this->_groupInfo->getSql()->select()->columns(array('hardware_id'));
+        $groups = $groupInfo->getSql()->select()->columns(array('hardware_id'));
         $nonNotified = clone $subquery;
         $nonNotified->where(new Predicate\IsNull('tvalue'))
                     ->where(new Predicate\NotIn('hardware_id', $groups));
@@ -159,7 +120,7 @@ class PackageManager
         $error = clone $subquery;
         $error->where(new Predicate\Like('tvalue', \Model_PackageAssignment::ERROR_PREFIX . '%'));
 
-        $select = $this->_packages->getSql()->select();
+        $select = $packages->getSql()->select();
         $select->columns(
             array(
                 '*',
@@ -173,7 +134,7 @@ class PackageManager
         $package = new \Model_Package;
         $select->order(\Model_Package::getOrder($order, $direction, $package->getPropertyMap()));
 
-        return $this->_packages->selectWith($select);
+        return $packages->selectWith($select);
     }
 
     /**
@@ -183,7 +144,7 @@ class PackageManager
      */
     public function getAllNames()
     {
-        return $this->_packages->fetchCol('name');
+        return $this->_serviceManager->get('Database\Table\Packages')->fetchCol('name');
     }
 
     /**
@@ -216,11 +177,13 @@ class PackageManager
         }
 
         // Set package ID/timestamp
-        $data['Id'] =time();
+        $data['Id'] = $this->_serviceManager->get('Library\Now')->getTimestamp();
 
+        $packages = $this->_serviceManager->get('Database\Table\Packages');
+        $storage = $this->_serviceManager->get('Model\Package\Storage\Direct');
         try {
             // Obtain archive file
-            $path = $this->_storage->prepare($data);
+            $path = $storage->prepare($data);
             $file = $this->autoArchive($data, $path, $deleteSource);
             $archiveCreated = ($file != $data['FileLocation']);
 
@@ -243,10 +206,10 @@ class PackageManager
             $data['Size'] = $fileSize;
 
             // Write storage specific data
-            $data['NumFragments'] = $this->_storage->write($data, $file, $deleteSource || $archiveCreated);
+            $data['NumFragments'] = $storage->write($data, $file, $deleteSource || $archiveCreated);
 
             // Create database entries
-            $this->_packages->insert(
+            $packages->insert(
                 array(
                     'fileid' => $data['Id'],
                     'name' => $data['Name'],
@@ -287,6 +250,7 @@ class PackageManager
             return $source;
         }
 
+        $archiveManager = $this->_serviceManager->get('Library\ArchiveManager');
         switch ($data['Platform']) {
             case 'windows':
                 $type = \Library\ArchiveManager::ZIP;
@@ -295,26 +259,26 @@ class PackageManager
                 // other platforms not implemented yet
                 return $source;
         }
-        if (!$this->_archiveManager->isSupported($type)) {
+        if (!$archiveManager->isSupported($type)) {
             trigger_error("Support for archive type '$type' not available. Assuming archive.", E_USER_NOTICE);
             return $source;
         }
-        if ($this->_archiveManager->isArchive($type, $source)) {
+        if ($archiveManager->isArchive($type, $source)) {
             // Already an archive of reqired type. Do nothing.
             return $source;
         }
 
         try {
             $filename = "$path/archive";
-            $archive = $this->_archiveManager->createArchive($type, $filename);
-            $this->_archiveManager->addFile($archive, $source, $data['FileName']);
-            $this->_archiveManager->closeArchive($archive);
+            $archive = $archiveManager->createArchive($type, $filename);
+            $archiveManager->addFile($archive, $source, $data['FileName']);
+            $archiveManager->closeArchive($archive);
             if ($deleteSource) {
                 \Library\FileObject::unlink($source);
             }
         } catch (\Exception $e) {
             if (isset($archive)) {
-                $this->_archiveManager->closeArchive($archive, true);
+                $archiveManager->closeArchive($archive, true);
                 \Library\FileObject::unlink($filename);
             }
             throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
@@ -330,22 +294,25 @@ class PackageManager
      */
     public function delete($name)
     {
+        $packages = $this->_serviceManager->get('Database\Table\Packages');
+        $clientConfig = $this->_serviceManager->get('Database\Table\ClientConfig');
+        $storage = $this->_serviceManager->get('Model\Package\Storage\Direct');
         try {
-            $select = $this->_packages->getSql()->select()->columns(array('fileid'))->where(array('name' => $name));
-            $package = $this->_packages->selectWith($select)->current();
+            $select = $packages->getSql()->select()->columns(array('fileid'))->where(array('name' => $name));
+            $package = $packages->selectWith($select)->current();
             if (!$package) {
                 throw new \RuntimeException("Package '$name' does not exist");
             }
             $id = $package['Id'];
-            $this->_clientConfig->delete(
+            $clientConfig->delete(
                 array(
                     'ivalue' => $id,
                     "name != 'DOWNLOAD_SWITCH'",
                     "name LIKE 'DOWNLOAD%'",
                 )
             );
-            $this->_packages->delete(array('fileid' => $id));
-            $this->_storage->cleanup($id);
+            $packages->delete(array('fileid' => $id));
+            $storage->cleanup($id);
         } catch (\Exception $e) {
             throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
         }
@@ -381,12 +348,15 @@ class PackageManager
             return; // nothing to do
         }
 
+        $clientConfig = $this->_serviceManager->get('Database\Table\ClientConfig');
+        $groupInfo = $this->_serviceManager->get('Database\Table\GroupInfo');
+
         $where = new \Zend\Db\Sql\Where;
         $where->equalTo('ivalue', $oldPackageId);
 
         // Additional filters are only necessary if not all conditions are set
         if (!($deployNonnotified and $deploySuccess and $deployNotified and $deployError and $deployGroups)) {
-            $groups = $this->_groupInfo->getSql()->select()->columns(array('hardware_id'));
+            $groups = $groupInfo->getSql()->select()->columns(array('hardware_id'));
             $filters = new \Zend\Db\Sql\Where(null, \Zend\Db\Sql\Where::COMBINED_BY_OR);
             if ($deployNonnotified) {
                 $filters->isNull('tvalue')->and->notIn('hardware_id', $groups);
@@ -406,26 +376,27 @@ class PackageManager
             $where->addPredicate($filters);
         }
 
+        $now = $this->_serviceManager->get('Library\Now')->format(\Model_PackageAssignment::DATEFORMAT);
         try{
             // Remove DOWNLOAD_* options from updated assignments
-            $subquery = $this->_clientConfig->getSql()
-                                            ->select()
-                                            ->columns(array('hardware_id'))
-                                            ->where(array('name' => 'DOWNLOAD', $where));
+            $subquery = $clientConfig->getSql()
+                                     ->select()
+                                     ->columns(array('hardware_id'))
+                                     ->where(array('name' => 'DOWNLOAD', $where));
             $delete = new \Zend\Db\Sql\Where;
             $delete->equalTo('ivalue', $oldPackageId)
                    ->in('hardware_id', $subquery)
                    ->notEqualTo('name', 'DOWNLOAD_SWITCH')
                    ->like('name', 'DOWNLOAD_%');
 
-            $this->_clientConfig->delete($delete);
+            $clientConfig->delete($delete);
 
             // Update package ID and reset status
-            $this->_clientConfig->update(
+            $clientConfig->update(
                 array(
                     'ivalue' => $newPackageId,
                     'tvalue' => \Model_PackageAssignment::NOT_NOTIFIED,
-                    'comments' => date(\Model_PackageAssignment::DATEFORMAT),
+                    'comments' => $now,
                 ),
                 array('name' => 'DOWNLOAD', $where)
             );

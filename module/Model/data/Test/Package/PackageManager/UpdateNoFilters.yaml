@@ -5,31 +5,31 @@ devices:
     name: "DOWNLOAD"
     ivalue: 3
     tvalue: null
-    comments: "#NOW#"
+    comments: "Sun Feb 08 14:17:29 2015"
   -
     hardware_id: 2
     name: "DOWNLOAD"
     ivalue: 3
     tvalue: null
-    comments: "#NOW#"
+    comments: "Sun Feb 08 14:17:29 2015"
   -
     hardware_id: 3
     name: "DOWNLOAD"
     ivalue: 3
     tvalue: null
-    comments: "#NOW#"
+    comments: "Sun Feb 08 14:17:29 2015"
   -
     hardware_id: 4
     name: "DOWNLOAD"
     ivalue: 3
     tvalue: null
-    comments: "#NOW#"
+    comments: "Sun Feb 08 14:17:29 2015"
   -
     hardware_id: 5
     name: "DOWNLOAD"
     ivalue: 3
     tvalue: null
-    comments: "#NOW#"
+    comments: "Sun Feb 08 14:17:29 2015"
   -
     hardware_id: 1
     name: "OTHER"
