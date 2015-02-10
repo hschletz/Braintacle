@@ -82,7 +82,7 @@ class SchemaManager
      */
     public function updateTables()
     {
-        $glob = new \GlobIterator(Module::getPath('data') . '/*.json');
+        $glob = new \GlobIterator(Module::getPath('data/Tables') . '/*.json');
         foreach ($glob as $fileinfo) {
             $tableClass = $fileinfo->getBaseName('.json');
             $table = \Library\Application::getService('Database\Table\\' . $tableClass);
