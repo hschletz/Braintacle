@@ -240,11 +240,11 @@ msgstr ""
 msgid "Effective"
 msgstr ""
 
-#: Console/Form/ClientConfig.php Console/Form/DeleteComputer.php
+#: Console/Form/ClientConfig.php Console/Form/DeleteClient.php
 msgid "Yes"
 msgstr ""
 
-#: Console/Form/ClientConfig.php Console/Form/DeleteComputer.php
+#: Console/Form/ClientConfig.php Console/Form/DeleteClient.php
 msgid "No"
 msgstr ""
 
@@ -295,7 +295,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: Console/Form/DeleteComputer.php
+#: Console/Form/DeleteClient.php
 msgid "Delete interfaces from network listing"
 msgstr ""
 

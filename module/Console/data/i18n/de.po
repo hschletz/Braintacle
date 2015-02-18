@@ -19,7 +19,7 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
-#: Console/Controller/ComputerController.php
+#: Console/Controller/ClientController.php
 #, php-format
 msgid "Client '%s' could not be deleted."
 msgstr "Client '%s' konnte nicht gelöscht werden."
@@ -247,7 +247,7 @@ msgstr "Maximale Paket-Priorität"
 msgid "Network scanning"
 msgstr "Netzwerk-Scans"
 
-#: Console/Form/ClientConfig.php Console/Form/DeleteComputer.php
+#: Console/Form/ClientConfig.php Console/Form/DeleteClient.php
 msgid "No"
 msgstr "Nein"
 
@@ -259,7 +259,7 @@ msgstr "Timeout (in Tagen)"
 msgid "Use SNMP"
 msgstr "SNMP verwenden"
 
-#: Console/Form/ClientConfig.php Console/Form/DeleteComputer.php
+#: Console/Form/ClientConfig.php Console/Form/DeleteClient.php
 msgid "Yes"
 msgstr "Ja"
 
@@ -298,7 +298,7 @@ msgstr "Langer Text"
 msgid "Text"
 msgstr "Text"
 
-#: Console/Form/DeleteComputer.php
+#: Console/Form/DeleteClient.php
 msgid "Delete interfaces from network listing"
 msgstr "Interfaces aus Netzwerkliste löschen"
 
