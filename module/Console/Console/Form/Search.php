@@ -193,7 +193,7 @@ class Search extends Form
         $this->add($invert);
 
         $submit = new \Library\Form\Element\Submit('customSearch');
-        $submit->setText('Search');
+        $submit->setLabel('Search');
         $this->add($submit);
 
         $inputFilter = new \Zend\InputFilter\InputFilter;

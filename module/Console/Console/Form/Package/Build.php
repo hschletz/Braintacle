@@ -215,7 +215,7 @@ class Build extends \Console\Form\Form
 
         // Submit button
         $submit = new \Library\Form\Element\Submit('Submit');
-        $submit->setText('Build');
+        $submit->setLabel('Build');
         $this->add($submit);
 
         $this->setInputFilter($inputFilter);

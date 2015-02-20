@@ -26,27 +26,37 @@ namespace Library\Form\Element;
  *
  * HTML submit buttons differ from other form elements in direct support for a
  * text label (via "value" attribute) instead of having to provide a label
- * outside the element markup. \Zend\Form\Element strictly separates the "value"
- * property (mapping to the "value" attribute) from the "label" property
- * (referring to the external label) regardless of element type.
+ * outside the element markup. Unlike other elements, the "value" attribute is
+ * not really part of the data layer but of the view layer. This inconsistency
+ * causes several problems:
  *
- * This is a problem when extracting translatable strings via xgettext:
- * setLabel() is typically undesirable for submit buttons, while setValue() is
- * not suitable for automatic string extraction because its argument is
- * typically not translatable for other element types.
+ * 1. The element and its "value" attribute's content is part of the submitted
+ * form data and treated like any other form element. This may overwrite
+ * existing button labels, and the view helper will try to translate an already
+ * translated string.
  *
- * This class extends \Zend\Form\Element\Submit with a new setText() method
- * which proxies to setValue() and can be made recognizable by xgettext.
+ * 2. \Zend\Form\Element strictly separates the "value" property (mapping to the
+ * "value" attribute) from the "label" property (referring to the external
+ * label) regardless of element type. This is a problem when extracting
+ * translatable strings via xgettext: setLabel() is typically undesirable for
+ * submit buttons, while setValue() is not suitable for automatic string
+ * extraction because its argument is typically not translatable for other
+ * element types.
+ *
+ * This class reimplements setValue() with a no-op, ignoring submitted form
+ * data. The button label must be set via the reimplemented setLabel().
  */
 class Submit extends \Zend\Form\Element\Submit
 {
-    /**
-     * Proxy to setValue()
-     *
-     * @param string $text Button text
-     */
-    public function setText($text)
+    /** {@inheritdoc} */
+    public function setValue($value)
     {
-        return $this->setValue($text);
+        return $this;
+    }
+
+    /** {@inheritdoc} */
+    public function setLabel($label)
+    {
+        return parent::setValue($label);
     }
 }

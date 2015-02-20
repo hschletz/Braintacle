@@ -36,7 +36,7 @@ class Import extends Form
         $this->add($file);
 
         $submit = new \Library\Form\Element\Submit('Submit');
-        $submit->setText('Import');
+        $submit->setLabel('Import');
         $this->add($submit);
 
         $inputFilter = new \Zend\InputFilter\InputFilter;

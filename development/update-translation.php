@@ -37,7 +37,7 @@ require_once __DIR__ . '/../module/Library/FileObject.php';
 $modules = array(
     'Console' => array(
         'subdirs' => array('Console/Controller', 'Console/Form', 'Console/Navigation', 'Console/View/Helper', 'view'),
-        'keywords' => array('translate', 'setLabel', 'setText', 'setMessage', 'addSuccessMessage', 'addErrorMessage'),
+        'keywords' => array('translate', 'setLabel', 'setMessage', 'addSuccessMessage', 'addErrorMessage'),
         'translationPath' => 'data/i18n',
     ),
     'Library' => array(

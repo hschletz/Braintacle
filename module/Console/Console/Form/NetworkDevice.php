@@ -47,7 +47,7 @@ class NetworkDevice extends Form
         $this->add($description);
 
         $submit = new \Library\Form\Element\Submit('Submit');
-        $submit->setText('OK');
+        $submit->setLabel('OK');
         $this->add($submit);
 
         $inputFilter = new \Zend\InputFilter\InputFilter;

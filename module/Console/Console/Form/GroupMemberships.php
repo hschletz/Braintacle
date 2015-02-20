@@ -38,7 +38,7 @@ class GroupMemberships extends Form
     public function init()
     {
         $submit = new \Library\Form\Element\Submit('Submit');
-        $submit->setText('OK');
+        $submit->setLabel('OK');
         $this->add($submit);
     }
 

@@ -126,7 +126,7 @@ class ClientConfig extends Form
         $inputFilter->add($inputFilterScan, 'Scan');
 
         $submit = new \Library\Form\Element\Submit('Submit');
-        $submit->setText('OK');
+        $submit->setLabel('OK');
         $this->add($submit);
 
         $this->setInputFilter($inputFilter);

@@ -92,7 +92,7 @@ class DefineFields extends Form
         $this->add($newType);
 
         $submit = new \Library\Form\Element\Submit('Submit');
-        $submit->setText('Change');
+        $submit->setLabel('Change');
         $this->add($submit);
 
         $callback = new \Zend\Validator\Callback;

@@ -33,7 +33,7 @@ class Assign extends \Console\Form\Form
     public function init()
     {
         $submit = new \Library\Form\Element\Submit('Submit');
-        $submit->setText('Install');
+        $submit->setLabel('Install');
         $this->add($submit);
     }
 

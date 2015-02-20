@@ -75,7 +75,7 @@ class NetworkDeviceTypes extends Form
         $this->add($add);
 
         $submit = new \Library\Form\Element\Submit('Submit');
-        $submit->setText('Change');
+        $submit->setLabel('Change');
         $this->add($submit);
 
         $callback = new \Zend\Validator\Callback;

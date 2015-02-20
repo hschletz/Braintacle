@@ -114,7 +114,7 @@ class ManageRegistryValues extends Form
         $fieldsetNew->add($newValue);
 
         $submit = new \Library\Form\Element\Submit('submit');
-        $submit->setText('Change');
+        $submit->setLabel('Change');
         $fieldsetNew->add($submit);
 
         $this->add($fieldsetNew);

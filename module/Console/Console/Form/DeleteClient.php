@@ -41,11 +41,11 @@ class DeleteClient extends Form
         $this->add($deleteInterfaces);
 
         $yes = new \Library\Form\Element\Submit('yes');
-        $yes->setText('Yes');
+        $yes->setLabel('Yes');
         $this->add($yes);
 
         $no = new \Library\Form\Element\Submit('no');
-        $no->setText('No');
+        $no->setLabel('No');
         $this->add($no);
     }
 

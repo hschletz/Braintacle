@@ -36,7 +36,7 @@ abstract class AbstractForm extends \Console\Form\Form
         $this->add($preferences);
 
         $submit = new \Library\Form\Element\Submit('Submit');
-        $submit->setText('Set');
+        $submit->setLabel('Set');
         $this->add($submit);
     }
 

@@ -47,6 +47,6 @@ class Add extends AbstractForm
             )
         );
 
-        $this->get('Submit')->setText('Add');
+        $this->get('Submit')->setLabel('Add');
     }
 }

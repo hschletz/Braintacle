@@ -26,12 +26,17 @@ namespace Library\Test\Form\Element;
  */
 class SubmitTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Test setText() method
-     */
-    public function testSetText()
+    public function testSetValue()
     {
         $submit = new \Library\Form\Element\Submit;
-        $this->assertEquals('test', $submit->setText('test')->getValue());
+        $submit->setLabel('test');
+        $submit->setValue('ignored');
+        $this->assertEquals('test', $submit->getValue());
+    }
+
+    public function testSetLabel()
+    {
+        $submit = new \Library\Form\Element\Submit;
+        $this->assertEquals('test', $submit->setLabel('test')->getValue());
     }
 }

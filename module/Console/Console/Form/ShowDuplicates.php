@@ -58,7 +58,7 @@ class ShowDuplicates extends Form
         $this->add($mergePackages);
 
         $submit = new \Library\Form\Element\Submit('submit');
-        $submit->setText('Merge selected computers');
+        $submit->setLabel('Merge selected computers');
         $this->add($submit);
 
         // Checkboxes for "computers[]" are generated manually, without

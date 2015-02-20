@@ -88,7 +88,7 @@ class CustomFields extends Form
         $this->add($fields);
 
         $submit = new \Library\Form\Element\Submit('Submit');
-        $submit->setText('Change');
+        $submit->setLabel('Change');
         $this->add($submit);
 
         $inputFilter = new \Zend\InputFilter\InputFilter;

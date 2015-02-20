@@ -78,7 +78,7 @@ class AddToGroup extends Form
         $this->add($existingGroup);
 
         $submit = new \Library\Form\Element\Submit('Submit');
-        $submit->setText('OK');
+        $submit->setLabel('OK');
         $this->add($submit);
 
         $lengthValidator = new \Zend\Validator\Callback;

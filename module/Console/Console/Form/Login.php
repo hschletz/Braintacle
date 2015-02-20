@@ -42,7 +42,7 @@ class Login extends Form
         $this->add($password);
 
         $submit = new \Library\Form\Element\Submit('Submit');
-        $submit->setText('Login');
+        $submit->setLabel('Login');
         $this->add($submit);
     }
 

@@ -53,9 +53,9 @@ class DeleteClientTest extends \Console\Test\AbstractFormTest
         $deleteInterfaces = $this->_form->get('DeleteInterfaces');
         $this->assertInstanceOf('Zend\Form\Element\Checkbox', $deleteInterfaces);
         $yes = $this->_form->get('yes');
-        $this->assertInstanceOf('Zend\Form\Element\Submit', $yes);
+        $this->assertInstanceOf('Library\Form\Element\Submit', $yes);
         $no = $this->_form->get('no');
-        $this->assertInstanceOf('Zend\Form\Element\Submit', $no);
+        $this->assertInstanceOf('Library\Form\Element\Submit', $no);
     }
 
     public function testDeleteInterfacesDefaultChecked()
