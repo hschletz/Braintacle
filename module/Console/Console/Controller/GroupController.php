@@ -27,10 +27,10 @@ namespace Console\Controller;
 class GroupController extends \Zend\Mvc\Controller\AbstractActionController
 {
     /**
-     * Group prototype
-     * @var \Model_Group
+     * Group manager
+     * @var \Model\Group\GroupManager
      */
-    protected $_group;
+    protected $_groupManager;
 
     /**
      * Computer prototype
@@ -65,21 +65,21 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Constructor
      *
-     * @param \Model_Group $group
+     * @param \Model\Group\GroupManager $groupManager
      * @param \Model_Computer $computer
      * @param \Console\Form\Package\Assign $packageAssignmentForm
      * @param \Console\Form\AddToGroup $addToGroupForm
      * @param \Console\Form\ClientConfig $clientConfigForm
      */
     public function __construct(
-        \Model_Group $group,
+        \Model\Group\GroupManager $groupManager,
         \Model_Computer $computer,
         \Console\Form\Package\Assign $packageAssignmentForm,
         \Console\Form\AddToGroup $addToGroupForm,
         \Console\Form\ClientConfig $clientConfigForm
     )
     {
-        $this->_group = $group;
+        $this->_groupManager = $groupManager;
         $this->_computer = $computer;
         $this->_packageAssignmentForm = $packageAssignmentForm;
         $this->_addToGroupForm = $addToGroupForm;
@@ -96,7 +96,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
         $action = $this->getEvent()->getRouteMatch()->getParam('action');
         if ($action != 'index' and $action != 'add') {
             try {
-                $this->_currentGroup = $this->_group->fetchByName(
+                $this->_currentGroup = $this->_groupManager->getGroup(
                     $request->getQuery('name')
                 );
             } catch(\RuntimeException $e) {
@@ -117,8 +117,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
     {
         $sorting = $this->getOrder('Name', 'asc');
         return array(
-            'groups' => $this->_group->fetch(
-                array('Name', 'CreationDate', 'Description'),
+            'groups' => $this->_groupManager->getGroups(
                 null,
                 null,
                 $sorting['order'],
@@ -324,13 +323,14 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
         $name = $this->_currentGroup['Name'];
         if ($this->getRequest()->isPost()) {
             if ($this->params()->fromPost('yes')) {
-                if ($this->_currentGroup->delete()) {
+                try {
+                    $this->_groupManager->deleteGroup($this->_currentGroup);
                     $this->flashMessenger()->addSuccessMessage(
                         array($this->_('Group \'%s\' was successfully deleted.') => $name)
                     );
-                } else {
+                } catch (\Model\Group\RuntimeException $e) {
                     $this->flashMessenger()->addErrorMessage(
-                        array($this->_('Group \'%s\' could not be deleted.') => $name)
+                        array($this->_('Group \'%s\' could not be deleted. Try again later.') => $name)
                     );
                 }
                 return $this->redirectToRoute('group', 'index');

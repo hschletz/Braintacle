@@ -48,8 +48,8 @@ msgstr "Die ausgewählten Computer wurden zusammengeführt."
 
 #: Console/Controller/GroupController.php
 #, php-format
-msgid "Group '%s' could not be deleted."
-msgstr "Gruppe '%s' konnte nicht gelöscht werden."
+msgid "Group '%s' could not be deleted. Try again later."
+msgstr "Gruppe '%s' konnte nicht gelöscht werden. Bitte erneut versuchen."
 
 #: Console/Controller/GroupController.php
 #, php-format

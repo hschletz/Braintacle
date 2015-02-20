@@ -108,7 +108,7 @@ class Model_GroupMembership extends Model_Abstract
         $direction='asc'
     )
     {
-        Model_Group::updateAll();
+        \Library\Application::getService('Model\Group\GroupManager')->updateCache();
 
         $db = Model_Database::getAdapter();
 

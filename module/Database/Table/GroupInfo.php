@@ -33,6 +33,9 @@ class GroupInfo extends \Database\AbstractTable
     public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'groups';
+        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
+            null, $serviceLocator->get('Model\Group\Group')
+        );
         parent::__construct($serviceLocator);
     }
 }

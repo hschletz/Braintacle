@@ -24,8 +24,8 @@ namespace Console\Form;
 /**
  * Add search results to a group
  *
- * The "GroupModel" option is required for init() and process(). The factory
- * automatically injects a \Model_Group instance.
+ * The "GroupManager" option is required for init() and process(). The factory
+ * automatically injects a \Model\Group\GroupManager instance.
  */
 class AddToGroup extends Form
 {
@@ -71,7 +71,7 @@ class AddToGroup extends Form
         $existingGroup = new \Library\Form\Element\SelectSimple('ExistingGroup');
         $existingGroup->setLabel('Group');
         $groups = array();
-        foreach ($this->getOption('GroupModel')->fetch(array('Name'), null, null, 'Name') as $group) {
+        foreach ($this->getOption('GroupManager')->getGroups(null, null, 'Name') as $group) {
             $groups[] = $group['Name'];
         }
         $existingGroup->setValueOptions($groups);
@@ -263,13 +263,15 @@ class AddToGroup extends Form
     public function process($filter, $search, $operator, $invert)
     {
         $data = $this->getData();
+        $groupManager = $this->getOption('GroupManager');
         if ($data['Where'] == 'new') {
-            $group = $this->getOption('GroupModel')->create(
+            $groupManager->createGroup(
                 $data['NewGroup'],
                 $data['Description']
             );
+            $group = $groupManager->getGroup($data['NewGroup']);
         } else {
-            $group = $this->getOption('GroupModel')->fetchByName($data['ExistingGroup']);
+            $group = $groupManager->getGroup($data['ExistingGroup']);
         }
         $group->setMembersFromQuery($data['What'], $filter, $search, $operator, $invert);
         return $group;

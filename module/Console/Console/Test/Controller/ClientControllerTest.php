@@ -33,10 +33,10 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     protected $_computer;
 
     /**
-     * Group mock
-     * @var \Model_Group
+     * Group manager mock
+     * @var \Model\Group\GroupManager
      */
-    protected $_group;
+    protected $_groupManager;
 
     /**
      * Form manager mock
@@ -102,8 +102,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function setUp()
     {
         $this->_computer = $this->getMockBuilder('Model_Computer')->disableOriginalConstructor()->getMock();
-        $this->_group = $this->getMockBuilder('Model_Group')->disableOriginalConstructor()->getMock();
-
+        $this->_groupManager = $this->getMockBuilder('Model\Group\GroupManager')
+                                    ->disableOriginalConstructor()
+                                    ->getMock();
         $this->_formManager = new \Zend\Form\FormElementManager;
         $this->_formManager->setService('Console\Form\Package\Assign', $this->getMock('Console\Form\Package\Assign'));
         $this->_formManager->setService('Console\Form\ClientConfig', $this->getMock('Console\Form\ClientConfig'));
@@ -130,7 +131,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         return new \Console\Controller\ClientController(
             $this->_computer,
-            $this->_group,
+            $this->_groupManager,
             $this->_formManager,
             $this->_config,
             $this->_inventoryUploader
@@ -2043,6 +2044,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testGroupsActionNoGroups()
     {
+        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet->initialize(array());
         $form = $this->_formManager->get('Console\Form\GroupMemberships');
         $form->expects($this->never())
              ->method('render');
@@ -2050,10 +2053,10 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('getGroups')
                         ->with(\Model_GroupMembership::TYPE_ALL)
                         ->will($this->returnValue(array()));
-        $this->_group->expects($this->once())
-                     ->method('fetch')
-                     ->with(array('Name'), null, null, 'Name')
-                     ->will($this->returnValue(array()));
+        $this->_groupManager->expects($this->once())
+                           ->method('getGroups')
+                           ->with(null, null, 'Name')
+                           ->willReturn($resultSet);
         $this->dispatch('/console/client/groups/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//h2');
@@ -2066,6 +2069,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             array('Name' => 'group1'),
             array('Name' => 'group2'),
         );
+        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet->initialize($groups);
         $membership = array(
             'GroupName' => 'group1',
             'Membership' => \Model_GroupMembership::TYPE_EXCLUDED
@@ -2091,10 +2096,10 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap(array(array('Id', 1))));
-        $this->_group->expects($this->once())
-                     ->method('fetch')
-                     ->with(array('Name'), null, null, 'Name')
-                     ->will($this->returnValue($groups));
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroups')
+                            ->with(null, null, 'Name')
+                            ->willReturn($resultSet);
         $this->dispatch('/console/client/groups/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//h2', "\nMitgliedschaften verwalten\n");
@@ -2109,6 +2114,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             array('Name' => 'group1'),
             array('Name' => 'group2'),
         );
+        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet->initialize($groups);
         $memberships = array(
             array(
                 'GroupName' => 'group1',
@@ -2140,10 +2147,10 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap(array(array('Id', 1))));
-        $this->_group->expects($this->once())
-                     ->method('fetch')
-                     ->with(array('Name'), null, null, 'Name')
-                     ->will($this->returnValue($groups));
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroups')
+                            ->with(null, null, 'Name')
+                            ->willReturn($resultSet);
         $this->dispatch('/console/client/groups/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//h2', "\nGruppenmitgliedschaften\n");

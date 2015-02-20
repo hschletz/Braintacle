@@ -58,7 +58,7 @@ msgstr ""
 
 #: Console/Controller/GroupController.php
 #, php-format
-msgid "Group '%s' could not be deleted."
+msgid "Group '%s' could not be deleted. Try again later."
 msgstr ""
 
 #: Console/Controller/PackageController.php

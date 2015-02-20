@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for GroupController
+ * Factory for Model\Group\GroupManager
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,26 +19,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Console\Service;
+namespace Model\Service\Group;
 
 /**
- * Factory for GroupController
+ * Factory for Model\Group\GroupManager
  */
-class GroupControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class GroupManagerFactory implements \Zend\ServiceManager\FactoryInterface
 {
     /**
      * @internal
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $serviceManager = $serviceLocator->getServiceLocator();
-        $formManager = $serviceManager->get('FormElementManager');
-        return new \Console\Controller\GroupController(
-            $serviceManager->get('Model\Group\GroupManager'),
-            $serviceManager->get('Model\Computer\Computer'),
-            $formManager->get('Console\Form\Package\Assign'),
-            $formManager->get('Console\Form\AddToGroup'),
-            $formManager->get('Console\Form\ClientConfig')
-        );
+        return new \Model\Group\GroupManager($serviceLocator);
     }
 }

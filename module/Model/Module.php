@@ -71,6 +71,7 @@ Feature\InitProviderInterface
                     'Model\Client\CustomFieldManager' => 'Model\Service\Client\CustomFieldManagerFactory',
                     'Model\Client\DuplicatesManager' => 'Model\Service\Client\DuplicatesManagerFactory',
                     'Model\Config' => 'Model\Service\ConfigFactory',
+                    'Model\Group\GroupManager' => 'Model\Service\Group\GroupManagerFactory',
                     'Model\Network\DeviceManager' => 'Model\Service\Network\DeviceManagerFactory',
                     'Model\Network\SubnetManager' => 'Model\Service\Network\SubnetManagerFactory',
                     'Model\Operator\Operator' => 'Model\Service\OperatorFactory',

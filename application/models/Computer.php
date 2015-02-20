@@ -1770,7 +1770,10 @@ class Model_Computer extends Model_ComputerOrGroup
                             'group_id = ?' => $group
                         )
                     );
-                    Model_Group::fetchByIdStatic($group)->update(true);
+                    $groups = \Library\Application::getService('Model\Group\GroupManager')->getGroups('Id', $group);
+                    if ($groups->count()) {
+                        $groups->current()->update(true);
+                    }
                     break;
             }
         }

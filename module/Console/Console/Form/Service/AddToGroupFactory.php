@@ -35,7 +35,7 @@ class AddToGroupFactory implements \Zend\ServiceManager\FactoryInterface
         $serviceManager = $serviceLocator->getServiceLocator();
         return new \Console\Form\AddToGroup(
             null,
-            array('GroupModel' => $serviceManager->get('Model\Group\Group'))
+            array('GroupManager' => $serviceManager->get('Model\Group\GroupManager'))
         );
     }
 }

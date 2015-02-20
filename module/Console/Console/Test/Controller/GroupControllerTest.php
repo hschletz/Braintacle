@@ -27,10 +27,10 @@ namespace Console\Test\Controller;
 class GroupControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
-     * Group mock
-     * @var \Model_Group
+     * Group manager mock
+     * @var \Model\Group\GroupManager
      */
-    protected $_group;
+    protected $_groupManager;
 
     /**
      * Computer mock
@@ -61,7 +61,9 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
      */
     public function setUp()
     {
-        $this->_group = $this->getMockBuilder('Model_Group')->disableOriginalConstructor()->getMock();
+        $this->_groupManager = $this->getMockBuilder('Model\Group\GroupManager')
+                                    ->disableOriginalConstructor()
+                                    ->getMock();
         $this->_computer = $this->getMockBuilder('Model_Computer')->disableOriginalConstructor()->getMock();
         $this->_packageAssignmentForm = $this->getMock('Console\Form\Package\Assign');
         $this->_addToGroupForm = $this->getMock('Console\Form\AddToGroup');
@@ -73,7 +75,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     protected function _createController()
     {
         return new \Console\Controller\GroupController(
-            $this->_group,
+            $this->_groupManager,
             $this->_computer,
             $this->_packageAssignmentForm,
             $this->_addToGroupForm,
@@ -83,7 +85,6 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testService()
     {
-        $this->_overrideService('Model\Group\Group', $this->_group);
         $this->_overrideService('Model\Computer\Computer', $this->_computer);
         $this->_overrideService('Console\Form\AddToGroup', $this->_addToGroupForm);
         parent::testService();
@@ -91,10 +92,10 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testInvalidGroup()
     {
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('test')
-                     ->will($this->throwException(new \RuntimeException));
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('test')
+                            ->will($this->throwException(new \RuntimeException));
         $this->dispatch('/console/group/general/?name=test');
         $this->assertRedirectTo('/console/group/index/');
         $this->assertContains(
@@ -105,17 +106,12 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionNoData()
     {
-        // Test empty group list
-        $this->_group->expects($this->once())
-                     ->method('fetch')
-                     ->with(
-                         array('Name', 'CreationDate', 'Description'),
-                         null,
-                         null,
-                         'Name',
-                         'asc'
-                     )
-                     ->will($this->returnValue(array()));
+        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet->initialize(array());
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroups')
+                            ->with(null, null, 'Name', 'asc')
+                            ->willReturn($resultSet);
         $this->dispatch('/console/group/index/');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//table');
@@ -124,26 +120,20 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionWithData()
     {
-        $this->_group->expects($this->once())
-                     ->method('fetch')
-                     ->with(
-                         array('Name', 'CreationDate', 'Description'),
-                         null,
-                         null,
-                         'Name',
-                         'asc'
-                     )
-                     ->will(
-                         $this->returnValue(
-                             array(
-                                 array(
-                                     'Name' => 'test',
-                                     'CreationDate' => new \Zend_Date('2014-04-06 11:55:33'),
-                                     'Description' => 'description',
-                                 )
-                             )
-                         )
-                     );
+        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet->initialize(
+            array(
+                array(
+                    'Name' => 'test',
+                    'CreationDate' => new \Zend_Date('2014-04-06 11:55:33'),
+                    'Description' => 'description',
+                )
+            )
+        );
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroups')
+                            ->with(null, null, 'Name', 'asc')
+                            ->willReturn($resultSet);
 
         $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->once())
@@ -171,10 +161,9 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionMessages()
     {
-        // Test empty group list
-        $this->_group->expects($this->once())
-                     ->method('fetch')
-                     ->will($this->returnValue(array()));
+        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet->initialize(array());
+        $this->_groupManager->expects($this->once())->method('getGroups')->willReturn($resultSet);
         $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
         $flashMessenger->addErrorMessage('error');
         $flashMessenger->addSuccessMessage('success');
@@ -194,10 +183,10 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
             'CreationDate' => new \Zend_Date('2014-04-08 20:12:21'),
             'DynamicMembersSql' => 'groupSql',
         );
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('test')
-                     ->will($this->returnValue($group));
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('test')
+                            ->willReturn($group);
 
         $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->once())
@@ -238,10 +227,10 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                 'Membership' => \Model_GroupMembership::TYPE_STATIC,
             ),
         );
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('test')
-                     ->will($this->returnValue($group));
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('test')
+                            ->willReturn($group);
         $this->_computer->expects($this->once())
                         ->method('fetch')
                         ->with(
@@ -294,10 +283,10 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                 'InventoryDate' => new \Zend_Date('2014-04-09 18:56:12'),
             ),
         );
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('test')
-                     ->will($this->returnValue($group));
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('test')
+                            ->willReturn($group);
         $this->_computer->expects($this->once())
                         ->method('fetch')
                         ->with(
@@ -320,26 +309,17 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     {
         $url = '/console/group/packages/?name=test';
         $packages = array('package1', 'package2');
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('test')
-                     ->will($this->returnSelf());
-        $this->_group->expects($this->once())
-                     ->method('getPackages')
-                     ->with('asc')
-                     ->will($this->returnValue($packages));
-        $this->_group->expects($this->atLeastOnce())
-                     ->method('offsetGet')
-                     ->will(
-                         $this->returnValueMap(
-                             array(
-                                array('Name', 'test')
-                             )
-                         )
-                     );
-        $this->_group->expects($this->once())
-                     ->method('getInstallablePackages')
-                     ->will($this->returnValue(array()));
+
+        $group = $this->getMock('Model_Group');
+        $group->expects($this->once())->method('getPackages')->with('asc')->willReturn($packages);
+        $group->method('offsetGet')->with('Name')->willReturn('test');
+        $group->expects($this->once())->method('getInstallablePackages')->willReturn(array());
+
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('test')
+                            ->willReturn($group);
+
         $this->_packageAssignmentForm->expects($this->never())
                                      ->method('setPackages');
         $this->_packageAssignmentForm->expects($this->never())
@@ -360,26 +340,17 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     {
         $url = '/console/group/packages/?name=test';
         $packages = array('package1', 'package2');
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('test')
-                     ->will($this->returnSelf());
-        $this->_group->expects($this->once())
-                     ->method('getPackages')
-                     ->with('asc')
-                     ->will($this->returnValue(array()));
-        $this->_group->expects($this->atLeastOnce())
-                     ->method('offsetGet')
-                     ->will(
-                         $this->returnValueMap(
-                             array(
-                                array('Name', 'test')
-                             )
-                         )
-                     );
-        $this->_group->expects($this->once())
-                     ->method('getInstallablePackages')
-                     ->will($this->returnValue($packages));
+
+        $group = $this->getMock('Model_Group');
+        $group->expects($this->once())->method('getPackages')->with('asc')->willReturn(array());
+        $group->method('offsetGet')->with('Name')->willReturn('test');
+        $group->expects($this->once())->method('getInstallablePackages')->willReturn($packages);
+
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('test')
+                            ->willReturn($group);
+
         $this->_packageAssignmentForm->expects($this->once())
                                      ->method('setPackages')
                                      ->with($packages);
@@ -397,13 +368,12 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testRemovepackageActionGet()
     {
-        $group = array('Name' => 'test');
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('test')
-                     ->will($this->returnValue($group));
-        $this->_group->expects($this->never())
-                     ->method('unaffectPackage');
+        $group = $this->getMock('Model_Group');
+        $group->expects($this->never())->method('unaffectPackage');
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('test')
+                            ->willReturn($group);
         $this->dispatch('/console/group/removepackage/?package=package&name=test');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery(
@@ -413,13 +383,12 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testRemovepackageActionPostNo()
     {
-        $group = array('Name' => 'test');
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('test')
-                     ->will($this->returnValue($group));
-        $this->_group->expects($this->never())
-                     ->method('unaffectPackage');
+        $group = $this->getMock('Model_Group');
+        $group->expects($this->never())->method('unaffectPackage');
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('test')
+                            ->willReturn($group);
         $this->dispatch(
             '/console/group/removepackage/?package=package&name=test',
             'POST',
@@ -430,13 +399,12 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testRemovepackageActionPostYes()
     {
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('test')
-                     ->will($this->returnSelf());
-        $this->_group->expects($this->once())
-                     ->method('unaffectPackage')
-                     ->with('package');
+        $group = $this->getMock('Model_Group');
+        $group->expects($this->once())->method('unaffectPackage')->with('package');
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('test')
+                            ->willReturn($group);
         $this->dispatch(
             '/console/group/removepackage/?package=package&name=test',
             'POST',
@@ -447,12 +415,12 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testInstallpackageActionGet()
     {
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('test')
-                     ->will($this->returnSelf());
-        $this->_group->expects($this->never())
-                     ->method('installPackage');
+        $group = $this->getMock('Model_Group');
+        $group->expects($this->never())->method('installPackage');
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('test')
+                            ->willReturn($group);
         $this->_packageAssignmentForm->expects($this->never())
                                      ->method('isValid');
         $this->_packageAssignmentForm->expects($this->never())
@@ -467,12 +435,12 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     public function testInstallpackageActionPostInvalid()
     {
         $postData = array('Packages' => array('package1' => '0', 'package2' => '1'));
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('test')
-                     ->will($this->returnSelf());
-        $this->_group->expects($this->never())
-                     ->method('installPackage');
+        $group = $this->getMock('Model_Group');
+        $group->expects($this->never())->method('installPackage');
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('test')
+                            ->willReturn($group);
         $this->_packageAssignmentForm->expects($this->once())
                                      ->method('isValid')
                                      ->will($this->returnValue(false));
@@ -488,13 +456,12 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     public function testInstallpackageActionPostValid()
     {
         $postData = array('Packages' => array('package1' => '0', 'package2' => '1'));
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('test')
-                     ->will($this->returnSelf());
-        $this->_group->expects($this->once())
-                     ->method('installPackage')
-                     ->with('package2');
+        $group = $this->getMock('Model_Group');
+        $group->expects($this->once())->method('installPackage')->with('package2');
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('test')
+                            ->willReturn($group);
         $this->_packageAssignmentForm->expects($this->once())
                                      ->method('isValid')
                                      ->will($this->returnValue(true));
@@ -575,17 +542,16 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     public function testConfigurationActionGet()
     {
         $config = array('name' => 'value');
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('test')
-                     ->will($this->returnSelf());
-        $this->_group->expects($this->once())
-                     ->method('getAllConfig')
-                     ->will($this->returnValue($config));
+        $group = $this->getMock('Model_Group');
+        $group->expects($this->once())->method('getAllConfig')->willReturn($config);
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('test')
+                            ->willReturn($group);
         $form = $this->_clientConfigForm;
         $form->expects($this->once())
              ->method('setClientObject')
-             ->with($this->_group);
+             ->with($group);
         $form->expects($this->once())
              ->method('setData')
              ->with($config);
@@ -603,15 +569,16 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testConfigurationActionPostInvalid()
     {
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('test')
-                     ->will($this->returnSelf());
+        $group = $this->getMock('Model_Group');
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('test')
+                            ->willReturn($group);
         $postData = array('key' => 'value');
         $form = $this->_clientConfigForm;
         $form->expects($this->once())
              ->method('setClientObject')
-             ->with($this->_group);
+             ->with($group);
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -630,19 +597,17 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testConfigurationActionPostValid()
     {
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('test')
-                     ->will($this->returnSelf());
-        $this->_group->expects($this->once())
-                     ->method('offsetGet')
-                     ->with('Name')
-                     ->will($this->returnValue('test'));
+        $group = $this->getMock('Model_Group');
+        $group->method('offsetGet')->with('Name')->willReturn('test');
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('test')
+                            ->willReturn($group);
         $postData = array('key' => 'value');
         $form = $this->_clientConfigForm;
         $form->expects($this->once())
              ->method('setClientObject')
-             ->with($this->_group);
+             ->with($group);
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -665,54 +630,41 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionGet()
     {
-        $group = array('Name' => 'groupName');
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('test')
-                     ->will($this->returnValue($group));
+        $group = array('Name' => 'test');
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('test')
+                            ->willReturn($group);
         $this->dispatch('/console/group/delete/?name=test');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery('//p[contains(text(), "\'groupName\'")]');
+        $this->assertXpathQuery('//p[contains(text(), "\'test\'")]');
     }
 
     public function testDeleteActionPostNo()
     {
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('test')
-                     ->will($this->returnSelf());
-        $this->_group->expects($this->exactly(2))
-                     ->method('offsetGet')
-                     ->will(
-                         $this->returnValueMap(
-                             array(
-                                 array('Name', 'test'),
-                             )
-                         )
-                     );
-        $this->_group->expects($this->never())
-                     ->method('delete');
+        $group = array('Name' => 'test');
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('test')
+                            ->willReturn($group);
+        $this->_groupManager->expects($this->never())->method('deleteGroup');
         $this->dispatch('/console/group/delete/?name=test', 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/group/general/?name=test');
     }
 
     public function testDeleteActionPostYesSuccess()
     {
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('test')
-                     ->will($this->returnSelf());
-        $this->_group->expects($this->once())
-                     ->method('offsetGet')
-                     ->with('Name')
-                     ->will($this->returnValue('groupName'));
-        $this->_group->expects($this->once())
-                     ->method('delete')
-                     ->will($this->returnValue(true));
+        $group = $this->getMock('Model_Group');
+        $group->method('offsetGet')->with('Name')->willReturn('test');
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('test')
+                            ->willReturn($group);
+        $this->_groupManager->expects($this->once())->method('deleteGroup')->with($group);
         $this->dispatch('/console/group/delete/?name=test', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/group/index/');
         $this->assertEquals(
-            array(array('Group \'%s\' was successfully deleted.' => 'groupName')),
+            array(array('Group \'%s\' was successfully deleted.' => 'test')),
             $this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
         );
         $this->assertEquals(
@@ -723,17 +675,16 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionPostYesError()
     {
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('test')
-                     ->will($this->returnSelf());
-        $this->_group->expects($this->once())
-                     ->method('offsetGet')
-                     ->with('Name')
-                     ->will($this->returnValue('groupName'));
-        $this->_group->expects($this->once())
-                     ->method('delete')
-                     ->will($this->returnValue(false));
+        $group = $this->getMock('Model_Group');
+        $group->method('offsetGet')->with('Name')->willReturn('test');
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('test')
+                            ->willReturn($group);
+        $this->_groupManager->expects($this->once())
+                            ->method('deleteGroup')
+                            ->with($group)
+                            ->will($this->throwException(new \Model\Group\RuntimeException));
         $this->dispatch('/console/group/delete/?name=test', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/group/index/');
         $this->assertEquals(
@@ -741,7 +692,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
             $this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
         );
         $this->assertEquals(
-            array(array('Group \'%s\' could not be deleted.' => 'groupName')),
+            array(array('Group \'%s\' could not be deleted. Try again later.' => 'test')),
             $this->_getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
         );
     }

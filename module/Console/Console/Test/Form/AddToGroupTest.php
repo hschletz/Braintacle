@@ -29,14 +29,16 @@ use \Zend\Dom\Document\Query as Query;
 class AddToGroupTest extends \Console\Test\AbstractFormTest
 {
     /**
-     * Group mock object
-     * @var \Model_Group
+     * Group manager mock
+     * @var \Model\Group\GroupManager
      */
-    protected $_group;
+    protected $_groupManager;
 
     public function setUp()
     {
-        $this->_group = $this->getMockBuilder('Model_Group')->disableOriginalConstructor()->getMock();
+        $this->_groupManager = $this->getMockBuilder('Model\Group\GroupManager')
+                                    ->disableOriginalConstructor()
+                                    ->getMock();
         parent::setUp();
     }
 
@@ -47,13 +49,15 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
             array('Name' => 'group1'),
             array('Name' => 'group2'),
         );
-        $this->_group->expects($this->once())
-                     ->method('fetch')
-                     ->with(array('Name'), null, null, 'Name')
-                     ->will($this->returnValue($groups));
+        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet->initialize($groups);
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroups')
+                            ->with(null, null, 'Name')
+                            ->willReturn($resultSet);
         $form = new \Console\Form\AddToGroup(
             null,
-            array('GroupModel' => $this->_group)
+            array('GroupManager' => $this->_groupManager)
         );
         $form->init();
         return $form;
@@ -266,13 +270,17 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
 
     public function testProcessNewGroup()
     {
-        $this->_group->expects($this->once())
-                     ->method('create')
-                     ->with('name', 'description')
-                     ->will($this->returnSelf());
-        $this->_group->expects($this->once())
-                     ->method('setMembersFromQuery')
-                     ->with('what', 'filter', 'search', 'operator', 'invert');
+        $group = $this->getMock('Model_Group');
+        $group->expects($this->once())
+              ->method('setMembersFromQuery')
+              ->with('what', 'filter', 'search', 'operator', 'invert');
+        $this->_groupManager->expects($this->once())
+                            ->method('createGroup')
+                            ->with('name', 'description');
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('name')
+                            ->willReturn($group);
         $data = array(
             'What' => 'what',
             'Where' => 'new',
@@ -283,19 +291,21 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
         $form->expects($this->once())
              ->method('getData')
              ->will($this->returnValue($data));
-        $form->setOption('GroupModel', $this->_group);
-        $this->assertEquals($this->_group, $form->process('filter', 'search', 'operator', 'invert'));
+        $form->setOption('GroupManager', $this->_groupManager);
+        $this->assertEquals($group, $form->process('filter', 'search', 'operator', 'invert'));
     }
 
     public function testProcessExistingGroup()
     {
-        $this->_group->expects($this->once())
-                     ->method('fetchByName')
-                     ->with('name')
-                     ->will($this->returnSelf());
-        $this->_group->expects($this->once())
-                     ->method('setMembersFromQuery')
-                     ->with('what', 'filter', 'search', 'operator', 'invert');
+        $group = $this->getMock('Model_Group');
+        $group->expects($this->once())
+              ->method('setMembersFromQuery')
+              ->with('what', 'filter', 'search', 'operator', 'invert');
+        $this->_groupManager->expects($this->never())->method('createGroup');
+        $this->_groupManager->expects($this->once())
+                            ->method('getGroup')
+                            ->with('name')
+                            ->willReturn($group);
         $data = array(
             'What' => 'what',
             'Where' => 'existing',
@@ -305,7 +315,7 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
         $form->expects($this->once())
              ->method('getData')
              ->will($this->returnValue($data));
-        $form->setOption('GroupModel', $this->_group);
-        $this->assertEquals($this->_group, $form->process('filter', 'search', 'operator', 'invert'));
+        $form->setOption('GroupManager', $this->_groupManager);
+        $this->assertEquals($group, $form->process('filter', 'search', 'operator', 'invert'));
     }
 }

@@ -33,10 +33,10 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     protected $_computer;
 
     /**
-     * Group prototype
-     * @var \Model_Group
+     * Group manager
+     * @var \Model\Group\GroupManager
      */
-    protected $_group;
+    protected $_groupManager;
 
     /**
      * Form manager
@@ -66,21 +66,21 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
      * Constructor
      *
      * @param \Model_Computer $computer
-     * @param \Model_Group $group
+     * @param \Model\Group\GroupManager $groupManager
      * @param \Zend\Form\FormElementManager $formManager
      * @param \Model\Config $config
      * @param \Library\InventoryUploader $inventoryUploader
      */
     public function __construct(
         \Model_Computer $computer,
-        \Model_Group $group,
+        \Model\Group\GroupManager $groupManager,
         \Zend\Form\FormElementManager $formManager,
         \Model\Config $config,
         \Library\InventoryUploader $inventoryUploader
     )
     {
         $this->_computer = $computer;
-        $this->_group = $group;
+        $this->_groupManager = $groupManager;
         $this->_formManager = $formManager;
         $this->_config = $config;
         $this->_inventoryUploader = $inventoryUploader;
@@ -433,8 +433,8 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
         $vars['client'] = $this->_currentClient;
         $vars['memberships'] = $this->_currentClient->getGroups(\Model_GroupMembership::TYPE_ALL);
 
-        $groups = $this->_group->fetch(array('Name'), null, null, 'Name');
-        if ($groups) {
+        $groups = $this->_groupManager->getGroups(null, null, 'Name');
+        if ($groups->count()) {
             $data = array();
             // Create form data for all groups with default value
             foreach ($groups as $group) {
