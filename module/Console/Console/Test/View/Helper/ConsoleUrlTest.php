@@ -26,10 +26,9 @@ namespace Console\Test\View\Helper;
  */
 class ConsoleUrlTest extends \Library\Test\View\Helper\AbstractTest
 {
-    /**
-     * Tests for the __invoke() method
-     */
-    public function testInvoke()
+    protected $_helper;
+
+    public function setUp()
     {
         // Inject mock RouteMatch into Url helper which is used by ConsoleUrl
         $routeMatch = new \Zend\Mvc\Router\RouteMatch(
@@ -38,48 +37,70 @@ class ConsoleUrlTest extends \Library\Test\View\Helper\AbstractTest
                 'action' => 'currentaction',
             )
         );
-        $this->_getHelper('Url')->setRouteMatch($routeMatch);
+        $urlHelper = $this->_getHelper('Url');
+        $urlHelper->setRouteMatch($routeMatch);
+        $this->_helper = new \Console\View\Helper\ConsoleUrl(null, $urlHelper);
+    }
 
-        // Inject request parameters
-        $requestParams = array('param1' => 'requestValue1');
-        $request = new \Zend\Http\PhpEnvironment\Request;
-        $request->setQuery(new \Zend\Stdlib\Parameters($requestParams));
-
-        $helper = new \Console\View\Helper\ConsoleUrl($request, $this->_getHelper('Url'));
-
-        // Default is currentcontroller/currentaction
+    public function testDefaultControllerAndAction()
+    {
         $this->assertEquals(
             '/console/currentcontroller/currentaction/',
-            $helper()
+            $this->_helper->__invoke()
         );
+    }
 
-        // Override controller/action
+    public function testExplicitControllerAndAction()
+    {
         $this->assertEquals(
             '/console/controller/action/',
-            $helper('controller', 'action')
+            $this->_helper->__invoke('controller', 'action')
         );
+    }
 
-        // Test with parameters
+    public function testSingleParam()
+    {
         $params = array('param1' => 'value1');
         $this->assertEquals(
             '/console/controller/action/?param1=value1',
-            $helper('controller', 'action', $params)
+            $this->_helper->__invoke('controller', 'action', $params)
         );
+    }
 
-        $params['param2'] = 'value2';
+    public function testMultipleParams()
+    {
+        $params = array('param1' => 'value1', 'param2' => 'value2');
         $this->assertEquals(
             '/console/controller/action/?param1=value1&param2=value2',
-            $helper('controller', 'action', $params)
+            $this->_helper->__invoke('controller', 'action', $params)
         );
+    }
 
-        // Test with stringifiable object parameter
+    public function testStringifiableObjectParam()
+    {
         $params = array('param' => new \Library\MacAddress('00:00:5E:00:53:00'));
         $this->assertEquals(
             '/console/controller/action/?param=00:00:5E:00:53:00',
-            $helper('controller', 'action', $params)
+            $this->_helper->__invoke('controller', 'action', $params)
         );
+    }
 
-        // Test with request parameters
+    public function testInheritParamsWithoutHttpRequest()
+    {
+        $params = array('param1' => 'value1');
+        $this->assertEquals(
+            '/console/controller/action/?param1=value1',
+            $this->_helper->__invoke('controller', 'action', $params, true)
+        );
+    }
+
+    public function testInheritRequestParams()
+    {
+        $requestParams = array('param1' => 'requestValue1');
+        $request = new \Zend\Http\PhpEnvironment\Request;
+        $request->setQuery(new \Zend\Stdlib\Parameters($requestParams));
+        $helper = new \Console\View\Helper\ConsoleUrl($request, $this->_getHelper('Url'));
+
         $params = array();
         $this->assertEquals(
             '/console/controller/action/?param1=requestValue1',
