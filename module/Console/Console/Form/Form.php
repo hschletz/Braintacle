@@ -39,9 +39,6 @@ namespace Console\Form;
  * - Default rendering methods.
  *
  * - Helper methods for dealing with localized integer, float and date formats.
- *
- * - Top-level submit buttons are protected from having their text being
- *   overwritten by setData().
  */
 class Form extends \Zend\Form\Form
 {
