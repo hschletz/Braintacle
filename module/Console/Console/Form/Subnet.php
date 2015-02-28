@@ -31,6 +31,8 @@ class Subnet extends Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
+
         $name = new \Zend\Form\Element\Text('Name');
         $name->setLabel('Name');
         $this->add($name);

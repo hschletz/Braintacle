@@ -38,6 +38,8 @@ class NetworkDeviceTypes extends Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
+
         $types = new \Zend\Form\Fieldset('Types');
         $this->add($types);
         $inputFilterTypes = new \Zend\InputFilter\InputFilter;

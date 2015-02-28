@@ -33,6 +33,8 @@ class Login extends Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
+
         $user = new \Zend\Form\Element\Text('User');
         $user->setLabel('Username');
         $this->add($user);

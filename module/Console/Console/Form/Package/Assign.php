@@ -32,6 +32,8 @@ class Assign extends \Console\Form\Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
+
         $submit = new \Library\Form\Element\Submit('Submit');
         $submit->setLabel('Install');
         $this->add($submit);

@@ -81,6 +81,7 @@ class Search extends Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
         $translator = $this->getOption('translator');
 
         $this->_filters = array(

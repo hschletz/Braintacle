@@ -66,6 +66,7 @@ class FormRendererTest extends \PHPUnit_Framework_TestCase
              ->method('renderFieldset')
              ->with($view, $form)
              ->will($this->returnValue('fieldset'));
+        $form->init();
         $form->remove('_csrf');
         $form->add($csrf);
 
@@ -91,6 +92,7 @@ EOT;
              ->method('renderFieldset')
              ->with($view, $form)
              ->will($this->returnValue('fieldset'));
+        $form->init();
         $form->remove('_csrf');
 
         $expected = <<<EOT
@@ -115,6 +117,7 @@ EOT;
         $submit = new \Zend\Form\Element\Submit('submit');
 
         $form = new \Console\Form\Form;
+        $form->init();
         $form->add($text1);
         $form->add($text2);
         $form->add($submit);
@@ -147,6 +150,7 @@ EOT;
         $submit = new \Zend\Form\Element\Submit('submit');
 
         $form = new \Console\Form\Form;
+        $form->init();
         $form->add($text1);
         $form->add($text2);
         $form->add($submit);
@@ -179,6 +183,7 @@ EOT;
         $submit = new \Zend\Form\Element\Submit('submit');
 
         $form = new \Console\Form\Form;
+        $form->init();
         $form->add($text1);
         $form->add($text2);
         $form->add($submit);
@@ -229,6 +234,7 @@ EOT;
         $fieldset->add($text3);
 
         $form = new \Console\Form\Form;
+        $form->init();
         $form->add($text1);
         $form->add($fieldset);
         $form->add($text2);

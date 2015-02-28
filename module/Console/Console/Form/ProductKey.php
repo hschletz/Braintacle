@@ -31,6 +31,8 @@ class ProductKey extends Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
+
         $key = new \Zend\Form\Element\Text('Key');
         $key->setLabel('Product key (if different)');
         $this->add($key);

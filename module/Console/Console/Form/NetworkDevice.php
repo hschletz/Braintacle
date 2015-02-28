@@ -37,6 +37,8 @@ class NetworkDevice extends Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
+
         $type = new \Library\Form\Element\SelectSimple('Type');
         $type->setLabel('Type')
              ->setValueOptions($this->getOption('DeviceManager')->getTypes());

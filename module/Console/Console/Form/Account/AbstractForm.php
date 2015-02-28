@@ -31,6 +31,7 @@ abstract class AbstractForm extends \Console\Form\Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
         $inputFilter = new \Zend\InputFilter\InputFilter;
 
         $id = new Element\Text('Id');

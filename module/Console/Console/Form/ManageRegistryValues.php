@@ -45,6 +45,7 @@ class ManageRegistryValues extends Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
         $inputFilter = new \Zend\InputFilter\InputFilter;
 
         // Create list of values as array because nested iteration does not work with ResultSet objects.

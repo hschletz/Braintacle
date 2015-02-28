@@ -33,6 +33,7 @@ class SoftwareFilter extends Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
         $this->setAttribute('method', 'GET');
 
         $filter = new \Zend\Form\Element\Select('filter');

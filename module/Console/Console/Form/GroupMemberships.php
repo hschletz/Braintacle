@@ -37,6 +37,8 @@ class GroupMemberships extends Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
+
         $submit = new \Library\Form\Element\Submit('Submit');
         $submit->setLabel('OK');
         $this->add($submit);

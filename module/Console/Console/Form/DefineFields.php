@@ -38,6 +38,8 @@ class DefineFields extends Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
+
         $translatedTypes = array(
             'text' => $this->_('Text'),
             'clob' => $this->_('Long text'),

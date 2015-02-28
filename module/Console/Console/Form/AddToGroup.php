@@ -32,6 +32,8 @@ class AddToGroup extends Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
+
         $what = new \Zend\Form\Element\Radio('What');
         $what->setValueOptions(
             array(

@@ -35,6 +35,8 @@ class DeleteClient extends Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
+
         $deleteInterfaces = new \Zend\Form\Element\Checkbox('DeleteInterfaces');
         $deleteInterfaces->setLabel('Delete interfaces from network listing')
                          ->setChecked($this->getOption('config')->defaultDeleteInterfaces);

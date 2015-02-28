@@ -44,6 +44,8 @@ class CustomFields extends Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
+
         $this->_types = $this->getOption('customFieldManager')->getFields();
 
         $fields = new \Zend\Form\Fieldset('Fields');

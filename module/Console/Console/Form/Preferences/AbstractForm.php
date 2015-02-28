@@ -32,6 +32,8 @@ abstract class AbstractForm extends \Console\Form\Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
+
         $preferences = new \Zend\Form\Fieldset('Preferences');
         $this->add($preferences);
 

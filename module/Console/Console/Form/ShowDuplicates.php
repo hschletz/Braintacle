@@ -40,6 +40,7 @@ class ShowDuplicates extends Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
         $config = $this->getOption('config');
 
         $mergeCustomFields = new Element\Checkbox('mergeCustomFields');

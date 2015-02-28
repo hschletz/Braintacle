@@ -31,6 +31,8 @@ class Import extends Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
+
         $file = new \Zend\Form\Element\File('File');
         $file->setLabel('File (*.ocs, *.xml)');
         $this->add($file);

@@ -27,14 +27,15 @@ namespace Console\Form;
  *
  * This base class extends \Zend\Form\Form with some convenience functionality:
  *
- * - The constructor sets the "class" attribute to "form" and a second value
- *   derived from the class name: Console\Form\Foo\Bar becomes form_foo_bar and
- *   so on. This allows general and individual styling of form content.
+ * - init() sets the "class" attribute to "form" and a second value derived from
+ *   the class name: Console\Form\Foo\Bar becomes form_foo_bar and so on. This
+ *   allows general and individual styling of form content.
  *
- * - The form's "id" attribute is set to the class-derived value ("form_foo_bar"
- *   in the above example). This can be overridden manually if necessary.
+ * - init() sets the form's "id" attribute to the class-derived value
+ *   ("form_foo_bar" in the above example). This can be overridden manually if
+ *   necessary.
  *
- * - Automatic CSRF protection via hidden "_csrf" element.
+ * - init() adds automatic CSRF protection via hidden "_csrf" element.
  *
  * - Default rendering methods.
  *
@@ -43,10 +44,8 @@ namespace Console\Form;
 class Form extends \Zend\Form\Form
 {
     /** {@inheritdoc} */
-    public function __construct($name = null, $options = array())
+    public function init()
     {
-        parent::__construct($name, $options);
-
         $class = get_class($this);
         $class = strtr($class, '\\', '_');
         $class = substr($class, strpos($class, '_') + 1);

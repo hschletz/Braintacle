@@ -35,6 +35,8 @@ class Build extends \Console\Form\Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
+
         $inputFilter = new \Zend\InputFilter\InputFilter;
         $integerFilter = array(
             'name' => 'Callback',

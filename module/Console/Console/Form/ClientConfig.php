@@ -40,6 +40,7 @@ class ClientConfig extends Form
     /** {@inheritdoc} */
     public function init()
     {
+        parent::init();
         $inputFilter = new \Zend\InputFilter\InputFilter;
 
         // Agent options
