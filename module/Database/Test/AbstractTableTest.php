@@ -95,6 +95,48 @@ class AbstractTableTest extends \PHPUnit_Extensions_Database_TestCase
         $this->assertEquals(array('col2a', 'col2b'), $this->_table->fetchCol('col2'));
     }
 
+    public function testFetchColWithHydrator()
+    {
+        $table = new \ReflectionProperty('Database\AbstractTable', 'table');
+        $table->setAccessible(true);
+        $table->setValue($this->_table, 'test1');
+
+        $hydrator = $this->getMock('Zend\Stdlib\Hydrator\ArraySerializable');
+        $hydrator->expects($this->once())->method('hydrateName')->with('col2')->willReturn('name');
+        $hydrator->method('hydrate')->willReturn(array('name' => 'value'));
+
+        $resultSet = new \ReflectionProperty('Database\AbstractTable', 'resultSetPrototype');
+        $resultSet->setAccessible(true);
+        $resultSet->setValue($this->_table, new \Zend\Db\ResultSet\HydratingResultSet($hydrator));
+
+        $this->_table->initialize();
+        $this->assertEquals(array('value', 'value'), $this->_table->fetchCol('col2'));
+    }
+
+    public function testFetchColWithLegacyPropertyMapper()
+    {
+        $model = $this->getMockBuilder('Model_Abstract')->setMethods(array('__get'))->getMockForAbstractClass();
+        $model->expects($this->once())->method('__get')->with('col2')->willReturn('value');
+
+        $resultSet = new \Zend\Db\ResultSet\ResultSet('Model_Abstract');
+        $resultSet->initialize(array($model));
+
+        $tableObj = $this->getMockBuilder('Database\AbstractTable')
+                         ->setMethods(array('selectWith'))
+                         ->disableOriginalConstructor()
+                         ->getMockForAbstractClass();
+        $tableObj->method('selectWith')->willReturn($resultSet);
+
+        $sqlObj = $this->getMockBuilder('Zend\Db\Sql\Sql')->disableOriginalConstructor()->getMock();
+        $sqlObj->method('select')->willReturn(new \Zend\Db\Sql\Select);
+
+        $sql = new \ReflectionProperty('Database\AbstractTable', 'sql');
+        $sql->setAccessible(true);
+        $sql->setValue($tableObj, $sqlObj);
+
+        $this->assertEquals(array('value'), $tableObj->fetchCol('col2'));
+    }
+
     public function testFetchColWithEmptyTable()
     {
         $table = new \ReflectionProperty('Database\AbstractTable', 'table');

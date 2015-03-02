@@ -217,7 +217,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
 
     /**
      * Fetch a single column as a flat array
-     * 
+     *
      * @param string $name Column name
      * @return array
      */
@@ -225,9 +225,25 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
     {
         $select = $this->sql->select();
         $select->columns(array($name), false);
+        $resultSet = $this->selectWith($select);
+
+        // Map column name to corresponding result key
+        if ($resultSet instanceof \Zend\Db\ResultSet\HydratingResultSet) {
+            $hydrator = $resultSet->getHydrator();
+            if ($hydrator instanceof \Zend\Stdlib\Hydrator\AbstractHydrator) {
+                $name = $hydrator->hydrateName($name);
+            }
+        }
+
         $col = array();
-        foreach ($this->selectWith($select) as $row) {
-            $col[] = $row->$name; // TODO switch back to array interface after elimitation of Model_Abstract bridge
+        foreach ($resultSet as $row) {
+            if ($row instanceof \Model_Abstract) {
+                // Legacy property mapping without hydrator naming strategy.
+                // $name is unaltered column name which is accessed via __get().
+                $col[] = $row->$name;
+            } else {
+                $col[] = $row[$name];
+            }
         }
         return $col;
     }
