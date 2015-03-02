@@ -61,7 +61,7 @@ class PackageManager
      * Retrieve existing package
      *
      * @param string $name Package name
-     * @return \Model_Package Package object containing all data except content and deployment statistics
+     * @return \Model\Package\Package Package object containing all data except content and deployment statistics
      * @throws RuntimeException if no package with given name exists or an error occurs
      */
     public function getPackage($name)
@@ -70,7 +70,8 @@ class PackageManager
         $storage = $this->_serviceManager->get('Model\Package\Storage\Direct');
 
         $select = $packages->getSql()->select();
-        $select->where(array('name' => $name));
+        $select->columns(array('fileid', 'name', 'priority', 'fragments', 'size', 'osname', 'comment'))
+               ->where(array('name' => $name));
 
         try {
             $packages = $packages->selectWith($select);
@@ -79,7 +80,7 @@ class PackageManager
             }
 
             $package = $packages->current();
-            $package->exchangeArray($storage->readMetadata($package['Id']));
+            $package->exchangeArray($storage->readMetadata($package['Id']) + $package->getArrayCopy());
             return $package;
         } catch (\Exception $e) {
             throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
@@ -91,7 +92,7 @@ class PackageManager
      *
      * @param string $order Property to sort by
      * @param string $direction One of [asc|desc]
-     * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model_Package
+     * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Package\Package
      */
     public function getPackages($order=null, $direction='asc')
     {
@@ -123,7 +124,13 @@ class PackageManager
         $select = $packages->getSql()->select();
         $select->columns(
             array(
-                '*',
+                'fileid',
+                'name',
+                'priority',
+                'fragments',
+                'size',
+                'osname',
+                'comment',
                 'num_nonnotified' => new Predicate\Expression('?', array($nonNotified)),
                 'num_success' => new Predicate\Expression('?', array($success)),
                 'num_notified' => new Predicate\Expression('?', array($notified)),
@@ -131,8 +138,12 @@ class PackageManager
             )
         );
 
-        $package = new \Model_Package;
-        $select->order(\Model_Package::getOrder($order, $direction, $package->getPropertyMap()));
+        if ($order) {
+            $order = $packages->getResultSetPrototype()->getHydrator()->extractName($order);
+            if ($order) {
+                $select->order(array($order => $direction));
+            }
+        }
 
         return $packages->selectWith($select);
     }

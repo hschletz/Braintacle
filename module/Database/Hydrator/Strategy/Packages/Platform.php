@@ -1,6 +1,6 @@
 <?php
 /**
- * "download_available" table
+ * Strategy for Platform attribute
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,30 +19,42 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-Namespace Database\Table;
+namespace Database\Hydrator\Strategy\Packages;
 
 /**
- * "download_available" table
- *
- * Produces \Model\Package\Package result sets.
+ * Strategy for Platform attribute
  */
-class Packages extends \Database\AbstractTable
+class Platform implements \Zend\Stdlib\Hydrator\Strategy\StrategyInterface
 {
     /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
+     * Map used by hydrate()
+     * @var string[]
      */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    protected $_hydratorMap = array(
+        'WINDOWS' => 'windows',
+        'LINUX' => 'linux',
+        'MacOSX' => 'mac',
+    );
+
+    /**
+     * Map used by extract()
+     * @var string[]
+     */
+    protected $_extractorMap = array(
+        'windows' => 'WINDOWS',
+        'linux' => 'LINUX',
+        'mac' => 'MacOSX',
+    );
+
+    /** {@inheritdoc} */
+    public function hydrate($value)
     {
-        $this->table = 'download_available';
+        return $this->_hydratorMap[$value];
+    }
 
-        $hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
-        $hydrator->setNamingStrategy(new \Database\Hydrator\NamingStrategy\Packages);
-        $hydrator->addStrategy('Platform', new \Database\Hydrator\Strategy\Packages\Platform);
-
-        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
-            $hydrator, $serviceLocator->get('Model\Package\Package')
-        );
-        parent::__construct($serviceLocator);
+    /** {@inheritdoc} */
+    public function extract($value)
+    {
+        return $this->_extractorMap[$value];
     }
 }

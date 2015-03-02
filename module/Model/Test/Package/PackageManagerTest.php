@@ -62,7 +62,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $storage->expects($this->once())->method('readMetadata')->with('1415958320')->willReturn($metadata);
         $model = $this->_getModel(array('Model\Package\Storage\Direct' => $storage));
         $package = $model->getPackage('package2');
-        $this->assertInstanceOf('Model_Package', $package);
+        $this->assertInstanceOf('Model\Package\Package', $package);
         $this->assertEquals(
             $packageData + $metadata + array('Timestamp' => new \Zend_Date(1415958320, \Zend_Date::TIMESTAMP)),
             $package->getArrayCopy()
@@ -116,6 +116,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             'NumError' => '0',
         );
         return array(
+            array(null, null, $package1, $package2),
             array('Timestamp', 'asc', $package1, $package2),
             array('Timestamp', 'desc', $package2, $package1),
             array('Name', 'asc', $package1, $package2),
@@ -137,11 +138,10 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     public function testGetPackages($order, $direction, $package1, $package2)
     {
         $model = $this->_getModel();
-        $packages = $model->getPackages($order, $direction)->buffer();
-        $this->assertContainsOnlyInstancesOf('Model_Package', $packages);
-        $this->assertEquals(
-            array($package1, $package2), $packages->toArray()
-        );
+        $packages = iterator_to_array($model->getPackages($order, $direction));
+        $this->assertContainsOnlyInstancesOf('Model\Package\Package', $packages);
+        $this->assertEquals($package1, $packages[0]->getArrayCopy());
+        $this->assertEquals($package2, $packages[1]->getArrayCopy());
     }
 
     public function testGetAllNames()

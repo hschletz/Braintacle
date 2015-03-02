@@ -64,7 +64,7 @@ Feature\InitProviderInterface
                     'Model\Network\Subnet' => 'Model_Subnet',
                     'Model\Package\Assignment' => 'Model_PackageAssignment',
                     'Model\Package\Metadata' => 'Model\Package\Metadata',
-                    'Model\Package\Package' => 'Model_Package',
+                    'Model\Package\Package' => 'Model\Package\Package',
                     'Model\RegistryValue' => 'Model_RegistryValue',
                 ),
                 'factories' => array(
