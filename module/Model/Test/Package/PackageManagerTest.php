@@ -319,7 +319,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             array('Model\Package\Storage\Direct' => $storage, 'Database\Table\Packages' => $packages)
         );
         try {
-            $model->build($data, false);
+            @$model->build($data, false);
             $this->fail('Expected exception was not thrown');
         } catch (\InvalidArgumentException $e) {
             $this->assertEquals('Invalid platform: invalid', $e->getMessage());

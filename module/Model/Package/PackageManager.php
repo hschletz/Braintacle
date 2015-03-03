@@ -169,18 +169,10 @@ class PackageManager
     public function build($data, $deleteSource)
     {
         // Validate input data
-        switch ($data['Platform']) {
-            case 'windows':
-                $platform = 'WINDOWS';
-                break;
-            case 'linux':
-                $platform = 'LINUX';
-                break;
-            case 'mac':
-                $platform = 'MacOSX';
-                break;
-            default:
-                throw new \InvalidArgumentException('Invalid platform: ' . $data['Platform']);
+        $strategy = new \Database\Hydrator\Strategy\Packages\Platform;
+        $platform = $strategy->extract($data['Platform']);
+        if (!$platform) {
+            throw new \InvalidArgumentException('Invalid platform: ' . $data['Platform']);
         }
         if ($this->packageExists($data['Name'])) {
             throw new RuntimeException("Package '$data[Name]' already exists");
