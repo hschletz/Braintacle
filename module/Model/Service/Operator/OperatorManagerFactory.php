@@ -19,7 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Model\Service;
+namespace Model\Service\Operator;
 
 /**
  * Factory for Model\Operator\OperatorManager
