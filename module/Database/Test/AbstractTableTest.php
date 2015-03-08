@@ -86,6 +86,14 @@ class AbstractTableTest extends \PHPUnit_Extensions_Database_TestCase
         );
     }
 
+    public function testGetHydrator()
+    {
+        $hydrator = new \ReflectionProperty('Database\AbstractTable', '_hydrator');
+        $hydrator->setAccessible(true);
+        $hydrator->setValue($this->_table, 'the hydrator');
+        $this->assertEquals('the hydrator', $this->_table->getHydrator());
+    }
+
     public function testFetchColWithData()
     {
         $table = new \ReflectionProperty('Database\AbstractTable', 'table');

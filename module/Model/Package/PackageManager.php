@@ -139,7 +139,7 @@ class PackageManager
         );
 
         if ($order) {
-            $order = $packages->getResultSetPrototype()->getHydrator()->extractName($order);
+            $order = $packages->getHydrator()->extractName($order);
             if ($order) {
                 $select->order(array($order => $direction));
             }

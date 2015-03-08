@@ -37,6 +37,12 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
     protected $_serviceLocator;
 
     /**
+     * Hydrator
+     * @var \Zend\Stdlib\Hydrator\AbstractHydrator
+     */
+    protected $_hydrator;
+
+    /**
      * Constructor
      *
      * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator Service manager instance
@@ -51,6 +57,16 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
         }
         $this->adapter = $serviceLocator->get('Db');
         $this->initialize();
+    }
+
+    /**
+     * Get hydrator suitable for bridging with model
+     *
+     * @return \Zend\Stdlib\Hydrator\AbstractHydrator|null
+     */
+    public function getHydrator()
+    {
+        return $this->_hydrator;
     }
 
     /**

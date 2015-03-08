@@ -33,11 +33,13 @@ class PackagesTest extends AbstractTest
 
     public function testHydrator()
     {
-        $resultSet = static::$_table->getResultSetPrototype();
-        $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);
-        $hydrator = $resultSet->getHydrator();
+        $hydrator = static::$_table->getHydrator();
         $this->assertInstanceOf('Zend\Stdlib\Hydrator\ArraySerializable', $hydrator);
         $this->assertInstanceOf('Database\Hydrator\NamingStrategy\Packages', $hydrator->getNamingStrategy());
         $this->assertInstanceOf('Database\Hydrator\Strategy\Packages\Platform', $hydrator->getStrategy('Platform'));
+
+        $resultSet = static::$_table->getResultSetPrototype();
+        $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);
+        $this->assertEquals($hydrator, $resultSet->getHydrator());
     }
 }

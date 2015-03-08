@@ -36,12 +36,12 @@ class Packages extends \Database\AbstractTable
     {
         $this->table = 'download_available';
 
-        $hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
-        $hydrator->setNamingStrategy(new \Database\Hydrator\NamingStrategy\Packages);
-        $hydrator->addStrategy('Platform', new \Database\Hydrator\Strategy\Packages\Platform);
+        $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
+        $this->_hydrator->setNamingStrategy(new \Database\Hydrator\NamingStrategy\Packages);
+        $this->_hydrator->addStrategy('Platform', new \Database\Hydrator\Strategy\Packages\Platform);
 
         $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
-            $hydrator, $serviceLocator->get('Model\Package\Package')
+            $this->_hydrator, $serviceLocator->get('Model\Package\Package')
         );
         parent::__construct($serviceLocator);
     }
