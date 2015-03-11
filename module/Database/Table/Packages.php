@@ -39,6 +39,7 @@ class Packages extends \Database\AbstractTable
         $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
         $this->_hydrator->setNamingStrategy(new \Database\Hydrator\NamingStrategy\Packages);
         $this->_hydrator->addStrategy('Platform', new \Database\Hydrator\Strategy\Packages\Platform);
+        $this->_hydrator->addStrategy('osname', new \Database\Hydrator\Strategy\Packages\Platform);
 
         $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
             $this->_hydrator, $serviceLocator->get('Model\Package\Package')

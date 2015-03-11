@@ -310,18 +310,38 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
     public function testBuildInvalidPlatform()
     {
-        $data = array('Platform' => 'invalid');
-        $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
-        $storage->expects($this->never())->method('write');
+        $data = array('Name' => 'test', 'FileLocation' => null, 'Platform' => 'invalid');
+
+        $hydrator = $this->getMock('Zend\Stdlib\Hydrator\ArraySerializable');
+        $hydrator->expects($this->once())->method('extract')->willReturn(array('osname' => null));
+
         $packages = $this->getMockBuilder('Database\Table\Packages')->disableOriginalConstructor()->getMock();
-        $packages->expects($this->never())->method('insert');
-        $model = $this->_getModel(
-            array('Model\Package\Storage\Direct' => $storage, 'Database\Table\Packages' => $packages)
+        $packages->expects($this->once())->method('getHydrator')->willReturn($hydrator);
+
+        $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
+
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')->will(
+            $this->returnValueMap(
+                array(
+                    array('Database\Table\Packages', true, $packages),
+                    array('Library\Now', true, new \DateTime),
+                    array('Model\Package\Storage\Direct', true, $storage),
+                )
+            )
         );
+
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethods(array('packageExists', 'autoArchive', 'delete'))
+                      ->setConstructorArgs(array($serviceManager))
+                      ->getMock();
+        $model->method('packageExists')->with('test')->willReturn(false);
+        $model->expects($this->once())->method('delete')->with('test');
+
         try {
-            @$model->build($data, false);
+            $model->build($data, false);
             $this->fail('Expected exception was not thrown');
-        } catch (\InvalidArgumentException $e) {
+        } catch (\Model\Package\RuntimeException $e) {
             $this->assertEquals('Invalid platform: invalid', $e->getMessage());
         }
     }

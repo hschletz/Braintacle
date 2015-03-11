@@ -23,6 +23,8 @@ namespace Database\Hydrator\Strategy\Packages;
 
 /**
  * Strategy for Platform attribute
+ *
+ * Invalid values yield NULL, generating an E_NOTICE.
  */
 class Platform implements \Zend\Stdlib\Hydrator\Strategy\StrategyInterface
 {

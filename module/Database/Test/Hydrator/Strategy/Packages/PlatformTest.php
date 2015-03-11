@@ -40,4 +40,23 @@ class PlatformTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
             array('mac', 'MacOSX'),
         );
     }
+
+    public function testInvalidValues()
+    {
+        // Suppress notices which are tested separately.
+        $this->assertNull(@$this->_strategy->hydrate('invalid'));
+        $this->assertNull(@$this->_strategy->extract('invalid'));
+    }
+
+    public function testNoticeOnHydrateInvalidValue()
+    {
+        $this->setExpectedException('PHPUnit_Framework_Error_Notice');
+        $this->_strategy->hydrate('invalid');
+    }
+
+    public function testNoticeOnExtractInvalidValue()
+    {
+        $this->setExpectedException('PHPUnit_Framework_Error_Notice');
+        $this->_strategy->extract('invalid');
+    }
 }

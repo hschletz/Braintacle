@@ -168,12 +168,6 @@ class PackageManager
      */
     public function build($data, $deleteSource)
     {
-        // Validate input data
-        $strategy = new \Database\Hydrator\Strategy\Packages\Platform;
-        $platform = $strategy->extract($data['Platform']);
-        if (!$platform) {
-            throw new \InvalidArgumentException('Invalid platform: ' . $data['Platform']);
-        }
         if ($this->packageExists($data['Name'])) {
             throw new RuntimeException("Package '$data[Name]' already exists");
             return false;
@@ -212,17 +206,12 @@ class PackageManager
             $data['NumFragments'] = $storage->write($data, $file, $deleteSource || $archiveCreated);
 
             // Create database entries
-            $packages->insert(
-                array(
-                    'fileid' => $data['Id'],
-                    'name' => $data['Name'],
-                    'priority' => $data['Priority'],
-                    'fragments' => $data['NumFragments'],
-                    'size' => $data['Size'],
-                    'osname' => $platform,
-                    'comment' => $data['Comment'],
-                )
-            );
+            $insert = @$packages->getHydrator()->extract(new \ArrayObject($data));
+            unset($insert['']); // Result from any unknown keys which are ignored
+            if (!$insert['osname']) {
+                throw new \InvalidArgumentException('Invalid platform: ' . $data['Platform']);
+            }
+            $packages->insert($insert);
         } catch (\Exception $e) {
             $this->delete($data['Name']);
             throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);

@@ -37,6 +37,7 @@ class PackagesTest extends AbstractTest
         $this->assertInstanceOf('Zend\Stdlib\Hydrator\ArraySerializable', $hydrator);
         $this->assertInstanceOf('Database\Hydrator\NamingStrategy\Packages', $hydrator->getNamingStrategy());
         $this->assertInstanceOf('Database\Hydrator\Strategy\Packages\Platform', $hydrator->getStrategy('Platform'));
+        $this->assertInstanceOf('Database\Hydrator\Strategy\Packages\Platform', $hydrator->getStrategy('osname'));
 
         $resultSet = static::$_table->getResultSetPrototype();
         $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);
