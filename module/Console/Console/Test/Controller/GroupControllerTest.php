@@ -539,6 +539,9 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/group/members/?name=test');
     }
 
+    /**
+     * @medium
+     */
     public function testConfigurationActionGet()
     {
         $config = array('name' => 'value');
@@ -567,6 +570,9 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXPathQuery('//form');
     }
 
+    /**
+     * @medium
+     */
     public function testConfigurationActionPostInvalid()
     {
         $group = $this->getMock('Model_Group');

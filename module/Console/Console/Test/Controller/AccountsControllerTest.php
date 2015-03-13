@@ -97,6 +97,9 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertQueryContentContains('td a[href="/console/accounts/edit/?id=testId"]', 'Bearbeiten');
     }
 
+    /**
+     * @medium
+     */
     public function testIndexActionOtherAccount()
     {
         $account = array(

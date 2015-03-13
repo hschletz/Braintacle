@@ -50,7 +50,7 @@ class MainMenuTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerT
     }
 
     /**
-     * Test for highlighting of active menu entry
+     * @medium
      */
     public function testActive()
     {
