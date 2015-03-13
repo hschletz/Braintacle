@@ -1755,6 +1755,3 @@ msgstr "Ignorieren"
 #: view/layout/layout.php
 msgid "Logout"
 msgstr "Abmelden"
-
-#~ msgid "Computer '%s' will be permanently deleted. Continue?"
-#~ msgstr "Computer '%s' wird dauerhaft gelöscht. Fortfahren?"
