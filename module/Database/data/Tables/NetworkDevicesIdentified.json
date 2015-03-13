@@ -28,15 +28,6 @@
             "default": null,
             "autoincrement": false,
             "comment": "references NetworkDeviceTypes table"
-        },
-        {
-            "name": "user",
-            "type": "varchar",
-            "length": 255,
-            "notnull": false,
-            "default": null,
-            "autoincrement": false,
-            "comment": "deprecated"
         }
     ],
     "primary_key": [

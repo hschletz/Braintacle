@@ -1696,10 +1696,6 @@ msgstr ""
 msgid "Discovery date"
 msgstr ""
 
-#: view/console/network/showidentified.php
-msgid "Idendified by"
-msgstr ""
-
 #: view/console/package/delete.php
 #, php-format
 msgid "Package '%s' will be permanently deleted. Continue?"

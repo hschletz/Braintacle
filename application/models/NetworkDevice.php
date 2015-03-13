@@ -31,7 +31,6 @@
  * - <b>DiscoveryDate:</b> Timestamp of IP discovery
  * - <b>Description:</b> Description (only identified devices)
  * - <b>Type:</b> Type (only identified devices)
- * - <b>IdentifiedBy:</b> User who identified the device
  * - <b>Vendor:</b> Vendor, derived from MAC address
  * @package Models
  */
@@ -48,7 +47,6 @@ class Model_NetworkDevice extends Model_Abstract
         // values from 'network_devices' table
         'Description' => 'description',
         'Type' => 'type',
-        'IdentifiedBy' => 'user',
         // calculated values
         'Vendor' => '',
     );
@@ -107,7 +105,7 @@ class Model_NetworkDevice extends Model_Abstract
 
 
     /**
-     * Store identification data (type, description, user) in database
+     * Store identification data (type, description) in database
      */
     public function save()
     {
@@ -116,14 +114,10 @@ class Model_NetworkDevice extends Model_Abstract
             throw new UnexpectedValueException('Uninitialized NetworkDevice object');
         }
 
-        $auth = \Library\Application::getService('Library\AuthenticationService');
-        $this->setIdentifiedBy($auth->getIdentity());
-
         $db = Model_Database::getAdapter();
         $data = array(
             'description' => $this->getDescription(),
             'type' => $this->getType(),
-            $db->quoteIdentifier('user') => $this->getIdentifiedBy(), // Quoting required for PostgreSQL
         );
         if ($db->fetchOne('SELECT macaddr FROM network_devices WHERE macaddr=?', $mac)) {
             $db->update('network_devices', $data, array('macaddr=?' => $mac));

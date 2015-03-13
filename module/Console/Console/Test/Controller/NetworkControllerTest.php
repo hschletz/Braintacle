@@ -172,7 +172,6 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                 'DiscoveryDate' => new \Zend_Date('2014-02-23 18:43:42'),
                 'Type' => 'type',
                 'Description' => 'description',
-                'IdentifiedBy' => 'idendified_by',
             ),
         );
         $this->_deviceManager->expects($this->once())
@@ -194,7 +193,6 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertQueryContentContains('td', "\ndate1\n");
         $this->assertQueryContentContains('td', "\ntype\n");
         $this->assertQueryContentContains('td', "\ndescription\n");
-        $this->assertQueryContentContains('td', "\nidendified_by\n");
         $this->assertQueryContentContains(
             'td a[href="/console/network/edit/?macaddress=00:00:5E:00:53:00"]',
             'Bearbeiten'
@@ -220,7 +218,6 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                 'DiscoveryDate' => new \Zend_Date('2014-02-23 18:43:42'),
                 'Type' => 'type',
                 'Description' => 'description',
-                'IdentifiedBy' => 'idendified_by',
             ),
         );
         $this->_deviceManager->expects($this->once())

@@ -75,9 +75,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
         $this->assertEquals($allDevices->getRow(0)['mac'], $devices[0]['MacAddress']);
         $this->assertEquals($allDevices->getRow(2)['mac'], $devices[1]['MacAddress']);
         $this->assertEquals('device1', $devices[0]['Description']);
-        $this->assertEquals('user1', $devices[0]['IdentifiedBy']);
         $this->assertEquals('device3', $devices[1]['Description']);
-        $this->assertEquals('user3', $devices[1]['IdentifiedBy']);
     }
 
     public function testGetDevicesFilterByIdentifiedTrue()
@@ -94,9 +92,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
         $this->assertEquals($allDevices->getRow(5)['mac'], $devices[3]['MacAddress']);
         $this->assertEquals($allDevices->getRow(6)['mac'], $devices[4]['MacAddress']);
         $this->assertEquals('device1', $devices[0]['Description']);
-        $this->assertEquals('user1', $devices[0]['IdentifiedBy']);
         $this->assertEquals('device3', $devices[1]['Description']);
-        $this->assertEquals('user3', $devices[1]['IdentifiedBy']);
         // Extra properties from other devices should be OK too
     }
 
@@ -124,7 +120,6 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
                 'DiscoveryDate' => new \Zend_Date('2014-12-28T16:40:00'),
                 'Description' => 'device3',
                 'Type' => 'present, inventoried interfaces',
-                'IdentifiedBy' => 'user3',
             ),
             $device->getArrayCopy()
         );
@@ -143,7 +138,6 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
                 'DiscoveryDate' => new \Zend_Date('2014-12-28T16:40:00'),
                 'Description' => null,
                 'Type' => null,
-                'IdentifiedBy' => null,
             ),
             $device->getArrayCopy()
         );
@@ -278,7 +272,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
             $this->assertTablesEqual(
                 $dataSet->getTable('network_devices'),
                 $this->getConnection()->createQueryTable(
-                    'network_devices', 'SELECT macaddr, description, type, user FROM network_devices'
+                    'network_devices', 'SELECT macaddr, description, type FROM network_devices'
                 )
             );
         }
@@ -303,7 +297,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
             $this->assertTablesEqual(
                 $dataSet->getTable('network_devices'),
                 $this->getConnection()->createQueryTable(
-                    'network_devices', 'SELECT macaddr, description, type, user FROM network_devices'
+                    'network_devices', 'SELECT macaddr, description, type FROM network_devices'
                 )
             );
         }
@@ -343,7 +337,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
             $this->assertTablesEqual(
                 $dataSet->getTable('network_devices'),
                 $this->getConnection()->createQueryTable(
-                    'network_devices', 'SELECT macaddr, description, type, user FROM network_devices'
+                    'network_devices', 'SELECT macaddr, description, type FROM network_devices'
                 )
             );
         }
@@ -368,7 +362,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
             $this->assertTablesEqual(
                 $dataSet->getTable('network_devices'),
                 $this->getConnection()->createQueryTable(
-                    'network_devices', 'SELECT macaddr, description, type, user FROM network_devices'
+                    'network_devices', 'SELECT macaddr, description, type FROM network_devices'
                 )
             );
         }

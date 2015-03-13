@@ -1704,10 +1704,6 @@ msgstr "Eigenschaften von Subnetz %s"
 msgid "Discovery date"
 msgstr "Datum"
 
-#: view/console/network/showidentified.php
-msgid "Idendified by"
-msgstr "identifiziert von"
-
 #: view/console/package/delete.php
 #, php-format
 msgid "Package '%s' will be permanently deleted. Continue?"

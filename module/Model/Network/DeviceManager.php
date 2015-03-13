@@ -72,8 +72,8 @@ class DeviceManager
      * - **Type:** Device type (description string), implies Identified=TRUE
      * - **Identified:** Boolean, selects only identified or unidentified devices
      *
-     * The 'Description', 'Type' and 'IdentifiedBy' properties are only set if
-     * the 'Identified' filter is TRUE.
+     * The 'Description' and 'Type' properties are only set if the 'Identified'
+     * filter is TRUE.
      *
      * @param array $filters Filters to apply
      * @param string $order Property to sort by. Default: null
@@ -105,7 +105,7 @@ class DeviceManager
                         $select->join(
                             'network_devices',
                             'mac = macaddr',
-                            array('description', 'type', 'user')
+                            array('description', 'type')
                         );
                     } else {
                         $select->where('mac NOT IN(SELECT macaddr FROM network_devices)');
@@ -138,7 +138,7 @@ class DeviceManager
                ->join(
                    'network_devices',
                    'macaddr = mac',
-                   array('description', 'type', 'user'),
+                   array('description', 'type'),
                    \Zend\Db\Sql\Select::JOIN_LEFT
                )
                ->where(array('mac' => $macAddress));

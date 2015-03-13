@@ -27,7 +27,6 @@ $headers = array(
     'DiscoveryDate' => $this->translate('Discovery date'),
     'Type' => $this->translate('Type'),
     'Description' => $this->translate('Description'),
-    'IdentifiedBy' => $this->translate('Idendified by'),
     'edit' => '',
     'delete' => '',
 );
