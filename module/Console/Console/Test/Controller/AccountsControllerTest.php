@@ -72,6 +72,9 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         parent::testService();
     }
 
+    /**
+     * @medium
+     */
     public function testIndexActionCurrentAccount()
     {
         $account = array(
@@ -195,8 +198,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testEditActionGet()
     {
-        $operator = $this->getMockBuilder('Model_Account')->disableOriginalConstructor()->getMock();
-        $operator->expects($this->never())->method('update');
+        $operator = $this->getMock('Model\Operator\Operator');
         $operator->expects($this->once())->method('getArrayCopy')->willReturn(array('Id' => 'testId'));
 
         $this->_operatorManager->expects($this->once())->method('get')->with('testId')->willReturn($operator);
@@ -243,10 +245,8 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
             'Password' => 'topsecret',
             'PasswordRepeat' => 'topsecret',
         );
-        $operator = $this->getMockBuilder('Model_Account')->disableOriginalConstructor()->getMock();
-        $operator->expects($this->once())->method('update')->with($data, 'topsecret');
 
-        $this->_operatorManager->expects($this->once())->method('get')->with('testId')->willReturn($operator);
+        $this->_operatorManager->expects($this->once())->method('update')->with('testId', $data, 'topsecret');
 
         $this->_formAccountEdit->expects($this->once())
                                ->method('setData')

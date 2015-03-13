@@ -58,14 +58,17 @@ class OperatorManager
      *
      * @param string $order Property to sort by
      * @param string $direction Sorting order (asc|desc)
-     * @return \Model_Account[]
+     * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Operator\Operator
      */
     public function fetchAll($order='Id', $direction='asc')
     {
-        $operator = \Library\Application::getService('Model\Operator\Operator');
         $select = $this->_operators->getSql()->select();
-        $select->columns(array('id', 'firstname', 'lastname', 'email', 'comments'))
-               ->order(\Model_Account::getOrder($order, $direction, $operator->getPropertyMap()));
+        $select->columns(array('id', 'firstname', 'lastname', 'email', 'comments'));
+
+        $order = $this->_operators->getHydrator()->extractName($order);
+        if ($order) {
+            $select->order(array($order => $direction));
+        }
         return $this->_operators->selectWith($select);
     }
 
@@ -117,19 +120,40 @@ class OperatorManager
             throw new \InvalidArgumentException('No password supplied');
         }
 
-        $operator = \Library\Application::getService('Model\Operator\Operator');
-        $propertyMap = $operator->getPropertyMap();
         // Compose array of columns to set
-        foreach ($data as $property => $value) {
-            if (isset($propertyMap[$property])) { // Ignore unknown keys
-                $insert[$propertyMap[$property]] = $value;
-            }
-        }
+        $insert = @$this->_operators->getHydrator()->extract(new \ArrayObject($data));
+        unset($insert['']); // caused by unrecognized key, ignore
         $insert['passwd'] = md5($password);
-        $insert['accesslvl'] = \Model_Account::OLD_PRIVILEGE_ADMIN;
-        $insert['new_accesslvl'] = \Model_Account::PRIVILEGE_ADMIN;
+        $insert['accesslvl'] = 1; // admin
+        $insert['new_accesslvl'] = 'sadmin';
 
         $this->_operators->insert($insert);
+    }
+
+    /**
+     * Update existing operator account
+     *
+     * @param string $id Login name of account to update
+     * @param string[] $data List of properties to set. Unknown keys will be ignored.
+     * @param string $password New password. If empty, password will remain unchanged.
+     */
+    public function update($id, $data, $password)
+    {
+        // Compose array of columns to set
+        $update = @$this->_operators->getHydrator()->extract(new \ArrayObject($data));
+        unset($update['']); // caused by unrecognized key, ignore
+        // Set password if specified
+        if ($password) {
+            $update['passwd'] = md5($password);
+        }
+        if (!$this->_operators->update($update, array('id' => $id))) {
+            throw new \RuntimeException('Invalid user name: ' . $id);
+        }
+        if (isset($data['Id']) and $id == $this->_authenticationService->getIdentity()) {
+            // If the account name of the logged in user is changed, the
+            // identity must be updated to remain valid.
+            $this->_authenticationService->changeIdentity($data['Id']);
+        }
     }
 
     /**

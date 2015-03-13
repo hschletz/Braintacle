@@ -112,8 +112,7 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $data = $form->getData();
-                $operator = $this->_operatorManager->get($data['OriginalId']);
-                $operator->update($data, $data['Password']);
+                $this->_operatorManager->update($data['OriginalId'], $data, $data['Password']);
                 return $this->redirectToRoute('accounts', 'index');
             }
         } else {

@@ -32,8 +32,11 @@ class Operators extends \Database\AbstractTable
      */
     public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
+        $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
+        $this->_hydrator->setNamingStrategy(new \Database\Hydrator\NamingStrategy\Operators);
+
         $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
-            null, $serviceLocator->get('Model\Operator\Operator')
+            $this->_hydrator, $serviceLocator->get('Model\Operator\Operator')
         );
         parent::__construct($serviceLocator);
     }

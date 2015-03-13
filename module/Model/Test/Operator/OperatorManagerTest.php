@@ -32,10 +32,11 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
     public function testFetchAllDefaultOrder()
     {
         $model = $this->_getModel();
-        $operators = $model->fetchAll()->buffer();
-        $this->assertContainsOnlyInstancesOf('Model_Account', $operators);
+        $resultSet = $model->fetchAll();
+        $this->assertInstanceOf('Zend\Db\ResultSet\AbstractResultSet', $resultSet);
+        $operators = iterator_to_array($resultSet);
+        $this->assertContainsOnlyInstancesOf('Model\Operator\Operator', $operators);
         $this->assertCount(2, $operators);
-        $operators = $operators->toArray();
         $this->assertEquals('user1', $operators[0]['Id']);
         $this->assertEquals('user2', $operators[1]['Id']);
     }
@@ -43,12 +44,13 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
     public function testFetchAllCustomOrder()
     {
         $model = $this->_getModel();
-        $operators = $model->fetchAll('LastName', 'desc')->buffer();
-        $this->assertContainsOnlyInstancesOf('Model_Account', $operators);
+        $resultSet = $model->fetchAll('Id', 'desc');
+        $this->assertInstanceOf('Zend\Db\ResultSet\AbstractResultSet', $resultSet);
+        $operators = iterator_to_array($resultSet);
+        $this->assertContainsOnlyInstancesOf('Model\Operator\Operator', $operators);
         $this->assertCount(2, $operators);
-        $operators = $operators->toArray();
-        $this->assertEquals('user1', $operators[0]['Id']);
-        $this->assertEquals('user2', $operators[1]['Id']);
+        $this->assertEquals('user2', $operators[0]['Id']);
+        $this->assertEquals('user1', $operators[1]['Id']);
     }
 
     public function testGetAllIds()
@@ -61,7 +63,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
     {
         $model = $this->_getModel();
         $operator = $model->get('user1');
-        $this->assertInstanceOf('Model_Account', $operator);
+        $this->assertInstanceOf('Model\Operator\Operator', $operator);
         $this->assertEquals(
             array(
                 'Id' => 'user1',
@@ -161,6 +163,81 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
             $this->_loadDataset()->getTable('operators'),
             $this->getConnection()->createQueryTable('operators', 'SELECT * from operators')
         );
+    }
+
+    public function updateProvider()
+    {
+        return array(
+            array(
+                array(
+                    'Id' => 'user1', // unchanged
+                    'FirstName' => 'new_first',
+                    'LastName' => 'new_last',
+                    'MailAddress' => 'new_mail',
+                    'Comment' => 'new_comment',
+                    'Ignored' => 'ignored',
+                ),
+                null,
+                'UpdateAuxilliaryProperties'
+            ),
+            array(array('Id' => 'new_id'), '', 'UpdateIdentity'),
+            array(array(), 'new_password', 'UpdatePassword'),
+        );
+    }
+
+    /**
+     * @dataProvider updateProvider
+     */
+    public function testUpdate($data, $password, $dataSet)
+    {
+        $authService = $this->getMock('Library\Authentication\AuthenticationService');
+        $authService->method('getIdentity')->willReturn('user2');
+        $authService->expects($this->never())->method('changeIdentity');
+
+        $model = $this->_getModel(array('Library\AuthenticationService' => $authService));
+        $model->update('user1', $data, $password);
+        $this->assertTablesEqual(
+            $this->_loadDataSet($dataSet)->getTable('operators'),
+            $this->getConnection()->createQueryTable(
+                'operators',
+                'SELECT id, firstname, lastname, passwd, comments, email FROM operators ORDER BY id'
+            )
+        );
+    }
+
+    public function testUpdateCurrentIdentity()
+    {
+        $authService = $this->getMock('Library\Authentication\AuthenticationService');
+        $authService->method('getIdentity')->willReturn('user1');
+        $authService->expects($this->once())->method('changeIdentity')->with('new_id');
+
+        $model = $this->_getModel(array('Library\AuthenticationService' => $authService));
+        $model->update('user1', array('Id' => 'new_id'), '');
+        $this->assertTablesEqual(
+            $this->_loadDataSet('UpdateIdentity')->getTable('operators'),
+            $this->getConnection()->createQueryTable(
+                'operators',
+                'SELECT id, firstname, lastname, passwd, comments, email FROM operators ORDER BY id'
+            )
+        );
+    }
+
+    public function testUpdateInvalidUser()
+    {
+        $model = $this->_getModel();
+        try {
+            $model->update('invalid', array('Id' => 'new_id'), '');
+            $this->fail('Expected exception was not thrown');
+        } catch (\RuntimeException $e) {
+            $this->assertEquals('Invalid user name: invalid', $e->getMessage());
+            $this->assertTablesEqual(
+                $this->_loadDataSet()->getTable('operators'),
+                $this->getConnection()->createQueryTable(
+                    'operators',
+                    'SELECT * FROM operators ORDER BY id DESC'
+                )
+            );
+        }
     }
 
     public function testDelete()

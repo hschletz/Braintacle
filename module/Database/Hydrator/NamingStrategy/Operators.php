@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for Model\Operator\Operator
+ * Naming strategy for Operators table
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,21 +19,28 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Model\Service\Operator;
+namespace Database\Hydrator\NamingStrategy;
 
 /**
- * Factory for Model\Operator\Operator
+ * Naming strategy for Operators table
  */
-class OperatorFactory implements \Zend\ServiceManager\FactoryInterface
+class Operators extends AbstractMappingStrategy
 {
-    /**
-     * @internal
-     * @codeCoverageIgnore
-     */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        return new \Model_Account(
-            $serviceLocator->get('Library\AuthenticationService')
-        );
-    }
+    /** {@inheritdoc} */
+    protected $_hydratorMap = array(
+        'id' => 'Id',
+        'firstname' => 'FirstName',
+        'lastname' => 'LastName',
+        'email' => 'MailAddress',
+        'comments' => 'Comment',
+    );
+
+    /** {@inheritdoc} */
+    protected $_extractorMap = array(
+        'Id' => 'id',
+        'FirstName' => 'firstname',
+        'LastName' => 'lastname',
+        'MailAddress' => 'email',
+        'Comment' => 'comments',
+    );
 }
