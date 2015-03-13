@@ -191,9 +191,8 @@ class DeviceManager
         if (!($macAddress instanceof \Library\MacAddress)) {
             $macAddress = new \Library\MacAddress($macAddress);
         }
-        $db = \Model_Database::getAdapter();
-        $db->delete('network_devices', array('macaddr=?' => $macAddress));
-        $db->delete('netmap', array('mac=?' => $macAddress));
+        $this->_networkDevicesIdentified->delete(array('macaddr' => $macAddress));
+        $this->_networkDevicesScanned->delete(array('mac' => $macAddress));
     }
 
     /**
