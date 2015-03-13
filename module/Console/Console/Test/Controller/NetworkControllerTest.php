@@ -230,10 +230,12 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     public function testShowunknownActionWithoutParameters()
     {
         $filters = array('Identified' => false);
+        $macAddress = $this->getMockBuilder('Library\MacAddress')->disableOriginalConstructor()->getMock();
+        $macAddress->method('__toString')->willReturn('00:00:5E:00:53:00');
+        $macAddress->method('getVendor')->willReturn('<vendor>');
         $result = array(
             array(
-                'MacAddress' => '00:00:5E:00:53:00',
-                'Vendor' => 'vendor',
+                'MacAddress' => $macAddress,
                 'IpAddress' => '192.0.2.1',
                 'Hostname' => 'host.example.net',
                 'DiscoveryDate' => new \Zend_Date('2014-02-23 18:43:42'),
@@ -254,7 +256,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/network/showunknown/');
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains('td', "\n00:00:5E:00:53:00\n");
-        $this->assertQueryContentContains('td', "\nvendor\n");
+        $this->assertQueryContentContains('td', "\n<vendor>\n");
         $this->assertQueryContentContains('td', "\n192.0.2.1\n");
         $this->assertQueryContentContains('td', "\nhost.example.net\n");
         $this->assertQueryContentContains('td', "\ndate1\n");
@@ -275,10 +277,12 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
             'Subnet' => '192.0.2.0',
             'Mask' => '255.255.255.0',
         );
+        $macAddress = $this->getMockBuilder('Library\MacAddress')->disableOriginalConstructor()->getMock();
+        $macAddress->method('__toString')->willReturn('00:00:5E:00:53:00');
+        $macAddress->method('getVendor')->willReturn('<vendor>');
         $result = array(
             array(
-                'MacAddress' => '00:00:5E:00:53:00',
-                'Vendor' => 'vendor',
+                'MacAddress' => $macAddress,
                 'IpAddress' => '192.0.2.1',
                 'Hostname' => 'host.example.net',
                 'DiscoveryDate' => new \Zend_Date('2014-02-23 18:43:42'),
@@ -485,12 +489,6 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     public function testEditActionPostValid()
     {
         $postData = array('Type' => 'type', 'Description' => 'description');
-        $device = $this->getMock('Model_NetworkDevice');
-        $device->expects($this->at(0))
-               ->method('fromArray')
-               ->with($postData);
-        $device->expects($this->at(1))
-               ->method('save');
         $this->_deviceForm->expects($this->once())
                           ->method('setData')
                           ->with($postData);
@@ -502,9 +500,9 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                           ->will($this->returnValue(true));
         $this->_deviceForm->expects($this->never())
                           ->method('prepare');
-        $this->_deviceManager->method('getDevice')
-                             ->with('00:00:5E:00:53:00')
-                             ->willReturn($device);
+        $this->_deviceManager->expects($this->once())
+                             ->method('saveDevice')
+                             ->with('00:00:5E:00:53:00', 'type', 'description');
         $this->dispatch('/console/network/edit/?macaddress=00:00:5E:00:53:00', 'POST', $postData);
         $this->assertRedirectTo('/console/network/index/');
     }

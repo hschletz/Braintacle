@@ -211,10 +211,11 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
             $this->_deviceForm->setData($params->fromPost());
             if ($this->_deviceForm->isValid()) {
                 $data = $this->_deviceForm->getData();
-                unset($data['_csrf']);
-                unset($data['Submit']);
-                $device->fromArray($data);
-                $device->save();
+                $this->_deviceManager->saveDevice(
+                    new \Library\MacAddress($params->fromQuery('macaddress')),
+                    $data['Type'],
+                    $data['Description']
+                );
                 return $this->redirectToRoute('network', 'index');
             }
         } else {

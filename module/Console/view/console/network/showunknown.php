@@ -32,6 +32,9 @@ $headers = array(
 );
 
 $renderCallbacks = array(
+    'Vendor' => function ($view, $device, $property) {
+        return $view->escapeHtml($device['MacAddress']->getVendor());
+    },
     'edit' => function ($view, $device, $property) {
         return $view->htmlTag(
             'a',

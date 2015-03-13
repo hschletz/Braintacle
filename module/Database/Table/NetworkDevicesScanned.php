@@ -33,8 +33,20 @@ class NetworkDevicesScanned extends \Database\AbstractTable
     public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'netmap';
+
+        $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
+        $this->_hydrator->setNamingStrategy(new \Database\Hydrator\NamingStrategy\NetworkDevicesScanned);
+
+        $zendDate = new \Library\Hydrator\Strategy\ZendDate;
+        $this->_hydrator->addStrategy('DiscoveryDate', $zendDate);
+        $this->_hydrator->addStrategy('date', $zendDate);
+
+        $macAddress = new \Library\Hydrator\Strategy\MacAddress;
+        $this->_hydrator->addStrategy('MacAddress', $macAddress);
+        $this->_hydrator->addStrategy('mac', $macAddress);
+
         $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
-            null, $serviceLocator->get('Model\Network\Device')
+            $this->_hydrator, $serviceLocator->get('Model\Network\Device')
         );
         parent::__construct($serviceLocator);
     }

@@ -60,7 +60,7 @@ Feature\InitProviderInterface
                     'Model\Computer\CustomFields' => 'Model_UserDefinedInfo',
                     'Model\Group\Group' => 'Model_Group',
                     'Model\Group\Membership' => 'Model_GroupMembership',
-                    'Model\Network\Device' => 'Model_NetworkDevice',
+                    'Model\Network\Device' => 'Model\Network\Device',
                     'Model\Network\Subnet' => 'Model_Subnet',
                     'Model\Operator\Operator' => 'Model\Operator\Operator',
                     'Model\Package\Assignment' => 'Model_PackageAssignment',

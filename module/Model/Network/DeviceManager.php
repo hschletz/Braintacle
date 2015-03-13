@@ -78,7 +78,7 @@ class DeviceManager
      * @param array $filters Filters to apply
      * @param string $order Property to sort by. Default: null
      * @param string $direction One of [asc|desc].
-     * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model_NetworkDevice
+     * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Network\Device
      */
     public function getDevices($filters, $order=null, $direction='asc')
     {
@@ -114,8 +114,17 @@ class DeviceManager
             }
         }
 
-        $networkDevice = new \Model_NetworkDevice;
-        $select->order(\Model_NetworkDevice::getOrder($order, $direction, $networkDevice->getPropertyMap()));
+        if ($order == 'Vendor') {
+            // This is not stored in the database. The best guess is sorting by
+            // MAC address which has a vendor-specific prefix.
+            $order = 'MacAddress';
+        }
+        if ($order) {
+            $order = $this->_networkDevicesScanned->getHydrator()->extractName($order);
+        }
+        if ($order) {
+            $select->order(array($order => $direction));
+        }
 
         return $this->_networkDevicesScanned->selectWith($select);
     }
@@ -124,7 +133,7 @@ class DeviceManager
      * Get device with given MAC address
      *
      * @param string|\Library\MacAddress $macAddress MAC address
-     * @return \Model_NetworkDevice
+     * @return \Model\Network\Device
      * @throws \Model\Network\RuntimeException if no scanned device with the given MAC address exists
      */
     public function getDevice($macAddress)
@@ -147,6 +156,28 @@ class DeviceManager
             throw new RuntimeException('Unknown MAC address: ' . $macAddress);
         }
         return $device;
+    }
+
+    /**
+     * Store identification data for a device
+     *
+     * @param \Library\MacAddress $macAddress MAC address
+     * @param string $type Device type
+     * @param string $description Description
+     */
+    public function saveDevice(\Library\MacAddress $macAddress, $type, $description)
+    {
+        $macAddress = (string) $macAddress;
+        $data = array(
+            'type' => $type,
+            'description' => $description,
+        );
+        if ($this->_networkDevicesIdentified->select(array('macaddr' => $macAddress))->count()) {
+            $this->_networkDevicesIdentified->update($data, array('macaddr' => $macAddress));
+        } else {
+            $data['macaddr'] = $macAddress;
+            $this->_networkDevicesIdentified->insert($data);
+        }
     }
 
     /**
