@@ -33,8 +33,16 @@ class RegistryValueDefinitions extends \Database\AbstractTable
     public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'regconfig';
+
+        $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
+        $this->_hydrator->setNamingStrategy(new \Database\Hydrator\NamingStrategy\RegistryValueDefinitions);
+
+        $valueConfigured = new \Database\Hydrator\Strategy\RegistryValueDefinitions\ValueConfigured;
+        $this->_hydrator->addStrategy('ValueConfigured', $valueConfigured);
+        $this->_hydrator->addStrategy('regvalue', $valueConfigured);
+
         $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
-            null, $serviceLocator->get('Model\RegistryValue')
+            $this->_hydrator, $serviceLocator->get('Model\Registry\Value')
         );
         parent::__construct($serviceLocator);
     }

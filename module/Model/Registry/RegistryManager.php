@@ -56,11 +56,13 @@ class RegistryManager
     /**
      * Get all registry value definitions
      *
-     * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model_RegistryValue, sorted by name
+     * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Registry\Value, sorted by name
      */
     public function getValueDefinitions()
     {
-        $select = $this->_registryValueDefinitions->getSql()->select()->order('name');
+        $select = $this->_registryValueDefinitions->getSql()->select();
+        $select->columns(array('id', 'name', 'regtree', 'regkey', 'regvalue'));
+        $select->order('name');
         return $this->_registryValueDefinitions->selectWith($select);
     }
 
@@ -68,12 +70,14 @@ class RegistryManager
      * Get registry value definition with given ID
      *
      * @param integer $id ID of an existing value definition
-     * @return \Model_RegistryValue
+     * @return \Model\Registry\Value
      * @throws \RuntimeException if given ID id invalid
      **/
     public function getValueDefinition($id)
     {
-        $select = $this->_registryValueDefinitions->getSql()->select()->where(array('id' => $id));
+        $select = $this->_registryValueDefinitions->getSql()->select();
+        $select->columns(array('id', 'name', 'regtree', 'regkey', 'regvalue'));
+        $select->where(array('id' => $id));
         $value = $this->_registryValueDefinitions->selectWith($select)->current();
         if (!$value) {
             throw new RuntimeException('Invalid registry value ID: ' . $id);
@@ -85,7 +89,7 @@ class RegistryManager
      * Add a value definition
      *
      * @param string $name Name of new value
-     * @param integer $rootKey One of the HKEY_* constants from \Model_RegistryValue
+     * @param integer $rootKey One of the HKEY_* constants from \Model\Registry\Value
      * @param string $subKeys Path to the key that contains the value, with components separated by backslashes
      * @param string $value Inventory only given value (default: all values for the given key)
      * @throws \InvalidArgumentException if $subKeys is empty
@@ -97,7 +101,7 @@ class RegistryManager
         if (empty($subKeys)) {
             throw new \InvalidArgumentException('Subkeys must not be empty');
         }
-        if (!isset(\Model_RegistryValue::rootKeys()[$rootKey])) {
+        if (!isset(\Model\Registry\Value::rootKeys()[$rootKey])) {
             throw new \DomainException('Invalid root key: ' . $rootKey);
         }
         if ($this->_registryValueDefinitions->select(array('name' => $name))->count()) {
@@ -115,6 +119,39 @@ class RegistryManager
                 'regvalue' => $value
             )
         );
+    }
+
+    /**
+     * Rename a value definition
+     *
+     * @param string $oldName Existing name
+     * @param string $newName New name. If identical with existing name, do nothing.
+     * @throws \InvalidArgumentException if $name is empty
+     * @throws \RuntimeException if a definition with the same name already exists.
+     **/
+    public function renameValueDefinition($oldName, $newName)
+    {
+        if ($newName == $oldName) {
+            return;
+        }
+        if ($newName == '') {
+            throw new \InvalidArgumentException('Name must not be empty');
+        }
+        if ($this->_registryValueDefinitions->select(array('name' => $newName))->count()) {
+            throw new \RuntimeException('Value already exists: ' . $newName);
+        }
+
+        $connection = $this->_registryValueDefinitions->getAdapter()->getDriver()->getConnection();
+        $connection->beginTransaction();
+        $this->_registryData->update(
+            array('name' => $newName),
+            array('name' => $oldName)
+        );
+        $this->_registryValueDefinitions->update(
+            array('name' => $newName),
+            array('name' => $oldName)
+        );
+        $connection->commit();
     }
 
     /**

@@ -66,7 +66,7 @@ Feature\InitProviderInterface
                     'Model\Package\Assignment' => 'Model_PackageAssignment',
                     'Model\Package\Metadata' => 'Model\Package\Metadata',
                     'Model\Package\Package' => 'Model\Package\Package',
-                    'Model\RegistryValue' => 'Model_RegistryValue',
+                    'Model\Registry\Value' => 'Model\Registry\Value',
                 ),
                 'factories' => array(
                     'Model\Client\CustomFieldManager' => 'Model\Service\Client\CustomFieldManagerFactory',

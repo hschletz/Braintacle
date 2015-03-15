@@ -117,7 +117,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         $this->assertInstanceOf('Zend\Form\Fieldset', $fieldset);
         $this->assertInstanceOf('Zend\Form\Element\Text', $fieldset->get('name'));
         $this->assertInstanceOf('Zend\Form\Element\Select', $fieldset->get('root_key'));
-        $this->assertEquals(\Model_RegistryValue::rootKeys(), $fieldset->get('root_key')->getValueOptions());
+        $this->assertEquals(\Model\Registry\Value::rootKeys(), $fieldset->get('root_key')->getValueOptions());
         $this->assertInstanceOf('Zend\Form\Element\Text', $fieldset->get('subkeys'));
         $this->assertInstanceOf('Zend\Form\Element\Text', $fieldset->get('value'));
         $this->assertInstanceOf('\Library\Form\Element\Submit', $fieldset->get('submit'));
@@ -266,20 +266,13 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         $this->assertEquals("Message2", $result[1]->textContent);
     }
 
-    /**
-     * Tests for process()
-     */
-    public function testProcess()
+    public function testProcessSetInspect()
     {
-        // Test data for first run: no value to add
-        $data1 = array(
+        $data = array(
             'inspect' => array(
                 'inspect' => '1',
             ),
-            'existing' => array(
-                'value_1_name' => 'name1',
-                'value_2_name' => 'name2',
-            ),
+            'existing' => array(),
             'new_value' => array(
                 'name' => '',
                 'root_key' => 'root_key',
@@ -288,58 +281,21 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
             ),
         );
 
-        // Test data for second run: add value
-        $data2 = $data1;
-        $data2['new_value']['name'] = 'name';
-
-        // 2 Mock values: Id 1/2, renamed to name1/name2
-        $value1 = $this->getMock('Model_RegistryValue');
-        $value1->expects($this->exactly(2))
-               ->method('rename')
-               ->with('name1');
-        $value1->expects($this->any())
-               ->method('offsetGet')
-               ->will(
-                   $this->returnValueMap(
-                       array(
-                           array('Id', 1),
-                       )
-                   )
-               );
-        $value2 = $this->getMock('Model_RegistryValue');
-        $value2->expects($this->exactly(2))
-               ->method('rename')
-               ->with('name2');
-        $value2->expects($this->any())
-               ->method('offsetGet')
-               ->will(
-                   $this->returnValueMap(
-                       array(
-                           array('Id', 2),
-                       )
-                   )
-               );
-
-        // Mock registryManager to deliver the 2 values above
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
-        $resultSet->initialize(array($value1, $value2));
+        $resultSet->initialize(array());
         $registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')
                                 ->disableOriginalconstructor()
                                 ->getMock();
         $registryManager->expects($this->once())
                         ->method('getValueDefinitions')
                         ->willReturn($resultSet);
-        // Value will be added only once (in the second run)
-        $registryManager->expects($this->once())
-                        ->method('addValueDefinition')
-                        ->with('name', 'root_key', 'subkeys', 'value');
+        $registryManager->expects($this->never())->method('addValueDefinition');
+        $registryManager->expects($this->never())->method('renameValueDefinition');
 
-        // Test set config value
-        $this->_config->expects($this->exactly(2))
+        $this->_config->expects($this->once())
                       ->method('__set')
                       ->with('inspectRegistry', '1');
 
-        // Set up form mock
         $form = $this->getMockBuilder('Console\Form\ManageRegistryValues')
                      ->setMethods(array('getData'))
                      ->setConstructorArgs(
@@ -351,13 +307,105 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
                             ),
                          )
                      )->getMock();
-        // Deliver different data in each run
-        $form->expects($this->exactly(2))
-             ->method('getData')
-             ->will($this->onConsecutiveCalls($data1, $data2));
+        $form->expects($this->once())->method('getData')->willReturn($data);
         $form->init();
+        $form->process();
+    }
 
-        $form->process(); // No value to add
-        $form->process(); // Add value
+    public function testProcessAdd()
+    {
+        $data = array(
+            'inspect' => array(
+                'inspect' => '1',
+            ),
+            'existing' => array(),
+            'new_value' => array(
+                'name' => 'name',
+                'root_key' => 'root_key',
+                'subkeys' => 'subkeys',
+                'value' => 'value'
+            ),
+        );
+
+        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet->initialize(array());
+        $registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')
+                                ->disableOriginalconstructor()
+                                ->getMock();
+        $registryManager->expects($this->once())
+                        ->method('getValueDefinitions')
+                        ->willReturn($resultSet);
+        $registryManager->expects($this->once())
+                        ->method('addValueDefinition')
+                        ->with('name', 'root_key', 'subkeys', 'value');
+        $registryManager->expects($this->never())->method('renameValueDefinition');
+
+        $form = $this->getMockBuilder('Console\Form\ManageRegistryValues')
+                     ->setMethods(array('getData'))
+                     ->setConstructorArgs(
+                         array(
+                            null,
+                            array(
+                                'config' => $this->_config,
+                                'registryManager' => $registryManager,
+                            ),
+                         )
+                     )->getMock();
+        $form->expects($this->once())->method('getData')->willReturn($data);
+        $form->init();
+        $form->process();
+    }
+
+    public function testProcessRename()
+    {
+        $data = array(
+            'inspect' => array(
+                'inspect' => '1',
+            ),
+            'existing' => array(
+                'value_1_name' => 'name1_new',
+                'value_2_name' => 'name2',
+            ),
+            'new_value' => array(
+                'name' => '',
+                'root_key' => 'root_key',
+                'subkeys' => 'subkeys',
+                'value' => 'value'
+            ),
+        );
+
+        $value1 = array('Id' => 1, 'Name' => 'name1', 'FullPath' => 'path1');
+        $value2 = array('Id' => 2, 'Name' => 'name2', 'FullPath' => 'path2');
+
+        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet->initialize(array($value1, $value2));
+        $registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')
+                                ->disableOriginalconstructor()
+                                ->getMock();
+        $registryManager->expects($this->once())
+                        ->method('getValueDefinitions')
+                        ->willReturn($resultSet);
+        $registryManager->expects($this->never())->method('addValueDefinition');
+        $registryManager->expects($this->exactly(2))
+                        ->method('renameValueDefinition')
+                        ->withConsecutive(
+                            array('name1', 'name1_new'),
+                            array('name2', 'name2')
+                        );
+
+        $form = $this->getMockBuilder('Console\Form\ManageRegistryValues')
+                     ->setMethods(array('getData'))
+                     ->setConstructorArgs(
+                         array(
+                            null,
+                            array(
+                                'config' => $this->_config,
+                                'registryManager' => $registryManager,
+                            ),
+                         )
+                     )->getMock();
+        $form->expects($this->once())->method('getData')->willReturn($data);
+        $form->init();
+        $form->process();
     }
 }

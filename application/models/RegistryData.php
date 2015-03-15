@@ -25,7 +25,7 @@
  *
  * Properties:
  *
- * - **Value** Model_RegistryValue object
+ * - **Value** Model\Registry\Value object
  * - **Data** Registry Data
  *
  * Don't confuse 'Value' with its content. In registry terms, 'Value' refers to
@@ -50,7 +50,7 @@ class Model_RegistryData extends Model_ChildObject
 
     /**
      * Value definition
-     * @var Model_RegistryValue
+     * @var Model\Registry\Value
      **/
     protected $_value;
 
@@ -62,7 +62,7 @@ class Model_RegistryData extends Model_ChildObject
         // constructor is invoked, which may initialize the property. Don't
         // overwrite it in that case.
         if (!$this->_value) {
-            $this->_value = new Model_RegistryValue;
+            $this->_value = clone \Library\Application::getService('Model\Registry\Value');
         }
     }
 
@@ -151,19 +151,14 @@ EOT
         );
 
         if (isset($orderByValue)) {
-            // Replace fake ordering with ordering from Model_RegistryValue.
+            // Replace fake ordering with ordering from Model\Registry\Value
             $select->reset('order');
             if ($orderByValue == 'ValueInventoried') {
                 $select->order("value_inventoried $direction");
             } else {
-                $dummy = new Model_RegistryValue;
-                $select->order(
-                    Model_RegistryValue::getOrder(
-                        $orderByValue,
-                        $direction,
-                        $dummy->getPropertyMap()
-                    )
-                );
+                $registryValueDefinitions = \Library\Application::getService('Database\Table\RegistryValueDefinitions');
+                $orderByValue = $registryValueDefinitions->getHydrator()->extractName($orderByValue);
+                $select->order("$orderByValue $direction");
             }
         }
 
@@ -180,18 +175,20 @@ EOT
         // When instantiated from fetchObject(), this gets called before
         // __construct(). Initialize property if necessary.
         if (!$this->_value) {
-            $this->_value = new Model_RegistryValue;
+            $this->_value = clone \Library\Application::getService('Model\Registry\Value');
         }
         switch ($property) {
             case 'data':
                 parent::__set($property, $value);
                 break;
             case 'value_inventoried':
-                $this->_value->setValueInventoried($value);
+                $this->_value['ValueInventoried'] = $value;
                 break;
             default:
-                // Unknown columns are passed to Model_RegistryValue.
-                $this->_value->$property = $value;
+                // Unknown columns are passed to Model\Registry\Value
+                $hydrator = \Library\Application::getService('Database\Table\RegistryValueDefinitions')->getHydrator();
+                $name = $hydrator->hydrateName($property);
+                $this->_value[$name] = $hydrator->hydrateValue($name, $value);
         }
     }
 

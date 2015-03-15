@@ -38,7 +38,7 @@ class ManageRegistryValues extends Form
 {
     /**
      * Array of all values defined in the database
-     * @var \Model_RegistryValue[]
+     * @var \Model\Registry\Value[]
      **/
     protected $_definedValues = array();
 
@@ -101,8 +101,8 @@ class ManageRegistryValues extends Form
         $newRootKey = new Element\Select('root_key');
         $newRootKey->setLabel('Root key')
                    ->setAttribute('type', 'select_untranslated')
-                   ->setValueOptions(\Model_RegistryValue::rootKeys())
-                   ->setValue(\Model_RegistryValue::HKEY_LOCAL_MACHINE);
+                   ->setValueOptions(\Model\Registry\Value::rootKeys())
+                   ->setValue(\Model\Registry\Value::HKEY_LOCAL_MACHINE);
         $fieldsetNew->add($newRootKey);
 
         // Additional validation in isValid()
@@ -288,9 +288,10 @@ class ManageRegistryValues extends Form
 
         $this->getOption('config')->inspectRegistry = $data['inspect']['inspect'];
 
+        $registryManager = $this->getOption('registryManager');
         $name = $data['new_value']['name'];
         if ($name) {
-            $this->getOption('registryManager')->addValueDefinition(
+            $registryManager->addValueDefinition(
                 $name,
                 $data['new_value']['root_key'],
                 $data['new_value']['subkeys'],
@@ -298,7 +299,8 @@ class ManageRegistryValues extends Form
             );
         }
         foreach ($this->_definedValues as $value) {
-            $value->rename(
+            $registryManager->renameValueDefinition(
+                $value['Name'],
                 $data['existing']["value_$value[Id]_name"]
             );
         }
