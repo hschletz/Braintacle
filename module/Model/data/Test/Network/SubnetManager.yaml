@@ -8,7 +8,7 @@
 # 203.0.113.0/24            0           0        1
 # 192.0.2.0/25    NAME      1           1        1
 #
-# The first and last entry have the dame address but a different mask and are
+# The first and last entry have the same address but a different mask and are
 # considered different subnets.
 # Various entries will be ignord for the reasons documented below.
 
