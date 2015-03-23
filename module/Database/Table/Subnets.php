@@ -33,6 +33,15 @@ class Subnets extends \Database\AbstractTable
     public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'subnet';
+
+        $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
+        $this->_hydrator->setNamingStrategy(new \Database\Hydrator\NamingStrategy\Subnets);
+
+        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
+            $this->_hydrator,
+            $serviceLocator->get('Model\Network\Subnet')
+        );
+
         parent::__construct($serviceLocator);
     }
 }

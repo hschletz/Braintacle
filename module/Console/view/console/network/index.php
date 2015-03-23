@@ -77,7 +77,7 @@ print $this->htmlTag(
 
 $headers = array(
     'Name' => $this->translate('Name'),
-    'AddressWithMask' => $this->translate('Address'),
+    'CidrAddress' => $this->translate('Address'),
     'NumInventoried' => $this->translate('inventoried'),
     'NumIdentified' => $this->translate('identified'),
     'NumUnknown' => $this->translate('unknown'),

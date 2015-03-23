@@ -180,7 +180,7 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
             $this->_subnetForm->setData($params->fromPost());
             if ($this->_subnetForm->isValid()) {
                 $data = $this->_subnetForm->getData();
-                $subnet['Name'] = $data['Name'];
+                $this->_subnetManager->saveSubnet($subnet['Address'], $subnet['Mask'], $data['Name']);
                 return $this->redirectToRoute('network', 'index');
             }
         } else {

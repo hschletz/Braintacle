@@ -53,8 +53,8 @@ class FilterDescription extends \Zend\View\Helper\AbstractHelper
                 $description = $this->view->translate(
                     '%1$d computers with an interface in network %2$s'
                 );
-                $network = $search[0] . \Model_Subnet::getCidrSuffix($search[1]);
-                return $this->view->escapeHtml(sprintf($description, $count, $network));
+                $subnet = new \Model\Network\Subnet(array('Address' => $search[0], 'Mask' => $search[1]));
+                return $this->view->escapeHtml(sprintf($description, $count, $subnet['CidrAddress']));
             }
             // No other multi-filters defined.
             throw new \InvalidArgumentException(

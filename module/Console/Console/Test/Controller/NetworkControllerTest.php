@@ -94,7 +94,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                 'Name' => 'subnet1',
                 'Address' => '192.0.2.0',
                 'Mask' => '255.255.255.0',
-                'AddressWithMask' => '192.0.2.0/24',
+                'CidrAddress' => '192.0.2.0/24',
                 'NumInventoried' => 1,
                 'NumIdentified' => 0,
                 'NumUnknown' => 0,
@@ -103,7 +103,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                 'Name' => null,
                 'Address' => '198.51.100.0',
                 'Mask' => '255.255.255.0',
-                'AddressWithMask' => '198.51.100.0/24',
+                'CidrAddress' => '198.51.100.0/24',
                 'NumInventoried' => 1,
                 'NumIdentified' => 2,
                 'NumUnknown' => 3,
@@ -138,7 +138,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
             'subnet1'
         );
         $this->assertNotQueryContentContains('td a[class="blur"]', 'subnet1');
-        $this->assertQueryContentContains('td', "\n192.0.2.0/24\n"); // AddressWithMask column
+        $this->assertQueryContentContains('td', "\n192.0.2.0/24\n"); // CidrAddress column
         $this->assertQueryContentContains(
             'td a[href*="/console/client/index/"][href*="search1=192.0.2.0"][href*="search2=255.255.255.0"]',
             '1'
@@ -147,7 +147,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertNotQuery('td a[href="/console/network/showunknown/?subnet=192.0.2.0&mask=255.255.255.0"]');
 
         // Second row: unnamed subnet with uninventoried devices
-        // AddressWithMask and NumInventoried columns are not tested again
+        // CidrAddress and NumInventoried columns are not tested again
         $this->assertQueryContentContains(
             'td a[href="/console/network/properties/?subnet=198.51.100.0&mask=255.255.255.0"][class="blur"]',
             'Bearbeiten'
@@ -297,20 +297,18 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testPropertiesActionGet()
     {
-        $map = array(
-            array('Address', '192.0.2.0'),
-            array('Mask', '255.255.255.0'),
-            array('AddressWithMask', '192.0.2.0/24'),
-            array('Name', 'name'),
+        $subnet = array(
+            'Address' => '192.0.2.0',
+            'Mask' => '255.255.255.0',
+            'CidrAddress' => '192.0.2.0/24',
+            'Name' => 'name',
         );
-        $subnet = $this->getMock('Model_Subnet');
-        $subnet->expects($this->never())->method('offsetSet');
-        $subnet->method('offsetGet')->will($this->returnValueMap($map));
 
         $this->_subnetManager->expects($this->once())
                              ->method('getSubnet')
                              ->with('192.0.2.0', '255.255.255.0')
                              ->willReturn($subnet);
+        $this->_subnetManager->expects($this->never())->method('saveSubnet');
 
         $this->_subnetForm->expects($this->once())
                           ->method('setData')
@@ -331,13 +329,10 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     {
         $postData = array('Name' => 'new_name');
 
-        $subnet = $this->getMock('Model_Subnet');
-        $subnet->expects($this->never())->method('offsetSet');
-
         $this->_subnetManager->expects($this->once())
                              ->method('getSubnet')
-                             ->with('192.0.2.0', '255.255.255.0')
-                             ->willReturn($subnet);
+                             ->with('192.0.2.0', '255.255.255.0');
+        $this->_subnetManager->expects($this->never())->method('saveSubnet');
 
         $this->_subnetForm->expects($this->once())
                           ->method('setData')
@@ -355,13 +350,13 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     {
         $postData = array('Name' => 'new_name');
 
-        $subnet = $this->getMock('Model_Subnet');
-        $subnet->expects($this->once())->method('offsetSet')->with('Name', 'new_name');
+        $subnet = array('Address' => 'address', 'Mask' => 'mask');
 
         $this->_subnetManager->expects($this->once())
                              ->method('getSubnet')
                              ->with('192.0.2.0', '255.255.255.0')
                              ->willReturn($subnet);
+        $this->_subnetManager->expects($this->once())->method('saveSubnet')->with('address', 'mask', 'new_name');
 
         $this->_subnetForm->expects($this->once())
                           ->method('setData')
@@ -383,8 +378,11 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     {
         $this->_subnetManager = $this->getMockBuilder('Model\Network\SubnetManager')
                                      ->disableOriginalConstructor()
-                                     ->setMethods(null)
                                      ->getMock();
+        $this->_subnetManager->expects($this->once())
+                             ->method('getSubnet')
+                             ->with(null, null)
+                             ->will($this->throwException(new \InvalidArgumentException));
         $this->dispatch('/console/network/properties');
         $this->assertApplicationException('InvalidArgumentException');
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Display form for network properties
+ * Tests for the Subnets table
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,14 +17,25 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-print $this->htmlTag(
-    'h1',
-    sprintf(
-        $this->translate('Properties of subnet %s'),
-        $this->escapeHtml($this->subnet['CidrAddress'])
-    )
-);
-print $this->form->render($this);
+namespace Database\Test\Table;
+
+class SubnetsTest extends AbstractTest
+{
+    public function getDataSet()
+    {
+        return new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet;
+    }
+
+    public function testHydrator()
+    {
+        $hydrator = static::$_table->getHydrator();
+        $this->assertInstanceOf('Zend\Stdlib\Hydrator\ArraySerializable', $hydrator);
+        $this->assertInstanceOf('Database\Hydrator\NamingStrategy\Subnets', $hydrator->getNamingStrategy());
+
+        $resultSet = static::$_table->getResultSetPrototype();
+        $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);
+        $this->assertEquals($hydrator, $resultSet->getHydrator());
+    }
+}

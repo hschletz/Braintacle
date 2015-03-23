@@ -61,7 +61,7 @@ Feature\InitProviderInterface
                     'Model\Group\Group' => 'Model_Group',
                     'Model\Group\Membership' => 'Model_GroupMembership',
                     'Model\Network\Device' => 'Model\Network\Device',
-                    'Model\Network\Subnet' => 'Model_Subnet',
+                    'Model\Network\Subnet' => 'Model\Network\Subnet',
                     'Model\Operator\Operator' => 'Model\Operator\Operator',
                     'Model\Package\Assignment' => 'Model_PackageAssignment',
                     'Model\Package\Metadata' => 'Model\Package\Metadata',

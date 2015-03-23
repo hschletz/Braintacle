@@ -1,6 +1,6 @@
 <?php
 /**
- * Display form for network properties
+ * Naming strategy for Subnets table
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,14 +17,32 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-print $this->htmlTag(
-    'h1',
-    sprintf(
-        $this->translate('Properties of subnet %s'),
-        $this->escapeHtml($this->subnet['CidrAddress'])
-    )
-);
-print $this->form->render($this);
+namespace Database\Hydrator\NamingStrategy;
+
+/**
+ * Naming strategy for Subnets table
+ */
+class Subnets extends AbstractMappingStrategy
+{
+    /** {@inheritdoc} */
+    protected $_hydratorMap = array(
+        'netid' => 'Address',
+        'mask' => 'Mask',
+        'name' => 'Name',
+        'num_inventoried' => 'NumInventoried',
+        'num_identified' => 'NumIdentified',
+        'num_unknown' => 'NumUnknown',
+    );
+
+    /** {@inheritdoc} */
+    protected $_extractorMap = array(
+        'Address' => 'netid',
+        'Mask' => 'mask',
+        'Name' => 'name',
+        'NumInventoried' => 'num_inventoried',
+        'NumIdentified' => 'num_identified',
+        'NumUnknown' => 'num_unknown',
+    );
+}
