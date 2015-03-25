@@ -36,4 +36,11 @@ class ZendDateTest extends \PHPUnit_Framework_TestCase
         $date = '2015-03-13T15:33:03+01:00';
         $this->assertEquals($date, $strategy->extract(new \Zend_Date($date)));
     }
+
+    public function testNullValue()
+    {
+        $strategy = new \Library\Hydrator\Strategy\ZendDate;
+        $this->assertNull($strategy->hydrate(null));
+        $this->assertNull($strategy->extract(null));
+    }
 }

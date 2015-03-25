@@ -22,19 +22,25 @@
 namespace Library\Hydrator\Strategy;
 
 /**
- * Convert date strings to Zend_Date objects
+ * Convert date strings to Zend_Date objects (NULL values remain unchanged)
  */
 class ZendDate implements \Zend\Stdlib\Hydrator\Strategy\StrategyInterface
 {
     /** {@inheritdoc} */
     public function hydrate($value)
     {
-        return new \Zend_Date($value, \Zend_Date::ISO_8601);
+        if ($value !== null) {
+            $value = new \Zend_Date($value, \Zend_Date::ISO_8601);
+        }
+        return $value;
     }
 
     /** {@inheritdoc} */
     public function extract($value)
     {
-        return $value->get(\Zend_Date::ISO_8601);
+        if ($value !== null) {
+            $value = $value->get(\Zend_Date::ISO_8601);
+        }
+        return $value;
     }
 }
