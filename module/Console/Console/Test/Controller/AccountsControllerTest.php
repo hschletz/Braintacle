@@ -72,9 +72,6 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         parent::testService();
     }
 
-    /**
-     * @medium
-     */
     public function testIndexActionCurrentAccount()
     {
         $account = array(
@@ -97,9 +94,6 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertQueryContentContains('td a[href="/console/accounts/edit/?id=testId"]', 'Bearbeiten');
     }
 
-    /**
-     * @medium
-     */
     public function testIndexActionOtherAccount()
     {
         $account = array(

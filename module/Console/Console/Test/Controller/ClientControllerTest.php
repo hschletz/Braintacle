@@ -1079,9 +1079,6 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXpathQueryContentContains('//table[2]/tr[3]/td[7]', '');
     }
 
-    /**
-     * @medium
-     */
     public function testStorageActionUnix()
     {
         $devices = array(
@@ -2171,9 +2168,6 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXPathQuery('//form');
     }
 
-    /**
-     * @medium
-     */
     public function testConfigurationActionGet()
     {
         $config = array('name' => 'value');

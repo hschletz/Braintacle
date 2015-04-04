@@ -23,9 +23,6 @@ namespace Library\Test;
 
 class NowTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @medium
-     */
     public function testService()
     {
         $serviceManager = \Library\Application::getService('serviceManager');

@@ -49,9 +49,6 @@ class MainMenuTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerT
         );
     }
 
-    /**
-     * @medium
-     */
     public function testActive()
     {
         // Mock AuthenticationService to provide an identity

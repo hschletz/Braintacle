@@ -127,7 +127,6 @@ class MacAddressTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $reflectionClass->getStaticProperties()['_vendorList']);
     }
 
-    /** @medium */
     public function testLoadVendorDatabaseFromFile()
     {
         // Clear database first to ensure that data actually gets loaded
@@ -162,7 +161,6 @@ class MacAddressTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('short2', $addr->getVendor());
     }
 
-    /** @medium */
     public function testGetVendorLoadsDatabase()
     {
         // Reset database to force loading from file
