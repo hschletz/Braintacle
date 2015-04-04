@@ -33,7 +33,8 @@ function testModule($module, $filter=null)
     if ($filter) {
         $filter = ' --filter ' .escapeshellarg($filter);
     }
-    $cmd = "phpunit -c module/$module/phpunit.xml --strict --colors " .
+    $cmd = "phpunit -c module/$module/phpunit.xml --colors " .
+           '--report-useless-tests --disallow-test-output ' .
            "--coverage-html=doc/CodeCoverage/$module " .
            "-d include_path=" . get_include_path() . $filter;
 
