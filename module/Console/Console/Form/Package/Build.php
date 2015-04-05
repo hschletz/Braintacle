@@ -48,7 +48,8 @@ class Build extends \Console\Form\Form
         $integerValidator = array(
             'name' => 'Callback',
             'options' => array(
-                'callback' => array($this, 'validateInteger'),
+                'callback' => array($this, 'validateType'),
+                'callbackOptions' => 'integer',
             )
         );
 
@@ -236,19 +237,6 @@ class Build extends \Console\Form\Form
     {
         $this->getInputFilter()->get('File')->setRequired(@$this->data['DeployAction'] != 'execute');
         return parent::isValid();
-    }
-
-    /**
-     * Validator callback for integer fields
-     * @internal
-     */
-    public function validateInteger($value, $context)
-    {
-        if ($value === '') {
-            return true;
-        } else {
-            return $this->validateType($value, $context, 'integer');
-        }
     }
 
     /** {@inheritdoc} */

@@ -137,21 +137,17 @@ class CustomFields extends Form
      */
     public function validateField($value, $context, $type)
     {
-        if ($value === null) {
-            $result = true;
-        } else {
-            switch ($type) {
-                case 'text':
-                    $result = (\Zend\Stdlib\StringUtils::getWrapper('UTF-8')->strlen($value) <= 255);
-                    break;
-                case 'integer':
-                case 'float':
-                case 'date':
-                    $result = $this->validateType($value, $context, $type);
-                    break;
-                default:
-                    $result = true;
-            }
+        switch ($type) {
+            case 'text':
+                $result = (\Zend\Stdlib\StringUtils::getWrapper('UTF-8')->strlen($value) <= 255);
+                break;
+            case 'integer':
+            case 'float':
+            case 'date':
+                $result = $this->validateType($value, $context, $type);
+                break;
+            default:
+                $result = true;
         }
         return $result;
     }

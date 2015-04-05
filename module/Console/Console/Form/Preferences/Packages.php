@@ -43,7 +43,8 @@ class Packages extends AbstractForm
         $integerValidator = array(
             'name' => 'Callback',
             'options' => array(
-                'callback' => array($this, 'validateInteger'),
+                'callback' => array($this, 'validateType'),
+                'callbackOptions' => 'integer',
             )
         );
 
@@ -153,19 +154,6 @@ class Packages extends AbstractForm
         $parentFilter = new \Zend\InputFilter\InputFilter;
         $parentFilter->add($inputFilter, 'Preferences');
         $this->setInputFilter($parentFilter);
-    }
-
-    /**
-     * Validator callback for integer fields
-     * @internal
-     */
-    public function validateInteger($value, $context)
-    {
-        if ($value === '') {
-            return true;
-        } else {
-            return $this->validateType($value, $context, 'integer');
-        }
     }
 
     /** {@inheritdoc} */
