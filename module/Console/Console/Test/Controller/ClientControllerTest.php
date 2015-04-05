@@ -2700,7 +2700,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $this->dispatch('/console/client/export/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset="utf-8"');
+        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=utf-8');
         $this->assertResponseHeaderContains('Content-Disposition', 'attachment; filename="filename.xml"');
         $this->assertResponseHeaderContains('Content-Length', strlen($xmlContent));
         $this->assertEquals($xmlContent, $this->getResponse()->getContent());

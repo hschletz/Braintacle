@@ -206,7 +206,7 @@ class Form extends \Zend\Form\Form
         switch ($type) {
             case 'integer':
                 $value = trim($value);
-                if (\Zend\Validator\StaticValidator::execute($value, 'Zend\I18n\Validator\Int')) {
+                if (\Zend\Validator\StaticValidator::execute($value, 'Zend\I18n\Validator\IsInt')) {
                     $value = \Zend\Filter\StaticFilter::execute(
                         $value,
                         'Zend\I18n\Filter\NumberParse',
@@ -216,7 +216,7 @@ class Form extends \Zend\Form\Form
                 break;
             case 'float':
                 $value = trim($value);
-                if (\Zend\Validator\StaticValidator::execute($value, 'Zend\I18n\Validator\Float')) {
+                if (\Zend\Validator\StaticValidator::execute($value, 'Zend\I18n\Validator\IsFloat')) {
                     $value = \Zend\Filter\StaticFilter::execute(
                         $value,
                         'Zend\I18n\Filter\NumberParse',

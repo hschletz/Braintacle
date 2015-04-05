@@ -142,6 +142,7 @@ class DeviceManager
         if (!($macAddress instanceof \Library\MacAddress)) {
             $macAddress = new \Library\MacAddress($macAddress);
         }
+        $macAddress = $macAddress->getAddress();
         $select = $this->_networkDevicesScanned->getSql()->select();
         $select->columns(array('ip', 'mac', 'name', 'date'))
                ->join(
@@ -191,6 +192,7 @@ class DeviceManager
         if (!($macAddress instanceof \Library\MacAddress)) {
             $macAddress = new \Library\MacAddress($macAddress);
         }
+        $macAddress = $macAddress->getAddress();
         $this->_networkDevicesIdentified->delete(array('macaddr' => $macAddress));
         $this->_networkDevicesScanned->delete(array('mac' => $macAddress));
     }

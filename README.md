@@ -40,13 +40,13 @@ Requirements
   PHP extensions are required:
 
   - A database-specific PHP extension,
-  <http://framework.zend.com/manual/2.2/en/modules/zend.db.adapter.html>
+  <http://framework.zend.com/manual/2.4/en/modules/zend.db.adapter.html>
 
   - The "intl" extension
 
   There are also some PHP libraries required in the include path:
 
-  - [Zend Framework](http://framework.zend.com) 2.x (tested with 2.2)
+  - [Zend Framework](http://framework.zend.com) 2.4 or later
 
   - [NADA](https://github.com/hschletz/NADA)
 
