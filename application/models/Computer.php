@@ -55,7 +55,7 @@
  * - <b>UserName:</b> User logged in at time of inventory
  * - <b>Uuid</b> UUID, typically found in virtual machines
  * - <b>Windows:</b> \Model_Windows object, NULL for non-Windows systems
- * - <b>CustomFields:</b> \Model_UserDefinedInfo object
+ * - <b>CustomFields:</b> \Model\Client\CustomFields object
  * - <b>IsSerialBlacklisted:</b> TRUE if the serial number is blacklisted, i.e. ignored for detection of duplicates.
  * - <b>IsAssetTagBlacklisted:</b> TRUE if the asset tag is blacklisted, i.e. ignored for detection of duplicates.
  * - <b>AudioDevice, Controller, Display, DisplayController, ExtensionSlot,
@@ -206,7 +206,7 @@ class Model_Computer extends Model_ComputerOrGroup
      * User defined information for this computer
      *
      * It can be 1 of 3 types:
-     * 1. A fully populated Model_UserDefinedInfo object
+     * 1. A fully populated \Model\Client\CustomFields object
      * 2. An associative array with a subset of available fields
      * 3. NULL if no value has been set yet.
      *
@@ -515,7 +515,9 @@ class Model_Computer extends Model_ComputerOrGroup
                 default:
                     if (preg_match('#^UserDefinedInfo\\.(.*)#', $type, $matches)) {
                         $property = $matches[1];
-                        switch (Model_UserDefinedInfo::getType($property)) {
+                        switch (
+                            \Library\Application::getService('Model\Client\CustomFieldManager')->getFields()[$property]
+                        ) {
                             case 'text':
                             case 'clob':
                                 $select = self::_findString(
@@ -813,15 +815,10 @@ class Model_Computer extends Model_ComputerOrGroup
                 // If _userDefinedInfo is already an object, do nothing - the
                 // information is already there. Otherwise, _userDefinedInfo
                 // will be an array with the given key/value pair.
-                if (!($this->_userDefinedInfo instanceof Model_UserDefinedInfo)) {
-                    $class = new Model_UserDefinedInfo;
-                    $property = $class->getPropertyName($matches[1]);
-                    if (
-                        !is_null($value) and
-                        Model_UserDefinedInfo::getType($property) == 'date'
-                    ) {
-                        $value = new Zend_Date($value);
-                    }
+                if (!($this->_userDefinedInfo instanceof \Model\Client\CustomFields)) {
+                    $hydrator = \Library\Application::getService('Model\Client\CustomFieldManager')->getHydrator();
+                    $property = $hydrator->hydrateName($matches[1]);
+                    $value = $hydrator->hydrateValue($property, $value);
                     $this->_userDefinedInfo[$property] = $value;
                 }
                 return;
@@ -889,10 +886,7 @@ class Model_Computer extends Model_ComputerOrGroup
             if (preg_match('#^Registry\\.#', $property)) {
                 return 'text';
             }
-            if (preg_match('#^UserDefinedInfo\\.(.*)#', $property, $matches)) {
-                $model = 'UserDefinedInfo';
-                $property = $matches[1];
-            } elseif (preg_match('/^[a-zA-Z]+\.[a-zA-Z]+$/', $property)) {
+            if (preg_match('/^[a-zA-Z]+\.[a-zA-Z]+$/', $property)) {
                 // Property is of the form 'Model.Property'
                 list($model, $property) = explode('.', $property);
             } else {
@@ -921,8 +915,8 @@ class Model_Computer extends Model_ComputerOrGroup
             return parent::getColumnName($property);
         } catch(Exception $e) {
             if (preg_match('#^UserDefinedInfo\\.(.*)#', $property, $matches)) {
-                $class = new Model_UserDefinedInfo;
-                return $class->getColumnName($matches[1]);
+                $hydrator = \Library\Application::getService('Model\Client\CustomFieldManager')->getHydrator();
+                return $hydrator->extractName($matches[1]);
             } elseif (preg_match('#^Registry\\.#', $property)) {
                 return 'registry_content';
             } else {
@@ -944,8 +938,8 @@ class Model_Computer extends Model_ComputerOrGroup
             return parent::getOrder($order, $direction, $propertyMap);
         } catch (Exception $exception) {
             if (preg_match('#^UserDefinedInfo\\.(.*)#', $order, $matches)) {
-                $class = new Model_UserDefinedInfo;
-                $order = 'userdefinedinfo_' . $class->getColumnName($matches[1]);
+                $hydrator = \Library\Application::getService('Model\Client\CustomFieldManager')->getHydrator();
+                $order = 'userdefinedinfo_' . $hydrator->extractName($matches[1]);
             } elseif (preg_match('#^Registry\\.#', $order)) {
                 $order = 'registry_content';
             } elseif (preg_match('/^[a-zA-Z]+\.[a-zA-Z]+$/', $order)) {
@@ -1018,7 +1012,7 @@ class Model_Computer extends Model_ComputerOrGroup
      *
      * If the $name argument is given, the value for the specific field is
      * returned. If $name is null (the default), a fully populated
-     * Model_UserDefinedInfo object is returned.
+     * \Model\Client\CustomFields object is returned.
      * @param string $name Field to retrieve (default: all fields)
      * @return mixed
      * @deprecated superseded by CustomFields property
@@ -1027,14 +1021,18 @@ class Model_Computer extends Model_ComputerOrGroup
     {
         // If _userDefinedInfo is undefined yet, retrieve all fields.
         if (!$this->_userDefinedInfo) {
-            $this->_userDefinedInfo = new Model_UserDefinedInfo($this);
+            $this->_userDefinedInfo = \Library\Application::getService('Model\Client\CustomFieldManager')->read(
+                $this['Id']
+            );
         }
         // From this point on, _userDefinedInfo is either an array or an object.
 
         // Always have an object if all fields are requested.
         if (is_null($name)) {
             if (is_array($this->_userDefinedInfo)) {
-                $this->_userDefinedInfo = new Model_UserDefinedInfo($this);
+                $this->_userDefinedInfo = \Library\Application::getService('Model\Client\CustomFieldManager')->read(
+                    $this['Id']
+                );
             }
             return $this->_userDefinedInfo;
         }
@@ -1046,11 +1044,13 @@ class Model_Computer extends Model_ComputerOrGroup
         } else {
             // Requested field is not available in the array. Create object
             // instead.
-            $this->_userDefinedInfo = new Model_UserDefinedInfo($this);
+            $this->_userDefinedInfo = \Library\Application::getService('Model\Client\CustomFieldManager')->read(
+                $this['Id']
+            );
         }
 
         // At this point _userDefinedInfo is always an object.
-        return $this->_userDefinedInfo->getProperty($name);
+        return $this->_userDefinedInfo[$name];
     }
 
     /**
@@ -1059,7 +1059,7 @@ class Model_Computer extends Model_ComputerOrGroup
      */
     public function setUserDefinedInfo($values)
     {
-        $this->getUserDefinedInfo()->setValues($values);
+        \Library\Application::getService('Model\Client\CustomFieldManager')->write($this['Id'], $values);
     }
 
     /**
@@ -1180,8 +1180,8 @@ class Model_Computer extends Model_ComputerOrGroup
             $columnAlias = $column; // Zend_Db_Select will ignore this alias because the strings are identical
         } elseif ($model == 'UserDefinedInfo') {
             $table = 'accountinfo';
-            $class = new Model_UserDefinedInfo;
-            $column = $class->getColumnName($property);
+            $hydrator = \Library\Application::getService('Model\Client\CustomFieldManager')->getHydrator();
+            $column = $hydrator->extractName($property);
             $columnAlias = 'userdefinedinfo_' . $column;
         } elseif ($model == 'Registry') {
             $table = 'registry';

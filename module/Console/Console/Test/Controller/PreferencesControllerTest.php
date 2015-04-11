@@ -87,13 +87,6 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         );
     }
 
-    /** {@inheritdoc} */
-    public function testService()
-    {
-        $this->_overrideService('Model\Computer\CustomFields', $this->_customFieldManager);
-        parent::testService();
-    }
-
     /**
      * Tests for indexAction()
      */

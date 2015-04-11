@@ -1818,7 +1818,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testCustomfieldsActionFlashMessage()
     {
-        $customFields = $this->getMockBuilder('Model_UserDefinedInfo')->disableOriginalConstructor()->getMock();
+        $customFields = $this->getMockBuilder('Model\Client\CustomFields')->disableOriginalConstructor()->getMock();
         $customFields->expects($this->once())
                      ->method('getArrayCopy')
                      ->will($this->returnValue(array()));
@@ -1840,7 +1840,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testCustomfieldsActionGet()
     {
         $data = array('field1' => 'value1', 'field2' => 'value2');
-        $customFields = $this->getMockBuilder('Model_UserDefinedInfo')->disableOriginalConstructor()->getMock();
+        $customFields = $this->getMockBuilder('Model\Client\CustomFields')->disableOriginalConstructor()->getMock();
         $customFields->expects($this->once())
                      ->method('getArrayCopy')
                      ->will($this->returnValue($data));

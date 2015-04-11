@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for Model\Client\CustomFieldManager
+ * Tests for CustomFields naming strategy
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,21 +19,31 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Model\Service\Client;
+namespace Database\Test\Hydrator\NamingStrategy;
 
-/**
- * Factory for Model\Client\CustomFieldManager
- */
-class CustomFieldManagerFactory implements \Zend\ServiceManager\FactoryInterface
+class CustomFields extends AbstractNamingStrategyTest
 {
-    /**
-     * @internal
-     */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function hydrateProvider()
     {
-        return new \Model\Client\CustomFieldManager(
-            $serviceLocator->get('Database\Table\CustomFieldConfig'),
-            $serviceLocator->get('Database\Table\CustomFields')
+        return array(
+            array('tag', 'TAG'),
         );
+    }
+
+    public function extractProvider()
+    {
+        return array(
+            array('TAG', 'tag'),
+        );
+    }
+
+    public function setUp()
+    {
+        $customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
+                                   ->disableOriginalConstructor()
+                                   ->getMock();
+        $customFieldManager->method('getColumnMap')->willReturn(array('TAG' => 'tag'));
+
+        $this->_namingStrategy = new \Database\Hydrator\NamingStrategy\CustomFields($customFieldManager);
     }
 }

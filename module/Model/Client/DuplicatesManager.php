@@ -310,7 +310,7 @@ class DuplicatesManager
 
             if ($mergeCustomFields) {
                 // Overwrite custom fields with values from oldest client
-                $newest->setUserDefinedInfo($clients[0]->getUserDefinedInfo()->getProperties());
+                $newest->setUserDefinedInfo($clients[0]->getUserDefinedInfo());
             }
 
             if ($mergeGroups) {

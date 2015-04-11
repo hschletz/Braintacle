@@ -54,10 +54,10 @@ Feature\InitProviderInterface
         return array(
             'service_manager' => array(
                 'invokables' => array(
+                    'Model\Client\CustomFields' => 'Model\Client\CustomFields',
                     'Model\Computer\Computer' => 'Model_Computer',
                     'Model\Computer\Software' => 'Model_Software',
                     'Model\Computer\Windows' => 'Model_Windows',
-                    'Model\Computer\CustomFields' => 'Model_UserDefinedInfo',
                     'Model\Group\Group' => 'Model_Group',
                     'Model\Group\Membership' => 'Model_GroupMembership',
                     'Model\Network\Device' => 'Model\Network\Device',

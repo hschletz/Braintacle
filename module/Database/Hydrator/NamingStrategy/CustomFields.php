@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for Model\Client\CustomFieldManager
+ * Naming strategy for CustomFields table
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,21 +19,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Model\Service\Client;
+namespace Database\Hydrator\NamingStrategy;
 
 /**
- * Factory for Model\Client\CustomFieldManager
+ * Naming strategy for CustomFields table
  */
-class CustomFieldManagerFactory implements \Zend\ServiceManager\FactoryInterface
+class CustomFields extends AbstractMappingStrategy
 {
     /**
-     * @internal
+     * Constructor
+     *
+     * @param \Model\Client\CustomFieldManager $customFieldManager
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Model\Client\CustomFieldManager $customFieldManager)
     {
-        return new \Model\Client\CustomFieldManager(
-            $serviceLocator->get('Database\Table\CustomFieldConfig'),
-            $serviceLocator->get('Database\Table\CustomFields')
-        );
+        $this->_extractorMap = $customFieldManager->getColumnMap();
+        $this->_hydratorMap = array_flip($this->_extractorMap);
     }
 }

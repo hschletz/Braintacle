@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for Model\Client\CustomFieldManager
+ * A client's custom fields
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,21 +19,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Model\Service\Client;
+namespace Model\Client;
 
 /**
- * Factory for Model\Client\CustomFieldManager
+ * A client's custom fields
  */
-class CustomFieldManagerFactory implements \Zend\ServiceManager\FactoryInterface
+class CustomFields extends \ArrayObject
 {
-    /**
-     * @internal
-     */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        return new \Model\Client\CustomFieldManager(
-            $serviceLocator->get('Database\Table\CustomFieldConfig'),
-            $serviceLocator->get('Database\Table\CustomFields')
-        );
-    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for Model\Client\CustomFieldManager
+ * Tests for Model\Client\CustomFields
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,21 +19,19 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Model\Service\Client;
+namespace Model\Test\Client;
 
-/**
- * Factory for Model\Client\CustomFieldManager
- */
-class CustomFieldManagerFactory implements \Zend\ServiceManager\FactoryInterface
+class CustomFieldsTest extends \Model\Test\AbstractTest
 {
-    /**
-     * @internal
-     */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function getDataSet()
     {
-        return new \Model\Client\CustomFieldManager(
-            $serviceLocator->get('Database\Table\CustomFieldConfig'),
-            $serviceLocator->get('Database\Table\CustomFields')
-        );
+        return new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet;
+    }
+
+    public function testObjectProperties()
+    {
+        $model = $this->_getModel();
+        $this->assertInstanceOf('ArrayAccess', $model);
+        $this->assertTrue(method_exists($model, 'exchangeArray'));
     }
 }

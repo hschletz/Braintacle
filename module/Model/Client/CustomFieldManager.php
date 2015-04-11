@@ -23,6 +23,15 @@ namespace Model\Client;
 
 /**
  * Class for managing custom fields
+ *
+ * The 'TAG' field is always present. Other fields may be defined by the
+ * administrator.
+ *
+ * Field names are case sensitive. To guarantee uniqueness independent from the
+ * database implementation, equality checks on field names are case insensitive,
+ * i.e. a column 'Name' cannnot be added if a column 'name' already exists.
+ *
+ * When obtaining a list of available fields, the configured order is preserved.
  */
 class CustomFieldManager
 {
@@ -31,6 +40,18 @@ class CustomFieldManager
      * @var \Database\Table\CustomFieldConfig
      */
     protected $_customFieldConfig;
+
+    /**
+     * CustomFields table
+     * @var \Database\Table\CustomFields
+     */
+    protected $_customFields;
+
+    /**
+     * Hydrator for CustomField objects
+     * @var \Zend\Stdlib\Hydrator\ArraySerializable
+     */
+    protected $_hydrator;
 
     /**
      * Map of field names => field types
@@ -48,10 +69,15 @@ class CustomFieldManager
      * Constructor
      *
      * @param \Database\Table\CustomFieldConfig $customFieldConfig
+     * @param \Database\Table\CustomFields $customFields
      */
-    public function __construct(\Database\Table\CustomFieldConfig $customFieldConfig)
+    public function __construct(
+        \Database\Table\CustomFieldConfig $customFieldConfig,
+        \Database\Table\CustomFields $customFields
+    )
     {
         $this->_customFieldConfig = $customFieldConfig;
+        $this->_customFields = $customFields;
     }
 
     /**
@@ -177,5 +203,75 @@ class CustomFieldManager
         $this->_customFieldConfig->deleteField($name);
         unset($this->_fields[$name]);
         unset($this->_columnMap[$name]);
+    }
+
+    /**
+     * Get a hydrator to bind CustomField objects to the database
+     *
+     * Unlike other tables, the hydrator cannot be provided by the CustomFields
+     * table class due to tricky dependencies. Use this method to get a suitable
+     * hydrator.
+     *
+     * @return \Zend\Stdlib\Hydrator\ArraySerializable
+     */
+    public function getHydrator()
+    {
+        if (!$this->_hydrator) {
+            $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
+            $this->_hydrator->setNamingStrategy(
+                new \Database\Hydrator\NamingStrategy\CustomFields($this)
+            );
+            $columns = $this->getColumnMap();
+            $dateStrategy = new \Library\Hydrator\Strategy\ZendDate;
+            foreach ($this->getFields() as $name => $type) {
+                if ($type == 'date') {
+                    $this->_hydrator->addStrategy($name, $dateStrategy);
+                    $this->_hydrator->addStrategy($columns[$name], $dateStrategy);
+                }
+            }
+        }
+        return $this->_hydrator;
+    }
+
+    /**
+     * Get field content for given client
+     *
+     * @param integer $clientId Client ID
+     * @return \Model\Client\CustomFields
+     * @throws \InvalidArgumentException if client ID does not exist
+     */
+    public function read($clientId)
+    {
+        $fields = new \Model\Client\CustomFields;
+        $select = $this->_customFields->getSql()->select();
+        $select->columns(array_values($this->getColumnMap()))
+               ->where(array('hardware_id' => $clientId));
+        $data = $this->_customFields->selectWith($select)->current();
+        if (!$data) {
+            throw new \RuntimeException('Invalid client ID: ' . $clientId);
+        }
+        $this->getHydrator()->hydrate(
+            $data->getArrayCopy(),
+            $fields
+        );
+        return $fields;
+    }
+
+    /**
+     * Set field content for given client
+     *
+     * @param integer $clientId Client ID
+     * @param array|\Model\Client\CustomFields $data Values
+     */
+    public function write($clientId, $data)
+    {
+        if (!$data instanceof \Model\Client\CustomFields) {
+            $data = new \Model\Client\CustomFields($data);
+        }
+        // Row is always present (created by server)
+        $this->_customFields->update(
+            $this->getHydrator()->extract($data),
+            array('hardware_id' => $clientId)
+        );
     }
 }
