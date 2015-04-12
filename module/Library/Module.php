@@ -74,6 +74,11 @@ Feature\InitProviderInterface
                     'Library\Now' => false,
                 ),
             ),
+            'translator_plugins' => array(
+                'invokables' => array(
+                    'Po' => 'Library\I18n\Translator\Loader\Po',
+                )
+            ),
             'view_helpers' => array(
                 'factories' => array(
                     'formYesNo' => 'Library\View\Helper\Service\FormYesNoFactory',
@@ -145,12 +150,8 @@ Feature\InitProviderInterface
 
         if (\Locale::getPrimaryLanguage(\Locale::getDefault()) != 'en') {
             $mvcTranslator = $serviceManager->get('MvcTranslator');
-            $translator = $mvcTranslator->getTranslator();
-            $translator->getPluginManager()->setInvokableClass(
-                'Po',
-                'Library\I18n\Translator\Loader\Po'
-            );
             if (Application::isDevelopment()) {
+                $translator = $mvcTranslator->getTranslator();
                 $translator->enableEventManager();
                 $translator->getEventManager()->attach(
                     \Zend\I18n\Translator\Translator::EVENT_MISSING_TRANSLATION,
