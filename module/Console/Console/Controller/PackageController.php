@@ -243,8 +243,7 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
             $flashMessenger->addSuccessMessage(
                 array($this->_('Package \'%s\' was successfully created.') => $name)
             );
-            $flashMessenger->setNamespace('packageName');
-            $flashMessenger->addMessage($name);
+            $flashMessenger->addMessage($name, 'packageName');
             return true;
         } catch (\Model\Package\RuntimeException $e) {
             $flashMessenger->addErrorMessage($e->getMessage());

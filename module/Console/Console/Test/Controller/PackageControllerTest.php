@@ -197,7 +197,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $flashMessenger->addErrorMessage('error');
         $flashMessenger->addSuccessMessage('success');
         $flashMessenger->addInfoMessage('info');
-        $flashMessenger->setNamespace('packageName')->addMessage('<br>');
+        $flashMessenger->addMessage('<br>', 'packageName');
 
         $this->_packageManager->expects($this->once())->method('getPackages')->willReturn(array());
         $this->_disableTranslator();
@@ -240,7 +240,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'NumError' => 0,
             ),
         );
-        $this->_getControllerPlugin('FlashMessenger')->setNamespace('packageName')->addMessage('name1');
+        $this->_getControllerPlugin('FlashMessenger')->addMessage('name1', 'packageName');
         $this->_packageManager->expects($this->once())->method('getPackages')->willReturn($packages);
         $this->dispatch('/console/package/index/');
         $this->assertResponseStatusCode(200);
