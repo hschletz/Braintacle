@@ -67,7 +67,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'PhysicalMemory' => 'physicalmemory1',
             'InventoryDate' => '2014-05-11 12:35',
             'Registry.value' => 'registry1',
-            'UserDefinedInfo.customField' => 'custom1',
+            'UserDefinedInfo.customField' => '<custom1>',
             'UserDefinedInfo.TAG' => 'category1',
         ),
         array(
@@ -80,7 +80,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'PhysicalMemory' => 'physicalmemory2',
             'InventoryDate' => '2014-05-12 11:14',
             'Registry.value' => 'registry2',
-            'UserDefinedInfo.customField' => 'custom2',
+            'UserDefinedInfo.customField' => '<custom2>',
             'UserDefinedInfo.TAG' => 'category2',
         )
     );
@@ -599,7 +599,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXpathQueryContentContains('//th/a', "value");
     }
 
-    public function testIndexActionWithCustomSearchOnCustomField()
+    public function testIndexActionWithCustomSearchOnCustomFieldText()
     {
         $formData = array(
             'filter' => 'UserDefinedInfo.customField',
@@ -634,6 +634,51 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//th/a', "customField");
+        $this->assertXpathQueryContentContains('//tr[2]/td[4]', "\n<custom1>\n");
+        $this->assertXpathQueryContentContains('//tr[3]/td[4]', "\n<custom2>\n");
+    }
+
+    public function testIndexActionWithCustomSearchOnCustomFieldDate()
+    {
+        $formData = array(
+            'filter' => 'UserDefinedInfo.customField',
+            'search' => 'test',
+            'operator' => 'like',
+            'invert' => '0',
+            'customSearch' => 'button',
+        );
+        $form = $this->_formManager->get('Console\Form\Search');
+        $form->expects($this->once())
+             ->method('setData')
+             ->with($formData);
+        $form->expects($this->once())
+             ->method('isValid')
+             ->will($this->returnValue(true));
+        $form->expects($this->once())
+             ->method('getData')
+             ->will($this->returnValue($formData));
+
+        $sampleClients = $this->_sampleClients;
+        $sampleClients[0]['UserDefinedInfo.customField'] = new \Zend_Date('2015-04-11 10:31:00');
+        $sampleClients[1]['UserDefinedInfo.customField'] = new \Zend_Date('2015-04-12 10:32:00');
+        $this->_computer->expects($this->once())
+                        ->method('fetch')
+                        ->with(
+                            array('Name', 'UserName', 'InventoryDate', 'UserDefinedInfo.customField'),
+                            'InventoryDate',
+                            'desc',
+                            'UserDefinedInfo.customField',
+                            'test',
+                            'like',
+                            '0'
+                        )
+                        ->willReturn($sampleClients);
+        $query = 'filter=UserDefinedInfo.customField&search=test&operator=like&invert=0';
+        $this->dispatch("/console/client/index/?customSearch=button&$query");
+        $this->assertResponseStatusCode(200);
+        $this->assertXpathQueryContentContains('//th/a', "customField");
+        $this->assertXpathQueryContentContains('//tr[2]/td[4]', "\n11.04.2015\n");
+        $this->assertXpathQueryContentContains('//tr[3]/td[4]', "\n12.04.2015\n");
     }
 
     public function testIndexActionWithCustomSearchOnCategory()
@@ -671,6 +716,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//th/a', "Kategorie");
+        $this->assertXpathQueryContentContains('//tr[2]/td[4]', "\ncategory1\n");
+        $this->assertXpathQueryContentContains('//tr[3]/td[4]', "\ncategory2\n");
     }
 
     public function testIndexActionWithInvalidCustomSearch()

@@ -111,19 +111,6 @@ $columnClasses = array(
 );
 
 $headers = array();
-foreach ($this->columns as $column) {
-    if (preg_match('/^(Registry|UserDefinedInfo)\.(.+)/', $column, $matches)) {
-        // Extract column header from name
-        if ($matches[1] == 'UserDefinedInfo' and $matches[2] == 'TAG') {
-            $headers[$column] = $this->translate('Category');
-        } else {
-            $headers[$column] = $matches[2];
-        }
-    } else {
-        $headers[$column] = $allHeaders[$column];
-    }
-}
-
 $renderCallbacks = array(
     'Name' => function($view, $client) {
         return $view->htmlTag(
@@ -140,6 +127,28 @@ $renderCallbacks = array(
         );
     },
 );
+
+foreach ($this->columns as $column) {
+    if (preg_match('/^(Registry|UserDefinedInfo)\.(.+)/', $column, $matches)) {
+        // Extract column header from name
+        $headers[$column] = $matches[2];
+        if ($matches[1] == 'UserDefinedInfo') {
+            if ($matches[2] == 'TAG') {
+                $headers[$column] = $this->translate('Category');
+            } else {
+                $renderCallbacks[$column] = function($view, $client, $property) {
+                    $value = $client[$property];
+                    if ($value instanceof \Zend_Date) {
+                        $value = $value->get(\Zend_Date::DATE_MEDIUM);
+                    }
+                    return $view->escapeHtml($value);
+                };
+            }
+        }
+    } else {
+        $headers[$column] = $allHeaders[$column];
+    }
+}
 
 $filter = $this->filter;
 $count = count($this->clients);
