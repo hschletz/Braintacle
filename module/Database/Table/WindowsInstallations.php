@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for LicensesController
+ * "braintacle_windows" table
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,20 +19,20 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Console\Service;
+Namespace Database\Table;
 
 /**
- * Factory for LicensesController
+ * "braintacle_windows" table
  */
-class LicensesControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class WindowsInstallations extends \Database\AbstractTable
 {
     /**
-     * @internal
+     * {@inheritdoc}
+     * @codeCoverageIgnore
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        return new \Console\Controller\LicensesController(
-            $serviceLocator->getServiceLocator()->get('Model\SoftwareManager')
-        );
+        $this->table = 'braintacle_windows';
+        parent::__construct($serviceLocator);
     }
 }

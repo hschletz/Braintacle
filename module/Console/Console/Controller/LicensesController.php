@@ -27,19 +27,20 @@ namespace Console\Controller;
 class LicensesController extends \Zend\Mvc\Controller\AbstractActionController
 {
     /**
-     * Windows prototype
-     * @var \Model_Windows
+     * Software manager
+     *
+     * @var \Model\SoftwareManager
      */
-    protected $_windows;
+    protected $_softwareManager;
 
     /**
      * Constructor
-     * 
-     * @param \Model_Windows $windows Windows prototype
+     *
+     * @param \Model\SoftwareManager $softwareManager
      */
-    public function __construct(\Model_Windows $windows)
+    public function __construct(\Model\SoftwareManager $softwareManager)
     {
-        $this->_windows = $windows;
+        $this->_softwareManager = $softwareManager;
     }
 
     /**
@@ -50,7 +51,7 @@ class LicensesController extends \Zend\Mvc\Controller\AbstractActionController
     public function indexAction()
     {
         return array(
-            'windowsProductKeys' => $this->_windows->getNumManualProductKeys()
+            'windowsProductKeys' => $this->_softwareManager->getNumManualProductKeys()
         );
     }
 }

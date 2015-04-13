@@ -50,40 +50,6 @@ class Model_Windows extends Model_Abstract
         'ManualProductKey' => 'manual_product_key',
     );
 
-    /** {@inheritdoc} */
-    public function setProperty($property, $value)
-    {
-        if ($property == 'ManualProductKey') {
-            // Validate and store value in database
-            if (empty($value) or $value == $this->getProductKey()) {
-                $value = null;
-            } else {
-                $validator = new \Library\Validator\ProductKey;
-                if (!$validator->isValid($value)) {
-                    throw new UnexpectedValueException(current($validator->getMessages()));
-                }
-            }
-
-            $db = Model_Database::getAdapter();
-            // A record might not exist yet, so try UPDATE first, then INSERT
-            if (!$db->update(
-                'braintacle_windows',
-                array('manual_product_key' => $value),
-                array('hardware_id = ?' => $this->getComputerId())
-            )) {
-                $db->insert(
-                    'braintacle_windows',
-                    array(
-                        'hardware_id' => $this->getComputerId(),
-                        'manual_product_key' => $value,
-                    )
-                );
-            }
-        }
-
-        parent::setProperty($property, $value);
-    }
-
     /**
      * Get name of table where a property is stored
      *
@@ -133,20 +99,4 @@ class Model_Windows extends Model_Abstract
         }
         return $windows;
     }
-
-    /**
-     * Get number of computers with manually entered Windows product key
-     * @return integer
-     **/
-    public function getNumManualProductKeys()
-    {
-        if (Model_Database::supportsManualProductKey()) {
-            return Model_Database::getAdapter()->fetchOne(
-                'SELECT COUNT(manual_product_key) FROM braintacle_windows WHERE manual_product_key IS NOT NULL'
-            );
-        } else {
-            return 0;
-        }
-    }
-
 }

@@ -27,39 +27,39 @@ namespace Console\Test\Controller;
 class LicensesControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
-     * Windows mock
-     * @var \Model_Windows
+     * Software manager mock
+     * @var \Model\SoftwareManager
      */
-    protected $_windows;
+    protected $_softwareManager;
 
     /** {@inheritdoc} */
     protected function _createController()
     {
-        return new \Console\Controller\LicensesController($this->_windows);
+        return new \Console\Controller\LicensesController($this->_softwareManager);
     }
 
-    /**
-     * Tests for indexAction()
-     */
-    public function testIndexAction()
+    public function testIndexActionNoManualKeys()
     {
-        $url = '/console/licenses/index/';
-
         // Zero manual product keys produce <dd>0</dd>.
-        $this->_windows = $this->getMock('Model_Windows');
-        $this->_windows->expects($this->any())
-                       ->method('getNumManualProductKeys')
-                       ->will($this->returnValue(0));
-        $this->dispatch($url);
+        $this->_softwareManager = $this->getMockBuilder('Model\SoftwareManager')
+                                       ->disableOriginalConstructor()
+                                       ->getMock();
+        $this->_softwareManager->expects($this->once())->method('getNumManualProductKeys')->willReturn(0);
+
+        $this->dispatch('/console/licenses/index/');
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains('dd', "\n0\n");
+    }
 
+    public function testIndexActionManualKeys()
+    {
         // Nonzero manual product keys produce <dd><a...>n</a></dd>.
-        $this->_windows = $this->getMock('Model_Windows');
-        $this->_windows->expects($this->any())
-                       ->method('getNumManualProductKeys')
-                       ->will($this->returnValue(1));
-        $this->dispatch($url);
+        $this->_softwareManager = $this->getMockBuilder('Model\SoftwareManager')
+                                       ->disableOriginalConstructor()
+                                       ->getMock();
+        $this->_softwareManager->expects($this->once())->method('getNumManualProductKeys')->willReturn(1);
+
+        $this->dispatch('/console/licenses/index/');
         $this->assertResponseStatusCode(200);
         $this->assertXPathQueryContentContains(
             '//dd/a[@href="/console/client/index/?' .

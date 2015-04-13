@@ -39,6 +39,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     protected $_groupManager;
 
     /**
+     * Software manager mock
+     * @var \Model\SoftwareManager
+     */
+    protected $_softwareManager;
+
+    /**
      * Form manager mock
      * @var \Zend\Form\FormElementManager
      */
@@ -105,6 +111,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_groupManager = $this->getMockBuilder('Model\Group\GroupManager')
                                     ->disableOriginalConstructor()
                                     ->getMock();
+        $this->_softwareManager = $this->getMockBuilder('Model\SoftwareManager')
+                                       ->disableOriginalConstructor()
+                                       ->getMock();
         $this->_formManager = new \Zend\Form\FormElementManager;
         $this->_formManager->setService('Console\Form\Package\Assign', $this->getMock('Console\Form\Package\Assign'));
         $this->_formManager->setService('Console\Form\ClientConfig', $this->getMock('Console\Form\ClientConfig'));
@@ -132,6 +141,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         return new \Console\Controller\ClientController(
             $this->_computer,
             $this->_groupManager,
+            $this->_softwareManager,
             $this->_formManager,
             $this->_config,
             $this->_inventoryUploader
@@ -940,10 +950,6 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testWindowsActionPostValid()
     {
         $postData = array('Key' => 'entered_key');
-        $windows = $this->getMock('Model_Windows');
-        $windows->expects($this->once())
-                ->method('offsetSet')
-                ->with('ManualProductKey', 'entered_key');
         $form = $this->_formManager->get('Console\Form\ProductKey');
         $form->expects($this->once())
              ->method('setData')
@@ -956,11 +962,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->will($this->returnValue($postData));
         $map = array(
             array('Id', 1),
-            array('Windows', $windows),
         );
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
+
+        $this->_softwareManager->expects($this->once())
+                               ->method('setProductKey')
+                               ->with($this->_computer, 'entered_key');
+
         $this->dispatch('/console/client/windows/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/windows/?id=1');
     }

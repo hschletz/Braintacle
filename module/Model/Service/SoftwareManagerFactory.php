@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for LicensesController
+ * Factory for Model\SoftwareManager
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,20 +19,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Console\Service;
+namespace Model\Service;
 
 /**
- * Factory for LicensesController
+ * Factory for Model\SoftwareManager
  */
-class LicensesControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class SoftwareManagerFactory implements \Zend\ServiceManager\FactoryInterface
 {
     /**
      * @internal
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        return new \Console\Controller\LicensesController(
-            $serviceLocator->getServiceLocator()->get('Model\SoftwareManager')
-        );
+        return new \Model\SoftwareManager($serviceLocator->get('Database\Table\WindowsInstallations'));
     }
 }

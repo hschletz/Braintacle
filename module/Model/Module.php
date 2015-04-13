@@ -79,6 +79,7 @@ Feature\InitProviderInterface
                     'Model\Package\PackageManager' => 'Model\Service\Package\PackageManagerFactory',
                     'Model\Package\Storage\Direct' => 'Model\Service\Package\Storage\DirectFactory',
                     'Model\Registry\RegistryManager' => 'Model\Service\Registry\RegistryManagerFactory',
+                    'Model\SoftwareManager' => 'Model\Service\SoftwareManagerFactory',
                 ),
                 'shared' => array(
                     'Model\Package\Metadata' => false,

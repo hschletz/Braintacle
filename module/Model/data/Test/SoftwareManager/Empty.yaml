@@ -1,0 +1,7 @@
+braintacle_windows:
+  -
+    hardware_id: 1
+    manual_product_key: null
+  -
+    hardware_id: 2
+    manual_product_key: "CDEFG-HIJKL-MNOPQ-RSTUV-WXYZA"

@@ -39,6 +39,12 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     protected $_groupManager;
 
     /**
+     * Software manager
+     * @var \Model\SoftwareManager
+     */
+    protected $_softwareManager;
+
+    /**
      * Form manager
      * @var \Zend\Form\FormElementManager
      */
@@ -67,6 +73,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
      *
      * @param \Model_Computer $computer
      * @param \Model\Group\GroupManager $groupManager
+     * @param \Model\SoftwareManager $softwareManager
      * @param \Zend\Form\FormElementManager $formManager
      * @param \Model\Config $config
      * @param \Library\InventoryUploader $inventoryUploader
@@ -74,6 +81,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     public function __construct(
         \Model_Computer $computer,
         \Model\Group\GroupManager $groupManager,
+        \Model\SoftwareManager $softwareManager,
         \Zend\Form\FormElementManager $formManager,
         \Model\Config $config,
         \Library\InventoryUploader $inventoryUploader
@@ -81,6 +89,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     {
         $this->_computer = $computer;
         $this->_groupManager = $groupManager;
+        $this->_softwareManager = $softwareManager;
         $this->_formManager = $formManager;
         $this->_config = $config;
         $this->_inventoryUploader = $inventoryUploader;
@@ -234,7 +243,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $data = $form->getData();
-                $windows['ManualProductKey'] = $data['Key'];
+                $this->_softwareManager->setProductKey($this->_currentClient, $data['Key']);
                 return $this->redirectToRoute(
                     'client',
                     'windows',
