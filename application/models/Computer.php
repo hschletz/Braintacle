@@ -1534,6 +1534,7 @@ class Model_Computer extends Model_ComputerOrGroup
         // Additional tables without associated Model_ChildObject class
         $tables[] = 'accountinfo';
         $tables[] = 'bios';
+        $tables[] = 'braintacle_windows';
         $tables[] = 'download_history';
         $tables[] = 'download_servers';
         $tables[] = 'groups_cache';

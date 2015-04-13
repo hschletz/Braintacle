@@ -42,6 +42,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         'Locks',
         'NetworkInterfaces',
         'RegistryData',
+        'WindowsInstallations',
     );
 
     /** {@inheritdoc} */

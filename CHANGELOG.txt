@@ -87,6 +87,8 @@ Fixed bugs:
 
 - Console: Fixed display of software size for Unix machines (wrong magnitude).
 
+- Console: Fixed orphaned database rows after deleting a computer.
+
 
 CHANGES IN VERSION 0.15
 =======================
