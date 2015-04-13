@@ -68,7 +68,7 @@ class Form_Package extends Zend_Form
                  'Db_NoRecordExists', false, array(
                     'table' => 'download_available',
                     'field' => 'name'
-                )
+                 )
              )
              ->setRequired(true)
              ->setLabel('Name');
@@ -159,7 +159,7 @@ class Form_Package extends Zend_Form
                         2, 3, 4, 5, 6, 7, 8, 9,
 
                         '10 (' . $translate->_('low') . ')'
-                    )
+                     )
                  )
                  ->setValue(Model_Config::get('DefaultPackagePriority'))
                  ->setLabel($translate->_('Priority'));

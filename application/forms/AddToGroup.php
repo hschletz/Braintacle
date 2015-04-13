@@ -91,7 +91,7 @@ class Form_AddToGroup extends Zend_Form
                     self::STORE_EXCLUDED => $translate->_(
                         'Exclude search results from a group.'
                     )
-                )
+                 )
              )
              ->setValue('filter')
              ->setDecorators($radioDecorator);
