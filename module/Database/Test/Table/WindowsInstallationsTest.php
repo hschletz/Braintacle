@@ -1,6 +1,6 @@
 <?php
 /**
- * "braintacle_windows" table
+ * Tests for the WindowsInstallations table
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,28 +19,26 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-Namespace Database\Table;
+namespace Database\Test\Table;
 
-/**
- * "braintacle_windows" table
- */
-class WindowsInstallations extends \Database\AbstractTable
+class WindowsInstallationsTest extends AbstractTest
 {
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function getDataSet()
     {
-        $this->table = 'braintacle_windows';
+        return new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet;
+    }
 
-        $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
-        $this->_hydrator->setNamingStrategy(new \Database\Hydrator\NamingStrategy\WindowsInstallations);
-
-        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
-            $this->_hydrator, $serviceLocator->get('Model\Client\WindowsInstallation')
+    public function testHydrator()
+    {
+        $hydrator = static::$_table->getHydrator();
+        $this->assertInstanceOf('Zend\Stdlib\Hydrator\ArraySerializable', $hydrator);
+        $this->assertInstanceOf(
+            'Database\Hydrator\NamingStrategy\WindowsInstallations',
+            $hydrator->getNamingStrategy()
         );
 
-        parent::__construct($serviceLocator);
+        $resultSet = static::$_table->getResultSetPrototype();
+        $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);
+        $this->assertEquals($hydrator, $resultSet->getHydrator());
     }
 }

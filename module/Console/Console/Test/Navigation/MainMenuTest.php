@@ -60,8 +60,7 @@ class MainMenuTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerT
              ->method('getIdentity')
              ->will($this->returnValue('test'));
 
-        // Mock model to make action run without errors
-        $model = $this->getMock('Model_Windows');
+        $model = $this->getMockBuilder('Model\SoftwareManager')->disableOriginalConstructor()->getMock();
         $model->expects($this->any())
               ->method('getNumManualProductKeys')
               ->will($this->returnValue(0));
@@ -69,7 +68,7 @@ class MainMenuTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerT
         $this->getApplicationServiceLocator()
              ->setAllowOverride(true)
              ->setService('Library\AuthenticationService', $auth)
-             ->setService('Model\Computer\Windows', $model);
+             ->setService('Model\SoftwareManager', $model);
 
         // Dispatch arbitrary action and test corresponding menu entry
         $this->dispatch('/console/licenses/index/');

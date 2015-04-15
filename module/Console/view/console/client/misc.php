@@ -76,7 +76,7 @@ if (count($ports)) {
         'Type' => $this->translate('Type'),
         'Name' => $this->translate('Name'),
     );
-    if (!$client['Windows']) {
+    if (!$client['Windows'] instanceof \Model\Client\WindowsInstallation) {
         $headers['Connector'] = $this->translate('Connector');
     }
     print $this->htmlTag(

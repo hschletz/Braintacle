@@ -51,7 +51,7 @@ $renderSize = function($view, $object, $property) {
 
 $renderCallbacks = array('Size' => $renderSize);
 
-if ($client['Windows']) {
+if ($client['Windows'] instanceof \Model\Client\WindowsInstallation) {
     $renderCallbacks['Type'] = function($view, $client, $property) {
         $type = $client['Type'];
         // Some generic device types can be translated.

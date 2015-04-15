@@ -27,7 +27,7 @@ $headers = array(
     'Name' => $this->translate('Name'),
     'Version' => $this->translate('Version'),
 );
-if ($client['Windows']) {
+if ($client['Windows'] instanceof \Model\Client\WindowsInstallation) {
     $headers['Publisher'] = $this->translate('Publisher');
     $headers['InstallLocation'] = $this->translate('Location');
     $headers['Architecture'] = $this->translate('Architecture');

@@ -1,6 +1,6 @@
 <?php
 /**
- * "braintacle_windows" table
+ * Naming strategy for WindowsInstallations table
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,28 +19,30 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-Namespace Database\Table;
+namespace Database\Hydrator\NamingStrategy;
 
 /**
- * "braintacle_windows" table
+ * Naming strategy for WindowsInstallations table
  */
-class WindowsInstallations extends \Database\AbstractTable
+class WindowsInstallations extends AbstractMappingStrategy
 {
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $this->table = 'braintacle_windows';
+    /** {@inheritdoc} */
+    protected $_hydratorMap = array(
+        'userdomain' => 'UserDomain',
+        'wincompany' => 'Company',
+        'winowner' => 'Owner',
+        'winprodkey' => 'ProductKey',
+        'winprodid' => 'ProductId',
+        'manual_product_key' => 'ManualProductKey',
+    );
 
-        $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
-        $this->_hydrator->setNamingStrategy(new \Database\Hydrator\NamingStrategy\WindowsInstallations);
-
-        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
-            $this->_hydrator, $serviceLocator->get('Model\Client\WindowsInstallation')
-        );
-
-        parent::__construct($serviceLocator);
-    }
+    /** {@inheritdoc} */
+    protected $_extractorMap = array(
+        'UserDomain' => 'userdomain',
+        'Company' => 'wincompany',
+        'Owner' => 'winowner',
+        'ProductKey' => 'winprodkey',
+        'ProductId' => 'winprodid',
+        'ManualProductKey' => 'manual_product_key',
+    );
 }

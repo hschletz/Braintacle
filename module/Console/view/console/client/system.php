@@ -78,7 +78,7 @@ $headers = array(
     'Manufacturer' => $this->translate('Manufacturer'),
     'Name' => $this->translate('Name'),
 );
-if ($this->client['Windows']) { // Not available for other OS
+if ($this->client['Windows'] instanceof \Model\Client\WindowsInstallation) { // Not available for other OS
     $headers['DriverVersion'] = $this->translate('Driver version');
 }
 

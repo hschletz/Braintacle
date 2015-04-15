@@ -79,7 +79,7 @@ class Model_DomDocument_InventoryRequest extends \Library\DomDocument
                     foreach ($this->getProperties($section) as $name => $property) {
                         // Get raw value from model class
                         if ($models[$name] == 'Windows') {
-                            $property = $computer->getWindows()->getProperty($property, true);
+                            $property = $computer['Windows'][$property];
                         } else {
                             $property = $computer->getProperty($property, true);
                         }

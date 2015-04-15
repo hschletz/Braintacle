@@ -30,7 +30,7 @@ print $this->htmlTag(
 $menu = $this->navigation('Console\Navigation\ClientMenu')
              ->menu()
              ->setUlClass('navigation navigation_details');
-if (!$this->client['Windows']) {
+if (!$this->client['Windows'] instanceof \Model\Client\WindowsInstallation) {
     foreach ($menu->findAllBy('windowsOnly', true) as $page) {
         $menu->removePage($page);
     }

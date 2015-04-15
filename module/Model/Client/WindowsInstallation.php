@@ -1,6 +1,6 @@
 <?php
 /**
- * "braintacle_windows" table
+ * Information about a client's windows installation
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,28 +19,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-Namespace Database\Table;
+namespace Model\Client;
 
 /**
- * "braintacle_windows" table
+ * Information about a client's windows installation
+ *
+ * @property string $UserDomain Domain of logged in user (for local accounts this is identical to the computer name)
+ * @property string $Company Company name (set during installation)
+ * @property string $Owner Owner (set during installation)
+ * @property string $ProductKey Product Key
+ * @property string $ProductId Product ID (installation-specific, may or may not be unique)
+ * @property string $ManualProductKey Manually overridden product key (entered in Braintacle console)
  */
-class WindowsInstallations extends \Database\AbstractTable
+class WindowsInstallation extends \ArrayObject
 {
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $this->table = 'braintacle_windows';
-
-        $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
-        $this->_hydrator->setNamingStrategy(new \Database\Hydrator\NamingStrategy\WindowsInstallations);
-
-        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
-            $this->_hydrator, $serviceLocator->get('Model\Client\WindowsInstallation')
-        );
-
-        parent::__construct($serviceLocator);
-    }
 }

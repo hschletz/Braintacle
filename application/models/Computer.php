@@ -54,7 +54,7 @@
  * - <b>OsComment:</b> comment
  * - <b>UserName:</b> User logged in at time of inventory
  * - <b>Uuid</b> UUID, typically found in virtual machines
- * - <b>Windows:</b> \Model_Windows object, NULL for non-Windows systems
+ * - <b>Windows:</b> \Model\Client\WindowsInstallation object, NULL for non-Windows systems
  * - <b>CustomFields:</b> \Model\Client\CustomFields object
  * - <b>IsSerialBlacklisted:</b> TRUE if the serial number is blacklisted, i.e. ignored for detection of duplicates.
  * - <b>IsAssetTagBlacklisted:</b> TRUE if the asset tag is blacklisted, i.e. ignored for detection of duplicates.
@@ -171,7 +171,7 @@ class Model_Computer extends Model_ComputerOrGroup
      * Windows-specific information
      *
      * Object has undefined content for non-Windows systems.
-     * @var Model_Windows
+     * @var \Model\Client\WindowsInstallation
      **/
     public $windows;
 
@@ -234,7 +234,7 @@ class Model_Computer extends Model_ComputerOrGroup
         // constructor is invoked, which may initialize the property. Don't
         // overwrite it in that case.
         if (!$this->windows) {
-            $this->windows = new Model_Windows;
+            $this->windows = clone \Library\Application::getService('Model\Client\WindowsInstallation');
         };
     }
 
@@ -347,13 +347,12 @@ class Model_Computer extends Model_ComputerOrGroup
                     } else {
                         list ($model, $property) = explode('.', $column);
                         if ($model == 'Windows') {
-                            $dummyWindows = new Model_Windows;
-                            if ($dummyWindows->getTableName($property) == 'hardware') {
-                                $fromHardware['windows_' . strtolower($property)] =
-                                    $dummyWindows->getColumnName($property);
+                            if ($property == 'ManualProductKey') {
+                                $fromWindows['windows_manual_product_key'] = 'manual_product_key';
                             } else {
-                                $fromWindows['windows_' . strtolower($property)] =
-                                    $dummyWindows->getColumnName($property);
+                                $property = \Library\Application::getService('Database\Table\WindowsInstallations')
+                                            ->getHydrator()->extractName($property);
+                                $fromHardware['windows_' . $property] = $property;
                             }
                         }
                     }
@@ -729,12 +728,12 @@ class Model_Computer extends Model_ComputerOrGroup
             } elseif (preg_match('#^Registry\\.#', $property)) {
                 return $this->_registryContent;
             } elseif (preg_match('#^Windows\\.(\w+)$#', $property, $matches)) {
-                return $this->windows->getProperty($matches[1]);
+                return $this->windows[$matches[1]];
             } elseif ($property == 'Windows') {
                 // The OS type is not stored directly in the database. However,
                 // the ProductId property is always non-empty on Windows systems
                 // so that it can be used to check for a Windows system.
-                $windows = \Model_Windows::getWindows($this);
+                $windows = $this->getWindows();
                 if ($windows['ProductId']) {
                     return $windows;
                 } else {
@@ -825,29 +824,26 @@ class Model_Computer extends Model_ComputerOrGroup
             }
 
             // Only handle properly formatted column identifiers
-            if (!preg_match('/^[a-z]+_[a-z]+$/', $property)) {
+            if (!preg_match('/^[a-z]+_[a-z_]+$/', $property)) {
                 throw $exception;
             }
 
-            list($model, $property) = explode('_', $property);
+            list($model, $property) = explode('_', $property, 2);
 
             if ($model == 'windows') {
                 // When instantiated from fetchObject(), this gets called before
                 // __construct(). Initialize property if necessary.
                 if (!$this->windows) {
-                    $this->windows = new Model_Windows;
+                    $this->windows = clone \Library\Application::getService('Model\Client\WindowsInstallation');
                 }
-                // Perform case insensitive search for the property inside the
-                // property map.
-                $map = $this->windows->getPropertyMap();
-                foreach (array_keys($map) as $windowsProperty) {
-                    if (strcasecmp($property, $windowsProperty) == 0) {
-                        // Property is valid. Store the raw value in windows object.
-                        $this->windows->$map[$windowsProperty] = $value;
-                        return; // No further iteration necessary.
-                    }
+                $hydrator = \Library\Application::getService('Database\Table\WindowsInstallations')->getHydrator();
+                $property = $hydrator->hydrateName($property);
+                if ($property) {
+                    $this->windows[$property] = $hydrator->hydrateValue($property, $value);
+                } else {
+                    throw $exception; // Property is invalid.
                 }
-                throw $exception; // Property is invalid.
+                return;
             }
 
             // Since the column identifier is all lowercase, a case insensitive
@@ -1092,12 +1088,26 @@ class Model_Computer extends Model_ComputerOrGroup
      *
      * It is valid to call this on non-Windows computer objects in which case
      * the content of the object is undefined.
-     * @return Model_Windows Updated windows property
+     * @return \Model\Client\WindowsInstallation Updated windows property
      * @deprecated superseded by "Windows" property
      **/
     public function getWindows()
     {
-        $this->windows = Model_Windows::getWindows($this);
+        // Cannot use TableGateway directly because LEFT JOIN must be done on
+        // ClientsAndGroups, but ResultSet is fetched from WindowsInstallations.
+        $windowsInstallations = \Library\Application::getService('Database\Table\windowsInstallations');
+        $clients = \Library\Application::getService('Database\Table\ClientsAndGroups');
+        $sql = $clients->getSql();
+        $select = $sql->select();
+        $select->columns(array('userdomain', 'wincompany', 'winowner', 'winprodkey', 'winprodid'))
+               ->join('braintacle_windows', 'id = hardware_id', 'manual_product_key', \Zend\Db\Sql\Select::JOIN_LEFT)
+               ->where(array('id' => $this['Id']));
+        $resultSet = clone $windowsInstallations->getResultSetPrototype();
+
+        $this->windows = $resultSet->initialize($sql->prepareStatementForSqlObject($select)->execute())->current();
+        if (!$this->windows) {
+            throw new \RuntimeException('Invalid client ID: ' . $this['Id']);
+        }
         return $this->windows;
     }
 
@@ -1189,10 +1199,15 @@ class Model_Computer extends Model_ComputerOrGroup
             $columnAlias = 'registry_content';
             $select->where('registry.name = ?', $property);
         } elseif ($model == 'Windows') {
-            $table = Model_Windows::getTableName($property);
-            $class = new Model_Windows;
-            $column = $class->getColumnName($property);
-            $columnAlias = 'windows_' . strtolower($property); // safe, malicious content would have raised an exception
+            if ($property == 'ManualProductKey') {
+                $table = 'braintacle_windows';
+                $column = 'manual_product_key';
+            } else {
+                $table = 'hardware';
+                $hydrator = \Library\Application::getService('Database\Table\WindowsInstallations')->getHydrator();
+                $column = $hydrator->extractName($property);
+            }
+            $columnAlias = 'windows_' . $column;
         } elseif (in_array($model, self::$_childObjectTypes)) {
             $className = "Model_$model";
             $class = new $className;

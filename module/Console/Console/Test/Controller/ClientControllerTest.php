@@ -176,7 +176,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                         ->will(
                             $this->returnValueMap(
                                 array(
-                                    array('Windows', $this->getMock('Model_Windows')),
+                                    array('Windows', $this->getMock('Model\Client\WindowsInstallation')),
                                 )
                             )
                         );
@@ -886,19 +886,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->init();
         $this->_formManager = new \Zend\Form\FormElementManager;
         $this->_formManager->setService('Console\Form\ProductKey', $form);
-        $map = array(
-            array('Company', 'company'),
-            array('Owner', 'owner'),
-            array('ProductId', 'product_id'),
-            array('ProductKey', 'product_key'),
-            array('ManualProductKey', 'manual_product_key'),
+        $windows = array(
+            'Company' => 'company',
+            'Owner' => 'owner',
+            'ProductId' => 'product_id',
+            'ProductKey' => 'product_key',
+            'ManualProductKey' => 'manual_product_key',
         );
-        $windows = $this->getMock('Model_Windows');
-        $windows->expects($this->any())
-                ->method('offsetGet')
-                ->will($this->returnValueMap($map));
-        $windows->expects($this->never())
-                ->method('offsetSet');
+        $this->_softwareManager->expects($this->never())->method('setProductKey');
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap(array(array('Windows', $windows))));
@@ -936,12 +931,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->get('Key')->setMessages(array('message'));
         $this->_formManager = new \Zend\Form\FormElementManager;
         $this->_formManager->setService('Console\Form\ProductKey', $form);
-        $windows = $this->getMock('Model_Windows');
-        $windows->expects($this->never())
-                ->method('offsetSet');
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap(array(array('Windows', $windows))));
+        $this->_softwareManager->expects($this->never())->method('setProductKey');
         $this->dispatch('/console/client/windows/?id=1', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//*[@class="error"]//*[text()="message"]');
@@ -1108,7 +1098,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
         $map = array(
-            array('Windows', $this->getMock('Model_Windows')),
+            array('Windows', $this->getMock('Model\Client\WindowsInstallation')),
             array('StorageDevice', $devices),
             array('Volume', $filesystems),
         );
@@ -1307,7 +1297,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             array('MemorySlot', array()),
             array('Controller', $controllers),
             array('ExtensionSlot', array()),
-            array('Windows', $this->getMock('Model_Windows')),
+            array('Windows', $this->getMock('Model\Client\WindowsInstallation')),
         );
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
@@ -1427,7 +1417,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                       ->method('getArrayCopy')
                       ->will($this->onConsecutiveCalls($software1, $software2));
         $map = array(
-            array('Windows', $this->getMock('Model_Windows')),
+            array('Windows', $this->getMock('Model\Client\WindowsInstallation')),
         );
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
@@ -1832,7 +1822,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             array('AudioDevice', array()),
             array('InputDevice', array()),
             array('Port', array($port)),
-            array('Windows', $this->getMock('Model_Windows')),
+            array('Windows', $this->getMock('Model\Client\WindowsInstallation')),
         );
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
