@@ -134,12 +134,12 @@ class Model_DomDocument_InventoryRequest extends \Library\DomDocument
                     $sections[$section] = $this->createDocumentFragment();
                     // Fetch data from child objects, once per distinct model
                     foreach (array_unique($models) as $model) {
-                        $statement = $computer->getChildObjects(
+                        $items = $computer->getItems(
                             $model,
                             'id', // Sort by 'id' to get more predictable results for comparision
                             'asc'
                         );
-                        while ($object = $statement->fetchObject('Model_' . $model)) {
+                        foreach ($items as $object) {
                             // Create base element
                             $element = $this->createElement($section);
                             // Create child elements, 1 per property

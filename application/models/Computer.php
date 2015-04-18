@@ -972,35 +972,20 @@ class Model_Computer extends Model_ComputerOrGroup
      */
     public function getItems($type, $order=null, $direction=null, $filters=array())
     {
-        $statement = $this->getChildObjects($type, $order, $direction, $filters);
-        $items = array();
-        while ($item = $statement->fetchObject("Model_$type")) {
-            $items[] = $item;
-        }
-        return $items;
-    }
-
-    /**
-     * Get a statement object for all child objects of a given type belonging to this computer.
-     *
-     * @param string $type Object type to retrieve (name of model class without 'Model_' prefix)
-     * @param string $order Property to sort by. If ommitted, the model's builtin default is used.
-     * @param string $direction Sorting direction (asc|desc)
-     * @param array $filters Extra filters to pass to the child model's createStatement() method
-     * @return Zend_Db_Statement Statement object with results
-     * @deprecated superseded by getItems()
-     */
-    public function getChildObjects($type, $order=null, $direction=null, $filters=array())
-    {
-        $filters['Computer'] = $this->getId();
+        $filters['Computer'] = $this['Id'];
         $className = "Model_$type";
         $class = new $className;
-        return $class->createStatement(
+        $statement = $class->createStatement(
             null,
             $order,
             $direction,
             $filters
         );
+        $items = array();
+        while ($item = $statement->fetchObject("Model_$type")) {
+            $items[] = $item;
+        }
+        return $items;
     }
 
     /**
