@@ -1,6 +1,6 @@
 <?php
 /**
- * Naming strategy for WindowsInstallations table
+ * Filter to keep only whitelisted properties
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,30 +19,32 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Database\Hydrator\NamingStrategy;
+namespace Library\Hydrator\Filter;
 
 /**
- * Naming strategy for WindowsInstallations table
+ * Filter to keep only whitelisted properties
  */
-class WindowsInstallations extends AbstractMappingStrategy
+class Whitelist implements \Zend\Stdlib\Hydrator\Filter\FilterInterface
 {
-    /** {@inheritdoc} */
-    protected $_hydratorMap = array(
-        'userdomain' => 'UserDomain',
-        'wincompany' => 'Company',
-        'winowner' => 'Owner',
-        'winprodkey' => 'ProductKey',
-        'winprodid' => 'ProductId',
-        'manual_product_key' => 'ManualProductKey',
-    );
+    /**
+     * Whitelisted properties
+     * @var string[]
+     */
+    protected $_whitelist;
+
+    /**
+     * Constructor
+     *
+     * @param string[] $whitelist Whitelisted properties
+     */
+    public function __construct(array $whitelist)
+    {
+        $this->_whitelist = $whitelist;
+    }
 
     /** {@inheritdoc} */
-    protected $_extractorMap = array(
-        'UserDomain' => 'userdomain',
-        'Company' => 'wincompany',
-        'Owner' => 'winowner',
-        'ProductKey' => 'winprodkey',
-        'ProductId' => 'winprodid',
-        'ManualProductKey' => 'manual_product_key',
-    );
+    public function filter($property)
+    {
+        return in_array($property, $this->_whitelist);
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Naming strategy for Operators table
+ * Tests for the Whitelist filter
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,28 +19,14 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Database\Hydrator\NamingStrategy;
+namespace Library\Test\Hydrator\Filter;
 
-/**
- * Naming strategy for Operators table
- */
-class Operators extends AbstractMappingStrategy
+class WhitelistTest extends \PHPUnit_Framework_TestCase
 {
-    /** {@inheritdoc} */
-    protected $_hydratorMap = array(
-        'id' => 'Id',
-        'firstname' => 'FirstName',
-        'lastname' => 'LastName',
-        'email' => 'MailAddress',
-        'comments' => 'Comment',
-    );
-
-    /** {@inheritdoc} */
-    protected $_extractorMap = array(
-        'Id' => 'id',
-        'FirstName' => 'firstname',
-        'LastName' => 'lastname',
-        'MailAddress' => 'email',
-        'Comment' => 'comments',
-    );
+    public function testFilter()
+    {
+        $filter = new \Library\Hydrator\Filter\Whitelist(array('hydrated'));
+        $this->assertTrue($filter->filter('hydrated'));
+        $this->assertFalse($filter->filter('invalid'));
+    }
 }

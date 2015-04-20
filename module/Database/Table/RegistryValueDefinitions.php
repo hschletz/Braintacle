@@ -35,7 +35,17 @@ class RegistryValueDefinitions extends \Database\AbstractTable
         $this->table = 'regconfig';
 
         $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
-        $this->_hydrator->setNamingStrategy(new \Database\Hydrator\NamingStrategy\RegistryValueDefinitions);
+        $this->_hydrator->setNamingStrategy(
+            new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
+                array(
+                    'id' => 'Id',
+                    'name' => 'Name',
+                    'regtree' => 'RootKey',
+                    'regkey' => 'SubKeys',
+                    'regvalue' => 'ValueConfigured',
+                )
+            )
+        );
 
         $valueConfigured = new \Database\Hydrator\Strategy\RegistryValueDefinitions\ValueConfigured;
         $this->_hydrator->addStrategy('ValueConfigured', $valueConfigured);

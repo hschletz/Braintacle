@@ -35,7 +35,21 @@ class OperatorsTest extends AbstractTest
     {
         $hydrator = static::$_table->getHydrator();
         $this->assertInstanceOf('Zend\Stdlib\Hydrator\ArraySerializable', $hydrator);
-        $this->assertInstanceOf('Database\Hydrator\NamingStrategy\Operators', $hydrator->getNamingStrategy());
+
+        $map = $hydrator->getNamingStrategy();
+        $this->assertInstanceOf('Database\Hydrator\NamingStrategy\MapNamingStrategy', $map);
+
+        $this->assertEquals('Id', $map->hydrate('id'));
+        $this->assertEquals('FirstName', $map->hydrate('firstname'));
+        $this->assertEquals('LastName', $map->hydrate('lastname'));
+        $this->assertEquals('MailAddress', $map->hydrate('email'));
+        $this->assertEquals('Comment', $map->hydrate('comments'));
+
+        $this->assertEquals('id', $map->extract('Id'));
+        $this->assertEquals('firstname', $map->extract('FirstName'));
+        $this->assertEquals('lastname', $map->extract('LastName'));
+        $this->assertEquals('email', $map->extract('MailAddress'));
+        $this->assertEquals('comments', $map->extract('Comment'));
 
         $resultSet = static::$_table->getResultSetPrototype();
         $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);

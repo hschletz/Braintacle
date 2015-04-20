@@ -32,7 +32,23 @@ class SubnetsTest extends AbstractTest
     {
         $hydrator = static::$_table->getHydrator();
         $this->assertInstanceOf('Zend\Stdlib\Hydrator\ArraySerializable', $hydrator);
-        $this->assertInstanceOf('Database\Hydrator\NamingStrategy\Subnets', $hydrator->getNamingStrategy());
+
+        $map = $hydrator->getNamingStrategy();
+        $this->assertInstanceOf('Database\Hydrator\NamingStrategy\MapNamingStrategy', $map);
+
+        $this->assertEquals('Address', $map->hydrate('netid'));
+        $this->assertEquals('Mask', $map->hydrate('mask'));
+        $this->assertEquals('Name', $map->hydrate('name'));
+        $this->assertEquals('NumInventoried', $map->hydrate('num_inventoried'));
+        $this->assertEquals('NumIdentified', $map->hydrate('num_identified'));
+        $this->assertEquals('NumUnknown', $map->hydrate('num_unknown'));
+
+        $this->assertEquals('netid', $map->extract('Address'));
+        $this->assertEquals('mask', $map->extract('Mask'));
+        $this->assertEquals('name', $map->extract('Name'));
+        $this->assertEquals('num_inventoried', $map->extract('NumInventoried'));
+        $this->assertEquals('num_identified', $map->extract('NumIdentified'));
+        $this->assertEquals('num_unknown', $map->extract('NumUnknown'));
 
         $resultSet = static::$_table->getResultSetPrototype();
         $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);

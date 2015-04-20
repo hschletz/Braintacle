@@ -35,7 +35,18 @@ class WindowsInstallations extends \Database\AbstractTable
         $this->table = 'braintacle_windows';
 
         $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
-        $this->_hydrator->setNamingStrategy(new \Database\Hydrator\NamingStrategy\WindowsInstallations);
+        $this->_hydrator->setNamingStrategy(
+            new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
+                array(
+                    'userdomain' => 'UserDomain',
+                    'wincompany' => 'Company',
+                    'winowner' => 'Owner',
+                    'winprodkey' => 'ProductKey',
+                    'winprodid' => 'ProductId',
+                    'manual_product_key' => 'ManualProductKey',
+                )
+            )
+        );
 
         $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
             $this->_hydrator, $serviceLocator->get('Model\Client\WindowsInstallation')

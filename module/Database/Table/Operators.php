@@ -32,8 +32,18 @@ class Operators extends \Database\AbstractTable
      */
     public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
+        $map = array(
+            'id' => 'Id',
+            'firstname' => 'FirstName',
+            'lastname' => 'LastName',
+            'email' => 'MailAddress',
+            'comments' => 'Comment',
+        );
         $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
-        $this->_hydrator->setNamingStrategy(new \Database\Hydrator\NamingStrategy\Operators);
+        $this->_hydrator->setNamingStrategy(
+            new \Database\Hydrator\NamingStrategy\MapNamingStrategy($map)
+        );
+        $this->_hydrator->addFilter('whitelist', new \Library\Hydrator\Filter\Whitelist($map));
 
         $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
             $this->_hydrator, $serviceLocator->get('Model\Operator\Operator')

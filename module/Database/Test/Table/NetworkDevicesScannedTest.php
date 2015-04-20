@@ -32,10 +32,24 @@ class NetworkDevicesScannedTest extends AbstractTest
     {
         $hydrator = static::$_table->getHydrator();
         $this->assertInstanceOf('Zend\Stdlib\Hydrator\ArraySerializable', $hydrator);
-        $this->assertInstanceOf(
-            'Database\Hydrator\NamingStrategy\NetworkDevicesScanned',
-            $hydrator->getNamingStrategy()
-        );
+
+        $map = $hydrator->getNamingStrategy();
+        $this->assertInstanceOf('Database\Hydrator\NamingStrategy\MapNamingStrategy', $map);
+
+        $this->assertEquals('IpAddress', $map->hydrate('ip'));
+        $this->assertEquals('MacAddress', $map->hydrate('mac'));
+        $this->assertEquals('Hostname', $map->hydrate('name'));
+        $this->assertEquals('DiscoveryDate', $map->hydrate('date'));
+        $this->assertEquals('Description', $map->hydrate('description'));
+        $this->assertEquals('Type', $map->hydrate('type'));
+
+        $this->assertEquals('ip', $map->extract('IpAddress'));
+        $this->assertEquals('mac', $map->extract('MacAddress'));
+        $this->assertEquals('name', $map->extract('Hostname'));
+        $this->assertEquals('date', $map->extract('DiscoveryDate'));
+        $this->assertEquals('description', $map->extract('Description'));
+        $this->assertEquals('type', $map->extract('Type'));
+
         $this->assertInstanceOf('Library\Hydrator\Strategy\ZendDate', $hydrator->getStrategy('DiscoveryDate'));
         $this->assertInstanceOf('Library\Hydrator\Strategy\ZendDate', $hydrator->getStrategy('date'));
         $this->assertInstanceOf('Library\Hydrator\Strategy\MacAddress', $hydrator->getStrategy('MacAddress'));

@@ -217,11 +217,13 @@ class CustomFieldManager
     public function getHydrator()
     {
         if (!$this->_hydrator) {
+            $columns = $this->getColumnMap();
             $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
             $this->_hydrator->setNamingStrategy(
-                new \Database\Hydrator\NamingStrategy\CustomFields($this)
+                new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
+                    array_flip($columns)
+                )
             );
-            $columns = $this->getColumnMap();
             $dateStrategy = new \Library\Hydrator\Strategy\ZendDate;
             foreach ($this->getFields() as $name => $type) {
                 if ($type == 'date') {

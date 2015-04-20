@@ -139,10 +139,12 @@ class PackageManager
         );
 
         if ($order) {
-            $order = $packages->getHydrator()->extractName($order);
-            if ($order) {
-                $select->order(array($order => $direction));
+            if ($order == 'Timestamp') {
+                $order = 'fileid';
+            } else {
+                $order = $packages->getHydrator()->extractName($order);
             }
+            $select->order(array($order => $direction));
         }
 
         return $packages->selectWith($select);
@@ -206,8 +208,7 @@ class PackageManager
             $data['NumFragments'] = $storage->write($data, $file, $deleteSource || $archiveCreated);
 
             // Create database entries
-            $insert = @$packages->getHydrator()->extract(new \ArrayObject($data));
-            unset($insert['']); // Result from any unknown keys which are ignored
+            $insert = $packages->getHydrator()->extract(new \ArrayObject($data));
             if (!$insert['osname']) {
                 throw new \InvalidArgumentException('Invalid platform: ' . $data['Platform']);
             }

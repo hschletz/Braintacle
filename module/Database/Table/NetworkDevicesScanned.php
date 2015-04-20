@@ -35,7 +35,18 @@ class NetworkDevicesScanned extends \Database\AbstractTable
         $this->table = 'netmap';
 
         $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
-        $this->_hydrator->setNamingStrategy(new \Database\Hydrator\NamingStrategy\NetworkDevicesScanned);
+        $this->_hydrator->setNamingStrategy(
+            new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
+                array(
+                    'ip' => 'IpAddress',
+                    'mac' => 'MacAddress',
+                    'name' => 'Hostname',
+                    'date' => 'DiscoveryDate',
+                    'description' => 'Description',
+                    'type' => 'Type',
+                )
+            )
+        );
 
         $zendDate = new \Library\Hydrator\Strategy\ZendDate;
         $this->_hydrator->addStrategy('DiscoveryDate', $zendDate);

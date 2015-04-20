@@ -288,8 +288,11 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
         $this->assertInstanceOf('Zend\Stdlib\Hydrator\ArraySerializable', $hydrator);
 
         $namingStrategy = $hydrator->getNamingStrategy();
-        $this->assertInstanceOf('Database\Hydrator\NamingStrategy\CustomFields', $namingStrategy);
+        $this->assertInstanceOf('Database\Hydrator\NamingStrategy\MapNamingStrategy', $namingStrategy);
+        $this->assertEquals('TAG', $namingStrategy->hydrate('tag'));
         $this->assertEquals('Date', $namingStrategy->hydrate('fields_2'));
+        $this->assertEquals('tag', $namingStrategy->extract('TAG'));
+        $this->assertEquals('fields_2', $namingStrategy->extract('Date'));
 
         $this->assertInstanceOf('Library\Hydrator\Strategy\ZendDate', $hydrator->getStrategy('Date'));
         $this->assertInstanceOf('Library\Hydrator\Strategy\ZendDate', $hydrator->getStrategy('fields_2'));

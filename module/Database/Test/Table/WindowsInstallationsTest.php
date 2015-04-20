@@ -32,10 +32,23 @@ class WindowsInstallationsTest extends AbstractTest
     {
         $hydrator = static::$_table->getHydrator();
         $this->assertInstanceOf('Zend\Stdlib\Hydrator\ArraySerializable', $hydrator);
-        $this->assertInstanceOf(
-            'Database\Hydrator\NamingStrategy\WindowsInstallations',
-            $hydrator->getNamingStrategy()
-        );
+
+        $map = $hydrator->getNamingStrategy();
+        $this->assertInstanceOf('Database\Hydrator\NamingStrategy\MapNamingStrategy', $map);
+
+        $this->assertEquals('UserDomain', $map->hydrate('userdomain'));
+        $this->assertEquals('Company', $map->hydrate('wincompany'));
+        $this->assertEquals('Owner', $map->hydrate('winowner'));
+        $this->assertEquals('ProductKey', $map->hydrate('winprodkey'));
+        $this->assertEquals('ProductId', $map->hydrate('winprodid'));
+        $this->assertEquals('ManualProductKey', $map->hydrate('manual_product_key'));
+
+        $this->assertEquals('userdomain', $map->extract('UserDomain'));
+        $this->assertEquals('wincompany', $map->extract('Company'));
+        $this->assertEquals('winowner', $map->extract('Owner'));
+        $this->assertEquals('winprodkey', $map->extract('ProductKey'));
+        $this->assertEquals('winprodid', $map->extract('ProductId'));
+        $this->assertEquals('manual_product_key', $map->extract('ManualProductKey'));
 
         $resultSet = static::$_table->getResultSetPrototype();
         $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);

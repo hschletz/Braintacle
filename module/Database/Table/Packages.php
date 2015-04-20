@@ -36,8 +36,24 @@ class Packages extends \Database\AbstractTable
     {
         $this->table = 'download_available';
 
+        $map = array(
+            'name' => 'Name',
+            'fileid' => 'Id',
+            'priority' => 'Priority',
+            'fragments' => 'NumFragments',
+            'size' => 'Size',
+            'osname' => 'Platform',
+            'comment' => 'Comment',
+            'num_nonnotified' => 'NumNonnotified',
+            'num_success' => 'NumSuccess',
+            'num_notified' => 'NumNotified',
+            'num_error' => 'NumError',
+        );
         $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
-        $this->_hydrator->setNamingStrategy(new \Database\Hydrator\NamingStrategy\Packages);
+        $this->_hydrator->setNamingStrategy(
+            new \Database\Hydrator\NamingStrategy\MapNamingStrategy($map)
+        );
+        $this->_hydrator->addFilter('whitelist', new \Library\Hydrator\Filter\Whitelist($map));
 
         $platform = new \Database\Hydrator\Strategy\Packages\Platform;
         $this->_hydrator->addStrategy('Platform', $platform);
