@@ -69,6 +69,7 @@ class Model_DomDocument_InventoryRequest extends \Library\DomDocument
      */
     public function loadComputer(Model_Computer $computer)
     {
+        $itemManager = \Library\Application::getService('Model\Client\ItemManager');
         // Collect all sections in an array
         $sections = array();
         foreach ($this->getModels() as $section => $models) {
@@ -142,20 +143,31 @@ class Model_DomDocument_InventoryRequest extends \Library\DomDocument
                         foreach ($items as $object) {
                             // Create base element
                             $element = $this->createElement($section);
-                            // Create child elements, 1 per property
-                            foreach ($this->getProperties($section) as $name => $property) {
-                                $value = $object->getProperty($property, true); // Get raw value
-                                if (strlen($value)) { // Don't generate empty elements
-                                    $type = $object->getPropertyType($property);
-                                    if ($type == 'timestamp' or $type == 'date') {
-                                        // Re-fetch value as Zend_Date
-                                        $value = $object->getProperty($property, false);
-                                        // Convert to specific format
-                                        $value = $value->get($this->getFormat($model, $property));
+                            if ($object instanceof \Model_ChildObject) {
+                                foreach ($this->getProperties($section) as $name => $property) {
+                                    // Create child elements, 1 per property
+                                    $value = $object->getProperty($property, true); // Get raw value
+                                    if (strlen($value)) { // Don't generate empty elements
+                                        $type = $object->getPropertyType($property);
+                                        if ($type == 'timestamp' or $type == 'date') {
+                                            // Re-fetch value as Zend_Date
+                                            $value = $object->getProperty($property, false);
+                                            // Convert to specific format
+                                            $value = $value->get($this->getFormat($model, $property));
+                                        }
+                                        $element->appendChild(
+                                            $this->createElementWithContent($name, $value)
+                                        );
                                     }
-                                    $element->appendChild(
-                                        $this->createElementWithContent($name, $value)
-                                    );
+                                }
+                            } else {
+                                $data = $itemManager->getTable($model)->getHydrator()->extract($object);
+                                foreach ($data as $name => $value) {
+                                    if ($value != '') {
+                                        $element->appendChild(
+                                            $this->createElementWithContent(strtoupper($name), $value)
+                                        );
+                                    }
                                 }
                             }
                             $sections[$section]->appendChild($element);

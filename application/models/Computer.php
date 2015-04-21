@@ -146,6 +146,7 @@ class Model_Computer extends Model_ComputerOrGroup
     /**
      * List of all child object types
      * @var array
+     * @deprecated to be handled by ItemManager
      */
     private static $_childObjectTypes = array(
         'AudioDevice',
@@ -751,10 +752,18 @@ class Model_Computer extends Model_ComputerOrGroup
                     "SELECT COUNT(assettag) FROM braintacle_blacklist_assettags WHERE assettag = ?",
                     $this['AssetTag']
                 );
-            } elseif (in_array($property, self::$_childObjectTypes)) {
-                return $this->getItems($property);
+            } elseif (preg_match('#^(\w+)\\.(\w+)$#', $property, $matches)) {
+                $type = $matches[1];
+                $property = $matches[2];
+                $table = \Library\Application::getService('Model\Client\ItemManager')->getTable($type);
+                $key = $table->table . '.' . $table->getHydrator()->extractName($property);
+                if (array_key_exists($key, $this->_childProperties)) {
+                    return $this->_childProperties[$key];
+                } else {
+                    throw $e;
+                }
             } else {
-                throw $e;
+                return $this->getItems($property);
             }
         }
 
@@ -864,7 +873,9 @@ class Model_Computer extends Model_ComputerOrGroup
                     }
                 }
             }
-            throw $exception; // Either model or property is invalid.
+
+            // Fallback: Assume property of an item
+            $this->_childProperties["$model.$property"] = $value;
         }
     }
 
@@ -938,9 +949,19 @@ class Model_Computer extends Model_ComputerOrGroup
                 $order = 'userdefinedinfo_' . $hydrator->extractName($matches[1]);
             } elseif (preg_match('#^Registry\\.#', $order)) {
                 $order = 'registry_content';
-            } elseif (preg_match('/^[a-zA-Z]+\.[a-zA-Z]+$/', $order)) {
-                // Assume proper column alias ('model_property')
-                $order = strtolower(strtr($order, '.', '_'));
+            } elseif (preg_match('/^([a-zA-Z]+)\.([a-zA-Z]+)$/', $order, $matches)) {
+                $model = $matches[1];
+                $property = $matches[2];
+                if (in_array($model, self::$_childObjectTypes)) {
+                    // Assume column alias 'model_property'
+                    $order = strtolower(strtr($order, '.', '_'));
+                } else {
+                    // Assume column alias 'table_column'
+                    $tableGateway = \Library\Application::getService('Model\Client\ItemManager')->getTable($model);
+                    $table = $tableGateway->table;
+                    $column = $tableGateway->getHydrator()->extractName($property);
+                    $order = "{$table}_$column";
+                }
             } else {
                 throw $exception;
             }
@@ -968,22 +989,29 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string $order Property to sort by. If ommitted, the model's builtin default is used.
      * @param string $direction Sorting direction (asc|desc)
      * @param array $filters Extra filters to pass to the model's createStatement() method
-     * @return \Model_ChildObject[]
+     * @return \Model_ChildObject[]|\Zend\Db\ResultSet\AbstractResultSet
      */
     public function getItems($type, $order=null, $direction=null, $filters=array())
     {
-        $filters['Computer'] = $this['Id'];
-        $className = "Model_$type";
-        $class = new $className;
-        $statement = $class->createStatement(
-            null,
-            $order,
-            $direction,
-            $filters
-        );
-        $items = array();
-        while ($item = $statement->fetchObject("Model_$type")) {
-            $items[] = $item;
+        if (in_array($type, self::$_childObjectTypes)) {
+            $filters['Computer'] = $this['Id'];
+            $className = "Model_$type";
+            $class = new $className;
+            $statement = $class->createStatement(
+                null,
+                $order,
+                $direction,
+                $filters
+            );
+            $items = array();
+            while ($item = $statement->fetchObject("Model_$type")) {
+                $items[] = $item;
+            }
+        } else {
+            $filters['Client'] = $this['Id'];
+            $items = \Library\Application::getService('Model\Client\ItemManager')->getItems(
+                $type, $filters, $order, $direction
+            );
         }
         return $items;
     }
@@ -1206,7 +1234,10 @@ class Model_Computer extends Model_ComputerOrGroup
             // model class determined from the alias.
             $columnAlias = strtolower($model) . '_' . strtolower($property);
         } else {
-            throw new UnexpectedValueException('Invalid model: ' . $model);
+            $tableGateway = \Library\Application::getService('Model\Client\ItemManager')->getTable($model);
+            $table = $tableGateway->table;
+            $column = $tableGateway->getHydrator()->extractName($property);
+            $columnAlias = "{$table}_$column";
         }
 
         // Join table if not already present
@@ -1576,6 +1607,7 @@ class Model_Computer extends Model_ComputerOrGroup
             foreach ($tables as $table) {
                 $db->delete($table, array('hardware_id=?' => $id));
             }
+            \Library\Application::getService('Model\Client\ItemManager')->deleteItems($id);
 
             // Delete attachments
             $db->delete(

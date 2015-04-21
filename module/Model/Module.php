@@ -69,6 +69,7 @@ Feature\InitProviderInterface
                     'Model\Registry\Value' => 'Model\Registry\Value',
                 ),
                 'factories' => array(
+                    'Model\Client\ItemManager' => 'Model\Service\Client\ItemManagerFactory',
                     'Model\Client\CustomFieldManager' => 'Model\Service\Client\CustomFieldManagerFactory',
                     'Model\Client\DuplicatesManager' => 'Model\Service\Client\DuplicatesManagerFactory',
                     'Model\Config' => 'Model\Service\ConfigFactory',
