@@ -192,7 +192,6 @@ class Braintacle_SchemaManager
             'printers',
             'slots',
             'softwares',
-            'sounds',
             'storages',
             'videos',
         );
@@ -377,7 +376,6 @@ class Braintacle_SchemaManager
             'snmp_accountinfo',
             'snmp_communities',
             'softwares',
-            'sounds',
             'storages',
             'videos',
             'virtualmachines',

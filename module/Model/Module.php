@@ -55,6 +55,7 @@ Feature\InitProviderInterface
             'service_manager' => array(
                 'invokables' => array(
                     'Model\Client\CustomFields' => 'Model\Client\CustomFields',
+                    'Model\Client\Item\AudioDevice' => 'Model\Client\Item\AudioDevice',
                     'Model\Client\WindowsInstallation' => 'Model\Client\WindowsInstallation',
                     'Model\Computer\Computer' => 'Model_Computer',
                     'Model\Computer\Software' => 'Model_Software',

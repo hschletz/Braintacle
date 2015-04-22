@@ -1,6 +1,6 @@
 <?php
 /**
- * Class representing an audio device
+ * Tests for Model\Client\Item\AudioDevice
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,34 +17,21 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Models
  */
-/**
- * An audio device
- *
- * Properties:
- *
- * - <b>Manufacturer</b>
- * - <b>Name</b>
- * - <b>Description</b>
- * @package Models
- */
-class Model_AudioDevice extends Model_ChildObject
+
+namespace Model\Test\Client\Item;
+
+class AudioDeviceTest extends \Model\Test\AbstractTest
 {
+    public function getDataSet()
+    {
+        return new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet;
+    }
 
-    /** {@inheritdoc} */
-    protected $_propertyMap = array(
-        // Values from 'sounds' table
-        'Manufacturer' => 'manufacturer',
-        'Name' => 'name',
-        'Description' => 'description',
-    );
-
-    /** {@inheritdoc} */
-    protected $_tableName = 'sounds';
-
-    /** {@inheritdoc} */
-    protected $_preferredOrder = 'Manufacturer';
-
+    public function testObjectProperties()
+    {
+        $model = $this->_getModel();
+        $this->assertInstanceOf('ArrayAccess', $model);
+        $this->assertTrue(method_exists($model, 'exchangeArray'));
+    }
 }

@@ -24,6 +24,7 @@ namespace Model\Test\Client;
 class ItemManagerTest extends \Model\Test\AbstractTest
 {
     protected static $_tables = array(
+        'AudioDevices',
     );
 
     public function testGetTableInvalidType()
@@ -34,6 +35,12 @@ class ItemManagerTest extends \Model\Test\AbstractTest
 
     public function getItemsProvider()
     {
+        return array(
+            array('AudioDevice', null, 'id', 'asc', array('name1', 'name2'), 'Name'),
+            array('AudioDevice', null, 'Name', 'desc', array('name2', 'name1'), 'Name'),
+            array('AudioDevice', null, null, 'something', array('name2', 'name1'), 'Name'),
+            array('AudioDevice', array('Client' => 2), null, null, array('name2'), 'Name'),
+        );
     }
 
     /**

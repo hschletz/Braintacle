@@ -1,1 +1,12 @@
 # Fixture for ItemManagerTest
+sounds:
+  -
+    id: 2
+    hardware_id: 2
+    manufacturer: "manufacturer3"
+    name: "name2"
+  -
+    id: 1
+    hardware_id: 1
+    manufacturer: "manufacturer4"
+    name: "name1"

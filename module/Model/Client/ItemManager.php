@@ -33,6 +33,7 @@ class ItemManager
      * @var string[]
      */
     protected $_tableClasses = array(
+        'AudioDevice' => 'AudioDevices',
     );
 
     /**
@@ -40,6 +41,7 @@ class ItemManager
      * @var string[]
      */
     protected $_defaultOrder = array(
+        'AudioDevice' => 'Manufacturer',
     );
 
     /**
