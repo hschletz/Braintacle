@@ -1,6 +1,6 @@
 <?php
 /**
- * Class representing a logical printer object
+ * Printer object
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,36 +17,18 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Models
  */
+
+namespace Model\Client\Item;
+
 /**
- * A single printer object.
+ * Printer object
  *
- * Properties:
- *
- * - <b>Name</b>
- * - <b>Driver</b>
- * - <b>Port</b>
- * - <b>Description</b>
- * @package Models
+ * @property string $Name
+ * @property string $Driver
+ * @property string $Port
+ * @property string $Description
  */
-class Model_Printer extends Model_ChildObject
+class Printer extends \ArrayObject
 {
-
-    /** {@inheritdoc} */
-    protected $_propertyMap = array(
-        // Values from 'printers' table
-        'Name' => 'name',
-        'Driver' => 'driver',
-        'Port' => 'port',
-        'Description' => 'description',
-    );
-
-    /** {@inheritdoc} */
-    protected $_tableName = 'printers';
-
-    /** {@inheritdoc} */
-    protected $_preferredOrder = 'Name';
-
 }

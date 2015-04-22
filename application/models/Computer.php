@@ -159,7 +159,6 @@ class Model_Computer extends Model_ComputerOrGroup
         'Modem',
         'MsOfficeProduct',
         'NetworkInterface',
-        'Printer',
         'RegistryData',
         'Software',
         'StorageDevice',

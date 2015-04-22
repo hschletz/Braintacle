@@ -56,6 +56,7 @@ Feature\InitProviderInterface
                 'invokables' => array(
                     'Model\Client\CustomFields' => 'Model\Client\CustomFields',
                     'Model\Client\Item\AudioDevice' => 'Model\Client\Item\AudioDevice',
+                    'Model\Client\Item\Printer' => 'Model\Client\Item\Printer',
                     'Model\Client\WindowsInstallation' => 'Model\Client\WindowsInstallation',
                     'Model\Computer\Computer' => 'Model_Computer',
                     'Model\Computer\Software' => 'Model_Software',

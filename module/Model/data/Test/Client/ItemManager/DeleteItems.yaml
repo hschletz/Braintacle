@@ -1,3 +1,7 @@
+printers:
+  -
+    hardware_id: 2
+
 sounds:
   -
     hardware_id: 2

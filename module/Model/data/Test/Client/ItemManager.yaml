@@ -1,4 +1,17 @@
 # Fixture for ItemManagerTest
+
+printers:
+  -
+    id: 2
+    hardware_id: 2
+    name: "name2"
+    port: "port3"
+  -
+    id: 1
+    hardware_id: 1
+    name: "name1"
+    port: "port4"
+
 sounds:
   -
     id: 2

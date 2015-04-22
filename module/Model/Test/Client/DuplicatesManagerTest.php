@@ -42,6 +42,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         'GroupMemberships',
         'Locks',
         'NetworkInterfaces',
+        'Printers',
         'RegistryData',
         'WindowsInstallations',
     );
@@ -67,7 +68,6 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
             'modems',
             'monitors',
             'ports',
-            'printers',
             'slots',
             'softwares',
             'storages',
