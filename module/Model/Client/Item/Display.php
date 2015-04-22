@@ -1,6 +1,6 @@
 <?php
 /**
- * Class representing a display device
+ * Display device (monitor, panel)
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,38 +17,19 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Models
  */
+
+namespace Model\Client\Item;
+
 /**
- * A display device (external monitor, LCD panel and similar)
+ * Display device (monitor, panel)
  *
- * Properties:
- *
- * - <b>Manufacturer</b>
- * - <b>Description</b>
- * - <b>Serial</b>
- * - <b>ProductionDate</b>
- * - <b>Type</b>
- * @package Models
+ * @property string $Manufacturer
+ * @property string $Description
+ * @property string $Serial
+ * @property string $ProductionDate
+ * @property string $Type
  */
-class Model_Display extends Model_ChildObject
+class Display extends \ArrayObject
 {
-
-    /** {@inheritdoc} */
-    protected $_propertyMap = array(
-        // Values from 'monitors' table
-        'Manufacturer' => 'manufacturer',
-        'Description' => 'caption',
-        'Serial' => 'serial',
-        'ProductionDate' => 'description',
-        'Type' => 'type',
-    );
-
-    /** {@inheritdoc} */
-    protected $_tableName = 'monitors';
-
-    /** {@inheritdoc} */
-    protected $_preferredOrder = 'Manufacturer';
-
 }

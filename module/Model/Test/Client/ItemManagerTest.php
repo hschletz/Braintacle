@@ -25,6 +25,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
 {
     protected static $_tables = array(
         'AudioDevices',
+        'Displays',
         'Modems',
         'Ports',
         'Printers',
@@ -43,6 +44,10 @@ class ItemManagerTest extends \Model\Test\AbstractTest
             array('AudioDevice', null, 'Name', 'desc', array('name2', 'name1'), 'Name'),
             array('AudioDevice', null, null, 'something', array('name2', 'name1'), 'Name'),
             array('AudioDevice', array('Client' => 2), null, null, array('name2'), 'Name'),
+            array('Display', null, 'id', 'asc', array('name1', 'name2'), 'Manufacturer'),
+            array('Display', null, 'Type', 'desc', array('name1', 'name2'), 'Manufacturer'),
+            array('Display', null, null, 'something', array('name1', 'name2'), 'Manufacturer'),
+            array('Display', array('Client' => 2), null, null, array('name2'), 'Manufacturer'),
             array('Modem', null, 'id', 'asc', array('name1', 'name2'), 'Name'),
             array('Modem', null, 'Name', 'desc', array('name2', 'name1'), 'Name'),
             array('Modem', null, null, 'something', array('name2', 'name1'), 'Name'),

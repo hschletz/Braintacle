@@ -150,7 +150,6 @@ class Model_Computer extends Model_ComputerOrGroup
      */
     private static $_childObjectTypes = array(
         'Controller',
-        'Display',
         'DisplayController',
         'ExtensionSlot',
         'InputDevice',

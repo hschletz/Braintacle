@@ -12,6 +12,18 @@ modems:
     name: "name1"
     type: "type4"
 
+monitors:
+  -
+    id: 2
+    hardware_id: 2
+    manufacturer: "name2"
+    type: "type3"
+  -
+    id: 1
+    hardware_id: 1
+    manufacturer: "name1"
+    type: "type4"
+
 ports:
   -
     id: 2
