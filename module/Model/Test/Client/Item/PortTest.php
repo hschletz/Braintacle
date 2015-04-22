@@ -1,6 +1,6 @@
 <?php
 /**
- * Class representing a port connector
+ * Tests for Model\Client\Item\Port
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,34 +17,21 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Models
  */
-/**
- * A port (Centronics, RS-232 and similar)
- *
- * Properties:
- *
- * - <b>Type</b>
- * - <b>Name</b>
- * - <b>Connector</b> Connector type (UNIX only), just a duplicate of Name on Windows
- * @package Models
- */
-class Model_Port extends Model_ChildObject
+
+namespace Model\Test\Client\Item;
+
+class PortTest extends \Model\Test\AbstractTest
 {
-    /** {@inheritdoc} */
-    protected $_propertyMap = array(
-        // Values from 'ports' table
-        'Name' => 'name',
-        'Type' => 'type',
-        'Connector' => 'caption',
-        'RawDescription' => 'description' // Useless, identical to Name without the port name
-    );
+    public function getDataSet()
+    {
+        return new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet;
+    }
 
-    /** {@inheritdoc} */
-    protected $_tableName = 'ports';
-
-    /** {@inheritdoc} */
-    protected $_preferredOrder = 'Name';
-
+    public function testObjectProperties()
+    {
+        $model = $this->_getModel();
+        $this->assertInstanceOf('ArrayAccess', $model);
+        $this->assertTrue(method_exists($model, 'exchangeArray'));
+    }
 }

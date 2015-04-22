@@ -57,6 +57,7 @@ Feature\InitProviderInterface
                     'Model\Client\CustomFields' => 'Model\Client\CustomFields',
                     'Model\Client\Item\AudioDevice' => 'Model\Client\Item\AudioDevice',
                     'Model\Client\Item\Modem' => 'Model\Client\Item\Modem',
+                    'Model\Client\Item\Port' => 'Model\Client\Item\Port',
                     'Model\Client\Item\Printer' => 'Model\Client\Item\Printer',
                     'Model\Client\WindowsInstallation' => 'Model\Client\WindowsInstallation',
                     'Model\Computer\Computer' => 'Model_Computer',

@@ -35,6 +35,7 @@ class ItemManager
     protected $_tableClasses = array(
         'AudioDevice' => 'AudioDevices',
         'Modem' => 'Modems',
+        'Port' => 'Ports',
         'Printer' => 'Printers',
     );
 
@@ -45,6 +46,7 @@ class ItemManager
     protected $_defaultOrder = array(
         'AudioDevice' => 'Manufacturer',
         'Modem' => 'Type',
+        'Port' => 'Name',
         'Printer' => 'Name',
     );
 

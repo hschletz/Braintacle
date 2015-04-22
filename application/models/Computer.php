@@ -154,7 +154,6 @@ class Model_Computer extends Model_ComputerOrGroup
         'DisplayController',
         'ExtensionSlot',
         'InputDevice',
-        'Port',
         'MemorySlot',
         'MsOfficeProduct',
         'NetworkInterface',
