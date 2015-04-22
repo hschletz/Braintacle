@@ -29,6 +29,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
     /** {@inheritdoc} */
     protected static $_tables = array(
         'AudioDevices',
+        'ClientConfig',
         'ClientsAndGroups',
         'ClientSystemInfo',
         'Config',
@@ -39,7 +40,6 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         'DuplicateSerials',
         'GroupInfo',
         'GroupMemberships',
-        'ClientConfig',
         'Locks',
         'NetworkInterfaces',
         'RegistryData',
