@@ -56,13 +56,15 @@ class ItemManagerTest extends \Model\Test\AbstractTest
         $model = $this->_getModel();
         $items = $model->getItems($type, $filters, $order, $direction);
         $this->assertInstanceOf('Zend\Db\Resultset\AbstractResultset', $items);
+        $items = iterator_to_array($items);
+        $this->assertContainsOnlyInstancesOf("Model\\Client\\Item\\$type", $items);
         $this->assertEquals(
             $result,
             array_map(
                 function($element) use ($keyColumn) {
                     return $element[$keyColumn];
                 },
-                iterator_to_array($items)
+                $items
             )
         );
     }
