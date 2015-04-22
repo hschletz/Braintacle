@@ -1,3 +1,7 @@
+modems:
+  -
+    hardware_id: 2
+
 printers:
   -
     hardware_id: 2

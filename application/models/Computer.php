@@ -156,7 +156,6 @@ class Model_Computer extends Model_ComputerOrGroup
         'InputDevice',
         'Port',
         'MemorySlot',
-        'Modem',
         'MsOfficeProduct',
         'NetworkInterface',
         'RegistryData',

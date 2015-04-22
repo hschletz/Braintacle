@@ -1,6 +1,6 @@
 <?php
 /**
- * Class representing a modem
+ * Modem
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,34 +17,16 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Models
  */
+
+namespace Model\Client\Item;
+
 /**
- * A modem
+ * Modem
  *
- * Properties:
- *
- * - <b>Type</b>
- * - <b>Name</b>
- * @package Models
+ * @property string $Name
+ * @property string $Type
  */
-class Model_Modem extends Model_ChildObject
+class Modem extends \ArrayObject
 {
-
-    /** {@inheritdoc} */
-    protected $_propertyMap = array(
-        // Values from 'modems' table
-        'Type' => 'type',
-        'Name' => 'name',
-        'RawDescription' => 'description', // Useless, same as Name without enumerator
-        'RawModel' => 'model', // Ussless, identical to RawDescription
-    );
-
-    /** {@inheritdoc} */
-    protected $_tableName = 'modems';
-
-    /** {@inheritdoc} */
-    protected $_preferredOrder = 'Type';
-
 }

@@ -399,10 +399,14 @@ Braintacle:
     <define name="MODEMS">
         <element name="MODEMS" braintacle:model="Modem">
             <interleave>
-                <ref name="DESCRIPTION" braintacle:property="RawDescription" />
-                <ref name="MODEL" braintacle:property="RawModel" />
                 <ref name="NAME" braintacle:property="Name" />
                 <ref name="TYPE" braintacle:property="Type" />
+                <optional>
+                    <ref name="DESCRIPTION" /><!-- unused -->
+                </optional>
+                <optional>
+                    <ref name="MODEL" /><!-- unused -->
+                </optional>
             </interleave>
         </element>
     </define>
