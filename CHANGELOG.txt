@@ -66,6 +66,9 @@ Misc:
 - Console: The display of the maximum file size in the package builder form has
   been removed as it was generally unreliable.
 
+- Console: Extension slots are no longer searchable because the data is provided
+  inconsistently by different agents.
+
 
 CHANGES IN VERSION 0.16
 =======================

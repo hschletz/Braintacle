@@ -137,7 +137,6 @@ class Search extends Form
             'AudioDevice.Name' => $translator->translate('Audio device'),
             'Controller.Name' => $translator->translate('Controller'),
             'Port.Name' => $translator->translate('Port name'),
-            'ExtensionSlot.Name' => $translator->translate('Extension slot'),
         );
 
         // Append filters and labels for registry values/data

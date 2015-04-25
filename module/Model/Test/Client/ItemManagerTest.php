@@ -24,8 +24,10 @@ namespace Model\Test\Client;
 class ItemManagerTest extends \Model\Test\AbstractTest
 {
     protected static $_tables = array(
+        'ClientsAndGroups',
         'AudioDevices',
         'Displays',
+        'ExtensionSlots',
         'Modems',
         'Ports',
         'Printers',
@@ -48,6 +50,9 @@ class ItemManagerTest extends \Model\Test\AbstractTest
             array('Display', null, 'Type', 'desc', array('name1', 'name2'), 'Manufacturer'),
             array('Display', null, null, 'something', array('name1', 'name2'), 'Manufacturer'),
             array('Display', array('Client' => 2), null, null, array('name2'), 'Manufacturer'),
+            array('ExtensionSlot', null, 'id', 'desc', array('name2', 'name1'), 'Name'),
+            array('ExtensionSlot', null, null, 'something', array('name1', 'name2'), 'Name'),
+            array('ExtensionSlot', array('Client' => 2), null, null, array('name2'), 'Name'),
             array('Modem', null, 'id', 'asc', array('name1', 'name2'), 'Name'),
             array('Modem', null, 'Name', 'desc', array('name2', 'name1'), 'Name'),
             array('Modem', null, null, 'something', array('name2', 'name1'), 'Name'),
@@ -90,6 +95,9 @@ class ItemManagerTest extends \Model\Test\AbstractTest
         $model->deleteItems(1);
         $dataSet = new \PHPUnit_Extensions_Database_DataSet_QueryDataSet($this->getConnection());
         foreach (static::$_tables as $table) {
+            if ($table == 'ClientsAndGroups') {
+                continue;
+            }
             $table = \Library\Application::getService("Database\\Table\\$table")->table;
             $dataSet->addTable($table, "SELECT hardware_id FROM $table");
         }

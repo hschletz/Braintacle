@@ -1,5 +1,17 @@
 # Fixture for ItemManagerTest
 
+hardware:
+  -
+    id: 1
+    deviceid: "id1"
+    name: "name1"
+    winprodid: "product_id"
+  -
+    id: 2
+    deviceid: "id2"
+    name: "name2"
+    winprodid: null
+
 modems:
   -
     id: 2
@@ -47,6 +59,19 @@ printers:
     hardware_id: 1
     name: "name1"
     port: "port4"
+
+# Different columns map to "Name" property depending on agent type
+slots:
+  -
+    id: 2
+    hardware_id: 2
+    name: "name2"
+    designation: null
+  -
+    id: 1
+    hardware_id: 1
+    name: null
+    designation: "name1"
 
 sounds:
   -

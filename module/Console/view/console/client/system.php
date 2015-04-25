@@ -113,9 +113,18 @@ print $this->table(
 
 $headers = array(
     'Name' => $this->translate('Name'),
-    'Type' => $this->translate('Type'),
     'Description' => $this->translate('Description'),
     'Status' => $this->translate('Status'),
+);
+
+$renderCallbacks = array (
+    'Name' => function($view, $slot) {
+        $name = $slot['Name'];
+        if (isset($slot['SlotId'])) {
+            $name .= " (#$slot[SlotId])";
+        }
+        return $view->escapeHtml($name);
+    }
 );
 
 $extSlots = $client['ExtensionSlot'];
@@ -126,6 +135,8 @@ if (count($extSlots)) {
     );
     print $this->table(
         $extSlots,
-        $headers
+        $headers,
+        null,
+        $renderCallbacks
     );
 }

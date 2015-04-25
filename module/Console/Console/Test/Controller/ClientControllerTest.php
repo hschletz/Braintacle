@@ -1354,9 +1354,20 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $slots = array(
             array(
                 'Name' => 'name',
-                'Type' => 'type',
                 'Description' => 'description',
                 'Status' => 'status',
+            ),
+            array(
+                'Name' => '<name>',
+                'Description' => 'description',
+                'Status' => 'status',
+                'SlotId' => null,
+            ),
+            array(
+                'Name' => '<name>',
+                'Description' => 'description',
+                'Status' => 'status',
+                'SlotId' => '<id>'
             ),
         );
         $map = array(
@@ -1370,7 +1381,10 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/client/system/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//h2[text()='\nErweiterungssteckplätze\n']");
-        $this->assertXpathQueryCount('//tr', 2);
+        $this->assertXpathQueryCount('//tr', 4);
+        $this->assertXpathQueryContentContains('//tr[2]/td[1]', "\nname\n");
+        $this->assertXpathQueryContentContains('//tr[3]/td[1]', "\n<name>\n");
+        $this->assertXpathQueryContentContains('//tr[4]/td[1]', "\n<name> (#<id>)\n");
     }
 
     public function testPrintersAction()
