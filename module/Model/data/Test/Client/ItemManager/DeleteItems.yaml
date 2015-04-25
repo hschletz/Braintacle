@@ -2,6 +2,10 @@ modems:
   -
     hardware_id: 2
 
+inputs:
+  -
+    hardware_id: 2
+
 monitors:
   -
     hardware_id: 2

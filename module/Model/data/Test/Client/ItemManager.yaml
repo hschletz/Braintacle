@@ -12,6 +12,18 @@ hardware:
     name: "name2"
     winprodid: null
 
+inputs:
+  -
+    id: 2
+    hardware_id: 2
+    caption: "name2"
+    type: "type3"
+  -
+    id: 1
+    hardware_id: 1
+    caption: "name1"
+    type: "type4"
+
 modems:
   -
     id: 2

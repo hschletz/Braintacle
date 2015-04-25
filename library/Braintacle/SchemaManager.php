@@ -183,7 +183,6 @@ class Braintacle_SchemaManager
         $fixTables = array(
             'controllers',
             'drives',
-            'inputs',
             'memories',
             'officepack',
             'softwares',
@@ -359,7 +358,6 @@ class Braintacle_SchemaManager
             'controllers',
             'download_history',
             'drives',
-            'inputs',
             'javainfo',
             'journallog',
             'memories',

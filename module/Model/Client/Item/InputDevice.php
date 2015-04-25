@@ -1,6 +1,6 @@
 <?php
 /**
- * Class representing an input device
+ * Input device (keyboard, mouse, touchpad...)
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,39 +17,19 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Models
  */
+
+namespace Model\Client\Item;
+
 /**
- * An input device (Keyboard, mouse, touchpad...)
+ * Input device (keyboard, mouse, touchpad...)
  *
- * Properties:
- *
- * - <b>Type</b>
- * - <b>Manufacturer</b>
- * - <b>Description</b>
- * - <b>Comment</b>
- * - <b>Interface</b>
- * @package Models
+ * @property string $Type
+ * @property string $Manufacturer
+ * @property string $Description
+ * @property string $Comment
+ * @property string $Interface
  */
-class Model_InputDevice extends Model_ChildObject
+class InputDevice extends \ArrayObject
 {
-
-    /** {@inheritdoc} */
-    protected $_propertyMap = array(
-        // Values from 'inputs' table
-        'Type' => 'type',
-        'Manufacturer' => 'manufacturer',
-        'Description' => 'caption',
-        'Comment' => 'description',
-        'Interface' => 'interface',
-        'RawPointType' => 'pointtype' // No useful information, always 'N/A' or NULL
-    );
-
-    /** {@inheritdoc} */
-    protected $_tableName = 'inputs';
-
-    /** {@inheritdoc} */
-    protected $_preferredOrder = 'Type';
-
 }

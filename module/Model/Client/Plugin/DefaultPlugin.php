@@ -45,6 +45,7 @@ class DefaultPlugin
     protected $_defaultOrder = array(
         'AudioDevices' => 'Manufacturer',
         'Displays' => 'Manufacturer',
+        'InputDevices' => 'Type',
         'Modems' => 'Type',
         'Ports' => 'Name',
         'Printers' => 'Name',
