@@ -41,15 +41,10 @@ class ItemManager
     );
 
     /**
-     * Default properties to sort by
+     * Plugins for specific types (if DefaultPlugin is not sufficient)
      * @var string[]
      */
-    protected $_defaultOrder = array(
-        'AudioDevice' => 'Manufacturer',
-        'Display' => 'Manufacturer',
-        'Modem' => 'Type',
-        'Port' => 'Name',
-        'Printer' => 'Name',
+    protected $_plugins = array(
     );
 
     /**
@@ -86,38 +81,28 @@ class ItemManager
     /**
      * Get items with given property
      *
-     * A standard filter "Client" is defined for all types, limiting results to
-     * the given client ID. A plugin may define additional filters.
-     *
      * @param string $type Item type
-     * @param array $filters Filters. Default: no filters
-     * @param string $order Property to sort by. "id" sorts by item ID. Default: item specific
+     * @param array $filters Filters, handled by plugin. Default: no filters
+     * @param string $order Property to sort by, handled by plugin.
      * @param string $direction One of asc|desc. Default: asc
      * @return \Zend\Db\ResultSet\AbstractResultSet
      */
     public function getItems($type, $filters=null, $order=null, $direction='asc')
     {
         $table = $this->getTable($type);
-        $hydrator = $table->getHydrator();
 
-        $columns = array_values($hydrator->getNamingStrategy()->getExtractorMap());
-
-        if (is_null($order)) {
-            $order = $this->_defaultOrder[$type];
+        if (isset($this->_plugins[$type])) {
+            $pluginClass = 'Model\Client\Plugin\\' . $this->_plugins[$type];
+        } else {
+            $pluginClass = 'Model\Client\Plugin\DefaultPlugin';
         }
-        if ($order != 'id') {
-            $order = $hydrator->extractName($order);
-        }
+        $plugin = new $pluginClass($table);
+        $plugin->columns();
+        $plugin->join();
+        $plugin->where($filters);
+        $plugin->order($order, $direction);
 
-        $select = $table->getSql()->select();
-        $select->columns($columns)
-               ->order(array($order => $direction));
-
-        if (isset($filters['Client'])) {
-            $select->where(array('hardware_id' => $filters['Client']));
-        }
-
-        return $table->selectWith($select);
+        return $table->selectWith($plugin->select());
     }
 
     /**
