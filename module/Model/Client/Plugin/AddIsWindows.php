@@ -1,6 +1,6 @@
 <?php
 /**
- * ExtensionSlot item plugin
+ * Item plugin to add "is_windows" boolean column
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,36 +22,20 @@
 namespace Model\Client\Plugin;
 
 /**
- * ExtensionSlot item plugin
+ * Item plugin to add "is_windows" boolean column
+ *
+ * The extra column is required by some hydrators as a hint about the agent
+ * type.
  */
-class ExtensionSlot extends AddIsWindows
+class AddIsWindows extends DefaultPlugin
 {
     /** {@inheritdoc} */
-    public function columns()
+    public function join()
     {
-        // Hydrator does not provide the names
-        $this->_select->columns(
-            array(
-                'name',
-                'description',
-                'designation',
-                'purpose',
-                'status',
-            )
+        $this->_select->join(
+            'hardware',
+            'hardware.id = hardware_id',
+            array('is_windows' => new \Zend\Db\Sql\Literal('(hardware.winprodid IS NOT NULL)'))
         );
-    }
-
-    /** {@inheritdoc} */
-    public function order($order, $direction)
-    {
-        if ($order == 'id') {
-            $order = 'slots.id';
-        } else {
-            // Since other Properties may map to different columns depending on
-            // agent type, "description" is the only reasonable choice that
-            // produces sane results with all agents.
-            $order = 'description';
-        }
-        $this->_select->order(array($order => $direction));
     }
 }
