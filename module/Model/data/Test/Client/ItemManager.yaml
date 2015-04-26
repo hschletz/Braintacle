@@ -12,6 +12,19 @@ hardware:
     name: "name2"
     winprodid: null
 
+# Different columns map to "Name" property depending on agent type
+controllers:
+  -
+    id: 2
+    hardware_id: 2
+    name: null
+    manufacturer: "name2"
+  -
+    id: 1
+    hardware_id: 1
+    name: "name1"
+    manufacturer: null
+
 inputs:
   -
     id: 2

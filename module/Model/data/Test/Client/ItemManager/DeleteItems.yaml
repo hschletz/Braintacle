@@ -1,3 +1,7 @@
+controllers:
+  -
+    hardware_id: 2
+
 modems:
   -
     hardware_id: 2

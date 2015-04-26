@@ -181,7 +181,6 @@ class Braintacle_SchemaManager
         // For the tables listed above plus some additional tables, the bad PK
         // needs to be dropped and recreated the right way.
         $fixTables = array(
-            'controllers',
             'drives',
             'memories',
             'officepack',
@@ -355,7 +354,6 @@ class Braintacle_SchemaManager
         $this->_logger->info('Tweaking tables...');
 
         $engineInnoDb = array(
-            'controllers',
             'download_history',
             'drives',
             'javainfo',

@@ -715,10 +715,6 @@ msgid "Exact match"
 msgstr "Exakte Übereinstimmung"
 
 #: Console/Form/Search.php view/console/client/index.php
-msgid "Extension slot"
-msgstr "Erweiterungssteckplatz"
-
-#: Console/Form/Search.php view/console/client/index.php
 msgid "GPU memory"
 msgstr "GPU-Speicher"
 
@@ -1268,6 +1264,10 @@ msgstr "Filter bearbeiten"
 msgid "Error code"
 msgstr "Fehlercode"
 
+#: view/console/client/index.php
+msgid "Extension slot"
+msgstr "Erweiterungssteckplatz"
+
 #: view/console/client/index.php view/console/client/storage.php
 msgid "Free space"
 msgstr "Frei"
@@ -1533,10 +1533,6 @@ msgstr "Takt"
 #: view/console/client/system.php
 msgid "Controllers"
 msgstr "Controller"
-
-#: view/console/client/system.php
-msgid "Driver version"
-msgstr "Treiber-Version"
 
 #: view/console/client/system.php
 msgid "Extension slots"

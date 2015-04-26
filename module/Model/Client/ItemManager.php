@@ -34,6 +34,7 @@ class ItemManager
      */
     protected $_tableClasses = array(
         'AudioDevice' => 'AudioDevices',
+        'Controller' => 'Controllers',
         'Display' => 'Displays',
         'ExtensionSlot' => 'ExtensionSlots',
         'InputDevice' => 'InputDevices',
@@ -47,6 +48,7 @@ class ItemManager
      * @var string[]
      */
     protected $_plugins = array(
+        'Controller' => 'Controller',
         'ExtensionSlot' => 'ExtensionSlot',
     );
 

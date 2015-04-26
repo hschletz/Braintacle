@@ -879,10 +879,6 @@ msgstr ""
 msgid "Port name"
 msgstr ""
 
-#: Console/Form/Search.php view/console/client/index.php
-msgid "Extension slot"
-msgstr ""
-
 #: Console/Form/Search.php
 #, php-format
 msgid "User defined: %s"
@@ -1266,6 +1262,10 @@ msgstr ""
 msgid "Error code"
 msgstr ""
 
+#: view/console/client/index.php
+msgid "Extension slot"
+msgstr ""
+
 #: view/console/client/index.php view/console/client/network.php
 msgid "Netmask"
 msgstr ""
@@ -1534,10 +1534,6 @@ msgstr ""
 
 #: view/console/client/system.php
 msgid "Memory slots"
-msgstr ""
-
-#: view/console/client/system.php
-msgid "Driver version"
 msgstr ""
 
 #: view/console/client/system.php

@@ -135,7 +135,6 @@ class Search extends Form
             'DisplayController.Memory' => $translator->translate('GPU memory'),
             'Modem.Name' => $translator->translate('Modem'),
             'AudioDevice.Name' => $translator->translate('Audio device'),
-            'Controller.Name' => $translator->translate('Controller'),
             'Port.Name' => $translator->translate('Port name'),
         );
 

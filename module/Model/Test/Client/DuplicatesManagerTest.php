@@ -33,6 +33,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         'ClientsAndGroups',
         'ClientSystemInfo',
         'Config',
+        'Controllers',
         'CustomFieldConfig',
         'CustomFields',
         'Displays',
@@ -61,7 +62,6 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         // They don't need any content and the mocked structure is reduced to a minimum.
         $database = \Library\Application::getService('Database\Nada');
         $mockTables = array(
-            'controllers',
             'download_history',
             'download_servers',
             'drives',

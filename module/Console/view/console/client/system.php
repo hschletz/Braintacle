@@ -73,39 +73,20 @@ if (count($memSlots)) {
 
 // Show controllers
 
-$headers = array(
-    'Type' => $this->translate('Type'),
-    'Manufacturer' => $this->translate('Manufacturer'),
-    'Name' => $this->translate('Name'),
-);
+$headers = array();
 if ($this->client['Windows'] instanceof \Model\Client\WindowsInstallation) { // Not available for other OS
-    $headers['DriverVersion'] = $this->translate('Driver version');
+    $headers['Manufacturer'] = $this->translate('Manufacturer');
 }
+$headers['Name'] = $this->translate('Name');
+$headers['Type'] = $this->translate('Type');
 
-$renderCallbacks = array (
-    'Name' => function($view, $controller) {
-        $name = $controller['Name'];
-        $comment = $controller['Comment'];
-        if ($name == $comment) {
-            return $view->escapeHtml($name);
-        } else {
-            return $view->htmlTag(
-                'span',
-                $view->escapeHtml($name),
-                array('title' => $comment)
-            );
-        }
-    },
-);
 print $this->htmlTag(
     'h2',
     $this->translate('Controllers')
 );
 print $this->table(
     $client['Controller'],
-    $headers,
-    null,
-    $renderCallbacks
+    $headers
 );
 
 

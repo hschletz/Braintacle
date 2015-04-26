@@ -1251,16 +1251,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $controllers = array(
             array(
-                'Type' => 'type1',
-                'Manufacturer' => 'manufacturer1',
+                'Type' => 'type',
                 'Name' => 'name',
-                'Comment' => 'comment',
-            ),
-            array(
-                'Type' => 'type2',
-                'Manufacturer' => 'manufacturer2',
-                'Name' => 'name_equals_comment',
-                'Comment' => 'name_equals_comment',
             ),
         );
         $map = array(
@@ -1277,9 +1269,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertNotXpathQuery("//h2[text()='\nRAM-Steckplätze\n']");
         $this->assertNotXpathQuery("//h2[text()='\nErweiterungssteckplätze\n']");
         $this->assertXpathQuery("//h2[text()='\nController\n']");
-        $this->assertNotXpathQuery("//th[text()='\nTreiber-Version\n']");
-        $this->assertXpathQueryCount('//span[@title]', 1);
-        $this->assertXpathQuery("//span[@title='comment'][text()='\nname\n']");
+        $this->assertXpathQueryCount('//tr[1]/th', 2);
+        $this->assertXpathQueryContentContains('//tr[1]/th[1]', "\nName\n");
+        $this->assertXpathQueryContentContains('//tr[1]/th[2]', "\nTyp\n");
     }
 
     public function testSystemActionWindows()
@@ -1289,8 +1281,6 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Type' => 'type',
                 'Manufacturer' => 'manufacturer',
                 'Name' => 'name',
-                'Comment' => 'comment',
-                'DriverVersion' => 'driver',
             ),
         );
         $map = array(
@@ -1304,8 +1294,10 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->dispatch('/console/client/system/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery("//th[text()='\nTreiber-Version\n']");
-        $this->assertXpathQuery("//td[text()='\ndriver\n']");
+        $this->assertXpathQueryCount('//tr[1]/th', 3);
+        $this->assertXpathQueryContentContains('//tr[1]/th[1]', "\nHersteller\n");
+        $this->assertXpathQueryContentContains('//tr[1]/th[2]', "\nName\n");
+        $this->assertXpathQueryContentContains('//tr[1]/th[3]', "\nTyp\n");
     }
 
     public function testSystemActionMemorySlots()

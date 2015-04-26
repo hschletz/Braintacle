@@ -56,6 +56,7 @@ Feature\InitProviderInterface
                 'invokables' => array(
                     'Model\Client\CustomFields' => 'Model\Client\CustomFields',
                     'Model\Client\Item\AudioDevice' => 'Model\Client\Item\AudioDevice',
+                    'Model\Client\Item\Controller' => 'Model\Client\Item\Controller',
                     'Model\Client\Item\Display' => 'Model\Client\Item\Display',
                     'Model\Client\Item\ExtensionSlot' => 'Model\Client\Item\ExtensionSlot',
                     'Model\Client\Item\InputDevice' => 'Model\Client\Item\InputDevice',
