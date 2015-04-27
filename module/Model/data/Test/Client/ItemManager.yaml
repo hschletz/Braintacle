@@ -110,6 +110,18 @@ sounds:
     manufacturer: "manufacturer4"
     name: "name1"
 
+videos:
+  -
+    id: 2
+    hardware_id: 2
+    name: "name2"
+    chipset: "chipset3"
+  -
+    id: 1
+    hardware_id: 1
+    name: "name1"
+    chipset: "chipset4"
+
 virtualmachines:
   -
     id: 2

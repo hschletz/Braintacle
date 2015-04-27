@@ -36,6 +36,7 @@ class ItemManager
         'AudioDevice' => 'AudioDevices',
         'Controller' => 'Controllers',
         'Display' => 'Displays',
+        'DisplayController' => 'DisplayControllers',
         'ExtensionSlot' => 'ExtensionSlots',
         'InputDevice' => 'InputDevices',
         'Modem' => 'Modems',

@@ -36,6 +36,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         'Controllers',
         'CustomFieldConfig',
         'CustomFields',
+        'DisplayControllers',
         'Displays',
         'DuplicateAssetTags',
         'DuplicateMacAddresses',
@@ -72,7 +73,6 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
             'memories',
             'softwares',
             'storages',
-            'videos',
         );
         $columns = array($database->createColumn('hardware_id', \Nada::DATATYPE_INTEGER));
         foreach ($mockTables as $table) {

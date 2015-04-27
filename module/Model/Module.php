@@ -58,6 +58,7 @@ Feature\InitProviderInterface
                     'Model\Client\Item\AudioDevice' => 'Model\Client\Item\AudioDevice',
                     'Model\Client\Item\Controller' => 'Model\Client\Item\Controller',
                     'Model\Client\Item\Display' => 'Model\Client\Item\Display',
+                    'Model\Client\Item\DisplayController' => 'Model\Client\Item\DisplayController',
                     'Model\Client\Item\ExtensionSlot' => 'Model\Client\Item\ExtensionSlot',
                     'Model\Client\Item\InputDevice' => 'Model\Client\Item\InputDevice',
                     'Model\Client\Item\Modem' => 'Model\Client\Item\Modem',

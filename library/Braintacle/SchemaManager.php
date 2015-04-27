@@ -185,7 +185,6 @@ class Braintacle_SchemaManager
             'officepack',
             'softwares',
             'storages',
-            'videos',
         );
         $fixTables = array_merge($fixTables, $createConstraint);
         // Only existing tables can be processed.
@@ -362,7 +361,6 @@ class Braintacle_SchemaManager
             'snmp_communities',
             'softwares',
             'storages',
-            'videos',
         );
         $engineMemory = array(
             'conntrack',
