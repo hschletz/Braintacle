@@ -63,6 +63,7 @@ Feature\InitProviderInterface
                     'Model\Client\Item\Modem' => 'Model\Client\Item\Modem',
                     'Model\Client\Item\Port' => 'Model\Client\Item\Port',
                     'Model\Client\Item\Printer' => 'Model\Client\Item\Printer',
+                    'Model\Client\Item\VirtualMachine' => 'Model\Client\Item\VirtualMachine',
                     'Model\Client\WindowsInstallation' => 'Model\Client\WindowsInstallation',
                     'Model\Computer\Computer' => 'Model_Computer',
                     'Model\Computer\Software' => 'Model_Software',

@@ -156,7 +156,6 @@ class Model_Computer extends Model_ComputerOrGroup
         'RegistryData',
         'Software',
         'StorageDevice',
-        'VirtualMachine',
         'Volume',
     );
 

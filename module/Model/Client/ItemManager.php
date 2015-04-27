@@ -41,6 +41,7 @@ class ItemManager
         'Modem' => 'Modems',
         'Port' => 'Ports',
         'Printer' => 'Printers',
+        'VirtualMachine' => 'VirtualMachines',
     );
 
     /**

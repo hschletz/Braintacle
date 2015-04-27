@@ -49,6 +49,7 @@ class DefaultPlugin
         'Modems' => 'Type',
         'Ports' => 'Name',
         'Printers' => 'Name',
+        'VirtualMachines' => 'Name',
     );
 
     /**

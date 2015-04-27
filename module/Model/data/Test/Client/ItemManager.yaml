@@ -109,3 +109,15 @@ sounds:
     hardware_id: 1
     manufacturer: "manufacturer4"
     name: "name1"
+
+virtualmachines:
+  -
+    id: 2
+    hardware_id: 2
+    name: "name2"
+    vmtype: "type3"
+  -
+    id: 1
+    hardware_id: 1
+    name: "name1"
+    vmtype: "type4"

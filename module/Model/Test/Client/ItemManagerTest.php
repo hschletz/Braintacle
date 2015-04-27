@@ -33,6 +33,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
         'Modems',
         'Ports',
         'Printers',
+        'VirtualMachines',
     );
 
     public function testGetTableInvalidType()
@@ -74,6 +75,10 @@ class ItemManagerTest extends \Model\Test\AbstractTest
             array('Printer', null, 'Port', 'desc', array('name1', 'name2'), 'Name'),
             array('Printer', null, null, 'something', array('name1', 'name2'), 'Name'),
             array('Printer', array('Client' => 2), null, null, array('name2'), 'Name'),
+            array('VirtualMachine', null, 'id', 'asc', array('name1', 'name2'), 'Name'),
+            array('VirtualMachine', null, 'Type', 'desc', array('name1', 'name2'), 'Name'),
+            array('VirtualMachine', null, null, 'something', array('name1', 'name2'), 'Name'),
+            array('VirtualMachine', array('Client' => 2), null, null, array('name2'), 'Name'),
         );
     }
 

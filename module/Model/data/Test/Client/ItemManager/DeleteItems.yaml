@@ -29,3 +29,7 @@ slots:
 sounds:
   -
     hardware_id: 2
+
+virtualmachines:
+  -
+    hardware_id: 2

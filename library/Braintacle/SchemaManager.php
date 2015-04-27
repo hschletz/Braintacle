@@ -176,7 +176,6 @@ class Braintacle_SchemaManager
             'snmp_switchs',
             'snmp_trays',
             'snmp_videos',
-            'virtualmachines',
         );
         // For the tables listed above plus some additional tables, the bad PK
         // needs to be dropped and recreated the right way.
@@ -364,7 +363,6 @@ class Braintacle_SchemaManager
             'softwares',
             'storages',
             'videos',
-            'virtualmachines',
         );
         $engineMemory = array(
             'conntrack',
