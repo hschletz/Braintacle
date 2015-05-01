@@ -14,6 +14,10 @@ monitors:
   -
     hardware_id: 2
 
+networks:
+  -
+    hardware_id: 2
+
 ports:
   -
     hardware_id: 2

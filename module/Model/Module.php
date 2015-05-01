@@ -62,6 +62,7 @@ Feature\InitProviderInterface
                     'Model\Client\Item\ExtensionSlot' => 'Model\Client\Item\ExtensionSlot',
                     'Model\Client\Item\InputDevice' => 'Model\Client\Item\InputDevice',
                     'Model\Client\Item\Modem' => 'Model\Client\Item\Modem',
+                    'Model\Client\Item\NetworkInterface' => 'Model\Client\Item\NetworkInterface',
                     'Model\Client\Item\Port' => 'Model\Client\Item\Port',
                     'Model\Client\Item\Printer' => 'Model\Client\Item\Printer',
                     'Model\Client\Item\VirtualMachine' => 'Model\Client\Item\VirtualMachine',

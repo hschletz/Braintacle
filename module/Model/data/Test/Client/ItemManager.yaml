@@ -12,6 +12,10 @@ hardware:
     name: "name2"
     winprodid: null
 
+blacklist_macaddresses:
+  -
+    macaddress: "00:00:5E:00:53:01"
+
 # Different columns map to "Name" property depending on agent type
 controllers:
   -
@@ -60,6 +64,20 @@ monitors:
     hardware_id: 1
     manufacturer: "name1"
     type: "type4"
+
+networks:
+  -
+    id: 2
+    hardware_id: 2
+    description: "name2"
+    status: "status3"
+    macaddr: "00:00:5E:00:53:02"
+  -
+    id: 1
+    hardware_id: 1
+    description: "name1"
+    status: "status4"
+    macaddr: "00:00:5E:00:53:01"
 
 ports:
   -

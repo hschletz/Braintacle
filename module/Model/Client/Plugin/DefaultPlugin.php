@@ -48,6 +48,7 @@ class DefaultPlugin
         'DisplayControllers' => 'Name',
         'InputDevices' => 'Type',
         'Modems' => 'Type',
+        'NetworkInterfaces' => 'Description',
         'Ports' => 'Name',
         'Printers' => 'Name',
         'VirtualMachines' => 'Name',

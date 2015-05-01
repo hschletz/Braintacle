@@ -41,6 +41,7 @@ class ItemManager
         'extensionslot' => 'ExtensionSlots',
         'inputdevice' => 'InputDevices',
         'modem' => 'Modems',
+        'networkinterface' => 'NetworkInterfaces',
         'port' => 'Ports',
         'printer' => 'Printers',
         'virtualmachine' => 'VirtualMachines',
@@ -53,6 +54,7 @@ class ItemManager
     protected $_plugins = array(
         'controller' => 'Controller',
         'extensionslot' => 'ExtensionSlot',
+        'networkinterface' => 'NetworkInterface',
     );
 
     /**

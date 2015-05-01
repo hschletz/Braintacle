@@ -33,6 +33,41 @@ class NetworkInterfaces extends \Database\AbstractTable
     public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'networks';
+
+        $hydratorMap = array(
+                    'description' => 'Description',
+                    'speed' => 'Rate',
+                    'macaddr' => 'MacAddress',
+                    'ipaddress' => 'IpAddress',
+                    'ipmask' => 'Netmask',
+                    'ipgateway' => 'Gateway',
+                    'ipsubnet' => 'Subnet',
+                    'ipdhcp' => 'DhcpServer',
+                    'status' => 'Status',
+                    'virtualdev' => 'Virtual',
+                    'type' => 'Type',
+                    'typemib' => 'TypeMib',
+                    'is_blacklisted' => 'IsBlacklisted',
+        );
+        // Don't extract the virtual IsBlacklisted property
+        $extractorMap = array_flip($hydratorMap);
+        unset($extractorMap['IsBlacklisted']);
+
+        $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
+
+        $this->_hydrator->setNamingStrategy(
+            new \Database\Hydrator\NamingStrategy\MapNamingStrategy($hydratorMap, $extractorMap)
+        );
+        $this->_hydrator->addFilter('whitelist', new \Library\Hydrator\Filter\Whitelist(array_keys($extractorMap)));
+
+        $this->_hydrator->addStrategy('MacAddress', new \Library\Hydrator\Strategy\MacAddress);
+        $this->_hydrator->addStrategy('macaddr', new \Library\Hydrator\Strategy\MacAddress);
+
+        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
+            $this->_hydrator,
+            $serviceLocator->get('Model\Client\Item\NetworkInterface')
+        );
+
         parent::__construct($serviceLocator);
     }
 }

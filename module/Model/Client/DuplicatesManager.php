@@ -234,7 +234,7 @@ class DuplicatesManager
         $select->join(
             'networks',
             'networks.hardware_id = hardware.id',
-            array('networkinterface_macaddress' => 'macaddr'),
+            array('networkinterface_macaddr' => 'macaddr'),
             $select::JOIN_LEFT
         )
         ->join(

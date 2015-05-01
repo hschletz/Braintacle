@@ -151,7 +151,6 @@ class Model_Computer extends Model_ComputerOrGroup
     private static $_childObjectTypes = array(
         'MemorySlot',
         'MsOfficeProduct',
-        'NetworkInterface',
         'RegistryData',
         'Software',
         'StorageDevice',
