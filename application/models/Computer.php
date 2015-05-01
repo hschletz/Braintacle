@@ -149,7 +149,6 @@ class Model_Computer extends Model_ComputerOrGroup
      * @deprecated to be handled by ItemManager
      */
     private static $_childObjectTypes = array(
-        'MemorySlot',
         'MsOfficeProduct',
         'RegistryData',
         'Software',

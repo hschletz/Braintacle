@@ -46,6 +46,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         'GroupInfo',
         'GroupMemberships',
         'Locks',
+        'MemorySlots',
         'Modems',
         'NetworkInterfaces',
         'Ports',
@@ -70,7 +71,6 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
             'itmgmt_comments',
             'javainfo',
             'journallog',
-            'memories',
             'softwares',
             'storages',
         );

@@ -872,10 +872,6 @@ msgid "Audio device"
 msgstr ""
 
 #: Console/Form/Search.php view/console/client/index.php
-msgid "Controller"
-msgstr ""
-
-#: Console/Form/Search.php view/console/client/index.php
 msgid "Port name"
 msgstr ""
 
@@ -1263,6 +1259,10 @@ msgid "Error code"
 msgstr ""
 
 #: view/console/client/index.php
+msgid "Controller"
+msgstr ""
+
+#: view/console/client/index.php
 msgid "Extension slot"
 msgstr ""
 
@@ -1526,10 +1526,6 @@ msgstr ""
 
 #: view/console/client/system.php
 msgid "Caption"
-msgstr ""
-
-#: view/console/client/system.php
-msgid "Purpose"
 msgstr ""
 
 #: view/console/client/system.php

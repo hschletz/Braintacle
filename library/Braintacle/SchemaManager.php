@@ -181,7 +181,6 @@ class Braintacle_SchemaManager
         // needs to be dropped and recreated the right way.
         $fixTables = array(
             'drives',
-            'memories',
             'officepack',
             'softwares',
             'storages',
@@ -356,7 +355,6 @@ class Braintacle_SchemaManager
             'drives',
             'javainfo',
             'journallog',
-            'memories',
             'snmp_accountinfo',
             'snmp_communities',
             'softwares',

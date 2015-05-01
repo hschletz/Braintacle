@@ -693,10 +693,6 @@ msgid "Computer name"
 msgstr "Computername"
 
 #: Console/Form/Search.php view/console/client/index.php
-msgid "Controller"
-msgstr "Controller"
-
-#: Console/Form/Search.php view/console/client/index.php
 #: view/console/client/network.php
 msgid "DNS server"
 msgstr "DNS-Server"
@@ -1257,6 +1253,10 @@ msgid "BIOS manufacturer"
 msgstr "BIOS-Hersteller"
 
 #: view/console/client/index.php
+msgid "Controller"
+msgstr "Controller"
+
+#: view/console/client/index.php
 msgid "Edit filter"
 msgstr "Filter bearbeiten"
 
@@ -1541,10 +1541,6 @@ msgstr "Erweiterungssteckplätze"
 #: view/console/client/system.php
 msgid "Memory slots"
 msgstr "RAM-Steckplätze"
-
-#: view/console/client/system.php
-msgid "Purpose"
-msgstr "Zweck"
 
 #: view/console/client/system.php
 msgid "Slot number"

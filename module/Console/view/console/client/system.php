@@ -34,7 +34,6 @@ $headers = array(
     'Serial' => $this->translate('Serial number'),
     'Caption' => $this->translate('Caption'),
     'Description' => $this->translate('Description'),
-    'Purpose' => $this->translate('Purpose'),
 );
 
 $renderCallbacks = array (

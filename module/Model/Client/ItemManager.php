@@ -40,6 +40,7 @@ class ItemManager
         'displaycontroller' => 'DisplayControllers',
         'extensionslot' => 'ExtensionSlots',
         'inputdevice' => 'InputDevices',
+        'memoryslot' => 'MemorySlots',
         'modem' => 'Modems',
         'networkinterface' => 'NetworkInterfaces',
         'port' => 'Ports',

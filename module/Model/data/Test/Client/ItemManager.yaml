@@ -41,6 +41,18 @@ inputs:
     caption: "name1"
     type: "type4"
 
+memories:
+  -
+    id: 2
+    hardware_id: 2
+    numslots: 1
+    description: "name2"
+  -
+    id: 1
+    hardware_id: 1
+    numslots: 2
+    description: "name1"
+
 modems:
   -
     id: 2

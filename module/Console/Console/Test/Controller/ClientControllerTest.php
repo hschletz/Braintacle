@@ -1311,7 +1311,6 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Serial' => 'serial1',
                 'Caption' => 'caption1',
                 'Description' => 'description1',
-                'Purpose' => 'purpose1',
             ),
             array(
                 'SlotNumber' => 1,
@@ -1321,7 +1320,6 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Serial' => 'serial1',
                 'Caption' => 'caption1',
                 'Description' => 'description1',
-                'Purpose' => 'purpose1',
             ),
         );
         $map = array(
