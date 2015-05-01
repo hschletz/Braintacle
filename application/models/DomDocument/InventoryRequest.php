@@ -163,7 +163,7 @@ class Model_DomDocument_InventoryRequest extends \Library\DomDocument
                             } else {
                                 $data = $itemManager->getTable($model)->getHydrator()->extract($object);
                                 foreach ($data as $name => $value) {
-                                    if ($value != '') {
+                                    if ((string) $value !== '') {
                                         $element->appendChild(
                                             $this->createElementWithContent(strtoupper($name), $value)
                                         );
