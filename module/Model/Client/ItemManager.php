@@ -24,7 +24,8 @@ namespace Model\Client;
 /**
  * Client item manager
  *
- * Item types are named by their corresponding model class (without prefix).
+ * Item types are named by their corresponding model class (without prefix, case
+ * insensitive).
  */
 class ItemManager
 {
@@ -33,16 +34,16 @@ class ItemManager
      * @var string[]
      */
     protected $_tableClasses = array(
-        'AudioDevice' => 'AudioDevices',
-        'Controller' => 'Controllers',
-        'Display' => 'Displays',
-        'DisplayController' => 'DisplayControllers',
-        'ExtensionSlot' => 'ExtensionSlots',
-        'InputDevice' => 'InputDevices',
-        'Modem' => 'Modems',
-        'Port' => 'Ports',
-        'Printer' => 'Printers',
-        'VirtualMachine' => 'VirtualMachines',
+        'audiodevice' => 'AudioDevices',
+        'controller' => 'Controllers',
+        'display' => 'Displays',
+        'displaycontroller' => 'DisplayControllers',
+        'extensionslot' => 'ExtensionSlots',
+        'inputdevice' => 'InputDevices',
+        'modem' => 'Modems',
+        'port' => 'Ports',
+        'printer' => 'Printers',
+        'virtualmachine' => 'VirtualMachines',
     );
 
     /**
@@ -50,8 +51,8 @@ class ItemManager
      * @var string[]
      */
     protected $_plugins = array(
-        'Controller' => 'Controller',
-        'ExtensionSlot' => 'ExtensionSlot',
+        'controller' => 'Controller',
+        'extensionslot' => 'ExtensionSlot',
     );
 
     /**
@@ -79,10 +80,11 @@ class ItemManager
      */
     public function getTable($type)
     {
-        if (!isset($this->_tableClasses[$type])) {
+        $key = strtolower($type);
+        if (!isset($this->_tableClasses[$key])) {
             throw new \InvalidArgumentException('Invalid item type: ' . $type);
         }
-        return $this->_serviceManager->get('Database\Table\\' . $this->_tableClasses[$type]);
+        return $this->_serviceManager->get('Database\Table\\' . $this->_tableClasses[$key]);
     }
 
     /**
@@ -96,6 +98,7 @@ class ItemManager
      */
     public function getItems($type, $filters=null, $order=null, $direction='asc')
     {
+        $type = strtolower($type);
         $table = $this->getTable($type);
 
         if (isset($this->_plugins[$type])) {

@@ -708,12 +708,17 @@ class Model_Computer extends Model_ComputerOrGroup
             $value = parent::getProperty($property, $rawValue);
         } catch (Exception $e) {
             if (array_key_exists($property, $this->_childProperties)) {
-                // Call setProperty()/getProperty() on child object to enable processing of the value
                 list($model, $property) = explode('.', $property);
                 $childClass = "Model_$model";
-                $childObject = new $childClass;
-                $childObject->setProperty($property, $this->_childProperties["$model.$property"]);
-                return $childObject->getProperty($property, $rawValue);
+                if (class_exists($childClass)) {
+                    // Call setProperty()/getProperty() on child object to process the value
+                    $childObject = new $childClass;
+                    $childObject->setProperty($property, $this->_childProperties["$model.$property"]);
+                    return $childObject->getProperty($property, $rawValue);
+                } else {
+                    // Already hydrated
+                    return $this->_childProperties["$model.$property"];
+                }
             } elseif (preg_match('#^UserDefinedInfo\\.(.*)#', $property, $matches)) {
                 return $this->getUserDefinedInfo($matches[1]);
             } elseif (preg_match('#^Registry\\.#', $property)) {
@@ -742,16 +747,6 @@ class Model_Computer extends Model_ComputerOrGroup
                     "SELECT COUNT(assettag) FROM braintacle_blacklist_assettags WHERE assettag = ?",
                     $this['AssetTag']
                 );
-            } elseif (preg_match('#^(\w+)\\.(\w+)$#', $property, $matches)) {
-                $type = $matches[1];
-                $property = $matches[2];
-                $table = \Library\Application::getService('Model\Client\ItemManager')->getTable($type);
-                $key = $table->table . '.' . $table->getHydrator()->extractName($property);
-                if (array_key_exists($key, $this->_childProperties)) {
-                    return $this->_childProperties[$key];
-                } else {
-                    throw $e;
-                }
             } else {
                 return $this->getItems($property);
             }
@@ -864,8 +859,13 @@ class Model_Computer extends Model_ComputerOrGroup
                 }
             }
 
-            // Fallback: Assume property of an item
-            $this->_childProperties["$model.$property"] = $value;
+            $table = \Library\Application::getService('Model\Client\ItemManager')->getTable($model);
+            // Get mixed-case model name
+            $model = get_class($table->getResultSetPrototype()->getObjectPrototype());
+            $model = substr($model, strrpos($model, '\\') + 1);
+            $hydrator = $table->getHydrator();
+            $property = $hydrator->hydrateName($property);
+            $this->_childProperties["$model.$property"] = $hydrator->hydrateValue($property, $value);
         }
     }
 
@@ -1227,7 +1227,7 @@ class Model_Computer extends Model_ComputerOrGroup
             $tableGateway = \Library\Application::getService('Model\Client\ItemManager')->getTable($model);
             $table = $tableGateway->table;
             $column = $tableGateway->getHydrator()->extractName($property);
-            $columnAlias = "{$table}_$column";
+            $columnAlias = strtolower($model) . '_' . $column;
         }
 
         // Join table if not already present
