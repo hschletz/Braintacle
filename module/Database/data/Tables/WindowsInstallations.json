@@ -23,5 +23,8 @@
     ],
     "primary_key": [
         "hardware_id"
-    ]
+    ],
+    "mysql": {
+        "engine": "InnoDB"
+    }
 }

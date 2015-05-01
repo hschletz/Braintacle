@@ -86,5 +86,8 @@
                 "hardware_id"
             ]
         }
-    ]
+    ],
+    "mysql": {
+        "engine": "InnoDB"
+    }
 }
