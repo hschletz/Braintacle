@@ -91,6 +91,20 @@ networks:
     status: "status4"
     macaddr: "00:00:5E:00:53:01"
 
+officepack:
+  -
+    id: 2
+    hardware_id: 2
+    product: "name2"
+    officeversion: "version3"
+    install: 1
+  -
+    id: 1
+    hardware_id: 1
+    product: "name1"
+    officeversion: "version4"
+    install: 0
+
 ports:
   -
     id: 2

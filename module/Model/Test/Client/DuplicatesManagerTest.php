@@ -48,6 +48,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         'Locks',
         'MemorySlots',
         'Modems',
+        'MsOfficeProducts',
         'NetworkInterfaces',
         'Ports',
         'Printers',

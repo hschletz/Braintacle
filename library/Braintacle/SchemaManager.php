@@ -157,7 +157,6 @@ class Braintacle_SchemaManager
         // created before the bad PK can be dropped.
         $createConstraint = array(
             'journallog',
-            'officepack',
             'snmp_cards',
             'snmp_cartridges',
             'snmp_cpus',
@@ -181,7 +180,6 @@ class Braintacle_SchemaManager
         // needs to be dropped and recreated the right way.
         $fixTables = array(
             'drives',
-            'officepack',
             'softwares',
             'storages',
         );

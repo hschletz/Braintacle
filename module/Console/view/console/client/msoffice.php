@@ -58,7 +58,7 @@ $installedProducts = $client->getItems(
     'MsOfficeProduct',
     $this->order,
     $this->direction,
-    array('Type' => \Model_MsOfficeProduct::TYPE_INSTALLED_PRODUCT)
+    array('Type' => \Model\Client\Item\MsOfficeProduct::TYPE_INSTALLED_PRODUCT)
 );
 if (count($installedProducts)) {
     print $this->htmlTag(
@@ -77,7 +77,7 @@ $unusedLicenses = $client->getItems(
     'MsOfficeProduct',
     $this->order,
     $this->direction,
-    array('Type' => \Model_MsOfficeProduct::TYPE_UNUSED_LICENSE)
+    array('Type' => \Model\Client\Item\MsOfficeProduct::TYPE_UNUSED_LICENSE)
 );
 if (count($unusedLicenses)) {
     print $this->htmlTag(

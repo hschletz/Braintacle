@@ -49,6 +49,7 @@ class DefaultPlugin
         'InputDevices' => 'Type',
         'Modems' => 'Type',
         'MemorySlots' => 'SlotNumber',
+        'MsOfficeProducts' => 'Name',
         'NetworkInterfaces' => 'Description',
         'Ports' => 'Name',
         'Printers' => 'Name',

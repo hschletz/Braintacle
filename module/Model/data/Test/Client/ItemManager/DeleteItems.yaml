@@ -22,6 +22,10 @@ networks:
   -
     hardware_id: 2
 
+officepack:
+  -
+    hardware_id: 2
+
 ports:
   -
     hardware_id: 2

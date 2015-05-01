@@ -63,6 +63,7 @@ Feature\InitProviderInterface
                     'Model\Client\Item\InputDevice' => 'Model\Client\Item\InputDevice',
                     'Model\Client\Item\MemorySlot' => 'Model\Client\Item\MemorySlot',
                     'Model\Client\Item\Modem' => 'Model\Client\Item\Modem',
+                    'Model\Client\Item\MsOfficeProduct' => 'Model\Client\Item\MsOfficeProduct',
                     'Model\Client\Item\NetworkInterface' => 'Model\Client\Item\NetworkInterface',
                     'Model\Client\Item\Port' => 'Model\Client\Item\Port',
                     'Model\Client\Item\Printer' => 'Model\Client\Item\Printer',

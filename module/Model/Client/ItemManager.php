@@ -42,6 +42,7 @@ class ItemManager
         'inputdevice' => 'InputDevices',
         'memoryslot' => 'MemorySlots',
         'modem' => 'Modems',
+        'msofficeproduct' => 'MsOfficeProducts',
         'networkinterface' => 'NetworkInterfaces',
         'port' => 'Ports',
         'printer' => 'Printers',
@@ -55,6 +56,7 @@ class ItemManager
     protected $_plugins = array(
         'controller' => 'Controller',
         'extensionslot' => 'ExtensionSlot',
+        'msofficeproduct' => 'MsOfficeProduct',
         'networkinterface' => 'NetworkInterface',
     );
 
