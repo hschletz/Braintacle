@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for ExtensionSlot hytrator
+ * Tests for ExtensionSlot hydrator
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
