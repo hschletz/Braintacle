@@ -21,7 +21,7 @@
 
 namespace Database\Test\Hydrator;
 
-class ControllersTest extends \PHPUnit_Framework_TestCase
+class ControllersTest extends AbstractHydratorTest
 {
     public function hydrateProvider()
     {
@@ -59,17 +59,6 @@ class ControllersTest extends \PHPUnit_Framework_TestCase
             array($windowsAgent, $windowsController),
             array($unixAgent, $unixController),
         );
-    }
-
-    /**
-     * @dataProvider hydrateProvider
-     */
-    public function testHydrate($agentData, $slotData)
-    {
-        $hydrator = new \Database\Hydrator\Controllers;
-        $slot = new \ArrayObject;
-        $this->assertSame($slot, $hydrator->hydrate($agentData, $slot));
-        $this->assertEquals($slotData, $slot->getArrayCopy());
     }
 
     public function extractProvider()
@@ -122,15 +111,5 @@ class ControllersTest extends \PHPUnit_Framework_TestCase
             array($windowsControllerManufacturerNull, $windowsAgentManufacturerNull),
             array($unixController, $unixAgent),
         );
-    }
-
-    /**
-     * @dataProvider extractProvider
-     */
-    public function testExtract($slotData, $agentData)
-    {
-        $hydrator = new \Database\Hydrator\Controllers;
-        $slot = new \ArrayObject($slotData);
-        $this->assertEquals($agentData, $hydrator->extract($slot));
     }
 }
