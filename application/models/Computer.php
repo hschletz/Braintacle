@@ -943,11 +943,10 @@ class Model_Computer extends Model_ComputerOrGroup
                     // Assume column alias 'model_property'
                     $order = strtolower(strtr($order, '.', '_'));
                 } else {
-                    // Assume column alias 'table_column'
+                    // Assume column alias 'model_column'
                     $tableGateway = \Library\Application::getService('Model\Client\ItemManager')->getTable($model);
-                    $table = $tableGateway->table;
                     $column = $tableGateway->getHydrator()->extractName($property);
-                    $order = "{$table}_$column";
+                    $order = strtolower("{$model}_$column");
                 }
             } else {
                 throw $exception;
