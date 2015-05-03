@@ -55,12 +55,7 @@ class Model_DomDocument_InventoryRequest extends \Library\DomDocument
     /** {@inheritdoc} */
     public function getSchemaFilename()
     {
-        $schema = get_class($this); // Will yield the name of the subclass
-        $schema = substr(
-            $schema,
-            strrpos($schema, '_') + 1
-        );
-        return realpath(APPLICATION_PATH . "/../xml/$schema.rng");
+        return \Protocol\Module::getPath('data/RelaxNG/InventoryRequest.rng');
     }
 
     /**

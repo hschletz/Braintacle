@@ -41,6 +41,7 @@ Feature\BootstrapListenerInterface
     {
         $manager->loadModule('Library');
         $manager->loadModule('Model');
+        $manager->loadModule('Protocol');
     }
 
     /**

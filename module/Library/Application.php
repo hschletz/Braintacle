@@ -111,6 +111,7 @@ class Application
                         'Database' => self::getPath('module/Database'),
                         'Library' => self::getPath('module/Library'),
                         'Model' => self::getPath('module/Model'),
+                        'Protocol' => self::getPath('module/Protocol'),
                     ),
                 ),
             )

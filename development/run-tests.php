@@ -67,5 +67,6 @@ if ($argc >= 2) {
     testModule('Library');
     testModule('Database');
     testModule('Model');
+    testModule('Protocol');
     testModule('Console');
 }
