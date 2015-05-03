@@ -43,7 +43,7 @@ Feature\InitProviderInterface
     public function init(\Zend\ModuleManager\ModuleManagerInterface $manager)
     {
         $manager->loadModule('Database');
-        $manager->loadModule('Model');
+        $manager->loadModule('Library');
     }
 
     /**
