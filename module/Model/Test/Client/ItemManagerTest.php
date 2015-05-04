@@ -40,6 +40,12 @@ class ItemManagerTest extends \Model\Test\AbstractTest
         'VirtualMachines',
     );
 
+    public function testGetTableNameInvalidType()
+    {
+        $this->setExpectedException('InvalidArgumentException', 'Invalid item type: invalid');
+        $this->_getModel()->getTableName('invalid');
+    }
+
     public function testGetTableInvalidType()
     {
         $this->setExpectedException('InvalidArgumentException', 'Invalid item type: invalid');

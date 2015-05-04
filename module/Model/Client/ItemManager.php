@@ -77,19 +77,30 @@ class ItemManager
     }
 
     /**
-     * Get table gateway for given type
+     * Get table name for given type
      *
      * @param string $type Item type
-     * @return \Database\AbstractTable
+     * @return string Table name without namespace prefix
      * @throws \InvalidArgumentException if $type is not defined
      */
-    public function getTable($type)
+    public function getTableName($type)
     {
         $key = strtolower($type);
         if (!isset($this->_tableClasses[$key])) {
             throw new \InvalidArgumentException('Invalid item type: ' . $type);
         }
-        return $this->_serviceManager->get('Database\Table\\' . $this->_tableClasses[$key]);
+        return $this->_tableClasses[$key];
+    }
+
+    /**
+     * Get table gateway for given type
+     *
+     * @param string $type Item type
+     * @return \Database\AbstractTable
+     */
+    public function getTable($type)
+    {
+        return $this->_serviceManager->get('Database\Table\\' . $this->getTableName($type));
     }
 
     /**

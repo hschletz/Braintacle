@@ -156,12 +156,12 @@ class Model_DomDocument_InventoryRequest extends \Library\DomDocument
                                     }
                                 }
                             } else {
-                                $data = $itemManager->getTable($model)->getHydrator()->extract($object);
-                                foreach ($data as $name => $value) {
+                                // TODO: move this outside the loop when all item models are migrated
+                                $table = $itemManager->getTableName($model);
+                                $hydrator = \Library\Application::getService("Protocol\\Hydrator\\$table");
+                                foreach ($hydrator->extract($object) as $name => $value) {
                                     if ((string) $value !== '') {
-                                        $element->appendChild(
-                                            $this->createElementWithContent(strtoupper($name), $value)
-                                        );
+                                        $element->appendChild($this->createElementWithContent($name, $value));
                                     }
                                 }
                             }

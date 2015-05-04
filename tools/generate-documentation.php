@@ -40,9 +40,12 @@ $basePath = realpath(dirname(dirname(__FILE__)));
 require_once "$basePath/module/Library/Application.php";
 \Library\Application::init('Cli');
 
-// Autoload Console namespace
+// Autoload namespaces from which classes are referenced
 require_once("$basePath/module/Console/Console/Module.php");
 $module = new \Console\Module;
+\Zend\Loader\AutoloaderFactory::factory($module->getAutoloaderConfig());
+require_once("$basePath/module/Protocol/Module.php");
+$module = new \Protocol\Module;
 \Zend\Loader\AutoloaderFactory::factory($module->getAutoloaderConfig());
 
 // Determine phpDocumentor invocation method
