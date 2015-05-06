@@ -238,7 +238,7 @@ Braintacle:
         </element>
     </define>
     <define name="DRIVES">
-        <element name="DRIVES" braintacle:model="Volume">
+        <element name="DRIVES" braintacle:model="Filesystem">
             <interleave>
                 <optional>
                     <ref name="CREATEDATE" braintacle:property="CreationDate" braintacle:format="yyyy/M/d HH:mm:ss" />

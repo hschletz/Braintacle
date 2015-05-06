@@ -29,6 +29,18 @@ controllers:
     name: "name1"
     manufacturer: null
 
+drives:
+  -
+    id: 2
+    hardware_id: 2
+    type: "type4"
+    filesystem: "name2"
+  -
+    id: 1
+    hardware_id: 1
+    type: "type3"
+    filesystem: "name1"
+
 inputs:
   -
     id: 2

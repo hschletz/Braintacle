@@ -42,6 +42,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         'DuplicateMacAddresses',
         'DuplicateSerials',
         'ExtensionSlots',
+        'Filesystems',
         'GroupInfo',
         'GroupMemberships',
         'InputDevices',
@@ -68,7 +69,6 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $mockTables = array(
             'download_history',
             'download_servers',
-            'drives',
             'itmgmt_comments',
             'javainfo',
             'journallog',

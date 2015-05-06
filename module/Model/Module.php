@@ -60,6 +60,7 @@ Feature\InitProviderInterface
                     'Model\Client\Item\Display' => 'Model\Client\Item\Display',
                     'Model\Client\Item\DisplayController' => 'Model\Client\Item\DisplayController',
                     'Model\Client\Item\ExtensionSlot' => 'Model\Client\Item\ExtensionSlot',
+                    'Model\Client\Item\Filesystem' => 'Model\Client\Item\Filesystem',
                     'Model\Client\Item\InputDevice' => 'Model\Client\Item\InputDevice',
                     'Model\Client\Item\MemorySlot' => 'Model\Client\Item\MemorySlot',
                     'Model\Client\Item\Modem' => 'Model\Client\Item\Modem',

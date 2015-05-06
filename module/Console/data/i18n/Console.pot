@@ -783,12 +783,12 @@ msgstr ""
 msgid "BIOS date"
 msgstr ""
 
-#: Console/Form/Search.php
-msgid "Volume size (MB)"
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Filesystem size (MB)"
 msgstr ""
 
 #: Console/Form/Search.php
-msgid "Volume free space (MB)"
+msgid "Filesystem free space (MB)"
 msgstr ""
 
 #: Console/Form/Search.php view/console/client/index.php
@@ -1266,16 +1266,12 @@ msgstr ""
 msgid "Extension slot"
 msgstr ""
 
+#: view/console/client/index.php
+msgid "Free space (MB)"
+msgstr ""
+
 #: view/console/client/index.php view/console/client/network.php
 msgid "Netmask"
-msgstr ""
-
-#: view/console/client/index.php
-msgid "Volume size"
-msgstr ""
-
-#: view/console/client/index.php view/console/client/storage.php
-msgid "Free space"
 msgstr ""
 
 #: view/console/client/index.php
@@ -1504,6 +1500,10 @@ msgid "Used space"
 msgstr ""
 
 #: view/console/client/storage.php
+msgid "Free space"
+msgstr ""
+
+#: view/console/client/storage.php
 msgid "Mountpoint"
 msgstr ""
 
@@ -1513,7 +1513,7 @@ msgid "Creation date"
 msgstr ""
 
 #: view/console/client/storage.php
-msgid "Volumes"
+msgid "Filesystems"
 msgstr ""
 
 #: view/console/client/system.php

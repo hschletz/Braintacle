@@ -39,6 +39,7 @@ class ItemManager
         'display' => 'Displays',
         'displaycontroller' => 'DisplayControllers',
         'extensionslot' => 'ExtensionSlots',
+        'filesystem' => 'Filesystems',
         'inputdevice' => 'InputDevices',
         'memoryslot' => 'MemorySlots',
         'modem' => 'Modems',
@@ -56,6 +57,7 @@ class ItemManager
     protected $_plugins = array(
         'controller' => 'Controller',
         'extensionslot' => 'ExtensionSlot',
+        'filesystem' => 'Filesystem',
         'msofficeproduct' => 'MsOfficeProduct',
         'networkinterface' => 'NetworkInterface',
     );

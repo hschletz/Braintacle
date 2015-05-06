@@ -55,8 +55,8 @@ class Search extends Form
         'LastContactDate' => 'date',
         'PhysicalMemory' => 'integer',
         'SwapMemory' => 'integer',
-        'Volume.Size' => 'integer',
-        'Volume.FreeSpace' => 'integer',
+        'Filesystem.Size' => 'integer',
+        'Filesystem.FreeSpace' => 'integer',
     );
 
     /**
@@ -115,8 +115,8 @@ class Search extends Form
             'AssetTag' => $translator->translate('Asset tag'),
             'BiosVersion' => $translator->translate('BIOS version'),
             'BiosDate' => $translator->translate('BIOS date'),
-            'Volume.Size' => $translator->translate('Volume size (MB)'),
-            'Volume.FreeSpace' => $translator->translate('Volume free space (MB)'),
+            'Filesystem.Size' => $translator->translate('Filesystem size (MB)'),
+            'Filesystem.FreeSpace' => $translator->translate('Filesystem free space (MB)'),
             'DnsServer' => $translator->translate('DNS server'),
             'DefaultGateway' => $translator->translate('Default gateway'),
             'NetworkInterface.IpAddress' => $translator->translate('IP address'),

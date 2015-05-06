@@ -55,6 +55,9 @@ Feature\InitProviderInterface
                 'abstract_factories' => array(
                     'Protocol\Service\AbstractHydratorFactory',
                 ),
+                'invokables' => array(
+                    'Protocol\Hydrator\Filesystems' => 'Protocol\Hydrator\Filesystems',
+                ),
             ),
         );
     }

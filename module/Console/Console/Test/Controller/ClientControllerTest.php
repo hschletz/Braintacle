@@ -1100,7 +1100,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Windows', $this->getMock('Model\Client\WindowsInstallation')),
             array('StorageDevice', $devices),
-            array('Volume', $filesystems),
+            array('Filesystem', $filesystems),
         );
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
@@ -1161,7 +1161,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Windows', null),
             array('StorageDevice', $devices),
-            array('Volume', $filesystems),
+            array('Filesystem', $filesystems),
         );
         $this->_computer->expects($this->any())
                         ->method('offsetGet')

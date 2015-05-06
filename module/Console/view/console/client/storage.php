@@ -90,7 +90,7 @@ print $this->table(
 );
 
 
-// Display volumes
+// Display filesystemss
 
 if ($client['Windows']) {
     $headers = array(
@@ -118,8 +118,8 @@ $renderCallbacks = array(
     'Size' => $renderSize,
     'UsedSpace' => $renderSize,
     'FreeSpace' => $renderSize,
-    'CreationDate' => function ($view, $volume) {
-        $date = $volume['CreationDate'];
+    'CreationDate' => function ($view, $filesystem) {
+        $date = $filesystem['CreationDate'];
         if ($date) {
             return $view->escapeHtml($date->get(\Zend_Date::DATE_MEDIUM));
         }
@@ -128,10 +128,10 @@ $renderCallbacks = array(
 
 print $this->htmlTag(
     'h2',
-    $this->translate('Volumes')
+    $this->translate('Filesystems')
 );
 print $this->table(
-    $client['Volume'],
+    $client['Filesystem'],
     $headers,
     null,
     $renderCallbacks

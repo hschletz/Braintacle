@@ -60,7 +60,7 @@
  * - <b>IsAssetTagBlacklisted:</b> TRUE if the asset tag is blacklisted, i.e. ignored for detection of duplicates.
  * - <b>AudioDevice, Controller, Display, DisplayController, ExtensionSlot,
  *   InputDevice, Port, MemorySlot, Modem, MsOfficeProduct, NetworkInterface,
- *   Printer, RegistryData, Software, StorageDevice, VirtualMachine, Volume:</b>
+ *   Printer, RegistryData, Software, StorageDevice, VirtualMachine, Filesystem:</b>
  *   A list of all items of the given type. Equivalent of calling getItems()
  *   without extra arguments.
  *
@@ -152,7 +152,6 @@ class Model_Computer extends Model_ComputerOrGroup
         'RegistryData',
         'Software',
         'StorageDevice',
-        'Volume',
     );
 
     /**
@@ -485,8 +484,8 @@ class Model_Computer extends Model_ComputerOrGroup
                         Model_GroupMembership::TYPE_EXCLUDED
                     );
                     break;
-                case 'Volume.Size':
-                case 'Volume.FreeSpace':
+                case 'Filesystem.Size':
+                case 'Filesystem.FreeSpace':
                     // Generic integer filter
                     list($model, $property) = explode('.', $type);
                     $select = self::_findInteger(

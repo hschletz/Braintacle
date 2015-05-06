@@ -710,6 +710,14 @@ msgstr "Display-Controller"
 msgid "Exact match"
 msgstr "Exakte Übereinstimmung"
 
+#: Console/Form/Search.php
+msgid "Filesystem free space (MB)"
+msgstr "Dateisystem: freier Speicherplatz (MB)"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Filesystem size (MB)"
+msgstr "Dateisystem: Größe (MB)"
+
 #: Console/Form/Search.php view/console/client/index.php
 msgid "GPU memory"
 msgstr "GPU-Speicher"
@@ -892,14 +900,6 @@ msgstr "Benutzername"
 #: Console/Form/Search.php view/console/client/registry.php
 msgid "Value"
 msgstr "Wert"
-
-#: Console/Form/Search.php
-msgid "Volume free space (MB)"
-msgstr "Laufwerk: freier Speicherplatz (MB)"
-
-#: Console/Form/Search.php
-msgid "Volume size (MB)"
-msgstr "Laufwerk: Größe (MB)"
 
 #: Console/Form/Search.php view/console/client/index.php
 msgid "Windows product key"
@@ -1268,9 +1268,9 @@ msgstr "Fehlercode"
 msgid "Extension slot"
 msgstr "Erweiterungssteckplatz"
 
-#: view/console/client/index.php view/console/client/storage.php
-msgid "Free space"
-msgstr "Frei"
+#: view/console/client/index.php
+msgid "Free space (MB)"
+msgstr "Freier Speicherplatz (MB)"
 
 #: view/console/client/index.php view/console/client/network.php
 msgid "Netmask"
@@ -1297,10 +1297,6 @@ msgstr "Auslagerungsspeicher"
 #: view/console/group/members.php
 msgid "User"
 msgstr "Benutzer"
-
-#: view/console/client/index.php
-msgid "Volume size"
-msgstr "Laufwerk: Größe"
 
 #: view/console/client/index.php
 msgid "Windows company"
@@ -1483,12 +1479,20 @@ msgid "Filesystem"
 msgstr "Dateisystem"
 
 #: view/console/client/storage.php
+msgid "Filesystems"
+msgstr "Dateisysteme"
+
+#: view/console/client/storage.php
 msgid "Firmware version"
 msgstr "Firmware-Version"
 
 #: view/console/client/storage.php
 msgid "Floppy disk drive"
 msgstr "Diskettenlaufwerk"
+
+#: view/console/client/storage.php
+msgid "Free space"
+msgstr "Frei"
 
 #: view/console/client/storage.php
 msgid "Hard disk"
@@ -1517,10 +1521,6 @@ msgstr "Speichergeräte"
 #: view/console/client/storage.php
 msgid "Used space"
 msgstr "Benutzt"
-
-#: view/console/client/storage.php
-msgid "Volumes"
-msgstr "Dateisysteme"
 
 #: view/console/client/system.php
 msgid "Caption"
