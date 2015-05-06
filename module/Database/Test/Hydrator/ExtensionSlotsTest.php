@@ -21,7 +21,7 @@
 
 namespace Database\Test\Hydrator;
 
-class ExtensionSlotsTest extends AbstractHydratorTest
+class ExtensionSlotsTest extends \Library\Test\Hydrator\AbstractHydratorTest
 {
     public function hydrateProvider()
     {

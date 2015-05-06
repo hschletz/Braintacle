@@ -21,7 +21,7 @@
 
 namespace Database\Test\Hydrator;
 
-class FilesystemsTest extends AbstractHydratorTest
+class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
 {
     public function hydrateProvider()
     {

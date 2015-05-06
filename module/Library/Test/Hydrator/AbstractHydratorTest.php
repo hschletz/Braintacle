@@ -19,7 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Database\Test\Hydrator;
+namespace Library\Test\Hydrator;
 
 abstract class AbstractHydratorTest extends \PHPUnit_Framework_TestCase
 {

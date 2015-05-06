@@ -21,7 +21,7 @@
 
 namespace Database\Test\Hydrator;
 
-class ControllersTest extends AbstractHydratorTest
+class ControllersTest extends \Library\Test\Hydrator\AbstractHydratorTest
 {
     public function hydrateProvider()
     {
