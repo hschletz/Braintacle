@@ -314,10 +314,31 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
         );
     }
 
-    /**
-     * Test rendering of \Zend_Date objects
-     */
-    public function testDateFormat()
+    public function testDateTimeFormat()
+    {
+        $date = new \DateTime;
+        $data = array(
+            array(1388567012, $date),
+            array($date, $date),
+            array($date, 1388567012),
+        );
+        $this->_dateFormat->expects($this->exactly(2)) // column 0 should be rendered by callback
+                          ->method('__invoke')
+                          ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT);
+        $callback = function() {
+        };
+        $helper = new \Console\View\Helper\Table(
+            $this->_escapeHtml, $this->_htmlTag, $this->_consoleUrl, $this->_dateFormat
+        );
+        $helper(
+            $data,
+            array('col1', 'col2'),
+            array(),
+            array(0 => $callback)
+        );
+    }
+
+    public function testZendDateFormat()
     {
         $date = new \Zend_Date(1388567012);
         $data = array(

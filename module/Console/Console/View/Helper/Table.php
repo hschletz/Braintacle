@@ -84,8 +84,9 @@ class Table extends \Zend\View\Helper\AbstractHelper
      * empty string is returned.
      *
      * By default, cell data is retrieved from $data and escaped automatically.
-     * \Zend_Date objects are rendered as short timestamps (yy-mm-dd hh:mm). The
-     * application's default locale controls the date/time format.
+     * \DateTime and \Zend_Date objects are rendered as short timestamps
+     * (yy-mm-dd hh:mm). The application's default locale controls the date/time
+     * format.
      * Alternatively, a callback can be provided in the $renderCallbacks array.
      * If a callback is defined for a column, the callback is responsible for
      * escaping cell data. It gets called with the following arguments:
@@ -154,6 +155,14 @@ class Table extends \Zend\View\Helper\AbstractHelper
             foreach ($keys as $key) {
                 if (isset($renderCallbacks[$key])) {
                     $row[$key] = $renderCallbacks[$key]($this->view, $rowData, $key);
+                } elseif ($rowData[$key] instanceof \DateTime) {
+                    $row[$key] = $this->_escapeHtml->__invoke(
+                        $this->_dateFormat->__invoke(
+                            $rowData[$key],
+                            \IntlDateFormatter::SHORT,
+                            \IntlDateFormatter::SHORT
+                        )
+                    );
                 } elseif ($rowData[$key] instanceof \Zend_Date) {
                     $row[$key] = $this->_escapeHtml->__invoke(
                         $this->_dateFormat->__invoke(
