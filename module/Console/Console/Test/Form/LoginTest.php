@@ -44,4 +44,46 @@ class LoginTest extends \Console\Test\AbstractFormTest
             $view->placeHolder('BodyOnLoad')
         );
     }
+
+    public function testInputFilter()
+    {
+        $data = array(
+            'User' => 'user',
+            'Password' => 'password',
+            '_csrf' => $this->_form->get('_csrf')->getValue(),
+        );
+        $this->_form->setData($data);
+        $this->assertTrue($this->_form->isValid());
+        $data = $this->_form->getData();
+        $this->assertEquals('user', $data['User']);
+        $this->assertEquals('password', $data['Password']);
+    }
+
+    public function testInputFilterEmptyValues()
+    {
+        $data = array(
+            'User' => '',
+            'Password' => '',
+            '_csrf' => $this->_form->get('_csrf')->getValue(),
+        );
+        $this->_form->setData($data);
+        $this->assertTrue($this->_form->isValid());
+        $data = $this->_form->getData();
+        $this->assertEquals('', $data['User']);
+        $this->assertEquals('', $data['Password']);
+    }
+
+    public function testInputFilterWhitespaceValues()
+    {
+        $data = array(
+            'User' => ' ',
+            'Password' => ' ',
+            '_csrf' => $this->_form->get('_csrf')->getValue(),
+        );
+        $this->_form->setData($data);
+        $this->assertTrue($this->_form->isValid());
+        $data = $this->_form->getData();
+        $this->assertEquals(' ', $data['User']);
+        $this->assertEquals(' ', $data['Password']);
+    }
 }

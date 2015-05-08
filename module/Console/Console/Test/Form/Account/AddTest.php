@@ -91,8 +91,8 @@ class AddTest extends \Console\Test\AbstractFormTest
     {
         $data = array(
             'Id' => ' User2 ',
-            'Password' => ' 234567 ',
-            'PasswordRepeat' => ' 234567 ',
+            'Password' => '        ',
+            'PasswordRepeat' => '        ',
             'FirstName' => ' ',
             'LastName' => ' ',
             'MailAddress' => ' ',
@@ -104,7 +104,7 @@ class AddTest extends \Console\Test\AbstractFormTest
 
         $data = $this->_form->getData();
         $this->assertEquals('User2', $data['Id']);
-        $this->assertEquals(' 234567 ', $data['Password']);
+        $this->assertEquals('        ', $data['Password']);
         $this->assertNull($data['FirstName']);
         $this->assertNull($data['LastName']);
         $this->assertNull($data['MailAddress']);

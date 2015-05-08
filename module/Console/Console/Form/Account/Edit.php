@@ -50,7 +50,7 @@ class Edit extends AbstractForm
         );
 
         // Password can remain empty - in that case, it is left untouched.
-        $inputFilter->get('Password')->setRequired(false);
+        $inputFilter->get('Password')->setAllowEmpty(true);
 
         $this->get('Submit')->setLabel('Change');
     }

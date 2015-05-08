@@ -46,6 +46,10 @@ class Login extends Form
         $submit = new \Library\Form\Element\Submit('Submit');
         $submit->setLabel('Login');
         $this->add($submit);
+
+        $inputFilter = $this->getInputFilter();
+        $inputFilter->get('User')->setAllowEmpty(true);
+        $inputFilter->get('Password')->setAllowEmpty(true);
     }
 
     /** {@inheritdoc} */

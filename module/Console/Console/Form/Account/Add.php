@@ -21,6 +21,8 @@
 
 namespace Console\Form\Account;
 
+use \Zend\Validator\NotEmpty;
+
 /**
  * Add Braintacle user account
  */
@@ -45,6 +47,16 @@ class Add extends AbstractForm
                 'name' => 'Id',
                 'validators' => array($idNotExistsValidator),
             )
+        );
+
+        // Default NotEmpty validator would behave inconsistently with
+        // all-whitespace passwords. While that would be an odd password choice,
+        // password quality check beyond length validation is not this form's
+        // purpose.
+        $inputFilter->get('Password')->getValidatorChain()->prependByName(
+            'NotEmpty',
+            array('type' => NotEmpty::STRING | NotEmpty::EMPTY_ARRAY | NotEmpty::NULL),
+            true // Stop here to avoid additional message by StringLength validator
         );
 
         $this->get('Submit')->setLabel('Add');
