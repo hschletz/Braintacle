@@ -28,7 +28,7 @@ hardware:
     deviceid: "_SYSTEMGROUP_"
     name: "name3"
     description: "#DESCRIPTION#"
-    lastdate: "2015-02-12T22:07:00.000000"
+    lastdate: "2015-02-12 22:07:00"
 
 groups:
   -
