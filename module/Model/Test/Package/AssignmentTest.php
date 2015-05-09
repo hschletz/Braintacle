@@ -33,21 +33,28 @@ class AssignmentTest extends \Model\Test\AbstractTest
         return new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet;
     }
 
+    public function testObjectProperties()
+    {
+        $model = $this->_getModel();
+        $this->assertInstanceOf('ArrayAccess', $model);
+        $this->assertTrue(method_exists($model, 'exchangeArray'));
+    }
+
     public function testDateFormat()
     {
         $date = new \DateTime('2014-12-30 19:01:23');
-        $this->assertEquals('Tue Dec 30 19:01:23 2014', $date->format(\Model_PackageAssignment::DATEFORMAT));
+        $this->assertEquals('Tue Dec 30 19:01:23 2014', $date->format(\Model\Package\Assignment::DATEFORMAT));
         $this->assertEquals(
-            $date, \DateTime::createFromFormat(\Model_PackageAssignment::DATEFORMAT, 'Tue Dec 30 19:01:23 2014')
+            $date, \DateTime::createFromFormat(\Model\Package\Assignment::DATEFORMAT, 'Tue Dec 30 19:01:23 2014')
         );
 
         $date = new \DateTime('2014-03-01 09:01:03');
-        $this->assertEquals('Sat Mar 01 09:01:03 2014', $date->format(\Model_PackageAssignment::DATEFORMAT));
+        $this->assertEquals('Sat Mar 01 09:01:03 2014', $date->format(\Model\Package\Assignment::DATEFORMAT));
         $this->assertEquals(
-            $date, \DateTime::createFromFormat(\Model_PackageAssignment::DATEFORMAT, 'Sat Mar 01 09:01:03 2014')
+            $date, \DateTime::createFromFormat(\Model\Package\Assignment::DATEFORMAT, 'Sat Mar 01 09:01:03 2014')
         );
         $this->assertEquals(
-            $date, \DateTime::createFromFormat(\Model_PackageAssignment::DATEFORMAT, 'Sat Mar  1 09:01:03 2014')
+            $date, \DateTime::createFromFormat(\Model\Package\Assignment::DATEFORMAT, 'Sat Mar  1 09:01:03 2014')
         );
     }
 }

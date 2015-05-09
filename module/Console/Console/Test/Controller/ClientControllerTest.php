@@ -1991,10 +1991,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->method('setPackages');
         $form->expects($this->never())
              ->method('render');
+        $assignments = new \Zend\Db\ResultSet\ResultSet;
+        $assignments->initialize(array());
         $this->_computer->expects($this->once())
-                        ->method('getItems')
-                        ->with('PackageAssignment', 'Name', 'asc')
-                        ->will($this->returnValue(array()));
+                        ->method('getPackages')
+                        ->with('PackageName', 'asc')
+                        ->will($this->returnValue($assignments));
         $this->_computer->expects($this->once())
                         ->method('getInstallablePackages')
                         ->will($this->returnValue(array()));
@@ -2011,35 +2013,35 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->method('setPackages');
         $form->expects($this->never())
              ->method('render');
-        $assignments = array(
+        $assignments = new \Zend\Db\ResultSet\ResultSet;
+        $assignments->initialize(
             array(
-                'Computer' => 1,
-                'Name' => 'package1',
-                'Status' => null,
-                'Timestamp' => 'timestamp1',
-            ),
-            array(
-                'Computer' => 1,
-                'Name' => 'package2',
-                'Status' => 'NOTIFIED',
-                'Timestamp' => 'timestamp2',
-            ),
-            array(
-                'Computer' => 1,
-                'Name' => 'package3',
-                'Status' => 'SUCCESS',
-                'Timestamp' => 'timestamp3',
-            ),
-            array(
-                'Computer' => 1,
-                'Name' => 'package4',
-                'Status' => '<ERROR>',
-                'Timestamp' => 'timestamp4',
-            ),
+                array(
+                    'PackageName' => 'package1',
+                    'Status' => null,
+                    'Timestamp' => 'timestamp1',
+                ),
+                array(
+                    'PackageName' => 'package2',
+                    'Status' => 'NOTIFIED',
+                    'Timestamp' => 'timestamp2',
+                ),
+                array(
+                    'PackageName' => 'package3',
+                    'Status' => 'SUCCESS',
+                    'Timestamp' => 'timestamp3',
+                ),
+                array(
+                    'PackageName' => 'package4',
+                    'Status' => '<ERROR>',
+                    'Timestamp' => 'timestamp4',
+                ),
+            )
         );
+        $this->_computer->method('offsetGet')->will($this->returnValueMap(array(array('Id', 1))));
         $this->_computer->expects($this->once())
-                        ->method('getItems')
-                        ->with('PackageAssignment', 'Name', 'asc')
+                        ->method('getPackages')
+                        ->with('PackageName', 'asc')
                         ->will($this->returnValue($assignments));
         $this->_computer->expects($this->once())
                         ->method('getInstallablePackages')
@@ -2077,13 +2079,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
+        $assignments = new \Zend\Db\ResultSet\ResultSet;
+        $assignments->initialize(array());
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->once())
-                        ->method('getItems')
-                        ->with('PackageAssignment', 'Name', 'asc')
-                        ->will($this->returnValue(array()));
+                        ->method('getPackages')
+                        ->with('PackageName', 'asc')
+                        ->will($this->returnValue($assignments));
         $this->_computer->expects($this->once())
                         ->method('getInstallablePackages')
                         ->will($this->returnValue($packages));

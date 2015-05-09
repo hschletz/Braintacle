@@ -77,7 +77,7 @@ Feature\InitProviderInterface
                     'Model\Network\Device' => 'Model\Network\Device',
                     'Model\Network\Subnet' => 'Model\Network\Subnet',
                     'Model\Operator\Operator' => 'Model\Operator\Operator',
-                    'Model\Package\Assignment' => 'Model_PackageAssignment',
+                    'Model\Package\Assignment' => 'Model\Package\Assignment',
                     'Model\Package\Metadata' => 'Model\Package\Metadata',
                     'Model\Package\Package' => 'Model\Package\Package',
                     'Model\Registry\Value' => 'Model\Registry\Value',

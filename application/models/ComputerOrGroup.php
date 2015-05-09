@@ -282,7 +282,7 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
                     'hardware_id' => $this->getId(),
                     'name' => 'DOWNLOAD',
                     'ivalue' => $package['Id'],
-                    'comments' => date(\Model_PackageAssignment::DATEFORMAT),
+                    'comments' => date(\Model\Package\Assignment::DATEFORMAT),
                 )
             );
         }

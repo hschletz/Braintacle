@@ -113,13 +113,13 @@ class PackageManager
                     ->where(new Predicate\NotIn('hardware_id', $groups));
 
         $success = clone $subquery;
-        $success->where(array('tvalue' => \Model_PackageAssignment::SUCCESS));
+        $success->where(array('tvalue' => \Model\Package\Assignment::SUCCESS));
 
         $notified = clone $subquery;
-        $notified->where(array('tvalue' => \Model_PackageAssignment::NOTIFIED));
+        $notified->where(array('tvalue' => \Model\Package\Assignment::NOTIFIED));
 
         $error = clone $subquery;
-        $error->where(new Predicate\Like('tvalue', \Model_PackageAssignment::ERROR_PREFIX . '%'));
+        $error->where(new Predicate\Like('tvalue', \Model\Package\Assignment::ERROR_PREFIX . '%'));
 
         $select = $packages->getSql()->select();
         $select->columns(
@@ -355,13 +355,13 @@ class PackageManager
                 $filters->isNull('tvalue')->and->notIn('hardware_id', $groups);
             }
             if ($deploySuccess) {
-                $filters->equalTo('tvalue', \Model_PackageAssignment::SUCCESS);
+                $filters->equalTo('tvalue', \Model\Package\Assignment::SUCCESS);
             }
             if ($deployNotified) {
-                $filters->equalTo('tvalue', \Model_PackageAssignment::NOTIFIED);
+                $filters->equalTo('tvalue', \Model\Package\Assignment::NOTIFIED);
             }
             if ($deployError) {
-                $filters->like('tvalue', \Model_PackageAssignment::ERROR_PREFIX . '%');
+                $filters->like('tvalue', \Model\Package\Assignment::ERROR_PREFIX . '%');
             }
             if ($deployGroups) {
                 $filters->in('hardware_id', $groups);
@@ -369,7 +369,7 @@ class PackageManager
             $where->addPredicate($filters);
         }
 
-        $now = $this->_serviceManager->get('Library\Now')->format(\Model_PackageAssignment::DATEFORMAT);
+        $now = $this->_serviceManager->get('Library\Now')->format(\Model\Package\Assignment::DATEFORMAT);
         try{
             // Remove DOWNLOAD_* options from updated assignments
             $subquery = $clientConfig->getSql()
@@ -388,7 +388,7 @@ class PackageManager
             $clientConfig->update(
                 array(
                     'ivalue' => $newPackageId,
-                    'tvalue' => \Model_PackageAssignment::NOT_NOTIFIED,
+                    'tvalue' => \Model\Package\Assignment::NOT_NOTIFIED,
                     'comments' => $now,
                 ),
                 array('name' => 'DOWNLOAD', $where)

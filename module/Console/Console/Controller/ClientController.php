@@ -411,7 +411,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function packagesAction()
     {
-        $vars = $this->getOrder('Name');
+        $vars = $this->getOrder('PackageName');
         $vars['client'] = $this->_currentClient;
         // Add package installation form if packages are available
         $packages = $this->_currentClient->getInstallablePackages();

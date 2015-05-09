@@ -24,7 +24,7 @@ require 'header.php';
 $client = $this->client;
 
 $headers = array(
-    'Name' => $this->translate('Name'),
+    'PackageName' => $this->translate('Name'),
     'Status' => $this->translate('Status'),
     'Timestamp' => $this->translate('Timestamp'),
     'remove' => '',
@@ -34,15 +34,15 @@ $renderCallbacks = array(
     'Status' => function($view, $assignment) {
         $status = $assignment['Status'];
         switch ($status) {
-            case \Model_PackageAssignment::NOT_NOTIFIED:
+            case \Model\Package\Assignment::NOT_NOTIFIED:
                 $content = $view->translate('not notified');
                 $class = 'package_notnotified';
                 break;
-            case \Model_PackageAssignment::NOTIFIED:
+            case \Model\Package\Assignment::NOTIFIED:
                 $content = $view->translate('in progress');
                 $class = 'package_inprogress';
                 break;
-            case \Model_PackageAssignment::SUCCESS:
+            case \Model\Package\Assignment::SUCCESS:
                 $content = $view->translate('installed');
                 $class = 'package_success';
                 break;
@@ -61,8 +61,8 @@ $renderCallbacks = array(
                     'client',
                     'removepackage',
                     array(
-                        'id' => $assignment['Computer'],
-                        'package' => $assignment['Name'],
+                        'id' => $view->client['Id'],
+                        'package' => $assignment['PackageName'],
                     )
                 )
             ),
@@ -71,7 +71,8 @@ $renderCallbacks = array(
     },
 );
 
-$assignments = $client->getItems('PackageAssignment', $this->order, $this->direction);
+$assignments = $client->getPackages($this->order, $this->direction);
+// error_log(var_export($assignments->count(), true));
 if (count($assignments)) {
     print $this->htmlTag(
         'h2',
