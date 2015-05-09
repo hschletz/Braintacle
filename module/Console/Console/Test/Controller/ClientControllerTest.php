@@ -413,6 +413,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionWithCustomEqualitySearchOnDateColumn()
     {
+        $date = new \DateTime('2014-05-12');
         $form = $this->_formManager->get('Console\Form\Search');
         $form->expects($this->once())
              ->method('setData')
@@ -434,7 +435,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                  $this->returnValue(
                      array(
                         'filter' => 'InventoryDate',
-                        'search' => new \Zend_Date('2014-05-12'),
+                        'search' => $date,
                         'operator' => 'eq',
                         'invert' => '1',
                         'customSearch' => 'button',
@@ -448,7 +449,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                             'InventoryDate',
                             'desc',
                             'InventoryDate',
-                            new \Zend_Date('2014-05-12'),
+                            $date,
                             'eq',
                             '1'
                         )
@@ -669,8 +670,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->will($this->returnValue($formData));
 
         $sampleClients = $this->_sampleClients;
-        $sampleClients[0]['UserDefinedInfo.customField'] = new \Zend_Date('2015-04-11 10:31:00');
-        $sampleClients[1]['UserDefinedInfo.customField'] = new \Zend_Date('2015-04-12 10:32:00');
+        $sampleClients[0]['UserDefinedInfo.customField'] = new \DateTime('2015-04-11 10:31:00');
+        $sampleClients[1]['UserDefinedInfo.customField'] = new \DateTime('2015-04-12 10:32:00');
         $this->_computer->expects($this->once())
                         ->method('fetch')
                         ->with(

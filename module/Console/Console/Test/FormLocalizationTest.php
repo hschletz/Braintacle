@@ -76,7 +76,8 @@ class FormLocalizationTest extends \PHPUnit_Framework_TestCase
 
     public function testLocalizeDateValid()
     {
-        $this->assertEquals('01.05.2014', $this->_form->localize(new \Zend_Date('2014-05-01'), 'date'));
+        $this->assertEquals('01.05.2014', $this->_form->localize(new \DateTime('2014-05-01 00:00:01'), 'date'));
+        $this->assertEquals('01.05.2014', $this->_form->localize(new \DateTime('2014-05-01 23:59:59'), 'date'));
         $this->assertEquals('01.05.2014', $this->_form->localize('2014-05-01', 'date'));
     }
 
@@ -135,14 +136,13 @@ class FormLocalizationTest extends \PHPUnit_Framework_TestCase
 
     public function testNormalizeDateValid()
     {
-        $this->assertEquals(
-            '2014-05-02',
-            $this->_form->normalize(' 2.5.2014 ', 'date')->get('yyyy-MM-dd')
-        );
-        $this->assertEquals(
-            '2014-05-02',
-            $this->_form->normalize(' 02.05.2014 ', 'date')->get('yyyy-MM-dd')
-        );
+        $date = $this->_form->normalize(' 2.5.2014 ', 'date');
+        $this->assertInstanceOf('DateTime', $date);
+        $this->assertEquals('2014-05-02', $date->format('Y-m-d'));
+
+        $date = $this->_form->normalize(' 02.05.2014 ', 'date');
+        $this->assertInstanceOf('DateTime', $date);
+        $this->assertEquals('2014-05-02', $date->format('Y-m-d'));
     }
 
     public function testNormalizeDateInvalid()
@@ -177,7 +177,7 @@ class FormLocalizationTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->_form->validateType(null, null, 'float'));
 
         $this->assertFalse($this->_form->validateType('', null, 'date'));
-        $this->assertTrue($this->_form->validateType(new \Zend_Date, null, 'date'));
+        $this->assertTrue($this->_form->validateType(new \DateTime, null, 'date'));
         $this->assertFalse($this->_form->validateType(null, null, 'date'));
     }
 }

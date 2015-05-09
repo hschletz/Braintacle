@@ -183,7 +183,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     {
         $data = array(
             'filter' => 'UserDefinedInfo.Date',
-            'search' => new \Zend_Date('2014-05-01'),
+            'search' => new \DateTime('2014-05-01'),
         );
         $this->_form->setData($data);
         $this->assertEquals('01.05.2014', $this->_form->get('search')->getValue());
@@ -292,12 +292,12 @@ class SearchTest extends \Console\Test\AbstractFormTest
 
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
-        $this->assertEquals('01.05.2014', $this->_form->getData()['search']->get(\Zend_Date::DATE_MEDIUM));
+        $this->assertEquals('2014-05-01', $this->_form->getData()['search']->format('Y-m-d'));
 
         $data['search'] = '2014-05-01';
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
-        $this->assertEquals('01.05.2014', $this->_form->getData()['search']->get(\Zend_Date::DATE_MEDIUM));
+        $this->assertEquals('2014-05-01', $this->_form->getData()['search']->format('Y-m-d'));
 
         $data['search'] = '05/01/2014';
         $this->_form->setData($data);

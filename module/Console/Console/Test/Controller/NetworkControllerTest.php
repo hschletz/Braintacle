@@ -165,11 +165,12 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     public function testShowidentifiedActionWithoutParameters()
     {
         $filters = array('Identified' => true);
+        $date = new \DateTime;
         $result = array(
             array(
                 'MacAddress' => '00:00:5E:00:53:00',
                 'IpAddress' => '192.0.2.1',
-                'DiscoveryDate' => new \Zend_Date('2014-02-23 18:43:42'),
+                'DiscoveryDate' => $date,
                 'Type' => 'type',
                 'Description' => 'description',
             ),
@@ -182,7 +183,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->once())
                    ->method('__invoke')
-                   ->with(1393177422, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
+                   ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
                    ->willReturn('date1');
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
 
@@ -215,7 +216,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
             array(
                 'MacAddress' => '00:00:5E:00:53:00',
                 'IpAddress' => '192.0.2.1',
-                'DiscoveryDate' => new \Zend_Date('2014-02-23 18:43:42'),
+                'DiscoveryDate' => 'date',
                 'Type' => 'type',
                 'Description' => 'description',
             ),
@@ -233,12 +234,13 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $macAddress = $this->getMockBuilder('Library\MacAddress')->disableOriginalConstructor()->getMock();
         $macAddress->method('__toString')->willReturn('00:00:5E:00:53:00');
         $macAddress->method('getVendor')->willReturn('<vendor>');
+        $date = new \DateTime;
         $result = array(
             array(
                 'MacAddress' => $macAddress,
                 'IpAddress' => '192.0.2.1',
                 'Hostname' => 'host.example.net',
-                'DiscoveryDate' => new \Zend_Date('2014-02-23 18:43:42'),
+                'DiscoveryDate' => $date,
             ),
         );
         $this->_deviceManager->expects($this->once())
@@ -249,7 +251,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->once())
                    ->method('__invoke')
-                   ->with(1393177422, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
+                   ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
                    ->willReturn('date1');
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
 
@@ -285,7 +287,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                 'MacAddress' => $macAddress,
                 'IpAddress' => '192.0.2.1',
                 'Hostname' => 'host.example.net',
-                'DiscoveryDate' => new \Zend_Date('2014-02-23 18:43:42'),
+                'DiscoveryDate' => 'date',
             ),
         );
         $this->_deviceManager->expects($this->once())
@@ -396,14 +398,22 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $macAddress->expects($this->any())
                    ->method('getVendor')
                    ->will($this->returnValue('vendor'));
+        $date = new \DateTime;
         $device = array(
             'MacAddress' => $macAddress,
             'IpAddress' => '192.0.2.1',
             'Hostname' => 'host.example.net',
-            'DiscoveryDate' => new \Zend_Date('2014-02-24 13:21:32'),
+            'DiscoveryDate' => $date,
             'Type' => 'type1',
             'Description' => 'description1',
         );
+        $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat->expects($this->once())
+                   ->method('__invoke')
+                   ->with($date, \IntlDateFormatter::MEDIUM, \IntlDateFormatter::MEDIUM)
+                   ->willReturn('date_format');
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
+
         $this->_deviceManager->method('getDevice')
                              ->with('00:00:5E:00:53:00')
                              ->willReturn($device);
@@ -433,7 +443,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXPathQuery(sprintf($query, 'Hersteller', 'vendor'));
         $this->assertXPathQuery(sprintf($query, 'IP-Adresse', '192.0.2.1'));
         $this->assertXPathQuery(sprintf($query, 'Hostname', 'host.example.net'));
-        $this->assertXPathQuery(sprintf($query, 'Datum', '24.02.2014 13:21:32'));
+        $this->assertXPathQuery(sprintf($query, 'Datum', 'date_format'));
         $this->assertXpathQueryContentContains('//tr[6]/td[1]', 'Typ');
         $this->assertXpathQuery('//tr[6]/td[2]/select[@name="Type"]/option[not(@value)]');
         $this->assertXpathQueryContentContains('//tr[7]/td[1]', 'Beschreibung');
@@ -457,7 +467,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
             'MacAddress' => $macAddress,
             'IpAddress' => '192.0.2.1',
             'Hostname' => 'host.example.net',
-            'DiscoveryDate' => new \Zend_Date('2014-02-24 13:21:32'),
+            'DiscoveryDate' => 'date',
         );
         $this->_deviceManager->method('getDevice')
                              ->with('00:00:5E:00:53:00')

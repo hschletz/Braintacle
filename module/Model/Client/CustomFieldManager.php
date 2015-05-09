@@ -224,7 +224,7 @@ class CustomFieldManager
                     array_flip($columns)
                 )
             );
-            $dateStrategy = new \Library\Hydrator\Strategy\ZendDate;
+            $dateStrategy = new \Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy('Y-m-d');
             foreach ($this->getFields() as $name => $type) {
                 if ($type == 'date') {
                     $this->_hydrator->addStrategy($name, $dateStrategy);

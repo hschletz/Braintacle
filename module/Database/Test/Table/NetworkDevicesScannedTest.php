@@ -50,8 +50,12 @@ class NetworkDevicesScannedTest extends AbstractTest
         $this->assertEquals('description', $map->extract('Description'));
         $this->assertEquals('type', $map->extract('Type'));
 
-        $this->assertInstanceOf('Library\Hydrator\Strategy\ZendDate', $hydrator->getStrategy('DiscoveryDate'));
-        $this->assertInstanceOf('Library\Hydrator\Strategy\ZendDate', $hydrator->getStrategy('date'));
+        $this->assertInstanceOf(
+            'Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy', $hydrator->getStrategy('DiscoveryDate')
+        );
+        $this->assertInstanceOf(
+            'Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy', $hydrator->getStrategy('date')
+        );
         $this->assertInstanceOf('Library\Hydrator\Strategy\MacAddress', $hydrator->getStrategy('MacAddress'));
         $this->assertInstanceOf('Library\Hydrator\Strategy\MacAddress', $hydrator->getStrategy('mac'));
 

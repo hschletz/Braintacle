@@ -143,7 +143,7 @@ class Form extends \Zend\Form\Form
      * - Integers must contain only digits.
      * - Floats must contain only digits and at most 1 dot, but not at the end
      *   of the string.
-     * - Dates must be passed as \Zend_Date objects or ISO date strings.
+     * - Dates must be passed as \DateTime objects or ISO date strings.
      *
      * Invalid input data is returned unmodified. The attached input filter
      * should take care of it.
@@ -172,11 +172,18 @@ class Form extends \Zend\Form\Form
                 }
                 break;
             case 'date':
-                if ($value instanceof \Zend_Date) {
-                    $value = $value->get(\Zend_Date::DATE_MEDIUM);
+                $formatter = new \IntlDateFormatter(
+                    \Locale::getDefault(),
+                    \IntlDateFormatter::MEDIUM,
+                    \IntlDateFormatter::NONE
+                );
+                if ($value instanceof \DateTime) {
+                    $value = $formatter->format($value);
                 } elseif (\Zend\Validator\StaticValidator::execute($value, 'Date')) {
-                    $value = new \Zend_Date($value);
-                    $value = $value->get(\Zend_Date::DATE_MEDIUM);
+                    $date = \DateTime::createFromFormat('Y-m-d', $value);
+                    if ($date) {
+                        $value = $formatter->format($date);
+                    }
                 }
                 break;
         }
@@ -190,9 +197,9 @@ class Form extends \Zend\Form\Form
      * from a filter.
      *
      * Non-string values get trimmed and converted to integer, float or
-     * \Zend_Date, depending on $type. Invalid values are returned as string.
-     * The input filter should validate filtered data by checking the datatype
-     * via validateType().
+     * \DateTime, depending on $type. Invalid values are returned as string. The
+     * input filter should validate filtered data by checking the datatype via
+     * validateType().
      *
      * @param string $value Localized input string
      * @param string $type Data type (integer, float, date). Any other value will be ignored.
@@ -243,7 +250,13 @@ class Form extends \Zend\Form\Form
                     // Set the year pattern.
                     $pattern = str_replace('§', '\d{4}', $pattern);
                     if (preg_match("#^$pattern$#", $value)) {
-                        $value = new \Zend_Date($value);
+                        $formatter = new \IntlDateFormatter(
+                            \Locale::getDefault(),
+                            \IntlDateFormatter::SHORT,
+                            \IntlDateFormatter::NONE,
+                            'UTC'
+                        );
+                        $value = \DateTime::createFromFormat('U', $formatter->parse($value));
                     }
                 }
                 break;
@@ -255,7 +268,7 @@ class Form extends \Zend\Form\Form
      * Validate datatype
      *
      * This method can be used to validate data returned by normalize(). It
-     * checks the value's actual datatype (integer, float, \Zend_Date) against
+     * checks the value's actual datatype (integer, float, \DateTime) against
      * the expected type.
      *
      * @param mixed $value Value to test
@@ -273,7 +286,7 @@ class Form extends \Zend\Form\Form
                 $valid = is_float($value);
                 break;
             case 'date':
-                $valid = $value instanceof \Zend_Date;
+                $valid = $value instanceof \DateTime;
                 break;
             default:
                 $valid = true;

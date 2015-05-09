@@ -138,8 +138,8 @@ foreach ($this->columns as $column) {
             } else {
                 $renderCallbacks[$column] = function($view, $client, $property) {
                     $value = $client[$property];
-                    if ($value instanceof \Zend_Date) {
-                        $value = $value->get(\Zend_Date::DATE_MEDIUM);
+                    if ($value instanceof \DateTime) {
+                        $value = $this->dateFormat($value, \IntlDateFormatter::MEDIUM, \IntlDateFormatter::NONE);
                     }
                     return $view->escapeHtml($value);
                 };
@@ -157,8 +157,8 @@ if ($filter) {
     if ($this->isCustomSearch) {
         // Display the number of results and links to edit the filter or add it
         // to a group.
-        if ($search instanceof \Zend_Date) {
-            $search = $search->get('yyyy-MM-dd');
+        if ($search instanceof \DateTime) {
+            $search = $search->format('Y-m-d');
         }
         $params = array(
             'filter' => $filter,

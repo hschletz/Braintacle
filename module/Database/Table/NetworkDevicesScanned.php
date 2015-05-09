@@ -48,9 +48,11 @@ class NetworkDevicesScanned extends \Database\AbstractTable
             )
         );
 
-        $zendDate = new \Library\Hydrator\Strategy\ZendDate;
-        $this->_hydrator->addStrategy('DiscoveryDate', $zendDate);
-        $this->_hydrator->addStrategy('date', $zendDate);
+        $dateTimeFormatter = new \Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy(
+            $serviceLocator->get('Database\Nada')->timestampFormatPhp()
+        );
+        $this->_hydrator->addStrategy('DiscoveryDate', $dateTimeFormatter);
+        $this->_hydrator->addStrategy('date', $dateTimeFormatter);
 
         $macAddress = new \Library\Hydrator\Strategy\MacAddress;
         $this->_hydrator->addStrategy('MacAddress', $macAddress);

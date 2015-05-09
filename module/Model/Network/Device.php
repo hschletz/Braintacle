@@ -27,7 +27,7 @@ namespace Model\Network;
  * @property string $IpAddress IP address
  * @property \Library\MacAddress $MacAddress MAC address
  * @property string $Hostname Hostname
- * @property \Zend_Date $DiscoveryDate Timestamp of IP discovery
+ * @property \DateTime $DiscoveryDate Timestamp of IP discovery
  * @property string $Description Description (only identified devices)
  * @property string $Type Type (only identified devices)
  */

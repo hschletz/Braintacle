@@ -52,7 +52,9 @@ printf(
 printf(
     $format,
     $this->translate('Date'),
-    $this->escapeHtml($device['DiscoveryDate'])
+    $this->escapeHtml(
+        $this->dateFormat($device['DiscoveryDate'], \IntlDateFormatter::MEDIUM, \IntlDateFormatter::MEDIUM)
+    )
 );
 
 foreach (array('Type', 'Description') as $name) {

@@ -1464,6 +1464,8 @@ class Model_Computer extends Model_ComputerOrGroup
         // Get beginning of day.
         if ($arg instanceof Zend_Date) {
             $dayStart = new Zend_Date($arg, Zend_Date::DATE_SHORT);
+        } elseif ($arg instanceof \DateTime) {
+            $dayStart = new Zend_Date($arg->format('Y-m-d'), 'yyyy-MM-dd');
         } else {
             $dayStart = new Zend_Date($arg, 'yyyy-MM-dd');
         }

@@ -31,7 +31,7 @@ namespace Console\Form;
  * Integer, float and date values are formatted with the default locale upon
  * display and must be entered localized. The data exchange methods (setData(),
  * getData()) however accept/return only canonicalized values (standard
- * integers/floats and \Zend_Date objects).
+ * integers/floats and \DateTime objects).
  */
 class CustomFields extends Form
 {
