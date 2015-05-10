@@ -28,6 +28,13 @@ Fixed bugs:
 
 - Console: Fixed orphaned database rows after deleting a computer.
 
+Misc:
+
+- Server: Added a partial workaround for a bug in the UNIX agent (LP#1436702)
+  where storage device size may be misreported. The server does not have the
+  information to fix it, but removes invalid (non-integer) values that would
+  cause the inventory process to fail.
+
 
 CHANGES IN VERSION 0.15
 =======================
