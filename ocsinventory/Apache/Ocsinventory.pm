@@ -266,6 +266,22 @@ sub handler{
             $i++;
         }
     }
+    # Fix bad size for 'STORAGES' entries (LP bug #1436702)
+    if ($query->{'CONTENT'}->{'STORAGES'}) {
+        $i = 0;
+        while ($query->{'CONTENT'}->{'STORAGES'}[$i]) {
+            # Affected agents report size in varying units (GB, TB...). Since
+            # the dimension is unknown, we cannot convert it to MB - we can't
+            # even tell if incoming data is affected by the bug.
+            # However, if the value contains a decimal point/comma, the database
+            # will not accept it (an integer is expected). In that case, it gets
+            # unset to proceed.
+            if ($query->{'CONTENT'}->{'STORAGES'}[$i]->{'DISKSIZE'} !~ /^\d+$/) {
+                $query->{'CONTENT'}->{'STORAGES'}[$i]->{'DISKSIZE'} = undef;
+            }
+            $i++;
+        }
+    }
     
     $CURRENT_CONTEXT{'XML_ENTRY'} = $query;
 
