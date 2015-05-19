@@ -166,6 +166,19 @@ sounds:
     manufacturer: "manufacturer4"
     name: "name1"
 
+# Different columns map to "Model" property depending on agent type
+storages:
+  -
+    id: 2
+    hardware_id: 2
+    model: "name2"
+    name: null
+  -
+    id: 1
+    hardware_id: 1
+    model: null
+    name: "name1"
+
 videos:
   -
     id: 2

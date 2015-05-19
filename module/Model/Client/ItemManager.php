@@ -47,6 +47,7 @@ class ItemManager
         'networkinterface' => 'NetworkInterfaces',
         'port' => 'Ports',
         'printer' => 'Printers',
+        'storagedevice' => 'StorageDevices',
         'virtualmachine' => 'VirtualMachines',
     );
 
@@ -60,6 +61,7 @@ class ItemManager
         'filesystem' => 'Filesystem',
         'msofficeproduct' => 'MsOfficeProduct',
         'networkinterface' => 'NetworkInterface',
+        'storagedevice' => 'StorageDevice',
     );
 
     /**

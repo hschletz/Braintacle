@@ -38,6 +38,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
         'NetworkInterfaces',
         'Ports',
         'Printers',
+        'StorageDevices',
         'VirtualMachines',
     );
 
@@ -107,6 +108,8 @@ class ItemManagerTest extends \Model\Test\AbstractTest
             array('Printer', null, 'Port', 'desc', array('name1', 'name2'), 'Name'),
             array('Printer', null, null, 'something', array('name1', 'name2'), 'Name'),
             array('printer', array('Client' => 2), null, null, array('name2'), 'Name'),
+            array('StorageDevice', null, null, 'something', array('name1', 'name2'), 'Model'),
+            array('storagedevice', array('Client' => 2), null, null, array('name2'), 'Model'),
             array('VirtualMachine', null, 'id', 'asc', array('name1', 'name2'), 'Name'),
             array('VirtualMachine', null, 'Type', 'desc', array('name1', 'name2'), 'Name'),
             array('VirtualMachine', null, null, 'something', array('name1', 'name2'), 'Name'),

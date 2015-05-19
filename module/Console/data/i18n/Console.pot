@@ -148,12 +148,12 @@ msgstr ""
 #: view/console/client/index.php view/console/client/misc.php
 #: view/console/client/network.php view/console/client/packages.php
 #: view/console/client/printers.php view/console/client/software.php
-#: view/console/client/storage.php view/console/client/system.php
-#: view/console/client/virtualmachines.php view/console/duplicates/index.php
-#: view/console/group/excluded.php view/console/group/general.php
-#: view/console/group/index.php view/console/group/members.php
-#: view/console/group/packages.php view/console/network/index.php
-#: view/console/package/index.php view/console/software/index.php
+#: view/console/client/system.php view/console/client/virtualmachines.php
+#: view/console/duplicates/index.php view/console/group/excluded.php
+#: view/console/group/general.php view/console/group/index.php
+#: view/console/group/members.php view/console/group/packages.php
+#: view/console/network/index.php view/console/package/index.php
+#: view/console/software/index.php
 msgid "Name"
 msgstr ""
 
@@ -758,7 +758,7 @@ msgid "Manufacturer"
 msgstr ""
 
 #: Console/Form/Search.php view/console/client/general.php
-#: view/console/client/index.php
+#: view/console/client/index.php view/console/client/storage.php
 msgid "Model"
 msgstr ""
 
@@ -1456,6 +1456,18 @@ msgid "Size"
 msgstr ""
 
 #: view/console/client/storage.php
+msgid "Product family"
+msgstr ""
+
+#: view/console/client/storage.php
+msgid "Device"
+msgstr ""
+
+#: view/console/client/storage.php
+msgid "Firmware version"
+msgstr ""
+
+#: view/console/client/storage.php
 msgid "DVD writer"
 msgstr ""
 
@@ -1465,18 +1477,6 @@ msgstr ""
 
 #: view/console/client/storage.php
 msgid "Removable medium"
-msgstr ""
-
-#: view/console/client/storage.php
-msgid "Floppy disk drive"
-msgstr ""
-
-#: view/console/client/storage.php
-msgid "Device"
-msgstr ""
-
-#: view/console/client/storage.php
-msgid "Firmware version"
 msgstr ""
 
 #: view/console/client/storage.php

@@ -54,6 +54,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         'Ports',
         'Printers',
         'RegistryData',
+        'StorageDevices',
         'VirtualMachines',
         'WindowsInstallations',
     );
@@ -73,7 +74,6 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
             'javainfo',
             'journallog',
             'softwares',
-            'storages',
         );
         $columns = array($database->createColumn('hardware_id', \Nada::DATATYPE_INTEGER));
         foreach ($mockTables as $table) {

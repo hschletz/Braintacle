@@ -46,6 +46,10 @@ sounds:
   -
     hardware_id: 2
 
+storages:
+  -
+    hardware_id: 2
+
 videos:
   -
     hardware_id: 2

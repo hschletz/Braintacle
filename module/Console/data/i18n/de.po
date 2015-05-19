@@ -148,12 +148,12 @@ msgstr "Gruppe"
 #: view/console/client/index.php view/console/client/misc.php
 #: view/console/client/network.php view/console/client/packages.php
 #: view/console/client/printers.php view/console/client/software.php
-#: view/console/client/storage.php view/console/client/system.php
-#: view/console/client/virtualmachines.php view/console/duplicates/index.php
-#: view/console/group/excluded.php view/console/group/general.php
-#: view/console/group/index.php view/console/group/members.php
-#: view/console/group/packages.php view/console/network/index.php
-#: view/console/package/index.php view/console/software/index.php
+#: view/console/client/system.php view/console/client/virtualmachines.php
+#: view/console/duplicates/index.php view/console/group/excluded.php
+#: view/console/group/general.php view/console/group/index.php
+#: view/console/group/members.php view/console/group/packages.php
+#: view/console/network/index.php view/console/package/index.php
+#: view/console/software/index.php
 msgid "Name"
 msgstr "Name"
 
@@ -765,7 +765,7 @@ msgid "Manufacturer"
 msgstr "Hersteller"
 
 #: Console/Form/Search.php view/console/client/general.php
-#: view/console/client/index.php
+#: view/console/client/index.php view/console/client/storage.php
 msgid "Model"
 msgstr "Modell"
 
@@ -1487,10 +1487,6 @@ msgid "Firmware version"
 msgstr "Firmware-Version"
 
 #: view/console/client/storage.php
-msgid "Floppy disk drive"
-msgstr "Diskettenlaufwerk"
-
-#: view/console/client/storage.php
 msgid "Free space"
 msgstr "Frei"
 
@@ -1509,6 +1505,10 @@ msgstr "Buchstabe"
 #: view/console/client/storage.php
 msgid "Mountpoint"
 msgstr "Mountpoint"
+
+#: view/console/client/storage.php
+msgid "Product family"
+msgstr "Produktfamilie"
 
 #: view/console/client/storage.php
 msgid "Removable medium"

@@ -180,7 +180,6 @@ class Braintacle_SchemaManager
         // needs to be dropped and recreated the right way.
         $fixTables = array(
             'softwares',
-            'storages',
         );
         $fixTables = array_merge($fixTables, $createConstraint);
         // Only existing tables can be processed.
@@ -354,7 +353,6 @@ class Braintacle_SchemaManager
             'snmp_accountinfo',
             'snmp_communities',
             'softwares',
-            'storages',
         );
         $engineMemory = array(
             'conntrack',

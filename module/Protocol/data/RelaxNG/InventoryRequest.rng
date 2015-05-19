@@ -630,7 +630,9 @@ Braintacle:
     <define name="STORAGES">
         <element name="STORAGES" braintacle:model="StorageDevice">
             <interleave>
-                <ref name="DESCRIPTION" braintacle:property="RawDescription" />
+                <optional>
+                    <ref name="DESCRIPTION" />
+                </optional>
                 <optional>
                     <ref name="DISKSIZE" braintacle:property="Size" />
                 </optional>
@@ -638,13 +640,13 @@ Braintacle:
                     <ref name="FIRMWARE" braintacle:property="Firmware" />
                 </optional>
                 <optional>
-                    <ref name="MANUFACTURER" braintacle:property="RawManufacturer" />
+                    <ref name="MANUFACTURER" />
                 </optional>
                 <optional>
-                    <ref name="MODEL" braintacle:property="RawModel" />
+                    <ref name="MODEL" />
                 </optional>
                 <optional>
-                    <ref name="NAME" braintacle:property="RawName" />
+                    <ref name="NAME" />
                 </optional>
                 <optional>
                     <ref name="SCSI_CHID" /><!-- not available in database -->
@@ -662,7 +664,7 @@ Braintacle:
                     <ref name="SERIALNUMBER" braintacle:property="Serial" />
                 </optional>
                 <optional>
-                    <ref name="TYPE" braintacle:property="RawType" />
+                    <ref name="TYPE" />
                 </optional>
             </interleave>
         </element>

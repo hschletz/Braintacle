@@ -1054,28 +1054,59 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $devices = array(
             array(
                 'Type' => 'DVD Writer', // translated
-                'Name' => 'name',
+                'Model' => 'model',
                 'Size' => 1024,
+                'Device' => 'device',
+                'Serial' => 'serial',
+                'Firmware' => 'firmware',
             ),
             array(
-                'Type' => 'Hard disk', // translated
-                'Name' => 'name',
+                'Type' => 'Fixed hard disk media', // translated
+                'Model' => 'model',
                 'Size' => 1024,
+                'Device' => 'device',
+                'Serial' => 'serial',
+                'Firmware' => 'firmware',
             ),
             array(
-                'Type' => 'Removable medium', // translated
-                'Name' => 'name',
+                'Type' => 'Fixedxhard disk media', // translated
+                'Model' => 'model',
                 'Size' => 1024,
+                'Device' => 'device',
+                'Serial' => 'serial',
+                'Firmware' => 'firmware',
             ),
             array(
-                'Type' => 'Floppy disk drive', // translated
-                'Name' => 'name',
+                'Type' => 'Removable Media', // translated
+                'Model' => 'model',
                 'Size' => 1024,
+                'Device' => 'device',
+                'Serial' => 'serial',
+                'Firmware' => 'firmware',
             ),
             array(
-                'Type' => '<other>', // not translated, but escaped
-                'Name' => 'name',
+                'Type' => 'Removable media other than floppy', // translated
+                'Model' => 'model',
                 'Size' => 1024,
+                'Device' => 'device',
+                'Serial' => 'serial',
+                'Firmware' => 'firmware',
+            ),
+            array(
+                'Type' => 'Removable media other thanxfloppy', // translated
+                'Model' => 'model',
+                'Size' => 1024,
+                'Device' => 'device',
+                'Serial' => 'serial',
+                'Firmware' => 'firmware',
+            ),
+            array(
+                'Type' => '<DVD Writer>', // not translated, but escaped
+                'Model' => 'model',
+                'Size' => 1024,
+                'Device' => 'device',
+                'Serial' => 'serial',
+                'Firmware' => 'firmware',
             ),
         );
         $filesystems = array(
@@ -1109,12 +1140,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/client/storage/?id=1');
         $this->assertResponseStatusCode(200);
         // Devices
-        $this->assertXpathQueryCount('//table[1]//th', 3);
-        $this->assertXpathQueryContentContains('//table[1]/tr[2]/td[1]', "\nDVD-Brenner\n");
-        $this->assertXpathQueryContentContains('//table[1]/tr[3]/td[1]', "\nFestplatte\n");
-        $this->assertXpathQueryContentContains('//table[1]/tr[4]/td[1]', "\nWechselmedium\n");
-        $this->assertXpathQueryContentContains('//table[1]/tr[5]/td[1]', "\nDiskettenlaufwerk\n");
-        $this->assertXpathQueryContentContains('//table[1]/tr[6]/td[1]', "\n<other>\n");
+        $this->assertXpathQueryCount('//table[1]//th', 5);
+        $this->assertXpathQueryContentContains('//table[1]/tr[2]/td[2]', "\nDVD-Brenner\n");
+        $this->assertXpathQueryContentContains('//table[1]/tr[3]/td[2]', "\nFestplatte\n");
+        $this->assertXpathQueryContentContains('//table[1]/tr[4]/td[2]', "\nFestplatte\n");
+        $this->assertXpathQueryContentContains('//table[1]/tr[5]/td[2]', "\nWechselmedium\n");
+        $this->assertXpathQueryContentContains('//table[1]/tr[6]/td[2]', "\nWechselmedium\n");
+        $this->assertXpathQueryContentContains('//table[1]/tr[7]/td[2]', "\nWechselmedium\n");
+        $this->assertXpathQueryContentContains('//table[1]/tr[8]/td[2]', "\n<DVD Writer>\n");
         $this->assertXpathQueryContentContains('//table[1]/tr[2]/td[3]', "\n1,0\xC2\xA0GB\n");
         // Filesystem 1
         $this->assertXpathQuery("//table[2]//th[text()='\nBuchstabe\n']");
@@ -1131,8 +1164,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $devices = array(
             array(
-                'Type' => 'type',
-                'Name' => 'name',
+                'ProductFamily' => 'product family',
+                'Model' => 'model',
                 'Size' => 1024,
                 'Device' => 'device',
                 'Serial' => 'serial',
