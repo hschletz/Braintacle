@@ -112,9 +112,6 @@ class Braintacle_SchemaManager
         $this->_logger = $logger;
         $this->_db = Model_Database::getAdapter();
         $this->_nada = Model_Database::getNada();
-        if ($this->_nada->isMysql()) {
-            $this->_nada->emulatedDatatypes = array(Nada::DATATYPE_TIMESTAMP);
-        }
         $this->_allTables = $this->_nada->getTables();
         $this->_basepath = dirname(APPLICATION_PATH);
     }
