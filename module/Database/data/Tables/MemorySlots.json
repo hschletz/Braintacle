@@ -23,7 +23,7 @@
         {
             "name": "numslots",
             "type": "integer",
-            "length": 8,
+            "length": 16,
             "notnull": false,
             "default": null,
             "autoincrement": false,
