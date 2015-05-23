@@ -55,7 +55,6 @@ class Model_Software extends Model_ChildObject
         'Guid' => 'guid',
         'Architecture' => 'bitswidth',
         'Language' => 'language',
-        'NumComputers' => 'num_computers',
         'RawFilename' => 'filename', // Useless, always 'N/A' or NULL
         'RawSource' => 'source', // Unknown meaning
     );
@@ -77,12 +76,7 @@ class Model_Software extends Model_ChildObject
     /** {@inheritdoc} */
     protected $_preferredOrder = 'Name';
 
-    /**
-     * Return a statement|select object with all objects matching criteria.
-     * This class implements the following filters:
-     * <b>Unique</b> filter that returns every name only once. Search parameter is ignored.
-     * <b>Os</b> filter by OS type ('windows', 'other')
-     */
+    /** {@inheritdoc} */
     public function createStatement(
         $columns=null,
         $order=null,
@@ -91,81 +85,12 @@ class Model_Software extends Model_ChildObject
         $query=true
     )
     {
-        // Don't pass NumComputers property to parent implementation.
-        // This is added later if explicitly specified.
-        if (empty($columns)) {
-            $columns = array_keys($this->_propertyMap);
-        }
-        foreach ($columns as $column) {
-            if ($column != 'NumComputers') {
-                $columnNames[] = $column;
-            }
-        }
+        $select = parent::createStatement($columns, $order, $direction, $filters, false);
 
-        // Have parent implementation do the basic stuff.
-        $select = parent::createStatement($columnNames, $order, $direction, $filters, false);
-
-        if (is_array($filters)) {
-            foreach ($filters as $filter => $search) {
-                switch ($filter) {
-                    case 'Unique':
-                        if (in_array('NumComputers', $columns)) {
-                            $select->columns(
-                                array('num_computers' => new \Zend_Db_Expr('COUNT(DISTINCT hardware_id)'))
-                            );
-                            $select->group('softwares.name');
-                        } else {
-                            $select->distinct();
-                        }
-                        break;
-                    case 'Os':
-                        switch ($search) {
-                            case 'windows':
-                                $select->join(
-                                    'hardware',
-                                    'hardware.id = softwares.hardware_id AND hardware.osname LIKE \'%Windows%\'',
-                                    array() // no columns, just filter
-                                );
-                                break;
-                            case 'other':
-                                $select->join(
-                                    'hardware',
-                                    'hardware.id = softwares.hardware_id AND hardware.osname NOT LIKE \'%Windows%\'',
-                                    array() // no columns, just filter
-                                );
-                                break;
-                        }
-                        break;
-                    case 'Status':
-                        switch ($search) {
-                            case 'accepted':
-                                $select->where(
-                                    'softwares.name IN(SELECT extracted FROM dico_soft)'
-                                );
-                                break;
-                            case 'ignored':
-                                $select->where(
-                                    'softwares.name IN(SELECT extracted FROM dico_ignored)'
-                                );
-                                break;
-                            case 'new':
-                                $select->where(
-                                    'softwares.name NOT IN(SELECT extracted FROM dico_ignored)'
-                                );
-                                $select->where(
-                                    'softwares.name NOT IN(SELECT extracted FROM dico_soft)'
-                                );
-                                break;
-                            case 'all':
-                                break;
-                            case 'notIgnored':
-                                $select->where(
-                                    'softwares.name NOT IN (SELECT extracted FROM dico_ignored)'
-                                );
-                        }
-                        break;
-                }
-            }
+        if (is_array($filters) and @$filters['Status'] == 'notIgnored') {
+            $select->where(
+                'softwares.name NOT IN(SELECT name FROM software_definitions WHERE display=FALSE)'
+            );
         }
 
         if ($query) {
@@ -204,41 +129,5 @@ class Model_Software extends Model_ChildObject
                 break;
         }
         return $value;
-    }
-
-    /**
-     * Blacklist a piece of software, i.e. mark it for not being displayed.
-     * @param string $name Raw name
-     */
-    public function ignore($name)
-    {
-        $db = Model_Database::getAdapter();
-
-        if (is_null($name)) { // Inserting NULL would fail
-            $name = '';
-        }
-        $db->delete('dico_soft', array('extracted=?' => $name));
-        $db->insert('dico_ignored', array('extracted' => $name));
-    }
-
-    /**
-     * Whitelist a piece of software, i.e. mark it for being known and accepted.
-     * @param string $name Raw name
-     */
-    public function accept($name)
-    {
-        $db = Model_Database::getAdapter();
-
-        if (is_null($name)) { // Inserting NULL would fail
-            $name = '';
-        }
-        $db->delete('dico_ignored', array('extracted=?' => $name));
-        $db->insert(
-            'dico_soft',
-            array(
-                'extracted' => $name,
-                'formatted' => $name
-            )
-        );
     }
 }

@@ -27,10 +27,10 @@ namespace Console\Test\Controller;
 class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
-     * Software mock
-     * @var \Model_Software
+     * Software manager mock
+     * @var \Model\SoftwareManager
      */
-    protected $_software;
+    protected $_softwareManager;
 
     /**
      * Form mock
@@ -43,8 +43,8 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
      * @var array[]
      */
     protected $_result = array(
-        array('Name' => 'name1', 'RawName' => 'raw_name1', 'NumComputers' => 1),
-        array('Name' => 'name2', 'RawName' => 'raw_name2', 'NumComputers' => 2),
+        array('name' => 'name', 'num_clients' => 1),
+        array('name' => "<name\xC2\x96>", 'num_clients' => 2), // Check for proper encoding and escaping
     );
 
     /**
@@ -55,7 +55,9 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
 
     public function setUp()
     {
-        $this->_software = $this->getMock('Model_Software');
+        $this->_softwareManager = $this->getMockBuilder('Model\SoftwareManager')
+                                       ->disableOriginalConstructor()
+                                       ->getMock();
         $this->_form = $this->getMock('Console\Form\SoftwareFilter');
         $this->_session = new \Zend\Session\Container('ManageSoftware');
         parent::setUp();
@@ -63,7 +65,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
 
     protected function _createController()
     {
-        return new \Console\Controller\SoftwareController($this->_software, $this->_form);
+        return new \Console\Controller\SoftwareController($this->_softwareManager, $this->_form);
     }
 
     public function testIndexActionDefaultFilterAccepted()
@@ -71,17 +73,11 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $filters = array(
             'Os' => 'windows',
             'Status' => 'accepted',
-            'Unique' => null,
         );
-        $this->_software->expects($this->once())
-                        ->method('find')
-                        ->with(
-                            array('Name', 'NumComputers'),
-                            'Name',
-                            'asc',
-                            $filters
-                        )
-                        ->will($this->returnValue($this->_result));
+        $this->_softwareManager->expects($this->once())
+                               ->method('getSoftware')
+                               ->with($filters, 'name', 'asc')
+                               ->willReturn($this->_result);
         $this->_form->expects($this->once())
                     ->method('setFilter')
                     ->with('accepted');
@@ -95,15 +91,15 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
             'Akzeptieren'
         );
         $this->assertQueryContentContains(
-            'td a[href="/console/software/ignore/?name=raw_name2"]',
+            'td a[href="/console/software/ignore/?name=%3Cname%C2%96%3E"]',
             'Ignorieren'
         );
         $this->assertQueryContentContains(
             'td',
-            "\nname2\n"
+            "\n<name\xE2\x80\x93>\n"
         );
         $this->assertQueryContentContains(
-            'td[class="textright"] a[href*="/console/client/index/"][href*="search=raw_name2"]',
+            'td[class="textright"] a[href*="/console/client/index/"][href*="search=%3Cname%C2%96%3E"]',
             '2'
         );
     }
@@ -113,17 +109,11 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $filters = array(
             'Os' => 'windows',
             'Status' => 'ignored',
-            'Unique' => null,
         );
-        $this->_software->expects($this->once())
-                        ->method('find')
-                        ->with(
-                            array('Name', 'NumComputers'),
-                            'Name',
-                            'asc',
-                            $filters
-                        )
-                        ->will($this->returnValue($this->_result));
+        $this->_softwareManager->expects($this->once())
+                               ->method('getSoftware')
+                               ->with($filters, 'name', 'asc')
+                               ->willReturn($this->_result);
         $this->_form->expects($this->once())
                     ->method('setFilter')
                     ->with('ignored');
@@ -132,7 +122,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertEquals('ignored', $this->_session->filter);
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains(
-            'td a[href="/console/software/accept/?name=raw_name2"]',
+            'td a[href="/console/software/accept/?name=%3Cname%C2%96%3E"]',
             'Akzeptieren'
         );
         $this->assertNotQueryContentContains(
@@ -146,17 +136,11 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $filters = array(
             'Os' => 'windows',
             'Status' => 'new',
-            'Unique' => null,
         );
-        $this->_software->expects($this->once())
-                        ->method('find')
-                        ->with(
-                            array('Name', 'NumComputers'),
-                            'Name',
-                            'asc',
-                            $filters
-                        )
-                        ->will($this->returnValue($this->_result));
+        $this->_softwareManager->expects($this->once())
+                               ->method('getSoftware')
+                               ->with($filters, 'name', 'asc')
+                               ->willReturn($this->_result);
         $this->_form->expects($this->once())
                     ->method('setFilter')
                     ->with('new');
@@ -165,11 +149,11 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertEquals('new', $this->_session->filter);
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains(
-            'td a[href="/console/software/accept/?name=raw_name2"]',
+            'td a[href="/console/software/accept/?name=%3Cname%C2%96%3E"]',
             'Akzeptieren'
         );
         $this->assertQueryContentContains(
-            'td a[href="/console/software/ignore/?name=raw_name2"]',
+            'td a[href="/console/software/ignore/?name=%3Cname%C2%96%3E"]',
             'Ignorieren'
         );
     }
@@ -179,18 +163,11 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $filters = array(
             'Os' => 'windows',
             'Status' => 'all',
-            'Unique' => null,
         );
-        $this->_software->expects($this->once())
-                        ->method('find')
-                        ->with(
-                            array('Name', 'NumComputers'),
-                            'Name',
-                            'asc',
-                            $filters
-                        )
-                        ->will($this->returnValue($this->_result));
-
+        $this->_softwareManager->expects($this->once())
+                               ->method('getSoftware')
+                               ->with($filters, 'name', 'asc')
+                               ->willReturn($this->_result);
         $this->_form->expects($this->once())
                     ->method('setFilter')
                     ->with('all');
@@ -220,7 +197,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testAcceptActionPostYes()
     {
-        $this->_testManageActionPostYes('accept');
+        $this->_testManageActionPostYes('accept', true);
     }
 
     public function testAcceptActionMissingName()
@@ -240,7 +217,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIgnoreActionPostYes()
     {
-        $this->_testManageActionPostYes('ignore');
+        $this->_testManageActionPostYes('ignore', false);
     }
 
     public function testIgnoreActionMissingName()
@@ -260,21 +237,17 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
 
     protected function _testManageActionPostNo($action)
     {
-        $this->_software->expects($this->never())
-                        ->method($action);
+        $this->_softwareManager->expects($this->never())->method('setDisplay');
         $session = new \Zend\Session\Container('ManageSoftware');
         $session->filter = 'test';
         $this->dispatch("/console/software/$action/?name=test", 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/software/index/?filter=test');
     }
 
-    protected function _testManageActionPostYes($action)
+    protected function _testManageActionPostYes($action, $display)
     {
         $tmBad = chr(0xc2) . chr(0x99); // Incorrect representation of TM symbol
-        $this->_software = $this->getMock('Model_Software');
-        $this->_software->expects($this->once())
-                        ->method($action)
-                        ->with($tmBad);
+        $this->_softwareManager->expects($this->once())->method('setDisplay')->with($tmBad, $display);
         $session = new \Zend\Session\Container('ManageSoftware');
         $session->filter = 'test';
         $this->dispatch("/console/software/$action/?name=$tmBad", 'POST', array('yes' => 'Yes'));

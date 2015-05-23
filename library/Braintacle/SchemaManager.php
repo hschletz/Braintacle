@@ -150,9 +150,7 @@ class Braintacle_SchemaManager
         $this->_logger->info('Fixing keys...');
         $mdb2 = $this->_schema->db;
 
-        // The definitions for some tables require an extra constraint to be
-        // created before the bad PK can be dropped.
-        $createConstraint = array(
+        $fixTables = array(
             'journallog',
             'snmp_cards',
             'snmp_cartridges',
@@ -173,12 +171,6 @@ class Braintacle_SchemaManager
             'snmp_trays',
             'snmp_videos',
         );
-        // For the tables listed above plus some additional tables, the bad PK
-        // needs to be dropped and recreated the right way.
-        $fixTables = array(
-            'softwares',
-        );
-        $fixTables = array_merge($fixTables, $createConstraint);
         // Only existing tables can be processed.
         $fixTables = array_intersect($fixTables, array_keys($this->_allTables));
 
@@ -202,9 +194,8 @@ class Braintacle_SchemaManager
             // Check for bad PK
             if (count($fields) > 1 or !isset($fields['id'])) {
                 $this->_logger->info('Fixing table ' . $table);
-                if (in_array($table, $createConstraint)) {
-                    $mdb2->manager->createConstraint($table, 'primary', $templateUnique);
-                }
+                // A UNIQUE constraint must be created before the bad PK can be dropped.
+                $mdb2->manager->createConstraint($table, 'primary', $templateUnique);
                 $mdb2->manager->dropConstraint($table, 'primary', true);
                 $mdb2->manager->createConstraint($table, 'primary', $templatePrimary);
             }
@@ -349,7 +340,6 @@ class Braintacle_SchemaManager
             'journallog',
             'snmp_accountinfo',
             'snmp_communities',
-            'softwares',
         );
         $engineMemory = array(
             'conntrack',

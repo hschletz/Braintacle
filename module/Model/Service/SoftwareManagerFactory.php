@@ -31,6 +31,10 @@ class SoftwareManagerFactory implements \Zend\ServiceManager\FactoryInterface
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        return new \Model\SoftwareManager($serviceLocator->get('Database\Table\WindowsInstallations'));
+        return new \Model\SoftwareManager(
+            $serviceLocator->get('Database\Table\Software'),
+            $serviceLocator->get('Database\Table\SoftwareDefinitions'),
+            $serviceLocator->get('Database\Table\WindowsInstallations')
+        );
     }
 }

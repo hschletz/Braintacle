@@ -24,7 +24,75 @@ namespace Model\Test;
 class SoftwareManagerTest extends AbstractTest
 {
     /** {@inheritdoc} */
-    protected static $_tables = array('WindowsInstallations');
+    protected static $_tables = array('ClientsAndGroups', 'Software', 'SoftwareDefinitions', 'WindowsInstallations');
+
+    public function getSoftwareProvider()
+    {
+        $accepted = array('name' => 'accepted', 'num_clients' => '2');
+        $acceptedOs = array('name' => 'accepted', 'num_clients' => '1');
+        $ignored = array('name' => 'ignored', 'num_clients' => '2');
+        $ignoredOs = array('name' => 'ignored', 'num_clients' => '1');
+        $new1 = array('name' => 'new1', 'num_clients' => '1');
+        $new2 = array('name' => 'new2', 'num_clients' => '2');
+        $new2Os = array('name' => 'new2', 'num_clients' => '1');
+        return array(
+            array(null, 'name', null, array($accepted, $ignored, $new1, $new2)),
+            array(array(), 'num_clients', 'desc', array($accepted, $ignored, $new2, $new1)),
+            array(array('Os' => 'windows'), 'name', 'asc', array($acceptedOs, $ignoredOs, $new1, $new2Os)),
+            array(array('Os' => 'other'), 'name', 'asc', array($acceptedOs, $ignoredOs, $new2Os)),
+            array(array('Status' => 'all'), 'name', 'asc', array($accepted, $ignored, $new1, $new2)),
+            array(array('Status' => 'accepted'), 'name', 'asc', array($accepted)),
+            array(array('Status' => 'ignored'), 'name', 'asc', array($ignored)),
+            array(array('Status' => 'new'), 'name', 'asc', array($new1, $new2)),
+        );
+    }
+
+    /**
+     * @dataProvider getSoftwareProvider
+     */
+    public function testGetSoftware($filters, $order, $direction, $expected)
+    {
+        $model = $this->_getModel();
+        $software = $model->getSoftware($filters, $order, $direction);
+        $this->assertInstanceOf('Traversable', $software);
+        $this->assertEquals($expected, iterator_to_array($software));
+    }
+
+    public function getSoftwareInvalidArgumentsProvider()
+    {
+        return array(
+            array(array('Os' => 'invalid'), 'name', 'Invalid OS filter: invalid'),
+            array(array('Status' => 'invalid'), 'name', 'Invalid status filter: invalid'),
+            array(array('invalid' => ''), 'name', 'Invalid filter: invalid'),
+            array(null, 'invalid', 'Invalid order column: invalid'),
+        );
+    }
+
+    /**
+     * @dataProvider getSoftwareInvalidArgumentsProvider
+     */
+    public function testGetSoftwareInvalidArgument($filters, $order, $message)
+    {
+        $this->setExpectedException('InvalidArgumentException', $message);
+        $model = $this->_getModel();
+        $software = $model->getSoftware($filters, $order);
+    }
+
+    public function testSetDisplay()
+    {
+        $model = $this->_getModel();
+        $model->setDisplay('new1', true); // updated
+        $model->setDisplay('new2', true);
+        $model->setDisplay('new3', false);
+        $model->setDisplay('new4', false);
+        $this->assertTablesEqual(
+            $this->_loadDataset('SetDisplay')->getTable('software_definitions'),
+            $this->getConnection()->createQueryTable(
+                'software_definitions',
+                'SELECT name, display FROM software_definitions ORDER BY name'
+            )
+        );
+    }
 
     public function testGetNumManualProductKeys()
     {

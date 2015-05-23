@@ -20,10 +20,12 @@
  *
  */
 
+$nameFilter = new \Library\Filter\FixEncodingErrors;
+
 $headers = array(
     'AcceptIgnore' => '',
-    'Name' => $this->translate('Name'),
-    'NumComputers' => $this->translate('Count'),
+    'name' => $this->translate('Name'),
+    'num_clients' => $this->translate('Count'),
 );
 
 $renderCallbacks = array (
@@ -37,7 +39,7 @@ $renderCallbacks = array (
                     'href' => $view->consoleUrl(
                         'software',
                         'accept',
-                        array('name' => $software['RawName'])
+                        array('name' => $software['name'])
                     ),
                 ),
                 true
@@ -51,7 +53,7 @@ $renderCallbacks = array (
                     'href' => $view->consoleUrl(
                         'software',
                         'ignore',
-                        array('name' => $software['RawName'])
+                        array('name' => $software['name'])
                     ),
                 ),
                 true
@@ -59,10 +61,13 @@ $renderCallbacks = array (
         }
         return implode(' ', $links);
     },
-    'NumComputers' => function($view, $software) {
+    'name' => function($view, $software) use ($nameFilter) {
+        return $view->escapeHtml($nameFilter->filter($software['name']));
+    },
+    'num_clients' => function($view, $software) {
         return $view->htmlTag(
             'a',
-            $software['NumComputers'],
+            $software['num_clients'],
             array(
                 'href' => $view->consoleUrl(
                     'client',
@@ -71,7 +76,7 @@ $renderCallbacks = array (
                         'columns' => 'Name,UserName,LastContactDate,InventoryDate,Software.Version',
                         'jumpto' => 'software',
                         'filter' => 'Software',
-                        'search' => $software['RawName'],
+                        'search' => $software['name'],
                     )
                 ),
             ),
@@ -86,5 +91,5 @@ print $this->table(
     $headers,
     $this->order,
     $renderCallbacks,
-    array('NumComputers' => 'textright')
+    array('num_clients' => 'textright')
 );

@@ -27,10 +27,10 @@ namespace Console\Controller;
 class SoftwareController extends \Zend\Mvc\Controller\AbstractActionController
 {
     /**
-     * \Model_Software prototype
-     * @var \Model_Software
+     * Software manager
+     * @var \Model\SoftwareManager
      */
-    protected $_software;
+    protected $_softwareManager;
 
     /**
      * Software filter form
@@ -41,12 +41,12 @@ class SoftwareController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Constructor
      *
-     * @param \Model_Software $software
+     * @param \Model\SoftwareManager $softwareManager
      * @param \Console\Form\SoftwareFilter $form
      */
-    public function __construct(\Model_Software $software, \Console\Form\SoftwareFilter $form)
+    public function __construct(\Model\softwareManager $softwareManager, \Console\Form\SoftwareFilter $form)
     {
-        $this->_software = $software;
+        $this->_softwareManager = $softwareManager;
         $this->_form = $form;
     }
 
@@ -63,19 +63,17 @@ class SoftwareController extends \Zend\Mvc\Controller\AbstractActionController
         $session = new \Zend\Session\Container('ManageSoftware');
         $session->filter = $filter;
 
-        $order = $this->getOrder('Name');
+        $order = $this->getOrder('name');
         return array(
             'filter' => $filter,
             'form' => $this->_form,
-            'software' => $this->_software->find(
-                array ('Name', 'NumComputers'),
-                $order['order'],
-                $order['direction'],
+            'software' => $this->_softwareManager->getSoftware(
                 array(
                     'Os' => $this->params()->fromQuery('os', 'windows'),
                     'Status' => $filter,
-                    'Unique' => null,
-                )
+                ),
+                $order['order'],
+                $order['direction']
             ),
             'order' => $order,
         );
@@ -88,7 +86,7 @@ class SoftwareController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function ignoreAction()
     {
-        return $this->_manage('ignore');
+        return $this->_manage(false);
     }
 
     /**
@@ -98,16 +96,16 @@ class SoftwareController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function acceptAction()
     {
-        return $this->_manage('accept');
+        return $this->_manage(true);
     }
 
     /**
      * Accept or ignore selected software
      *
-     * @param string $action Method to call on \Model_Software, must be 'accept' or 'ignore'
+     * @param bool $display Display status to set
      * @return mixed array(name) or redirect response
      */
-    protected function _manage($action)
+    protected function _manage($display)
     {
         $name = $this->params()->fromQuery('name');
         if ($name === null) {
@@ -117,7 +115,7 @@ class SoftwareController extends \Zend\Mvc\Controller\AbstractActionController
             return array('name' => $name); // Display confirmation form
         } else {
             if ($this->params()->fromPost('yes')) {
-                $this->_software->$action($name); // accept/ignore software
+                $this->_softwareManager->setDisplay($name, $display);
             }
             $session = new \Zend\Session\Container('ManageSoftware');
             return $this->redirectToRoute('software', 'index', array('filter' => $session->filter));
