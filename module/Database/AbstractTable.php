@@ -130,6 +130,24 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
                         $columnObj->setNotNull($column['notnull']);
                         $logger->info('done.');
                     }
+                    // Change default if different.
+                    if (
+                        // Since SQL types cannot be completely mapped to PHP
+                        // types, a loose comparision is required, but changes
+                        // to/from NULL must be taken into account.
+                        $columnObj->getDefault() === null and $column['default'] !== null or
+                        $columnObj->getDefault() !== null and $column['default'] === null or
+                        $columnObj->getDefault() != $column['default']
+                    ) {
+                        $logger->info(
+                            sprintf(
+                                "Setting default value of column $this->table.$column[name] to %s...",
+                                ($column['default'] === null) ? 'NULL' : "'$column[default]'"
+                            )
+                        );
+                        $columnObj->setDefault($column['default']);
+                        $logger->info('done.');
+                    }
                 } else {
                     $logger->info("Creating column $this->table.$column[name]...");
                     $table->addColumnObject($database->createColumnFromArray($column));
