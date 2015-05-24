@@ -132,6 +132,6 @@ class DefaultPlugin
         if ($order != 'id') {
             $order = $this->_table->getHydrator()->extractName($order);
         }
-        $this->_select->order(array($order => $direction));
+        $this->_select->order(array($this->_table->table . ".$order" => $direction));
     }
 }
