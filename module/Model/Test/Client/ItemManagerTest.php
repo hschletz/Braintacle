@@ -25,6 +25,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
 {
     protected static $_tables = array(
         'ClientsAndGroups',
+        'DuplicateMacAddresses',
         'AudioDevices',
         'Controllers',
         'Displays',
@@ -144,7 +145,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
         $model->deleteItems(1);
         $dataSet = new \PHPUnit_Extensions_Database_DataSet_QueryDataSet($this->getConnection());
         foreach (static::$_tables as $table) {
-            if ($table == 'ClientsAndGroups') {
+            if ($table == 'ClientsAndGroups' or $table == 'DuplicateMacAddresses') {
                 continue;
             }
             $table = \Library\Application::getService("Database\\Table\\$table")->table;
