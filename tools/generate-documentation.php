@@ -98,7 +98,7 @@ foreach (Query::execute('//div[@class="package-contents"]/a', $errorDocument) as
     );
 
     // Extract hyperlink to class file
-    $link = Query::execute('//h2[text()="Classes"]/following-sibling::table/tr/td/a', $fileDocument);
+    $link = Query::execute('//h2[text()="Classes" or text()="Traits"]/following-sibling::table/tr/td/a', $fileDocument);
 
     // Extract namespaced class from class file name
     $class = strtr(basename($link[0]->getAttribute('href'), '.html'), '.', '\\');
