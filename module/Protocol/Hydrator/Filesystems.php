@@ -26,29 +26,7 @@ namespace Protocol\Hydrator;
  */
 class Filesystems extends \Database\Hydrator\Filesystems
 {
-    /** {@inheritdoc} */
-    public function hydrate(array $data, $object)
-    {
-        return parent::hydrate(array_change_key_case($data, CASE_LOWER), $object);
-    }
-
-    /** {@inheritdoc} */
-    public function extract($object)
-    {
-        return array_change_key_case(parent::extract($object), CASE_UPPER);
-    }
-
-    /** {@inheritdoc} */
-    public function hydrateName($name)
-    {
-        return parent::hydrateName(strtolower($name));
-    }
-
-    /** {@inheritdoc} */
-    public function extractName($name)
-    {
-        return strtoupper(parent::extractName($name));
-    }
+    use DatabaseExtensionTrait;
 
     /** {@inheritdoc} */
     public function hydrateValue($name, $value)
