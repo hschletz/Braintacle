@@ -197,13 +197,13 @@ EOT
     {
         if ($property == 'Value') {
             if ($rawValue) {
-                return $this->_value->getName();
+                return $this->_value['Name'];
             } else {
                 return $this->_value;
             }
-        } elseif ($property == 'Data' and $rawValue and $this->_value->getValueConfigured() === null) {
+        } elseif ($property == 'Data' and $rawValue and $this->_value['ValueConfigured'] === null) {
             // Reassemble the compound data ('value=data')
-            return $this->_value->getValueInventoried() . '=' . parent::getProperty('Data');
+            return $this->_value['ValueInventoried'] . '=' . parent::getProperty('Data');
         } else {
             return parent::getProperty($property, $rawValue);
         }
