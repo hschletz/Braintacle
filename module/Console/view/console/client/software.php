@@ -81,14 +81,13 @@ $renderCallbacks = array(
 
 $filters = array();
 if (!$this->displayBlacklistedSoftware) {
-    $filters['Status'] = 'notIgnored';
+    $filters['Software.NotIgnored'] = null;
 }
 
 // Compact list by suppressing duplicate entries, adding the number of instances for each entry.
 $list = array();
 foreach ($client->getItems('Software', $this->order, $this->direction, $filters) as $software) {
-    $software = $software->getArrayCopy();
-    $key = implode("\0", $software);
+    $key = json_encode($software);
     if (isset($list[$key])) {
         $list[$key]['NumInstances']++;
     } else {

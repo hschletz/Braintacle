@@ -42,6 +42,10 @@ slots:
   -
     hardware_id: 2
 
+softwares:
+  -
+    hardware_id: 2
+
 sounds:
   -
     hardware_id: 2

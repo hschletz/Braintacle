@@ -16,6 +16,17 @@ blacklist_macaddresses:
   -
     macaddress: "00:00:5E:00:53:01"
 
+software_definitions:
+  -
+    name: "name1"
+    display: false
+  -
+    name: "name2"
+    display: true
+  -
+    name: "name3"
+    display: null
+
 # Different columns map to "Name" property depending on agent type
 controllers:
   -
@@ -153,6 +164,34 @@ slots:
     hardware_id: 1
     name: null
     designation: "name1"
+
+softwares:
+  -
+    id: 2
+    hardware_id: 2
+    name: "name2"
+    version: "version3"
+  -
+    id: 1
+    hardware_id: 1
+    name: "name1"
+    version: "version4"
+  -
+    id: 3
+    hardware_id: 1
+    name: "name3"
+    version: "version5"
+  -
+    id: 4
+    hardware_id: 1
+    name: "name4"
+    version: "version6"
+  -
+    # Always ignored (name NULL)
+    id: 5
+    hardware_id: 1
+    name: null
+    version: "version0"
 
 sounds:
   -

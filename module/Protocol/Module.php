@@ -57,6 +57,7 @@ Feature\InitProviderInterface
                 ),
                 'invokables' => array(
                     'Protocol\Hydrator\Filesystems' => 'Protocol\Hydrator\Filesystems',
+                    'Protocol\Hydrator\Software' => 'Protocol\Hydrator\Software',
                 ),
             ),
         );

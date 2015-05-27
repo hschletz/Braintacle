@@ -1,8 +1,8 @@
 <?php
 /**
- * "softwares" table
+ * Tests for the Software table
  *
- * Copyright (C) 2011-2014 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -19,28 +19,22 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-Namespace Database\Table;
+namespace Database\Test\Table;
 
-/**
- * "softwares" table
- */
-class Software extends \Database\AbstractTable
+class SoftwareTest extends AbstractTest
 {
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function getDataSet()
     {
-        $this->table = 'softwares';
+        return new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet;
+    }
 
-        $this->_hydrator = new \Database\Hydrator\Software;
+    public function testHydrator()
+    {
+        $hydrator = static::$_table->getHydrator();
+        $this->assertInstanceOf('Database\Hydrator\Software', $hydrator);
 
-        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
-            $this->_hydrator,
-            $serviceLocator->get('Model\Client\Item\Software')
-        );
-
-        parent::__construct($serviceLocator);
+        $resultSet = static::$_table->getResultSetPrototype();
+        $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);
+        $this->assertEquals($hydrator, $resultSet->getHydrator());
     }
 }

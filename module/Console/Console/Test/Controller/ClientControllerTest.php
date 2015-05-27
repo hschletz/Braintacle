@@ -1450,10 +1450,6 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'InstallLocation' => 'location2',
             'Architecture' => '',
         );
-        $softwareModel = $this->getMock('Model_Software');
-        $softwareModel->expects($this->any())
-                      ->method('getArrayCopy')
-                      ->will($this->onConsecutiveCalls($software1, $software2));
         $map = array(
             array('Windows', $this->getMock('Model\Client\WindowsInstallation')),
         );
@@ -1462,7 +1458,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->once())
                         ->method('getItems')
-                        ->will($this->returnValue(array($softwareModel, $softwareModel)));
+                        ->willReturn(array($software1, $software2));
         $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//th/a[text()='Version']");
@@ -1482,10 +1478,6 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Version' => 'version1',
             'Size' => 42,
         );
-        $softwareModel = $this->getMock('Model_Software');
-        $softwareModel->expects($this->any())
-                      ->method('getArrayCopy')
-                      ->will($this->onConsecutiveCalls($software1));
         $map = array(
             array('Windows', null),
         );
@@ -1494,7 +1486,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->once())
                         ->method('getItems')
-                        ->will($this->returnValue(array($softwareModel)));
+                        ->willReturn(array($software1));
         $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//th/a[text()='Version']");
@@ -1519,10 +1511,6 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Version' => 'version2',
             'Size' => 0,
         );
-        $softwareModel = $this->getMock('Model_Software');
-        $softwareModel->expects($this->any())
-                      ->method('getArrayCopy')
-                      ->will($this->onConsecutiveCalls($software1, $software2));
         $map = array(
             array('Windows', null),
         );
@@ -1531,7 +1519,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->once())
                         ->method('getItems')
-                        ->will($this->returnValue(array($softwareModel, $softwareModel)));
+                        ->willReturn(array($software1, $software2));
         $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//tr[2]/td[1]/span[@title="comment1"]');
@@ -1542,42 +1530,56 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $software1a = array(
             'Name' => 'name',
-            'Comment' => '',
             'Version' => 'version1',
-            'Size' => 0,
+            'Comment' => '',
+            'Publisher' => '',
+            'InstallLocation' => '',
+            'IsHotfix' => '',
+            'Guid' => '',
+            'Language' => '',
+            'InstallationDate' => new \DateTime('2015-05-25'),
+            'Architecture' => '',
         );
         $software2 = array(
             'Name' => 'name',
-            'Comment' => '',
             'Version' => 'version2',
-            'Size' => 0,
+            'Comment' => '',
+            'Publisher' => '',
+            'InstallLocation' => '',
+            'IsHotfix' => '',
+            'Guid' => '',
+            'Language' => '',
+            'InstallationDate' => new \DateTime('2015-05-25'),
+            'Architecture' => '',
         );
         $software1b = array(
             'Name' => 'name',
-            'Comment' => '',
             'Version' => 'version1',
-            'Size' => 0,
+            'Comment' => '',
+            'Publisher' => '',
+            'InstallLocation' => '',
+            'IsHotfix' => '',
+            'Guid' => '',
+            'Language' => '',
+            'InstallationDate' => new \DateTime('2015-05-25'),
+            'Architecture' => '',
         );
-        $softwareModel = $this->getMock('Model_Software');
-        $softwareModel->expects($this->any())
-                      ->method('getArrayCopy')
-                      ->will($this->onConsecutiveCalls($software1a, $software2, $software1b));
         $map = array(
-            array('Windows', null),
+            array('Windows', $this->getMock('Model\Client\WindowsInstallation')),
         );
         $this->_computer->expects($this->any())
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->once())
                         ->method('getItems')
-                        ->will($this->returnValue(array($softwareModel, $softwareModel, $softwareModel)));
+                        ->willReturn(array($software1a, $software2, $software1b));
         $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//tr[2]/td[1]/span[@class="duplicate"][text()="(2)"]');
         $this->assertNotXpathQuery('//tr[3]/td[1]/span');
     }
 
-    public function testSoftwareHideBlacklisted()
+    public function testSoftwareActionHideBlacklisted()
     {
         $this->_config->expects($this->once())
                       ->method('__get')
@@ -1585,13 +1587,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                       ->will($this->returnValue(false));
         $this->_computer->expects($this->once())
                         ->method('getItems')
-                        ->with('Software', 'Name', 'asc', array('Status' => 'notIgnored'))
+                        ->with('Software', 'Name', 'asc', array('Software.NotIgnored' => null))
                         ->will($this->returnValue(array()));
         $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
     }
 
-    public function testSoftwareShowBlacklisted()
+    public function testSoftwareActionShowBlacklisted()
     {
         $this->_config->expects($this->once())
                       ->method('__get')

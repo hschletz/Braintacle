@@ -26,6 +26,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
     protected static $_tables = array(
         'ClientsAndGroups',
         'DuplicateMacAddresses',
+        'SoftwareDefinitions',
         'AudioDevices',
         'Controllers',
         'Displays',
@@ -39,6 +40,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
         'NetworkInterfaces',
         'Ports',
         'Printers',
+        'Software',
         'StorageDevices',
         'VirtualMachines',
     );
@@ -109,6 +111,26 @@ class ItemManagerTest extends \Model\Test\AbstractTest
             array('Printer', null, 'Port', 'desc', array('name1', 'name2'), 'Name'),
             array('Printer', null, null, 'something', array('name1', 'name2'), 'Name'),
             array('printer', array('Client' => 2), null, null, array('name2'), 'Name'),
+            array('Software', null, 'id', 'asc', array('name1', 'name2', 'name3', 'name4', ''), 'Name'),
+            array('Software', null, 'Version', 'desc', array('name4', 'name3', 'name1', 'name2', ''), 'Name'),
+            array('Software', null, null, 'something', array('', 'name1', 'name2', 'name3', 'name4'), 'Name'),
+            array('software', array('Client' => 2), null, null, array('name2'), 'Name'),
+            array(
+                'software',
+                array('Software.NotIgnored' => null),
+                null,
+                null,
+                array('name2', 'name3', 'name4'),
+                'Name'
+            ),
+            array(
+                'Software',
+                array('Client' => 1, 'Software.NotIgnored' => null),
+                null,
+                null,
+                array('name3', 'name4'),
+                'Name'
+            ),
             array('StorageDevice', null, null, 'something', array('name1', 'name2'), 'Model'),
             array('storagedevice', array('Client' => 2), null, null, array('name2'), 'Model'),
             array('VirtualMachine', null, 'id', 'asc', array('name1', 'name2'), 'Name'),
@@ -145,7 +167,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
         $model->deleteItems(1);
         $dataSet = new \PHPUnit_Extensions_Database_DataSet_QueryDataSet($this->getConnection());
         foreach (static::$_tables as $table) {
-            if ($table == 'ClientsAndGroups' or $table == 'DuplicateMacAddresses') {
+            if ($table == 'ClientsAndGroups' or $table == 'DuplicateMacAddresses' or $table == 'SoftwareDefinitions') {
                 continue;
             }
             $table = \Library\Application::getService("Database\\Table\\$table")->table;
