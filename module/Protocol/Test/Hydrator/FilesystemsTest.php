@@ -23,6 +23,14 @@ namespace Protocol\Test\Hydrator;
 
 class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
 {
+    public function testService()
+    {
+        $this->assertInstanceOf(
+            'Protocol\Hydrator\Filesystems',
+            \Library\Application::getService('Protocol\Hydrator\Filesystems')
+        );
+    }
+
     public function hydrateProvider()
     {
         $windowsAgent = array(
