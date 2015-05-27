@@ -29,17 +29,6 @@ class Filesystems extends \Database\Hydrator\Filesystems
     use DatabaseExtensionTrait;
 
     /** {@inheritdoc} */
-    public function hydrateValue($name, $value)
-    {
-        if ($name == 'CreationDate') {
-            $value = ($value ? new \Zend_Date($value, 'yyyy/M/d HH:mm:ss') : null);
-        } else {
-            $value = parent::hydrateValue($name, $value);
-        }
-        return $value;
-    }
-
-    /** {@inheritdoc} */
     public function extractValue($name, $value)
     {
         if (strtoupper($name) == 'CREATEDATE') {
