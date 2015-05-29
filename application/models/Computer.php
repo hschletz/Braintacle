@@ -144,14 +144,6 @@ class Model_Computer extends Model_ComputerOrGroup
     );
 
     /**
-     * List of all child object types
-     * @var array
-     * @deprecated to be handled by ItemManager
-     */
-    private static $_childObjectTypes = array(
-    );
-
-    /**
      * Windows-specific information
      *
      * Object has undefined content for non-Windows systems.
@@ -702,16 +694,7 @@ class Model_Computer extends Model_ComputerOrGroup
         } catch (Exception $e) {
             if (array_key_exists($property, $this->_childProperties)) {
                 list($model, $property) = explode('.', $property);
-                $childClass = "Model_$model";
-                if (class_exists($childClass)) {
-                    // Call setProperty()/getProperty() on child object to process the value
-                    $childObject = new $childClass;
-                    $childObject->setProperty($property, $this->_childProperties["$model.$property"]);
-                    return $childObject->getProperty($property, $rawValue);
-                } else {
-                    // Already hydrated
-                    return $this->_childProperties["$model.$property"];
-                }
+                return $this->_childProperties["$model.$property"];
             } elseif (preg_match('#^UserDefinedInfo\\.(.*)#', $property, $matches)) {
                 return $this->getUserDefinedInfo($matches[1]);
             } elseif (preg_match('#^Registry\\.#', $property)) {
@@ -833,25 +816,6 @@ class Model_Computer extends Model_ComputerOrGroup
                 return;
             }
 
-            // Since the column identifier is all lowercase, a case insensitive
-            // search for a valid child object is necessary. The real class name
-            // is determined from $_childObjectTypes.
-            foreach (self::$_childObjectTypes as $childModel) {
-                if (strcasecmp($model, $childModel) == 0) {
-                    // Found the model name. Perform case insensitive search
-                    // for the property inside the property map.
-                    $childClass = "Model_$childModel";
-                    $childObject = new $childClass;
-                    foreach (array_keys($childObject->getPropertyMap()) as $childProperty) {
-                        if (strcasecmp($property, $childProperty) == 0) {
-                            // Property is valid. Store the raw value in $_childProperties.
-                            $this->_childProperties["$childModel.$childProperty"] = $value;
-                            return; // No further iteration necessary.
-                        }
-                    }
-                }
-            }
-
             $table = \Library\Application::getService('Model\Client\ItemManager')->getTable($model);
             // Get mixed-case model name
             $model = get_class($table->getResultSetPrototype()->getObjectPrototype());
@@ -935,15 +899,10 @@ class Model_Computer extends Model_ComputerOrGroup
             } elseif (preg_match('/^([a-zA-Z]+)\.([a-zA-Z]+)$/', $order, $matches)) {
                 $model = $matches[1];
                 $property = $matches[2];
-                if (in_array($model, self::$_childObjectTypes)) {
-                    // Assume column alias 'model_property'
-                    $order = strtolower(strtr($order, '.', '_'));
-                } else {
-                    // Assume column alias 'model_column'
-                    $tableGateway = \Library\Application::getService('Model\Client\ItemManager')->getTable($model);
-                    $column = $tableGateway->getHydrator()->extractName($property);
-                    $order = strtolower("{$model}_$column");
-                }
+                // Assume column alias 'model_column'
+                $tableGateway = \Library\Application::getService('Model\Client\ItemManager')->getTable($model);
+                $column = $tableGateway->getHydrator()->extractName($property);
+                $order = strtolower("{$model}_$column");
             } else {
                 throw $exception;
             }
@@ -971,31 +930,14 @@ class Model_Computer extends Model_ComputerOrGroup
      * @param string $order Property to sort by. If ommitted, the model's builtin default is used.
      * @param string $direction Sorting direction (asc|desc)
      * @param array $filters Extra filters to pass to the model's createStatement() method
-     * @return \Model_ChildObject[]|\Zend\Db\ResultSet\AbstractResultSet
+     * @return \Zend\Db\ResultSet\AbstractResultSet
      */
     public function getItems($type, $order=null, $direction=null, $filters=array())
     {
-        if (in_array($type, self::$_childObjectTypes)) {
-            $filters['Computer'] = $this['Id'];
-            $className = "Model_$type";
-            $class = new $className;
-            $statement = $class->createStatement(
-                null,
-                $order,
-                $direction,
-                $filters
-            );
-            $items = array();
-            while ($item = $statement->fetchObject("Model_$type")) {
-                $items[] = $item;
-            }
-        } else {
-            $filters['Client'] = $this['Id'];
-            $items = \Library\Application::getService('Model\Client\ItemManager')->getItems(
-                $type, $filters, $order, $direction
-            );
-        }
-        return $items;
+        $filters['Client'] = $this['Id'];
+        return \Library\Application::getService('Model\Client\ItemManager')->getItems(
+            $type, $filters, $order, $direction
+        );
     }
 
     /**
@@ -1221,18 +1163,6 @@ class Model_Computer extends Model_ComputerOrGroup
                 $column = $hydrator->extractName($property);
             }
             $columnAlias = 'windows_' . $column;
-        } elseif (in_array($model, self::$_childObjectTypes)) {
-            $className = "Model_$model";
-            $class = new $className;
-
-            $table = $class->getTableName();
-            $column = $class->getColumnName($property);
-            // Compose a column alias to avoid ambiguous identifiers (like
-            // 'name' which is present in more than 1 table). This allows
-            // identification of the column in a query result.
-            // Properties not handled by Model_Computer will be passed to the
-            // model class determined from the alias.
-            $columnAlias = strtolower($model) . '_' . strtolower($property);
         } else {
             $tableGateway = \Library\Application::getService('Model\Client\ItemManager')->getTable($model);
             $table = $tableGateway->table;
@@ -1554,17 +1484,6 @@ class Model_Computer extends Model_ComputerOrGroup
         $db = Model_Database::getAdapter();
         $id = $this->getId();
 
-        // Get list of tables for child objects
-        foreach (self::$_childObjectTypes as $type) {
-            if ($type == 'MsOfficeProduct' and !Model_Database::supportsMsOfficeKeyPlugin()) {
-                // Skip table if not present
-                continue;
-            }
-            $model = 'Model_' . $type;
-            $model = new $model;
-            $tables[] = $model->getTableName();
-        }
-        // Additional tables without associated Model_ChildObject class
         $tables[] = 'accountinfo';
         $tables[] = 'bios';
         $tables[] = 'braintacle_windows';

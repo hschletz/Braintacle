@@ -43,15 +43,6 @@ class Model_DomDocument_InventoryRequest extends \Library\DomDocument
      */
     private  static $_properties;
 
-    /**
-     * Global cache for model=>property=>format specification
-     *
-     * Do not use directly, always call {@link getFormat()} to retrieve format for
-     * a specific property
-     * @var array
-     */
-    private static $_formats;
-
     /** {@inheritdoc} */
     public function getSchemaFilename()
     {
@@ -67,14 +58,14 @@ class Model_DomDocument_InventoryRequest extends \Library\DomDocument
         $itemManager = \Library\Application::getService('Model\Client\ItemManager');
         // Collect all sections in an array
         $sections = array();
-        foreach ($this->getModels() as $section => $models) {
+        foreach ($this->getModels() as $section => $model) {
             switch ($section) {
                 case 'HARDWARE':
                 case 'BIOS':
                     $element = $this->createElement($section);
                     foreach ($this->getProperties($section) as $name => $property) {
                         // Get raw value from model class
-                        if ($models[$name] == 'Windows') {
+                        if ($model[$name] == 'WindowsInstallation') {
                             $property = $computer['Windows'][$property];
                         } else {
                             $property = $computer->getProperty($property, true);
@@ -129,44 +120,23 @@ class Model_DomDocument_InventoryRequest extends \Library\DomDocument
                 default:
                     $sections[$section] = $this->createDocumentFragment();
                     // Fetch data from child objects, once per distinct model
-                    foreach (array_unique($models) as $model) {
-                        $items = $computer->getItems(
-                            $model,
-                            'id', // Sort by 'id' to get more predictable results for comparision
-                            'asc'
-                        );
-                        foreach ($items as $object) {
-                            // Create base element
-                            $element = $this->createElement($section);
-                            if ($object instanceof \Model_ChildObject) {
-                                foreach ($this->getProperties($section) as $name => $property) {
-                                    // Create child elements, 1 per property
-                                    $value = $object->getProperty($property, true); // Get raw value
-                                    if (strlen($value)) { // Don't generate empty elements
-                                        $type = $object->getPropertyType($property);
-                                        if ($type == 'timestamp' or $type == 'date') {
-                                            // Re-fetch value as Zend_Date
-                                            $value = $object->getProperty($property, false);
-                                            // Convert to specific format
-                                            $value = $value->get($this->getFormat($model, $property));
-                                        }
-                                        $element->appendChild(
-                                            $this->createElementWithContent($name, $value)
-                                        );
-                                    }
-                                }
-                            } else {
-                                // TODO: move this outside the loop when all item models are migrated
-                                $table = $itemManager->getTableName($model);
-                                $hydrator = \Library\Application::getService("Protocol\\Hydrator\\$table");
-                                foreach ($hydrator->extract($object) as $name => $value) {
-                                    if ((string) $value !== '') {
-                                        $element->appendChild($this->createElementWithContent($name, $value));
-                                    }
-                                }
+                    $type = str_replace('Item\\', '', $model);
+                    $items = $computer->getItems(
+                        $type,
+                        'id', // Sort by 'id' to get more predictable results for comparision
+                        'asc'
+                    );
+                    $table = $itemManager->getTableName($type);
+                    $hydrator = \Library\Application::getService("Protocol\\Hydrator\\$table");
+                    foreach ($items as $object) {
+                        // Create base element
+                        $element = $this->createElement($section);
+                        foreach ($hydrator->extract($object) as $name => $value) {
+                            if ((string) $value !== '') {
+                                $element->appendChild($this->createElementWithContent($name, $value));
                             }
-                            $sections[$section]->appendChild($element);
                         }
+                        $sections[$section]->appendChild($element);
                     }
                     break;
             }
@@ -244,20 +214,6 @@ class Model_DomDocument_InventoryRequest extends \Library\DomDocument
     }
 
     /**
-     * Retrieve date/timestamp format for a given property
-     * @param string $model Model class (without 'Model_' prefix)
-     * @param string $property Property whose format to retrieve
-     * @return string Format string
-     */
-    public function getFormat($model, $property)
-    {
-        if (empty(self::$_formats)) {
-            $this->_parseSchema();
-        }
-        return self::$_formats[$model][$property];
-    }
-
-    /**
      * Extract element=>model/property mappings from schema
      *
      * The mappings are cached globally so that this has to be done only once.
@@ -300,11 +256,6 @@ class Model_DomDocument_InventoryRequest extends \Library\DomDocument
                 $element = $item->getAttribute('name');
                 self::$_models[$section][$element] = $elementModel;
                 self::$_properties[$section][$element] = $property;
-                // Store date/timestamp format in cache if specified
-                $format = $item->getAttribute('braintacle:format');
-                if ($format) {
-                    self::$_formats[$elementModel][$property] = $format;
-                }
             }
             // If no properties are defined, store just the model.
             if (!isset(self::$_models[$section])) {
