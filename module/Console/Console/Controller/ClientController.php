@@ -39,6 +39,12 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     protected $_groupManager;
 
     /**
+     * Registry manager
+     * @var \Model\Registry\RegistryManager
+     */
+    protected $_registryManager;
+
+    /**
      * Software manager
      * @var \Model\SoftwareManager
      */
@@ -73,6 +79,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
      *
      * @param \Model_Computer $computer
      * @param \Model\Group\GroupManager $groupManager
+     * @param \Model\Registry\RegistryManager $registryManager
      * @param \Model\SoftwareManager $softwareManager
      * @param \Zend\Form\FormElementManager $formManager
      * @param \Model\Config $config
@@ -81,6 +88,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     public function __construct(
         \Model_Computer $computer,
         \Model\Group\GroupManager $groupManager,
+        \Model\Registry\RegistryManager $registryManager,
         \Model\SoftwareManager $softwareManager,
         \Zend\Form\FormElementManager $formManager,
         \Model\Config $config,
@@ -89,6 +97,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     {
         $this->_computer = $computer;
         $this->_groupManager = $groupManager;
+        $this->_registryManager = $registryManager;
         $this->_softwareManager = $softwareManager;
         $this->_formManager = $formManager;
         $this->_config = $config;
@@ -347,11 +356,15 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Information about a client's registry values (Windows only)
      *
-     * @return array client, order, direction
+     * @return array client, values, order, direction
      */
     public function registryAction()
     {
-        return $this->getOrder('Value.Name') + array('client' => $this->_currentClient);
+        $values = array();
+        foreach ($this->_registryManager->getValueDefinitions() as $value) {
+            $values[$value['Name']] = $value;
+        }
+        return $this->getOrder('Value') + array('client' => $this->_currentClient, 'values' => $values);
     }
 
     /**

@@ -38,6 +38,10 @@ printers:
   -
     hardware_id: 2
 
+registry:
+  -
+    hardware_id: 2
+
 slots:
   -
     hardware_id: 2

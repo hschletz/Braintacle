@@ -1432,10 +1432,6 @@ msgid "Content"
 msgstr "Inhalt"
 
 #: view/console/client/registry.php
-msgid "Key"
-msgstr "Schlüssel"
-
-#: view/console/client/registry.php
 msgid "Manage inventoried values"
 msgstr "Inventarisierte Werte verwalten"
 

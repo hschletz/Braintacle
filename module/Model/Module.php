@@ -68,6 +68,7 @@ Feature\InitProviderInterface
                     'Model\Client\Item\NetworkInterface' => 'Model\Client\Item\NetworkInterface',
                     'Model\Client\Item\Port' => 'Model\Client\Item\Port',
                     'Model\Client\Item\Printer' => 'Model\Client\Item\Printer',
+                    'Model\Client\Item\RegistryData' => 'Model\Client\Item\RegistryData',
                     'Model\Client\Item\Software' => 'Model\Client\Item\Software',
                     'Model\Client\Item\StorageDevice' => 'Model\Client\Item\StorageDevice',
                     'Model\Client\Item\VirtualMachine' => 'Model\Client\Item\VirtualMachine',

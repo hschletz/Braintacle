@@ -33,6 +33,22 @@ class RegistryData extends \Database\AbstractTable
     public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'registry';
+
+        $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
+        $this->_hydrator->setNamingStrategy(
+            new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
+                array(
+                    'name' => 'Value',
+                    'regvalue' => 'Data',
+                )
+            )
+        );
+
+        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
+            $this->_hydrator,
+            $serviceLocator->get('Model\Client\Item\RegistryData')
+        );
+
         parent::__construct($serviceLocator);
     }
 }

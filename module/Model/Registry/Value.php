@@ -28,17 +28,11 @@ namespace Model\Registry;
  * defines registry data to be collected by agents, and also represents the base
  * value of inventored registry data.
  *
- * The ValueInventoried property is only valid for \Model_RegistryData::$Value.
- * If ValueConfigured is NULL (inventory all values), it contains the name of
- * the registry value for each data item. Otherwise, it is identical to
- * ValueConfigured.
- *
  * @property integer $Id ID
  * @property string $Name Userdefined display name
  * @property integer $RootKey Root key, one of the HKEY_* constants
  * @property string $SubKeys Path to the key that contains the value
  * @property string $ValueConfigured Registry value to inventory (NULL for all values)
- * @property-read string $ValueInventoried Name of the actually inventoried value.
  * @property-read string $FullPath Textual representation of configured value
  */
 class Value extends \ArrayObject
@@ -102,19 +96,14 @@ class Value extends \ArrayObject
     /** {@inheritdoc} */
     public function offsetGet($index)
     {
-        switch ($index) {
-            case 'ValueInventoried':
-                $value = @parent::offsetGet('ValueInventoried') ?: $this['ValueConfigured'];
-                break;
-            case 'FullPath':
-                $value  = self::$_rootKeys[$this['RootKey']];
-                $value .= '\\';
-                $value .= $this['SubKeys'];
-                $value .= '\\';
-                $value .= $this['ValueConfigured'] ?: '*';
-                break;
-            default:
-                $value = parent::offsetGet($index);
+        if ($index == 'FullPath') {
+            $value  = self::$_rootKeys[$this['RootKey']];
+            $value .= '\\';
+            $value .= $this['SubKeys'];
+            $value .= '\\';
+            $value .= $this['ValueConfigured'] ?: '*';
+        } else {
+            $value = parent::offsetGet($index);
         }
         return $value;
     }

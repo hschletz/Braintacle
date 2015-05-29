@@ -22,24 +22,20 @@
 require 'header.php';
 
 $client = $this->client;
+$values = $this->values;
 
 $headers = array(
-    'Value.Name' => $this->translate('Key'),
-    'Value.ValueInventoried' => $this->translate('Value'),
+    'Value' => $this->translate('Value'),
     'Data' => $this->translate('Content'),
 );
 
 $renderCallbacks = array(
-    'Value.Name' => function($view, $data) {
-        $value = $data['Value'];
+    'Value' => function($view, $data) use($values) {
         return $view->htmlTag(
             'span',
-            $view->escapeHtml($value['Name']),
-            array('title' => $value['FullPath'])
+            $view->escapeHtml($data['Value']),
+            array('title' => $values[$data['Value']]['FullPath'])
         );
-    },
-    'Value.ValueInventoried' => function($view, $data) {
-        return $view->escapeHtml($data['Value']['ValueInventoried']);
     },
 );
 

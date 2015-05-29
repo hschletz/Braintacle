@@ -35,21 +35,6 @@ class ValueTest extends \Model\Test\AbstractTest
         $this->assertTrue(method_exists($model, 'exchangeArray'));
     }
 
-    public function testValueInventoriedPropertyExplicitValue()
-    {
-        $model = $this->_getModel();
-        $model['ValueConfigured'] = 'configured';
-        $model['ValueInventoried'] = 'inventoried';
-        $this->assertEquals('inventoried', $model['ValueInventoried']);
-    }
-
-    public function testValueInventoriedPropertyInheritedValue()
-    {
-        $model = $this->_getModel();
-        $model['ValueConfigured'] = 'configured';
-        $this->assertEquals('configured', $model['ValueInventoried']);
-    }
-
     public function testFullPathPropertyPropertyExplicitValue()
     {
         $model = $this->_getModel();

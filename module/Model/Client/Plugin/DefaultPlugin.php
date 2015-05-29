@@ -53,6 +53,7 @@ class DefaultPlugin
         'NetworkInterfaces' => 'Description',
         'Ports' => 'Name',
         'Printers' => 'Name',
+        'RegistryData' => 'Value',
         'Software' => 'Name',
         'VirtualMachines' => 'Name',
     );

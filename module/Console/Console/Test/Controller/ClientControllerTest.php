@@ -39,6 +39,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     protected $_groupManager;
 
     /**
+     * Registry manager mock
+     * @var \Model\Registry\RegistryManager
+     */
+    protected $_registryManager;
+
+    /**
      * Software manager mock
      * @var \Model\SoftwareManager
      */
@@ -111,6 +117,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_groupManager = $this->getMockBuilder('Model\Group\GroupManager')
                                     ->disableOriginalConstructor()
                                     ->getMock();
+        $this->_registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')
+                                       ->disableOriginalConstructor()
+                                       ->getMock();
         $this->_softwareManager = $this->getMockBuilder('Model\SoftwareManager')
                                        ->disableOriginalConstructor()
                                        ->getMock();
@@ -141,6 +150,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         return new \Console\Controller\ClientController(
             $this->_computer,
             $this->_groupManager,
+            $this->_registryManager,
             $this->_softwareManager,
             $this->_formManager,
             $this->_config,
@@ -1713,8 +1723,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $this->_computer->expects($this->once())
                         ->method('getItems')
-                        ->with('RegistryData', 'Value.Name', 'asc')
+                        ->with('RegistryData', 'Value', 'asc')
                         ->will($this->returnValue(array()));
+        $this->_registryManager->expects($this->once())->method('getValueDefinitions')->willReturn(array());
         $this->dispatch('/console/client/registry/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//table');
@@ -1724,22 +1735,28 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testRegistryActionWithValues()
     {
         $data = array(
-            'Value' => array(
-                'Name' => 'name',
-                'FullPath' => 'full_path',
-                'ValueInventoried' => 'value_inventoried',
-            ),
+            'Value' => '<value>',
             'Data' => 'data',
+        );
+        $values = array(
+            array(
+                'Name' => 'unused',
+                'FullPath' => null,
+            ),
+            array(
+                'Name' => '<value>',
+                'FullPath' => 'full_path',
+            )
         );
         $this->_computer->expects($this->once())
                         ->method('getItems')
-                        ->with('RegistryData', 'Value.Name', 'asc')
+                        ->with('RegistryData', 'Value', 'asc')
                         ->will($this->returnValue(array($data)));
+        $this->_registryManager->expects($this->once())->method('getValueDefinitions')->willReturn($values);
         $this->dispatch('/console/client/registry/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//tr[2]/td[1]/span[@title="full_path"]', "\nname\n");
-        $this->assertXpathQueryContentContains('//tr[2]/td[2]', "\nvalue_inventoried\n");
-        $this->assertXpathQueryContentContains('//tr[2]/td[3]', "\ndata\n");
+        $this->assertXpathQueryContentContains('//tr[2]/td[1]/span[@title="full_path"]', "\n<value>\n");
+        $this->assertXpathQueryContentContains('//tr[2]/td[2]', "\ndata\n");
         $this->assertXpathQuery('//p/a[@href="/console/preferences/registryvalues/"]');
     }
 

@@ -1422,10 +1422,6 @@ msgid "Port"
 msgstr ""
 
 #: view/console/client/registry.php
-msgid "Key"
-msgstr ""
-
-#: view/console/client/registry.php
 msgid "Content"
 msgstr ""
 
