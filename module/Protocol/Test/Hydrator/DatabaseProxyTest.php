@@ -19,7 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Protocol\Hydrator;
+namespace Protocol\Test\Hydrator;
 
 class DatabaseProxyTest extends \PHPUnit_Framework_TestCase
 {
