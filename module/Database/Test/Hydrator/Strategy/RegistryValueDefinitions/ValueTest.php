@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for ValueConfigured strategy
+ * Tests for Value strategy
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -21,7 +21,7 @@
 
 namespace Database\Test\Hydrator\Strategy\RegistryValueDefinitions;
 
-class ValueConfiguredTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
+class ValueTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
 {
     public function hydrateProvider()
     {

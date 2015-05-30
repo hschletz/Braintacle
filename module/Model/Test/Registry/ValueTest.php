@@ -40,7 +40,7 @@ class ValueTest extends \Model\Test\AbstractTest
         $model = $this->_getModel();
         $model['RootKey'] = \Model\Registry\Value::HKEY_LOCAL_MACHINE;
         $model['SubKeys'] = 'a\b';
-        $model['ValueConfigured'] = 'configured';
+        $model['Value'] = 'configured';
         $this->assertEquals('HKEY_LOCAL_MACHINE\a\b\configured', $model['FullPath']);
     }
 
@@ -49,7 +49,7 @@ class ValueTest extends \Model\Test\AbstractTest
         $model = $this->_getModel();
         $model['RootKey'] = \Model\Registry\Value::HKEY_LOCAL_MACHINE;
         $model['SubKeys'] = 'a\b';
-        $model['ValueConfigured'] = null;
+        $model['Value'] = null;
         $this->assertEquals('HKEY_LOCAL_MACHINE\a\b\*', $model['FullPath']);
     }
 

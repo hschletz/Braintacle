@@ -52,7 +52,7 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
                 'Name' => 'name1',
                 'RootKey' => '1',
                 'SubKeys' => 'sub\key1',
-                'ValueConfigured' => 'value1',
+                'Value' => 'value1',
             ),
             $value->getArrayCopy()
         );

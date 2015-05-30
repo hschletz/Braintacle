@@ -40,20 +40,20 @@ class RegistryValueDefinitionsTest extends AbstractTest
         $this->assertEquals('Name', $map->hydrate('name'));
         $this->assertEquals('RootKey', $map->hydrate('regtree'));
         $this->assertEquals('SubKeys', $map->hydrate('regkey'));
-        $this->assertEquals('ValueConfigured', $map->hydrate('regvalue'));
+        $this->assertEquals('Value', $map->hydrate('regvalue'));
 
         $this->assertEquals('id', $map->extract('Id'));
         $this->assertEquals('name', $map->extract('Name'));
         $this->assertEquals('regtree', $map->extract('RootKey'));
         $this->assertEquals('regkey', $map->extract('SubKeys'));
-        $this->assertEquals('regvalue', $map->extract('ValueConfigured'));
+        $this->assertEquals('regvalue', $map->extract('Value'));
 
         $this->assertInstanceOf(
-            'Database\Hydrator\Strategy\RegistryValueDefinitions\ValueConfigured',
-            $hydrator->getStrategy('ValueConfigured')
+            'Database\Hydrator\Strategy\RegistryValueDefinitions\Value',
+            $hydrator->getStrategy('Value')
         );
         $this->assertInstanceOf(
-            'Database\Hydrator\Strategy\RegistryValueDefinitions\ValueConfigured',
+            'Database\Hydrator\Strategy\RegistryValueDefinitions\Value',
             $hydrator->getStrategy('regvalue')
         );
 

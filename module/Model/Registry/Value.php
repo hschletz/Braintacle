@@ -32,7 +32,7 @@ namespace Model\Registry;
  * @property string $Name Userdefined display name
  * @property integer $RootKey Root key, one of the HKEY_* constants
  * @property string $SubKeys Path to the key that contains the value
- * @property string $ValueConfigured Registry value to inventory (NULL for all values)
+ * @property string $Value Registry value to inventory (NULL for all values)
  * @property-read string $FullPath Textual representation of configured value
  */
 class Value extends \ArrayObject
@@ -101,7 +101,7 @@ class Value extends \ArrayObject
             $value .= '\\';
             $value .= $this['SubKeys'];
             $value .= '\\';
-            $value .= $this['ValueConfigured'] ?: '*';
+            $value .= $this['Value'] ?: '*';
         } else {
             $value = parent::offsetGet($index);
         }

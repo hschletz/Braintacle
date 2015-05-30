@@ -42,14 +42,14 @@ class RegistryValueDefinitions extends \Database\AbstractTable
                     'name' => 'Name',
                     'regtree' => 'RootKey',
                     'regkey' => 'SubKeys',
-                    'regvalue' => 'ValueConfigured',
+                    'regvalue' => 'Value',
                 )
             )
         );
 
-        $valueConfigured = new \Database\Hydrator\Strategy\RegistryValueDefinitions\ValueConfigured;
-        $this->_hydrator->addStrategy('ValueConfigured', $valueConfigured);
-        $this->_hydrator->addStrategy('regvalue', $valueConfigured);
+        $value = new \Database\Hydrator\Strategy\RegistryValueDefinitions\Value;
+        $this->_hydrator->addStrategy('Value', $value);
+        $this->_hydrator->addStrategy('regvalue', $value);
 
         $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
             $this->_hydrator, $serviceLocator->get('Model\Registry\Value')

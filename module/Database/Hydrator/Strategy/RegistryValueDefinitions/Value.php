@@ -1,6 +1,6 @@
 <?php
 /**
- * Strategy for ValueConfigured attribute
+ * Strategy for Value attribute
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,9 +22,9 @@
 namespace Database\Hydrator\Strategy\RegistryValueDefinitions;
 
 /**
- * Strategy for ValueConfigured attribute
+ * Strategy for Value attribute
  */
-class ValueConfigured implements \Zend\Stdlib\Hydrator\Strategy\StrategyInterface
+class Value implements \Zend\Stdlib\Hydrator\Strategy\StrategyInterface
 {
     /** {@inheritdoc} */
     public function hydrate($value)
