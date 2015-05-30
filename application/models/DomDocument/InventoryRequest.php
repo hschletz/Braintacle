@@ -66,13 +66,15 @@ class Model_DomDocument_InventoryRequest extends \Library\DomDocument
                     foreach ($this->getProperties($section) as $name => $property) {
                         // Get raw value from model class
                         if ($model[$name] == 'WindowsInstallation') {
-                            $property = $computer['Windows'][$property];
+                            $value = $computer['Windows'][$property];
+                        } elseif ($property == 'InventoryDate' or $property == 'LastContactDate') {
+                            $value = $computer->getProperty($property)->get('yyyy-MM-dd HH:mm:ss');
                         } else {
-                            $property = $computer->getProperty($property, true);
+                            $value = $computer->getProperty($property, true);
                         }
-                        if (strlen($property)) {// Don't generate empty elements
+                        if (strlen($value)) {// Don't generate empty elements
                             $element->appendChild(
-                                $this->createElementWithContent($name, $property)
+                                $this->createElementWithContent($name, $value)
                             );
                         }
                     }
@@ -85,8 +87,8 @@ class Model_DomDocument_InventoryRequest extends \Library\DomDocument
                     $info = array();
                     foreach ($computer->getUserDefinedInfo() as $property => $value) {
                         // Convert date values
-                        if ($value instanceof Zend_Date) {
-                            $value = $value->get('yyyy-MM-dd');
+                        if ($value instanceof \DateTime) {
+                            $value = $value->format('Y-m-d');
                         }
                         $info[$property] = $value;
                     }
