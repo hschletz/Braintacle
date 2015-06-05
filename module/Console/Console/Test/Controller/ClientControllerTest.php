@@ -2795,7 +2795,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testExportAction()
     {
         $xmlContent = "xml_content\n";
-        $document = $this->getMock('Model_DomDocument_InventoryRequest');
+        $document = $this->getMock('\Protocol\Message\InventoryRequest');
         $document->expects($this->once())
                  ->method('getFilename')
                  ->will($this->returnValue('filename.xml'));

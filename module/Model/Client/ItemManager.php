@@ -85,6 +85,16 @@ class ItemManager
     }
 
     /**
+     * List all valid item types
+     *
+     * @return string[]
+     */
+    public function getItemTypes()
+    {
+        return array_keys($this->_tableClasses);
+    }
+
+    /**
      * Get table name for given type
      *
      * @param string $type Item type

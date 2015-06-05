@@ -1735,12 +1735,12 @@ class Model_Computer extends Model_ComputerOrGroup
 
     /**
      * Export computer as DOMDocument
-     * @return Model_DomDocument_InventoryRequest
+     * @return \Protocol\Message\InventoryRequest
      */
     public function toDomDocument()
     {
-        $document = new Model_DomDocument_InventoryRequest;
-        $document->loadComputer($this);
+        $document = new \Protocol\Message\InventoryRequest;
+        $document->loadClient($this, \Library\Application::getService('ServiceManager'));
         return $document;
     }
 

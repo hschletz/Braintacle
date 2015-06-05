@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<REQUEST>
+    <DEVICEID>client_id</DEVICEID>
+    <QUERY>INVENTORY</QUERY>
+    <CONTENT>
+        <HARDWARE>
+            <LASTCOME>2015-05-05 21:18:04</LASTCOME>
+            <LASTDATE>2015-05-15 21:19:05</LASTDATE>
+        </HARDWARE>
+        <BIOS>
+            <ASSETTAG>asset_tag</ASSETTAG>
+            <BDATE>bios_date</BDATE>
+            <BMANUFACTURER>bios_manufacturer</BMANUFACTURER>
+            <BVERSION>bios_version</BVERSION>
+            <SMANUFACTURER>manufacturer</SMANUFACTURER>
+            <SMODEL>model</SMODEL>
+            <SSN>serial</SSN>
+            <TYPE>type</TYPE>
+        </BIOS>
+    </CONTENT>
+</REQUEST>

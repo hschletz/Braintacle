@@ -46,6 +46,31 @@ class ItemManagerTest extends \Model\Test\AbstractTest
         'VirtualMachines',
     );
 
+    public function testGetItemTypes()
+    {
+        $this->assertEquals(
+            array(
+                'audiodevice',
+                'controller',
+                'display',
+                'displaycontroller',
+                'extensionslot',
+                'filesystem',
+                'inputdevice',
+                'memoryslot',
+                'modem',
+                'msofficeproduct',
+                'networkinterface',
+                'port',
+                'printer',
+                'registrydata',
+                'software',
+                'storagedevice',
+                'virtualmachine',
+            ),
+            $this->_getModel()->getItemTypes()
+        );
+    }
     public function testGetTableNameInvalidType()
     {
         $this->setExpectedException('InvalidArgumentException', 'Invalid item type: invalid');
