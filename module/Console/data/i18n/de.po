@@ -1393,7 +1393,7 @@ msgstr "Status"
 
 #: view/console/client/packages.php view/console/group/packages.php
 msgid "Assigned packages"
-msgstr "Assigned packages"
+msgstr "Zugewiesene Pakete"
 
 #: view/console/client/packages.php view/console/group/packages.php
 msgid "Install packages"

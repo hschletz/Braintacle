@@ -2100,7 +2100,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                         ->will($this->returnValue(array()));
         $this->dispatch('/console/client/packages/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//h2', "\nAssigned packages\n");
+        $this->assertXpathQueryContentContains('//h2', "\nZugewiesene Pakete\n");
         $this->assertXpathQueryCount('//h2', 1);
         $this->assertXpathQueryContentContains(
             '//tr[2]/td[2]/span[@class="package_notnotified"]',
