@@ -1037,7 +1037,7 @@ msgid "Inventory"
 msgstr ""
 
 #: Console/Navigation/MainMenuFactory.php
-msgid "Computers"
+msgid "Clients"
 msgstr ""
 
 #: Console/Navigation/MainMenuFactory.php

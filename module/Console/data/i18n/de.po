@@ -1038,8 +1038,8 @@ msgid "Members"
 msgstr "Mitglieder"
 
 #: Console/Navigation/MainMenuFactory.php
-msgid "Computers"
-msgstr "Computer"
+msgid "Clients"
+msgstr "Clients"
 
 #: Console/Navigation/MainMenuFactory.php
 msgid "Duplicates"

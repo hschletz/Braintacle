@@ -36,7 +36,7 @@ class MainMenuFactory extends \Library\Navigation\AbstractNavigationFactory
                 'action' => 'index',
                 'pages' => array(
                     array(
-                        'label' => $this->_('Computers'),
+                        'label' => $this->_('Clients'),
                         'controller' => 'client',
                         'action' => 'index',
                     ),
