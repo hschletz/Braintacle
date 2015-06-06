@@ -40,7 +40,7 @@
  * {@link createStatementStatic()} and will never be returned as a property.
  * @package Models
  */
-class Model_GroupMembership extends Model_Abstract
+class Model_GroupMembership extends \ArrayObject
 {
 
     // Class constants describing membership types.
@@ -58,19 +58,6 @@ class Model_GroupMembership extends Model_Abstract
     // It refers to all membership types.
     const TYPE_ALL = -3;
 
-    /** {@inheritdoc} */
-    protected $_propertyMap = array(
-        // Values from query result
-        'GroupId' => 'group_id',
-        'GroupName' => 'name',
-        'Membership' => 'static',
-    );
-
-    /** {@inheritdoc} */
-    protected $_types = array(
-        'Membership' => 'enum',
-    );
-
     /**
      * Return all group memberships for given computer and type
      *
@@ -87,34 +74,9 @@ class Model_GroupMembership extends Model_Abstract
         $direction='asc'
     )
     {
-        return $this->_fetchAll(
-            self::createStatementStatic($computer['Id'], $membershipType, $order, $direction)
-        );
-    }
-
-    /**
-     * Return a statement object with all all group memberships matching criteria.
-     * @param integer $computer ID of computer for which to determine memberships
-     * @param integer $membership Type of membership to determine, default: all types
-     * @param string $order Property to sort by, default: Group
-     * @param string $direction Direction for sorting, default: ascending
-     * @return Zend_Db_Statement
-     * @deprecated superseded by fetch()
-     */
-    static function createStatementStatic(
-        $computer,
-        $membership=self::TYPE_ALL,
-        $order='GroupName',
-        $direction='asc'
-    )
-    {
         \Library\Application::getService('Model\Group\GroupManager')->updateCache();
 
         $db = Model_Database::getAdapter();
-
-        $dummy = new Model_GroupMembership;
-        $map = $dummy->getPropertyMap();
-        $order = self::getOrder($order, $direction, $map);
 
         $select = $db->select()
             ->from('groups_cache', array('group_id', 'static'))
@@ -123,11 +85,10 @@ class Model_GroupMembership extends Model_Abstract
                 'groups_cache.group_id=hardware.id',
                 array('name')
             )
-            ->where('hardware_id=?', $computer)
-            ->order($order);
+            ->where('hardware_id=?', $computer['Id']);
 
-        if (!is_null($membership)) {
-            switch ($membership) {
+        if (!is_null($membershipType)) {
+            switch ($membershipType) {
                 case self::TYPE_ALL:
                     break;
                 case self::TYPE_INCLUDED:
@@ -145,16 +106,45 @@ class Model_GroupMembership extends Model_Abstract
                 case self::TYPE_DYNAMIC:
                 case self::TYPE_STATIC:
                 case self::TYPE_EXCLUDED:
-                    $select->where('static=?', $membership);
+                    $select->where('static=?', $membershipType);
                     break;
                 default:
                     throw new UnexpectedValueException(
-                        "Bad value for membership: $membership"
+                        "Bad value for membership: $membershipType"
                     );
             }
         }
 
-        return $select->query();
+        if ($order) {
+            $propertyMap = array(
+                'GroupId' => 'group_id',
+                'GroupName' => 'name',
+                'Membership' => 'static',
+            );
+            if (isset($propertyMap[$order])) {
+                $order = $propertyMap[$order];
+            } elseif ($order != 'id') {
+                throw new \UnexpectedValueException('Unknown property: ' . $order);
+            }
+            if ($direction) {
+                $order .= ' ' . $direction;
+            }
+            $select->order($order);
+        }
+
+        $statement = $select->query();
+        $statement->setFetchMode(\Zend_Db::FETCH_ASSOC);
+        $result = array();
+        foreach ($statement as $row) {
+            $result[] = new \Model_GroupMembership(
+                array(
+                    'GroupId' => $row['group_id'],
+                    'GroupName' => $row['name'],
+                    'Membership' => $row['static']
+                )
+            );
+        }
+        return $result;
     }
 
 }

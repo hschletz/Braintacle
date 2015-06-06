@@ -88,7 +88,7 @@
  *
  * @package Models
  */
-class Model_Computer extends Model_ComputerOrGroup
+class Model_Computer extends \Model_Abstract
 {
 
     /** {@inheritdoc} */
@@ -202,9 +202,9 @@ class Model_Computer extends Model_ComputerOrGroup
     /**
      * Constructor
      **/
-    public function __construct()
+    public function __construct($input=array(), $flags=0, $iteratorClass='ArrayIterator')
     {
-        parent::__construct();
+        parent::__construct($input, $flags, $iteratorClass);
 
         // When instantiated from fetchObject(), __set() gets called before the
         // constructor is invoked, which may initialize the property. Don't
@@ -1584,28 +1584,6 @@ class Model_Computer extends Model_ComputerOrGroup
     }
 
     /**
-     * Retrieve group membership information for this computer
-     * @param integer $membership Membership type to retrieve
-     * @param string $order Property to sort by
-     * @param string $direction Direction to sort by
-     * @return Zend_Db_Statement
-     * @deprecated superseded by getGroups()
-     */
-    public function getGroupMemberships(
-        $membership=Model_GroupMembership::TYPE_INCLUDED,
-        $order='GroupName',
-        $direction='asc'
-    )
-    {
-        return Model_GroupMembership::createStatementStatic(
-            $this->getId(),
-            $membership,
-            $order,
-            $direction
-        );
-    }
-
-    /**
      * Set group membership information for this computer (reference groups by name)
      *
      * The $newGroups argument is an array with group names as key and the new
@@ -1937,10 +1915,10 @@ class Model_Computer extends Model_ComputerOrGroup
         $id = $this->getId();
         if (!isset(self::$_configGroups[$id])) {
             self::$_configGroups[$id] = array();
-            $memberships = $this->getGroupMemberships();
-            while ($membership = $memberships->fetchObject('Model_GroupMembership')) {
+            $memberships = $this->getGroups(\Model_GroupMembership::TYPE_INCLUDED);
+            foreach ($memberships as $membership) {
                 $group = new Model_Group;
-                $group->setId($membership->getGroupId());
+                $group['Id'] = $membership['GroupId'];
                 self::$_configGroups[$id][] = $group;
             }
         }

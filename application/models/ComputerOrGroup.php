@@ -31,7 +31,7 @@
  * class implements the common functionality for both.
  * @package Models
  */
-abstract class Model_ComputerOrGroup extends Model_Abstract
+abstract class Model_ComputerOrGroup extends \ArrayObject
 {
     /**
      * @internal
@@ -67,9 +67,9 @@ abstract class Model_ComputerOrGroup extends Model_Abstract
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct($input=array(), $flags=0, $iteratorClass='ArrayIterator')
     {
-        parent::__construct();
+        parent::__construct($input, $flags, $iteratorClass);
         $this->_config = \Library\Application::getService('Model\Config');
     }
 

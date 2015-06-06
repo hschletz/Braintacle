@@ -92,7 +92,7 @@
  * {@link getPropertyMap} method.
  * @package Models
  */
-abstract class Model_Abstract implements Iterator, ArrayAccess
+abstract class Model_Abstract extends \Model_ComputerOrGroup
 {
     /**
      * Have __set() throw exception when setting unmapped properties instead of ignoring them
@@ -132,24 +132,6 @@ abstract class Model_Abstract implements Iterator, ArrayAccess
      * @var array
      */
     private $_data = array();
-
-    /**
-     * Internal state of iterator
-     *
-     * @var bool
-     */
-    private $_iteratorValid;
-
-    /**
-     * Constructor
-     */
-    function __construct()
-    {
-        // Constructor is empty. It exists only to allow derived classes to call
-        // parent::__construct() from their own constructor, regardless of the
-        // parent's implementation which a derived class does not have to know
-        // about. See https://bugs.php.net/bug.php?id=55864
-    }
 
     /**
      * Generic accessor method
@@ -393,55 +375,15 @@ abstract class Model_Abstract implements Iterator, ArrayAccess
         return $order;
     }
 
-    /**
-     * Part of iterator implementation. Do not call directly.
-     * @internal
-     */
-    public function current()
+    /** {@inheritdoc} */
+    public function getIterator()
     {
-        return $this->getProperty($this->key());
-    }
-
-    /**
-     * Part of iterator implementation. Do not call directly.
-     * @internal
-     */
-    public function key()
-    {
-        return array_search(
-            key($this->_data),
-            $this->_propertyMap
-        );
-    }
-
-    /**
-     * Part of iterator implementation. Do not call directly.
-     * @internal
-     */
-    public function next()
-    {
-        if (next($this->_data) === false) {
-            $this->_iteratorValid = false;
+        $data = array();
+        foreach ($this->_data as $key => $value) {
+            $property = array_search($key, $this->_propertyMap);
+            $data[$property] = $this->getProperty($property);
         }
-    }
-
-    /**
-     * Part of iterator implementation. Do not call directly.
-     * @internal
-     */
-    public function rewind()
-    {
-        reset($this->_data);
-        $this->_iteratorValid = true;
-    }
-
-    /**
-     * Part of iterator implementation. Do not call directly.
-     * @internal
-     */
-    public function valid()
-    {
-        return $this->_iteratorValid;
+        return new \ArrayIterator($data);
     }
 
     /**

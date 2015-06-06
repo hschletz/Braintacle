@@ -74,7 +74,7 @@
  * between 0 and <i>GroupCacheExpirationFuzz</i> is added.
  * @package Models
  */
-class Model_Group extends Model_ComputerOrGroup
+class Model_Group extends \Model_Abstract
 {
 
     /**
