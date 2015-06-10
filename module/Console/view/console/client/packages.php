@@ -72,7 +72,6 @@ $renderCallbacks = array(
 );
 
 $assignments = $client->getPackages($this->order, $this->direction);
-// error_log(var_export($assignments->count(), true));
 if (count($assignments)) {
     print $this->htmlTag(
         'h2',
