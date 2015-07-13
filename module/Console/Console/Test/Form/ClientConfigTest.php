@@ -29,20 +29,20 @@ use \Zend\Dom\Document\Query as Query;
 class ClientConfigTest extends \Console\Test\AbstractFormTest
 {
     /**
-     * Computer mock
+     * Client mock
      * @var \Model_Computer
      */
-    protected $_computer;
+    protected $_client;
 
     /**
      * Group mock
-     * @var \Model_Computer
+     * @var \Model_Group
      */
     protected $_group;
 
     public function setUp()
     {
-        $this->_computer = $this->getMockBuilder('Model_Computer')->disableOriginalConstructor()->getMock();
+        $this->_client = $this->getMockBuilder('Model_Computer')->disableOriginalConstructor()->getMock();
         $this->_group = $this->getMockBuilder('Model_Group')->disableOriginalConstructor()->getMock();
         parent::setUp();
     }
@@ -152,7 +152,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
         $this->assertCount(1, Query::execute(sprintf($query, 'inventoryInterval', 'default&2'), $document));
     }
 
-    public function testRenderFieldsetTextDefaultsForComputer()
+    public function testRenderFieldsetTextDefaultsForClient()
     {
         $defaults = array(
             array('contactInterval', 'default&1'),
@@ -162,17 +162,11 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
             array('contactInterval', 'effective&1'),
             array('inventoryInterval', 'effective&2'),
         );
-        $this->_computer->expects($this->any())
-                        ->method('getDefaultConfig')
-                        ->will($this->returnValueMap($defaults));
-        $this->_computer->expects($this->any())
-                        ->method('getEffectiveConfig')
-                        ->will($this->returnValueMap($effective));
-        $this->_computer->expects($this->any())
-                        ->method('getItems')
-                        ->will($this->returnValue(array()));
+        $this->_client->method('getDefaultConfig')->will($this->returnValueMap($defaults));
+        $this->_client->method('getEffectiveConfig')->will($this->returnValueMap($effective));
+        $this->_client->method('getItems')->willReturn(array());
 
-        $this->_form->setClientObject($this->_computer);
+        $this->_form->setClientObject($this->_client);
         $this->_form->prepare();
 
         $view = $this->_createView();
@@ -212,7 +206,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
         $this->assertCount(1, Query::execute(sprintf($query, 'scanSnmp', 'Nein'), $document));
     }
 
-    public function testRenderFieldsetCheckboxDefaultsForComputer()
+    public function testRenderFieldsetCheckboxDefaultsForClient()
     {
         $defaults = array(
             array('allowScan', '1'),
@@ -222,17 +216,11 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
             array('allowScan', '0'),
             array('scanSnmp', '1'),
         );
-        $this->_computer->expects($this->any())
-                        ->method('getDefaultConfig')
-                        ->will($this->returnValueMap($defaults));
-        $this->_computer->expects($this->any())
-                        ->method('getEffectiveConfig')
-                        ->will($this->returnValueMap($effective));
-        $this->_computer->expects($this->any())
-                        ->method('getItems')
-                        ->will($this->returnValue(array()));
+        $this->_client->method('getDefaultConfig')->will($this->returnValueMap($defaults));
+        $this->_client->method('getEffectiveConfig')->will($this->returnValueMap($effective));
+        $this->_client->method('getItems')->willReturn(array());
 
-        $this->_form->setClientObject($this->_computer);
+        $this->_form->setClientObject($this->_client);
         $this->_form->prepare();
 
         $view = $this->_createView();
@@ -246,11 +234,9 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
 
     public function testRenderFieldsetWithNetworks()
     {
-        $this->_computer->expects($this->any())
-                        ->method('getItems')
-                        ->will($this->returnValue(array(array('Subnet' => '192.9.2.0'))));
+        $this->_client->method('getItems')->will($this->returnValue(array(array('Subnet' => '192.9.2.0'))));
 
-        $this->_form->setClientObject($this->_computer);
+        $this->_form->setClientObject($this->_client);
         $this->_form->prepare();
 
         $view = $this->_createView();
@@ -306,7 +292,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
 
     public function testSetDataWithoutClientObject()
     {
-        $this->setExpectedException('LogicException', 'No computer or group object set');
+        $this->setExpectedException('LogicException', 'No client or group object set');
         $this->_form->setData(array());
     }
 
@@ -319,37 +305,36 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
         $this->assertEmpty($scanThisNetwork->getValueOptions());
     }
 
-    public function testSetClientObjectComputerNoNetworks()
+    public function testSetClientObjectClientNoNetworks()
     {
-        $networks = array();
-        $this->_computer->expects($this->once())
-                        ->method('getItems')
-                        ->with('NetworkInterface', 'Subnet')
-                        ->will($this->returnValue($networks));
-        $this->_form->setClientObject($this->_computer);
+        $this->_client->expects($this->once())
+                      ->method('getItems')
+                      ->with('NetworkInterface', 'Subnet')
+                      ->willReturn(array());
+        $this->_form->setClientObject($this->_client);
         $scan = $this->_form->get('Scan');
         $scanThisNetwork = $scan->get('scanThisNetwork');
         $this->assertTrue($scanThisNetwork->getAttribute('disabled'));
         $this->assertEmpty($scanThisNetwork->getValueOptions());
     }
 
-    public function testSetClientObjectComputerNoScannableNetworks()
+    public function testSetClientObjectClientNoScannableNetworks()
     {
         $networks = array(
             array('Subnet' => '0.0.0.0'),
         );
-        $this->_computer->expects($this->once())
-                        ->method('getItems')
-                        ->with('NetworkInterface', 'Subnet')
-                        ->will($this->returnValue($networks));
-        $this->_form->setClientObject($this->_computer);
+        $this->_client->expects($this->once())
+                      ->method('getItems')
+                      ->with('NetworkInterface', 'Subnet')
+                      ->willReturn($networks);
+        $this->_form->setClientObject($this->_client);
         $scan = $this->_form->get('Scan');
         $scanThisNetwork = $scan->get('scanThisNetwork');
         $this->assertTrue($scanThisNetwork->getAttribute('disabled'));
         $this->assertEmpty($scanThisNetwork->getValueOptions());
     }
 
-    public function testSetClientObjectComputerWithScannableNetworks()
+    public function testSetClientObjectClientWithScannableNetworks()
     {
         $networks = array(
             array('Subnet' => '0.0.0.0'),
@@ -357,11 +342,11 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
             array('Subnet' => '192.0.2.0'),
             array('Subnet' => '198.51.100.0'),
         );
-        $this->_computer->expects($this->once())
-                        ->method('getItems')
-                        ->with('NetworkInterface', 'Subnet')
-                        ->will($this->returnValue($networks));
-        $this->_form->setClientObject($this->_computer);
+        $this->_client->expects($this->once())
+                      ->method('getItems')
+                      ->with('NetworkInterface', 'Subnet')
+                      ->willReturn($networks);
+        $this->_form->setClientObject($this->_client);
         $scan = $this->_form->get('Scan');
         $scanThisNetwork = $scan->get('scanThisNetwork');
         $this->assertFalse($scanThisNetwork->getAttribute('disabled'));
@@ -595,11 +580,11 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
                 'scanSnmp' => '1',
             )
         );
-        $this->_computer->expects($this->once())
-                        ->method('getItems')
-                        ->with('NetworkInterface', 'Subnet')
-                        ->will($this->returnValue(array(array('Subnet' => '192.0.2.0'))));
-        $this->_form->setClientObject($this->_computer);
+        $this->_client->expects($this->once())
+                      ->method('getItems')
+                      ->with('NetworkInterface', 'Subnet')
+                      ->willReturn(array(array('Subnet' => '192.0.2.0')));
+        $this->_form->setClientObject($this->_client);
         $this->assertTrue($this->_form->get('Scan')->has('scanThisNetwork'));
         $this->_form->setValidationGroup('Scan');
         $this->_form->setData($data);
@@ -615,11 +600,11 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
                 'scanSnmp' => '1',
             )
         );
-        $this->_computer->expects($this->once())
-                        ->method('getItems')
-                        ->with('NetworkInterface', 'Subnet')
-                        ->will($this->returnValue(array(array('Subnet' => '192.0.2.0'))));
-        $this->_form->setClientObject($this->_computer);
+        $this->_client->expects($this->once())
+                      ->method('getItems')
+                      ->with('NetworkInterface', 'Subnet')
+                      ->willReturn(array(array('Subnet' => '192.0.2.0')));
+        $this->_form->setClientObject($this->_client);
         $this->_form->setValidationGroup('Scan');
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());

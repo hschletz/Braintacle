@@ -1,6 +1,6 @@
 <?php
 /**
- * Computer/group configuration
+ * Client/group configuration
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -24,15 +24,15 @@ namespace Console\Form;
 use Zend\Form\Element;
 
 /**
- * Computer/group configuration
+ * Client/group configuration
  *
- * This form operates on a particular computer or group which must be set via
+ * This form operates on a particular client or group which must be set via
  * setClientObject().
  */
 class ClientConfig extends Form
 {
     /**
-     * Computer or group object for which configuration is shown/set.
+     * Client or group object for which configuration is shown/set.
      * @var \Model\ClientOrGroup
      */
     protected $_object;
@@ -137,7 +137,7 @@ class ClientConfig extends Form
     public function setData($data)
     {
         if (!($this->_object instanceof \Model\ClientOrGroup)) {
-            throw new \LogicException('No computer or group object set');
+            throw new \LogicException('No client or group object set');
         }
         return parent::setData($data);
     }
@@ -330,7 +330,7 @@ class ClientConfig extends Form
     }
 
     /**
-     * Set computer/group object on which the form will operate
+     * Set client/group object on which the form will operate
      *
      * @param \Model\ClientOrGroup $object
      */
@@ -340,7 +340,7 @@ class ClientConfig extends Form
 
         $addresses = array();
         if ($object instanceof \Model_Computer) {
-            // Get list of all networks this computer is connected to
+            // Get list of all networks this client is connected to
             $interfaces = $object->getItems('NetworkInterface', 'Subnet');
             foreach ($interfaces as $interface) {
                 $subnet = $interface['Subnet'];
@@ -355,7 +355,7 @@ class ClientConfig extends Form
     }
 
     /**
-     * Apply the entered settings to the computer or group
+     * Apply the entered settings to the client or group
      */
     public function process()
     {
