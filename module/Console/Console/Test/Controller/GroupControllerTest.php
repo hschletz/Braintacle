@@ -313,7 +313,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $group = $this->getMock('Model_Group');
         $group->expects($this->once())->method('getPackages')->with('asc')->willReturn($packages);
         $group->method('offsetGet')->with('Name')->willReturn('test');
-        $group->expects($this->once())->method('getInstallablePackages')->willReturn(array());
+        $group->expects($this->once())->method('getAssignablePackages')->willReturn(array());
 
         $this->_groupManager->expects($this->once())
                             ->method('getGroup')
@@ -344,7 +344,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $group = $this->getMock('Model_Group');
         $group->expects($this->once())->method('getPackages')->with('asc')->willReturn(array());
         $group->method('offsetGet')->with('Name')->willReturn('test');
-        $group->expects($this->once())->method('getInstallablePackages')->willReturn($packages);
+        $group->expects($this->once())->method('getAssignablePackages')->willReturn($packages);
 
         $this->_groupManager->expects($this->once())
                             ->method('getGroup')
@@ -369,7 +369,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     public function testRemovepackageActionGet()
     {
         $group = $this->getMock('Model_Group');
-        $group->expects($this->never())->method('unaffectPackage');
+        $group->expects($this->never())->method('removePackage');
         $this->_groupManager->expects($this->once())
                             ->method('getGroup')
                             ->with('test')
@@ -384,7 +384,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     public function testRemovepackageActionPostNo()
     {
         $group = $this->getMock('Model_Group');
-        $group->expects($this->never())->method('unaffectPackage');
+        $group->expects($this->never())->method('removePackage');
         $this->_groupManager->expects($this->once())
                             ->method('getGroup')
                             ->with('test')
@@ -400,7 +400,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     public function testRemovepackageActionPostYes()
     {
         $group = $this->getMock('Model_Group');
-        $group->expects($this->once())->method('unaffectPackage')->with('package');
+        $group->expects($this->once())->method('removePackage')->with('package');
         $this->_groupManager->expects($this->once())
                             ->method('getGroup')
                             ->with('test')
@@ -416,7 +416,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     public function testInstallpackageActionGet()
     {
         $group = $this->getMock('Model_Group');
-        $group->expects($this->never())->method('installPackage');
+        $group->expects($this->never())->method('assignPackage');
         $this->_groupManager->expects($this->once())
                             ->method('getGroup')
                             ->with('test')
@@ -436,7 +436,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     {
         $postData = array('Packages' => array('package1' => '0', 'package2' => '1'));
         $group = $this->getMock('Model_Group');
-        $group->expects($this->never())->method('installPackage');
+        $group->expects($this->never())->method('assignPackage');
         $this->_groupManager->expects($this->once())
                             ->method('getGroup')
                             ->with('test')
@@ -457,7 +457,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     {
         $postData = array('Packages' => array('package1' => '0', 'package2' => '1'));
         $group = $this->getMock('Model_Group');
-        $group->expects($this->once())->method('installPackage')->with('package2');
+        $group->expects($this->once())->method('assignPackage')->with('package2');
         $this->_groupManager->expects($this->once())
                             ->method('getGroup')
                             ->with('test')

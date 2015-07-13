@@ -92,7 +92,7 @@
  * {@link getPropertyMap} method.
  * @package Models
  */
-abstract class Model_Abstract extends \Model_ComputerOrGroup
+abstract class Model_Abstract extends \Model\ClientOrGroup
 {
     /**
      * Have __set() throw exception when setting unmapped properties instead of ignoring them
@@ -132,6 +132,23 @@ abstract class Model_Abstract extends \Model_ComputerOrGroup
      * @var array
      */
     private $_data = array();
+
+    /**
+     * Application config
+     * @var \Model\Config
+     * @deprecated get config from service locator
+     */
+    protected $_config;
+
+    /**
+     * Constructor
+     **/
+    public function __construct($input=array(), $flags=0, $iteratorClass='ArrayIterator')
+    {
+        parent::__construct($input, $flags, $iteratorClass);
+        $this->serviceLocator = \Library\Application::getService('ServiceManager');
+        $this->_config = $this->serviceLocator->get('Model\Config');
+    }
 
     /**
      * Generic accessor method

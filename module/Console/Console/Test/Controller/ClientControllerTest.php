@@ -2050,7 +2050,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                         ->with('PackageName', 'asc')
                         ->will($this->returnValue($assignments));
         $this->_computer->expects($this->once())
-                        ->method('getInstallablePackages')
+                        ->method('getAssignablePackages')
                         ->will($this->returnValue(array()));
         $this->dispatch('/console/client/packages/?id=1');
         $this->assertResponseStatusCode(200);
@@ -2096,7 +2096,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                         ->with('PackageName', 'asc')
                         ->will($this->returnValue($assignments));
         $this->_computer->expects($this->once())
-                        ->method('getInstallablePackages')
+                        ->method('getAssignablePackages')
                         ->will($this->returnValue(array()));
         $this->dispatch('/console/client/packages/?id=1');
         $this->assertResponseStatusCode(200);
@@ -2141,7 +2141,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                         ->with('PackageName', 'asc')
                         ->will($this->returnValue($assignments));
         $this->_computer->expects($this->once())
-                        ->method('getInstallablePackages')
+                        ->method('getAssignablePackages')
                         ->will($this->returnValue($packages));
         $this->dispatch('/console/client/packages/?id=1');
         $this->assertResponseStatusCode(200);
@@ -2446,7 +2446,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testRemovepackageActionGet()
     {
         $this->_computer->expects($this->never())
-                        ->method('unaffectPackage');
+                        ->method('removePackage');
         $this->dispatch('/console/client/removepackage/?id=1&package=name');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
@@ -2464,7 +2464,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->never())
-                        ->method('unaffectPackage');
+                        ->method('removePackage');
         $this->dispatch('/console/client/removepackage/?id=1&package=name', 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/client/packages/?id=1');
     }
@@ -2478,7 +2478,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->once())
-                        ->method('unaffectPackage')
+                        ->method('removePackage')
                         ->with('name');
         $this->dispatch('/console/client/removepackage/?id=1&package=name', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/client/packages/?id=1');
@@ -2500,7 +2500,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->never())
-                        ->method('installPackage');
+                        ->method('assignPackage');
         $this->dispatch('/console/client/installpackage/?id=1');
         $this->assertRedirectTo('/console/client/packages/?id=1');
     }
@@ -2524,7 +2524,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->never())
-                        ->method('installPackage');
+                        ->method('assignPackage');
         $this->dispatch('/console/client/installpackage/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/packages/?id=1');
     }
@@ -2549,7 +2549,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                         ->method('offsetGet')
                         ->will($this->returnValueMap($map));
         $this->_computer->expects($this->once())
-                        ->method('installPackage')
+                        ->method('assignPackage')
                         ->with('package2');
         $this->dispatch('/console/client/installpackage/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/packages/?id=1');

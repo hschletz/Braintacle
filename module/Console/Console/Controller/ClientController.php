@@ -427,7 +427,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
         $vars = $this->getOrder('PackageName');
         $vars['client'] = $this->_currentClient;
         // Add package installation form if packages are available
-        $packages = $this->_currentClient->getInstallablePackages();
+        $packages = $this->_currentClient->getAssignablePackages();
         if ($packages) {
             $form = $this->_formManager->get('Console\Form\Package\Assign');
             $form->setPackages($packages);
@@ -560,7 +560,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
         $params = $this->params();
         if ($this->getRequest()->isPost()) {
             if ($params->fromPost('yes')) {
-                $this->_currentClient->unaffectPackage($params->fromQuery('package'));
+                $this->_currentClient->removePackage($params->fromQuery('package'));
             }
             return $this->redirectToRoute(
                 'client',
@@ -586,7 +586,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
                 $data = $form->getData();
                 foreach ($data['Packages'] as $name => $install) {
                     if ($install) {
-                        $this->_currentClient->installPackage($name);
+                        $this->_currentClient->assignPackage($name);
                     }
                 }
             }

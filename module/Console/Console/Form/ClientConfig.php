@@ -33,7 +33,7 @@ class ClientConfig extends Form
 {
     /**
      * Computer or group object for which configuration is shown/set.
-     * @var \Model_ComputerOrGroup
+     * @var \Model\ClientOrGroup
      */
     protected $_object;
 
@@ -136,7 +136,7 @@ class ClientConfig extends Form
     /** {@inheritdoc} */
     public function setData($data)
     {
-        if (!($this->_object instanceof \Model_ComputerOrGroup)) {
+        if (!($this->_object instanceof \Model\ClientOrGroup)) {
             throw new \LogicException('No computer or group object set');
         }
         return parent::setData($data);
@@ -332,9 +332,9 @@ class ClientConfig extends Form
     /**
      * Set computer/group object on which the form will operate
      *
-     * @param \Model_ComputerOrGroup $object
+     * @param \Model\ClientOrGroup $object
      */
-    public function setClientObject(\Model_ComputerOrGroup $object)
+    public function setClientObject(\Model\ClientOrGroup $object)
     {
         $this->_object = $object;
 

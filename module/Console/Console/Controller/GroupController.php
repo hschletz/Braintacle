@@ -194,7 +194,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
         $vars['packageNames'] = $this->_currentGroup->getPackages($vars['sorting']['direction']);
 
         // Add package installation form if packages are available.
-        $packages = $this->_currentGroup->getInstallablePackages();
+        $packages = $this->_currentGroup->getAssignablePackages();
         if ($packages) {
             $this->_packageAssignmentForm->setPackages($packages);
             $this->_packageAssignmentForm->setAttribute(
@@ -220,7 +220,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
     {
         if ($this->getRequest()->isPost()) {
             if ($this->params()->fromPost('yes')) {
-                $this->_currentGroup->unaffectPackage($this->params()->fromQuery('package'));
+                $this->_currentGroup->removePackage($this->params()->fromQuery('package'));
             }
             return $this->redirectToRoute(
                 'group',
@@ -247,7 +247,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
                 $data = $this->_packageAssignmentForm->getData();
                 foreach ($data['Packages'] as $name => $install) {
                     if ($install) {
-                        $this->_currentGroup->installPackage($name);
+                        $this->_currentGroup->assignPackage($name);
                     }
                 }
             }

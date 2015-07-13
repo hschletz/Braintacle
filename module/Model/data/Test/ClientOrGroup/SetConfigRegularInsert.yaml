@@ -1,0 +1,55 @@
+devices:
+  -
+    hardware_id: 10
+    name: "DOWNLOAD_SWITCH"
+    ivalue: 0
+    tvalue: null
+    comments: null
+  -
+    hardware_id: 10
+    name: "FREQUENCY"
+    ivalue: 23
+    tvalue: null
+    comments: null
+  -
+    hardware_id: 10
+    name: "IPDISCOVER"
+    ivalue: 0
+    tvalue: null
+    comments: null
+  -
+    hardware_id: 10
+    name: "IPDISCOVER"
+    ivalue: 2
+    tvalue: "192.0.2.0"
+    comments: null
+  -
+    hardware_id: 10
+    name: "PROLOG_FREQ"
+    ivalue: 42
+    tvalue: null
+    comments: null
+  -
+    hardware_id: 10
+    name: "SNMP_SWITCH"
+    ivalue: 0
+    tvalue: null
+    comments: null
+  -
+    hardware_id: 11
+    name: "DOWNLOAD_SWITCH"
+    ivalue: 1
+    tvalue: null
+    comments: null
+  -
+    hardware_id: 11
+    name: "IPDISCOVER"
+    ivalue: 1
+    tvalue: null
+    comments: null
+  -
+    hardware_id: 11
+    name: "SNMP_SWITCH"
+    ivalue: 1
+    tvalue: null
+    comments: null
