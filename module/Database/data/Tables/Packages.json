@@ -69,6 +69,15 @@
     "primary_key": [
         "fileid"
     ],
+    "indexes": [
+        {
+            "name": "download_available_name_unique_idx",
+            "unique": true,
+            "columns": [
+                "name"
+            ]
+        }
+    ],
     "mysql": {
         "engine": "InnoDB"
     }
