@@ -44,7 +44,6 @@ class NetworkInterfaces extends \Database\AbstractTable
                     'ipsubnet' => 'Subnet',
                     'ipdhcp' => 'DhcpServer',
                     'status' => 'Status',
-                    'virtualdev' => 'Virtual',
                     'type' => 'Type',
                     'typemib' => 'TypeMib',
                     'is_blacklisted' => 'IsBlacklisted',

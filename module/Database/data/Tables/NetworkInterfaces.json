@@ -118,15 +118,6 @@
             "default": null,
             "autoincrement": false,
             "comment": "IPv4 address of DHCP server for current subnet"
-        },
-        {
-            "name": "virtualdev",
-            "type": "bool",
-            "length": null,
-            "notnull": false,
-            "default": 0,
-            "autoincrement": false,
-            "comment": "unreliable"
         }
     ],
     "primary_key": [

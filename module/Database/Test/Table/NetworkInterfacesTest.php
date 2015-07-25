@@ -45,7 +45,6 @@ class NetworkInterfacesTest extends AbstractTest
         $this->assertEquals('Subnet', $map->hydrate('ipsubnet'));
         $this->assertEquals('DhcpServer', $map->hydrate('ipdhcp'));
         $this->assertEquals('Status', $map->hydrate('status'));
-        $this->assertEquals('Virtual', $map->hydrate('virtualdev'));
         $this->assertEquals('Type', $map->hydrate('type'));
         $this->assertEquals('TypeMib', $map->hydrate('typemib'));
         $this->assertEquals('IsBlacklisted', $map->hydrate('is_blacklisted'));
@@ -59,7 +58,6 @@ class NetworkInterfacesTest extends AbstractTest
         $this->assertEquals('ipsubnet', $map->extract('Subnet'));
         $this->assertEquals('ipdhcp', $map->extract('DhcpServer'));
         $this->assertEquals('status', $map->extract('Status'));
-        $this->assertEquals('virtualdev', $map->extract('Virtual'));
         $this->assertEquals('type', $map->extract('Type'));
         $this->assertEquals('typemib', $map->extract('TypeMib'));
 

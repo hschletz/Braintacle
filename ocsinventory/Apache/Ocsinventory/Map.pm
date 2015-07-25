@@ -292,8 +292,7 @@ our %DATA_MAP= (
        MACADDR => { fallback => '00:00:00:00:00:00' },
        STATUS => {},
        IPGATEWAY => {},
-       IPDHCP => {},
-       VIRTUALDEV => {}
+       IPDHCP => {}
    }
   },
   
