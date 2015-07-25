@@ -1488,7 +1488,6 @@ class Model_Computer extends \Model_Abstract
         $tables[] = 'bios';
         $tables[] = 'braintacle_windows';
         $tables[] = 'download_history';
-        $tables[] = 'download_servers';
         $tables[] = 'groups_cache';
         $tables[] = 'itmgmt_comments';
         $tables[] = 'javainfo';

@@ -416,10 +416,6 @@ sub download_duplicate {
   
   my $dbh = $current_context->{'DBI_HANDLE'};
 
-  # Handle deployment servers
-  $dbh->do('UPDATE download_enable SET SERVER_ID=? WHERE SERVER_ID=?', {}, $current_context->{'DATABASE_ID'}, $device);
-  $dbh->do('UPDATE download_servers SET HARDWARE_ID=? WHERE HARDWARE_ID=?', {}, $current_context->{'DATABASE_ID'}, $device);
-
   # If we encounter problems, it aborts whole replacement
   return $dbh->do('DELETE FROM download_history WHERE HARDWARE_ID=?', {}, $device);
 }
