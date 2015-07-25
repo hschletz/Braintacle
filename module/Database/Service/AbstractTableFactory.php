@@ -53,6 +53,8 @@ class AbstractTableFactory implements \Zend\ServiceManager\AbstractFactoryInterf
         $requestedName
     )
     {
-        return new $requestedName($serviceLocator);
+        $table = new $requestedName($serviceLocator);
+        $table->initialize();
+        return $table;
     }
 }
