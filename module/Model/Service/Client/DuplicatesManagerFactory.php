@@ -32,8 +32,7 @@ class DuplicatesManagerFactory implements \Zend\ServiceManager\FactoryInterface
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         return new \Model\Client\DuplicatesManager(
-            $serviceLocator->get('Database\Table\ClientsAndGroups'),
-            $serviceLocator->get('Database\Table\ClientSystemInfo'),
+            $serviceLocator->get('Database\Table\Clients'),
             $serviceLocator->get('Database\Table\NetworkInterfaces'),
             $serviceLocator->get('Database\Table\DuplicateAssetTags'),
             $serviceLocator->get('Database\Table\DuplicateSerials'),

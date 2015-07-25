@@ -32,6 +32,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         'ClientConfig',
         'ClientsAndGroups',
         'ClientSystemInfo',
+        'Clients',
         'Config',
         'Controllers',
         'CustomFieldConfig',
@@ -99,10 +100,10 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         // Test only tables where data may get merged.
         // We rely on \Model_Computer::delete() to clean other tables as well.
         $this->assertTablesEqual(
-            $dataSet->getTable('hardware'),
+            $dataSet->getTable('clients'),
             $connection->createQueryTable(
-                'hardware',
-                'SELECT id, deviceid, name, lastcome FROM hardware WHERE deviceid != \'_SYSTEMGROUP_\' ORDER BY id'
+                'clients',
+                'SELECT id, deviceid, name, lastcome FROM clients ORDER BY id'
             )
         );
         $this->assertTablesEqual(
@@ -267,10 +268,10 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
 
         // The result should be the same as with testMergeBasic(). Test only computers to confirm.
         $this->assertTablesEqual(
-            $dataSet->getTable('hardware'),
+            $dataSet->getTable('clients'),
             $connection->createQueryTable(
-                'hardware',
-                'SELECT id, deviceid, name, lastcome FROM hardware WHERE deviceid != \'_SYSTEMGROUP_\' ORDER BY id'
+                'clients',
+                'SELECT id, deviceid, name, lastcome FROM clients ORDER BY id'
             )
         );
     }

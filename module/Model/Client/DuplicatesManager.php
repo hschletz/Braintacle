@@ -51,16 +51,10 @@ use Database\Table;
 class DuplicatesManager
 {
     /**
-     * ClientsAndGroups prototype
-     * @var \Database\Table\ClientsAndGroups
+     * Clients prototype
+     * @var \Database\Table\Clients
      */
-    protected $_clientsAndGroups;
-
-    /**
-     * ClientSystemInfo prototype
-     * @var \Database\Table\ClientSystemInfo
-     */
-    protected $_clientSystemInfo;
+    protected $_clients;
 
     /**
      * NetworkInterfaces prototype
@@ -101,8 +95,7 @@ class DuplicatesManager
     /**
      * Constructor
      *
-     * @param \Database\Table\ClientsAndGroups $clientsAndGroups
-     * @param \Database\Table\ClientSystemInfo $clientSystemInfo
+     * @param \Database\Table\Clients $clients
      * @param \Database\Table\NetworkInterfaces $networkInterfaces
      * @param \Database\Table\DuplicateAssetTags $duplicateAssetTags
      * @param \Database\Table\DuplicateSerials $duplicateSerials
@@ -111,8 +104,7 @@ class DuplicatesManager
      * @param \Model_Computer $computer
      */
     public function __construct(
-        Table\ClientsAndGroups $clientsAndGroups,
-        Table\ClientSystemInfo $clientSystemInfo,
+        Table\Clients $clients,
         Table\NetworkInterfaces $networkInterfaces,
         Table\DuplicateAssetTags $duplicateAssetTags,
         Table\DuplicateSerials $duplicateSerials,
@@ -121,8 +113,7 @@ class DuplicatesManager
         \Model_Computer $computer
     )
     {
-        $this->_clientsAndGroups = $clientsAndGroups;
-        $this->_clientSystemInfo = $clientSystemInfo;
+        $this->_clients = $clients;
         $this->_networkInterfaces = $networkInterfaces;
         $this->_duplicateAssetTags = $duplicateAssetTags;
         $this->_duplicateSerials = $duplicateSerials;
@@ -142,17 +133,16 @@ class DuplicatesManager
     {
         switch ($criteria) {
             case 'Name':
-                $table = $this->_clientsAndGroups;
+                $table = $this->_clients;
                 $column = 'name';
-                $where = 'deviceid NOT IN(\'_SYSTEMGROUP_\', \'_DOWNLOADGROUP_\')';
                 break;
             case 'AssetTag':
-                $table = $this->_clientSystemInfo;
+                $table = $this->_clients;
                 $column = 'assettag';
                 $where = 'assettag NOT IN(SELECT assettag FROM braintacle_blacklist_assettags)';
                 break;
             case 'Serial':
-                $table = $this->_clientSystemInfo;
+                $table = $this->_clients;
                 $column = 'ssn';
                 $where = 'ssn NOT IN(SELECT serial FROM blacklist_serials)';
                 break;
@@ -166,9 +156,11 @@ class DuplicatesManager
         }
         $select = $table->getSql()->select();
         $select->columns(array($column))
-               ->where($where)
                ->group($column)
                ->having("COUNT($column) > 1");
+        if (isset($where)) {
+            $select->where($where);
+        }
         return $select;
     }
 
@@ -183,19 +175,12 @@ class DuplicatesManager
         $subQuery = $this->_getDuplicateValues($criteria);
         $columns = $subQuery->getRawState($subQuery::COLUMNS);
         $column = $columns[0];
-        switch ($criteria) {
-            case 'Name':
-                $table = $this->_clientsAndGroups;
-                break;
-            case 'AssetTag':
-            case 'Serial':
-                $table = $this->_clientSystemInfo;
-                break;
-            case 'MacAddress':
-                $table = $this->_networkInterfaces;
-                break;
+        if ($criteria == 'MacAddress') {
+            $table = $this->_networkInterfaces;
+        } else {
+            $table = $this->_clients;
         }
-        $subQuery = $subQuery->getSqlString($this->_clientsAndGroups->getAdapter()->getPlatform());
+        $subQuery = $subQuery->getSqlString($this->_clients->getAdapter()->getPlatform());
 
         $sql = $table->getSql();
         $select = $sql->select();
@@ -205,9 +190,6 @@ class DuplicatesManager
             )
         );
         $select->where("$column IN($subQuery)");
-        if ($table instanceof Table\ClientsAndGroups) {
-            $select->where('deviceid NOT IN(\'_SYSTEMGROUP_\', \'_DOWNLOADGROUP_\')');
-        }
         $row = $sql->prepareStatementForSqlObject($select)->execute()->current();
         return $row['num_clients'];
     }
@@ -223,30 +205,20 @@ class DuplicatesManager
     public function find($criteria, $order='Id', $direction='asc')
     {
         $subQuery = $this->_getDuplicateValues($criteria);
-        $table = $subQuery->getRawState($subQuery::TABLE);
         $columns = $subQuery->getRawState($subQuery::COLUMNS);
         $column = $columns[0];
-        $subQuery = $subQuery->getSqlString($this->_clientsAndGroups->getAdapter()->getPlatform());
+        $subQuery = $subQuery->getSqlString($this->_clients->getAdapter()->getPlatform());
 
-        $sql = $this->_clientsAndGroups->getSql();
+        $sql = $this->_clients->getSql();
         $select = $sql->select();
-        $select->columns(array('id', 'name', 'lastcome'));
+        $select->columns(array('id', 'name', 'lastcome', 'ssn', 'assettag'));
         $select->join(
             'networks',
-            'networks.hardware_id = hardware.id',
+            'networks.hardware_id = clients.id',
             array('networkinterface_macaddr' => 'macaddr'),
             $select::JOIN_LEFT
         )
-        ->join(
-            'bios',
-            'bios.hardware_id=hardware.id',
-            array('ssn', 'assettag'),
-            $select::JOIN_LEFT
-        )
         ->where("$column IN($subQuery)");
-        if ($table == 'hardware') {
-            $select->where('deviceid NOT IN(\'_SYSTEMGROUP_\', \'_DOWNLOADGROUP_\')');
-        }
         $select->order(\Model_Computer::getOrder($order, $direction, $this->_computer->getPropertyMap()));
         if ($order != 'Name') {
             // Secondary ordering by name
@@ -255,7 +227,7 @@ class DuplicatesManager
         if ($order != 'Id') {
             // Additional ordering by ID, to ensure multiple rows for the same
             // client are kept together where primary ordering allows
-            $select->order('hardware.id');
+            $select->order('clients.id');
         }
 
         $resultSet = new \Zend\Db\ResultSet\HydratingResultSet(
@@ -288,7 +260,7 @@ class DuplicatesManager
             return; // Nothing to do
         }
 
-        $connection = $this->_clientsAndGroups->getAdapter()->getDriver()->getConnection();
+        $connection = $this->_clients->getAdapter()->getDriver()->getConnection();
         $connection->beginTransaction();
         try {
             // Lock all given clients and create a list sorted by LastContactDate.

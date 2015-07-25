@@ -1,5 +1,5 @@
 # client #2 has been merged with #3
-hardware:
+clients:
   -
     id: 1
     deviceid: "ClientId1"

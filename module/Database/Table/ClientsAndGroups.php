@@ -23,6 +23,9 @@ Namespace Database\Table;
 
 /**
  * "hardware" table
+ *
+ * This table should only be used for write operations and groups. Use the
+ * "Clients" view for SELECT queries on clients.
  */
 class ClientsAndGroups extends \Database\AbstractTable
 {

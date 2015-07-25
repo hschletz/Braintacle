@@ -23,6 +23,9 @@ Namespace Database\Table;
 
 /**
  * "bios" table
+ *
+ * This table should only be used for write operations. The "Clients" view
+ * should be used for SELECT queries.
  */
 class ClientSystemInfo extends \Database\AbstractTable
 {

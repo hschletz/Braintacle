@@ -1,5 +1,5 @@
 # Content should be unchanged
-hardware:
+clients:
   -
     id: 1
     deviceid: "ClientId1"
@@ -15,20 +15,6 @@ hardware:
     deviceid: "ClientId3"
     name: "Name2"
     lastcome: "2013-12-23 13:03:33"
-
-bios:
-  -
-    hardware_id: 1
-    ssn: "unique"
-    assettag: "unique"
-  -
-    hardware_id: 2
-    ssn: "duplicate"
-    assettag: "duplicate"
-  -
-    hardware_id: 3
-    ssn: "duplicate"
-    assettag: "duplicate"
 
 accountinfo:
   -
