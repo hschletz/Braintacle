@@ -144,7 +144,7 @@
             "notnull": false,
             "default": null,
             "autoincrement": false,
-            "comment": "Windows product key (reported by agent)"
+            "comment": "Windows CPU architecture"
         },
         {
             "name": "processort",
