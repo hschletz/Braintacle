@@ -443,7 +443,7 @@ class Model_Computer extends \Model_Abstract
                         );
                     break;
                 case 'MemberOf':
-                    // $arg is expected to be a Model_Group object.
+                    // $arg is expected to be a \Model\Group\Group object.
                     $arg->update();
 
                     $select
@@ -452,7 +452,7 @@ class Model_Computer extends \Model_Abstract
                             'hardware.id = groups_cache.hardware_id',
                             $addSearchColumns ? array('static') : null
                         )
-                        ->where('groups_cache.group_id = ?', $arg->getId())
+                        ->where('groups_cache.group_id = ?', $arg['Id'])
                         ->where(
                             'groups_cache.static IN (?)',
                             array(
@@ -462,11 +462,11 @@ class Model_Computer extends \Model_Abstract
                         );
                     break;
                 case 'ExcludedFrom':
-                    // $arg is expected to be a Model_Group object.
+                    // $arg is expected to be a \Model\Group\Group object.
                     $select->where(
                         $db->quoteInto(
                             'id IN(SELECT hardware_id FROM groups_cache WHERE group_id = ? AND static = ?)',
-                            $arg->getId(),
+                            $arg['Id'],
                             Zend_Db::INT_TYPE,
                             1
                         ),
@@ -1907,7 +1907,7 @@ class Model_Computer extends \Model_Abstract
      * enough information to retrieve their configuration. They should not be
      * used for anything else.
      *
-     * @return Model_Group[]
+     * @return \Model\Group\Group[]
      */
     protected function _getConfigGroups()
     {
@@ -1916,7 +1916,7 @@ class Model_Computer extends \Model_Abstract
             self::$_configGroups[$id] = array();
             $memberships = $this->getGroups(\Model_GroupMembership::TYPE_INCLUDED);
             foreach ($memberships as $membership) {
-                $group = new Model_Group;
+                $group = clone \Library\Application::getService('Model\Group\Group');
                 $group['Id'] = $membership['GroupId'];
                 self::$_configGroups[$id][] = $group;
             }

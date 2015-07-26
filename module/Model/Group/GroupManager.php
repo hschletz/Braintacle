@@ -49,13 +49,13 @@ class GroupManager
      * @param mixed $filterArg Argument for Id and Name filters, ignored otherwise
      * @param string $order Property to sort by. Default: none
      * @param string $direction one of [asc|desc]. Default: asc
-     * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model_Group
+     * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Group\Group
      */
     public function getGroups($filter = null, $filterArg = null, $order=null, $direction='asc')
     {
         $groupInfo = $this->_serviceManager->get('Database\Table\GroupInfo');
         $select = $groupInfo->getSql()->select();
-        $select->columns(array('request', 'xmldef', 'create_time', 'revalidate_from'))
+        $select->columns(array('request', 'create_time', 'revalidate_from'))
                ->join(
                    'hardware',
                    'hardware.id = groups.hardware_id',
@@ -90,8 +90,7 @@ class GroupManager
         }
 
         if ($order) {
-            $group = new \Model_Group;
-            $select->order(\Model_Group::getOrder($order, $direction, $group->getPropertyMap()));
+            $select->order(array($groupInfo->getHydrator()->extractName($order) => $direction));
         }
 
         return $groupInfo->selectWith($select);
@@ -101,7 +100,7 @@ class GroupManager
      * Get group with given name.
      *
      * @param string $name Group name
-     * @return \Model_Group
+     * @return \Model\Group\Group
      * @throws \RuntimeException if the given group name does not exist
      * @throws \InvalidArgumentException if $name is empty
      */
@@ -164,10 +163,10 @@ class GroupManager
     /**
      * Delete a group
      *
-     * @param \Model_Group $group
+     * @param \Model\Group\Group $group
      * @throws \Model\Group\RuntimeException if group is locked
      */
-    public function deleteGroup(\Model_Group $group)
+    public function deleteGroup(\Model\Group\Group $group)
     {
         if (!$group->lock()) {
             throw new RuntimeException('Cannot delete group because it is locked');

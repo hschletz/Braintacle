@@ -69,6 +69,7 @@ Feature\InitProviderInterface
                     'Library\ArchiveManager' => 'Library\ArchiveManager',
                     'Library\AuthenticationService' => '\Library\Authentication\AuthenticationService',
                     'Library\Now' => 'DateTime',
+                    'Library\Random' => 'Library\Random',
                 ),
                 'shared' => array(
                     'Library\Now' => false,

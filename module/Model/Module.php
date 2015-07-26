@@ -74,7 +74,7 @@ Feature\InitProviderInterface
                     'Model\Client\Item\VirtualMachine' => 'Model\Client\Item\VirtualMachine',
                     'Model\Client\WindowsInstallation' => 'Model\Client\WindowsInstallation',
                     'Model\Computer\Computer' => 'Model_Computer',
-                    'Model\Group\Group' => 'Model_Group',
+                    'Model\Group\Group' => 'Model\Group\Group',
                     'Model\Group\Membership' => 'Model_GroupMembership',
                     'Model\Network\Device' => 'Model\Network\Device',
                     'Model\Network\Subnet' => 'Model\Network\Subnet',

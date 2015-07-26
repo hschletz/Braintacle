@@ -45,7 +45,7 @@ printf(
     $this->translate('Creation date'),
     $this->escapeHtml(
         $this->dateFormat(
-            (int) $this->group['CreationDate']->get(\Zend_Date::TIMESTAMP),
+            $this->group['CreationDate'],
             \IntlDateFormatter::FULL,
             \IntlDateFormatter::MEDIUM
         )

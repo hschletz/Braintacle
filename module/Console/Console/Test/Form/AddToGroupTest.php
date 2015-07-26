@@ -270,7 +270,7 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
 
     public function testProcessNewGroup()
     {
-        $group = $this->getMock('Model_Group');
+        $group = $this->getMock('Model\Group\Group');
         $group->expects($this->once())
               ->method('setMembersFromQuery')
               ->with('what', 'filter', 'search', 'operator', 'invert');
@@ -297,7 +297,7 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
 
     public function testProcessExistingGroup()
     {
-        $group = $this->getMock('Model_Group');
+        $group = $this->getMock('Model\Group\Group');
         $group->expects($this->once())
               ->method('setMembersFromQuery')
               ->with('what', 'filter', 'search', 'operator', 'invert');

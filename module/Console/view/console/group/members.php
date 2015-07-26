@@ -55,7 +55,7 @@ printf(
     "<tr><td class='textright'>%s</td><td>%s</td></tr>\n",
     $this->translate('Last update:'),
     $creationDate ? $this->dateFormat(
-        (int) $creationDate->get(Zend_Date::TIMESTAMP),
+        $creationDate,
         \IntlDateFormatter::FULL,
         \IntlDateFormatter::MEDIUM
     ) : '&ndash;'
@@ -66,7 +66,7 @@ printf(
     "<tr><td class='textright'>%s</td><td>%s</td></tr>\n",
     $this->translate('Next update:'),
     $expirationDate ? $this->dateFormat(
-        (int) $expirationDate->get(Zend_Date::TIMESTAMP),
+        $expirationDate,
         \IntlDateFormatter::FULL,
         \IntlDateFormatter::MEDIUM
     ) : '&ndash;'

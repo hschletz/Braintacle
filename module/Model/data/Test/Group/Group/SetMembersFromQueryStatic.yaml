@@ -1,0 +1,26 @@
+groups_cache:
+  -
+    hardware_id: 1
+    group_id: 10
+    static: 1
+  -
+    hardware_id: 2
+    group_id: 10
+    static: 1
+  -
+    hardware_id: 3
+    group_id: 10
+    static: 1
+  -
+    hardware_id: 4
+    group_id: 10
+    static: 0
+  -
+    hardware_id: 5
+    group_id: 10
+    static: 1
+  -
+    hardware_id: 1
+    group_id: 11
+    static: 0
+

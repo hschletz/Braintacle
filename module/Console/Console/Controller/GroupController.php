@@ -58,7 +58,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
 
     /**
      * Current group - populated automatically for appropriate actions
-     * @var \Model_Group
+     * @var \Model\Group\Group
      */
     protected $_currentGroup;
 

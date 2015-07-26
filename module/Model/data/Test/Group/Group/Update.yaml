@@ -1,0 +1,34 @@
+groups:
+  -
+    hardware_id: 10
+    request: "query_10"
+    create_time: 1437675600
+    revalidate_from: 1437675642
+  -
+    hardware_id: 11
+    request: "query_11"
+    create_time: 0
+    revalidate_from: 0
+
+groups_cache:
+  -
+    hardware_id: 2
+    group_id: 10
+    static: 1
+  -
+    hardware_id: 3
+    group_id: 10
+    static: 2
+  -
+    hardware_id: 4
+    group_id: 10
+    static: 0
+  -
+    hardware_id: 5
+    group_id: 10
+    static: 0
+  -
+    hardware_id: 1
+    group_id: 11
+    static: 0
+

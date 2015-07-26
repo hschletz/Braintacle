@@ -31,22 +31,20 @@ class GroupManagerTest extends \Model\Test\AbstractTest
         $group1 = array(
             'Id' => '1',
             'Name' => 'name1',
-            'CreationDate' => new \Zend_Date('2015-02-02 19:01:00'),
+            'CreationDate' => new \DateTime('2015-02-02 19:01:00'),
             'Description' => 'description1',
             'DynamicMembersSql' => 'request1',
-            'DynamicMembersXml' => null,
-            'CacheExpirationDate' => new \Zend_Date('2015-02-08 19:35:30'),
-            'CacheCreationDate' => new \Zend_Date('2015-02-04 20:46:23'),
+            'CacheExpirationDate' => new \DateTime('2015-02-08 19:35:30'),
+            'CacheCreationDate' => new \DateTime('2015-02-04 20:46:23'),
         );
         $group2 = array(
             'Id' => '2',
             'Name' => 'name2',
-            'CreationDate' => new \Zend_Date('2015-02-02 19:02:00'),
+            'CreationDate' => new \DateTime('2015-02-02 19:02:00'),
             'Description' => null,
             'DynamicMembersSql' => 'request2',
-            'DynamicMembersXml' => null,
-            'CacheExpirationDate' => new \Zend_Date('2015-02-08 19:36:30'),
-            'CacheCreationDate' => new \Zend_Date('2015-02-04 20:46:24'),
+            'CacheExpirationDate' => new \DateTime('2015-02-08 19:36:30'),
+            'CacheCreationDate' => new \DateTime('2015-02-04 20:46:24'),
         );
         return array(
             array(null, null, 'Name', 'desc', array($group2, $group1)),
@@ -61,13 +59,39 @@ class GroupManagerTest extends \Model\Test\AbstractTest
      */
     public function testGetGroups($filter, $filterArg, $order, $direction, $expected)
     {
-        \Library\Application::getService('Model\Config')->groupCacheExpirationInterval = 30;
-        $model = $this->_getModel(array('Library\Now' => new \DateTime('2015-02-08 19:36:29')));
+        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config->method('__get')->will($this->returnValueMap(array(array('groupCacheExpirationInterval', 30))));
+
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')->will(
+            $this->returnValueMap(
+                array(
+                    array('Db', true, \Library\Application::getService('Db')),
+                    array('Database\Nada', true, \Library\Application::getService('Database\Nada')),
+                    array('Model\Config', true, $config),
+                    array('Model\Group\Group', true, \Library\Application::getService('Model\Group\Group')),
+                )
+            )
+        );
+
+        $groupInfo = new \Database\Table\GroupInfo($serviceManager);
+        $groupInfo->initialize();
+
+        $model = $this->_getModel(
+            array(
+                'Database\Table\GroupInfo' => $groupInfo,
+                'Library\Now' => new \DateTime('2015-02-08 19:36:29'),
+                'Model\Config' => $config,
+            )
+        );
         $resultSet = $model->getGroups($filter, $filterArg, $order, $direction);
         $this->assertInstanceOf('Zend\Db\ResultSet\AbstractResultSet', $resultSet);
-        $resultSet->buffer();
-        $this->assertContainsOnlyInstancesOf('Model_Group', $resultSet);
-        $this->assertEquals($expected, $resultSet->toArray());
+        $groups = iterator_to_array($resultSet);
+        $this->assertContainsOnlyInstancesOf('Model\Group\Group', $groups);
+        $this->assertCount(count($expected), $groups);
+        foreach ($groups as $index => $group) {
+            $this->assertEquals($expected[$index], $group->getArrayCopy());
+        }
     }
 
     public function testGetGroupsInvalidFilter()
@@ -81,7 +105,7 @@ class GroupManagerTest extends \Model\Test\AbstractTest
     {
         $model = $this->_getModel();
         $group = $model->getGroup('name2');
-        $this->assertInstanceOf('Model_Group', $group);
+        $this->assertInstanceOf('Model\Group\Group', $group);
         $this->assertEquals('name2', $group['Name']);
     }
 
@@ -187,7 +211,7 @@ class GroupManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteGroup()
     {
-        $group = $this->getMock('Model_Group');
+        $group = $this->getMock('Model\Group\Group');
         $group->expects($this->at(0))->method('lock')->willReturn(true);
         $group->expects($this->at(1))->method('offsetGet')->with('Id')->willReturn(1);
         $group->expects($this->at(2))->method('unlock');
@@ -225,7 +249,7 @@ class GroupManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteGroupLocked()
     {
-        $group = $this->getMock('Model_Group');
+        $group = $this->getMock('Model\Group\Group');
         $group->expects($this->at(0))->method('lock')->willReturn(false);
 
         $model = $this->_getModel();
@@ -265,7 +289,7 @@ class GroupManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteGroupDatabaseError()
     {
-        $group = $this->getMock('Model_Group');
+        $group = $this->getMock('Model\Group\Group');
         $group->expects($this->at(0))->method('lock')->willReturn(true);
 
         $clientsAndGroups = $this->getMockBuilder('Database\Table\ClientsAndGroups')
@@ -310,7 +334,7 @@ class GroupManagerTest extends \Model\Test\AbstractTest
 
     public function testUpdateCache()
     {
-        $group = $this->getMock('Model_Group');
+        $group = $this->getMock('Model\Group\Group');
         $group->expects($this->once())->method('update')->with(true);
 
         $model = $this->getMockBuilder($this->_getClass())
