@@ -30,6 +30,7 @@ error_reporting(-1);
  */
 function testModule($module, $filter=null)
 {
+    print "\nRunning tests on $module module\n\n";
     if ($filter) {
         $filter = ' --filter ' .escapeshellarg($filter);
     }
@@ -45,6 +46,8 @@ function testModule($module, $filter=null)
         if ($exitCode) {
             printf("\n\nUnit tests for module '%s' failed with status %d. Aborting.\n", $module, $exitCode);
             exit(1);
+        } else {
+            print "\n";
         }
     } else {
         print "Could not invoke PHPUnit. Aborting.\n";
