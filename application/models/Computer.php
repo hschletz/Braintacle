@@ -229,7 +229,7 @@ class Model_Computer extends \Model_Abstract
      * @param bool $distinct Force distinct results.
      * @param bool $query Perform query and return array (default).
      *                    Set to false to return a \Zend_Db_Select object.
-     * @return \Model_Computer[]|Zend_Db_Select Query result or Query
+     * @return \Model\Client\Client[]|Zend_Db_Select Query result or Query
      * @throws \LogicException if more than 2 tables are joined (only in development mode)
      */
     public function fetch(

@@ -451,9 +451,8 @@ abstract class Model_Abstract extends \Model\ClientOrGroup
         if (!is_array($constructorArgs)) {
             $constructorArgs = array($constructorArgs);
         }
-        $class = get_class($this);
         $result = array();
-        while ($row = $statement->fetchObject($class, $constructorArgs)) {
+        while ($row = $statement->fetchObject('Model\Client\Client', $constructorArgs)) {
             $result[] = $row;
         }
         return $result;

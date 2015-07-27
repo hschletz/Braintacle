@@ -73,10 +73,13 @@ class InventoryRequest extends \Library\DomDocument
     /**
      * Load document tree from a client object
      *
-     * @param \Model_Computer $client Client data source
+     * @param \Model\Client\Client $client Client data source
      * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator Service manager
      */
-    public function loadClient(\Model_Computer $client, \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function loadClient(
+        \Model\Client\Client $client,
+        \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+    )
     {
         $this->_parseSchema();
         $itemManager = $serviceLocator->get('Model\Client\ItemManager');

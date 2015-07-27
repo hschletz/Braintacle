@@ -30,7 +30,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
 {
     /**
      * Client mock
-     * @var \Model_Computer
+     * @var \Model\Client\Client
      */
     protected $_client;
 
@@ -42,7 +42,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
 
     public function setUp()
     {
-        $this->_client = $this->getMockBuilder('Model_Computer')->disableOriginalConstructor()->getMock();
+        $this->_client = $this->getMockBuilder('Model\Client\Client')->disableOriginalConstructor()->getMock();
         $this->_group = $this->getMockBuilder('Model\Group\Group')->disableOriginalConstructor()->getMock();
         parent::setUp();
     }

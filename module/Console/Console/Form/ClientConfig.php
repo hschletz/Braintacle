@@ -222,7 +222,7 @@ class ClientConfig extends Form
                         $defaultValue = $defaultValue ? $yes : $no;
                     }
                     $row = sprintf('%s: %s', $default, $defaultValue);
-                    if ($this->_object instanceof \Model_Computer) {
+                    if ($this->_object instanceof \Model\Client\Client) {
                         $effectiveValue = $this->_object->getEffectiveConfig($option);
                         if ($element instanceof Element\Checkbox) {
                             $effectiveValue = $effectiveValue ? $yes : $no;
@@ -339,7 +339,7 @@ class ClientConfig extends Form
         $this->_object = $object;
 
         $addresses = array();
-        if ($object instanceof \Model_Computer) {
+        if ($object instanceof \Model\Client\Client) {
             // Get list of all networks this client is connected to
             $interfaces = $object->getItems('NetworkInterface', 'Subnet');
             foreach ($interfaces as $interface) {

@@ -54,6 +54,7 @@ Feature\InitProviderInterface
         return array(
             'service_manager' => array(
                 'invokables' => array(
+                    'Model\Client\Client' => 'Model\Client\Client',
                     'Model\Client\CustomFields' => 'Model\Client\CustomFields',
                     'Model\Client\Item\AudioDevice' => 'Model\Client\Item\AudioDevice',
                     'Model\Client\Item\Controller' => 'Model\Client\Item\Controller',

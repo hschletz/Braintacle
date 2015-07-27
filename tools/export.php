@@ -60,7 +60,7 @@ $statement = Model_Computer::createStatementStatic(
     null,
     'ClientId'
 );
-while ($computer = $statement->fetchObject('Model_Computer')) {
+while ($computer = $statement->fetchObject('Model\Client\Client')) {
     $id = $computer->getClientId();
     print "Exporting $id\n";
     try {

@@ -113,7 +113,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function setUp()
     {
-        $this->_computer = $this->getMockBuilder('Model_Computer')->disableOriginalConstructor()->getMock();
+        $this->_computer = $this->getMockBuilder('Model\Client\Client')->disableOriginalConstructor()->getMock();
         $this->_groupManager = $this->getMockBuilder('Model\Group\GroupManager')
                                     ->disableOriginalConstructor()
                                     ->getMock();

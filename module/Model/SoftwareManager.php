@@ -196,11 +196,11 @@ class SoftwareManager
     /**
      * Override Windows product key
      *
-     * @param \Model_Computer $client Client for which product key is set
+     * @param \Model\Client\Client $client Client for which product key is set
      * @param string $productKey New product key
      * @throws \InvalidArgumentException if $productKey is syntactically invalid
      */
-    public function setProductKey(\Model_Computer $client, $productKey)
+    public function setProductKey(\Model\Client\Client $client, $productKey)
     {
         if (empty($productKey) or $productKey == $client['Windows']['ProductKey']) {
             $productKey = null;

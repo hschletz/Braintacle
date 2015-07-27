@@ -34,7 +34,7 @@ class ClientControllerFactory implements \Zend\ServiceManager\FactoryInterface
         $serviceManager = $serviceLocator->getServiceLocator();
         $config = $serviceManager->get('Model\Config');
         return new \Console\Controller\ClientController(
-            $serviceManager->get('Model\Computer\Computer'),
+            $serviceManager->get('Model\Client\Client'),
             $serviceManager->get('Model\Group\GroupManager'),
             $serviceManager->get('Model\Registry\RegistryManager'),
             $serviceManager->get('Model\SoftwareManager'),

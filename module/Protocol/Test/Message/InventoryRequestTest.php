@@ -240,7 +240,7 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
                 $mapGetItems[] = array($type, 'id', 'asc', array(), array());
             }
         }
-        $client = $this->getMock('Model_Computer');
+        $client = $this->getMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($mapOffsetGet));
         $client->method('getProperty')->will($this->returnValueMap($mapGetProperty));
         $client->method('getDownloadedPackages')->willReturn($packages);

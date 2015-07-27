@@ -200,7 +200,7 @@ class DuplicatesManager
      * @param string $criteria One of Name|MacAddress|Serial|AssetTag
      * @param string $order Sorting order (default: 'Id')
      * @param string $direction One of asc|desc (default: 'asc')
-     * @return \Zend\Db\ResultSet\AbstractResultSet \Model_Computer iterator
+     * @return \Zend\Db\ResultSet\AbstractResultSet \Model\Client\Client iterator
      */
     public function find($criteria, $order='Id', $direction='asc')
     {
