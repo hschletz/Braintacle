@@ -75,6 +75,7 @@ class ShowDuplicates extends Form
         $inputFilter->add(
             array(
                 'name' => 'computers',
+                'required' => false,
                 'continue_if_empty' => true, // Have empty/missing array processed by callback validator
                 'filters' => array(
                     (array($this, 'computersFilter')),
