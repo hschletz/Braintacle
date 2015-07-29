@@ -275,7 +275,7 @@ class DuplicatesManager
 
             if ($mergeCustomFields) {
                 // Overwrite custom fields with values from oldest client
-                $newest->setUserDefinedInfo($clients[0]->getUserDefinedInfo());
+                $newest->setUserDefinedInfo($clients[0]['CustomFields']);
             }
 
             if ($mergeGroups) {
@@ -295,15 +295,16 @@ class DuplicatesManager
             if ($mergePackages) {
                 // Update the client IDs directly. Assignments from all older
                 // clients are merged. Exclude packages that are already assigned.
+                $id = $newest['Id'];
                 $subQuery = 'ivalue NOT IN(SELECT ivalue FROM devices WHERE hardware_id = ? AND name = \'DOWNLOAD\')';
                 foreach ($clients as $client) {
                     $this->_clientConfig->update(
-                        array('hardware_id' => $newest['Id']),
+                        array('hardware_id' => $id),
                         array(
                             'hardware_id' => $client['Id'],
                             "name != 'DOWNLOAD_SWITCH'",
                             "name LIKE 'DOWNLOAD%'",
-                            $subQuery => $newest['Id'],
+                            $subQuery => $id,
                         )
                     );
                 }

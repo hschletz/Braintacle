@@ -28,106 +28,15 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
 {
     /** {@inheritdoc} */
     protected static $_tables = array(
-        'AudioDevices',
         'ClientConfig',
         'ClientsAndGroups',
         'ClientSystemInfo',
         'Clients',
-        'Config',
-        'Controllers',
-        'CustomFieldConfig',
-        'CustomFields',
-        'DisplayControllers',
-        'Displays',
         'DuplicateAssetTags',
         'DuplicateMacAddresses',
         'DuplicateSerials',
-        'ExtensionSlots',
-        'Filesystems',
-        'GroupInfo',
-        'GroupMemberships',
-        'InputDevices',
-        'Locks',
-        'MemorySlots',
-        'Modems',
-        'MsOfficeProducts',
         'NetworkInterfaces',
-        'PackageHistory',
-        'Ports',
-        'Printers',
-        'RegistryData',
-        'Software',
-        'StorageDevices',
-        'VirtualMachines',
-        'WindowsInstallations',
     );
-
-    /** {@inheritdoc} */
-    public static function setUpBeforeClass()
-    {
-        parent::setUpBeforeClass();
-
-        // Provide mock tables which are referenced by \Model_Computer::delete().
-        // They don't need any content and the mocked structure is reduced to a minimum.
-        $database = \Library\Application::getService('Database\Nada');
-        $mockTables = array(
-            'itmgmt_comments',
-            'javainfo',
-            'journallog',
-        );
-        $columns = array($database->createColumn('hardware_id', \Nada::DATATYPE_INTEGER));
-        foreach ($mockTables as $table) {
-            $database->createTable($table, $columns, 'hardware_id');
-        }
-
-        $columns = array(
-            $database->createColumn('id_dde', \Nada::DATATYPE_INTEGER),
-            $database->createColumn('table_name', \Nada::DATATYPE_VARCHAR, 255),
-        );
-        $database->createTable('temp_files', $columns, 'id_dde');
-    }
-
-    /**
-     * Common assertions for testMerge*()
-     *
-     * @param string $dataSetName Name of the dataset file to compare with merged content
-     */
-    public function assertTablesMerged($dataSetName)
-    {
-        $dataSet = $this->_loadDataSet($dataSetName);
-        $connection = $this->getConnection();
-
-        // Test only tables where data may get merged.
-        // We rely on \Model_Computer::delete() to clean other tables as well.
-        $this->assertTablesEqual(
-            $dataSet->getTable('clients'),
-            $connection->createQueryTable(
-                'clients',
-                'SELECT id, deviceid, name, lastcome FROM clients ORDER BY id'
-            )
-        );
-        $this->assertTablesEqual(
-            $dataSet->getTable('accountinfo'),
-            $connection->createQueryTable(
-                'accountinfo',
-                'SELECT hardware_id, tag FROM accountinfo ORDER BY hardware_id'
-            )
-        );
-        $this->assertTablesEqual(
-            $dataSet->getTable('devices'),
-            $connection->createQueryTable(
-                'devices',
-                'SELECT hardware_id, name, ivalue, tvalue FROM devices ORDER BY hardware_id, name, ivalue'
-            )
-        );
-        $this->assertTablesEqual(
-            $dataSet->getTable('groups_cache'),
-            $connection->createQueryTable(
-                'groups_cache',
-                'SELECT hardware_id, group_id, static FROM groups_cache ORDER BY hardware_id, group_id'
-            )
-        );
-    }
 
     /**
      * Tests for count()
@@ -223,8 +132,19 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
     {
         $mergeIds = array(2, 2); // Test deduplication of IDs
 
-        $this->_getModel()->merge($mergeIds, true, true, true);
-        $this->assertTablesMerged('MergeNone');
+        $clientManager = $this->getMock('Model\Client\ClientManager');
+        $clientManager->expects($this->never())->method('getClient');
+
+        $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
+        $clientConfig->expects($this->never())->method('update');
+
+        $model = $this->_getModel(
+            array(
+                'Model\Client\ClientManager' => $clientManager,
+                'Database\Table\ClientConfig' => $clientConfig,
+            )
+        );
+        $model->merge($mergeIds, true, true, true);
     }
 
     /**
@@ -236,13 +156,24 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
 
         $client = $this->getMock('Model\Client\Client');
         $client->method('lock')->willReturn(false);
-        $client->expects($this->never())->method('offsetGet');
+        $client->expects($this->never())->method('setUserDefinedInfo');
+        $client->expects($this->never())->method('setGroups');
+        $client->expects($this->never())->method('delete');
 
         $clientManager = $this->getMock('Model\Client\ClientManager');
         $clientManager->method('getClient')->willReturn($client);
 
+        $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
+        $clientConfig->expects($this->never())->method('update');
+
         $this->setExpectedException('RuntimeException', 'Cannot lock client 2');
-        $this->_getModel(array('Model\Client\ClientManager' => $clientManager))->merge($mergeIds, true, true, true);
+        $model = $this->_getModel(
+            array(
+                'Model\Client\ClientManager' => $clientManager,
+                'Database\Table\ClientConfig' => $clientConfig,
+            )
+        );
+        $model->merge($mergeIds, true, true, true);
     }
 
     /**
@@ -252,8 +183,36 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
     {
         $mergeIds = array(2, 2, 3, 3); // Test deduplication of IDs
 
-        $this->_getModel()->merge($mergeIds, false, false, false); // Don't merge anything
-        $this->assertTablesMerged('MergeBasic');
+        $client2 = $this->getMock('Model\Client\Client');
+        $client2->method('offsetGet')->with('LastContactDate')->willReturn(new \Zend_Date('2013-12-23 13:02:33'));
+        $client2->method('lock')->willReturn(true);
+        $client2->expects($this->never())->method('setUserDefinedInfo');
+        $client2->expects($this->never())->method('setGroups');
+        $client2->expects($this->once())->method('delete');
+
+        $client3 = $this->getMock('Model\Client\Client');
+        $client3->method('offsetGet')->with('LastContactDate')->willReturn(new \Zend_Date('2013-12-23 13:03:33'));
+        $client3->method('lock')->willReturn(true);
+        $client3->expects($this->once())->method('unlock');
+        $client3->expects($this->never())->method('setUserDefinedInfo');
+        $client3->expects($this->never())->method('setGroups');
+        $client3->expects($this->never())->method('delete');
+
+        $clientManager = $this->getMock('Model\Client\ClientManager');
+        $clientManager->method('getClient')
+                      ->withConsecutive(array(2), array(3))
+                      ->will($this->onConsecutiveCalls($client2, $client3));
+
+        $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
+        $clientConfig->expects($this->never())->method('update');
+
+        $model = $this->_getModel(
+            array(
+                'Model\Client\ClientManager' => $clientManager,
+                'Database\Table\ClientConfig' => $clientConfig,
+            )
+        );
+        $model->merge($mergeIds, false, false, false); // Don't merge any extra information
     }
 
     /**
@@ -263,19 +222,36 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
     {
         $mergeIds = array(3, 3, 2, 2); // Test deduplication of IDs
 
-        $this->_getModel()->merge($mergeIds, false, false, false);
+        $client2 = $this->getMock('Model\Client\Client');
+        $client2->method('offsetGet')->with('LastContactDate')->willReturn(new \Zend_Date('2013-12-23 13:02:33'));
+        $client2->method('lock')->willReturn(true);
+        $client2->expects($this->never())->method('setUserDefinedInfo');
+        $client2->expects($this->never())->method('setGroups');
+        $client2->expects($this->once())->method('delete');
 
-        $dataSet = $this->_loadDataSet('MergeBasic');
-        $connection = $this->getConnection();
+        $client3 = $this->getMock('Model\Client\Client');
+        $client3->method('offsetGet')->with('LastContactDate')->willReturn(new \Zend_Date('2013-12-23 13:03:33'));
+        $client3->method('lock')->willReturn(true);
+        $client3->expects($this->once())->method('unlock');
+        $client3->expects($this->never())->method('setUserDefinedInfo');
+        $client3->expects($this->never())->method('setGroups');
+        $client3->expects($this->never())->method('delete');
 
-        // The result should be the same as with testMergeBasic(). Test only computers to confirm.
-        $this->assertTablesEqual(
-            $dataSet->getTable('clients'),
-            $connection->createQueryTable(
-                'clients',
-                'SELECT id, deviceid, name, lastcome FROM clients ORDER BY id'
+        $clientManager = $this->getMock('Model\Client\ClientManager');
+        $clientManager->method('getClient')
+                      ->withConsecutive(array(3), array(2))
+                      ->will($this->onConsecutiveCalls($client3, $client2));
+
+        $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
+        $clientConfig->expects($this->never())->method('update');
+
+        $model = $this->_getModel(
+            array(
+                'Model\Client\ClientManager' => $clientManager,
+                'Database\Table\ClientConfig' => $clientConfig,
             )
         );
+        $model->merge($mergeIds, false, false, false);
     }
 
     /**
@@ -283,8 +259,38 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
      */
     public function testMergeCustomFields()
     {
-        $this->_getModel()->merge(array(2, 3), true, false, false);
-        $this->assertTablesMerged('MergeCustomFields');
+        $client2 = $this->getMock('Model\Client\Client');
+        $client2->method('offsetGet')
+                ->withConsecutive(array('LastContactDate'), array('CustomFields'))
+                ->will($this->onConsecutiveCalls(new \Zend_Date('2013-12-23 13:02:33'), 'custom_fields'));
+        $client2->method('lock')->willReturn(true);
+        $client2->expects($this->never())->method('setUserDefinedInfo');
+        $client2->expects($this->never())->method('setGroups');
+        $client2->expects($this->once())->method('delete');
+
+        $client3 = $this->getMock('Model\Client\Client');
+        $client3->method('offsetGet')->with('LastContactDate')->willReturn(new \Zend_Date('2013-12-23 13:03:33'));
+        $client3->method('lock')->willReturn(true);
+        $client3->expects($this->once())->method('unlock');
+        $client3->expects($this->once())->method('setUserDefinedInfo')->with('custom_fields');
+        $client3->expects($this->never())->method('setGroups');
+        $client3->expects($this->never())->method('delete');
+
+        $clientManager = $this->getMock('Model\Client\ClientManager');
+        $clientManager->method('getClient')
+                      ->withConsecutive(array(2), array(3))
+                      ->will($this->onConsecutiveCalls($client2, $client3));
+
+        $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
+        $clientConfig->expects($this->never())->method('update');
+
+        $model = $this->_getModel(
+            array(
+                'Model\Client\ClientManager' => $clientManager,
+                'Database\Table\ClientConfig' => $clientConfig,
+            )
+        );
+        $model->merge(array(2, 3), true, false, false);
     }
 
     /**
@@ -292,8 +298,42 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
      */
     public function testMergeGroups()
     {
-        $this->_getModel()->merge(array(2, 3), false, true, false);
-        $this->assertTablesMerged('MergeGroups');
+        $groups = array(
+            array('GroupId' => 1, 'Membership' => 'membership1a'),
+            array('GroupId' => 2, 'Membership' => 'membership2'),
+            array('GroupId' => 1, 'Membership' => 'membership1b'), // Duplicate to simulate groups from multiple clients
+        );
+        $client2 = $this->getMock('Model\Client\Client');
+        $client2->method('offsetGet')->with('LastContactDate')->willReturn(new \Zend_Date('2013-12-23 13:02:33'));
+        $client2->method('lock')->willReturn(true);
+        $client2->method('getGroups')->with(\Model_GroupMembership::TYPE_MANUAL, null)->willReturn($groups);
+        $client2->expects($this->never())->method('setUserDefinedInfo');
+        $client2->expects($this->never())->method('setGroups');
+        $client2->expects($this->once())->method('delete');
+
+        $client3 = $this->getMock('Model\Client\Client');
+        $client3->method('offsetGet')->with('LastContactDate')->willReturn(new \Zend_Date('2013-12-23 13:03:33'));
+        $client3->method('lock')->willReturn(true);
+        $client3->expects($this->once())->method('unlock');
+        $client3->expects($this->never())->method('setUserDefinedInfo');
+        $client3->expects($this->once())->method('setGroups')->with(array(2 => 'membership2', 1 => 'membership1b'));
+        $client3->expects($this->never())->method('delete');
+
+        $clientManager = $this->getMock('Model\Client\ClientManager');
+        $clientManager->method('getClient')
+                      ->withConsecutive(array(2), array(3))
+                      ->will($this->onConsecutiveCalls($client2, $client3));
+
+        $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
+        $clientConfig->expects($this->never())->method('update');
+
+        $model = $this->_getModel(
+            array(
+                'Model\Client\ClientManager' => $clientManager,
+                'Database\Table\ClientConfig' => $clientConfig,
+            )
+        );
+        $model->merge(array(2, 3), false, true, false);
     }
 
     /**
@@ -301,8 +341,48 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
      */
     public function testMergePackages()
     {
-        $this->_getModel()->merge(array(2, 3), false, false, true);
-        $this->assertTablesMerged('MergePackages');
+        $client2 = $this->getMock('Model\Client\Client');
+        $client2->method('offsetGet')
+                ->withConsecutive(array('LastContactDate'), array('Id'))
+                ->will($this->onConsecutiveCalls(new \Zend_Date('2013-12-23 13:02:33'), 2));
+        $client2->method('lock')->willReturn(true);
+        $client2->expects($this->never())->method('setUserDefinedInfo');
+        $client2->expects($this->never())->method('setGroups');
+        $client2->expects($this->once())->method('delete');
+
+        $client3 = $this->getMock('Model\Client\Client');
+        $client3->method('offsetGet')
+                ->withConsecutive(array('LastContactDate'), array('Id'))
+                ->will($this->onConsecutiveCalls(new \Zend_Date('2013-12-23 13:03:33'), 3));
+        $client3->method('lock')->willReturn(true);
+        $client3->expects($this->once())->method('unlock');
+        $client3->expects($this->never())->method('setUserDefinedInfo');
+        $client3->expects($this->never())->method('setGroups');
+        $client3->expects($this->never())->method('delete');
+
+        $clientManager = $this->getMock('Model\Client\ClientManager');
+        $clientManager->method('getClient')
+                      ->withConsecutive(array(2), array(3))
+                      ->will($this->onConsecutiveCalls($client2, $client3));
+
+        $model = $this->_getModel(
+            array(
+                'Model\Client\ClientManager' => $clientManager,
+            )
+        );
+        $model->merge(array(2, 3), false, false, true);
+        $this->assertTablesEqual(
+            $this->_loadDataSet('MergePackages')->getTable('devices'),
+            $this->getConnection()->createQueryTable(
+                'devices',
+                <<<EOT
+                    SELECT hardware_id, name, ivalue, tvalue
+                    FROM devices
+                    WHERE hardware_id = 3
+                    ORDER BY hardware_id, name, ivalue
+EOT
+            )
+        );
     }
 
     /**
