@@ -55,6 +55,7 @@ Feature\InitProviderInterface
             'service_manager' => array(
                 'invokables' => array(
                     'Model\Client\Client' => 'Model\Client\Client',
+                    'Model\Client\ClientManager' => 'Model\Client\ClientManager',
                     'Model\Client\CustomFields' => 'Model\Client\CustomFields',
                     'Model\Client\Item\AudioDevice' => 'Model\Client\Item\AudioDevice',
                     'Model\Client\Item\Controller' => 'Model\Client\Item\Controller',
@@ -74,7 +75,6 @@ Feature\InitProviderInterface
                     'Model\Client\Item\StorageDevice' => 'Model\Client\Item\StorageDevice',
                     'Model\Client\Item\VirtualMachine' => 'Model\Client\Item\VirtualMachine',
                     'Model\Client\WindowsInstallation' => 'Model\Client\WindowsInstallation',
-                    'Model\Computer\Computer' => 'Model_Computer',
                     'Model\Group\Group' => 'Model\Group\Group',
                     'Model\Group\Membership' => 'Model_GroupMembership',
                     'Model\Network\Device' => 'Model\Network\Device',

@@ -87,10 +87,10 @@ class DuplicatesManager
     protected $_clientConfig;
 
     /**
-     * Computer prototype
-     * @var \Model_Computer
+     * Client manager
+     * @var \Model\Client\ClientManager
      */
-    protected $_computer;
+    protected $_clientManager;
 
     /**
      * Constructor
@@ -101,7 +101,7 @@ class DuplicatesManager
      * @param \Database\Table\DuplicateSerials $duplicateSerials
      * @param \Database\Table\DuplicateMacAddresses $duplicateMacAddresses
      * @param \Database\Table\ClientConfig $clientConfig
-     * @param \Model_Computer $computer
+     * @param \Model\Client\ClientManager $clientManager
      */
     public function __construct(
         Table\Clients $clients,
@@ -110,7 +110,7 @@ class DuplicatesManager
         Table\DuplicateSerials $duplicateSerials,
         Table\DuplicateMacAddresses $duplicateMacAddresses,
         Table\ClientConfig $clientConfig,
-        \Model_Computer $computer
+        \Model\Client\ClientManager $clientManager
     )
     {
         $this->_clients = $clients;
@@ -119,7 +119,7 @@ class DuplicatesManager
         $this->_duplicateSerials = $duplicateSerials;
         $this->_duplicateMacaddresses = $duplicateMacAddresses;
         $this->_clientConfig = $clientConfig;
-        $this->_computer = $computer;
+        $this->_clientManager = $clientManager;
     }
 
     /**
@@ -259,8 +259,7 @@ class DuplicatesManager
         try {
             // Lock all given clients and create a list sorted by LastContactDate.
             foreach ($clients as $id) {
-                $client = clone $this->_computer;
-                $client->fetchById($id);
+                $client = $this->_clientManager->getClient($id);
                 if (!$client->lock()) {
                     throw new \RuntimeException("Cannot lock client $id");
                 }

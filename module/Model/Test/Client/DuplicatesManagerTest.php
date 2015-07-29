@@ -234,13 +234,15 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
     {
         $mergeIds = array(2, 3);
 
-        $computer = clone \Library\Application::getService('Model\Computer\Computer');
-        $computer->fetchById(3);
-        $computer->lock();
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('lock')->willReturn(false);
+        $client->expects($this->never())->method('offsetGet');
 
-        $this->setExpectedException('RuntimeException');
-        $this->_getModel()->merge($mergeIds, true, true, true);
-        $this->assertTablesMerged('MergeNone');
+        $clientManager = $this->getMock('Model\Client\ClientManager');
+        $clientManager->method('getClient')->willReturn($client);
+
+        $this->setExpectedException('RuntimeException', 'Cannot lock client 2');
+        $this->_getModel(array('Model\Client\ClientManager' => $clientManager))->merge($mergeIds, true, true, true);
     }
 
     /**

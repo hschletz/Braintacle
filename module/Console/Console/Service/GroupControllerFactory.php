@@ -35,7 +35,7 @@ class GroupControllerFactory implements \Zend\ServiceManager\FactoryInterface
         $formManager = $serviceManager->get('FormElementManager');
         return new \Console\Controller\GroupController(
             $serviceManager->get('Model\Group\GroupManager'),
-            $serviceManager->get('Model\Computer\Computer'),
+            $serviceManager->get('Model\Client\ClientManager'),
             $formManager->get('Console\Form\Package\Assign'),
             $formManager->get('Console\Form\AddToGroup'),
             $formManager->get('Console\Form\ClientConfig')

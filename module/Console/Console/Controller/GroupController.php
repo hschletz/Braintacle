@@ -33,10 +33,10 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
     protected $_groupManager;
 
     /**
-     * Computer prototype
-     * @var \Model_Computer
+     * Client manager
+     * @var \Model\Client\ClientManager
      */
-    protected $_computer;
+    protected $_clientManager;
 
     /**
      * Package assignment form
@@ -66,21 +66,21 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
      * Constructor
      *
      * @param \Model\Group\GroupManager $groupManager
-     * @param \Model_Computer $computer
+     * @param \Model\Client\ClientManager $clientManager
      * @param \Console\Form\Package\Assign $packageAssignmentForm
      * @param \Console\Form\AddToGroup $addToGroupForm
      * @param \Console\Form\ClientConfig $clientConfigForm
      */
     public function __construct(
         \Model\Group\GroupManager $groupManager,
-        \Model_Computer $computer,
+        \Model\Client\ClientManager $clientManager,
         \Console\Form\Package\Assign $packageAssignmentForm,
         \Console\Form\AddToGroup $addToGroupForm,
         \Console\Form\ClientConfig $clientConfigForm
     )
     {
         $this->_groupManager = $groupManager;
-        $this->_computer = $computer;
+        $this->_clientManager = $clientManager;
         $this->_packageAssignmentForm = $packageAssignmentForm;
         $this->_addToGroupForm = $addToGroupForm;
         $this->_clientConfigForm = $clientConfigForm;
@@ -149,7 +149,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
 
         $vars['sorting'] = $this->getOrder('InventoryDate', 'desc');
         $vars['group'] = $this->_currentGroup;
-        $vars['computers'] = $this->_computer->fetch(
+        $vars['computers'] = $this->_clientManager->getClients(
             array('Name', 'UserName', 'InventoryDate', 'Membership'),
             $vars['sorting']['order'],
             $vars['sorting']['direction'],
@@ -170,7 +170,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
 
         $vars['sorting'] = $this->getOrder('InventoryDate', 'desc');
         $vars['group'] = $this->_currentGroup;
-        $vars['computers'] = $this->_computer->fetch(
+        $vars['computers'] = $this->_clientManager->getClients(
             array('Name', 'UserName', 'InventoryDate'),
             $vars['sorting']['order'],
             $vars['sorting']['direction'],

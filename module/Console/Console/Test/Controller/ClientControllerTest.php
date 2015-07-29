@@ -27,10 +27,10 @@ namespace Console\Test\Controller;
 class ClientControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
-     * Computer mock
-     * @var \Model_Computer
+     * Client manager mock
+     * @var \Model\Client\ClientManager
      */
-    protected $_computer;
+    protected $_clientManager;
 
     /**
      * Group manager mock
@@ -113,7 +113,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function setUp()
     {
-        $this->_computer = $this->getMockBuilder('Model\Client\Client')->disableOriginalConstructor()->getMock();
+        $this->_clientManager = $this->getMockBuilder('Model\Client\ClientManager')
+                                     ->disableOriginalConstructor()
+                                     ->getMock();
         $this->_groupManager = $this->getMockBuilder('Model\Group\GroupManager')
                                     ->disableOriginalConstructor()
                                     ->getMock();
@@ -148,7 +150,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     protected function _createController()
     {
         return new \Console\Controller\ClientController(
-            $this->_computer,
+            $this->_clientManager,
             $this->_groupManager,
             $this->_registryManager,
             $this->_softwareManager,
@@ -160,17 +162,17 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testService()
     {
-        $this->_overrideService('Model\Computer\Computer', $this->_computer);
+        $this->_overrideService('Model\Client\ClientManager', $this->_clientManager);
         $this->_overrideService('Model\Config', $this->_config);
         parent::testService();
     }
 
     public function testInvalidClient()
     {
-        $this->_computer->expects($this->once())
-                        ->method('fetchById')
-                        ->with(42)
-                        ->will($this->throwException(new \RuntimeException));
+        $this->_clientManager->expects($this->once())
+                             ->method('getClient')
+                             ->with(42)
+                             ->will($this->throwException(new \RuntimeException));
         $this->dispatch('/console/client/general/?id=42');
         $this->assertRedirectTo('/console/client/index/');
         $this->assertContains(
@@ -181,15 +183,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testMenuForWindowsClients()
     {
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will(
-                            $this->returnValueMap(
-                                array(
-                                    array('Windows', $this->getMock('Model\Client\WindowsInstallation')),
-                                )
-                            )
-                        );
+        $client = array(
+            'Name' => 'name',
+            'Windows' => $this->getMock('Model\Client\WindowsInstallation'),
+            'Printer' => array(),
+        );
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/printers/?id=1');
         $query = '//ul[contains(concat(" ", normalize-space(@class), " "), " navigation_details ")]/li';
         $this->assertXpathQuery($query . '/a[@href="/console/client/windows/?id=1"]');
@@ -199,15 +199,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testMenuForNonWindowsClients()
     {
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will(
-                            $this->returnValueMap(
-                                array(
-                                    array('Windows', null),
-                                )
-                            )
-                        );
+        $client = array(
+            'Name' => 'name',
+            'Windows' => null,
+            'Printer' => array(),
+        );
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/printers/?id=1');
         $query = '//ul[contains(concat(" ", normalize-space(@class), " "), " navigation_details ")]/li';
         $this->assertNotXpathQuery($query . '/a[@href="/console/client/windows/?id=1"]');
@@ -220,18 +218,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form = $this->_formManager->get('Console\Form\Search');
         $form->expects($this->never())
              ->method('setData');
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->with(
-                            $this->_defaultColumns,
-                            'InventoryDate',
-                            'desc',
-                            null,
-                            null,
-                            null,
-                            null
-                        )
-                        ->will($this->returnValue($this->_sampleClients));
+        $this->_clientManager->expects($this->once())
+                             ->method('getClients')
+                             ->with(
+                                 $this->_defaultColumns,
+                                 'InventoryDate',
+                                 'desc',
+                                 null,
+                                 null,
+                                 null,
+                                 null
+                             )
+                             ->willReturn($this->_sampleClients);
         $this->dispatch('/console/client/index/');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//p[@class="textcenter"]', "\nAnzahl Clients: 2\n");
@@ -248,18 +246,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form = $this->_formManager->get('Console\Form\Search');
         $form->expects($this->never())
              ->method('setData');
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->with(
-                            array('Name', 'InventoryDate'),
-                            'InventoryDate',
-                            'desc',
-                            null,
-                            null,
-                            null,
-                            null
-                        )
-                        ->will($this->returnValue($this->_sampleClients));
+        $this->_clientManager->expects($this->once())
+                             ->method('getClients')
+                             ->with(
+                                 array('Name', 'InventoryDate'),
+                                 'InventoryDate',
+                                 'desc',
+                                 null,
+                                 null,
+                                 null,
+                                 null
+                             )
+                             ->willReturn($this->_sampleClients);
         $this->dispatch('/console/client/index/?columns=Name,InventoryDate');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryCount('//th', 2);
@@ -270,9 +268,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form = $this->_formManager->get('Console\Form\Search');
         $form->expects($this->never())
              ->method('setData');
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->will($this->returnValue($this->_sampleClients));
+        $this->_clientManager->expects($this->once())->method('getClients')->willReturn($this->_sampleClients);
+
         $this->dispatch('/console/client/index/?jumpto=software');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
@@ -286,9 +283,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form = $this->_formManager->get('Console\Form\Search');
         $form->expects($this->never())
              ->method('setData');
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->will($this->returnValue($this->_sampleClients));
+        $this->_clientManager->expects($this->once())->method('getClients')->willReturn($this->_sampleClients);
+
         $this->dispatch('/console/client/index/?jumpto=invalid');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
@@ -302,18 +298,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form = $this->_formManager->get('Console\Form\Search');
         $form->expects($this->never())
              ->method('setData');
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->with(
-                            $this->_defaultColumns,
-                            'InventoryDate',
-                            'desc',
-                            'PackageError',
-                            'packageName',
-                            null,
-                            null
-                        )
-                        ->will($this->returnValue($this->_sampleClients));
+        $this->_clientManager->expects($this->once())
+                             ->method('getClients')
+                             ->with(
+                                 $this->_defaultColumns,
+                                 'InventoryDate',
+                                 'desc',
+                                 'PackageError',
+                                 'packageName',
+                                 null,
+                                 null
+                             )
+                             ->willReturn($this->_sampleClients);
         $this->dispatch('/console/client/index/?filter=PackageError&search=packageName');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
@@ -327,18 +323,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form = $this->_formManager->get('Console\Form\Search');
         $form->expects($this->never())
              ->method('setData');
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->with(
-                            $this->_defaultColumns,
-                            'InventoryDate',
-                            'desc',
-                            array('NetworkInterface.Subnet', 'NetworkInterface.Netmask'),
-                            array('192.0.2.0', '255.255.255.0'),
-                            array(null, null),
-                            array(null, null)
-                        )
-                        ->will($this->returnValue($this->_sampleClients));
+        $this->_clientManager->expects($this->once())
+                             ->method('getClients')
+                             ->with(
+                                 $this->_defaultColumns,
+                                 'InventoryDate',
+                                 'desc',
+                                 array('NetworkInterface.Subnet', 'NetworkInterface.Netmask'),
+                                 array('192.0.2.0', '255.255.255.0'),
+                                 array(null, null),
+                                 array(null, null)
+                             )
+                             ->willReturn($this->_sampleClients);
         $this->dispatch(
             '/console/client/index/?' .
             'filter1=NetworkInterface.Subnet&search1=192.0.2.0&' .
@@ -356,18 +352,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form = $this->_formManager->get('Console\Form\Search');
         $form->expects($this->never())
              ->method('setData');
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->with(
-                            $this->_defaultColumns,
-                            'InventoryDate',
-                            'desc',
-                            'Software',
-                            "\xc2\x99", // Incorrect representation of TM symbol
-                            null,
-                            null
-                        )
-                        ->will($this->returnValue($this->_sampleClients));
+        $this->_clientManager->expects($this->once())
+                             ->method('getClients')
+                             ->with(
+                                 $this->_defaultColumns,
+                                 'InventoryDate',
+                                 'desc',
+                                 'Software',
+                                 "\xc2\x99", // Incorrect representation of TM symbol
+                                 null,
+                                 null
+                             )
+                             ->willReturn($this->_sampleClients);
         $this->dispatch('/console/client/index/?filter=Software&search=%C2%99');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
@@ -395,18 +391,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('getData')
              ->will($this->returnValue($formData));
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->with(
-                            array('Name', 'UserName', 'InventoryDate'),
-                            'InventoryDate',
-                            'desc',
-                            'Name',
-                            'test',
-                            'eq',
-                            '1'
-                        )
-                        ->will($this->returnValue($this->_sampleClients));
+        $this->_clientManager->expects($this->once())
+                             ->method('getClients')
+                             ->with(
+                                 array('Name', 'UserName', 'InventoryDate'),
+                                 'InventoryDate',
+                                 'desc',
+                                 'Name',
+                                 'test',
+                                 'eq',
+                                 '1'
+                             )
+                             ->willReturn($this->_sampleClients);
         $query = 'filter=Name&search=test&operator=eq&invert=1';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
@@ -452,18 +448,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                      )
                  )
              );
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->with(
-                            array('Name', 'UserName', 'InventoryDate'),
-                            'InventoryDate',
-                            'desc',
-                            'InventoryDate',
-                            $date,
-                            'eq',
-                            '1'
-                        )
-                        ->will($this->returnValue($this->_sampleClients));
+        $this->_clientManager->expects($this->once())
+                             ->method('getClients')
+                             ->with(
+                                 array('Name', 'UserName', 'InventoryDate'),
+                                 'InventoryDate',
+                                 'desc',
+                                 'InventoryDate',
+                                 $date,
+                                 'eq',
+                                 '1'
+                             )
+                             ->willReturn($this->_sampleClients);
         $query = 'filter=InventoryDate&search=2014-05-12&operator=eq&invert=1';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
@@ -492,18 +488,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                      )
                  )
              );
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->with(
-                            array('Name', 'UserName', 'InventoryDate'),
-                            'InventoryDate',
-                            'desc',
-                            'CpuType',
-                            'value',
-                            'eq',
-                            '0'
-                        )
-                        ->will($this->returnValue(array()));
+        $this->_clientManager->expects($this->once())
+                             ->method('getClients')
+                             ->with(
+                                 array('Name', 'UserName', 'InventoryDate'),
+                                 'InventoryDate',
+                                 'desc',
+                                 'CpuType',
+                                 'value',
+                                 'eq',
+                                 '0'
+                             )
+                             ->willReturn(array());
         $query = 'filter=CpuType&search=value&operator=eq&invert=0';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
@@ -529,18 +525,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                      )
                  )
              );
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->with(
-                            array('Name', 'UserName', 'InventoryDate', 'CpuType'),
-                            'InventoryDate',
-                            'desc',
-                            'CpuType',
-                            'value',
-                            'ne',
-                            '0'
-                        )
-                        ->will($this->returnValue(array()));
+        $this->_clientManager->expects($this->once())
+                             ->method('getClients')
+                             ->with(
+                                 array('Name', 'UserName', 'InventoryDate', 'CpuType'),
+                                 'InventoryDate',
+                                 'desc',
+                                 'CpuType',
+                                 'value',
+                                 'ne',
+                                 '0'
+                             )
+                             ->willReturn(array());
         $query = 'filter=CpuType&search=value&operator=ne&invert=0';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
@@ -566,18 +562,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                      )
                  )
              );
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->with(
-                            array('Name', 'UserName', 'InventoryDate', 'CpuType'),
-                            'InventoryDate',
-                            'desc',
-                            'CpuType',
-                            'value',
-                            'eq',
-                            '1'
-                        )
-                        ->will($this->returnValue(array()));
+        $this->_clientManager->expects($this->once())
+                             ->method('getClients')
+                             ->with(
+                                 array('Name', 'UserName', 'InventoryDate', 'CpuType'),
+                                 'InventoryDate',
+                                 'desc',
+                                 'CpuType',
+                                 'value',
+                                 'eq',
+                                 '1'
+                             )
+                             ->willReturn(array());
         $query = 'filter=CpuType&search=value&operator=eq&invert=1';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
@@ -602,18 +598,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('getData')
              ->will($this->returnValue($formData));
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->with(
-                            array('Name', 'UserName', 'InventoryDate', 'Registry.value'),
-                            'InventoryDate',
-                            'desc',
-                            'Registry.value',
-                            'test',
-                            'like',
-                            '0'
-                        )
-                        ->will($this->returnValue($this->_sampleClients));
+        $this->_clientManager->expects($this->once())
+                             ->method('getClients')
+                             ->with(
+                                 array('Name', 'UserName', 'InventoryDate', 'Registry.value'),
+                                 'InventoryDate',
+                                 'desc',
+                                 'Registry.value',
+                                 'test',
+                                 'like',
+                                 '0'
+                             )
+                             ->willReturn($this->_sampleClients);
         $query = 'filter=Registry.value&search=test&operator=like&invert=0';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
@@ -639,18 +635,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('getData')
              ->will($this->returnValue($formData));
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->with(
-                            array('Name', 'UserName', 'InventoryDate', 'UserDefinedInfo.customField'),
-                            'InventoryDate',
-                            'desc',
-                            'UserDefinedInfo.customField',
-                            'test',
-                            'like',
-                            '0'
-                        )
-                        ->will($this->returnValue($this->_sampleClients));
+        $this->_clientManager->expects($this->once())
+                             ->method('getClients')
+                             ->with(
+                                 array('Name', 'UserName', 'InventoryDate', 'UserDefinedInfo.customField'),
+                                 'InventoryDate',
+                                 'desc',
+                                 'UserDefinedInfo.customField',
+                                 'test',
+                                 'like',
+                                 '0'
+                             )
+                             ->willReturn($this->_sampleClients);
         $query = 'filter=UserDefinedInfo.customField&search=test&operator=like&invert=0';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
@@ -682,18 +678,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $sampleClients = $this->_sampleClients;
         $sampleClients[0]['UserDefinedInfo.customField'] = new \DateTime('2015-04-11 10:31:00');
         $sampleClients[1]['UserDefinedInfo.customField'] = new \DateTime('2015-04-12 10:32:00');
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->with(
-                            array('Name', 'UserName', 'InventoryDate', 'UserDefinedInfo.customField'),
-                            'InventoryDate',
-                            'desc',
-                            'UserDefinedInfo.customField',
-                            'test',
-                            'like',
-                            '0'
-                        )
-                        ->willReturn($sampleClients);
+        $this->_clientManager->expects($this->once())
+                             ->method('getClients')
+                             ->with(
+                                 array('Name', 'UserName', 'InventoryDate', 'UserDefinedInfo.customField'),
+                                 'InventoryDate',
+                                 'desc',
+                                 'UserDefinedInfo.customField',
+                                 'test',
+                                 'like',
+                                 '0'
+                             )
+                             ->willReturn($sampleClients);
         $query = 'filter=UserDefinedInfo.customField&search=test&operator=like&invert=0';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
@@ -721,18 +717,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('getData')
              ->will($this->returnValue($formData));
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->with(
-                            array('Name', 'UserName', 'InventoryDate', 'UserDefinedInfo.TAG'),
-                            'InventoryDate',
-                            'desc',
-                            'UserDefinedInfo.TAG',
-                            'test',
-                            'like',
-                            '0'
-                        )
-                        ->will($this->returnValue($this->_sampleClients));
+        $this->_clientManager->expects($this->once())
+                             ->method('getClients')
+                             ->with(
+                                 array('Name', 'UserName', 'InventoryDate', 'UserDefinedInfo.TAG'),
+                                 'InventoryDate',
+                                 'desc',
+                                 'UserDefinedInfo.TAG',
+                                 'test',
+                                 'like',
+                                 '0'
+                             )
+                             ->willReturn($this->_sampleClients);
         $query = 'filter=UserDefinedInfo.TAG&search=test&operator=like&invert=0';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
@@ -751,8 +747,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->will($this->returnValue(false));
         $form->expects($this->never())
              ->method('getData');
-        $this->_computer->expects($this->never())
-                        ->method('fetch');
+        $this->_clientManager->expects($this->never())->method('getClients');
         $query = 'filter=CpuClock&search=invalid&operator=lt&invert=1';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertRedirectTo("/console/client/search/?customSearch=button&$query");
@@ -763,9 +758,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
         $flashMessenger->addErrorMessage('error');
         $flashMessenger->addSuccessMessage(array('success %d' => 42));
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->will($this->returnValue(array()));
+        $this->_clientManager->expects($this->once())->method('getClients')->willReturn(array());
         $this->_disableTranslator();
         $this->dispatch('/console/client/index/');
         $this->assertXpathQuery('//ul[@class="error"]/li[text()="error"]');
@@ -774,36 +767,36 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testGeneralActionDefault()
     {
-        $map = array(
-            array('Id', 1),
-            array('ClientId', 'client_id'),
-            array('InventoryDate', new \Zend_Date('2014-05-29 11:16:15')),
-            array('LastContactDate', new \Zend_Date('2014-05-29 11:17:34')),
-            array('OcsAgent', 'user_agent'),
-            array('Manufacturer', 'manufacturer'),
-            array('Model', 'model'),
-            array('IsSerialBlacklisted', false),
-            array('Serial', 'serial'),
-            array('IsAssetTagBlacklisted', false),
-            array('AssetTag', 'asset_tag'),
-            array('Type', 'type'),
-            array('OsName', 'os_name'),
-            array('OsVersionString', 'os_version_string'),
-            array('OsVersionNumber', 'os_version_number'),
-            array('OsComment', 'os_comment'),
-            array('CpuType', 'cpu_type'),
-            array('CpuClock', 1234),
-            array('CpuCores', 2),
-            array('MemorySlot', array(array('Size' => 2), array('Size' => 3))),
-            array('PhysicalMemory', 1234),
-            array('SwapMemory', 5678),
-            array('UserName', 'user_name'),
-            array('Windows', null),
-            array('Uuid', 'uuid'),
+        $client = array(
+            'Id' => 1,
+            'Name' => 'name',
+            'ClientId' => 'client_id',
+            'InventoryDate' => new \Zend_Date('2014-05-29 11:16:15'),
+            'LastContactDate' => new \Zend_Date('2014-05-29 11:17:34'),
+            'OcsAgent' => 'user_agent',
+            'Manufacturer' => 'manufacturer',
+            'Model' => 'model',
+            'IsSerialBlacklisted' => false,
+            'Serial' => 'serial',
+            'IsAssetTagBlacklisted' => false,
+            'AssetTag' => 'asset_tag',
+            'Type' => 'type',
+            'OsName' => 'os_name',
+            'OsVersionString' => 'os_version_string',
+            'OsVersionNumber' => 'os_version_number',
+            'OsComment' => 'os_comment',
+            'CpuType' => 'cpu_type',
+            'CpuClock' => 1234,
+            'CpuCores' => 2,
+            'MemorySlot' => array(array('Size' => 2), array('Size' => 3)),
+            'PhysicalMemory' => 1234,
+            'SwapMemory' => 5678,
+            'UserName' => 'user_name',
+            'Windows' => null,
+            'Uuid' => 'uuid',
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/general/?id=1');
         $this->assertResponseStatusCode(200);
 
@@ -840,9 +833,10 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             array('AssetTag', 'asset_tag'),
             array('MemorySlot', array()),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/general/?id=1');
         $this->assertXpathQuery("//dd[text()='\nserial\n'][@class='blacklisted']");
         $this->assertXpathQuery("//dd[text()='\nasset_tag\n'][not(@class)]");
@@ -857,9 +851,10 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             array('AssetTag', 'asset_tag'),
             array('MemorySlot', array()),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/general/?id=1');
         $this->assertXpathQuery("//dd[text()='\nserial\n'][not(@class)]");
         $this->assertXpathQuery("//dd[text()='\nasset_tag\n'][@class='blacklisted']");
@@ -868,13 +863,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testGeneralActionWindowsUser()
     {
         $map = array(
-            array('UserName', 'user_name'),
             array('Windows', array('UserDomain' => 'user_domain')),
+            array('UserName', 'user_name'),
             array('MemorySlot', array()),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/general/?id=1');
         $this->assertXpathQueryContentContains('//dd', "\nuser_name @ user_domain\n");
     }
@@ -905,9 +901,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'ManualProductKey' => 'manual_product_key',
         );
         $this->_softwareManager->expects($this->never())->method('setProductKey');
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap(array(array('Windows', $windows))));
+
+        $client = array(
+            'Name' => 'name',
+            'Windows' => $windows,
+        );
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/windows/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXPathQuery('//form[@action=""][@method="POST"]');
@@ -961,16 +961,17 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('getData')
              ->will($this->returnValue($postData));
-        $map = array(
+
+         $map = array(
             array('Id', 1),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->_softwareManager->expects($this->once())
                                ->method('setProductKey')
-                               ->with($this->_computer, 'entered_key');
+                               ->with($client, 'entered_key');
 
         $this->dispatch('/console/client/windows/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/windows/?id=1');
@@ -980,15 +981,16 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         // DnsServer and DefaultGateway typically show up both or not at all, so
         // they are not tested separately.
-        $map = array(
-            array('DnsServer', 'dns_server'),
-            array('DefaultGateway', 'default_gateway'),
-            array('NetworkInterface', array()),
-            array('Modem', array()),
+        $client = array(
+            'Name' => 'name',
+            'Windows' => null,
+            'DnsServer' => 'dns_server',
+            'DefaultGateway' => 'default_gateway',
+            'NetworkInterface' => array(),
+            'Modem' => array(),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/network/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//h2[text()='\nGlobale Netzwerkkonfiguration\n']");
@@ -1022,13 +1024,16 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             $interface + array('IsBlacklisted' => false),
             $interface + array('IsBlacklisted' => true),
         );
-        $map = array(
-            array('NetworkInterface', $interfaces),
-            array('Modem', array()),
+        $client = array(
+            'Name' => 'name',
+            'Windows' => null,
+            'DnsServer' => null,
+            'DefaultGateway' => null,
+            'NetworkInterface' => $interfaces,
+            'Modem' => array(),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/network/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery("//h2[text()='\nGlobale Netzwerkkonfiguration\n']");
@@ -1044,15 +1049,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Type' => 'type',
             'Name' => 'name',
         );
-        $map = array(
-            array('NetworkInterface', array()),
-            array('Modem', array($modem)),
+        $client = array(
+            'Name' => 'name',
+            'Windows' => null,
+            'DnsServer' => null,
+            'DefaultGateway' => null,
+            'NetworkInterface' => array(),
+            'Modem' => array($modem),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
         $this->dispatch('/console/client/network/?id=1');
         $this->assertResponseStatusCode(200);
+
         $this->assertNotXpathQuery("//h2[text()='\nGlobale Netzwerkkonfiguration\n']");
         $this->assertNotXpathQuery("//h2[text()='\nNetzwerkschnittstellen\n']");
         $this->assertXpathQuery("//h2[text()='\nModems\n']");
@@ -1139,14 +1147,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'FreeSpace' => 4000, // ignored
             ),
         );
-        $map = array(
-            array('Windows', $this->getMock('Model\Client\WindowsInstallation')),
-            array('StorageDevice', $devices),
-            array('Filesystem', $filesystems),
+        $client = array(
+            'Name' => 'name',
+            'Windows' => $this->getMock('Model\Client\WindowsInstallation'),
+            'StorageDevice' => $devices,
+            'Filesystem' => $filesystems,
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/storage/?id=1');
         $this->assertResponseStatusCode(200);
         // Devices
@@ -1202,14 +1210,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'FreeSpace' => 4000,
             ),
         );
-        $map = array(
-            array('Windows', null),
-            array('StorageDevice', $devices),
-            array('Filesystem', $filesystems),
+        $client = array(
+            'Name' => 'name',
+            'Windows' => null,
+            'StorageDevice' => $devices,
+            'Filesystem' => $filesystems,
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/storage/?id=1');
         $this->assertResponseStatusCode(200);
         // Devices
@@ -1236,13 +1244,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'CurrentResolution' => 'resolution2',
             ),
         );
-        $map = array(
-            array('DisplayController', $displayControllers),
-            array('Display', array()),
+        $client = array(
+            'Name' => 'name',
+            'Windows' => null,
+            'DisplayController' => $displayControllers,
+            'Display' => array(),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/display/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//h2[text()='\nDisplay-Controller\n']");
@@ -1260,13 +1269,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'ProductionDate' => 'date',
             'Type' => 'type',
         );
-        $map = array(
-            array('DisplayController', array()),
-            array('Display', array($display)),
+        $client = array(
+            'Name' => 'name',
+            'Windows' => null,
+            'DisplayController' => array(),
+            'Display' => array($display),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/display/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//h2[text()='\nAnzeigegeräte\n']");
@@ -1275,14 +1285,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testBiosAction()
     {
-        $map = array(
-            array('BiosManufacturer', 'manufacturer'),
-            array('BiosDate', 'date'),
-            array('BiosVersion', 'line1;line2'),
+        $client = array(
+            'Name' => 'name',
+            'Windows' => null,
+            'BiosManufacturer' => 'manufacturer',
+            'BiosDate' => 'date',
+            'BiosVersion' => 'line1;line2',
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/bios/?id=1');
         $this->assertResponseStatusCode(200);
         $query = "//dl/dt[text()='\n%s\n']/following::dd[1][text()='\n%s\n']";
@@ -1299,15 +1310,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Name' => 'name',
             ),
         );
-        $map = array(
-            array('MemorySlot', array()),
-            array('Controller', $controllers),
-            array('ExtensionSlot', array()),
-            array('Windows', null),
+        $client = array(
+            'Name' => 'name',
+            'Windows' => null,
+            'MemorySlot' => array(),
+            'Controller' => $controllers,
+            'ExtensionSlot' => array(),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/system/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery("//h2[text()='\nRAM-Steckplätze\n']");
@@ -1327,15 +1338,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Name' => 'name',
             ),
         );
-        $map = array(
-            array('MemorySlot', array()),
-            array('Controller', $controllers),
-            array('ExtensionSlot', array()),
-            array('Windows', $this->getMock('Model\Client\WindowsInstallation')),
+        $client = array(
+            'Name' => 'name',
+            'Windows' => $this->getMock('Model\Client\WindowsInstallation'),
+            'MemorySlot' => array(),
+            'Controller' => $controllers,
+            'ExtensionSlot' => array(),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/system/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryCount('//tr[1]/th', 3);
@@ -1366,14 +1377,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Description' => 'description1',
             ),
         );
-        $map = array(
-            array('MemorySlot', $slots),
-            array('Controller', array()),
-            array('ExtensionSlot', array()),
+        $client = array(
+            'Name' => 'name',
+            'Windows' => null,
+            'MemorySlot' => $slots,
+            'Controller' => array(),
+            'ExtensionSlot' => array(),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/system/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//h2[text()='\nRAM-Steckplätze\n']");
@@ -1404,14 +1416,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'SlotId' => '<id>'
             ),
         );
-        $map = array(
-            array('MemorySlot', array()),
-            array('Controller', array()),
-            array('ExtensionSlot', $slots),
+        $client = array(
+            'Name' => 'name',
+            'Windows' => null,
+            'MemorySlot' => array(),
+            'Controller' => array(),
+            'ExtensionSlot' => $slots,
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/system/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//h2[text()='\nErweiterungssteckplätze\n']");
@@ -1431,12 +1444,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Description' => 'description',
             ),
         );
-        $map = array(
-            array('Printer', $printers),
+        $client = array(
+            'Name' => 'name',
+            'Windows' => null,
+            'Printer' => $printers,
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/printers/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryCount('//tr', 2);
@@ -1463,12 +1477,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Windows', $this->getMock('Model\Client\WindowsInstallation')),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->once())
-                        ->method('getItems')
-                        ->willReturn(array($software1, $software2));
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $client->expects($this->once())
+               ->method('getItems')
+               ->with('Software')
+               ->willReturn(array($software1, $software2));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//th/a[text()='Version']");
@@ -1491,12 +1507,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Windows', null),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->once())
-                        ->method('getItems')
-                        ->willReturn(array($software1));
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $client->expects($this->once())
+               ->method('getItems')
+               ->with('Software')
+               ->willReturn(array($software1));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//th/a[text()='Version']");
@@ -1524,12 +1542,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Windows', null),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->once())
-                        ->method('getItems')
-                        ->willReturn(array($software1, $software2));
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $client->expects($this->once())
+               ->method('getItems')
+               ->with('Software')
+               ->willReturn(array($software1, $software2));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//tr[2]/td[1]/span[@title="comment1"]');
@@ -1577,12 +1597,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Windows', $this->getMock('Model\Client\WindowsInstallation')),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->once())
-                        ->method('getItems')
-                        ->willReturn(array($software1a, $software2, $software1b));
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $client->expects($this->once())
+               ->method('getItems')
+               ->with('Software')
+               ->willReturn(array($software1a, $software2, $software1b));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//tr[2]/td[1]/span[@class="duplicate"][text()="(2)"]');
@@ -1595,10 +1617,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                       ->method('__get')
                       ->with('displayBlacklistedSoftware')
                       ->will($this->returnValue(false));
-        $this->_computer->expects($this->once())
-                        ->method('getItems')
-                        ->with('Software', 'Name', 'asc', array('Software.NotIgnored' => null))
-                        ->will($this->returnValue(array()));
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->once())
+               ->method('getItems')
+               ->with('Software', 'Name', 'asc', array('Software.NotIgnored' => null))
+               ->willReturn(array());
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
     }
@@ -1609,10 +1634,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                       ->method('__get')
                       ->with('displayBlacklistedSoftware')
                       ->will($this->returnValue(true));
-        $this->_computer->expects($this->once())
-                        ->method('getItems')
-                        ->with('Software', 'Name', 'asc', array())
-                        ->will($this->returnValue(array()));
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->once())
+               ->method('getItems')
+               ->with('Software', 'Name', 'asc', array())
+               ->willReturn(array());
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
     }
@@ -1629,9 +1657,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Guid' => null,
             ),
         );
-        $this->_computer->expects($this->exactly(2))
-                        ->method('getItems')
-                        ->will($this->onConsecutiveCalls($products, array()));
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->exactly(2))
+               ->method('getItems')
+               ->will($this->onConsecutiveCalls($products, array()));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/msoffice/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//h2[text()='\nInstallierte Microsoft Office-Produkte\n']");
@@ -1651,9 +1682,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Guid' => null,
             ),
         );
-        $this->_computer->expects($this->exactly(2))
-                        ->method('getItems')
-                        ->will($this->onConsecutiveCalls(array(), $products));
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->exactly(2))
+               ->method('getItems')
+               ->will($this->onConsecutiveCalls(array(), $products));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/msoffice/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery("//h2[text()='\nInstallierte Microsoft Office-Produkte\n']");
@@ -1681,9 +1715,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Guid' => null,
             ),
         );
-        $this->_computer->expects($this->exactly(2))
-                        ->method('getItems')
-                        ->will($this->onConsecutiveCalls($products, array()));
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->exactly(2))
+               ->method('getItems')
+               ->will($this->onConsecutiveCalls($products, array()));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/msoffice/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//tr[2]/td[1]', "\nname1\n");
@@ -1710,9 +1747,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Guid' => 'guid',
             ),
         );
-        $this->_computer->expects($this->exactly(2))
-                        ->method('getItems')
-                        ->will($this->onConsecutiveCalls($products, array()));
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->exactly(2))
+               ->method('getItems')
+               ->will($this->onConsecutiveCalls($products, array()));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/msoffice/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//tr[2]/td[1]/span');
@@ -1721,10 +1761,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testRegistryActionNoValues()
     {
-        $this->_computer->expects($this->once())
-                        ->method('getItems')
-                        ->with('RegistryData', 'Value', 'asc')
-                        ->will($this->returnValue(array()));
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->once())
+               ->method('getItems')
+               ->with('RegistryData', 'Value', 'asc')
+               ->willReturn(array());
+        $this->_clientManager->method('getClient')->willReturn($client);
         $this->_registryManager->expects($this->once())->method('getValueDefinitions')->willReturn(array());
         $this->dispatch('/console/client/registry/?id=1');
         $this->assertResponseStatusCode(200);
@@ -1748,10 +1790,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'FullPath' => 'full_path',
             )
         );
-        $this->_computer->expects($this->once())
-                        ->method('getItems')
-                        ->with('RegistryData', 'Value', 'asc')
-                        ->will($this->returnValue(array($data)));
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->once())
+               ->method('getItems')
+               ->with('RegistryData', 'Value', 'asc')
+               ->willReturn(array($data));
+        $this->_clientManager->method('getClient')->willReturn($client);
         $this->_registryManager->expects($this->once())->method('getValueDefinitions')->willReturn($values);
         $this->dispatch('/console/client/registry/?id=1');
         $this->assertResponseStatusCode(200);
@@ -1762,10 +1806,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testVirtualmachinesActionNoMachines()
     {
-        $this->_computer->expects($this->once())
-                        ->method('getItems')
-                        ->with('VirtualMachine', 'Name', 'asc')
-                        ->will($this->returnValue(array()));
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->once())
+               ->method('getItems')
+               ->with('VirtualMachine', 'Name', 'asc')
+               ->willReturn(array());
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/virtualmachines/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//table');
@@ -1791,10 +1838,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'GuestMemory' => '',
             ),
         );
-        $this->_computer->expects($this->once())
-                        ->method('getItems')
-                        ->with('VirtualMachine', 'Name', 'asc')
-                        ->will($this->returnValue($vms));
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->once())
+               ->method('getItems')
+               ->with('VirtualMachine', 'Name', 'asc')
+               ->willReturn($vms);
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/virtualmachines/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//tr[2]/td[6]', "\n1024 MB\n");
@@ -1808,14 +1858,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Name' => 'name',
             'Description' => 'description',
         );
-        $map = array(
-            array('AudioDevice', array($audiodevice)),
-            array('InputDevice', array()),
-            array('Port', array()),
+        $client = array(
+            'Name' => 'name',
+            'Windows' => null,
+            'AudioDevice' => array($audiodevice),
+            'InputDevice' => array(),
+            'Port' => array(),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/misc/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//h2[text()='\nAudiogeräte\n']");
@@ -1850,14 +1901,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Interface' => 'interface1',
             ),
         );
-        $map = array(
-            array('AudioDevice', array()),
-            array('InputDevice', $inputdevices),
-            array('Port', array()),
+        $client = array(
+            'Name' => 'name',
+            'Windows' => null,
+            'AudioDevice' => array(),
+            'InputDevice' => $inputdevices,
+            'Port' => array(),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/misc/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery("//h2[text()='\nAudiogeräte\n']");
@@ -1875,15 +1927,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Type' => 'manufacturer',
             'Name' => 'name',
         );
-        $map = array(
-            array('AudioDevice', array()),
-            array('InputDevice', array()),
-            array('Port', array($port)),
-            array('Windows', $this->getMock('Model\Client\WindowsInstallation')),
+        $client = array(
+            'Name' => 'name',
+            'Windows' => $this->getMock('Model\Client\WindowsInstallation'),
+            'AudioDevice' => array(),
+            'InputDevice' => array(),
+            'Port' => array($port),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/misc/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery("//h2[text()='\nAudiogeräte\n']");
@@ -1901,15 +1953,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Name' => 'name',
             'Connector' => 'connector',
         );
-        $map = array(
-            array('AudioDevice', array()),
-            array('InputDevice', array()),
-            array('Port', array($port)),
-            array('Windows', null),
+        $client = array(
+            'Name' => 'name',
+            'Windows' => null,
+            'AudioDevice' => array(),
+            'InputDevice' => array(),
+            'Port' => array($port),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/misc/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery("//h2[text()='\nAudiogeräte\n']");
@@ -1926,12 +1978,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $customFields->expects($this->once())
                      ->method('getArrayCopy')
                      ->will($this->returnValue(array()));
-        $map = array(
-            array('CustomFields', $customFields),
+        $client = array(
+            'Name' => 'name',
+            'Windows' => null,
+            'CustomFields' => $customFields,
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->_getControllerPlugin('FlashMessenger')->addSuccessMessage('successMessage');
         $this->_disableTranslator();
         $this->dispatch('/console/client/customfields/?id=1');
@@ -1948,12 +2001,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $customFields->expects($this->once())
                      ->method('getArrayCopy')
                      ->will($this->returnValue($data));
-        $map = array(
-            array('CustomFields', $customFields),
+        $client = array(
+            'Name' => 'name',
+            'Windows' => null,
+            'CustomFields' => $customFields,
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+        $this->_clientManager->method('getClient')->willReturn($client);
         $form = $this->_formManager->get('Console\Form\CustomFields');
         $form->expects($this->never())
              ->method('isValid');
@@ -2022,12 +2075,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->once())
-                        ->method('setUserDefinedInfo')
-                        ->with($postData['Fields']);
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $client->expects($this->once())->method('setUserDefinedInfo')->with($postData['Fields']);
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/customfields/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/customfields/?id=1');
         $this->assertContains(
@@ -2045,13 +2097,16 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->method('render');
         $assignments = new \Zend\Db\ResultSet\ResultSet;
         $assignments->initialize(array());
-        $this->_computer->expects($this->once())
-                        ->method('getPackages')
-                        ->with('PackageName', 'asc')
-                        ->will($this->returnValue($assignments));
-        $this->_computer->expects($this->once())
-                        ->method('getAssignablePackages')
-                        ->will($this->returnValue(array()));
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->once())
+               ->method('getPackages')
+               ->with('PackageName', 'asc')
+               ->willReturn($assignments);
+        $client->expects($this->once())
+               ->method('getAssignablePackages')
+               ->willReturn(array());
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/packages/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//h2');
@@ -2090,14 +2145,17 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 ),
             )
         );
-        $this->_computer->method('offsetGet')->will($this->returnValueMap(array(array('Id', 1))));
-        $this->_computer->expects($this->once())
-                        ->method('getPackages')
-                        ->with('PackageName', 'asc')
-                        ->will($this->returnValue($assignments));
-        $this->_computer->expects($this->once())
-                        ->method('getAssignablePackages')
-                        ->will($this->returnValue(array()));
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap(array(array('Id', 1))));
+        $client->expects($this->once())
+               ->method('getPackages')
+               ->with('PackageName', 'asc')
+               ->willReturn($assignments);
+        $client->expects($this->once())
+               ->method('getAssignablePackages')
+               ->willReturn(array());
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/packages/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//h2', "\nZugewiesene Pakete\n");
@@ -2133,16 +2191,17 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $assignments = new \Zend\Db\ResultSet\ResultSet;
         $assignments->initialize(array());
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->once())
-                        ->method('getPackages')
-                        ->with('PackageName', 'asc')
-                        ->will($this->returnValue($assignments));
-        $this->_computer->expects($this->once())
-                        ->method('getAssignablePackages')
-                        ->will($this->returnValue($packages));
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $client->expects($this->once())
+               ->method('getPackages')
+               ->with('PackageName', 'asc')
+               ->willReturn($assignments);
+        $client->expects($this->once())
+               ->method('getAssignablePackages')
+               ->willReturn($packages);
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/packages/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//h2', "\nPakete installieren\n");
@@ -2157,10 +2216,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form = $this->_formManager->get('Console\Form\GroupMemberships');
         $form->expects($this->never())
              ->method('render');
-        $this->_computer->expects($this->once())
-                        ->method('getGroups')
-                        ->with(\Model_GroupMembership::TYPE_ALL)
-                        ->will($this->returnValue(array()));
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->once())
+               ->method('getGroups')
+               ->with(\Model_GroupMembership::TYPE_ALL)
+               ->willReturn(array());
+        $this->_clientManager->method('getClient')->willReturn($client);
         $this->_groupManager->expects($this->once())
                            ->method('getGroups')
                            ->with(null, null, 'Name')
@@ -2197,13 +2258,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('setAttribute')
              ->with('action', '/console/client/managegroups/?id=1');
-        $this->_computer->expects($this->once())
-                        ->method('getGroups')
-                        ->with(\Model_GroupMembership::TYPE_ALL)
-                        ->will($this->returnValue(array($membership)));
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap(array(array('Id', 1))));
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->once())
+               ->method('getGroups')
+               ->with(\Model_GroupMembership::TYPE_ALL)
+               ->willReturn(array($membership));
+        $client->method('offsetGet')
+               ->will($this->returnValueMap(array(array('Id', 1))));
+        $this->_clientManager->method('getClient')->willReturn($client);
         $this->_groupManager->expects($this->once())
                             ->method('getGroups')
                             ->with(null, null, 'Name')
@@ -2248,13 +2310,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('setAttribute')
              ->with('action', '/console/client/managegroups/?id=1');
-        $this->_computer->expects($this->once())
-                        ->method('getGroups')
-                        ->with(\Model_GroupMembership::TYPE_ALL)
-                        ->will($this->returnValue($memberships));
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap(array(array('Id', 1))));
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->once())
+               ->method('getGroups')
+               ->with(\Model_GroupMembership::TYPE_ALL)
+               ->willReturn($memberships);
+        $client->method('offsetGet')
+               ->will($this->returnValueMap(array(array('Id', 1))));
+        $this->_clientManager->method('getClient')->willReturn($client);
         $this->_groupManager->expects($this->once())
                             ->method('getGroups')
                             ->with(null, null, 'Name')
@@ -2279,13 +2342,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testConfigurationActionGet()
     {
         $config = array('name' => 'value');
-        $this->_computer->expects($this->once())
-                        ->method('getAllConfig')
-                        ->will($this->returnValue($config));
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->once())->method('getAllConfig')->willReturn($config);
+        $this->_clientManager->method('getClient')->willReturn($client);
         $form = $this->_formManager->get('Console\Form\ClientConfig');
         $form->expects($this->once())
              ->method('setClientObject')
-             ->with($this->_computer);
+             ->with($client);
         $form->expects($this->once())
              ->method('setData')
              ->with($config);
@@ -2304,10 +2367,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testConfigurationActionPostInvalid()
     {
         $postData = array('key' => 'value');
+        $client = $this->getMock('Model\Client\Client');
+        $this->_clientManager->method('getClient')->willReturn($client);
         $form = $this->_formManager->get('Console\Form\ClientConfig');
         $form->expects($this->once())
              ->method('setClientObject')
-             ->with($this->_computer);
+             ->with($client);
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -2327,10 +2392,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testConfigurationActionPostValid()
     {
         $postData = array('key' => 'value');
+
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap(array(array('Id', 1))));
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $form = $this->_formManager->get('Console\Form\ClientConfig');
         $form->expects($this->once())
              ->method('setClientObject')
-             ->with($this->_computer);
+             ->with($client);
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -2341,12 +2411,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->method('process');
         $form->expects($this->never())
              ->method('render');
-        $map = array(
-            array('Id', 1),
-        );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
+
         $this->dispatch('/console/client/configuration/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/configuration/?id=1');
     }
@@ -2360,11 +2425,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Name', 'name'),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->never())
-                        ->method('delete');
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $client->expects($this->never())->method('delete');
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/delete/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
@@ -2382,11 +2447,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->never())
-                        ->method('delete');
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $client->expects($this->never())->method('delete');
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/delete/?id=1', 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/client/general/?id=1');
     }
@@ -2399,13 +2464,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Name', 'name'),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->once())
-                        ->method('delete')
-                        ->with(false, true)
-                        ->will($this->returnValue(true));
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $client->expects($this->once())
+               ->method('delete')
+               ->with(false, true)
+               ->willReturn(true);
+        $this->_clientManager->method('getClient')->willReturn($client);
         $postData = array('yes' => 'Yes', 'DeleteInterfaces' => '1');
         $this->dispatch('/console/client/delete/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/index/');
@@ -2425,13 +2490,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Name', 'name'),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->once())
-                        ->method('delete')
-                        ->with(false, false)
-                        ->will($this->returnValue(false));
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $client->expects($this->once())
+               ->method('delete')
+               ->with(false, false)
+               ->willReturn(false);
+        $this->_clientManager->method('getClient')->willReturn($client);
         $postData = array('yes' => 'Yes', 'DeleteInterfaces' => '0');
         $this->dispatch('/console/client/delete/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/index/');
@@ -2445,8 +2510,10 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testRemovepackageActionGet()
     {
-        $this->_computer->expects($this->never())
-                        ->method('removePackage');
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->never())->method('removePackage');
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/removepackage/?id=1&package=name');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
@@ -2460,11 +2527,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->never())
-                        ->method('removePackage');
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $client->expects($this->never())->method('removePackage');
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/removepackage/?id=1&package=name', 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/client/packages/?id=1');
     }
@@ -2474,12 +2541,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->once())
-                        ->method('removePackage')
-                        ->with('name');
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $client->expects($this->once())->method('removePackage')->with('name');
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/removepackage/?id=1&package=name', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/client/packages/?id=1');
     }
@@ -2496,11 +2562,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->never())
-                        ->method('assignPackage');
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $client->expects($this->never())->method('assignPackage');
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/installpackage/?id=1');
         $this->assertRedirectTo('/console/client/packages/?id=1');
     }
@@ -2520,11 +2586,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->never())
-                        ->method('assignPackage');
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $client->expects($this->never())->method('assignPackage');
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/installpackage/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/packages/?id=1');
     }
@@ -2545,12 +2611,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->once())
-                        ->method('assignPackage')
-                        ->with('package2');
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $client->expects($this->once())->method('assignPackage')->with('package2');
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/installpackage/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/packages/?id=1');
     }
@@ -2567,11 +2632,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->never())
-                            ->method('setGroups');
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $client->expects($this->never())->method('setGroupsByName');
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/managegroups/?id=1');
         $this->assertRedirectTo('/console/client/groups/?id=1');
     }
@@ -2593,11 +2658,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->never())
-                        ->method('setGroupsByName');
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $client->expects($this->never())->method('setGroupsByName');
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/managegroups/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/groups/?id=1');
     }
@@ -2620,12 +2685,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
-        $this->_computer->expects($this->once())
-                        ->method('setGroupsByName')
-                        ->with($postData['Groups']);
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $client->expects($this->once())->method('setGroupsByName')->with($postData['Groups']);
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->dispatch('/console/client/managegroups/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/groups/?id=1');
     }
@@ -2802,9 +2866,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $document->expects($this->once())
                  ->method('saveXml')
                  ->will($this->returnValue($xmlContent));
-        $this->_computer->expects($this->once())
-                        ->method('toDomDocument')
-                        ->will($this->returnValue($document));
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->once())->method('toDomDocument')->willReturn($document);
+        $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/export/?id=1');
         $this->assertResponseStatusCode(200);

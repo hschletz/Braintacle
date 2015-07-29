@@ -55,13 +55,12 @@ try {
     exit(1);
 }
 
-// Get all computers, sorted by Client ID
-$statement = Model_Computer::createStatementStatic(
+$clients = \Library\Application::getService('Model\Client\ClientManager')->getClients(
     null,
     'ClientId'
 );
-while ($computer = $statement->fetchObject('Model\Client\Client')) {
-    $id = $computer->getClientId();
+foreach ($clients as $client) {
+    $id = $client['ClientId'];
     print "Exporting $id\n";
     try {
         // The Client ID is used for filename generation. Since database content
@@ -73,7 +72,7 @@ while ($computer = $statement->fetchObject('Model\Client\Client')) {
             throw new UnexpectedValueException($id . ' is not a valid filename part');
         }
         // Save content to file
-        $document = $computer->toDomDocument();
+        $document = $client->toDomDocument();
         $filename = $cmdLine->dir . DIRECTORY_SEPARATOR . $document->getFilename();
         if (!$document->save($filename)) {
             throw new RuntimeException('Could not write file ' . $filename);

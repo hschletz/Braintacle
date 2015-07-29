@@ -66,9 +66,9 @@ class GroupTest extends \Model\Test\AbstractTest
      */
     public function testSetMembersFromQuery($type, $simulateLockFailure, $dataSet)
     {
-        $clientManager = $this->getMock('Model_Computer');
+        $clientManager = $this->getMock('Model\Client\ClientManager');
         $clientManager->expects($this->once())
-                      ->method('fetch')
+                      ->method('getClients')
                       ->with(
                           array('Id'),
                           null,
@@ -87,7 +87,7 @@ class GroupTest extends \Model\Test\AbstractTest
                        ->will(
                            $this->returnValueMap(
                                array(
-                                   array('Model\Computer\Computer', true, $clientManager),
+                                   array('Model\Client\ClientManager', true, $clientManager),
                                    array(
                                        'Database\Table\GroupMemberships',
                                        true,
@@ -120,8 +120,8 @@ class GroupTest extends \Model\Test\AbstractTest
 
     public function testSetMembersFromQueryExceptionInTransaction()
     {
-        $clientManager = $this->getMock('Model_Computer');
-        $clientManager->method('fetch')->willReturn(array(array('Id' => 1)));
+        $clientManager = $this->getMock('Model\Client\ClientManager');
+        $clientManager->method('getClients')->willReturn(array(array('Id' => 1)));
 
         $connection = $this->getMock('Zend\Db\Adapter\Driver\AbstractConnection');
         $connection->expects($this->once())->method('beginTransaction');
@@ -151,7 +151,7 @@ class GroupTest extends \Model\Test\AbstractTest
                        ->will(
                            $this->returnValueMap(
                                array(
-                                   array('Model\Computer\Computer', true, $clientManager),
+                                   array('Model\Client\ClientManager', true, $clientManager),
                                    array('Database\Table\GroupMemberships', true, $groupMemberships)
                                )
                            )
@@ -173,9 +173,9 @@ class GroupTest extends \Model\Test\AbstractTest
         $select->expects($this->once())->method('getPart')->with(\Zend_Db_Select::COLUMNS)->willReturn(array('id'));
         $select->method('__toString')->willReturn('query_new');
 
-        $clientManager = $this->getMock('Model_Computer');
+        $clientManager = $this->getMock('Model\Client\ClientManager');
         $clientManager->expects($this->once())
-                      ->method('fetch')
+                      ->method('getClients')
                       ->with(
                           array('Id'),
                           null,
@@ -194,7 +194,7 @@ class GroupTest extends \Model\Test\AbstractTest
                        ->will(
                            $this->returnValueMap(
                                array(
-                                   array('Model\Computer\Computer', true, $clientManager),
+                                   array('Model\Client\ClientManager', true, $clientManager),
                                    array(
                                        'Database\Table\GroupInfo',
                                        true,
@@ -225,10 +225,10 @@ class GroupTest extends \Model\Test\AbstractTest
         $select->expects($this->once())->method('getPart')->with(\Zend_Db_Select::COLUMNS)->willReturn(array(1, 2));
         $select->expects($this->never())->method('__toString');
 
-        $clientManager = $this->getMock('Model_Computer');
-        $clientManager->method('fetch')->willReturn($select);
+        $clientManager = $this->getMock('Model\Client\ClientManager');
+        $clientManager->method('getClients')->willReturn($select);
 
-        $model = $this->_getModel(array('Model\Computer\Computer' => $clientManager));
+        $model = $this->_getModel(array('Model\Client\ClientManager' => $clientManager));
         $model['Id'] = 10;
 
         $this->setExpectedException('LogicException', 'Expected 1 column, got 2');

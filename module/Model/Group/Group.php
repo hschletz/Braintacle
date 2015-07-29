@@ -63,7 +63,7 @@ class Group extends \Model\ClientOrGroup
      * will be executed and $type is stored as manual membership/exclusion on
      * the results.
      *
-     * The query arguments are passed to \Model_Computer::fetch().
+     * The query arguments are passed to \Model\Client\ClientManager::getClients().
      *
      * @param integer $type Membership type
      * @param string|array $filter Name or array of names of a pre-defined filter routine
@@ -75,7 +75,7 @@ class Group extends \Model\ClientOrGroup
     public function setMembersFromQuery($type, $filter, $search, $operator, $invert)
     {
         $id = $this['Id'];
-        $members = $this->serviceLocator->get('Model\Computer\Computer')->fetch(
+        $members = $this->serviceLocator->get('Model\Client\ClientManager')->getClients(
             array('Id'),
             null,
             null,

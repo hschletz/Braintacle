@@ -33,10 +33,10 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     protected $_groupManager;
 
     /**
-     * Computer mock
-     * @var \Model_Computer
+     * Client manager mock
+     * @var \Model\Client\ClientManager
      */
-    protected $_computer;
+    protected $_clientManager;
 
     /**
      * Package assignment form mock
@@ -64,7 +64,9 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_groupManager = $this->getMockBuilder('Model\Group\GroupManager')
                                     ->disableOriginalConstructor()
                                     ->getMock();
-        $this->_computer = $this->getMockBuilder('Model_Computer')->disableOriginalConstructor()->getMock();
+        $this->_clientManager = $this->getMockBuilder('Model\Client\ClientManager')
+                                     ->disableOriginalConstructor()
+                                     ->getMock();
         $this->_packageAssignmentForm = $this->getMock('Console\Form\Package\Assign');
         $this->_addToGroupForm = $this->getMock('Console\Form\AddToGroup');
         $this->_clientConfigForm = $this->getMock('Console\Form\ClientConfig');
@@ -76,7 +78,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     {
         return new \Console\Controller\GroupController(
             $this->_groupManager,
-            $this->_computer,
+            $this->_clientManager,
             $this->_packageAssignmentForm,
             $this->_addToGroupForm,
             $this->_clientConfigForm
@@ -85,7 +87,6 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testService()
     {
-        $this->_overrideService('Model\Computer\Computer', $this->_computer);
         $this->_overrideService('Console\Form\AddToGroup', $this->_addToGroupForm);
         parent::testService();
     }
@@ -221,7 +222,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
             'CacheCreationDate' => $cacheCreationDate,
             'CacheExpirationDate' => $cacheExpirationDate,
         );
-        $computers = array(
+        $clients = array(
             array(
                 'Id' => '1',
                 'Name' => 'computerName',
@@ -234,16 +235,16 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                             ->method('getGroup')
                             ->with('test')
                             ->willReturn($group);
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->with(
-                            array('Name', 'UserName', 'InventoryDate', 'Membership'),
-                            'InventoryDate',
-                            'desc',
-                            'MemberOf',
-                            $group
-                        )
-                        ->will($this->returnValue($computers));
+        $this->_clientManager->expects($this->once())
+                             ->method('getClients')
+                             ->with(
+                                 array('Name', 'UserName', 'InventoryDate', 'Membership'),
+                                 'InventoryDate',
+                                 'desc',
+                                 'MemberOf',
+                                 $group
+                             )
+                             ->willReturn($clients);
 
         $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->exactly(3))
@@ -278,7 +279,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     {
         $url = '/console/group/excluded/?name=test';
         $group = array('Name' => 'test');
-        $computers = array(
+        $clients = array(
             array(
                 'Id' => '1',
                 'Name' => 'computerName',
@@ -290,14 +291,14 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                             ->method('getGroup')
                             ->with('test')
                             ->willReturn($group);
-        $this->_computer->expects($this->once())
-                        ->method('fetch')
-                        ->with(
-                            array('Name', 'UserName', 'InventoryDate'),
-                            'InventoryDate',
-                            'desc'
-                        )
-                        ->will($this->returnValue($computers));
+        $this->_clientManager->expects($this->once())
+                             ->method('getClients')
+                             ->with(
+                                 array('Name', 'UserName', 'InventoryDate'),
+                                 'InventoryDate',
+                                 'desc'
+                             )
+                             ->willReturn($clients);
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
@@ -621,12 +622,6 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
              ->method('process');
         $form->expects($this->never())
              ->method('render');
-        $map = array(
-            array('Id', 1),
-        );
-        $this->_computer->expects($this->any())
-                        ->method('offsetGet')
-                        ->will($this->returnValueMap($map));
         $this->dispatch('/console/group/configuration/?name=test', 'POST', $postData);
         $this->assertRedirectTo('/console/group/configuration/?name=test');
     }

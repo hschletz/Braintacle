@@ -27,10 +27,10 @@ namespace Console\Controller;
 class ClientController extends \Zend\Mvc\Controller\AbstractActionController
 {
     /**
-     * Computer prototype
-     * @var \Model_Computer
+     * Client manager
+     * @var \Model\Client\ClientManager
      */
-    protected $_computer;
+    protected $_clientManager;
 
     /**
      * Group manager
@@ -70,14 +70,14 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
 
     /**
      * Client selected for client-specific actions
-     * @var \Model_Computer
+     * @var \Model\Client\Client
      */
     protected $_currentClient;
 
     /**
      * Constructor
      *
-     * @param \Model_Computer $computer
+     * @param \Model\Client\ClientManager $clientManager
      * @param \Model\Group\GroupManager $groupManager
      * @param \Model\Registry\RegistryManager $registryManager
      * @param \Model\SoftwareManager $softwareManager
@@ -86,7 +86,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
      * @param \Library\InventoryUploader $inventoryUploader
      */
     public function __construct(
-        \Model_Computer $computer,
+        \Model\Client\ClientManager $clientManager,
         \Model\Group\GroupManager $groupManager,
         \Model\Registry\RegistryManager $registryManager,
         \Model\SoftwareManager $softwareManager,
@@ -95,7 +95,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
         \Library\InventoryUploader $inventoryUploader
     )
     {
-        $this->_computer = $computer;
+        $this->_clientManager = $clientManager;
         $this->_groupManager = $groupManager;
         $this->_registryManager = $registryManager;
         $this->_softwareManager = $softwareManager;
@@ -113,11 +113,8 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
         // Fetch client with given ID for actions referring to a particular client
         $action = $this->getEvent()->getRouteMatch()->getParam('action');
         if ($action != 'index' and $action != 'search' and $action != 'import') {
-            $this->_currentClient = clone $this->_computer;
             try {
-                $this->_currentClient->fetchById(
-                    $request->getQuery('id')
-                );
+                $this->_currentClient = $this->_clientManager->getClient($request->getQuery('id'));
             } catch(\RuntimeException $e) {
                 // Client does not exist - may happen when URL has become stale.
                 $this->flashMessenger()->addErrorMessage('The requested client does not exist.');
@@ -202,7 +199,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
         }
 
         $vars = $this->getOrder('InventoryDate', 'desc');
-        $vars['clients'] = $this->_computer->fetch(
+        $vars['clients'] = $this->_clientManager->getClients(
             $columns,
             $vars['order'],
             $vars['direction'],

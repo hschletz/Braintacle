@@ -214,56 +214,6 @@ class Model_Computer extends \Model_Abstract
         };
     }
 
-    /**
-     * Return all computers matching criteria
-     *
-     * @param array $properties Properties to be returned. If empty or null, return all properties.
-     * @param string $order Property to sort by
-     * @param string $direction One of [asc|desc]
-     * @param string|array $filter Name or array of names of a pre-defined filter routine
-     * @param string|array $search Search parameter(s) passed to the filter. May be case sensitive depending on DBMS.
-     * @param string|array $operator Comparision operator
-     * @param bool|array $invert Invert query results (return all computers NOT matching criteria)
-     * @param bool $addSearchColumns Add columns with search criteria (default).
-     *                               Set to false to return only columns specified by $columns.
-     * @param bool $distinct Force distinct results.
-     * @param bool $query Perform query and return array (default).
-     *                    Set to false to return a \Zend_Db_Select object.
-     * @return \Model\Client\Client[]|Zend_Db_Select Query result or Query
-     * @throws \LogicException if more than 2 tables are joined (only in development mode)
-     */
-    public function fetch(
-        $properties=null,
-        $order=null,
-        $direction='asc',
-        $filter=null,
-        $search=null,
-        $operator=null,
-        $invert=null,
-        $addSearchColumns=true,
-        $distinct=false,
-        $query=true
-    )
-    {
-        $select = static::createStatementStatic(
-            $properties,
-            $order,
-            $direction,
-            $filter,
-            $search,
-            $invert,
-            $operator,
-            $addSearchColumns,
-            false,
-            $distinct
-        );
-        if ($query) {
-            return $this->_fetchAll($select->query());
-        } else {
-            return $select;
-        }
-    }
-
     /** Return a statement object with all computers matching criteria
      * @param array $columns Logical properties to be returned. If empty or null, return all properties.
      * @param string $order Property to sort by
@@ -661,22 +611,6 @@ class Model_Computer extends \Model_Abstract
             return $select->query();
         } else {
             return $select;
-        }
-    }
-
-    /**
-     * Populate object with data for the given ID
-     *
-     * @param int $id Primary key
-     * @throws \RuntimeException if there is no computer with the given ID
-     */
-    public function fetchById($id)
-    {
-        $row = self::createStatementStatic(null, null, null, 'Id', $id)->fetch(\Zend_Db::FETCH_ASSOC);
-        if ($row) {
-            $this->exchangeArray($row);
-        } else {
-            throw new \RuntimeException("Invalid computer ID: $id");
         }
     }
 
