@@ -173,23 +173,21 @@ class DuplicatesManager
     public function count($criteria)
     {
         $subQuery = $this->_getDuplicateValues($criteria);
-        $columns = $subQuery->getRawState($subQuery::COLUMNS);
-        $column = $columns[0];
+        $column = $subQuery->getRawState($subQuery::COLUMNS)[0];
         if ($criteria == 'MacAddress') {
             $table = $this->_networkInterfaces;
         } else {
             $table = $this->_clients;
         }
-        $subQuery = $subQuery->getSqlString($this->_clients->getAdapter()->getPlatform());
 
         $sql = $table->getSql();
         $select = $sql->select();
         $select->columns(
             array(
-                'num_clients' => new \Zend\Db\Sql\Expression("COUNT($column)")
+                'num_clients' => new \Zend\Db\Sql\Literal("COUNT($column)")
             )
         );
-        $select->where("$column IN($subQuery)");
+        $select->where(array(new \Zend\Db\Sql\Predicate\In($column, $subQuery)));
         $row = $sql->prepareStatementForSqlObject($select)->execute()->current();
         return $row['num_clients'];
     }
@@ -205,9 +203,7 @@ class DuplicatesManager
     public function find($criteria, $order='Id', $direction='asc')
     {
         $subQuery = $this->_getDuplicateValues($criteria);
-        $columns = $subQuery->getRawState($subQuery::COLUMNS);
-        $column = $columns[0];
-        $subQuery = $subQuery->getSqlString($this->_clients->getAdapter()->getPlatform());
+        $column = $subQuery->getRawState($subQuery::COLUMNS)[0];
 
         $select = $this->_clients->getSql()->select();
         $select->columns(array('id', 'name', 'lastcome', 'ssn', 'assettag'));
@@ -217,7 +213,7 @@ class DuplicatesManager
             array('networkinterface_macaddr' => 'macaddr'),
             $select::JOIN_LEFT
         )
-        ->where("$column IN($subQuery)");
+        ->where(array(new \Zend\Db\Sql\Predicate\In($column, $subQuery)));
         $select->order(
             \Model_Computer::getOrder(
                 $order, $direction, $this->_clients->getResultSetPrototype()->getObjectPrototype()->getPropertyMap()
