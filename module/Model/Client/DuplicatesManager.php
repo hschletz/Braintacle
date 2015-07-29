@@ -209,8 +209,7 @@ class DuplicatesManager
         $column = $columns[0];
         $subQuery = $subQuery->getSqlString($this->_clients->getAdapter()->getPlatform());
 
-        $sql = $this->_clients->getSql();
-        $select = $sql->select();
+        $select = $this->_clients->getSql()->select();
         $select->columns(array('id', 'name', 'lastcome', 'ssn', 'assettag'));
         $select->join(
             'networks',
@@ -219,7 +218,11 @@ class DuplicatesManager
             $select::JOIN_LEFT
         )
         ->where("$column IN($subQuery)");
-        $select->order(\Model_Computer::getOrder($order, $direction, $this->_computer->getPropertyMap()));
+        $select->order(
+            \Model_Computer::getOrder(
+                $order, $direction, $this->_clients->getResultSetPrototype()->getObjectPrototype()->getPropertyMap()
+            )
+        );
         if ($order != 'Name') {
             // Secondary ordering by name
             $select->order('name');
@@ -230,12 +233,7 @@ class DuplicatesManager
             $select->order('clients.id');
         }
 
-        $resultSet = new \Zend\Db\ResultSet\HydratingResultSet(
-            new \Zend\Stdlib\Hydrator\ArraySerializable,
-            $this->_computer
-        );
-        $resultSet->initialize($sql->prepareStatementForSqlObject($select)->execute());
-        return $resultSet;
+        return $this->_clients->selectWith($select);
     }
 
     /**

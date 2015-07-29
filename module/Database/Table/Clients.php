@@ -34,6 +34,20 @@ class Clients extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
+    public function initialize()
+    {
+        $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
+        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
+            $this->_hydrator,
+            $this->_serviceLocator->get('Model\Client\Client')
+        );
+        return parent::initialize();
+    }
+
+    /**
+     * {@inheritdoc}
+     * @codeCoverageIgnore
+     */
     public function setSchema()
     {
         // Reimplementation to provide a view
