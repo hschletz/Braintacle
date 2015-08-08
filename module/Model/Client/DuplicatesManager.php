@@ -296,15 +296,17 @@ class DuplicatesManager
                 // Update the client IDs directly. Assignments from all older
                 // clients are merged. Exclude packages that are already assigned.
                 $id = $newest['Id'];
-                $subQuery = 'ivalue NOT IN(SELECT ivalue FROM devices WHERE hardware_id = ? AND name = \'DOWNLOAD\')';
+                $notIn = $this->_clientConfig->getSql()->select();
+                $notIn->columns(array('ivalue'))
+                      ->where(array('hardware_id' => $id, 'name' => 'DOWNLOAD'));
                 foreach ($clients as $client) {
                     $this->_clientConfig->update(
                         array('hardware_id' => $id),
                         array(
                             'hardware_id' => $client['Id'],
-                            "name != 'DOWNLOAD_SWITCH'",
-                            "name LIKE 'DOWNLOAD%'",
-                            $subQuery => $id,
+                            new \Zend\Db\Sql\Predicate\Operator('name', '!=', 'DOWNLOAD_SWITCH'),
+                            new \Zend\Db\Sql\Predicate\Like('name', 'DOWNLOAD%'),
+                            new \Zend\Db\Sql\Predicate\NotIn('ivalue', $notIn),
                         )
                     );
                 }
