@@ -88,7 +88,7 @@ class Search extends Form
             'Name' => $translator->translate('Computer name'),
             'UserName' => $translator->translate('User name'),
             'Windows.UserDomain' => $translator->translate('User domain'),
-            'Workgroup' => $translator->translate('Workgroup'),
+            'Windows.Workgroup' => $translator->translate('Workgroup'),
             'OsName' => $translator->translate('OS name'),
             'OsVersionNumber' => $translator->translate('OS version number'),
             'OsVersionString' => $translator->translate('OS version string'),

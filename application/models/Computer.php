@@ -33,7 +33,6 @@
  * - <b>Model:</b> system model
  * - <b>Serial:</b> serial number
  * - <b>AssetTag:</b> asset tag
- * - <b>Workgroup:</b> Windows workgroup or domain
  * - <b>CpuClock:</b> CPU clock in MHz
  * - <b>CpuCores:</b> total number of CPUs/cores
  * - <b>CpuType:</b> CPU manufacturer and model
@@ -97,7 +96,6 @@ class Model_Computer extends \Model_Abstract
         'Id' => 'id',
         'ClientId' => 'deviceid',
         'Name' => 'name',
-        'Workgroup' => 'workgroup',
         'CpuClock' => 'processors',
         'CpuCores' => 'processorn',
         'CpuType' => 'processort',
@@ -318,7 +316,6 @@ class Model_Computer extends \Model_Abstract
                     $select->where('id = ?', (int) $arg);
                     break;
                 case 'Name':
-                case 'Workgroup':
                 case 'CpuType':
                 case 'DnsServer':
                 case 'DefaultGateway':

@@ -36,7 +36,6 @@ $allHeaders = array(
     'Id' => $this->translate('ID'),
     'ClientId' => $this->translate('Client ID'),
     'Name' => $this->translate('Name'),
-    'Workgroup' => $this->translate('Workgroup'),
     'CpuClock' => $this->translate('CPU clock'),
     'CpuCores' => $this->translate('CPU cores'),
     'CpuType' => $this->translate('CPU type'),
@@ -95,6 +94,7 @@ $allHeaders = array(
     'Windows.ProductKey' => $this->translate('Windows product key'),
     'Windows.ManualProductKey' => $this->translate('Windows product key (manual)'),
     'Windows.ProductId' => $this->translate('Windows product ID'),
+    'Windows.Workgroup' => $this->translate('Workgroup'),
     'MsOfficeProduct.ProductKey' => $this->translate('MS Office product key'),
     'MsOfficeProduct.ProductId' => $this->translate('MS Office product ID'),
 );

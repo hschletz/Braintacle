@@ -335,7 +335,7 @@ Braintacle:
                 <optional>
                     <ref name="WINPRODKEY" braintacle:model="WindowsInstallation" braintacle:property="ProductKey" />
                 </optional>
-                <ref name="WORKGROUP" braintacle:property="Workgroup" />
+                <ref name="WORKGROUP" braintacle:model="WindowsInstallation" braintacle:property="Workgroup" />
             </interleave>
         </element>
     </define>

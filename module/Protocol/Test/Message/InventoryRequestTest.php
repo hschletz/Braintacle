@@ -61,7 +61,6 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
                     'SwapMemory' => 'swap_memory',
                     'UserName' => 'user_name',
                     'Uuid' => 'uuid',
-                    'Workgroup' => 'workgroup',
                 ),
                 array(),
                 array(),
@@ -100,6 +99,7 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
                 array(),
                 array(),
                 array(
+                    'Workgroup' => '',
                     'UserDomain' => '',
                     'Company' => '',
                     'Owner' => '',
@@ -114,6 +114,7 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
                 array(),
                 array(),
                 array(
+                    'Workgroup' => 'workgroup',
                     'UserDomain' => 'user_domain',
                     'Company' => 'company',
                     'Owner' => 'owner',

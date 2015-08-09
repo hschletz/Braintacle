@@ -11,6 +11,7 @@
             <WINOWNER>owner</WINOWNER>
             <WINPRODID>&lt;product_id&gt;</WINPRODID>
             <WINPRODKEY>product_key</WINPRODKEY>
+            <WORKGROUP>workgroup</WORKGROUP>
         </HARDWARE>
     </CONTENT>
 </REQUEST>

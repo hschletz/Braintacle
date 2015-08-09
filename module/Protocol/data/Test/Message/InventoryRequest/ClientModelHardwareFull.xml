@@ -22,7 +22,6 @@
             <SWAP>swap_memory</SWAP>
             <USERID>user_name</USERID>
             <UUID>uuid</UUID>
-            <WORKGROUP>workgroup</WORKGROUP>
         </HARDWARE>
     </CONTENT>
 </REQUEST>
