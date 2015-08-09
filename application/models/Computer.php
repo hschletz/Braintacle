@@ -273,13 +273,9 @@ class Model_Computer extends \Model_Abstract
                     } else {
                         list ($model, $property) = explode('.', $column);
                         if ($model == 'Windows') {
-                            if ($property == 'ManualProductKey') {
-                                $fromWindows['windows_manual_product_key'] = 'manual_product_key';
-                            } else {
-                                $property = \Library\Application::getService('Database\Table\WindowsInstallations')
-                                            ->getHydrator()->extractName($property);
-                                $fromHardware['windows_' . $property] = $property;
-                            }
+                            $property = \Library\Application::getService('Database\Table\WindowsInstallations')
+                                        ->getHydrator()->extractName($property);
+                            $fromWindows['windows_' . $property] = $property;
                         }
                     }
                     // ignore nonexistent columns
@@ -298,8 +294,8 @@ class Model_Computer extends \Model_Abstract
             $select->joinLeft('bios', 'hardware.id = bios.hardware_id', $fromBios);
         }
         if (isset($fromWindows)) {
-            // Use left join because there might be no matching row in the 'braintacle_windows' table.
-            $select->joinLeft('braintacle_windows', 'hardware.id = braintacle_windows.hardware_id', $fromWindows);
+            // Use left join because there might be no matching row in the 'windows_installations' table.
+            $select->joinLeft('windows_installations', 'hardware.id = windows_installations.client_id', $fromWindows);
         }
 
         // apply filters
@@ -982,20 +978,15 @@ class Model_Computer extends \Model_Abstract
      **/
     public function getWindows()
     {
-        // Cannot use TableGateway directly because LEFT JOIN must be done on
-        // ClientsAndGroups, but ResultSet is fetched from WindowsInstallations.
-        $windowsInstallations = \Library\Application::getService('Database\Table\windowsInstallations');
-        $clients = \Library\Application::getService('Database\Table\ClientsAndGroups');
-        $sql = $clients->getSql();
-        $select = $sql->select();
-        $select->columns(array('userdomain', 'wincompany', 'winowner', 'winprodkey', 'winprodid'))
-               ->join('braintacle_windows', 'id = hardware_id', 'manual_product_key', \Zend\Db\Sql\Select::JOIN_LEFT)
-               ->where(array('id' => $this['Id']));
-        $resultSet = clone $windowsInstallations->getResultSetPrototype();
+        $windowsInstallations = \Library\Application::getService('Database\Table\WindowsInstallations');
+        $select = $windowsInstallations->getSql()->select();
+        $select->columns(
+            array('workgroup', 'user_domain', 'company', 'owner', 'product_key', 'product_id', 'manual_product_key')
+        )->where(array('client_id' => $this['Id']));
 
-        $this->windows = $resultSet->initialize($sql->prepareStatementForSqlObject($select)->execute())->current();
-        if (!$this->windows) {
-            throw new \RuntimeException('Invalid client ID: ' . $this['Id']);
+        $this->windows = $windowsInstallations->selectWith($select)->current();
+        if ($this->windows === false) {
+            $this->windows = null;
         }
         return $this->windows;
     }
@@ -1088,14 +1079,9 @@ class Model_Computer extends \Model_Abstract
             $columnAlias = 'registry_content';
             $select->where('registry.name = ?', $property);
         } elseif ($model == 'Windows') {
-            if ($property == 'ManualProductKey') {
-                $table = 'braintacle_windows';
-                $column = 'manual_product_key';
-            } else {
-                $table = 'hardware';
-                $hydrator = \Library\Application::getService('Database\Table\WindowsInstallations')->getHydrator();
-                $column = $hydrator->extractName($property);
-            }
+            $table = 'windows_installations';
+            $hydrator = \Library\Application::getService('Database\Table\WindowsInstallations')->getHydrator();
+            $column = $hydrator->extractName($property);
             $columnAlias = 'windows_' . $column;
         } else {
             $tableGateway = \Library\Application::getService('Model\Client\ItemManager')->getTable($model);
@@ -1179,7 +1165,7 @@ class Model_Computer extends \Model_Abstract
             // SELECT ... FROM ... WHERE hardware.id NOT IN (SELECT hardware_id FROM $table WHERE ...);
             if ($invertResult) {
                 $subquery = new Zend_Db_Select($select->getAdapter());
-                $subquery->from($table, 'hardware_id')
+                $subquery->from($table, ($table == 'windows_installations') ? 'client_id' : 'hardware_id')
                          ->where("$column $operator ?", $arg);
                 $select->where("hardware.id NOT IN ($subquery)");
             } else {

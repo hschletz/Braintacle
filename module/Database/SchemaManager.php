@@ -91,5 +91,6 @@ class SchemaManager
         // Views need manual invocation.
         \Library\Application::getService('Database\Table\Clients')->setSchema();
         \Library\Application::getService('Database\Table\PackageDownloadInfo')->setSchema();
+        \Library\Application::getService('Database\Table\WindowsInstallations')->setSchema();
     }
 }

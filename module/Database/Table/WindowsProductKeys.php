@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for Model\SoftwareManager
+ * "braintacle_windows" table
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,23 +19,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Model\Service;
+Namespace Database\Table;
 
 /**
- * Factory for Model\SoftwareManager
+ * "braintacle_windows" table
+ * @deprecated Use only for setting manual_product_key. Use WindowsInstallations view for everything else.
  */
-class SoftwareManagerFactory implements \Zend\ServiceManager\FactoryInterface
+class WindowsProductKeys extends \Database\AbstractTable
 {
     /**
-     * @internal
+     * {@inheritdoc}
+     * @codeCoverageIgnore
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        return new \Model\SoftwareManager(
-            $serviceLocator->get('Database\Table\Software'),
-            $serviceLocator->get('Database\Table\SoftwareDefinitions'),
-            $serviceLocator->get('Database\Table\WindowsInstallations'),
-            $serviceLocator->get('Database\Table\WindowsProductKeys')
-        );
+        $this->table = 'braintacle_windows';
+        parent::__construct($serviceLocator);
     }
 }

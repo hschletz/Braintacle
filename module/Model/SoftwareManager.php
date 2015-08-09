@@ -45,21 +45,30 @@ class SoftwareManager
     protected $_windowsInstallations;
 
     /**
+     * WindowsProductKeys table
+     * @var \Database\Table\WindowsProductKeys
+     */
+    protected $_windowsProductKeys;
+
+    /**
      * Constructor
      *
      * @param \Database\Table\Software $software
      * @param \Database\Table\SoftwareDefinitions $softwareDefinitions
      * @param \Database\Table\WindowsInstallations $windowsInstallations
+     * @param \Database\Table\WindowsProductKeys $windowsProductKeys
      */
     public function __construct(
         \Database\Table\Software $software,
         \Database\Table\SoftwareDefinitions $softwareDefinitions,
-        \Database\Table\WindowsInstallations $windowsInstallations
+        \Database\Table\WindowsInstallations $windowsInstallations,
+        \Database\Table\WindowsProductKeys $windowsProductKeys
     )
     {
         $this->_software = $software;
         $this->_softwareDefinitions = $softwareDefinitions;
         $this->_windowsInstallations = $windowsInstallations;
+        $this->_windowsProductKeys = $windowsProductKeys;
     }
 
     /**
@@ -187,8 +196,11 @@ class SoftwareManager
      **/
     public function getNumManualProductKeys()
     {
+        $select = $this->_windowsInstallations->getSql()->select();
+        $select->columns(array('num' => new \Zend\Db\Sql\Literal('COUNT(manual_product_key)')))
+               ->where(new \Zend\Db\Sql\Predicate\IsNotNull('manual_product_key'));
         return $this->_windowsInstallations->getAdapter()->query(
-            'SELECT COUNT(manual_product_key) AS num FROM braintacle_windows WHERE manual_product_key IS NOT NULL',
+            $select->getSqlString(),
             \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
         )->current()['num'];
     }
@@ -212,12 +224,12 @@ class SoftwareManager
         }
 
         if (
-            !$this->_windowsInstallations->update(
+            !$this->_windowsProductKeys->update(
                 array('manual_product_key' => $productKey),
                 array('hardware_id' => $client['Id'])
             )
         ) {
-            $this->_windowsInstallations->insert(
+            $this->_windowsProductKeys->insert(
                 array(
                     'hardware_id' => $client['Id'],
                     'manual_product_key' => $productKey,

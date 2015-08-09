@@ -23,6 +23,14 @@ namespace Database\Test\Table;
 
 class WindowsInstallationsTest extends AbstractTest
 {
+    public static function setUpBeforeClass()
+    {
+        // This table must exist before the view can be created
+        \Library\Application::getService('Database\Table\ClientsAndGroups')->setSchema();
+        \Library\Application::getService('Database\Table\WindowsProductKeys')->setSchema();
+        parent::setUpBeforeClass();
+    }
+
     public function getDataSet()
     {
         return new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet;
@@ -36,18 +44,20 @@ class WindowsInstallationsTest extends AbstractTest
         $map = $hydrator->getNamingStrategy();
         $this->assertInstanceOf('Database\Hydrator\NamingStrategy\MapNamingStrategy', $map);
 
-        $this->assertEquals('UserDomain', $map->hydrate('userdomain'));
-        $this->assertEquals('Company', $map->hydrate('wincompany'));
-        $this->assertEquals('Owner', $map->hydrate('winowner'));
-        $this->assertEquals('ProductKey', $map->hydrate('winprodkey'));
-        $this->assertEquals('ProductId', $map->hydrate('winprodid'));
+        $this->assertEquals('Workgroup', $map->hydrate('workgroup'));
+        $this->assertEquals('UserDomain', $map->hydrate('user_domain'));
+        $this->assertEquals('Company', $map->hydrate('company'));
+        $this->assertEquals('Owner', $map->hydrate('owner'));
+        $this->assertEquals('ProductKey', $map->hydrate('product_key'));
+        $this->assertEquals('ProductId', $map->hydrate('product_id'));
         $this->assertEquals('ManualProductKey', $map->hydrate('manual_product_key'));
 
-        $this->assertEquals('userdomain', $map->extract('UserDomain'));
-        $this->assertEquals('wincompany', $map->extract('Company'));
-        $this->assertEquals('winowner', $map->extract('Owner'));
-        $this->assertEquals('winprodkey', $map->extract('ProductKey'));
-        $this->assertEquals('winprodid', $map->extract('ProductId'));
+        $this->assertEquals('workgroup', $map->extract('Workgroup'));
+        $this->assertEquals('user_domain', $map->extract('UserDomain'));
+        $this->assertEquals('company', $map->extract('Company'));
+        $this->assertEquals('owner', $map->extract('Owner'));
+        $this->assertEquals('product_key', $map->extract('ProductKey'));
+        $this->assertEquals('product_id', $map->extract('ProductId'));
         $this->assertEquals('manual_product_key', $map->extract('ManualProductKey'));
 
         $resultSet = static::$_table->getResultSetPrototype();

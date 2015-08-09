@@ -1,6 +1,6 @@
 <?php
 /**
- * "braintacle_windows" table
+ * "windows_installations" view
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,7 +22,7 @@
 Namespace Database\Table;
 
 /**
- * "braintacle_windows" table
+ * "windows_installations" view
  */
 class WindowsInstallations extends \Database\AbstractTable
 {
@@ -32,17 +32,16 @@ class WindowsInstallations extends \Database\AbstractTable
      */
     public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $this->table = 'braintacle_windows';
-
         $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(
-                    'userdomain' => 'UserDomain',
-                    'wincompany' => 'Company',
-                    'winowner' => 'Owner',
-                    'winprodkey' => 'ProductKey',
-                    'winprodid' => 'ProductId',
+                    'workgroup' => 'Workgroup',
+                    'user_domain' => 'UserDomain',
+                    'company' => 'Company',
+                    'owner' => 'Owner',
+                    'product_key' => 'ProductKey',
+                    'product_id' => 'ProductId',
                     'manual_product_key' => 'ManualProductKey',
                 )
             )
@@ -53,5 +52,41 @@ class WindowsInstallations extends \Database\AbstractTable
         );
 
         parent::__construct($serviceLocator);
+    }
+
+    /**
+     * {@inheritdoc}
+     * @codeCoverageIgnore
+     */
+    public function setSchema()
+    {
+        // Reimplementation to provide a view
+        $logger = $this->_serviceLocator->get('Library\Logger');
+        $database = $this->_serviceLocator->get('Database\Nada');
+        if (!in_array('windows_installations', $database->getViewNames())) {
+            $logger->info("Creating view 'windows_installations'");
+            $select = $this->_serviceLocator->get('Database\Table\ClientsAndGroups')->getSql()->select();
+            $select->columns(
+                array(
+                    'client_id' => 'id',
+                    'workgroup',
+                    'user_domain' => 'userdomain',
+                    'company' => 'wincompany',
+                    'owner' => 'winowner',
+                    'product_key' => 'winprodkey',
+                    'product_id' => 'winprodid',
+                    'cpu_architecture' => 'arch',
+                ),
+                false
+            )->join(
+                'braintacle_windows',
+                'hardware_id = id',
+                array('manual_product_key'),
+                \Zend\Db\Sql\Select::JOIN_LEFT
+            )->where(new \Zend\Db\Sql\Predicate\IsNotNull('winprodid'));
+
+            $database->createView('windows_installations', $select->getSqlString($this->adapter->getPlatform()));
+            $logger->info('done.');
+        }
     }
 }

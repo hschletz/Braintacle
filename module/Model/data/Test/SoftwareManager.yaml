@@ -11,6 +11,16 @@ hardware:
     name: "client2"
     deviceid: "client2"
     winprodid: null
+  -
+    id: 3
+    name: "client3"
+    deviceid: "client3"
+    winprodid: "prodid"
+  -
+    id: 4
+    name: "client4"
+    deviceid: "client4"
+    winprodid: "prodid"
 
 softwares:
   -
@@ -62,5 +72,5 @@ braintacle_windows:
     hardware_id: 1
     manual_product_key: "BCDEF-GHIJK-LMNOP-QRSTU-VWXYZ"
   -
-    hardware_id: 2
+    hardware_id: 3
     manual_product_key: "CDEFG-HIJKL-MNOPQ-RSTUV-WXYZA"
