@@ -53,7 +53,9 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
         $this->_serviceLocator = $serviceLocator;
         if (!$this->table) {
             // If not set explicitly, derive table name from class name.
-            $this->table = strtolower($this->_getClassName());
+            // Uppercase letters cause an underscore to be inserted, except at
+            // the beginning of the string.
+            $this->table = strtolower(preg_replace('/(.)([A-Z])/', '$1_$2', $this->_getClassName()));
         }
         $this->adapter = $serviceLocator->get('Db');
     }
