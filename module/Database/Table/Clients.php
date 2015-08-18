@@ -77,12 +77,14 @@ class Clients extends \Database\AbstractTable
                     'lastdate',
                     'lastcome',
                     'useragent',
+                    'checksum',
+                    'ipaddr', // deprecated
                 ),
                 false
             )->join(
                 'bios',
                 'hardware_id = id',
-                array('smanufacturer', 'smodel', 'ssn', 'assettag', 'type', 'bversion', 'bdate'),
+                array('smanufacturer', 'smodel', 'ssn', 'assettag', 'type', 'bversion', 'bdate', 'bmanufacturer'),
                 \Zend\Db\Sql\Select::JOIN_LEFT
             )->where(new \Zend\Db\Sql\Predicate\Operator('deviceid', '!=', '_SYSTEMGROUP_'));
 
