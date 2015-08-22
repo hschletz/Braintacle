@@ -33,8 +33,8 @@ class GroupInfo extends \Database\AbstractTable
     public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'groups';
-        // Hydrator and ResultSet initialization is postponed to their getter
-        // methods because they depend on reading from Model\Config which is
+        // Hydrator and ResultSet initialization is postponed to initialize()
+        // because they depend on reading from Model\Config which is
         // inappropriate in a constructor and may not be functional under
         // certain circumstances (database initialization)
         parent::__construct($serviceLocator);
