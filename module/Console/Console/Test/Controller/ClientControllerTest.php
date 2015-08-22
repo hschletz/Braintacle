@@ -79,8 +79,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'PhysicalMemory' => 'physicalmemory1',
             'InventoryDate' => '2014-05-11 12:35',
             'Registry.value' => 'registry1',
-            'UserDefinedInfo.customField' => '<custom1>',
-            'UserDefinedInfo.TAG' => 'category1',
+            'CustomFields.customField' => '<custom1>',
+            'CustomFields.TAG' => 'category1',
         ),
         array(
             'Id' => 2,
@@ -92,8 +92,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'PhysicalMemory' => 'physicalmemory2',
             'InventoryDate' => '2014-05-12 11:14',
             'Registry.value' => 'registry2',
-            'UserDefinedInfo.customField' => '<custom2>',
-            'UserDefinedInfo.TAG' => 'category2',
+            'CustomFields.customField' => '<custom2>',
+            'CustomFields.TAG' => 'category2',
         )
     );
 
@@ -619,7 +619,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testIndexActionWithCustomSearchOnCustomFieldText()
     {
         $formData = array(
-            'filter' => 'UserDefinedInfo.customField',
+            'filter' => 'CustomFields.customField',
             'search' => 'test',
             'operator' => 'like',
             'invert' => '0',
@@ -638,16 +638,16 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_clientManager->expects($this->once())
                              ->method('getClients')
                              ->with(
-                                 array('Name', 'UserName', 'InventoryDate', 'UserDefinedInfo.customField'),
+                                 array('Name', 'UserName', 'InventoryDate', 'CustomFields.customField'),
                                  'InventoryDate',
                                  'desc',
-                                 'UserDefinedInfo.customField',
+                                 'CustomFields.customField',
                                  'test',
                                  'like',
                                  '0'
                              )
                              ->willReturn($this->_sampleClients);
-        $query = 'filter=UserDefinedInfo.customField&search=test&operator=like&invert=0';
+        $query = 'filter=CustomFields.customField&search=test&operator=like&invert=0';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//th/a', "customField");
@@ -658,7 +658,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testIndexActionWithCustomSearchOnCustomFieldDate()
     {
         $formData = array(
-            'filter' => 'UserDefinedInfo.customField',
+            'filter' => 'CustomFields.customField',
             'search' => 'test',
             'operator' => 'like',
             'invert' => '0',
@@ -676,21 +676,21 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->will($this->returnValue($formData));
 
         $sampleClients = $this->_sampleClients;
-        $sampleClients[0]['UserDefinedInfo.customField'] = new \DateTime('2015-04-11 10:31:00');
-        $sampleClients[1]['UserDefinedInfo.customField'] = new \DateTime('2015-04-12 10:32:00');
+        $sampleClients[0]['CustomFields.customField'] = new \DateTime('2015-04-11 10:31:00');
+        $sampleClients[1]['CustomFields.customField'] = new \DateTime('2015-04-12 10:32:00');
         $this->_clientManager->expects($this->once())
                              ->method('getClients')
                              ->with(
-                                 array('Name', 'UserName', 'InventoryDate', 'UserDefinedInfo.customField'),
+                                 array('Name', 'UserName', 'InventoryDate', 'CustomFields.customField'),
                                  'InventoryDate',
                                  'desc',
-                                 'UserDefinedInfo.customField',
+                                 'CustomFields.customField',
                                  'test',
                                  'like',
                                  '0'
                              )
                              ->willReturn($sampleClients);
-        $query = 'filter=UserDefinedInfo.customField&search=test&operator=like&invert=0';
+        $query = 'filter=CustomFields.customField&search=test&operator=like&invert=0';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//th/a', "customField");
@@ -701,7 +701,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testIndexActionWithCustomSearchOnCategory()
     {
         $formData = array(
-            'filter' => 'UserDefinedInfo.TAG',
+            'filter' => 'CustomFields.TAG',
             'search' => 'test',
             'operator' => 'like',
             'invert' => '0',
@@ -720,16 +720,16 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_clientManager->expects($this->once())
                              ->method('getClients')
                              ->with(
-                                 array('Name', 'UserName', 'InventoryDate', 'UserDefinedInfo.TAG'),
+                                 array('Name', 'UserName', 'InventoryDate', 'CustomFields.TAG'),
                                  'InventoryDate',
                                  'desc',
-                                 'UserDefinedInfo.TAG',
+                                 'CustomFields.TAG',
                                  'test',
                                  'like',
                                  '0'
                              )
                              ->willReturn($this->_sampleClients);
-        $query = 'filter=UserDefinedInfo.TAG&search=test&operator=like&invert=0';
+        $query = 'filter=CustomFields.TAG&search=test&operator=like&invert=0';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//th/a', "Kategorie");

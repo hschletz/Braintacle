@@ -89,11 +89,14 @@ class Group extends \Model\ClientOrGroup
         );
 
         if ($type == \Model_GroupMembership::TYPE_DYNAMIC) {
-            $numCols = count($members->getPart(\Zend_Db_Select::COLUMNS));
+            $numCols = count($members->getRawState(\Zend\Db\Sql\Select::COLUMNS));
+            foreach ($members->getRawState(\Zend\Db\Sql\Select::JOINS) as $join) {
+                $numCols += count($join['columns']);
+            }
             if ($numCols != 1) {
                 throw new \LogicException('Expected 1 column, got ' . $numCols);
             }
-            $query = (string) $members;
+            $query = $members->getSqlString($this->serviceLocator->get('Db')->getPlatform());
             $this->serviceLocator->get('Database\Table\GroupInfo')->update(
                 array('request' => $query),
                 array('hardware_id' => $id)

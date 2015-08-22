@@ -1,0 +1,274 @@
+# Fixture for ClientManagerTest
+
+hardware:
+  -
+    id: 1
+    deviceid: "id1"
+    name: "name1"
+    processors: 1111
+    processorn: 1
+    processort: "cpu_type1"
+    lastcome: "2015-08-10 14:19:50"
+    lastdate: "2015-08-10 14:18:50"
+    memory: 1000
+    swap: 100
+    dns: "192.0.2.1"
+    defaultgateway: "192.0.2.2"
+    useragent: "user_agent1"
+    osname: "os_name1"
+    osversion: "os.version.number1"
+    oscomments: "os_version_string1"
+    description: "os_comment1"
+    userid: "user_name1"
+    uuid: "uuid1"
+    winprodid: "product_id1"
+  -
+    id: 2
+    deviceid: "id2"
+    name: "name2"
+    processors: 2222
+    processorn: 2
+    processort: "cpu_type2"
+    lastcome: "2015-08-11 14:19:50"
+    lastdate: "2015-08-11 14:18:50"
+    memory: 2000
+    swap: 200
+    dns: "192.0.2.3"
+    defaultgateway: "192.0.2.4"
+    useragent: "user_agent2"
+    osname: "os_name2"
+    osversion: "os.version.number2"
+    oscomments: "os_version_string2"
+    description: "os_comment2"
+    userid: "user_name2"
+    uuid: "uuid2"
+    winprodid: "product_id2"
+  -
+    id: 3
+    deviceid: "id3"
+    name: "name3"
+    processors: 3333
+    processorn: 3
+    processort: "cpu_type3"
+    lastcome: "2015-08-12 15:19:50"
+    lastdate: "2015-08-11 15:18:50"
+    memory: 3000
+    swap: 300
+    dns: "192.0.2.5"
+    defaultgateway: "192.0.2.6"
+    useragent: "user_agent3"
+    osname: "os_name3"
+    osversion: "os_version_number3"
+    oscomments: "os.version.string3"
+    description: "os_comment3"
+    userid: "user_name3"
+    uuid: "uuid3"
+    winprodid: null
+  -
+    id: 4
+    deviceid: "id4"
+    name: "name4"
+  -
+    id: 5
+    deviceid: "_SYSTEMGROUP_"
+    name: "group"
+
+bios:
+  -
+    hardware_id: 1
+    ssn: "serial1"
+    smanufacturer: "manufacturer.1"
+    smodel: "model1"
+    type: "type1"
+    bmanufacturer: "bios_manufacturer1"
+    bversion: "bios_version1"
+    bdate: "bios_date1"
+    assettag: "asset_tag1"
+  -
+    hardware_id: 2
+    ssn: "serial2"
+    smanufacturer: "manufacturer2"
+    smodel: "model2"
+    type: "type2"
+    bmanufacturer: "bios_manufacturer2"
+    bversion: "bios_version2"
+    bdate: "bios.date2"
+    assettag: "asset_tag2"
+
+accountinfo:
+  -
+    hardware_id: 1
+    col_text: "text1"
+    col_clob: "clob1"
+    col_integer: 1
+    col_float: 1.1
+    col_date: "2015-08-01"
+  -
+    hardware_id: 2
+    col_text: "text2"
+    col_clob: "clob2"
+    col_integer: 2
+    col_float: 2.2
+    col_date: "2015-08-02"
+
+devices:
+  -
+    hardware_id: 1
+    name: "DOWNLOAD"
+    ivalue: 1
+    tvalue: "ERR_FOO"
+  -
+    hardware_id: 1
+    name: "DOWNLOAD"
+    ivalue: 2
+    tvalue: null
+  -
+    hardware_id: 1
+    name: "DOWNLOAD"
+    ivalue: 3
+    tvalue: "NOTIFIED"
+  -
+    hardware_id: 1
+    name: "DOWNLOAD"
+    ivalue: 4
+    tvalue: "SUCCESS"
+  -
+    hardware_id: 2
+    name: "DOWNLOAD"
+    ivalue: 1
+    tvalue: null
+  -
+    hardware_id: 2
+    name: "DOWNLOAD"
+    ivalue: 2
+    tvalue: "NOTIFIED"
+  -
+    hardware_id: 2
+    name: "DOWNLOAD"
+    ivalue: 3
+    tvalue: "SUCCESS"
+  -
+    hardware_id: 2
+    name: "DOWNLOAD"
+    ivalue: 4
+    tvalue: "ERR_FOO"
+  -
+    hardware_id: 3
+    name: "DOWNLOAD"
+    ivalue: 5
+    tvalue: null
+
+download_available:
+  -
+    fileid: 1
+    name: "package1"
+    priority: 0
+    fragments: 0
+    size: 0
+    osname: "LINUX"
+  -
+    fileid: 2
+    name: "package2"
+    priority: 0
+    fragments: 0
+    size: 0
+    osname: "LINUX"
+  -
+    fileid: 3
+    name: "package3"
+    priority: 0
+    fragments: 0
+    size: 0
+    osname: "LINUX"
+  -
+    fileid: 4
+    name: "package4"
+    priority: 0
+    fragments: 0
+    size: 0
+    osname: "LINUX"
+  -
+    fileid: 5
+    name: "package5"
+    priority: 0
+    fragments: 0
+    size: 0
+    osname: "LINUX"
+  -
+    fileid: 6
+    name: "package6"
+    priority: 0
+    fragments: 0
+    size: 0
+    osname: "LINUX"
+
+drives:
+  -
+    hardware_id: 1
+    filesystem: 'filesystem1'
+    total: 1000
+    free: 100
+  -
+    hardware_id: 2
+    filesystem: 'filesystem2'
+    total: 2000
+    free: 200
+  -
+    hardware_id: 3
+    filesystem: null
+    total: null
+    free: null
+
+groups_cache:
+  -
+    hardware_id: 1
+    group_id: 1
+    static: 0
+  -
+    hardware_id: 1
+    group_id: 2
+    static: 2
+  -
+    hardware_id: 2
+    group_id: 1
+    static: 2
+  -
+    hardware_id: 2
+    group_id: 2
+    static: 1
+
+registry:
+  -
+    hardware_id: 1
+    name: "value 1"
+    regvalue: "content1_1"
+  -
+    hardware_id: 2
+    name: "value 1"
+    regvalue: "content1_2"
+  -
+    hardware_id: 2
+    name: "value 2"
+    regvalue: "content2_2"
+
+softwares:
+  -
+    hardware_id: 1
+    name: "name1"
+    version: "version1a"
+  -
+    hardware_id: 2
+    name: "name1"
+    version: "version1b"
+  -
+    hardware_id: 2
+    name: "name1"
+    version: "version1c"
+  -
+    hardware_id: 2
+    name: "name2"
+    version: "version2a"
+  -
+    hardware_id: 3
+    name: "name2"
+    version: "version2b"

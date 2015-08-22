@@ -129,10 +129,10 @@ $renderCallbacks = array(
 );
 
 foreach ($this->columns as $column) {
-    if (preg_match('/^(Registry|UserDefinedInfo)\.(.+)/', $column, $matches)) {
+    if (preg_match('/^(Registry|CustomFields)\.(.+)/', $column, $matches)) {
         // Extract column header from name
         $headers[$column] = $matches[2];
-        if ($matches[1] == 'UserDefinedInfo') {
+        if ($matches[1] == 'CustomFields') {
             if ($matches[2] == 'TAG') {
                 $headers[$column] = $this->translate('Category');
             } else {

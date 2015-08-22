@@ -147,7 +147,7 @@ class Search extends Form
         // Append filters and labels for user defined info
         $template = $translator->translate('User defined: %s');
         foreach ($this->getOption('customFieldManager')->getFields() as $name => $type) {
-            $key = "UserDefinedInfo.$name";
+            $key = "CustomFields.$name";
             switch ($type) {
                 case 'text':
                 case 'clob':

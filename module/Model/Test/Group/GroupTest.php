@@ -168,11 +168,36 @@ class GroupTest extends \Model\Test\AbstractTest
         $model->setMembersFromQuery(\Model_GroupMembership::TYPE_STATIC, 'filter', 'search', 'operator', 'invert');
     }
 
-    public function testSetMembersFromQueryDynamic()
+    public function setMembersFromQueryDynamicProvider()
     {
-        $select = $this->getMockBuilder('Zend_Db_Select')->disableOriginalConstructor()->getMock();
-        $select->expects($this->once())->method('getPart')->with(\Zend_Db_Select::COLUMNS)->willReturn(array('id'));
-        $select->method('__toString')->willReturn('query_new');
+        return array(
+            array(array()),
+            array(array(array('columns' => array()))),
+        );
+    }
+
+    /**
+     * @dataProvider setMembersFromQueryDynamicProvider
+     */
+    public function testSetMembersFromQueryDynamic($joins)
+    {
+        $platform = $this->getMockForAbstractClass('Zend\Db\Adapter\Platform\AbstractPlatform');
+
+        $adapter = $this->getMockBuilder('Zend\Db\Adapter\Adapter')->disableOriginalConstructor()->getMock();
+        $adapter->method('getPlatform')->willReturn($platform);
+
+        $select = $this->getMock('Zend\Db\Sql\Select');
+        $select->expects($this->exactly(2))
+               ->method('getRawState')
+               ->will(
+                   $this->returnValueMap(
+                       array(
+                           array(\Zend\Db\Sql\Select::COLUMNS, array('id')),
+                           array(\Zend\Db\Sql\Select::JOINS, $joins),
+                       )
+                   )
+               );
+        $select->method('getSqlString')->with($platform)->willReturn('query_new');
 
         $clientManager = $this->getMock('Model\Client\ClientManager');
         $clientManager->expects($this->once())
@@ -195,6 +220,7 @@ class GroupTest extends \Model\Test\AbstractTest
                        ->will(
                            $this->returnValueMap(
                                array(
+                                   array('Db', true, $adapter),
                                    array('Model\Client\ClientManager', true, $clientManager),
                                    array(
                                        'Database\Table\GroupInfo',
@@ -222,9 +248,22 @@ class GroupTest extends \Model\Test\AbstractTest
 
     public function testSetMembersFromQueryDynamicInvalidQuery()
     {
-        $select = $this->getMockBuilder('Zend_Db_Select')->disableOriginalConstructor()->getMock();
-        $select->expects($this->once())->method('getPart')->with(\Zend_Db_Select::COLUMNS)->willReturn(array(1, 2));
-        $select->expects($this->never())->method('__toString');
+        $joins = array(
+            array('columns' => array()),
+            array('columns' => array('name')),
+        );
+        $select = $this->getMock('Zend\Db\Sql\Select');
+        $select->expects($this->exactly(2))
+               ->method('getRawState')
+               ->will(
+                   $this->returnValueMap(
+                       array(
+                           array(\Zend\Db\Sql\Select::COLUMNS, array('id')),
+                           array(\Zend\Db\Sql\Select::JOINS, $joins),
+                       )
+                   )
+               );
+        $select->expects($this->never())->method('getSqlString');
 
         $clientManager = $this->getMock('Model\Client\ClientManager');
         $clientManager->method('getClients')->willReturn($select);

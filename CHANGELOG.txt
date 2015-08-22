@@ -69,6 +69,10 @@ Misc:
 - Console: Some peripheal items (extension slots, controllers) are no longer
   searchable because the data is provided inconsistently by different agents.
 
+- Console: The "invert results" search operation now behaves consistently across
+  all argument types (string, numeric, date). Previously, the operation behaved
+  differently for string arguments.
+
 
 CHANGES IN VERSION 0.16
 =======================

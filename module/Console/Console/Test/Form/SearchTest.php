@@ -126,7 +126,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     public function testSetDataText()
     {
         $data = array(
-            'filter' => 'UserDefinedInfo.TAG',
+            'filter' => 'CustomFields.TAG',
             'search' => '1000000',
         );
         $this->_form->setData($data);
@@ -136,7 +136,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     public function testSetDataClob()
     {
         $data = array(
-            'filter' => 'UserDefinedInfo.Clob',
+            'filter' => 'CustomFields.Clob',
             'search' => '1000000',
         );
         $this->_form->setData($data);
@@ -146,7 +146,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     public function testSetDataInteger()
     {
         $data = array(
-            'filter' => 'UserDefinedInfo.Integer',
+            'filter' => 'CustomFields.Integer',
             'search' => '1234',
         );
         $this->_form->setData($data);
@@ -164,7 +164,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     public function testSetDataFloat()
     {
         $data = array(
-            'filter' => 'UserDefinedInfo.Float',
+            'filter' => 'CustomFields.Float',
             'search' => '1234.5678',
         );
         $this->_form->setData($data);
@@ -182,7 +182,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     public function testSetDataDate()
     {
         $data = array(
-            'filter' => 'UserDefinedInfo.Date',
+            'filter' => 'CustomFields.Date',
             'search' => new \DateTime('2014-05-01'),
         );
         $this->_form->setData($data);
@@ -200,7 +200,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     public function testSetDataNoSearch()
     {
         $data = array(
-            'filter' => 'UserDefinedInfo.TAG',
+            'filter' => 'CustomFields.TAG',
         );
         $this->_form->setData($data); // Must not generate error
     }
@@ -208,7 +208,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     public function testInputFilterText()
     {
         $data = array(
-            'filter' => 'UserDefinedInfo.Clob',
+            'filter' => 'CustomFields.Clob',
             'search' => ' test ',
             'operator' => 'eq',
             'invert' => '0',
@@ -227,7 +227,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     public function testInputFilterInteger()
     {
         $data = array(
-            'filter' => 'UserDefinedInfo.Integer',
+            'filter' => 'CustomFields.Integer',
             'search' => ' 1234 ',
             'operator' => 'eq',
             'invert' => '0',
@@ -255,7 +255,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     public function testInputFilterFloat()
     {
         $data = array(
-            'filter' => 'UserDefinedInfo.Float',
+            'filter' => 'CustomFields.Float',
             'search' => ' 1234,5678 ',
             'operator' => 'eq',
             'invert' => '0',
@@ -283,7 +283,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     public function testInputFilterDate()
     {
         $data = array(
-            'filter' => 'UserDefinedInfo.Date',
+            'filter' => 'CustomFields.Date',
             'search' => ' 1.5.2014 ',
             'operator' => 'eq',
             'invert' => '0',
@@ -311,7 +311,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     public function testInputFilterOnTextOperator()
     {
         $data = array(
-            'filter' => 'UserDefinedInfo.Clob',
+            'filter' => 'CustomFields.Clob',
             'search' => '1',
             'operator' => 'like',
             'invert' => '0',
@@ -327,7 +327,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     public function testInputFilterOnOrdinalOperator()
     {
         $data = array(
-            'filter' => 'UserDefinedInfo.Integer',
+            'filter' => 'CustomFields.Integer',
             'search' => '1',
             'operator' => 'ne',
             'invert' => '0',
