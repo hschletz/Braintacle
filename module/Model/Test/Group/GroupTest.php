@@ -29,6 +29,7 @@ class GroupTest extends \Model\Test\AbstractTest
         'ClientsAndGroups',
         'ClientSystemInfo',
         'Clients',
+        'Config',
         'GroupInfo',
         'GroupMemberships',
         'Packages',
