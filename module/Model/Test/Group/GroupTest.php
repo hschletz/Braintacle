@@ -21,7 +21,7 @@
 
 namespace Model\Test\Group;
 
-class GroupTest extends \Model\Test\AbstractTest
+class GroupTest extends AbstractGroupTest
 {
     /** {@inheritdoc} */
     protected static $_tables = array(
@@ -29,8 +29,6 @@ class GroupTest extends \Model\Test\AbstractTest
         'ClientsAndGroups',
         'ClientSystemInfo',
         'Clients',
-        'Config',
-        'GroupInfo',
         'GroupMemberships',
         'Packages',
     );
@@ -222,10 +220,7 @@ class GroupTest extends \Model\Test\AbstractTest
                                array(
                                    array('Db', true, $adapter),
                                    array('Model\Client\ClientManager', true, $clientManager),
-                                   array(
-                                       'Database\Table\GroupInfo',
-                                       true,
-                                       \Library\Application::getService('Database\Table\GroupInfo')
+                                   array('Database\Table\GroupInfo', true, $this->_groupInfo
                                    )
                                )
                            )
@@ -324,9 +319,7 @@ class GroupTest extends \Model\Test\AbstractTest
                                        \Library\Application::getService('Database\Table\Clients')
                                    ),
                                    array(
-                                       'Database\Table\GroupInfo',
-                                       true,
-                                       \Library\Application::getService('Database\Table\GroupInfo')
+                                       'Database\Table\GroupInfo', true, $this->_groupInfo
                                    ),
                                    array(
                                        'Database\Table\GroupMemberships',

@@ -21,10 +21,10 @@
 
 namespace Model\Test\Group;
 
-class GroupManagerTest extends \Model\Test\AbstractTest
+class GroupManagerTest extends AbstractGroupTest
 {
     /** {@inheritdoc} */
-    protected static $_tables = array('ClientConfig', 'ClientsAndGroups', 'Config', 'GroupInfo', 'GroupMemberships');
+    protected static $_tables = array('ClientConfig', 'ClientsAndGroups', 'GroupMemberships');
 
     public function getGroupsProvider()
     {
@@ -59,29 +59,11 @@ class GroupManagerTest extends \Model\Test\AbstractTest
      */
     public function testGetGroups($filter, $filterArg, $order, $direction, $expected)
     {
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
-        $config->method('__get')->will($this->returnValueMap(array(array('groupCacheExpirationInterval', 30))));
-
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->will(
-            $this->returnValueMap(
-                array(
-                    array('Db', true, \Library\Application::getService('Db')),
-                    array('Database\Nada', true, \Library\Application::getService('Database\Nada')),
-                    array('Model\Config', true, $config),
-                    array('Model\Group\Group', true, \Library\Application::getService('Model\Group\Group')),
-                )
-            )
-        );
-
-        $groupInfo = new \Database\Table\GroupInfo($serviceManager);
-        $groupInfo->initialize();
-
         $model = $this->_getModel(
             array(
-                'Database\Table\GroupInfo' => $groupInfo,
+                'Database\Table\GroupInfo' => $this->_groupInfo,
                 'Library\Now' => new \DateTime('2015-02-08 19:36:29'),
-                'Model\Config' => $config,
+                'Model\Config' => $this->_config,
             )
         );
         $resultSet = $model->getGroups($filter, $filterArg, $order, $direction);
@@ -97,13 +79,13 @@ class GroupManagerTest extends \Model\Test\AbstractTest
     public function testGetGroupsInvalidFilter()
     {
         $this->setExpectedException('InvalidArgumentException', 'Invalid group filter: invalid');
-        $model = $this->_getModel();
+        $model = $this->_getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
         $resultSet = $model->getGroups('invalid');
     }
 
     public function testGetGroup()
     {
-        $model = $this->_getModel();
+        $model = $this->_getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
         $group = $model->getGroup('name2');
         $this->assertInstanceOf('Model\Group\Group', $group);
         $this->assertEquals('name2', $group['Name']);
@@ -112,7 +94,7 @@ class GroupManagerTest extends \Model\Test\AbstractTest
     public function testGetGroupNonExistentGroup()
     {
         $this->setExpectedException('RuntimeException', 'Unknown group name: invalid');
-        $model = $this->_getModel();
+        $model = $this->_getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
         $group = $model->getGroup('invalid');
     }
 
@@ -136,7 +118,12 @@ class GroupManagerTest extends \Model\Test\AbstractTest
      */
     public function testCreateGroup($description, $expectedDescription)
     {
-        $model = $this->_getModel(array('Library\Now' => new \DateTime('2015-02-12 22:07:00')));
+        $model = $this->_getModel(
+            array(
+                'Database\Table\GroupInfo' => $this->_groupInfo,
+                'Library\Now' => new \DateTime('2015-02-12 22:07:00'),
+            )
+        );
         $model->createGroup('name3', $description);
 
         $table = \Library\Application::getService('Database\Table\ClientsAndGroups');
@@ -216,7 +203,7 @@ class GroupManagerTest extends \Model\Test\AbstractTest
         $group->expects($this->at(1))->method('offsetGet')->with('Id')->willReturn(1);
         $group->expects($this->at(2))->method('unlock');
 
-        $model = $this->_getModel();
+        $model = $this->_getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
         $model->deleteGroup($group);
 
         $dataSet = $this->_loadDataSet('DeleteGroup');
@@ -297,7 +284,12 @@ class GroupManagerTest extends \Model\Test\AbstractTest
                                  ->getMock();
         $clientsAndGroups->method('delete')->will($this->throwException(new \RuntimeException('database error')));
 
-        $model = $this->_getModel(array('Database\Table\ClientsAndGroups' => $clientsAndGroups));
+        $model = $this->_getModel(
+            array(
+                'Database\Table\ClientsAndGroups' => $clientsAndGroups,
+                'Database\Table\GroupInfo' => $this->_groupInfo,
+            )
+        );
         try {
             $model->deleteGroup($group);
             $this->fail('Expected exception was not thrown');
