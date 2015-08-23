@@ -232,12 +232,19 @@ class GroupTest extends \Model\Test\AbstractTest
                        );
 
         $model = $this->getMockBuilder($this->_getClass())->setMethods(array('update'))->getMock();
-        $model->expects($this->once())->method('update')->with(true);
+        $model->expects($this->once())
+              ->method('update')
+              ->with(true)
+              ->willReturnCallback(
+                  function() use ($model) {
+                      // Verify that value is set before update() gets called
+                      $this->assertEquals('query_new', $model['DynamicMembersSql']);
+                  }
+              );
         $model['Id'] = 10;
         $model->setServiceLocator($serviceManager);
 
         $model->setMembersFromQuery(\Model_GroupMembership::TYPE_DYNAMIC, 'filter', 'search', 'operator', 'invert');
-        $this->assertEquals('query_new', $model['DynamicMembersSql']);
         $this->assertTablesEqual(
             $this->_loadDataSet('SetMembersFromQueryDynamic')->getTable('groups'),
             $this->getConnection()->createQueryTable(

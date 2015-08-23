@@ -101,8 +101,8 @@ class Group extends \Model\ClientOrGroup
                 array('request' => $query),
                 array('hardware_id' => $id)
             );
-            $this->update(true); // Force cache update, effectively validating query
             $this->offsetSet('DynamicMembersSql', $query);
+            $this->update(true); // Force cache update, effectively validating query
         } else {
             // Wait until lock can be obtained
             while (!$this->lock()) {
