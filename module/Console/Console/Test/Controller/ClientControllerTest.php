@@ -263,6 +263,31 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXpathQueryCount('//th', 2);
     }
 
+    public function testIndexActionWithMangledOsNames()
+    {
+        $sampleClients = array(
+            array('OsName' => 'Microsoft OS version1'),
+            array('OsName' => "Microsoft\xC2\xAE OS version2"),
+            array('OsName' => 'not Microsoft OS'),
+        );
+        $this->_clientManager->method('getClients')
+                             ->with(
+                                 array('OsName'),
+                                 'InventoryDate',
+                                 'desc',
+                                 null,
+                                 null,
+                                 null,
+                                 null
+                             )
+                             ->willReturn($sampleClients);
+        $this->dispatch('/console/client/index/?columns=OsName');
+        $this->assertResponseStatusCode(200);
+        $this->assertXpathQueryContentContains('//tr[2]/td[1]', "\nOS version1\n");
+        $this->assertXpathQueryContentContains('//tr[3]/td[1]', "\nOS version2\n");
+        $this->assertXpathQueryContentContains('//tr[4]/td[1]', "\nnot Microsoft OS\n");
+    }
+
     public function testIndexActionWithValidJumpto()
     {
         $form = $this->_formManager->get('Console\Form\Search');

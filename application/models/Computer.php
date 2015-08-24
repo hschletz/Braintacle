@@ -215,8 +215,6 @@ class Model_Computer extends \Model_Abstract
     /**
      * Retrieve a property by its logical name
      *
-     * Mangles certain OS names to a nicer and shorter value.
-     * Replaces certain meaningless manufacturer and model names with NULL.
      * Provides access to child object properties.
      */
     function getProperty($property, $rawValue=false)
@@ -258,39 +256,6 @@ class Model_Computer extends \Model_Abstract
             } else {
                 return $this->getItems($property);
             }
-        }
-
-        if ($rawValue) {
-            return $value;
-        }
-
-        switch ($property) {
-            case 'OsName':
-                // Some Unicode characters to be stripped from OS name
-                $r  = chr(0xc2) . chr(0xae); // the (R) symbol
-                $tm = chr(0xc2) . chr(0x99); // the TM symbol
-
-                // strip 'Microsoft' prefix to conserve space. We know who made it...
-                $value = preg_replace("/Microsoft[$r]* /", '', $this->osname, 1);
-                // The TM symbol is not available with certain fonts. Ugly...
-                $value = str_replace($tm, '', $value);
-                break;
-            case 'Manufacturer':
-                if ($value == 'To Be Filled By O.E.M.'
-                    or $value == 'System manufacturer'
-                    or $value == 'System Manufacturer'
-                ) {
-                    $value = null;
-                }
-                break;
-            case 'Model':
-                if ($value == 'To Be Filled By O.E.M.'
-                    or $value == 'System Name'
-                    or $value == 'System Product Name'
-                ) {
-                    $value = null;
-                }
-                break;
         }
 
         return $value;

@@ -126,6 +126,10 @@ $renderCallbacks = array(
             true
         );
     },
+    'OsName' => function($view, $client) {
+        // Strip prefix to conserve space
+        return $view->escapeHtml(preg_replace('/^Microsoft\x{00AE}? /u', '', $client['OsName']));
+    },
 );
 
 foreach ($this->columns as $column) {
