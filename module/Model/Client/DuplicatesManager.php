@@ -205,8 +205,18 @@ class DuplicatesManager
         $subQuery = $this->_getDuplicateValues($criteria);
         $column = $subQuery->getRawState($subQuery::COLUMNS)[0];
 
-        $select = $this->_clients->getSql()->select();
-        $select->columns(array('id', 'name', 'lastcome', 'ssn', 'assettag'));
+        $select = $this->_clientManager->getClients(
+            array('Id', 'Name', 'LastContactDate', 'Serial', 'AssetTag'),
+            $order,
+            $direction,
+            null,
+            null,
+            null,
+            null,
+            false,
+            false,
+            false
+        );
         $select->join(
             'networks',
             'networks.hardware_id = clients.id',
@@ -214,11 +224,6 @@ class DuplicatesManager
             $select::JOIN_LEFT
         )
         ->where(array(new \Zend\Db\Sql\Predicate\In($column, $subQuery)));
-        $select->order(
-            \Model_Computer::getOrder(
-                $order, $direction, $this->_clients->getResultSetPrototype()->getObjectPrototype()->getPropertyMap()
-            )
-        );
         if ($order != 'Name') {
             // Secondary ordering by name
             $select->order('name');
