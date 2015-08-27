@@ -66,63 +66,124 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $duplicates->count('invalid');
     }
 
-    /**
-     * Tests for find()
-     */
-    public function testFind()
+    public function findProvider()
     {
-        $duplicates = $this->_getModel();
-
-        $expectedResult = array(
-            array (
-                'Id' => '2',
-                'Name' => 'Name2',
-                'LastContactDate' => new \Zend_Date('2013-12-23 13:02:33'),
-                'Serial' => 'duplicate',
-                'AssetTag' => 'duplicate',
-                'NetworkInterface.MacAddress' => new \Library\MacAddress('00:00:5E:00:53:01'),
+        $client2 = array(
+            'id' => '2',
+            'name' => 'Name2',
+            'lastcome' => '2013-12-23 13:02:33',
+            'ssn' => 'duplicate',
+            'assettag' => 'duplicate',
+            'networkinterface_macaddr' => '00:00:5E:00:53:01',
+        );
+        $client3 = array (
+            'id' => '3',
+            'name' => 'Name2',
+            'lastcome' => '2013-12-23 13:03:33',
+            'ssn' => 'duplicate',
+            'assettag' => 'duplicate',
+            'networkinterface_macaddr' => '00:00:5E:00:53:01',
+        );
+        $defaultOrder = array('clients.id asc', 'name');
+        return array(
+            array('MacAddress', 'Id', 'asc', false, $defaultOrder, array()),
+            array('Serial', 'Id', 'asc', false, $defaultOrder, array()),
+            array('AssetTag', 'Id', 'asc', false, $defaultOrder, array()),
+            array('MacAddress', 'Id', 'asc', true, $defaultOrder, array($client2, $client3)),
+            array('Serial', 'Id', 'asc', true, $defaultOrder, array($client2, $client3)),
+            array('AssetTag', 'Id', 'asc', true, $defaultOrder, array($client2, $client3)),
+            array('Name', 'Id', 'asc', false, $defaultOrder, array($client2, $client3)),
+            array('Name', 'Id', 'desc', false, array('clients.id desc', 'name'), array($client3, $client2)),
+            array('Name', 'Name', 'asc', false, array('clients.name asc', 'clients.id'), array($client2, $client3)),
+            array(
+                'Name',
+                'NetworkInterface.MacAddress',
+                'asc',
+                false,
+                array('networkinterface_macaddr asc', 'name', 'clients.id'),
+                array($client2, $client3)
             ),
-            array (
-                'Id' => '3',
-                'Name' => 'Name2',
-                'LastContactDate' => new \Zend_Date('2013-12-23 13:03:33'),
-                'Serial' => 'duplicate',
-                'AssetTag' => 'duplicate',
-                'NetworkInterface.MacAddress' => new \Library\MacAddress('00:00:5E:00:53:01'),
-            ),
+        );
+    }
+
+    /**
+     * @dataProvider findProvider
+     */
+    public function testFind($criteria, $order, $direction, $clearBlacklist, $expectedOrder, $expectedResult)
+    {
+        if ($clearBlacklist) {
+            \Library\Application::getService('Database\Table\DuplicateMacAddresses')->delete(true);
+            \Library\Application::getService('Database\Table\DuplicateSerials')->delete(true);
+            \Library\Application::getService('Database\Table\DuplicateAssetTags')->delete(true);
+        }
+
+        $ordercolumns = array(
+            'Id' => 'clients.id',
+            'Name' => 'clients.name',
+            'NetworkInterface.MacAddress' => 'networkinterface_macaddr',
         );
 
-        // These criteria are initially allowed duplicate.
-        $this->assertCount(0, $duplicates->find('MacAddress'));
-        $this->assertCount(0, $duplicates->find('Serial'));
-        $this->assertCount(0, $duplicates->find('AssetTag'));
+        $sql = new \Zend\Db\Sql\Sql(\Library\Application::getService('Db'), 'clients');
 
-        // Duplicate names are always counted.
-        $this->assertEquals($expectedResult, $duplicates->find('Name')->toArray());
+        $select = $sql->select()
+                      ->columns(array('id', 'name', 'lastcome', 'ssn', 'assettag'))
+                      ->order("$ordercolumns[$order] $direction");
 
-        // Clear list of allowed duplicate values and re-check.
-        \Library\Application::getService('Database\Table\DuplicateMacAddresses')->delete(true);
-        \Library\Application::getService('Database\Table\DuplicateSerials')->delete(true);
-        \Library\Application::getService('Database\Table\DuplicateAssetTags')->delete(true);
-        $this->assertEquals($expectedResult, $duplicates->find('MacAddress')->toArray());
-        $this->assertEquals($expectedResult, $duplicates->find('Serial')->toArray());
-        $this->assertEquals($expectedResult, $duplicates->find('AssetTag')->toArray());
+        $clientManager = $this->getMockBuilder('Model\Client\ClientManager')->disableOriginalConstructor()->getMock();
+        $clientManager->method('getClients')
+                      ->with(
+                          array('Id', 'Name', 'LastContactDate', 'Serial', 'AssetTag'),
+                          $order,
+                          $direction,
+                          null,
+                          null,
+                          null,
+                          null,
+                          false,
+                          false,
+                          false
+                      )
+                      ->willReturn($select);
 
-        // Test sorting
-        $this->assertEquals(
-            array_reverse($expectedResult),
-            $duplicates->find('Name', 'Id', 'desc')->toArray()
+        $clients = $this->getMockBuilder('Database\Table\Clients')
+                        ->disableOriginalConstructor()
+                        ->setMethods(array('getSql', 'selectWith'))
+                        ->getMock();
+        $clients->method('getSql')->willReturn($sql);
+        $clients->method('selectWith')
+                ->with(
+                    $this->callback(
+                        function($select) use($expectedOrder) {
+                            return $select->getRawState($select::ORDER) == $expectedOrder;
+                        }
+                    )
+                )
+                ->willReturnCallback(
+                    function($select) use($sql) {
+                        // Build simple result set to bypass hydrator
+                        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+                        $resultSet->initialize($sql->prepareStatementForSqlObject($select)->execute());
+                        return $resultSet;
+                    }
+                );
+
+        $duplicates = $this->_getModel(
+            array(
+                'Database\Table\Clients' => $clients,
+                'Model\Client\ClientManager' => $clientManager,
+            )
         );
 
-        // Test secondary sorting
-        $this->assertEquals(
-            $expectedResult,
-            $duplicates->find('Name', 'Name')->toArray()
-        );
+        $resultSet = $duplicates->find($criteria, $order, $direction);
+        $this->assertInstanceOf('Zend\Db\ResultSet\AbstractResultSet', $resultSet);
+        $this->assertEquals($expectedResult, $resultSet->toArray());
+    }
 
+    public function testFindInvalidCriteria()
+    {
         // Test invalid criteria
         $this->setExpectedException('InvalidArgumentException');
-        $duplicates->count('invalid');
+        $this->_getModel()->find('invalid');
     }
 
     /**
