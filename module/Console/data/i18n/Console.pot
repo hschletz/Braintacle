@@ -287,11 +287,10 @@ msgid "Date"
 msgstr ""
 
 #: Console/Form/DefineFields.php Console/Form/ManageRegistryValues.php
-#: Console/Form/NetworkDeviceTypes.php
-#: Console/Navigation/ClientMenuFactory.php
+#: Console/Form/NetworkDeviceTypes.php Console/Navigation/ClientMenuFactory.php
 #: Console/Navigation/GroupMenuFactory.php view/console/accounts/index.php
-#: view/console/network/showidentified.php
-#: view/console/network/showunknown.php view/console/package/index.php
+#: view/console/network/showidentified.php view/console/network/showunknown.php
+#: view/console/package/index.php
 msgid "Delete"
 msgstr ""
 
@@ -327,8 +326,7 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
-#: Console/Form/ManageRegistryValues.php
-#: Console/Form/Preferences/Inventory.php
+#: Console/Form/ManageRegistryValues.php Console/Form/Preferences/Inventory.php
 msgid "Inspect registry"
 msgstr ""
 
@@ -803,8 +801,7 @@ msgstr ""
 
 #: Console/Form/Search.php view/console/client/index.php
 #: view/console/client/network.php view/console/network/edit.php
-#: view/console/network/showidentified.php
-#: view/console/network/showunknown.php
+#: view/console/network/showidentified.php view/console/network/showunknown.php
 msgid "IP address"
 msgstr ""
 
@@ -1117,8 +1114,7 @@ msgid "Edit account"
 msgstr ""
 
 #: view/console/accounts/index.php view/console/network/index.php
-#: view/console/network/showidentified.php
-#: view/console/network/showunknown.php
+#: view/console/network/showidentified.php view/console/network/showunknown.php
 msgid "Edit"
 msgstr ""
 
@@ -1679,8 +1675,7 @@ msgstr ""
 msgid "Properties of subnet %s"
 msgstr ""
 
-#: view/console/network/showidentified.php
-#: view/console/network/showunknown.php
+#: view/console/network/showidentified.php view/console/network/showunknown.php
 msgid "Discovery date"
 msgstr ""
 

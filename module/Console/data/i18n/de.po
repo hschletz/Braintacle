@@ -274,11 +274,10 @@ msgid "Date"
 msgstr "Datum"
 
 #: Console/Form/DefineFields.php Console/Form/ManageRegistryValues.php
-#: Console/Form/NetworkDeviceTypes.php
-#: Console/Navigation/ClientMenuFactory.php
+#: Console/Form/NetworkDeviceTypes.php Console/Navigation/ClientMenuFactory.php
 #: Console/Navigation/GroupMenuFactory.php view/console/accounts/index.php
-#: view/console/network/showidentified.php
-#: view/console/network/showunknown.php view/console/package/index.php
+#: view/console/network/showidentified.php view/console/network/showunknown.php
+#: view/console/package/index.php
 msgid "Delete"
 msgstr "Löschen"
 
@@ -330,8 +329,7 @@ msgstr "Anmelden"
 msgid "Username"
 msgstr "Benutzername"
 
-#: Console/Form/ManageRegistryValues.php
-#: Console/Form/Preferences/Inventory.php
+#: Console/Form/ManageRegistryValues.php Console/Form/Preferences/Inventory.php
 msgid "Inspect registry"
 msgstr "Registry durchsuchen"
 
@@ -724,8 +722,7 @@ msgstr "GPU-Speicher"
 
 #: Console/Form/Search.php view/console/client/index.php
 #: view/console/client/network.php view/console/network/edit.php
-#: view/console/network/showidentified.php
-#: view/console/network/showunknown.php
+#: view/console/network/showidentified.php view/console/network/showunknown.php
 msgid "IP address"
 msgstr "IP-Adresse"
 
@@ -1127,8 +1124,7 @@ msgid "Add user"
 msgstr "Benutzer hinzufügen"
 
 #: view/console/accounts/index.php view/console/network/index.php
-#: view/console/network/showidentified.php
-#: view/console/network/showunknown.php
+#: view/console/network/showidentified.php view/console/network/showunknown.php
 msgid "Edit"
 msgstr "Bearbeiten"
 
@@ -1687,8 +1683,7 @@ msgstr "unbekannt"
 msgid "Properties of subnet %s"
 msgstr "Eigenschaften von Subnetz %s"
 
-#: view/console/network/showidentified.php
-#: view/console/network/showunknown.php
+#: view/console/network/showidentified.php view/console/network/showunknown.php
 msgid "Discovery date"
 msgstr "Datum"
 
