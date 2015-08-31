@@ -239,7 +239,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_duplicates->expects($this->never())
                           ->method('allow');
         $this->dispatch('/console/duplicates/allow/?criteria=Serial&value=12345678', 'POST', array('no' => 'No'));
-        $this->assertRedirectTo('/console/duplicates/show/?criteria=Serial');
+        $this->assertRedirectTo('/console/duplicates/manage/?criteria=Serial');
     }
 
     public function testAllowActionPostYes()

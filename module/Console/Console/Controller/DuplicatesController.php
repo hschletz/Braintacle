@@ -128,7 +128,7 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
                 return $this->redirectToRoute('duplicates', 'index');
             } else {
                 // Operation cancelled by user
-                return $this->redirectToRoute('duplicates', 'show', array('criteria' => $criteria));
+                return $this->redirectToRoute('duplicates', 'manage', array('criteria' => $criteria));
             }
         } else {
             // View script renders form
