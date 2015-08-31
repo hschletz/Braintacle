@@ -198,8 +198,8 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
     public function testLoadClient($clientData, $customFields, $packages, $items, $windows, $xmlFile)
     {
         $clientData['ClientId'] = 'client_id';
-        $clientData['InventoryDate'] = new \Zend_Date('2015-05-15 21:19:05');
-        $clientData['LastContactDate'] = new \Zend_Date('2015-05-05 21:18:04');
+        $clientData['InventoryDate'] = new \DateTime('2015-05-15 21:19:05');
+        $clientData['LastContactDate'] = new \DateTime('2015-05-05 21:18:04');
         $clientData['CustomFields'] = $customFields;
         $clientData['Windows'] = $windows;
 

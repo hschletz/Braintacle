@@ -36,7 +36,7 @@ class Clients extends \Database\AbstractTable
      */
     public function initialize()
     {
-        $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
+        $this->_hydrator = new \Database\Hydrator\Clients($this->_serviceLocator);
         $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
             $this->_serviceLocator->get('Model\Client\Client')

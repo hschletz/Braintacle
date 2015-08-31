@@ -61,29 +61,23 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
         $query=true
     )
     {
-        $dummy = new \Model_Computer;
-        $map = $dummy->getPropertyMap();
+        $clients = $this->serviceLocator->get('Database\Table\Clients');
+        $map = $clients->getHydrator()->getExtractorMap();
 
         $fromClients = array();
         if (empty($properties)) {
             $properties = array_keys($map); // Select all properties
         }
         foreach ($properties as $property) {
-            switch ($property) {
-                case 'Package.Status':
-                case 'Membership':
-                    break; // columns are added later
-                default:
-                    if (isset($map[$property])) { // Other properties provided by Client model
-                        $fromClients[] = $map[$property];
-                    } elseif (preg_match('/^Windows\.(.*)/', $property, $matches)) {
-                        $column = $this->serviceLocator->get('Database\Table\WindowsInstallations')
-                                                       ->getHydrator()
-                                                       ->extractName($matches[1]);
-                        $fromWindows["windows_$column"] = $column;
-                    }
-                    // Ignore other properties. They might get added by a filter.
+            if (isset($map[$property])) {
+                $fromClients[] = $map[$property];
+            } elseif (preg_match('/^Windows\.(.*)/', $property, $matches)) {
+                $column = $this->serviceLocator->get('Database\Table\WindowsInstallations')
+                                               ->getHydrator()
+                                               ->extractName($matches[1]);
+                $fromWindows["windows_$column"] = $column;
             }
+            // Ignore other properties. They might get added by a filter.
         }
         // add PK if not already selected
         if (!in_array('id', $fromClients)) {
@@ -369,7 +363,7 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
         }
 
         if ($query) {
-            $resultSet = clone $this->serviceLocator->get('Database\Table\Clients')->getResultSetPrototype();
+            $resultSet = clone $clients->getResultSetPrototype();
             $resultSet->initialize($sql->prepareStatementForSqlObject($select)->execute());
             return $resultSet;
         } else {
@@ -644,8 +638,8 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
         switch ($model) {
             case 'Client':
                 $table = 'Clients';
-                $class = new \Model_Computer;
-                $column = $class->getColumnName($property);
+                $hydrator = $this->serviceLocator->get('Database\Table\Clients')->getHydrator();
+                $column = $hydrator->extractName($property);
                 $columnAlias = $column;
                 break;
             case 'CustomFields':

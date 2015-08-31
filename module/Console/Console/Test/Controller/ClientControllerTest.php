@@ -792,12 +792,25 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testGeneralActionDefault()
     {
+        $inventoryDate = new \DateTime('2014-05-29 11:16:15');
+        $lastContactDate = new \DateTime('2014-05-29 11:17:34');
+
+        $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat->expects($this->exactly(2))
+                   ->method('__invoke')
+                   ->withConsecutive(
+                       array($inventoryDate, \IntlDateFormatter::FULL, \IntlDateFormatter::LONG),
+                       array($lastContactDate, \IntlDateFormatter::FULL, \IntlDateFormatter::LONG)
+                   )
+                   ->willReturnOnConsecutiveCalls('inventory_date', 'last_contact_date');
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
+
         $client = array(
             'Id' => 1,
             'Name' => 'name',
             'ClientId' => 'client_id',
-            'InventoryDate' => new \Zend_Date('2014-05-29 11:16:15'),
-            'LastContactDate' => new \Zend_Date('2014-05-29 11:17:34'),
+            'InventoryDate' => $inventoryDate,
+            'LastContactDate' => $lastContactDate,
             'OcsAgent' => 'user_agent',
             'Manufacturer' => 'manufacturer',
             'Model' => 'model',
@@ -828,8 +841,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $query = "//dl/dt[text()='\n%s\n']/following::dd[1][text()='\n%s\n']";
         $this->assertXPathQuery(sprintf($query, 'ID', 1));
         $this->assertXPathQuery(sprintf($query, 'Client-ID', 'client_id'));
-        $this->assertXPathQuery(sprintf($query, 'Datum der Inventarinformationen', '29.05.2014 11:16:15'));
-        $this->assertXPathQuery(sprintf($query, 'Letzter Kontakt', '29.05.2014 11:17:34'));
+        $this->assertXPathQuery(sprintf($query, 'Datum der Inventarinformationen', 'inventory_date'));
+        $this->assertXPathQuery(sprintf($query, 'Letzter Kontakt', 'last_contact_date'));
         $this->assertXPathQuery(sprintf($query, 'User-Agent', 'user_agent'));
         $this->assertXPathQuery(sprintf($query, 'Modell', 'manufacturer model'));
         $this->assertXPathQuery(sprintf($query, 'Seriennummer', 'serial'));

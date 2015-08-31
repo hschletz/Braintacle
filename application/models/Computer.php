@@ -89,58 +89,6 @@
  */
 class Model_Computer extends \Model_Abstract
 {
-
-    /** {@inheritdoc} */
-    protected $_propertyMap = array(
-        // Values from 'hardware' table
-        'Id' => 'id',
-        'ClientId' => 'deviceid',
-        'Name' => 'name',
-        'CpuClock' => 'processors',
-        'CpuCores' => 'processorn',
-        'CpuType' => 'processort',
-        'InventoryDate' => 'lastdate',
-        'LastContactDate' => 'lastcome',
-        'PhysicalMemory' => 'memory',
-        'SwapMemory' => 'swap',
-        'IpAddress' => 'ipaddr',
-        'DnsServer' => 'dns',
-        'DefaultGateway' => 'defaultgateway',
-        'OcsAgent' => 'useragent',
-        'OsName' => 'osname',
-        'OsVersionNumber' => 'osversion',
-        'OsVersionString' => 'oscomments',
-        'OsComment' => 'description',
-        'UserName' => 'userid',
-        'InventoryDiff' => 'checksum',
-        'Uuid' => 'uuid',
-        // Values from 'bios' table
-        'Manufacturer' => 'smanufacturer',
-        'Model' => 'smodel',
-        'Serial' => 'ssn',
-        'Type' => 'type',
-        'BiosManufacturer' => 'bmanufacturer',
-        'BiosVersion' => 'bversion',
-        'BiosDate' => 'bdate',
-        'AssetTag' => 'assettag',
-        // Values from assigned packages
-        'Package.Status' => 'package_status',
-        // Values from group memberships
-        'Membership' => 'static'
-    );
-
-    /** {@inheritdoc} */
-    protected $_types = array(
-        'Id' => 'integer',
-        'CpuClock' => 'integer',
-        'CpuCores' => 'integer',
-        'InventoryDate' => 'timestamp',
-        'LastContactDate' => 'timestamp',
-        'PhysicalMemory' => 'integer',
-        'SwapMemory' => 'integer',
-        'Membership' => 'enum',
-    );
-
     /**
      * Windows-specific information
      *
@@ -171,12 +119,6 @@ class Model_Computer extends \Model_Abstract
     protected static $_configEffective = array();
 
     /**
-     * Raw properties of child objects from joined queries.
-     * @var array
-     */
-    private $_childProperties = array();
-
-    /**
      * User defined information for this computer
      *
      * It can be 1 of 3 types:
@@ -190,12 +132,6 @@ class Model_Computer extends \Model_Abstract
      * @var mixed
      */
     private $_userDefinedInfo;
-
-    /**
-     * Content of registry value/data for registry search results
-     * @var string
-     */
-    private $_registryContent;
 
     /**
      * Constructor
@@ -217,21 +153,12 @@ class Model_Computer extends \Model_Abstract
      *
      * Provides access to child object properties.
      */
-    function getProperty($property, $rawValue=false)
+    public function offsetGet($property)
     {
-        try {
-            $value = parent::getProperty($property, $rawValue);
-        } catch (Exception $e) {
-            if (array_key_exists($property, $this->_childProperties)) {
-                list($model, $property) = explode('.', $property);
-                return $this->_childProperties["$model.$property"];
-            } elseif (preg_match('#^CustomFields\\.(.*)#', $property, $matches)) {
-                return $this->getUserDefinedInfo($matches[1]);
-            } elseif (preg_match('#^Registry\\.#', $property)) {
-                return $this->_registryContent;
-            } elseif (preg_match('#^Windows\\.(\w+)$#', $property, $matches)) {
-                return $this->windows[$matches[1]];
-            } elseif ($property == 'Windows') {
+        if (array_key_exists($property, $this)) {
+            $value = parent::offsetGet($property);
+        } else {
+            if ($property == 'Windows') {
                 // The OS type is not stored directly in the database. However,
                 // the ProductId property is always non-empty on Windows systems
                 // so that it can be used to check for a Windows system.
@@ -243,6 +170,8 @@ class Model_Computer extends \Model_Abstract
                 }
             } elseif ($property == 'CustomFields') {
                 return $this->getUserDefinedInfo();
+            } elseif (strpos($property, 'Registry.') === 0) {
+                return $this['Registry.Content'];
             } elseif ($property == 'IsSerialBlacklisted') {
                 return (bool) \Model_Database::getAdapter()->fetchOne(
                     "SELECT COUNT(serial) FROM blacklist_serials WHERE serial = ?",
@@ -259,121 +188,6 @@ class Model_Computer extends \Model_Abstract
         }
 
         return $value;
-    }
-
-    /**
-     * Magic method to set a property directly
-     *
-     * This implementation handles columns from joined tables if they are
-     * properly named ('model_property').
-     */
-    public function __set($property, $value)
-    {
-        try {
-            // Parent's implementation will handle properties from Model_Computer
-            parent::__set($property, $value);
-        } catch (Exception $exception) {
-            if ($property == 'registry_content') {
-                $this->_registryContent = $value;
-                return;
-            }
-            if (preg_match('#^customfields_(.*)#', $property, $matches)) {
-                // If _userDefinedInfo is already an object, do nothing - the
-                // information is already there. Otherwise, _userDefinedInfo
-                // will be an array with the given key/value pair.
-                if (!($this->_userDefinedInfo instanceof \Model\Client\CustomFields)) {
-                    $hydrator = \Library\Application::getService('Model\Client\CustomFieldManager')->getHydrator();
-                    $property = $hydrator->hydrateName($matches[1]);
-                    $value = $hydrator->hydrateValue($property, $value);
-                    $this->_userDefinedInfo[$property] = $value;
-                }
-                return;
-            }
-
-            // Only handle properly formatted column identifiers
-            if (!preg_match('/^[a-z]+_[a-z_]+$/', $property)) {
-                throw $exception;
-            }
-
-            list($model, $property) = explode('_', $property, 2);
-
-            if ($model == 'windows') {
-                // When instantiated from fetchObject(), this gets called before
-                // __construct(). Initialize property if necessary.
-                if (!$this->windows) {
-                    $this->windows = clone \Library\Application::getService('Model\Client\WindowsInstallation');
-                }
-                $hydrator = \Library\Application::getService('Database\Table\WindowsInstallations')->getHydrator();
-                $property = $hydrator->hydrateName($property);
-                if ($property) {
-                    $this->windows[$property] = $hydrator->hydrateValue($property, $value);
-                } else {
-                    throw $exception; // Property is invalid.
-                }
-                return;
-            }
-
-            $table = \Library\Application::getService('Model\Client\ItemManager')->getTable($model);
-            // Get mixed-case model name
-            $model = get_class($table->getResultSetPrototype()->getObjectPrototype());
-            $model = substr($model, strrpos($model, '\\') + 1);
-            $hydrator = $table->getHydrator();
-            $property = $hydrator->hydrateName($property);
-            $this->_childProperties["$model.$property"] = $hydrator->hydrateValue($property, $value);
-        }
-    }
-
-    /**
-     * Return the datatype of a property
-     *
-     * This implementation passes unknown properties to their matching child
-     * object class if possible.
-     */
-    public function getPropertyType($property)
-    {
-        try {
-            $type = parent::getPropertyType($property);
-        } catch (Exception $exception) {
-            if (preg_match('#^Registry\\.#', $property)) {
-                return 'text';
-            }
-            if (preg_match('/^[a-zA-Z]+\.[a-zA-Z]+$/', $property)) {
-                // Property is of the form 'Model.Property'
-                list($model, $property) = explode('.', $property);
-            } else {
-                // Invalid property. Re-throw exception.
-                throw $exception;
-            }
-            // Pass property to the model class
-            $model = "Model_$model";
-            if (!class_exists($model)) {
-                throw $exception;
-            }
-            $model = new $model;
-            $type = $model->getPropertyType($property);
-        }
-        return $type;
-    }
-
-    /**
-     * Get the real column name for a property
-     * @param string $property Logical property name
-     * @return string Column name to be used in SQL queries
-     */
-    public function getColumnName($property)
-    {
-        try {
-            return parent::getColumnName($property);
-        } catch(Exception $e) {
-            if (preg_match('#^CustomFields\\.(.*)#', $property, $matches)) {
-                $hydrator = \Library\Application::getService('Model\Client\CustomFieldManager')->getHydrator();
-                return $hydrator->extractName($matches[1]);
-            } elseif (preg_match('#^Registry\\.#', $property)) {
-                return 'registry_content';
-            } else {
-                throw $e;
-            }
-        }
     }
 
     /**
@@ -417,16 +231,6 @@ class Model_Computer extends \Model_Abstract
             }
             return $order;
         }
-    }
-
-    /** {@inheritdoc} */
-    public function getArrayCopy()
-    {
-        $array = parent::getArrayCopy();
-        foreach ($this->_childProperties as $key => $value) {
-            $array[$key] = $value;
-        }
-        return $array;
     }
 
     /**

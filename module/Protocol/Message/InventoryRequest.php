@@ -100,9 +100,9 @@ class InventoryRequest extends \Library\DomDocument
                 if ($this->_models[$section][$name] == 'WindowsInstallation') {
                     $value = $client['Windows'][$property];
                 } elseif ($property == 'InventoryDate' or $property == 'LastContactDate') {
-                    $value = $client[$property]->get('yyyy-MM-dd HH:mm:ss');
+                    $value = $client[$property]->format('Y-m-d H:i:s');
                 } else {
-                    $value = $client->getProperty($property, true);
+                    $value = $client[$property];
                 }
                 if ((string) $value != '') {
                     $element->appendChild($this->createElementWithContent($name, $value));

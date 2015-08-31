@@ -121,30 +121,6 @@ class AbstractTableTest extends \PHPUnit_Extensions_Database_TestCase
         $this->assertEquals(array('value', 'value'), $this->_table->fetchCol('col2'));
     }
 
-    public function testFetchColWithLegacyPropertyMapper()
-    {
-        $model = $this->getMockBuilder('Model_Abstract')->setMethods(array('__get'))->getMockForAbstractClass();
-        $model->expects($this->once())->method('__get')->with('col2')->willReturn('value');
-
-        $resultSet = new \Zend\Db\ResultSet\ResultSet('Model_Abstract');
-        $resultSet->initialize(array($model));
-
-        $tableObj = $this->getMockBuilder('Database\AbstractTable')
-                         ->setMethods(array('selectWith'))
-                         ->disableOriginalConstructor()
-                         ->getMockForAbstractClass();
-        $tableObj->method('selectWith')->willReturn($resultSet);
-
-        $sqlObj = $this->getMockBuilder('Zend\Db\Sql\Sql')->disableOriginalConstructor()->getMock();
-        $sqlObj->method('select')->willReturn(new \Zend\Db\Sql\Select);
-
-        $sql = new \ReflectionProperty('Database\AbstractTable', 'sql');
-        $sql->setAccessible(true);
-        $sql->setValue($tableObj, $sqlObj);
-
-        $this->assertEquals(array('value'), $tableObj->fetchCol('col2'));
-    }
-
     public function testFetchColWithEmptyTable()
     {
         $table = new \ReflectionProperty('Database\AbstractTable', 'table');

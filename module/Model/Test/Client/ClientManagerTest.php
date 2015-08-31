@@ -40,6 +40,38 @@ class ClientManagerTest extends \Model\Test\AbstractTest
 
     protected static $_customFields;
 
+    protected $_map = array(
+        'Id' => 'id',
+        'AssetTag' => 'assettag',
+        'BiosDate' => 'bdate',
+        'BiosManufacturer' => 'bmanufacturer',
+        'BiosVersion' => 'bversion',
+        'ClientId' => 'deviceid',
+        'CpuClock' => 'processors',
+        'CpuCores' => 'processorn',
+        'CpuType' => 'processort',
+        'DefaultGateway' => 'defaultgateway',
+        'DnsServer' => 'dns',
+        'InventoryDate' => 'lastdate',
+        'InventoryDiff' => 'checksum',
+        'IpAddress' => 'ipaddr',
+        'LastContactDate' => 'lastcome',
+        'Manufacturer' => 'smanufacturer',
+        'Model' => 'smodel',
+        'Name' => 'name',
+        'OcsAgent' => 'useragent',
+        'OsComment' => 'description',
+        'OsName' => 'osname',
+        'OsVersionNumber' => 'osversion',
+        'OsVersionString' => 'oscomments',
+        'PhysicalMemory' => 'memory',
+        'Serial' => 'ssn',
+        'SwapMemory' => 'swap',
+        'Type' => 'type',
+        'UserName' => 'userid',
+        'Uuid' => 'uuid',
+    );
+
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -614,9 +646,19 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                                    }
                                )
                            )->will($this->returnSelf());
+
+        $hydrator = $this->getMockBuilder('Database\Hydrator\Clients')->disableOriginalConstructor()->getMock();
+        $hydrator->method('getExtractorMap')->willReturn($this->_map);
+        $hydrator->method('extractName')->willReturnCallback(
+            function($name) {
+                return $this->_map[$name];
+            }
+        );
+
         $clients = $this->getMockBuilder('Database\Table\Clients')->disableOriginalConstructor()->getMock();
         $clients->method('getResultSetPrototype')->willReturn($resultSetPrototype);
         $clients->method('getTable')->willReturn('clients');
+        $clients->method('getHydrator')->willReturn($hydrator);
 
         $model = $this->_getModel(
             array(
@@ -673,8 +715,13 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                                    }
                                )
                            )->will($this->returnSelf());
+
+        $hydrator = $this->getMockBuilder('Database\Hydrator\Clients')->disableOriginalConstructor()->getMock();
+        $hydrator->method('getExtractorMap')->willReturn($this->_map);
+
         $clients = $this->getMockBuilder('Database\Table\Clients')->disableOriginalConstructor()->getMock();
         $clients->method('getResultSetPrototype')->willReturn($resultSetPrototype);
+        $clients->method('getHydrator')->willReturn($hydrator);
 
         $model = $this->_getModel(array('Database\Table\Clients' => $clients));
         $model->getClients(array('Id'), 'Id', 'asc', $filter, $group, null, null, $addColumn);
@@ -722,8 +769,13 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                                    }
                                )
                            )->will($this->returnSelf());
+
+        $hydrator = $this->getMockBuilder('Database\Hydrator\Clients')->disableOriginalConstructor()->getMock();
+        $hydrator->method('getExtractorMap')->willReturn($this->_map);
+
         $clients = $this->getMockBuilder('Database\Table\Clients')->disableOriginalConstructor()->getMock();
         $clients->method('getResultSetPrototype')->willReturn($resultSetPrototype);
+        $clients->method('getHydrator')->willReturn($hydrator);
 
         $model = $this->_getModel(array('Database\Table\Clients' => $clients));
         $model->getClients(array('Id'), 'Id', 'asc', 'Software.Name', 'name1', null, null, true, $distinct);

@@ -49,7 +49,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escapeHtml($client['InventoryDate'])
+    $this->dateFormat($client['InventoryDate'], \IntlDateFormatter::FULL, \IntlDateFormatter::LONG)
 );
 
 print $this->htmlTag(
@@ -58,7 +58,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escapeHtml($client['LastContactDate'])
+    $this->dateFormat($client['LastContactDate'], \IntlDateFormatter::FULL, \IntlDateFormatter::LONG)
 );
 
 print $this->htmlTag(

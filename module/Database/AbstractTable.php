@@ -272,13 +272,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
 
         $col = array();
         foreach ($resultSet as $row) {
-            if ($row instanceof \Model_Abstract) {
-                // Legacy property mapping without hydrator naming strategy.
-                // $name is unaltered column name which is accessed via __get().
-                $col[] = $row->$name;
-            } else {
-                $col[] = $row[$name];
-            }
+            $col[] = $row[$name];
         }
         return $col;
     }
