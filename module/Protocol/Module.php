@@ -56,6 +56,8 @@ Feature\InitProviderInterface
                     'Protocol\Service\AbstractHydratorFactory',
                 ),
                 'invokables' => array(
+                    'Protocol\Hydrator\ClientsBios' => 'Protocol\Hydrator\ClientsBios',
+                    'Protocol\Hydrator\ClientsHardware' => 'Protocol\Hydrator\ClientsHardware',
                     'Protocol\Hydrator\Filesystems' => 'Protocol\Hydrator\Filesystems',
                     'Protocol\Hydrator\Software' => 'Protocol\Hydrator\Software',
                 ),

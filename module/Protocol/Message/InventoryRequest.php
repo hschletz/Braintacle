@@ -50,20 +50,6 @@ class InventoryRequest extends \Library\DomDocument
         'virtualmachine' => 'VIRTUALMACHINES',
     );
 
-    /**
-     * Global cache for element=>model mappings
-     * @var string[]
-     * @deprecated Query ItemManager for non-hardcoded elements
-     */
-    private $_models;
-
-    /**
-     * Global cache for element=>property mappings
-     * @var array
-     * @deprecated Retrieve child elements via hydrator
-     */
-    private $_properties;
-
     /** {@inheritdoc} */
     public function getSchemaFilename()
     {
@@ -81,7 +67,6 @@ class InventoryRequest extends \Library\DomDocument
         \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
     )
     {
-        $this->_parseSchema();
         $itemManager = $serviceLocator->get('Model\Client\ItemManager');
 
         // Root element
@@ -94,16 +79,12 @@ class InventoryRequest extends \Library\DomDocument
         $content = $this->createElement('CONTENT');
         $request->appendChild($content);
 
-        foreach (array('HARDWARE', 'BIOS') as $section) {
+        $sections = array('HARDWARE' => 'ClientsHardware', 'BIOS' => 'ClientsBios');
+        foreach ($sections as $section => $hydratorName) {
+            $data = $serviceLocator->get("Protocol\Hydrator\\$hydratorName")->extract($client);
+            ksort($data);
             $element = $this->createElement($section);
-            foreach ($this->_properties[$section] as $name => $property) {
-                if ($this->_models[$section][$name] == 'WindowsInstallation') {
-                    $value = $client['Windows'][$property];
-                } elseif ($property == 'InventoryDate' or $property == 'LastContactDate') {
-                    $value = $client[$property]->format('Y-m-d H:i:s');
-                } else {
-                    $value = $client[$property];
-                }
+            foreach ($data as $name => $value) {
                 if ((string) $value != '') {
                     $element->appendChild($this->createElementWithContent($name, $value));
                 }
@@ -186,53 +167,5 @@ class InventoryRequest extends \Library\DomDocument
             throw new \UnexpectedValueException($filename . ' is not a valid filename part');
         }
         return $filename . '.xml';
-    }
-
-    /**
-     * Extract element=>model/property mappings from schema
-     * @deprecated Use alternative mechanisms in favour of $_models and $_properties
-     */
-    private function _parseSchema()
-    {
-        $this->_models = array();
-        $this->_properties = array();
-
-        $filename = $this->getSchemaFilename();
-        $schema = new \Library\DomDocument;
-        $schema->load($filename);
-        $xpath = new \DOMXPath($schema);
-
-        // Extract all elements having a braintacle:model attribute
-        $models = $xpath->query('//*[@braintacle:model]');
-        foreach ($models as $item) {
-            if ($item->hasAttribute('braintacle:property')) {
-                // $item is a child element with overridden model attribute. It
-                // gets evaluated later. For now, only elements representing an
-                // entire section are relevant.
-                continue;
-            }
-            $section = $item->getAttribute('name');
-            $model = $item->getAttribute('braintacle:model');
-            // Extract all child elements having a braintacle:property attribute
-            $properties = $xpath->query('.//*[@braintacle:property]', $item);
-            foreach ($properties as $item) {
-                if ($item->hasAttribute('braintacle:model')) {
-                    // Child element has overridden model attribute
-                    $elementModel = $item->getAttribute('braintacle:model');
-                } else {
-                    // Inherit model attribute from section
-                    $elementModel = $model;
-                }
-                $property = $item->getAttribute('braintacle:property');
-                // Store mappings in cache
-                $element = $item->getAttribute('name');
-                $this->_models[$section][$element] = $elementModel;
-                $this->_properties[$section][$element] = $property;
-            }
-            // If no properties are defined, store just the model.
-            if (!isset($this->_models[$section])) {
-                $this->_models[$section] = $model;
-            }
-        }
     }
 }

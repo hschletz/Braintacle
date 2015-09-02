@@ -36,94 +36,35 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array(
-                array(),
-                array(),
-                array(),
-                array(),
-                null,
-                'Minimal.xml'
-            ),
-            array(
                 array(
-                    'CpuClock' => 'cpu_clock',
-                    'CpuCores' => 'cpu_cores',
-                    'CpuType' => 'cpu_type',
-                    'DefaultGateway' => 'default_gateway',
-                    'DnsServer' => 'dns_server',
-                    'InventoryDiff' => 'inventory_diff',
-                    'IpAddress' => 'ip_address',
-                    'Name' => 'name',
-                    'OsComment' => '<os_comment>',
-                    'OsName' => 'os_name',
-                    'OsVersionNumber' => 'os_version_number',
-                    'OsVersionString' => 'os_version_string',
-                    'PhysicalMemory' => 'physical_memory',
-                    'SwapMemory' => 'swap_memory',
-                    'UserName' => 'user_name',
-                    'Uuid' => 'uuid',
+                    'PROPERTY2' => '0',
+                    'PROPERTY3' => 0,
+                    'PROPERTY1' => '<value>',
+                    'IGNORE1' => '',
+                    'IGNORE2' => null,
                 ),
                 array(),
                 array(),
                 array(),
-                null,
-                'ClientModelHardwareFull.xml'
+                array(),
+                'Hardware.xml'
             ),
             array(
-                array('Type' => '<type>', 'Serial' => 0),
                 array(),
-                array(),
-                array(),
-                null,
-                'BiosPartial.xml'
-            ),
-            array(
                 array(
-                    'AssetTag' => 'asset_tag',
-                    'BiosDate' => 'bios_date',
-                    'BiosManufacturer' => 'bios_manufacturer',
-                    'BiosVersion' => 'bios_version',
-                    'Manufacturer' => 'manufacturer',
-                    'Model' => 'model',
-                    'Serial' => 'serial',
-                    'Type' => 'type',
+                    'PROPERTY2' => '0',
+                    'PROPERTY3' => 0,
+                    'PROPERTY1' => '<value>',
+                    'IGNORE1' => '',
+                    'IGNORE2' => null,
                 ),
                 array(),
                 array(),
                 array(),
-                null,
-                'BiosFull.xml'
+                'Bios.xml'
             ),
             array(
                 array(),
-                array(),
-                array(),
-                array(),
-                array(
-                    'Workgroup' => '',
-                    'UserDomain' => '',
-                    'Company' => '',
-                    'Owner' => '',
-                    'ProductId' => '0',
-                    'ProductKey' => null,
-                ),
-                'WindowsPartial.xml'
-            ),
-            array(
-                array(),
-                array(),
-                array(),
-                array(),
-                array(
-                    'Workgroup' => 'workgroup',
-                    'UserDomain' => 'user_domain',
-                    'Company' => 'company',
-                    'Owner' => 'owner',
-                    'ProductId' => '<product_id>',
-                    'ProductKey' => 'product_key',
-                ),
-                'WindowsFull.xml'
-            ),
-            array(
                 array(),
                 array(
                     'text' => '<value>',
@@ -134,18 +75,18 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
                 ),
                 array(),
                 array(),
-                null,
                 'CustomFields.xml'
             ),
             array(
                 array(),
                 array(),
+                array(),
                 array('<package1>', 'package2'),
                 array(),
-                null,
                 'Packages.xml'
             ),
             array(
+                array(),
                 array(),
                 array(),
                 array(),
@@ -160,10 +101,10 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
                         array('property1' => '<value>'),
                     )
                 ),
-                null,
                 'ItemSingleFull.xml'
             ),
             array(
+                array(),
                 array(),
                 array(),
                 array(),
@@ -186,7 +127,6 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
                     'storagedevice' => array(array('property' => 'storagedevice')),
                     'virtualmachine' => array(array('property' => 'virtualmachine')),
                 ),
-                null,
                 'ItemAllBasic.xml'
             ),
         );
@@ -195,14 +135,8 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider loadClientProvider
      */
-    public function testLoadClient($clientData, $customFields, $packages, $items, $windows, $xmlFile)
+    public function testLoadClient($hardwareData, $biosData, $customFields, $packages, $items, $xmlFile)
     {
-        $clientData['ClientId'] = 'client_id';
-        $clientData['InventoryDate'] = new \DateTime('2015-05-15 21:19:05');
-        $clientData['LastContactDate'] = new \DateTime('2015-05-05 21:18:04');
-        $clientData['CustomFields'] = $customFields;
-        $clientData['Windows'] = $windows;
-
         // Only getTableName() is called which returns static data and does not
         // need to be mocked.
         $itemManager = $this->getMockBuilder('Model\Client\ItemManager')
@@ -211,8 +145,8 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
                             ->getMock();
         $itemTypes = $itemManager->getItemTypes();
 
-        $hydrator = $this->getMock('Zend\Stdlib\Hydrator\ArraySerializable');
-        $hydrator->method('extract')->will(
+        $itemHydrator = $this->getMock('Zend\Stdlib\Hydrator\ArraySerializable');
+        $itemHydrator->method('extract')->will(
             $this->returnCallback(
                 function($data) {
                     return array_change_key_case($data, CASE_UPPER);
@@ -220,20 +154,13 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $serviceLocator = new \Zend\ServiceManager\ServiceManager;
-        $serviceLocator->setService('Model\Client\ItemManager', $itemManager);
-
-        $mapOffsetGet = array();
-        $mapGetProperty = array();
         $mapGetItems = array();
-        foreach ($clientData as $key => $value) {
-            $mapOffsetGet[] = array($key, $value);
-            $mapGetProperty[] = array($key, true, $value);
-        }
+        $services = array();
         foreach ($itemTypes as $type) {
-            $serviceLocator->setService(
+            $services[] = array(
                 'Protocol\Hydrator\\' . $itemManager->getTableName($type),
-                $hydrator
+                true,
+                $itemHydrator
             );
             if (isset($items[$type])) {
                 $mapGetItems[] = array($type, 'id', 'asc', array(), $items[$type]);
@@ -241,13 +168,37 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
                 $mapGetItems[] = array($type, 'id', 'asc', array(), array());
             }
         }
+
         $client = $this->getMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($mapOffsetGet));
-        $client->method('getProperty')->will($this->returnValueMap($mapGetProperty));
+        $client->method('offsetGet')->willReturnMap(
+            array(
+                array('ClientId', 'client_id'),
+                array('CustomFields', $customFields),
+            )
+        );
         $client->method('getDownloadedPackages')->willReturn($packages);
         $client->expects($this->exactly(count($itemTypes)))
                ->method('getItems')
                ->will($this->returnValueMap($mapGetItems));
+
+        $hardwareHydrator = $this->getMock('Protocol\Hydrator\ClientsHardware');
+        $hardwareHydrator->expects($this->once())
+                         ->method('extract')
+                         ->with($client)
+                         ->willReturn($hardwareData);
+
+        $biosHydrator = $this->getMock('Protocol\Hydrator\ClientsBios');
+        $biosHydrator->expects($this->once())
+                     ->method('extract')
+                     ->with($client)
+                     ->willReturn($biosData);
+
+        $services[] = array('Model\Client\ItemManager', true, $itemManager);
+        $services[] = array('Protocol\Hydrator\ClientsHardware', true, $hardwareHydrator);
+        $services[] = array('Protocol\Hydrator\ClientsBios', true, $biosHydrator);
+
+        $serviceLocator = $this->getMock('\Zend\ServiceManager\ServiceManager');
+        $serviceLocator->method('get')->willReturnMap($services);
 
         $document = new \Protocol\Message\InventoryRequest;
         $document->loadClient($client, $serviceLocator);

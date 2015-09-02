@@ -3,9 +3,10 @@
     <DEVICEID>client_id</DEVICEID>
     <QUERY>INVENTORY</QUERY>
     <CONTENT>
-        <HARDWARE>
-            <LASTCOME>2015-05-05 21:18:04</LASTCOME>
-            <LASTDATE>2015-05-15 21:19:05</LASTDATE>
-        </HARDWARE>
+        <BIOS>
+            <PROPERTY1>&lt;value&gt;</PROPERTY1>
+            <PROPERTY2>0</PROPERTY2>
+            <PROPERTY3>0</PROPERTY3>
+        </BIOS>
     </CONTENT>
 </REQUEST>

@@ -3,10 +3,6 @@
     <DEVICEID>client_id</DEVICEID>
     <QUERY>INVENTORY</QUERY>
     <CONTENT>
-        <HARDWARE>
-            <LASTCOME>2015-05-05 21:18:04</LASTCOME>
-            <LASTDATE>2015-05-15 21:19:05</LASTDATE>
-        </HARDWARE>
         <DOWNLOAD>
             <HISTORY>
                 <PACKAGE ID="&lt;package1&gt;"/>
