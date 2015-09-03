@@ -79,6 +79,9 @@ class Clients extends \Database\AbstractTable
                     'useragent',
                     'checksum',
                     'ipaddr', // deprecated
+                    'dns_domain' => new \Zend\Db\Sql\Literal(
+                        'CASE WHEN winprodid IS NULL THEN workgroup ELSE NULL END'
+                    )
                 ),
                 false
             )->join(

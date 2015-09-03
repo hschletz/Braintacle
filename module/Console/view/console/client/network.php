@@ -24,12 +24,21 @@ require 'header.php';
 $client = $this->client;
 
 // Display global network settings if available
+$dnsDomain = $client['DnsDomain'];
 $dnsServer = $client['DnsServer'];
 $defaultGateway = $client['DefaultGateway'];
-if ($dnsServer or $defaultGateway) {
+if ($dnsDomain or $dnsServer or $defaultGateway) {
     print $this->htmlTag('h2', $this->translate('Global network configuration'));
     $table = $this->plugin('table');
     print "<table class='textnormalsize'>\n";
+    if ($dnsDomain) {
+        print $table->row(
+            array(
+                $this->translate('Hostname'),
+                $this->escapeHtml("$client[Name].$dnsDomain"),
+            )
+        );
+    }
     print $table->row(
         array(
             $this->translate('DNS server'),

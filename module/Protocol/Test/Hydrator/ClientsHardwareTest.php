@@ -52,6 +52,8 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
             'SWAP' => 2222,
             'USERID' => 'user name',
             'UUID' => 'uuid',
+        );
+        $extractedWindows = array(
             'USERDOMAIN' => 'user domain',
             'WINCOMPANY' => 'company',
             'WINOWNER' => 'owner',
@@ -79,6 +81,9 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
             'SwapMemory' => 2222,
             'UserName' => 'user name',
             'Uuid' => 'uuid',
+            'ClientId' => 'ignored',
+        );
+        $hydratedWindows = array(
             'Windows' => array(
                 'UserDomain' => 'user domain',
                 'Company' => 'company',
@@ -87,9 +92,11 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
                 'ProductKey' => 'product key',
                 'Workgroup' => 'workgroup',
             ),
-            'ClientId' => 'ignored',
         );
-        return array(array($extracted, $hydrated));
+        return array(
+            array($extracted + array('WORKGROUP' => 'domain'), $hydrated + array('DnsDomain' => 'domain')),
+            array($extracted + $extractedWindows, $hydrated + $hydratedWindows),
+        );
     }
 
     /**
@@ -167,7 +174,10 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
             'WORKGROUP' => 'workgroup',
         );
         return array(
-            array($hydrated + array('Windows' => null), $extracted), // UNIX client
+            array(
+                $hydrated + array('Windows' => null, 'DnsDomain' => 'domain'),
+                $extracted + array('WORKGROUP' => 'domain')
+            ), // UNIX client
             array($hydrated + $windowsHydrated, $extracted + $windowsExtracted), // Windows client
         );
     }

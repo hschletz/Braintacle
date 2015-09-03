@@ -99,7 +99,7 @@ class ClientsHardware implements \Zend\Stdlib\Hydrator\HydratorInterface
         'WINOWNER' => 'Owner',
         'WINPRODID' => 'ProductId',
         'WINPRODKEY' => 'ProductKey',
-        'WORKGROUP' => 'Workgroup',
+        // WORKGROUP is treated explicitly by hydrate()
     );
 
     /**
@@ -113,7 +113,7 @@ class ClientsHardware implements \Zend\Stdlib\Hydrator\HydratorInterface
         'ProductId' => 'WINPRODID',
         'ProductKey' => 'WINPRODKEY',
         'UserDomain' => 'USERDOMAIN',
-        'Workgroup' => 'WORKGROUP',
+        // WORKGROUP is treated explicitly by extract()
     );
 
     /**
@@ -139,6 +139,12 @@ class ClientsHardware implements \Zend\Stdlib\Hydrator\HydratorInterface
                 }
             }
         }
+        // Map WORKGROUP element to appropriate property
+        if (isset($data['WINPRODID'])) {
+            $object['Windows']['Workgroup'] = @$data['WORKGROUP'];
+        } else {
+            $object['DnsDomain'] = @$data['WORKGROUP'];
+        }
         return $object;
     }
 
@@ -160,6 +166,9 @@ class ClientsHardware implements \Zend\Stdlib\Hydrator\HydratorInterface
                     $data[$name] = $this->extractValue($name, $value);
                 }
             }
+            $data['WORKGROUP'] = @$windows['Workgroup'];
+        } else {
+            $data['WORKGROUP'] = @$object['DnsDomain'];
         }
         return $data;
     }

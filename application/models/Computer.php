@@ -44,6 +44,7 @@
  * - <b>BiosVersion:</b> BIOS version
  * - <b>BiosDate:</b> BIOS date
  * - <b>IpAddress:</b> IP Adress
+ * - <b>DnsDomain:</b> DNS domain name (UNIX clients only)
  * - <b>DnsServer:</b> IP Address of DNS server
  * - <b>DefaultGateway:</b> default gateway
  * - <b>OcsAgent:</b> name and version of OCS agent

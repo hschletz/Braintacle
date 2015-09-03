@@ -1356,6 +1356,11 @@ msgstr ""
 msgid "Global network configuration"
 msgstr ""
 
+#: view/console/client/network.php view/console/network/edit.php
+#: view/console/network/showunknown.php
+msgid "Hostname"
+msgstr ""
+
 #: view/console/client/network.php
 msgid "Data rate"
 msgstr ""
@@ -1632,10 +1637,6 @@ msgstr ""
 
 #: view/console/network/edit.php view/console/network/showunknown.php
 msgid "Vendor"
-msgstr ""
-
-#: view/console/network/edit.php view/console/network/showunknown.php
-msgid "Hostname"
 msgstr ""
 
 #: view/console/network/index.php

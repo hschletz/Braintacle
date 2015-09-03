@@ -1022,6 +1022,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client = array(
             'Name' => 'name',
             'Windows' => null,
+            'DnsDomain' => 'dns_domain',
             'DnsServer' => 'dns_server',
             'DefaultGateway' => 'default_gateway',
             'NetworkInterface' => array(),
@@ -1033,6 +1034,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//h2[text()='\nGlobale Netzwerkkonfiguration\n']");
         $query = "//td[text()='\n%s\n']/following::td[1][text()='\n%s\n']";
+        $this->assertXPathQuery(sprintf($query, 'Hostname', 'name.dns_domain'));
         $this->assertXPathQuery(sprintf($query, 'DNS-Server', 'dns_server'));
         $this->assertXPathQuery(sprintf($query, 'Standardgateway', 'default_gateway'));
         $this->assertNotXpathQuery("//h2[text()='\nNetzwerkschnittstellen\n']");
@@ -1065,6 +1067,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client = array(
             'Name' => 'name',
             'Windows' => null,
+            'DnsDomain' => null,
             'DnsServer' => null,
             'DefaultGateway' => null,
             'NetworkInterface' => $interfaces,
@@ -1090,6 +1093,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client = array(
             'Name' => 'name',
             'Windows' => null,
+            'DnsDomain' => null,
             'DnsServer' => null,
             'DefaultGateway' => null,
             'NetworkInterface' => array(),

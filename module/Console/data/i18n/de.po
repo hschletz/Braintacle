@@ -1374,6 +1374,11 @@ msgstr "Gateway"
 msgid "Global network configuration"
 msgstr "Globale Netzwerkkonfiguration"
 
+#: view/console/client/network.php view/console/network/edit.php
+#: view/console/network/showunknown.php
+msgid "Hostname"
+msgstr "Hostname"
+
 #: view/console/client/network.php
 msgid "Modems"
 msgstr "Modems"
@@ -1637,10 +1642,6 @@ msgstr ""
 #: view/console/network/edit.php
 msgid "Edit network device"
 msgstr "Netzwerkgerät bearbeiten"
-
-#: view/console/network/edit.php view/console/network/showunknown.php
-msgid "Hostname"
-msgstr "Hostname"
 
 #: view/console/network/edit.php view/console/network/showunknown.php
 msgid "Vendor"
