@@ -96,7 +96,8 @@ class Group extends \Model\ClientOrGroup
             if ($numCols != 1) {
                 throw new \LogicException('Expected 1 column, got ' . $numCols);
             }
-            $query = $members->getSqlString($this->serviceLocator->get('Db')->getPlatform());
+            $sql = new \Zend\Db\Sql\Sql($this->serviceLocator->get('Db'));
+            $query = $sql->buildSqlString($members);
             $this->serviceLocator->get('Database\Table\GroupInfo')->update(
                 array('request' => $query),
                 array('hardware_id' => $id)

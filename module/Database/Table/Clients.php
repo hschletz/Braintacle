@@ -55,7 +55,8 @@ class Clients extends \Database\AbstractTable
         $database = $this->_serviceLocator->get('Database\Nada');
         if (!in_array('clients', $database->getViewNames())) {
             $logger->info("Creating view 'clients'");
-            $select = $this->_serviceLocator->get('Database\Table\ClientsAndGroups')->getSql()->select();
+            $sql = $this->_serviceLocator->get('Database\Table\ClientsAndGroups')->getSql();
+            $select = $sql->select();
             $select->columns(
                 array(
                     'id',
@@ -91,7 +92,7 @@ class Clients extends \Database\AbstractTable
                 \Zend\Db\Sql\Select::JOIN_LEFT
             )->where(new \Zend\Db\Sql\Predicate\Operator('deviceid', '!=', '_SYSTEMGROUP_'));
 
-            $database->createView('clients', $select->getSqlString($this->adapter->getPlatform()));
+            $database->createView('clients', $sql->buildSqlString($select));
             $logger->info('done.');
         }
     }

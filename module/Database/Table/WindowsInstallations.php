@@ -65,7 +65,8 @@ class WindowsInstallations extends \Database\AbstractTable
         $database = $this->_serviceLocator->get('Database\Nada');
         if (!in_array('windows_installations', $database->getViewNames())) {
             $logger->info("Creating view 'windows_installations'");
-            $select = $this->_serviceLocator->get('Database\Table\ClientsAndGroups')->getSql()->select();
+            $sql = $this->_serviceLocator->get('Database\Table\ClientsAndGroups')->getSql();
+            $select = $sql->select();
             $select->columns(
                 array(
                     'client_id' => 'id',
@@ -85,7 +86,7 @@ class WindowsInstallations extends \Database\AbstractTable
                 \Zend\Db\Sql\Select::JOIN_LEFT
             )->where(new \Zend\Db\Sql\Predicate\IsNotNull('winprodid'));
 
-            $database->createView('windows_installations', $select->getSqlString($this->adapter->getPlatform()));
+            $database->createView('windows_installations', $sql->buildSqlString($select));
             $logger->info('done.');
         }
     }

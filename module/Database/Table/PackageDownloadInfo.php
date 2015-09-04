@@ -77,25 +77,25 @@ class PackageDownloadInfo extends \Database\AbstractTable
             $typeText =$database->getNativeDatatype(\Nada::DATATYPE_VARCHAR, 255, true);
             $typeInt = $database->getNativeDatatype(\Nada::DATATYPE_INTEGER, 32, true);
             $null = 'CAST(NULL AS %s)';
-            $select = new \Zend\Db\Sql\Select;
-            $select->from('download_available')
-                   ->columns(
-                       array(
-                            'id' => 'fileid',
-                            'fileid' => 'fileid',
-                            'info_loc' => new Literal(
-                                "(SELECT tvalue FROM config WHERE name = 'BRAINTACLE_DEFAULT_INFOFILE_LOCATION')"
-                            ),
-                            'pack_loc' => new Literal(
-                                "(SELECT tvalue FROM config WHERE name = 'BRAINTACLE_DEFAULT_DOWNLOAD_LOCATION')"
-                            ),
-                            'cert_path' => new Literal(sprintf($null, $typeText)),
-                            'cert_file' => new Literal(sprintf($null, $typeText)),
-                            'server_id' => new Literal(sprintf($null, $typeInt)),
-                       ),
-                       false
-                   );
-            $database->createView('download_enable', $select->getSqlString($this->adapter->getPlatform()));
+            $sql = $this->_serviceLocator->get('Database\Table\Packages')->getSql();
+            $select = $sql->select();
+            $select->columns(
+                array(
+                    'id' => 'fileid',
+                    'fileid' => 'fileid',
+                    'info_loc' => new Literal(
+                        "(SELECT tvalue FROM config WHERE name = 'BRAINTACLE_DEFAULT_INFOFILE_LOCATION')"
+                    ),
+                    'pack_loc' => new Literal(
+                        "(SELECT tvalue FROM config WHERE name = 'BRAINTACLE_DEFAULT_DOWNLOAD_LOCATION')"
+                    ),
+                    'cert_path' => new Literal(sprintf($null, $typeText)),
+                    'cert_file' => new Literal(sprintf($null, $typeText)),
+                    'server_id' => new Literal(sprintf($null, $typeInt)),
+                ),
+                false
+            );
+            $database->createView('download_enable', $sql->buildSqlString($select));
             $logger->info('done.');
         }
     }

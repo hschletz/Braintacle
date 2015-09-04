@@ -196,11 +196,12 @@ class SoftwareManager
      **/
     public function getNumManualProductKeys()
     {
-        $select = $this->_windowsInstallations->getSql()->select();
+        $sql = $this->_windowsInstallations->getSql();
+        $select = $sql->select();
         $select->columns(array('num' => new \Zend\Db\Sql\Literal('COUNT(manual_product_key)')))
                ->where(new \Zend\Db\Sql\Predicate\IsNotNull('manual_product_key'));
-        return $this->_windowsInstallations->getAdapter()->query(
-            $select->getSqlString(),
+        return $sql->getAdapter()->query(
+            $sql->buildSqlString($select),
             \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
         )->current()['num'];
     }
