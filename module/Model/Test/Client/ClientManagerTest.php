@@ -785,61 +785,48 @@ class ClientManagerTest extends \Model\Test\AbstractTest
     public function getClientsExceptionsProvider()
     {
         return array(
-            array(array('Id'), 'invalid', '', 'InvalidArgumentException', 'Invalid filter: invalid'),
-            array(array('Id'), 'CustomFields.invalid', '', 'LogicException', 'Unsupported type: invalid'),
-            array(array('Id'), 'CpuClock', '=', 'DomainException', 'Invalid comparison operator: ='),
-            array(array('Id'), 'LastContactDate', '=', 'DomainException', 'Invalid comparison operator: ='),
+            array('invalid', '', 'InvalidArgumentException', 'Invalid filter: invalid'),
+            array('CustomFields.invalid', '', 'LogicException', 'Unsupported type: invalid'),
+            array('CpuClock', '=', 'DomainException', 'Invalid comparison operator: ='),
+            array('LastContactDate', '=', 'DomainException', 'Invalid comparison operator: ='),
+            array('Id', '=', 'LogicException', 'invertResult cannot be used on Id filter'),
             array(
-                array('Id'),
-                'Id',
-                '=',
-                'LogicException',
-                'invertResult cannot be used on Id filter'
-            ),
-            array(
-                array('Id'),
                 'PackageNonnotified',
                 '=',
                 'LogicException',
                 'invertResult cannot be used on PackageNonnotified filter'
             ),
             array(
-                array('Id'),
                 'PackageNotified',
                 '=',
                 'LogicException',
                 'invertResult cannot be used on PackageNotified filter'
             ),
             array(
-                array('Id'),
                 'PackageSuccess',
                 '=',
                 'LogicException',
                 'invertResult cannot be used on PackageSuccess filter'
             ),
             array(
-                array('Id'),
                 'PackageError',
                 '=',
                 'LogicException',
                 'invertResult cannot be used on PackageError filter'
             ),
             array(
-                array('Id'),
                 'Software',
                 '=',
                 'LogicException',
                 'invertResult cannot be used on Software filter'
             ),
             array(
-                array('Id'),
                 'MemberOf',
                 '=',
                 'LogicException',
                 'invertResult cannot be used on MemberOf filter'
             ),
             array(
-                array('Id'),
                 'ExcludedFrom',
                 '=',
                 'LogicException',
@@ -847,10 +834,11 @@ class ClientManagerTest extends \Model\Test\AbstractTest
             ),
         );
     }
+
     /**
      * @dataProvider getClientsExceptionsProvider
      */
-    public function testGetClientsExceptions($properties, $filter, $operator, $exceptionType, $message)
+    public function testGetClientsExceptions($filter, $operator, $exceptionType, $message)
     {
         $this->setExpectedException($exceptionType, $message);
 
@@ -864,7 +852,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         );
 
         $model = $this->_getModel(array('Model\Client\CustomFieldManager' => $customFieldManager));
-        $model->getClients($properties, 'Id', 'asc', $filter, '2015-08-17', $operator, true);
+        $model->getClients(array('Id'), 'Id', 'asc', $filter, '2015-08-17', $operator, true);
     }
 
     public function testGetClientSelect()
