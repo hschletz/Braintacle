@@ -236,6 +236,14 @@ groups_cache:
     hardware_id: 2
     group_id: 2
     static: 1
+  -
+    hardware_id: 1
+    group_id: 3
+    static: 1
+  -
+    hardware_id: 2
+    group_id: 3
+    static: 0
 
 registry:
   -
@@ -254,21 +262,21 @@ registry:
 softwares:
   -
     hardware_id: 1
-    name: "name1"
-    version: "version1a"
-  -
-    hardware_id: 2
-    name: "name1"
-    version: "version1b"
-  -
-    hardware_id: 2
-    name: "name1"
-    version: "version1c"
-  -
-    hardware_id: 2
     name: "name2"
     version: "version2a"
   -
-    hardware_id: 3
+    hardware_id: 2
     name: "name2"
     version: "version2b"
+  -
+    hardware_id: 2
+    name: "name2"
+    version: "version2c"
+  -
+    hardware_id: 2
+    name: "name1"
+    version: "version1a"
+  -
+    hardware_id: 3
+    name: "name1"
+    version: "version1b"

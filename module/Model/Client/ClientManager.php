@@ -45,7 +45,7 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
      * @param bool $distinct Force distinct results.
      * @param bool $query Perform query and return result set (default), return \Zend\Db\Sql\Select object otherwise.
      * @return \Zend\Db\ResultSet\AbstractResultSet|\Zend\Db\Sql\Select Query result or Query object
-     * @throws \InvalidArgumentException if a filter is invalid
+     * @throws \InvalidArgumentException if a filter or order column is invalid
      * @throws \LogicException if $invertResult is not supported by a filter or type of custom field is not supported
      */
     public function getClients(
@@ -326,7 +326,29 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
         }
 
         if ($order) {
-            $select->order(\Model_Computer::getOrder($order, $direction, $map));
+            if (isset($map[$order])) {
+                $order = "clients.$map[$order]";
+            } elseif ($order == 'Membership') {
+                $order = 'groups_cache.static';
+            } elseif (preg_match('/^CustomFields\\.(.+)/', $order, $matches)) {
+                $order = 'customfields_' . $this->serviceLocator->get('Model\Client\CustomFieldManager')
+                                                                ->getColumnMap()[$matches[1]];
+            } elseif (preg_match('/^Windows\.(.+)/', $order, $matches)) {
+                $hydrator = $this->serviceLocator->get('Database\Table\WindowsInstallations')->getHydrator();
+                $order = 'windows_' . $hydrator->extractName($matches[1]);
+            } elseif (preg_match('/^Registry\./', $order)) {
+                $order = 'registry_content';
+            } elseif (preg_match('/^([a-zA-Z]+)\.([a-zA-Z]+)$/', $order, $matches)) {
+                $model = $matches[1];
+                $property = $matches[2];
+                // Assume column alias 'model_column'
+                $tableGateway = $this->serviceLocator->get('Model\Client\ItemManager')->getTable($model);
+                $column = $tableGateway->getHydrator()->extractName($property);
+                $order = strtolower("{$model}_$column");
+            } else {
+                throw new \InvalidArgumentException('Invalid order: ' . $order);
+            }
+            $select->order(array($order => $direction));
         }
 
         /*
@@ -355,10 +377,15 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
                 $select->reset(Select::JOINS);
 
                 // Replace possible clients.id in ORDER BY clause
-                $orderSpec = $select->getRawState(Select::ORDER);
+                $orderSpec = array();
+                foreach ($select->getRawState(Select::ORDER) as $column => $direction) {
+                    if ($column == 'clients.id') {
+                        $column = $joinColumn;
+                    }
+                    $orderSpec[$column] = $direction;
+                }
                 $select->reset(Select::ORDER);
-                $select->order(str_replace('clients.id ', "$joinColumn ", $orderSpec));
-
+                $select->order($orderSpec);
             }
         }
 

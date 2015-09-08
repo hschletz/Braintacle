@@ -84,7 +84,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
             'assettag' => 'duplicate',
             'networkinterface_macaddr' => '00:00:5E:00:53:01',
         );
-        $defaultOrder = array('clients.id asc', 'name');
+        $defaultOrder = array('clients.id' => 'asc', 'name');
         return array(
             array('MacAddress', 'Id', 'asc', false, $defaultOrder, array()),
             array('Serial', 'Id', 'asc', false, $defaultOrder, array()),
@@ -93,14 +93,21 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
             array('Serial', 'Id', 'asc', true, $defaultOrder, array($client2, $client3)),
             array('AssetTag', 'Id', 'asc', true, $defaultOrder, array($client2, $client3)),
             array('Name', 'Id', 'asc', false, $defaultOrder, array($client2, $client3)),
-            array('Name', 'Id', 'desc', false, array('clients.id desc', 'name'), array($client3, $client2)),
-            array('Name', 'Name', 'asc', false, array('clients.name asc', 'clients.id'), array($client2, $client3)),
+            array('Name', 'Id', 'desc', false, array('clients.id' => 'desc', 'name'), array($client3, $client2)),
+            array(
+                'Name',
+                'Name',
+                'asc',
+                false,
+                array('clients.name' => 'asc', 'clients.id'),
+                array($client2, $client3)
+            ),
             array(
                 'Name',
                 'NetworkInterface.MacAddress',
                 'asc',
                 false,
-                array('networkinterface_macaddr asc', 'name', 'clients.id'),
+                array('networkinterface_macaddr' => 'asc', 'name', 'clients.id'),
                 array($client2, $client3)
             ),
         );
@@ -127,7 +134,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
 
         $select = $sql->select()
                       ->columns(array('id', 'name', 'lastcome', 'ssn', 'assettag'))
-                      ->order("$ordercolumns[$order] $direction");
+                      ->order(array($ordercolumns[$order] => $direction));
 
         $clientManager = $this->getMockBuilder('Model\Client\ClientManager')->disableOriginalConstructor()->getMock();
         $clientManager->method('getClients')

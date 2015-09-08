@@ -366,7 +366,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
             ),
             // "Software" filter
             array(
-                array('Id'), 'Id', 'asc', 'Software', 'name1', null, null, false, $client12
+                array('Id'), 'Id', 'asc', 'Software', 'name2', null, null, false, $client12
             ),
             // Numeric filesystem filters
             array(
@@ -454,6 +454,20 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                  false,
                  $client2
             ),
+            array(
+                array('Id'),
+                'CustomFields.type_integer',
+                'desc',
+                'CustomFields.type_integer',
+                1,
+                'ge',
+                false,
+                true,
+                array(
+                    array('id' => 2, 'customfields_col_integer' => 2),
+                    array('id' => 1, 'customfields_col_integer' => 1),
+                )
+            ),
             // Registry data
             array(
                 array('Id'), 'Id', 'asc', 'Registry.value 1', 'content1_2', 'eq', false, false, $client2
@@ -469,14 +483,17 @@ class ClientManagerTest extends \Model\Test\AbstractTest
             ),
             array(
                 array('Id'),
-                'Id',
-                'asc',
-                'Registry.value 2',
-                'content2_2',
-                'eq',
+                'Registry.Content',
+                'desc',
+                'Registry.value 1',
+                '',
+                'like',
                 false,
                 true,
-                array(array('id' => 2, 'registry_content' => 'content2_2'))
+                array(
+                    array('id' => 2, 'registry_content' => 'content1_2'),
+                    array('id' => 1, 'registry_content' => 'content1_1'),
+                )
             ),
             // String filters on items
             // Use Filesystem and Software model to ensure that they are
@@ -488,14 +505,28 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                 array('Id'), 'Id', 'asc', 'Filesystem.Filesystem', '1', 'like', true, false, $client23
             ),
             array(
-                array('Id'), 'Id', 'asc', 'Software.Name', '2', 'like', false, false, $client23
+                array('Id'), 'Id', 'asc', 'Software.Name', '1', 'like', false, false, $client23
             ),
             array(
-                array('Id'), 'Id', 'asc', 'Software.Name', '2', 'like', true, false, array_merge($client12, $client2)
+                array('Id'), 'Id', 'asc', 'Software.Name', '1', 'like', true, false, array_merge($client12, $client2)
             ),
             // Windows filters
             array(
                 array('Id'), 'Id', 'asc', 'Windows.ProductId', '2', 'like', false, false, $client2
+            ),
+            array(
+                array('Id'),
+                'Windows.ProductId',
+                'desc',
+                'Windows.ProductId',
+                '',
+                'like',
+                false,
+                true,
+                array(
+                    array('id' => 2, 'windows_product_id' => 'product_id2'),
+                    array('id' => 1, 'windows_product_id' => 'product_id1'),
+                )
             ),
             // Single filter as array
             array(
@@ -559,13 +590,13 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                 'Id',
                 'asc',
                 'Software',
-                'name2',
+                'name1',
                 null,
                 false,
                 true,
                 array(
-                    array('id' => 2, 'software_version' => 'version2a'),
-                    array('id' => 3, 'software_version' => 'version2b'),
+                    array('id' => 2, 'software_version' => 'version1a'),
+                    array('id' => 3, 'software_version' => 'version1b'),
                 )
             ),
             array(
@@ -584,11 +615,40 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                 'Id',
                 'asc',
                 'Software.Name',
-                'name2',
+                'name1',
                 'eq',
                 false,
                 true,
-                array(array('id' => 2, 'software_name' => 'name2'), array('id' => 3, 'software_name' => 'name2')),
+                array(array('id' => 2, 'software_name' => 'name1'), array('id' => 3, 'software_name' => 'name1')),
+            ),
+            // Add search column, search column "Name" unambiguously resolved by model prefix
+            array(
+                array('Name'),
+                'Name',
+                'desc',
+                array('Software.Name', 'Software.Version'),
+                array('', 'a'),
+                array('like', 'like'),
+                array(false, false),
+                true,
+                array(
+                    array('id' => 2, 'name' => 'name2', 'software_name' => 'name1'),
+                    array('id' => 1, 'name' => 'name1', 'software_name' => 'name2'),
+                )
+            ),
+            array(
+                array('Name'),
+                'Software.Name',
+                'desc',
+                array('Software.Name', 'Software.Version'),
+                array('', 'a'),
+                array('like', 'like'),
+                array(false, false),
+                true,
+                array(
+                    array('id' => 1, 'name' => 'name1', 'software_name' => 'name2'),
+                    array('id' => 2, 'name' => 'name2', 'software_name' => 'name1'),
+                )
             ),
         );
     }
@@ -683,18 +743,38 @@ class ClientManagerTest extends \Model\Test\AbstractTest
     public function getClientsGroupFilterProvider()
     {
         return array(
-            array('MemberOf', 1, false, array('id' => 1)),
-            array('MemberOf', 2, false, array('id' => 2)),
-            array('ExcludedFrom', 1, false, array('id' => 2)),
-            array('MemberOf', 1, true, array('id' => 1, 'static' => \Model_GroupMembership::TYPE_DYNAMIC)),
-            array('MemberOf', 2, true, array('id' => 2, 'static' => \Model_GroupMembership::TYPE_STATIC)),
+            array('MemberOf', 'Id', 'asc', 1, false, array(array('id' => 1))),
+            array('MemberOf', 'Id', 'asc', 2, false, array(array('id' => 2))),
+            array('ExcludedFrom', 'Id', 'asc', 1, false, array(array('id' => 2))),
+            array(
+                'MemberOf',
+                'Membership',
+                'asc',
+                3,
+                true,
+                array(
+                    array('id' => 2, 'static' => \Model_GroupMembership::TYPE_DYNAMIC),
+                    array('id' => 1, 'static' => \Model_GroupMembership::TYPE_STATIC),
+                ),
+            ),
+            array(
+                'MemberOf',
+                'Membership',
+                'desc',
+                3,
+                true,
+                array(
+                    array('id' => 1, 'static' => \Model_GroupMembership::TYPE_STATIC),
+                    array('id' => 2, 'static' => \Model_GroupMembership::TYPE_DYNAMIC),
+                ),
+            ),
         );
     }
 
     /**
      * @dataProvider getClientsGroupFilterProvider
      */
-    public function testGetClientsGroupFilter($filter, $groupId, $addColumn, $expectedClient)
+    public function testGetClientsGroupFilter($filter, $order, $direction, $groupId, $addColumn, $expected)
     {
         $group = $this->getMock('Model\Group\Group');
         $group->method('offsetGet')->with('Id')->willReturn($groupId);
@@ -724,8 +804,8 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $clients->method('getHydrator')->willReturn($hydrator);
 
         $model = $this->_getModel(array('Database\Table\Clients' => $clients));
-        $model->getClients(array('Id'), 'Id', 'asc', $filter, $group, null, null, $addColumn);
-        $this->assertEquals($expectedClient, $result[0]);
+        $model->getClients(array('Id'), $order, $direction, $filter, $group, null, null, $addColumn);
+        $this->assertEquals($expected, $result);
     }
 
     public function getClientsDistinctProvider()
@@ -734,16 +814,16 @@ class ClientManagerTest extends \Model\Test\AbstractTest
             array(
                 false,
                 array(
-                    array('id' => 1, 'software_name' => 'name1'),
-                    array('id' => 2, 'software_name' => 'name1'),
-                    array('id' => 2, 'software_name' => 'name1'),
+                    array('id' => 1, 'software_name' => 'name2'),
+                    array('id' => 2, 'software_name' => 'name2'),
+                    array('id' => 2, 'software_name' => 'name2'),
                 )
             ),
             array(
                 true,
                 array(
-                    array('id' => 1, 'software_name' => 'name1'),
-                    array('id' => 2, 'software_name' => 'name1'),
+                    array('id' => 1, 'software_name' => 'name2'),
+                    array('id' => 2, 'software_name' => 'name2'),
                 )
             ),
         );
@@ -778,59 +858,80 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $clients->method('getHydrator')->willReturn($hydrator);
 
         $model = $this->_getModel(array('Database\Table\Clients' => $clients));
-        $model->getClients(array('Id'), 'Id', 'asc', 'Software.Name', 'name1', null, null, true, $distinct);
+        $model->getClients(array('Id'), 'Id', 'asc', 'Software.Name', 'name2', null, null, true, $distinct);
         $this->assertEquals($expected, $result);
     }
 
     public function getClientsExceptionsProvider()
     {
         return array(
-            array('invalid', '', 'InvalidArgumentException', 'Invalid filter: invalid'),
-            array('CustomFields.invalid', '', 'LogicException', 'Unsupported type: invalid'),
-            array('CpuClock', '=', 'DomainException', 'Invalid comparison operator: ='),
-            array('LastContactDate', '=', 'DomainException', 'Invalid comparison operator: ='),
-            array('Id', '=', 'LogicException', 'invertResult cannot be used on Id filter'),
+            array('Id', 'invalid', '', 'InvalidArgumentException', 'Invalid filter: invalid'),
+            array('Id', 'CustomFields.invalid', '', 'LogicException', 'Unsupported type: invalid'),
+            array('Id', 'CpuClock', '=', 'DomainException', 'Invalid comparison operator: ='),
+            array('Id', 'LastContactDate', '=', 'DomainException', 'Invalid comparison operator: ='),
+            array('Id', 'Id', '=', 'LogicException', 'invertResult cannot be used on Id filter'),
             array(
+                'Id',
                 'PackageNonnotified',
                 '=',
                 'LogicException',
                 'invertResult cannot be used on PackageNonnotified filter'
             ),
             array(
+                'Id',
                 'PackageNotified',
                 '=',
                 'LogicException',
                 'invertResult cannot be used on PackageNotified filter'
             ),
             array(
+                'Id',
                 'PackageSuccess',
                 '=',
                 'LogicException',
                 'invertResult cannot be used on PackageSuccess filter'
             ),
             array(
+                'Id',
                 'PackageError',
                 '=',
                 'LogicException',
                 'invertResult cannot be used on PackageError filter'
             ),
             array(
+                'Id',
                 'Software',
                 '=',
                 'LogicException',
                 'invertResult cannot be used on Software filter'
             ),
             array(
+                'Id',
                 'MemberOf',
                 '=',
                 'LogicException',
                 'invertResult cannot be used on MemberOf filter'
             ),
             array(
+                'Id',
                 'ExcludedFrom',
                 '=',
                 'LogicException',
                 'invertResult cannot be used on ExcludedFrom filter'
+            ),
+            array(
+                'Software',
+                null,
+                null,
+                'InvalidArgumentException',
+                'Invalid order: Software'
+            ),
+            array(
+                'Software.',
+                null,
+                null,
+                'InvalidArgumentException',
+                'Invalid order: Software'
             ),
         );
     }
@@ -838,7 +939,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
     /**
      * @dataProvider getClientsExceptionsProvider
      */
-    public function testGetClientsExceptions($filter, $operator, $exceptionType, $message)
+    public function testGetClientsExceptions($order, $filter, $operator, $exceptionType, $message)
     {
         $this->setExpectedException($exceptionType, $message);
 
@@ -852,7 +953,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         );
 
         $model = $this->_getModel(array('Model\Client\CustomFieldManager' => $customFieldManager));
-        $model->getClients(array('Id'), 'Id', 'asc', $filter, '2015-08-17', $operator, true);
+        $model->getClients(array('Id'), $order, 'asc', $filter, '2015-08-17', $operator, true);
     }
 
     public function testGetClientSelect()

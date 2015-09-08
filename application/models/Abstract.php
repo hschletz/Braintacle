@@ -138,32 +138,4 @@ abstract class Model_Abstract extends \Model\ClientOrGroup
             );
         }
     }
-
-    /**
-     * Compose ORDER BY clause from logical identifier
-     *
-     * $property is the logical property name. The special value 'id' sorts by
-     * the 'id' column, even when it is not a regular property.
-     * @param string $order Property to sort by.
-     * @param string $direction One of [asc|desc]
-     * @param array $propertyMap Property map to use. Must be passed explicitly because this method is static.
-     * @return string ORDER BY clause with schema identifier, NULL if $order was empty
-     */
-    static function getOrder($order, $direction, $propertyMap)
-    {
-        if (empty($order)) {
-            return NULL;
-        }
-
-        if (isset($propertyMap[$order])) {
-            $order = $propertyMap[$order];
-        } elseif ($order != 'id') {
-            throw new UnexpectedValueException('Unknown property: ' . $order);
-        }
-
-        if ($direction) {
-            $order .= ' ' . $direction;
-        }
-        return $order;
-    }
 }

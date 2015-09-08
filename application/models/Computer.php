@@ -192,49 +192,6 @@ class Model_Computer extends \Model_Abstract
     }
 
     /**
-     * Compose ORDER BY clause from logical identifier
-     *
-     * This implementation handles properties from child objects if they are
-     * properly qualified ('Model.Property').
-     */
-    static function getOrder($order, $direction, $propertyMap)
-    {
-        try {
-            // Parent's implementation will handle properties from Model_Computer
-            $expression = parent::getOrder($order, $direction, $propertyMap);
-            if (strpos($expression, 'static ') === 0) {
-                $expression = "groups_cache.$expression";
-            } elseif ($expression) {
-                $expression = "clients.$expression";
-            }
-            return $expression;
-        } catch (Exception $exception) {
-            if (preg_match('#^CustomFields\\.(.*)#', $order, $matches)) {
-                $hydrator = \Library\Application::getService('Model\Client\CustomFieldManager')->getHydrator();
-                $order = 'customfields_' . $hydrator->extractName($matches[1]);
-            } elseif (preg_match('/^Windows\\.(.*)/', $order, $matches)) {
-                $hydrator = \Library\Application::getService('Database\Table\WindowsInstallations')->getHydrator();
-                $order = 'windows_' . $hydrator->extractName($matches[1]);
-            } elseif (preg_match('#^Registry\\.#', $order)) {
-                $order = 'registry_content';
-            } elseif (preg_match('/^([a-zA-Z]+)\.([a-zA-Z]+)$/', $order, $matches)) {
-                $model = $matches[1];
-                $property = $matches[2];
-                // Assume column alias 'model_column'
-                $tableGateway = \Library\Application::getService('Model\Client\ItemManager')->getTable($model);
-                $column = $tableGateway->getHydrator()->extractName($property);
-                $order = strtolower("{$model}_$column");
-            } else {
-                throw $exception;
-            }
-            if ($direction) {
-                $order .= ' ' . $direction;
-            }
-            return $order;
-        }
-    }
-
-    /**
      * Get all items of a given type belonging to this computer.
      *
      * @param string $type Item type to retrieve (name of model class without 'Model_' prefix)
