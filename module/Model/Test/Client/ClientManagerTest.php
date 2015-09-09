@@ -632,8 +632,8 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                 array(false, false),
                 true,
                 array(
-                    array('id' => 2, 'name' => 'name2', 'software_name' => 'name1'),
-                    array('id' => 1, 'name' => 'name1', 'software_name' => 'name2'),
+                    array('id' => 2, 'name' => 'name2', 'software_name' => 'name1', 'software_version' => 'version1a'),
+                    array('id' => 1, 'name' => 'name1', 'software_name' => 'name2', 'software_version' => 'version2a'),
                 )
             ),
             array(
@@ -646,8 +646,28 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                 array(false, false),
                 true,
                 array(
-                    array('id' => 1, 'name' => 'name1', 'software_name' => 'name2'),
-                    array('id' => 2, 'name' => 'name2', 'software_name' => 'name1'),
+                    array('id' => 1, 'name' => 'name1', 'software_name' => 'name2', 'software_version' => 'version2a'),
+                    array('id' => 2, 'name' => 'name2', 'software_name' => 'name1', 'software_version' => 'version1a'),
+                )
+            ),
+            // Add search column, first from a joined table, second and third from another joined table.
+            // Ensures correct rewriting of joins.
+            array(
+                array('Id'),
+                'Id',
+                'asc',
+                array('Filesystem.Size', 'Software.Name', 'Software.Version'),
+                array(2000, '', 'a'),
+                array('eq', 'like', 'like'),
+                array(false, false, false),
+                true,
+                array(
+                    array(
+                        'id' => 2,
+                        'filesystem_total' => 2000,
+                        'software_name' => 'name1',
+                        'software_version' => 'version1a',
+                    ),
                 )
             ),
         );

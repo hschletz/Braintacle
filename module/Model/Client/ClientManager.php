@@ -741,12 +741,17 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
                 if (!$tablePresent) {
                     $joinedTables[] = $joinedTable;
                 }
-                foreach ($joinedTables as $joinedTable) {
+                foreach ($joinedTables as $table) {
+                    if ($table['name'] == $joinedTable['name']) {
+                        // Existing spec is out of date for updated tables.
+                        // Always replace with new spec.
+                        $table = $joinedTable;
+                    }
                     $select->join(
-                        $joinedTable['name'],
-                        $joinedTable['on'],
-                        $joinedTable['columns'],
-                        $joinedTable['type']
+                        $table['name'],
+                        $table['on'],
+                        $table['columns'],
+                        $table['type']
                     );
                 }
             }
