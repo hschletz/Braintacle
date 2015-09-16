@@ -127,10 +127,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
         $this->_form->isValid();
     }
 
-    /**
-     * Tests for getMessages()
-     */
-    public function testGetMessages()
+    public function testGetMessagesNoSelection()
     {
         // Test with invalid "computers" and "mergeGroups" fields
         $data = array(
@@ -146,7 +143,27 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
         $this->assertCount(2, $this->_form->getMessages());
         $this->assertCount(1, $this->_form->getMessages('mergeGroups'));
         $this->assertEquals(
-            array('callbackValue' => 'Es müssen mindestens 2 verschiedene Computer ausgewählt werden'),
+            array('Es müssen mindestens 2 verschiedene Computer ausgewählt werden'),
+            $this->_form->getMessages('computers')
+        );
+    }
+
+    public function testGetMessagesInsufficientSelection()
+    {
+        $data = array(
+            'computers' => array('1'),
+            'mergeCustomFields' => '1',
+            'mergeGroups' => '1',
+            'mergePackages' => '0',
+            'submit' => 'Merge selected computers',
+            '_csrf' => $this->_form->get('_csrf')->getValue(),
+        );
+        $this->_form->setData($data);
+        $this->_form->isValid();
+
+        $this->assertCount(1, $this->_form->getMessages());
+        $this->assertEquals(
+            array('Es müssen mindestens 2 verschiedene Computer ausgewählt werden'),
             $this->_form->getMessages('computers')
         );
     }

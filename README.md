@@ -46,7 +46,7 @@ Requirements
 
   There are also some PHP libraries required in the include path:
 
-  - [Zend Framework](http://framework.zend.com) 2.4 or later
+  - [Zend Framework](http://framework.zend.com) 2.4.8 or later
 
   - [NADA](https://github.com/hschletz/NADA)
 

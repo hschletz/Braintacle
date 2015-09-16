@@ -641,8 +641,8 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
                          array('downloadMaxPriority', $this->identicalTo(4444)),
                          array('downloadTimeout', $this->isNull()),
                          array('packageDeployment', $this->identicalTo('1')),
-                         array('scanThisNetwork', $this->isNull()),
                          array('allowScan', $this->identicalTo('0')),
+                         array('scanThisNetwork', $this->isNull()),
                          array('scanSnmp', $this->isNull())
                      );
         $this->_form->setValidationGroup('Agent', 'Download', 'Scan');

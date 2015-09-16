@@ -75,7 +75,7 @@ class ShowDuplicates extends Form
         $inputFilter->add(
             array(
                 'name' => 'computers',
-                'required' => false,
+                'required' => true,
                 'continue_if_empty' => true, // Have empty/missing array processed by callback validator
                 'filters' => array(
                     (array($this, 'computersFilter')),
@@ -84,6 +84,10 @@ class ShowDuplicates extends Form
                     $arrayCount,
                     new \Zend\Validator\Explode(array('validator' => new \Zend\Validator\Digits)),
                 ),
+                // Explicit message in case of missing field (no clients selected)
+                'error_message' => $arrayCount->getDefaultTranslator()->translate(
+                    $arrayCount->getMessageTemplates()[\Zend\Validator\Callback::INVALID_VALUE]
+                )
             )
         );
         $this->setInputFilter($inputFilter);
