@@ -35,8 +35,8 @@ namespace Model\Client;
  * @property integer $CpuClock CPU clock in MHz
  * @property integer $CpuCores total number of CPUs/cores
  * @property string $CpuType CPU manufacturer and model
- * @property \Zend_Date $InventoryDate timestamp of last inventory
- * @property \Zend_Date $LastContactDate timestamp of last agent contact (may be newer than InventoryDate)
+ * @property \DateTime $InventoryDate timestamp of last inventory
+ * @property \DateTime $LastContactDate timestamp of last agent contact (may be newer than InventoryDate)
  * @property integer $PhysicalMemory Amount of RAM as reported by OS. May be lower than actual RAM.
  * @property integer $SwapMemory Amount of swap space in use
  * @property string $BiosManufacturer BIOS manufacturer

@@ -173,7 +173,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
      */
     public function testRender()
     {
-        $now = \Zend_Date::now();
+        $now = new \DateTime;
         $computers = array(
             array(
                 'Id' => 1,

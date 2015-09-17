@@ -268,7 +268,7 @@ class DuplicatesManager
                 if (!$client->lock()) {
                     throw new \RuntimeException("Cannot lock client $id");
                 }
-                $timestamp = $client['LastContactDate']->get(\Zend_Date::TIMESTAMP);
+                $timestamp = $client['LastContactDate']->getTimestamp();
                 $list[$timestamp] = $client;
             }
             ksort($list);

@@ -121,12 +121,13 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionWithData()
     {
+        $creationDate = new \DateTime('2014-04-06 11:55:33');
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
         $resultSet->initialize(
             array(
                 array(
                     'Name' => 'test',
-                    'CreationDate' => new \Zend_Date('2014-04-06 11:55:33'),
+                    'CreationDate' => $creationDate,
                     'Description' => 'description',
                 )
             )
@@ -139,7 +140,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->once())
                    ->method('__invoke')
-                   ->with(1396778133, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
+                   ->with($creationDate, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
                    ->willReturn('date_create');
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
 
@@ -217,6 +218,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $url = '/console/group/members/?name=test';
         $cacheCreationDate =new \DateTime('2014-04-08 20:12:21');
         $cacheExpirationDate = new \DateTime('2014-04-09 18:53:21');
+        $inventoryDate = new \DateTime('2014-04-09 18:56:12');
         $group = array(
             'Name' => 'groupName',
             'CacheCreationDate' => $cacheCreationDate,
@@ -227,7 +229,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                 'Id' => '1',
                 'Name' => 'computerName',
                 'UserName' => 'userName',
-                'InventoryDate' => new \Zend_Date('2014-04-09 18:56:12'),
+                'InventoryDate' => $inventoryDate,
                 'Membership' => \Model_GroupMembership::TYPE_STATIC,
             ),
         );
@@ -252,7 +254,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                    ->withConsecutive(
                        array($cacheCreationDate, \IntlDateFormatter::FULL, \IntlDateFormatter::MEDIUM),
                        array($cacheExpirationDate, \IntlDateFormatter::FULL, \IntlDateFormatter::MEDIUM),
-                       array(1397062572, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
+                       array($inventoryDate, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
                    )
                    ->will($this->onConsecutiveCalls('date_create', 'date_expire', 'date_computer'));
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
@@ -284,7 +286,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                 'Id' => '1',
                 'Name' => 'computerName',
                 'UserName' => 'userName',
-                'InventoryDate' => new \Zend_Date('2014-04-09 18:56:12'),
+                'InventoryDate' => new \DateTime('2014-04-09 18:56:12'),
             ),
         );
         $this->_groupManager->expects($this->once())
