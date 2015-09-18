@@ -1237,7 +1237,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Mountpoint' => 'mountpoint1',
                 'Device' => 'device1',
                 'Filesystem' => 'filesystem1',
-                'CreationDate' => new \Zend_Date('2014-05-31'),
+                'CreationDate' => new \DateTime('2014-05-31'),
                 'Size' => 10000,
                 'UsedSpace' => 6000,
                 'FreeSpace' => 4000,

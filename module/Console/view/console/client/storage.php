@@ -122,7 +122,7 @@ $renderCallbacks = array(
     'CreationDate' => function ($view, $filesystem) {
         $date = $filesystem['CreationDate'];
         if ($date) {
-            return $view->escapeHtml($date->get(\Zend_Date::DATE_MEDIUM));
+            return $view->escapeHtml($view->dateFormat($date, \IntlDateFormatter::MEDIUM));
         }
     }
 );

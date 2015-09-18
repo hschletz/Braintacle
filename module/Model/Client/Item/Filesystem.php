@@ -33,7 +33,7 @@ namespace Model\Client\Item;
  * @property integer $Size Size in MB
  * @property integer $FreeSpace Free space in MB
  * @property integer $UsedSpace Used space in MB
- * @property \Zend_Date $CreationDate Date of filesystem creation (UNIX only)
+ * @property \DateTime $CreationDate Date of filesystem creation (UNIX only)
  */
 class Filesystem extends \ArrayObject
 {

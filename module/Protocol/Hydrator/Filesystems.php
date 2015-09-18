@@ -29,10 +29,25 @@ class Filesystems extends \Database\Hydrator\Filesystems
     use DatabaseExtensionTrait;
 
     /** {@inheritdoc} */
+    public function hydrateValue($name, $value)
+    {
+        if ($name == 'CreationDate') {
+            if ($value) {
+                $value = \DateTime::createFromFormat('Y/m/d H:i:s', $value);
+            } else {
+                $value = null;
+            }
+        } else {
+            $value = parent::hydrateValue($name, $value);
+        }
+        return $value;
+    }
+
+    /** {@inheritdoc} */
     public function extractValue($name, $value)
     {
         if (strtoupper($name) == 'CREATEDATE') {
-            $value = ($value ? $value->get('yyyy/M/d HH:mm:ss') : null);
+            $value = ($value ? $value->format('Y/n/j H:i:s') : null);
         } else {
             $value = parent::extractValue(strtolower($name), $value);
         }

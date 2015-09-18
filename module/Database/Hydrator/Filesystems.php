@@ -154,7 +154,12 @@ class Filesystems implements \Zend\Stdlib\Hydrator\HydratorInterface
                 $value = rtrim($value, '/');
                 break;
             case 'CreationDate':
-                $value = ($value ? new \Zend_Date($value) : null);
+                if ($value) {
+                    $value = \DateTime::createFromFormat('Y-m-d', $value);
+                    $value->setTime(0, 0);
+                } else {
+                    $value = null;
+                }
                 break;
         }
         return $value;
@@ -170,7 +175,7 @@ class Filesystems implements \Zend\Stdlib\Hydrator\HydratorInterface
     public function extractValue($name, $value)
     {
         if ($name == 'createdate') {
-            $value = ($value ? $value->get('yyyy-MM-dd') : null);
+            $value = ($value ? $value->format('Y-m-d') : null);
         }
         return $value;
     }

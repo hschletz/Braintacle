@@ -55,7 +55,7 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         $unixFilesystem = array(
             'Mountpoint' => '_mountpoint',
             'Device' => '_device',
-            'CreationDate' => new \Zend_Date('2014-12-31'),
+            'CreationDate' => new \DateTime('2014-12-31'),
             'Filesystem' => '_filesystem',
             'Size' => 3,
             'FreeSpace' => 2,
@@ -81,7 +81,7 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         $unixFilesystem = array(
             'Mountpoint' => '_mountpoint',
             'Device' => '_device',
-            'CreationDate' => new \Zend_Date('2014-12-31'),
+            'CreationDate' => new \DateTime('2014-12-31'),
             'Filesystem' => '_filesystem',
             'Size' => 3,
             'FreeSpace' => 2,
@@ -174,7 +174,7 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         return array(
             array('Letter', 'C:/', 'C:'),
             array('Letter', 'C:', 'C:'),
-            array('CreationDate', '2014-12-31', new \Zend_Date('2014-12-31')),
+            array('CreationDate', '2014-12-31', new \DateTime('2014-12-31')),
             array('CreationDate', '', null),
             array('CreationDate', null, null),
             array('Filesystem', '_filesystem', '_filesystem'),
@@ -194,7 +194,7 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
     {
         return array(
             array('letter', 'C:', 'C:'),
-            array('createdate', new \Zend_Date('2014-12-31'), '2014-12-31'),
+            array('createdate', new \DateTime('2014-12-31'), '2014-12-31'),
             array('createdate', '', null),
             array('createdate', null, null),
             array('filesystem', '_filesystem', '_filesystem'),

@@ -63,7 +63,7 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         $unixFilesystem = array(
             'Mountpoint' => '_mountpoint',
             'Device' => '_device',
-            'CreationDate' => new \Zend_Date('2015-05-04T21:34:45'),
+            'CreationDate' => new \DateTime('2015-05-04T21:34:45'),
             'Filesystem' => '_filesystem',
             'Size' => 3,
             'FreeSpace' => 2,
@@ -89,7 +89,7 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         $unixFilesystem = array(
             'Mountpoint' => '_mountpoint',
             'Device' => '_device',
-            'CreationDate' => new \Zend_Date('2015-05-04'),
+            'CreationDate' => new \DateTime('2015-05-04'),
             'Filesystem' => '_filesystem',
             'Size' => 3,
             'FreeSpace' => 2,
@@ -182,7 +182,7 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         return array(
             array('Letter', 'C:/', 'C:'),
             array('Letter', 'C:', 'C:'),
-            array('CreationDate', '2015/5/4 21:34:45', new \Zend_Date('2015-05-04T21:34:45')),
+            array('CreationDate', '2015/5/4 21:34:45', new \DateTime('2015-05-04T21:34:45')),
             array('CreationDate', '', null),
             array('CreationDate', null, null),
             array('Filesystem', '_filesystem', '_filesystem'),
@@ -202,8 +202,8 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
     {
         return array(
             array('LETTER', 'C:', 'C:'),
-            array('createdate', new \Zend_Date('2015-05-04'), '2015/5/4 00:00:00'),
-            array('CREATEDATE', new \Zend_Date('2015-05-04'), '2015/5/4 00:00:00'),
+            array('createdate', new \DateTime('2015-05-04'), '2015/5/4 00:00:00'),
+            array('CREATEDATE', new \DateTime('2015-05-04'), '2015/5/4 00:00:00'),
             array('CREATEDATE', '', null),
             array('CREATEDATE', null, null),
             array('FILESYSTEM', '_filesystem', '_filesystem'),
