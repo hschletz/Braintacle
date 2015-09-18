@@ -64,7 +64,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $package = $model->getPackage('package2');
         $this->assertInstanceOf('Model\Package\Package', $package);
         $this->assertEquals(
-            $packageData + $metadata + array('Timestamp' => new \Zend_Date(1415958320, \Zend_Date::TIMESTAMP)),
+            $packageData + $metadata + array('Timestamp' => new \DateTime('@1415958320')),
             $package->getArrayCopy()
         );
     }
@@ -88,7 +88,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     public function getPackagesProvider()
     {
         $package1 =  array (
-            'Timestamp' => new \Zend_Date(1415958319, \Zend_Date::TIMESTAMP),
+            'Timestamp' => new \DateTime('@1415958319'),
             'Name' => 'package1',
             'Priority' => '5',
             'NumFragments' => '42',
@@ -102,7 +102,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             'NumError' => '1',
         );
         $package2 =  array (
-            'Timestamp' => new \Zend_Date(1415958320, \Zend_Date::TIMESTAMP),
+            'Timestamp' => new \DateTime('@1415958320'),
             'Name' => 'package2',
             'Priority' => '5',
             'NumFragments' => '42',
@@ -758,7 +758,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     public function testUpdateAssignmentsException()
     {
         $this->setExpectedException('Model\Package\RuntimeException', 'database error');
-        $data = array('Timestamp' => new \Zend_Date(1415958319, \Zend_Date::TIMESTAMP));
+        $data = array('Timestamp' => new \DateTime('@1415958319'));
         $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
         $clientConfig->method('getSql')->will($this->throwException(new \RuntimeException('database error')));
         $model = $this->_getModel(array('Database\Table\ClientConfig' => $clientConfig));

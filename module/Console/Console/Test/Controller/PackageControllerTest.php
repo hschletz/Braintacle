@@ -85,11 +85,13 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionPackageList()
     {
+        $timestamp1 = new \DateTime('2014-03-29 20:03:45');
+        $timestamp2 = new \DateTime('2014-03-29 20:15:43');
         $packages = array(
             array(
                 'Name' => 'name1',
                 'Comment' => 'comment1',
-                'Timestamp' => new \Zend_Date('2014-03-29 20:03:45'),
+                'Timestamp' => $timestamp1,
                 'Size' => 12345678,
                 'Platform' => 'platform',
                 'NumNonnotified' => 1,
@@ -100,7 +102,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             array(
                 'Name' => 'name2',
                 'Comment' => '',
-                'Timestamp' => new \Zend_Date('2014-03-29 20:15:43'),
+                'Timestamp' => $timestamp2,
                 'Size' => 87654321,
                 'Platform' => 'platform',
                 'NumNonnotified' => 0,
@@ -115,8 +117,8 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $dateFormat->expects($this->exactly(2))
                    ->method('__invoke')
                    ->withConsecutive(
-                       array(1396119825, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT),
-                       array(1396120543, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
+                       array($timestamp1, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT),
+                       array($timestamp2, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
                    )
                    ->will($this->onConsecutiveCalls('date1', 'date2'));
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
@@ -220,7 +222,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             array(
                 'Name' => 'name1',
                 'Comment' => 'comment1',
-                'Timestamp' => new \Zend_Date('2014-03-29 20:03:45'),
+                'Timestamp' => new \DateTime('2014-03-29 20:03:45'),
                 'Size' => 12345678,
                 'Platform' => 'platform',
                 'NumNonnotified' => 1,
@@ -231,7 +233,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             array(
                 'Name' => 'name2',
                 'Comment' => '',
-                'Timestamp' => new \Zend_Date('2014-03-29 20:15:43'),
+                'Timestamp' => new \DateTime('2014-03-29 20:15:43'),
                 'Size' => 87654321,
                 'Platform' => 'platform',
                 'NumNonnotified' => 0,

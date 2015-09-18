@@ -30,7 +30,7 @@ namespace Model\Package;
  *
  * @property integer $Id Numeric package ID, historically a UNIX timestamp
  * @property string $Name Name to uniquely identify package
- * @property \Zend_Date $Timestamp Timestamp of package creation
+ * @property \DateTime $Timestamp Timestamp of package creation
  * @property integer $Priority Download priority (0-10)
  * @property integer $NumFragments Number of download fragments
  * @property integer $Size Download size
@@ -70,7 +70,7 @@ class Package extends \ArrayObject
     {
         if (isset($input['Id'])) {
             // Add Timestamp property
-            $input['Timestamp'] = new \Zend_Date($input['Id']);
+            $input['Timestamp'] = new \DateTime("@$input[Id]");
         }
         return parent::exchangeArray($input);
     }
