@@ -1,6 +1,6 @@
 <?php
 /**
- * Controller for managing duplicate computers
+ * Controller for managing duplicate clients
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,7 +22,7 @@
 namespace Console\Controller;
 
 /**
- * Controller for managing duplicate computers and the criteria for determining duplicates.
+ * Controller for managing duplicate clients and the criteria for determining duplicates.
  */
 class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
 {
@@ -82,12 +82,12 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
             if ($this->_showDuplicates->isValid()) {
                 $data = $this->_showDuplicates->getData();
                 $this->_duplicates->merge(
-                    $data['computers'],
+                    $data['clients'],
                     $data['mergeCustomFields'],
                     $data['mergeGroups'],
                     $data['mergePackages']
                 );
-                $this->flashMessenger()->addSuccessMessage('The selected computers have been merged.');
+                $this->flashMessenger()->addSuccessMessage('The selected clients have been merged.');
                 return $this->redirectToRoute('duplicates', 'index');
             }
         }
@@ -100,7 +100,7 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
         );
         $this->_showDuplicates->setOptions(
             array(
-                'computers' => $clients,
+                'clients' => $clients,
                 'order' => $ordering['order'],
                 'direction' => $ordering['direction'],
             )

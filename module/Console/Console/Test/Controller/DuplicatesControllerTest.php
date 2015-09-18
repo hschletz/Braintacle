@@ -94,7 +94,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
     {
         $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
         $flashMessenger->addInfoMessage(
-            'At least 2 different computers have to be selected'
+            'At least 2 different clients have to be selected'
         );
         $flashMessenger->addSuccessMessage(
             array("'%s' is no longer considered duplicate." => 'abc')
@@ -106,7 +106,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXpathQueryCount('//ul', 2);
         $this->assertXPathQueryContentContains(
             '//ul[@class="info"]/li',
-            'Es müssen mindestens 2 verschiedene Computer ausgewählt werden'
+            'Es müssen mindestens 2 verschiedene Clients ausgewählt werden'
         );
         $this->assertXPathQueryContentContains(
             '//ul[@class="success"]/li',
@@ -156,7 +156,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_showDuplicates->expects($this->never())->method('getData');
         $this->_showDuplicates->expects($this->once())
                               ->method('setOptions')
-                              ->with(array('computers' => 'client_list', 'order' => 'Id', 'direction' => 'asc'));
+                              ->with(array('clients' => 'client_list', 'order' => 'Id', 'direction' => 'asc'));
         $this->_showDuplicates->expects($this->once())->method('getMessages')->willReturn(array());
         $this->_showDuplicates->expects($this->once())->method('render')->willReturn('<form></form>');
         $this->dispatch('/console/duplicates/manage/?criteria=Name');
@@ -166,7 +166,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
     public function testManageActionPostValid()
     {
         $params = array(
-            'computers' => array(1, 2),
+            'clients' => array(1, 2),
             'mergeCustomFields' => '1',
             'mergeGroups' => '1',
             'mergePackages' => '0'
@@ -189,7 +189,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/duplicates/manage/', 'POST', $params);
         $this->assertRedirectTo('/console/duplicates/index/');
         $this->assertContains(
-            'The selected computers have been merged.',
+            'The selected clients have been merged.',
             $this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
         );
     }
@@ -204,10 +204,10 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_showDuplicates->expects($this->never())->method('getData');
         $this->_showDuplicates->expects($this->once())
                               ->method('setOptions')
-                              ->with(array('computers' => 'client_list', 'order' => 'Id', 'direction' => 'asc'));
+                              ->with(array('clients' => 'client_list', 'order' => 'Id', 'direction' => 'asc'));
         $this->_showDuplicates->expects($this->once())
                               ->method('getMessages')
-                              ->willReturn(array('computers' => array('invalid')));
+                              ->willReturn(array('clients' => array('invalid')));
         $this->_showDuplicates->expects($this->once())
                               ->method('render')
                               ->willReturn('<form></form>');

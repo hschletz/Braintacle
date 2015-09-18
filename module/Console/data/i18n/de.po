@@ -43,8 +43,8 @@ msgid "'%s' is no longer considered duplicate."
 msgstr "'%s' wird nicht mehr als Duplikat betrachtet."
 
 #: Console/Controller/DuplicatesController.php
-msgid "The selected computers have been merged."
-msgstr "Die ausgewählten Computer wurden zusammengeführt."
+msgid "The selected clients have been merged."
+msgstr "Die ausgewählten Clients wurden zusammengeführt."
 
 #: Console/Controller/GroupController.php
 #, php-format
@@ -911,8 +911,8 @@ msgid "Workgroup"
 msgstr "Arbeitsgruppe"
 
 #: Console/Form/ShowDuplicates.php
-msgid "At least 2 different computers have to be selected"
-msgstr "Es müssen mindestens 2 verschiedene Computer ausgewählt werden"
+msgid "At least 2 different clients have to be selected"
+msgstr "Es müssen mindestens 2 verschiedene Clients ausgewählt werden"
 
 #: Console/Form/ShowDuplicates.php
 msgid "Merge manual group assignments"
@@ -923,8 +923,8 @@ msgid "Merge missing package assignments"
 msgstr "Fehlende Paketzuweisungen übernehmen"
 
 #: Console/Form/ShowDuplicates.php
-msgid "Merge selected computers"
-msgstr "Ausgewählte Computer zusammenführen"
+msgid "Merge selected clients"
+msgstr "Ausgewählte Clients zusammenführen"
 
 #: Console/Form/ShowDuplicates.php
 msgid "Merge user supplied information"

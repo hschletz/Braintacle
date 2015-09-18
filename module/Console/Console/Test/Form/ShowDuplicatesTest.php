@@ -80,39 +80,39 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
      */
     public function testInputFilter()
     {
-        // Test without "computers" array (happens when no computer is selected)
+        // Test without "clients" array (happens when no client is selected)
         $data = array(
             'mergeCustomFields' => '1',
             'mergeGroups' => '1',
             'mergePackages' => '0',
-            'submit' => 'Merge selected computers',
+            'submit' => 'Merge selected clients',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
 
-        // Test with empty "computers" array
-        $data['computers'] = array();
+        // Test with empty "clients" array
+        $data['clients'] = array();
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
 
-        // Test with 2 identical computers
-        $data['computers'] = array('1', '1');
+        // Test with 2 identical clients
+        $data['clients'] = array('1', '1');
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
 
         // Test with invalid array content
-        $data['computers'] = array('1', 'a');
+        $data['clients'] = array('1', 'a');
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
 
-        // Test with 2 identical computers + 1 extra
-        $data['computers'] = array('1', '1', '2');
+        // Test with 2 identical clients + 1 extra
+        $data['clients'] = array('1', '1', '2');
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
 
         // Test filtered and validated data
-        $this->assertEquals(array('1', '2'), array_values($this->_form->getData()['computers']));
+        $this->assertEquals(array('1', '2'), array_values($this->_form->getData()['clients']));
 
         // Test invalid input on other elements to ensure that builtin input
         // filters are not overwritten
@@ -120,21 +120,21 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
 
-        // Test non-array input on "computers"
+        // Test non-array input on "clients"
         $this->setExpectedException('InvalidArgumentException');
-        $data['computers'] = '';
+        $data['clients'] = '';
         $this->_form->setData($data);
         $this->_form->isValid();
     }
 
     public function testGetMessagesNoSelection()
     {
-        // Test with invalid "computers" and "mergeGroups" fields
+        // Test with invalid "clients" and "mergeGroups" fields
         $data = array(
             'mergeCustomFields' => '1',
             'mergeGroups' => '2',
             'mergePackages' => '0',
-            'submit' => 'Merge selected computers',
+            'submit' => 'Merge selected clients',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setData($data);
@@ -143,19 +143,19 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
         $this->assertCount(2, $this->_form->getMessages());
         $this->assertCount(1, $this->_form->getMessages('mergeGroups'));
         $this->assertEquals(
-            array('Es müssen mindestens 2 verschiedene Computer ausgewählt werden'),
-            $this->_form->getMessages('computers')
+            array('Es müssen mindestens 2 verschiedene Clients ausgewählt werden'),
+            $this->_form->getMessages('clients')
         );
     }
 
     public function testGetMessagesInsufficientSelection()
     {
         $data = array(
-            'computers' => array('1'),
+            'clients' => array('1'),
             'mergeCustomFields' => '1',
             'mergeGroups' => '1',
             'mergePackages' => '0',
-            'submit' => 'Merge selected computers',
+            'submit' => 'Merge selected client',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
         $this->_form->setData($data);
@@ -163,8 +163,8 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
 
         $this->assertCount(1, $this->_form->getMessages());
         $this->assertEquals(
-            array('Es müssen mindestens 2 verschiedene Computer ausgewählt werden'),
-            $this->_form->getMessages('computers')
+            array('Es müssen mindestens 2 verschiedene Clients ausgewählt werden'),
+            $this->_form->getMessages('clients')
         );
     }
 
@@ -174,7 +174,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
     public function testRender()
     {
         $now = new \DateTime;
-        $computers = array(
+        $clients = array(
             array(
                 'Id' => 1,
                 'Name' => 'Test1',
@@ -195,7 +195,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
 
         $this->_form->setOptions(
             array(
-                'computers' => $computers,
+                'clients' => $clients,
                 'order' => 'Id',
                 'direction' => 'asc',
             )

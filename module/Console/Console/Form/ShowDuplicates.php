@@ -1,6 +1,6 @@
 <?php
 /**
- * Form for merging duplicate computers
+ * Form for merging duplicate clients
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -25,14 +25,14 @@ namespace Console\Form;
 use Zend\Form\Element;
 
 /**
- * Form for displaying duplicate computers by given criteria and selection of
- * computers/options for merging
+ * Form for displaying duplicate clients by given criteria and selection of
+ * clients/options for merging
  *
  * The form requires the following options to be set:
  *
  * - **config:** \Model\Config instance, required by init(). The factory injects
  *   this automatically.
- * - **computers:** Array of Computer objects to display, required by render().
+ * - **clients:** Array of Client objects to display, required by render().
  * - **order, direction:** Sorting of result table, required by render().
  */
 class ShowDuplicates extends Form
@@ -59,26 +59,26 @@ class ShowDuplicates extends Form
         $this->add($mergePackages);
 
         $submit = new \Library\Form\Element\Submit('submit');
-        $submit->setLabel('Merge selected computers');
+        $submit->setLabel('Merge selected clients');
         $this->add($submit);
 
-        // Checkboxes for "computers[]" are generated manually, without
+        // Checkboxes for "clients[]" are generated manually, without
         // \Zend\Form\Element. Define an input filter to have them processed.
         $arrayCount = new \Zend\Validator\Callback;
         $arrayCount->setCallback(array($this, 'validateArrayCount'))
                    ->setTranslatorTextDomain('default')
                    ->setMessage(
-                       'At least 2 different computers have to be selected',
+                       'At least 2 different clients have to be selected',
                        \Zend\Validator\Callback::INVALID_VALUE
                    );
         $inputFilter = new \Zend\InputFilter\InputFilter;
         $inputFilter->add(
             array(
-                'name' => 'computers',
+                'name' => 'clients',
                 'required' => true,
                 'continue_if_empty' => true, // Have empty/missing array processed by callback validator
                 'filters' => array(
-                    (array($this, 'computersFilter')),
+                    (array($this, 'clientsFilter')),
                 ),
                 'validators' => array(
                     $arrayCount,
@@ -99,15 +99,15 @@ class ShowDuplicates extends Form
         if ($elementName === null) {
             $messages = parent::getMessages();
             $filterMessages = $this->getInputFilter()->getMessages();
-            if (isset($filterMessages['computers'])) {
-                $messages['computers'] = $filterMessages['computers'];
+            if (isset($filterMessages['clients'])) {
+                $messages['clients'] = $filterMessages['clients'];
             }
             return $messages;
-        } elseif ($elementName == 'computers') {
+        } elseif ($elementName == 'clients') {
             $messages = array();
             $filterMessages = $this->getInputFilter()->getMessages();
-            if (isset($filterMessages['computers'])) {
-                $messages += $filterMessages['computers'];
+            if (isset($filterMessages['clients'])) {
+                $messages += $filterMessages['clients'];
             }
             return $messages;
         } else {
@@ -116,26 +116,26 @@ class ShowDuplicates extends Form
     }
 
     /**
-     * Filter callback for "computers" input
+     * Filter callback for "clients" input
      *
      * @internal
-     * @param mixed $computers
+     * @param mixed $clients
      * @return array Unique input values
-     * @throws \InvalidArgumentException if $computers is not array|null
+     * @throws \InvalidArgumentException if $clients is not array|null
      */
-    public function computersFilter($computers)
+    public function clientsFilter($clients)
     {
-        if (is_array($computers)) {
-            return array_unique($computers);
-        } elseif ($computers === null) {
+        if (is_array($clients)) {
+            return array_unique($clients);
+        } elseif ($clients === null) {
             return array();
         } else {
-            throw new \InvalidArgumentException('Invalid input for "computers": ' . $computers);
+            throw new \InvalidArgumentException('Invalid input for "clients": ' . $clients);
         }
     }
 
     /**
-     * Validator callback for "computers" input
+     * Validator callback for "clients" input
      *
      * @internal
      * @param array $array
@@ -157,8 +157,8 @@ class ShowDuplicates extends Form
             'AssetTag' => $view->translate('Asset tag'),
             'LastContactDate' => $view->translate('Last contact'),
         );
-        $renderCriteria = function($view, $computer, $property) {
-            $value = $computer[$property];
+        $renderCriteria = function($view, $client, $property) {
+            $value = $client[$property];
             if ($value === null) {
                 // NULL values are never considered for duplicates and cannot be blacklisted.
                 return;
@@ -185,28 +185,28 @@ class ShowDuplicates extends Form
             );
         };
         $renderCallbacks = array(
-            'Id' => function($view, $computer) {
+            'Id' => function($view, $client) {
                 // Display ID and a checkbox. Render checkbox manually because
                 // ZF's MultiCheckbox element does not handle duplicate values.
-                // $_POST['computers'] will become an array of selected
+                // $_POST['clients'] will become an array of selected
                 // (possibly duplicate) IDs.
                 return sprintf(
-                    '<input type="checkbox" name="computers[]" value="%d">%d',
-                    $computer['Id'],
-                    $computer['Id']
+                    '<input type="checkbox" name="clients[]" value="%d">%d',
+                    $client['Id'],
+                    $client['Id']
                 );
             },
-            'Name' => function($view, $computer) {
-                // Hyperlink to "customfields" page of given computer.
+            'Name' => function($view, $client) {
+                // Hyperlink to "customfields" page of given client.
                 // This allows for easy review of the information about to be merged.
                 return $view->htmlTag(
                     'a',
-                    $view->escapeHtml($computer['Name']),
+                    $view->escapeHtml($client['Name']),
                     array(
                         'href' => $view->consoleUrl(
                             'client',
                             'customfields',
-                            array('id' => $computer['Id'])
+                            array('id' => $client['Id'])
                         ),
                     ),
                     true
@@ -218,7 +218,7 @@ class ShowDuplicates extends Form
         );
 
         $formContent = $view->table(
-            $this->getOption('computers'),
+            $this->getOption('clients'),
             $headers,
             array(
                 'order' => $this->getOption('order'),

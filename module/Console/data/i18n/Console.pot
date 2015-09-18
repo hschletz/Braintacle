@@ -39,7 +39,7 @@ msgid "Client '%s' could not be deleted."
 msgstr ""
 
 #: Console/Controller/DuplicatesController.php
-msgid "The selected computers have been merged."
+msgid "The selected clients have been merged."
 msgstr ""
 
 #: Console/Controller/DuplicatesController.php
@@ -918,11 +918,11 @@ msgid "Merge missing package assignments"
 msgstr ""
 
 #: Console/Form/ShowDuplicates.php
-msgid "Merge selected computers"
+msgid "Merge selected clients"
 msgstr ""
 
 #: Console/Form/ShowDuplicates.php
-msgid "At least 2 different computers have to be selected"
+msgid "At least 2 different clients have to be selected"
 msgstr ""
 
 #: Console/Form/SoftwareFilter.php
