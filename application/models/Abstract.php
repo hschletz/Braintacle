@@ -107,8 +107,7 @@ abstract class Model_Abstract extends \Model\ClientOrGroup
     public function __construct($input=array(), $flags=0, $iteratorClass='ArrayIterator')
     {
         parent::__construct($input, $flags, $iteratorClass);
-        $this->serviceLocator = \Library\Application::getService('ServiceManager');
-        $this->_config = $this->serviceLocator->get('Model\Config');
+        $this->_config = \Library\Application::getService('Model\Config');
     }
 
     /**
