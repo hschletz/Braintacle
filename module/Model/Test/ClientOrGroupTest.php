@@ -35,7 +35,8 @@ class ClientOrGroupTest extends AbstractTest
         $this->_currentTimestamp = new \DateTime(
             $this->getConnection()->createQueryTable(
                 'current', 'SELECT CURRENT_TIMESTAMP AS current'
-            )->getValue(0, 'current')
+            )->getValue(0, 'current'),
+            new \DateTimeZone('UTC')
         );
 
         $dataSet = parent::_loadDataSet($testName);
@@ -114,6 +115,7 @@ class ClientOrGroupTest extends AbstractTest
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
+                    array('Database\Nada', true, \Library\Application::getService('Database\Nada')),
                     array('Database\Table\Locks', true, \Library\Application::getService('Database\Table\Locks')),
                     array('Db', true, \Library\Application::getService('Db')),
                     array('Model\Config', true, $config),
@@ -142,65 +144,6 @@ class ClientOrGroupTest extends AbstractTest
         $this->assertLocksTableEquals($dataSetName);
     }
 
-    public function lockAtDstSwitchProvider()
-    {
-        return array(
-            // Assume Europe/Berlin timezone
-            array('2014-10-25 01:59:59+02:00', '2014-10-25 03:00:01+02:00', 4000, false),
-            array('2014-10-26 01:59:59+02:00', '2014-10-26 03:00:01+01:00', 4000, true), // DST switch
-            array('2015-03-28 01:59:59+01:00', '2015-03-28 03:00:01+01:00', 60, true),
-            array('2015-03-29 01:59:59+01:00', '2015-03-29 03:00:01+02:00', 60, false), // DST switch
-            // Repeat without offset specification
-            array('2014-10-25 01:59:59', '2014-10-25 03:00:01', 4000, false),
-            array('2014-10-26 01:59:59', '2014-10-26 03:00:01', 4000, true), // DST switch
-            array('2015-03-28 01:59:59', '2015-03-28 03:00:01', 60, true),
-            array('2015-03-29 01:59:59', '2015-03-29 03:00:01', 60, false), // DST switch
-            // Assume UTC
-            array('2014-10-25 01:59:59+00:00', '2014-10-25 03:00:01+00:00', 4000, false),
-            array('2014-10-26 01:59:59+00:00', '2014-10-26 03:00:01+00:00', 4000, false),
-            array('2015-03-28 01:59:59+00:00', '2015-03-28 03:00:01+00:00', 60, true),
-            array('2015-03-29 01:59:59+00:00', '2015-03-29 03:00:01+00:00', 60, true),
-        );
-    }
-
-    /**
-     * @dataProvider lockAtDstSwitchProvider
-     */
-    public function testLockAtDstSwitch($since, $current, $timeout, $success)
-    {
-        $resultSet = new \ArrayIterator(
-            array(
-                array('since' => $since, 'current' => $current)
-            )
-        );
-
-        $sql = $this->getMockBuilder('\Zend\Db\Sql\Sql')->disableOriginalConstructor()->getMock();
-        $sql->method('select')->willReturn(new \Zend\Db\Sql\Select);
-
-        $locks = $this->getMockBuilder('Database\Table\Locks')->disableOriginalConstructor()->getMock();
-        $locks->method('getSql')->willReturn($sql);
-        $locks->method('selectWith')->willReturn($resultSet);
-
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
-        $config->expects($this->once())->method('__get')->with('lockValidity')->willreturn($timeout);
-
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->will(
-            $this->returnValueMap(
-                array(
-                    array('Database\Table\Locks', true, $locks),
-                    array('Model\Config', true, $config),
-                )
-            )
-        );
-
-        $model = $this->getMockBuilder($this->_getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
-        $model->setServiceLocator($serviceManager);
-        $model['Id'] = 42;
-
-        $this->assertSame($success, $model->lock());
-    }
-
     public function testLockRaceCondition()
     {
         $sql = $this->getMockBuilder('\Zend\Db\Sql\Sql')->disableOriginalConstructor()->getMock();
@@ -217,7 +160,9 @@ class ClientOrGroupTest extends AbstractTest
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
+                    array('Database\Nada', true, \Library\Application::getService('Database\Nada')),
                     array('Database\Table\Locks', true, $locks),
+                    array('Db', true, \Library\Application::getService('Db')),
                     array('Model\Config', true, $config),
                 )
             )
@@ -245,6 +190,7 @@ class ClientOrGroupTest extends AbstractTest
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
+                    array('Database\Nada', true, \Library\Application::getService('Database\Nada')),
                     array('Database\Table\Locks', true, \Library\Application::getService('Database\Table\Locks')),
                     array('Db', true, \Library\Application::getService('Db')),
                 )
@@ -276,6 +222,7 @@ class ClientOrGroupTest extends AbstractTest
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
+                    array('Database\Nada', true, \Library\Application::getService('Database\Nada')),
                     array('Db', true, \Library\Application::getService('Db')),
                 )
             )

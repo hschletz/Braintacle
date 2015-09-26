@@ -82,10 +82,25 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
      */
     public function lock()
     {
-        // Time is queried from database which may run at a different time or
-        // timezone. This guarantees consistent reference across all operations
-        // (including Braintacle server)
-        $currentTimestamp = new \Zend\Db\Sql\Literal('CURRENT_TIMESTAMP');
+        $utc = new \DateTimeZone('UTC');
+        // Current time is queried from the database which may run on another
+        // server where the clock may differ. This guarantees consistent
+        // reference across all operations (including Braintacle server).
+        // The cast is necessary on some DBMS to get consistent timezone and
+        // precision.
+        $currentTimestamp = new \Zend\Db\Sql\Literal(
+            sprintf(
+                'CAST(CURRENT_TIMESTAMP AS %s)',
+                $this->serviceLocator->get('Database\Nada')->getNativeDatatype(\Nada::DATATYPE_TIMESTAMP, null, true)
+            )
+        );
+        $current = new \DateTime(
+            $this->serviceLocator->get('Db')->query(
+                sprintf('SELECT %s AS current', $currentTimestamp->getLiteral()),
+                \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
+            )->current()['current'],
+            $utc
+        );
         $id = $this['Id'];
         $expireInterval = new \DateInterval(
             sprintf(
@@ -97,13 +112,12 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
 
         // Check if a lock already exists
         $select = $locks->getSql()->select();
-        $select->columns(array('since', 'current' => $currentTimestamp))
+        $select->columns(array('since'))
                ->where(array('hardware_id' => $id));
         $lock = $locks->selectWith($select)->current();
         if ($lock) {
             // A lock exists. Check its timestamp.
-            $current = new \DateTime($lock['current']);
-            $expire = new \DateTime($lock['since']);
+            $expire = new \DateTime($lock['since'], $utc);
             $expire->add($expireInterval);
             if ($current > $expire) {
                 // The existing lock is stale and can be reused.
@@ -130,12 +144,6 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
                     )
                 );
                 $success = true;
-                $current = new \DateTime(
-                    $this->serviceLocator->get('Db')->query(
-                        'SELECT CURRENT_TIMESTAMP AS current',
-                        \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
-                    )->current()['current']
-                );
             } catch (\Exception $e) {
                 $success = false;
             }
@@ -165,9 +173,17 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
         // Query time from database for consistent reference across all operations
         $current = new \DateTime(
             $this->serviceLocator->get('Db')->query(
-                'SELECT CURRENT_TIMESTAMP AS current',
+                sprintf(
+                    'SELECT CAST(CURRENT_TIMESTAMP AS %s) AS current',
+                    $this->serviceLocator->get('Database\Nada')->getNativeDatatype(
+                        \Nada::DATATYPE_TIMESTAMP,
+                        null,
+                        true
+                    )
+                ),
                 \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
-            )->current()['current']
+            )->current()['current'],
+            new \DateTimeZone('UTC')
         );
         $isExpired = ($current > $this->_lockTimeout);
         $this->_lockTimeout = null;
