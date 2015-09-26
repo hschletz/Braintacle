@@ -30,6 +30,12 @@ namespace Protocol\Hydrator;
 class ClientsHardware implements \Zend\Stdlib\Hydrator\HydratorInterface
 {
     /**
+     * WindowsInstallation prototype
+     * @var \Model\Client\WindowsInstallation
+     */
+    protected $_windowsInstallationPrototype;
+
+    /**
      * Filter for hydration of "OsName"
      *
      * @var \Library\Filter\FixEncodingErrors
@@ -118,22 +124,26 @@ class ClientsHardware implements \Zend\Stdlib\Hydrator\HydratorInterface
 
     /**
      * Constructor
+     *
+     * @param \Model\Client\WindowsInstallation $windowsInstallationPrototype
      */
-    public function __construct()
+    public function __construct(\Model\Client\WindowsInstallation $windowsInstallationPrototype)
     {
+        $this->_windowsInstallationPrototype = $windowsInstallationPrototype;
         $this->_encodingFilter = new \Library\Filter\FixEncodingErrors;
     }
 
     /** {@inheritdoc} */
     public function hydrate(array $data, $object)
     {
+        $windows = array();
         foreach ($data as $name => $value) {
             $isWindows = isset($this->_hydratorMapWindows[$name]);
             $name = $this->hydrateName($name);
             if ($name) {
                 $value = $this->hydrateValue($name, $value);
                 if ($isWindows) {
-                    $object['Windows'][$name] = $value;
+                    $windows[$name] = $value;
                 } else {
                     $object[$name] = $value;
                 }
@@ -141,10 +151,16 @@ class ClientsHardware implements \Zend\Stdlib\Hydrator\HydratorInterface
         }
         // Map WORKGROUP element to appropriate property
         if (isset($data['WINPRODID'])) {
-            $object['Windows']['Workgroup'] = @$data['WORKGROUP'];
+            $windows['Workgroup'] = @$data['WORKGROUP'];
         } else {
             $object['DnsDomain'] = @$data['WORKGROUP'];
         }
+
+        if ($windows) {
+            $object['Windows'] = clone $this->_windowsInstallationPrototype;
+            $object['Windows']->exchangeArray($windows);
+        }
+
         return $object;
     }
 

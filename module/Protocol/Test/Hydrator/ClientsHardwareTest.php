@@ -23,6 +23,13 @@ namespace Protocol\Test\Hydrator;
 
 class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
 {
+    protected function _getHydrator()
+    {
+        return new \Protocol\Hydrator\ClientsHardware(
+            \Library\Application::getService('Model\Client\WindowsInstallation')
+        );
+    }
+
     public function testService()
     {
         $this->assertInstanceOf(
@@ -84,13 +91,15 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
             'ClientId' => 'ignored',
         );
         $hydratedWindows = array(
-            'Windows' => array(
-                'UserDomain' => 'user domain',
-                'Company' => 'company',
-                'Owner' => 'owner',
-                'ProductId' => 'product id',
-                'ProductKey' => 'product key',
-                'Workgroup' => 'workgroup',
+            'Windows' => new \Model\Client\WindowsInstallation(
+                array(
+                    'UserDomain' => 'user domain',
+                    'Company' => 'company',
+                    'Owner' => 'owner',
+                    'ProductId' => 'product id',
+                    'ProductKey' => 'product key',
+                    'Workgroup' => 'workgroup',
+                )
             ),
         );
         return array(

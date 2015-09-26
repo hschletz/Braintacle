@@ -181,7 +181,9 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
                ->method('getItems')
                ->will($this->returnValueMap($mapGetItems));
 
-        $hardwareHydrator = $this->getMock('Protocol\Hydrator\ClientsHardware');
+        $hardwareHydrator = $this->getMockBuilder('Protocol\Hydrator\ClientsHardware')
+                                 ->disableOriginalConstructor()
+                                 ->getMock();
         $hardwareHydrator->expects($this->once())
                          ->method('extract')
                          ->with($client)
