@@ -1,0 +1,41 @@
+# Fixture for ClientTest
+
+hardware:
+  -
+    id: 1
+    deviceid: "id1"
+    name: "name1"
+    winprodid: "product_id1"
+    workgroup: "workgroup1"
+    userdomain: "userdomain1"
+    wincompany: "company1"
+    winowner: "owner1"
+    winprodkey: "product_key1"
+  -
+    id: 2
+    deviceid: "id2"
+    name: "name2"
+    winprodid: "product_id2"
+    workgroup: "workgroup2"
+    userdomain: "userdomain2"
+    wincompany: "company2"
+    winowner: "owner2"
+    winprodkey: "product_key2"
+  -
+    id: 3
+    deviceid: "id3"
+    name: "name3"
+    winprodid: null
+
+braintacle_windows:
+  -
+    hardware_id: 2
+    manual_product_key: "manual_product_key2"
+
+blacklist_serials:
+  -
+    serial: "serial_bad"
+
+braintacle_blacklist_assettags:
+  -
+    assettag: "assettag_bad"

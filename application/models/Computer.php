@@ -91,14 +91,6 @@
 class Model_Computer extends \Model_Abstract
 {
     /**
-     * Windows-specific information
-     *
-     * Object has undefined content for non-Windows systems.
-     * @var \Model\Client\WindowsInstallation
-     **/
-    public $windows;
-
-    /**
      * Global cache for _getConfigGroups() results
      *
      * This is a 2-dimensional array: $_configGroups[computer ID][n] = group
@@ -118,78 +110,6 @@ class Model_Computer extends \Model_Abstract
      * This is a 2-dimensional array: $_configEffective[computer ID][option name] = value
      */
     protected static $_configEffective = array();
-
-    /**
-     * User defined information for this computer
-     *
-     * It can be 1 of 3 types:
-     * 1. A fully populated \Model\Client\CustomFields object
-     * 2. An associative array with a subset of available fields
-     * 3. NULL if no value has been set yet.
-     *
-     * It is populated on demand internally. This allows caching the information,
-     * efficiently feeding partial information from a query result and making an
-     * extra query only if really needed.
-     * @var mixed
-     */
-    private $_userDefinedInfo;
-
-    /**
-     * Constructor
-     **/
-    public function __construct($input=array(), $flags=0, $iteratorClass='ArrayIterator')
-    {
-        parent::__construct($input, $flags, $iteratorClass);
-
-        // When instantiated from fetchObject(), __set() gets called before the
-        // constructor is invoked, which may initialize the property. Don't
-        // overwrite it in that case.
-        if (!$this->windows) {
-            $this->windows = clone \Library\Application::getService('Model\Client\WindowsInstallation');
-        };
-    }
-
-    /**
-     * Retrieve a property by its logical name
-     *
-     * Provides access to child object properties.
-     */
-    public function offsetGet($property)
-    {
-        if (array_key_exists($property, $this)) {
-            $value = parent::offsetGet($property);
-        } else {
-            if ($property == 'Windows') {
-                // The OS type is not stored directly in the database. However,
-                // the ProductId property is always non-empty on Windows systems
-                // so that it can be used to check for a Windows system.
-                $windows = $this->getWindows();
-                if ($windows['ProductId']) {
-                    return $windows;
-                } else {
-                    return null;
-                }
-            } elseif ($property == 'CustomFields') {
-                return $this->getUserDefinedInfo();
-            } elseif (strpos($property, 'Registry.') === 0) {
-                return $this['Registry.Content'];
-            } elseif ($property == 'IsSerialBlacklisted') {
-                return (bool) \Model_Database::getAdapter()->fetchOne(
-                    "SELECT COUNT(serial) FROM blacklist_serials WHERE serial = ?",
-                    $this['Serial']
-                );
-            } elseif ($property == 'IsAssetTagBlacklisted') {
-                return (bool) \Model_Database::getAdapter()->fetchOne(
-                    "SELECT COUNT(assettag) FROM braintacle_blacklist_assettags WHERE assettag = ?",
-                    $this['AssetTag']
-                );
-            } else {
-                return $this->getItems($property);
-            }
-        }
-
-        return $value;
-    }
 
     /**
      * Get all items of a given type belonging to this computer.
@@ -252,81 +172,12 @@ class Model_Computer extends \Model_Abstract
     }
 
     /**
-     * Retrieve the user defined fields for this computer
-     *
-     * If the $name argument is given, the value for the specific field is
-     * returned. If $name is null (the default), a fully populated
-     * \Model\Client\CustomFields object is returned.
-     * @param string $name Field to retrieve (default: all fields)
-     * @return mixed
-     * @deprecated superseded by CustomFields property
-     */
-    public function getUserDefinedInfo($name=null)
-    {
-        // If _userDefinedInfo is undefined yet, retrieve all fields.
-        if (!$this->_userDefinedInfo) {
-            $this->_userDefinedInfo = \Library\Application::getService('Model\Client\CustomFieldManager')->read(
-                $this['Id']
-            );
-        }
-        // From this point on, _userDefinedInfo is either an array or an object.
-
-        // Always have an object if all fields are requested.
-        if (is_null($name)) {
-            if (is_array($this->_userDefinedInfo)) {
-                $this->_userDefinedInfo = \Library\Application::getService('Model\Client\CustomFieldManager')->read(
-                    $this['Id']
-                );
-            }
-            return $this->_userDefinedInfo;
-        }
-
-        // isset() would not work here!
-        if (is_array($this->_userDefinedInfo) and array_key_exists($name, $this->_userDefinedInfo)) {
-            // Requested field is available in the array.
-            return $this->_userDefinedInfo[$name];
-        } else {
-            // Requested field is not available in the array. Create object
-            // instead.
-            $this->_userDefinedInfo = \Library\Application::getService('Model\Client\CustomFieldManager')->read(
-                $this['Id']
-            );
-        }
-
-        // At this point _userDefinedInfo is always an object.
-        return $this->_userDefinedInfo[$name];
-    }
-
-    /**
      * Set values for the user defined fields for this computer.
      * @param array $values Associative array with field names as keys.
      */
     public function setUserDefinedInfo($values)
     {
         \Library\Application::getService('Model\Client\CustomFieldManager')->write($this['Id'], $values);
-    }
-
-    /**
-     * Update windows property for computer
-     *
-     * It is valid to call this on non-Windows computer objects in which case
-     * the content of the object is undefined.
-     * @return \Model\Client\WindowsInstallation Updated windows property
-     * @deprecated superseded by "Windows" property
-     **/
-    public function getWindows()
-    {
-        $windowsInstallations = \Library\Application::getService('Database\Table\WindowsInstallations');
-        $select = $windowsInstallations->getSql()->select();
-        $select->columns(
-            array('workgroup', 'user_domain', 'company', 'owner', 'product_key', 'product_id', 'manual_product_key')
-        )->where(array('client_id' => $this['Id']));
-
-        $this->windows = $windowsInstallations->selectWith($select)->current();
-        if ($this->windows === false) {
-            $this->windows = null;
-        }
-        return $this->windows;
     }
 
     /**

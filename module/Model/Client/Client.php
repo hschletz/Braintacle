@@ -81,4 +81,50 @@ namespace Model\Client;
  */
 class Client extends \Model_Computer
 {
+    /** {@inheritdoc} */
+    public function offsetGet($index)
+    {
+        if ($this->offsetExists($index)) {
+            $value = parent::offsetGet($index);
+        } elseif (strpos($index, 'Registry.') === 0) {
+            $value = $this['Registry.Content'];
+        } else {
+            // Virtual properties from database queries
+            switch ($index) {
+                case 'Windows':
+                    $windowsInstallations = $this->serviceLocator->get('Database\Table\WindowsInstallations');
+                    $select = $windowsInstallations->getSql()->select();
+                    $select->columns(
+                        array(
+                            'workgroup',
+                            'user_domain',
+                            'company',
+                            'owner',
+                            'product_key',
+                            'product_id',
+                            'manual_product_key'
+                        )
+                    );
+                    $select->where(array('client_id' => $this['Id']));
+                    $value = $windowsInstallations->selectWith($select)->current() ?: null;
+                    break;
+                case 'CustomFields':
+                    $value = $this->serviceLocator->get('Model\Client\CustomFieldManager')->read($this['Id']);
+                    break;
+                case 'IsSerialBlacklisted':
+                    $duplicateSerials = $this->serviceLocator->get('Database\Table\DuplicateSerials');
+                    $value = (bool) $duplicateSerials->select(array('serial' => $this['Serial']))->count();
+                    break;
+                case 'IsAssetTagBlacklisted':
+                    $duplicateAssetTags = $this->serviceLocator->get('Database\Table\DuplicateAssetTags');
+                    $value = (bool) $duplicateAssetTags->select(array('assettag' => $this['AssetTag']))->count();
+                    break;
+                default:
+                    $value = $this->getItems($index);
+            }
+            // Cache result
+            $this->offsetSet($index, $value);
+        }
+        return $value;
+    }
 }
