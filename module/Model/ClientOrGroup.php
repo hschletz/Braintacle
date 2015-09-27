@@ -62,10 +62,19 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
     protected $_lockTimeout;
 
     /**
+     * Lock nesting level counter
+     * @var integer
+     */
+    protected $_lockNestCount = 0;
+
+    /**
      * Destructor
      */
     function __destruct()
     {
+        if ($this->_lockNestCount > 1) {
+            $this->_lockNestCount = 1;
+        }
         $this->unlock();
     }
 
@@ -75,6 +84,11 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
      * The lock will be released automatically in the destructor. It can also
      * be released manually via unlock().
      *
+     * Locks can be nested. If lock() is called more than once on the same
+     * instance, the lock is only released after a matching number of unlock()
+     * calls or in the destructor. This does not refresh the expiry timeout -
+     * only the first lock() call sets the timeout.
+     *
      * The lock is implemented as a row in the "locks" table. This must be
      * accounted for when using transactions.
      *
@@ -82,6 +96,11 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
      */
     public function lock()
     {
+        if ($this->isLocked()) {
+            $this->_lockNestCount++;
+            return true;
+        }
+
         $utc = new \DateTimeZone('UTC');
         // Current time is queried from the database which may run on another
         // server where the clock may differ. This guarantees consistent
@@ -153,6 +172,7 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
             // Keep track of the lock inside this instance.
             $this->_lockTimeout = $current;
             $this->_lockTimeout->add($expireInterval);
+            $this->_lockNestCount++;
         }
 
         return $success;
@@ -167,6 +187,10 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
     public function unlock()
     {
         if (!$this->isLocked()) {
+            return;
+        }
+        if ($this->_lockNestCount > 1) {
+            $this->_lockNestCount--;
             return;
         }
 
@@ -187,6 +211,7 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
         );
         $isExpired = ($current > $this->_lockTimeout);
         $this->_lockTimeout = null;
+        $this->_lockNestCount = 0;
         if ($isExpired) {
             // This instance's lock has expired. The database entry may no
             // longer belong to this instance. It will be deleted or reused by
@@ -204,12 +229,11 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
     /**
      * Check whether this object is locked
      *
-     * Returns TRUE if {@link lock()} has been successfully called on this instance.
      * @return bool
      */
     public function isLocked()
     {
-        return !is_null($this->_lockTimeout);
+        return (bool) $this->_lockNestCount;
     }
 
     /**

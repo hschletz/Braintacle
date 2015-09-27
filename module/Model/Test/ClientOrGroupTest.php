@@ -94,6 +94,33 @@ class ClientOrGroupTest extends AbstractTest
         $model->__destruct();
     }
 
+    public function testDestructorWithNestedLocks()
+    {
+        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config->method('__get')->with('lockValidity')->willReturn(42);
+
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')->will(
+            $this->returnValueMap(
+                array(
+                    array('Database\Nada', true, \Library\Application::getService('Database\Nada')),
+                    array('Database\Table\Locks', true, \Library\Application::getService('Database\Table\Locks')),
+                    array('Db', true, \Library\Application::getService('Db')),
+                    array('Model\Config', true, $config),
+                )
+            )
+        );
+
+        $model = $this->getMockBuilder($this->_getClass())->getMockForAbstractClass();
+        $model->setServiceLocator($serviceManager);
+        $model['Id'] = 23;
+
+        $model->lock();
+        $model->lock();
+        $model->__destruct();
+        $this->assertLocksTableEquals(null);
+    }
+
     public function lockWithDatabaseTimeProvider()
     {
         return array(
@@ -261,11 +288,40 @@ class ClientOrGroupTest extends AbstractTest
     {
         $model = $this->getMockBuilder($this->_getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
 
-        $expire = new \ReflectionProperty($model, '_lockTimeout');
+        $expire = new \ReflectionProperty($model, '_lockNestCount');
         $expire->setAccessible(true);
-        $expire->setValue($model, new \DateTime);
+        $expire->setValue($model, 2);
 
         $this->assertTrue($model->isLocked());
+    }
+
+    public function testNestedLocks()
+    {
+        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config->method('__get')->with('lockValidity')->willReturn(42);
+
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')->will(
+            $this->returnValueMap(
+                array(
+                    array('Database\Nada', true, \Library\Application::getService('Database\Nada')),
+                    array('Database\Table\Locks', true, \Library\Application::getService('Database\Table\Locks')),
+                    array('Db', true, \Library\Application::getService('Db')),
+                    array('Model\Config', true, $config),
+                )
+            )
+        );
+
+        $model = $this->getMockBuilder($this->_getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
+        $model->setServiceLocator($serviceManager);
+        $model['Id'] = 23;
+
+        $this->assertTrue($model->lock());
+        $this->assertTrue($model->lock());
+        $model->unlock();
+        $this->assertTrue($model->isLocked());
+        $model->unlock();
+        $this->assertFalse($model->isLocked());
     }
 
     public function testGetAssignablePackages()
