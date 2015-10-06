@@ -203,7 +203,6 @@ class Model_Computer extends \Model_Abstract
         $tables[] = 'groups_cache';
         $tables[] = 'itmgmt_comments';
         $tables[] = 'javainfo';
-        $tables[] = 'journallog';
 
         // Start transaction to keep database consistent in case of errors
         // If a transaction is already in progress, an exception will be thrown

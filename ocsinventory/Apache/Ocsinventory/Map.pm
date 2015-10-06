@@ -451,23 +451,6 @@ javainfo => {
     }
   },
 
-  journallog => {
-    mask => 0,
-    multi => 1,
-    auto => 1,
-    delOnReplace => 0,
-    sortBy => '',
-    writeDiff => 0,
-    cache => 0,
-    fields => {
-      JOURNALLOG => {},
-      LISTENERNAME => { fallback=>'noname' },
-      DATE => {},
-      STATUS => { fallback=>0 },
-      ERRORCODE => {}
-    }
-   },
-
   itmgmt_comments => {
     mask => 0,
     multi => 1,

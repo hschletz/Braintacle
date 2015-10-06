@@ -151,7 +151,6 @@ class Braintacle_SchemaManager
         $mdb2 = $this->_schema->db;
 
         $fixTables = array(
-            'journallog',
             'snmp_cards',
             'snmp_cartridges',
             'snmp_cpus',
@@ -336,7 +335,6 @@ class Braintacle_SchemaManager
 
         $engineInnoDb = array(
             'javainfo',
-            'journallog',
             'snmp_accountinfo',
             'snmp_communities',
         );
