@@ -434,7 +434,7 @@ our %DATA_MAP= (
     }
   },
 
-javainfo => {
+  javainfos => {
     mask => 0,
     multi => 0,
     auto => 1,
@@ -443,8 +443,7 @@ javainfo => {
     writeDiff => 0,
     cache => 0,
     fields => {
-      JAVANAME => { fallback=>'noname' },
-      JAVAPATHLEVEL => { fallback=>0 },
+      JAVANAME => {},
       JAVACOUNTRY => {},
       JAVACLASSPATH => {},
       JAVAHOME => {}

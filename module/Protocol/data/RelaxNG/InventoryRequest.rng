@@ -69,6 +69,9 @@ informational and not evaluated:
                         <zeroOrMore>
                             <ref name="INPUTS" />
                         </zeroOrMore>
+                        <optional>
+                            <ref name="JAVAINFOS" /><!-- Provided by Android agent only -->
+                        </optional>
                         <zeroOrMore>
                             <ref name="MEMORIES" />
                         </zeroOrMore>
@@ -357,6 +360,19 @@ informational and not evaluated:
                     <ref name="POINTTYPE" />
                 </optional>
                 <ref name="TYPE" />
+            </interleave>
+        </element>
+    </define>
+    <define name="JAVAINFOS">
+        <element name="JAVAINFOS">
+            <interleave>
+                <ref name="JAVACLASSPATH" />
+                <ref name="JAVACOUNTRY" />
+                <ref name="JAVAHOME" />
+                <ref name="JAVANAME" />
+                <optional>
+                    <ref name="JAVAPATHLEVEL" /><!-- unused -->
+                </optional>
             </interleave>
         </element>
     </define>
@@ -900,6 +916,31 @@ informational and not evaluated:
     </define>
     <define name="IPSUBNET">
         <element name="IPSUBNET">
+            <text />
+        </element>
+    </define>
+    <define name="JAVACLASSPATH">
+        <element name="JAVACLASSPATH">
+            <text />
+        </element>
+    </define>
+    <define name="JAVACOUNTRY">
+        <element name="JAVACOUNTRY">
+            <text />
+        </element>
+    </define>
+    <define name="JAVAHOME">
+        <element name="JAVAHOME">
+            <text />
+        </element>
+    </define>
+    <define name="JAVANAME">
+        <element name="JAVANAME">
+            <text />
+        </element>
+    </define>
+    <define name="JAVAPATHLEVEL">
+        <element name="JAVAPATHLEVEL">
             <text />
         </element>
     </define>

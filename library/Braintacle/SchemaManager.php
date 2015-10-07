@@ -334,7 +334,6 @@ class Braintacle_SchemaManager
         $this->_logger->info('Tweaking tables...');
 
         $engineInnoDb = array(
-            'javainfo',
             'snmp_accountinfo',
             'snmp_communities',
         );
