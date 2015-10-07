@@ -224,7 +224,7 @@ sub handler{
         }
     }
     my $i;
-    # Fix bad date strings for software entries
+    # Fix bad date strings and size values for software entries
     if ($query->{'CONTENT'}->{'SOFTWARES'}) {
         $i = 0;
         while ($query->{'CONTENT'}->{'SOFTWARES'}[$i]) {
@@ -241,6 +241,11 @@ sub handler{
             } else {
                 # Bad syntax.
                 $query->{'CONTENT'}->{'SOFTWARES'}[$i]->{'INSTALLDATE'} = undef;
+            }
+
+            if ($query->{'CONTENT'}->{'SOFTWARES'}[$i]->{'FILESIZE'} !~ /^\d+$/) {
+                # Bad syntax.
+                $query->{'CONTENT'}->{'SOFTWARES'}[$i]->{'FILESIZE'} = undef;
             }
             $i++;
         }
