@@ -123,6 +123,7 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
                     'port' => array(array('property' => 'port')),
                     'printer' => array(array('property' => 'printer')),
                     'registrydata' => array(array('property' => 'registrydata')),
+                    'sim' => array(array('property' => 'sim')),
                     'software' => array(array('property' => 'software')),
                     'storagedevice' => array(array('property' => 'storagedevice')),
                     'virtualmachine' => array(array('property' => 'virtualmachine')),

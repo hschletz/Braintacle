@@ -48,6 +48,7 @@ class ItemManager
         'port' => 'Ports',
         'printer' => 'Printers',
         'registrydata' => 'RegistryData',
+        'sim' => 'Sim',
         'software' => 'Software',
         'storagedevice' => 'StorageDevices',
         'virtualmachine' => 'VirtualMachines',

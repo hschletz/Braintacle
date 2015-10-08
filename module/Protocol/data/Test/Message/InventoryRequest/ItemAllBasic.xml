@@ -36,6 +36,9 @@
         <REGISTRY>
             <PROPERTY>registrydata</PROPERTY>
         </REGISTRY>
+        <SIM>
+            <PROPERTY>sim</PROPERTY>
+        </SIM>
         <SLOTS>
             <PROPERTY>extensionslot</PROPERTY>
         </SLOTS>

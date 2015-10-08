@@ -42,6 +42,10 @@ registry:
   -
     hardware_id: 2
 
+sim:
+  -
+    hardware_id: 2
+
 slots:
   -
     hardware_id: 2

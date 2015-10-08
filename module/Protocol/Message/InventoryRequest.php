@@ -42,6 +42,7 @@ class InventoryRequest extends \Library\DomDocument
         'port' => 'PORTS',
         'printer' => 'PRINTERS',
         'registrydata' => 'REGISTRY',
+        'sim' => 'SIM',
         'extensionslot' => 'SLOTS',
         'software' => 'SOFTWARES',
         'audiodevice' => 'SOUNDS',

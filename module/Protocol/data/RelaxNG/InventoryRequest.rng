@@ -100,6 +100,9 @@ informational and not evaluated:
                             <ref name="REGISTRY" />
                         </zeroOrMore>
                         <zeroOrMore>
+                            <ref name="SIM" />
+                        </zeroOrMore>
+                        <zeroOrMore>
                             <ref name="SLOTS" />
                         </zeroOrMore>
                         <zeroOrMore>
@@ -555,6 +558,17 @@ informational and not evaluated:
             </interleave>
         </element>
     </define>
+    <define name="SIM">
+        <element name="SIM" braintacle:model="Item\Sim">
+            <interleave>
+                <ref name="COUNTRY" />
+                <ref name="DEVICEID" />
+                <ref name="OPERATOR" />
+                <ref name="OPNAME" />
+                <ref name="SERIALNUMBER" />
+            </interleave>
+        </element>
+    </define>
     <define name="SLOTS">
         <element name="SLOTS" braintacle:model="Item\ExtensionSlot">
             <interleave>
@@ -784,6 +798,11 @@ informational and not evaluated:
             <text />
         </element>
     </define>
+    <define name="COUNTRY">
+        <element name="COUNTRY">
+            <text />
+        </element>
+    </define>
     <define name="CPUUSAGE">
         <element name="CPUUSAGE">
             <text />
@@ -811,6 +830,11 @@ informational and not evaluated:
     </define>
     <define name="DESIGNATION">
         <element name="DESIGNATION">
+            <text />
+        </element>
+    </define>
+    <define name="DEVICEID">
+        <element name="DEVICEID">
             <text />
         </element>
     </define>
@@ -1046,6 +1070,16 @@ informational and not evaluated:
     </define>
     <define name="OFFICEVERSION">
         <element name="OFFICEVERSION">
+            <text />
+        </element>
+    </define>
+    <define name="OPERATOR">
+        <element name="OPERATOR">
+            <text />
+        </element>
+    </define>
+    <define name="OPNAME">
+        <element name="OPNAME">
             <text />
         </element>
     </define>

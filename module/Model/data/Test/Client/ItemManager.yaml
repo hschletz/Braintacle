@@ -169,6 +169,18 @@ registry:
     name: "name1"
     regvalue: "=data1"
 
+sim:
+  -
+    id: 2
+    hardware_id: 2
+    opname: "name2"
+    serialnumber: "serial3"
+  -
+    id: 1
+    hardware_id: 1
+    opname: "name1"
+    serialnumber: "serial4"
+
 # Different columns map to "Name" property depending on agent type
 slots:
   -

@@ -54,6 +54,7 @@ class DefaultPlugin
         'Ports' => 'Name',
         'Printers' => 'Name',
         'RegistryData' => 'Value',
+        'Sim' => 'OperatorName',
         'Software' => 'Name',
         'VirtualMachines' => 'Name',
     );
