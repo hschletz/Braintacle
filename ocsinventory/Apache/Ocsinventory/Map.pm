@@ -461,9 +461,7 @@ our %DATA_MAP= (
     fields =>  {
       COMMENTS => {},
       USER_INSERT => {},
-      DATE_INSERT => {},
-      ACTION  => {},
-      VISIBLE => {}
+      DATE_INSERT => {}
     }
   },
   
