@@ -1,0 +1,138 @@
+{
+    "name": "cpus",
+    "comment": "Detailled CPU infos (per physical CPU on newer agents, per core on older agents)",
+    "columns": [
+        {
+            "name": "id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": true,
+            "comment": null
+        },
+        {
+            "name": "hardware_id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "manufacturer",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "type",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "CPU model"
+        },
+        {
+            "name": "serialnumber",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "speed",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Nominal clock frequency (MHz)"
+        },
+        {
+            "name": "cores",
+            "type": "integer",
+            "length": 32,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Number of cores"
+        },
+        {
+            "name": "l2cachesize",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Level 2 cache size (kB)"
+        },
+        {
+            "name": "cpuarch",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Architecture"
+        },
+        {
+            "name": "data_width",
+            "type": "integer",
+            "length": 32,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "32/64 bit"
+        },
+        {
+            "name": "voltage",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "current_speed",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Current clock frequency (MHz)"
+        },
+        {
+            "name": "socket",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Socket type"
+        }
+    ],
+    "primary_key": [
+        "id"
+    ],
+    "indexes": [
+        {
+            "name": "cpus_hardware_id_idx",
+            "unique": false,
+            "columns": [
+                "hardware_id"
+            ]
+        }
+    ],
+    "mysql": {
+        "engine": "InnoDB"
+    }
+}

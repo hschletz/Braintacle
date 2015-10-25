@@ -110,6 +110,7 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
                 array(),
                 array(
                     'audiodevice' => array(array('property' => 'audiodevice')),
+                    'cpu' => array(array('property' => 'cpu')),
                     'controller' => array(array('property' => 'controller')),
                     'display' => array(array('property' => 'display')),
                     'displaycontroller' => array(array('property' => 'displaycontroller')),

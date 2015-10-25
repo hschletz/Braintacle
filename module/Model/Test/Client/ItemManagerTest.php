@@ -29,6 +29,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
         'SoftwareDefinitions',
         'AudioDevices',
         'Controllers',
+        'Cpu',
         'Displays',
         'DisplayControllers',
         'ExtensionSlots',
@@ -53,6 +54,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
             array(
                 'audiodevice',
                 'controller',
+                'cpu',
                 'display',
                 'displaycontroller',
                 'extensionslot',
@@ -95,6 +97,15 @@ class ItemManagerTest extends \Model\Test\AbstractTest
             array('Controller', null, 'id', 'desc', array('name2', 'name1'), 'Name'),
             array('Controller', null, null, 'something', array('name1', 'name2'), 'Name'),
             array('controller', array('Client' => 2), null, null, array('name2'), 'Name'),
+            array('Cpu', array('Client' => 3), 'id', 'asc', array('type3a', 'type3b'), 'Type'),
+            array('Cpu', array('Client' => 4), 'Manufacturer', 'desc', array('type4b', 'type4a'), 'Type'),
+            array(
+                'Cpu', null, null, 'something', array('type1', 'type2', 'type3a', 'type3b', 'type4a', 'type4b'), 'Type'
+            ),
+            array('cpu', array('Client' => 2), null, null, array('type2'), 'Type'),
+            array('cpu', array('Client' => 3), 'Type', 'asc', array(2, 1), 'NumCores'),
+            array('cpu', array('Client' => 4), 'Type', 'asc', array(3, 4), 'NumCores'),
+            array('cpu', array('Client' => 42), null, null, array(), 'Type'),
             array('Display', null, 'id', 'asc', array('name1', 'name2'), 'Manufacturer'),
             array('Display', null, 'Type', 'desc', array('name1', 'name2'), 'Manufacturer'),
             array('Display', null, null, 'something', array('name1', 'name2'), 'Manufacturer'),

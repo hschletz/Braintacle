@@ -59,6 +59,7 @@ Feature\InitProviderInterface
                     'Model\Client\CustomFields' => 'Model\Client\CustomFields',
                     'Model\Client\Item\AudioDevice' => 'Model\Client\Item\AudioDevice',
                     'Model\Client\Item\Controller' => 'Model\Client\Item\Controller',
+                    'Model\Client\Item\Cpu' => 'Model\Client\Item\Cpu',
                     'Model\Client\Item\Display' => 'Model\Client\Item\Display',
                     'Model\Client\Item\DisplayController' => 'Model\Client\Item\DisplayController',
                     'Model\Client\Item\ExtensionSlot' => 'Model\Client\Item\ExtensionSlot',

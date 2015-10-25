@@ -36,6 +36,7 @@ class ItemManager
     protected $_tableClasses = array(
         'audiodevice' => 'AudioDevices',
         'controller' => 'Controllers',
+        'cpu' => 'Cpu',
         'display' => 'Displays',
         'displaycontroller' => 'DisplayControllers',
         'extensionslot' => 'ExtensionSlots',
@@ -60,6 +61,7 @@ class ItemManager
      */
     protected $_plugins = array(
         'controller' => 'Controller',
+        'cpu' => 'Cpu',
         'extensionslot' => 'ExtensionSlot',
         'filesystem' => 'Filesystem',
         'msofficeproduct' => 'MsOfficeProduct',
@@ -147,7 +149,7 @@ class ItemManager
         $plugin->where($filters);
         $plugin->order($order, $direction);
 
-        return $table->selectWith($plugin->select());
+        return $plugin->select();
     }
 
     /**

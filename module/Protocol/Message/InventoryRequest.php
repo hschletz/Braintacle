@@ -32,6 +32,7 @@ class InventoryRequest extends \Library\DomDocument
      */
     protected static $_itemSections = array(
         'controller' => 'CONTROLLERS',
+        'cpu' => 'CPUS',
         'filesystem' => 'DRIVES',
         'inputdevice' => 'INPUTS',
         'memoryslot' => 'MEMORIES',

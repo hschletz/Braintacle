@@ -44,6 +44,7 @@ class DefaultPlugin
      */
     protected $_defaultOrder = array(
         'AudioDevices' => 'Manufacturer',
+        'Cpu' => 'Type',
         'Displays' => 'Manufacturer',
         'DisplayControllers' => 'Name',
         'InputDevices' => 'Type',
@@ -71,13 +72,13 @@ class DefaultPlugin
     }
 
     /**
-     * Get Select object set up by plugin methods
+     * Retrieve items from database
      *
-     * @return \Zend\Db\Sql\Select
+     * @return \Zend\Db\ResultSet\AbstractResultSet
      */
     public function select()
     {
-        return $this->_select;
+        return $this->_table->selectWith($this->_select);
     }
 
     /**

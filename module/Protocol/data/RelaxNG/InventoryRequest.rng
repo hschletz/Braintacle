@@ -211,12 +211,40 @@ informational and not evaluated:
         </element>
     </define>
     <define name="CPUS">
-        <element name="CPUS"><!-- not available in database -->
+        <element name="CPUS" braintacle:model="Cpu">
             <interleave>
+                <optional>
+                    <ref name="CORES" />
+                </optional>
+                <optional>
+                    <ref name="CPUARCH" />
+                </optional>
+                <optional>
+                    <ref name="CURRENT_SPEED" />
+                </optional>
+                <optional>
+                    <ref name="DATA_WIDTH" />
+                </optional>
+                <optional>
+                    <ref name="L2CACHESIZE" />
+                </optional>
                 <ref name="MANUFACTURER" />
-                <ref name="SERIAL" />
-                <ref name="SPEED" />
+                <optional>
+                    <ref name="SERIAL" /><!-- unused -->
+                </optional>
+                <optional>
+                    <ref name="SERIALNUMBER" />
+                </optional>
+                <optional>
+                    <ref name="SOCKET" />
+                </optional>
+                <optional>
+                    <ref name="SPEED" />
+                </optional>
                 <ref name="TYPE" />
+                <optional>
+                    <ref name="VOLTAGE" />
+                </optional>
             </interleave>
         </element>
     </define>
@@ -798,8 +826,18 @@ informational and not evaluated:
             <text />
         </element>
     </define>
+    <define name="CORES">
+        <element name="CORES">
+            <text />
+        </element>
+    </define>
     <define name="COUNTRY">
         <element name="COUNTRY">
+            <text />
+        </element>
+    </define>
+    <define name="CPUARCH">
+        <element name="CPUARCH">
             <text />
         </element>
     </define>
@@ -810,6 +848,16 @@ informational and not evaluated:
     </define>
     <define name="CREATEDATE">
         <element name="CREATEDATE">
+            <text />
+        </element>
+    </define>
+    <define name="CURRENT_SPEED">
+        <element name="CURRENT_SPEED">
+            <text />
+        </element>
+    </define>
+    <define name="DATA_WIDTH">
+        <element name="DATA_WIDTH">
             <text />
         </element>
     </define>
@@ -975,6 +1023,11 @@ informational and not evaluated:
     </define>
     <define name="KEYVALUE">
         <element name="KEYVALUE">
+            <text />
+        </element>
+    </define>
+    <define name="L2CACHESIZE">
+        <element name="L2CACHESIZE">
             <text />
         </element>
     </define>
@@ -1213,6 +1266,11 @@ informational and not evaluated:
             <text />
         </element>
     </define>
+    <define name="SOCKET">
+        <element name="SOCKET">
+            <text />
+        </element>
+    </define>
     <define name="SOURCE">
         <element name="SOURCE">
             <text />
@@ -1325,6 +1383,11 @@ informational and not evaluated:
     </define>
     <define name="VMSYSTEM">
         <element name="VMSYSTEM">
+            <text />
+        </element>
+    </define>
+    <define name="VOLTAGE">
+        <element name="VOLTAGE">
             <text />
         </element>
     </define>

@@ -2,6 +2,20 @@ controllers:
   -
     hardware_id: 2
 
+cpus:
+  -
+    hardware_id: 2
+  -
+    hardware_id: 3
+  -
+    hardware_id: 3
+  -
+    hardware_id: 3
+  -
+    hardware_id: 4
+  -
+    hardware_id: 4
+
 drives:
   -
     hardware_id: 2

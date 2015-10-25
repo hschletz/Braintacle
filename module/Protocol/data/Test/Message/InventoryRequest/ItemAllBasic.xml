@@ -6,6 +6,9 @@
         <CONTROLLERS>
             <PROPERTY>controller</PROPERTY>
         </CONTROLLERS>
+        <CPUS>
+            <PROPERTY>cpu</PROPERTY>
+        </CPUS>
         <DRIVES>
             <PROPERTY>filesystem</PROPERTY>
         </DRIVES>
