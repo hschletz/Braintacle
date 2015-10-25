@@ -1517,6 +1517,7 @@ class Model_Computer extends Model_ComputerOrGroup
         // Additional tables without associated Model_ChildObject class
         $tables[] = 'accountinfo';
         $tables[] = 'bios';
+        $tables[] = 'cpus';
         $tables[] = 'devices';
         $tables[] = 'download_history';
         $tables[] = 'download_servers';
@@ -1524,6 +1525,7 @@ class Model_Computer extends Model_ComputerOrGroup
         $tables[] = 'itmgmt_comments';
         $tables[] = 'javainfo';
         $tables[] = 'journallog';
+        $tables[] = 'sim';
         if (Model_Database::supportsManualProductKey()) {
             $tables[] = 'braintacle_windows';
         }
