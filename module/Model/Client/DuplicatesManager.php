@@ -319,7 +319,7 @@ class DuplicatesManager
 
             // Delete all older clients
             foreach ($clients as $client) {
-                $client->delete(true, false);
+                $this->_clientManager->deleteClient($client, false);
             }
             // Unlock remaining client
             $newest->unlock();

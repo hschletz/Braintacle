@@ -759,4 +759,85 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
 
         return array($tableGateway, $column);
     }
+
+    /**
+     * Delete a client
+     *
+     * @param \Model\Client\Client $client Client to be deleted
+     * @param bool $deleteInterfaces Delete interfaces from scanned interfaces
+     * @throws \RuntimeException if the client is locked by another instance
+     */
+    public function deleteClient(\Model\Client\Client $client, $deleteInterfaces)
+    {
+        if (!$client->lock()) {
+            throw new \RuntimeException('Could not lock client for deletion');
+        }
+
+        $connection = $this->serviceLocator->get('Db')->getDriver()->getConnection();
+        $id = $client['Id'];
+
+        // Start transaction to keep database consistent in case of errors
+        // If a transaction is already in progress, an exception will be thrown
+        // which has to be caught. The commit() and rollBack() methods can only
+        // be called if the transaction has been started here.
+        try{
+            $connection->beginTransaction();
+            $transactionStarted = true;
+        } catch (\Exception $exception) {
+            $transactionStarted = false;
+        }
+
+        try {
+            // If requested, delete client's network interfaces from the list of
+            // scanned interfaces. Also delete any manually entered description.
+            if ($deleteInterfaces) {
+                $macAddresses = $this->serviceLocator->get('Database\Table\NetworkInterfaces')->getSql()->select();
+                $macAddresses->columns(array('macaddr'));
+                $macAddresses->where(array('hardware_id' => $id));
+                $this->serviceLocator->get('Database\Table\NetworkDevicesIdentified')->delete(
+                    new \Zend\Db\Sql\Predicate\In('macaddr', $macAddresses)
+                );
+                $this->serviceLocator->get('Database\Table\NetworkDevicesScanned')->delete(
+                    new \Zend\Db\Sql\Predicate\In('mac', $macAddresses)
+                );
+            }
+
+            // Delete rows from foreign tables
+            $tables = array(
+                'AndroidInstallations',
+                'ClientSystemInfo',
+                'Comments',
+                'CustomFields',
+                'PackageHistory',
+                'WindowsProductKeys',
+                'GroupMemberships',
+                'ClientConfig',
+            );
+            foreach ($tables as $table) {
+                $this->serviceLocator->get("Database\\Table\\$table")->delete(array('hardware_id' => $id));
+            }
+            $this->serviceLocator->get('Database\Table\Attachments')->delete(
+                array(
+                    'id_dde' => $id,
+                    'table_name' => \Database\Table\Attachments::OBJECT_TYPE_CLIENT
+                )
+            );
+            $this->serviceLocator->get('Model\Client\ItemManager')->deleteItems($id);
+
+            // Delete row in clients table
+            $this->serviceLocator->get('Database\Table\ClientsAndGroups')->delete(array('id' => $id));
+        } catch (\Exception $exception) {
+            if ($transactionStarted) {
+                $connection->rollback();
+            }
+            $client->unlock();
+            throw $exception;
+        }
+
+        if ($transactionStarted) {
+            $connection->commit();
+        }
+
+        $client->unlock();
+    }
 }

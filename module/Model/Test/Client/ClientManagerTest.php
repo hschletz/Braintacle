@@ -31,6 +31,9 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         'CustomFields',
         'Filesystems',
         'GroupMemberships',
+        'NetworkDevicesIdentified',
+        'NetworkDevicesScanned',
+        'NetworkInterfaces',
         'Packages',
         'RegistryData',
         'Software',
@@ -999,5 +1002,270 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $model = $this->getMockBuilder($this->_getClass())->setMethods(array('getClients'))->getMock();
         $model->method('getClients')->with(null, null, null, 'Id', 42)->willReturn(array());
         $model->getClient(42);
+    }
+
+    public function deleteClientNoDeleteInterfacesProvider()
+    {
+        $connection1 = $this->getMock('Zend\Db\Adapter\Driver\Pdo\Connection');
+        $connection1->expects($this->once())->method('beginTransaction');
+        $connection1->expects($this->once())->method('commit');
+        $connection1->expects($this->never())->method('rollback');
+
+        $connection2 = $this->getMock('Zend\Db\Adapter\Driver\Pdo\Connection');
+        $connection2->expects($this->once())->method('beginTransaction')->willThrowException(new \RuntimeException);
+        $connection2->expects($this->never())->method('commit');
+        $connection2->expects($this->never())->method('rollback');
+
+        return array(
+            array($connection1),
+            array($connection2),
+        );
+    }
+
+    /**
+     * @dataProvider deleteClientNoDeleteInterfacesProvider
+     */
+    public function testDeleteClientNoDeleteInterfaces($connection)
+    {
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->once())->method('lock')->willReturn(true);
+        $client->expects($this->once())->method('offsetGet')->with('Id')->willReturn(42);
+        $client->expects($this->once())->method('unlock');
+
+        $driver = $this->getMockBuilder('Zend\Db\Adapter\Driver\Pdo\Pdo')->disableOriginalConstructor()->getMock();
+        $driver->method('getConnection')->willReturn($connection);
+
+        $adapter = $this->getMockBuilder('Zend\Db\Adapter\Adapter')->disableOriginalConstructor()->getMock();
+        $adapter->method('getDriver')->willReturn($driver);
+
+        $androidInstallations = $this->getMockBuilder('Database\Table\AndroidInstallations')
+                                     ->disableOriginalConstructor()
+                                     ->getMock();
+        $androidInstallations->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
+
+        $clientSystemInfo = $this->getMockBuilder('Database\Table\ClientSystemInfo')
+                                 ->disableOriginalConstructor()
+                                 ->getMock();
+        $clientSystemInfo->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
+
+        $comments = $this->getMockBuilder('Database\Table\Comments')
+                         ->disableOriginalConstructor()
+                         ->getMock();
+        $comments->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
+
+        $customFields = $this->getMockBuilder('Database\Table\CustomFields')
+                             ->disableOriginalConstructor()
+                             ->getMock();
+        $customFields->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
+
+        $packageHistory = $this->getMockBuilder('Database\Table\PackageHistory')
+                               ->disableOriginalConstructor()
+                               ->getMock();
+        $packageHistory->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
+
+        $windowsProductKeys = $this->getMockBuilder('Database\Table\WindowsProductKeys')
+                                   ->disableOriginalConstructor()
+                                   ->getMock();
+        $windowsProductKeys->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
+
+        $groupMemberships = $this->getMockBuilder('Database\Table\GroupMemberships')
+                                 ->disableOriginalConstructor()
+                                 ->getMock();
+        $groupMemberships->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
+
+        $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')
+                             ->disableOriginalConstructor()
+                             ->getMock();
+        $clientConfig->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
+
+        $attachments = $this->getMockBuilder('Database\Table\Attachments')
+                            ->disableOriginalConstructor()
+                            ->getMock();
+        $attachments->expects($this->once())->method('delete')->with(
+            array('id_dde' => 42, 'table_name' => \Database\Table\Attachments::OBJECT_TYPE_CLIENT)
+        );
+
+        $itemManager = $this->getMockBuilder('Model\Client\ItemManager')->disableOriginalConstructor()->getMock();
+        $itemManager->expects($this->once())->method('deleteItems')->with(42);
+
+        $clientsAndGroups = $this->getMockBuilder('Database\Table\ClientsAndGroups')
+                                 ->disableOriginalConstructor()
+                                 ->getMock();
+        $clientsAndGroups->expects($this->once())->method('delete')->with(array('id' => 42));
+
+        $clientManager = $this->_getModel(
+            array(
+                'Db' => $adapter,
+                'Database\Table\AndroidInstallations' => $androidInstallations,
+                'Database\Table\Attachments' => $attachments,
+                'Database\Table\ClientsAndGroups' => $clientsAndGroups,
+                'Database\Table\ClientConfig' => $clientConfig,
+                'Database\Table\ClientSystemInfo' => $clientSystemInfo,
+                'Database\Table\Comments' => $comments,
+                'Database\Table\CustomFields' => $customFields,
+                'Database\Table\GroupMemberships' => $groupMemberships,
+                'Database\Table\PackageHistory' => $packageHistory,
+                'Database\Table\WindowsProductKeys' => $windowsProductKeys,
+                'Model\Client\ItemManager' => $itemManager,
+            )
+        );
+        $clientManager->deleteClient($client, false);
+    }
+
+    public function testDeleteClientDeleteInterfaces()
+    {
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->once())->method('lock')->willReturn(true);
+        $client->expects($this->once())->method('offsetGet')->with('Id')->willReturn(4);
+        $client->expects($this->once())->method('unlock');
+
+        $androidInstallations = $this->getMockBuilder('Database\Table\AndroidInstallations')
+                                     ->disableOriginalConstructor()
+                                     ->getMock();
+        $androidInstallations->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
+
+        $clientSystemInfo = $this->getMockBuilder('Database\Table\ClientSystemInfo')
+                                 ->disableOriginalConstructor()
+                                 ->getMock();
+        $clientSystemInfo->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
+
+        $comments = $this->getMockBuilder('Database\Table\Comments')
+                         ->disableOriginalConstructor()
+                         ->getMock();
+        $comments->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
+
+        $customFields = $this->getMockBuilder('Database\Table\CustomFields')
+                             ->disableOriginalConstructor()
+                             ->getMock();
+        $customFields->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
+
+        $packageHistory = $this->getMockBuilder('Database\Table\PackageHistory')
+                               ->disableOriginalConstructor()
+                               ->getMock();
+        $packageHistory->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
+
+        $windowsProductKeys = $this->getMockBuilder('Database\Table\WindowsProductKeys')
+                                   ->disableOriginalConstructor()
+                                   ->getMock();
+        $windowsProductKeys->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
+
+        $groupMemberships = $this->getMockBuilder('Database\Table\GroupMemberships')
+                                 ->disableOriginalConstructor()
+                                 ->getMock();
+        $groupMemberships->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
+
+        $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')
+                             ->disableOriginalConstructor()
+                             ->getMock();
+        $clientConfig->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
+
+        $attachments = $this->getMockBuilder('Database\Table\Attachments')
+                            ->disableOriginalConstructor()
+                            ->getMock();
+        $attachments->expects($this->once())->method('delete')->with(
+            array('id_dde' => 4, 'table_name' => \Database\Table\Attachments::OBJECT_TYPE_CLIENT)
+        );
+
+        $itemManager = $this->getMockBuilder('Model\Client\ItemManager')->disableOriginalConstructor()->getMock();
+        $itemManager->expects($this->once())->method('deleteItems')->with(4);
+
+        $clientsAndGroups = $this->getMockBuilder('Database\Table\ClientsAndGroups')
+                                 ->disableOriginalConstructor()
+                                 ->getMock();
+        $clientsAndGroups->expects($this->once())->method('delete')->with(array('id' => 4));
+
+        $clientManager = $this->_getModel(
+            array(
+                'Database\Table\AndroidInstallations' => $androidInstallations,
+                'Database\Table\Attachments' => $attachments,
+                'Database\Table\ClientsAndGroups' => $clientsAndGroups,
+                'Database\Table\ClientConfig' => $clientConfig,
+                'Database\Table\ClientSystemInfo' => $clientSystemInfo,
+                'Database\Table\Comments' => $comments,
+                'Database\Table\CustomFields' => $customFields,
+                'Database\Table\GroupMemberships' => $groupMemberships,
+                'Database\Table\PackageHistory' => $packageHistory,
+                'Database\Table\WindowsProductKeys' => $windowsProductKeys,
+                'Model\Client\ItemManager' => $itemManager,
+            )
+        );
+        $clientManager->deleteClient($client, true);
+
+        $dataSet = $this->_loadDataSet('DeleteClientDeleteInterfaces');
+        $connection = $this->getConnection();
+        $this->assertTablesEqual(
+            $dataSet->getTable('netmap'),
+            $connection->createQueryTable('netmap', 'SELECT mac FROM netmap ORDER BY mac')
+        );
+        $this->assertTablesEqual(
+            $dataSet->getTable('network_devices'),
+            $connection->createQueryTable('network_devices', 'SELECT macaddr FROM network_devices ORDER BY macaddr')
+        );
+    }
+
+    public function testDeleteClientLockingFailure()
+    {
+        $this->setExpectedException('RuntimeException', 'Could not lock client for deletion');
+
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->once())->method('lock')->willReturn(false);
+        $client->expects($this->never())->method('unlock');
+
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->expects($this->never())->method('get');
+
+        $clientManager = $this->_getModel(array('ServiceManager' => $serviceManager));
+        $clientManager->deleteClient($client, false);
+    }
+
+
+    public function deleteClientExceptionProvider()
+    {
+        $connection1 = $this->getMock('Zend\Db\Adapter\Driver\Pdo\Connection');
+        $connection1->expects($this->once())->method('beginTransaction');
+        $connection1->expects($this->never())->method('commit');
+        $connection1->expects($this->once())->method('rollback');
+
+        $connection2 = $this->getMock('Zend\Db\Adapter\Driver\Pdo\Connection');
+        $connection2->expects($this->once())->method('beginTransaction')->willThrowException(new \RuntimeException);
+        $connection2->expects($this->never())->method('commit');
+        $connection2->expects($this->never())->method('rollback');
+
+        return array(
+            array($connection1),
+            array($connection2),
+        );
+    }
+
+    /**
+     * @dataProvider deleteClientExceptionProvider
+     */
+    public function testDeleteClientException($connection)
+    {
+        $this->setExpectedException('RuntimeException', 'message');
+
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->once())->method('lock')->willReturn(true);
+        $client->expects($this->once())->method('offsetGet')->with('Id')->willReturn(42);
+        $client->expects($this->once())->method('unlock');
+
+        $driver = $this->getMockBuilder('Zend\Db\Adapter\Driver\Pdo\Pdo')->disableOriginalConstructor()->getMock();
+        $driver->method('getConnection')->willReturn($connection);
+
+        $adapter = $this->getMockBuilder('Zend\Db\Adapter\Adapter')->disableOriginalConstructor()->getMock();
+        $adapter->method('getDriver')->willReturn($driver);
+
+        $androidInstallations = $this->getMockBuilder('Database\Table\AndroidInstallations')
+                                     ->disableOriginalConstructor()
+                                     ->getMock();
+        $androidInstallations->method('delete')->willThrowException(new \RuntimeException('message'));
+
+        $clientManager = $this->_getModel(
+            array(
+                'Db' => $adapter,
+                'Database\Table\AndroidInstallations' => $androidInstallations,
+            )
+        );
+        $clientManager->deleteClient($client, false);
     }
 }

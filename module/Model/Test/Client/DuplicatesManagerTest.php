@@ -226,10 +226,10 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client->method('lock')->willReturn(false);
         $client->expects($this->never())->method('setUserDefinedInfo');
         $client->expects($this->never())->method('setGroups');
-        $client->expects($this->never())->method('delete');
 
         $clientManager = $this->getMock('Model\Client\ClientManager');
         $clientManager->method('getClient')->willReturn($client);
+        $clientManager->expects($this->never())->method('deleteClient');
 
         $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
         $clientConfig->expects($this->never())->method('update');
@@ -256,7 +256,6 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client2->method('lock')->willReturn(true);
         $client2->expects($this->never())->method('setUserDefinedInfo');
         $client2->expects($this->never())->method('setGroups');
-        $client2->expects($this->once())->method('delete');
 
         $client3 = $this->getMock('Model\Client\Client');
         $client3->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:03:33'));
@@ -264,12 +263,12 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client3->expects($this->once())->method('unlock');
         $client3->expects($this->never())->method('setUserDefinedInfo');
         $client3->expects($this->never())->method('setGroups');
-        $client3->expects($this->never())->method('delete');
 
         $clientManager = $this->getMock('Model\Client\ClientManager');
         $clientManager->method('getClient')
                       ->withConsecutive(array(2), array(3))
                       ->will($this->onConsecutiveCalls($client2, $client3));
+        $clientManager->expects($this->once())->method('deleteClient')->with($this->identicalTo($client2), false);
 
         $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
         $clientConfig->expects($this->never())->method('update');
@@ -295,7 +294,6 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client2->method('lock')->willReturn(true);
         $client2->expects($this->never())->method('setUserDefinedInfo');
         $client2->expects($this->never())->method('setGroups');
-        $client2->expects($this->once())->method('delete');
 
         $client3 = $this->getMock('Model\Client\Client');
         $client3->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:03:33'));
@@ -303,12 +301,12 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client3->expects($this->once())->method('unlock');
         $client3->expects($this->never())->method('setUserDefinedInfo');
         $client3->expects($this->never())->method('setGroups');
-        $client3->expects($this->never())->method('delete');
 
         $clientManager = $this->getMock('Model\Client\ClientManager');
         $clientManager->method('getClient')
                       ->withConsecutive(array(3), array(2))
                       ->will($this->onConsecutiveCalls($client3, $client2));
+        $clientManager->expects($this->once())->method('deleteClient')->with($this->identicalTo($client2), false);
 
         $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
         $clientConfig->expects($this->never())->method('update');
@@ -334,7 +332,6 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client2->method('lock')->willReturn(true);
         $client2->expects($this->never())->method('setUserDefinedInfo');
         $client2->expects($this->never())->method('setGroups');
-        $client2->expects($this->once())->method('delete');
 
         $client3 = $this->getMock('Model\Client\Client');
         $client3->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:03:33'));
@@ -342,12 +339,12 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client3->expects($this->once())->method('unlock');
         $client3->expects($this->once())->method('setUserDefinedInfo')->with('custom_fields');
         $client3->expects($this->never())->method('setGroups');
-        $client3->expects($this->never())->method('delete');
 
         $clientManager = $this->getMock('Model\Client\ClientManager');
         $clientManager->method('getClient')
                       ->withConsecutive(array(2), array(3))
                       ->will($this->onConsecutiveCalls($client2, $client3));
+        $clientManager->expects($this->once())->method('deleteClient')->with($this->identicalTo($client2), false);
 
         $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
         $clientConfig->expects($this->never())->method('update');
@@ -377,7 +374,6 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client2->method('getGroups')->with(\Model_GroupMembership::TYPE_MANUAL, null)->willReturn($groups);
         $client2->expects($this->never())->method('setUserDefinedInfo');
         $client2->expects($this->never())->method('setGroups');
-        $client2->expects($this->once())->method('delete');
 
         $client3 = $this->getMock('Model\Client\Client');
         $client3->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:03:33'));
@@ -385,12 +381,12 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client3->expects($this->once())->method('unlock');
         $client3->expects($this->never())->method('setUserDefinedInfo');
         $client3->expects($this->once())->method('setGroups')->with(array(2 => 'membership2', 1 => 'membership1b'));
-        $client3->expects($this->never())->method('delete');
 
         $clientManager = $this->getMock('Model\Client\ClientManager');
         $clientManager->method('getClient')
                       ->withConsecutive(array(2), array(3))
                       ->will($this->onConsecutiveCalls($client2, $client3));
+        $clientManager->expects($this->once())->method('deleteClient')->with($this->identicalTo($client2), false);
 
         $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
         $clientConfig->expects($this->never())->method('update');
@@ -416,7 +412,6 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client2->method('lock')->willReturn(true);
         $client2->expects($this->never())->method('setUserDefinedInfo');
         $client2->expects($this->never())->method('setGroups');
-        $client2->expects($this->once())->method('delete');
 
         $client3 = $this->getMock('Model\Client\Client');
         $client3->method('offsetGet')
@@ -426,12 +421,12 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client3->expects($this->once())->method('unlock');
         $client3->expects($this->never())->method('setUserDefinedInfo');
         $client3->expects($this->never())->method('setGroups');
-        $client3->expects($this->never())->method('delete');
 
         $clientManager = $this->getMock('Model\Client\ClientManager');
         $clientManager->method('getClient')
                       ->withConsecutive(array(2), array(3))
                       ->will($this->onConsecutiveCalls($client2, $client3));
+        $clientManager->expects($this->once())->method('deleteClient')->with($this->identicalTo($client2), false);
 
         $model = $this->_getModel(
             array(

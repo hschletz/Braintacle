@@ -517,16 +517,15 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
         if ($this->getRequest()->isPost()) {
             if ($this->params()->fromPost('yes')) {
                 $name = $this->_currentClient['Name'];
-                if (
-                    $this->_currentClient->delete(
-                        false,
+                try {
+                    $this->_clientManager->deleteClient(
+                        $this->_currentClient,
                         (bool) $this->params()->fromPost('DeleteInterfaces')
-                    )
-                ) {
+                    );
                     $this->flashMessenger()->addSuccessMessage(
                         array($this->_("Client '%s' was successfully deleted.") => $name)
                     );
-                } else {
+                } catch (\RuntimeException $e) {
                     $this->flashMessenger()->addErrorMessage(
                         array($this->_("Client '%s' could not be deleted.") => $name)
                     );

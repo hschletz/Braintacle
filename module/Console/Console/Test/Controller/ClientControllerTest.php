@@ -2469,8 +2469,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $client = $this->getMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
-        $client->expects($this->never())->method('delete');
+
         $this->_clientManager->method('getClient')->willReturn($client);
+        $this->_clientManager->expects($this->never())->method('deleteClient');
 
         $this->dispatch('/console/client/delete/?id=1');
         $this->assertResponseStatusCode(200);
@@ -2491,8 +2492,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $client = $this->getMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
-        $client->expects($this->never())->method('delete');
+
         $this->_clientManager->method('getClient')->willReturn($client);
+        $this->_clientManager->expects($this->never())->method('deleteClient');
 
         $this->dispatch('/console/client/delete/?id=1', 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/client/general/?id=1');
@@ -2508,11 +2510,10 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $client = $this->getMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
-        $client->expects($this->once())
-               ->method('delete')
-               ->with(false, true)
-               ->willReturn(true);
+
         $this->_clientManager->method('getClient')->willReturn($client);
+        $this->_clientManager->expects($this->once())->method('deleteClient')->with($client, true);
+
         $postData = array('yes' => 'Yes', 'DeleteInterfaces' => '1');
         $this->dispatch('/console/client/delete/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/index/');
@@ -2534,11 +2535,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $client = $this->getMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
-        $client->expects($this->once())
-               ->method('delete')
-               ->with(false, false)
-               ->willReturn(false);
+
         $this->_clientManager->method('getClient')->willReturn($client);
+        $this->_clientManager->expects($this->once())
+                             ->method('deleteClient')
+                             ->with($client, false)
+                             ->willThrowException(new \RuntimeException);
+
         $postData = array('yes' => 'Yes', 'DeleteInterfaces' => '0');
         $this->dispatch('/console/client/delete/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/index/');
