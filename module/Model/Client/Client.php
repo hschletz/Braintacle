@@ -42,6 +42,7 @@ namespace Model\Client;
  * @property string $BiosManufacturer BIOS manufacturer
  * @property string $BiosVersion BIOS version
  * @property string $BiosDate BIOS date (no unified format, not parseable)
+ * @property string $DnsDomain DNS domain name (UNIX clients only)
  * @property string $DnsServer IP Address of DNS server
  * @property string $DefaultGateway default gateway
  * @property string $OcsAgent user agent identification string
@@ -57,6 +58,7 @@ namespace Model\Client;
  * @property bool $IsAssetTagBlacklisted TRUE if the asset tag is ignored for detection of duplicates
  * @property \Model\Client\Item\AudioDevice[] $AudioDevice audio devices
  * @property \Model\Client\Item\Controller[] $Controller controllers
+ * @property \Model\Client\Item\Cpu[] $Cpu CPUs (newer UNIX clients only)
  * @property \Model\Client\Item\Display[] $Display displays
  * @property \Model\Client\Item\DisplayController[] $DisplayController display controllers
  * @property \Model\Client\Item\ExtensionSlot[] $ExtensionSlot extension slots
@@ -69,6 +71,7 @@ namespace Model\Client;
  * @property \Model\Client\Item\Port[] $Port ports
  * @property \Model\Client\Item\Printer[] $Printer printers
  * @property \Model\Client\Item\RegistryData[] $RegistryData registry data
+ * @property \Model\Client\Item\Sim[] $Sim SIM (Android clients only)
  * @property \Model\Client\Item\Software[] $Software software
  * @property \Model\Client\Item\StorageDevice[] $StorageDevice storage devices
  * @property \Model\Client\Item\VirtualMachine[] $VirtualMachine virtual machines
