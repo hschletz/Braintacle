@@ -130,4 +130,21 @@ class Client extends \Model_Computer
         }
         return $value;
     }
+
+    /**
+     * Get all items of given type
+     *
+     * @param string $type Item type
+     * @param string $order Property to sort by. Default: item-specific
+     * @param string $direction Sorting direction (asc|desc)
+     * @param array $filters Extra filters for ItemManager::getItems()
+     * @return \Zend\Db\ResultSet\AbstractResultSet
+     */
+    public function getItems($type, $order=null, $direction=null, $filters=array())
+    {
+        $filters['Client'] = $this['Id'];
+        return $this->serviceLocator->get('Model\Client\ItemManager')->getItems(
+            $type, $filters, $order, $direction
+        );
+    }
 }

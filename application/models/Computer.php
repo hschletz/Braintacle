@@ -112,23 +112,6 @@ class Model_Computer extends \Model_Abstract
     protected static $_configEffective = array();
 
     /**
-     * Get all items of a given type belonging to this computer.
-     *
-     * @param string $type Item type to retrieve (name of model class without 'Model_' prefix)
-     * @param string $order Property to sort by. If ommitted, the model's builtin default is used.
-     * @param string $direction Sorting direction (asc|desc)
-     * @param array $filters Extra filters to pass to the model's createStatement() method
-     * @return \Zend\Db\ResultSet\AbstractResultSet
-     */
-    public function getItems($type, $order=null, $direction=null, $filters=array())
-    {
-        $filters['Client'] = $this['Id'];
-        return \Library\Application::getService('Model\Client\ItemManager')->getItems(
-            $type, $filters, $order, $direction
-        );
-    }
-
-    /**
      * Get assigned packages
      *
      * @param string $order Package assignment property to sort by, default: PackageName

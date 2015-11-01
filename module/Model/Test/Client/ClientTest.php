@@ -148,4 +148,40 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->assertEquals('items', $model['type']);
         $this->assertEquals('items', $model['type']); // cached result
     }
+
+    public function testGetItemsDefaultArgs()
+    {
+        $itemManager = $this->getMockBuilder('Model\Client\ItemManager')->disableOriginalConstructor()->getMock();
+        $itemManager->expects($this->once())
+                    ->method('getItems')
+                    ->with('type', array('Client' => 42), null, null)
+                    ->willReturn('result');
+
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')->with('Model\Client\ItemManager')->willReturn($itemManager);
+
+        $model = $this->getMockBuilder('Model\Client\Client')->setMethods(array('offsetGet'))->getMock();
+        $model->method('offsetGet')->with('Id')->willReturn(42);
+        $model->setServiceLocator($serviceManager);
+
+        $this->assertEquals('result', $model->getItems('type'));
+    }
+
+    public function testGetItemsCustomArgs()
+    {
+        $itemManager = $this->getMockBuilder('Model\Client\ItemManager')->disableOriginalConstructor()->getMock();
+        $itemManager->expects($this->once())
+                    ->method('getItems')
+                    ->with('type', array('filter' => 'arg', 'Client' => 42), 'order', 'direction')
+                    ->willReturn('result');
+
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')->with('Model\Client\ItemManager')->willReturn($itemManager);
+
+        $model = $this->getMockBuilder('Model\Client\Client')->setMethods(array('offsetGet'))->getMock();
+        $model->method('offsetGet')->with('Id')->willReturn(42);
+        $model->setServiceLocator($serviceManager);
+
+        $this->assertEquals('result', $model->getItems('type', 'order', 'direction', array('filter' => 'arg')));
+    }
 }
