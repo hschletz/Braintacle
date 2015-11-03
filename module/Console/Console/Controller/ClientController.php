@@ -444,7 +444,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Display and manage group memberships
      *
-     * @return array client, order, direction [, form (Console\Form\) if groups are available]
+     * @return array client, order, direction [, form (Console\Form\GroupMemberships) if groups are available]
      */
     public function groupsAction()
     {
