@@ -29,6 +29,9 @@ groups_cache:
   -
     hardware_id: 3
     group_id: 2
+  -
+    hardware_id: 4
+    group_id: 2
 
 devices:
   -

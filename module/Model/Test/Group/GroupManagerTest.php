@@ -47,25 +47,35 @@ class GroupManagerTest extends AbstractGroupTest
             'CacheCreationDate' => new \DateTime('2015-02-04 20:46:24'),
         );
         return array(
-            array(null, null, 'Name', 'desc', array($group2, $group1)),
-            array('Id', '2', null, null, array($group2)),
-            array('Name', 'name1', null, null, array($group1)),
-            array('Expired', null, null, null, array($group1)),
+            array(null, null, 'Name', 'desc', array($group2, $group1), 'never'),
+            array('Id', '2', null, null, array($group2), 'never'),
+            array('Name', 'name1', null, null, array($group1), 'never'),
+            array('Expired', null, null, null, array($group1), 'never'),
+            array('Member', '3', 'Name', 'asc', array($group1, $group2), 'once'),
+            array('Member', '4', null, null, array($group1), 'once'),
         );
     }
 
     /**
      * @dataProvider getGroupsProvider
      */
-    public function testGetGroups($filter, $filterArg, $order, $direction, $expected)
+    public function testGetGroups($filter, $filterArg, $order, $direction, $expected, $updateCache)
     {
-        $model = $this->_getModel(
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')->willReturnMap(
             array(
-                'Database\Table\GroupInfo' => $this->_groupInfo,
-                'Library\Now' => new \DateTime('2015-02-08 19:36:29'),
-                'Model\Config' => $this->_config,
+                array('Database\Table\GroupInfo', true, $this->_groupInfo),
+                array('Library\Now', true, new \DateTime('2015-02-08 19:36:29')),
+                array('Model\Config', true, $this->_config),
             )
         );
+
+        $model = $this->getMockBuilder('Model\Group\GroupManager')
+                      ->setMethods(array('updateCache'))
+                      ->setConstructorArgs(array($serviceManager))
+                      ->getMock();
+        $model->expects($this->$updateCache())->method('updateCache');
+
         $resultSet = $model->getGroups($filter, $filterArg, $order, $direction);
         $this->assertInstanceOf('Zend\Db\ResultSet\AbstractResultSet', $resultSet);
         $groups = iterator_to_array($resultSet);
@@ -262,7 +272,7 @@ class GroupManagerTest extends AbstractGroupTest
             $this->assertTablesEqual(
                 $dataSet->getTable('groups_cache'),
                 $connection->createQueryTable(
-                    'groups_cache', 'SELECT hardware_id, group_id FROM groups_cache'
+                    'groups_cache', 'SELECT group_id, hardware_id, static FROM groups_cache'
                 )
             );
             $this->assertTablesEqual(
@@ -312,7 +322,7 @@ class GroupManagerTest extends AbstractGroupTest
             $this->assertTablesEqual(
                 $dataSet->getTable('groups_cache'),
                 $connection->createQueryTable(
-                    'groups_cache', 'SELECT hardware_id, group_id FROM groups_cache'
+                    'groups_cache', 'SELECT group_id, hardware_id, static FROM groups_cache'
                 )
             );
             $this->assertTablesEqual(

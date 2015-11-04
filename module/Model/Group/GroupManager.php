@@ -45,8 +45,8 @@ class GroupManager
     /**
      * Return a all groups matching criteria
      *
-     * @param string $filter Optional filter to apply (Id|Name|Expired), default: return all groups
-     * @param mixed $filterArg Argument for Id and Name filters, ignored otherwise
+     * @param string $filter Optional filter to apply (Id|Name|Expired|Member), default: return all groups
+     * @param mixed $filterArg Argument for Id, Name and Member filters, ignored otherwise
      * @param string $order Property to sort by. Default: none
      * @param string $direction one of [asc|desc]. Default: asc
      * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Group\Group
@@ -79,6 +79,16 @@ class GroupManager
                         'revalidate_from',
                         '<=',
                         $now - $this->_serviceManager->get('Model\Config')->groupCacheExpirationInterval
+                    )
+                );
+                break;
+            case 'Member':
+                $this->updateCache();
+                $select->join('groups_cache', 'groups_cache.group_id = groups.hardware_id', array());
+                $select->where(
+                    array(
+                        'groups_cache.hardware_id' => $filterArg,
+                        new \Zend\Db\Sql\Predicate\Operator('static', '!=', \Model_GroupMembership::TYPE_EXCLUDED),
                     )
                 );
                 break;

@@ -91,13 +91,6 @@
 class Model_Computer extends \Model_Abstract
 {
     /**
-     * Global cache for _getConfigGroups() results
-     *
-     * This is a 2-dimensional array: $_configGroups[computer ID][n] = group
-     */
-    protected static $_configGroups = array();
-
-    /**
      * Global cache for getDefaultConfig() results
      *
      * This is a 2-dimensional array: $_configDefault[computer ID][option name] = value
@@ -356,7 +349,8 @@ class Model_Computer extends \Model_Abstract
         }
         // Get default from groups.
         $groupValues = array();
-        foreach ($this->_getConfigGroups() as $group) {
+        $groups = \Library\Application::getService('Model\Group\GroupManager')->getGroups('Member', $id);
+        foreach ($groups as $group) {
             $groupValues[] = $group->getConfig($option);
         }
         switch ($option) {
@@ -459,7 +453,8 @@ class Model_Computer extends \Model_Abstract
                 if ($value >= 1) {
                     // Get smallest value of computer and group settings
                     $value = $this->getConfig('inventoryInterval');
-                    foreach ($this->_getConfigGroups() as $group) {
+                    $groups = \Library\Application::getService('Model\Group\GroupManager')->getGroups('Member', $id);
+                    foreach ($groups as $group) {
                         $groupValue = $group->getConfig('inventoryInterval');
                         if ($value === null or ($groupValue !== null and $groupValue < $value)) {
                             $value = $groupValue;
@@ -501,30 +496,6 @@ class Model_Computer extends \Model_Abstract
 
         self::$_configEffective[$id][$option] = $value;
         return $value;
-    }
-
-    /**
-     * Get a list of all groups of which this is computer is a member, suitable for evaluating group config
-     *
-     * The returned group objects are not fully functional. They contain just
-     * enough information to retrieve their configuration. They should not be
-     * used for anything else.
-     *
-     * @return \Model\Group\Group[]
-     */
-    protected function _getConfigGroups()
-    {
-        $id = $this->getId();
-        if (!isset(self::$_configGroups[$id])) {
-            self::$_configGroups[$id] = array();
-            $memberships = $this->getGroups(\Model_GroupMembership::TYPE_INCLUDED);
-            foreach ($memberships as $membership) {
-                $group = clone \Library\Application::getService('Model\Group\Group');
-                $group['Id'] = $membership['GroupId'];
-                self::$_configGroups[$id][] = $group;
-            }
-        }
-        return self::$_configGroups[$id];
     }
 
     /** {@inheritdoc} */

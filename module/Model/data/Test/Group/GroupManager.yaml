@@ -40,11 +40,21 @@ groups:
 
 groups_cache:
   -
-    hardware_id: 3
     group_id: 1
-  -
     hardware_id: 3
+    static: 0
+  -
+    group_id: 1
+    hardware_id: 4
+    static: 1
+  -
     group_id: 2
+    hardware_id: 3
+    static: 1
+  -
+    group_id: 2
+    hardware_id: 4
+    static: 2
 
 devices:
   -
