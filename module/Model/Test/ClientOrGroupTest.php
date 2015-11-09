@@ -477,7 +477,7 @@ class ClientOrGroupTest extends AbstractTest
 
         $cache = new \ReflectionProperty($model, '_configCache');
         $cache->setAccessible(true);
-        $this->assertSame($value, $cache->getValue()[$id][$option]);
+        $this->assertSame($value, $cache->getValue($model)[$option]);
     }
 
     public function testGetConfigCached()
@@ -487,7 +487,7 @@ class ClientOrGroupTest extends AbstractTest
 
         $cache = new \ReflectionProperty($model, '_configCache');
         $cache->setAccessible(true);
-        $cache->setValue(array(42 => array('option' => 'value')));
+        $cache->setValue($model, array('option' => 'value'));
 
         $this->assertEquals('value', $model->getConfig('option'));
     }
@@ -553,7 +553,7 @@ class ClientOrGroupTest extends AbstractTest
 
         $cache = new \ReflectionProperty($model, '_configCache');
         $cache->setAccessible(true);
-        $this->assertSame($normalizedValue, $cache->getValue()[$id][$option]);
+        $this->assertSame($normalizedValue, $cache->getValue($model)[$option]);
     }
 
     public function testSetConfigUnchanged()
@@ -588,7 +588,7 @@ class ClientOrGroupTest extends AbstractTest
 
         $cache = new \ReflectionProperty($model, '_configCache');
         $cache->setAccessible(true);
-        $this->assertEquals(23, $cache->getValue()[10]['inventoryInterval']);
+        $this->assertEquals(23, $cache->getValue($model)['inventoryInterval']);
     }
 
     public function getAllConfigProvider()

@@ -49,11 +49,9 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
 
     /**
      * Global cache for getConfig() results
-     *
-     * This is a 2-dimensional array: $_configCache[client/group ID][option name] = value
      * @var array
      */
-    protected static $_configCache = array();
+    protected $_configCache = array();
 
     /**
      * Timestamp when a lock held by this instance will expire
@@ -356,7 +354,7 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
      * these options can only be 0 (explicitly disabled if enabled on a higher
      * level) or NULL (inherit behavior).
      *
-     * Results are cached globally.
+     * Results are cached per instance.
      *
      * @param string $option Option name
      * @return mixed Stored value or NULL
@@ -364,8 +362,8 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
     public function getConfig($option)
     {
         $id = $this['Id'];
-        if (isset(self::$_configCache[$id]) and array_key_exists($option, self::$_configCache[$id])) {
-            return self::$_configCache[$id][$option];
+        if (array_key_exists($option, $this->_configCache)) {
+            return $this->_configCache[$option];
         }
 
         $column = 'ivalue';
@@ -404,7 +402,7 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
             $value = null;
         }
 
-        self::$_configCache[$id][$option] = $value;
+        $this->_configCache[$option] = $value;
         return $value;
     }
 
@@ -483,7 +481,7 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
             }
         }
         $connection->commit();
-        self::$_configCache[$this['Id']][$option] = $value;
+        $this->_configCache[$option] = $value;
     }
 
     /**
