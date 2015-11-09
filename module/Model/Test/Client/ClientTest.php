@@ -149,6 +149,262 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->assertEquals('items', $model['type']); // cached result
     }
 
+    public function getDefaultConfigProvider()
+    {
+        // All options have a default, so the global value can never be NULL.
+        return array(
+            array('inventoryInterval', -1, array(0), -1), // global value -1 precedes
+            array('inventoryInterval', 0, array(-1), 0), // global value 0 precedes
+            array('inventoryInterval', 1, array(), 1), // no group values, default to global value
+            array('inventoryInterval', 1, array(null), 1), // no group values, default to global value
+            array('inventoryInterval', 1, array(2, null, 3), 2), // smallest group value
+            array('inventoryInterval', 4, array(2, 3, null), 2), // smallest group value
+            array('contactInterval', 1, array(2, 3, null), 2),
+            array('contactInterval', 1, array(), 1),
+            array('downloadMaxPriority', 1, array(2, 3, null), 2),
+            array('downloadMaxPriority', 1, array(), 1),
+            array('downloadTimeout', 1, array(2, 3, null), 2),
+            array('downloadTimeout', 1, array(), 1),
+            array('downloadPeriodDelay', 3, array(1, 2, null), 2),
+            array('downloadPeriodDelay', 1, array(), 1),
+            array('downloadCycleDelay', 3, array(1, 2, null), 2),
+            array('downloadCycleDelay', 1, array(), 1),
+            array('downloadFragmentDelay', 3, array(1, 2, null), 2),
+            array('downloadFragmentDelay', 1, array(), 1),
+            array('packageDeployment', 0, array(1), 0),
+            array('packageDeployment', 1, array(), 1),
+            array('packageDeployment', 1, array(null, 1), 1),
+            array('packageDeployment', 1, array(0, 1), 0),
+            array('scanSnmp', 0, array(1), 0),
+            array('scanSnmp', 1, array(), 1),
+            array('scanSnmp', 1, array(null, 1), 1),
+            array('scanSnmp', 1, array(0, 1), 0),
+            array('allowScan', 0, array(1), 0),
+            array('allowScan', 1, array(), 1),
+            array('allowScan', 2, array(null, 1), 1),
+            array('allowScan', 2, array(0, 1), 0),
+        );
+    }
+
+    /**
+     * @dataProvider getDefaultConfigProvider
+     */
+    public function testGetDefaultConfig($option, $globalValue, $groupValues, $expectedValue)
+    {
+        $globalOption = (($option == 'allowScan') ? 'scannersPerSubnet' : $option);
+
+        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config->method('__get')->with($globalOption)->willReturn($globalValue);
+
+        $groups = array();
+        foreach ($groupValues as $groupValue) {
+            $group = $this->getMock('Model\Group\Group');
+            $group->method('getConfig')->with($option)->willReturn($groupValue);
+            $groups[] = $group;
+        }
+
+        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
+        $groupManager->method('getGroups')->with('Member', 42)->willReturn(new \ArrayIterator($groups));
+
+        $model = $this->_getModel(
+            array(
+                'Model\Config' => $config,
+                'Model\Group\GroupManager' => $groupManager,
+            )
+        );
+        $model['Id'] = 42;
+
+        $this->assertSame($expectedValue, $model->getDefaultConfig($option));
+    }
+
+    public function testGetDefaultConfigCache()
+    {
+        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config->expects($this->exactly(2))
+               ->method('__get')
+               ->withConsecutive(array('option1'), array('option2'))
+               ->willReturnOnConsecutiveCalls('value1', 'value2');
+
+        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
+        $groupManager->expects($this->once())->method('getGroups')->with('Member', 42)->willReturn(new \EmptyIterator);
+
+        $model = $this->_getModel(
+            array(
+                'Model\Config' => $config,
+                'Model\Group\GroupManager' => $groupManager,
+            )
+        );
+        $model['Id'] = 42;
+
+        $this->assertEquals('value1', $model->getDefaultConfig('option1'));
+        $this->assertEquals('value1', $model->getDefaultConfig('option1')); // from cache
+        $this->assertEquals('value2', $model->getDefaultConfig('option2')); // non-cached value to test group cache
+    }
+
+    public function testGetAllConfig()
+    {
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethods(array('__destruct', 'getConfig'))
+                      ->getMock();
+        $model->method('getConfig')->willReturnMap(
+            array(
+                array('contactInterval', 2),
+                array('inventoryInterval', 3),
+                array('packageDeployment', 0),
+                array('downloadPeriodDelay', 4),
+                array('downloadCycleDelay', 5),
+                array('downloadFragmentDelay', 6),
+                array('downloadMaxPriority', 7),
+                array('downloadTimeout', 8),
+                array('allowScan', 1),
+                array('scanSnmp', 0),
+                array('scanThisNetwork', '192.0.2.0'),
+            )
+        );
+        $this->assertEquals(
+            array(
+                'Agent' => array(
+                    'contactInterval' => 2,
+                    'inventoryInterval' => 3,
+                ),
+                'Download' => array(
+                    'packageDeployment' => 0,
+                    'downloadPeriodDelay' => 4,
+                    'downloadCycleDelay' => 5,
+                    'downloadFragmentDelay' => 6,
+                    'downloadMaxPriority' => 7,
+                    'downloadTimeout' => 8,
+                ),
+                'Scan' => array(
+                    'allowScan' => 0,
+                    'scanSnmp' => 0,
+                    'scanThisNetwork' => '192.0.2.0',
+                ),
+            ),
+            $model->getAllConfig()
+        );
+    }
+
+    public function getEffectiveConfigProvider()
+    {
+        return array(
+            array('contactInterval', 1, null, 1),
+            array('contactInterval', 1, 2, 2),
+            array('contactInterval', 2, 1, 1),
+            array('downloadPeriodDelay', 1, null, 1),
+            array('downloadPeriodDelay', 1, 2, 2),
+            array('downloadPeriodDelay', 2, 1, 1),
+            array('downloadCycleDelay', 1, null, 1),
+            array('downloadCycleDelay', 1, 2, 2),
+            array('downloadCycleDelay', 2, 1, 1),
+            array('downloadFragmentDelay', 1, null, 1),
+            array('downloadFragmentDelay', 1, 2, 2),
+            array('downloadFragmentDelay', 2, 1, 1),
+            array('downloadMaxPriority', 1, null, 1),
+            array('downloadMaxPriority', 1, 2, 2),
+            array('downloadMaxPriority', 2, 1, 1),
+            array('downloadTimeout', 1, null, 1),
+            array('downloadTimeout', 1, 2, 2),
+            array('downloadTimeout', 2, 1, 1),
+            array('packageDeployment', 0, 0, 0),
+            array('packageDeployment', 0, null, 0),
+            array('packageDeployment', 1, 0, 0),
+            array('packageDeployment', 1, null, 1),
+            array('allowScan', 0, 0, 0),
+            array('allowScan', 0, null, 0),
+            array('allowScan', 1, 0, 0),
+            array('allowScan', 1, null, 1),
+            array('scanSnmp', 0, 0, 0),
+            array('scanSnmp', 0, null, 0),
+            array('scanSnmp', 1, 0, 0),
+            array('scanSnmp', 1, null, 1),
+        );
+    }
+
+    /**
+     * @dataProvider getEffectiveConfigProvider
+     */
+    public function testGetEffectiveConfig($option, $defaultValue, $clientValue, $expectedValue)
+    {
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethods(array('offsetGet', 'getDefaultConfig', 'getConfig'))
+                      ->getMock();
+        $model->method('offsetGet')->with('Id')->willReturn(42);
+        $model->method('getDefaultConfig')->with($option)->willReturn($defaultValue);
+        $model->method('getConfig')->with($option)->willReturn($clientValue);
+
+        $this->assertSame($expectedValue, $model->getEffectiveConfig($option));
+    }
+
+    public function getEffectiveConfigForInventoryIntervalProvider()
+    {
+        return array(
+            array(-1, array(1), 1, -1), // global value -1 always precedes
+            array( 0, array(-1), -1, 0), // global value 0 always precedes
+            array(1, array(2, null), 3, 2), // smallest value from groups/client
+            array(1, array(3, null), 2, 2), // smallest value from groups/client
+            array(1, array(), null, 1), // no values defined, fall back to global value
+            array(1, array(), 2, 2), // smallest value from groups/client
+            array(1, array(2, 3), null, 2), // no client value, use smallest group value
+            array(1, array(0), -1, -1), // client value overrides default
+            array(1, array(-1), 0, -1), // client value does not override default
+        );
+    }
+
+    /**
+     * @dataProvider getEffectiveConfigForInventoryIntervalProvider
+     */
+    public function testGetEffectiveConfigForInventoryInterval(
+        $globalValue, $groupValues, $clientValue, $expectedValue
+    )
+    {
+        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config->method('__get')->with('inventoryInterval')->willReturn($globalValue);
+
+        $groups = array();
+        foreach ($groupValues as $groupValue) {
+            $group = $this->getMock('Model\Group\Group');
+            $group->method('getConfig')->with('inventoryInterval')->willReturn($groupValue);
+            $groups[] = $group;
+        }
+
+        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
+        $groupManager->method('getGroups')->with('Member', 42)->willReturn(new \ArrayIterator($groups));
+
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')->willReturnMap(
+            array(
+                array('Model\Config', true, $config),
+                array('Model\Group\GroupManager', true, $groupManager),
+            )
+        );
+
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethods(array('offsetGet', 'getConfig'))
+                      ->getMock();
+        $model->setServiceLocator($serviceManager);
+        $model->method('offsetGet')->with('Id')->willReturn(42);
+        $model->method('getConfig')->with('inventoryInterval')->willReturn($clientValue);
+
+        $this->assertSame($expectedValue, $model->getEffectiveConfig('inventoryInterval'));
+    }
+
+    public function testGetEffectiveConfigCache()
+    {
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethods(array('offsetGet', 'getConfig'))
+                      ->getMock();
+        $model->method('offsetGet')->with('Id')->willReturn(42);
+        $model->expects($this->exactly(2))
+              ->method('getConfig')
+              ->withConsecutive(array('option1'), array('option2'))
+              ->willReturnOnConsecutiveCalls('value1', 'value2');
+
+        $this->assertEquals('value1', $model->getEffectiveConfig('option1'));
+        $this->assertEquals('value1', $model->getEffectiveConfig('option1')); // from cache
+        $this->assertEquals('value2', $model->getEffectiveConfig('option2')); // non-cached value
+    }
+
     public function testGetItemsDefaultArgs()
     {
         $itemManager = $this->getMockBuilder('Model\Client\ItemManager')->disableOriginalConstructor()->getMock();

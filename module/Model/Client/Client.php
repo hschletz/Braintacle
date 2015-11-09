@@ -84,6 +84,24 @@ namespace Model\Client;
  */
 class Client extends \Model_Computer
 {
+    /**
+     * Cache for getDefaultConfig() results
+     * @var array
+     */
+    protected $_configDefault = array();
+
+    /**
+     * Cache for getEffectiveConfig() results
+     * @var array
+     */
+    protected $_configEffective = array();
+
+    /**
+     * Cache for groups of which this client is a member
+     * @var \Zend\Db\ResultSet\AbstractResultSet
+     */
+    protected $_groups;
+
     /** {@inheritdoc} */
     public function offsetGet($index)
     {
@@ -128,6 +146,179 @@ class Client extends \Model_Computer
             // Cache result
             $this->offsetSet($index, $value);
         }
+        return $value;
+    }
+
+    /** {@inheritdoc} */
+    public function getDefaultConfig($option)
+    {
+        $id = $this['Id'];
+        if (array_key_exists($option, $this->_configDefault)) {
+            return $this->_configDefault[$option];
+        }
+
+        $config = $this->serviceLocator->get('Model\Config');
+
+        // Get non-NULL values from groups
+        $groupValues = array();
+        if ($this->_groups === null) {
+            $this->_groups = iterator_to_array(
+                $this->serviceLocator->get('Model\Group\GroupManager')->getGroups('Member', $id)
+            );
+        }
+        foreach ($this->_groups as $group) {
+            $groupValue = $group->getConfig($option);
+            if ($groupValue !== null) {
+                $groupValues[] = $groupValue;
+            }
+        }
+
+        $value = null;
+        switch ($option) {
+            case 'inventoryInterval':
+                $value = $config->inventoryInterval;
+                // Special values 0 and -1 always take precedence if
+                // configured globally. Otherwise use smallest value from
+                // groups if defined.
+                if ($value >= 1 and !empty($groupValues)) {
+                    $value = min($groupValues);
+                }
+                break;
+            case 'contactInterval':
+            case 'downloadMaxPriority':
+            case 'downloadTimeout':
+                // Get smallest value from groups
+                if ($groupValues) {
+                    $value = min($groupValues);
+                }
+                break;
+            case 'downloadPeriodDelay':
+            case 'downloadCycleDelay':
+            case 'downloadFragmentDelay':
+                // Get largest value from groups
+                if ($groupValues) {
+                    $value = max($groupValues);
+                }
+                break;
+            case 'packageDeployment':
+            case 'scanSnmp':
+                // 0 if global setting or any group setting is 0, otherwise 1.
+                if (in_array(0, $groupValues)) {
+                    $value = 0;
+                } else {
+                    $value = $config->$option;
+                }
+                break;
+            case 'allowScan':
+                // 0 scanning is disabled globally or any group setting is 0, otherwise 1.
+                if (in_array(0, $groupValues)) {
+                    $value = 0;
+                } else {
+                    // Limit result to 1
+                    $value = min($config->scannersPerSubnet, 1);
+                }
+                break;
+        }
+        if ($value === null) {
+            // Fall back to global value
+            $value = $config->$option;
+        }
+
+        $this->_configDefault[$option] = $value;
+        return $value;
+    }
+
+    /** {@inheritdoc} */
+    public function getAllConfig()
+    {
+        $config = parent::getAllConfig();
+        $config['Scan']['scanThisNetwork'] = $this->getConfig('scanThisNetwork');
+        return $config;
+    }
+
+    /**
+     * Get effective configuration value
+     *
+     * This method returns the effective setting for an option. It is determined
+     * from this client's individual setting, the global setting and/or all
+     * groups of which the client is a member. The exact rules are:
+     *
+     * - packageDeployment, allowScan and scanSnmp return 0 if the setting is
+     *   disabled either globally, for any group or for the client, otherwise 1.
+     * - For inventoryInterval, if the global setting is one of the special
+     *   values 0 or -1, this setting is returned. Otherwise, return the
+     *   smallest value of the group and client setting. If this is undefined,
+     *   use global setting.
+     * - contactInterval, downloadMaxPriority and downloadTimeout evaluate (in
+     *   that order): the client setting, the smallest value of all group
+     *   settings and the global setting. The first non-null result is returned.
+     * - downloadPeriodDelay, downloadCycleDelay, downloadFragmentDelay evaluate
+     *   (in that order): the client setting, the largest value of all group
+     *   settings and the global setting. The first non-null result is returned.
+     * - For any other setting, the client's configured value is evaluated via
+     *   getConfig().
+     *
+     * @param string $option Option name
+     * @return mixed Effective value or NULL
+     */
+    public function getEffectiveConfig($option)
+    {
+        $id = $this['Id'];
+        if (array_key_exists($option, $this->_configEffective)) {
+            return $this->_configEffective[$option];
+        }
+
+        switch ($option) {
+            case 'inventoryInterval':
+                $globalValue = $this->serviceLocator->get('Model\Config')->inventoryInterval;
+                // Special global values 0 and -1 always take precedence.
+                if ($globalValue <= 0) {
+                    $value = $globalValue;
+                } else {
+                    // Get smallest value of client and group settings
+                    $value = $this->getConfig('inventoryInterval');
+                    $groups = $this->serviceLocator->get('Model\Group\GroupManager')->getGroups('Member', $id);
+                    foreach ($groups as $group) {
+                        $groupValue = $group->getConfig('inventoryInterval');
+                        if ($value === null or ($groupValue !== null and $groupValue < $value)) {
+                            $value = $groupValue;
+                        }
+                    }
+                    // Fall back to global default if not set anywhere else
+                    if ($value === null) {
+                        $value = $globalValue;
+                    }
+                }
+                break;
+            case 'contactInterval':
+            case 'downloadPeriodDelay':
+            case 'downloadCycleDelay':
+            case 'downloadFragmentDelay':
+            case 'downloadMaxPriority':
+            case 'downloadTimeout':
+                // Client value takes precedence.
+                $value = $this->getConfig($option);
+                if ($value === null) {
+                    $value = $this->getDefaultConfig($option);
+                }
+                break;
+            case 'packageDeployment':
+            case 'allowScan':
+            case 'scanSnmp':
+                // If default is 0, return 0.
+                // Otherwise override default if explicitly disabled.
+                $default = $this->getDefaultConfig($option);
+                if ($default and $this->getConfig($option) === 0) {
+                    $value = 0;
+                } else {
+                    $value = $default;
+                }
+                break;
+            default:
+                $value = $this->getConfig($option);
+        }
+
+        $this->_configEffective[$option] = $value;
         return $value;
     }
 

@@ -95,22 +95,6 @@
 abstract class Model_Abstract extends \Model\ClientOrGroup
 {
     /**
-     * Application config
-     * @var \Model\Config
-     * @deprecated get config from service locator
-     */
-    protected $_config;
-
-    /**
-     * Constructor
-     **/
-    public function __construct($input=array(), $flags=0, $iteratorClass='ArrayIterator')
-    {
-        parent::__construct($input, $flags, $iteratorClass);
-        $this->_config = \Library\Application::getService('Model\Config');
-    }
-
-    /**
      * Generic accessor method
      *
      * It provides the getLogicalIdentifier() and setLogicalIdentifier()
