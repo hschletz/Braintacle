@@ -112,7 +112,7 @@ class InventoryRequest extends \Library\DomDocument
             }
         }
         // DOWNLOAD section
-        $packages = $client->getDownloadedPackages();
+        $packages = $client->getDownloadedPackageIds();
         if ($packages) {
             // DOWNLOAD section has 1 HISTORY element with 1 PACKAGE element per package.
             $download = $this->createElement('DOWNLOAD');

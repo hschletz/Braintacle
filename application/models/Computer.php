@@ -91,49 +91,6 @@
 abstract class Model_Computer extends \Model_Abstract
 {
     /**
-     * Get assigned packages
-     *
-     * @param string $order Package assignment property to sort by, default: PackageName
-     * @param string $direction asc|desc, default: asc
-     * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Package\Assignment
-     */
-    public function getPackages($order='PackageName', $direction='asc')
-    {
-        $map = array(
-            'name' => 'PackageName',
-            'tvalue' => 'Status',
-            'comments' => 'Timestamp',
-        );
-        $hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
-        $hydrator->setNamingStrategy(new \Database\Hydrator\NamingStrategy\MapNamingStrategy($map));
-        $hydrator->addStrategy(
-            'Timestamp',
-            new \Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy(\Model\Package\Assignment::DATEFORMAT)
-        );
-
-        $sql = new \Zend\Db\Sql\Sql(\Library\Application::getService('Db'));
-        $select = $sql->select();
-        $select->from('devices')
-               ->columns(array('tvalue', 'comments'))
-               ->join(
-                   'download_available',
-                   'download_available.fileid = devices.ivalue',
-                   array('name'),
-                   \Zend\Db\Sql\Select::JOIN_INNER
-               )
-               ->where(array('hardware_id' => $this['Id'], 'devices.name' => 'DOWNLOAD'))
-               ->order(array($hydrator->extractName($order) => $direction));
-
-        $resultSet = new \Zend\Db\ResultSet\HydratingResultSet(
-            $hydrator,
-            \Library\Application::getService('Model\Package\Assignment')
-        );
-        $resultSet->initialize($sql->prepareStatementForSqlObject($select)->execute());
-
-        return $resultSet;
-    }
-
-    /**
      * Set values for the user defined fields for this computer.
      * @param array $values Associative array with field names as keys.
      */
@@ -301,18 +258,5 @@ abstract class Model_Computer extends \Model_Abstract
         $document = new \Protocol\Message\InventoryRequest;
         $document->loadClient($this, \Library\Application::getService('ServiceManager'));
         return $document;
-    }
-
-    /**
-     * Get all packages from download history
-     * @return array Package IDs (creation timestamps)
-     */
-    public function getDownloadedPackages()
-    {
-        $db = Model_Database::getAdapter();
-        return $db->fetchCol(
-            'SELECT pkg_id FROM download_history WHERE hardware_id=? ORDER BY pkg_id',
-            $this->getId()
-        );
     }
 }

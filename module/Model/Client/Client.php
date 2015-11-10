@@ -323,6 +323,68 @@ class Client extends \Model_Computer
     }
 
     /**
+     * Get package assignments
+     *
+     * @param string $order Package assignment property to sort by, default: PackageName
+     * @param string $direction asc|desc, default: asc
+     * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Package\Assignment
+     */
+    public function getPackageAssignments($order='PackageName', $direction='asc')
+    {
+        $hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
+        $hydrator->setNamingStrategy(
+            new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
+                array(
+                    'name' => 'PackageName',
+                    'tvalue' => 'Status',
+                    'comments' => 'Timestamp',
+                )
+            )
+        );
+        $hydrator->addStrategy(
+            'Timestamp',
+            new \Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy(
+                \Model\Package\Assignment::DATEFORMAT
+            )
+        );
+
+        $sql = $this->serviceLocator->get('Database\Table\ClientConfig')->getSql();
+        $select = $sql->select();
+        $select->columns(array('tvalue', 'comments'))
+               ->join(
+                   'download_available',
+                   'download_available.fileid = devices.ivalue',
+                   array('name'),
+                   \Zend\Db\Sql\Select::JOIN_INNER
+               )
+               ->where(array('hardware_id' => $this['Id'], 'devices.name' => 'DOWNLOAD'))
+               ->order(array($hydrator->extractName($order) => $direction));
+
+        $resultSet = new \Zend\Db\ResultSet\HydratingResultSet(
+            $hydrator,
+            clone $this->serviceLocator->get('Model\Package\Assignment')
+        );
+        $resultSet->initialize($sql->prepareStatementForSqlObject($select)->execute());
+
+        return $resultSet;
+    }
+
+    /**
+     * Get package IDs from download history
+     *
+     * @return array Package IDs (creation timestamps)
+     */
+    public function getDownloadedPackageIds()
+    {
+        $packageHistory = $this->serviceLocator->get('Database\Table\PackageHistory');
+        $select = $packageHistory->getSql()->select();
+        $select->columns(array('pkg_id'))
+               ->where(array('hardware_id' => $this['Id']))
+               ->order('pkg_id');
+        return array_column($packageHistory->selectWith($select)->toArray(), 'pkg_id');
+    }
+
+    /**
      * Get all items of given type
      *
      * @param string $type Item type

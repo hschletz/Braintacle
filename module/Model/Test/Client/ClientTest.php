@@ -29,6 +29,9 @@ class ClientTest extends \Model\Test\AbstractTest
         'WindowsInstallations',
         'DuplicateSerials',
         'DuplicateAssetTags',
+        'ClientConfig',
+        'Packages',
+        'PackageHistory',
     );
 
     public function testObjectProperties()
@@ -403,6 +406,78 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->assertEquals('value1', $model->getEffectiveConfig('option1'));
         $this->assertEquals('value1', $model->getEffectiveConfig('option1')); // from cache
         $this->assertEquals('value2', $model->getEffectiveConfig('option2')); // non-cached value
+    }
+
+    public function getPackageAssignmentsProvider()
+    {
+        $package1 = array(
+            'PackageName' => 'package1',
+            'Status' => 'SUCCESS',
+            'Timestamp' => new \DateTime('2014-12-30 19:02:23'),
+        );
+        $package2 = array(
+            'PackageName' => 'package2',
+            'Status' => 'NOTIFIED',
+            'Timestamp' => new \DateTime('2014-12-30 19:01:23'),
+        );
+        // Non-default order. Default order tested separately.
+        return array(
+            array('PackageName', 'desc', $package2, $package1),
+            array('Status', 'asc', $package2, $package1),
+            array('Status', 'desc', $package1, $package2),
+        );
+    }
+
+    /**
+     * @dataProvider getPackageAssignmentsProvider
+     */
+    public function testGetPackageAssignments($order, $direction, $package0, $package1)
+    {
+        $model = $this->_getModel();
+        $model['Id'] = 1;
+
+        $assignments = $model->getPackageAssignments($order, $direction);
+        $this->assertInstanceOf('Zend\Db\ResultSet\AbstractResultSet', $assignments);
+        $assignments = iterator_to_array($assignments);
+        $this->assertCount(2, $assignments);
+        $this->assertContainsOnlyInstancesOf('Model\Package\Assignment', $assignments);
+        $this->assertEquals($package0, $assignments[0]->getArrayCopy());
+        $this->assertEquals($package1, $assignments[1]->getArrayCopy());
+    }
+
+    public function testGetPackageAssignmentsDefaultOrder()
+    {
+        $model = $this->_getModel();
+        $model['Id'] = 1;
+
+        $assignments = $model->getPackageAssignments();
+        $this->assertInstanceOf('Zend\Db\ResultSet\AbstractResultSet', $assignments);
+        $assignments = iterator_to_array($assignments);
+        $this->assertCount(2, $assignments);
+        $this->assertContainsOnlyInstancesOf('Model\Package\Assignment', $assignments);
+        $this->assertEquals(
+            array(
+                'PackageName' => 'package1',
+                'Status' => 'SUCCESS',
+                'Timestamp' => new \DateTime('2014-12-30 19:02:23'),
+            ),
+            $assignments[0]->getArrayCopy()
+        );
+        $this->assertEquals(
+            array(
+                'PackageName' => 'package2',
+                'Status' => 'NOTIFIED',
+                'Timestamp' => new \DateTime('2014-12-30 19:01:23'),
+            ),
+            $assignments[1]->getArrayCopy()
+        );
+    }
+
+    public function testGetDownloadedPackageIds()
+    {
+        $model = $this->_getModel();
+        $model['Id'] = 1;
+        $this->assertEquals(array(1, 2), $model->getDownloadedPackageIds());
     }
 
     public function testGetItemsDefaultArgs()

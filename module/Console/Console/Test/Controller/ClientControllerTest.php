@@ -2141,7 +2141,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $assignments->initialize(array());
         $client = $this->getMock('Model\Client\Client');
         $client->expects($this->once())
-               ->method('getPackages')
+               ->method('getPackageAssignments')
                ->with('PackageName', 'asc')
                ->willReturn($assignments);
         $client->expects($this->once())
@@ -2190,7 +2190,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client = $this->getMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap(array(array('Id', 1))));
         $client->expects($this->once())
-               ->method('getPackages')
+               ->method('getPackageAssignments')
                ->with('PackageName', 'asc')
                ->willReturn($assignments);
         $client->expects($this->once())
@@ -2236,7 +2236,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client = $this->getMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $client->expects($this->once())
-               ->method('getPackages')
+               ->method('getPackageAssignments')
                ->with('PackageName', 'asc')
                ->willReturn($assignments);
         $client->expects($this->once())

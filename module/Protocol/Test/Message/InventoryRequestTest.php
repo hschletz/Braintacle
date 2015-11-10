@@ -178,7 +178,7 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
                 array('CustomFields', $customFields),
             )
         );
-        $client->method('getDownloadedPackages')->willReturn($packages);
+        $client->method('getDownloadedPackageIds')->willReturn($packages);
         $client->expects($this->exactly(count($itemTypes)))
                ->method('getItems')
                ->will($this->returnValueMap($mapGetItems));
