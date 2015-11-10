@@ -261,7 +261,7 @@ class ClientTest extends \Model\Test\AbstractTest
                 array('scanThisNetwork', '192.0.2.0'),
             )
         );
-        $this->assertEquals(
+        $this->assertSame(
             array(
                 'Agent' => array(
                     'contactInterval' => 2,

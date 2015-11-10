@@ -397,7 +397,11 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
         }
         $row = $clientConfig->selectWith($select)->current();
         if ($row) {
-            $value = $this->_normalizeConfig($option, $row[$column]);
+            $value = $row[$column];
+            if ($column == 'ivalue') {
+                $value = (integer) $value;
+            }
+            $value = $this->_normalizeConfig($option, $value);
         } else {
             $value = null;
         }
@@ -427,6 +431,9 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
             }
         }
 
+        if ($value !== null and $option != 'scanThisNetwork') {
+            $value = (integer) $value; // Strict type required for cache
+        }
         $value = $this->_normalizeConfig($option, $value);
 
         // Set affected columns
@@ -514,7 +521,7 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
             // enabled, i.e. they only have an effect if they get disabled.
             // To keep things clearer in the database, the option is unset if
             // enabled, with the same effect (i.e. none).
-            if ($value != '0') {
+            if ($value != 0) {
                 $value = null;
             }
         }
@@ -537,7 +544,7 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
                 'inventoryInterval' => $this->getConfig('inventoryInterval'),
             ),
             'Download' => array(
-                'packageDeployment' => $this->getConfig('packageDeployment') === null,
+                'packageDeployment' => (integer) ($this->getConfig('packageDeployment') === null),
                 'downloadPeriodDelay' => $this->getConfig('downloadPeriodDelay'),
                 'downloadCycleDelay' => $this->getConfig('downloadCycleDelay'),
                 'downloadFragmentDelay' => $this->getConfig('downloadFragmentDelay'),
@@ -545,8 +552,8 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
                 'downloadTimeout' => $this->getConfig('downloadTimeout'),
             ),
             'Scan' => array(
-                'allowScan' => $this->getConfig('allowScan') === null,
-                'scanSnmp' => $this->getConfig('scanSnmp') === null,
+                'allowScan' => (integer) ($this->getConfig('allowScan') === null),
+                'scanSnmp' => (integer) ($this->getConfig('scanSnmp') === null),
             ),
         );
     }

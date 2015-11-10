@@ -68,7 +68,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         $this->_config->expects($this->any())
                       ->method('__get')
                       ->with('inspectRegistry')
-                      ->will($this->returnValue('1'));
+                      ->willReturn(1);
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
         $resultSet->initialize($this->_values);
         $this->_registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')

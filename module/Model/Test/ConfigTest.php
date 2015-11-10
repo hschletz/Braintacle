@@ -51,7 +51,7 @@ class ConfigTest extends AbstractTest
         $this->assertEquals(42, $config->inventoryInterval);
         $this->assertEquals('/example/package/path', $config->packagePath);
         // Test default for unpopulated option
-        $this->assertEquals(12, $config->contactInterval);
+        $this->assertSame(12, $config->contactInterval);
         // Test invalid option
         $this->setExpectedException('InvalidArgumentException');
         $config->invalid;
@@ -204,7 +204,7 @@ class ConfigTest extends AbstractTest
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
         );
         // Read value from new clone to test conversion from database content
-        $this->assertTrue($this->_getModel()->autoMergeDuplicates);
+        $this->assertSame(1, $this->_getModel()->autoMergeDuplicates);
     }
 
     public function testAutoMergeDuplicatesFalse()
@@ -215,6 +215,6 @@ class ConfigTest extends AbstractTest
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
         );
         // Read value from new clone to test conversion from database content
-        $this->assertFalse($this->_getModel()->autoMergeDuplicates);
+        $this->assertSame(0, $this->_getModel()->autoMergeDuplicates);
     }
 }

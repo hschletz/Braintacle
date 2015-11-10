@@ -126,6 +126,30 @@ class Config extends \Database\AbstractTable
     );
 
     /**
+     * Integer options stored in the 'tvalue' column
+     * @var array
+     */
+    protected $_integerOptions = array(
+        'defaultDeleteInterfaces',
+        'defaultDeployError',
+        'defaultDeployGroups',
+        'defaultDeployNonnotified',
+        'defaultDeployNotified',
+        'defaultDeploySuccess',
+        'defaultMaxFragmentSize',
+        'defaultMergeGroups',
+        'defaultMergePackages',
+        'defaultMergeCustomFields',
+        'defaultPackagePriority',
+        'defaultWarn',
+        'defaultWarnAllowAbort',
+        'defaultWarnAllowDelay',
+        'defaultWarnCountdown',
+        'displayBlacklistedSoftware',
+        'schemaVersion',
+    );
+
+    /**
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
@@ -228,6 +252,9 @@ class Config extends \Database\AbstractTable
         $row = $this->select(array('name' => $name))->current();
         if ($row) {
             $value = $row[$column];
+            if (in_array($option, $this->_iValues) or in_array($option, $this->_integerOptions)) {
+                $value = (integer) $value;
+            }
         } else {
             $value = null;
         }

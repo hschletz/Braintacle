@@ -1658,7 +1658,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_config->expects($this->once())
                       ->method('__get')
                       ->with('displayBlacklistedSoftware')
-                      ->will($this->returnValue(false));
+                      ->willReturn(0);
         $client = $this->getMock('Model\Client\Client');
         $client->expects($this->once())
                ->method('getItems')
@@ -1675,7 +1675,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_config->expects($this->once())
                       ->method('__get')
                       ->with('displayBlacklistedSoftware')
-                      ->will($this->returnValue(true));
+                      ->willReturn(1);
         $client = $this->getMock('Model\Client\Client');
         $client->expects($this->once())
                ->method('getItems')

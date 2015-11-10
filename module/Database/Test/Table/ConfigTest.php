@@ -41,8 +41,11 @@ class ConfigTest extends AbstractTest
      */
     public function testGet()
     {
-        // Test populated ivalue and tvalue options
-        $this->assertEquals(42, static::$_table->get('inventoryInterval'));
+        // Test populated ivalue and tvalue options (check return type for integer options)
+        $this->assertSame(42, static::$_table->get('inventoryInterval'));
+        $this->assertSame(2048, static::$_table->get('defaultMaxFragmentSize'));
+        $this->assertSame(1, static::$_table->get('defaultWarnAllowAbort'));
+        $this->assertSame(0, static::$_table->get('defaultWarnAllowDelay'));
         $this->assertEquals('/example/package/path', static::$_table->get('packagePath'));
         // Test unpopulated option
         $this->assertNull(static::$_table->get('contactInterval'));
@@ -121,7 +124,7 @@ class ConfigTest extends AbstractTest
                 'ivalue' => 42,
             )
         );
-        $this->assertEquals(42, static::$_table->get('limitInventoryInterval'));
+        $this->assertSame(42, static::$_table->get('limitInventoryInterval'));
     }
 
     public function testSetLimitInventoryIntervalDisabled()

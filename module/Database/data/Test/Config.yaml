@@ -20,3 +20,18 @@ config:
     name: "REGISTRY"
     ivalue: 0
     tvalue: null
+  -
+    # Example for tvalue with integer content
+    name: "BRAINTACLE_DEFAULT_MAX_FRAGMENT_SIZE"
+    ivalue: null
+    tvalue: "2048"
+  -
+    # Example for tvalue with boolean true
+    name: "BRAINTACLE_DEFAULT_WARN_ALLOW_ABORT"
+    ivalue: null
+    tvalue: "1"
+  -
+    # Example for tvalue with boolean false
+    name: "BRAINTACLE_DEFAULT_WARN_ALLOW_DELAY"
+    ivalue: null
+    tvalue: "0"

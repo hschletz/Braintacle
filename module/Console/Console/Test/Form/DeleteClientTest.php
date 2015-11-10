@@ -63,7 +63,7 @@ class DeleteClientTest extends \Console\Test\AbstractFormTest
         $this->_config->expects($this->once())
                       ->method('__get')
                       ->with('defaultDeleteInterfaces')
-                      ->will($this->returnValue('1'));
+                      ->willReturn(1);
         $this->assertTrue($this->_getForm()->get('DeleteInterfaces')->isChecked());
     }
 
@@ -72,7 +72,7 @@ class DeleteClientTest extends \Console\Test\AbstractFormTest
         $this->_config->expects($this->once())
                       ->method('__get')
                       ->with('defaultDeleteInterfaces')
-                      ->will($this->returnValue('0'));
+                      ->willReturn(0);
         $this->assertFalse($this->_getForm()->get('DeleteInterfaces')->isChecked());
     }
 

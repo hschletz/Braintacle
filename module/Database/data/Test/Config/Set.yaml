@@ -1,6 +1,21 @@
 # Result set for testSet(), ordered by name
 config:
   -
+    # unchanged
+    name: "BRAINTACLE_DEFAULT_MAX_FRAGMENT_SIZE"
+    ivalue: null
+    tvalue: "2048"
+  -
+    # unchanged
+    name: "BRAINTACLE_DEFAULT_WARN_ALLOW_ABORT"
+    ivalue: null
+    tvalue: "1"
+  -
+    # unchanged
+    name: "BRAINTACLE_DEFAULT_WARN_ALLOW_DELAY"
+    ivalue: null
+    tvalue: "0"
+  -
     # updated
     name: "DOWNLOAD_PACK_DIR"
     ivalue: null

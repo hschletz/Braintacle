@@ -36,8 +36,8 @@ class GroupTest extends AbstractGroupTest
     public function getDefaultConfigProvider()
     {
         return array(
-            array('allowScan', 0, 'scannersPerSubnet', '0'),
-            array('allowScan', 1, 'scannersPerSubnet', '2'),
+            array('allowScan', 0, 'scannersPerSubnet', 0),
+            array('allowScan', 1, 'scannersPerSubnet', 2),
             array('foo', 'bar', 'foo', 'bar'),
         );
     }
@@ -49,7 +49,7 @@ class GroupTest extends AbstractGroupTest
         $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
         $config->expects($this->once())->method('__get')->with($globalOptionName)->willReturn($globalOptionValue);
         $model = $this->_getModel(array('Model\Config' => $config));
-        $this->assertEquals($expectedValue, $model->getDefaultConfig($option));
+        $this->assertSame($expectedValue, $model->getDefaultConfig($option));
     }
 
     public function setMembersFromQueryProvider()

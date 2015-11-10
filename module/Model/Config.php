@@ -32,7 +32,8 @@ namespace Model;
  * that repeated access to an option is inexpensive.
  *
  * The documented datatypes of the properties are only a hint about expected
- * values. They may actually be set and retrieved as strings.
+ * values. Booleans are actually returned as integers (0/1). Integer options are
+ * always returned as integer values and safe for strict type checks.
  *
  * @property string $agentWhitelistFile  Server-side path to file with allowed non-OCS agents (FusionInventory etc.)
  * @property integer $autoMergeDuplicates  Detect and merge duplicates automatically. Default: FALSE (recommended)
@@ -104,19 +105,19 @@ class Config
     protected $_defaults = array(
         'communicationServerUri' => 'http://localhost/ocsinventory',
         'defaultAction' => 'launch',
-        'defaultDeleteInterfaces' => '1',
-        'defaultDeployError' => '1',
-        'defaultDeployGroups' => '1',
-        'defaultDeployNonnotified' => '1',
-        'defaultDeployNotified' => '1',
-        'defaultDeploySuccess' => '1',
-        'defaultMergeGroups' => '1',
-        'defaultMergeCustomFields' => '1',
-        'defaultPackagePriority' => '5',
+        'defaultDeleteInterfaces' => 1,
+        'defaultDeployError' => 1,
+        'defaultDeployGroups' => 1,
+        'defaultDeployNonnotified' => 1,
+        'defaultDeployNotified' => 1,
+        'defaultDeploySuccess' => 1,
+        'defaultMergeGroups' => 1,
+        'defaultMergeCustomFields' => 1,
+        'defaultPackagePriority' => 5,
         'defaultPlatform' => 'windows',
-        'defaultWarn' => '0',
+        'defaultWarn' => 0,
         // Defaults below this point are defined by communication server.
-        'autoMergeDuplicates' => false,
+        'autoMergeDuplicates' => 0,
         'contactInterval' => 12,
         'downloadCycleDelay' => 60,
         'downloadFragmentDelay' => 60,
@@ -184,8 +185,8 @@ class Config
                 $value = $this->_defaults[$option];
             }
             if ($option == 'autoMergeDuplicates') {
-                // Convert bitmask to boolean
-                $value = (bool) $value;
+                // Convert bitmask to 0/1
+                $value = min($value, 1);
             }
             $this->_cache[$option] = $value;
         }

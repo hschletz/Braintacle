@@ -47,9 +47,9 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
                       ->will(
                           $this->returnValueMap(
                               array(
-                                array('defaultMergeCustomFields', '1'),
-                                array('defaultMergeGroups', '1'),
-                                array('defaultMergePackages', '0'),
+                                array('defaultMergeCustomFields', 1),
+                                array('defaultMergeGroups', 1),
+                                array('defaultMergePackages', 0),
                               )
                           )
                       );

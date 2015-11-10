@@ -434,15 +434,15 @@ class ClientOrGroupTest extends AbstractTest
     public function getConfigProvider()
     {
         return array(
-            array(10, 'packageDeployment', '0'),
+            array(10, 'packageDeployment', 0),
             array(11, 'packageDeployment', null),
-            array(10, 'allowScan', '0'),
+            array(10, 'allowScan', 0),
             array(11, 'allowScan', null),
             array(10, 'scanThisNetwork', '192.0.2.0'),
             array(11, 'scanThisNetwork', null),
-            array(10, 'scanSnmp', '0'),
+            array(10, 'scanSnmp', 0),
             array(11, 'scanSnmp', null),
-            array(10, 'inventoryInterval', '23'),
+            array(10, 'inventoryInterval', 23),
             array(11, 'inventoryInterval', null),
         );
     }
@@ -584,19 +584,19 @@ class ClientOrGroupTest extends AbstractTest
         $model->setServiceLocator($serviceManager);
         $model['Id'] = 10;
 
-        $model->setConfig('inventoryInterval', 23);
+        $model->setConfig('inventoryInterval', '23');
 
         $cache = new \ReflectionProperty($model, '_configCache');
         $cache->setAccessible(true);
-        $this->assertEquals(23, $cache->getValue($model)['inventoryInterval']);
+        $this->assertSame(23, $cache->getValue($model)['inventoryInterval']);
     }
 
     public function getAllConfigProvider()
     {
         return array(
-            array(null, 0, 0, true, false, false),
-            array(0, null, 0, false, true, false),
-            array(0, 0, null, false, false, true),
+            array(null, 0, 0, 1, 0, 0),
+            array(0, null, 0, 0, 1, 0),
+            array(0, 0, null, 0, 0, 1),
         );
     }
 
@@ -631,7 +631,7 @@ class ClientOrGroupTest extends AbstractTest
                 )
             )
         );
-        $this->assertEquals(
+        $this->assertSame(
             array(
                 'Agent' => array(
                     'contactInterval' => 2,
