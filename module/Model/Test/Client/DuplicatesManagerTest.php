@@ -366,7 +366,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client1 = $this->getMock('Model\Client\Client');
         $client1->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:01:33'));
         $client1->method('lock')->willReturn(true);
-        $client1->method('getGroupMemberships')->with(\Model_GroupMembership::TYPE_MANUAL)->willReturn(
+        $client1->method('getGroupMemberships')->with(\Model\Client\Client::MEMBERSHIP_MANUAL)->willReturn(
             array(
                 1 => 'membership1',
                 2 => 'membership2',
@@ -378,7 +378,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client2 = $this->getMock('Model\Client\Client');
         $client2->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:02:33'));
         $client2->method('lock')->willReturn(true);
-        $client2->method('getGroupMemberships')->with(\Model_GroupMembership::TYPE_MANUAL)->willReturn(
+        $client2->method('getGroupMemberships')->with(\Model\Client\Client::MEMBERSHIP_MANUAL)->willReturn(
             array(
                 2 => 'membership2',
                 3 => 'membership3',

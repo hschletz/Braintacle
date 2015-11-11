@@ -68,7 +68,7 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
         $what = $this->_form->get('What');
         $this->assertInstanceOf('Zend\Form\Element\Radio', $what);
         $this->assertCount(3, $what->getValueOptions());
-        $this->assertEquals(\Model_GroupMembership::TYPE_DYNAMIC, $what->getValue());
+        $this->assertEquals(\Model\Client\Client::MEMBERSHIP_AUTOMATIC, $what->getValue());
 
         $where = $this->_form->get('Where');
         $this->assertInstanceOf('Zend\Form\Element\Radio', $where);

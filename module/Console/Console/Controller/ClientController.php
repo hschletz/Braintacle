@@ -454,7 +454,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
 
         $groups = $this->_groupManager->getGroups(null, null, 'Name');
         if ($groups->count()) {
-            $memberships = $this->_currentClient->getGroupMemberships(\Model_GroupMembership::TYPE_ALL);
+            $memberships = $this->_currentClient->getGroupMemberships(\Model\Client\Client::MEMBERSHIP_ANY);
             $data = array();
             // Create form data for all groups and actual membership list
             foreach ($groups as $group) {
@@ -463,12 +463,12 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
                 if (isset($memberships[$id])) {
                     $type = $memberships[$id];
                     $data['Groups'][$name] = $type;
-                    if ($type != \Model_GroupMembership::TYPE_EXCLUDED) {
+                    if ($type != \Model\Client\Client::MEMBERSHIP_NEVER) {
                         $vars['memberships'][] = array('GroupName' => $name, 'Membership' => $type);
                     }
                 } else {
                     // Default to automatic membership
-                    $data['Groups'][$group['Name']] = \Model_GroupMembership::TYPE_DYNAMIC;
+                    $data['Groups'][$group['Name']] = \Model\Client\Client::MEMBERSHIP_AUTOMATIC;
                 }
             }
             $form = $this->_formManager->get('Console\Form\GroupMemberships');

@@ -217,8 +217,8 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
                                 new Predicate\In(
                                     'groups_cache.static',
                                     array(
-                                        \Model_GroupMembership::TYPE_DYNAMIC,
-                                        \Model_GroupMembership::TYPE_STATIC
+                                        Client::MEMBERSHIP_AUTOMATIC,
+                                        Client::MEMBERSHIP_ALWAYS
                                     )
                                 )
                             )
@@ -234,7 +234,7 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
                            ->where(
                                array(
                                    'groups_cache.group_id' => $arg['Id'],
-                                   'groups_cache.static' => \Model_GroupMembership::TYPE_EXCLUDED
+                                   'groups_cache.static' => \Model\Client\Client::MEMBERSHIP_NEVER
                                )
                            );
                     break;

@@ -29,13 +29,13 @@ class MembershipTypeTest extends AbstractTest
     public function testTypeAutomatic()
     {
         $helper = $this->_getHelper();
-        $this->assertEquals('automatisch', $helper(\Model_GroupMembership::TYPE_DYNAMIC));
+        $this->assertEquals('automatisch', $helper(\Model\Client\Client::MEMBERSHIP_AUTOMATIC));
     }
 
     public function testTypeManual()
     {
         $helper = $this->_getHelper();
-        $this->assertEquals('manuell', $helper(\Model_GroupMembership::TYPE_STATIC));
+        $this->assertEquals('manuell', $helper(\Model\Client\Client::MEMBERSHIP_ALWAYS));
     }
 
     public function testInvalidType()

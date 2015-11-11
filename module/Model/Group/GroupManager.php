@@ -88,7 +88,7 @@ class GroupManager
                 $select->where(
                     array(
                         'groups_cache.hardware_id' => $filterArg,
-                        new \Zend\Db\Sql\Predicate\Operator('static', '!=', \Model_GroupMembership::TYPE_EXCLUDED),
+                        new \Zend\Db\Sql\Predicate\Operator('static', '!=', \Model\Client\Client::MEMBERSHIP_NEVER),
                     )
                 );
                 break;

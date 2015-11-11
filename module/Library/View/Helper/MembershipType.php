@@ -45,7 +45,7 @@ class MembershipType extends \Zend\View\Helper\AbstractHelper
     /**
      * Render translated text for membership type
      *
-     * @param integer $type One of \Model_GroupMembership::TYPE_DYNAMIC or \Model_GroupMembership::TYPE_STATIC
+     * @param integer $type One of \Model\Client\Client::MEMBERSHIP_AUTOMATIC or \Model\Client\Client::MEMBERSHIP_ALWAYS
      * @return string Translation for either 'automatic' or 'manual'
      * @throws \InvalidArgumentException if $type is not one of the allowed values
      */
@@ -53,9 +53,9 @@ class MembershipType extends \Zend\View\Helper\AbstractHelper
     {
         // Cast to string to avoid type juggling side effects
         switch ((string) $type) {
-            case (string) \Model_GroupMembership::TYPE_DYNAMIC:
+            case (string) \Model\Client\Client::MEMBERSHIP_AUTOMATIC:
                 return $this->_translate->__invoke('automatic');
-            case (string) \Model_GroupMembership::TYPE_STATIC:
+            case (string) \Model\Client\Client::MEMBERSHIP_ALWAYS:
                 return $this->_translate->__invoke('manual');
             default:
                 throw new \InvalidArgumentException("Invalid group membership type: $type");

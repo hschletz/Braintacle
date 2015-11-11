@@ -776,8 +776,8 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                 3,
                 true,
                 array(
-                    array('id' => 2, 'static' => \Model_GroupMembership::TYPE_DYNAMIC),
-                    array('id' => 1, 'static' => \Model_GroupMembership::TYPE_STATIC),
+                    array('id' => 2, 'static' => \Model\Client\Client::MEMBERSHIP_AUTOMATIC),
+                    array('id' => 1, 'static' => \Model\Client\Client::MEMBERSHIP_ALWAYS),
                 ),
             ),
             array(
@@ -787,8 +787,8 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                 3,
                 true,
                 array(
-                    array('id' => 1, 'static' => \Model_GroupMembership::TYPE_STATIC),
-                    array('id' => 2, 'static' => \Model_GroupMembership::TYPE_DYNAMIC),
+                    array('id' => 1, 'static' => \Model\Client\Client::MEMBERSHIP_ALWAYS),
+                    array('id' => 2, 'static' => \Model\Client\Client::MEMBERSHIP_AUTOMATIC),
                 ),
             ),
         );

@@ -521,31 +521,31 @@ class ClientTest extends \Model\Test\AbstractTest
     {
         return array(
             array(
-                \Model_GroupMembership::TYPE_ALL,
+                \Model\Client\Client::MEMBERSHIP_ANY,
                 array(
-                    1 => \Model_GroupMembership::TYPE_STATIC,
-                    2 => \Model_GroupMembership::TYPE_EXCLUDED,
-                    3 => \Model_GroupMembership::TYPE_DYNAMIC,
+                    1 => \Model\Client\Client::MEMBERSHIP_ALWAYS,
+                    2 => \Model\Client\Client::MEMBERSHIP_NEVER,
+                    3 => \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
                 )
             ),
             array(
-                \Model_GroupMembership::TYPE_MANUAL,
+                \Model\Client\Client::MEMBERSHIP_MANUAL,
                 array(
-                    1 => \Model_GroupMembership::TYPE_STATIC,
-                    2 => \Model_GroupMembership::TYPE_EXCLUDED,
+                    1 => \Model\Client\Client::MEMBERSHIP_ALWAYS,
+                    2 => \Model\Client\Client::MEMBERSHIP_NEVER,
                 )
             ),
             array(
-                \Model_GroupMembership::TYPE_STATIC,
-                array(1 => \Model_GroupMembership::TYPE_STATIC)
+                \Model\Client\Client::MEMBERSHIP_ALWAYS,
+                array(1 => \Model\Client\Client::MEMBERSHIP_ALWAYS)
             ),
             array(
-                \Model_GroupMembership::TYPE_EXCLUDED,
-                array(2 => \Model_GroupMembership::TYPE_EXCLUDED)
+                \Model\Client\Client::MEMBERSHIP_NEVER,
+                array(2 => \Model\Client\Client::MEMBERSHIP_NEVER)
             ),
             array(
-                \Model_GroupMembership::TYPE_DYNAMIC,
-                array(3 => \Model_GroupMembership::TYPE_DYNAMIC)
+                \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
+                array(3 => \Model\Client\Client::MEMBERSHIP_AUTOMATIC)
             ),
         );
     }

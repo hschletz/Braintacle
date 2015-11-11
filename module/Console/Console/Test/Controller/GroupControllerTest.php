@@ -230,7 +230,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                 'Name' => 'computerName',
                 'UserName' => 'userName',
                 'InventoryDate' => $inventoryDate,
-                'Membership' => \Model_GroupMembership::TYPE_STATIC,
+                'Membership' => \Model\Client\Client::MEMBERSHIP_ALWAYS,
             ),
         );
         $this->_groupManager->expects($this->once())

@@ -58,10 +58,10 @@ class Group extends \Model\ClientOrGroup
     /**
      * Set group members based on query
      *
-     * If $type is \Model_GroupMembership::TYPE_DYNAMIC, the DynamicMembersSql
-     * property will be set to the resulting query. For other values, the query
-     * will be executed and $type is stored as manual membership/exclusion on
-     * the results.
+     * If $type is \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
+     * the DynamicMembersSql property will be set to the resulting query. For
+     * other values, the query will be executed and $type is stored as manual
+     * membership/exclusion on the results.
      *
      * The query arguments are passed to \Model\Client\ClientManager::getClients().
      *
@@ -85,10 +85,10 @@ class Group extends \Model\ClientOrGroup
             $invert,
             false,
             true,
-            ($type != \Model_GroupMembership::TYPE_DYNAMIC)
+            ($type != \Model\Client\Client::MEMBERSHIP_AUTOMATIC)
         );
 
-        if ($type == \Model_GroupMembership::TYPE_DYNAMIC) {
+        if ($type == \Model\Client\Client::MEMBERSHIP_AUTOMATIC) {
             $numCols = count($members->getRawState(\Zend\Db\Sql\Select::COLUMNS));
             foreach ($members->getRawState(\Zend\Db\Sql\Select::JOINS) as $join) {
                 $numCols += count($join['columns']);
@@ -181,7 +181,7 @@ class Group extends \Model\ClientOrGroup
         $groupMemberships->delete(
             array(
                 'group_id' => $this['Id'],
-                'static' => \Model_GroupMembership::TYPE_DYNAMIC,
+                'static' => \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
                 "hardware_id NOT IN($this[DynamicMembersSql])"
             )
         );
@@ -196,7 +196,7 @@ class Group extends \Model\ClientOrGroup
             array(
                 'hardware_id' => 'id',
                 'group_id' => new \Zend\Db\Sql\Expression('?', $this['Id']),
-                'static' => new \Zend\Db\Sql\Literal(\Model_GroupMembership::TYPE_DYNAMIC),
+                'static' => new \Zend\Db\Sql\Literal(\Model\Client\Client::MEMBERSHIP_AUTOMATIC),
             )
         )->where(
             array(

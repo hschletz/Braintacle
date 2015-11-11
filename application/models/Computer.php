@@ -157,25 +157,25 @@ abstract class Model_Computer extends \Model_Abstract
             // Determine action to be taken depending on old and new membership.
             $action = ''; // default: no action
             switch ($newMembership) {
-                case Model_GroupMembership::TYPE_DYNAMIC:
-                    if ($oldMembership === Model_GroupMembership::TYPE_STATIC or
-                        $oldMembership === Model_GroupMembership::TYPE_EXCLUDED
+                case \Model\Client\Client::MEMBERSHIP_AUTOMATIC:
+                    if ($oldMembership === Model\Client\Client::MEMBERSHIP_ALWAYS or
+                        $oldMembership === Model\Client\Client::MEMBERSHIP_NEVER
                     ) {
                         $action = 'delete';
                     }
                     break;
-                case Model_GroupMembership::TYPE_STATIC:
-                    if ($oldMembership === Model_GroupMembership::TYPE_DYNAMIC or
-                        $oldMembership === Model_GroupMembership::TYPE_EXCLUDED
+                case Model\Client\Client::MEMBERSHIP_ALWAYS:
+                    if ($oldMembership === \Model\Client\Client::MEMBERSHIP_AUTOMATIC or
+                        $oldMembership === Model\Client\Client::MEMBERSHIP_NEVER
                     ) {
                         $action = 'update';
                     } elseif ($oldMembership === null) {
                         $action = 'insert';
                     }
                     break;
-                case Model_GroupMembership::TYPE_EXCLUDED:
-                    if ($oldMembership === Model_GroupMembership::TYPE_DYNAMIC or
-                        $oldMembership === Model_GroupMembership::TYPE_STATIC
+                case Model\Client\Client::MEMBERSHIP_NEVER:
+                    if ($oldMembership === \Model\Client\Client::MEMBERSHIP_AUTOMATIC or
+                        $oldMembership === Model\Client\Client::MEMBERSHIP_ALWAYS
                     ) {
                         $action = 'update';
                     } elseif ($oldMembership === null) {

@@ -37,18 +37,18 @@ class AddToGroup extends Form
         $what = new \Zend\Form\Element\Radio('What');
         $what->setValueOptions(
             array(
-                \Model_GroupMembership::TYPE_DYNAMIC => $this->_(
+                \Model\Client\Client::MEMBERSHIP_AUTOMATIC => $this->_(
                     'Store search parameters. Group memberships will be updated automatically.'
                 ),
-                \Model_GroupMembership::TYPE_STATIC => $this->_(
+                \Model\Client\Client::MEMBERSHIP_ALWAYS => $this->_(
                     'Add current search results. Group memberships will be set only this time.'
                 ),
-                \Model_GroupMembership::TYPE_EXCLUDED => $this->_(
+                \Model\Client\Client::MEMBERSHIP_NEVER => $this->_(
                     'Exclude search results from a group.'
                 )
             )
         );
-        $what->setValue(\Model_GroupMembership::TYPE_DYNAMIC);
+        $what->setValue(\Model\Client\Client::MEMBERSHIP_AUTOMATIC);
         $this->add($what);
 
         $where = new \Zend\Form\Element\Radio('Where');

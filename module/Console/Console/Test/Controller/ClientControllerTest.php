@@ -2281,8 +2281,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
         $resultSet->initialize($groups);
         $formGroups = array(
-            'group1' => \Model_GroupMembership::TYPE_EXCLUDED,
-            'group2' => \Model_GroupMembership::TYPE_DYNAMIC,
+            'group1' => \Model\Client\Client::MEMBERSHIP_NEVER,
+            'group2' => \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
         );
         $form = $this->_formManager->get('Console\Form\GroupMemberships');
         $form->expects($this->once())
@@ -2297,8 +2297,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client = $this->getMock('Model\Client\Client');
         $client->expects($this->once())
                ->method('getGroupMemberships')
-               ->with(\Model_GroupMembership::TYPE_ALL)
-               ->willReturn(array(1 => \Model_GroupMembership::TYPE_EXCLUDED));
+               ->with(\Model\Client\Client::MEMBERSHIP_ANY)
+               ->willReturn(array(1 => \Model\Client\Client::MEMBERSHIP_NEVER));
         $client->method('offsetGet')
                ->will($this->returnValueMap(array(array('Id', 1))));
         $this->_clientManager->method('getClient')->willReturn($client);
@@ -2323,12 +2323,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
         $resultSet->initialize($groups);
         $memberships = array(
-            1 => \Model_GroupMembership::TYPE_DYNAMIC,
-            2 => \Model_GroupMembership::TYPE_STATIC,
+            1 => \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
+            2 => \Model\Client\Client::MEMBERSHIP_ALWAYS,
         );
         $formGroups = array(
-            'group1' => \Model_GroupMembership::TYPE_DYNAMIC,
-            'group2' => \Model_GroupMembership::TYPE_STATIC,
+            'group1' => \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
+            'group2' => \Model\Client\Client::MEMBERSHIP_ALWAYS,
         );
         $form = $this->_formManager->get('Console\Form\GroupMemberships');
         $form->expects($this->once())
@@ -2343,7 +2343,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client = $this->getMock('Model\Client\Client');
         $client->expects($this->once())
                ->method('getGroupMemberships')
-               ->with(\Model_GroupMembership::TYPE_ALL)
+               ->with(\Model\Client\Client::MEMBERSHIP_ANY)
                ->willReturn($memberships);
         $client->method('offsetGet')
                ->will($this->returnValueMap(array(array('Id', 1))));

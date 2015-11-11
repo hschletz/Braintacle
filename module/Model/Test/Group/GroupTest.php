@@ -55,8 +55,8 @@ class GroupTest extends AbstractGroupTest
     public function setMembersFromQueryProvider()
     {
         return array(
-            array(\Model_GroupMembership::TYPE_STATIC, false, 'SetMembersFromQueryStatic'),
-            array(\Model_GroupMembership::TYPE_EXCLUDED, true, 'SetMembersFromQueryExcluded'),
+            array(\Model\Client\Client::MEMBERSHIP_ALWAYS, false, 'SetMembersFromQueryStatic'),
+            array(\Model\Client\Client::MEMBERSHIP_NEVER, true, 'SetMembersFromQueryExcluded'),
         );
     }
 
@@ -163,7 +163,7 @@ class GroupTest extends AbstractGroupTest
         $model->setServiceLocator($serviceManager);
 
         $this->setExpectedException('RuntimeException', 'test');
-        $model->setMembersFromQuery(\Model_GroupMembership::TYPE_STATIC, 'filter', 'search', 'operator', 'invert');
+        $model->setMembersFromQuery(\Model\Client\Client::MEMBERSHIP_ALWAYS, 'filter', 'search', 'operator', 'invert');
     }
 
     public function setMembersFromQueryDynamicProvider()
@@ -239,7 +239,9 @@ class GroupTest extends AbstractGroupTest
         $model['Id'] = 10;
         $model->setServiceLocator($serviceManager);
 
-        $model->setMembersFromQuery(\Model_GroupMembership::TYPE_DYNAMIC, 'filter', 'search', 'operator', 'invert');
+        $model->setMembersFromQuery(
+            \Model\Client\Client::MEMBERSHIP_AUTOMATIC, 'filter', 'search', 'operator', 'invert'
+        );
         $this->assertTablesEqual(
             $this->_loadDataSet('SetMembersFromQueryDynamic')->getTable('groups'),
             $this->getConnection()->createQueryTable(
@@ -274,7 +276,9 @@ class GroupTest extends AbstractGroupTest
         $model['Id'] = 10;
 
         $this->setExpectedException('LogicException', 'Expected 1 column, got 2');
-        $model->setMembersFromQuery(\Model_GroupMembership::TYPE_DYNAMIC, 'filter', 'search', 'operator', 'invert');
+        $model->setMembersFromQuery(
+            \Model\Client\Client::MEMBERSHIP_AUTOMATIC, 'filter', 'search', 'operator', 'invert'
+        );
     }
 
     public function updateProvider()

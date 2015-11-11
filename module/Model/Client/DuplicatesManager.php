@@ -290,7 +290,7 @@ class DuplicatesManager
                 // undefined.
                 $groupList = array();
                 foreach ($clients as $client) {
-                    $groupList += $client->getGroupMemberships(\Model_GroupMembership::TYPE_MANUAL);
+                    $groupList += $client->getGroupMemberships(\Model\Client\Client::MEMBERSHIP_MANUAL);
                 }
                 $newest->setGroups($groupList);
             }

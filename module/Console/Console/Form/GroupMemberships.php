@@ -28,9 +28,9 @@ namespace Console\Form;
  * radio button set (with the same name as the package) in the "Groups" fieldset
  * with 3 buttons:
  *
- * - value \Model_GroupMembership::TYPE_DYNAMIC ("automatic")
- * - value \Model_GroupMembership::TYPE_STATIC ("always")
- * - value \Model_GroupMembership::TYPE_EXCLUDED ("never")
+ * - value \Model\Client\Client::MEMBERSHIP_AUTOMATIC
+ * - value \Model\Client\Client::MEMBERSHIP_ALWAYS
+ * - value \Model\Client\Client::MEMBERSHIP_NEVER
  */
 class GroupMemberships extends Form
 {
@@ -106,15 +106,15 @@ class GroupMemberships extends Form
         $this->add($fieldset);
 
         $buttons = array(
-            \Model_GroupMembership::TYPE_DYNAMIC => $this->_('automatic'),
-            \Model_GroupMembership::TYPE_STATIC => $this->_('always'),
-            \Model_GroupMembership::TYPE_EXCLUDED => $this->_('never'),
+            \Model\Client\Client::MEMBERSHIP_AUTOMATIC => $this->_('automatic'),
+            \Model\Client\Client::MEMBERSHIP_ALWAYS => $this->_('always'),
+            \Model\Client\Client::MEMBERSHIP_NEVER => $this->_('never'),
         );
         foreach ($groups as $group) {
             $element = new \Zend\Form\Element\Radio($group);
             $element->setLabel($group);
             $element->setValueOptions($buttons);
-            $element->setValue(\Model_GroupMembership::TYPE_DYNAMIC);
+            $element->setValue(\Model\Client\Client::MEMBERSHIP_AUTOMATIC);
             $fieldset->add($element);
         }
     }

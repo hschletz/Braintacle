@@ -85,6 +85,31 @@ namespace Model\Client;
 class Client extends \Model_Computer
 {
     /**
+     * Value denoting automatic group membership, i.e. from a group query
+     */
+    const MEMBERSHIP_AUTOMATIC = 0;
+
+    /**
+     * Value denoting explicit group membership
+     */
+    const MEMBERSHIP_ALWAYS = 1;
+
+    /**
+     * Value denoting that the client is excluded from a group
+     */
+    const MEMBERSHIP_NEVER = 2;
+
+    /**
+     * Value denoting either MEMBERSHIP_ALWAYS or MEMBERSHIP_NEVER - only as argument for getGroupMemberships()
+     */
+    const MEMBERSHIP_MANUAL = -1;
+
+    /**
+     * Value denoting any membership value - only as argument for getGroupMemberships()
+     */
+    const MEMBERSHIP_ANY = -2;
+
+    /**
      * Cache for getDefaultConfig() results
      * @var array
      */
@@ -404,7 +429,7 @@ class Client extends \Model_Computer
     /**
      * Retrieve group membership information
      *
-     * @param integer $membershipType Membership type to retrieve
+     * @param integer $membershipType Membership type (one of the MEMBERSHIP_* constants)
      * @return array Group ID => membership type
      * @throws \InvalidArgumentException if $membershipType is invalid
      */
@@ -415,16 +440,16 @@ class Client extends \Model_Computer
         $select->columns(array('group_id', 'static'));
 
         switch ($membershipType) {
-            case \Model_GroupMembership::TYPE_ALL:
+            case self::MEMBERSHIP_ANY:
                 break;
-            case \Model_GroupMembership::TYPE_MANUAL:
+            case self::MEMBERSHIP_MANUAL:
                 $select->where(
-                    new \Zend\Db\Sql\Predicate\Operator('static', '!=', \Model_GroupMembership::TYPE_DYNAMIC)
+                    new \Zend\Db\Sql\Predicate\Operator('static', '!=', self::MEMBERSHIP_AUTOMATIC)
                 );
                 break;
-            case \Model_GroupMembership::TYPE_DYNAMIC:
-            case \Model_GroupMembership::TYPE_STATIC:
-            case \Model_GroupMembership::TYPE_EXCLUDED:
+            case self::MEMBERSHIP_AUTOMATIC:
+            case self::MEMBERSHIP_ALWAYS:
+            case self::MEMBERSHIP_NEVER:
                 $select->where(array('static' => $membershipType));
                 break;
             default:
