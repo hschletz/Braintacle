@@ -2259,10 +2259,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->never())
              ->method('render');
         $client = $this->getMock('Model\Client\Client');
-        $client->expects($this->once())
-               ->method('getGroups')
-               ->with(\Model_GroupMembership::TYPE_ALL)
-               ->willReturn(array());
+        $client->expects($this->never())->method('getGroupMemberships');
+
         $this->_clientManager->method('getClient')->willReturn($client);
         $this->_groupManager->expects($this->once())
                            ->method('getGroups')
@@ -2277,15 +2275,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testGroupsActionOnlyExcluded()
     {
         $groups = array(
-            array('Name' => 'group1'),
-            array('Name' => 'group2'),
+            array('Id' => 1, 'Name' => 'group1'),
+            array('Id' => 2, 'Name' => 'group2'),
         );
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
         $resultSet->initialize($groups);
-        $membership = array(
-            'GroupName' => 'group1',
-            'Membership' => \Model_GroupMembership::TYPE_EXCLUDED
-        );
         $formGroups = array(
             'group1' => \Model_GroupMembership::TYPE_EXCLUDED,
             'group2' => \Model_GroupMembership::TYPE_DYNAMIC,
@@ -2302,9 +2296,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->with('action', '/console/client/managegroups/?id=1');
         $client = $this->getMock('Model\Client\Client');
         $client->expects($this->once())
-               ->method('getGroups')
+               ->method('getGroupMemberships')
                ->with(\Model_GroupMembership::TYPE_ALL)
-               ->willReturn(array($membership));
+               ->willReturn(array(1 => \Model_GroupMembership::TYPE_EXCLUDED));
         $client->method('offsetGet')
                ->will($this->returnValueMap(array(array('Id', 1))));
         $this->_clientManager->method('getClient')->willReturn($client);
@@ -2323,20 +2317,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testGroupsActionMember()
     {
         $groups = array(
-            array('Name' => 'group1'),
-            array('Name' => 'group2'),
+            array('Id' => 1, 'Name' => 'group1'),
+            array('Id' => 2, 'Name' => 'group2'),
         );
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
         $resultSet->initialize($groups);
         $memberships = array(
-            array(
-                'GroupName' => 'group1',
-                'Membership' => \Model_GroupMembership::TYPE_DYNAMIC,
-            ),
-            array(
-                'GroupName' => 'group2',
-                'Membership' => \Model_GroupMembership::TYPE_STATIC,
-            ),
+            1 => \Model_GroupMembership::TYPE_DYNAMIC,
+            2 => \Model_GroupMembership::TYPE_STATIC,
         );
         $formGroups = array(
             'group1' => \Model_GroupMembership::TYPE_DYNAMIC,
@@ -2354,7 +2342,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->with('action', '/console/client/managegroups/?id=1');
         $client = $this->getMock('Model\Client\Client');
         $client->expects($this->once())
-               ->method('getGroups')
+               ->method('getGroupMemberships')
                ->with(\Model_GroupMembership::TYPE_ALL)
                ->willReturn($memberships);
         $client->method('offsetGet')

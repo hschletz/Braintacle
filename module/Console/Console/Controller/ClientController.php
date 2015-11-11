@@ -450,18 +450,26 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     {
         $vars = $this->getOrder('GroupName');
         $vars['client'] = $this->_currentClient;
-        $vars['memberships'] = $this->_currentClient->getGroups(\Model_GroupMembership::TYPE_ALL);
+        $vars['memberships'] = array();
 
         $groups = $this->_groupManager->getGroups(null, null, 'Name');
         if ($groups->count()) {
+            $memberships = $this->_currentClient->getGroupMemberships(\Model_GroupMembership::TYPE_ALL);
             $data = array();
-            // Create form data for all groups with default value
+            // Create form data for all groups and actual membership list
             foreach ($groups as $group) {
-                $data['Groups'][$group['Name']] = \Model_GroupMembership::TYPE_DYNAMIC;
-            }
-            // Overlay with actual memberships
-            foreach ($vars['memberships'] as $membership) {
-                $data['Groups'][$membership['GroupName']] = $membership['Membership'];
+                $id = $group['Id'];
+                $name = $group['Name'];
+                if (isset($memberships[$id])) {
+                    $type = $memberships[$id];
+                    $data['Groups'][$name] = $type;
+                    if ($type != \Model_GroupMembership::TYPE_EXCLUDED) {
+                        $vars['memberships'][] = array('GroupName' => $name, 'Membership' => $type);
+                    }
+                } else {
+                    // Default to automatic membership
+                    $data['Groups'][$group['Name']] = \Model_GroupMembership::TYPE_DYNAMIC;
+                }
             }
             $form = $this->_formManager->get('Console\Form\GroupMemberships');
             $form->setData($data);

@@ -48,19 +48,13 @@ $renderCallbacks = array(
     },
 );
 
-$memberships = array();
-foreach ($this->memberships as $membership) {
-    if ($membership['Membership'] != \Model_GroupMembership::TYPE_EXCLUDED) {
-        $memberships[] = $membership;
-    }
-}
-if (count($memberships)) {
+if (count($this->memberships)) {
     print $this->htmlTag(
         'h2',
         $this->translate('Group memberships')
     );
     print $this->table(
-        $memberships,
+        $this->memberships,
         $headers,
         array('order' => $this->order, 'direction' => $this->direction),
         $renderCallbacks

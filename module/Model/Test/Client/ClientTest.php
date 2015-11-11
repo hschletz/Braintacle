@@ -32,6 +32,7 @@ class ClientTest extends \Model\Test\AbstractTest
         'ClientConfig',
         'Packages',
         'PackageHistory',
+        'GroupMemberships',
     );
 
     public function testObjectProperties()
@@ -514,5 +515,60 @@ class ClientTest extends \Model\Test\AbstractTest
         $model->setServiceLocator($serviceManager);
 
         $this->assertEquals('result', $model->getItems('type', 'order', 'direction', array('filter' => 'arg')));
+    }
+
+    public function getGroupMembershipsProvider()
+    {
+        return array(
+            array(
+                \Model_GroupMembership::TYPE_ALL,
+                array(
+                    1 => \Model_GroupMembership::TYPE_STATIC,
+                    2 => \Model_GroupMembership::TYPE_EXCLUDED,
+                    3 => \Model_GroupMembership::TYPE_DYNAMIC,
+                )
+            ),
+            array(
+                \Model_GroupMembership::TYPE_MANUAL,
+                array(
+                    1 => \Model_GroupMembership::TYPE_STATIC,
+                    2 => \Model_GroupMembership::TYPE_EXCLUDED,
+                )
+            ),
+            array(
+                \Model_GroupMembership::TYPE_STATIC,
+                array(1 => \Model_GroupMembership::TYPE_STATIC)
+            ),
+            array(
+                \Model_GroupMembership::TYPE_EXCLUDED,
+                array(2 => \Model_GroupMembership::TYPE_EXCLUDED)
+            ),
+            array(
+                \Model_GroupMembership::TYPE_DYNAMIC,
+                array(3 => \Model_GroupMembership::TYPE_DYNAMIC)
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider getGroupMembershipsProvider
+     */
+    public function testGetGroupMemberships($type, $expected)
+    {
+        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
+        $groupManager->expects($this->once())->method('updateCache');
+
+        $model = $this->_getModel(array('Model\Group\GroupManager' => $groupManager));
+        $model['Id'] = 1;
+
+        $this->assertEquals($expected, $model->getGroupMemberships($type));
+    }
+
+    public function testGetGroupMembershipsInvalidType()
+    {
+        $this->setExpectedException('InvalidArgumentException', 'Bad value for membership: 42');
+
+        $model = $this->_getModel();
+        $model->getGroupMemberships(42);
     }
 }

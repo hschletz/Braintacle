@@ -363,15 +363,27 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
      */
     public function testMergeGroups()
     {
-        $groups = array(
-            array('GroupId' => 1, 'Membership' => 'membership1a'),
-            array('GroupId' => 2, 'Membership' => 'membership2'),
-            array('GroupId' => 1, 'Membership' => 'membership1b'), // Duplicate to simulate groups from multiple clients
+        $client1 = $this->getMock('Model\Client\Client');
+        $client1->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:01:33'));
+        $client1->method('lock')->willReturn(true);
+        $client1->method('getGroupMemberships')->with(\Model_GroupMembership::TYPE_MANUAL)->willReturn(
+            array(
+                1 => 'membership1',
+                2 => 'membership2',
+            )
         );
+        $client1->expects($this->never())->method('setUserDefinedInfo');
+        $client1->expects($this->never())->method('setGroups');
+
         $client2 = $this->getMock('Model\Client\Client');
         $client2->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:02:33'));
         $client2->method('lock')->willReturn(true);
-        $client2->method('getGroups')->with(\Model_GroupMembership::TYPE_MANUAL, null)->willReturn($groups);
+        $client2->method('getGroupMemberships')->with(\Model_GroupMembership::TYPE_MANUAL)->willReturn(
+            array(
+                2 => 'membership2',
+                3 => 'membership3',
+            )
+        );
         $client2->expects($this->never())->method('setUserDefinedInfo');
         $client2->expects($this->never())->method('setGroups');
 
@@ -380,13 +392,24 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client3->method('lock')->willReturn(true);
         $client3->expects($this->once())->method('unlock');
         $client3->expects($this->never())->method('setUserDefinedInfo');
-        $client3->expects($this->once())->method('setGroups')->with(array(2 => 'membership2', 1 => 'membership1b'));
+        $client3->expects($this->once())->method('setGroups')->with(
+            array(
+                1 => 'membership1',
+                2 => 'membership2',
+                3 => 'membership3',
+            )
+        );
 
         $clientManager = $this->getMock('Model\Client\ClientManager');
         $clientManager->method('getClient')
-                      ->withConsecutive(array(2), array(3))
-                      ->will($this->onConsecutiveCalls($client2, $client3));
-        $clientManager->expects($this->once())->method('deleteClient')->with($this->identicalTo($client2), false);
+                      ->withConsecutive(array(1), array(2), array(3))
+                      ->will($this->onConsecutiveCalls($client1, $client2, $client3));
+        $clientManager->expects($this->exactly(2))
+                      ->method('deleteClient')
+                      ->withConsecutive(
+                          array($this->identicalTo($client1), false),
+                          array($this->identicalTo($client2), false)
+                      );
 
         $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
         $clientConfig->expects($this->never())->method('update');
@@ -397,7 +420,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
                 'Database\Table\ClientConfig' => $clientConfig,
             )
         );
-        $model->merge(array(2, 3), false, true, false);
+        $model->merge(array(1, 2, 3), false, true, false);
     }
 
     /**

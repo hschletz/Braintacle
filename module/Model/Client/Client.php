@@ -400,4 +400,44 @@ class Client extends \Model_Computer
             $type, $filters, $order, $direction
         );
     }
+
+    /**
+     * Retrieve group membership information
+     *
+     * @param integer $membershipType Membership type to retrieve
+     * @return array Group ID => membership type
+     * @throws \InvalidArgumentException if $membershipType is invalid
+     */
+    public function getGroupMemberships($membershipType)
+    {
+        $groupMemberships = $this->serviceLocator->get('Database\Table\GroupMemberships');
+        $select = $groupMemberships->getSql()->select();
+        $select->columns(array('group_id', 'static'));
+
+        switch ($membershipType) {
+            case \Model_GroupMembership::TYPE_ALL:
+                break;
+            case \Model_GroupMembership::TYPE_MANUAL:
+                $select->where(
+                    new \Zend\Db\Sql\Predicate\Operator('static', '!=', \Model_GroupMembership::TYPE_DYNAMIC)
+                );
+                break;
+            case \Model_GroupMembership::TYPE_DYNAMIC:
+            case \Model_GroupMembership::TYPE_STATIC:
+            case \Model_GroupMembership::TYPE_EXCLUDED:
+                $select->where(array('static' => $membershipType));
+                break;
+            default:
+                throw new \InvalidArgumentException("Bad value for membership: $membershipType");
+        }
+        $select->where(array('hardware_id' => $this['Id']));
+
+        $this->serviceLocator->get('Model\Group\GroupManager')->updateCache();
+
+        $result = array();
+        foreach ($groupMemberships->selectWith($select) as $row) {
+            $result[$row['group_id']] = $row['static'];
+        }
+        return $result;
+    }
 }

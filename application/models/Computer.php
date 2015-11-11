@@ -100,28 +100,6 @@ abstract class Model_Computer extends \Model_Abstract
     }
 
     /**
-     * Retrieve group membership information for this computer
-     *
-     * @param integer $membershipType Membership type to retrieve
-     * @param string $order Property to sort by, default: GroupName
-     * @param string $direction Direction to sort by, default: asc
-     * @return \Model_GroupMembership[]
-     */
-    public function getGroups(
-        $membershipType,
-        $order='GroupName',
-        $direction='asc'
-    )
-    {
-        return \Library\Application::getService('Model\Group\Membership')->fetch(
-            $this,
-            $membershipType,
-            $order,
-            $direction
-        );
-    }
-
-    /**
      * Set group membership information for this computer (reference groups by name)
      *
      * The $newGroups argument is an array with group names as key and the new
