@@ -48,7 +48,7 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
     const SCAN_EXPLICIT = 2;
 
     /**
-     * Global cache for getConfig() results
+     * Cache for getConfig() results
      * @var array
      */
     protected $_configCache = array();
