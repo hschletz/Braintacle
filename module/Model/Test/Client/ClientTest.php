@@ -207,16 +207,15 @@ class ClientTest extends \Model\Test\AbstractTest
             $groups[] = $group;
         }
 
-        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
-        $groupManager->method('getGroups')->with('Member', 42)->willReturn(new \ArrayIterator($groups));
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')->with('Model\Config')->willReturn($config);
 
-        $model = $this->_getModel(
-            array(
-                'Model\Config' => $config,
-                'Model\Group\GroupManager' => $groupManager,
-            )
-        );
-        $model['Id'] = 42;
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethods(array('offsetGet', 'getGroups', '__destruct'))
+                      ->getMock();
+        $model->method('offsetGet')->willReturn(42);
+        $model->method('getGroups')->willReturn($groups);
+        $model->setServiceLocator($serviceManager);
 
         $this->assertSame($expectedValue, $model->getDefaultConfig($option));
     }
@@ -229,16 +228,15 @@ class ClientTest extends \Model\Test\AbstractTest
                ->withConsecutive(array('option1'), array('option2'))
                ->willReturnOnConsecutiveCalls('value1', 'value2');
 
-        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
-        $groupManager->expects($this->once())->method('getGroups')->with('Member', 42)->willReturn(new \EmptyIterator);
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->expects($this->exactly(2))->method('get')->with('Model\Config')->willReturn($config);
 
-        $model = $this->_getModel(
-            array(
-                'Model\Config' => $config,
-                'Model\Group\GroupManager' => $groupManager,
-            )
-        );
-        $model['Id'] = 42;
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethods(array('offsetGet', 'getGroups', '__destruct'))
+                      ->getMock();
+        $model->expects($this->exactly(3))->method('offsetGet')->willReturn(42);
+        $model->expects($this->exactly(2))->method('getGroups')->willReturn(array());
+        $model->setServiceLocator($serviceManager);
 
         $this->assertEquals('value1', $model->getDefaultConfig('option1'));
         $this->assertEquals('value1', $model->getDefaultConfig('option1')); // from cache
@@ -372,23 +370,16 @@ class ClientTest extends \Model\Test\AbstractTest
             $groups[] = $group;
         }
 
-        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
-        $groupManager->method('getGroups')->with('Member', 42)->willReturn(new \ArrayIterator($groups));
-
         $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->willReturnMap(
-            array(
-                array('Model\Config', true, $config),
-                array('Model\Group\GroupManager', true, $groupManager),
-            )
-        );
+        $serviceManager->method('get')->with('Model\Config')->willReturn($config);
 
         $model = $this->getMockBuilder($this->_getClass())
-                      ->setMethods(array('offsetGet', 'getConfig'))
+                      ->setMethods(array('offsetGet', 'getConfig', 'getGroups'))
                       ->getMock();
         $model->setServiceLocator($serviceManager);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getConfig')->with('inventoryInterval')->willReturn($clientValue);
+        $model->method('getGroups')->willReturn($groups);
 
         $this->assertSame($expectedValue, $model->getEffectiveConfig('inventoryInterval'));
     }
@@ -570,5 +561,21 @@ class ClientTest extends \Model\Test\AbstractTest
 
         $model = $this->_getModel();
         $model->getGroupMemberships(42);
+    }
+
+    public function testGetGroups()
+    {
+        $groups = array('group1', 'group2');
+
+        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
+        $groupManager->expects($this->once())->method('getGroups')->with('Member', 42)->willReturn(
+            new \ArrayIterator($groups)
+        );
+
+        $model = $this->_getModel(array('Model\Group\GroupManager' => $groupManager));
+        $model['Id'] = 42;
+
+        $this->assertEquals($groups, $model->getGroups());
+        $this->assertEquals($groups, $model->getGroups()); // cached result
     }
 }

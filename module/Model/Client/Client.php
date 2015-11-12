@@ -122,8 +122,8 @@ class Client extends \Model_Computer
     protected $_configEffective = array();
 
     /**
-     * Cache for groups of which this client is a member
-     * @var \Zend\Db\ResultSet\AbstractResultSet
+     * Cache for getGroups() result
+     * @var \Model\Group\Group[]
      */
     protected $_groups;
 
@@ -186,12 +186,7 @@ class Client extends \Model_Computer
 
         // Get non-NULL values from groups
         $groupValues = array();
-        if ($this->_groups === null) {
-            $this->_groups = iterator_to_array(
-                $this->serviceLocator->get('Model\Group\GroupManager')->getGroups('Member', $id)
-            );
-        }
-        foreach ($this->_groups as $group) {
+        foreach ($this->getGroups() as $group) {
             $groupValue = $group->getConfig($option);
             if ($groupValue !== null) {
                 $groupValues[] = $groupValue;
@@ -302,8 +297,7 @@ class Client extends \Model_Computer
                 } else {
                     // Get smallest value of client and group settings
                     $value = $this->getConfig('inventoryInterval');
-                    $groups = $this->serviceLocator->get('Model\Group\GroupManager')->getGroups('Member', $id);
-                    foreach ($groups as $group) {
+                    foreach ($this->getGroups() as $group) {
                         $groupValue = $group->getConfig('inventoryInterval');
                         if ($value === null or ($groupValue !== null and $groupValue < $value)) {
                             $value = $groupValue;
@@ -464,5 +458,22 @@ class Client extends \Model_Computer
             $result[$row['group_id']] = $row['static'];
         }
         return $result;
+    }
+
+    /**
+     * Get groups of which this client is a member
+     *
+     * Result gets cached.
+     *
+     * @return \Model\Group\Group[]
+     */
+    public function getGroups()
+    {
+        if ($this->_groups === null) {
+            $this->_groups = iterator_to_array(
+                $this->serviceLocator->get('Model\Group\GroupManager')->getGroups('Member', $this['Id'])
+            );
+        }
+        return $this->_groups;
     }
 }
