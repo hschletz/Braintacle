@@ -198,7 +198,7 @@ class SchemaManager
             }
         } else {
             // Table does not exist, create it
-            $logger->info("Creating table '$tableName...");
+            $logger->info("Creating table '$tableName'...");
             $table = $database->createTable($tableName, $schema['columns'], $schema['primary_key']);
             $table->setComment($schema['comment']);
             if ($database->isMySql()) {
