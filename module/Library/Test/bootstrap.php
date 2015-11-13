@@ -59,10 +59,6 @@ require_once(__DIR__ . '/../../Library/Application.php');
     )
 );
 
-// Replace global ZF1 adapter with SQLite :memory: database.
-$zf1adapter = new Zend_Db_Adapter_Pdo_Sqlite(array('dbname' => ':memory:'));
-Zend_Registry::set('db', $zf1adapter);
-
 // Replace global ZF2 adapter with SQLite :memory: database.
 // This must be shared with the ZF1 adapter.
 $adapter = new \Zend\Db\Adapter\Adapter(
@@ -70,13 +66,11 @@ $adapter = new \Zend\Db\Adapter\Adapter(
         'driver' => 'Pdo_Sqlite',
     )
 );
-$adapter->getDriver()->getConnection()->setResource($zf1adapter->getConnection());
 $serviceManager = \Library\Application::getService('ServiceManager');
 $serviceManager->setAllowOverride(true);
 $serviceManager->setService('Db', $adapter);
 
 // Unset temporary variables to prevent PHPUnit from backing them up which may
 // cause errors.
-unset($zf1adapter);
 unset($adapter);
 unset($serviceManager);

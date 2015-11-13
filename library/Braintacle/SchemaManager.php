@@ -48,12 +48,6 @@ class Braintacle_SchemaManager
     protected $_config;
 
     /**
-     * Database adapter
-     * @var Zend_Db_Adapter_Abstract
-     */
-    protected $_db;
-
-    /**
      * MDB2_Schema object
      * @var MDB2_Schema
      */
@@ -110,8 +104,7 @@ class Braintacle_SchemaManager
             )
         );
         $this->_logger = $logger;
-        $this->_db = Model_Database::getAdapter();
-        $this->_nada = Model_Database::getNada();
+        $this->_nada = \Library\Application::getService('Database\Nada');
         $this->_allTables = $this->_nada->getTables();
         $this->_basepath = dirname(APPLICATION_PATH);
     }

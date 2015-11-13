@@ -24,6 +24,9 @@ namespace Model\Client;
 /**
  * Client
  *
+ * Additional virtual properties from searched items are provided by filters on
+ * an item in the form "Type.Property".
+ *
  * @property integer $Id primary key
  * @property string $ClientId client-generated ID (name + timestamp, like 'COMPUTERNAME-2009-04-27-15-52-37')
  * @property string $Name computer name
@@ -78,11 +81,8 @@ namespace Model\Client;
  * @property string $Package.Status package status (supplied by filter)
  * @property integer $Membership group membership type (supplied by filter)
  * @property string $Registry.* registry search result (supplied by filter)
- *
- * Additional virtual properties from searched items are provided by filters on
- * an item in the form "Type.Property".
  */
-class Client extends \Model_Computer
+class Client extends \Model\ClientOrGroup
 {
     /**
      * Value denoting automatic group membership, i.e. from a group query

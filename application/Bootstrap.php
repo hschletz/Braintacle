@@ -23,35 +23,6 @@ use \Library\Application;
 
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
-    protected function _initDatabase()
-    {
-        $this->bootstrap('autoload');
-
-        try {
-            $config = new Zend_Config_Ini(
-                realpath(APPLICATION_PATH . '/../config/database.ini'),
-                APPLICATION_ENV,
-                true
-            );
-        } catch (Zend_Exception $exception) {
-            print 'Please create a file "database.ini" in the config/ directory.<br />';
-            print 'A sample file can be found in the doc/ directory.';
-            exit;
-        }
-
-        // Force UTF-8 client encoding regardless of configuration
-        $config->params->charset = 'utf8';
-        // Force lower case identifiers.
-        $config->params->options = array (
-            Zend_Db::AUTO_QUOTE_IDENTIFIERS => false,
-            Zend_Db::CASE_FOLDING => Zend_Db::CASE_LOWER
-        );
-        $db = Zend_Db::factory($config);
-        $db->setFetchMode(Zend_Db::FETCH_OBJ);
-        Zend_Registry::set('db', $db);
-        Zend_Db_Table::setDefaultAdapter($db);
-    }
-
     protected function _initAutoload()
     {
         // Autoloader for old library code
@@ -60,7 +31,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 '\Zend\Loader\StandardAutoloader' => array(
                     'prefixes' => array(
                         'Zend' => Application::$zf1Path,
-                        'Model' => Application::getPath('application/models'),
                         'Braintacle' => Application::getPath('library/Braintacle'),
                     )
                 ),
