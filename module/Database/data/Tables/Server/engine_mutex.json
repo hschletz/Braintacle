@@ -1,0 +1,40 @@
+{
+    "name": "engine_mutex",
+    "comment": null,
+    "columns": [
+        {
+            "name": "name",
+            "type": "varchar",
+            "length": 50,
+            "notnull": true,
+            "default": "",
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "pid",
+            "type": "integer",
+            "length": 32,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "tag",
+            "type": "varchar",
+            "length": 50,
+            "notnull": true,
+            "default": "",
+            "autoincrement": false,
+            "comment": null
+        }
+    ],
+    "primary_key": [
+        "name",
+        "tag"
+    ],
+    "mysql": {
+        "engine": "MEMORY"
+    }
+}

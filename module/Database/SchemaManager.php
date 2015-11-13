@@ -95,6 +95,16 @@ class SchemaManager
 
         $logger = \Library\Application::getService('Library\Logger');
 
+        // Server tables have no table class
+        $glob = new \GlobIterator(Module::getPath('data/Tables/Server') . '/*.json');
+        foreach ($glob as $fileinfo) {
+            self::setSchema(
+                $logger,
+                \Zend\Config\Factory::fromFile($fileinfo->getPathname()),
+                $this->_nada
+            );
+        }
+
         // SNMP tables have no table class
         $glob = new \GlobIterator(Module::getPath('data/Tables/Snmp') . '/*.json');
         foreach ($glob as $fileinfo) {

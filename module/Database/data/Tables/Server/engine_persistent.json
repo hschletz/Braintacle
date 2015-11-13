@@ -1,0 +1,57 @@
+{
+    "name": "engine_persistent",
+    "comment": null,
+    "columns": [
+        {
+            "name": "id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": true,
+            "comment": null
+        },
+        {
+            "name": "name",
+            "type": "varchar",
+            "length": 255,
+            "notnull": true,
+            "default": "",
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "ivalue",
+            "type": "integer",
+            "length": 32,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "tvalue",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        }
+    ],
+    "primary_key": [
+        "id"
+    ],
+    "indexes": [
+        {
+            "name": "engine_persistent_name_idx",
+            "unique": true,
+            "columns": [
+                "name"
+            ]
+        }
+    ],
+    "mysql": {
+        "engine": "MyISAM"
+    }
+}
