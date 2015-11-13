@@ -25,7 +25,7 @@ namespace Console\Form;
  * Confirmation for deleting clients
  *
  * Only one of "yes" or "no" will show up in POST data. The "DeleteInterfaces"
- * checkbox state should be passed to \Model_Computer::delete().
+ * checkbox state should be passed to \Model\Client\ClientManager::deleteClient().
  *
  * The init() method requires the "config" option to be set to a \Model\Config
  * instance. The factory sets this automatically.
