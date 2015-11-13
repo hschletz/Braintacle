@@ -23,6 +23,14 @@ namespace Protocol\Test\Message;
 
 class InventoryRequestTest extends \PHPUnit_Framework_TestCase
 {
+    public function testService()
+    {
+        $this->assertInstanceOf(
+            'Protocol\Message\InventoryRequest',
+            \Library\Application::getService('Protocol\Message\InventoryRequest')
+        );
+    }
+
     public function testGetSchemaFilename()
     {
         $document = new \Protocol\Message\InventoryRequest;

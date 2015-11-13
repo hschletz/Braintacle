@@ -62,6 +62,7 @@ Feature\InitProviderInterface
                     'Protocol\Hydrator\ClientsBios' => 'Protocol\Hydrator\ClientsBios',
                     'Protocol\Hydrator\Filesystems' => 'Protocol\Hydrator\Filesystems',
                     'Protocol\Hydrator\Software' => 'Protocol\Hydrator\Software',
+                    'Protocol\Message\InventoryRequest' => 'Protocol\Message\InventoryRequest',
                 ),
             ),
         );

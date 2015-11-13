@@ -397,7 +397,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $data = $form->getData();
-                $this->_currentClient->setUserDefinedInfo($data['Fields']);
+                $this->_currentClient->setCustomFields($data['Fields']);
                 $this->flashMessenger()->addSuccessMessage('The information was successfully updated.');
                 return $this->redirectToRoute(
                     'client',

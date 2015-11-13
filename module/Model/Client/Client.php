@@ -566,4 +566,25 @@ class Client extends \Model_Computer
         }
         return $this->_groups;
     }
+    /**
+     * Set values for custom fields
+     *
+     * @param array $values Field name => Value
+     */
+    public function setCustomFields($values)
+    {
+        $this->serviceLocator->get('Model\Client\CustomFieldManager')->write($this['Id'], $values);
+    }
+
+    /**
+     * Export to DOM document
+     *
+     * @return \Protocol\Message\InventoryRequest
+     */
+    public function toDomDocument()
+    {
+        $document = clone $this->serviceLocator->get('Protocol\Message\InventoryRequest');
+        $document->loadClient($this, $this->serviceLocator);
+        return $document;
+    }
 }

@@ -946,4 +946,41 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->assertEquals($groups, $model->getGroups());
         $this->assertEquals($groups, $model->getGroups()); // cached result
     }
+
+    public function testSetCustomFields()
+    {
+        $customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
+                                   ->disableOriginalConstructor()
+                                   ->getMock();
+        $customFieldManager->expects($this->once())->method('write')->with(42, 'data');
+
+        $model = $this->_getModel(array('Model\Client\CustomFieldManager' => $customFieldManager));
+        $model['Id'] = 42;
+
+        $model->setCustomFields('data');
+    }
+
+    public function testToDomDocument()
+    {
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+
+        $model = $this->_getModel();
+        $model->setServiceLocator($serviceManager);
+
+        $inventoryRequest = $this->getMock('Protocol\Message\InventoryRequest');
+        $inventoryRequest->expects($this->exactly(2))->method('loadClient')->with(
+            $model,
+            $serviceManager
+        );
+
+        $serviceManager->method('get')->with('Protocol\Message\InventoryRequest')->willReturn($inventoryRequest);
+
+        $document1 = $model->toDomDocument();
+        $this->assertInstanceOf('Protocol\Message\InventoryRequest', $document1);
+
+        $document2 = $model->toDomDocument();
+        $this->assertInstanceOf('Protocol\Message\InventoryRequest', $document2);
+
+        $this->assertNotSame($document1, $document2); // Test prototype cloning
+    }
 }

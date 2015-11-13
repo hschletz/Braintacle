@@ -2119,7 +2119,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $client = $this->getMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
-        $client->expects($this->once())->method('setUserDefinedInfo')->with($postData['Fields']);
+        $client->expects($this->once())->method('setCustomFields')->with($postData['Fields']);
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/customfields/?id=1', 'POST', $postData);

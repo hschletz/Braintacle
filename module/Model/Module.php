@@ -44,6 +44,7 @@ Feature\InitProviderInterface
     {
         $manager->loadModule('Database');
         $manager->loadModule('Library');
+        $manager->loadModule('Protocol');
     }
 
     /**

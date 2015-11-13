@@ -90,23 +90,4 @@
  */
 abstract class Model_Computer extends \Model_Abstract
 {
-    /**
-     * Set values for the user defined fields for this computer.
-     * @param array $values Associative array with field names as keys.
-     */
-    public function setUserDefinedInfo($values)
-    {
-        \Library\Application::getService('Model\Client\CustomFieldManager')->write($this['Id'], $values);
-    }
-
-    /**
-     * Export computer as DOMDocument
-     * @return \Protocol\Message\InventoryRequest
-     */
-    public function toDomDocument()
-    {
-        $document = new \Protocol\Message\InventoryRequest;
-        $document->loadClient($this, \Library\Application::getService('ServiceManager'));
-        return $document;
-    }
 }
