@@ -990,6 +990,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
     {
         $resultSet = $this->getMock('Zend\Db\ResultSet\HydratingResultSet');
         $resultSet->method('current')->willReturn('client');
+        $resultSet->method('count')->willReturn(1);
 
         $model = $this->getMockBuilder($this->_getClass())->setMethods(array('getClients'))->getMock();
         $model->method('getClients')->with(null, null, null, 'Id', 42)->willReturn($resultSet);
@@ -999,8 +1000,12 @@ class ClientManagerTest extends \Model\Test\AbstractTest
     public function testGetClientInvalidId()
     {
         $this->setExpectedException('RuntimeException', 'Invalid client ID: 42');
+
+        $resultSet = $this->getMock('Zend\Db\ResultSet\HydratingResultSet');
+        $resultSet->method('count')->willReturn(0);
+
         $model = $this->getMockBuilder($this->_getClass())->setMethods(array('getClients'))->getMock();
-        $model->method('getClients')->with(null, null, null, 'Id', 42)->willReturn(array());
+        $model->method('getClients')->with(null, null, null, 'Id', 42)->willReturn($resultSet);
         $model->getClient(42);
     }
 

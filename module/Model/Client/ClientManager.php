@@ -408,7 +408,7 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
     public function getClient($id)
     {
         $result = $this->getClients(null, null, null, 'Id', $id);
-        if (!$result) {
+        if (!$result->count()) {
             throw new \RuntimeException("Invalid client ID: $id");
         }
         return $result->current();
