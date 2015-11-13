@@ -83,12 +83,7 @@ class Application
             )
         );
 
-        // PEAR libraries are not suitable for autoloading. Add them to include path instead.
-        set_include_path(get_include_path() . PATH_SEPARATOR . self::getPath('library/PEAR'));
-
         // Bootstrap ZF1 application part.
-        // TODO: remove APPLICATION_PATH and APPLICATION_ENV when no longer used
-        @define('APPLICATION_PATH', self::getPath('application'));
         $environment = self::getEnvironment();
 
         // Get absolute path to ZF1 library
@@ -183,11 +178,6 @@ class Application
         if ($environment != 'production' and $environment != 'development' and $environment != 'test') {
             throw new \DomainException('APPLICATION_ENV environment variable has invalid value: ' . $environment);
         }
-        if (!defined('APPLICATION_ENV')) {
-            // @codeCoverageIgnoreStart
-            define('APPLICATION_ENV', ($environment == 'test' ? 'development' : $environment));
-        }
-        // @codeCoverageIgnoreEnd
         return $environment;
     }
 

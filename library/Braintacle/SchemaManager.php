@@ -21,11 +21,6 @@
  * @package Library
  */
 /**
- * Includes
- */
-Braintacle_MDB2::setErrorReporting();
-require_once('MDB2/Schema.php');
-/**
  * Interface for database schema management
  *
  * This is the legacy schema manager. It is superseded by Database\SchemaManager
@@ -48,22 +43,10 @@ class Braintacle_SchemaManager
     protected $_config;
 
     /**
-     * MDB2_Schema object
-     * @var MDB2_Schema
-     */
-    protected $_schema;
-
-    /**
      * NADA object
      * @var Nada
      */
      protected $_nada;
-
-    /**
-     * Zend_Log object
-     * @var Zend_Log
-     */
-    protected $_logger;
 
     /**
      * List of all tables in the database (array of Nada_Table objects)
@@ -72,41 +55,13 @@ class Braintacle_SchemaManager
     protected $_allTables;
 
     /**
-     * Names of tables managed by this class
-     * @var string[]
-     */
-    protected $_managedTables = array();
-
-    /**
-     * Path to Braintacle's base directory
-     * @var string
-     */
-    protected $_basepath;
-
-    /**
      * Constructor
-     * @param \Zend_Log $logger Logger object
-     * @param \MDB2_Driver_Common $mdb2 Database connection (default: connect automatically)
      */
-    function __construct(Zend_Log $logger, MDB2_Driver_Common $mdb2=null)
+    function __construct()
     {
         $this->_config = \Library\Application::getService('Model\Config');
-
-        if (is_null($mdb2)) {
-            $mdb2 =  Braintacle_MDB2::factory();
-        }
-        $this->_schema = MDB2_Schema::factory(
-            $mdb2,
-            array (
-                'quote_identifier' => true,
-                'force_defaults' => false,
-                'portability' => MDB2_PORTABILITY_ALL ^ MDB2_PORTABILITY_EMPTY_TO_NULL,
-            )
-        );
-        $this->_logger = $logger;
         $this->_nada = \Library\Application::getService('Database\Nada');
         $this->_allTables = $this->_nada->getTables();
-        $this->_basepath = dirname(APPLICATION_PATH);
     }
 
     /**

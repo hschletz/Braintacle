@@ -64,11 +64,6 @@ if (!$environment) {
 putenv("APPLICATION_ENV=$environment");
 
 // Set up logger
-// TODO: remove ZF1 logger when no longer used by legacy schema manager
-$oldWriter = new Zend_Log_Writer_Stream('php://stderr');
-$oldFormatter = new Zend_Log_Formatter_Simple('%priorityName%: %message%' . PHP_EOL);
-$oldWriter->setFormatter($oldFormatter);
-$oldLogger = new Zend_Log($oldWriter);
 $formatter = new \Zend\Log\Formatter\Simple('%priorityName%: %message%');
 $writer = new \Zend\Log\Writer\Stream('php://stderr');
 $writer->setFormatter($formatter);
@@ -76,7 +71,7 @@ $logger = \Library\Application::getService('Library\Logger');
 $logger->addWriter($writer);
 
 // Create Schema manager object
-$manager = new Braintacle_SchemaManager($oldLogger);
+$manager = new Braintacle_SchemaManager;
 $schemaManager = new \Database\SchemaManager($manager);
 
 $isCompatible = $manager->isOcsCompatible();
