@@ -32,10 +32,9 @@ Namespace Database;
 class SchemaManager
 {
     /**
-     * Legacy schema manager passed to the constructor
-     * @var \Braintacle_SchemaManager
+     * Latest version of data transformations that cannot be detected automatically
      */
-    protected $_legacySchemaManager;
+    const SCHEMA_VERSION = 8;
 
     /**
      * Database adapter
@@ -51,12 +50,9 @@ class SchemaManager
 
     /**
      * Constructor
-     *
-     * @param \Braintacle_SchemaManager $legacySchemaManager Legacy schema manager
      */
-    function __construct(\Braintacle_SchemaManager $legacySchemaManager)
+    function __construct()
     {
-        $this->_legacySchemaManager = $legacySchemaManager;
         $this->_db = \Library\Application::getService('Db');
         $this->_nada = \Library\Application::getService('Database\Nada');
     }
@@ -70,7 +66,7 @@ class SchemaManager
     public function updateAll()
     {
         $this->updateTables();
-        $this->_legacySchemaManager->updateAll();
+        \Library\Application::getService('Model\Config')->schemaVersion = self::SCHEMA_VERSION;
     }
 
     /**

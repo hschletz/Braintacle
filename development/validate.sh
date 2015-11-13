@@ -30,7 +30,6 @@ BASEDIR=$(readlink -f "$DEVDIR/..")
 phpcs -n --standard=Zend --extensions=php,phtml \
     "$BASEDIR/application/" \
     "$BASEDIR/development/" \
-    "$BASEDIR/library/Braintacle/" \
     "$BASEDIR/module" \
     "$BASEDIR/public" \
     "$BASEDIR/tools/"
