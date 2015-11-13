@@ -225,7 +225,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client = $this->getMock('Model\Client\Client');
         $client->method('lock')->willReturn(false);
         $client->expects($this->never())->method('setUserDefinedInfo');
-        $client->expects($this->never())->method('setGroups');
+        $client->expects($this->never())->method('setGroupMemberships');
 
         $clientManager = $this->getMock('Model\Client\ClientManager');
         $clientManager->method('getClient')->willReturn($client);
@@ -255,14 +255,14 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client2->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:02:33'));
         $client2->method('lock')->willReturn(true);
         $client2->expects($this->never())->method('setUserDefinedInfo');
-        $client2->expects($this->never())->method('setGroups');
+        $client2->expects($this->never())->method('setGroupMemberships');
 
         $client3 = $this->getMock('Model\Client\Client');
         $client3->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:03:33'));
         $client3->method('lock')->willReturn(true);
         $client3->expects($this->once())->method('unlock');
         $client3->expects($this->never())->method('setUserDefinedInfo');
-        $client3->expects($this->never())->method('setGroups');
+        $client3->expects($this->never())->method('setGroupMemberships');
 
         $clientManager = $this->getMock('Model\Client\ClientManager');
         $clientManager->method('getClient')
@@ -293,14 +293,14 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client2->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:02:33'));
         $client2->method('lock')->willReturn(true);
         $client2->expects($this->never())->method('setUserDefinedInfo');
-        $client2->expects($this->never())->method('setGroups');
+        $client2->expects($this->never())->method('setGroupMemberships');
 
         $client3 = $this->getMock('Model\Client\Client');
         $client3->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:03:33'));
         $client3->method('lock')->willReturn(true);
         $client3->expects($this->once())->method('unlock');
         $client3->expects($this->never())->method('setUserDefinedInfo');
-        $client3->expects($this->never())->method('setGroups');
+        $client3->expects($this->never())->method('setGroupMemberships');
 
         $clientManager = $this->getMock('Model\Client\ClientManager');
         $clientManager->method('getClient')
@@ -331,14 +331,14 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
                 ->will($this->onConsecutiveCalls(new \DateTime('2013-12-23 13:02:33'), 'custom_fields'));
         $client2->method('lock')->willReturn(true);
         $client2->expects($this->never())->method('setUserDefinedInfo');
-        $client2->expects($this->never())->method('setGroups');
+        $client2->expects($this->never())->method('setGroupMemberships');
 
         $client3 = $this->getMock('Model\Client\Client');
         $client3->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:03:33'));
         $client3->method('lock')->willReturn(true);
         $client3->expects($this->once())->method('unlock');
         $client3->expects($this->once())->method('setUserDefinedInfo')->with('custom_fields');
-        $client3->expects($this->never())->method('setGroups');
+        $client3->expects($this->never())->method('setGroupMemberships');
 
         $clientManager = $this->getMock('Model\Client\ClientManager');
         $clientManager->method('getClient')
@@ -373,7 +373,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
             )
         );
         $client1->expects($this->never())->method('setUserDefinedInfo');
-        $client1->expects($this->never())->method('setGroups');
+        $client1->expects($this->never())->method('setGroupMemberships');
 
         $client2 = $this->getMock('Model\Client\Client');
         $client2->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:02:33'));
@@ -385,14 +385,14 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
             )
         );
         $client2->expects($this->never())->method('setUserDefinedInfo');
-        $client2->expects($this->never())->method('setGroups');
+        $client2->expects($this->never())->method('setGroupMemberships');
 
         $client3 = $this->getMock('Model\Client\Client');
         $client3->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:03:33'));
         $client3->method('lock')->willReturn(true);
         $client3->expects($this->once())->method('unlock');
         $client3->expects($this->never())->method('setUserDefinedInfo');
-        $client3->expects($this->once())->method('setGroups')->with(
+        $client3->expects($this->once())->method('setGroupMemberships')->with(
             array(
                 1 => 'membership1',
                 2 => 'membership2',
@@ -434,7 +434,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
                 ->will($this->onConsecutiveCalls(new \DateTime('2013-12-23 13:02:33'), 2));
         $client2->method('lock')->willReturn(true);
         $client2->expects($this->never())->method('setUserDefinedInfo');
-        $client2->expects($this->never())->method('setGroups');
+        $client2->expects($this->never())->method('setGroupMemberships');
 
         $client3 = $this->getMock('Model\Client\Client');
         $client3->method('offsetGet')
@@ -443,7 +443,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client3->method('lock')->willReturn(true);
         $client3->expects($this->once())->method('unlock');
         $client3->expects($this->never())->method('setUserDefinedInfo');
-        $client3->expects($this->never())->method('setGroups');
+        $client3->expects($this->never())->method('setGroupMemberships');
 
         $clientManager = $this->getMock('Model\Client\ClientManager');
         $clientManager->method('getClient')

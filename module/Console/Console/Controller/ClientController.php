@@ -614,7 +614,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $data = $form->getData();
-                $this->_currentClient->setGroupsByName($data['Groups']);
+                $this->_currentClient->setGroupMemberships($data['Groups']);
             }
         }
         return $this->redirectToRoute(

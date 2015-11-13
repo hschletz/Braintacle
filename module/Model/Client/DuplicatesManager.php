@@ -292,7 +292,7 @@ class DuplicatesManager
                 foreach ($clients as $client) {
                     $groupList += $client->getGroupMemberships(\Model\Client\Client::MEMBERSHIP_MANUAL);
                 }
-                $newest->setGroups($groupList);
+                $newest->setGroupMemberships($groupList);
             }
 
             if ($mergePackages) {

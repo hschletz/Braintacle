@@ -421,6 +421,96 @@ class Client extends \Model_Computer
     }
 
     /**
+     * Set group memberships
+     *
+     * Groups which are not present in $newGroups remain unchanged. The keys can
+     * be either the integer ID or the name of the group.
+     *
+     * @param array $newMemberships New group memberships (integer|string => Type). Unknown groups are ignored.
+     */
+    public function setGroupMemberships($newMemberships)
+    {
+        $groupMemberships = $this->serviceLocator->get('Database\Table\GroupMemberships');
+
+        // Build lookup tables
+        $groupsById = array();
+        $groupsByName = array();
+        foreach ($this->serviceLocator->get('Model\Group\GroupManager')->getGroups() as $group) {
+            $groupsById[$group['Id']] = $group;
+            $groupsByName[$group['Name']] = $group;
+        }
+        $oldMemberships = $this->getGroupMemberships(self::MEMBERSHIP_ANY);
+
+        $resetCache = false;
+        foreach ($newMemberships as $groupKey => $newMembership) {
+            if (is_int($groupKey)) {
+                $group = @$groupsById[$groupKey];
+            } else {
+                $group = @$groupsByName[$groupKey];
+            }
+            if (!$group) {
+                continue; // Ignore unknown groups
+            }
+
+            $groupId = $group['Id'];
+            if (isset($oldMemberships[$groupId])) {
+                $oldMembership = $oldMemberships[$groupId];
+            } else {
+                $oldMembership = null;
+            }
+            switch ($newMembership) {
+                case self::MEMBERSHIP_AUTOMATIC:
+                    if ($oldMembership === self::MEMBERSHIP_ALWAYS or
+                        $oldMembership === self::MEMBERSHIP_NEVER
+                    ) {
+                        // Delete manual membership and update group cache
+                        // because the client may be a candidate for automatic
+                        // membership.
+                        $groupMemberships->delete(
+                            array(
+                                'hardware_id' => $this['Id'],
+                                'group_id' => $groupId,
+                            )
+                        );
+                        $group->update(true);
+                        $resetCache = true;
+                    }
+                    break;
+                case self::MEMBERSHIP_ALWAYS:
+                case self::MEMBERSHIP_NEVER:
+                    if ($oldMembership === null) {
+                        $groupMemberships->insert(
+                            array(
+                                'hardware_id' => $this['Id'],
+                                'group_id' => $groupId,
+                                'static' => $newMembership,
+                            )
+                        );
+                        $resetCache = true;
+                    } elseif ($oldMembership !== $newMembership) {
+                        $groupMemberships->update(
+                            array(
+                                'static' => $newMembership
+                            ),
+                            array(
+                                'hardware_id' => $this['Id'],
+                                'group_id' => $groupId,
+                            )
+                        );
+                        $resetCache = true;
+                    }
+                    break;
+                default:
+                    throw new \InvalidArgumentException('Invalid membership type: ' . $newMembership);
+            }
+        }
+
+        if ($resetCache) {
+            $this->_groups = null;
+        }
+    }
+
+    /**
      * Retrieve group membership information
      *
      * @param integer $membershipType Membership type (one of the MEMBERSHIP_* constants)
@@ -455,7 +545,7 @@ class Client extends \Model_Computer
 
         $result = array();
         foreach ($groupMemberships->selectWith($select) as $row) {
-            $result[$row['group_id']] = $row['static'];
+            $result[(integer) $row['group_id']] = (integer) $row['static'];
         }
         return $result;
     }

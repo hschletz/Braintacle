@@ -508,6 +508,374 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->assertEquals('result', $model->getItems('type', 'order', 'direction', array('filter' => 'arg')));
     }
 
+    public function setGroupMembershipsNoActionProvider()
+    {
+        return array(
+            array(
+                array(),
+                array(),
+            ),
+            array(
+                array(),
+                array('group1' => \Model\Client\Client::MEMBERSHIP_AUTOMATIC),
+            ),
+            array(
+                array(2 => \Model\Client\Client::MEMBERSHIP_AUTOMATIC),
+                array('group1' => \Model\Client\Client::MEMBERSHIP_AUTOMATIC),
+            ),
+            array(
+                array(1 => \Model\Client\Client::MEMBERSHIP_AUTOMATIC),
+                array('group1' => \Model\Client\Client::MEMBERSHIP_AUTOMATIC),
+            ),
+            array(
+                array(1 => \Model\Client\Client::MEMBERSHIP_ALWAYS),
+                array('group1' => \Model\Client\Client::MEMBERSHIP_ALWAYS),
+            ),
+            array(
+                array(1 => \Model\Client\Client::MEMBERSHIP_NEVER),
+                array('group1' => \Model\Client\Client::MEMBERSHIP_NEVER),
+            ),
+            array(
+                array(),
+                array('ignore' => \Model\Client\Client::MEMBERSHIP_ALWAYS),
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider setGroupMembershipsNoActionProvider
+     */
+    public function testSetGroupMembershipsNoAction($oldMemberships, $newMemberships)
+    {
+        $groupMemberships = $this->getMockBuilder('Database\Table\GroupMemberships')
+                                 ->disableOriginalConstructor()
+                                 ->getMock();
+        $groupMemberships->expects($this->never())->method('insert');
+        $groupMemberships->expects($this->never())->method('update');
+        $groupMemberships->expects($this->never())->method('delete');
+
+        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
+        $groupManager->method('getGroups')->with()->willReturn(
+            array(
+                array('Id' => 1, 'Name' => 'group1'),
+                array('Id' => 2, 'Name' => 'group2'),
+            )
+        );
+
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')
+                       ->willReturnMap(
+                           array(
+                               array('Database\Table\GroupMemberships', true, $groupMemberships),
+                               array('Model\Group\GroupManager', true, $groupManager),
+                           )
+                       );
+
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethods(array('getGroupMemberships', '__destruct'))
+                      ->setConstructorArgs(array(array('Id' => 42)))
+                      ->getMock();
+        $model->method('getGroupMemberships')->willReturn($oldMemberships);
+        $model->setServiceLocator($serviceManager);
+
+        $cache = new \ReflectionProperty($model, '_groups');
+        $cache->setAccessible(true);
+        $cache->setValue($model, 'cache');
+
+        $model->setGroupMemberships($newMemberships);
+        $this->assertEquals('cache', $cache->getValue($model));
+    }
+
+    public function setGroupMembershipsInsertProvider()
+    {
+        return array(
+            array(
+                array(),
+                \Model\Client\Client::MEMBERSHIP_ALWAYS,
+            ),
+            array(
+                array(),
+                \Model\Client\Client::MEMBERSHIP_NEVER,
+            ),
+            array(
+                array(2 => \Model\Client\Client::MEMBERSHIP_AUTOMATIC),
+                \Model\Client\Client::MEMBERSHIP_ALWAYS,
+            ),
+            array(
+                array(2 => \Model\Client\Client::MEMBERSHIP_AUTOMATIC),
+                \Model\Client\Client::MEMBERSHIP_NEVER,
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider setGroupMembershipsInsertProvider
+     */
+    public function testSetGroupMembershipsInsert($oldMemberships, $newMembership)
+    {
+        $groupMemberships = $this->getMockBuilder('Database\Table\GroupMemberships')
+                                 ->disableOriginalConstructor()
+                                 ->getMock();
+        $groupMemberships->expects($this->once())->method('insert')->with(
+            array(
+                'hardware_id' => 42,
+                'group_id' => 1,
+                'static' => $newMembership,
+            )
+        );
+        $groupMemberships->expects($this->never())->method('update');
+        $groupMemberships->expects($this->never())->method('delete');
+
+        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
+        $groupManager->method('getGroups')->with()->willReturn(
+            array(
+                array('Id' => 1, 'Name' => 'group1'),
+                array('Id' => 2, 'Name' => 'group2'),
+            )
+        );
+
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')
+                       ->willReturnMap(
+                           array(
+                               array('Database\Table\GroupMemberships', true, $groupMemberships),
+                               array('Model\Group\GroupManager', true, $groupManager),
+                           )
+                       );
+
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethods(array('getGroupMemberships', '__destruct'))
+                      ->setConstructorArgs(array(array('Id' => 42)))
+                      ->getMock();
+        $model->method('getGroupMemberships')->willReturn($oldMemberships);
+        $model->setServiceLocator($serviceManager);
+
+        $cache = new \ReflectionProperty($model, '_groups');
+        $cache->setAccessible(true);
+        $cache->setValue($model, 'cache');
+
+        $model->setGroupMemberships(array('group1' => $newMembership));
+        $this->assertNull($cache->getValue($model));
+    }
+
+    public function setGroupMembershipsUpdateProvider()
+    {
+        return array(
+            array(
+                \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
+                \Model\Client\Client::MEMBERSHIP_ALWAYS,
+            ),
+            array(
+                \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
+                \Model\Client\Client::MEMBERSHIP_NEVER,
+            ),
+            array(
+                \Model\Client\Client::MEMBERSHIP_ALWAYS,
+                \Model\Client\Client::MEMBERSHIP_NEVER,
+            ),
+            array(
+                \Model\Client\Client::MEMBERSHIP_NEVER,
+                \Model\Client\Client::MEMBERSHIP_ALWAYS,
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider setGroupMembershipsUpdateProvider
+     */
+    public function testSetGroupMembershipsUpdate($oldMembership, $newMembership)
+    {
+        $groupMemberships = $this->getMockBuilder('Database\Table\GroupMemberships')
+                                 ->disableOriginalConstructor()
+                                 ->getMock();
+        $groupMemberships->expects($this->never())->method('insert');
+        $groupMemberships->expects($this->once())->method('update')->with(
+            array('static' => $newMembership),
+            array(
+             'hardware_id' => 42,
+             'group_id' => 1,
+            )
+        );
+        $groupMemberships->expects($this->never())->method('delete');
+
+        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
+        $groupManager->method('getGroups')->with()->willReturn(
+            array(
+                array('Id' => 1, 'Name' => 'group1'),
+                array('Id' => 2, 'Name' => 'group2'),
+            )
+        );
+
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')
+                       ->willReturnMap(
+                           array(
+                               array('Database\Table\GroupMemberships', true, $groupMemberships),
+                               array('Model\Group\GroupManager', true, $groupManager),
+                           )
+                       );
+
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethods(array('getGroupMemberships', '__destruct'))
+                      ->setConstructorArgs(array(array('Id' => 42)))
+                      ->getMock();
+        $model->method('getGroupMemberships')->willReturn(array(1 => $oldMembership));
+        $model->setServiceLocator($serviceManager);
+
+        $cache = new \ReflectionProperty($model, '_groups');
+        $cache->setAccessible(true);
+        $cache->setValue($model, 'cache');
+
+        $model->setGroupMemberships(array('group1' => $newMembership));
+        $this->assertNull($cache->getValue($model));
+    }
+
+    public function setGroupMembershipsDeleteProvider()
+    {
+        return array(
+            array(\Model\Client\Client::MEMBERSHIP_ALWAYS),
+            array(\Model\Client\Client::MEMBERSHIP_NEVER),
+        );
+    }
+
+    /**
+     * @dataProvider setGroupMembershipsDeleteProvider
+     */
+    public function testSetGroupMembershipsDelete($oldMembership)
+    {
+        $group1 = $this->getMock('Model\Group\Group');
+        $group1->method('offsetGet')->willReturnMap(
+            array(array('Id', 1), array('Name', 'group1'))
+        );
+        $group1->expects($this->once())->method('update')->with(true);
+
+        $group2 = $this->getMock('Model\Group\Group');
+        $group2->method('offsetGet')->willReturnMap(
+            array(array('Id', 2), array('Name', 'group2'))
+        );
+        $group2->expects($this->never())->method('update');
+
+        $groupMemberships = $this->getMockBuilder('Database\Table\GroupMemberships')
+                                 ->disableOriginalConstructor()
+                                 ->getMock();
+        $groupMemberships->expects($this->never())->method('insert');
+        $groupMemberships->expects($this->never())->method('update');
+        $groupMemberships->expects($this->once())->method('delete')->with(
+            array(
+                'hardware_id' => 42,
+                'group_id' => 1,
+            )
+        );
+
+        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
+        $groupManager->method('getGroups')->with()->willReturn(array($group1, $group2));
+
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')
+                       ->willReturnMap(
+                           array(
+                               array('Database\Table\GroupMemberships', true, $groupMemberships),
+                               array('Model\Group\GroupManager', true, $groupManager),
+                           )
+                       );
+
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethods(array('getGroupMemberships', '__destruct'))
+                      ->setConstructorArgs(array(array('Id' => 42)))
+                      ->getMock();
+        $model->method('getGroupMemberships')->willReturn(array(1 => $oldMembership));
+        $model->setServiceLocator($serviceManager);
+
+        $cache = new \ReflectionProperty($model, '_groups');
+        $cache->setAccessible(true);
+        $cache->setValue($model, 'cache');
+
+        $model->setGroupMemberships(array('group1' => \Model\Client\Client::MEMBERSHIP_AUTOMATIC));
+        $this->assertNull($cache->getValue($model));
+    }
+
+    public function testSetGroupMembershipsMixedKeys()
+    {
+        $groupMemberships = $this->getMockBuilder('Database\Table\GroupMemberships')
+                                 ->disableOriginalConstructor()
+                                 ->getMock();
+        $groupMemberships->expects($this->exactly(2))->method('insert')->withConsecutive(
+            array(
+                array(
+                    'hardware_id' => 42,
+                    'group_id' => 1,
+                    'static' => \Model\Client\Client::MEMBERSHIP_ALWAYS,
+                )
+            ),
+            array(
+                array(
+                    'hardware_id' => 42,
+                    'group_id' => 3,
+                    'static' => \Model\Client\Client::MEMBERSHIP_NEVER,
+                )
+            )
+        );
+        $groupMemberships->expects($this->never())->method('update');
+        $groupMemberships->expects($this->never())->method('delete');
+
+        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
+        $groupManager->method('getGroups')->with()->willReturn(
+            array(
+                array('Id' => 1, 'Name' => 'group1'),
+                array('Id' => 2, 'Name' => 'group2'),
+                array('Id' => 3, 'Name' => 'group3'),
+            )
+        );
+
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')
+                       ->willReturnMap(
+                           array(
+                               array('Database\Table\GroupMemberships', true, $groupMemberships),
+                               array('Model\Group\GroupManager', true, $groupManager),
+                           )
+                       );
+
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethods(array('getGroupMemberships', '__destruct'))
+                      ->setConstructorArgs(array(array('Id' => 42)))
+                      ->getMock();
+        $model->method('getGroupMemberships')->willReturn(array(2 => \Model\Client\Client::MEMBERSHIP_ALWAYS));
+        $model->setServiceLocator($serviceManager);
+
+        $model->setGroupMemberships(
+            array(
+                1 => \Model\Client\Client::MEMBERSHIP_ALWAYS,
+                'group2' => \Model\Client\Client::MEMBERSHIP_ALWAYS,
+                'group3' => \Model\Client\Client::MEMBERSHIP_NEVER,
+            )
+        );
+    }
+
+    public function testSetGroupMembershipsInvalidMembership()
+    {
+        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
+        $groupManager->method('getGroups')->with()->willReturn(
+            array(array('Id' => 1, 'Name' => 'group1'))
+        );
+
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')
+                       ->willReturnMap(
+                           array(array('Model\Group\GroupManager', true, $groupManager))
+                       );
+
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethods(array('getGroupMemberships', '__destruct'))
+                      ->setConstructorArgs(array(array('Id' => 42)))
+                      ->getMock();
+        $model->method('getGroupMemberships')->willReturn(array());
+        $model->setServiceLocator($serviceManager);
+
+        $this->setExpectedException('InvalidArgumentException', 'Invalid membership type: 23');
+        $model->setGroupMemberships(array('group1' => 23));
+    }
+
     public function getGroupMembershipsProvider()
     {
         return array(
@@ -552,7 +920,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $model = $this->_getModel(array('Model\Group\GroupManager' => $groupManager));
         $model['Id'] = 1;
 
-        $this->assertEquals($expected, $model->getGroupMemberships($type));
+        $this->assertSame($expected, $model->getGroupMemberships($type));
     }
 
     public function testGetGroupMembershipsInvalidType()

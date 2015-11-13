@@ -2667,7 +2667,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $client = $this->getMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
-        $client->expects($this->never())->method('setGroupsByName');
+        $client->expects($this->never())->method('setGroupMemberships');
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/managegroups/?id=1');
@@ -2693,7 +2693,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $client = $this->getMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
-        $client->expects($this->never())->method('setGroupsByName');
+        $client->expects($this->never())->method('setGroupMemberships');
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/managegroups/?id=1', 'POST', $postData);
@@ -2720,7 +2720,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $client = $this->getMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
-        $client->expects($this->once())->method('setGroupsByName')->with($postData['Groups']);
+        $client->expects($this->once())->method('setGroupMemberships')->with($postData['Groups']);
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/managegroups/?id=1', 'POST', $postData);
