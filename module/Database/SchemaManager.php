@@ -92,6 +92,18 @@ class SchemaManager
         \Library\Application::getService('Database\Table\Clients')->setSchema();
         \Library\Application::getService('Database\Table\PackageDownloadInfo')->setSchema();
         \Library\Application::getService('Database\Table\WindowsInstallations')->setSchema();
+
+        $logger = \Library\Application::getService('Library\Logger');
+
+        // SNMP tables have no table class
+        $glob = new \GlobIterator(Module::getPath('data/Tables/Snmp') . '/*.json');
+        foreach ($glob as $fileinfo) {
+            self::setSchema(
+                $logger,
+                \Zend\Config\Factory::fromFile($fileinfo->getPathname()),
+                $this->_nada
+            );
+        }
     }
 
     /**

@@ -125,85 +125,11 @@ class Braintacle_SchemaManager
     }
 
     /**
-     * Fix bad primary keys
-     *
-     * The original OCS Inventory schema (i.e. not managed by braintacle) has
-     * some weird primary keys which MDB2_Schema would refuse to operate on.
-     * These keys need to be dropped and re-created correctly before the schema
-     * can be validated by MDB2_Schema. See schema/README.html for details.
-     */
-    public function fixKeys()
-    {
-        // Since OCS Inventory only supports MySQL, databases for any other DBMS
-        // will essentially be managed exclusively by Braintacle so that this
-        // operation will not be necessary.
-        if (!$this->_nada->isMysql()) {
-            return;
-        }
-        $this->_logger->info('Fixing keys...');
-        $mdb2 = $this->_schema->db;
-
-        $fixTables = array(
-            'snmp_cards',
-            'snmp_cartridges',
-            'snmp_cpus',
-            'snmp_drives',
-            'snmp_fans',
-            'snmp_inputs',
-            'snmp_localprinters',
-            'snmp_memories',
-            'snmp_modems',
-            'snmp_networks',
-            'snmp_ports',
-            'snmp_powersupplies',
-            'snmp_softwares',
-            'snmp_sounds',
-            'snmp_storages',
-            'snmp_switchs',
-            'snmp_trays',
-            'snmp_videos',
-        );
-        // Only existing tables can be processed.
-        $fixTables = array_intersect($fixTables, array_keys($this->_allTables));
-
-        // Templates for constraint creation
-        $templatePrimary = array(
-            'primary' => true,
-            'fields' => array(
-                'id' => array()
-            )
-        );
-        $templateUnique = array(
-            'unique' => true,
-            'fields' => array(
-                'id' => array()
-            )
-        );
-
-        foreach ($fixTables as $table) {
-            $pk = $mdb2->reverse->getTableConstraintDefinition($table, 'primary');
-            $fields = $pk['fields'];
-            // Check for bad PK
-            if (count($fields) > 1 or !isset($fields['id'])) {
-                $this->_logger->info('Fixing table ' . $table);
-                // A UNIQUE constraint must be created before the bad PK can be dropped.
-                $mdb2->manager->createConstraint($table, 'primary', $templateUnique);
-                $mdb2->manager->dropConstraint($table, 'primary', true);
-                $mdb2->manager->createConstraint($table, 'primary', $templatePrimary);
-            }
-        }
-        $this->_logger->info('done.');
-    }
-
-    /**
      * Retrieve schema definition from existing database
      * @return array MDB2_Schema-style definition
      */
     public function getSchemaFromDatabase()
     {
-        // Fix bad PK first to make getDefinitionFromDatabase() work
-        $this->fixKeys();
-
         $this->_logger->info('Retrieving existing definition from database...');
 
         $previousSchema = $this->_schema->getDefinitionFromDatabase();
@@ -276,16 +202,6 @@ class Braintacle_SchemaManager
             throw new RuntimeException($newSchema->getUserInfo());
         }
 
-        // The snmp_accountinfo table has a dynamic structure.
-        // Only the static part is defined in the XML file. The additional
-        // fields have to be preserved here.
-        if (array_key_exists('snmp_accountinfo', $previousSchema['tables'])) {
-            $newSchema['tables']['snmp_accountinfo']['fields'] = array_merge(
-                $previousSchema['tables']['snmp_accountinfo']['fields'],
-                $newSchema['tables']['snmp_accountinfo']['fields']
-            );
-        }
-
         $this->_logger->info('done.');
         return $newSchema;
     }
@@ -326,10 +242,6 @@ class Braintacle_SchemaManager
         }
         $this->_logger->info('Tweaking tables...');
 
-        $engineInnoDb = array(
-            'snmp_accountinfo',
-            'snmp_communities',
-        );
         $engineMemory = array(
             'conntrack',
             'engine_mutex',
@@ -345,9 +257,7 @@ class Braintacle_SchemaManager
             // MDB2_Schema is not aware of MySQL's table engines and always
             // uses the configured default engine. The tables need to be
             // converted manually.
-            if (in_array($name, $engineInnoDb)) {
-                $engine = 'InnoDB';
-            } elseif (in_array($name, $engineMemory)) {
+            if (in_array($name, $engineMemory)) {
                 $engine = 'MEMORY';
             } else {
                 $engine = 'MyISAM';

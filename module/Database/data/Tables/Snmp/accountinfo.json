@@ -1,0 +1,39 @@
+{
+    "name": "snmp_accountinfo",
+    "comment": null,
+    "columns": [
+        {
+            "name": "snmp_id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "tag",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": "NA",
+            "autoincrement": false,
+            "comment": null
+        }
+    ],
+    "primary_key": [
+        "snmp_id"
+    ],
+    "indexes": [
+        {
+            "name": "snmp_accountinfo_tag_idx",
+            "unique": false,
+            "columns": [
+                "tag"
+            ]
+        }
+    ],
+    "mysql": {
+        "engine": "InnoDB"
+    }
+}
