@@ -72,4 +72,5 @@ if ($argc >= 2) {
     testModule('Model');
     testModule('Protocol');
     testModule('Console');
+    testModule('Export');
 }

@@ -1,7 +1,6 @@
-#!/usr/bin/php
 <?php
 /**
- * Export all clients as XML
+ * Bootstrap for unit tests
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -18,17 +17,20 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Tools
  */
 
 error_reporting(-1);
-// Only set 1 of these options to prevent duplicate messages on the console
-ini_set('display_errors', true);
-ini_set('log_errors', false);
-if (extension_loaded('xdebug')) {
-    xdebug_disable(); // Prevents printing backtraces on validation errors
-}
 
-require_once __DIR__ . '/../module/Library/Application.php';
-\Library\Application::init('Export');
+require_once(__DIR__ . '/../../Library/Application.php');
+\Library\Application::init('Export', false);
+
+// Get absolute path to vfsStream library
+\Zend\Loader\AutoloaderFactory::factory(
+    array(
+        '\Zend\Loader\StandardAutoloader' => array(
+            'namespaces' => array(
+                'org\bovigo\vfs' => stream_resolve_include_path('org/bovigo/vfs'),
+            ),
+        )
+    )
+);

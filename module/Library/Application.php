@@ -104,6 +104,7 @@ class Application
                         'Cli' => self::getPath('module/Cli'),
                         'Console' => self::getPath('module/Console/Console'),
                         'Database' => self::getPath('module/Database'),
+                        'Export' => self::getPath('module/Export'),
                         'Library' => self::getPath('module/Library'),
                         'Model' => self::getPath('module/Model'),
                         'Protocol' => self::getPath('module/Protocol'),
@@ -113,7 +114,7 @@ class Application
         );
         self::$_serviceManager = $application->getServiceManager();
         if ($run === null) {
-            if ($module == 'Console') {
+            if ($module == 'Console' or $module == 'Export') {
                 $run = true;
             } else {
                 $run = false;
