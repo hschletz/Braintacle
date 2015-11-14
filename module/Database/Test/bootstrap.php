@@ -24,8 +24,7 @@ require_once('Nada.php');
 require_once(__DIR__ . '/../../Library/Application.php');
 \Library\Application::init('Database', false);
 
-// Replace global ZF2 adapter with SQLite :memory: database.
-// This must be shared with the ZF1 adapter.
+// Replace global adapter with SQLite :memory: database.
 $adapter = new \Zend\Db\Adapter\Adapter(
     array(
         'driver' => 'Pdo_Sqlite',

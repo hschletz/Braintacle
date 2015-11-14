@@ -30,18 +30,6 @@ namespace Library;
 class Application
 {
     /**
-     * The ZF1 application object (must be run manually if required)
-     * @var \Zend_Application
-     */
-    public static $application;
-
-    /**
-     * Base path of the ZF1 library
-     * @var string
-     */
-    public static $zf1Path;
-
-    /**
      * Cached content of config file, managed and accessed via getConfig()
      * @var array
      */
@@ -82,19 +70,6 @@ class Application
                 )
             )
         );
-
-        // Bootstrap ZF1 application part.
-        $environment = self::getEnvironment();
-
-        // Get absolute path to ZF1 library
-        self::$zf1Path = dirname(stream_resolve_include_path('Zend/Application.php'));
-
-        require_once 'Zend/Application.php';
-        self::$application = new \Zend_Application(
-            ($environment == 'test' ? 'development' : $environment)
-        );
-        self::$application->setBootstrap(self::getPath('application/Bootstrap.php'));
-        self::$application->bootstrap();
 
         $application = \Zend\Mvc\Application::init(
             array(
