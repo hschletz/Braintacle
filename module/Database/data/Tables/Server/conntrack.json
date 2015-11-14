@@ -1,0 +1,30 @@
+{
+    "name": "conntrack",
+    "comment": null,
+    "columns": [
+        {
+            "name": "ip",
+            "type": "varchar",
+            "length": 255,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "timestamp",
+            "type": "timestamp",
+            "length": null,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        }
+    ],
+    "primary_key": [
+        "ip"
+    ],
+    "mysql": {
+        "engine": "MEMORY"
+    }
+}

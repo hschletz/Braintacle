@@ -1,0 +1,143 @@
+# Fixture for ClientOrGroupTest
+
+# hardware_id < 10 is used for package related tests.
+# hardware_id >= 10 is used for config related tests.
+devices:
+  -
+    hardware_id: 1
+    name: "DOWNLOAD"
+    ivalue: 2
+    tvalue: 'status'
+    comments: null
+  -
+    hardware_id: 1
+    name: "DOWNLOAD"
+    ivalue: 5
+    tvalue: 'status'
+    comments: null
+  -
+    hardware_id: 1
+    name: "DOWNLOAD_suffix"
+    ivalue: 5
+    tvalue: 'status'
+    comments: null
+  -
+    hardware_id: 1
+    name: "OTHER"
+    ivalue: 1
+    tvalue: null
+    comments: null
+  -
+    hardware_id: 1
+    name: "OTHER"
+    ivalue: 2
+    tvalue: null
+    comments: null
+  -
+    hardware_id: 2
+    name: "DOWNLOAD"
+    ivalue: 1
+    tvalue: null
+    comments: null
+  -
+    hardware_id: 10
+    name: "DOWNLOAD_SWITCH"
+    ivalue: 0
+    tvalue: null
+    comments: null
+  -
+    hardware_id: 10
+    name: "FREQUENCY"
+    ivalue: 23
+    tvalue: null
+    comments: null
+  -
+    hardware_id: 10
+    name: "IPDISCOVER"
+    ivalue: 0
+    tvalue: null
+    comments: null
+  -
+    hardware_id: 10
+    name: "IPDISCOVER"
+    ivalue: 2
+    tvalue: "192.0.2.0"
+    comments: null
+  -
+    hardware_id: 10
+    name: "SNMP_SWITCH"
+    ivalue: 0
+    tvalue: null
+    comments: null
+  -
+    hardware_id: 11
+    name: "DOWNLOAD_SWITCH"
+    ivalue: 1
+    tvalue: null
+    comments: null
+  -
+    hardware_id: 11
+    name: "IPDISCOVER"
+    ivalue: 1
+    tvalue: null
+    comments: null
+  -
+    hardware_id: 11
+    name: "SNMP_SWITCH"
+    ivalue: 1
+    tvalue: null
+    comments: null
+
+download_available:
+  -
+    fileid: 3
+    name: "package3"
+    priority: 1
+    fragments: 1
+    size: 1
+    osname: "platform"
+  -
+    fileid: 1
+    name: "package1"
+    priority: 1
+    fragments: 1
+    size: 1
+    osname: "platform"
+  -
+    fileid: 2
+    name: "package2"
+    priority: 1
+    fragments: 1
+    size: 1
+    osname: "platform"
+  -
+    fileid: 4
+    name: "package4"
+    priority: 1
+    fragments: 1
+    size: 1
+    osname: "platform"
+  -
+    fileid: 5
+    name: "package5"
+    priority: 1
+    fragments: 1
+    size: 1
+    osname: "platform"
+
+download_history:
+  -
+    hardware_id: 1
+    pkg_id: 4
+  -
+    hardware_id: 2
+    pkg_id: 1
+
+# Column "since" may contain offsets which getDataset() subtracts from CURRENT_TIMESTAMP.
+locks:
+  -
+    hardware_id: 1
+    since: "#60#"
+  -
+    hardware_id: 2
+    since: "2015-06-10 18:35:56"

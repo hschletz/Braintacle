@@ -1,0 +1,22 @@
+# Fixture for ConfigTest
+config:
+  -
+    # Example for tvalue with non-default content
+    name: "DOWNLOAD_PACK_DIR"
+    ivalue: null
+    tvalue: "/example/package/path"
+  -
+    # Example for ivalue with non-default content
+    name: "FREQUENCY"
+    ivalue: 42
+    tvalue: null
+  -
+    # Example for ivalue with boolean true
+    name: "GENERATE_OCS_FILES"
+    ivalue: 1
+    tvalue: null
+  -
+    # Example for ivalue with boolean false
+    name: "REGISTRY"
+    ivalue: 0
+    tvalue: null

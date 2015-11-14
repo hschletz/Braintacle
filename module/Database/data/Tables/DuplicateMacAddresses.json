@@ -1,0 +1,21 @@
+{
+    "name": "blacklist_macaddresses",
+    "comment": "List of MAC addresses that are not unique, i.e. no indicator for duplicate computers.",
+    "columns": [
+        {
+            "name": "macaddress",
+            "type": "varchar",
+            "length": 255,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        }
+    ],
+    "primary_key": [
+        "macaddress"
+    ],
+    "mysql": {
+        "engine": "MyISAM"
+    }
+}

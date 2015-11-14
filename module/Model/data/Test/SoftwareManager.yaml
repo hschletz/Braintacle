@@ -1,0 +1,76 @@
+# Fixture for SoftwareManagerTest
+
+hardware:
+  -
+    id: 1
+    name: "client1"
+    deviceid: "client1"
+    winprodid: "prodid"
+  -
+    id: 2
+    name: "client2"
+    deviceid: "client2"
+    winprodid: null
+  -
+    id: 3
+    name: "client3"
+    deviceid: "client3"
+    winprodid: "prodid"
+  -
+    id: 4
+    name: "client4"
+    deviceid: "client4"
+    winprodid: "prodid"
+
+softwares:
+  -
+    hardware_id: 1
+    name: "new1"
+  -
+    hardware_id: 1
+    name: "new2"
+  -
+    hardware_id: 1
+    name: "accepted"
+  # duplicate entry should be counted only once.
+  -
+    hardware_id: 1
+    name: "accepted"
+  -
+    hardware_id: 1
+    name: "ignored"
+  -
+    hardware_id: 2
+    name: "new2"
+  -
+    hardware_id: 2
+    name: "accepted"
+  -
+    hardware_id: 2
+    name: "ignored"
+  -
+    hardware_id: 2
+    name: null
+
+software_definitions:
+  -
+    name: "orphaned"
+    display: true
+  -
+    name: "accepted"
+    display: 1
+  -
+    name: "ignored"
+    display: 0
+  -
+    name: "new1"
+    display: null
+# "new2" intentionally left out
+
+braintacle_windows:
+  -
+    hardware_id: 1
+    manual_product_key: "BCDEF-GHIJK-LMNOP-QRSTU-VWXYZ"
+  -
+    hardware_id: 3
+    manual_product_key: "CDEFG-HIJKL-MNOPQ-RSTUV-WXYZA"

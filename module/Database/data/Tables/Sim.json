@@ -1,0 +1,84 @@
+{
+    "name": "sim",
+    "comment": "SIM on mobile devices",
+    "columns": [
+        {
+            "name": "id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": true,
+            "comment": null
+        },
+        {
+            "name": "hardware_id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "operator",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "operator code (PLMN)"
+        },
+        {
+            "name": "opname",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "operator name"
+        },
+        {
+            "name": "country",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "ISO country code"
+        },
+        {
+            "name": "serialnumber",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "SIM serial number"
+        },
+        {
+            "name": "deviceid",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Device ID (IMEI)"
+        }
+    ],
+    "primary_key": [
+        "id"
+    ],
+    "indexes": [
+        {
+            "name": "sim_hardware_id_idx",
+            "unique": false,
+            "columns": [
+                "hardware_id"
+            ]
+        }
+    ],
+    "mysql": {
+        "engine": "InnoDB"
+    }
+}

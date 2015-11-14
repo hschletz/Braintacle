@@ -1,0 +1,15 @@
+operators:
+  -
+    id: "new_id"
+    firstname: "First"
+    lastname: "Last"
+    passwd: "0cc175b9c0f1b6a831c399e269772661"
+    comments: "Comment"
+    email: "test@example.net"
+  -
+    id: "user2"
+    firstname: null
+    lastname: 'A'
+    passwd: "0cc175b9c0f1b6a831c399e269772661"
+    comments: null
+    email: null

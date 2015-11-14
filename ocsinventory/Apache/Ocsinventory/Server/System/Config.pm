@@ -65,7 +65,7 @@ our %CONFIG = (
   },
   AUTO_DUPLICATE_LVL => { 
     type => 'IVALUE',
-    default => 15,
+    default => 0,
     unit => 'NA',
     description => 'Configure the duplicates detection system',
     level => IMPORTANT,
@@ -265,7 +265,7 @@ our %CONFIG = (
   },
   IPDISCOVER_NO_POSTPONE => {
     type => 'IVALUE',
-    default => 0,
+    default => 1,
     unit => 'NA',
     description => 'Disable the time before a first election (not recommended)',
     level => CANSKIP,
@@ -377,7 +377,7 @@ our %CONFIG = (
   },
   INVENTORY_FILTER_FLOOD_IP_CACHE_TIME => {
     type => 'IVALUE',
-    default => 300,
+    default => 0,
     unit => 'second',
     description => 'Period definition for INVENTORY_FILTER_FLOOD_IP',
     level => CANSKIP,
@@ -401,7 +401,7 @@ our %CONFIG = (
   },
   COMPRESS_TRY_OTHERS => {
     type => 'IVALUE',
-    default => 0,
+    default => 1,
     unit => 'NA',
     description => 'Configure engine to try other compress algorythm than raw zlib',
     level => CANSKIP,

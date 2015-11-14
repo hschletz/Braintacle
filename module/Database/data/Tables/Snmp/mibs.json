@@ -1,0 +1,66 @@
+{
+    "name": "snmp_mibs",
+    "comment": null,
+    "columns": [
+        {
+            "name": "id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": true,
+            "comment": null
+        },
+        {
+            "name": "vendor",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "url",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "checksum",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "version",
+            "type": "varchar",
+            "length": 5,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "parser",
+            "type": "varchar",
+            "length": 5,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        }
+    ],
+    "primary_key": [
+        "id"
+    ],
+    "mysql": {
+        "engine": "MyISAM"
+    }
+}

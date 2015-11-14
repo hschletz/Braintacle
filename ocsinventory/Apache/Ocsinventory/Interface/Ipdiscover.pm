@@ -61,7 +61,7 @@ sub ipdiscover_tag {
   my ( $device, $description, $type, $user ) = @_;
   return send_error('BAD_TYPE') if do_sql('SELECT * FROM devicetype WHERE NAME=?', $type) == 0E0;
   return send_error('BAD_USER') if do_sql('SELECT * FROM operators WHERE ID=?', $user) == 0E0;
-  return do_sql('INSERT INTO network_devices(DESCRIPTION,TYPE,MACADDR,' . $Apache::Ocsinventory::CURRENT_CONTEXT{'DBI_HANDLE'}->quote_identifier ('USER') .') VALUES(?,?,?,?)', ($description, $type, uc ($device), $user ) );
+  return do_sql('INSERT INTO network_devices(DESCRIPTION,TYPE,MACADDR) VALUES(?,?,?)', ($description, $type, uc ($device) ) );
 }
 
 sub ipdiscover_untag{

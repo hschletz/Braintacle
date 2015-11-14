@@ -1,0 +1,9 @@
+# Fixture for CustomFieldsTest
+
+accountinfo:
+  -
+    hardware_id: 1
+    tag: "Custom1"
+  -
+    hardware_id: 2
+    tag: "Custom2"

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+RELAX NG schema for package metadata served to the agent
+
+Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <start>
+        <element name="DOWNLOAD">
+
+            <!-- Package ID (timestamp of package creation) -->
+            <attribute name="ID">
+                <data type="positiveInteger" />
+            </attribute>
+
+            <!-- Priority -->
+            <attribute name="PRI">
+                <data type="integer">
+                    <param name="minInclusive">0</param>
+                    <param name="maxInclusive">10</param>
+                </data>
+            </attribute>
+
+            <!-- Action -->
+            <attribute name="ACT">
+                <choice>
+                    <value>STORE</value>
+                    <value>LAUNCH</value>
+                    <value>EXECUTE</value>
+                </choice>
+            </attribute>
+
+            <!-- Hash of package content (empty if no content)-->
+            <attribute name="DIGEST" />
+
+            <!-- Protocol for fragment download -->
+            <attribute name="PROTO">
+                <value>HTTP</value>
+            </attribute>
+
+            <!-- Number of fragments (0 if no content) -->
+            <attribute name="FRAGS">
+                <data type="integer">
+                    <param name="minInclusive">0</param>
+                </data>
+            </attribute>
+
+            <!-- Digest method for hash -->
+            <attribute name="DIGEST_ALGO">
+                <choice>
+                    <value>SHA1</value>
+                    <value>MD5</value>
+                </choice>
+            </attribute>
+
+            <!-- Digest encoding type -->
+            <attribute name="DIGEST_ENCODE">
+                <value>Hexa</value>
+            </attribute>
+
+            <!-- Target path for STORE action, empty for other actions -->
+            <attribute name="PATH" />
+
+            <!-- Command line to execute for LAUNCH action, empty for other actions -->
+            <attribute name="NAME" />
+
+            <!-- Command line to execute for EXECUTE action, empty for other actions -->
+            <attribute name="COMMAND" />
+
+            <!-- Display pre-installation message to user? -->
+            <attribute name="NOTIFY_USER">
+                <choice>
+                    <value>0</value>
+                    <value>1</value>
+                </choice>
+            </attribute>
+
+            <!-- Pre-installation message -->
+            <attribute name="NOTIFY_TEXT" />
+
+            <!-- Pre-installation countdown in seconds, empty to disable -->
+            <attribute name="NOTIFY_COUNTDOWN">
+                <choice>
+                    <data type="positiveInteger" />
+                    <empty />
+                </choice>
+            </attribute>
+
+            <!-- Allow user abort? -->
+            <attribute name="NOTIFY_CAN_ABORT">
+                <choice>
+                    <value>0</value>
+                    <value>1</value>
+                </choice>
+            </attribute>
+
+            <!-- Allow user postpone? -->
+            <attribute name="NOTIFY_CAN_DELAY">
+                <choice>
+                    <value>0</value>
+                    <value>1</value>
+                </choice>
+            </attribute>
+
+            <!-- Display post-installation message to user? -->
+            <attribute name="NEED_DONE_ACTION">
+                <choice>
+                    <value>0</value>
+                    <value>1</value>
+                </choice>
+            </attribute>
+
+            <!-- Post-installation message -->
+            <attribute name="NEED_DONE_ACTION_TEXT" />
+
+            <!-- Unknown attribute, read by some agents but never used -->
+            <attribute name="GARDEFOU">
+                <value>rien</value>
+            </attribute>
+
+            </element>
+    </start>
+</grammar>

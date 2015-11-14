@@ -1,0 +1,1741 @@
+# Translation file for Console module
+#
+# Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 2 of the License, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
+
+#: Console/Controller/ClientController.php
+#, php-format
+msgid "Client '%s' could not be deleted."
+msgstr "Client '%s' konnte nicht gelöscht werden."
+
+#: Console/Controller/ClientController.php
+#, php-format
+msgid "Client '%s' was successfully deleted."
+msgstr "Client '%s' wurde erfolgreich gelöscht."
+
+#: Console/Controller/ClientController.php
+msgid "The information was successfully updated."
+msgstr "Die Informationen wurden aktualisiert."
+
+#: Console/Controller/ClientController.php
+msgid "The requested client does not exist."
+msgstr "Der angeforderte Client existiert nicht."
+
+#: Console/Controller/DuplicatesController.php
+#, php-format
+msgid "'%s' is no longer considered duplicate."
+msgstr "'%s' wird nicht mehr als Duplikat betrachtet."
+
+#: Console/Controller/DuplicatesController.php
+msgid "The selected clients have been merged."
+msgstr "Die ausgewählten Clients wurden zusammengeführt."
+
+#: Console/Controller/GroupController.php
+#, php-format
+msgid "Group '%s' could not be deleted. Try again later."
+msgstr "Gruppe '%s' konnte nicht gelöscht werden. Bitte erneut versuchen."
+
+#: Console/Controller/GroupController.php
+#, php-format
+msgid "Group '%s' was successfully deleted."
+msgstr "Gruppe '%s' wurde erfolgreich gelöscht."
+
+#: Console/Controller/GroupController.php
+msgid "The requested group does not exist."
+msgstr "Die angeforderte Gruppe existiert nicht."
+
+#: Console/Controller/PackageController.php
+#, php-format
+msgid "Package '%s' was successfully changed to '%s'."
+msgstr "Paket '%s' wurde erfolgreich zu '%s' geändert."
+
+#: Console/Controller/PackageController.php
+#, php-format
+msgid "Package '%s' was successfully created."
+msgstr "Paket '%s' wurde erfolgreich erstellt."
+
+#: Console/Controller/PackageController.php
+#, php-format
+msgid "Package '%s' was successfully deleted."
+msgstr "Paket '%s' wurde erfolgreich gelöscht."
+
+#: Console/Form/Account/AbstractForm.php Console/Form/Package/Build.php
+#: view/console/client/general.php view/console/client/misc.php
+msgid "Comment"
+msgstr "Kommentar"
+
+#: Console/Form/Account/AbstractForm.php view/console/accounts/index.php
+msgid "First name"
+msgstr "Vorname"
+
+#: Console/Form/Account/AbstractForm.php view/console/accounts/index.php
+msgid "Last name"
+msgstr "Nachname"
+
+#: Console/Form/Account/AbstractForm.php view/console/accounts/index.php
+msgid "Login name"
+msgstr "Anmeldename"
+
+#: Console/Form/Account/AbstractForm.php view/console/accounts/index.php
+msgid "Mail address"
+msgstr "Mailadresse"
+
+#: Console/Form/Account/AbstractForm.php Console/Form/Login.php
+msgid "Password"
+msgstr "Passwort"
+
+#: Console/Form/Account/AbstractForm.php
+msgid "Repeat password"
+msgstr "Passwort wiederholen"
+
+#: Console/Form/Account/AbstractForm.php
+msgid "The passwords do not match"
+msgstr "Die Passwörter stimmen nicht überein"
+
+#: Console/Form/Account/Add.php Console/Form/DefineFields.php
+#: Console/Form/ManageRegistryValues.php Console/Form/NetworkDeviceTypes.php
+msgid "Add"
+msgstr "Hinzufügen"
+
+#: Console/Form/Account/Edit.php Console/Form/CustomFields.php
+#: Console/Form/DefineFields.php Console/Form/ManageRegistryValues.php
+#: Console/Form/NetworkDeviceTypes.php
+msgid "Change"
+msgstr "Ändern"
+
+#: Console/Form/AddToGroup.php
+msgid ""
+"Add current search results. Group memberships will be set only this time."
+msgstr ""
+"Aktuelle Suchergebnisse hinzufügen. Gruppenmitgliedschaften werden nur "
+"dieses mal gesetzt."
+
+#: Console/Form/AddToGroup.php Console/Form/NetworkDevice.php
+#: view/console/client/display.php view/console/client/misc.php
+#: view/console/client/network.php view/console/client/printers.php
+#: view/console/client/system.php view/console/group/general.php
+#: view/console/group/index.php view/console/network/showidentified.php
+msgid "Description"
+msgstr "Beschreibung"
+
+#: Console/Form/AddToGroup.php
+msgid "Exclude search results from a group."
+msgstr "Suchergebnisse aus einer Gruppe ausschließen."
+
+#: Console/Form/AddToGroup.php view/console/client/groups.php
+msgid "Group"
+msgstr "Gruppe"
+
+#: Console/Form/AddToGroup.php Console/Form/ManageRegistryValues.php
+#: Console/Form/Package/Build.php Console/Form/ShowDuplicates.php
+#: Console/Form/Subnet.php view/console/client/display.php
+#: view/console/client/index.php view/console/client/misc.php
+#: view/console/client/network.php view/console/client/packages.php
+#: view/console/client/printers.php view/console/client/software.php
+#: view/console/client/system.php view/console/client/virtualmachines.php
+#: view/console/duplicates/index.php view/console/group/excluded.php
+#: view/console/group/general.php view/console/group/index.php
+#: view/console/group/members.php view/console/group/packages.php
+#: view/console/network/index.php view/console/package/index.php
+#: view/console/software/index.php
+msgid "Name"
+msgstr "Name"
+
+#: Console/Form/AddToGroup.php Console/Form/ClientConfig.php
+#: Console/Form/GroupMemberships.php Console/Form/NetworkDevice.php
+#: Console/Form/ProductKey.php Console/Form/Subnet.php
+msgid "OK"
+msgstr "OK"
+
+#: Console/Form/AddToGroup.php
+msgid "Store in existing group"
+msgstr "In vorhandener Gruppe speichern"
+
+#: Console/Form/AddToGroup.php
+msgid "Store in new group"
+msgstr "In neuer Gruppe speichern"
+
+#: Console/Form/AddToGroup.php
+msgid ""
+"Store search parameters. Group memberships will be updated automatically."
+msgstr ""
+"Suchparameter speichern. Gruppenmitgliedschaften werden automatisch "
+"aktualisiert."
+
+#: Console/Form/AddToGroup.php
+msgid "The input is more than 255 characters long"
+msgstr "Die Eingabe ist länger als 255 Zeichen"
+
+#: Console/Form/AddToGroup.php Console/Form/DefineFields.php
+#: Console/Form/NetworkDeviceTypes.php
+msgid "The name already exists"
+msgstr "Der Name existiert bereits"
+
+#: Console/Form/AddToGroup.php Console/Form/ManageRegistryValues.php
+msgid "Value is required and can't be empty"
+msgstr "Eingabe erforderlich"
+
+#: Console/Form/ClientConfig.php Console/Navigation/MainMenuFactory.php
+msgid "Agent"
+msgstr "Agent"
+
+#: Console/Form/ClientConfig.php Console/Form/Preferences/Agent.php
+msgid "Agent contact interval (in hours)"
+msgstr "Agenten-Kontaktintervall (in Stunden)"
+
+#: Console/Form/ClientConfig.php
+msgid "Allow network scanning"
+msgstr "Netzwerk-Scans erlauben"
+
+#: Console/Form/ClientConfig.php
+msgid "Always scan this network"
+msgstr "Dieses Netzwerk immer scannen"
+
+#: Console/Form/ClientConfig.php
+msgid "Default"
+msgstr "Standard"
+
+#: Console/Form/ClientConfig.php Console/Form/Preferences/Download.php
+msgid "Delay (in seconds) between cycles"
+msgstr "Pause (in Sekunden) zwischen Zyklen"
+
+#: Console/Form/ClientConfig.php Console/Form/Preferences/Download.php
+msgid "Delay (in seconds) between fragments"
+msgstr "Pause (in Sekunden) zwischen Fragmenten"
+
+#: Console/Form/ClientConfig.php Console/Form/Preferences/Download.php
+msgid "Delay (in seconds) between periods"
+msgstr "Pause (in Sekunden) zwischen Perioden"
+
+#: Console/Form/ClientConfig.php Console/Navigation/MainMenuFactory.php
+msgid "Download"
+msgstr "Download"
+
+#: Console/Form/ClientConfig.php
+msgid "Effective"
+msgstr "Effektiv"
+
+#: Console/Form/ClientConfig.php Console/Form/Preferences/Download.php
+msgid "Enable package download"
+msgstr "Download von Paketen aktivieren"
+
+#: Console/Form/ClientConfig.php Console/Form/Preferences/Agent.php
+msgid "Inventory interval (in days, 0 = always, -1 = never)"
+msgstr "Inventar-Intervall (in Tagen, 0 = immer, -1 = nie)"
+
+#: Console/Form/ClientConfig.php
+msgid "Maximum package priority"
+msgstr "Maximale Paket-Priorität"
+
+#: Console/Form/ClientConfig.php Console/Navigation/MainMenuFactory.php
+msgid "Network scanning"
+msgstr "Netzwerk-Scans"
+
+#: Console/Form/ClientConfig.php Console/Form/DeleteClient.php
+msgid "No"
+msgstr "Nein"
+
+#: Console/Form/ClientConfig.php Console/Form/Preferences/Download.php
+msgid "Timeout (in days)"
+msgstr "Timeout (in Tagen)"
+
+#: Console/Form/ClientConfig.php Console/Form/Preferences/NetworkScanning.php
+msgid "Use SNMP"
+msgstr "SNMP verwenden"
+
+#: Console/Form/ClientConfig.php Console/Form/DeleteClient.php
+msgid "Yes"
+msgstr "Ja"
+
+#: Console/Form/CustomFields.php Console/Form/Search.php
+#: view/console/client/index.php
+msgid "Category"
+msgstr "Kategorie"
+
+#: Console/Form/DefineFields.php view/console/client/bios.php
+#: view/console/network/edit.php view/console/package/index.php
+msgid "Date"
+msgstr "Datum"
+
+#: Console/Form/DefineFields.php Console/Form/ManageRegistryValues.php
+#: Console/Form/NetworkDeviceTypes.php Console/Navigation/ClientMenuFactory.php
+#: Console/Navigation/GroupMenuFactory.php view/console/accounts/index.php
+#: view/console/network/showidentified.php view/console/network/showunknown.php
+#: view/console/package/index.php
+msgid "Delete"
+msgstr "Löschen"
+
+#: Console/Form/DefineFields.php
+msgid "Float"
+msgstr "Kommazahl"
+
+#: Console/Form/DefineFields.php
+msgid "Integer"
+msgstr "Ganzzahl"
+
+#: Console/Form/DefineFields.php
+msgid "Long text"
+msgstr "Langer Text"
+
+#: Console/Form/DefineFields.php
+msgid "Text"
+msgstr "Text"
+
+#: Console/Form/DeleteClient.php
+msgid "Delete interfaces from network listing"
+msgstr "Interfaces aus Netzwerkliste löschen"
+
+#: Console/Form/GroupMemberships.php
+msgid "always"
+msgstr "immer"
+
+#: Console/Form/GroupMemberships.php
+msgid "automatic"
+msgstr "automatisch"
+
+#: Console/Form/GroupMemberships.php
+msgid "never"
+msgstr "nie"
+
+#: Console/Form/Import.php
+msgid "File (*.ocs, *.xml)"
+msgstr "Datei (*.ocs, *.xml)"
+
+#: Console/Form/Import.php Console/Navigation/MainMenuFactory.php
+msgid "Import"
+msgstr "Import"
+
+#: Console/Form/Login.php
+msgid "Login"
+msgstr "Anmelden"
+
+#: Console/Form/Login.php
+msgid "Username"
+msgstr "Benutzername"
+
+#: Console/Form/ManageRegistryValues.php Console/Form/Preferences/Inventory.php
+msgid "Inspect registry"
+msgstr "Registry durchsuchen"
+
+#: Console/Form/ManageRegistryValues.php
+msgid "Only this value (optional)"
+msgstr "Nur dieser Wert (optional)"
+
+#: Console/Form/ManageRegistryValues.php
+msgid "Root key"
+msgstr "Wurzelschlüssel"
+
+#: Console/Form/ManageRegistryValues.php
+msgid "Subkeys"
+msgstr "Unterschlüssel"
+
+#: Console/Form/ManageRegistryValues.php
+msgid "Values"
+msgstr "Werte"
+
+#: Console/Form/NetworkDevice.php view/console/client/display.php
+#: view/console/client/general.php view/console/client/index.php
+#: view/console/client/misc.php view/console/client/network.php
+#: view/console/client/storage.php view/console/client/system.php
+#: view/console/client/virtualmachines.php view/console/network/index.php
+#: view/console/network/showidentified.php
+msgid "Type"
+msgstr "Typ"
+
+#: Console/Form/Package/Assign.php
+msgid "Install"
+msgstr "Installieren"
+
+#: Console/Form/Package/Build.php
+msgid "Action"
+msgstr "Aktion"
+
+#: Console/Form/Package/Build.php
+msgid "Allow abort by user"
+msgstr "Erlaube Abbruch durch Benutzer"
+
+#: Console/Form/Package/Build.php
+msgid "Allow delay by user"
+msgstr "Erlaube Aufschub durch Benutzer"
+
+#: Console/Form/Package/Build.php Console/Navigation/MainMenuFactory.php
+msgid "Build"
+msgstr "Erstellen"
+
+#: Console/Form/Package/Build.php
+msgid "Command line"
+msgstr "Befehlszeile"
+
+#: Console/Form/Package/Build.php
+msgid "Countdown (seconds)"
+msgstr "Countdown (Sekunden)"
+
+#: Console/Form/Package/Build.php Console/Form/Preferences/Packages.php
+msgid "Download package, execute command, retrieve result"
+msgstr "Paket herunterladen, Befehl ausführen, Ergebnis ermitteln"
+
+#: Console/Form/Package/Build.php
+msgid "File"
+msgstr "Datei"
+
+#: Console/Form/Package/Build.php Console/Form/Preferences/Packages.php
+msgid "Just download package to target path"
+msgstr "Nur Paket in Zielpfad herunterladen"
+
+#: Console/Form/Package/Build.php
+msgid "Maximum fragment size (kB)"
+msgstr "Maximale Fragmentgröße (kB)"
+
+#: Console/Form/Package/Build.php
+msgid "Message"
+msgstr "Nachricht"
+
+#: Console/Form/Package/Build.php Console/Form/Preferences/Packages.php
+msgid "Optionally download package, execute command"
+msgstr "Optional Paket herunterladen, Befehl ausführen"
+
+#: Console/Form/Package/Build.php view/console/package/index.php
+msgid "Platform"
+msgstr "Plattform"
+
+#: Console/Form/Package/Build.php
+msgid "Post-installation message"
+msgstr "Nachricht nach Installation"
+
+#: Console/Form/Package/Build.php
+msgid "Priority (0: exclusive, 10: lowest)"
+msgstr "Priorität (0: exklusiv, 10: niedrigste)"
+
+#: Console/Form/Package/Build.php
+msgid "Target Path"
+msgstr "Zielpfad"
+
+#: Console/Form/Package/Build.php
+msgid "Warn user"
+msgstr "Benutzer warnen"
+
+#: Console/Form/Package/Update.php
+msgid "Deploy to computers which have existing package assigned"
+msgstr "Auf Computern installieren, denen das exisierende Paket zugewiesen ist"
+
+#: Console/Form/Package/Update.php Console/Form/Preferences/Packages.php
+#: view/console/package/index.php
+msgid "Error"
+msgstr "Fehler"
+
+#: Console/Form/Package/Update.php Console/Form/Preferences/Packages.php
+#: Console/Navigation/ClientMenuFactory.php
+#: Console/Navigation/MainMenuFactory.php
+msgid "Groups"
+msgstr "Gruppen"
+
+#: Console/Form/Package/Update.php Console/Form/Preferences/Packages.php
+#: view/console/package/index.php
+msgid "Not notified"
+msgstr "Ausstehend"
+
+#: Console/Form/Package/Update.php Console/Form/Preferences/Packages.php
+#: view/console/package/index.php
+msgid "Running"
+msgstr "Laufend"
+
+#: Console/Form/Package/Update.php Console/Form/Preferences/Packages.php
+#: view/console/package/index.php
+msgid "Success"
+msgstr "Erfolg"
+
+#: Console/Form/Preferences/AbstractForm.php
+msgid "Set"
+msgstr "Setzen"
+
+#: Console/Form/Preferences/Agent.php
+msgid "File with allowed non-OCS agents (FusionInventory etc.)"
+msgstr "Datei mit erlaubten nicht-OCS-Agenten (FusionInventory etc.)"
+
+#: Console/Form/Preferences/Display.php
+msgid "Display ignored software"
+msgstr "Ignorierte Software anzeigen"
+
+#: Console/Form/Preferences/Download.php
+msgid "HTTP package base URL"
+msgstr "HTTP-Basis-URL für Pakete"
+
+#: Console/Form/Preferences/Download.php
+msgid "HTTPS package base URL"
+msgstr "HTTPS-Basis-URL für Pakete"
+
+#: Console/Form/Preferences/Download.php
+msgid ""
+"Maximum package priority (packages with higher value will not be downloaded)"
+msgstr ""
+"Maximale Paket-Priorität (Pakete mit höherem Wert werden nicht herunter "
+"geladen)"
+
+#: Console/Form/Preferences/Download.php
+msgid "Package storage directory"
+msgstr "Paketverzeichnis"
+
+#: Console/Form/Preferences/Filters.php
+msgid "Limit agent connections to trusted networks"
+msgstr "Agentenverbindungen auf vertrauenswürdige Netze beschränken"
+
+#: Console/Form/Preferences/Filters.php
+msgid "Limit inventory frequency"
+msgstr "Inventarhäufigkeit begrenzen"
+
+#: Console/Form/Preferences/Filters.php
+msgid "Seconds between inventory processing"
+msgstr "Sekunden zwischen Inventarverarbeitung"
+
+#: Console/Form/Preferences/Groups.php
+msgid "Maximum seconds added to above value"
+msgstr "Max. Sekunden, die zum obigen Wert addiert werden"
+
+#: Console/Form/Preferences/Groups.php
+msgid "Minimum seconds between group cache rebuilds"
+msgstr "Min. Sekunden bis zur Erneuerung des Gruppencache"
+
+#: Console/Form/Preferences/Groups.php
+msgid "Set package status on computers for group-assigned packages"
+msgstr "Status von durch Gruppe zugewiesenen Paketen bei Computern setzen "
+
+#: Console/Form/Preferences/Inventory.php
+msgid "Delete interfaces from network listing by default"
+msgstr "'Interfaces aus Netzwerkliste löschen' als Vorgabe"
+
+#: Console/Form/Preferences/Inventory.php
+msgid "Manage inventoried registry values"
+msgstr "Inventarisierte Registry-Werte verwalten"
+
+#: Console/Form/Preferences/Inventory.php
+msgid "Merge manual group assignments by default"
+msgstr "'Manuelle Gruppenzuweisungen übernehmen' als Vorgabe"
+
+#: Console/Form/Preferences/Inventory.php
+msgid "Merge missing package assignments by default"
+msgstr "'Fehlende Paketzuweisungen übernehmen' als Vorgabe"
+
+#: Console/Form/Preferences/Inventory.php
+msgid "Merge user supplied information by default"
+msgstr "'Benutzerdefinierte Informationen übernehmen' als Vorgabe"
+
+#: Console/Form/Preferences/NetworkScanning.php
+msgid "Delay (in milliseconds) between ARP requests"
+msgstr "Pause (in Millisekunden) zwischen ARP-Anfragen"
+
+#: Console/Form/Preferences/NetworkScanning.php
+msgid "Maximum days before a scanning computer is replaced"
+msgstr "Maximale Anzahl Tage bevor ein Scan-Computer ersetzt wird"
+
+#: Console/Form/Preferences/NetworkScanning.php
+msgid "Minimum days before a scanning computer is replaced"
+msgstr "Minimale Anzahl Tage bevor ein Scan-Computer ersetzt wird"
+
+#: Console/Form/Preferences/NetworkScanning.php
+msgid "Number of scanning computers per subnet"
+msgstr "Anzahl der Scan-Computer pro Subnetz"
+
+#: Console/Form/Preferences/Packages.php
+msgid "Allow user abort by default"
+msgstr "Vorgabe für 'Erlaube Abbruch durch Benutzer'"
+
+#: Console/Form/Preferences/Packages.php
+msgid "Allow user delay by default"
+msgstr "Vorgabe für 'Erlaube Aufschub durch Benutzer'"
+
+#: Console/Form/Preferences/Packages.php
+msgid "Default action"
+msgstr "Standardaktion"
+
+#: Console/Form/Preferences/Packages.php
+msgid "Default action parameter"
+msgstr "Standardparameter für Aktion"
+
+#: Console/Form/Preferences/Packages.php
+msgid "Default maximum fragment size (kB)"
+msgstr "Vorgabe für maximale Fragmentgröße (kB)"
+
+#: Console/Form/Preferences/Packages.php
+msgid "Default platform"
+msgstr "Standardplattform"
+
+#: Console/Form/Preferences/Packages.php
+msgid "Default post-installation message"
+msgstr "Standardnachricht nach Installation"
+
+#: Console/Form/Preferences/Packages.php
+msgid "Default priority (0: exclusive, 10: lowest)"
+msgstr "Standardpriorität (0: exklusiv, 10: niedrigste)"
+
+#: Console/Form/Preferences/Packages.php
+msgid "Default warn countdown (seconds)"
+msgstr "Standardcountdown (Sekunden)"
+
+#: Console/Form/Preferences/Packages.php
+msgid "Default warn message"
+msgstr "Standardwarnmeldung"
+
+#: Console/Form/Preferences/Packages.php
+msgid "Defaults for deploying updated packages"
+msgstr "Vorgaben für Zuweisung aktualisierter Pakete"
+
+#: Console/Form/Preferences/Packages.php
+msgid "Warn user by default"
+msgstr "Vorgabe für 'Benutzer warnen'"
+
+#: Console/Form/Preferences/RawData.php
+msgid "File format"
+msgstr "Dateiformat"
+
+#: Console/Form/Preferences/RawData.php
+msgid "Overwrite existing files"
+msgstr "Existierende Dateien überschreiben"
+
+#: Console/Form/Preferences/RawData.php
+msgid "Save incoming raw inventory data"
+msgstr "Eingehende Inventarrohdaten speichern"
+
+#: Console/Form/Preferences/RawData.php
+msgid "Target directory"
+msgstr "Zielverzeichnis"
+
+#: Console/Form/Preferences/RawData.php
+msgid "uncompressed XML"
+msgstr "XML, unkomprimiert"
+
+#: Console/Form/Preferences/RawData.php
+msgid "zlib compressed XML"
+msgstr "XML, zlib-komprimiert"
+
+#: Console/Form/Preferences/System.php
+msgid "Communication server URI"
+msgstr "URI des Kommunikationsservers"
+
+#: Console/Form/Preferences/System.php
+msgid "Interval in seconds to cleanup sessions"
+msgstr "Intervall für Sitzungsbereinigung in Sekunden"
+
+#: Console/Form/Preferences/System.php
+msgid "Log level"
+msgstr "Protokollierungsstufe"
+
+#: Console/Form/Preferences/System.php
+msgid "Maximum duration of an agent session in seconds"
+msgstr "Maximale Dauer einer Agentensitzung in Sekunden"
+
+#: Console/Form/Preferences/System.php
+msgid "Maximum seconds to lock a computer"
+msgstr "Max. Sekunden, die ein Computer gesperrt wird"
+
+#: Console/Form/Preferences/System.php
+msgid "Merge duplicates automatically (not recommended)"
+msgstr "Duplikate automatisch zusammenführen (nicht empfohlen)"
+
+#: Console/Form/Preferences/System.php
+msgid "Session required for inventory"
+msgstr "Sitzung erforderlich für Inventar"
+
+#: Console/Form/ProductKey.php
+msgid "Product key (if different)"
+msgstr "Lizenzschlüssel (falls verschieden)"
+
+#: Console/Form/Search.php Console/Form/ShowDuplicates.php
+#: view/console/client/general.php view/console/client/index.php
+#: view/console/duplicates/index.php
+msgid "Asset tag"
+msgstr "Asset tag"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Audio device"
+msgstr "Audiogerät"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "BIOS date"
+msgstr "BIOS-Datum"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "BIOS version"
+msgstr "BIOS-Version"
+
+#: Console/Form/Search.php
+msgid "CPU clock (MHz)"
+msgstr "CPU-Taktfrequenz (MHz)"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "CPU cores"
+msgstr "CPU-Kerne"
+
+#: Console/Form/Search.php view/console/client/general.php
+#: view/console/client/index.php
+msgid "CPU type"
+msgstr "CPU Typ"
+
+#: Console/Form/Search.php
+msgid "Computer name"
+msgstr "Computername"
+
+#: Console/Form/Search.php view/console/client/index.php
+#: view/console/client/network.php
+msgid "DNS server"
+msgstr "DNS-Server"
+
+#: Console/Form/Search.php view/console/client/index.php
+#: view/console/client/network.php
+msgid "Default gateway"
+msgstr "Standardgateway"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Display controller"
+msgstr "Display-Controller"
+
+#: Console/Form/Search.php
+msgid "Exact match"
+msgstr "Exakte Übereinstimmung"
+
+#: Console/Form/Search.php
+msgid "Filesystem free space (MB)"
+msgstr "Dateisystem: freier Speicherplatz (MB)"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Filesystem size (MB)"
+msgstr "Dateisystem: Größe (MB)"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "GPU memory"
+msgstr "GPU-Speicher"
+
+#: Console/Form/Search.php view/console/client/index.php
+#: view/console/client/network.php view/console/network/edit.php
+#: view/console/network/showidentified.php view/console/network/showunknown.php
+msgid "IP address"
+msgstr "IP-Adresse"
+
+#: Console/Form/Search.php
+msgid "Invert results"
+msgstr "Ergebnisse invertieren"
+
+#: Console/Form/Search.php Console/Form/ShowDuplicates.php
+#: view/console/client/general.php view/console/client/index.php
+msgid "Last contact"
+msgstr "Letzter Kontakt"
+
+#: Console/Form/Search.php view/console/client/index.php
+#: view/console/group/excluded.php view/console/group/members.php
+msgid "Last inventory"
+msgstr "Letzte Inventarisierung"
+
+#: Console/Form/Search.php Console/Form/ShowDuplicates.php
+#: view/console/client/index.php view/console/client/network.php
+#: view/console/network/edit.php view/console/network/showidentified.php
+#: view/console/network/showunknown.php
+msgid "MAC address"
+msgstr "MAC-Adresse"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "MS Office product ID"
+msgstr "Microsoft Office-Produkt-ID"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "MS Office product key"
+msgstr "Microsoft Office-Lizenzschlüssel"
+
+#: Console/Form/Search.php view/console/client/bios.php
+#: view/console/client/display.php view/console/client/index.php
+#: view/console/client/misc.php view/console/client/system.php
+msgid "Manufacturer"
+msgstr "Hersteller"
+
+#: Console/Form/Search.php view/console/client/general.php
+#: view/console/client/index.php view/console/client/storage.php
+msgid "Model"
+msgstr "Modell"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Modem"
+msgstr "Modem"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Monitor: description"
+msgstr "Monitor: Beschreibung"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Monitor: manufacturer"
+msgstr "Monitor: Hersteller"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Monitor: production date"
+msgstr "Monitor: Produktionsdatum"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Monitor: serial"
+msgstr "Monitor: Seriennummer"
+
+#: Console/Form/Search.php
+msgid "Network Mask"
+msgstr "Netzmaske"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Network address"
+msgstr "Netzwerkadresse"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "OCS agent"
+msgstr "OCS Agent"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "OS comment"
+msgstr "Kommentar"
+
+#: Console/Form/Search.php
+msgid "OS name"
+msgstr "Betriebssystem"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "OS version number"
+msgstr "Betriebssystemversionsnummer"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "OS version string"
+msgstr "Betriebssystemversion"
+
+#: Console/Form/Search.php
+msgid "Operator"
+msgstr "Operator"
+
+#: Console/Form/Search.php
+msgid "Physical memory"
+msgstr "Arbeitsspeicher"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Port name"
+msgstr "Anschlussname"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Printer driver"
+msgstr "Druckertreiber"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Printer name"
+msgstr "Druckername"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Printer port"
+msgstr "Druckeranschluss"
+
+#: Console/Form/Search.php Console/Navigation/MainMenuFactory.php
+msgid "Search"
+msgstr "Suchen"
+
+#: Console/Form/Search.php
+msgid "Search for"
+msgstr "Suche nach"
+
+#: Console/Form/Search.php Console/Form/ShowDuplicates.php
+#: view/console/client/display.php view/console/client/general.php
+#: view/console/client/index.php view/console/client/storage.php
+#: view/console/client/system.php view/console/duplicates/index.php
+msgid "Serial number"
+msgstr "Seriennummer"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Software: Comment"
+msgstr "Software: Kommentar"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Software: Install location"
+msgstr "Software: Installationsort"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Software: Name"
+msgstr "Software: Name"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Software: Publisher"
+msgstr "Software: Herausgeber"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Software: Version"
+msgstr "Software: Version"
+
+#: Console/Form/Search.php
+msgid "Substring match, wildcards '?' and '*' allowed"
+msgstr "Teilzeichenfolge, Platzhalter '?' und '*' erlaubt"
+
+#: Console/Form/Search.php view/console/client/general.php
+msgid "Swap memory"
+msgstr "Auslagerungsspeicher"
+
+#: Console/Form/Search.php
+#, php-format
+msgid "User defined: %s"
+msgstr "Benutzerdefiniert: %s"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "User domain"
+msgstr "Benutzerdomäne"
+
+#: Console/Form/Search.php
+msgid "User name"
+msgstr "Benutzername"
+
+#: Console/Form/Search.php view/console/client/registry.php
+msgid "Value"
+msgstr "Wert"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Windows product key"
+msgstr "Windows-Lizenzschlüssel"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Windows product key (manual)"
+msgstr "Windows-Lizenzschlüssel (manuell)"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "Workgroup"
+msgstr "Arbeitsgruppe"
+
+#: Console/Form/ShowDuplicates.php
+msgid "At least 2 different clients have to be selected"
+msgstr "Es müssen mindestens 2 verschiedene Clients ausgewählt werden"
+
+#: Console/Form/ShowDuplicates.php
+msgid "Merge manual group assignments"
+msgstr "Manuelle Gruppenzuweisungen übernehmen"
+
+#: Console/Form/ShowDuplicates.php
+msgid "Merge missing package assignments"
+msgstr "Fehlende Paketzuweisungen übernehmen"
+
+#: Console/Form/ShowDuplicates.php
+msgid "Merge selected clients"
+msgstr "Ausgewählte Clients zusammenführen"
+
+#: Console/Form/ShowDuplicates.php
+msgid "Merge user supplied information"
+msgstr "Benutzerdefinierte Informationen übernehmen"
+
+#: Console/Form/SoftwareFilter.php
+msgid "Filter"
+msgstr "Filter"
+
+#: Console/Form/SoftwareFilter.php
+msgid "all"
+msgstr "alle"
+
+#: Console/Form/SoftwareFilter.php
+msgid "ignored for display"
+msgstr "für Anzeige ignoriert"
+
+#: Console/Form/SoftwareFilter.php
+msgid "new or not categorized"
+msgstr "neu oder nicht kategorisiert"
+
+#: Console/Form/SoftwareFilter.php
+msgid "selected for display"
+msgstr "für Anzeige ausgewählt"
+
+#: Console/Navigation/ClientMenuFactory.php
+msgid "BIOS"
+msgstr "BIOS"
+
+#: Console/Navigation/ClientMenuFactory.php
+#: Console/Navigation/GroupMenuFactory.php
+msgid "Configuration"
+msgstr "Konfiguration"
+
+#: Console/Navigation/ClientMenuFactory.php
+#: Console/Navigation/MainMenuFactory.php
+msgid "Display"
+msgstr "Anzeige"
+
+#: Console/Navigation/ClientMenuFactory.php
+msgid "Export"
+msgstr "Exportieren"
+
+#: Console/Navigation/ClientMenuFactory.php
+#: Console/Navigation/GroupMenuFactory.php
+msgid "General"
+msgstr "Allgemein"
+
+#: Console/Navigation/ClientMenuFactory.php
+msgid "MS Office"
+msgstr "MS Office"
+
+#: Console/Navigation/ClientMenuFactory.php
+msgid "Misc"
+msgstr "Verschiedenes"
+
+#: Console/Navigation/ClientMenuFactory.php
+#: Console/Navigation/MainMenuFactory.php
+msgid "Network"
+msgstr "Netzwerk"
+
+#: Console/Navigation/ClientMenuFactory.php
+#: Console/Navigation/GroupMenuFactory.php
+#: Console/Navigation/MainMenuFactory.php
+msgid "Packages"
+msgstr "Pakete"
+
+#: Console/Navigation/ClientMenuFactory.php
+msgid "Printers"
+msgstr "Drucker"
+
+#: Console/Navigation/ClientMenuFactory.php
+msgid "Registry"
+msgstr "Registry"
+
+#: Console/Navigation/ClientMenuFactory.php
+#: Console/Navigation/MainMenuFactory.php
+msgid "Software"
+msgstr "Software"
+
+#: Console/Navigation/ClientMenuFactory.php
+msgid "Storage"
+msgstr "Massenspeicher"
+
+#: Console/Navigation/ClientMenuFactory.php
+#: Console/Navigation/MainMenuFactory.php
+msgid "System"
+msgstr "System"
+
+#: Console/Navigation/ClientMenuFactory.php
+msgid "User defined"
+msgstr "Benutzerdefiniert"
+
+#: Console/Navigation/ClientMenuFactory.php
+msgid "Virtual machines"
+msgstr "Virtuelle Maschinen"
+
+#: Console/Navigation/ClientMenuFactory.php
+msgid "Windows"
+msgstr "Windows"
+
+#: Console/Navigation/GroupMenuFactory.php
+msgid "Excluded"
+msgstr "Ausgeschlossen"
+
+#: Console/Navigation/GroupMenuFactory.php
+msgid "Members"
+msgstr "Mitglieder"
+
+#: Console/Navigation/MainMenuFactory.php
+msgid "Clients"
+msgstr "Clients"
+
+#: Console/Navigation/MainMenuFactory.php
+msgid "Duplicates"
+msgstr "Duplikate"
+
+#: Console/Navigation/MainMenuFactory.php
+msgid "Filters"
+msgstr "Filter"
+
+#: Console/Navigation/MainMenuFactory.php
+msgid "Inventory"
+msgstr "Inventar"
+
+#: Console/Navigation/MainMenuFactory.php
+msgid "Licenses"
+msgstr "Lizenzen"
+
+#: Console/Navigation/MainMenuFactory.php
+msgid "Overview"
+msgstr "Übersicht"
+
+#: Console/Navigation/MainMenuFactory.php
+msgid "Preferences"
+msgstr "Einstellungen"
+
+#: Console/Navigation/MainMenuFactory.php
+msgid "Raw data"
+msgstr "Rohdaten"
+
+#: Console/Navigation/MainMenuFactory.php
+msgid "Users"
+msgstr "Benutzer"
+
+#: Console/View/Helper/FilterDescription.php
+#, php-format
+msgid "%1$d computers waiting for notification of package '%2$s'"
+msgstr "%1$d Computer, die auf Installation von Paket '%2$s' warten"
+
+#: Console/View/Helper/FilterDescription.php
+#, php-format
+msgid "%1$d computers where deployment of package '%2$s' failed"
+msgstr ""
+"%1$d Computer, bei denen die Installation von Paket '%2$s' fehlgeschlagen ist"
+
+#: Console/View/Helper/FilterDescription.php
+#, php-format
+msgid "%1$d computers where software '%2$s' is installed"
+msgstr "%1$d Computer, auf denen die Software '%2$s' installiert ist"
+
+#: Console/View/Helper/FilterDescription.php
+#, php-format
+msgid "%1$d computers with an interface in network %2$s"
+msgstr "%1$d Computer mit Interface in Netzwerk %2$s"
+
+#: Console/View/Helper/FilterDescription.php
+#, php-format
+msgid "%1$d computers with deployment of package '%2$s' in progress"
+msgstr "%1$d Computer mit laufender Installation von Paket '%2$s'"
+
+#: Console/View/Helper/FilterDescription.php
+#, php-format
+msgid "%1$d computers with manually entered product key"
+msgstr "%1$d Computer mit manuell eingegebenem Windows-Lizenzschlüssel"
+
+#: Console/View/Helper/FilterDescription.php
+#, php-format
+msgid "%1$d computers with package '%2$s' successfully deployed"
+msgstr "%1$d Computer mit erfolgreich installiertem Paket '%2$s'"
+
+#: view/console/accounts/add.php
+msgid "Create new account"
+msgstr "Neuen Account erstellen"
+
+#: view/console/accounts/delete.php
+#, php-format
+msgid "Account '%s' will be permanently deleted. Continue?"
+msgstr "Account '%s' wird dauerhaft gelöscht. Fortfahren?"
+
+#: view/console/accounts/edit.php
+msgid "Edit account"
+msgstr "Account bearbeiten"
+
+#: view/console/accounts/index.php
+msgid "Add user"
+msgstr "Benutzer hinzufügen"
+
+#: view/console/accounts/index.php view/console/network/index.php
+#: view/console/network/showidentified.php view/console/network/showunknown.php
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: view/console/client/bios.php view/console/client/index.php
+#: view/console/client/software.php
+msgid "Version"
+msgstr "Version"
+
+#: view/console/client/customfields.php
+msgid "Define fields"
+msgstr "Felder definieren"
+
+#: view/console/client/delete.php
+#, php-format
+msgid "Client '%s' will be permanently deleted. Continue?"
+msgstr "Client '%s' wird dauerhaft gelöscht. Fortfahren?"
+
+#: view/console/client/display.php
+msgid "Chipset"
+msgstr "Chipsatz"
+
+#: view/console/client/display.php
+msgid "Current resolution"
+msgstr "Gegenwärtige Auflösung"
+
+#: view/console/client/display.php
+msgid "Display controllers"
+msgstr "Display-Controller"
+
+#: view/console/client/display.php
+msgid "Displays"
+msgstr "Anzeigegeräte"
+
+#: view/console/client/display.php view/console/client/index.php
+#: view/console/client/virtualmachines.php
+msgid "Memory"
+msgstr "Speicher"
+
+#: view/console/client/display.php
+msgid "Production date"
+msgstr "Produktionsdatum"
+
+#: view/console/client/general.php view/console/client/index.php
+msgid "CPU clock"
+msgstr "CPU Takt"
+
+#: view/console/client/general.php view/console/client/index.php
+msgid "Client ID"
+msgstr "Client-ID"
+
+#: view/console/client/general.php view/console/client/index.php
+#: view/console/group/general.php
+msgid "ID"
+msgstr "ID"
+
+#: view/console/client/general.php
+msgid "Inventory date"
+msgstr "Datum der Inventarinformationen"
+
+#: view/console/client/general.php
+msgid "Last user logged in"
+msgstr "Letzter angemeldeter Benutzer"
+
+#: view/console/client/general.php
+msgid "Number of CPU cores"
+msgstr "Anzahl der CPU-Kerne"
+
+#: view/console/client/general.php
+msgid "Operating System"
+msgstr "Betriebssystem"
+
+#: view/console/client/general.php
+msgid "RAM detected by agent"
+msgstr "Vom Agenten entdeckter Arbeitsspeicher"
+
+#: view/console/client/general.php
+msgid "RAM reported by OS"
+msgstr "Arbeitsspeicher lt. Betriebssystem"
+
+#: view/console/client/general.php view/console/client/index.php
+#: view/console/client/virtualmachines.php
+msgid "UUID"
+msgstr "UUID"
+
+#: view/console/client/general.php
+msgid "User Agent"
+msgstr "User-Agent"
+
+#: view/console/client/groups.php
+msgid "Group memberships"
+msgstr "Gruppenmitgliedschaften"
+
+#: view/console/client/groups.php
+msgid "Manage memberships"
+msgstr "Mitgliedschaften verwalten"
+
+#: view/console/client/groups.php view/console/group/members.php
+msgid "Membership"
+msgstr "Mitgliedschaft"
+
+#: view/console/client/header.php
+#, php-format
+msgid "Details for client '%s'"
+msgstr "Einzelheiten für Client '%s'"
+
+#: view/console/client/import.php
+msgid "Import locally generated inventory data"
+msgstr "Import lokal erzeugter Inventardaten"
+
+#: view/console/client/import.php
+#, php-format
+msgid "Upload error. Server %1$s responded with error %2$d: %3$s"
+msgstr "Fehler beim Hochladen. Server %1$s antwortete mit Fehler %2$d: %3$s"
+
+#: view/console/client/index.php
+#, php-format
+msgid "%d matches"
+msgstr "%d Treffer"
+
+#: view/console/client/index.php
+msgid "BIOS manufacturer"
+msgstr "BIOS-Hersteller"
+
+#: view/console/client/index.php
+msgid "Controller"
+msgstr "Controller"
+
+#: view/console/client/index.php
+msgid "Edit filter"
+msgstr "Filter bearbeiten"
+
+#: view/console/client/index.php
+msgid "Error code"
+msgstr "Fehlercode"
+
+#: view/console/client/index.php
+msgid "Extension slot"
+msgstr "Erweiterungssteckplatz"
+
+#: view/console/client/index.php
+msgid "Free space (MB)"
+msgstr "Freier Speicherplatz (MB)"
+
+#: view/console/client/index.php view/console/client/network.php
+msgid "Netmask"
+msgstr "Netzmaske"
+
+#: view/console/client/index.php
+#, php-format
+msgid "Number of clients: %d"
+msgstr "Anzahl Clients: %d"
+
+#: view/console/client/index.php
+msgid "Operating system"
+msgstr "Betriebssystem"
+
+#: view/console/client/index.php view/console/group/add.php
+msgid "Save to group"
+msgstr "In Gruppe speichern"
+
+#: view/console/client/index.php
+msgid "Swap"
+msgstr "Auslagerungsspeicher"
+
+#: view/console/client/index.php view/console/group/excluded.php
+#: view/console/group/members.php
+msgid "User"
+msgstr "Benutzer"
+
+#: view/console/client/index.php
+msgid "Windows company"
+msgstr "Windows/Firma"
+
+#: view/console/client/index.php
+msgid "Windows owner"
+msgstr "Windows/Besitzer"
+
+#: view/console/client/index.php
+msgid "Windows product ID"
+msgstr "Windows/Produkt-ID"
+
+#: view/console/client/misc.php
+msgid "Audio devices"
+msgstr "Audiogeräte"
+
+#: view/console/client/misc.php
+msgid "Connector"
+msgstr "Verbinder"
+
+#: view/console/client/misc.php
+msgid "Input devices"
+msgstr "Eingabegeräte"
+
+#: view/console/client/misc.php
+msgid "Interface"
+msgstr "Interface"
+
+#: view/console/client/misc.php
+msgid "Keyboard"
+msgstr "Tastatur"
+
+#: view/console/client/misc.php
+msgid "Pointing device"
+msgstr "Zeigegerät"
+
+#: view/console/client/misc.php
+msgid "Ports"
+msgstr "Anschlüsse"
+
+#: view/console/client/msoffice.php view/console/client/software.php
+msgid "Architecture"
+msgstr "Architektur"
+
+#: view/console/client/msoffice.php
+msgid "Installed Microsoft Office products"
+msgstr "Installierte Microsoft Office-Produkte"
+
+#: view/console/client/msoffice.php view/console/client/virtualmachines.php
+msgid "Product"
+msgstr "Produkt"
+
+#: view/console/client/msoffice.php view/console/client/windows.php
+msgid "Product ID"
+msgstr "Produkt-ID"
+
+#: view/console/client/msoffice.php
+msgid "Product key"
+msgstr "Lizenzschlüssel"
+
+#: view/console/client/msoffice.php
+msgid "Unused Microsoft Office licenses"
+msgstr "Ungenutzte Microsoft Office-Lizenzen"
+
+#: view/console/client/network.php
+msgid "DHCP server"
+msgstr "DHCP-Server"
+
+#: view/console/client/network.php
+msgid "Data rate"
+msgstr "Datenrate"
+
+#: view/console/client/network.php
+msgid "Gateway"
+msgstr "Gateway"
+
+#: view/console/client/network.php
+msgid "Global network configuration"
+msgstr "Globale Netzwerkkonfiguration"
+
+#: view/console/client/network.php view/console/network/edit.php
+#: view/console/network/showunknown.php
+msgid "Hostname"
+msgstr "Hostname"
+
+#: view/console/client/network.php
+msgid "Modems"
+msgstr "Modems"
+
+#: view/console/client/network.php
+msgid "Network interfaces"
+msgstr "Netzwerkschnittstellen"
+
+#: view/console/client/network.php view/console/client/packages.php
+#: view/console/client/system.php view/console/client/virtualmachines.php
+msgid "Status"
+msgstr "Status"
+
+#: view/console/client/packages.php view/console/group/packages.php
+msgid "Assigned packages"
+msgstr "Zugewiesene Pakete"
+
+#: view/console/client/packages.php view/console/group/packages.php
+msgid "Install packages"
+msgstr "Pakete installieren"
+
+#: view/console/client/packages.php
+msgid "Timestamp"
+msgstr "Zeitpunkt"
+
+#: view/console/client/packages.php
+msgid "in progress"
+msgstr "läuft"
+
+#: view/console/client/packages.php
+msgid "installed"
+msgstr "installiert"
+
+#: view/console/client/packages.php
+msgid "not notified"
+msgstr "nicht benachrichtigt"
+
+#: view/console/client/packages.php view/console/group/packages.php
+msgid "remove"
+msgstr "entfernen"
+
+#: view/console/client/printers.php
+msgid "Driver"
+msgstr "Treiber"
+
+#: view/console/client/printers.php
+msgid "Port"
+msgstr "Port"
+
+#: view/console/client/registry.php
+msgid "Content"
+msgstr "Inhalt"
+
+#: view/console/client/registry.php
+msgid "Manage inventoried values"
+msgstr "Inventarisierte Werte verwalten"
+
+#: view/console/client/registry.php
+msgid "Registry Keys"
+msgstr "Registry-Schlüssel"
+
+#: view/console/client/removepackage.php
+#, php-format
+msgid "Package '%s' will no longer be assigned to this client. Continue?"
+msgstr "Paket '%s' wird nicht mehr diesem Client zugewiesen sein. Fortfahren?"
+
+#: view/console/client/software.php
+msgid "Location"
+msgstr "Ort"
+
+#: view/console/client/software.php
+msgid "Publisher"
+msgstr "Herausgeber"
+
+#: view/console/client/software.php view/console/client/storage.php
+#: view/console/client/system.php view/console/package/index.php
+msgid "Size"
+msgstr "Größe"
+
+#: view/console/client/storage.php view/console/group/general.php
+#: view/console/group/index.php
+msgid "Creation date"
+msgstr "Erstellungsdatum"
+
+#: view/console/client/storage.php
+msgid "DVD writer"
+msgstr "DVD-Brenner"
+
+#: view/console/client/storage.php
+msgid "Device"
+msgstr "Gerät"
+
+#: view/console/client/storage.php
+msgid "Filesystem"
+msgstr "Dateisystem"
+
+#: view/console/client/storage.php
+msgid "Filesystems"
+msgstr "Dateisysteme"
+
+#: view/console/client/storage.php
+msgid "Firmware version"
+msgstr "Firmware-Version"
+
+#: view/console/client/storage.php
+msgid "Free space"
+msgstr "Frei"
+
+#: view/console/client/storage.php
+msgid "Hard disk"
+msgstr "Festplatte"
+
+#: view/console/client/storage.php
+msgid "Label"
+msgstr "Name"
+
+#: view/console/client/storage.php
+msgid "Letter"
+msgstr "Buchstabe"
+
+#: view/console/client/storage.php
+msgid "Mountpoint"
+msgstr "Mountpoint"
+
+#: view/console/client/storage.php
+msgid "Product family"
+msgstr "Produktfamilie"
+
+#: view/console/client/storage.php
+msgid "Removable medium"
+msgstr "Wechselmedium"
+
+#: view/console/client/storage.php
+msgid "Storage devices"
+msgstr "Speichergeräte"
+
+#: view/console/client/storage.php
+msgid "Used space"
+msgstr "Benutzt"
+
+#: view/console/client/system.php
+msgid "Caption"
+msgstr "Titel"
+
+#: view/console/client/system.php
+msgid "Clock"
+msgstr "Takt"
+
+#: view/console/client/system.php
+msgid "Controllers"
+msgstr "Controller"
+
+#: view/console/client/system.php
+msgid "Extension slots"
+msgstr "Erweiterungssteckplätze"
+
+#: view/console/client/system.php
+msgid "Memory slots"
+msgstr "RAM-Steckplätze"
+
+#: view/console/client/system.php
+msgid "Slot number"
+msgstr "Steckplatz"
+
+#: view/console/client/virtualmachines.php
+msgid "Virtual machines hosted on this client"
+msgstr "Auf diesem Client beherbergte virtuelle Maschinen"
+
+#: view/console/client/windows.php
+msgid "Company"
+msgstr "Firma"
+
+#: view/console/client/windows.php
+msgid "Owner"
+msgstr "Besitzer"
+
+#: view/console/client/windows.php
+msgid "Product key (reported by agent)"
+msgstr "Lizenzschlüssel (vom Agenten ermittelt)"
+
+#: view/console/duplicates/allow.php
+#, php-format
+msgid "Exclude MAC address %s from duplicates search?"
+msgstr "MAC-Adresse %s von Duplikatsuche ausschließen?"
+
+#: view/console/duplicates/allow.php
+#, php-format
+msgid "Exclude asset tag '%s' from duplicates search?"
+msgstr "Asset Tag '%s' von Duplikatsuche ausschließen?"
+
+#: view/console/duplicates/allow.php
+#, php-format
+msgid "Exclude serial number '%s' from duplicates search?"
+msgstr "Seriennummer '%s' von Duplikatsuche ausschließen?"
+
+#: view/console/duplicates/index.php
+msgid "MAC Address"
+msgstr "MAC-Adresse"
+
+#: view/console/duplicates/index.php
+msgid "No duplicates present."
+msgstr "Keine Duplikate vorhanden."
+
+#: view/console/group/delete.php
+#, php-format
+msgid "Group '%s' will be permanently deleted. Continue?"
+msgstr "Gruppe '%s' wird dauerhaft gelöscht. Fortfahren?"
+
+#: view/console/group/excluded.php view/console/group/members.php
+#, php-format
+msgid "Number of computers: %d"
+msgstr "Anzahl Computer: %d"
+
+#: view/console/group/general.php
+msgid "SQL query"
+msgstr "SQL-Abfrage"
+
+#: view/console/group/header.php
+#, php-format
+msgid "Details for group '%s'"
+msgstr "Einzelheiten für Gruppe '%s'"
+
+#: view/console/group/index.php
+msgid "No groups defined."
+msgstr "Keine Gruppen definiert."
+
+#: view/console/group/members.php
+msgid "Last update:"
+msgstr "Letztes Update:"
+
+#: view/console/group/members.php
+msgid "Next update:"
+msgstr "Nächstes Update:"
+
+#: view/console/group/removepackage.php
+#, php-format
+msgid "Package '%s' will no longer be assigned to this group. Continue?"
+msgstr "Paket '%s' wird nicht mehr dieser Gruppe zugewiesen sein. Fortfahren?"
+
+#: view/console/licenses/index.php
+msgid "Manually entered Windows product keys"
+msgstr "Manuell eingegebene Windows-Lizenzschlüssel"
+
+#: view/console/login/login.php
+msgid "Invalid username or password"
+msgstr "Benutzername und/oder Passwort ungültig."
+
+#: view/console/login/login.php
+msgid "Login to Braintacle"
+msgstr "Bei Braintacle anmelden"
+
+#: view/console/network/delete.php
+#, php-format
+msgid ""
+"The network device '%1s' with the MAC address %2s will be permanently "
+"deleted. Continue?"
+msgstr ""
+"Das Netzwerkgerät '%1s' mit der MAC-Adresse %2s wird dauerhaft gelöscht. "
+"Fortfahren?"
+
+#: view/console/network/edit.php
+msgid "Edit network device"
+msgstr "Netzwerkgerät bearbeiten"
+
+#: view/console/network/edit.php view/console/network/showunknown.php
+msgid "Vendor"
+msgstr "Hersteller"
+
+#: view/console/network/index.php
+msgid "Address"
+msgstr "Adresse"
+
+#: view/console/network/index.php view/console/software/index.php
+msgid "Count"
+msgstr "Anzahl"
+
+#: view/console/network/index.php
+msgid "Identified network devices"
+msgstr "Identifizierte Netzwerkgeräte"
+
+#: view/console/network/index.php view/console/preferences/networkdevices.php
+msgid "Manage device types"
+msgstr "Gerätetypen verwalten"
+
+#: view/console/network/index.php
+msgid "Subnets"
+msgstr "Subnetze"
+
+#: view/console/network/index.php
+msgid "identified"
+msgstr "identifiziert"
+
+#: view/console/network/index.php
+msgid "inventoried"
+msgstr "inventarisiert"
+
+#: view/console/network/index.php
+msgid "unknown"
+msgstr "unbekannt"
+
+#: view/console/network/properties.php
+#, php-format
+msgid "Properties of subnet %s"
+msgstr "Eigenschaften von Subnetz %s"
+
+#: view/console/network/showidentified.php view/console/network/showunknown.php
+msgid "Discovery date"
+msgstr "Datum"
+
+#: view/console/package/delete.php
+#, php-format
+msgid "Package '%s' will be permanently deleted. Continue?"
+msgstr "Paket '%s' wird dauerhaft gelöscht. Fortfahren?"
+
+#: view/console/preferences/customfields.php
+msgid "Manage custom fields"
+msgstr "Benutzerdefinierte Felder verwalten"
+
+#: view/console/preferences/deletedevicetype.php
+#, php-format
+msgid "The device type '%s' will be deleted. Continue?"
+msgstr "Gerätetyp '%s' wird dauerhaft gelöscht. Fortfahren?"
+
+#: view/console/preferences/deletefield.php
+#, php-format
+msgid ""
+"The field '%s' and its contents for all computers will be deleted. Continue?"
+msgstr ""
+"Das Feld '%s' und sein Inhalt für alle Computer werden gelöscht. Fortfahren?"
+
+#: view/console/preferences/deleteregistryvalue.php
+#, php-format
+msgid "The registry value '%s' will be deleted from the inventory. Continue?"
+msgstr "Der Registry-Wert '%s' wird aus dem Inventar gelöscht. Fortfahren?"
+
+#: view/console/preferences/registryvalues.php
+msgid "Manage registry values"
+msgstr "Registry-Werte verwalten"
+
+#: view/console/software/accept.php
+#, php-format
+msgid "Software '%s' will be marked as known and accepted. Continue?"
+msgstr "Software '%s' wird als bekannt und akzeptiert markiert. Fortfahren?"
+
+#: view/console/software/ignore.php
+#, php-format
+msgid "Software '%s' will be no longer be displayed. Continue?"
+msgstr "Software '%s' wird nicht mehr angezeigt. Fortfahren?"
+
+#: view/console/software/index.php
+msgid "Accept"
+msgstr "Akzeptieren"
+
+#: view/console/software/index.php
+msgid "Ignore"
+msgstr "Ignorieren"
+
+#: view/layout/layout.php
+msgid "Logout"
+msgstr "Abmelden"

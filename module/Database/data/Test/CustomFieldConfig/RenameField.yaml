@@ -1,0 +1,55 @@
+accountinfo_config:
+  -
+    id: 1
+    name: "TAG"
+    type: 0
+    account_type: "COMPUTERS"
+    show_order: 1
+  -
+    id: 2
+    name: "TAG"
+    type: 0
+    account_type: "SNMP"
+    show_order: 1
+  -
+    id: 3
+    name: "Renamed field"
+    type: 0
+    account_type: "COMPUTERS"
+    show_order: 6
+  -
+    id: 4
+    name: "Integer"
+    type: 0
+    account_type: "COMPUTERS"
+    show_order: 5
+  -
+    id: 5
+    name: "Float"
+    type: 0
+    account_type: "COMPUTERS"
+    show_order: 4
+  -
+    id: 6
+    name: "Clob"
+    type: 1
+    account_type: "COMPUTERS"
+    show_order: 3
+  -
+    id: 7
+    name: "Date"
+    type: 6
+    account_type: "COMPUTERS"
+    show_order: 2
+  -
+    id: 8
+    name: "Date ignored"
+    type: 6
+    account_type: "COMPUTERS"
+    show_order: 7
+  -
+    id: 9
+    name: "Other type ignored"
+    type: 42
+    account_type: "COMPUTERS"
+    show_order: 8

@@ -1,0 +1,161 @@
+{
+    "name": "softwares",
+    "comment": "Software on client",
+    "columns": [
+        {
+            "name": "id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": true,
+            "comment": null
+        },
+        {
+            "name": "hardware_id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "name",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "version",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "comments",
+            "type": "clob",
+            "length": null,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "publisher",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Publisher (Windows only)"
+        },
+        {
+            "name": "folder",
+            "type": "clob",
+            "length": null,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Windows only: Installation directory"
+        },
+        {
+            "name": "source",
+            "type": "integer",
+            "length": 16,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Windows only: 0 => Windows hotfix (Vista and newer); 1 => other"
+        },
+        {
+            "name": "guid",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Windows only: GUID, not necessarily a regular GUID string"
+        },
+        {
+            "name": "language",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Windows only: Full language name"
+        },
+        {
+            "name": "installdate",
+            "type": "date",
+            "length": null,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Windows only: installation date"
+        },
+        {
+            "name": "bitswidth",
+            "type": "integer",
+            "length": 16,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Windows only: Architecture (32/64), other values should be ignored"
+        },
+        {
+            "name": "filesize",
+            "type": "integer",
+            "length": 32,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "UNIX only: Package size"
+        },
+        {
+            "name": "filename",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "obsolete"
+        }
+    ],
+    "primary_key": [
+        "id"
+    ],
+    "indexes": [
+        {
+            "name": "softwares_hardware_id_idx",
+            "unique": false,
+            "columns": [
+                "hardware_id"
+            ]
+        },
+        {
+            "name": "softwares_name_idx",
+            "unique": false,
+            "columns": [
+                "name"
+            ]
+        },
+        {
+            "name": "softwares_version_idx",
+            "unique": false,
+            "columns": [
+                "version"
+            ]
+        }
+    ],
+    "mysql": {
+        "engine": "InnoDB"
+    }
+}

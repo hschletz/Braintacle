@@ -50,47 +50,35 @@ if (is_resource($zip)) {
 }
 
 // Set up environment
-require(realpath(dirname(dirname(__FILE__)) . '/library/Braintacle/Application.php'));
-Braintacle_Application::init();
+require(__DIR__ . '/../module/Library/Application.php');
+\Library\Application::init('Cli');
+$config = \Library\Application::getService('Model\Config');
 
 // Create Package
-$package = new Model_Package;
-$package->fromArray(
-    array(
-        'Name' => $name,
-        'Comment' => null,
-        'FileName' => basename($file),
-        'FileType' => $type,
-        'FileLocation' => $file,
-        'Priority' => Model_Config::get('DefaultPackagePriority'),
-        'Platform' => Model_Config::get('DefaultPlatform'),
-        'DeployAction' => Model_Config::get('DefaultAction'),
-        'ActionParam' => Model_Config::get('DefaultActionParam'),
-        'Warn' => Model_Config::get('DefaultWarn'),
-        'WarnMessage' => Model_Config::get('DefaultWarnMessage'),
-        'WarnCountdown' => Model_Config::get('DefaultWarnCountdown'),
-        'WarnAllowAbort' => Model_Config::get('DefaultWarnAllowAbort'),
-        'WarnAllowDelay' => Model_Config::get('DefaultWarnAllowDelay'),
-        'UserActionRequired' => Model_Config::get('DefaultUserActionRequired'),
-        'UserActionMessage' => Model_Config::get('DefaultUserActionMessage'),
-        'MaxFragmentSize' => Model_Config::get('DefaultMaxFragmentSize'),
-        'InfoFileUrlPath' => Model_Config::get('DefaultInfoFileLocation'),
-        'DownloadUrlPath' => Model_Config::get('DefaultDownloadLocation'),
-        'CertFile' => Model_Config::get('DefaultCertificate'),
-    )
-);
-if ($package->build(false)) {
-    $errType = 'WARNING: ';
-    $message = "Package successfully built.\n";
-    $path = $package->getPath();
-} else {
-    $errType = 'ERROR: ';
-    $message = "The package has not been built.\n";
+$packageManager = \Library\Application::getService('Model\Package\PackageManager');
+try {
+    $packageManager->build(
+        array(
+            'Name' => $name,
+            'Comment' => null,
+            'FileName' => basename($file),
+            'FileLocation' => $file,
+            'Priority' => $config->defaultPackagePriority,
+            'Platform' => $config->defaultPlatform,
+            'DeployAction' => $config->defaultAction,
+            'ActionParam' => $config->defaultActionParam,
+            'Warn' => $config->defaultWarn,
+            'WarnMessage' => $config->defaultWarnMessage,
+            'WarnCountdown' => $config->defaultWarnCountdown,
+            'WarnAllowAbort' => $config->defaultWarnAllowAbort,
+            'WarnAllowDelay' => $config->defaultWarnAllowDelay,
+            'PostInstMessage' => $config->defaultPostInstMessage,
+            'MaxFragmentSize' => $config->defaultMaxFragmentSize,
+        ),
+        false
+    );
+    $message = "Package successfully built.";
+} catch (\Exception $e) {
+    $message = "The package has not been built.\nReason: " . $e->getMessage();
 }
-foreach ($package->getErrors() as $msg) {
-    print $errType;
-    print $msg;
-    print "\n";
-}
-print "\n";
-print $message;
+print "$message\n";

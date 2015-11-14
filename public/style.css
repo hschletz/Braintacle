@@ -26,7 +26,8 @@ body {
 h1 {
     font-size: 120%;
     text-align: center;
-    margin: 0;
+    margin-top: 0;
+    margin-bottom: 2ex;
 }
 
 h2 {
@@ -50,6 +51,7 @@ a {
     text-decoration: none;
 }
 
+/* Main page content */
 #content {
     position: absolute;
     top: 10ex;
@@ -57,6 +59,7 @@ a {
     padding: 0 0.3em 0 0.3em;
 }
 
+/* Main navigation area */
 #menu {
     position: fixed;
     top: 0;
@@ -68,6 +71,7 @@ a {
     font-weight: bold;
 }
 
+/* Navigation elements */
 ul.navigation {
     height: 4ex;
     margin: 0;
@@ -76,11 +80,13 @@ ul.navigation {
     background-color: #80c0ff;
 }
 
+/* Level 2 main menu */
 ul.navigation_sub {
     background-color: #c0e0ff;
     border-bottom: 1px solid black;
 }
 
+/* Navigation for computers and groups */
 ul.navigation_details {
     background-color: #ffffff;
     line-height: 175%;
@@ -91,10 +97,11 @@ ul.navigation li {
     list-style: none;
     display: inline;
     vertical-align: middle;
+    white-space: nowrap;
 }
 
 ul.navigation a {
-    padding: 0.2ex 1em;
+    padding: 0.2ex .5em;
     border-width: 1px;
     border-style: solid;
     border-top-color: white;
@@ -140,6 +147,7 @@ ul.navigation_details a {
     font-weight: bold;
 }
 
+/* Logout button */
 #logout {
     position: fixed;
     top: 1ex;
@@ -177,8 +185,42 @@ table {
     clear: both;
 }
 
+/* Pseudo table rendering for forms */
+.table {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Alternating background colors for table rows */
+.alternating tr:nth-child(even) {
+    background-color: #e0f0ff;
+}
+
 td,th {
     padding: .3ex .5em .3ex .5em;
+}
+
+tr.highlight {
+    font-weight: bold;
+}
+
+th {
+    text-align: left;
+}
+
+th a {
+    color: #000055;
+    text-decoration: none;
+}
+
+/* Cell placeholders for form pseudo tables */
+.cell {
+    display: table-cell;
+}
+
+.row {
+    display: table-row;
 }
 
 .textright {
@@ -189,42 +231,66 @@ td,th {
     text-align: center;
 }
 
-.clearboth {
-    clear:both;
+.textnormalsize {
+    font-size: 100%;
 }
 
-.red {
-    color: red;
+.nowrap {
+    white-space: nowrap;
 }
 
-.green {
-    color: green;
-}
-
-.blue {
-    color: blue;
-}
-
-.gray {
+.blacklisted {
     color: gray;
 }
 
 .duplicate {
     color: gray;
-    display: none; /* This may be changed by JS */
 }
 
-tr.bgcolor {
-    background-color: #e0f0ff;
+.blur {
+    color: gray;
 }
 
-tr.highlight {
+td.label {
+    text-align: right;
+    vertical-align: top;
     font-weight: bold;
+    white-space: nowrap;
 }
 
-th a {
-    color: #000055;
-    text-decoration: none;
+.package_inprogress, .package_error {
+    color: red;
+}
+
+.package_success {
+    color: green;
+}
+
+.package_notnotified {
+    color: blue;
+}
+
+/* FlashMessenger output */
+.success {
+    color: green;
+    text-align: center;
+    list-style-type: none;
+    margin-bottom: 3ex;
+}
+.error {
+    color: red;
+    text-align: center;
+    list-style-type: none;
+    margin-bottom: 3ex;
+}
+.info {
+    color: blue;
+    text-align: center;
+    list-style-type: none;
+    margin-bottom: 3ex;
+}
+.success li, .error li, .info li {
+    margin-bottom: 1ex;
 }
 
 /* used for forms */
@@ -241,36 +307,12 @@ dd {
     float: left;
     clear: right;
 }
-fieldset dt {
-    max-width: 21.7em;
-    margin-left: .5em;
-    margin-bottom: 0;
-    float: right;
-    clear: both;
-    text-align: left;
-}
-fieldset dd {
-    margin: 0;
-    float: right;
-    clear: left;
-}
-.fieldset-fullwidth dt {
-    max-width: 30em;
-    margin-top: 1.5ex;
-    float: left;
-    clear: both;
-    text-align: right;
-}
-.fieldset-fullwidth dd {
-    margin-left: 1em;
-    margin-top: 1.5ex;
-    float: left;
-    clear: right;
-}
 ul.errors {
     margin-top: 0;
+    margin-bottom: 0.8ex;
     padding-left: 1em;
     color: red;
+    list-style-position: inside;
 }
 
 /* general format for input fields */
@@ -281,32 +323,17 @@ input[type=text],
 input[type=file] {
     width: 30em;
 }
+input[type=radio] {
+    margin: 0 .5em 0 1.5em;
+}
 textarea {
     width: 30em;
     height: 10ex;
     background-color: #e0f0ff;
 }
-fieldset {
-    margin-left: 30em;
-    width: 23em;
-    border: 1px inset black;
-}
-.fieldset-fullwidth {
-    margin-left: 5%;
-    margin-top: 1.5ex;
-    width: 90%;
-}
-.fieldset-fullwidth legend {
-    /* Center legend */
-    margin-left: auto;
-    margin-right: auto;
-}
+
 /* special formats */
-input#userid,
-input#password
-{
-    width: 10em;
-}
+
 /* The 'size' attribute will have no effect because the default width for
  * <input> elements applies. These rules override the width to match the given
  * 'size' attribute. */
@@ -318,44 +345,233 @@ input[size="8"]
 {
     width: 8em;
 }
-#yes-label,#no-label,#Deploy-label
-{
-    display: none;
-}
-.yesbutton_not_inline #yes-label
-{
-    display: block;
-}
-.hint {
-    text-align: right;
-    color: red;
-}
-#toggleDuplicatesLabel {
-    display: none; /* This may be changed by JS */
-    margin: 1ex auto 2ex auto;
-    text-align: center;
-}
-.badValue {
-    background-color: red;
-}
 
-.table_network_devices, .table_registry_values {
+.table_network_devices, .form_manageregistryvalues table {
     font-size: 80%;
 }
 
-.Form_AddToGroup td, .Form_ManageNetworkDeviceTypes td, .table_registry_values td {
+.table_registry_values td {
     padding-top: 2ex;
 }
 
-td.formElement {
-    padding-top: 2ex;
-    width: 87%;
+.table label {
+    display: table-row;
 }
 
-.Form_ManageNetworkDeviceTypes input[name=new] {
-    margin-top: 1ex;
+.table label span, .table label[for], .table span.label, .table input, .table select, .table textarea {
+    display: table-cell;
+    margin: 1.4ex 1em 1.4ex 1em;
+    vertical-align: middle;
 }
 
-table.table_registry_values {
+.table label span, .table label[for], .table span.label {
+    text-align: right;
+}
+
+.form label span, .form input, .form select {
+    vertical-align: middle;
+}
+
+.form .input-error {
+    border-color: red;
+    border-style: solid;
+}
+
+.form input[type=submit] {
     margin-top: 3ex;
+}
+
+.form_yesno {
+    text-align: center;
+}
+
+.form_package_assign label span {
+    text-align: left;
+}
+
+.form_package_assign input[type="submit"] {
+    margin-left: 0;
+}
+
+.form_addtogroup fieldset {
+    border: none;
+    padding: 0;
+}
+
+.form_addtogroup fieldset + fieldset {
+    margin-top: 2ex;
+}
+
+.form_addtogroup legend span{
+    display: none;
+}
+
+.form_addtogroup input, .form_addtogroup select {
+    margin-left: 0;
+}
+
+.form_addtogroup input[type="radio"] {
+    display: inline;
+}
+
+.form_addtogroup label span {
+    display: block;
+    text-align: left;
+    margin: 1ex 0 0;
+}
+
+.form_addtogroup .error {
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+
+.form_clientconfig .label {
+    width: 50%;
+}
+
+.form_clientconfig .values {
+    text-align: left;
+    white-space: nowrap;
+}
+
+.form_clientconfig > .table {
+    width: 90%;
+    text-align: center;
+    font-size: 90%;
+}
+
+.form_clientconfig input {
+    display: inline;
+}
+
+.form_clientconfig fieldset {
+    margin-top: 2ex;
+}
+
+.form_clientconfig .error {
+    margin: 0;
+    text-align: left;
+    padding-left: 1em;
+}
+
+.form_clientconfig legend {
+    margin: auto;
+    padding-left: .5em;
+    padding-right: .5em;
+    font-weight: bold;
+}
+
+.form_definefields .cell {
+    vertical-align: middle;
+    padding-right: 1em;
+}
+
+.form_definefields input, .form_definefields select {
+    margin-left: 0;
+}
+
+.form_definefields label, .form_definefields select {
+    display: table-cell;
+    vertical-align: bottom;
+    margin-top: 7ex;
+}
+
+.form_definefields .error {
+    text-align: left;
+    margin: 0;
+    padding: 0;
+}
+
+.form_deletecomputer {
+    text-align: center;
+    margin-top: 4ex;
+}
+
+.form_deletecomputer input[type=submit]{
+    margin: 4ex 1em;
+}
+
+.form_groupmemberships div {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form_groupmemberships fieldset {
+    border: none;
+    padding: .3ex;
+    text-align: right;
+}
+
+.form_groupmemberships legend {
+    display: inline-block;
+}
+
+.form_groupmemberships input[type=submit] {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form_login input[type="text"], .form_login input[type="password"] {
+    width: 12em;
+}
+
+.form_manageregistryvalues h2 {
+    margin: 0;
+}
+
+.form_manageregistryvalues td input {
+    margin: 1.2ex 0em 1.2ex 0em;
+}
+
+.form_networkdevicetypes input {
+    display: inline;
+}
+
+.form_networkdevicetypes label span {
+    display:block;
+    margin-top: 2ex;
+    margin-bottom: 0;
+    text-align: left;
+}
+
+.form_networkdevicetypes .error {
+    text-align: left;
+    margin: 0 1em;
+    padding: 0;
+}
+
+.form_package_update span.label {
+    max-width: 20em;
+}
+
+.form_package_update fieldset label span, .form_preferences_packages fieldset label span {
+    text-align: left;
+}
+
+.form_package_update fieldset, .form_preferences_packages fieldset {
+    margin: 1.4ex .9em 1.4ex .9em;
+}
+
+.form_package_update legend, .form_preferences_packages legend {
+    display: none;
+}
+
+.form_customfields, .form_productkey {
+    margin-top: 4ex;
+}
+
+.form_productkey .error, .form_networkdevice .error {
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+
+.form_showduplicates label, .form_showduplicates input[type=submit] {
+    display: block;
+    text-align: center;
+    margin: 2ex auto 0 auto;
 }

@@ -1,0 +1,15 @@
+blacklist_macaddresses:
+  -
+    macaddress: "00:00:5E:00:53:00"
+  -
+    macaddress: "00:00:5E:00:53:01"
+blacklist_serials:
+  -
+    serial: "duplicate"
+  -
+    serial: "test"
+braintacle_blacklist_assettags:
+  -
+    assettag: "duplicate"
+  -
+    assettag: "test"

@@ -1,0 +1,26 @@
+config:
+  -
+    # equivalent to TRUE
+    name: "AUTO_DUPLICATE_LVL"
+    ivalue: 63
+    tvalue: null
+  -
+    # unchanged
+    name: "DOWNLOAD_PACK_DIR"
+    ivalue: null
+    tvalue: "/example/package/path"
+  -
+    # unchanged
+    name: "FREQUENCY"
+    ivalue: 42
+    tvalue: null
+  -
+    # unchanged
+    name: "GENERATE_OCS_FILES"
+    ivalue: 1
+    tvalue: null
+  -
+    # unchanged
+    name: "REGISTRY"
+    ivalue: 0
+    tvalue: null

@@ -1,0 +1,39 @@
+{
+    "name": "config",
+    "comment": "Global application configuration",
+    "columns": [
+        {
+            "name": "name",
+            "type": "varchar",
+            "length": 50,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Option name"
+        },
+        {
+            "name": "ivalue",
+            "type": "integer",
+            "length": 32,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Value for integer options"
+        },
+        {
+            "name": "tvalue",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Value for text options"
+        }
+    ],
+    "primary_key": [
+        "name"
+    ],
+    "mysql": {
+        "engine": "MyISAM"
+    }
+}

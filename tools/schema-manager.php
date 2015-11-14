@@ -30,75 +30,17 @@
  */
 
 // All paths are relative to this script's parent directory
-$basepath = realpath(dirname(dirname(__FILE__)));
+$basepath = realpath(dirname(__DIR__));
 
-// Set include path
-require_once "$basepath/library/Braintacle/Application.php";
-Braintacle_Application::setIncludePath();
-
-// Parse command line. This needs to be done before initializing the application
-// because that would set APPLICATION_ENV, but that could be overridden in the
-// command line.
-require_once 'Zend/Console/Getopt.php';
-require_once 'Zend/Console/Getopt/Exception.php';
-$cmdLine = new Zend_Console_Getopt(
-    array(
-        'environment|e=w' => 'Application environment (default: production)',
-        'force|f' => 'force update',
-    )
-);
-try {
-    $cmdLine->parse();
-    if ($cmdLine->getRemainingArgs()) {
-        throw new Zend_Console_Getopt_Exception('', $cmdLine->getUsageMessage());
-    }
-} catch(Zend_Console_Getopt_Exception $exception) {
-    print $exception->getUsageMessage();
-    exit(1);
-}
-
-// Set up application environment
-$environment = $cmdLine->environment;
-if (!$environment) {
-    $environment = 'production';
-}
-define('APPLICATION_ENV', $environment);
-Braintacle_Application::init();
+require_once "$basepath/module/Library/Application.php";
+\Library\Application::init('Cli');
 
 // Set up logger
-$writer = new Zend_Log_Writer_Stream('php://stderr');
-$formatter = new Zend_Log_Formatter_Simple('%priorityName%: %message%' . PHP_EOL);
+$formatter = new \Zend\Log\Formatter\Simple('%priorityName%: %message%');
+$writer = new \Zend\Log\Writer\Stream('php://stderr');
 $writer->setFormatter($formatter);
-$logger = new Zend_Log($writer);
+$logger = \Library\Application::getService('Library\Logger');
+$logger->addWriter($writer);
 
-// Create Schema manager object
-require_once 'Braintacle/MDB2.php';
-Braintacle_MDB2::setErrorReporting();
-require_once 'Braintacle/SchemaManager.php';
-$manager = new Braintacle_SchemaManager($logger);
-
-$isCompatible = $manager->isOcsCompatible();
-if ($cmdLine->force or (!$isCompatible and $manager->isUpdateRequired())) {
-    if ($isCompatible) {
-        $logger->warn(
-            'Schema update forced. Database will no longer be compatible with OCS Inventory NG.'
-        );
-        $logger->warn(
-            'The version that comes bundled with Braintacle will continue to work.'
-        );
-    }
-    // Update the database automatically
-    $manager->updateAll();
-    $logger->info('Database successfully updated.');
-} else {
-    if ($isCompatible) {
-        $logger->notice(
-            'The current database is still compatible with OCS Inventory NG.'
-        );
-        $logger->notice(
-            'Use --force to update anyway, but you will lose compatibility.'
-        );
-    } else {
-        $logger->info('Database is already up to date. Use --force to update anyway.');
-    }
-}
+$schemaManager = new \Database\SchemaManager;
+$schemaManager->updateAll();

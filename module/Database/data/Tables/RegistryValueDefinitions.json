@@ -1,0 +1,66 @@
+{
+    "name": "regconfig",
+    "comment": "Definitions of registry values to scan",
+    "columns": [
+        {
+            "name": "id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": true,
+            "comment": null
+        },
+        {
+            "name": "name",
+            "type": "varchar",
+            "length": 255,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Display name"
+        },
+        {
+            "name": "regtree",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Root key (0=HKEY_CLASSES_ROOT, 1=HKEY_CURRENT_USER, 2=HKEY_LOCAL_MACHINE, 3=HKEY_USERS, 4=HKEY_CURRENT_CONFIG, 5=HKEY_DYN_DATA)"
+        },
+        {
+            "name": "regkey",
+            "type": "clob",
+            "length": null,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Subkey path"
+        },
+        {
+            "name": "regvalue",
+            "type": "varchar",
+            "length": 255,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Value"
+        }
+    ],
+    "primary_key": [
+        "id"
+    ],
+    "indexes": [
+        {
+            "name": "regconfig_name_unique_idx",
+            "unique": true,
+            "columns": [
+                "name"
+            ]
+        }
+    ],
+    "mysql": {
+        "engine": "MyISAM"
+    }
+}

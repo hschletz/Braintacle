@@ -1,0 +1,76 @@
+{
+    "name": "netmap",
+    "comment": "Scanned MAC/IP addresses",
+    "columns": [
+        {
+            "name": "mac",
+            "type": "varchar",
+            "length": 17,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "ip",
+            "type": "varchar",
+            "length": 15,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "netid",
+            "type": "varchar",
+            "length": 15,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Network address"
+        },
+        {
+            "name": "mask",
+            "type": "varchar",
+            "length": 15,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "name",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "DNS name (IP address if it does not resolve)"
+        },
+        {
+            "name": "date",
+            "type": "timestamp",
+            "length": null,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        }
+    ],
+    "primary_key": [
+        "mac"
+    ],
+    "indexes": [
+        {
+            "name": "netmap_netid_mask_idx",
+            "unique": false,
+            "columns": [
+                "netid",
+                "mask"
+            ]
+        }
+    ],
+    "mysql": {
+        "engine": "InnoDB"
+    }
+}

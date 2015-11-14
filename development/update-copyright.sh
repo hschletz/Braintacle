@@ -30,9 +30,6 @@ grep -r -l --null \
     --exclude-dir=.git \
     --exclude=update-copyright.sh \
     --exclude-dir="$BASEDIR/doc/api/*" \
-    --exclude-dir="$BASEDIR/library/NADA/*" \
-    --exclude-dir="$BASEDIR/library/PEAR/*" \
-    --exclude-dir="$BASEDIR/library/Zend/*" \
     'Copyright (C) 2011-2014 Holger Schletz' \
     "$BASEDIR" \
     | xargs --null --no-run-if-empty \

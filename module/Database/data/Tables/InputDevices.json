@@ -1,0 +1,93 @@
+{
+    "name": "inputs",
+    "comment": "Client input devices (Keyboard, mouse, touchpad...)",
+    "columns": [
+        {
+            "name": "id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": true,
+            "comment": null
+        },
+        {
+            "name": "hardware_id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "type",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Keyboard/Pointing"
+        },
+        {
+            "name": "manufacturer",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "caption",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "description"
+        },
+        {
+            "name": "description",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "comment"
+        },
+        {
+            "name": "interface",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "PS/2, USB..."
+        },
+        {
+            "name": "pointtype",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "deprecated"
+        }
+    ],
+    "primary_key": [
+        "id"
+    ],
+    "indexes": [
+        {
+            "name": "inputs_hardware_id_idx",
+            "unique": false,
+            "columns": [
+                "hardware_id"
+            ]
+        }
+    ],
+    "mysql": {
+        "engine": "InnoDB"
+    }
+}

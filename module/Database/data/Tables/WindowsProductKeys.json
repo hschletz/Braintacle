@@ -1,0 +1,30 @@
+{
+    "name": "braintacle_windows",
+    "comment": "Windows-specific client information",
+    "columns": [
+        {
+            "name": "hardware_id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "manual_product_key",
+            "type": "varchar",
+            "length": 29,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Product key manually entered in the console if detected key is incorrect"
+        }
+    ],
+    "primary_key": [
+        "hardware_id"
+    ],
+    "mysql": {
+        "engine": "InnoDB"
+    }
+}

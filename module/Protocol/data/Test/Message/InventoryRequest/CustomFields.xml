@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<REQUEST>
+    <DEVICEID>client_id</DEVICEID>
+    <QUERY>INVENTORY</QUERY>
+    <CONTENT>
+        <ACCOUNTINFO>
+            <KEYNAME>text</KEYNAME>
+            <KEYVALUE>&lt;value&gt;</KEYVALUE>
+        </ACCOUNTINFO>
+        <ACCOUNTINFO>
+            <KEYNAME>zero</KEYNAME>
+            <KEYVALUE>0</KEYVALUE>
+        </ACCOUNTINFO>
+        <ACCOUNTINFO>
+            <KEYNAME>date</KEYNAME>
+            <KEYVALUE>2015-05-15</KEYVALUE>
+        </ACCOUNTINFO>
+    </CONTENT>
+</REQUEST>

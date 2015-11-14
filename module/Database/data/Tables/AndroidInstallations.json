@@ -1,0 +1,57 @@
+{
+    "name": "javainfos",
+    "comment": "Android environment",
+    "columns": [
+        {
+            "name": "hardware_id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "javaname",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "javacountry",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "javaclasspath",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "javahome",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        }
+    ],
+    "primary_key": [
+        "hardware_id"
+    ],
+    "mysql": {
+        "engine": "InnoDB"
+    }
+}

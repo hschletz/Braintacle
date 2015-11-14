@@ -1,0 +1,111 @@
+{
+    "name": "drives",
+    "comment": "Client filesystems",
+    "columns": [
+        {
+            "name": "id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": true,
+            "comment": null
+        },
+        {
+            "name": "hardware_id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "letter",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Drive letter (Windows only)"
+        },
+        {
+            "name": "type",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Windows: device type, UNIX: mountpoint"
+        },
+        {
+            "name": "filesystem",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Filesystem type"
+        },
+        {
+            "name": "total",
+            "type": "integer",
+            "length": 32,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Size in MB"
+        },
+        {
+            "name": "free",
+            "type": "integer",
+            "length": 32,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Free space in MB"
+        },
+        {
+            "name": "volumn",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Windows: label, UNIX: device"
+        },
+        {
+            "name": "createdate",
+            "type": "date",
+            "length": null,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Filesystem creation date (UNIX only)"
+        },
+        {
+            "name": "numfiles",
+            "type": "integer",
+            "length": 32,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "obsolete"
+        }
+    ],
+    "primary_key": [
+        "id"
+    ],
+    "indexes": [
+        {
+            "name": "drives_hardware_id_idx",
+            "unique": false,
+            "columns": [
+                "hardware_id"
+            ]
+        }
+    ],
+    "mysql": {
+        "engine": "InnoDB"
+    }
+}

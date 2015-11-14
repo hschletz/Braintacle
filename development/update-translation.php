@@ -18,30 +18,36 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
-/**
- * Run this script to extract new strings from all .php and .phtml source files.
- * This will update all .po files where new translations can be edited.
- *
- * Note that zend.pot and braintacle-library.pot are maintained manually. If the
- * application complains about untranslated messages that originate from library
- * code, add the message to the .pot file and run this script to update the .po files.
  */
 
-error_reporting(-1);
+// Run this script to extract new strings from all PHP source files to .pot
+// files and update corresponding .po files. Some .pot files are maintained
+// manually. For these modules only the .po files are updated.
 
-// Define some constants for placeholder replacements
-define(
-    'TITLE',
-<<<EOT
-# Translation file for Braintacle
-#
-EOT
+error_reporting(-1);
+require_once __DIR__ . '/../module/Library/FileObject.php';
+
+// Module configuration
+//
+// The "translationPath" element must be present for each module. If the
+// "subdirs" element is present, message strings are extracted from these
+// subdirectories. The "keywords" element lists function names that are used as
+// xgettext's --keyword option. The "_" function is always evaluated and not
+// explicitly listed.
+$modules = array(
+    'Console' => array(
+        'subdirs' => array('Console/Controller', 'Console/Form', 'Console/Navigation', 'Console/View/Helper', 'view'),
+        'keywords' => array('translate', 'setLabel', 'setMessage', 'addSuccessMessage', 'addErrorMessage'),
+        'translationPath' => 'data/i18n',
+    ),
+    'Library' => array(
+        'translationPath' => 'data/i18n',
+    ),
 );
 
-define(
-    'COPYRIGHT',
-<<<EOT
+$template = <<<EOT
+# Translation file for %s module
+#
 # Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
 #
 # This program is free software; you can redistribute it and/or modify it
@@ -57,153 +63,107 @@ define(
 # You should have received a copy of the GNU General Public License along with
 # this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-EOT
-);
+#
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\\n"
+
+%s\n
+EOT;
 
 // All paths are relative to this script's parent directory
-$basePath = realpath(dirname(dirname(__FILE__)));
-$languagePath = realpath($basePath . '/languages');
-$applicationPath = realpath($basePath . '/application');
-$potFileName = realpath($languagePath . '/braintacle.pot');
+$basePath = dirname(__DIR__);
 
-// STAGE 1: Let xgettext extract all strings to $newPot
-print "Running xgettext on source files... ";
-$cmd = array(
-    'xgettext',
-    '--directory=' . escapeshellarg($applicationPath),
-    '--default-domain=braintacle',
-    '--output=-',
-    '--language=PHP',
-    '--sort-by-file',
-    '--package-name=braintacle',
-    '--copyright-holder="Holger Schletz"',
-    '--keyword=translate',
-    '--keyword=setLabel',
-    '--keyword=setLegend',
-    '--keyword=setDescription',
-    '--keyword=_setError',
-    '--keyword=_setErrorHtml',
-);
-$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($applicationPath));
-foreach ($iterator as $file) {
-    // Retrieve relative path only
-    $file = $iterator->getSubPathName();
+foreach ($modules as $module => $config) {
+    // Use DIRECTORY_SEPARATOR for paths that are used as shell arguments
+    $modulePath = $basePath . DIRECTORY_SEPARATOR . 'module' . DIRECTORY_SEPARATOR . $module;
+    $translationPath = $modulePath . DIRECTORY_SEPARATOR . $config['translationPath'];
+    $potFileName = $translationPath . DIRECTORY_SEPARATOR . "$module.pot";
+    if (isset($config['subdirs'])) {
+        // STAGE 1: Let xgettext extract all strings from module to $newPot
+        print "Extracting strings fron $module module...";
+        $cmd = array(
+            'xgettext',
+            '--directory=' . escapeshellarg($modulePath),
+            '--output=-',
+            '--language=PHP',
+            '--omit-header',
+            '--sort-by-file',
+            '--add-location=file',
+        );
+        foreach ($config['keywords'] as $keyword) {
+            $cmd[] = "--keyword=$keyword";
+        }
+        foreach ($config['subdirs'] as $subdir) {
+            foreach (
+                new \RecursiveIteratorIterator(
+                    new \RecursiveDirectoryIterator(
+                        "$modulePath/$subdir",
+                        \RecursiveDirectoryIterator::CURRENT_AS_SELF
+                    )
+                ) as $file
+            ) {
+                $file = $file->getSubPathName();
+                if (substr($file, -4) == '.php') {
+                    $cmd[] = escapeshellarg($subdir . DIRECTORY_SEPARATOR . $file);
+                }
+            }
+        }
+        $cmd = implode(' ', $cmd);
+        exec($cmd, $newPot, $result);
+        if ($result) {
+            print "ERROR: xgettext returned with error code $result.\n";
+            print "Command line was:\n\n";
+            print "$cmd\n\n";
+            exit(1);
+        }
+        print " done.\n";
 
-    // Ignore everything except *.php and *.phtml
-    if (substr($file, -4) != '.php' and substr($file, -6) != '.phtml')
-        continue;
-
-    // append file to command line
-    $cmd[] = $file;
-}
-$cmd = implode(' ', $cmd);
-exec($cmd, $newPot, $result);
-if ($result) {
-    print "ERROR: xgettext returned with error code $result.\n";
-    print "Command line was:\n\n";
-    print "$cmd\n\n";
-    exit(1);
-}
-print "done.\n";
-
-// Replace some placeholders
-foreach ($newPot as $index => $line) {
-    switch ($line) {
-    case '# SOME DESCRIPTIVE TITLE.':
-        $newPot[$index] = TITLE;
-        break;
-    case '# Copyright (C) YEAR Holger Schletz':
-        $newPot[$index] = COPYRIGHT;
-        break;
-    case '# This file is distributed under the same license as the PACKAGE package.':
-        $newPot[$index] = '#';
-        break;
-    case '"Language-Team: LANGUAGE <LL@li.org>\n"':
-        $newPot[$index] = '"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"';
-        break;
-    default:
-        // Strip line numbers from comments. These shift too often on
-        // totally unrelated changes on the source file.
-        if (preg_match('/^#: /', $line)) {
-            $line = preg_replace('/:\d+/', ';', $line); // replace with ';' for better readability
-            $newPot[$index] = rtrim($line, ';'); // strip trailing semicolon
+        if (in_array('--force', $_SERVER['argv'])) {
+            $update = true;
+        } else {
+            // Read existing POT file into $oldPot
+            $oldPot = \Library\FileObject::fileGetContentsAsArray($potFileName, FILE_IGNORE_NEW_LINES);
+            // Skip to first message string (strip header and first empty line)
+            $startPos = array_search('', $oldPot, true);
+            if ($startPos === false) {
+                print "WARNING: File $potFileName as unexpected content. Skipping.\n";
+                continue;
+            }
+            $oldPot = array_slice($oldPot, $startPos + 1);
+            $update = ($newPot != $oldPot);
+        }
+        if ($update) {
+            \Library\FileObject::FilePutContents(
+                $potFileName,
+                sprintf($template, $module, implode("\n", $newPot))
+            );
+            print "Changes written to $potFileName.\n";
+        } else {
+            print "No changes detected for $potFileName.\n";
         }
     }
-}
 
-// Read existing braintacle.pot into $oldPot
-$oldPot = file($potFileName, FILE_IGNORE_NEW_LINES);
-if ($oldPot == false) {
-    print "ERROR: could not read $potFileName\n";
-    exit(1);
-}
-
-// Compare $oldPot with $newPot, write file only if significant changes are detected
-// See http://php.net/manual/en/function.array-diff.php#82143 for an explanation
-$union = array_merge($oldPot, $newPot);
-$intersect = array_intersect($oldPot, $newPot);
-$diff = array_diff($union, $intersect);
-foreach (array_keys($diff) as $index) {
-    if (strpos($diff[$index], '"POT-Creation-Date:') === 0
-        or strpos($diff[$index], '#') === 0) {
-        unset($diff[$index]);
-    }
-}
-if (count($diff) or in_array('--force', $_SERVER['argv'])) {
-    $potFile = fopen($potFileName, 'w');
-    if (!$potFile) {
-        print "ERROR: could not open $potFileName for writing.\n";
-        exit(1);
-    }
-    foreach ($newPot as $line) {
-        if (fwrite($potFile, $line . "\n") === false) {
-            print "ERROR: writing to $potFileName aborted.\n";
+    // STAGE 2: Update .po files if necessary
+    print "Updating .po files for $module module...";
+    foreach (new \GlobIterator("$translationPath/*.po", \GlobIterator::CURRENT_AS_PATHNAME) as $poFileName) {
+        $cmd = array(
+            'msgmerge',
+            '--quiet',
+            '--update',
+            '--backup=off',
+            '--sort-by-file',
+            escapeshellarg($poFileName),
+            escapeshellarg($potFileName),
+        );
+        $cmd = implode(' ', $cmd);
+        exec($cmd, $output, $result);
+        if ($result) {
+            print "ERROR: msgmerge returned with error code $result.\n";
+            print "Command line was:\n\n";
+            print "$cmd\n\n";
             exit(1);
         }
     }
-    print "Changes written to $potFileName.\n";
-} else {
-    print "No changes detected.\n";
+    print " done.\n";
 }
-
-// STAGE 2: Update .po files if necessary
-print 'Updating and compiling .po files... ';
-$baseNames = array(
-    'braintacle',
-    'braintacle-library',
-    'zend',
-);
-$iterator = new DirectoryIterator($languagePath);
-foreach ($iterator as $entry) {
-    $entry = $iterator->getFileName();
-    if ($iterator->isDir() and substr($entry, 0, 1) != '.') {
-        foreach ($baseNames as $baseName) {
-            $potFileName = realpath("$languagePath/$baseName.pot");
-            $poFileName  = realpath("$languagePath/$entry/$baseName.po");
-            if (empty($poFileName)) {
-                print "WARNING: missing file $languagePath/$entry/$baseName.po\n";
-                continue;
-            }
-            // Update .po file.
-            $cmd = array(
-                'msgmerge',
-                '--quiet',
-                '--update',
-                '--backup=off',
-                '--sort-by-file',
-                escapeshellarg($poFileName),
-                escapeshellarg($potFileName),
-            );
-            $cmd = implode(' ', $cmd);
-            exec($cmd, $output, $result);
-            if ($result) {
-                print "ERROR: msgmerge returned with error code $result.\n";
-                print "Command line was:\n\n";
-                print "$cmd\n\n";
-                exit(1);
-            }
-        }
-    }
-}
-print "done\n";
-exit(0);

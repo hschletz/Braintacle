@@ -19,24 +19,17 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-// Report every possible error and warning
+// Set up PHP environment. The error configuration is done as early as possible.
 error_reporting(-1);
 
-// Set up PHP environment. This could be done in application.ini, but the
-// settings there come into effect at a later point only where it might be too
-// late.
-ini_set('log_errors', true);
+require_once('../module/Library/Application.php');
 
-require '../library/Braintacle/Application.php';
-
-if (Braintacle_Application::getEnvironment() == 'production') {
+if (\Library\Application::isProduction()) {
     ini_set('display_errors', false);
     ini_set('display_startup_errors', false);
 } else {
     ini_set('display_errors', true);
     ini_set('display_startup_errors', true);
 }
-ini_set('magic_quotes_runtime', false);
 
-// Bootstrap the application
-Braintacle_Application::init();
+\Library\Application::init('Console');

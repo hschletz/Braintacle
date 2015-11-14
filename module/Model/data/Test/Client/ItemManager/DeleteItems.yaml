@@ -1,0 +1,85 @@
+controllers:
+  -
+    hardware_id: 2
+
+cpus:
+  -
+    hardware_id: 2
+  -
+    hardware_id: 3
+  -
+    hardware_id: 3
+  -
+    hardware_id: 3
+  -
+    hardware_id: 4
+  -
+    hardware_id: 4
+
+drives:
+  -
+    hardware_id: 2
+
+inputs:
+  -
+    hardware_id: 2
+
+memories:
+  -
+    hardware_id: 2
+
+modems:
+  -
+    hardware_id: 2
+
+monitors:
+  -
+    hardware_id: 2
+
+networks:
+  -
+    hardware_id: 2
+
+officepack:
+  -
+    hardware_id: 2
+
+ports:
+  -
+    hardware_id: 2
+
+printers:
+  -
+    hardware_id: 2
+
+registry:
+  -
+    hardware_id: 2
+
+sim:
+  -
+    hardware_id: 2
+
+slots:
+  -
+    hardware_id: 2
+
+softwares:
+  -
+    hardware_id: 2
+
+sounds:
+  -
+    hardware_id: 2
+
+storages:
+  -
+    hardware_id: 2
+
+videos:
+  -
+    hardware_id: 2
+
+virtualmachines:
+  -
+    hardware_id: 2

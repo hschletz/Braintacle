@@ -1,0 +1,27 @@
+devicetype:
+  -
+    name: "present, inventoried interfaces"
+  -
+    name: "present, no inventoried interfaces"
+  -
+    name: "not present, no inventoried interfaces"
+
+network_devices:
+  -
+    macaddr: "00:00:5E:00:53:01"
+    type: "present, inventoried interfaces"
+  -
+    macaddr: "00:00:5E:00:53:02"
+    type: "present, inventoried interfaces"
+  -
+    macaddr: "00:00:5E:00:53:03"
+    type: "present, inventoried interfaces"
+  -
+    macaddr: "00:00:5E:00:53:05"
+    type: "present, no inventoried interfaces"
+  -
+    macaddr: "00:00:5E:00:53:06"
+    type: "present, no inventoried interfaces"
+  -
+    macaddr: "00:00:5E:00:53:07"
+    type: "present, no inventoried interfaces"

@@ -292,8 +292,7 @@ our %DATA_MAP= (
        MACADDR => { fallback => '00:00:00:00:00:00' },
        STATUS => {},
        IPGATEWAY => {},
-       IPDHCP => {},
-       VIRTUALDEV => {}
+       IPDHCP => {}
    }
   },
   
@@ -410,8 +409,6 @@ our %DATA_MAP= (
       L2CACHESIZE => {}, 
       CPUARCH => {},
       DATA_WIDTH => {},
-      CURRENT_ADDRESS_WIDTH => {},
-      LOGICAL_CPUS => {},
       VOLTAGE => {},
       CURRENT_SPEED => {},
       SOCKET => {}
@@ -435,7 +432,7 @@ our %DATA_MAP= (
     }
   },
 
-javainfo => {
+  javainfos => {
     mask => 0,
     multi => 0,
     auto => 1,
@@ -444,30 +441,12 @@ javainfo => {
     writeDiff => 0,
     cache => 0,
     fields => {
-      JAVANAME => { fallback=>'noname' },
-      JAVAPATHLEVEL => { fallback=>0 },
+      JAVANAME => {},
       JAVACOUNTRY => {},
       JAVACLASSPATH => {},
       JAVAHOME => {}
     }
   },
-
-  journallog => {
-    mask => 0,
-    multi => 1,
-    auto => 1,
-    delOnReplace => 0,
-    sortBy => '',
-    writeDiff => 0,
-    cache => 0,
-    fields => {
-      JOURNALLOG => {},
-      LISTENERNAME => { fallback=>'noname' },
-      DATE => {},
-      STATUS => { fallback=>0 },
-      ERRORCODE => {}
-    }
-   },
 
   itmgmt_comments => {
     mask => 0,
@@ -480,9 +459,7 @@ javainfo => {
     fields =>  {
       COMMENTS => {},
       USER_INSERT => {},
-      DATE_INSERT => {},
-      ACTION  => {},
-      VISIBLE => {}
+      DATE_INSERT => {}
     }
   },
   

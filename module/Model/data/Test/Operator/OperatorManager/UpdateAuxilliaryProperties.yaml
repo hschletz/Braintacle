@@ -1,0 +1,15 @@
+operators:
+  -
+    id: "user1"
+    firstname: "new_first"
+    lastname: "new_last"
+    passwd: "0cc175b9c0f1b6a831c399e269772661"
+    comments: "new_comment"
+    email: "new_mail"
+  -
+    id: "user2"
+    firstname: null
+    lastname: 'A'
+    passwd: "0cc175b9c0f1b6a831c399e269772661"
+    comments: null
+    email: null

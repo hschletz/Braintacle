@@ -1,0 +1,35 @@
+# Fixture for PackageManagerTest
+download_available:
+  -
+    fileid: 1415958320
+    name: "package2"
+    priority: 5
+    fragments: 42
+    size: 12345678
+    osname: "LINUX"
+    comment: "Existing package 2"
+
+download_enable:
+  -
+    id: 1415958320
+    fileid: 1415958320
+    info_loc: "HTTPS URL"
+    pack_loc: "HTTP URL"
+
+devices:
+  -
+    hardware_id: 1
+    name: "DOWNLOAD_SWITCH"
+    ivalue: 1
+  -
+    hardware_id: 1
+    name: "OTHER"
+    ivalue: 1415958319
+  -
+    hardware_id: 2
+    name: "DOWNLOAD"
+    ivalue: 1415958320
+  -
+    hardware_id: 2
+    name: "DOWNLOAD_FORCE"
+    ivalue: 1415958320

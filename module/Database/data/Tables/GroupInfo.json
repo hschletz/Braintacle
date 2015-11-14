@@ -1,0 +1,57 @@
+{
+    "name": "groups",
+    "comment": "Extra information on groups, supplementing the information in the 'hardware' table",
+    "columns": [
+        {
+            "name": "hardware_id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "request",
+            "type": "clob",
+            "length": null,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "An SQL query that delivers computer IDs for dynamic membership"
+        },
+        {
+            "name": "xmldef",
+            "type": "clob",
+            "length": null,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Pseudo-XML for multiple SQL queries"
+        },
+        {
+            "name": "create_time",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": 0,
+            "autoincrement": false,
+            "comment": "UNIX timestamp of last cache computation"
+        },
+        {
+            "name": "revalidate_from",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
+            "default": 0,
+            "autoincrement": false,
+            "comment": "create_time + random offset, used to determine time for next cache computation"
+        }
+    ],
+    "primary_key": [
+        "hardware_id"
+    ],
+    "mysql": {
+        "engine": "MyISAM"
+    }
+}

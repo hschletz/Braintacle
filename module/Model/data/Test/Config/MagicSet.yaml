@@ -1,0 +1,37 @@
+# Result set for testSet(), ordered by name
+config:
+  -
+    # updated
+    name: "DOWNLOAD_PACK_DIR"
+    ivalue: null
+    tvalue: "/other/package/path"
+  -
+    # unchanged
+    name: "FREQUENCY"
+    ivalue: 42
+    tvalue: null
+  -
+    # boolean false, updated
+    name: "GENERATE_OCS_FILES"
+    ivalue: 0
+    tvalue: null
+  -
+    # boolean true, new
+    name: "INVENTORY_SESSION_ONLY"
+    ivalue: 1
+    tvalue: null
+  -
+    # boolean false, new
+    name: "PROLOG_FILTER_ON"
+    ivalue: 0
+    tvalue: null
+  -
+    # new
+    name: "PROLOG_FREQ"
+    ivalue: 10
+    tvalue: null
+  -
+    # boolean true, updated
+    name: "REGISTRY"
+    ivalue: 1
+    tvalue: null

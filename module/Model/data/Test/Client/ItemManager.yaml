@@ -1,0 +1,328 @@
+# Fixture for ItemManagerTest
+
+hardware:
+  -
+    id: 1
+    deviceid: "id1"
+    name: "name1"
+    winprodid: "product_id"
+  -
+    id: 2
+    deviceid: "id2"
+    name: "name2"
+    winprodid: null
+  -
+    id: 3
+    deviceid: "id3"
+    name: "name3"
+    winprodid: null
+  -
+    id: 4
+    deviceid: "id4"
+    name: "name4"
+    winprodid: null
+
+blacklist_macaddresses:
+  -
+    macaddress: "00:00:5E:00:53:01"
+
+software_definitions:
+  -
+    name: "name1"
+    display: false
+  -
+    name: "name2"
+    display: true
+  -
+    name: "name3"
+    display: null
+
+# Different columns map to "Name" property depending on agent type
+controllers:
+  -
+    id: 2
+    hardware_id: 2
+    name: null
+    manufacturer: "name2"
+  -
+    id: 1
+    hardware_id: 1
+    name: "name1"
+    manufacturer: null
+
+cpus:
+  -
+    id: 2
+    hardware_id: 2
+    manufacturer: "manufacturer3"
+    type: "type2"
+    cores: null
+  -
+    id: 1
+    hardware_id: 1
+    manufacturer: "manufacturer4"
+    type: "type1"
+    cores: null
+  # For core aggregation tests: 2 CPUs, 2/1 cores
+  -
+    id: 3
+    hardware_id: 3
+    manufacturer: "manufacturer5"
+    type: "type3a"
+    cores: null
+  -
+    id: 4
+    hardware_id: 3
+    manufacturer: "manufacturer5"
+    type: "type3b"
+    cores: null
+  -
+    id: 5
+    hardware_id: 3
+    manufacturer: "manufacturer5"
+    type: "type3a"
+    cores: null
+  # Per-CPU input
+  -
+    id: 6
+    hardware_id: 4
+    manufacturer: "manufacturer6a"
+    type: "type4a"
+    cores: 3
+  -
+    id: 7
+    hardware_id: 4
+    manufacturer: "manufacturer6b"
+    type: "type4b"
+    cores: 4
+
+drives:
+  -
+    id: 2
+    hardware_id: 2
+    type: "type4"
+    filesystem: "name2"
+  -
+    id: 1
+    hardware_id: 1
+    type: "type3"
+    filesystem: "name1"
+
+inputs:
+  -
+    id: 2
+    hardware_id: 2
+    caption: "name2"
+    type: "type3"
+  -
+    id: 1
+    hardware_id: 1
+    caption: "name1"
+    type: "type4"
+
+memories:
+  -
+    id: 2
+    hardware_id: 2
+    numslots: 1
+    description: "name2"
+  -
+    id: 1
+    hardware_id: 1
+    numslots: 2
+    description: "name1"
+
+modems:
+  -
+    id: 2
+    hardware_id: 2
+    name: "name2"
+    type: "type3"
+  -
+    id: 1
+    hardware_id: 1
+    name: "name1"
+    type: "type4"
+
+monitors:
+  -
+    id: 2
+    hardware_id: 2
+    manufacturer: "name2"
+    type: "type3"
+  -
+    id: 1
+    hardware_id: 1
+    manufacturer: "name1"
+    type: "type4"
+
+networks:
+  -
+    id: 2
+    hardware_id: 2
+    description: "name2"
+    status: "status3"
+    macaddr: "00:00:5E:00:53:02"
+  -
+    id: 1
+    hardware_id: 1
+    description: "name1"
+    status: "status4"
+    macaddr: "00:00:5E:00:53:01"
+
+officepack:
+  -
+    id: 2
+    hardware_id: 2
+    product: "name2"
+    officeversion: "version3"
+    install: 1
+  -
+    id: 1
+    hardware_id: 1
+    product: "name1"
+    officeversion: "version4"
+    install: 0
+
+ports:
+  -
+    id: 2
+    hardware_id: 2
+    name: "name2"
+    type: "type3"
+  -
+    id: 1
+    hardware_id: 1
+    name: "name1"
+    type: "type4"
+
+printers:
+  -
+    id: 2
+    hardware_id: 2
+    name: "name2"
+    port: "port3"
+  -
+    id: 1
+    hardware_id: 1
+    name: "name1"
+    port: "port4"
+
+registry:
+  -
+    id: 2
+    hardware_id: 2
+    name: "name2"
+    regvalue: "data"
+  -
+    id: 1
+    hardware_id: 1
+    name: "name1"
+    regvalue: "value=data2"
+  -
+    id: 3
+    hardware_id: 1
+    name: "name1"
+    regvalue: "=data1"
+
+sim:
+  -
+    id: 2
+    hardware_id: 2
+    opname: "name2"
+    serialnumber: "serial3"
+  -
+    id: 1
+    hardware_id: 1
+    opname: "name1"
+    serialnumber: "serial4"
+
+# Different columns map to "Name" property depending on agent type
+slots:
+  -
+    id: 2
+    hardware_id: 2
+    name: "name2"
+    designation: null
+  -
+    id: 1
+    hardware_id: 1
+    name: null
+    designation: "name1"
+
+softwares:
+  -
+    id: 2
+    hardware_id: 2
+    name: "name2"
+    version: "version3"
+  -
+    id: 1
+    hardware_id: 1
+    name: "name1"
+    version: "version4"
+  -
+    id: 3
+    hardware_id: 1
+    name: "name3"
+    version: "version5"
+  -
+    id: 4
+    hardware_id: 1
+    name: "name4"
+    version: "version6"
+  -
+    # Always ignored (name NULL)
+    id: 5
+    hardware_id: 1
+    name: null
+    version: "version0"
+
+sounds:
+  -
+    id: 2
+    hardware_id: 2
+    manufacturer: "manufacturer3"
+    name: "name2"
+  -
+    id: 1
+    hardware_id: 1
+    manufacturer: "manufacturer4"
+    name: "name1"
+
+# Different columns map to "Model" property depending on agent type
+storages:
+  -
+    id: 2
+    hardware_id: 2
+    model: "name2"
+    name: null
+  -
+    id: 1
+    hardware_id: 1
+    model: null
+    name: "name1"
+
+videos:
+  -
+    id: 2
+    hardware_id: 2
+    name: "name2"
+    chipset: "chipset3"
+  -
+    id: 1
+    hardware_id: 1
+    name: "name1"
+    chipset: "chipset4"
+
+virtualmachines:
+  -
+    id: 2
+    hardware_id: 2
+    name: "name2"
+    vmtype: "type3"
+  -
+    id: 1
+    hardware_id: 1
+    name: "name1"
+    vmtype: "type4"

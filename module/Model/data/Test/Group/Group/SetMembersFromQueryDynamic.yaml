@@ -1,0 +1,7 @@
+groups:
+  -
+    hardware_id: 10
+    request: "query_new"
+  -
+    hardware_id: 11
+    request: "query_11"

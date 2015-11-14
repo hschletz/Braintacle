@@ -55,7 +55,12 @@ sub _context{
   my $dbh = $Apache::Ocsinventory::CURRENT_CONTEXT{'DBI_HANDLE'};
   
   if(!$Apache::Ocsinventory::CURRENT_CONTEXT{'EXIST_FL'}){
-    $dbh->do('INSERT INTO hardware(DEVICEID) VALUES(?)', {}, $Apache::Ocsinventory::CURRENT_CONTEXT{'DEVICEID'}) or return(1);
+    $dbh->do(
+        'INSERT INTO hardware(DEVICEID, NAME) VALUES(?, ?)',
+        {},
+        $Apache::Ocsinventory::CURRENT_CONTEXT{'DEVICEID'},
+        $Apache::Ocsinventory::CURRENT_CONTEXT{XML_ENTRY}->{CONTENT}->{HARDWARE}->{NAME}
+    ) or return(1);
     my $request = $dbh->prepare('SELECT ID FROM hardware WHERE DEVICEID=?');
     unless($request->execute($Apache::Ocsinventory::CURRENT_CONTEXT{'DEVICEID'})){
       &_log(518,'inventory','id_error') if $ENV{'OCS_OPT_LOGLEVEL'};

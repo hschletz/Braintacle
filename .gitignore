@@ -9,5 +9,10 @@ doc/api/*
 !doc/api/Readme.txt!
 !doc/api/phpdoc.xml
 
+# The doc/CodeCoverage/ directory contains many phpunit-generated files. Ignore content...
+doc/CodeCoverage/*
+# ... except for the project-defined files.
+!doc/CodeCoverage/index.html
+
 # User-provided config file
 ocsinventory/ocsreports/dbconfig.inc.php

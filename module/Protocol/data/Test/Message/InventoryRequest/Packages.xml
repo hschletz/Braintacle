@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<REQUEST>
+    <DEVICEID>client_id</DEVICEID>
+    <QUERY>INVENTORY</QUERY>
+    <CONTENT>
+        <DOWNLOAD>
+            <HISTORY>
+                <PACKAGE ID="&lt;package1&gt;"/>
+                <PACKAGE ID="package2"/>
+            </HISTORY>
+        </DOWNLOAD>
+    </CONTENT>
+</REQUEST>

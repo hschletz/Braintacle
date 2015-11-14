@@ -338,15 +338,11 @@ See the [main documentation](./doc/index.html) for a more detailed description
 of differences.
 
 
-Sharing or converting the database
+Converting the database
 ----------------------------------
 
-Braintacle can reuse the database, but not all features will be available. The
-schema manager can convert an existing database, but compatibility will be lost.
-For this reason, the script will detect a compatible database and refuse to
-alter it unless the `--force` flag is given:
-
-    /usr/local/share/braintacle/tools/schema-manager.php --force
+The schema manager can convert an existing database, but compatibility will be
+lost.
 
 
 Reusing or replacing the server component

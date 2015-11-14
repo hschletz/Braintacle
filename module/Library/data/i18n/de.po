@@ -1,0 +1,60 @@
+# Translation file for Library module
+#
+# Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 2 of the License, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
+
+#: Validator/DirectoryWritable.php
+msgid "'%value%' is not a directory or inaccessible"
+msgstr "'%value%' ist kein Verzeichnis oder nicht zugänglich"
+
+#: Validator/DirectoryWritable.php
+msgid "Directory '%value%' is not writable"
+msgstr "Verzeichnis '%value%' ist nicht schreibbar"
+
+#: Validator/FileReadable.php
+msgid "'%value%' is not a file or inaccessible"
+msgstr "'%value%' ist keine Datei oder nicht zugänglich"
+
+#: Validator/FileReadable.php
+msgid "File '%value%' is not readable"
+msgstr "Datei '%value%' ist nicht lesbar"
+
+#: Validator/NotInArray.php
+msgid "'%value%' is in the list of invalid values"
+msgstr "'%value%' ist in der Liste ungültiger Werte"
+
+#: Validator/ProductKey.php
+msgid "'%value%' is not a valid product key"
+msgstr "'%value%' ist kein gültiger Lizenzschlüssel"
+
+#: View/Helper/FormYesNo.php
+msgid "No"
+msgstr "Nein"
+
+#: View/Helper/FormYesNo.php
+msgid "Yes"
+msgstr "Ja"
+
+#: View/Helper/MembershipType.php
+msgid "automatic"
+msgstr "automatisch"
+
+#: View/Helper/MembershipType.php
+msgid "manual"
+msgstr "manuell"

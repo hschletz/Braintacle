@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<REQUEST>
+    <DEVICEID>client_id</DEVICEID>
+    <QUERY>INVENTORY</QUERY>
+    <CONTENT>
+        <HARDWARE>
+            <PROPERTY1>&lt;value&gt;</PROPERTY1>
+            <PROPERTY2>0</PROPERTY2>
+            <PROPERTY3>0</PROPERTY3>
+        </HARDWARE>
+    </CONTENT>
+</REQUEST>

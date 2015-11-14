@@ -1,0 +1,28 @@
+operators:
+  -
+    id: "user2"
+    firstname: null
+    lastname: 'A'
+    passwd: "0cc175b9c0f1b6a831c399e269772661"
+    accesslvl: 1
+    comments: null
+    new_accesslvl: "sadmin"
+    email: null
+  -
+    id: "user1"
+    firstname: "First"
+    lastname: "Last"
+    passwd: "0cc175b9c0f1b6a831c399e269772661"
+    accesslvl: 1
+    comments: "Comment"
+    new_accesslvl: "sadmin"
+    email: "test@example.net"
+  -
+    id: "new_id"
+    firstname: null
+    lastname: null
+    passwd: "f846fe6860446458dcf44117af4b069e"
+    accesslvl: 1
+    comments: null
+    new_accesslvl: "sadmin"
+    email: null

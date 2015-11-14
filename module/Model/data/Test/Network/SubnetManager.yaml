@@ -1,0 +1,106 @@
+# Fixture for SubnetManagerTest
+#
+# Defines interfaces in 4 subnets:
+#
+# address         name inventoried identified unknown
+# 192.0.2.0/24              1           0        0
+# 198.51.100.0/24           0           1        0
+# 203.0.113.0/24            0           0        1
+# 192.0.2.0/25    NAME      1           1        1
+#
+# The first and last entry have the same address but a different mask and are
+# considered different subnets.
+# Various entries will be ignord for the reasons documented below.
+
+subnet:
+  -
+    netid: "192.0.2.0"
+    mask: "255.255.255.128"
+    name: "NAME"
+  -
+    # Ignored because no inventoried interface exists in this subnet
+    netid: "198.51.100.0"
+    mask: "255.255.255.0"
+    name: "ignored"
+
+network_devices:
+  -
+    # ignored because it's inventoried
+    macaddr: "00:00:5E:00:53:01"
+  -
+    macaddr: "00:00:5E:00:53:03"
+  -
+    macaddr: "00:00:5E:00:53:06"
+
+networks:
+  -
+    macaddr: "00:00:5E:00:53:01"
+    ipsubnet: "192.0.2.0"
+    ipmask: "255.255.255.0"
+    description: ""
+    hardware_id: 1
+  -
+    macaddr: "00:00:5E:00:53:02"
+    ipsubnet: "192.0.2.0"
+    ipmask: "255.255.255.128"
+    description: ""
+    hardware_id: 1
+  -
+    # ignored because it's not on a network
+    macaddr: "00:00:5E:00:53:07"
+    ipsubnet: "0.0.0.0"
+    ipmask: "0.0.0.0"
+    description: ""
+    hardware_id: 1
+  -
+    # ignored because it's a loopback interface
+    macaddr: "00:00:00:00:00:00"
+    ipsubnet: "127.0.0.0"
+    ipmask: "255.0.0.0"
+    description: ""
+    hardware_id: 1
+  -
+    # ignored because it's a PPP interface
+    macaddr: "00:00:00:00:00:00"
+    ipsubnet: "192.0.2.0"
+    ipmask: "255.255.255.0"
+    description: "This is a PPP interface"
+    hardware_id: 1
+
+netmap:
+  -
+    mac: "00:00:5E:00:53:01"
+    ip: "192.0.2.1"
+    netid: "192.0.2.0"
+    mask: "255.255.255.0"
+    date: "2015-01-11T12:58:00"
+  -
+    mac: "00:00:5E:00:53:02"
+    ip: "192.0.2.2"
+    netid: "192.0.2.0"
+    mask: "255.255.255.0"
+    date: "2015-01-11T12:58:00"
+  -
+    mac: "00:00:5E:00:53:03"
+    ip: "198.51.100.3"
+    netid: "198.51.100.0"
+    mask: "255.255.255.0"
+    date: "2015-01-11T12:58:00"
+  -
+    mac: "00:00:5E:00:53:04"
+    ip: "203.0.113.4"
+    netid: "203.0.113.0"
+    mask: "255.255.255.0"
+    date: "2015-01-11T12:58:00"
+  -
+    mac: "00:00:5E:00:53:05"
+    ip: "192.0.2.5"
+    netid: "192.0.2.0"
+    mask: "255.255.255.128"
+    date: "2015-01-11T12:58:00"
+  -
+    mac: "00:00:5E:00:53:06"
+    ip: "192.0.2.6"
+    netid: "192.0.2.0"
+    mask: "255.255.255.128"
+    date: "2015-01-11T12:58:00"
