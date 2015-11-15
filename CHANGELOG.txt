@@ -54,6 +54,8 @@ Misc:
 - The schema manager unconditionally converts the database to the latest schema,
   disregarding backward compatibility. The --force flag has been removed.
 
+- The ocsreports application has been removed.
+
 - Console: The download URLs can no longer be set per package. The global
   options, which have been moved to the "Download" preferences section, are
   always used for package creation. Multiple download locations have never been

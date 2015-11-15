@@ -13,6 +13,3 @@ doc/api/*
 doc/CodeCoverage/*
 # ... except for the project-defined files.
 !doc/CodeCoverage/index.html
-
-# User-provided config file
-ocsinventory/ocsreports/dbconfig.inc.php

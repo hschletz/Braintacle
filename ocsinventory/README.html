@@ -29,12 +29,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 <h2>About this version</h2>
 
 <p>
-This is a patched version of <a href="http://ocsinventory-ng.org">OCS inventory NG</a>
-2.0.5/1.3.3 that uses a database abstraction layer for all database access,
-allowing to work with databases other than MySQL.
-It was developed and tested with PostgreSQL, which is the recommended database for this version.
-MySQL is also supported.
-Other databases might work, but are entirely untested.
+This is a patched version of the <a href="http://ocsinventory-ng.org">OCS inventory NG</a>
+server that works with PostgeSQL in addition to MySQL and handles some
+incompatible changes in Braintacle's database schema.
 </p>
 <p>
 <strong>
@@ -44,213 +41,36 @@ Use Braintacle's issue tracker instead.
 </strong>
 </p>
 <p>
-This version comes bundled with <a href="https://github.com/hschletz/Braintacle">Braintacle</a>.
-It is not a requirement for using Braintacle if you use MySQL &ndash;
-Braintacle works with an original OCS Inventory NG database, too.
-In that case, read the section about reusing an OCS Inventory NG installation in
-<a href="../INSTALL.md">INSTALL.md</a> for some issues to be aware of.
-</p>
-<p>
-<strong>This version of the ocsreports console is deprecated and will soon be removed.</strong>
-</p>
-<p>
 The agent that runs on the clients does not make any direct database connections.
 All interaction runs through the communication server via HTTP/HTTPS.
 No special version of the agent is required for the modified server.
 Use any suitable agent as described in <a href="../INSTALL.md">INSTALL.md</a>.
 </p>
 
-<h3>Differences to the original version</h3>
+<h2>Differences to the original version</h2>
 
 <p>
 Besides the different database access methods, more changes have been made to the code:
 </p>
 <ul>
 <li>
-Some <a href="../schema/README.html">changes to the database schema</a> were necessary for portability.
-Braintacle and its bundled communication server work with both schema types (Braintacle and OCS),
-but an unmodified OCS Inventory NG installation will not work with the Braintacle schema.
-</li>
-<li>
-The setup must be done manually, giving the administrator more control over the installation process.
-This is better than having a script messing with the system, which might break things and makes uninstallation
-more difficult.
+The setup must be done manually. giving the administrator more control over the installation process.
 Detailed installation instructions are given in <a href="../INSTALL.md">INSTALL.md</a>.
 </li>
 <li>
-The communication server can optionally log to syslog instead of an extra log file.
+Log messages can optionally go to syslog instead of an extra log file.
 </li>
 <li>
-The communication server supports the <a href="http://wiki.ocsinventory-ng.org/index.php/Plugins:MSofficeKey">
-MSofficeKey plugin</a> out of the box &ndash; no patching necessary.
+The <a href="http://wiki.ocsinventory-ng.org/index.php/Plugins:MSofficeKey">
+MSofficeKey plugin</a> is supported out of the box.
 </li>
 <li>
-The workaround for <a href="https://bugs.launchpad.net/ocsinventory-windows-agent/+bug/530881">bug #530881</a> is included.
+Workarounds for various agent bugs.
 </li>
 <li>
-The caching feature is disabled by default.
-Leave it disabled.
-</li>
-<li>
-A lot of improvements under the hood.
+The caching feature is disabled.
 </li>
 </ul>
-
-
-<h2>Installation</h2>
-
-<h3>Install Braintacle first</h3>
-
-<p>
-This version cannot be run standalone.
-It depends on a properly configured Braintacle installation.
-The Braintacle installation instructions cover installation of the database and server component.
-</p>
-
-
-<h3>Installation of administration console (deprecated)</h3>
-
-<p>
-The old administration console (ocsreports) is not needed and should not be used anymore.
-</p>
-<p>
-Some operations are intentionally not supported by Braintacle,
-like multiple download servers or agent upload.
-Do not use ocsreports for these operations &ndash; they are deprecated and untested.
-</p>
-
-<h4>Requirements</h4>
-
-<p>
-The database must already be set up with the schema manager.
-</p>
-<p>
-You need the pgsql/mysql PHP extension.
-It is avaliable as a package for GNU/Linux distributions:
-<table border="1">
-<tr>
-<th>PHP extension</th><th>Debian/Ubuntu</th><th>Fedora</th><th>SUSE</th>
-</tr>
-<tr>
-<td>pgsql</td><td>php5-pgsql</td><td>php-pgsql</td><td>php5-pgsql</td>
-</tr>
-<tr>
-<td>mysql</td><td>php5-mysql</td><td>php-mysql</td><td>php5-mysql</td>
-</tr>
-</table>
-
-<h4>Configuration</h4>
-
-<ol>
-<li>
-Create a copy of config/ocsreports.conf.template and make it known to Apache.
-Edit the file to suit your needs.
-</li>
-<li>
-Copy config/dbconfig.inc.php.template to ocsinventory/ocsreports/dbconfig.inc.php
-and edit it to match your database setup.
-</li>
-<li>
-Since dbconfig.inc.php contains your database credentials, it should not be world readable.
-It must of course be readable for your web server.
-</li>
-</ol>
-
-<h2>Technical details</h2>
-
-<p>The following information may be helpful if you try to hack the code yourself. If you just want to use it you can skip the rest of this document.</p>
-
-<h3>Database Abstraction layers</h3>
-
-<p>
-The perl code uses the DBI class as an abstraction layer.
-Making the driver configurable instead of hardcoding to "mysql" does most of the trick.
-</p>
-<p>
-The PHP part is much trickier.
-It uses native MySQL library functions which have to be changed one by one.
-Since the MDB2 API is much different from the MySQL API, direct use would be a painful and error prone procedure.
-So I wrote some wrapper functions <em>mdb2_foo()</em> to mimic the behaior of the corresponding <em>mysql_foo()</em> functions.
-This way a simple search-and-replace operation brings us halfway to our goal.
-See <em>ocsreports/require/function_mdb2.php</em> for supported functions and caveats.
-</p>
-<p>
-There are some limitations:
-</p>
-<ul>
-<li>Some functions are not strictly compatible with their mysql counterparts and require adjustments to the calling code. See the comments for details.</li>
-<li><em>mdb2_query()</em> only supports SELECT, INSERT, UPDATE and DELETE operations. There were occasional uses of SHOW and ALTER TABLE, which are not portable. MDB2 provides abstraction for these operations. This required rewriting the code portion. The same operations replace <em>mysql_field_type()</em> and <em>mysql_fetch_field()</em>.</li>
-<li>There is no <em>mdb2_fetch_array()</em> function. I could have implemented one, but using either <em>mdb2_fetch_assoc()</em> or <em>mdb2_fetch_row()</em> is cleaner and sufficient in most cases. There were a few cases where both associative and numeric indices werde needed. These are special cases where only the first entry is needed, so I wrote a workaround directly in the code.</li>
-</ul>
-
-<p>
-Some functions have extra optional arguments for enhanced functionality.
-For example, <em>mdb2_query()</em> supports prepared statements via 2 extra arguments.
-Since these arguments are optional, it is still suitable as a drop-in replacement for <em>mysql_query()</em>.
-</p>
-
-<h3>SQL compatibility</h3>
-
-<p>
-Unfortunately, the API switch does only half of the job.
-There were many MySQL-specific expressions present in the code.
-This started with inconsistent quoting (MySQL allows single and double quotes for string literals, while standard SQL requires single quotes) and other obvious stuff like "LIMIT a,b" instead of standard "LIMIT b OFFSET a".
-There were some less obvious issues like columns in GROUP BY clauses which are not present in the FROM clause (this is allowed by MySQL, but not standard SQL).
-It even turned out that some of these grouping statements were completely unnecessary.
-</p>
-<p>
-I converted the statements to all standard SQL, assuming this will be understood by all databases. MDB2's Function module helps increasing portability. Since the provided database backend can be queried at runtime, DBMS-specific extensions like PostgreSQLs ILIKE operator can be used without breaking compatibility with other DBMS.
-</p>
-
-<h3>Spelling of column identifiers</h3>
-
-<p>
-Another problem is case-sensitiveness of array/hash keys.
-Whenever a database function returns an array (PHP) or hash (Perl) with column identifiers as keys, it's up to the API whether these are uppercase or lowercase.
-PostgreSQL seems to return all lowercase identifiers, while MySQL seems to adapt the spelling from the query string (or table creation statement in case of <code>"SELECT * FROM...")</code>.
-Unfortunately, <code>$foo['bar']</code> is not the same as <code>$foo['BAR']</code>.
-The same applies to object members returned by <em>mdb2_fetch_object()</em>.
-</p>
-<p>
-Since this behavior would make database applications effectively unportable, both DBI and MDB2 provide an option to convert identifiers to all uppercase or all lowercase.
-It's then up to the application to use all uppercase or all lowercase throughout the code.
-</p>
-<p>
-The perl code consistently uses uppercase spelling.
-The only necessary step was turning on uppercase conversion globally.
-</p>
-<p>
-The PHP code was not that friendly.
-While the majority of the code uses lowercase spelling, there was a significant amount of uppercase use.
-MDB2 converts the identifiers to lowercase.
-Logging E_NOTICE messages helps spotting non-lowercase identifiers even for complex, dynamically generated queries.
-Speaking of which...
-
-<h3>Getting rid of E_NOTICE messages</h3>
-
-<p>
-Unfortunately, this code was developed with E_NOTICE logging turned off.
-Turning it on initially resulted in tons of messages flooding the logfile, making it nearly impossible to find the real errors between all those mostly harmless ones.
-Most of these result from situations like this:
-</p>
-<pre>
-if ($_GET['foo'] == 'bar')...
-</pre>
-<p>
-which drops an E_NOTICE if the parameter 'foo' is not present.
-This is not an error &ndash; the code behaves just as expected.
-I wrote a helper function called check_param() to handle this.
-This workaround is quite clumsy and not a substitute for a more sophisticated parameter handling, but this would require a LOT more changes to the code, making it nearly impossible to merge future upstream changes.
-</p>
-
-<h3>Tracking down problems</h3>
-
-<p>
-If you observe erratic behavior, check your logfiles. The answer is probably out there. Many of the issues introduced by my patches result from code expecting uppercase indices (remember, they all get converted to lowercase). A less frequent class of bugs results from substituting <em>mysql_fetch_array()</em> and <em>MYSQL_FETCHMODE_BOTH</em> (the default) with either <em>mdb2_fetch_assoc()</em> (associative indices, sufficient in most cases) or <em>mdb2_fetch_row()</em> (numeric indices, not so often) in rare cases where both associative and numeric indices are actually needed. All these bugs are accompanied by an "undefined index" message. Thanks to the logged filename and line number, the source of the error is easily spotted and fixed.
-</p>
-<p>
-Another problem with case-changed indices are case-sensitive string comparisions. These are harder to track down because they fail silently without an error message. Similarly, string comparisions at SQL level behave differently: in MySQL they are case insensitive while in PostgreSQL they are case sensitive.
-</p>
 
 </body>
 </html>
