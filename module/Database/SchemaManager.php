@@ -37,24 +37,19 @@ class SchemaManager
     const SCHEMA_VERSION = 8;
 
     /**
-     * Database adapter
-     * @var \Zend\Db\Adapter
+     * Service locator
+     * @var \Zend\ServiceManager\ServiceLocatorInterface
      */
-    protected $_db;
-
-    /**
-     * NADA interface
-     * @var \Nada_Database
-     */
-     protected $_nada;
+     protected $_serviceLocator;
 
     /**
      * Constructor
+     *
+     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
      */
-    function __construct()
+    function __construct($serviceLocator)
     {
-        $this->_db = \Library\Application::getService('Db');
-        $this->_nada = \Library\Application::getService('Database\Nada');
+        $this->_serviceLocator = $serviceLocator;
     }
 
     /**
@@ -66,7 +61,7 @@ class SchemaManager
     public function updateAll()
     {
         $this->updateTables();
-        \Library\Application::getService('Model\Config')->schemaVersion = self::SCHEMA_VERSION;
+        $this->_serviceLocator->get('Model\Config')->schemaVersion = self::SCHEMA_VERSION;
     }
 
     /**
@@ -81,15 +76,15 @@ class SchemaManager
         $glob = new \GlobIterator(Module::getPath('data/Tables') . '/*.json');
         foreach ($glob as $fileinfo) {
             $tableClass = $fileinfo->getBaseName('.json');
-            $table = \Library\Application::getService('Database\Table\\' . $tableClass);
+            $table = $this->_serviceLocator->get('Database\Table\\' . $tableClass);
             $table->setSchema();
         }
         // Views need manual invocation.
-        \Library\Application::getService('Database\Table\Clients')->setSchema();
-        \Library\Application::getService('Database\Table\PackageDownloadInfo')->setSchema();
-        \Library\Application::getService('Database\Table\WindowsInstallations')->setSchema();
+        $this->_serviceLocator->get('Database\Table\Clients')->setSchema();
+        $this->_serviceLocator->get('Database\Table\PackageDownloadInfo')->setSchema();
+        $this->_serviceLocator->get('Database\Table\WindowsInstallations')->setSchema();
 
-        $logger = \Library\Application::getService('Library\Logger');
+        $logger = $this->_serviceLocator->get('Library\Logger');
 
         // Server tables have no table class
         $glob = new \GlobIterator(Module::getPath('data/Tables/Server') . '/*.json');
@@ -97,7 +92,7 @@ class SchemaManager
             self::setSchema(
                 $logger,
                 \Zend\Config\Factory::fromFile($fileinfo->getPathname()),
-                $this->_nada
+                $this->_serviceLocator->get('Database\Nada')
             );
         }
 
@@ -107,7 +102,7 @@ class SchemaManager
             self::setSchema(
                 $logger,
                 \Zend\Config\Factory::fromFile($fileinfo->getPathname()),
-                $this->_nada
+                $this->_serviceLocator->get('Database\Nada')
             );
         }
     }

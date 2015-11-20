@@ -34,13 +34,14 @@ $basepath = realpath(dirname(__DIR__));
 
 require_once "$basepath/module/Library/Application.php";
 \Library\Application::init('Cli');
+$serviceManager = \Library\Application::getService('ServiceManager');
 
 // Set up logger
 $formatter = new \Zend\Log\Formatter\Simple('%priorityName%: %message%');
 $writer = new \Zend\Log\Writer\Stream('php://stderr');
 $writer->setFormatter($formatter);
-$logger = \Library\Application::getService('Library\Logger');
+$logger = $serviceManager->get('Library\Logger');
 $logger->addWriter($writer);
 
-$schemaManager = new \Database\SchemaManager;
+$schemaManager = new \Database\SchemaManager($serviceManager);
 $schemaManager->updateAll();
