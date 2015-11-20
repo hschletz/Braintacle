@@ -32,7 +32,7 @@
         {
             "name": "account_type",
             "type": "varchar",
-            "length": 255,
+            "length": 9,
             "notnull": false,
             "default": null,
             "autoincrement": false,
