@@ -60,6 +60,17 @@ class SchemaManager
      */
     public function updateAll()
     {
+        $nada = $this->_serviceLocator->get('Database\Nada');
+        $convertedTimestamps = $nada->convertTimestampColumns();
+        if ($convertedTimestamps) {
+            $this->_serviceLocator->get('Library\Logger')->info(
+                sprintf(
+                    '%d columns converted to %s.',
+                    $convertedTimestamps,
+                    $nada->getNativeDatatype(\Nada::DATATYPE_TIMESTAMP)
+                )
+            );
+        }
         $this->updateTables();
         $this->_serviceLocator->get('Model\Config')->schemaVersion = self::SCHEMA_VERSION;
     }
