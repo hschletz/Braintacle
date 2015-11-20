@@ -51,10 +51,9 @@ Set up libraries and PHP environment
 ------------------------------------
 
 If not already present on your system, download and extract [Zend Framework
-1.12.8 or later](https://packages.zendframework.com/releases/
-ZendFramework-1.12.8/ZendFramework-1.12.8-minimal.zip) (2.x is not supported by
-Braintacle) and [NADA](https://github.com/hschletz/NADA/archive/master.zip) to
-an arbitrary location (for example, /usr/local/share/php).
+2.4.8 or later](http://framework.zend.com/downloads/latest#ZF2)
+and [NADA](https://github.com/hschletz/NADA/archive/master.zip) to an arbitrary
+location (for example, /usr/local/share/php).
 
 These libraries don't need extra setup, but must reside within PHP's include
 path, which can be set the usual way. If you don't want to mess with php.ini
@@ -71,8 +70,8 @@ Set up the database
 Install a PostgreSQL or MySQL server, if not already available, and log into
 that database server with superuser privileges (typically the 'postgres' user
 for PostgreSQL, 'root' for MySQL). Create a new database user (if not already
-present) and the database with access privileges for that user. Using Unicode
-for the database is strongly recommended.
+present) and the database with access privileges for that user. The database
+must use Unicode.
 
 For PostgreSQL, run:
 
@@ -87,8 +86,8 @@ For MySQL, run:
 
 You can choose any database name, user name and password.
 
-Copy or rename the file /usr/local/share/braintacle/config/database.ini.template
-to /usr/local/share/braintacle/config/database.ini and adjust its content
+Copy or rename the file /usr/local/share/braintacle/config/braintacle.ini.template
+to /usr/local/share/braintacle/config/braintacle.ini and adjust its content
 according to the comments within the file. This file must be readable by the
 webserver, but should not be readable for the rest of the world. For example, if
 the webserver runs in the 'www-data' group:
@@ -116,8 +115,8 @@ The server component requires an Apache installation. Other web servers are not
 supported because it heavily relies on mod_perl and its interface to Apache
 internals.
 
-mod_perl2 is available as a native package for most GNU/Linux distributions:
-*libapache2-mod-perl2* (Debian/Ubuntu), *mod_perl* (Fedora), *apache2-mod_perl*
+mod\_perl2 is available as a native package for most GNU/Linux distributions:
+*libapache2-mod-perl2* (Debian/Ubuntu), *mod\_perl* (Fedora), *apache2-mod_perl*
 (Suse). A Perl interpreter is installed by default on most GNU/Linux
 distributions. Some nonstandard perl modules are required. There are several
 ways to install them, in preferred order:
@@ -139,13 +138,10 @@ Date::Calc                | libdate-calc-perl         | perl-Date-Calc    | perl
 XML::Simple               | libxml-simple-perl        | perl-XML-Simple   | perl-XML-Simple
 XML::PARSER               | libxml-parser-perl        | perl-XML-Parser   | perl-XML-Parser
 Sys::Syslog (optional)    | (already present)         | (already present) | (already present)
-SOAP::Lite (optional)     | libsoap-lite-perl         | perl-SOAP-Lite    | perl-SOAP-Lite
-XML::Entities (optional)  | (not available, use CPAN) | perl-XML-Entities | perl-XML-Entities
 </pre>
 
 Sys::Syslog is only required if you want to use syslog instead of logging
-directly to a file (see below). The last 2 modules are only required for the
-SOAP service.
+directly to a file (see below).
 
 There are 2 configuration files for the server component:
 
@@ -185,7 +181,7 @@ the Apache configuration and restrict read access, for example:
 Edit both files to match your environment. Do not edit the template files
 directly as they will be overwritten upon upgrading.
 
-It is important that mod_perl is loaded before the file is included. This is the
+It is important that mod\_perl is loaded before the file is included. This is the
 case in most standard Apache setups where modules are set up before conf.d gets
 evaluated. If mod_perl is loaded from a config file in the same directory, make
 sure that its name comes before the Braintacle configuration file in
@@ -222,8 +218,8 @@ like this:
 
     braintacle-server: Can't load SOAP::Transport::HTTP* - Web service will be unavailable
 
-These messages are harmless and can be ignored if you don't plan to use the SOAP
-service.
+These messages are harmless and can be ignored if you don't plan to use the
+(unsupported) SOAP service.
 
 
 Set up the administration console
@@ -253,8 +249,7 @@ Set up the package directory
 ----------------------------
 
 If you want to use Braintacle to deploy packages, create a directory with write
-access for the web server. For compatibility with OCS Inventory NG, it must be
-named 'download'. Uploaded packages will be stored in this directory.
+access for the web server. Uploaded packages will be stored in this directory.
 
     mkdir /var/lib/braintacle/download
     chown www-data:www-data /var/lib/braintacle/download
@@ -305,21 +300,19 @@ schema-manager.php.
 
 
 
-Reusing or replacing an OCS Inventory NG installation
-=====================================================
+Migrating from OCS Inventory NG
+===============================
 
-As parts of Braintacle are originally derived from OCS Inventory NG, it can hook
-into an existing installation and complement or replace it. However, as the
-project evolves, compatibility may be lost in the future. Sharing components
-between both applications is only recommended as a temporary measure. A
-migration path will continue to exist in the long term.
+As parts of Braintacle are originally derived from OCS Inventory NG, an existing
+installation can be migrated to a certain degree. This is not well tested, and
+some data may not be converted properly. It's usually safer to set up from
+scratch.
 
 
 Conflicts with unsupported features
 -----------------------------------
 
-Braintacle is tuned towards simple usage. Some features are not supported and
-assumed not to be used in the database:
+Some features are not supported and assumed not to be used in the database:
 
 - Braintacle does not implement different access privileges. Only administrators
   can log in, and newly created users will have admin privileges.
@@ -328,28 +321,28 @@ assumed not to be used in the database:
   for these accounts to use them.
 
 - Braintacle assumes exactly 1 download server per package. Delete additional
-  server entries before managing packages with Braintacle.
+  server entries. Use the same server URL for all packages.
 
-- The `INVENTORY_CACHE_ENABLED` option is not supported, i.e. the cache tables
-  are never updated. This option should be turned off to prevent inconsistent
-  behavior.
+- The SOAP service us unsupported and untested.
 
 See the [main documentation](./doc/index.html) for a more detailed description
 of differences.
 
 
 Converting the database
-----------------------------------
+-----------------------
 
-The schema manager can convert an existing database, but compatibility will be
-lost.
+Backing up the database before conversion is strongly recommended. Run
+schema-manager.php as documented above; it should be able to convert the
+database.
 
 
-Reusing or replacing the server component
------------------------------------------
+Replacing the server component
+------------------------------
 
-The server component can be reused, but it is recommended to replace it. All
-required Perl modules will already be installed except for Date::Calc which
-might not yet be present. To prevent accidental execution of the wrong scripts,
-the old code should be moved out of Perl's include path. The Apache
-configuration should be removed and set up from scratch
+The converted database is not backwards compatible and only works with
+Braintacle's server component. All required Perl modules will already be
+installed except for Date::Calc which might not yet be present. To prevent
+accidental execution of the wrong scripts, the old code should be moved out of
+Perl's include path. The Apache configuration should be removed and set up from
+scratch.

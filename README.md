@@ -16,14 +16,6 @@ allowing centralized software updates, remote configuration and more. For
 developers, a PHP API is provided to access the inventory and control the
 applications.
 
-Braintacle currently reuses some code from [OCS Inventory
-NG](http://ocsinventory-ng.org). That code is enhanced with extra features,
-easier maintenance and improved stability. The administration console is written
-from scratch. It is also possible to install Braintacle along an existing OCS
-Inventory NG installation and share the database, but this is only recommended
-for testing purposes. Not all of Braintacle's features will be available, and
-compatibility may be dropped in the future.
-
 
 Requirements
 ------------
@@ -43,6 +35,9 @@ Requirements
   <http://framework.zend.com/manual/2.4/en/modules/zend.db.adapter.html>
 
   - The "intl" extension
+
+  - The "zip" extension is optional. If present, the package builder can create ZIP
+    archives on the fly.
 
   There are also some PHP libraries required in the include path:
 
@@ -83,19 +78,6 @@ This project contains some third party code:
   components](http://www.ocsinventory-ng.org/), licensed under the GNU General
   Public License v2) is included in the ocsinventory/ directory.
   See <http://www.ocsinventory-ng.org/en/about/licence.html>.
-
-- The library/PEAR/ directory contains a copy of some PEAR packages, partially
-  patched. See the Readme.txt in the same directory for details.
-  They are licensed under the BSD license, see
-  <http://www.opensource.org/licenses/bsd-license.php>
-
-  - [PEAR](http://pear.php.net/package/PEAR)
-  - [MDB2](http://pear.php.net/package/MDB2)
-  - [MDB2_Driver_pgsql](http://pear.php.net/package/MDB2_Driver_pgsql)
-  - [MDB2_Driver_mysql](http://pear.php.net/package/MDB2_Driver_mysql)
-  - [MDB2_Driver_oci8](http://pear.php.net/package/MDB2_Driver_oci8)
-  - [MDB2_Schema](http://pear.php.net/package/MDB2_Schema)
-  - [XML_Parser](http://pear.php.net/package/XML_Parser)
 
 - The file module/Library/data/MacAddress/manuf is taken from the
   [Wireshark](http://wireshark.org) project. GPLv2 and copyright information are

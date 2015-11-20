@@ -9,6 +9,22 @@ without any warranty.
 CHANGES IN VERSION 1.0
 =======================
 
+Upgrading from previous versions:
+
+- Required: Braintacle uses a new config file (braintacle.ini) which replaces
+  the database.ini file from earlier versions. This file must be set up from
+  scratch (see the instructions in the template) - renaming is not sufficient.
+
+- Required: Upgrade Zend Framework to 2.4.8 or later.
+
+- Required: Upgrade NADA to the latest snapshot.
+
+- Required: Run tools/schema-manager.php to update the database schema.
+
+- Required: The database is no longer compatible with OCS Inventory NG. If you
+  used both applications in parallel, see the migration section in INSTALL.md
+  for further instructions.
+
 New features:
 
 - Console: After being redirected to the login page from an unauthenticated
@@ -26,8 +42,7 @@ Fixed bugs:
 
 - Console: Fixed display of some characters incorrectly encoded by old agents
 
-- Console: Updated package download URLs/certificate did not affect existing
-  packages.
+- Console: Updated package download URLs did not affect existing packages.
 
 - Console: Package notification messages (pre- and postinstall) were not
   displayed properly under certain circumstances. The package builder now

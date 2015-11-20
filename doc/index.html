@@ -46,15 +46,6 @@ developers, a PHP API is provided to access the inventory and control the
 applications.
 </p>
 <p>
-Braintacle currently reuses some code from <a href="http://ocsinventory-ng.org">
-OCS Inventory NG</a>. That code is enhanced with extra features, easier
-maintenance and improved stability. The administration console is written from
-scratch. It is also possible to install Braintacle along an existing OCS
-Inventory NG installation and share the database, but this is only recommended
-for testing purposes. Not all of Braintacle's features will be available, and
-compatibility may be dropped in the future.
-</p>
-<p>
 The application consists of several parts:
 </p>
 <ul>
@@ -154,18 +145,6 @@ For this reason, the new package needs a different name (typically a different v
 If anything goes wrong with building the new package, the old package will not be touched.
 </p>
 
-<h5>Customizable certificate path</h5>
-
-<p>
-The field is already present in the database and the certificate path is really evaluated,
-but the original GUI submits a hardcoded default ('INSTALL_PATH/cacert.pem').
-INSTALL_PATH will be expanded to the agent's installation directory
-(like '%PROGRAMFILES%\Ocs Inventory Agent').
-You can set any path and filename you like.
-The Windows agent also accepts UNC paths (which will probably only work if all clients reside on a local network and the share allows guest access).
-This allows some cool stuff like changing the HTTPS server's certificate without breaking deployment.
-</p>
-
 <h5>On-the-fly ZIP compression</h5>
 
 <p>
@@ -189,31 +168,11 @@ The result will almost certainly be different from the original value, but still
 In particular, it would deliver the same number of fragments if the size of the new file had not changed.
 </p>
 
-<h5>Upload size limit</h5>
-
-<p>
-Braintacle will try to prevent you from uploading a file that is too big to handle.
-This is more user-friendly than seeing the script abort prematurely and having to look at the logfiles to find out which one of PHP's limits had been exceeded.
-</p>
-<p>
-The maximum allowed file size is displayed within the package builder.
-If this value is too low, adjust the PHP settings.
-It is the smallest value of these PHP settings:
-</p>
-<ul>
-<li>100% of upload_max_filesize</li>
-<li>90% of post_max_size</li>
-<li>80% of memory_limit</li>
-</ul>
-
 <h5>Only 1 download server supported</h5>
 
 <p>
 Braintacle supports only 1 download server.
 This simplifies not only the code, but also the workflow.
-The code is written with the assumption that there is only 1 download server per package.
-<strong>Having more than 1 download server can give unpredictable results. Use at your own risk!</strong>
-<p>
 If ressource usage is a problem on your server, you should consider solving the problem outside the application.
 For example, you could force usage of a caching proxy on external sites or set up a load balancer.
 Once set up this may be easier to handle than having to deal with this everytime you build a new package.
@@ -226,26 +185,6 @@ The limitation to 1 download server allows package creation and activation to be
 The download locations must be specified at build time, where defaults can be provided.
 </p>
 
-<h5>Secure hashes</h5>
-
-<p>
-Since MD5 hashes are insecure, SHA1 hashes are used instead.
-This is already supported by the agent, but the OCS GUI does not make use of this feature.
-</p>
-
-<h5>More reliable connection testing</h5>
-
-<p>
-The HTTP and HTTPS connections are checked without using fopen() wrappers.
-These checks now work even if allow_url_fopen is disabled.
-</p>
-<p>
-Note that success or failure of these tests does not necessarily mean that the download will or will not work.
-Different proxy configuration, firewalls and name resolution may give a different result on the client.
-The test results only indicate success or failure on the server that runs Braintacle.
-It's up to you to interpret the results.
-</p>
-
 <h4><a name="softwarefilter">Software filter</a></h4>
 
 <p>
@@ -254,28 +193,28 @@ This is intended for interaction with <a href="http://www.glpi-project.org/spip.
 The OCS Inventory console only provides an interface to define these lists, but does not make use of it.
 </p>
 <p>
-Braintacle honours this list and does not display any software which is tagged to be ignored.
-If you already use GLPI and make use of this feature, this behavior might not be desired.
+The Braintacle console makes use of this list and does not display any software which is tagged to be ignored.
 There is an option to display all software anyway.
+Note that the database format for this list has changed and is no longer compatible with GLPI.
 </p>
 <p>
-Some software (like MS Office 2007) causes multiple identical entries in a computer's inventory.
+Some software (like MS Office 2007) causes multiple identical entries in a client's inventory.
 These duplicate entries are hidden by default, but can be shown with a single mouseclick if you are really interested.
 </p>
 
 <h4>Network scanning (aka IP discovery)</h4>
 
 <p>
-Braintacle uses a different method to determine which network a computer belongs to.
+Braintacle uses a different method to determine which network a client belongs to.
 In particular, it takes the netmask into account (for example, 192.168.0.0/16 is different from 192.168.0.0/24)
 and also ignores 127.0.0.0/8 completely as this is not a real network.
-Additionally, interfaces belonging to an inventoried computer will never show up as unknown, even if the inventory is out of date.
+Additionally, interfaces belonging to an inventoried client will never show up as unknown, even if the inventory is out of date.
 </p>
 
-<h4>Installing packages on a computer</h4>
+<h4>Installing packages on a client</h4>
 
 <p>
-Multiple packages can be deployed to a computer at once instead of picking them one by one.
+Multiple packages can be deployed to a client at once instead of picking them one by one.
 This is particularly convenient for fresh installs where a lot of packages have to be installed.
 </p>
 <p>
@@ -294,7 +233,7 @@ The information to be merged can be specified in detail:
 </p>
 <ul>
 <li>
-User defined information, if selected, will be preserved from the oldest entry.
+Custom fields, if selected, will be preserved from the oldest entry.
 </li>
 <li>
 Manual group assignments, if selected, will be combined from all older entries.
@@ -329,8 +268,8 @@ The script will also invoke schema-manager.php.
 <h3><a name="export.php">export.php</a></h3>
 
 <p>
-This script exports all computers in the database to the directory specified via the --dir or -d argument.
-It will generate 1 XML file per computer.
+This script exports all clients in the database to a given directory.
+It will generate 1 XML file per client.
 The generated files can optionally be validated via the --validate or -v switch.
 </p>
 
@@ -352,9 +291,6 @@ You could also use <code>su</code> to run this script with the UID of the webser
 <pre>
 su -c 'php tools/createpackage-php PackageName install-Package.exe' www-data
 </pre>
-<p>
-The script is also an example for using the Braintacle API in a different application.
-</p>
 
 <h3>generate-documentation.php</h3>
 

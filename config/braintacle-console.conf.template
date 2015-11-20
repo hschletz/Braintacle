@@ -49,9 +49,8 @@ Alias /braintacle /usr/local/share/braintacle/public
     # Uncomment this to force HTTPS connection
     # SSLRequireSSL
 
-    # Uncomment and adjust if the efault upload limit is not sufficient. Note
-    # that the actual limit may be smaller than the values provided here. See
-    # the "upload size limit" section in doc/index.html for an explanation.
+    # Uncomment and adjust if the default upload limit is not sufficient. Note
+    # that the actual limit may be smaller than the values provided here.
     # php_value upload_max_filesize 128m
     # php_value post_max_size 128m
     # php_value memory_limit 128m

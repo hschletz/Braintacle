@@ -23,8 +23,8 @@
 
 [database]
 
-; Zend\DB Adapter.
-; See http://framework.zend.com/manual/2.2/en/modules/zend.db.adapter.html
+; Zend\Db Adapter.
+; See http://framework.zend.com/manual/2.4/en/modules/zend.db.adapter.html
 ; for a list of available drivers.
 driver = Pdo_Pgsql
 ; For MySQL:
@@ -41,8 +41,6 @@ driver = Pdo_Pgsql
 
 ; Name of database
 database = braintacle
-; For a default OCS Inventory NG setup:
-; database = ocsweb
 
 ; Username and password for database connection.
 username = ocs
