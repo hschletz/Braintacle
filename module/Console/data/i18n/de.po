@@ -305,7 +305,8 @@ msgstr "Interfaces aus Netzwerkliste löschen"
 msgid "always"
 msgstr "immer"
 
-#: Console/Form/GroupMemberships.php
+#: Console/Form/GroupMemberships.php view/console/client/groups.php
+#: view/console/group/members.php
 msgid "automatic"
 msgstr "automatisch"
 
@@ -1224,6 +1225,10 @@ msgstr "Mitgliedschaften verwalten"
 #: view/console/client/groups.php view/console/group/members.php
 msgid "Membership"
 msgstr "Mitgliedschaft"
+
+#: view/console/client/groups.php view/console/group/members.php
+msgid "manual"
+msgstr "manuell"
 
 #: view/console/client/header.php
 #, php-format

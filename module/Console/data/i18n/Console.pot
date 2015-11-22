@@ -298,7 +298,8 @@ msgstr ""
 msgid "Delete interfaces from network listing"
 msgstr ""
 
-#: Console/Form/GroupMemberships.php
+#: Console/Form/GroupMemberships.php view/console/client/groups.php
+#: view/console/group/members.php
 msgid "automatic"
 msgstr ""
 
@@ -1209,6 +1210,10 @@ msgstr ""
 
 #: view/console/client/groups.php view/console/group/members.php
 msgid "Membership"
+msgstr ""
+
+#: view/console/client/groups.php view/console/group/members.php
+msgid "manual"
 msgstr ""
 
 #: view/console/client/groups.php

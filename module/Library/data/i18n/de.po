@@ -50,11 +50,3 @@ msgstr "Nein"
 #: View/Helper/FormYesNo.php
 msgid "Yes"
 msgstr "Ja"
-
-#: View/Helper/MembershipType.php
-msgid "automatic"
-msgstr "automatisch"
-
-#: View/Helper/MembershipType.php
-msgid "manual"
-msgstr "manuell"

@@ -28,6 +28,11 @@ $headers = array(
     'Membership' => $this->translate('Membership'),
 );
 
+$types = array(
+    \Model\Client\Client::MEMBERSHIP_AUTOMATIC => $this->translate('automatic'),
+    \Model\Client\Client::MEMBERSHIP_ALWAYS => $this->translate('manual'),
+);
+
 $renderCallbacks = array(
     'Name' => function($view, $computer) {
         return $view->htmlTag(
@@ -43,8 +48,8 @@ $renderCallbacks = array(
             true
         );
     },
-    'Membership' => function($view, $computer) {
-        return $view->membershipType($computer['Membership']);
+    'Membership' => function($view, $client) use($types) {
+        return $types[$client['Membership']];
     }
 );
 

@@ -53,11 +53,3 @@ msgstr ""
 #: View/Helper/FormYesNo.php
 msgid "No"
 msgstr ""
-
-#: View/Helper/MembershipType.php
-msgid "automatic"
-msgstr ""
-
-#: View/Helper/MembershipType.php
-msgid "manual"
-msgstr ""

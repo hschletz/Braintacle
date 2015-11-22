@@ -84,7 +84,6 @@ Feature\InitProviderInterface
                 'factories' => array(
                     'formYesNo' => 'Library\View\Helper\Service\FormYesNoFactory',
                     'htmlTag' => 'Library\View\Helper\Service\HtmlTagFactory',
-                    'membershipType' => 'Library\View\Helper\Service\MembershipTypeFactory',
                 ),
                 'invokables' => array(
                     'formSelectSimple' => 'Library\View\Helper\FormSelectSimple',

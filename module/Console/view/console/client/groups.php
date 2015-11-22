@@ -28,6 +28,11 @@ $headers = array(
     'Membership' => $this->translate('Membership'),
 );
 
+$types = array(
+    \Model\Client\Client::MEMBERSHIP_AUTOMATIC => $this->translate('automatic'),
+    \Model\Client\Client::MEMBERSHIP_ALWAYS => $this->translate('manual'),
+);
+
 $renderCallbacks = array(
     'GroupName' => function($view, $membership) {
         return $view->htmlTag(
@@ -43,8 +48,8 @@ $renderCallbacks = array(
             true
         );
     },
-    'Membership' => function($view, $membership) {
-        return $view->membershipType($membership['Membership']);
+    'Membership' => function($view, $membership) use($types){
+        return $types[$membership['Membership']];
     },
 );
 
