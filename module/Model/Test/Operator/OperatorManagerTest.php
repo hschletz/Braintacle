@@ -105,7 +105,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
             $this->_loadDataset('CreateMinimal')->getTable('operators'),
             $this->getConnection()->createQueryTable('operators', 'SELECT * from operators')
         );
-        $auth = clone \Library\Application::getService('Library\AuthenticationService');
+        $auth = clone \Library\Application::getService('Zend\Authentication\AuthenticationService');
         $this->assertFalse($auth->hasIdentity());
         $this->assertTrue($auth->login('new_id', 'new_passwd'));
         $this->assertEquals('new_id', $auth->getIdentity());
@@ -129,7 +129,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
             $this->_loadDataset('CreateFull')->getTable('operators'),
             $this->getConnection()->createQueryTable('operators', 'SELECT * from operators')
         );
-        $auth = clone \Library\Application::getService('Library\AuthenticationService');
+        $auth = clone \Library\Application::getService('Zend\Authentication\AuthenticationService');
         $this->assertFalse($auth->hasIdentity());
         $this->assertTrue($auth->login('new_id', 'new_passwd'));
         $this->assertEquals('new_id', $auth->getIdentity());
@@ -190,11 +190,11 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
      */
     public function testUpdate($data, $password, $dataSet)
     {
-        $authService = $this->getMock('Library\Authentication\AuthenticationService');
+        $authService = $this->getMock('Model\Operator\AuthenticationService');
         $authService->method('getIdentity')->willReturn('user2');
         $authService->expects($this->never())->method('changeIdentity');
 
-        $model = $this->_getModel(array('Library\AuthenticationService' => $authService));
+        $model = $this->_getModel(array('Zend\Authentication\AuthenticationService' => $authService));
         $model->update('user1', $data, $password);
         $this->assertTablesEqual(
             $this->_loadDataSet($dataSet)->getTable('operators'),
@@ -207,11 +207,11 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
 
     public function testUpdateCurrentIdentity()
     {
-        $authService = $this->getMock('Library\Authentication\AuthenticationService');
+        $authService = $this->getMock('Model\Operator\AuthenticationService');
         $authService->method('getIdentity')->willReturn('user1');
         $authService->expects($this->once())->method('changeIdentity')->with('new_id');
 
-        $model = $this->_getModel(array('Library\AuthenticationService' => $authService));
+        $model = $this->_getModel(array('Zend\Authentication\AuthenticationService' => $authService));
         $model->update('user1', array('Id' => 'new_id'), '');
         $this->assertTablesEqual(
             $this->_loadDataSet('UpdateIdentity')->getTable('operators'),
@@ -262,9 +262,9 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteCurrentUser()
     {
-        $authService = $this->getMock('Library\Authentication\AuthenticationService');
+        $authService = $this->getMock('Model\Operator\AuthenticationService');
         $authService->expects($this->once())->method('getIdentity')->willReturn('user2');
-        $model = $this->_getModel(array('Library\AuthenticationService' => $authService));
+        $model = $this->_getModel(array('Zend\Authentication\AuthenticationService' => $authService));
         try {
             $model->delete('user2');
             $this->fail('Expected Exception was not thrown');

@@ -54,6 +54,9 @@ Feature\InitProviderInterface
     {
         return array(
             'service_manager' => array(
+                'aliases' => array(
+                    'Zend\Authentication\AuthenticationService' => 'Model\Operator\AuthenticationService',
+                ),
                 'invokables' => array(
                     'Model\Client\Client' => 'Model\Client\Client',
                     'Model\Client\ClientManager' => 'Model\Client\ClientManager',
@@ -81,6 +84,7 @@ Feature\InitProviderInterface
                     'Model\Group\Group' => 'Model\Group\Group',
                     'Model\Network\Device' => 'Model\Network\Device',
                     'Model\Network\Subnet' => 'Model\Network\Subnet',
+                    'Model\Operator\AuthenticationService' => 'Model\Operator\AuthenticationService',
                     'Model\Operator\Operator' => 'Model\Operator\Operator',
                     'Model\Package\Assignment' => 'Model\Package\Assignment',
                     'Model\Package\Metadata' => 'Model\Package\Metadata',

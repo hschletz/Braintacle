@@ -19,7 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Library\Test\Authentication;
+namespace Model\Test\Operator;
 
 /**
  * Tests for AuthenticationService
@@ -29,7 +29,7 @@ class AuthenticationServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * An AuthenticationService instance pulled in by setUp()
      *
-     * @var \Library\Authentication\AuthenticationService
+     * @var \Model\Operator\AuthenticationService
      */
     protected $_auth;
 
@@ -41,7 +41,7 @@ class AuthenticationServiceTest extends \PHPUnit_Framework_TestCase
         // Create table and default account
         \Library\Application::getService('Database\Table\Operators')->setSchema();
 
-        $this->_auth = new \Library\Authentication\AuthenticationService;
+        $this->_auth = new \Model\Operator\AuthenticationService;
         $this->_auth->setServiceLocator(\Library\Application::getService('ServiceManager'));
     }
 
@@ -51,8 +51,8 @@ class AuthenticationServiceTest extends \PHPUnit_Framework_TestCase
     public function testService()
     {
         $this->assertInstanceOf(
-            'Library\Authentication\AuthenticationService',
-            \Library\Application::getService('Library\AuthenticationService')
+            'Model\Operator\AuthenticationService',
+            \Library\Application::getService('Zend\Authentication\AuthenticationService')
         );
     }
 

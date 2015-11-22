@@ -28,7 +28,7 @@ class OperatorManager
 {
     /**
      * Authentication service
-     * @var \Library\Authentication\AuthenticationService
+     * @var \Model\Operator\AuthenticationService
      */
     protected $_authenticationService;
 
@@ -41,11 +41,11 @@ class OperatorManager
     /**
      * Constructor
      *
-     * @param \Library\Authentication\AuthenticationService $authenticationService
+     * @param \Model\Operator\AuthenticationService $authenticationService
      * @param \Database\Table\Operators $operators
      */
     public function __construct(
-        \Library\Authentication\AuthenticationService $authenticationService,
+        \Model\Operator\AuthenticationService $authenticationService,
         \Database\Table\Operators $operators
     )
     {

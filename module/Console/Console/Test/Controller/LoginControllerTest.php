@@ -28,7 +28,7 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
      * AuthenticationService mock
-     * @var \Library\Authentication\AuthenticationService
+     * @var \Model\Operator\AuthenticationService
      */
     protected $_authenticationService;
 
@@ -41,7 +41,7 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
     /** {@inheritdoc} */
     public function setUp()
     {
-        $this->_authenticationService = $this->getMock('\Library\Authentication\AuthenticationService');
+        $this->_authenticationService = $this->getMock('\Model\Operator\AuthenticationService');
         $this->_form = $this->getMock('Console\Form\Login');
         parent::setUp();
     }

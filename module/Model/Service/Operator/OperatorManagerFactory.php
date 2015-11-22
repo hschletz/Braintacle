@@ -33,7 +33,7 @@ class OperatorManagerFactory implements \Zend\ServiceManager\FactoryInterface
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         return new \Model\Operator\OperatorManager(
-            $serviceLocator->get('Library\AuthenticationService'),
+            $serviceLocator->get('Zend\Authentication\AuthenticationService'),
             $serviceLocator->get('Database\Table\Operators')
         );
     }

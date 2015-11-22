@@ -19,14 +19,14 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Library\Authentication;
+namespace Model\Operator;
 
 /**
  * Authentication service
  *
- * Provided by the service manager as Library\AuthenticationService, this is the
- * service that should be used for authentication against the application's
- * database.
+ * Provided by the service manager as Zend\Authentication\AuthenticationService,
+ * this is the service that should be used for authentication against the
+ * application's database.
  */
 class AuthenticationService extends \Zend\Authentication\AuthenticationService
 implements \Zend\ServiceManager\ServiceLocatorAwareInterface

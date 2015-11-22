@@ -28,7 +28,7 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
 {
     /**
      * Authentication service
-     * @var \Library\Authentication\AuthenticationService
+     * @var \Model\Operator\AuthenticationService
      */
     protected $_authenticationService;
 
@@ -41,11 +41,11 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Constructor
      *
-     * @param \Library\Authentication\AuthenticationService $authenticationService Authentication service
+     * @param \Model\Operator\AuthenticationService $authenticationService Authentication service
      * @param \Console\Form\Login $form
      */
     public function __construct(
-        \Library\Authentication\AuthenticationService $authenticationService,
+        \Model\Operator\AuthenticationService $authenticationService,
         \Console\Form\Login $form
     )
     {

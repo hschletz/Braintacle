@@ -122,7 +122,7 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 
     public function testIdentityButNoRoute()
     {
-        $authService = $this->getMock('Library\Authentication\AuthenticationService');
+        $authService = $this->getMock('Model\Operator\AuthenticationService');
         $authService->method('hasIdentity')->willReturn(true);
         $authService->method('getIdentity')->willReturn('identity');
         $this->_view->plugin('identity')->setAuthenticationService($authService);
@@ -133,7 +133,7 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 
     public function testMenu()
     {
-        $authService = $this->getMock('Library\Authentication\AuthenticationService');
+        $authService = $this->getMock('Model\Operator\AuthenticationService');
         $authService->method('hasIdentity')->willReturn(true);
         $authService->method('getIdentity')->willReturn('identity');
         $this->_view->plugin('identity')->setAuthenticationService($authService);

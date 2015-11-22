@@ -59,15 +59,11 @@ Feature\InitProviderInterface
                 )
             ),
             'service_manager' => array(
-                'aliases' => array(
-                    'Zend\Authentication\AuthenticationService' => 'Library\AuthenticationService',
-                ),
                 'factories' => array(
                     '\Library\Logger' => 'Library\Log\LoggerServiceFactory',
                 ),
                 'invokables' => array(
                     'Library\ArchiveManager' => 'Library\ArchiveManager',
-                    'Library\AuthenticationService' => '\Library\Authentication\AuthenticationService',
                     'Library\Now' => 'DateTime',
                     'Library\Random' => 'Library\Random',
                 ),

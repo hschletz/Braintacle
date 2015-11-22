@@ -33,7 +33,7 @@ class LoginControllerFactory implements \Zend\ServiceManager\FactoryInterface
     {
         $serviceManager = $serviceLocator->getServiceLocator();
         return new \Console\Controller\LoginController(
-            $serviceManager->get('Library\AuthenticationService'),
+            $serviceManager->get('Zend\Authentication\AuthenticationService'),
             $serviceManager->get('FormElementManager')->get('Console\Form\Login')
         );
     }

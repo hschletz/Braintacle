@@ -93,7 +93,8 @@ Feature\BootstrapListenerInterface
         // If user is not yet authenticated, redirect to the login page except
         // for the login controller, in which case redirection would result in
         // an infinite loop.
-        if (!$e->getApplication()->getServiceManager()->get('Library\AuthenticationService')->hasIdentity() and
+        $serviceManager = $e->getApplication()->getServiceManager();
+        if (!$serviceManager->get('Zend\Authentication\AuthenticationService')->hasIdentity() and
             $e->getRouteMatch()->getParam('controller') != 'login' and
             !\Library\Application::isTest() // TODO: Provide test case
         ) {
