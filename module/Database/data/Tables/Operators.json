@@ -39,15 +39,6 @@
             "comment": "MD5 hash of password"
         },
         {
-            "name": "accesslvl",
-            "type": "integer",
-            "length": 32,
-            "notnull": false,
-            "default": null,
-            "autoincrement": false,
-            "comment": "deprecated"
-        },
-        {
             "name": "comments",
             "type": "clob",
             "length": null,
@@ -55,15 +46,6 @@
             "default": null,
             "autoincrement": false,
             "comment": null
-        },
-        {
-            "name": "new_accesslvl",
-            "type": "varchar",
-            "length": 255,
-            "notnull": false,
-            "default": null,
-            "autoincrement": false,
-            "comment": "deprecated"
         },
         {
             "name": "email",

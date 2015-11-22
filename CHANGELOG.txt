@@ -69,6 +69,9 @@ Misc:
 - The schema manager unconditionally converts the database to the latest schema,
   disregarding backward compatibility. The --force flag has been removed.
 
+- Non-admin accounts are removed from the database. These have intentionally
+  never been functional.
+
 - The ocsreports application has been removed.
 
 - Console: The download URLs can no longer be set per package. The global

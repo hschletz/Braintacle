@@ -315,7 +315,8 @@ Conflicts with unsupported features
 Some features are not supported and assumed not to be used in the database:
 
 - Braintacle does not implement different access privileges. Only administrators
-  can log in, and newly created users will have admin privileges.
+  can log in, and newly created users will have admin privileges. Non-admin
+  accounts will be deleted.
 
 - Very old accounts with a cleartext password will not work. Change the password
   for these accounts to use them.

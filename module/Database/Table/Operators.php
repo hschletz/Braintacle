@@ -55,6 +55,29 @@ class Operators extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
+    protected function _preSetSchema($logger, $schema, $database)
+    {
+        // Drop non-admin accounts
+        $logger->debug('Checking for non-admin accounts.');
+        if (in_array($this->table, $database->getTableNames())) {
+            $dropped = 0;
+            $columns = $database->getTable($this->table)->getColumns();
+            if (isset($columns['accesslvl'])) {
+                $dropped += $this->delete(new \Zend\Db\Sql\Predicate\Operator('accesslvl', '!=', 1));
+            }
+            if (isset($columns['new_accesslvl'])) {
+                $dropped += $this->delete(new \Zend\Db\Sql\Predicate\Operator('new_accesslvl', '!=', 'sadmin'));
+            }
+            if ($dropped) {
+                $logger->warn("$dropped non-admin accounts dropped.");
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     * @codeCoverageIgnore
+     */
     protected function _postSetSchema($logger, $schema, $database)
     {
         // If no account exists yet, create a default account.

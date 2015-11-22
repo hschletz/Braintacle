@@ -68,7 +68,6 @@ implements \Zend\ServiceManager\ServiceLocatorAwareInterface
         $adapter->setTableName('operators')
                 ->setIdentityColumn('id')
                 ->setCredentialColumn('passwd')
-                ->setCredentialTreatment("? AND (accesslvl=1 OR new_accesslvl='sadmin')") // TODO: drop access controls
                 ->setIdentity($id)
                 ->setCredential(md5($password)); // TODO: provide more secure authentication method
 

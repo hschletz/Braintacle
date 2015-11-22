@@ -124,8 +124,6 @@ class OperatorManager
         $insert = @$this->_operators->getHydrator()->extract(new \ArrayObject($data));
         unset($insert['']); // caused by unrecognized key, ignore
         $insert['passwd'] = md5($password);
-        $insert['accesslvl'] = 1; // admin
-        $insert['new_accesslvl'] = 'sadmin';
 
         $this->_operators->insert($insert);
     }
