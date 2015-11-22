@@ -41,8 +41,7 @@ class AuthenticationServiceTest extends \PHPUnit_Framework_TestCase
         // Create table and default account
         \Library\Application::getService('Database\Table\Operators')->setSchema();
 
-        $this->_auth = new \Model\Operator\AuthenticationService;
-        $this->_auth->setServiceLocator(\Library\Application::getService('ServiceManager'));
+        $this->_auth = \Library\Application::getService('Zend\Authentication\AuthenticationService');
     }
 
     /**

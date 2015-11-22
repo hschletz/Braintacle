@@ -29,29 +29,7 @@ namespace Model\Operator;
  * application's database.
  */
 class AuthenticationService extends \Zend\Authentication\AuthenticationService
-implements \Zend\ServiceManager\ServiceLocatorAwareInterface
 {
-    /**
-     * @internal
-     */
-    protected $_serviceLocator;
-
-    /**
-     * @internal
-     */
-    public function setServiceLocator(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $this->_serviceLocator = $serviceLocator;
-    }
-
-    /**
-     * @internal
-     */
-    public function getServiceLocator()
-    {
-        return $this->_serviceLocator;
-    }
-
     /**
      * Attempt login with given credentials
      *
@@ -64,14 +42,8 @@ implements \Zend\ServiceManager\ServiceLocatorAwareInterface
         if (!$id) {
             return false;
         }
-        $adapter = new \Zend\Authentication\Adapter\DbTable($this->getServiceLocator()->get('Db'));
-        $adapter->setTableName('operators')
-                ->setIdentityColumn('id')
-                ->setCredentialColumn('passwd')
-                ->setIdentity($id)
-                ->setCredential(md5($password)); // TODO: provide more secure authentication method
-
-        return $this->authenticate($adapter)->isValid();
+        $this->adapter->setIdentity($id)->setCredential(md5($password));
+        return $this->authenticate()->isValid();
     }
 
     /**
