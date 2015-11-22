@@ -77,7 +77,7 @@ class Operators extends \Database\AbstractTable
             $this->adapter->query(
                 'SELECT COUNT(id) AS num FROM operators WHERE passwd = ?',
                 array(md5('admin'))
-            )->current()->offsetGet('num') !== '0'
+            )->current()->offsetGet('num') > 0
         ) {
             $logger->warn(
                 'Account with default password detected. It should be changed as soon as possible!'
