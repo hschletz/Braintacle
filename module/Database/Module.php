@@ -63,12 +63,17 @@ Feature\InitProviderInterface
             ),
         );
 
-        // Merge database configuration from config file
-        $configFileContent = \Library\Application::getConfig();
-        if (!is_array($configFileContent['database'])) {
-            throw new \RuntimeException('Config file has no "database" section');
+        if (\Library\Application::isTest()) {
+            // Test setup with in-memory database
+            $config['db'] = array('driver' => 'Pdo_Sqlite');
+        } else {
+            // Merge database configuration from config file
+            $configFileContent = \Library\Application::getConfig();
+            if (!is_array($configFileContent['database'])) {
+                throw new \RuntimeException('Config file has no "database" section');
+            }
+            $config['db'] = $configFileContent['database'];
         }
-        $config['db'] = $configFileContent['database'];
         $config['db']['charset'] = 'utf8';
 
         return $config;

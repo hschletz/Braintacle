@@ -23,18 +23,3 @@ error_reporting(-1);
 require_once('Nada.php');
 require_once(__DIR__ . '/../../Library/Application.php');
 \Library\Application::init('Database', false);
-
-// Replace global adapter with SQLite :memory: database.
-$adapter = new \Zend\Db\Adapter\Adapter(
-    array(
-        'driver' => 'Pdo_Sqlite',
-    )
-);
-$serviceManager = \Library\Application::getService('ServiceManager');
-$serviceManager->setAllowOverride(true);
-$serviceManager->setService('Db', $adapter);
-
-// Unset temporary variables to prevent PHPUnit from backing them up which may
-// cause errors.
-unset($adapter);
-unset($serviceManager);

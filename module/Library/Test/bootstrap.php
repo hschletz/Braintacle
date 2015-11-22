@@ -58,18 +58,3 @@ require_once(__DIR__ . '/../../Library/Application.php');
         )
     )
 );
-
-// Replace global adapter with SQLite :memory: database.
-$adapter = new \Zend\Db\Adapter\Adapter(
-    array(
-        'driver' => 'Pdo_Sqlite',
-    )
-);
-$serviceManager = \Library\Application::getService('ServiceManager');
-$serviceManager->setAllowOverride(true);
-$serviceManager->setService('Db', $adapter);
-
-// Unset temporary variables to prevent PHPUnit from backing them up which may
-// cause errors.
-unset($adapter);
-unset($serviceManager);
