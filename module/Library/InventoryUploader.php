@@ -27,10 +27,10 @@ namespace Library;
 class InventoryUploader
 {
     /**
-     * Application config
-     * @var \Model\Config
+     * Server URI
+     * @var string
      */
-    protected $_config;
+    protected $_serverUri;
 
     /**
      * HTTP adapter
@@ -41,12 +41,12 @@ class InventoryUploader
     /**
      * Constructor
      *
-     * @param \Model\Config $config
+     * @param string $serverUri
      * @param string|\Zend\Http\Client\Adapter\AdapterInterface $adapter default: 'Zend\Http\Client\Adapter\Socket'
      */
-    public function __construct(\Model\Config $config, $adapter = 'Zend\Http\Client\Adapter\Socket')
+    public function __construct($serverUri, $adapter = 'Zend\Http\Client\Adapter\Socket')
     {
-        $this->_config = $config;
+        $this->_serverUri = $serverUri;
         $this->_adapter = $adapter;
     }
 
@@ -70,7 +70,7 @@ class InventoryUploader
     public function uploadData($data)
     {
         $client = new \Zend\Http\Client(
-            $this->_config->communicationServerUri,
+            $this->_serverUri,
             array(
                 'adapter' => $this->_adapter,
                 'strictredirects' => true, // required for POST requests

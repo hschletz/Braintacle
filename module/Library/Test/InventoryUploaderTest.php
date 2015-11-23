@@ -47,11 +47,6 @@ class InventoryUploaderTest extends \PHPUnit_Framework_TestCase
 
     public function testUploadData()
     {
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
-        $config->expects($this->any())
-               ->method('__get')
-               ->with('communicationServerUri')
-               ->will($this->returnValue('http://example.net/server'));
         $content = "testUploadFile\nline1\nline2\n";
         $adapter = $this->getMockBuilder('Zend\Http\Client\Adapter\Test')->setMethods(array('write'))->getMock();
         $adapter->expects($this->once())
@@ -70,7 +65,7 @@ class InventoryUploaderTest extends \PHPUnit_Framework_TestCase
                     ),
                     $content
                 );
-        $uploader = new InventoryUploader($config, $adapter);
+        $uploader = new InventoryUploader('http://example.net/server', $adapter);
         $uploader->uploadData($content);
 
         // No public method available to test "strictredirects" option - use reflection

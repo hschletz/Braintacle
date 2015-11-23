@@ -40,7 +40,7 @@ class ClientControllerFactory implements \Zend\ServiceManager\FactoryInterface
             $serviceManager->get('Model\SoftwareManager'),
             $serviceManager->get('FormElementManager'),
             $config,
-            new \Library\InventoryUploader($config)
+            new \Library\InventoryUploader($config->communicationServerUri)
         );
     }
 }

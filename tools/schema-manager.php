@@ -33,7 +33,7 @@
 $basepath = realpath(dirname(__DIR__));
 
 require_once "$basepath/module/Library/Application.php";
-\Library\Application::init('Cli');
+\Library\Application::init('Database');
 $serviceManager = \Library\Application::getService('ServiceManager');
 
 // Set up logger
