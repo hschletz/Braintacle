@@ -34,6 +34,7 @@ use Zend\ModuleManager\Feature;
 class Module implements
 Feature\AutoloaderProviderInterface,
 Feature\ConfigProviderInterface,
+Feature\BootstrapListenerInterface,
 Feature\InitProviderInterface
 {
     /**
@@ -102,5 +103,13 @@ Feature\InitProviderInterface
     static function getPath($path='')
     {
         return \Library\Application::getPath('module/Database/' . $path);
+    }
+
+    /**
+     * @internal
+     */
+    public function onBootstrap(\Zend\EventManager\EventInterface $e)
+    {
+        $e->getParam('application')->getServiceManager()->get('Database\Nada')->setTimezone();
     }
 }

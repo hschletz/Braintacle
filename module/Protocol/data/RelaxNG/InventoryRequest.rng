@@ -322,10 +322,10 @@ informational and not evaluated:
                 </optional>
                 <ref name="IPADDR" />
                 <optional>
-                    <ref name="LASTCOME" braintacle:format="yyyy-MM-dd HH:mm:ss" />
+                    <ref name="LASTCOME" braintacle:format="yyyy-MM-dd HH:mm:ss" /><!-- UTC -->
                 </optional>
                 <optional>
-                    <ref name="LASTDATE" braintacle:format="yyyy-MM-dd HH:mm:ss" />
+                    <ref name="LASTDATE" braintacle:format="yyyy-MM-dd HH:mm:ss" /><!-- UTC -->
                 </optional>
                 <optional>
                     <ref name="LASTLOGGEDUSER" /><!-- not available in database -->

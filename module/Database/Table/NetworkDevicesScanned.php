@@ -49,7 +49,8 @@ class NetworkDevicesScanned extends \Database\AbstractTable
         );
 
         $dateTimeFormatter = new \Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy(
-            $serviceLocator->get('Database\Nada')->timestampFormatPhp()
+            $serviceLocator->get('Database\Nada')->timestampFormatPhp(),
+            new \DateTimeZone('UTC')
         );
         $this->_hydrator->addStrategy('DiscoveryDate', $dateTimeFormatter);
         $this->_hydrator->addStrategy('date', $dateTimeFormatter);

@@ -49,6 +49,13 @@ class Clients implements \Zend\Stdlib\Hydrator\HydratorInterface
     protected $_encodingFilter;
 
     /**
+     * Database time zone
+     *
+     * @var \DateTimeZone
+     */
+    protected $_databaseTimeZone;
+
+    /**
      * Map for hydrateName() (client properties only)
      *
      * @var string[]
@@ -133,6 +140,7 @@ class Clients implements \Zend\Stdlib\Hydrator\HydratorInterface
     {
         $this->_serviceLocator = $serviceLocator;
         $this->_encodingFilter = new \Library\Filter\FixEncodingErrors;
+        $this->_databaseTimeZone = new \DateTimeZone('UTC');
     }
 
     /**
@@ -249,7 +257,8 @@ class Clients implements \Zend\Stdlib\Hydrator\HydratorInterface
                 case 'LastContactDate':
                     $value = \DateTime::createFromFormat(
                         $this->_serviceLocator->get('Database\Nada')->timestampFormatPhp(),
-                        $value
+                        $value,
+                        $this->_databaseTimeZone
                     );
                     break;
                 case 'OsName':
@@ -291,6 +300,7 @@ class Clients implements \Zend\Stdlib\Hydrator\HydratorInterface
     public function extractValue($name, $value)
     {
         if ($name == 'lastcome' or $name == 'lastdate') {
+            $value->setTimezone($this->_databaseTimeZone);
             $value = $value->format($this->_serviceLocator->get('Database\Nada')->timestampFormatPhp());
         }
         return $value;

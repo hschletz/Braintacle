@@ -43,6 +43,13 @@ class ClientsHardware implements \Zend\Stdlib\Hydrator\HydratorInterface
     protected $_encodingFilter;
 
     /**
+     * UTC time zone
+     *
+     * @var \DateTimeZone
+     */
+    protected $_utcTimeZone;
+
+    /**
      * Map for hydrateName() (client properties only)
      *
      * @var string[]
@@ -131,6 +138,7 @@ class ClientsHardware implements \Zend\Stdlib\Hydrator\HydratorInterface
     {
         $this->_windowsInstallationPrototype = $windowsInstallationPrototype;
         $this->_encodingFilter = new \Library\Filter\FixEncodingErrors;
+        $this->_utcTimeZone = new \DateTimeZone('UTC');
     }
 
     /** {@inheritdoc} */
@@ -233,7 +241,7 @@ class ClientsHardware implements \Zend\Stdlib\Hydrator\HydratorInterface
         switch ($name) {
             case 'InventoryDate':
             case 'LastContactDate':
-                $value = \DateTime::createFromFormat('Y-m-d H:i:s', $value);
+                $value = \DateTime::createFromFormat('Y-m-d H:i:s', $value, $this->_utcTimeZone);
                 break;
             case 'OsName':
                 $value = $this->_encodingFilter->filter($value);
@@ -252,6 +260,7 @@ class ClientsHardware implements \Zend\Stdlib\Hydrator\HydratorInterface
     public function extractValue($name, $value)
     {
         if ($name == 'LASTCOME' or $name == 'LASTDATE') {
+            $value->setTimezone($this->_utcTimeZone);
             $value = $value->format('Y-m-d H:i:s');
         }
         return $value;
