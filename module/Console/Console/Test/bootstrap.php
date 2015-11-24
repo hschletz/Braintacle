@@ -21,6 +21,7 @@
 
 error_reporting(-1);
 ini_set('memory_limit', '300M');
+date_default_timezone_set('Europe/Berlin');
 require_once(__DIR__ . '/../../../Library/Application.php');
 require_once('Zend/Console/Console.php');
 
