@@ -25,6 +25,9 @@ Upgrading from previous versions:
   used both applications in parallel, see the migration section in INSTALL.md
   for further instructions.
 
+- Recommended: If you generated the API documentation, remove the doc/api
+  directory before re-generating.
+
 New features:
 
 - Console: After being redirected to the login page from an unauthenticated
@@ -95,6 +98,8 @@ Misc:
 - Console: The "invert results" search operation now behaves consistently across
   all argument types (string, numeric, date). Previously, the operation behaved
   differently for string arguments.
+
+- Tools: API documentation is now generated using ApiGen.
 
 
 CHANGES IN VERSION 0.16

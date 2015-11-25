@@ -3,11 +3,8 @@ config/*
 # ... except for the project-defined templates
 !config/*.template
 
-# The doc/api/ directory contains many phpdoc-generated files. Ignore content...
-doc/api/*
-# ... except for the project-defined files.
-!doc/api/Readme.txt!
-!doc/api/phpdoc.xml
+# The doc/api/ directory contains the generated API documentation.
+doc/api/
 
 # The doc/CodeCoverage/ directory contains many phpunit-generated files. Ignore content...
 doc/CodeCoverage/*
