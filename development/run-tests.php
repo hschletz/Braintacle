@@ -64,7 +64,7 @@ putenv('APPLICATION_ENV=test');
 
 if ($argc >= 2) {
     // Run tests for explicit module and optional filter
-    testModule(ucfirst(strtolower($argv[1])), @$argv[2]);
+    testModule(ucfirst($argv[1]), @$argv[2]);
 } else {
     // Run tests for all modules that have tests defined
     testModule('Library');
@@ -72,5 +72,6 @@ if ($argc >= 2) {
     testModule('Model');
     testModule('Protocol');
     testModule('Console');
+    testModule('DatabaseManager');
     testModule('Export');
 }

@@ -19,7 +19,7 @@ Upgrading from previous versions:
 
 - Required: Upgrade NADA to the latest snapshot.
 
-- Required: Run tools/schema-manager.php to update the database schema.
+- Required: Run tools/database-manager.php to update the database schema.
 
 - Required: The database is no longer compatible with OCS Inventory NG. If you
   used both applications in parallel, see the migration section in INSTALL.md
@@ -69,8 +69,9 @@ Misc:
 - Packages can now be stored in an arbitrary directory. The directory name no
   longer has to be "download".
 
-- The schema manager unconditionally converts the database to the latest schema,
-  disregarding backward compatibility. The --force flag has been removed.
+- The database manager unconditionally converts the database to the latest
+  schema, disregarding backward compatibility. The --force flag has been
+  removed.
 
 - Non-admin accounts are removed from the database. These have intentionally
   never been functional.
@@ -98,6 +99,8 @@ Misc:
 - Console: The "invert results" search operation now behaves consistently across
   all argument types (string, numeric, date). Previously, the operation behaved
   differently for string arguments.
+
+- Tools: The schema-manager.php script has been renamed to database-manager.php.
 
 - Tools: API documentation is now generated using ApiGen.
 

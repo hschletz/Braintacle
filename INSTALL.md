@@ -100,9 +100,9 @@ If you prefer all config files within /etc or /usr/local/etc, make
 file.
 
 To create and initialize the tables, log out from the database and run the
-schema manager script:
+database manager script:
 
-    /usr/local/share/braintacle/tools/schema-manager.php
+    /usr/local/share/braintacle/tools/database-manager.php
 
 If everything ran correctly, you should now be able to log into the database
 with the configured credentials and see the tables.
@@ -287,16 +287,16 @@ required steps will be noted in the [changelog](./CHANGELOG.txt). If you skipped
 a release, follow the instructions for the skipped releases first.
 
 A common upgrade step is the database schema update. This is done with the
-schema-manager.php script:
+database-manager.php script:
 
-    /usr/local/share/braintacle/tools/schema-manager.php
+    /usr/local/share/braintacle/tools/database-manager.php
 
 Although the schema update is usually safe, a database backup is recommended. It
 is also safe to run the script even if there is nothing to update.
 
 If you run Braintacle directly off a git tree, upgrading is very easy: you can
 use the script tools/update-from-git.sh which pulls the latest code and invokes
-schema-manager.php.
+database-manager.php.
 
 
 
@@ -334,7 +334,7 @@ Converting the database
 -----------------------
 
 Backing up the database before conversion is strongly recommended. Run
-schema-manager.php as documented above; it should be able to convert the
+database-manager.php as documented above; it should be able to convert the
 database.
 
 

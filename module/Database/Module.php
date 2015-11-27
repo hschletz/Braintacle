@@ -60,6 +60,7 @@ Feature\InitProviderInterface
                 'factories' => array(
                     'Db' => 'Zend\Db\Adapter\AdapterServiceFactory',
                     'Database\Nada' => 'Database\Service\NadaFactory',
+                    'Database\SchemaManager' => 'Database\Service\SchemaManagerFactory',
                 ),
             ),
         );

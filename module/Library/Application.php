@@ -83,6 +83,7 @@ class Application
                         'Library' => self::getPath('module/Library'),
                         'Model' => self::getPath('module/Model'),
                         'Protocol' => self::getPath('module/Protocol'),
+                        'DatabaseManager' => self::getPath('module/DatabaseManager'),
                     ),
                 ),
             )

@@ -35,4 +35,4 @@ cd $BASEDIR
 git pull
 
 echo Updating database
-php $TOOLSDIR/schema-manager.php
+php $TOOLSDIR/database-manager.php
