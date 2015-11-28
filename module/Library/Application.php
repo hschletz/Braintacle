@@ -76,7 +76,6 @@ class Application
                 'modules' => array($module),
                 'module_listener_options' => array(
                     'module_paths' => array(
-                        'Cli' => self::getPath('module/Cli'),
                         'Console' => self::getPath('module/Console/Console'),
                         'Database' => self::getPath('module/Database'),
                         'Export' => self::getPath('module/Export'),
