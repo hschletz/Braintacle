@@ -82,6 +82,7 @@ class Application
                         'Export' => self::getPath('module/Export'),
                         'Library' => self::getPath('module/Library'),
                         'Model' => self::getPath('module/Model'),
+                        'PackageBuilder' => self::getPath('module/PackageBuilder'),
                         'Protocol' => self::getPath('module/Protocol'),
                         'DatabaseManager' => self::getPath('module/DatabaseManager'),
                     ),

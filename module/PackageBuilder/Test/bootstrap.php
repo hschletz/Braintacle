@@ -1,7 +1,6 @@
-#!/usr/bin/php
 <?php
 /**
- * Create a package from the command line
+ * Bootstrap for unit tests
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -18,22 +17,9 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Tools
- */
-/**
- * This script creates a package from the command line. This is useful if a file
- * is too big to be uploaded to the webserver. It can also be used as part of a
- * package builder script.
- *
- * It is limited to the package builder defaults. Only the name and the file
- * itself can be specified.
- *
- * Don't forget to change permissions/ownership of the generated directory and
- * files. Otherwise the webserver won't be able to read and/or delete them.
  */
 
-error_reporting(E_ALL);
+error_reporting(-1);
 
-require(__DIR__ . '/../module/Library/Application.php');
-\Library\Application::init('PackageBuilder');
+require_once(__DIR__ . '/../../Library/Application.php');
+\Library\Application::init('PackageBuilder', false);
