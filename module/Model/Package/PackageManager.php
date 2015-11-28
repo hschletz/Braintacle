@@ -214,7 +214,12 @@ class PackageManager
             }
             $packages->insert($insert);
         } catch (\Exception $e) {
-            $this->delete($data['Name']);
+            try {
+                $this->delete($data['Name']);
+            } catch (\Exception $e2) {
+                // Ignore error (package does probably not exist at this point)
+                // and return original exception instead
+            }
             throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
         }
     }
