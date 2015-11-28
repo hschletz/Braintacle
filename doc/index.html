@@ -248,8 +248,14 @@ The tools directory contains some scripts that are not part of the application, 
 <h3>database-manager.php</h3>
 
 <p>
-This script is used to manage the database schema as part of the installation and upgrade process as described in <a href="../INSTALL.md">INSTALL.md</a>
+This script is used to manage the database schema as part of the installation
+and upgrade process as described in <a href="../INSTALL.md">INSTALL.md</a>.
+There is an optional parameter for the log level (default: info):
 </p>
+<p><code>
+--loglevel=emerg|alert|crit|err|warn|notice|info|debug
+</code></p>
+
 
 <h3>update-from-git.sh</h3>
 

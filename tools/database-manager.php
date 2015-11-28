@@ -28,6 +28,10 @@
  * Run this script every time the schema has changed. It is safe to run it more
  * than once, even if the schema has not changed. However, it won't hurt to
  * back up your database first.
+ *
+ * There is an optional parameter for the log level (default: info):
+ *
+ * --loglevel=emerg|alert|crit|err|warn|notice|info|debug
  */
 
 require_once __DIR__ . "/../module/Library/Application.php";

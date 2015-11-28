@@ -21,11 +21,24 @@
 
 namespace DatabaseManager;
 
+use Zend\Log\Logger;
+
 /**
  * Database manager application controller
  */
 class Controller extends \Zend\Mvc\Controller\AbstractConsoleController
 {
+    protected $_priorities = array(
+        'emerg' => Logger::EMERG,
+        'alert' => Logger::ALERT,
+        'crit' => Logger::CRIT,
+        'err' => Logger::ERR,
+        'warn' => Logger::WARN,
+        'notice' => Logger::NOTICE,
+        'info' => Logger::INFO,
+        'debug' => Logger::DEBUG,
+    );
+
     /**
      * Manage database schema
      */
@@ -33,8 +46,12 @@ class Controller extends \Zend\Mvc\Controller\AbstractConsoleController
     {
         $serviceManager = $this->getServiceLocator();
 
-        // Set up logger
+        // Set up logger. Log level is already validated by route.
         $writer = new \Zend\Log\Writer\Stream('php://stderr');
+        $writer->addFilter(
+            'Priority',
+            array('priority' => $this->_priorities[$this->getRequest()->getParam('loglevel', 'info')])
+        );
         $writer->setFormatter('Simple', array('format' => '%priorityName%: %message%'));
         $logger = $serviceManager->get('Library\Logger');
         $logger->addWriter($writer);

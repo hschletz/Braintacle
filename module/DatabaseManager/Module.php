@@ -29,7 +29,9 @@ use Zend\ModuleManager\Feature;
 class Module implements
 Feature\InitProviderInterface,
 Feature\ConfigProviderInterface,
-Feature\AutoloaderProviderInterface
+Feature\AutoloaderProviderInterface,
+Feature\BootstrapListenerInterface,
+Feature\ConsoleUsageProviderInterface
 {
     /**
      * @internal
@@ -50,7 +52,7 @@ Feature\AutoloaderProviderInterface
                     'routes' => array(
                         'schemaManager' => array(
                             'options' => array(
-                                'route' => '',
+                                'route' => '[--loglevel=]',
                                 'defaults' => array(
                                     'controller' => 'DatabaseManager\Controller',
                                     'action'     => 'schemaManager'
@@ -79,6 +81,43 @@ Feature\AutoloaderProviderInterface
                     __NAMESPACE__ => __DIR__,
                 ),
             ),
+        );
+    }
+
+    /**
+     * @internal
+     */
+    public function onBootstrap(\Zend\EventManager\EventInterface $e)
+    {
+        $e->getTarget()->getEventManager()->attach(\Zend\Mvc\MvcEvent::EVENT_ROUTE, array($this, 'onRoute'));
+    }
+
+    /**
+     * @internal
+     */
+    public function onRoute(\Zend\EventManager\EventInterface $e)
+    {
+        // Validate loglevel value. Invalid content will cause the route to fail
+        // and trigger the usage message.
+        if (
+            !preg_match(
+                '/^(emerg|alert|crit|err|warn|notice|info|debug)?$/',
+                $e->getRouteMatch()->getParam('loglevel')
+            )
+        ) {
+            $e->setError(\Zend\Mvc\Application::ERROR_ROUTER_NO_MATCH);
+            $e->getTarget()->getEventManager()->trigger(\Zend\Mvc\MvcEvent::EVENT_DISPATCH_ERROR, $e);
+        }
+    }
+
+    /**
+     * @internal
+     */
+    public function getConsoleUsage(\Zend\Console\Adapter\AdapterInterface $console)
+    {
+        return array(
+            '[--loglevel=emerg|alert|crit|err|warn|notice|info|debug]' => 'Update the database',
+            array('--loglevel', 'Set maximum log level, default: info'),
         );
     }
 }
