@@ -35,4 +35,4 @@
  */
 
 require_once __DIR__ . "/../module/Library/Application.php";
-\Library\Application::init('DatabaseManager', true);
+\Library\Application::init('DatabaseManager');

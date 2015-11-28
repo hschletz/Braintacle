@@ -50,10 +50,10 @@ class Application
      * overridden except for testing.
      *
      * @param string $module Module to load
-     * @param bool $run Run the application after initialization.
+     * @param bool $run Run the application after initialization. Default: TRUE
      * @codeCoverageIgnore
      */
-    public static function init($module, $run=null)
+    public static function init($module, $run = true)
     {
         // Set up PHP environment.
         session_cache_limiter('nocache'); // Default headers to prevent caching
@@ -89,13 +89,7 @@ class Application
             )
         );
         self::$_serviceManager = $application->getServiceManager();
-        if ($run === null) {
-            if ($module == 'Console' or $module == 'Export') {
-                $run = true;
-            } else {
-                $run = false;
-            }
-        }
+
         if ($run) {
             $application->run();
         }
