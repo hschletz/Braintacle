@@ -135,7 +135,7 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
                 case 'Manufacturer':
                 case 'Model':
                 case 'Name':
-                case 'OcsAgent':
+                case 'UserAgent':
                 case 'OsName':
                 case 'OsVersionNumber':
                 case 'OsVersionString':

@@ -48,11 +48,11 @@ namespace Model\Client;
  * @property string $DnsDomain DNS domain name (UNIX clients only)
  * @property string $DnsServer IP Address of DNS server
  * @property string $DefaultGateway default gateway
- * @property string $OcsAgent user agent identification string
  * @property string $OsName OS name
  * @property string $OsVersionNumber internal OS version number
  * @property string $OsVersionString OS version (Service pack, kernel version etc...)
  * @property string $OsComment OS comment
+ * @property string $UserAgent user agent identification string
  * @property string $UserName user logged in at time of inventory
  * @property string $Uuid UUID (typically provided by BIOS)
  * @property \Model\Client\WindowsInstallation $Windows Windows installation info, NULL for non-Windows systems

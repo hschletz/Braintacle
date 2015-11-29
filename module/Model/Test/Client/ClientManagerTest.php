@@ -62,7 +62,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         'Manufacturer' => 'smanufacturer',
         'Model' => 'smodel',
         'Name' => 'name',
-        'OcsAgent' => 'useragent',
+        'UserAgent' => 'useragent',
         'OsComment' => 'description',
         'OsName' => 'osname',
         'OsVersionNumber' => 'osversion',
@@ -240,7 +240,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                 array('Id'), 'Id', 'asc', 'Name', 'name2', 'eq', false, false, $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'OcsAgent', 'user_agent2', 'eq', false, false, $client2
+                array('Id'), 'Id', 'asc', 'UserAgent', 'user_agent2', 'eq', false, false, $client2
             ),
             array(
                 array('Id'), 'Id', 'asc', 'OsName', 'os_name2', 'eq', false, false, $client2

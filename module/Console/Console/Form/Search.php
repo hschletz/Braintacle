@@ -126,7 +126,7 @@ class Search extends Form
             'Printer.Name' => $translator->translate('Printer name'),
             'Printer.Port' => $translator->translate('Printer port'),
             'Printer.Driver' => $translator->translate('Printer driver'),
-            'OcsAgent' => $translator->translate('OCS agent'),
+            'UserAgent' => $translator->translate('User agent'),
             'Display.Manufacturer' => $translator->translate('Monitor: manufacturer'),
             'Display.Description' => $translator->translate('Monitor: description'),
             'Display.Serial' => $translator->translate('Monitor: serial'),

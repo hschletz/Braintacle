@@ -834,7 +834,7 @@ msgid "Printer driver"
 msgstr ""
 
 #: Console/Form/Search.php view/console/client/index.php
-msgid "OCS agent"
+msgid "User agent"
 msgstr ""
 
 #: Console/Form/Search.php view/console/client/index.php

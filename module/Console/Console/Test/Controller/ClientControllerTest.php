@@ -811,7 +811,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'ClientId' => 'client_id',
             'InventoryDate' => $inventoryDate,
             'LastContactDate' => $lastContactDate,
-            'OcsAgent' => 'user_agent',
+            'UserAgent' => 'user_agent',
             'Manufacturer' => 'manufacturer',
             'Model' => 'model',
             'IsSerialBlacklisted' => false,

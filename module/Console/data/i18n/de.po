@@ -796,10 +796,6 @@ msgid "Network address"
 msgstr "Netzwerkadresse"
 
 #: Console/Form/Search.php view/console/client/index.php
-msgid "OCS agent"
-msgstr "OCS Agent"
-
-#: Console/Form/Search.php view/console/client/index.php
 msgid "OS comment"
 msgstr "Kommentar"
 
@@ -881,6 +877,10 @@ msgstr "Teilzeichenfolge, Platzhalter '?' und '*' erlaubt"
 #: Console/Form/Search.php view/console/client/general.php
 msgid "Swap memory"
 msgstr "Auslagerungsspeicher"
+
+#: Console/Form/Search.php view/console/client/index.php
+msgid "User agent"
+msgstr "User-Agent"
 
 #: Console/Form/Search.php
 #, php-format

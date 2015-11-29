@@ -67,7 +67,7 @@ print $this->htmlTag(
 );
 print $this->htmlTag(
     'dd',
-    $this->escapeHtml($client['OcsAgent'])
+    $this->escapeHtml($client['UserAgent'])
 );
 
 print $this->htmlTag(
