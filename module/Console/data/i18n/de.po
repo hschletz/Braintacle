@@ -1173,13 +1173,13 @@ msgid "CPU clock"
 msgstr "CPU Takt"
 
 #: view/console/client/general.php view/console/client/index.php
-msgid "Client ID"
-msgstr "Client-ID"
-
-#: view/console/client/general.php view/console/client/index.php
 #: view/console/group/general.php
 msgid "ID"
 msgstr "ID"
+
+#: view/console/client/general.php view/console/client/index.php
+msgid "ID string"
+msgstr "ID-String"
 
 #: view/console/client/general.php
 msgid "Inventory date"

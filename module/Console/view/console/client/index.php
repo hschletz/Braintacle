@@ -34,7 +34,7 @@ foreach (array('error', 'success') as $namespace) {
 // Column headers
 $allHeaders = array(
     'Id' => $this->translate('ID'),
-    'ClientId' => $this->translate('Client ID'),
+    'IdString' => $this->translate('ID string'),
     'Name' => $this->translate('Name'),
     'CpuClock' => $this->translate('CPU clock'),
     'CpuCores' => $this->translate('CPU cores'),

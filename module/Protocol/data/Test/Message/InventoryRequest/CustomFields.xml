@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <REQUEST>
-    <DEVICEID>client_id</DEVICEID>
+    <DEVICEID>id_string</DEVICEID>
     <QUERY>INVENTORY</QUERY>
     <CONTENT>
         <ACCOUNTINFO>

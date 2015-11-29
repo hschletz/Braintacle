@@ -808,7 +808,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client = array(
             'Id' => 1,
             'Name' => 'name',
-            'ClientId' => 'client_id',
+            'IdString' => 'id_string',
             'InventoryDate' => $inventoryDate,
             'LastContactDate' => $lastContactDate,
             'UserAgent' => 'user_agent',
@@ -840,7 +840,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $query = "//dl/dt[text()='\n%s\n']/following::dd[1][text()='\n%s\n']";
         $this->assertXPathQuery(sprintf($query, 'ID', 1));
-        $this->assertXPathQuery(sprintf($query, 'Client-ID', 'client_id'));
+        $this->assertXPathQuery(sprintf($query, 'ID-String', 'id_string'));
         $this->assertXPathQuery(sprintf($query, 'Datum der Inventarinformationen', 'inventory_date'));
         $this->assertXPathQuery(sprintf($query, 'Letzter Kontakt', 'last_contact_date'));
         $this->assertXPathQuery(sprintf($query, 'User-Agent', 'user_agent'));

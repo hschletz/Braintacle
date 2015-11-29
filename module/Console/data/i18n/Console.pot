@@ -1168,7 +1168,7 @@ msgid "ID"
 msgstr ""
 
 #: view/console/client/general.php view/console/client/index.php
-msgid "Client ID"
+msgid "ID string"
 msgstr ""
 
 #: view/console/client/general.php

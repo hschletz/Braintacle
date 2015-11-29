@@ -182,7 +182,7 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
         $client = $this->getMock('Model\Client\Client');
         $client->method('offsetGet')->willReturnMap(
             array(
-                array('ClientId', 'client_id'),
+                array('IdString', 'id_string'),
                 array('CustomFields', $customFields),
             )
         );

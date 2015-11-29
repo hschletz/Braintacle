@@ -49,7 +49,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         'BiosDate' => 'bdate',
         'BiosManufacturer' => 'bmanufacturer',
         'BiosVersion' => 'bversion',
-        'ClientId' => 'deviceid',
+        'IdString' => 'deviceid',
         'CpuClock' => 'processors',
         'CpuCores' => 'processorn',
         'CpuType' => 'processort',

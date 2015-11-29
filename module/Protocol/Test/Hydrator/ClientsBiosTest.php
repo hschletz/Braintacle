@@ -43,7 +43,7 @@ class ClientsBiosTest extends \Library\Test\Hydrator\AbstractHydratorTest
         'Model' => 'model',
         'Serial' => 'serial',
         'Type' => 'type',
-        'ClientId' => 'ignored',
+        'IdString' => 'ignored',
     );
 
     public function testService()
@@ -66,7 +66,7 @@ class ClientsBiosTest extends \Library\Test\Hydrator\AbstractHydratorTest
     {
         $hydrator = $this->_getHydrator();
         $object = new \ArrayObject;
-        $object['ClientId'] = 'ignored';
+        $object['IdString'] = 'ignored';
         $this->assertSame($object, $hydrator->hydrate($data, $object));
         $this->assertEquals($objectData, $object->getArrayCopy());
     }

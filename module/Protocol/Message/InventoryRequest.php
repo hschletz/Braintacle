@@ -75,7 +75,7 @@ class InventoryRequest extends \Library\DomDocument
         $request = $this->createElement('REQUEST');
         $this->appendChild($request);
         // Additional elements
-        $request->appendChild($this->createElementWithContent('DEVICEID', $client['ClientId']));
+        $request->appendChild($this->createElementWithContent('DEVICEID', $client['IdString']));
         $request->appendChild($this->createElement('QUERY', 'INVENTORY'));
         // Main inventory section
         $content = $this->createElement('CONTENT');

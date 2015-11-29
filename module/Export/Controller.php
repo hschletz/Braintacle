@@ -44,10 +44,10 @@ class Controller extends \Zend\Mvc\Controller\AbstractConsoleController
 
         $clients = $this->getServiceLocator()->get('Model\Client\ClientManager')->getClients(
             null,
-            'ClientId'
+            'IdString'
         );
         foreach ($clients as $client) {
-            $id = $client['ClientId'];
+            $id = $client['IdString'];
             $this->console->writeLine("Exporting $id");
             $document = $client->toDomDocument();
             $document->save($directory . '/' . $document->getFilename());

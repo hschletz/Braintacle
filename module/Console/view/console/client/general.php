@@ -36,11 +36,11 @@ print $this->htmlTag(
 
 print $this->htmlTag(
     'dt',
-    $this->translate('Client ID')
+    $this->translate('ID string')
 );
 print $this->htmlTag(
     'dd',
-    $this->escapeHtml($client['ClientId'])
+    $this->escapeHtml($client['IdString'])
 );
 
 print $this->htmlTag(

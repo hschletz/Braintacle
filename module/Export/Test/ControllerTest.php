@@ -74,15 +74,15 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
         $document2->expects($this->never())->method('isValid');
 
         $client1 = $this->getMock('Model\Client\Client');
-        $client1->method('offsetGet')->with('ClientId')->willReturn('client1');
+        $client1->method('offsetGet')->with('IdString')->willReturn('client1');
         $client1->method('toDomDocument')->willReturn($document1);
 
         $client2 = $this->getMock('Model\Client\Client');
-        $client2->method('offsetGet')->with('ClientId')->willReturn('client2');
+        $client2->method('offsetGet')->with('IdString')->willReturn('client2');
         $client2->method('toDomDocument')->willReturn($document2);
 
         $clientManager = $this->getMockBuilder('Model\Client\ClientManager')->disableOriginalConstructor()->getMock();
-        $clientManager->method('getClients')->with(null, 'ClientId')->willReturn(array($client1, $client2));
+        $clientManager->method('getClients')->with(null, 'IdString')->willReturn(array($client1, $client2));
 
         $console = $this->getMockBuilder('Zend\Console\Adapter\AbstractAdapter')
                         ->setMethods(array('writeLine'))
@@ -179,11 +179,11 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
         $document3->expects($this->never())->method('isValid');
 
         $client1 = $this->getMock('Model\Client\Client');
-        $client1->method('offsetGet')->with('ClientId')->willReturn('client1');
+        $client1->method('offsetGet')->with('IdString')->willReturn('client1');
         $client1->method('toDomDocument')->willReturn($document1);
 
         $client2 = $this->getMock('Model\Client\Client');
-        $client2->method('offsetGet')->with('ClientId')->willReturn('client2');
+        $client2->method('offsetGet')->with('IdString')->willReturn('client2');
         $client2->method('toDomDocument')->willReturn($document2);
 
         $client3 = $this->getMock('Model\Client\Client');
@@ -191,7 +191,7 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
         $client3->expects($this->never())->method('toDomDocument');
 
         $clientManager = $this->getMockBuilder('Model\Client\ClientManager')->disableOriginalConstructor()->getMock();
-        $clientManager->method('getClients')->with(null, 'ClientId')->willReturn(array($client1, $client2, $client3));
+        $clientManager->method('getClients')->with(null, 'IdString')->willReturn(array($client1, $client2, $client3));
 
         $console = $this->getMockBuilder('Zend\Console\Adapter\AbstractAdapter')
                         ->setMethods(array('writeLine'))

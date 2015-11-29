@@ -88,7 +88,7 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
             'SwapMemory' => 2222,
             'UserName' => 'user name',
             'Uuid' => 'uuid',
-            'ClientId' => 'ignored',
+            'IdString' => 'ignored',
         );
         $hydratedWindows = array(
             'Windows' => new \Model\Client\WindowsInstallation(
@@ -115,7 +115,7 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
     {
         $hydrator = $this->_getHydrator();
         $object = new \ArrayObject;
-        $object['ClientId'] = 'ignored';
+        $object['IdString'] = 'ignored';
         $this->assertSame($object, $hydrator->hydrate($data, $object));
         $this->assertEquals($objectData, $object->getArrayCopy());
     }
@@ -141,7 +141,7 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
             'SwapMemory' => 2222,
             'UserName' => 'user name',
             'Uuid' => 'uuid',
-            'ClientId' => 'ignored',
+            'IdString' => 'ignored',
         );
         $windowsHydrated = array(
             'Windows' => array(
