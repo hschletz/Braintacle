@@ -912,6 +912,7 @@ msgid "Windows product key (manual)"
 msgstr "Windows-Lizenzschlüssel (manuell)"
 
 #: Console/Form/Search.php view/console/client/index.php
+#: view/console/client/network.php
 msgid "Workgroup"
 msgstr "Arbeitsgruppe"
 

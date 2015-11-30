@@ -27,7 +27,8 @@ $client = $this->client;
 $dnsDomain = $client['DnsDomain'];
 $dnsServer = $client['DnsServer'];
 $defaultGateway = $client['DefaultGateway'];
-if ($dnsDomain or $dnsServer or $defaultGateway) {
+$workgroup = $client['Windows']['Workgroup'];
+if ($dnsDomain or $dnsServer or $defaultGateway or $workgroup) {
     print $this->htmlTag('h2', $this->translate('Global network configuration'));
     $table = $this->plugin('table');
     print "<table class='textnormalsize'>\n";
@@ -39,18 +40,30 @@ if ($dnsDomain or $dnsServer or $defaultGateway) {
             )
         );
     }
-    print $table->row(
-        array(
-            $this->translate('DNS server'),
-            $this->escapeHtml($dnsServer),
-        )
-    );
-    print $table->row(
-        array(
-            $this->translate('Default gateway'),
-            $this->escapeHtml($defaultGateway),
-        )
-    );
+    if ($dnsServer) {
+        print $table->row(
+            array(
+                $this->translate('DNS server'),
+                $this->escapeHtml($dnsServer),
+            )
+        );
+    }
+    if ($defaultGateway) {
+        print $table->row(
+            array(
+                $this->translate('Default gateway'),
+                $this->escapeHtml($defaultGateway),
+            )
+        );
+    }
+    if ($workgroup) {
+        print $table->row(
+            array(
+                $this->translate('Workgroup'),
+                $this->escapeHtml($workgroup),
+            )
+        );
+    }
     print "</table>\n";
 }
 

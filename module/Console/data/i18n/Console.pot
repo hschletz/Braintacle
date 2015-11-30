@@ -664,6 +664,7 @@ msgid "User domain"
 msgstr ""
 
 #: Console/Form/Search.php view/console/client/index.php
+#: view/console/client/network.php
 msgid "Workgroup"
 msgstr ""
 

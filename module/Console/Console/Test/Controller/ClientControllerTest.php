@@ -1055,7 +1055,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/client/windows/?id=1');
     }
 
-    public function testNetworkActionSettingsOnly()
+    public function testNetworkActionSettingsOnlyUnix()
     {
         // DnsServer and DefaultGateway typically show up both or not at all, so
         // they are not tested separately.
@@ -1073,10 +1073,33 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/client/network/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery("//h2[text()='\nGlobale Netzwerkkonfiguration\n']");
+        $this->assertXpathQueryCount('//tr', 3);
         $query = "//td[text()='\n%s\n']/following::td[1][text()='\n%s\n']";
         $this->assertXPathQuery(sprintf($query, 'Hostname', 'name.dns_domain'));
         $this->assertXPathQuery(sprintf($query, 'DNS-Server', 'dns_server'));
         $this->assertXPathQuery(sprintf($query, 'Standardgateway', 'default_gateway'));
+        $this->assertNotXpathQuery("//h2[text()='\nNetzwerkschnittstellen\n']");
+        $this->assertNotXpathQuery("//h2[text()='\nModems\n']");
+    }
+
+    public function testNetworkActionSettingsOnlyWindows()
+    {
+        $client = array(
+            'Name' => 'name',
+            'Windows' => array('Workgroup' => 'workgroup'),
+            'DnsDomain' => null,
+            'DnsServer' => null,
+            'DefaultGateway' => null,
+            'NetworkInterface' => array(),
+            'Modem' => array(),
+        );
+        $this->_clientManager->method('getClient')->willReturn($client);
+
+        $this->dispatch('/console/client/network/?id=1');
+        $this->assertResponseStatusCode(200);
+        $this->assertXpathQuery("//h2[text()='\nGlobale Netzwerkkonfiguration\n']");
+        $this->assertXpathQueryCount('//tr', 1);
+        $this->assertXpathQuery("//td[text()='\nArbeitsgruppe\n']/following::td[1][text()='\nworkgroup\n']");
         $this->assertNotXpathQuery("//h2[text()='\nNetzwerkschnittstellen\n']");
         $this->assertNotXpathQuery("//h2[text()='\nModems\n']");
     }
