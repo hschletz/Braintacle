@@ -95,6 +95,7 @@ $allHeaders = array(
     'Windows.ManualProductKey' => $this->translate('Windows product key (manual)'),
     'Windows.ProductId' => $this->translate('Windows product ID'),
     'Windows.Workgroup' => $this->translate('Workgroup'),
+    'Windows.CpuArchitecture' => $this->translate('OS architecture'),
     'MsOfficeProduct.ProductKey' => $this->translate('MS Office product key'),
     'MsOfficeProduct.ProductId' => $this->translate('MS Office product ID'),
 );

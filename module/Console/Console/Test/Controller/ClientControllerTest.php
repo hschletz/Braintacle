@@ -913,6 +913,46 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXpathQueryContentContains('//dd', "\nuser_name @ user_domain\n");
     }
 
+    public function testGeneralActionWindowsNoArch()
+    {
+        $map = array(
+            array('OsName', 'os_name'),
+            array('OsVersionString', 'os_version_string'),
+            array('OsVersionNumber', 'os_version_number'),
+            array('Windows', array('CpuArchitecture' => null, 'UserDomain' => 'domain')),
+            array('MemorySlot', array()),
+        );
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->willReturnMap($map);
+        $this->_clientManager->method('getClient')->willReturn($client);
+
+        $this->dispatch('/console/client/general/?id=1');
+        $this->assertXpathQueryContentContains(
+            '//dd',
+            "\nos_name os_version_string (os_version_number)\n"
+        );
+    }
+
+    public function testGeneralActionWindowsWithArch()
+    {
+        $map = array(
+            array('OsName', 'os_name'),
+            array('OsVersionString', 'os_version_string'),
+            array('OsVersionNumber', 'os_version_number'),
+            array('Windows', array('CpuArchitecture' => 'cpu_architecture', 'UserDomain' => 'domain')),
+            array('MemorySlot', array()),
+        );
+        $client = $this->getMock('Model\Client\Client');
+        $client->method('offsetGet')->willReturnMap($map);
+        $this->_clientManager->method('getClient')->willReturn($client);
+
+        $this->dispatch('/console/client/general/?id=1');
+        $this->assertXpathQueryContentContains(
+            '//dd',
+            "\nos_name os_version_string (os_version_number) \xE2\x80\x93 cpu_architecture\n"
+        );
+    }
+
     public function testWindowsActionGet()
     {
         // Since form elements are rendered manually, mocking the entire form

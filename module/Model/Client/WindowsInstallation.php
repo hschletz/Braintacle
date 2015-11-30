@@ -31,6 +31,7 @@ namespace Model\Client;
  * @property string $ProductKey Product Key
  * @property string $ProductId Product ID (installation-specific, may or may not be unique)
  * @property string $ManualProductKey Manually overridden product key (entered in Braintacle console)
+ * @property string $CpuArchitecture CPU architecture (may be different from physical CPU's capabilities)
  */
 class WindowsInstallation extends \ArrayObject
 {

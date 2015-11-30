@@ -148,7 +148,8 @@ class Client extends \Model\ClientOrGroup
                             'owner',
                             'product_key',
                             'product_id',
-                            'manual_product_key'
+                            'manual_product_key',
+                            'cpu_architecture',
                         )
                     );
                     $select->where(array('client_id' => $this['Id']));

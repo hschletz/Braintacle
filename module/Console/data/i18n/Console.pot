@@ -680,6 +680,10 @@ msgid "OS version string"
 msgstr ""
 
 #: Console/Form/Search.php view/console/client/index.php
+msgid "OS architecture"
+msgstr ""
+
+#: Console/Form/Search.php view/console/client/index.php
 msgid "OS comment"
 msgstr ""
 

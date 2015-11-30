@@ -73,6 +73,7 @@ class ClientTest extends \Model\Test\AbstractTest
                 'ProductKey' => 'product_key2',
                 'ProductId' => 'product_id2',
                 'ManualProductKey' => 'manual_product_key2',
+                'CpuArchitecture' => 'cpu_architecture2',
             ),
             $windows->getArrayCopy()
         );

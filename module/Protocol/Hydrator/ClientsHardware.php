@@ -107,6 +107,7 @@ class ClientsHardware implements \Zend\Stdlib\Hydrator\HydratorInterface
      * @var string[]
      */
     protected $_hydratorMapWindows = array(
+        'ARCH' => 'CpuArchitecture',
         'USERDOMAIN' => 'UserDomain',
         'WINCOMPANY' => 'Company',
         'WINOWNER' => 'Owner',
@@ -122,6 +123,7 @@ class ClientsHardware implements \Zend\Stdlib\Hydrator\HydratorInterface
      */
     protected $_extractorMapWindows = array(
         'Company' => 'WINCOMPANY',
+        'CpuArchitecture' => 'ARCH',
         'Owner' => 'WINOWNER',
         'ProductId' => 'WINPRODID',
         'ProductKey' => 'WINPRODKEY',

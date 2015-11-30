@@ -92,6 +92,7 @@ class Search extends Form
             'OsName' => $translator->translate('OS name'),
             'OsVersionNumber' => $translator->translate('OS version number'),
             'OsVersionString' => $translator->translate('OS version string'),
+            'Windows.CpuArchitecture' => $translator->translate('OS architecture'),
             'OsComment' => $translator->translate('OS comment'),
             'Windows.ProductKey' => $translator->translate('Windows product key'),
             'Windows.ManualProductKey' => $translator->translate('Windows product key (manual)'),

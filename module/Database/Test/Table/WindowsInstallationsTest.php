@@ -51,6 +51,7 @@ class WindowsInstallationsTest extends AbstractTest
         $this->assertEquals('ProductKey', $map->hydrate('product_key'));
         $this->assertEquals('ProductId', $map->hydrate('product_id'));
         $this->assertEquals('ManualProductKey', $map->hydrate('manual_product_key'));
+        $this->assertEquals('CpuArchitecture', $map->hydrate('cpu_architecture'));
 
         $this->assertEquals('workgroup', $map->extract('Workgroup'));
         $this->assertEquals('user_domain', $map->extract('UserDomain'));
@@ -59,6 +60,7 @@ class WindowsInstallationsTest extends AbstractTest
         $this->assertEquals('product_key', $map->extract('ProductKey'));
         $this->assertEquals('product_id', $map->extract('ProductId'));
         $this->assertEquals('manual_product_key', $map->extract('ManualProductKey'));
+        $this->assertEquals('cpu_architecture', $map->extract('CpuArchitecture'));
 
         $resultSet = static::$_table->getResultSetPrototype();
         $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);

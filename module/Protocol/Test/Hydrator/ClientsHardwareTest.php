@@ -61,6 +61,7 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
             'UUID' => 'uuid',
         );
         $extractedWindows = array(
+            'ARCH' => 'CPU architecture',
             'USERDOMAIN' => 'user domain',
             'WINCOMPANY' => 'company',
             'WINOWNER' => 'owner',
@@ -99,6 +100,7 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
                     'ProductId' => 'product id',
                     'ProductKey' => 'product key',
                     'Workgroup' => 'workgroup',
+                    'CpuArchitecture' => 'CPU architecture',
                 )
             ),
         );
@@ -151,6 +153,7 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
                 'ProductId' => 'product id',
                 'ProductKey' => 'product key',
                 'Workgroup' => 'workgroup',
+                'CpuArchitecture' => 'CPU architecture',
                 'Ignored' => 'ignored',
             ),
         );
@@ -175,6 +178,7 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
             'UUID' => 'uuid',
         );
         $windowsExtracted = array(
+            'ARCH' => 'CPU architecture',
             'USERDOMAIN' => 'user domain',
             'WINCOMPANY' => 'company',
             'WINOWNER' => 'owner',

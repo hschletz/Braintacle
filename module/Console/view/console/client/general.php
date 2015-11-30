@@ -108,21 +108,22 @@ print $this->htmlTag(
     $this->escapeHtml($client['Type'])
 );
 
+$os = $this->escapeHtml(
+    sprintf(
+        '%s %s (%s)',
+        $client['OsName'],
+        $client['OsVersionString'],
+        $client['OsVersionNumber']
+    )
+);
+if (isset($client['Windows']['CpuArchitecture'])) {
+    $os .= ' &ndash; ' . $this->escapeHtml($client['Windows']['CpuArchitecture']);
+}
 print $this->htmlTag(
     'dt',
     $this->translate('Operating System')
 );
-print $this->htmlTag(
-    'dd',
-    $this->escapeHtml(
-        sprintf(
-            '%s %s (%s)',
-            $client['OsName'],
-            $client['OsVersionString'],
-            $client['OsVersionNumber']
-        )
-    )
-);
+print $this->htmlTag('dd', $os);
 
 print $this->htmlTag(
     'dt',

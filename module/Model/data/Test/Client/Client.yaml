@@ -5,6 +5,7 @@ hardware:
     id: 1
     deviceid: "id1"
     name: "name1"
+    arch: "cpu_architecture1"
     winprodid: "product_id1"
     workgroup: "workgroup1"
     userdomain: "userdomain1"
@@ -15,6 +16,7 @@ hardware:
     id: 2
     deviceid: "id2"
     name: "name2"
+    arch: "cpu_architecture2"
     winprodid: "product_id2"
     workgroup: "workgroup2"
     userdomain: "userdomain2"

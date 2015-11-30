@@ -43,6 +43,7 @@ class WindowsInstallations extends \Database\AbstractTable
                     'product_key' => 'ProductKey',
                     'product_id' => 'ProductId',
                     'manual_product_key' => 'ManualProductKey',
+                    'cpu_architecture' => 'CpuArchitecture',
                 )
             )
         );
