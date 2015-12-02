@@ -2,7 +2,7 @@ regconfig:
   -
     name: "name1"
     regtree: 1
-    regkey: "sub\key1"
+    regkey: 'sub\key1'
     regvalue: "value1"
 
 registry:

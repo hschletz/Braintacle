@@ -3,13 +3,13 @@ regconfig:
     id: 1
     name: "name2"
     regtree: 2
-    regkey: "sub\key2"
+    regkey: 'sub\key2'
     regvalue: "value2"
   -
     id: 2
     name: "new_name"
     regtree: 1
-    regkey: "sub\key1"
+    regkey: 'sub\key1'
     regvalue: "value1"
 
 registry:

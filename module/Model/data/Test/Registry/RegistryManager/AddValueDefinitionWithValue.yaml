@@ -2,15 +2,15 @@ regconfig:
   -
     name: "name1"
     regtree: 1
-    regkey: "sub\key1"
+    regkey: 'sub\key1'
     regvalue: "value1"
   -
     name: "name2"
     regtree: 2
-    regkey: "sub\key2"
+    regkey: 'sub\key2'
     regvalue: "value2"
   -
     name: "name3"
     regtree: 3
-    regkey: "sub\key3"
+    regkey: 'sub\key3'
     regvalue: "value3"
