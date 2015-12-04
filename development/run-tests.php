@@ -31,15 +31,20 @@ error_reporting(-1);
 function testModule($module, $filter=null)
 {
     global $vendorBin;
+    global $doCoverage;
 
     print "\nRunning tests on $module module\n\n";
-    if ($filter) {
-        $filter = ' --filter ' .escapeshellarg($filter);
+    $cmd = PHP_BINARY;
+    if ($doCoverage) {
+        $cmd .= ' -dzend_extension=xdebug.' . PHP_SHLIB_SUFFIX;
     }
-    $cmd = "{$vendorBin}phpunit -c module/$module/phpunit.xml --colors " .
-           '--report-useless-tests --disallow-test-output ' .
-           "--coverage-html=doc/CodeCoverage/$module " .
-           "-d include_path=" . get_include_path() . $filter;
+    $cmd .= " {$vendorBin}phpunit -c module/$module/phpunit.xml --colors --report-useless-tests --disallow-test-output";
+    if ($doCoverage) {
+       $cmd .= " --coverage-html=doc/CodeCoverage/$module";
+    }
+    if ($filter) {
+        $cmd .= ' --filter ' .escapeshellarg($filter);
+    }
 
     // Pass descriptors explicitly to make PHPUnit 4.4 recognize a TTY which is
     // required for color output and terminal size detection.
@@ -70,9 +75,19 @@ if (!file_exists($vendorBin . 'phpunit')) {
     $vendorBin = ''; // fall back to globally installed version
 }
 
-if ($argc >= 2) {
+// Look for --coverage argument anywhere in the command line, remove it for subsequent processing
+$args = $_SERVER['argv'];
+$coveragePos = array_search('--coverage', $args);
+if ($coveragePos === false) {
+    $doCoverage = false;
+} else {
+    $doCoverage = true;
+    array_splice($args, $coveragePos, 1);
+}
+
+if (count($args) >= 2) {
     // Run tests for explicit module and optional filter
-    testModule(ucfirst($argv[1]), @$argv[2]);
+    testModule(ucfirst($args[1]), @$args[2]);
 } else {
     // Run tests for all modules that have tests defined
     testModule('Library');
