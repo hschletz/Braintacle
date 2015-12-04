@@ -24,14 +24,3 @@ date_default_timezone_set('Europe/Berlin');
 
 require_once(__DIR__ . '/../../Library/Application.php');
 \Library\Application::init('Export', false);
-
-// Get absolute path to vfsStream library
-\Zend\Loader\AutoloaderFactory::factory(
-    array(
-        '\Zend\Loader\StandardAutoloader' => array(
-            'namespaces' => array(
-                'org\bovigo\vfs' => stream_resolve_include_path('org/bovigo/vfs'),
-            ),
-        )
-    )
-);

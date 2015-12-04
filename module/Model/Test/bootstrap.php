@@ -39,14 +39,3 @@ stream_wrapper_register('statonly', 'StreamWrapperStatOnly');
 
 require_once(__DIR__ . '/../../Library/Application.php');
 \Library\Application::init('Model', false);
-
-// Get absolute path to vfsStream library
-\Zend\Loader\AutoloaderFactory::factory(
-    array(
-        '\Zend\Loader\StandardAutoloader' => array(
-            'namespaces' => array(
-                'org\bovigo\vfs' => stream_resolve_include_path('org/bovigo/vfs'),
-            ),
-        )
-    )
-);

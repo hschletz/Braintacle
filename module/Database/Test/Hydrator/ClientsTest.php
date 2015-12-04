@@ -21,8 +21,6 @@
 
 namespace Database\Test\Hydrator;
 
-require_once 'Database.php'; // from NADA path
-
 class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
 {
     protected function _getHydrator()

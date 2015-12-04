@@ -48,14 +48,3 @@ require_once(__DIR__ . '/../../Library/Application.php');
 \Library\Application::init('Library', false);
 
 \Locale::setDefault('de_DE'); // Force environment-independent locale
-
-// Get absolute path to vfsStream library
-\Zend\Loader\AutoloaderFactory::factory(
-    array(
-        '\Zend\Loader\StandardAutoloader' => array(
-            'namespaces' => array(
-                'org\bovigo\vfs' => stream_resolve_include_path('org/bovigo/vfs'),
-            ),
-        )
-    )
-);

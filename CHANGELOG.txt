@@ -15,9 +15,9 @@ Upgrading from previous versions:
   the database.ini file from earlier versions. This file must be set up from
   scratch (see the instructions in the template) - renaming is not sufficient.
 
-- Required: Upgrade Zend Framework to 2.4.8 or later.
-
-- Required: Upgrade NADA to the latest snapshot.
+- Required: Update dependencies, either via the new Composer support, or
+  manually (upgrade Zend Framework to 2.4.8 or later, upgrade NADA to the latest
+  snapshot).
 
 - Required: Run tools/database-manager.php to update the database schema.
 

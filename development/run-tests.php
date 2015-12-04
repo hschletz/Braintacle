@@ -30,11 +30,13 @@ error_reporting(-1);
  */
 function testModule($module, $filter=null)
 {
+    global $vendorBin;
+
     print "\nRunning tests on $module module\n\n";
     if ($filter) {
         $filter = ' --filter ' .escapeshellarg($filter);
     }
-    $cmd = "phpunit -c module/$module/phpunit.xml --colors " .
+    $cmd = "{$vendorBin}phpunit -c module/$module/phpunit.xml --colors " .
            '--report-useless-tests --disallow-test-output ' .
            "--coverage-html=doc/CodeCoverage/$module " .
            "-d include_path=" . get_include_path() . $filter;
@@ -61,6 +63,12 @@ chdir(dirname(__DIR__));
 // Special application environment, allows application code to skip actions not
 // appropriate in a unit test environment.
 putenv('APPLICATION_ENV=test');
+
+// Use phpunit from vendor directory if available
+$vendorBin = __DIR__ . '/../vendor/bin/';
+if (!file_exists($vendorBin . 'phpunit')) {
+    $vendorBin = ''; // fall back to globally installed version
+}
 
 if ($argc >= 2) {
     // Run tests for explicit module and optional filter

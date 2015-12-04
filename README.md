@@ -39,11 +39,9 @@ Requirements
   - The "zip" extension is optional. If present, the package builder can create ZIP
     archives on the fly.
 
-  There are also some PHP libraries required in the include path:
-
-  - [Zend Framework](http://framework.zend.com) 2.4.8 or later
-
-  - [NADA](https://github.com/hschletz/NADA)
+- [Composer](https://getcomposer.org/) is recommended for setup of dependencies.
+  See [INSTALL.md](INSTALL.md) for additional requirements if you don't install
+  via Composer.
 
 - On every client that should be managed through Braintacle, either the
   [OCS Inventory NG agent](http://www.ocsinventory-ng.org/en/download/download-agent.html) or

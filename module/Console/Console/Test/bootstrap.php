@@ -23,21 +23,13 @@ error_reporting(-1);
 ini_set('memory_limit', '300M');
 date_default_timezone_set('Europe/Berlin');
 require_once(__DIR__ . '/../../../Library/Application.php');
-require_once('Zend/Console/Console.php');
 
 // Pretend to be not on a console to force choice of HTTP route over console route.
+if (!is_dir(__DIR__ . '/../../../../vendor')) {
+    require_once 'Zend/Console/Console.php';
+}
 \Zend\Console\Console::overrideIsConsole(false);
+
 \Library\Application::init('Console', false);
 
 \Locale::setDefault('de_DE'); // Force environment-independent locale
-
-// Get absolute path to vfsStream library
-\Zend\Loader\AutoloaderFactory::factory(
-    array(
-        '\Zend\Loader\StandardAutoloader' => array(
-            'namespaces' => array(
-                'org\bovigo\vfs' => stream_resolve_include_path('org/bovigo/vfs'),
-            ),
-        )
-    )
-);
