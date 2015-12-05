@@ -95,9 +95,10 @@ class ArchiveManager
     /**
      * Create an archive file
      *
-     * Existing files will be overwritten. Depending on the underlying archive
-     * implementation, the archive may not be created on disk immediately, but
-     * only after successfully adding files and/or closing the archive.
+     * The archive file must not exist - delete existing archives before calling
+     * this method. Depending on the underlying archive implementation, the
+     * archive may not be created on disk immediately, but only after
+     * successfully adding files and/or closing the archive.
      *
      * @param string $type Archive type to create, one of the class constants
      * @param string $filename File to create
@@ -107,10 +108,15 @@ class ArchiveManager
      */
     public function createArchive($type, $filename)
     {
+        // ZipArchive::OVERWRITE gives strange errors on Windows if the target
+        // file exists. The only known workaround is to forbid an existing file.
+        if (file_exists($filename)) {
+            throw new \RuntimeException('Archive already exists: ' . $filename);
+        }
         switch ($type) {
             case self::ZIP:
                 $archive = new \ZipArchive;
-                $result = @$archive->open($filename, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+                $result = $archive->open($filename, \ZipArchive::CREATE | \ZipArchive::EXCL);
                 if ($result !== true) {
                     throw new \RuntimeException("Error creating ZIP archive '$filename', code $result");
                 }

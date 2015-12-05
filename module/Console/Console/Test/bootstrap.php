@@ -20,7 +20,7 @@
  */
 
 error_reporting(-1);
-ini_set('memory_limit', '300M');
+ini_set('memory_limit', '350M');
 date_default_timezone_set('Europe/Berlin');
 require_once(__DIR__ . '/../../../Library/Application.php');
 

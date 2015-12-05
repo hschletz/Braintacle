@@ -70,7 +70,7 @@ chdir(dirname(__DIR__));
 putenv('APPLICATION_ENV=test');
 
 // Use phpunit from vendor directory if available
-$vendorBin = __DIR__ . '/../vendor/bin/';
+$vendorBin = __DIR__ . '/../vendor/phpunit/phpunit/';
 if (!file_exists($vendorBin . 'phpunit')) {
     $vendorBin = ''; // fall back to globally installed version
 }

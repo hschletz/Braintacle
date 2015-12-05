@@ -64,14 +64,23 @@ class ArchiveManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('RuntimeException', "Error creating ZIP archive '', code ");
         $manager = new ArchiveManager;
-        $manager->createArchive(ArchiveManager::ZIP, '');
+        @$manager->createArchive(ArchiveManager::ZIP, '');
     }
 
     public function testCreateArchiveInvalid()
     {
         $this->setExpectedException('InvalidArgumentException', 'Unsupported archive type: invalid');
         $manager = new ArchiveManager;
-        $manager->createArchive('invalid', __FILE__);
+        $manager->createArchive('invalid', '');
+    }
+
+    public function testCreateArchiveFileExists()
+    {
+        $tmpFile = tmpfile();
+        $filename = stream_get_meta_data($tmpFile)['uri'];
+        $this->setExpectedException('RuntimeException', 'Archive already exists: ' . $filename);
+        $manager = new ArchiveManager;
+        $manager->createArchive('something', $filename);
     }
 
     /**
@@ -124,23 +133,44 @@ class ArchiveManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testZipArchiveCreation()
     {
-        // Zip extension does not support stream wrappers. Use real filesystem objects.
-        $tmpFile = tmpfile();
-        $archiveFile = stream_get_meta_data($tmpFile)['uri'];
+        // The Zip extension does not support stream wrappers. Use real
+        // filesystem objects instead. Since the target file must not exist,
+        // tmpfile() is not suitable. Instead, use tempnam() with a dedicated
+        // directory to get a safe filename and delete the created file. This
+        // is mostly safe because the only source for filename clashes would be
+        // another test running on the same tree in parallel, and the randomized
+        // filename part reduces the risk even further.
+        $tmpDir = \Library\Module::getPath('data/Test/ArchiveManager');
+        $archiveFile = tempnam($tmpDir, 'zip');
 
-        $manager = new ArchiveManager;
-        $archive = $manager->createArchive(ArchiveManager::ZIP, $archiveFile);
-        $manager->addFile($archive, __FILE__, 'äöü.txt');
-        $manager->closeArchive($archive);
+        try {
+            if (dirname($archiveFile) != $tmpDir) {
+                throw new \UnexpectedValueException('Could not generate temporary file in safe location');
+            }
 
-        $this->assertFileExists($archiveFile);
-        $this->assertTrue($manager->isArchive(ArchiveManager::ZIP, $archiveFile));
+            unlink($archiveFile);
+            $manager = new ArchiveManager;
+            $archive = $manager->createArchive(ArchiveManager::ZIP, $archiveFile);
+            $manager->addFile($archive, __FILE__, 'äöü.txt');
+            $manager->closeArchive($archive);
 
-        $testArchive = new \ZipArchive;
-        $this->assertTrue($testArchive->open($archiveFile));
-        $this->assertEquals(1, $testArchive->numFiles);
-        $content = $testArchive->getFromName('äöü.txt');
-        $this->assertNotFalse($content); // Message is easier readable in case of error
-        $this->assertEquals(file_get_contents(__FILE__), $content);
+            $this->assertFileExists($archiveFile);
+            $this->assertTrue($manager->isArchive(ArchiveManager::ZIP, $archiveFile));
+
+            $testArchive = new \ZipArchive;
+            $this->assertTrue($testArchive->open($archiveFile));
+            $this->assertEquals(1, $testArchive->numFiles);
+            $content = $testArchive->getFromName('äöü.txt');
+            $testArchive->close();
+            $this->assertNotFalse($content); // Message is easier readable in case of error
+            $this->assertEquals(file_get_contents(__FILE__), $content);
+
+            unlink($archiveFile);
+        } catch (\Exception $e) {
+            if ($archiveFile) {
+                @unlink($archiveFile);
+                throw $e;
+            }
+        }
     }
 }
