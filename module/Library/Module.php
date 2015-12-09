@@ -41,7 +41,7 @@ Feature\ConfigProviderInterface
      */
     public function getConfig()
     {
-        $config = array(
+        return array(
             'controller_plugins' => array(
                 'invokables' => array(
                     '_' => 'Library\Mvc\Controller\Plugin\TranslationHelper',
@@ -50,16 +50,29 @@ Feature\ConfigProviderInterface
                 )
             ),
             'service_manager' => array(
+                'delegators' => array(
+                    'MvcTranslator' => array('Library\I18n\Translator\DelegatorFactory'),
+                ),
                 'factories' => array(
                     '\Library\Logger' => 'Library\Log\LoggerServiceFactory',
                 ),
                 'invokables' => array(
                     'Library\ArchiveManager' => 'Library\ArchiveManager',
+                    'Library\I18n\Translator\DelegatorFactory' => 'Library\I18n\Translator\DelegatorFactory',
                     'Library\Now' => 'DateTime',
                     'Library\Random' => 'Library\Random',
                 ),
                 'shared' => array(
                     'Library\Now' => false,
+                ),
+            ),
+            'translator' => array(
+                'translation_file_patterns' => array(
+                    array(
+                        'type' => 'Po',
+                        'base_dir' => __DIR__ . '/data/i18n',
+                        'pattern' => '%s.po',
+                    ),
                 ),
             ),
             'translator_plugins' => array(
@@ -78,31 +91,6 @@ Feature\ConfigProviderInterface
                 ),
             ),
         );
-        $config += Application::getTranslationConfig(static::getPath('data/i18n'));
-
-        if (\Locale::getPrimaryLanguage(\Locale::getDefault()) != 'en') {
-            $zfTranslations = @$appConfig = Application::getConfig()['paths']['Zend translations'];
-            if (is_dir($zfTranslations)) {
-                $locale = \Locale::getDefault();
-                $translationFile = "$zfTranslations/$locale/Zend_Validate.php";
-                if (!is_file($translationFile)) {
-                    $locale = \Locale::getPrimaryLanguage($locale);
-                    $translationFile = "$zfTranslations/$locale/Zend_Validate.php";
-                    if (!is_file($translationFile)) {
-                        $translationFile = null;
-                    }
-                }
-                if ($translationFile) {
-                    $config['translator']['translation_files'][] = array(
-                        'type' => 'phparray',
-                        'filename' => $translationFile,
-                        'text_domain' => 'Zend',
-                    );
-                }
-            }
-        }
-
-        return $config;
     }
 
     /**
@@ -135,39 +123,16 @@ Feature\ConfigProviderInterface
         $formElementHelper->addClass('Library\Form\Element\SelectSimple', 'formselectsimple');
         $formElementHelper->addType('select_untranslated', 'formselectuntranslated');
 
-        if (\Locale::getPrimaryLanguage(\Locale::getDefault()) != 'en') {
-            $mvcTranslator = $serviceManager->get('MvcTranslator');
-            if (Application::isDevelopment()) {
-                $translator = $mvcTranslator->getTranslator();
-                $translator->enableEventManager();
-                $translator->getEventManager()->attach(
-                    \Zend\I18n\Translator\Translator::EVENT_MISSING_TRANSLATION,
-                    array($this, 'onMissingTranslation')
-                );
-            }
-            // Validators have no translator by default. Attach translator, but
-            // use a different text domain to avoid warnings if the Zend
-            // translations are not loaded. For custom messages, the text domain
-            // must be reset manually to 'default' for individual validators.
-            \Zend\Validator\AbstractValidator::setDefaultTranslator($mvcTranslator);
-            \Zend\Validator\AbstractValidator::setDefaultTranslatorTextDomain('Zend');
-        }
-    }
-
-    /**
-     * Event handler for missing translations
-     * @param \Zend\EventManager\EventInterface $e
-     * @internal
-     */
-    public function onMissingTranslation(\Zend\EventManager\EventInterface $e)
-    {
-        // Issue warning about missing translation for the 'default' text
-        // domain. This warning will indicate either a message string missing in
-        // the translation file, or accidental translator invokation when a
-        // string should not actually be translated.
-        if ($e->getParam('text_domain') == 'default') {
-            trigger_error('Missing translation: ' . $e->getParam('message'), E_USER_NOTICE);
-        }
+        // Validators have no translator by default. Attach translator, but use
+        // a different text domain to avoid warnings if the Zend translations
+        // are not loaded. For custom messages, the text domain must be reset
+        // manually to 'default' for individual validators.
+        // This cannot be done by the delegator because it is invoked after form
+        // validation messages get translated.
+        \Zend\Validator\AbstractValidator::setDefaultTranslator(
+            $serviceManager->get('MvcTranslator'),
+            'Zend'
+        );
     }
 
     /**

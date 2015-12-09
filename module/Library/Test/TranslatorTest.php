@@ -26,63 +26,144 @@ namespace Library\Test;
  */
 class TranslatorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testMissingTranslationTriggersNotineInDevelopmentMode()
+    protected static $_defaultLocale;
+    protected static $_applicationEnvironment;
+
+    public static function setUpBeforeClass()
     {
-        // Repeat application initialization with production environment
-        putenv('APPLICATION_ENV=production');
-        \Library\Application::init('Library', false);
-
-        // Invoke translator with untranslatable string - must not trigger notice
-        $translator = \Library\Application::getService('MvcTranslator')->getTranslator();
-        $message = $translator->translate('this_string_is_not_translated');
-
-        // Reset application state ASAP.
-        putenv('APPLICATION_ENV=test');
-        \Library\Application::init('Library', false);
-
-        $this->assertEquals('this_string_is_not_translated', $message);
-
-        // Repeat test - must trigger notice this time
-        @trigger_error(''); // Bring error_get_last() into defined state
-        $translator = \Library\Application::getService('MvcTranslator')->getTranslator();
-        $message = @$translator->translate('this_string_is_not_translated');
-        $lastError = error_get_last();
-        $this->assertEquals(E_USER_NOTICE, $lastError['type']);
-        $this->assertEquals(
-            'Missing translation: this_string_is_not_translated',
-            $lastError['message']
-        );
-        $this->assertEquals('this_string_is_not_translated', $message);
+        // Preserve global state
+        static::$_defaultLocale = \Locale::getDefault();
+        static::$_applicationEnvironment = \Library\Application::getEnvironment();
     }
 
-    public function testNoTranslatorForEnglishLocale()
+    public function tearDown()
     {
-        // Preserve state
-        if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-        }
-        // Repeat application initialization with english locale
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en_UK';
-        \Library\Application::init('Library', false);
+        // Reset after every test to avoid interference
+        \Locale::setDefault(static::$_defaultLocale);
+        putenv('APPLICATION_ENV=' . static::$_applicationEnvironment);
+    }
 
-        // Invoke translator with untranslatable string - must not trigger notice
-        $translator = \Library\Application::getService('MvcTranslator')->getTranslator();
-        $message = $translator->translate('this_string_is_not_translated');
+    public function translatorSetupProvider()
+    {
+        return array(
+            // Messages from Library module
+            array('en', 'default', "File '%value%' is not readable", "File '%value%' is not readable"),
+            array('en_UK', 'default', "File '%value%' is not readable", "File '%value%' is not readable"),
+            array('de', 'default', "File '%value%' is not readable", "Datei '%value%' ist nicht lesbar"),
+            array('de_DE', 'default', "File '%value%' is not readable", "Datei '%value%' ist nicht lesbar"),
+            // Messages from ZF resources
+            array('en', 'Zend', "Value is required and can't be empty", "Value is required and can't be empty"),
+            array('en_UK', 'Zend', "Value is required and can't be empty", "Value is required and can't be empty"),
+            array('de', 'Zend', "Value is required and can't be empty", 'Es wird eine Eingabe benötigt'),
+            array('de_DE', 'Zend', "Value is required and can't be empty", 'Es wird eine Eingabe benötigt'),
+        );
+    }
 
-        // Reset application state ASAP.
-        if (isset($language)) {
-            $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $language;
-        } else {
-            unset($_SERVER['HTTP_ACCEPT_LANGUAGE']);
-        }
-        \Library\Application::init('Library', false);
+    /**
+     * @dataProvider translatorSetupProvider
+     */
+    public function testTranslatorSetup($locale, $textDomain, $message, $expectedMessage)
+    {
+        \Locale::setDefault($locale);
+        $application = \Zend\Mvc\Application::init(
+            array(
+                'modules' => array('Library'),
+                'module_listener_options' => array(
+                    'module_paths' => array(
+                        'Library' => \Library\Application::getPath('module/Library')
+                    ),
+                ),
+            )
+        );
+        $translator = $application->getServiceManager()->get('MvcTranslator');
+        $this->assertEquals($expectedMessage, $translator->translate($message, $textDomain));
+    }
 
-        $this->assertEquals('this_string_is_not_translated', $message);
+    public function missingTranslationForDevelopmentProvider()
+    {
+        return array(
+            array('development', 'de'),
+            array('development', 'de_DE'),
+            array('test', 'de'),
+            array('test', 'de_DE'),
+        );
+    }
 
-        // No translations should be loaded
-        $reflectionObject = new \ReflectionObject($translator);
-        $reflectionProperty = $reflectionObject->getProperty('files');
-        $reflectionProperty->setAccessible(true);
-        $this->assertSame(array(), $reflectionProperty->getValue($translator));
+    /**
+     * @dataProvider missingTranslationForDevelopmentProvider
+     */
+    public function testMissingTranslationTriggersNoticeInDevelopmentOrTestMode($mode, $locale)
+    {
+        $this->setExpectedException(
+            'PHPUnit_Framework_Error_Notice',
+            'Missing translation: this_string_is_not_translated'
+        );
+        putenv('APPLICATION_ENV=' . $mode);
+        \Locale::setDefault($locale);
+        $application = \Zend\Mvc\Application::init(
+            array(
+                'modules' => array('Library'),
+                'module_listener_options' => array(
+                    'module_paths' => array(
+                        'Library' => \Library\Application::getPath('module/Library')
+                    ),
+                ),
+            )
+        );
+        $translator = $application->getServiceManager()->get('MvcTranslator');
+        $this->assertEquals('this_string_is_not_translated', $translator->translate('this_string_is_not_translated'));
+    }
+
+    public function missingTranslationWithoutEnvironmentProvider()
+    {
+        return array(
+            array('de'),
+            array('de_DE')
+        );
+    }
+
+    /**
+     * @dataProvider missingTranslationWithoutEnvironmentProvider
+     */
+    public function testMissingTranslationDoesNotTriggerNoticeInProductionMode($locale)
+    {
+        putenv('APPLICATION_ENV=production');
+        \Locale::setDefault($locale);
+        $application = \Zend\Mvc\Application::init(
+            array(
+                'modules' => array('Library'),
+                'module_listener_options' => array(
+                    'module_paths' => array(
+                        'Library' => \Library\Application::getPath('module/Library')
+                    ),
+                ),
+            )
+        );
+        $translator = $application->getServiceManager()->get('MvcTranslator');
+        $this->assertEquals('this_string_is_not_translated', $translator->translate('this_string_is_not_translated'));
+    }
+
+    /**
+     * @dataProvider missingTranslationForDevelopmentProvider
+     */
+    public function testMissingTranslationDoesNotTriggerNoticeForZendResources($mode, $locale)
+    {
+        putenv('APPLICATION_ENV=' . $mode);
+        \Locale::setDefault($locale);
+        $application = \Zend\Mvc\Application::init(
+            array(
+                'modules' => array('Library'),
+                'module_listener_options' => array(
+                    'module_paths' => array(
+                        'Library' => \Library\Application::getPath('module/Library')
+                    ),
+                ),
+            )
+        );
+        $translator = $application->getServiceManager()->get('MvcTranslator');
+        $this->assertEquals(
+            'this_string_is_not_translated',
+            $translator->translate('this_string_is_not_translated', 'Zend')
+        );
     }
 }

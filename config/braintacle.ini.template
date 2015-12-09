@@ -8,18 +8,7 @@
 ; without any warranty.
 
 
-; Library paths
-
-[paths]
-
-; OPTIONAL: Path to ZF translation files
-; These are typically located in the ZF source tree under resources/languages
-; and contain translations for validation messages. If the path is invalid or
-; not given, some messages are displayed in English regardless of locale.
-; Zend translations =
-
-
-; Database connection options.
+; Database connection options
 
 [database]
 
@@ -45,3 +34,14 @@ database = braintacle
 ; Username and password for database connection.
 username = ocs
 password = ocs
+
+
+; Library paths
+
+[paths]
+
+; OPTIONAL: Path to ZF translation files (ignored for Composer installations)
+; These are typically located in the ZF source tree under resources/languages
+; and contain translations for validation messages. If the path is invalid or
+; not given, some messages are displayed in English regardless of locale.
+; Zend translations =

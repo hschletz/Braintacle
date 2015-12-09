@@ -28,6 +28,7 @@
         "zendframework/zend-form": "~2.5.0",
         "zendframework/zend-http": "~2.5.0",
         "zendframework/zend-i18n": "~2.5.0",
+        "zendframework/zend-i18n-resources": "~2.5.0",
         "zendframework/zend-inputfilter": "~2.5.0",
         "zendframework/zend-json": "~2.5.0",
         "zendframework/zend-loader": "~2.5.0",

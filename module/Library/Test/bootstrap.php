@@ -21,6 +21,7 @@
 
 error_reporting(-1);
 date_default_timezone_set('Europe/Berlin');
+\Locale::setDefault('de');
 
 /**
  * A minimal stream wrapper to simulate I/O errors
@@ -47,4 +48,3 @@ stream_wrapper_register('fail', 'StreamWrapperFail');
 require_once(__DIR__ . '/../../Library/Application.php');
 \Library\Application::init('Library', false);
 
-\Locale::setDefault('de_DE'); // Force environment-independent locale

@@ -49,9 +49,7 @@ Feature\BootstrapListenerInterface
      */
     public function getConfig()
     {
-        $config = require(__DIR__ . '/../module.config.php');
-        $config += \Library\Application::getTranslationConfig(static::getPath('data/i18n'));
-        return $config;
+        return require(__DIR__ . '/../module.config.php');
     }
 
     /**

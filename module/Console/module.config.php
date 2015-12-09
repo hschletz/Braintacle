@@ -105,6 +105,15 @@ return array(
             'Console\Navigation\MainMenu' => 'Console\Navigation\MainMenuFactory',
         ),
     ),
+    'translator' => array(
+        'translation_file_patterns' => array(
+            array(
+                'type' => 'Po',
+                'base_dir' => __DIR__ . '/data/i18n',
+                'pattern' => '%s.po',
+            ),
+        ),
+    ),
     'view_helpers' => array(
         'factories' => array(
             'consoleUrl' => 'Console\View\Helper\Service\ConsoleUrlFactory',

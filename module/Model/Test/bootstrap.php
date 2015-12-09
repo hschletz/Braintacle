@@ -21,6 +21,7 @@
 
 error_reporting(-1);
 date_default_timezone_set('Europe/Berlin');
+\Locale::setDefault('de');
 
 /**
  * A minimal stream wrapper to simulate I/O errors
