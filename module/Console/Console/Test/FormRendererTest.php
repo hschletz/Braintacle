@@ -212,13 +212,9 @@ EOT;
     {
         $translator = $this->getMock('Zend\I18n\Translator\Translator');
         $translator->method('translate')
-                   ->will(
-                       $this->returnCallback(
-                           function($string) {
-                                return "$string-translated";
-                           }
-                       )
-                   );
+                   ->willReturnCallback(function ($string) {
+                       return "$string-translated";
+                   });
         $view = $this->_createView();
         $view->plugin('translate')->setTranslator($translator);
         $view->plugin('FormRow')->setTranslatorEnabled(false);

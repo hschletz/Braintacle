@@ -29,7 +29,6 @@ class DirectoryWritable extends \Zend\Validator\AbstractValidator
     const DIRECTORY = 'directory';
     const WRITABLE = 'writable';
 
-    // @codingStandardsIgnoreStart
     /**
      * Validation failure message template definitions
      * @var string[]
@@ -41,7 +40,6 @@ class DirectoryWritable extends \Zend\Validator\AbstractValidator
 
     /** {@inheritdoc} */
     protected static $defaultTranslatorTextDomain = 'default';
-    // @codingStandardsIgnoreEnd
 
     /**
      * Returns true if $value is a directory and writable

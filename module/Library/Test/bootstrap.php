@@ -19,6 +19,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+namespace Library;
+
 error_reporting(-1);
 date_default_timezone_set('Europe/Berlin');
 \Locale::setDefault('de');
@@ -31,6 +33,7 @@ date_default_timezone_set('Europe/Berlin');
  * error from a normal EOF). Every other method will cause the calling stream
  * function to fail, allowing testing the error handling in the application.
  */
+// @codingStandardsIgnoreStart
 class StreamWrapperFail
 {
     public function stream_open($path, $mode, $options, &$openedPath)
@@ -43,8 +46,8 @@ class StreamWrapperFail
         return false;
     }
 }
-stream_wrapper_register('fail', 'StreamWrapperFail');
+// @codingStandardsIgnoreEnd
+stream_wrapper_register('fail', 'Library\StreamWrapperFail');
 
 require_once(__DIR__ . '/../../Library/Application.php');
 \Library\Application::init('Library', false);
-

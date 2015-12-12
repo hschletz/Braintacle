@@ -27,10 +27,10 @@ use Zend\ModuleManager\Feature;
  * The package builder CLI application
  */
 class Module implements
-Feature\InitProviderInterface,
-Feature\ConfigProviderInterface,
-Feature\AutoloaderProviderInterface,
-Feature\ConsoleUsageProviderInterface
+    Feature\InitProviderInterface,
+    Feature\ConfigProviderInterface,
+    Feature\AutoloaderProviderInterface,
+    Feature\ConsoleUsageProviderInterface
 {
     /**
      * @internal

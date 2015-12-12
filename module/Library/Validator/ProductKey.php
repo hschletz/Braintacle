@@ -34,7 +34,6 @@ class ProductKey extends \Zend\Validator\AbstractValidator
      */
     const PRODUCT_KEY = 'productKey';
 
-    // @codingStandardsIgnoreStart
     /**
      * Validation failure message template definitions
      * @var string[]
@@ -45,7 +44,6 @@ class ProductKey extends \Zend\Validator\AbstractValidator
 
     /** {@inheritdoc} */
     protected static $defaultTranslatorTextDomain = 'default';
-    // @codingStandardsIgnoreEnd
 
     /**
      * Returns TRUE if $value is a valid product key

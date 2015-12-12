@@ -33,7 +33,7 @@ class GetOrder extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
      * @param string $defaultDirection default for missing/invalid "direction"
      * @return array ['order' => $order, 'direction => '$direction]
      */
-    function __invoke($defaultOrder, $defaultDirection='asc')
+    public function __invoke($defaultOrder, $defaultDirection = 'asc')
     {
         $request = $this->getController()->getRequest();
 

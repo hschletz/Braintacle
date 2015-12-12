@@ -95,14 +95,12 @@ foreach ($modules as $module => $config) {
             $cmd[] = "--keyword=$keyword";
         }
         foreach ($config['subdirs'] as $subdir) {
-            foreach (
-                new \RecursiveIteratorIterator(
-                    new \RecursiveDirectoryIterator(
-                        "$modulePath/$subdir",
-                        \RecursiveDirectoryIterator::CURRENT_AS_SELF
-                    )
-                ) as $file
-            ) {
+            foreach (new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator(
+                    "$modulePath/$subdir",
+                    \RecursiveDirectoryIterator::CURRENT_AS_SELF
+                )
+            ) as $file) {
                 $file = $file->getSubPathName();
                 if (substr($file, -4) == '.php') {
                     $cmd[] = escapeshellarg($subdir . DIRECTORY_SEPARATOR . $file);

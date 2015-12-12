@@ -52,7 +52,7 @@ class ClientTest extends \Model\Test\AbstractTest
     {
         $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
-            function($name) {
+            function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
                 // that the service is used only once.
                 return \Library\Application::getService($name);
@@ -84,7 +84,7 @@ class ClientTest extends \Model\Test\AbstractTest
     {
         $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
-            function($name) {
+            function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
                 // that the service is used only once.
                 return \Library\Application::getService($name);
@@ -134,7 +134,7 @@ class ClientTest extends \Model\Test\AbstractTest
     {
         $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
-            function($name) {
+            function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
                 // that the service is used only once.
                 return \Library\Application::getService($name);
@@ -358,9 +358,11 @@ class ClientTest extends \Model\Test\AbstractTest
      * @dataProvider getEffectiveConfigForInventoryIntervalProvider
      */
     public function testGetEffectiveConfigForInventoryInterval(
-        $globalValue, $groupValues, $clientValue, $expectedValue
-    )
-    {
+        $globalValue,
+        $groupValues,
+        $clientValue,
+        $expectedValue
+    ) {
         $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
         $config->method('__get')->with('inventoryInterval')->willReturn($globalValue);
 

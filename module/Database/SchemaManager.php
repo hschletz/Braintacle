@@ -19,7 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-Namespace Database;
+namespace Database;
 
 /**
  * Schema management class
@@ -40,14 +40,14 @@ class SchemaManager
      * Service locator
      * @var \Zend\ServiceManager\ServiceLocatorInterface
      */
-     protected $_serviceLocator;
+    protected $_serviceLocator;
 
     /**
      * Constructor
      *
      * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
      */
-    function __construct($serviceLocator)
+    public function __construct($serviceLocator)
     {
         $this->_serviceLocator = $serviceLocator;
     }
@@ -142,8 +142,7 @@ class SchemaManager
                     $columnObj = $table->getColumn($column['name']);
                     $columnObj->setComment($column['comment']);
                     // Change datatype if different.
-                    if (
-                        $columnObj->getDatatype() != $column['type'] or
+                    if ($columnObj->getDatatype() != $column['type'] or
                         $columnObj->getLength() != $column['length']
                     ) {
                         $logger->info(
@@ -162,11 +161,10 @@ class SchemaManager
                         $logger->info('done.');
                     }
                     // Change default if different.
-                    if (
-                        // Since SQL types cannot be completely mapped to PHP
-                        // types, a loose comparision is required, but changes
-                        // to/from NULL must be taken into account.
-                        $columnObj->getDefault() === null and $column['default'] !== null or
+                    // Since SQL types cannot be completely mapped to PHP
+                    // types, a loose comparision is required, but changes
+                    // to/from NULL must be taken into account.
+                    if ($columnObj->getDefault() === null and $column['default'] !== null or
                         $columnObj->getDefault() !== null and $column['default'] === null or
                         $columnObj->getDefault() != $column['default']
                     ) {

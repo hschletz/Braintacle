@@ -40,7 +40,7 @@ class UrlFromRoute extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
      * @param array $params Associative array of URL parameters
      * @return string URL
      */
-    function __invoke($controllerName=null, $action=null, array $params=array())
+    public function __invoke($controllerName = null, $action = null, array $params = array())
     {
         $path = array();
         if ($controllerName) {

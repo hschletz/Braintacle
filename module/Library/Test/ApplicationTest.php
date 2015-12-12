@@ -35,7 +35,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests for environment detection methods
-     * 
+     *
      * The tests cover getEnvironment(), isProduction(), isDevelopment() and
      * isTest() with all relevant values for the APPLICATION_ENV environment
      * variable.
@@ -69,7 +69,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         putenv('APPLICATION_ENV=invalid');
         try {
             Application::getEnvironment();
-        } catch(\DomainException $expected) {
+        } catch (\DomainException $expected) {
             $invalidEnvironmmentDetected = true;
         }
         // Reset to default.

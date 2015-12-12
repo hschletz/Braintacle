@@ -33,11 +33,11 @@ $headers = array(
     'CurrentResolution' => $this->translate('Current resolution'),
 );
 
-$renderValues = function($view, $object, $property) {
+$renderValues = function ($view, $object, $property) {
 };
 
 $renderCallbacks = array (
-    'Memory' => function($view, $displayController) {
+    'Memory' => function ($view, $displayController) {
         $value = $view->escapeHtml($displayController['Memory']);
         if ($value) {
             $value .= '&nbsp;MB';

@@ -72,7 +72,8 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
         $this->assertTablesEqual(
             $this->_loadDataSet('AddValueDefinitionWithValue')->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
-                'regconfig', 'SELECT name, regtree, regkey, regvalue FROM regconfig ORDER BY name'
+                'regconfig',
+                'SELECT name, regtree, regkey, regvalue FROM regconfig ORDER BY name'
             )
         );
     }
@@ -84,7 +85,8 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
         $this->assertTablesEqual(
             $this->_loadDataSet('AddValueDefinitionWithoutValue')->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
-                'regconfig', 'SELECT name, regtree, regkey, regvalue FROM regconfig ORDER BY name'
+                'regconfig',
+                'SELECT name, regtree, regkey, regvalue FROM regconfig ORDER BY name'
             )
         );
     }
@@ -101,7 +103,8 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
         $this->assertTablesEqual(
             $this->_loadDataSet()->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
-                'regconfig', 'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
+                'regconfig',
+                'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
             )
         );
     }
@@ -118,7 +121,8 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
         $this->assertTablesEqual(
             $this->_loadDataSet()->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
-                'regconfig', 'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
+                'regconfig',
+                'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
             )
         );
     }
@@ -135,7 +139,8 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
         $this->assertTablesEqual(
             $this->_loadDataSet()->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
-                'regconfig', 'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
+                'regconfig',
+                'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
             )
         );
     }
@@ -148,13 +153,15 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
         $this->assertTablesEqual(
             $dataSet->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
-                'regconfig', 'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
+                'regconfig',
+                'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
             )
         );
         $this->assertTablesEqual(
             $dataSet->getTable('registry'),
             $this->getConnection()->createQueryTable(
-                'registry', 'SELECT hardware_id, name FROM registry ORDER BY hardware_id'
+                'registry',
+                'SELECT hardware_id, name FROM registry ORDER BY hardware_id'
             )
         );
     }
@@ -167,13 +174,15 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
         $this->assertTablesEqual(
             $dataSet->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
-                'regconfig', 'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
+                'regconfig',
+                'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
             )
         );
         $this->assertTablesEqual(
             $dataSet->getTable('registry'),
             $this->getConnection()->createQueryTable(
-                'registry', 'SELECT hardware_id, name FROM registry ORDER BY hardware_id'
+                'registry',
+                'SELECT hardware_id, name FROM registry ORDER BY hardware_id'
             )
         );
     }
@@ -191,13 +200,15 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
         $this->assertTablesEqual(
             $dataSet->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
-                'regconfig', 'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
+                'regconfig',
+                'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
             )
         );
         $this->assertTablesEqual(
             $dataSet->getTable('registry'),
             $this->getConnection()->createQueryTable(
-                'registry', 'SELECT hardware_id, name FROM registry ORDER BY hardware_id'
+                'registry',
+                'SELECT hardware_id, name FROM registry ORDER BY hardware_id'
             )
         );
     }
@@ -215,13 +226,15 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
         $this->assertTablesEqual(
             $dataSet->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
-                'regconfig', 'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
+                'regconfig',
+                'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
             )
         );
         $this->assertTablesEqual(
             $dataSet->getTable('registry'),
             $this->getConnection()->createQueryTable(
-                'registry', 'SELECT hardware_id, name FROM registry ORDER BY hardware_id'
+                'registry',
+                'SELECT hardware_id, name FROM registry ORDER BY hardware_id'
             )
         );
     }
@@ -234,13 +247,15 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
         $this->assertTablesEqual(
             $dataSet->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
-                'regconfig', 'SELECT name, regtree, regkey, regvalue FROM regconfig ORDER BY name'
+                'regconfig',
+                'SELECT name, regtree, regkey, regvalue FROM regconfig ORDER BY name'
             )
         );
         $this->assertTablesEqual(
             $dataSet->getTable('registry'),
             $this->getConnection()->createQueryTable(
-                'registry', 'SELECT hardware_id, name FROM registry'
+                'registry',
+                'SELECT hardware_id, name FROM registry'
             )
         );
     }
@@ -253,13 +268,15 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
         $this->assertTablesEqual(
             $dataSet->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
-                'regconfig', 'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
+                'regconfig',
+                'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
             )
         );
         $this->assertTablesEqual(
             $dataSet->getTable('registry'),
             $this->getConnection()->createQueryTable(
-                'registry', 'SELECT hardware_id, name FROM registry ORDER BY name'
+                'registry',
+                'SELECT hardware_id, name FROM registry ORDER BY name'
             )
         );
     }

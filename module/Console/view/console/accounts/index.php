@@ -30,7 +30,7 @@ $headers = array(
 );
 
 $renderCallbacks = array(
-    'MailAddress' => function($view, $account) {
+    'MailAddress' => function ($view, $account) {
         $address = $account['MailAddress'];
         if ($address) {
             return $view->htmlTag(
@@ -43,7 +43,7 @@ $renderCallbacks = array(
             );
         }
     },
-    'edit' => function($view, $account) {
+    'edit' => function ($view, $account) {
         return $view->htmlTag(
             'a',
             $view->translate('Edit'),
@@ -59,7 +59,7 @@ $renderCallbacks = array(
             true
         );
     },
-    'delete' => function($view, $account) {
+    'delete' => function ($view, $account) {
         if ($account['Id'] == $this->identity()) {
             return '';
         } else {

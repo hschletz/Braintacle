@@ -113,7 +113,7 @@ $columnClasses = array(
 
 $headers = array();
 $renderCallbacks = array(
-    'Name' => function($view, $client) {
+    'Name' => function ($view, $client) {
         return $view->htmlTag(
             'a',
             $view->escapeHtml($client['Name']),
@@ -127,7 +127,7 @@ $renderCallbacks = array(
             true
         );
     },
-    'OsName' => function($view, $client) {
+    'OsName' => function ($view, $client) {
         // Strip prefix to conserve space
         return $view->escapeHtml(preg_replace('/^Microsoft\x{00AE}? /u', '', $client['OsName']));
     },
@@ -141,7 +141,7 @@ foreach ($this->columns as $column) {
             if ($matches[2] == 'TAG') {
                 $headers[$column] = $this->translate('Category');
             } else {
-                $renderCallbacks[$column] = function($view, $client, $property) {
+                $renderCallbacks[$column] = function ($view, $client, $property) {
                     $value = $client[$property];
                     if ($value instanceof \DateTime) {
                         $value = $this->dateFormat($value, \IntlDateFormatter::MEDIUM, \IntlDateFormatter::NONE);

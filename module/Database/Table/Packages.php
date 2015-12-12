@@ -19,7 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-Namespace Database\Table;
+namespace Database\Table;
 
 /**
  * "download_available" table
@@ -60,7 +60,8 @@ class Packages extends \Database\AbstractTable
         $this->_hydrator->addStrategy('osname', $platform);
 
         $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
-            $this->_hydrator, $serviceLocator->get('Model\Package\Package')
+            $this->_hydrator,
+            $serviceLocator->get('Model\Package\Package')
         );
         parent::__construct($serviceLocator);
     }

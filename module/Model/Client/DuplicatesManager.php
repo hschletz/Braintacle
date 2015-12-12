@@ -111,8 +111,7 @@ class DuplicatesManager
         Table\DuplicateMacAddresses $duplicateMacAddresses,
         Table\ClientConfig $clientConfig,
         \Model\Client\ClientManager $clientManager
-    )
-    {
+    ) {
         $this->_clients = $clients;
         $this->_networkInterfaces = $networkInterfaces;
         $this->_duplicateAssetTags = $duplicateAssetTags;
@@ -200,7 +199,7 @@ class DuplicatesManager
      * @param string $direction One of asc|desc (default: 'asc')
      * @return \Zend\Db\ResultSet\AbstractResultSet \Model\Client\Client iterator
      */
-    public function find($criteria, $order='Id', $direction='asc')
+    public function find($criteria, $order = 'Id', $direction = 'asc')
     {
         $subQuery = $this->_getDuplicateValues($criteria);
         $column = $subQuery->getRawState($subQuery::COLUMNS)[0];

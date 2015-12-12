@@ -30,4 +30,3 @@ print $this->formYesNo(
         $this->escapeHtml($this->value)
     )
 );
-

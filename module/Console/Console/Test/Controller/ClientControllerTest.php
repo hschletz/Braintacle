@@ -1040,7 +1040,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->method('getData')
              ->will($this->returnValue($postData));
 
-         $map = array(
+        $map = array(
             array('Id', 1),
         );
         $client = $this->getMock('Model\Client\Client');

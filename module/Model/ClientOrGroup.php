@@ -68,7 +68,7 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
     /**
      * Destructor
      */
-    function __destruct()
+    public function __destruct()
     {
         if ($this->_lockNestCount > 1) {
             $this->_lockNestCount = 1;
@@ -282,11 +282,11 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
                    )
                )->order('download_available.name');
 
-       $result = array();
-       foreach ($packages->selectWith($select) as $package) {
-           $result[] = $package['Name'];
-       }
-       return $result;
+        $result = array();
+        foreach ($packages->selectWith($select) as $package) {
+            $result[] = $package['Name'];
+        }
+        return $result;
     }
 
     /**

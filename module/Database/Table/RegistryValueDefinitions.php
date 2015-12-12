@@ -19,7 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-Namespace Database\Table;
+namespace Database\Table;
 
 /**
  * "regconfig" table
@@ -52,7 +52,8 @@ class RegistryValueDefinitions extends \Database\AbstractTable
         $this->_hydrator->addStrategy('regvalue', $value);
 
         $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
-            $this->_hydrator, $serviceLocator->get('Model\Registry\Value')
+            $this->_hydrator,
+            $serviceLocator->get('Model\Registry\Value')
         );
         parent::__construct($serviceLocator);
     }

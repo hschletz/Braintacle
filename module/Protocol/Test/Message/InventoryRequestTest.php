@@ -158,7 +158,7 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
         $itemHydrator = $this->getMock('Zend\Stdlib\Hydrator\ArraySerializable');
         $itemHydrator->method('extract')->will(
             $this->returnCallback(
-                function($data) {
+                function ($data) {
                     return array_change_key_case($data, CASE_UPPER);
                 }
             )

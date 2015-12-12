@@ -25,7 +25,7 @@ use Zend\ModuleManager\Feature;
 
 /**
  * The Library module
- * 
+ *
  * This module provides a library of general purpose classes (not specific to
  * other modules). Provided view helpers etc. are automatically registered and
  * don't need to be loaded explicitly.
@@ -33,8 +33,8 @@ use Zend\ModuleManager\Feature;
  * @codeCoverageIgnore
  */
 class Module implements
-Feature\AutoloaderProviderInterface,
-Feature\ConfigProviderInterface
+    Feature\AutoloaderProviderInterface,
+    Feature\ConfigProviderInterface
 {
     /**
      * @internal
@@ -141,7 +141,7 @@ Feature\ConfigProviderInterface
      * @param string $path Optional path component that is appended to the module root path
      * @return string Absolute path to requested file/directory (directories without trailing slash)
      */
-    static function getPath($path='')
+    public static function getPath($path = '')
     {
         return \Library\Application::getPath('module/Library/' . $path);
     }

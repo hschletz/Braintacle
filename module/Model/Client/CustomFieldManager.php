@@ -74,8 +74,7 @@ class CustomFieldManager
     public function __construct(
         \Database\Table\CustomFieldConfig $customFieldConfig,
         \Database\Table\CustomFields $customFields
-    )
-    {
+    ) {
         $this->_customFieldConfig = $customFieldConfig;
         $this->_customFields = $customFields;
     }

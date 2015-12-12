@@ -32,7 +32,8 @@ class Filesystems implements \Zend\Stdlib\Hydrator\HydratorInterface
     /**
      * Map for hydrateName()
      *
-     * Names that cannot be hydrated unambigously are not provided. 
+     * Names that cannot be hydrated unambigously are not provided.
+     *
      * @var string[]
      */
     protected $_hydratorMap = array(

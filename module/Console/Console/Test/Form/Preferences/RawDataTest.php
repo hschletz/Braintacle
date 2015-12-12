@@ -20,6 +20,7 @@
  */
 
 namespace Console\Test\Form\Preferences;
+
 use \org\bovigo\vfs\vfsStream;
 use Zend\Dom\Document\Query;
 

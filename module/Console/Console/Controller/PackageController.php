@@ -63,8 +63,7 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
         \Model\Config $config,
         \Console\Form\Package\Build $buildForm,
         \Console\Form\Package\Update $updateForm
-    )
-    {
+    ) {
         $this->_packageManager = $packageManager;
         $this->_config = $config;
         $this->_buildForm = $buildForm;

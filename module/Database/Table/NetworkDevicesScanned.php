@@ -19,7 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-Namespace Database\Table;
+namespace Database\Table;
 
 /**
  * "netmap" table
@@ -60,7 +60,8 @@ class NetworkDevicesScanned extends \Database\AbstractTable
         $this->_hydrator->addStrategy('mac', $macAddress);
 
         $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
-            $this->_hydrator, $serviceLocator->get('Model\Network\Device')
+            $this->_hydrator,
+            $serviceLocator->get('Model\Network\Device')
         );
         parent::__construct($serviceLocator);
     }

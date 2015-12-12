@@ -156,7 +156,7 @@ class Group extends \Model\ClientOrGroup
      *
      * @param bool $force always rebuild cache, ignoring expiration time
      */
-    public function update($force=false)
+    public function update($force = false)
     {
         if (!$this['DynamicMembersSql']) {
             return; // Nothing to do if no SQL query is defined for this group
@@ -212,7 +212,8 @@ class Group extends \Model\ClientOrGroup
             sprintf(
                 '+%d seconds',
                 $this->serviceLocator->get('Library\Random')->getInteger(
-                    0, $config->groupCacheExpirationFuzz
+                    0,
+                    $config->groupCacheExpirationFuzz
                 )
             )
         );
@@ -237,7 +238,7 @@ class Group extends \Model\ClientOrGroup
      * @param string $direction one of [asc|desc]. Default: asc
      * @return string[]
      */
-    public function getPackages($direction='asc')
+    public function getPackages($direction = 'asc')
     {
         $packages = $this->serviceLocator->get('Database\Table\Packages');
         $select = $packages->getSql()->select();

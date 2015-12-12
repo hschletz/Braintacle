@@ -19,7 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-Namespace Database\Service;
+namespace Database\Service;
 
 /**
  * Abstract factory for table objects
@@ -38,8 +38,7 @@ class AbstractTableFactory implements \Zend\ServiceManager\AbstractFactoryInterf
         \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
         $name,
         $requestedName
-    )
-    {
+    ) {
         return strpos($requestedName, 'Database\Table\\') === 0;
     }
 
@@ -51,8 +50,7 @@ class AbstractTableFactory implements \Zend\ServiceManager\AbstractFactoryInterf
         \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
         $name,
         $requestedName
-    )
-    {
+    ) {
         $table = new $requestedName($serviceLocator);
         $table->initialize();
         return $table;

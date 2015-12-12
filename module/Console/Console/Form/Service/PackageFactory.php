@@ -34,8 +34,7 @@ class PackageFactory implements \Zend\ServiceManager\AbstractFactoryInterface
         \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
         $name,
         $requestedName
-    )
-    {
+    ) {
         return (strpos($requestedName, 'Console\Form\Package\\') === 0);
     }
 
@@ -46,8 +45,7 @@ class PackageFactory implements \Zend\ServiceManager\AbstractFactoryInterface
         \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
         $name,
         $requestedName
-    )
-    {
+    ) {
         $form = new $requestedName;
         if ($form instanceof \Console\Form\Package\Build) {
             $serviceManager = $serviceLocator->getServiceLocator();

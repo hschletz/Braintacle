@@ -691,7 +691,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
      * @param bool $success Build success to test
      * @param mixed[] $extraMessages Success/error messages appended by tested action
      */
-    protected function _testBuildPackage($url, $postData, $packageData, $success, $extraMessages=array())
+    protected function _testBuildPackage($url, $postData, $packageData, $success, $extraMessages = array())
     {
         $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
         $name = $postData['Name'];

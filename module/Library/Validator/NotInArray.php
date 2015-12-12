@@ -49,7 +49,6 @@ class NotInArray extends \Zend\Validator\AbstractValidator
      */
     const IN_ARRAY = 'inArray';
 
-    // @codingStandardsIgnoreStart
     /**
      * Validation failure message template definitions
      * @var array
@@ -60,7 +59,6 @@ class NotInArray extends \Zend\Validator\AbstractValidator
 
     /** {@inheritdoc} */
     protected static $defaultTranslatorTextDomain = 'default';
-    // @codingStandardsIgnoreEnd
 
     /**
      * Haystack option

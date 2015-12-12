@@ -68,7 +68,7 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
 
     /**
      * Get the name of the controller class, derived from the test class name
-     * 
+     *
      * @return string Controller class name
      */
     protected function _getControllerClass()
@@ -106,7 +106,7 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
      * @param mixed $service New service (a mock object, for example)
      * @param string $serviceLocatorName Service locator to manipulate (default: 'ServiceManager')
      */
-    protected function _overrideService($name, $service, $serviceLocatorName='ServiceManager')
+    protected function _overrideService($name, $service, $serviceLocatorName = 'ServiceManager')
     {
         $serviceLocator = \Library\Application::getService($serviceLocatorName);
         $serviceLocator->setAllowOverride(true)->setService($name, $service);

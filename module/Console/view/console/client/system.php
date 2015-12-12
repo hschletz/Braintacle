@@ -37,7 +37,7 @@ $headers = array(
 );
 
 $renderCallbacks = array (
-    'Size' => function($view, $memorySlot) {
+    'Size' => function ($view, $memorySlot) {
         $size = $memorySlot['Size'];
         if ($size) {
             $size .= '&nbsp;MB';
@@ -46,7 +46,7 @@ $renderCallbacks = array (
         }
         return $size;
     },
-    'Clock' => function($view, $memorySlot) {
+    'Clock' => function ($view, $memorySlot) {
         $clock = $view->escapeHtml($memorySlot['Clock']);
         if (is_numeric($clock)) {
             $clock .= '&nbsp;MHz';
@@ -98,7 +98,7 @@ $headers = array(
 );
 
 $renderCallbacks = array (
-    'Name' => function($view, $slot) {
+    'Name' => function ($view, $slot) {
         $name = $slot['Name'];
         if (isset($slot['SlotId'])) {
             $name .= " (#$slot[SlotId])";

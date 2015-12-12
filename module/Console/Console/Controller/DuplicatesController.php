@@ -47,8 +47,7 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
     public function __construct(
         \Model\Client\DuplicatesManager $duplicates,
         \Console\Form\ShowDuplicates $showDuplicates
-    )
-    {
+    ) {
         $this->_duplicates = $duplicates;
         $this->_showDuplicates = $showDuplicates;
     }

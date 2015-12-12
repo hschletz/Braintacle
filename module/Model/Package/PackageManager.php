@@ -94,7 +94,7 @@ class PackageManager
      * @param string $direction One of [asc|desc]
      * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Package\Package
      */
-    public function getPackages($order=null, $direction='asc')
+    public function getPackages($order = null, $direction = 'asc')
     {
         $clientConfig = $this->_serviceManager->get('Database\Table\ClientConfig');
         $groupInfo = $this->_serviceManager->get('Database\Table\GroupInfo');
@@ -340,8 +340,7 @@ class PackageManager
         $deployNotified,
         $deployError,
         $deployGroups
-    )
-    {
+    ) {
         if (!($deployNonnotified or $deploySuccess or $deployNotified or $deployError or $deployGroups)) {
             return; // nothing to do
         }
@@ -375,7 +374,7 @@ class PackageManager
         }
 
         $now = $this->_serviceManager->get('Library\Now')->format(\Model\Package\Assignment::DATEFORMAT);
-        try{
+        try {
             // Remove DOWNLOAD_* options from updated assignments
             $subquery = $clientConfig->getSql()
                                      ->select()

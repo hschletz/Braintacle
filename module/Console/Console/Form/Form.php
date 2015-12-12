@@ -304,8 +304,10 @@ class Form extends \Zend\Form\Form
      * @param string $string Translatable string
      * @return string same as $string
      */
+    // @codingStandardsIgnoreStart
     protected function _($string)
     {
         return $string;
     }
+    // @codingStandardsIgnoreEnd
 }

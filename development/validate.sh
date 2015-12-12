@@ -27,7 +27,7 @@ DEVDIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 BASEDIR=$(readlink -f "$DEVDIR/..")
 
 # Run PHP_CodeSniffer on relevant directories
-phpcs -n --standard=Zend --extensions=php,phtml \
+phpcs -n --standard=PSR2 \
     "$BASEDIR/development/" \
     "$BASEDIR/module" \
     "$BASEDIR/public" \

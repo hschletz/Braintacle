@@ -55,7 +55,8 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
         $model = $this->_getModel();
         $devices = iterator_to_array(
             $model->getDevices(
-                array('Subnet' => '198.51.100.0', 'Mask' => '255.255.255.0'), 'Hostname'
+                array('Subnet' => '198.51.100.0', 'Mask' => '255.255.255.0'),
+                'Hostname'
             )
         );
         $this->assertCount(2, $devices);
@@ -296,7 +297,8 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
             $this->assertTablesEqual(
                 $dataSet->getTable('network_devices'),
                 $this->getConnection()->createQueryTable(
-                    'network_devices', 'SELECT macaddr, description, type FROM network_devices'
+                    'network_devices',
+                    'SELECT macaddr, description, type FROM network_devices'
                 )
             );
         }
@@ -321,7 +323,8 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
             $this->assertTablesEqual(
                 $dataSet->getTable('network_devices'),
                 $this->getConnection()->createQueryTable(
-                    'network_devices', 'SELECT macaddr, description, type FROM network_devices'
+                    'network_devices',
+                    'SELECT macaddr, description, type FROM network_devices'
                 )
             );
         }
@@ -361,7 +364,8 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
             $this->assertTablesEqual(
                 $dataSet->getTable('network_devices'),
                 $this->getConnection()->createQueryTable(
-                    'network_devices', 'SELECT macaddr, description, type FROM network_devices'
+                    'network_devices',
+                    'SELECT macaddr, description, type FROM network_devices'
                 )
             );
         }
@@ -386,7 +390,8 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
             $this->assertTablesEqual(
                 $dataSet->getTable('network_devices'),
                 $this->getConnection()->createQueryTable(
-                    'network_devices', 'SELECT macaddr, description, type FROM network_devices'
+                    'network_devices',
+                    'SELECT macaddr, description, type FROM network_devices'
                 )
             );
         }

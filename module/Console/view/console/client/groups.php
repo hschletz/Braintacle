@@ -34,7 +34,7 @@ $types = array(
 );
 
 $renderCallbacks = array(
-    'GroupName' => function($view, $membership) {
+    'GroupName' => function ($view, $membership) {
         return $view->htmlTag(
             'a',
             $view->escapeHtml($membership['GroupName']),
@@ -48,7 +48,7 @@ $renderCallbacks = array(
             true
         );
     },
-    'Membership' => function($view, $membership) use($types){
+    'Membership' => function ($view, $membership) use ($types) {
         return $types[$membership['Membership']];
     },
 );

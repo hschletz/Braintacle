@@ -49,7 +49,7 @@ $renderCallbacks = array(
             true
         );
     },
-    'delete' => function($view, $device, $property) {
+    'delete' => function ($view, $device, $property) {
         return $view->htmlTag(
             'a',
             $view->translate('Delete'),

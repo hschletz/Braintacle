@@ -47,8 +47,7 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
     public function __construct(
         \Model\Operator\AuthenticationService $authenticationService,
         \Console\Form\Login $form
-    )
-    {
+    ) {
         $this->_authenticationService = $authenticationService;
         $this->_form = $form;
     }
@@ -80,12 +79,10 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
             if ($this->_form->isValid()) {
                 // Check credentials
                 $data = $this->_form->getData();
-                if (
-                    $this->_authenticationService->login(
-                        $data['User'],
-                        $data['Password']
-                    )
-                ) {
+                if ($this->_authenticationService->login(
+                    $data['User'],
+                    $data['Password']
+                )) {
                     // Authentication successful. Redirect to appropriate page.
                     $session = new \Zend\Session\Container('login');
                     if (isset($session->originalUri)) {

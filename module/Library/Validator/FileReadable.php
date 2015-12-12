@@ -30,7 +30,6 @@ class FileReadable extends \Zend\Validator\AbstractValidator
     const READABLE = 'readable';
 
 
-    // @codingStandardsIgnoreStart
     /**
      * Validation failure message template definitions
      * @var string[]
@@ -42,7 +41,6 @@ class FileReadable extends \Zend\Validator\AbstractValidator
 
     /** {@inheritdoc} */
     protected static $defaultTranslatorTextDomain = 'default';
-    // @codingStandardsIgnoreEnd
 
     /**
      * Returns true if $value is a file and readable

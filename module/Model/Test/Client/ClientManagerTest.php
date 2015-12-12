@@ -689,8 +689,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $invert,
         $addSearchColumns,
         $expected
-    )
-    {
+    ) {
         $customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
                                    ->disableOriginalConstructor()
                                    ->getMock();
@@ -718,22 +717,20 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $resultSetPrototype->expects($this->once())
                            ->method('initialize')
                            ->with(
-                               $this->callback(
-                                   function($dataSource) use(&$result) {
-                                       // Callback is invoked more than once.
-                                       // Prevent multiple iterations over forward-only result set.
-                                       if (!isset($result)) {
-                                           $result = iterator_to_array($dataSource);
-                                       }
-                                       return true;
-                                   }
-                               )
-                           )->will($this->returnSelf());
+                               $this->callback(function ($dataSource) use (&$result) {
+                                // Callback is invoked more than once.
+                                // Prevent multiple iterations over forward-only result set.
+                                if (!isset($result)) {
+                                    $result = iterator_to_array($dataSource);
+                                }
+                                return true;
+                               })
+                           )->willReturnSelf();
 
         $hydrator = $this->getMockBuilder('Database\Hydrator\Clients')->disableOriginalConstructor()->getMock();
         $hydrator->method('getExtractorMap')->willReturn($this->_map);
         $hydrator->method('extractName')->willReturnCallback(
-            function($name) {
+            function ($name) {
                 return $this->_map[$name];
             }
         );
@@ -756,7 +753,14 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $this->assertInstanceOf(
             get_class($resultSetPrototype),
             $model->getClients(
-                $properties, $order, $direction, $filter, $search, $operator, $invert, $addSearchColumns
+                $properties,
+                $order,
+                $direction,
+                $filter,
+                $search,
+                $operator,
+                $invert,
+                $addSearchColumns
             )
         );
 
@@ -807,17 +811,15 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $resultSetPrototype->expects($this->once())
                            ->method('initialize')
                            ->with(
-                               $this->callback(
-                                   function($dataSource) use(&$result) {
-                                       // Callback is invoked more than once.
-                                       // Prevent multiple iterations over forward-only result set.
-                                       if (!isset($result)) {
-                                           $result = iterator_to_array($dataSource);
-                                       }
-                                       return true;
-                                   }
-                               )
-                           )->will($this->returnSelf());
+                               $this->callback(function ($dataSource) use (&$result) {
+                                // Callback is invoked more than once.
+                                // Prevent multiple iterations over forward-only result set.
+                                if (!isset($result)) {
+                                    $result = iterator_to_array($dataSource);
+                                }
+                                return true;
+                               })
+                           )->willReturnSelf();
 
         $hydrator = $this->getMockBuilder('Database\Hydrator\Clients')->disableOriginalConstructor()->getMock();
         $hydrator->method('getExtractorMap')->willReturn($this->_map);
@@ -861,17 +863,15 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $resultSetPrototype->expects($this->once())
                            ->method('initialize')
                            ->with(
-                               $this->callback(
-                                   function($dataSource) use(&$result) {
-                                       // Callback is invoked more than once.
-                                       // Prevent multiple iterations over forward-only result set.
-                                       if (!isset($result)) {
-                                           $result = iterator_to_array($dataSource);
-                                       }
-                                       return true;
-                                   }
-                               )
-                           )->will($this->returnSelf());
+                               $this->callback(function ($dataSource) use (&$result) {
+                                // Callback is invoked more than once.
+                                // Prevent multiple iterations over forward-only result set.
+                                if (!isset($result)) {
+                                    $result = iterator_to_array($dataSource);
+                                }
+                                return true;
+                               })
+                           )->willReturnSelf();
 
         $hydrator = $this->getMockBuilder('Database\Hydrator\Clients')->disableOriginalConstructor()->getMock();
         $hydrator->method('getExtractorMap')->willReturn($this->_map);

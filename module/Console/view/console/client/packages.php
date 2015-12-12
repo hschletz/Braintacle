@@ -31,7 +31,7 @@ $headers = array(
 );
 
 $renderCallbacks = array(
-    'Status' => function($view, $assignment) {
+    'Status' => function ($view, $assignment) {
         $status = $assignment['Status'];
         switch ($status) {
             case \Model\Package\Assignment::NOT_NOTIFIED:
@@ -52,7 +52,7 @@ $renderCallbacks = array(
         }
         return $view->htmlTag('span', $content, array('class' => $class), true);
     },
-    'remove' => function($view, $assignment) {
+    'remove' => function ($view, $assignment) {
         return $view->htmlTag(
             'a',
             $view->translate('remove'),

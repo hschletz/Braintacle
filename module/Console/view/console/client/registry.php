@@ -30,7 +30,7 @@ $headers = array(
 );
 
 $renderCallbacks = array(
-    'Value' => function($view, $data) use($values) {
+    'Value' => function ($view, $data) use ($values) {
         return $view->htmlTag(
             'span',
             $view->escapeHtml($data['Value']),

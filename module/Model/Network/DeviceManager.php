@@ -55,8 +55,7 @@ class DeviceManager
         \Database\Table\NetworkDeviceTypes $networkDeviceTypes,
         \Database\Table\NetworkDevicesScanned $networkDevicesScanned,
         \Database\Table\NetworkDevicesIdentified $networkDevicesIdentified
-    )
-    {
+    ) {
         $this->_networkDeviceTypes = $networkDeviceTypes;
         $this->_networkDevicesScanned = $networkDevicesScanned;
         $this->_networkDevicesIdentified = $networkDevicesIdentified;
@@ -80,7 +79,7 @@ class DeviceManager
      * @param string $direction One of [asc|desc].
      * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Network\Device
      */
-    public function getDevices($filters, $order=null, $direction='asc')
+    public function getDevices($filters, $order = null, $direction = 'asc')
     {
         $select = $this->_networkDevicesScanned->getSql()->select();
         $select->columns(array('ip', 'mac', 'name', 'date'))

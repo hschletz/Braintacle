@@ -27,11 +27,11 @@ use Zend\ModuleManager\Feature;
  * The database manager CLI application
  */
 class Module implements
-Feature\InitProviderInterface,
-Feature\ConfigProviderInterface,
-Feature\AutoloaderProviderInterface,
-Feature\BootstrapListenerInterface,
-Feature\ConsoleUsageProviderInterface
+    Feature\InitProviderInterface,
+    Feature\ConfigProviderInterface,
+    Feature\AutoloaderProviderInterface,
+    Feature\BootstrapListenerInterface,
+    Feature\ConsoleUsageProviderInterface
 {
     /**
      * @internal
@@ -99,12 +99,10 @@ Feature\ConsoleUsageProviderInterface
     {
         // Validate loglevel value. Invalid content will cause the route to fail
         // and trigger the usage message.
-        if (
-            !preg_match(
-                '/^(emerg|alert|crit|err|warn|notice|info|debug)?$/',
-                $e->getRouteMatch()->getParam('loglevel')
-            )
-        ) {
+        if (!preg_match(
+            '/^(emerg|alert|crit|err|warn|notice|info|debug)?$/',
+            $e->getRouteMatch()->getParam('loglevel')
+        )) {
             $e->setError(\Zend\Mvc\Application::ERROR_ROUTER_NO_MATCH);
             $e->getTarget()->getEventManager()->trigger(\Zend\Mvc\MvcEvent::EVENT_DISPATCH_ERROR, $e);
         }

@@ -77,8 +77,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
         \Console\Form\Package\Assign $packageAssignmentForm,
         \Console\Form\AddToGroup $addToGroupForm,
         \Console\Form\ClientConfig $clientConfigForm
-    )
-    {
+    ) {
         $this->_groupManager = $groupManager;
         $this->_clientManager = $clientManager;
         $this->_packageAssignmentForm = $packageAssignmentForm;
@@ -90,8 +89,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
     public function dispatch(
         \Zend\Stdlib\RequestInterface $request,
         \Zend\Stdlib\ResponseInterface $response = null
-    )
-    {
+    ) {
         // Fetch group with given name for actions referring to a particular group
         $action = $this->getEvent()->getRouteMatch()->getParam('action');
         if ($action != 'index' and $action != 'add') {
@@ -99,7 +97,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
                 $this->_currentGroup = $this->_groupManager->getGroup(
                     $request->getQuery('name')
                 );
-            } catch(\RuntimeException $e) {
+            } catch (\RuntimeException $e) {
                 // Group does not exist - may happen when URL has become stale.
                 $this->flashMessenger()->addErrorMessage('The requested group does not exist.');
                 return $this->redirectToRoute('group', 'index');

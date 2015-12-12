@@ -52,8 +52,7 @@ class FormYesNo extends \Zend\View\Helper\AbstractHelper
     public function __construct(
         \Zend\I18n\View\Helper\Translate $translate,
         \Library\View\Helper\HtmlTag $htmlTag
-    )
-    {
+    ) {
         $this->_translate = $translate;
         $this->_htmlTag = $htmlTag;
     }
@@ -65,7 +64,7 @@ class FormYesNo extends \Zend\View\Helper\AbstractHelper
      * @param array $params Optional name/value pairs that will be included as hidden elements.
      * @return string Form code
      */
-    public function __invoke($caption, $params=array())
+    public function __invoke($caption, $params = array())
     {
         $hiddenFields = '';
         foreach ($params as $name => $value) {

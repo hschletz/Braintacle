@@ -33,4 +33,3 @@ if (!is_dir(__DIR__ . '/../../../../vendor')) {
 \Zend\Console\Console::overrideIsConsole(false);
 
 \Library\Application::init('Console', false);
-

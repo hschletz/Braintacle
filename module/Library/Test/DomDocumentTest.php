@@ -20,6 +20,7 @@
  */
 
 namespace Library\Test;
+
 use Library\DomDocument;
 use org\bovigo\vfs\vfsStream;
 

@@ -198,7 +198,7 @@ class ManageRegistryValues extends Form
     }
 
     /** {@inheritdoc} */
-    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset=null)
+    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset = null)
     {
         $output = '';
         $name = $fieldset->getName();
@@ -261,7 +261,7 @@ class ManageRegistryValues extends Form
      * @param string $name Existing name to allow (default: none)
      * @return \Library\Validator\NotInArray Validator object
      **/
-    protected function _createBlacklistValidator($name=null)
+    protected function _createBlacklistValidator($name = null)
     {
         $blacklist = array();
         foreach ($this->_definedValues as $value) {

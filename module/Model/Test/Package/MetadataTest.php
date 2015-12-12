@@ -20,6 +20,7 @@
  */
 
 namespace Model\Test\Package;
+
 use Model\Package\Metadata;
 
 /**
@@ -177,7 +178,7 @@ class MetadataTest extends \Model\Test\AbstractTest
      */
     public function testSetPackageDataPostinstMessage($inputMessage, $documentMessage, $documentFlag)
     {
-         $data = array(
+        $data = array(
             'Id' => '12345678',
             'Priority' => '5',
             'DeployAction' => 'store',

@@ -40,7 +40,7 @@ $columnClasses = array(
 );
 
 $renderCallbacks = array(
-    'Name' => function($view, $software) {
+    'Name' => function ($view, $software) {
         $content = $view->escapeHtml($software['Name']);
         if ($software['Comment']) {
             $content = $view->htmlTag(
@@ -63,14 +63,18 @@ $renderCallbacks = array(
         }
         return $content;
     },
-    'Size' => function($view, $software) {
+    'Size' => function ($view, $software) {
         $size = $view->numberFormat(
-            $software['Size'], \NumberFormatter::DECIMAL, \NumberFormatter::TYPE_DOUBLE, null, 0
+            $software['Size'],
+            \NumberFormatter::DECIMAL,
+            \NumberFormatter::TYPE_DOUBLE,
+            null,
+            0
         );
         $size .= "\xC2\xA0kB";
         return $view->escapeHtml($size);
     },
-    'Architecture' => function($view, $software) {
+    'Architecture' => function ($view, $software) {
         $architecture = $software['Architecture'];
         if ($architecture) {
             $architecture = $view->escapeHtml($architecture . ' Bit');

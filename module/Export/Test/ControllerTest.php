@@ -88,7 +88,8 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
                         ->setMethods(array('writeLine'))
                         ->getMockForAbstractClass();
         $console->expects($this->exactly(2))->method('writeLine')->withConsecutive(
-            array('Exporting client1'), array('Exporting client2')
+            array('Exporting client1'),
+            array('Exporting client2')
         );
 
         $this->getApplicationServiceLocator()
@@ -197,7 +198,8 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
                         ->setMethods(array('writeLine'))
                         ->getMockForAbstractClass();
         $console->expects($this->exactly(2))->method('writeLine')->withConsecutive(
-            array('Exporting client1'), array('Exporting client2')
+            array('Exporting client1'),
+            array('Exporting client2')
         );
 
         $this->getApplicationServiceLocator()

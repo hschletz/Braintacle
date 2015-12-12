@@ -213,12 +213,10 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_config->expects($this->once())
                       ->method('setOptions')
                       ->with(
-                          $this->callback(
-                              function($options) {
-                                    $options = iterator_to_array($options);
-                                    return ($options == array('pref1' => 'value1', 'pref2' => 'value2'));
-                              }
-                          )
+                          $this->callback(function ($options) {
+                              $options = iterator_to_array($options);
+                              return ($options == array('pref1' => 'value1', 'pref2' => 'value2'));
+                          })
                       );
         $this->dispatch("/console/preferences/packages", 'POST', $postData);
         $this->assertRedirectTo("/console/preferences/packages/");
@@ -418,12 +416,10 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_config->expects($this->once())
                       ->method('setOptions')
                       ->with(
-                          $this->callback(
-                              function($options) {
-                                    $options = iterator_to_array($options);
-                                    return ($options == array('pref1' => 'value1', 'pref2' => 'value2'));
-                              }
-                          )
+                          $this->callback(function ($options) {
+                              $options = iterator_to_array($options);
+                              return ($options == array('pref1' => 'value1', 'pref2' => 'value2'));
+                          })
                       );
         $this->dispatch("/console/preferences/$action", 'POST', $postData);
         $this->assertRedirectTo("/console/preferences/$action/");

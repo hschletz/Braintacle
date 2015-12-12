@@ -269,7 +269,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testInvokeWithRowClassCallback()
     {
-        $rowClassCallback = function($columns) {
+        $rowClassCallback = function ($columns) {
             static $counter = 0;
             if ($counter++) {
                 return "$columns[column1]+$columns[column2]";
@@ -325,10 +325,13 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
         $this->_dateFormat->expects($this->exactly(2)) // column 0 should be rendered by callback
                           ->method('__invoke')
                           ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT);
-        $callback = function() {
+        $callback = function () {
         };
         $helper = new \Console\View\Helper\Table(
-            $this->_escapeHtml, $this->_htmlTag, $this->_consoleUrl, $this->_dateFormat
+            $this->_escapeHtml,
+            $this->_htmlTag,
+            $this->_consoleUrl,
+            $this->_dateFormat
         );
         $helper(
             $data,
@@ -350,7 +353,10 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
                        ->with('a', 'Label&uarr;', array('href' => 'ConsoleUrlMock'))
                        ->will($this->returnValue('HtmlTagMock'));
         $helper = new \Console\View\Helper\Table(
-            $this->_escapeHtml, $this->_htmlTag, $this->_consoleUrl, $this->_dateFormat
+            $this->_escapeHtml,
+            $this->_htmlTag,
+            $this->_consoleUrl,
+            $this->_dateFormat
         );
         $this->assertEquals('HtmlTagMock', $helper->sortableHeader('Label', 'Key', 'Key', 'asc'));
     }
@@ -367,7 +373,10 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
                        ->with('a', 'Label&darr;', array('href' => 'ConsoleUrlMock'))
                        ->will($this->returnValue('HtmlTagMock'));
         $helper = new \Console\View\Helper\Table(
-            $this->_escapeHtml, $this->_htmlTag, $this->_consoleUrl, $this->_dateFormat
+            $this->_escapeHtml,
+            $this->_htmlTag,
+            $this->_consoleUrl,
+            $this->_dateFormat
         );
         $this->assertEquals('HtmlTagMock', $helper->sortableHeader('Label', 'Key', 'Key', 'desc'));
     }
@@ -384,7 +393,10 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
                        ->with('a', 'Label', array('href' => 'ConsoleUrlMock'))
                        ->will($this->returnValue('HtmlTagMock'));
         $helper = new \Console\View\Helper\Table(
-            $this->_escapeHtml, $this->_htmlTag, $this->_consoleUrl, $this->_dateFormat
+            $this->_escapeHtml,
+            $this->_htmlTag,
+            $this->_consoleUrl,
+            $this->_dateFormat
         );
         $this->assertEquals('HtmlTagMock', $helper->sortableHeader('Label', 'Key', 'Order', 'desc'));
     }

@@ -67,8 +67,7 @@ class InventoryRequest extends \Library\DomDocument
     public function loadClient(
         \Model\Client\Client $client,
         \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
-    )
-    {
+    ) {
         $itemManager = $serviceLocator->get('Model\Client\ItemManager');
 
         // Root element

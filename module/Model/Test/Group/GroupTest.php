@@ -112,7 +112,8 @@ class GroupTest extends AbstractGroupTest
         $this->assertTablesEqual(
             $this->_loadDataSet($dataSet)->getTable('groups_cache'),
             $this->getConnection()->createQueryTable(
-                'groups_cache', 'SELECT hardware_id, group_id, static FROM groups_cache ORDER BY group_id, hardware_id'
+                'groups_cache',
+                'SELECT hardware_id, group_id, static FROM groups_cache ORDER BY group_id, hardware_id'
             )
         );
     }
@@ -230,22 +231,25 @@ class GroupTest extends AbstractGroupTest
         $model->expects($this->once())
               ->method('update')
               ->with(true)
-              ->willReturnCallback(
-                  function() use ($model) {
-                      // Verify that value is set before update() gets called
-                      $this->assertEquals('query_new', $model['DynamicMembersSql']);
-                  }
-              );
+              ->willReturnCallback(function () use ($model) {
+                  // Verify that value is set before update() gets called
+                  $this->assertEquals('query_new', $model['DynamicMembersSql']);
+              });
         $model['Id'] = 10;
         $model->setServiceLocator($serviceManager);
 
         $model->setMembersFromQuery(
-            \Model\Client\Client::MEMBERSHIP_AUTOMATIC, 'filter', 'search', 'operator', 'invert'
+            \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
+            'filter',
+            'search',
+            'operator',
+            'invert'
         );
         $this->assertTablesEqual(
             $this->_loadDataSet('SetMembersFromQueryDynamic')->getTable('groups'),
             $this->getConnection()->createQueryTable(
-                'groups', 'SELECT hardware_id, request FROM groups ORDER BY hardware_id'
+                'groups',
+                'SELECT hardware_id, request FROM groups ORDER BY hardware_id'
             )
         );
     }
@@ -277,7 +281,11 @@ class GroupTest extends AbstractGroupTest
 
         $this->setExpectedException('LogicException', 'Expected 1 column, got 2');
         $model->setMembersFromQuery(
-            \Model\Client\Client::MEMBERSHIP_AUTOMATIC, 'filter', 'search', 'operator', 'invert'
+            \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
+            'filter',
+            'search',
+            'operator',
+            'invert'
         );
     }
 
@@ -362,7 +370,8 @@ class GroupTest extends AbstractGroupTest
         $this->assertTablesEqual(
             $this->_loadDataSet($dataSet)->getTable('groups'),
             $this->getConnection()->createQueryTable(
-                'groups', 'SELECT hardware_id, request, create_time, revalidate_from FROM groups ORDER BY hardware_id'
+                'groups',
+                'SELECT hardware_id, request, create_time, revalidate_from FROM groups ORDER BY hardware_id'
             )
         );
     }

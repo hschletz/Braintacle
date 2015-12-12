@@ -20,6 +20,7 @@
  */
 
 namespace Model\Test\Package\Storage;
+
 use Model\Package\Storage\Direct;
 use Model\Package\Metadata;
 use org\bovigo\vfs\vfsStream;

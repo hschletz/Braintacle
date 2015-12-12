@@ -51,7 +51,7 @@ class GroupManager
      * @param string $direction one of [asc|desc]. Default: asc
      * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Group\Group
      */
-    public function getGroups($filter = null, $filterArg = null, $order=null, $direction='asc')
+    public function getGroups($filter = null, $filterArg = null, $order = null, $direction = 'asc')
     {
         $groupInfo = $this->_serviceManager->get('Database\Table\GroupInfo');
         $select = $groupInfo->getSql()->select();
@@ -134,7 +134,7 @@ class GroupManager
      * @throws \InvalidArgumentException if group name is empty
      * @throws \RuntimeException if a group with the given name already exists
      **/
-    public function createGroup($name, $description=null)
+    public function createGroup($name, $description = null)
     {
         if ($name == '') {
             throw new \InvalidArgumentException('Group name is empty');

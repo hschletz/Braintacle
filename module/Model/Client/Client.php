@@ -349,7 +349,7 @@ class Client extends \Model\ClientOrGroup
      * @param string $direction asc|desc, default: asc
      * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Package\Assignment
      */
-    public function getPackageAssignments($order='PackageName', $direction='asc')
+    public function getPackageAssignments($order = 'PackageName', $direction = 'asc')
     {
         $hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
         $hydrator->setNamingStrategy(
@@ -413,11 +413,14 @@ class Client extends \Model\ClientOrGroup
      * @param array $filters Extra filters for ItemManager::getItems()
      * @return \Zend\Db\ResultSet\AbstractResultSet
      */
-    public function getItems($type, $order=null, $direction=null, $filters=array())
+    public function getItems($type, $order = null, $direction = null, $filters = array())
     {
         $filters['Client'] = $this['Id'];
         return $this->serviceLocator->get('Model\Client\ItemManager')->getItems(
-            $type, $filters, $order, $direction
+            $type,
+            $filters,
+            $order,
+            $direction
         );
     }
 

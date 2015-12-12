@@ -33,7 +33,7 @@ $headers = array(
 );
 
 $renderCallbacks = array(
-    'GuestMemory' => function($view, $virtualMachine) {
+    'GuestMemory' => function ($view, $virtualMachine) {
         $mem = $view->escapeHtml($virtualMachine['GuestMemory']);
         if ($mem) {
             $mem .= ' MB';

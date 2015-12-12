@@ -19,7 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-Namespace Database\Table;
+namespace Database\Table;
 
 /**
  * "accountinfo_config" table
@@ -59,12 +59,7 @@ class CustomFieldConfig extends \Database\AbstractTable
     {
         // If table is empty, create default entries
         $logger->debug('Checking for existing custom field config.');
-        if (
-            $this->adapter->query(
-                'SELECT COUNT(id) AS num FROM accountinfo_config',
-                \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
-            )->current()->offsetGet('num') === '0'
-        ) {
+        if ($this->select()->count() == 0) {
             $this->insert(
                 array(
                     'name' => 'TAG',

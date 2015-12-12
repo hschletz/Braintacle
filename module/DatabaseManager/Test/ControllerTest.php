@@ -80,7 +80,7 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
         $logger = $this->getMock('Zend\Log\Logger');
         $logger->expects($this->once())->method('addWriter')->with(
             $this->callback(
-                function($writer) use($expectedPriority) {
+                function ($writer) use ($expectedPriority) {
                     if (!$writer instanceof \Zend\Log\Writer\Stream) {
                         return false;
                     };

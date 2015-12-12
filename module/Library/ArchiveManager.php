@@ -136,7 +136,7 @@ class ArchiveManager
      * @throws \InvalidArgumentException if $type is unknown
      * @throws \RuntimeException if an error occurs unless $ignoreErrors is TRUE
      */
-    public function closeArchive($archive, $ignoreErrors=false)
+    public function closeArchive($archive, $ignoreErrors = false)
     {
         if ($archive instanceof \ZipArchive) {
             if (!@$archive->close()) {

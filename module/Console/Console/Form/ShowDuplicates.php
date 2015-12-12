@@ -157,7 +157,7 @@ class ShowDuplicates extends Form
             'AssetTag' => $view->translate('Asset tag'),
             'LastContactDate' => $view->translate('Last contact'),
         );
-        $renderCriteria = function($view, $client, $property) {
+        $renderCriteria = function ($view, $client, $property) {
             $value = $client[$property];
             if ($value === null) {
                 // NULL values are never considered for duplicates and cannot be blacklisted.
@@ -185,7 +185,7 @@ class ShowDuplicates extends Form
             );
         };
         $renderCallbacks = array(
-            'Id' => function($view, $client) {
+            'Id' => function ($view, $client) {
                 // Display ID and a checkbox. Render checkbox manually because
                 // ZF's MultiCheckbox element does not handle duplicate values.
                 // $_POST['clients'] will become an array of selected
@@ -196,7 +196,7 @@ class ShowDuplicates extends Form
                     $client['Id']
                 );
             },
-            'Name' => function($view, $client) {
+            'Name' => function ($view, $client) {
                 // Hyperlink to "customfields" page of given client.
                 // This allows for easy review of the information about to be merged.
                 return $view->htmlTag(

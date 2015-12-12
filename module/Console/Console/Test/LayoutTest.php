@@ -20,6 +20,7 @@
  */
 
 namespace Console\Test;
+
 use \Zend\Dom\Document\Query;
 
 /**
@@ -55,13 +56,15 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(
             1,
             Query::execute(
-                '/html/head/meta[@http-equiv="Content-Type"][@content="text/html; charset=UTF-8"]', $document
+                '/html/head/meta[@http-equiv="Content-Type"][@content="text/html; charset=UTF-8"]',
+                $document
             )
         );
         $this->assertCount(
             1,
             Query::execute(
-                '/html/head/link[@href="/style.css"][@media="screen"][@rel="stylesheet"][@type="text/css"]', $document
+                '/html/head/link[@href="/style.css"][@media="screen"][@rel="stylesheet"][@type="text/css"]',
+                $document
             )
         );
     }

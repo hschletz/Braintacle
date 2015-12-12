@@ -133,7 +133,7 @@ class ItemManager
      * @param string $direction One of asc|desc. Default: asc
      * @return \Zend\Db\ResultSet\AbstractResultSet
      */
-    public function getItems($type, $filters=null, $order=null, $direction='asc')
+    public function getItems($type, $filters = null, $order = null, $direction = 'asc')
     {
         $type = strtolower($type);
         $table = $this->getTable($type);

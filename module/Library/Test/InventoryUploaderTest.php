@@ -56,7 +56,7 @@ class InventoryUploaderTest extends \PHPUnit_Framework_TestCase
                     'http://example.net/server',
                     '1.1',
                     $this->callback(
-                        function($headers) {
+                        function ($headers) {
                             return (
                                 $headers['User-Agent'] == 'Braintacle_local_upload' and
                                 $headers['Content-Type'] == 'application/x-compress'

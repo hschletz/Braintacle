@@ -34,7 +34,7 @@ $types = array(
 );
 
 $renderCallbacks = array(
-    'Name' => function($view, $computer) {
+    'Name' => function ($view, $computer) {
         return $view->htmlTag(
             'a',
             $view->escapeHtml($computer['Name']),
@@ -48,7 +48,7 @@ $renderCallbacks = array(
             true
         );
     },
-    'Membership' => function($view, $client) use($types) {
+    'Membership' => function ($view, $client) use ($types) {
         return $types[$client['Membership']];
     }
 );

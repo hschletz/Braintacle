@@ -29,10 +29,10 @@ use Zend\Mvc\MvcEvent;
  * @codeCoverageIgnore
  */
 class Module implements
-Feature\InitProviderInterface,
-Feature\ConfigProviderInterface,
-Feature\AutoloaderProviderInterface,
-Feature\BootstrapListenerInterface
+    Feature\InitProviderInterface,
+    Feature\ConfigProviderInterface,
+    Feature\AutoloaderProviderInterface,
+    Feature\BootstrapListenerInterface
 {
     /**
      * @internal
@@ -190,7 +190,7 @@ Feature\BootstrapListenerInterface
      * @param string $path Optional path component that is appended to the module root path
      * @return string Absolute path to requested file/directory (directories without trailing slash)
      */
-    static function getPath($path='')
+    public static function getPath($path = '')
     {
         return \Library\Application::getPath('module/Console/' . $path);
     }

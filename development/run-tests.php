@@ -24,11 +24,11 @@ error_reporting(-1);
 
 /**
  * Run tests for specified module
- * 
+ *
  * @param string $module Module name
  * @param string $filter optional filter for tests, used as phpunit's --filter option
  */
-function testModule($module, $filter=null)
+function testModule($module, $filter = null)
 {
     global $vendorBin;
     global $doCoverage;
@@ -40,7 +40,7 @@ function testModule($module, $filter=null)
     }
     $cmd .= " {$vendorBin}phpunit -c module/$module/phpunit.xml --colors --report-useless-tests --disallow-test-output";
     if ($doCoverage) {
-       $cmd .= " --coverage-html=doc/CodeCoverage/$module";
+        $cmd .= " --coverage-html=doc/CodeCoverage/$module";
     }
     if ($filter) {
         $cmd .= ' --filter ' .escapeshellarg($filter);

@@ -55,8 +55,7 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
         \Model\Operator\OperatorManager $operatorManager,
         \Console\Form\Account\Add $formAccountAdd,
         \Console\Form\Account\Edit $formAccountEdit
-    )
-    {
+    ) {
         $this->_operatorManager = $operatorManager;
         $this->_formAccountAdd = $formAccountAdd;
         $this->_formAccountEdit = $formAccountEdit;

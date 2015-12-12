@@ -72,7 +72,7 @@ class FileObject extends \SplFileInfo implements \Iterator
      * @param string $filename
      * @param string $openMode
      */
-    public function __construct($filename, $openMode='r')
+    public function __construct($filename, $openMode = 'r')
     {
         $this->_file = @fopen($filename, $openMode);
         if (!$this->_file) {
@@ -261,7 +261,7 @@ class FileObject extends \SplFileInfo implements \Iterator
      * @return string[] File content
      * @throws \RuntimeException if an error occurs during reading.
      */
-    public static function fileGetContentsAsArray($filename, $flags=0)
+    public static function fileGetContentsAsArray($filename, $flags = 0)
     {
         $content = @file($filename, $flags);
         if ($content === false) {
@@ -301,9 +301,9 @@ class FileObject extends \SplFileInfo implements \Iterator
      */
     public static function copy($oldName, $newName)
     {
-         if (!@copy($oldName, $newName)) {
+        if (!@copy($oldName, $newName)) {
             throw new \RuntimeException("Error copying '$oldName' to '$newName'");
-         }
+        }
     }
 
     /**
@@ -318,9 +318,9 @@ class FileObject extends \SplFileInfo implements \Iterator
      */
     public static function rename($oldName, $newName)
     {
-         if (!@rename($oldName, $newName)) {
+        if (!@rename($oldName, $newName)) {
             throw new \RuntimeException("Error renaming '$oldName' to '$newName'");
-         }
+        }
     }
 
     /**

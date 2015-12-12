@@ -47,7 +47,7 @@ $headers = array(
     'Interface' => $this->translate('Interface'),
 );
 $renderCallbacks = array (
-    'Type' => function($view, $inputDevice) {
+    'Type' => function ($view, $inputDevice) {
         $type = $inputDevice['Type'];
         switch ($type) {
             case 'Keyboard':

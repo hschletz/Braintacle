@@ -93,8 +93,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
         \Zend\Form\FormElementManager $formManager,
         \Model\Config $config,
         \Library\InventoryUploader $inventoryUploader
-    )
-    {
+    ) {
         $this->_clientManager = $clientManager;
         $this->_groupManager = $groupManager;
         $this->_registryManager = $registryManager;
@@ -108,14 +107,13 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     public function dispatch(
         \Zend\Stdlib\RequestInterface $request,
         \Zend\Stdlib\ResponseInterface $response = null
-    )
-    {
+    ) {
         // Fetch client with given ID for actions referring to a particular client
         $action = $this->getEvent()->getRouteMatch()->getParam('action');
         if ($action != 'index' and $action != 'search' and $action != 'import') {
             try {
                 $this->_currentClient = $this->_clientManager->getClient($request->getQuery('id'));
-            } catch(\RuntimeException $e) {
+            } catch (\RuntimeException $e) {
                 // Client does not exist - may happen when URL has become stale.
                 $this->flashMessenger()->addErrorMessage('The requested client does not exist.');
                 return $this->redirectToRoute('client', 'index');

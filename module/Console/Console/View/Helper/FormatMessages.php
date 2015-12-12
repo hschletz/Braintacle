@@ -54,8 +54,8 @@ class FormatMessages extends \Zend\View\Helper\AbstractHelper
     public function __construct(
         \Zend\View\Helper\EscapeHtml $escapeHtml,
         \Library\View\Helper\HtmlTag $htmlTag,
-        \Zend\I18n\View\Helper\Translate $translate)
-    {
+        \Zend\I18n\View\Helper\Translate $translate
+    ) {
         $this->_escapeHtml = $escapeHtml;
         $this->_htmlTag = $htmlTag;
         $this->_translate = $translate;

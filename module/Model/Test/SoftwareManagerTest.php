@@ -132,7 +132,8 @@ class SoftwareManagerTest extends AbstractTest
         $this->assertTablesEqual(
             $this->_loadDataSet($dataSet)->getTable('braintacle_windows'),
             $this->getConnection()->createQueryTable(
-                'braintacle_windows', 'SELECT hardware_id, manual_product_key FROM braintacle_windows'
+                'braintacle_windows',
+                'SELECT hardware_id, manual_product_key FROM braintacle_windows'
             )
         );
     }
@@ -152,7 +153,8 @@ class SoftwareManagerTest extends AbstractTest
         $this->assertTablesEqual(
             $this->_loadDataSet()->getTable('braintacle_windows'),
             $this->getConnection()->createQueryTable(
-                'braintacle_windows', 'SELECT hardware_id, manual_product_key FROM braintacle_windows'
+                'braintacle_windows',
+                'SELECT hardware_id, manual_product_key FROM braintacle_windows'
             )
         );
     }

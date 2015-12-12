@@ -145,13 +145,15 @@ class GroupManagerTest extends AbstractGroupTest
         $this->assertTablesEqual(
             $dataSet->getTable('hardware'),
             $connection->createQueryTable(
-                'hardware', 'SELECT id, deviceid, name, description, lastdate FROM hardware'
+                'hardware',
+                'SELECT id, deviceid, name, description, lastdate FROM hardware'
             )
         );
         $this->assertTablesEqual(
             $dataSet->getTable('groups'),
             $connection->createQueryTable(
-                'groups', 'SELECT hardware_id, request, create_time, revalidate_from FROM groups'
+                'groups',
+                'SELECT hardware_id, request, create_time, revalidate_from FROM groups'
             )
         );
     }
@@ -169,13 +171,15 @@ class GroupManagerTest extends AbstractGroupTest
             $this->assertTablesEqual(
                 $dataSet->getTable('hardware'),
                 $connection->createQueryTable(
-                    'hardware', 'SELECT id, deviceid, name, description, lastdate FROM hardware'
+                    'hardware',
+                    'SELECT id, deviceid, name, description, lastdate FROM hardware'
                 )
             );
             $this->assertTablesEqual(
                 $dataSet->getTable('groups'),
                 $connection->createQueryTable(
-                    'groups', 'SELECT hardware_id, request, create_time, revalidate_from FROM groups'
+                    'groups',
+                    'SELECT hardware_id, request, create_time, revalidate_from FROM groups'
                 )
             );
         }
@@ -194,13 +198,15 @@ class GroupManagerTest extends AbstractGroupTest
             $this->assertTablesEqual(
                 $dataSet->getTable('hardware'),
                 $connection->createQueryTable(
-                    'hardware', 'SELECT id, deviceid, name, description, lastdate FROM hardware'
+                    'hardware',
+                    'SELECT id, deviceid, name, description, lastdate FROM hardware'
                 )
             );
             $this->assertTablesEqual(
                 $dataSet->getTable('groups'),
                 $connection->createQueryTable(
-                    'groups', 'SELECT hardware_id, request, create_time, revalidate_from FROM groups'
+                    'groups',
+                    'SELECT hardware_id, request, create_time, revalidate_from FROM groups'
                 )
             );
         }
@@ -221,25 +227,29 @@ class GroupManagerTest extends AbstractGroupTest
         $this->assertTablesEqual(
             $dataSet->getTable('hardware'),
             $connection->createQueryTable(
-                'hardware', 'SELECT id, deviceid, name, description, lastdate FROM hardware'
+                'hardware',
+                'SELECT id, deviceid, name, description, lastdate FROM hardware'
             )
         );
         $this->assertTablesEqual(
             $dataSet->getTable('groups'),
             $connection->createQueryTable(
-                'groups', 'SELECT hardware_id, request, create_time, revalidate_from FROM groups'
+                'groups',
+                'SELECT hardware_id, request, create_time, revalidate_from FROM groups'
             )
         );
         $this->assertTablesEqual(
             $dataSet->getTable('groups_cache'),
             $connection->createQueryTable(
-                'groups_cache', 'SELECT hardware_id, group_id FROM groups_cache'
+                'groups_cache',
+                'SELECT hardware_id, group_id FROM groups_cache'
             )
         );
         $this->assertTablesEqual(
             $dataSet->getTable('devices'),
             $connection->createQueryTable(
-                'devices', 'SELECT hardware_id, name, ivalue FROM devices'
+                'devices',
+                'SELECT hardware_id, name, ivalue FROM devices'
             )
         );
     }
@@ -260,25 +270,29 @@ class GroupManagerTest extends AbstractGroupTest
             $this->assertTablesEqual(
                 $dataSet->getTable('hardware'),
                 $connection->createQueryTable(
-                    'hardware', 'SELECT id, deviceid, name, description, lastdate FROM hardware'
+                    'hardware',
+                    'SELECT id, deviceid, name, description, lastdate FROM hardware'
                 )
             );
             $this->assertTablesEqual(
                 $dataSet->getTable('groups'),
                 $connection->createQueryTable(
-                    'groups', 'SELECT hardware_id, request, create_time, revalidate_from FROM groups'
+                    'groups',
+                    'SELECT hardware_id, request, create_time, revalidate_from FROM groups'
                 )
             );
             $this->assertTablesEqual(
                 $dataSet->getTable('groups_cache'),
                 $connection->createQueryTable(
-                    'groups_cache', 'SELECT group_id, hardware_id, static FROM groups_cache'
+                    'groups_cache',
+                    'SELECT group_id, hardware_id, static FROM groups_cache'
                 )
             );
             $this->assertTablesEqual(
                 $dataSet->getTable('devices'),
                 $connection->createQueryTable(
-                    'devices', 'SELECT hardware_id, name, ivalue FROM devices'
+                    'devices',
+                    'SELECT hardware_id, name, ivalue FROM devices'
                 )
             );
         }
@@ -310,25 +324,29 @@ class GroupManagerTest extends AbstractGroupTest
             $this->assertTablesEqual(
                 $dataSet->getTable('hardware'),
                 $connection->createQueryTable(
-                    'hardware', 'SELECT id, deviceid, name, description, lastdate FROM hardware'
+                    'hardware',
+                    'SELECT id, deviceid, name, description, lastdate FROM hardware'
                 )
             );
             $this->assertTablesEqual(
                 $dataSet->getTable('groups'),
                 $connection->createQueryTable(
-                    'groups', 'SELECT hardware_id, request, create_time, revalidate_from FROM groups'
+                    'groups',
+                    'SELECT hardware_id, request, create_time, revalidate_from FROM groups'
                 )
             );
             $this->assertTablesEqual(
                 $dataSet->getTable('groups_cache'),
                 $connection->createQueryTable(
-                    'groups_cache', 'SELECT group_id, hardware_id, static FROM groups_cache'
+                    'groups_cache',
+                    'SELECT group_id, hardware_id, static FROM groups_cache'
                 )
             );
             $this->assertTablesEqual(
                 $dataSet->getTable('devices'),
                 $connection->createQueryTable(
-                    'devices', 'SELECT hardware_id, name, ivalue FROM devices'
+                    'devices',
+                    'SELECT hardware_id, name, ivalue FROM devices'
                 )
             );
         }

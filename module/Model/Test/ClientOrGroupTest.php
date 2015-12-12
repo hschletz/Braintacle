@@ -29,12 +29,13 @@ class ClientOrGroupTest extends AbstractTest
     protected $_currentTimestamp;
 
     /** {@inheritdoc} */
-    protected function _loadDataSet($testName=null)
+    protected function _loadDataSet($testName = null)
     {
         // Get current time from database as reference point for all operations.
         $this->_currentTimestamp = new \DateTime(
             $this->getConnection()->createQueryTable(
-                'current', 'SELECT CURRENT_TIMESTAMP AS current'
+                'current',
+                'SELECT CURRENT_TIMESTAMP AS current'
             )->getValue(0, 'current'),
             new \DateTimeZone('UTC')
         );
@@ -67,7 +68,8 @@ class ClientOrGroupTest extends AbstractTest
     {
         $dataSetTable = $this->_loadDataSet($dataSetName)->getTable('locks');
         $queryTable = $this->getConnection()->createQueryTable(
-            'locks', 'SELECT hardware_id, since FROM locks ORDER BY hardware_id'
+            'locks',
+            'SELECT hardware_id, since FROM locks ORDER BY hardware_id'
         );
         $count = $dataSetTable->getRowCount();
         $this->assertEquals($count, $queryTable->getRowCount());
@@ -610,8 +612,7 @@ class ClientOrGroupTest extends AbstractTest
         $expectedPackageDeployment,
         $expectedAllowScan,
         $expectedScanSnmp
-    )
-    {
+    ) {
         $model = $this->getMockBuilder($this->_getClass())
                       ->setMethods(array('__destruct', 'getConfig'))
                       ->getMockForAbstractClass();

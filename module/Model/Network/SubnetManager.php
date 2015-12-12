@@ -50,7 +50,7 @@ class SubnetManager
      * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Network\Subnet
      */
 
-    public function getSubnets($order=null, $direction='asc')
+    public function getSubnets($order = null, $direction = 'asc')
     {
         $orderBy = '';
         if ($order) {
@@ -150,15 +150,13 @@ EOT;
         if ($name == '') {
             $name = null;
         }
-        if (
-            !$this->_subnets->update(
-                array('name' => $name),
-                array(
-                    'netid' => $address,
-                    'mask' => $mask,
-                )
+        if (!$this->_subnets->update(
+            array('name' => $name),
+            array(
+                'netid' => $address,
+                'mask' => $mask,
             )
-        ) {
+        )) {
             $this->_subnets->insert(
                 array(
                     'netid' => $address,

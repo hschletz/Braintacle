@@ -62,8 +62,8 @@ class Table extends \Zend\View\Helper\AbstractHelper
         \Zend\View\Helper\EscapeHtml $escapeHtml,
         \Library\View\Helper\HtmlTag $htmlTag,
         \Console\View\Helper\ConsoleUrl $consoleUrl,
-        \Zend\I18n\View\Helper\DateFormat $dateFormat)
-    {
+        \Zend\I18n\View\Helper\DateFormat $dateFormat
+    ) {
         $this->_escapeHtml = $escapeHtml;
         $this->_htmlTag = $htmlTag;
         $this->_consoleUrl = $consoleUrl;
@@ -121,15 +121,14 @@ class Table extends \Zend\View\Helper\AbstractHelper
      * @param callable $rowClassCallback Optional callback to provide row class attributes
      * @return string HTML table
      */
-    function __invoke(
+    public function __invoke(
         $data,
         array $headers,
-        $sorting=array(),
-        $renderCallbacks=array(),
-        $columnClasses=array(),
+        $sorting = array(),
+        $renderCallbacks = array(),
+        $columnClasses = array(),
         $rowClassCallback = null
-    )
-    {
+    ) {
         if (count($data) == 0) {
             return '';
         }
@@ -218,14 +217,14 @@ class Table extends \Zend\View\Helper\AbstractHelper
 
     /**
      * Generate a table row
-     * 
+     *
      * @param array $columns Column data
      * @param bool $isHeader Use "th" tag instead of "td". Default: false
      * @param string[] $columnClasses Optional class attributes to apply to cells (keys are matched against $row)
      * @param string $rowClass Optional class attribute for the row
      * @return string HTML table row
      */
-    public function row(array $columns, $isHeader=false, $columnClasses=array(), $rowClass=null)
+    public function row(array $columns, $isHeader = false, $columnClasses = array(), $rowClass = null)
     {
         $row = '';
         foreach ($columns as $key => $column) {

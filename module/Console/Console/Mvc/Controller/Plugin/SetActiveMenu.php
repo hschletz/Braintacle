@@ -49,12 +49,12 @@ class SetActiveMenu extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
 
     /**
      * Mark a given page as active
-     * 
+     *
      * @param string $mainPage Label of top menu page
      * @param string $subPage Optional: label of submenu page
      * @throws \InvalidArgumentException if the given page does not exist
      */
-    function __invoke($mainPage, $subPage=null)
+    public function __invoke($mainPage, $subPage = null)
     {
         // Search $mainPage label in top level menu only.
         // Don't use findOneByLabel() because that would search in submenus too.

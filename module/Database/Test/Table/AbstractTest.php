@@ -53,7 +53,7 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
 
     /**
      * Get connection for DbUnit
-     * 
+     *
      * @return \PHPUnit_Extensions_Database_DB_IDatabaseConnection
      */
     public function getConnection()
@@ -81,7 +81,7 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
      * @param string $testName Test name. If NULL, the fixture dataset for the test class is loaded.
      * @return \PHPUnit_Extensions_Database_DataSet_IDataSet
      */
-    protected function _loadDataSet($testName=null)
+    protected function _loadDataSet($testName = null)
     {
         $class = $this->_getClass();
         $class = substr($class, strrpos($class, '\\') + 1); // Remove namespace

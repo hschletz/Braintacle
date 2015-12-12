@@ -160,13 +160,13 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $clients->method('selectWith')
                 ->with(
                     $this->callback(
-                        function($select) use($expectedOrder) {
+                        function ($select) use ($expectedOrder) {
                             return $select->getRawState($select::ORDER) == $expectedOrder;
                         }
                     )
                 )
                 ->willReturnCallback(
-                    function($select) use($sql) {
+                    function ($select) use ($sql) {
                         // Build simple result set to bypass hydrator
                         $resultSet = new \Zend\Db\ResultSet\ResultSet;
                         $resultSet->initialize($sql->prepareStatementForSqlObject($select)->execute());

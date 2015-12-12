@@ -28,8 +28,8 @@ use \Library\Application;
  *
  * Tests for controller plugin classes can derive from this class for some
  * convenience functions. Additionally, the testPluginInterface() test is
- * executed for all derived tests. 
-*/
+ * executed for all derived tests.
+ */
 abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -72,7 +72,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
      * @param bool $setController Initialize the helper with a working controller (default: TRUE)
      * @return \Zend\Mvc\Controller\Plugin\PluginInterface Plugin instance
      */
-    protected function _getPlugin($setController=true)
+    protected function _getPlugin($setController = true)
     {
         if ($setController) {
             $router = new \Zend\Mvc\Router\Http\TreeRouteStack;

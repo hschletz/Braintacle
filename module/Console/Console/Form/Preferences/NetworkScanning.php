@@ -68,7 +68,7 @@ class NetworkScanning extends AbstractForm
 
     /**
      * Create input filter specification for integers
-     * 
+     *
      * @param string $name Element name
      * @param integer $min 'min' option to passt to GreaterThan validator
      * @return array

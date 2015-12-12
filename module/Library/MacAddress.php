@@ -65,7 +65,7 @@ class MacAddress
      *
      * @param string $address MAC address. No validation is performed.
      */
-    function __construct($address)
+    public function __construct($address)
     {
         $this->_address = strtoupper($address);
     }
@@ -75,7 +75,7 @@ class MacAddress
      *
      * @return string
      */
-    function __toString()
+    public function __toString()
     {
         return $this->_address;
     }
@@ -85,7 +85,7 @@ class MacAddress
      *
      * @return string
      */
-    function getAddress()
+    public function getAddress()
     {
         return $this->_address;
     }

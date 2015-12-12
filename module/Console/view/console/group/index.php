@@ -38,7 +38,7 @@ $headers = array(
 );
 
 $renderCallbacks = array(
-    'Name' => function($view, $group) {
+    'Name' => function ($view, $group) {
         return $view->htmlTag(
             'a',
             $view->escapeHtml($group['Name']),

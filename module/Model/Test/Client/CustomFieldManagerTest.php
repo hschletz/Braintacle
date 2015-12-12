@@ -295,10 +295,12 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
         $this->assertEquals('fields_2', $namingStrategy->extract('Date'));
 
         $this->assertInstanceOf(
-            'Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy', $hydrator->getStrategy('Date')
+            'Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy',
+            $hydrator->getStrategy('Date')
         );
         $this->assertInstanceOf(
-            'Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy', $hydrator->getStrategy('fields_2')
+            'Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy',
+            $hydrator->getStrategy('fields_2')
         );
 
         $this->assertFalse($hydrator->hasStrategy('TAG'));

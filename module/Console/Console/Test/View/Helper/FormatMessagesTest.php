@@ -34,13 +34,9 @@ class FormatMessagesTest extends \Library\Test\View\Helper\AbstractTest
         $escapeHtml = $this->getMock('Zend\View\Helper\EscapeHtml');
         $escapeHtml->expects($this->any())
                    ->method('__invoke')
-                   ->will(
-                       $this->returnCallback(
-                           function($value) {
-                                return "escape($value)";
-                           }
-                       )
-                   );
+                   ->willReturnCallback(function ($value) {
+                       return "escape($value)";
+                   });
 
         $htmlTag = $this->getMockBuilder('Library\View\Helper\HtmlTag')->disableOriginalConstructor()->getMock();
         $htmlTag->expects($this->once())
@@ -51,13 +47,9 @@ class FormatMessagesTest extends \Library\Test\View\Helper\AbstractTest
         $translate = $this->getMock('Zend\I18n\View\Helper\Translate');
         $translate->expects($this->any())
                   ->method('__invoke')
-                  ->will(
-                      $this->returnCallback(
-                          function($value) {
-                              return "translate($value)";
-                          }
-                      )
-                  );
+                  ->willReturnCallback(function ($value) {
+                      return "translate($value)";
+                  });
 
         $uri = $this->getMock('Zend\Uri\Http');
         $uri->expects($this->any())

@@ -31,7 +31,7 @@ $headers = array(
 );
 
 $renderCallbacks = array(
-    'Name' => function($view, $product) {
+    'Name' => function ($view, $product) {
         $name = $view->escapeHtml($product['Name']);
         $description = $product['ExtraDescription'];
         if ($description) {
@@ -49,7 +49,7 @@ $renderCallbacks = array(
             return $name;
         }
     },
-    'Architecture' => function($view, $product) {
+    'Architecture' => function ($view, $product) {
         return $view->escapeHtml($product['Architecture'] . ' Bit');
     },
 );

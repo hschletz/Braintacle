@@ -27,11 +27,11 @@ $headers = array(
 );
 
 $renderCallbacks = array(
-    'Name' => function($view, $packageName) {
+    'Name' => function ($view, $packageName) {
         // Use callback because default renderer only operates on array row data
         return $view->escapeHtml($packageName);
     },
-    'remove' => function($view, $packageName) {
+    'remove' => function ($view, $packageName) {
         return $view->htmlTag(
             'a',
             $view->translate('remove'),

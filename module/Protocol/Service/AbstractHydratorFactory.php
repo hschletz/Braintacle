@@ -19,7 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-Namespace Protocol\Service;
+namespace Protocol\Service;
 
 /**
  * Abstract factory for hydrators
@@ -37,8 +37,7 @@ class AbstractHydratorFactory implements \Zend\ServiceManager\AbstractFactoryInt
         \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
         $name,
         $requestedName
-    )
-    {
+    ) {
         return strpos($requestedName, 'Protocol\Hydrator\\') === 0;
     }
 
@@ -47,8 +46,7 @@ class AbstractHydratorFactory implements \Zend\ServiceManager\AbstractFactoryInt
         \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
         $name,
         $requestedName
-    )
-    {
+    ) {
         return new \Protocol\Hydrator\DatabaseProxy(
             clone $serviceLocator->get(
                 'Database\Table' . substr($requestedName, strrpos($requestedName, '\\'))

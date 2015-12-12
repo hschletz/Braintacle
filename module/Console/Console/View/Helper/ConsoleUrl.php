@@ -59,7 +59,7 @@ class ConsoleUrl extends \Zend\View\Helper\AbstractHelper
      * @param bool $inheritParams Include request query parameters. Parameters in $params take precedence.
      * @return string Target URL
      */
-    public function __invoke($controller=null, $action=null, $params=array(), $inheritParams=false)
+    public function __invoke($controller = null, $action = null, $params = array(), $inheritParams = false)
     {
         $route = array();
         if ($controller) {

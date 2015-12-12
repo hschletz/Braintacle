@@ -20,6 +20,7 @@
  */
 
 namespace Model\Test\Package;
+
 use Model\Package\Assignment;
 
 /**
@@ -45,16 +46,19 @@ class AssignmentTest extends \Model\Test\AbstractTest
         $date = new \DateTime('2014-12-30 19:01:23');
         $this->assertEquals('Tue Dec 30 19:01:23 2014', $date->format(\Model\Package\Assignment::DATEFORMAT));
         $this->assertEquals(
-            $date, \DateTime::createFromFormat(\Model\Package\Assignment::DATEFORMAT, 'Tue Dec 30 19:01:23 2014')
+            $date,
+            \DateTime::createFromFormat(\Model\Package\Assignment::DATEFORMAT, 'Tue Dec 30 19:01:23 2014')
         );
 
         $date = new \DateTime('2014-03-01 09:01:03');
         $this->assertEquals('Sat Mar 01 09:01:03 2014', $date->format(\Model\Package\Assignment::DATEFORMAT));
         $this->assertEquals(
-            $date, \DateTime::createFromFormat(\Model\Package\Assignment::DATEFORMAT, 'Sat Mar 01 09:01:03 2014')
+            $date,
+            \DateTime::createFromFormat(\Model\Package\Assignment::DATEFORMAT, 'Sat Mar 01 09:01:03 2014')
         );
         $this->assertEquals(
-            $date, \DateTime::createFromFormat(\Model\Package\Assignment::DATEFORMAT, 'Sat Mar  1 09:01:03 2014')
+            $date,
+            \DateTime::createFromFormat(\Model\Package\Assignment::DATEFORMAT, 'Sat Mar  1 09:01:03 2014')
         );
     }
 }

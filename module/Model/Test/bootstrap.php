@@ -19,6 +19,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+namespace Model;
+
 error_reporting(-1);
 date_default_timezone_set('Europe/Berlin');
 \Locale::setDefault('de');
@@ -31,12 +33,14 @@ date_default_timezone_set('Europe/Berlin');
  */
 class StreamWrapperStatOnly
 {
+    // @codingStandardsIgnoreStart
     public function url_stat($path, $flags)
     {
         return array('size' => 42);
     }
+    // @codingStandardsIgnoreEnd
 }
-stream_wrapper_register('statonly', 'StreamWrapperStatOnly');
+stream_wrapper_register('statonly', 'Model\StreamWrapperStatOnly');
 
 require_once(__DIR__ . '/../../Library/Application.php');
 \Library\Application::init('Model', false);

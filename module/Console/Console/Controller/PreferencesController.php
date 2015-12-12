@@ -71,8 +71,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
         \Model\Network\DeviceManager $deviceManager,
         \Model\Registry\RegistryManager $registryManager,
         \Model\Config $config
-    )
-    {
+    ) {
         $this->_formManager = $formManager;
         $this->_customFieldManager = $customFieldManager;
         $this->_deviceManager = $deviceManager;

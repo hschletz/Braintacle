@@ -371,7 +371,7 @@ class ClientConfig extends Form
      * @param array $data Fieldset data
      * @param string $masterElement Optional name of a checkbox that voids all other elements if unchecked.
      */
-    protected function _processFieldset($data, $masterElement=null)
+    protected function _processFieldset($data, $masterElement = null)
     {
         if ($masterElement) {
             $clearValues = !$data[$masterElement];

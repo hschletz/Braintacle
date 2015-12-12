@@ -28,13 +28,13 @@ use Library\Application;
  *
  * Tests for view helper classes can derive from this class for some convenience
  * functions. Additionally, the testHelperInterface() test is executed for all
- * derived tests. 
+ * derived tests.
  */
 abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Get the name of the view helper, derived from the test class name
-     * 
+     *
      * @return string Helper name
      */
     protected function _getHelperName()
@@ -45,7 +45,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Get the name of the view helper class, derived from the test class name
-     * 
+     *
      * @return string Helper name
      */
     protected function _getHelperClass()
@@ -60,7 +60,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
      * @param string $name Helper name (default: derive from test class name)
      * @return \Zend\View\Helper\HelperInterface Helper instance
      */
-    protected function _getHelper($name=null)
+    protected function _getHelper($name = null)
     {
         if (!$name) {
             $name = $this->_getHelperName();

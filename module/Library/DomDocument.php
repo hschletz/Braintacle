@@ -38,7 +38,7 @@ class DomDocument extends \DOMDocument
      * @param string $version Default: 1.0
      * @param string $encoding Default: UTF-8
      */
-    function __construct($version='1.0', $encoding='UTF-8')
+    public function __construct($version = '1.0', $encoding = 'UTF-8')
     {
         parent::__construct($version, $encoding);
         $this->formatOutput = true;
@@ -123,7 +123,7 @@ class DomDocument extends \DOMDocument
      * @return integer number of bytes written
      * @throws \RuntimeException if a write error occurs
      */
-    public function save($filename, $options=0)
+    public function save($filename, $options = 0)
     {
         $xml = $this->saveXml(null, $options);
         try {
@@ -148,7 +148,7 @@ class DomDocument extends \DOMDocument
      * @return bool always TRUE for compatibility with original implementation
      * @throws \RuntimeException if file is unreadable or has unparseable content
      */
-    public function load($filename, $options=0)
+    public function load($filename, $options = 0)
     {
         if (@parent::load($filename, $options)) {
             return true;

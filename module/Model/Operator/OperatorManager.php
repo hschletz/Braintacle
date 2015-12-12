@@ -47,8 +47,7 @@ class OperatorManager
     public function __construct(
         \Model\Operator\AuthenticationService $authenticationService,
         \Database\Table\Operators $operators
-    )
-    {
+    ) {
         $this->_authenticationService = $authenticationService;
         $this->_operators = $operators;
     }
@@ -60,7 +59,7 @@ class OperatorManager
      * @param string $direction Sorting order (asc|desc)
      * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Operator\Operator
      */
-    public function fetchAll($order='Id', $direction='asc')
+    public function fetchAll($order = 'Id', $direction = 'asc')
     {
         $select = $this->_operators->getSql()->select();
         $select->columns(array('id', 'firstname', 'lastname', 'email', 'comments'));

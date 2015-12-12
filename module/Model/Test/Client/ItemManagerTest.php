@@ -200,7 +200,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
         $this->assertEquals(
             $result,
             array_map(
-                function($element) use ($keyColumn) {
+                function ($element) use ($keyColumn) {
                     return $element[$keyColumn];
                 },
                 $items

@@ -29,7 +29,7 @@ $headers = array(
 );
 
 $renderCallbacks = array (
-    'AcceptIgnore' => function($view, $software) {
+    'AcceptIgnore' => function ($view, $software) {
         $links = array();
         if ($view->filter == 'ignored' or $view->filter == 'new') {
             $links[] = $view->htmlTag(
@@ -61,10 +61,10 @@ $renderCallbacks = array (
         }
         return implode(' ', $links);
     },
-    'name' => function($view, $software) use ($nameFilter) {
+    'name' => function ($view, $software) use ($nameFilter) {
         return $view->escapeHtml($nameFilter->filter($software['name']));
     },
-    'num_clients' => function($view, $software) {
+    'num_clients' => function ($view, $software) {
         return $view->htmlTag(
             'a',
             $software['num_clients'],

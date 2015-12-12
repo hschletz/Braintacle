@@ -49,18 +49,17 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
      * @throws \LogicException if $invertResult is not supported by a filter or type of custom field is not supported
      */
     public function getClients(
-        $properties=null,
-        $order=null,
-        $direction='asc',
-        $filter=null,
-        $search=null,
-        $operators=null,
-        $invert=null,
-        $addSearchColumns=true,
-        $distinct=false,
-        $query=true
-    )
-    {
+        $properties = null,
+        $order = null,
+        $direction = 'asc',
+        $filter = null,
+        $search = null,
+        $operators = null,
+        $invert = null,
+        $addSearchColumns = true,
+        $distinct = false,
+        $query = true
+    ) {
         $clients = $this->serviceLocator->get('Database\Table\Clients');
         $map = $clients->getHydrator()->getExtractorMap();
 
@@ -434,8 +433,7 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
         $matchExact,
         $invertResult,
         $addSearchColumns
-    )
-    {
+    ) {
         $arg = (string) $arg; // Treat NULL as empty string
         list($tableGateway, $column) = $this->_filter($select, $model, $property, $addSearchColumns);
         $table = $tableGateway->getTable();
@@ -535,7 +533,13 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
         if ($model == 'CustomFields') {
             // For plain date columns a simple ordinal comparison is sufficient.
             return $this->_filterByOrdinal(
-                $select, $model, $property, $dayStart->format('Y-m-d'), $operator, $invertResult, $addSearchColumns
+                $select,
+                $model,
+                $property,
+                $dayStart->format('Y-m-d'),
+                $operator,
+                $invertResult,
+                $addSearchColumns
             );
         }
 
@@ -780,7 +784,7 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
         // If a transaction is already in progress, an exception will be thrown
         // which has to be caught. The commit() and rollBack() methods can only
         // be called if the transaction has been started here.
-        try{
+        try {
             $connection->beginTransaction();
             $transactionStarted = true;
         } catch (\Exception $exception) {

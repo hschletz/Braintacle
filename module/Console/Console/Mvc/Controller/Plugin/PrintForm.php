@@ -36,7 +36,7 @@ class PrintForm extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
      * @param mixed $form Form to render
      * @return \Zend\View\Model\ViewModel
      */
-    function __invoke($form)
+    public function __invoke($form)
     {
         $view = new \Zend\View\Model\ViewModel;
         $view->setTemplate('plugin/PrintForm.php');

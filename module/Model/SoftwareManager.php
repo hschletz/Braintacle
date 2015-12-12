@@ -63,8 +63,7 @@ class SoftwareManager
         \Database\Table\SoftwareDefinitions $softwareDefinitions,
         \Database\Table\WindowsInstallations $windowsInstallations,
         \Database\Table\WindowsProductKeys $windowsProductKeys
-    )
-    {
+    ) {
         $this->_software = $software;
         $this->_softwareDefinitions = $softwareDefinitions;
         $this->_windowsInstallations = $windowsInstallations;
@@ -95,7 +94,7 @@ class SoftwareManager
      * @param string $direction Onde of "asc" or "desc", default: "asc"
      * @return \Traversable Iterator producing array objects with "name" and "num_clients" keys
      */
-    public function getSoftware($filters=null, $order='name', $direction='asc')
+    public function getSoftware($filters = null, $order = 'name', $direction = 'asc')
     {
         $sql = $this->_software->getSql();
         $select = $sql->select();
@@ -224,12 +223,10 @@ class SoftwareManager
             }
         }
 
-        if (
-            !$this->_windowsProductKeys->update(
-                array('manual_product_key' => $productKey),
-                array('hardware_id' => $client['Id'])
-            )
-        ) {
+        if (!$this->_windowsProductKeys->update(
+            array('manual_product_key' => $productKey),
+            array('hardware_id' => $client['Id'])
+        )) {
             $this->_windowsProductKeys->insert(
                 array(
                     'hardware_id' => $client['Id'],

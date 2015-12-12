@@ -20,6 +20,7 @@
  */
 
 namespace Model\Test\Package;
+
 use Model\Package\PackageManager;
 use org\bovigo\vfs\vfsStream;
 
@@ -199,8 +200,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $size,
         $deleteSource,
         $deleteArchive
-    )
-    {
+    ) {
         // vfsStream is difficult to set up from a data provider, so the files are created here.
         $root = vfsStream::setup('root');
         if ($content) {
@@ -227,14 +227,14 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         );
 
         // Callback to test the static part of package data (input values)
-        $checkStaticData = function($testData) use ($data) {
+        $checkStaticData = function ($testData) use ($data) {
             unset($testData['Hash']);
             unset($testData['Size']);
             return ($testData === $data);
         };
 
         // Callback to test the added file properties
-        $checkFileProperties = function($testData) use ($hash, $size) {
+        $checkFileProperties = function ($testData) use ($hash, $size) {
             return ($testData['Hash'] === $hash and $testData['Size'] === $size);
         };
 
@@ -548,13 +548,9 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $archiveManager->expects($this->once())
                        ->method('createArchive')
                        ->with(\Library\ArchiveManager::ZIP, $archive)
-                       ->will(
-                           $this->returnCallback(
-                               function () use ($root) {
-                                   return vfsStream::newFile('archive')->at($root)->url();
-                               }
-                           )
-                       );
+                       ->willReturnCallback(function () use ($root) {
+                           return vfsStream::newFile('archive')->at($root)->url();
+                       });
         $archiveManager->expects($this->once())
                        ->method('addFile')
                        ->with($archive, $source, 'FileName');
@@ -704,7 +700,8 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $this->assertTablesEqual(
             $this->_loadDataSet()->getTable('devices'),
             $this->getConnection()->createQueryTable(
-                'devices', 'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices'
+                'devices',
+                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices'
             )
         );
     }
@@ -733,8 +730,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $deployNotified,
         $deployError,
         $deployGroups
-    )
-    {
+    ) {
         $model = $this->_getModel(array('Library\Now' => new \DateTime('2015-02-08 14:17:29')));
         $model->updateAssignments(
             1415958319,
@@ -750,7 +746,8 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $this->assertTablesEqual(
             $dataset->getTable('devices'),
             $this->getConnection()->createQueryTable(
-                'devices', 'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices'
+                'devices',
+                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices'
             )
         );
     }

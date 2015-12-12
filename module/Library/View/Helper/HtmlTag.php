@@ -46,8 +46,7 @@ class HtmlTag extends \Zend\View\Helper\AbstractHelper
     public function __construct(
         \Zend\View\Helper\EscapeHtmlAttr $escapeHtmlAttr,
         \Zend\View\Helper\Doctype $doctype
-    )
-    {
+    ) {
         $this->_escapeHtmlAttr = $escapeHtmlAttr;
         if (!$doctype->isXhtml()) {
             $this->_emptyTags = array('area', 'base', 'br', 'col', 'hr', 'img', 'input', 'link', 'meta', 'param');
@@ -66,7 +65,7 @@ class HtmlTag extends \Zend\View\Helper\AbstractHelper
      * @param bool $inline Whether the element should appear inline or with newlines
      * @return string
      */
-    function __invoke($element, $content=null, $attributes=null, $inline=false)
+    public function __invoke($element, $content = null, $attributes = null, $inline = false)
     {
         $newline = $inline ? '' : "\n";
 

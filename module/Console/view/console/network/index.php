@@ -31,7 +31,7 @@ $headers = array(
 );
 
 $renderCallbacks = array(
-    'Count' => function($view, $deviceType, $property) {
+    'Count' => function ($view, $deviceType, $property) {
         $count = $deviceType['Count'];
         if ($count) {
             return $view->htmlTag(
@@ -83,7 +83,7 @@ $headers = array(
     'NumUnknown' => $this->translate('unknown'),
 );
 
-$renderUninventoried = function($view, $subnet, $property) {
+$renderUninventoried = function ($view, $subnet, $property) {
     $count = $subnet[$property];
     if ($count) {
         return $view->htmlTag(
@@ -105,7 +105,7 @@ $renderUninventoried = function($view, $subnet, $property) {
     }
 };
 $renderCallbacks = array(
-    'Name' => function($view, $subnet, $property) {
+    'Name' => function ($view, $subnet, $property) {
         // Link to edit subnet properties. If no name is defined, use gray
         // 'Edit' as link text.
         $name = $subnet['Name'];
@@ -132,7 +132,7 @@ $renderCallbacks = array(
             true
         );
     },
-    'NumInventoried' => function($view, $subnet, $property) {
+    'NumInventoried' => function ($view, $subnet, $property) {
         // The number is always >= 1. There is no need to check for 0.
         return $view->htmlTag(
             'a',

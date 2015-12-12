@@ -47,8 +47,7 @@ class RegistryManager
     public function __construct(
         \Database\Table\RegistryValueDefinitions $registryValueDefinitions,
         \Database\Table\RegistryData $registryData
-    )
-    {
+    ) {
         $this->_registryValueDefinitions = $registryValueDefinitions;
         $this->_registryData = $registryData;
     }
@@ -96,7 +95,7 @@ class RegistryManager
      * @throws \DomainException if $rootkey is not one of the HKEY_* constants
      * @throws \Model\Registry\RuntimeException if a value with the same name already exists.
      **/
-    public function addValueDefinition($name, $rootKey, $subKeys, $value=null)
+    public function addValueDefinition($name, $rootKey, $subKeys, $value = null)
     {
         if (empty($subKeys)) {
             throw new \InvalidArgumentException('Subkeys must not be empty');

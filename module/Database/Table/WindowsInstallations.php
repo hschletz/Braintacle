@@ -19,7 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-Namespace Database\Table;
+namespace Database\Table;
 
 /**
  * "windows_installations" view
@@ -49,7 +49,8 @@ class WindowsInstallations extends \Database\AbstractTable
         );
 
         $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
-            $this->_hydrator, $serviceLocator->get('Model\Client\WindowsInstallation')
+            $this->_hydrator,
+            $serviceLocator->get('Model\Client\WindowsInstallation')
         );
 
         parent::__construct($serviceLocator);

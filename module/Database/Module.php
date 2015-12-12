@@ -32,10 +32,10 @@ use Zend\ModuleManager\Feature;
  * @codeCoverageIgnore
  */
 class Module implements
-Feature\AutoloaderProviderInterface,
-Feature\ConfigProviderInterface,
-Feature\BootstrapListenerInterface,
-Feature\InitProviderInterface
+    Feature\AutoloaderProviderInterface,
+    Feature\ConfigProviderInterface,
+    Feature\BootstrapListenerInterface,
+    Feature\InitProviderInterface
 {
     /**
      * @internal
@@ -101,7 +101,7 @@ Feature\InitProviderInterface
      * @param string $path Optional path component that is appended to the module root path
      * @return string Absolute path to requested file/directory (directories without trailing slash)
      */
-    static function getPath($path='')
+    public static function getPath($path = '')
     {
         return \Library\Application::getPath('module/Database/' . $path);
     }

@@ -34,8 +34,7 @@ class AccountFactory implements \Zend\ServiceManager\AbstractFactoryInterface
         \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
         $name,
         $requestedName
-    )
-    {
+    ) {
         return (strpos($requestedName, 'Console\Form\Account\\') === 0);
     }
 
@@ -46,8 +45,7 @@ class AccountFactory implements \Zend\ServiceManager\AbstractFactoryInterface
         \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
         $name,
         $requestedName
-    )
-    {
+    ) {
         $form = new $requestedName;
         $form->setOption(
             'operatorManager',

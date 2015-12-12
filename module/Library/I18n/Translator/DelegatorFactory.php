@@ -32,8 +32,7 @@ class DelegatorFactory implements \Zend\ServiceManager\DelegatorFactoryInterface
         $name,
         $requestedName,
         $callback
-    )
-    {
+    ) {
         $locale = \Locale::getDefault();
         $primaryLanguage = \Locale::getPrimaryLanguage($locale);
 
@@ -102,8 +101,7 @@ class DelegatorFactory implements \Zend\ServiceManager\DelegatorFactoryInterface
         // If a fallback locale is involved, suppress the warning for the
         // standard locale.
         $fallbackLocale = $e->getTarget()->getFallbackLocale();
-        if (
-            (!$fallbackLocale or $e->getParam('locale') == $fallbackLocale) and
+        if ((!$fallbackLocale or $e->getParam('locale') == $fallbackLocale) and
             $e->getParam('text_domain') == 'default'
         ) {
             trigger_error('Missing translation: ' . $e->getParam('message'), E_USER_NOTICE);

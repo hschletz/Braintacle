@@ -116,7 +116,7 @@ class NetworkDeviceTypes extends Form
      * @return bool
      * @internal
      */
-    public function validateName($value, $context, $originalValue=null)
+    public function validateName($value, $context, $originalValue = null)
     {
         if ($originalValue) {
             if ($value == $originalValue) {
@@ -141,7 +141,7 @@ class NetworkDeviceTypes extends Form
     }
 
     /** {@inheritdoc} */
-    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset=null)
+    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset = null)
     {
         $output = "<div class='table'>\n";
         $types = $this->get('Types');

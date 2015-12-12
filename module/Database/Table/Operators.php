@@ -19,7 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-Namespace Database\Table;
+namespace Database\Table;
 
 /**
  * "operators" table
@@ -46,7 +46,8 @@ class Operators extends \Database\AbstractTable
         $this->_hydrator->addFilter('whitelist', new \Library\Hydrator\Filter\Whitelist($map));
 
         $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
-            $this->_hydrator, $serviceLocator->get('Model\Operator\Operator')
+            $this->_hydrator,
+            $serviceLocator->get('Model\Operator\Operator')
         );
         parent::__construct($serviceLocator);
     }
@@ -82,12 +83,7 @@ class Operators extends \Database\AbstractTable
     {
         // If no account exists yet, create a default account.
         $logger->debug('Checking for existing account.');
-        if (
-            $this->adapter->query(
-                'SELECT COUNT(id) AS num FROM operators',
-                \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
-            )->current()->offsetGet('num') === '0'
-        ) {
+        if ($this->select()->count() == 0) {
             $this->_serviceLocator->get('Model\Operator\OperatorManager')->create(array('Id' => 'admin'), 'admin');
             $logger->notice(
                 'Default account \'admin\' created with password \'admin\'.'
@@ -96,12 +92,7 @@ class Operators extends \Database\AbstractTable
 
         // Warn about default password 'admin'
         $logger->debug('Checking for accounts with default password.');
-        if (
-            $this->adapter->query(
-                'SELECT COUNT(id) AS num FROM operators WHERE passwd = ?',
-                array(md5('admin'))
-            )->current()->offsetGet('num') > 0
-        ) {
+        if ($this->select(array('passwd' => md5('admin')))->count() > 0) {
             $logger->warn(
                 'Account with default password detected. It should be changed as soon as possible!'
             );

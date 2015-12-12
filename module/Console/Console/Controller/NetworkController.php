@@ -63,8 +63,7 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
         \Model\Network\SubnetManager $subnetManager,
         \Console\Form\Subnet $subnetForm,
         \Console\Form\NetworkDevice $deviceForm
-    )
-    {
+    ) {
         $this->_deviceManager = $deviceManager;
         $this->_subnetManager = $subnetManager;
         $this->_subnetForm = $subnetForm;
@@ -75,8 +74,7 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
     public function dispatch(
         \Zend\Stdlib\RequestInterface $request,
         \Zend\Stdlib\ResponseInterface $response = null
-    )
-    {
+    ) {
         $this->setActiveMenu('Inventory', 'Network');
         return parent::dispatch($request, $response);
     }

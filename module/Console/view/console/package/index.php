@@ -51,7 +51,7 @@ $headers = array(
     'Delete' => '',
 );
 
-$renderNumPackages = function($view, $package, $property) {
+$renderNumPackages = function ($view, $package, $property) {
     switch ($property) {
         case 'NumNonnotified':
             $filter = 'PackageNonnotified';
@@ -96,7 +96,7 @@ $renderNumPackages = function($view, $package, $property) {
 };
 
 $renderCallbacks = array(
-    'Name' => function($view, $package) {
+    'Name' => function ($view, $package) {
         $attributes = array(
             'href' => $view->consoleUrl(
                 'package',
@@ -114,17 +114,21 @@ $renderCallbacks = array(
             true
         );
     },
-    'Size' => function($view, $package) {
+    'Size' => function ($view, $package) {
         $size = $view->numberFormat(
-            $package['Size'] / 1048576, \NumberFormatter::DECIMAL, \NumberFormatter::TYPE_DOUBLE, null, 1
+            $package['Size'] / 1048576,
+            \NumberFormatter::DECIMAL,
+            \NumberFormatter::TYPE_DOUBLE,
+            null,
+            1
         );
         $size .= "\xC2\xA0MB";
         return $view->escapeHtml($size);
     },
-    'Platform' => function($view, $package) {
+    'Platform' => function ($view, $package) {
         return $view->escapeHtml(ucfirst($package['Platform']));
     },
-    'Delete' => function($view, $package) {
+    'Delete' => function ($view, $package) {
         return $view->htmlTag(
             'a',
             $view->translate('Delete'),
@@ -144,7 +148,7 @@ $renderCallbacks = array(
     'NumError' => $renderNumPackages,
 );
 
-$rowClassCallback = function($row) use($currentPackage) {
+$rowClassCallback = function ($row) use ($currentPackage) {
     if ($row['Name'] == $currentPackage) {
         return 'highlight';
     } else {

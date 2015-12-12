@@ -112,7 +112,7 @@ class Application
      * @throws \LogicException if the requested path component does not exist
      * @codeCoverageIgnore
      */
-    public static function getPath($path='')
+    public static function getPath($path = '')
     {
         $realPath = realpath(__DIR__ . '/../../' . $path);
         if (!$realPath) {

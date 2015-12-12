@@ -40,7 +40,7 @@ class RedirectToRoute extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
      * @param array $params Associative array of URL parameters
      * @return \Zend\Http\Response Redirect response
      */
-    function __invoke($controllerName=null, $action=null, array $params=array())
+    public function __invoke($controllerName = null, $action = null, array $params = array())
     {
         $controller = $this->getController();
         return $controller->redirect()->toUrl(
