@@ -22,9 +22,17 @@
 
 error_reporting(-1);
 
+// Use phpcs from vendor directory if available
+$phpcs = __DIR__ . '/../vendor/bin/phpcs';
+if (file_exists($phpcs)) {
+    $phpcs = escapeshellarg(realpath($phpcs));
+} else {
+    $phpcs = 'phpcs'; // fall back to globally installed version
+}
+
 $baseDir = dirname(__DIR__) . DIRECTORY_SEPARATOR;
 $cmd = array(
-    'phpcs',
+    $phpcs,
     '-n', // suppress warnings
     '--standard=PSR2',
     escapeshellarg($baseDir . 'development'),

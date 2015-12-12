@@ -49,6 +49,7 @@
     "require-dev": {
         "mikey179/vfsStream": "*",
         "phpunit/dbunit": "*",
+        "squizlabs/php_codesniffer": "2.*",
         "zendframework/zend-dom": "~2.5.0",
         "zendframework/zend-test": "~2.5.0"
     }
