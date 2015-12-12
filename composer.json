@@ -47,6 +47,7 @@
         "zendframework/zend-view": "~2.5.0"
     },
     "require-dev": {
+        "apigen/apigen": "*",
         "mikey179/vfsStream": "*",
         "phpunit/dbunit": "*",
         "squizlabs/php_codesniffer": "2.*",

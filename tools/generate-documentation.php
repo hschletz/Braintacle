@@ -36,7 +36,13 @@ error_reporting(-1);
 if (isset($_SERVER['argv'][1])) {
     $apigenCmd = $_SERVER['argv'][1];
 } else {
-    $apigenCmd = 'apigen';
+    // Use apigen from vendor directory if available
+    $apigenCmd = __DIR__ . '/../vendor/bin/apigen';
+    if (file_exists($apigenCmd)) {
+        $apigenCmd = escapeshellarg(realpath($apigenCmd));
+    } else {
+        $apigenCmd = 'apigen'; // fall back to globally installed version
+    }
 }
 
 // Invoke ApiGen
