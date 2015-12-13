@@ -483,12 +483,12 @@ input[size="8"]
     padding: 0;
 }
 
-.form_deletecomputer {
+.form_deleteclient {
     text-align: center;
     margin-top: 4ex;
 }
 
-.form_deletecomputer input[type=submit]{
+.form_deleteclient input[type=submit]{
     margin: 4ex 1em;
 }
 
