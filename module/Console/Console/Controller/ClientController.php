@@ -430,7 +430,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
                 'action',
                 $this->urlFromRoute(
                     'client',
-                    'installpackage',
+                    'assignpackage',
                     array('id' => $this->_currentClient['Id'])
                 )
             );
@@ -575,11 +575,11 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     }
 
     /**
-     * Install packages from Console\Form\Package\Assign (POST only)
+     * Assign packages from Console\Form\Package\Assign (POST only)
      *
      * @return \Zend\Http\Response redirect response
      */
-    public function installpackageAction()
+    public function assignpackageAction()
     {
         if ($this->getRequest()->isPost()) {
             $form = $this->_formManager->get('Console\Form\Package\Assign');

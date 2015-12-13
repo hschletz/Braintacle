@@ -199,7 +199,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
                 'action',
                 $this->urlFromRoute(
                     'group',
-                    'installpackage',
+                    'assignpackage',
                     array('name' => $this->_currentGroup['Name'])
                 )
             );
@@ -237,7 +237,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
      *
      * @return \Zend\Http\Response redirect response
      */
-    public function installpackageAction()
+    public function assignpackageAction()
     {
         if ($this->getRequest()->isPost()) {
             $this->_packageAssignmentForm->setData($this->params()->fromPost());

@@ -35,7 +35,7 @@ class Assign extends \Console\Form\Form
         parent::init();
 
         $submit = new \Library\Form\Element\Submit('Submit');
-        $submit->setLabel('Install');
+        $submit->setLabel('Assign');
         $this->add($submit);
     }
 

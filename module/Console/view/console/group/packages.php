@@ -66,7 +66,7 @@ if (count($this->packageNames)) {
 if (isset($this->form)) {
     print $this->htmlTag(
         'h2',
-        $this->translate('Install packages')
+        $this->translate('Assign packages')
     );
     print $this->form->render($this);
 }

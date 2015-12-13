@@ -1,6 +1,6 @@
 <?php
 /**
- * Display and install packages
+ * Display and assign packages
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -88,7 +88,7 @@ if (count($assignments)) {
 if (isset($this->form)) {
     print $this->htmlTag(
         'h2',
-        $this->translate('Install packages')
+        $this->translate('Assign packages')
     );
     print $this->form->render($this);
 }

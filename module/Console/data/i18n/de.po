@@ -360,8 +360,8 @@ msgid "Type"
 msgstr "Typ"
 
 #: Console/Form/Package/Assign.php
-msgid "Install"
-msgstr "Installieren"
+msgid "Assign"
+msgstr "Zuweisen"
 
 #: Console/Form/Package/Build.php
 msgid "Action"
@@ -1403,12 +1403,12 @@ msgid "Status"
 msgstr "Status"
 
 #: view/console/client/packages.php view/console/group/packages.php
-msgid "Assigned packages"
-msgstr "Zugewiesene Pakete"
+msgid "Assign packages"
+msgstr "Pakete zuweisen"
 
 #: view/console/client/packages.php view/console/group/packages.php
-msgid "Install packages"
-msgstr "Pakete installieren"
+msgid "Assigned packages"
+msgstr "Zugewiesene Pakete"
 
 #: view/console/client/packages.php
 msgid "Timestamp"

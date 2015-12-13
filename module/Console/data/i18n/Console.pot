@@ -357,7 +357,7 @@ msgid "Type"
 msgstr ""
 
 #: Console/Form/Package/Assign.php
-msgid "Install"
+msgid "Assign"
 msgstr ""
 
 #: Console/Form/Package/Build.php view/console/package/index.php
@@ -1421,7 +1421,7 @@ msgid "Assigned packages"
 msgstr ""
 
 #: view/console/client/packages.php view/console/group/packages.php
-msgid "Install packages"
+msgid "Assign packages"
 msgstr ""
 
 #: view/console/client/printers.php

@@ -365,7 +365,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                                      ->will($this->returnValue('<form></form>'));
         $this->_packageAssignmentForm->expects($this->once())
                                      ->method('setAttribute')
-                                     ->with('action', '/console/group/installpackage/?name=test');
+                                     ->with('action', '/console/group/assignpackage/?name=test');
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//table');
@@ -419,7 +419,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/group/packages/?name=test');
     }
 
-    public function testInstallpackageActionGet()
+    public function testassignpackageActionGet()
     {
         $group = $this->getMock('Model\Group\Group');
         $group->expects($this->never())->method('assignPackage');
@@ -434,11 +434,11 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_packageAssignmentForm->expects($this->never())
                                      ->method('getData');
 
-        $this->dispatch('/console/group/installpackage/?name=test');
+        $this->dispatch('/console/group/assignpackage/?name=test');
         $this->assertRedirectTo('/console/group/packages/?name=test');
     }
 
-    public function testInstallpackageActionPostInvalid()
+    public function testassignpackageActionPostInvalid()
     {
         $postData = array('Packages' => array('package1' => '0', 'package2' => '1'));
         $group = $this->getMock('Model\Group\Group');
@@ -455,11 +455,11 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                                      ->with($postData);
         $this->_packageAssignmentForm->expects($this->never())
                                      ->method('getData');
-        $this->dispatch('/console/group/installpackage/?name=test', 'POST', $postData);
+        $this->dispatch('/console/group/assignpackage/?name=test', 'POST', $postData);
         $this->assertRedirectTo('/console/group/packages/?name=test');
     }
 
-    public function testInstallpackageActionPostValid()
+    public function testassignpackageActionPostValid()
     {
         $postData = array('Packages' => array('package1' => '0', 'package2' => '1'));
         $group = $this->getMock('Model\Group\Group');
@@ -477,7 +477,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_packageAssignmentForm->expects($this->once())
                                      ->method('getData')
                                      ->will($this->returnValue($postData));
-        $this->dispatch('/console/group/installpackage/?name=test', 'POST', $postData);
+        $this->dispatch('/console/group/assignpackage/?name=test', 'POST', $postData);
         $this->assertRedirectTo('/console/group/packages/?name=test');
     }
 

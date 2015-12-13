@@ -2287,7 +2287,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->with($packages);
         $form->expects($this->once())
              ->method('setAttribute')
-             ->with('action', '/console/client/installpackage/?id=1');
+             ->with('action', '/console/client/assignpackage/?id=1');
         $form->expects($this->once())
              ->method('render')
              ->will($this->returnValue('<form></form>'));
@@ -2309,7 +2309,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $this->dispatch('/console/client/packages/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//h2', "\nPakete installieren\n");
+        $this->assertXpathQueryContentContains('//h2', "\nPakete zuweisen\n");
         $this->assertXpathQueryCount('//h2', 1);
         $this->assertXPathQuery('//form');
     }
@@ -2646,7 +2646,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/client/packages/?id=1');
     }
 
-    public function testInstallpackageActionGet()
+    public function testassignpackageActionGet()
     {
         $form = $this->_formManager->get('Console\Form\Package\Assign');
         $form->expects($this->never())
@@ -2663,11 +2663,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client->expects($this->never())->method('assignPackage');
         $this->_clientManager->method('getClient')->willReturn($client);
 
-        $this->dispatch('/console/client/installpackage/?id=1');
+        $this->dispatch('/console/client/assignpackage/?id=1');
         $this->assertRedirectTo('/console/client/packages/?id=1');
     }
 
-    public function testInstallpackageActionPostInvalid()
+    public function testassignpackageActionPostInvalid()
     {
         $postData = array('package1' => '1', 'package2' => '1');
         $form = $this->_formManager->get('Console\Form\Package\Assign');
@@ -2687,11 +2687,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client->expects($this->never())->method('assignPackage');
         $this->_clientManager->method('getClient')->willReturn($client);
 
-        $this->dispatch('/console/client/installpackage/?id=1', 'POST', $postData);
+        $this->dispatch('/console/client/assignpackage/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/packages/?id=1');
     }
 
-    public function testInstallpackageActionPostValid()
+    public function testassignpackageActionPostValid()
     {
         $postData = array('Packages' => array('package1' => '0', 'package2' => '1'));
         $form = $this->_formManager->get('Console\Form\Package\Assign');
@@ -2712,7 +2712,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client->expects($this->once())->method('assignPackage')->with('package2');
         $this->_clientManager->method('getClient')->willReturn($client);
 
-        $this->dispatch('/console/client/installpackage/?id=1', 'POST', $postData);
+        $this->dispatch('/console/client/assignpackage/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/packages/?id=1');
     }
 
