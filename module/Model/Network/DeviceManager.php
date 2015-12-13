@@ -216,7 +216,7 @@ class DeviceManager
     public function getTypeCounts()
     {
         // The JOIN condition excludes stale entries where the interface has
-        // become part of an inventoried computer.
+        // become part of an inventoried client.
         $select = $this->_networkDeviceTypes->getSql()->select();
         $select->columns(
             array(

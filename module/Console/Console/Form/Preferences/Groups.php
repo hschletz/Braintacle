@@ -78,7 +78,7 @@ class Groups extends AbstractForm
         );
 
         $setGroupPackageStatus = new \Zend\Form\Element\Checkbox('setGroupPackageStatus');
-        $setGroupPackageStatus->setLabel('Set package status on computers for group-assigned packages');
+        $setGroupPackageStatus->setLabel('Set package status on clients for group-assigned packages');
         $preferences->add($setGroupPackageStatus);
 
         $parentFilter = new \Zend\InputFilter\InputFilter;

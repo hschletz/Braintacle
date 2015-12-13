@@ -1,6 +1,6 @@
 {
     "name": "devices",
-    "comment": "Configuration for specific computers and groups",
+    "comment": "Configuration for specific clients and groups",
     "columns": [
         {
             "name": "hardware_id",

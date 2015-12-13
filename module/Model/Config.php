@@ -40,7 +40,7 @@ namespace Model;
  * @property string $communicationServerUri  URI of communication server. Default: http://localhost/ocsinventory
  * @property string $defaultAction  Default action for new packages (one of store, execute, launch). Default: launch
  * @property string $defaultActionParam  Default action parameter for new packages
- * @property bool $defaultDeleteInterfaces  Default for deleting network interfaces along with computer. Default: true
+ * @property bool $defaultDeleteInterfaces  Default for deleting network interfaces along with client. Default: true
  * @property bool $defaultDeployError  Default to deploy updated packages with state "error". Default: true
  * @property bool $defaultDeployGroups  Default to deploy updated packages to groups. Default: true
  * @property bool $defaultDeployNonnotified  Default to deploy updated packages with state "not notified ".
@@ -48,9 +48,9 @@ namespace Model;
  * @property bool $defaultDeployNotified  Default to deploy updated packages with state "notified". Default: true
  * @property bool $defaultDeploySuccess  Default to deploy updated packages with state "success". Default: true
  * @property integer $defaultMaxFragmentSize  Default maximum fragment size (in kB) for new packages. Default: 0
- * @property bool $defaultMergeGroups  Default for merging manual group memberships along with computers. Default: true
- * @property bool $defaultMergePackages  Default for merging package assignments along with computers. Default: true
- * @property bool $defaultMergeCustomFields  Default for merging userdefined fields along with computers. Default: true
+ * @property bool $defaultMergeGroups  Default for merging manual group memberships along with clients. Default: true
+ * @property bool $defaultMergePackages  Default for merging package assignments along with clients. Default: true
+ * @property bool $defaultMergeCustomFields  Default for merging userdefined fields along with clients. Default: true
  * @property integer $defaultPackagePriority  Default priority (0-10) for new packages. Default: 5
  * @property string $defaultPlatform  Default platform for new packages (one of windows, linux, mac). Default: windows
  * @property string $defaultPostInstMessage  Default post-installation message for new packages
@@ -59,13 +59,13 @@ namespace Model;
  * @property bool $defaultWarnAllowDelay  Default to allow delay by user for new packages
  * @property integer $defaultWarnCountdown  Default warning countdown for new packages
  * @property string $defaultWarnMessage  Default warning message for new packages
- * @property bool $displayBlacklistedSoftware  Display ignored software in computer's inventory
+ * @property bool $displayBlacklistedSoftware  Display ignored software in client's inventory
  * @property integer $groupCacheExpirationFuzz  Random range added to group cache rebuild interval. Default: 43200
  * @property integer $groupCacheExpirationInterval  Seconds between group cache rebuilds. Default: 43200
  * @property bool $inspectRegistry  Let windows agent inspect configured registry values. Default: true
  * @property bool $inventoryFilter  Evaluate the limitInventory and limitInventoryInterval options. Default: false
  * @property integer $limitInventoryInterval  Minimum seconds between connections.
- * @property integer $lockValidity  Seconds before a computer's lock expires. Default: 600
+ * @property integer $lockValidity  Seconds before a client's lock expires. Default: 600
  * @property integer $logLevel  Server logging verbosity (0-2). Default: 0
  * @property string $packageBaseUriHttp  Base URI for package download (HTTP), without http:// prefix
  * @property string $packageBaseUriHttps  Base URI for package download (HTTPS), without https:// prefix
@@ -75,15 +75,15 @@ namespace Model;
  * @property bool $saveOverwrite  Overwrite existing files (otherwise, append version to filename). Default: false
  * @property bool $saveRawData  Evaluate saveDir, saveFormat and saveOverwrite options. default: false
  * @property integer $scanArpDelay  Delay in milliseconds (>=10) between single ARP scans. Default: 100
- * @property integer $scannerMaxDays  Maximum days before a computer is replaced for scanning. Default: 14
- * @property integer $scannerMinDays  Minimum days before a scanning computer is replaced. Default: 1
- * @property integer $scannersPerSubnet  Maximum number of computers per subnet used for scanning. Default: 2
+ * @property integer $scannerMaxDays  Maximum days before a client is replaced for scanning. Default: 14
+ * @property integer $scannerMinDays  Minimum days before a scanning client is replaced. Default: 1
+ * @property integer $scannersPerSubnet  Maximum number of clients per subnet used for scanning. Default: 2
  * @property integer $schemaVersion  Database schema version. Used by the schema manager to check for database states
  *                                   that cannot be determined from the database structure or content alone.
  * @property integer $sessionCleanupInterval  Seconds before a stale server session is expunged. Default: 86400
  * @property bool $sessionRequired  Require full session for inventory. Default: false
  * @property integer $sessionValidity  Maximum server session duration. Default: 3600
- * @property bool $setGroupPackageStatus  Set computer status for group-assigned packages. Default: true
+ * @property bool $setGroupPackageStatus  Set Client status for group-assigned packages. Default: true
  * @property bool $trustedNetworksOnly  Let server reject clients from untrusted networks. Default: false
 
  * @property integer $contactInterval  Default hours between agent contacts. Default: 12

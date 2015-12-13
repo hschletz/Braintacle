@@ -194,7 +194,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
     }
 
     /**
-     * Test merge() with less than 2 computers (no action is taken)
+     * Test merge() with less than 2 clients (no action is taken)
      */
     public function testMergeNone()
     {

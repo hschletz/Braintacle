@@ -1,6 +1,6 @@
 <?php
 /**
- * Form for managing a computer's group memberships
+ * Form for managing a client's group memberships
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,7 +22,7 @@
 namespace Console\Form;
 
 /**
- * Form for managing a computer's group memberships
+ * Form for managing a client's group memberships
  *
  * Available groups are set via setPackages() or setData(). Each group has a
  * radio button set (with the same name as the package) in the "Groups" fieldset

@@ -23,7 +23,7 @@
 print $this->formYesNo(
     sprintf(
         $this->translate(
-            'The field \'%s\' and its contents for all computers will be deleted. Continue?'
+            'The field \'%s\' and its contents for all clients will be deleted. Continue?'
         ),
         $this->escapeHtml($this->field)
     )

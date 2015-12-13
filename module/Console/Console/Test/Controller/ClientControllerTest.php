@@ -339,7 +339,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
             '//p[@class="textcenter"]',
-            "\n2 Computer, bei denen die Installation von Paket 'packageName' fehlgeschlagen ist\n"
+            "\n2 Clients, bei denen die Installation von Paket 'packageName' fehlgeschlagen ist\n"
         );
     }
 
@@ -368,7 +368,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
             '//p[@class="textcenter"]',
-            "\n2 Computer mit Interface in Netzwerk 192.0.2.0/24\n"
+            "\n2 Clients mit Interface in Netzwerk 192.0.2.0/24\n"
         );
     }
 
@@ -393,7 +393,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
             '//p[@class="textcenter"]',
-            "\n2 Computer, auf denen die Software '\xe2\x84\xa2' installiert ist\n"
+            "\n2 Clients, auf denen die Software '\xe2\x84\xa2' installiert ist\n"
         ); // Corrected representation of TM symbol
     }
 

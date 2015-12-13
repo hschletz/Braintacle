@@ -34,7 +34,7 @@ class NetworkScanning extends AbstractForm
         $inputFilter = new \Zend\InputFilter\InputFilter;
 
         $scannersPerSubnet = new \Zend\Form\Element\Text('scannersPerSubnet');
-        $scannersPerSubnet->setLabel('Number of scanning computers per subnet')
+        $scannersPerSubnet->setLabel('Number of scanning clients per subnet')
                           ->setAttribute('size', 5);
         $preferences->add($scannersPerSubnet);
         $inputFilter->add($this->_getIntegerFilter('scannersPerSubnet', -1));
@@ -44,13 +44,13 @@ class NetworkScanning extends AbstractForm
         $preferences->add($scanSnmp);
 
         $scannerMinDays = new \Zend\Form\Element\Text('scannerMinDays');
-        $scannerMinDays->setLabel('Minimum days before a scanning computer is replaced')
+        $scannerMinDays->setLabel('Minimum days before a scanning client is replaced')
                        ->setAttribute('size', 5);
         $preferences->add($scannerMinDays);
         $inputFilter->add($this->_getIntegerFilter('scannerMinDays', 0));
 
         $scannerMaxDays = new \Zend\Form\Element\Text('scannerMaxDays');
-        $scannerMaxDays->setLabel('Maximum days before a scanning computer is replaced')
+        $scannerMaxDays->setLabel('Maximum days before a scanning client is replaced')
                        ->setAttribute('size', 5);
         $preferences->add($scannerMaxDays);
         $inputFilter->add($this->_getIntegerFilter('scannerMaxDays', 0));

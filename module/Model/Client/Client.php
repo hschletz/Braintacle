@@ -29,8 +29,8 @@ namespace Model\Client;
  *
  * @property integer $Id primary key
  * @property string $IdString client-generated ID (name + timestamp, like 'NAME-2009-04-27-15-52-37')
- * @property string $Name computer name
- * @property string $Type computer type (Desktop, Notebook...) as reported by BIOS
+ * @property string $Name Name
+ * @property string $Type Type (Desktop, Notebook...) as reported by BIOS
  * @property string $Manufacturer system manufacturer
  * @property string $Model system model
  * @property string $Serial serial number

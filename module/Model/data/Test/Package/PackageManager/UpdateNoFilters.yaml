@@ -1,4 +1,4 @@
-# Update all computers (no filters required)
+# Update all clients (no filters required)
 devices:
   -
     hardware_id: 1

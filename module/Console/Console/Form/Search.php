@@ -85,7 +85,7 @@ class Search extends Form
         $translator = $this->getOption('translator');
 
         $this->_filters = array(
-            'Name' => $translator->translate('Computer name'),
+            'Name' => $translator->translate('Name'),
             'UserName' => $translator->translate('User name'),
             'Windows.UserDomain' => $translator->translate('User domain'),
             'Windows.Workgroup' => $translator->translate('Workgroup'),

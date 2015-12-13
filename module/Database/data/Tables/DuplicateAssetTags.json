@@ -1,6 +1,6 @@
 {
     "name": "braintacle_blacklist_assettags",
-    "comment": "List of asset tags that are not unique, i.e. no indicator for duplicate computers.",
+    "comment": "List of asset tags that are not unique, i.e. no indicator for duplicate clients.",
     "columns": [
         {
             "name": "assettag",

@@ -39,7 +39,7 @@ class Update extends Build
     public function init()
     {
         $fieldset = new \Zend\Form\Fieldset('Deploy');
-        $fieldset->setLabel('Deploy to computers which have existing package assigned');
+        $fieldset->setLabel('Deploy to clients which have existing package assigned');
 
         $deployNonnotified = new \Zend\Form\Element\Checkbox('Nonnotified');
         $deployNonnotified->setLabel('Not notified');

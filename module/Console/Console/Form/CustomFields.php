@@ -1,6 +1,6 @@
 <?php
 /**
- * Display/set values of custom fields for a computer
+ * Display/set values of custom fields for a client
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,7 +22,7 @@
 namespace Console\Form;
 
 /**
- * Display/set values of custom fields for a computer
+ * Display/set values of custom fields for a client
  *
  * The field names and types are retrieved from the \Model\Client\CustomFieldManager
  * object passed via the "customFieldManager" option which is required by init().

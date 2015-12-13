@@ -1,6 +1,6 @@
 {
     "name": "locks",
-    "comment": "Advisory locks for computers and groups",
+    "comment": "Advisory locks for clients and groups",
     "columns": [
         {
             "name": "hardware_id",
@@ -9,7 +9,7 @@
             "notnull": true,
             "default": null,
             "autoincrement": false,
-            "comment": "Computer or group ID"
+            "comment": "Client or group ID"
         },
         {
             "name": "id",

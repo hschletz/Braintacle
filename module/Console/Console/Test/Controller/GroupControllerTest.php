@@ -227,7 +227,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $clients = array(
             array(
                 'Id' => '1',
-                'Name' => 'computerName',
+                'Name' => 'clientName',
                 'UserName' => 'userName',
                 'InventoryDate' => $inventoryDate,
                 'Membership' => \Model\Client\Client::MEMBERSHIP_ALWAYS,
@@ -256,7 +256,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                        array($cacheExpirationDate, \IntlDateFormatter::FULL, \IntlDateFormatter::MEDIUM),
                        array($inventoryDate, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
                    )
-                   ->will($this->onConsecutiveCalls('date_create', 'date_expire', 'date_computer'));
+                   ->will($this->onConsecutiveCalls('date_create', 'date_expire', 'date_client'));
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
 
         $this->dispatch($url);
@@ -272,9 +272,9 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXpathQuery(
             '//td[text()="Nächstes Update:"]/following::td[text()="date_expire"]'
         );
-        $this->assertXpathQuery("//p[@class='textcenter'][text()='\nAnzahl Computer: 1\n']");
+        $this->assertXpathQuery("//p[@class='textcenter'][text()='\nAnzahl Clients: 1\n']");
         $this->assertXpathQuery("//td[text()='\nmanuell\n']");
-        $this->assertXpathQuery("//td/a[@href='/console/client/groups/?id=1'][text()='computerName']");
+        $this->assertXpathQuery("//td/a[@href='/console/client/groups/?id=1'][text()='clientName']");
     }
 
     public function testExcludedAction()
@@ -284,7 +284,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $clients = array(
             array(
                 'Id' => '1',
-                'Name' => 'computerName',
+                'Name' => 'clientName',
                 'UserName' => 'userName',
                 'InventoryDate' => new \DateTime('2014-04-09 18:56:12'),
             ),
@@ -307,8 +307,8 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
             "//ul[@class='navigation navigation_details']/li[@class='active']/a[@href='$url']",
             'Ausgeschlossen'
         );
-        $this->assertXpathQuery("//p[@class='textcenter'][text()='\nAnzahl Computer: 1\n']");
-        $this->assertXpathQuery("//td/a[@href='/console/client/groups/?id=1'][text()='computerName']");
+        $this->assertXpathQuery("//p[@class='textcenter'][text()='\nAnzahl Clients: 1\n']");
+        $this->assertXpathQuery("//td/a[@href='/console/client/groups/?id=1'][text()='clientName']");
     }
 
     public function testPackagesActionOnlyAssigned()

@@ -18,7 +18,7 @@
             "notnull": false,
             "default": null,
             "autoincrement": false,
-            "comment": "An SQL query that delivers computer IDs for dynamic membership"
+            "comment": "An SQL query that delivers client IDs for dynamic membership"
         },
         {
             "name": "xmldef",

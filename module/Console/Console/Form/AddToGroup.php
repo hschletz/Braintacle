@@ -252,7 +252,7 @@ class AddToGroup extends Form
     }
 
     /**
-     * Add query/computers to group according to form data
+     * Add query/clients to group according to form data
      *
      * Form elements are not updated. The form instance is invalid after calling
      * process() and should no longer be used.

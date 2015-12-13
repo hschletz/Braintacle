@@ -1,6 +1,6 @@
 <?php
 /**
- * Get description for builtin computer filter specification
+ * Get description for builtin client filter specification
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,12 +22,12 @@
 namespace Console\View\Helper;
 
 /**
- * Get description for builtin computer filter specification
+ * Get description for builtin client filter specification
  */
 class FilterDescription extends \Zend\View\Helper\AbstractHelper
 {
     /**
-     * Get description for builtin computer filter specification
+     * Get description for builtin client filter specification
      *
      * The following filters are recognized:
      *
@@ -51,7 +51,7 @@ class FilterDescription extends \Zend\View\Helper\AbstractHelper
         if (is_array($filter)) {
             if ($filter === array('NetworkInterface.Subnet', 'NetworkInterface.Netmask')) {
                 $description = $this->view->translate(
-                    '%1$d computers with an interface in network %2$s'
+                    '%1$d clients with an interface in network %2$s'
                 );
                 $subnet = new \Model\Network\Subnet(array('Address' => $search[0], 'Mask' => $search[1]));
                 return $this->view->escapeHtml(sprintf($description, $count, $subnet['CidrAddress']));
@@ -66,32 +66,32 @@ class FilterDescription extends \Zend\View\Helper\AbstractHelper
         switch ($filter) {
             case 'PackageNonnotified':
                 $description = $this->view->translate(
-                    '%1$d computers waiting for notification of package \'%2$s\''
+                    '%1$d clients waiting for notification of package \'%2$s\''
                 );
                 break;
             case 'PackageSuccess':
                 $description = $this->view->translate(
-                    '%1$d computers with package \'%2$s\' successfully deployed'
+                    '%1$d clients with package \'%2$s\' successfully deployed'
                 );
                 break;
             case 'PackageNotified':
                 $description = $this->view->translate(
-                    '%1$d computers with deployment of package \'%2$s\' in progress'
+                    '%1$d clients with deployment of package \'%2$s\' in progress'
                 );
                 break;
             case 'PackageError':
                 $description = $this->view->translate(
-                    '%1$d computers where deployment of package \'%2$s\' failed'
+                    '%1$d clients where deployment of package \'%2$s\' failed'
                 );
                 break;
             case 'Software':
                 $description = $this->view->translate(
-                    '%1$d computers where software \'%2$s\' is installed'
+                    '%1$d clients where software \'%2$s\' is installed'
                 );
                 break;
             case 'Windows.ManualProductKey':
                 $description = $this->view->translate(
-                    '%1$d computers with manually entered product key'
+                    '%1$d clients with manually entered product key'
                 );
                 break;
             default:

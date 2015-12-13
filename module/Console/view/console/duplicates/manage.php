@@ -1,6 +1,6 @@
 <?php
 /**
- * Display form for merging duplicate computers
+ * Display form for merging duplicate clients
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *

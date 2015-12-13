@@ -31,7 +31,7 @@ namespace Model\Network;
  * @property string $Mask IPv4 Subnet Mask, example: 255.255.255.0
  * @property-read string $CidrAddress CIDR Address/Mask notation, example: 192.168.1.0/24
  * @property string $Name Assigned name (NULL if no name has been assigned)
- * @property integer $NumInventoried Number of interfaces belonging to an inventoried computer
+ * @property integer $NumInventoried Number of interfaces belonging to an inventoried client
  * @property integer $NumIdentified Number of uninventoried, but manually identified interfaces
  * @property integer $NumUnknown Number of uninventoried and unidentified interfaces
  */

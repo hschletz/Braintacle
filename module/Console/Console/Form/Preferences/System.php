@@ -52,7 +52,7 @@ class System extends AbstractForm
         );
 
         $lockValidity = new \Zend\Form\Element\Text('lockValidity');
-        $lockValidity->setLabel('Maximum seconds to lock a computer')
+        $lockValidity->setLabel('Maximum seconds to lock a client')
                      ->setAttribute('size', 5);
         $preferences->add($lockValidity);
         $inputFilter->add($this->_getIntegerFilter('lockValidity'));

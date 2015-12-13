@@ -139,7 +139,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Show group members
      *
-     * @return array sorting, group, computers, order, direction
+     * @return array sorting, group, clients, order, direction
      */
     public function membersAction()
     {
@@ -147,7 +147,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
 
         $vars['sorting'] = $this->getOrder('InventoryDate', 'desc');
         $vars['group'] = $this->_currentGroup;
-        $vars['computers'] = $this->_clientManager->getClients(
+        $vars['clients'] = $this->_clientManager->getClients(
             array('Name', 'UserName', 'InventoryDate', 'Membership'),
             $vars['sorting']['order'],
             $vars['sorting']['direction'],
@@ -158,9 +158,9 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
     }
 
     /**
-     * Show excluded computers
+     * Show excluded clients
      *
-     * @return array sorting, group, computers, order, direction
+     * @return array sorting, group, clients, order, direction
      */
     public function excludedAction()
     {
@@ -168,7 +168,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
 
         $vars['sorting'] = $this->getOrder('InventoryDate', 'desc');
         $vars['group'] = $this->_currentGroup;
-        $vars['computers'] = $this->_clientManager->getClients(
+        $vars['clients'] = $this->_clientManager->getClients(
             array('Name', 'UserName', 'InventoryDate'),
             $vars['sorting']['order'],
             $vars['sorting']['direction'],
@@ -258,7 +258,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
     }
 
     /**
-     * Use Form to set query or include/exclude computers
+     * Use Form to set query or include/exclude clients
      *
      * @return array|\Zend\Http\Response array(form) or redirect response
      */

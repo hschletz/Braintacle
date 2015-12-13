@@ -25,7 +25,7 @@ namespace Model\Client;
  * Information about a client's windows installation
  *
  * @property string $Workgroup Workgroup/domain
- * @property string $UserDomain Domain of logged in user (for local accounts this is identical to the computer name)
+ * @property string $UserDomain Domain of logged in user (for local accounts this is identical to the client name)
  * @property string $Company Company name (set during installation)
  * @property string $Owner Owner (set during installation)
  * @property string $ProductKey Product Key

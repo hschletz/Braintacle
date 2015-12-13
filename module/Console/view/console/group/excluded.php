@@ -1,6 +1,6 @@
 <?php
 /**
- * Display all excluded computers
+ * Display all excluded clients
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -28,15 +28,15 @@ $headers = array(
 );
 
 $renderCallbacks = array(
-    'Name' => function ($view, $computer) {
+    'Name' => function ($view, $client) {
         return $view->htmlTag(
             'a',
-            $view->escapeHtml($computer['Name']),
+            $view->escapeHtml($client['Name']),
             array(
                 'href' => $view->consoleUrl(
                     'client',
                     'groups',
-                    array('id' => $computer['Id'])
+                    array('id' => $client['Id'])
                 ),
             ),
             true
@@ -47,14 +47,14 @@ $renderCallbacks = array(
 print $this->htmlTag(
     'p',
     sprintf(
-        $this->translate('Number of computers: %d'),
-        count($this->computers)
+        $this->translate('Number of clients: %d'),
+        count($this->clients)
     ),
     array('class' => 'textcenter')
 );
 
 print $this->table(
-    $this->computers,
+    $this->clients,
     $headers,
     $this->sorting,
     $renderCallbacks

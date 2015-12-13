@@ -1,6 +1,6 @@
 <?php
 /**
- * Form for assigning packages to a computer or group
+ * Form for assigning packages to a client or group
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,7 +22,7 @@
 namespace Console\Form\Package;
 
 /**
- * Form for assigning packages to a computer or group
+ * Form for assigning packages to a client or group
  *
  * Available packages are set via setPackages() or setData(). Each package has a
  * checkbox (with the same name as the package) in the "Packages" fieldset.

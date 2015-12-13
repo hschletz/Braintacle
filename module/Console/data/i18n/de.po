@@ -143,17 +143,17 @@ msgid "Group"
 msgstr "Gruppe"
 
 #: Console/Form/AddToGroup.php Console/Form/ManageRegistryValues.php
-#: Console/Form/Package/Build.php Console/Form/ShowDuplicates.php
-#: Console/Form/Subnet.php view/console/client/display.php
-#: view/console/client/index.php view/console/client/misc.php
-#: view/console/client/network.php view/console/client/packages.php
-#: view/console/client/printers.php view/console/client/software.php
-#: view/console/client/system.php view/console/client/virtualmachines.php
-#: view/console/duplicates/index.php view/console/group/excluded.php
-#: view/console/group/general.php view/console/group/index.php
-#: view/console/group/members.php view/console/group/packages.php
-#: view/console/network/index.php view/console/package/index.php
-#: view/console/software/index.php
+#: Console/Form/Package/Build.php Console/Form/Search.php
+#: Console/Form/ShowDuplicates.php Console/Form/Subnet.php
+#: view/console/client/display.php view/console/client/index.php
+#: view/console/client/misc.php view/console/client/network.php
+#: view/console/client/packages.php view/console/client/printers.php
+#: view/console/client/software.php view/console/client/system.php
+#: view/console/client/virtualmachines.php view/console/duplicates/index.php
+#: view/console/group/excluded.php view/console/group/general.php
+#: view/console/group/index.php view/console/group/members.php
+#: view/console/group/packages.php view/console/network/index.php
+#: view/console/package/index.php view/console/software/index.php
 msgid "Name"
 msgstr "Name"
 
@@ -432,8 +432,8 @@ msgid "Warn user"
 msgstr "Benutzer warnen"
 
 #: Console/Form/Package/Update.php
-msgid "Deploy to computers which have existing package assigned"
-msgstr "Auf Computern installieren, denen das exisierende Paket zugewiesen ist"
+msgid "Deploy to clients which have existing package assigned"
+msgstr "Auf Clients installieren, denen das exisierende Paket zugewiesen ist"
 
 #: Console/Form/Package/Update.php Console/Form/Preferences/Packages.php
 #: view/console/package/index.php
@@ -513,8 +513,8 @@ msgid "Minimum seconds between group cache rebuilds"
 msgstr "Min. Sekunden bis zur Erneuerung des Gruppencache"
 
 #: Console/Form/Preferences/Groups.php
-msgid "Set package status on computers for group-assigned packages"
-msgstr "Status von durch Gruppe zugewiesenen Paketen bei Computern setzen "
+msgid "Set package status on clients for group-assigned packages"
+msgstr "Status von durch Gruppe zugewiesenen Paketen bei Clients setzen "
 
 #: Console/Form/Preferences/Inventory.php
 msgid "Delete interfaces from network listing by default"
@@ -541,16 +541,16 @@ msgid "Delay (in milliseconds) between ARP requests"
 msgstr "Pause (in Millisekunden) zwischen ARP-Anfragen"
 
 #: Console/Form/Preferences/NetworkScanning.php
-msgid "Maximum days before a scanning computer is replaced"
-msgstr "Maximale Anzahl Tage bevor ein Scan-Computer ersetzt wird"
+msgid "Maximum days before a scanning client is replaced"
+msgstr "Maximale Anzahl Tage bevor ein Scan-Client ersetzt wird"
 
 #: Console/Form/Preferences/NetworkScanning.php
-msgid "Minimum days before a scanning computer is replaced"
-msgstr "Minimale Anzahl Tage bevor ein Scan-Computer ersetzt wird"
+msgid "Minimum days before a scanning client is replaced"
+msgstr "Minimale Anzahl Tage bevor ein Scan-Client ersetzt wird"
 
 #: Console/Form/Preferences/NetworkScanning.php
-msgid "Number of scanning computers per subnet"
-msgstr "Anzahl der Scan-Computer pro Subnetz"
+msgid "Number of scanning clients per subnet"
+msgstr "Anzahl der Scan-Clients pro Subnetz"
 
 #: Console/Form/Preferences/Packages.php
 msgid "Allow user abort by default"
@@ -641,8 +641,8 @@ msgid "Maximum duration of an agent session in seconds"
 msgstr "Maximale Dauer einer Agentensitzung in Sekunden"
 
 #: Console/Form/Preferences/System.php
-msgid "Maximum seconds to lock a computer"
-msgstr "Max. Sekunden, die ein Computer gesperrt wird"
+msgid "Maximum seconds to lock a client"
+msgstr "Max. Sekunden, die ein Client gesperrt wird"
 
 #: Console/Form/Preferences/System.php
 msgid "Merge duplicates automatically (not recommended)"
@@ -686,10 +686,6 @@ msgstr "CPU-Kerne"
 #: view/console/client/index.php
 msgid "CPU type"
 msgstr "CPU Typ"
-
-#: Console/Form/Search.php
-msgid "Computer name"
-msgstr "Computername"
 
 #: Console/Form/Search.php view/console/client/index.php
 #: view/console/client/network.php
@@ -1078,39 +1074,39 @@ msgstr "Benutzer"
 
 #: Console/View/Helper/FilterDescription.php
 #, php-format
-msgid "%1$d computers waiting for notification of package '%2$s'"
-msgstr "%1$d Computer, die auf Installation von Paket '%2$s' warten"
+msgid "%1$d clients waiting for notification of package '%2$s'"
+msgstr "%1$d Clients, die auf Installation von Paket '%2$s' warten"
 
 #: Console/View/Helper/FilterDescription.php
 #, php-format
-msgid "%1$d computers where deployment of package '%2$s' failed"
+msgid "%1$d clients where deployment of package '%2$s' failed"
 msgstr ""
-"%1$d Computer, bei denen die Installation von Paket '%2$s' fehlgeschlagen ist"
+"%1$d Clients, bei denen die Installation von Paket '%2$s' fehlgeschlagen ist"
 
 #: Console/View/Helper/FilterDescription.php
 #, php-format
-msgid "%1$d computers where software '%2$s' is installed"
-msgstr "%1$d Computer, auf denen die Software '%2$s' installiert ist"
+msgid "%1$d clients where software '%2$s' is installed"
+msgstr "%1$d Clients, auf denen die Software '%2$s' installiert ist"
 
 #: Console/View/Helper/FilterDescription.php
 #, php-format
-msgid "%1$d computers with an interface in network %2$s"
-msgstr "%1$d Computer mit Interface in Netzwerk %2$s"
+msgid "%1$d clients with an interface in network %2$s"
+msgstr "%1$d Clients mit Interface in Netzwerk %2$s"
 
 #: Console/View/Helper/FilterDescription.php
 #, php-format
-msgid "%1$d computers with deployment of package '%2$s' in progress"
-msgstr "%1$d Computer mit laufender Installation von Paket '%2$s'"
+msgid "%1$d clients with deployment of package '%2$s' in progress"
+msgstr "%1$d Clients mit laufender Installation von Paket '%2$s'"
 
 #: Console/View/Helper/FilterDescription.php
 #, php-format
-msgid "%1$d computers with manually entered product key"
-msgstr "%1$d Computer mit manuell eingegebenem Windows-Lizenzschlüssel"
+msgid "%1$d clients with manually entered product key"
+msgstr "%1$d Clients mit manuell eingegebenem Windows-Lizenzschlüssel"
 
 #: Console/View/Helper/FilterDescription.php
 #, php-format
-msgid "%1$d computers with package '%2$s' successfully deployed"
-msgstr "%1$d Computer mit erfolgreich installiertem Paket '%2$s'"
+msgid "%1$d clients with package '%2$s' successfully deployed"
+msgstr "%1$d Clients mit erfolgreich installiertem Paket '%2$s'"
 
 #: view/console/accounts/add.php
 msgid "Create new account"
@@ -1282,7 +1278,8 @@ msgstr "Freier Speicherplatz (MB)"
 msgid "Netmask"
 msgstr "Netzmaske"
 
-#: view/console/client/index.php
+#: view/console/client/index.php view/console/group/excluded.php
+#: view/console/group/members.php
 #, php-format
 msgid "Number of clients: %d"
 msgstr "Anzahl Clients: %d"
@@ -1597,11 +1594,6 @@ msgstr "Keine Duplikate vorhanden."
 msgid "Group '%s' will be permanently deleted. Continue?"
 msgstr "Gruppe '%s' wird dauerhaft gelöscht. Fortfahren?"
 
-#: view/console/group/excluded.php view/console/group/members.php
-#, php-format
-msgid "Number of computers: %d"
-msgstr "Anzahl Computer: %d"
-
 #: view/console/group/general.php
 msgid "SQL query"
 msgstr "SQL-Abfrage"
@@ -1715,9 +1707,9 @@ msgstr "Gerätetyp '%s' wird dauerhaft gelöscht. Fortfahren?"
 #: view/console/preferences/deletefield.php
 #, php-format
 msgid ""
-"The field '%s' and its contents for all computers will be deleted. Continue?"
+"The field '%s' and its contents for all clients will be deleted. Continue?"
 msgstr ""
-"Das Feld '%s' und sein Inhalt für alle Computer werden gelöscht. Fortfahren?"
+"Das Feld '%s' und sein Inhalt für alle Clients werden gelöscht. Fortfahren?"
 
 #: view/console/preferences/deleteregistryvalue.php
 #, php-format

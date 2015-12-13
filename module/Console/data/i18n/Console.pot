@@ -143,17 +143,17 @@ msgid "Store in existing group"
 msgstr ""
 
 #: Console/Form/AddToGroup.php Console/Form/ManageRegistryValues.php
-#: Console/Form/Package/Build.php Console/Form/ShowDuplicates.php
-#: Console/Form/Subnet.php view/console/client/display.php
-#: view/console/client/index.php view/console/client/misc.php
-#: view/console/client/network.php view/console/client/packages.php
-#: view/console/client/printers.php view/console/client/software.php
-#: view/console/client/system.php view/console/client/virtualmachines.php
-#: view/console/duplicates/index.php view/console/group/excluded.php
-#: view/console/group/general.php view/console/group/index.php
-#: view/console/group/members.php view/console/group/packages.php
-#: view/console/network/index.php view/console/package/index.php
-#: view/console/software/index.php
+#: Console/Form/Package/Build.php Console/Form/Search.php
+#: Console/Form/ShowDuplicates.php Console/Form/Subnet.php
+#: view/console/client/display.php view/console/client/index.php
+#: view/console/client/misc.php view/console/client/network.php
+#: view/console/client/packages.php view/console/client/printers.php
+#: view/console/client/software.php view/console/client/system.php
+#: view/console/client/virtualmachines.php view/console/duplicates/index.php
+#: view/console/group/excluded.php view/console/group/general.php
+#: view/console/group/index.php view/console/group/members.php
+#: view/console/group/packages.php view/console/network/index.php
+#: view/console/package/index.php view/console/software/index.php
 msgid "Name"
 msgstr ""
 
@@ -429,7 +429,7 @@ msgid "Target Path"
 msgstr ""
 
 #: Console/Form/Package/Update.php
-msgid "Deploy to computers which have existing package assigned"
+msgid "Deploy to clients which have existing package assigned"
 msgstr ""
 
 #: Console/Form/Package/Update.php Console/Form/Preferences/Packages.php
@@ -508,7 +508,7 @@ msgid "Maximum seconds added to above value"
 msgstr ""
 
 #: Console/Form/Preferences/Groups.php
-msgid "Set package status on computers for group-assigned packages"
+msgid "Set package status on clients for group-assigned packages"
 msgstr ""
 
 #: Console/Form/Preferences/Inventory.php
@@ -532,15 +532,15 @@ msgid "Manage inventoried registry values"
 msgstr ""
 
 #: Console/Form/Preferences/NetworkScanning.php
-msgid "Number of scanning computers per subnet"
+msgid "Number of scanning clients per subnet"
 msgstr ""
 
 #: Console/Form/Preferences/NetworkScanning.php
-msgid "Minimum days before a scanning computer is replaced"
+msgid "Minimum days before a scanning client is replaced"
 msgstr ""
 
 #: Console/Form/Preferences/NetworkScanning.php
-msgid "Maximum days before a scanning computer is replaced"
+msgid "Maximum days before a scanning client is replaced"
 msgstr ""
 
 #: Console/Form/Preferences/NetworkScanning.php
@@ -624,7 +624,7 @@ msgid "Communication server URI"
 msgstr ""
 
 #: Console/Form/Preferences/System.php
-msgid "Maximum seconds to lock a computer"
+msgid "Maximum seconds to lock a client"
 msgstr ""
 
 #: Console/Form/Preferences/System.php
@@ -649,10 +649,6 @@ msgstr ""
 
 #: Console/Form/ProductKey.php
 msgid "Product key (if different)"
-msgstr ""
-
-#: Console/Form/Search.php
-msgid "Computer name"
 msgstr ""
 
 #: Console/Form/Search.php
@@ -1073,37 +1069,37 @@ msgstr ""
 
 #: Console/View/Helper/FilterDescription.php
 #, php-format
-msgid "%1$d computers with an interface in network %2$s"
+msgid "%1$d clients with an interface in network %2$s"
 msgstr ""
 
 #: Console/View/Helper/FilterDescription.php
 #, php-format
-msgid "%1$d computers waiting for notification of package '%2$s'"
+msgid "%1$d clients waiting for notification of package '%2$s'"
 msgstr ""
 
 #: Console/View/Helper/FilterDescription.php
 #, php-format
-msgid "%1$d computers with package '%2$s' successfully deployed"
+msgid "%1$d clients with package '%2$s' successfully deployed"
 msgstr ""
 
 #: Console/View/Helper/FilterDescription.php
 #, php-format
-msgid "%1$d computers with deployment of package '%2$s' in progress"
+msgid "%1$d clients with deployment of package '%2$s' in progress"
 msgstr ""
 
 #: Console/View/Helper/FilterDescription.php
 #, php-format
-msgid "%1$d computers where deployment of package '%2$s' failed"
+msgid "%1$d clients where deployment of package '%2$s' failed"
 msgstr ""
 
 #: Console/View/Helper/FilterDescription.php
 #, php-format
-msgid "%1$d computers where software '%2$s' is installed"
+msgid "%1$d clients where software '%2$s' is installed"
 msgstr ""
 
 #: Console/View/Helper/FilterDescription.php
 #, php-format
-msgid "%1$d computers with manually entered product key"
+msgid "%1$d clients with manually entered product key"
 msgstr ""
 
 #: view/console/accounts/add.php
@@ -1305,7 +1301,8 @@ msgstr ""
 msgid "Save to group"
 msgstr ""
 
-#: view/console/client/index.php
+#: view/console/client/index.php view/console/group/excluded.php
+#: view/console/group/members.php
 #, php-format
 msgid "Number of clients: %d"
 msgstr ""
@@ -1591,11 +1588,6 @@ msgstr ""
 msgid "Group '%s' will be permanently deleted. Continue?"
 msgstr ""
 
-#: view/console/group/excluded.php view/console/group/members.php
-#, php-format
-msgid "Number of computers: %d"
-msgstr ""
-
 #: view/console/group/general.php
 msgid "SQL query"
 msgstr ""
@@ -1707,7 +1699,7 @@ msgstr ""
 #: view/console/preferences/deletefield.php
 #, php-format
 msgid ""
-"The field '%s' and its contents for all computers will be deleted. Continue?"
+"The field '%s' and its contents for all clients will be deleted. Continue?"
 msgstr ""
 
 #: view/console/preferences/deleteregistryvalue.php

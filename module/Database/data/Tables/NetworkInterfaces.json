@@ -1,6 +1,6 @@
 {
     "name": "networks",
-    "comment": "Computer's network interfaces",
+    "comment": "Client's network interfaces",
     "columns": [
         {
             "name": "id",
