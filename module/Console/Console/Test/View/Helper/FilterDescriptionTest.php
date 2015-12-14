@@ -39,11 +39,19 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
         );
     }
 
-    public function testPackageNonnotified()
+    public function testPackagePending()
     {
         $this->assertEquals(
             "42 Clients, die auf Installation von Paket &#039;&gt;Name&#039; warten",
-            $this->_getHelper()->__invoke('PackageNonnotified', '>Name', 42)
+            $this->_getHelper()->__invoke('PackagePending', '>Name', 42)
+        );
+    }
+
+    public function testPackageRunning()
+    {
+        $this->assertEquals(
+            "42 Clients mit laufender Installation von Paket &#039;&gt;Name&#039;",
+            $this->_getHelper()->__invoke('PackageRunning', '>Name', 42)
         );
     }
 
@@ -52,14 +60,6 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
         $this->assertEquals(
             "42 Clients mit erfolgreich installiertem Paket &#039;&gt;Name&#039;",
             $this->_getHelper()->__invoke('PackageSuccess', '>Name', 42)
-        );
-    }
-
-    public function testPackageNotified()
-    {
-        $this->assertEquals(
-            "42 Clients mit laufender Installation von Paket &#039;&gt;Name&#039;",
-            $this->_getHelper()->__invoke('PackageNotified', '>Name', 42)
         );
     }
 

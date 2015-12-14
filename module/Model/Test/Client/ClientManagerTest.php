@@ -350,10 +350,10 @@ class ClientManagerTest extends \Model\Test\AbstractTest
             ),
             // Package filters
             array(
-                array('Id'), 'Id', 'asc', 'PackageNonnotified', 'package1', null, null, false, $client2
+                array('Id'), 'Id', 'asc', 'PackagePending', 'package1', null, null, false, $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'PackageNotified', 'package2', null, null, false, $client2
+                array('Id'), 'Id', 'asc', 'PackageRunning', 'package2', null, null, false, $client2
             ),
             array(
                 array('Id'), 'Id', 'asc', 'PackageSuccess', 'package3', null, null, false, $client2
@@ -895,17 +895,17 @@ class ClientManagerTest extends \Model\Test\AbstractTest
             array('Id', 'Id', '=', 'LogicException', 'invertResult cannot be used on Id filter'),
             array(
                 'Id',
-                'PackageNonnotified',
+                'PackagePending',
                 '=',
                 'LogicException',
-                'invertResult cannot be used on PackageNonnotified filter'
+                'invertResult cannot be used on PackagePending filter'
             ),
             array(
                 'Id',
-                'PackageNotified',
+                'PackageRunning',
                 '=',
                 'LogicException',
-                'invertResult cannot be used on PackageNotified filter'
+                'invertResult cannot be used on PackageRunning filter'
             ),
             array(
                 'Id',

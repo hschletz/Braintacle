@@ -177,8 +177,8 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
                         $addSearchColumns
                     );
                     break;
-                case 'PackageNonnotified':
-                case 'PackageNotified':
+                case 'PackagePending':
+                case 'PackageRunning':
                 case 'PackageSuccess':
                 case 'PackageError':
                     if ($invertResult) {
@@ -613,7 +613,7 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
      * Apply a package filter
      *
      * @param \Zend\Db\Sql\Select $select Object to apply the filter to
-     * @param string $filter PackageNonnotified|PackageSuccess|PackageNotified|PackageError
+     * @param string $filter PackagePending|PackageRunning|PackageSuccess|PackageError
      * @param string $package Package name
      * @param bool $addSearchColumns Add columns with search criteria (Package.Status)
      * @return Zend\Db\Sql\Select Object with filter applied
@@ -621,14 +621,14 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
     protected function _filterByPackage($select, $filter, $package, $addSearchColumns)
     {
         switch ($filter) {
-            case 'PackageNonnotified':
+            case 'PackagePending':
                 $condition = new Predicate\IsNull('devices.tvalue');
+                break;
+            case 'PackageRunning':
+                $condition = array('devices.tvalue' => \Model\Package\Assignment::RUNNING);
                 break;
             case 'PackageSuccess':
                 $condition = array('devices.tvalue' => \Model\Package\Assignment::SUCCESS);
-                break;
-            case 'PackageNotified':
-                $condition = array('devices.tvalue' => \Model\Package\Assignment::NOTIFIED);
                 break;
             case 'PackageError':
                 $condition = new Predicate\Like('devices.tvalue', \Model\Package\Assignment::ERROR_PREFIX . '%');

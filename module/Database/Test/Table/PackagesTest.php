@@ -46,9 +46,9 @@ class PackagesTest extends AbstractTest
         $this->assertEquals('Size', $map->hydrate('size'));
         $this->assertEquals('Platform', $map->hydrate('osname'));
         $this->assertEquals('Comment', $map->hydrate('comment'));
-        $this->assertEquals('NumNonnotified', $map->hydrate('num_nonnotified'));
+        $this->assertEquals('NumPending', $map->hydrate('num_pending'));
+        $this->assertEquals('NumRunning', $map->hydrate('num_running'));
         $this->assertEquals('NumSuccess', $map->hydrate('num_success'));
-        $this->assertEquals('NumNotified', $map->hydrate('num_notified'));
         $this->assertEquals('NumError', $map->hydrate('num_error'));
 
         $this->assertEquals('name', $map->extract('Name'));
@@ -58,9 +58,9 @@ class PackagesTest extends AbstractTest
         $this->assertEquals('size', $map->extract('Size'));
         $this->assertEquals('osname', $map->extract('Platform'));
         $this->assertEquals('comment', $map->extract('Comment'));
-        $this->assertEquals('num_nonnotified', $map->extract('NumNonnotified'));
+        $this->assertEquals('num_pending', $map->extract('NumPending'));
         $this->assertEquals('num_success', $map->extract('NumSuccess'));
-        $this->assertEquals('num_notified', $map->extract('NumNotified'));
+        $this->assertEquals('num_running', $map->extract('NumRunning'));
         $this->assertEquals('num_error', $map->extract('NumError'));
 
         $this->assertInstanceOf('Database\Hydrator\Strategy\Packages\Platform', $hydrator->getStrategy('Platform'));

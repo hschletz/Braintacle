@@ -407,12 +407,12 @@ class ClientTest extends \Model\Test\AbstractTest
     {
         $package1 = array(
             'PackageName' => 'package1',
-            'Status' => 'SUCCESS',
+            'Status' => \Model\Package\Assignment::SUCCESS,
             'Timestamp' => new \DateTime('2014-12-30 19:02:23'),
         );
         $package2 = array(
             'PackageName' => 'package2',
-            'Status' => 'NOTIFIED',
+            'Status' => \Model\Package\Assignment::RUNNING,
             'Timestamp' => new \DateTime('2014-12-30 19:01:23'),
         );
         // Non-default order. Default order tested separately.
@@ -453,7 +453,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->assertEquals(
             array(
                 'PackageName' => 'package1',
-                'Status' => 'SUCCESS',
+                'Status' => \Model\Package\Assignment::SUCCESS,
                 'Timestamp' => new \DateTime('2014-12-30 19:02:23'),
             ),
             $assignments[0]->getArrayCopy()
@@ -461,7 +461,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->assertEquals(
             array(
                 'PackageName' => 'package2',
-                'Status' => 'NOTIFIED',
+                'Status' => \Model\Package\Assignment::RUNNING,
                 'Timestamp' => new \DateTime('2014-12-30 19:01:23'),
             ),
             $assignments[1]->getArrayCopy()

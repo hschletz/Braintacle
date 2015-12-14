@@ -33,9 +33,9 @@ class PackagesTest extends \Console\Test\AbstractFormTest
      * @var array
      */
     protected $_deployData = array(
-        'defaultDeployNonnotified' => '0',
+        'defaultDeployPending' => '0',
+        'defaultDeployRunning' => '0',
         'defaultDeploySuccess' => '0',
-        'defaultDeployNotified' => '0',
         'defaultDeployError' => '0',
         'defaultDeployGroups' => '0',
     );
@@ -46,9 +46,9 @@ class PackagesTest extends \Console\Test\AbstractFormTest
 
         $deploy = $preferences->get('Deploy');
         $this->assertInstanceOf('Zend\Form\Fieldset', $deploy);
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $deploy->get('defaultDeployNonnotified'));
+        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $deploy->get('defaultDeployPending'));
+        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $deploy->get('defaultDeployRunning'));
         $this->assertInstanceOf('Zend\Form\Element\Checkbox', $deploy->get('defaultDeploySuccess'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $deploy->get('defaultDeployNotified'));
         $this->assertInstanceOf('Zend\Form\Element\Checkbox', $deploy->get('defaultDeployError'));
         $this->assertInstanceOf('Zend\Form\Element\Checkbox', $deploy->get('defaultDeployGroups'));
 

@@ -258,7 +258,7 @@ td.label {
     white-space: nowrap;
 }
 
-.package_inprogress, .package_error {
+.package_running, .package_error {
     color: red;
 }
 
@@ -266,7 +266,7 @@ td.label {
     color: green;
 }
 
-.package_notnotified {
+.package_pending {
     color: blue;
 }
 

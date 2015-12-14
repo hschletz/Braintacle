@@ -44,26 +44,26 @@ $headers = array(
     'Timestamp' => $this->translate('Date'),
     'Size' => $this->translate('Size'),
     'Platform' => $this->translate('Platform'),
-    'NumNonnotified' => $this->translate('Not notified'),
+    'NumPending' => $this->translate('Pending'),
+    'NumRunning' => $this->translate('Running'),
     'NumSuccess' => $this->translate('Success'),
-    'NumNotified' => $this->translate('Running'),
     'NumError' => $this->translate('Error'),
     'Delete' => '',
 );
 
 $renderNumPackages = function ($view, $package, $property) {
     switch ($property) {
-        case 'NumNonnotified':
-            $filter = 'PackageNonnotified';
-            $class = 'package_notnotified';
+        case 'NumPending':
+            $filter = 'PackagePending';
+            $class = 'package_pending';
+            break;
+        case 'NumRunning':
+            $filter = 'PackageRunning';
+            $class = 'package_running';
             break;
         case 'NumSuccess':
             $filter = 'PackageSuccess';
             $class = 'package_success';
-            break;
-        case 'NumNotified':
-            $filter = 'PackageNotified';
-            $class = 'package_inprogress';
             break;
         case 'NumError':
             $filter = 'PackageError';
@@ -142,9 +142,9 @@ $renderCallbacks = array(
             true
         );
     },
-    'NumNonnotified' => $renderNumPackages,
+    'NumPending' => $renderNumPackages,
+    'NumRunning' => $renderNumPackages,
     'NumSuccess' => $renderNumPackages,
-    'NumNotified' => $renderNumPackages,
     'NumError' => $renderNumPackages,
 );
 
@@ -163,9 +163,9 @@ print $this->table(
     $renderCallbacks,
     array(
         'Size' => 'textright',
-        'NumNonnotified' => 'textright',
+        'NumPending' => 'textright',
+        'NumRunning' => 'textright',
         'NumSuccess' => 'textright',
-        'NumNotified' => 'textright',
         'NumError' => 'textright',
     ),
     $rowClassCallback

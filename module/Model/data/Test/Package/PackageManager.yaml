@@ -20,7 +20,7 @@ download_available:
 devices:
   # All tests are run on package ID 1415958319.
   -
-    # not notified
+    # pending
     hardware_id: 1
     name: "DOWNLOAD"
     ivalue: 1415958319

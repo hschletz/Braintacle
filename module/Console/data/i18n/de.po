@@ -447,17 +447,17 @@ msgid "Groups"
 msgstr "Gruppen"
 
 #: Console/Form/Package/Update.php Console/Form/Preferences/Packages.php
-#: view/console/package/index.php
-msgid "Not notified"
+#: view/console/client/packages.php view/console/package/index.php
+msgid "Pending"
 msgstr "Ausstehend"
 
 #: Console/Form/Package/Update.php Console/Form/Preferences/Packages.php
-#: view/console/package/index.php
+#: view/console/client/packages.php view/console/package/index.php
 msgid "Running"
 msgstr "Laufend"
 
 #: Console/Form/Package/Update.php Console/Form/Preferences/Packages.php
-#: view/console/package/index.php
+#: view/console/client/packages.php view/console/package/index.php
 msgid "Success"
 msgstr "Erfolg"
 
@@ -1410,18 +1410,6 @@ msgstr "Zugewiesene Pakete"
 #: view/console/client/packages.php
 msgid "Timestamp"
 msgstr "Zeitpunkt"
-
-#: view/console/client/packages.php
-msgid "in progress"
-msgstr "läuft"
-
-#: view/console/client/packages.php
-msgid "installed"
-msgstr "installiert"
-
-#: view/console/client/packages.php
-msgid "not notified"
-msgstr "nicht benachrichtigt"
 
 #: view/console/client/packages.php view/console/group/packages.php
 msgid "remove"

@@ -2230,17 +2230,17 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             array(
                 array(
                     'PackageName' => 'package1',
-                    'Status' => null,
+                    'Status' => \Model\Package\Assignment::PENDING,
                     'Timestamp' => 'timestamp1',
                 ),
                 array(
                     'PackageName' => 'package2',
-                    'Status' => 'NOTIFIED',
+                    'Status' => \Model\Package\Assignment::RUNNING,
                     'Timestamp' => 'timestamp2',
                 ),
                 array(
                     'PackageName' => 'package3',
-                    'Status' => 'SUCCESS',
+                    'Status' => \Model\Package\Assignment::SUCCESS,
                     'Timestamp' => 'timestamp3',
                 ),
                 array(
@@ -2266,11 +2266,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXpathQueryContentContains('//h2', "\nZugewiesene Pakete\n");
         $this->assertXpathQueryCount('//h2', 1);
         $this->assertXpathQueryContentContains(
-            '//tr[2]/td[2]/span[@class="package_notnotified"]',
-            'nicht benachrichtigt'
+            '//tr[2]/td[2]/span[@class="package_pending"]',
+            'Ausstehend'
         );
-        $this->assertXpathQueryContentContains('//tr[3]/td[2]/span[@class="package_inprogress"]', 'läuft');
-        $this->assertXpathQueryContentContains('//tr[4]/td[2]/span[@class="package_success"]', 'installiert');
+        $this->assertXpathQueryContentContains('//tr[3]/td[2]/span[@class="package_running"]', 'Laufend');
+        $this->assertXpathQueryContentContains('//tr[4]/td[2]/span[@class="package_success"]', 'Erfolg');
         $this->assertXpathQueryContentContains('//tr[5]/td[2]/span[@class="package_error"]', '<ERROR>');
         $this->assertXpathQueryContentContains(
             '//tr[3]/td[4]/a[@href="/console/client/removepackage/?id=1&package=package2"]',

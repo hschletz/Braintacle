@@ -36,11 +36,11 @@ namespace Model\Package;
  * @property integer $Size Download size
  * @property string $Platform One of 'windows', 'linux' or 'mac'
  * @property string $Comment Comment
- * @property integer $NumNonnotified Number of clients waiting for notification,
+ * @property integer $NumPending Number of clients with pending packages,
+ * provided by PackageManager::getPackages()
+ * @property integer $NumRunning Number of clients currently downloading/installing package,
  * provided by PackageManager::getPackages()
  * @property integer $NumSuccess Number of clients with successful deployment,
- * provided by PackageManager::getPackages()
- * @property integer $NumNotified Number of clients currently downloading/installing package,
  * provided by PackageManager::getPackages()
  * @property integer $NumError Number of clients with unsuccessful deployment,
  * provided by PackageManager::getPackages()

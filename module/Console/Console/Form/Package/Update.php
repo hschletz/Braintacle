@@ -27,9 +27,9 @@ namespace Console\Form\Package;
  * In addition to the fields provided by the Build form, a fieldset "Deploy"
  * provides checkboxes:
  *
- * - Nonnotified
+ * - Pending
+ * - Running
  * - Success
- * - Notified
  * - Error
  * - Groups
  */
@@ -41,17 +41,17 @@ class Update extends Build
         $fieldset = new \Zend\Form\Fieldset('Deploy');
         $fieldset->setLabel('Deploy to clients which have existing package assigned');
 
-        $deployNonnotified = new \Zend\Form\Element\Checkbox('Nonnotified');
-        $deployNonnotified->setLabel('Not notified');
-        $fieldset->add($deployNonnotified);
+        $deployPending = new \Zend\Form\Element\Checkbox('Pending');
+        $deployPending->setLabel('Pending');
+        $fieldset->add($deployPending);
+
+        $deployRunning = new \Zend\Form\Element\Checkbox('Running');
+        $deployRunning->setLabel('Running');
+        $fieldset->add($deployRunning);
 
         $deploySuccess = new \Zend\Form\Element\Checkbox('Success');
         $deploySuccess->setLabel('Success');
         $fieldset->add($deploySuccess);
-
-        $deployNotified = new \Zend\Form\Element\Checkbox('Notified');
-        $deployNotified->setLabel('Running');
-        $fieldset->add($deployNotified);
 
         $deployError = new \Zend\Form\Element\Checkbox('Error');
         $deployError->setLabel('Error');

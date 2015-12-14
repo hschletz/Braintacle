@@ -51,17 +51,17 @@ class Packages extends AbstractForm
         $deploy = new \Zend\Form\Fieldset('Deploy');
         $deploy->setLabel('Defaults for deploying updated packages');
 
-        $deployNonnotified = new \Zend\Form\Element\Checkbox('defaultDeployNonnotified');
-        $deployNonnotified->setLabel('Not notified');
-        $deploy->add($deployNonnotified);
+        $deployPending = new \Zend\Form\Element\Checkbox('defaultDeployPending');
+        $deployPending->setLabel('Pending');
+        $deploy->add($deployPending);
+
+        $deployRunning = new \Zend\Form\Element\Checkbox('defaultDeployRunning');
+        $deployRunning->setLabel('Running');
+        $deploy->add($deployRunning);
 
         $deploySuccess = new \Zend\Form\Element\Checkbox('defaultDeploySuccess');
         $deploySuccess->setLabel('Success');
         $deploy->add($deploySuccess);
-
-        $deployNotified = new \Zend\Form\Element\Checkbox('defaultDeployNotified');
-        $deployNotified->setLabel('Running');
-        $deploy->add($deployNotified);
 
         $deployError = new \Zend\Form\Element\Checkbox('defaultDeployError');
         $deployError->setLabel('Error');

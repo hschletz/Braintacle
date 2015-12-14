@@ -94,9 +94,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'Timestamp' => $timestamp1,
                 'Size' => 12345678,
                 'Platform' => 'platform',
-                'NumNonnotified' => 1,
-                'NumSuccess' => 2,
-                'NumNotified' => 3,
+                'NumPending' => 1,
+                'NumRunning' => 2,
+                'NumSuccess' => 3,
                 'NumError' => 4,
             ),
             array(
@@ -105,9 +105,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'Timestamp' => $timestamp2,
                 'Size' => 87654321,
                 'Platform' => 'platform',
-                'NumNonnotified' => 0,
+                'NumPending' => 0,
+                'NumRunning' => 0,
                 'NumSuccess' => 0,
-                'NumNotified' => 0,
                 'NumError' => 0,
             ),
         );
@@ -161,15 +161,15 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                  '"][@class="%s"]';
 
         $this->assertXpathQueryContentContains(
-            sprintf($query, 'PackageNonnotified', 'name1', 'package_notnotified'),
+            sprintf($query, 'PackagePending', 'name1', 'package_pending'),
             '1'
         );
         $this->assertXpathQueryContentContains(
-            sprintf($query, 'PackageSuccess', 'name1', 'package_success'),
+            sprintf($query, 'PackageRunning', 'name1', 'package_running'),
             '2'
         );
         $this->assertXpathQueryContentContains(
-            sprintf($query, 'PackageNotified', 'name1', 'package_inprogress'),
+            sprintf($query, 'PackageSuccess', 'name1', 'package_success'),
             '3'
         );
         $this->assertXpathQueryContentContains(
@@ -225,9 +225,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'Timestamp' => new \DateTime('2014-03-29 20:03:45'),
                 'Size' => 12345678,
                 'Platform' => 'platform',
-                'NumNonnotified' => 1,
-                'NumSuccess' => 2,
-                'NumNotified' => 3,
+                'NumPending' => 1,
+                'NumRunning' => 2,
+                'NumSuccess' => 3,
                 'NumError' => 4,
             ),
             array(
@@ -236,9 +236,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'Timestamp' => new \DateTime('2014-03-29 20:15:43'),
                 'Size' => 87654321,
                 'Platform' => 'platform',
-                'NumNonnotified' => 0,
+                'NumPending' => 0,
+                'NumRunning' => 0,
                 'NumSuccess' => 0,
-                'NumNotified' => 0,
                 'NumError' => 0,
             ),
         );
@@ -392,9 +392,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
         $formData = array(
             'Deploy' => array(
-                'Nonnotified' => 'defaultDeployNonnotified',
+                'Pending' => 'defaultDeployPending',
+                'Running' => 'defaultDeployRunning',
                 'Success' => 'defaultDeploySuccess',
-                'Notified' => 'defaultDeployNotified',
                 'Error' => 'defaultDeployError',
                 'Groups' => 'defaultDeployGroups',
             ),
@@ -454,9 +454,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
     {
         $postData = array(
             'Deploy' => array(
-                'Nonnotified' => '1',
-                'Success' => '0',
-                'Notified' => '1',
+                'Pending' => '1',
+                'Running' => '0',
+                'Success' => '1',
                 'Error' => '0',
                 'Groups' => '1',
             ),
@@ -469,9 +469,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
         $packageData = array(
             'Deploy' => array(
-                'Nonnotified' => '1',
-                'Success' => '0',
-                'Notified' => '1',
+                'Pending' => '1',
+                'Running' => '0',
+                'Success' => '1',
                 'Error' => '0',
                 'Groups' => '1',
             ),
@@ -533,9 +533,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
     {
         $postData = array(
             'Deploy' => array(
-                'Nonnotified' => '0',
-                'Success' => '1',
-                'Notified' => '0',
+                'Pending' => '0',
+                'Running' => '1',
+                'Success' => '0',
                 'Error' => '1',
                 'Groups' => '0',
             ),
@@ -548,9 +548,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
         $packageData = array(
             'Deploy' => array(
-                'Nonnotified' => '0',
-                'Success' => '1',
-                'Notified' => '0',
+                'Pending' => '0',
+                'Running' => '1',
+                'Success' => '0',
                 'Error' => '1',
                 'Groups' => '0',
             ),
@@ -600,9 +600,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
     {
         $postData = array(
             'Deploy' => array(
-                'Nonnotified' => '1',
-                'Success' => '0',
-                'Notified' => '1',
+                'Pending' => '1',
+                'Running' => '0',
+                'Success' => '1',
                 'Error' => '0',
                 'Groups' => '1',
             ),
@@ -615,9 +615,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
         $packageData = array(
             'Deploy' => array(
-                'Nonnotified' => '1',
-                'Success' => '0',
-                'Notified' => '1',
+                'Pending' => '1',
+                'Running' => '0',
+                'Success' => '1',
                 'Error' => '0',
                 'Groups' => '1',
             ),

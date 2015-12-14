@@ -305,7 +305,7 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
                     'hardware_id' => $this['Id'],
                     'name' => 'DOWNLOAD',
                     'ivalue' => $package['Id'],
-                    'tvalue' => \Model\Package\Assignment::NOT_NOTIFIED,
+                    'tvalue' => \Model\Package\Assignment::PENDING,
                     'comments' => $this->serviceLocator->get('Library\Now')->format(
                         \Model\Package\Assignment::DATEFORMAT
                     ),

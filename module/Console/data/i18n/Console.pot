@@ -433,18 +433,18 @@ msgid "Deploy to clients which have existing package assigned"
 msgstr ""
 
 #: Console/Form/Package/Update.php Console/Form/Preferences/Packages.php
-#: view/console/package/index.php
-msgid "Not notified"
+#: view/console/client/packages.php view/console/package/index.php
+msgid "Pending"
 msgstr ""
 
 #: Console/Form/Package/Update.php Console/Form/Preferences/Packages.php
-#: view/console/package/index.php
-msgid "Success"
-msgstr ""
-
-#: Console/Form/Package/Update.php Console/Form/Preferences/Packages.php
-#: view/console/package/index.php
+#: view/console/client/packages.php view/console/package/index.php
 msgid "Running"
+msgstr ""
+
+#: Console/Form/Package/Update.php Console/Form/Preferences/Packages.php
+#: view/console/client/packages.php view/console/package/index.php
+msgid "Success"
 msgstr ""
 
 #: Console/Form/Package/Update.php Console/Form/Preferences/Packages.php
@@ -1079,12 +1079,12 @@ msgstr ""
 
 #: Console/View/Helper/FilterDescription.php
 #, php-format
-msgid "%1$d clients with package '%2$s' successfully deployed"
+msgid "%1$d clients with deployment of package '%2$s' in progress"
 msgstr ""
 
 #: Console/View/Helper/FilterDescription.php
 #, php-format
-msgid "%1$d clients with deployment of package '%2$s' in progress"
+msgid "%1$d clients with package '%2$s' successfully deployed"
 msgstr ""
 
 #: Console/View/Helper/FilterDescription.php
@@ -1395,18 +1395,6 @@ msgstr ""
 
 #: view/console/client/packages.php
 msgid "Timestamp"
-msgstr ""
-
-#: view/console/client/packages.php
-msgid "not notified"
-msgstr ""
-
-#: view/console/client/packages.php
-msgid "in progress"
-msgstr ""
-
-#: view/console/client/packages.php
-msgid "installed"
 msgstr ""
 
 #: view/console/client/packages.php view/console/group/packages.php

@@ -43,9 +43,8 @@ namespace Model;
  * @property bool $defaultDeleteInterfaces  Default for deleting network interfaces along with client. Default: true
  * @property bool $defaultDeployError  Default to deploy updated packages with state "error". Default: true
  * @property bool $defaultDeployGroups  Default to deploy updated packages to groups. Default: true
- * @property bool $defaultDeployNonnotified  Default to deploy updated packages with state "not notified ".
- *                                            Default: true
- * @property bool $defaultDeployNotified  Default to deploy updated packages with state "notified". Default: true
+ * @property bool $defaultDeployPending  Default to deploy updated packages with state "pending". Default: true
+ * @property bool $defaultDeployRunning  Default to deploy updated packages with state "running". Default: true
  * @property bool $defaultDeploySuccess  Default to deploy updated packages with state "success". Default: true
  * @property integer $defaultMaxFragmentSize  Default maximum fragment size (in kB) for new packages. Default: 0
  * @property bool $defaultMergeGroups  Default for merging manual group memberships along with clients. Default: true
@@ -108,8 +107,8 @@ class Config
         'defaultDeleteInterfaces' => 1,
         'defaultDeployError' => 1,
         'defaultDeployGroups' => 1,
-        'defaultDeployNonnotified' => 1,
-        'defaultDeployNotified' => 1,
+        'defaultDeployPending' => 1,
+        'defaultDeployRunning' => 1,
         'defaultDeploySuccess' => 1,
         'defaultMergeGroups' => 1,
         'defaultMergeCustomFields' => 1,

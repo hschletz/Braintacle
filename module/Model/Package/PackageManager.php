@@ -108,15 +108,15 @@ class PackageManager
                  );
 
         $groups = $groupInfo->getSql()->select()->columns(array('hardware_id'));
-        $nonNotified = clone $subquery;
-        $nonNotified->where(new Predicate\IsNull('tvalue'))
-                    ->where(new Predicate\NotIn('hardware_id', $groups));
+        $pending = clone $subquery;
+        $pending->where(new Predicate\IsNull('tvalue'))
+                ->where(new Predicate\NotIn('hardware_id', $groups));
+
+        $running = clone $subquery;
+        $running->where(array('tvalue' => \Model\Package\Assignment::RUNNING));
 
         $success = clone $subquery;
         $success->where(array('tvalue' => \Model\Package\Assignment::SUCCESS));
-
-        $notified = clone $subquery;
-        $notified->where(array('tvalue' => \Model\Package\Assignment::NOTIFIED));
 
         $error = clone $subquery;
         $error->where(new Predicate\Like('tvalue', \Model\Package\Assignment::ERROR_PREFIX . '%'));
@@ -131,9 +131,9 @@ class PackageManager
                 'size',
                 'osname',
                 'comment',
-                'num_nonnotified' => new Predicate\Expression('?', array($nonNotified)),
+                'num_pending' => new Predicate\Expression('?', array($pending)),
+                'num_running' => new Predicate\Expression('?', array($running)),
                 'num_success' => new Predicate\Expression('?', array($success)),
-                'num_notified' => new Predicate\Expression('?', array($notified)),
                 'num_error' => new Predicate\Expression('?', array($error)),
             )
         );
@@ -320,14 +320,14 @@ class PackageManager
      * Update package assignments
      *
      * Sets a new package on existing assignments. Updated assignments have
-     * their status reset to "not notified" and their options (force, schedule,
+     * their status reset to "pending" and their options (force, schedule,
      * post cmd) removed.
      *
      * @param integer $oldPackageId package to be replaced
      * @param integer $newPackageId new package
-     * @param bool $deployNonnotified Update assignments with status 'not notified'
+     * @param bool $deployPending Update assignments with status 'pending'
+     * @param bool $deployRunning Update assignments with status 'running'
      * @param bool $deploySuccess Update assignments with status 'success'
-     * @param bool $deployNotified Update assignments with status 'notified'
      * @param bool $deployError Update assignments with status 'error'
      * @param bool $deployGroups Update assignments for groups
      * @throws RuntimeException if an error occurs
@@ -335,13 +335,13 @@ class PackageManager
     public function updateAssignments(
         $oldPackageId,
         $newPackageId,
-        $deployNonnotified,
+        $deployPending,
+        $deployRunning,
         $deploySuccess,
-        $deployNotified,
         $deployError,
         $deployGroups
     ) {
-        if (!($deployNonnotified or $deploySuccess or $deployNotified or $deployError or $deployGroups)) {
+        if (!($deployPending or $deployRunning or $deploySuccess or $deployError or $deployGroups)) {
             return; // nothing to do
         }
 
@@ -352,17 +352,17 @@ class PackageManager
         $where->equalTo('ivalue', $oldPackageId);
 
         // Additional filters are only necessary if not all conditions are set
-        if (!($deployNonnotified and $deploySuccess and $deployNotified and $deployError and $deployGroups)) {
+        if (!($deployPending and $deployRunning and $deploySuccess and $deployError and $deployGroups)) {
             $groups = $groupInfo->getSql()->select()->columns(array('hardware_id'));
             $filters = new \Zend\Db\Sql\Where(null, \Zend\Db\Sql\Where::COMBINED_BY_OR);
-            if ($deployNonnotified) {
+            if ($deployPending) {
                 $filters->isNull('tvalue')->and->notIn('hardware_id', $groups);
+            }
+            if ($deployRunning) {
+                $filters->equalTo('tvalue', \Model\Package\Assignment::RUNNING);
             }
             if ($deploySuccess) {
                 $filters->equalTo('tvalue', \Model\Package\Assignment::SUCCESS);
-            }
-            if ($deployNotified) {
-                $filters->equalTo('tvalue', \Model\Package\Assignment::NOTIFIED);
             }
             if ($deployError) {
                 $filters->like('tvalue', \Model\Package\Assignment::ERROR_PREFIX . '%');
@@ -392,7 +392,7 @@ class PackageManager
             $clientConfig->update(
                 array(
                     'ivalue' => $newPackageId,
-                    'tvalue' => \Model\Package\Assignment::NOT_NOTIFIED,
+                    'tvalue' => \Model\Package\Assignment::PENDING,
                     'comments' => $now,
                 ),
                 array('name' => 'DOWNLOAD', $where)

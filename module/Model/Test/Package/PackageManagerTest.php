@@ -97,9 +97,9 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             'Platform' => 'windows',
             'Comment' => 'Existing package 1',
             'Id' => '1415958319',
-            'NumNonnotified' => '1',
+            'NumPending' => '1',
+            'NumRunning' => '1',
             'NumSuccess' => '1',
-            'NumNotified' => '1',
             'NumError' => '1',
         );
         $package2 =  array (
@@ -111,9 +111,9 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             'Platform' => 'linux',
             'Comment' => 'Existing package 2',
             'Id' => '1415958320',
-            'NumNonnotified' => '1',
+            'NumPending' => '1',
+            'NumRunning' => '0',
             'NumSuccess' => '0',
-            'NumNotified' => '0',
             'NumError' => '0',
         );
         return array(
@@ -710,12 +710,12 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     {
         return array(
             array('UpdateNoFilters', true, true, true, true, true),
-            array('UpdateNonNotified', true, false, false, false, false),
-            array('UpdateSuccess', false, true, false, false, false),
-            array('UpdateNotified', false, false, true, false, false),
+            array('UpdatePending', true, false, false, false, false),
+            array('UpdateRunning', false, true, false, false, false),
+            array('UpdateSuccess', false, false, true, false, false),
             array('UpdateError', false, false, false, true, false),
             array('UpdateGroups', false, false, false, false, true),
-            array('UpdateCombined', true, true, false, true, false),
+            array('UpdateCombined', true, false, true, true, false),
         );
     }
 
@@ -725,9 +725,9 @@ class PackageManagerTest extends \Model\Test\AbstractTest
      */
     public function testUpdateAssignments(
         $datasetName,
-        $deployNonnotified,
+        $deployPending,
+        $deployRunning,
         $deploySuccess,
-        $deployNotified,
         $deployError,
         $deployGroups
     ) {
@@ -735,9 +735,9 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $model->updateAssignments(
             1415958319,
             3,
-            $deployNonnotified,
+            $deployPending,
+            $deployRunning,
             $deploySuccess,
-            $deployNotified,
             $deployError,
             $deployGroups
         );

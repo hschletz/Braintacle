@@ -44,14 +44,14 @@ class Assignment extends \ArrayObject
     const DATEFORMAT = 'D M d H:i:s Y';
 
     /**
-     * Database value for status "not notified"
+     * Database value for status "pending"
      */
-    const NOT_NOTIFIED = null;
+    const PENDING = null;
 
     /**
-     * Database value for status "notified"
+     * Database value for status "running"
      */
-    const NOTIFIED = 'NOTIFIED';
+    const RUNNING = 'NOTIFIED';
 
     /**
      * Database value for status "success"

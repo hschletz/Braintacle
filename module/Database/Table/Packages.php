@@ -44,9 +44,9 @@ class Packages extends \Database\AbstractTable
             'size' => 'Size',
             'osname' => 'Platform',
             'comment' => 'Comment',
-            'num_nonnotified' => 'NumNonnotified',
+            'num_pending' => 'NumPending',
+            'num_running' => 'NumRunning',
             'num_success' => 'NumSuccess',
-            'num_notified' => 'NumNotified',
             'num_error' => 'NumError',
         );
         $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;

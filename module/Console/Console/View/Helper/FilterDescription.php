@@ -31,9 +31,9 @@ class FilterDescription extends \Zend\View\Helper\AbstractHelper
      *
      * The following filters are recognized:
      *
-     * - PackageNonnotified
+     * - PackagePending
+     * - PackageRunning
      * - PackageSuccess
-     * - PackageNotified
      * - PackageError
      * - Software
      * - Windows.ManualProductKey
@@ -64,19 +64,19 @@ class FilterDescription extends \Zend\View\Helper\AbstractHelper
 
         // Single filter
         switch ($filter) {
-            case 'PackageNonnotified':
+            case 'PackagePending':
                 $description = $this->view->translate(
                     '%1$d clients waiting for notification of package \'%2$s\''
+                );
+                break;
+            case 'PackageRunning':
+                $description = $this->view->translate(
+                    '%1$d clients with deployment of package \'%2$s\' in progress'
                 );
                 break;
             case 'PackageSuccess':
                 $description = $this->view->translate(
                     '%1$d clients with package \'%2$s\' successfully deployed'
-                );
-                break;
-            case 'PackageNotified':
-                $description = $this->view->translate(
-                    '%1$d clients with deployment of package \'%2$s\' in progress'
                 );
                 break;
             case 'PackageError':

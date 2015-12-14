@@ -172,9 +172,9 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
                     $this->_packageManager->updateAssignments(
                         $oldPackage['Id'],
                         $newPackage['Id'],
-                        $data['Deploy']['Nonnotified'],
+                        $data['Deploy']['Pending'],
+                        $data['Deploy']['Running'],
                         $data['Deploy']['Success'],
-                        $data['Deploy']['Notified'],
                         $data['Deploy']['Error'],
                         $data['Deploy']['Groups']
                     );
@@ -198,9 +198,9 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
             $form->setData(
                 array(
                     'Deploy' => array(
-                        'Nonnotified' => $this->_config->defaultDeployNonnotified,
+                        'Pending' => $this->_config->defaultDeployPending,
+                        'Running' => $this->_config->defaultDeployRunning,
                         'Success' => $this->_config->defaultDeploySuccess,
-                        'Notified' => $this->_config->defaultDeployNotified,
                         'Error' => $this->_config->defaultDeployError,
                         'Groups' => $this->_config->defaultDeployGroups,
                     ),
