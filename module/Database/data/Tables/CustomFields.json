@@ -16,7 +16,7 @@
             "type": "varchar",
             "length": 255,
             "notnull": false,
-            "default": "NA",
+            "default": null,
             "autoincrement": false,
             "comment": "Default field with some special treatment"
         }
