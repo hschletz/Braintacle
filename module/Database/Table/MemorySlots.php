@@ -49,6 +49,9 @@ class MemorySlots extends \Database\AbstractTable
             )
         );
         $this->_hydrator->addStrategy('Size', new \Database\Hydrator\Strategy\MemorySlots\Size);
+        $this->_hydrator->addStrategy('capacity', new \Database\Hydrator\Strategy\MemorySlots\Size);
+        $this->_hydrator->addStrategy('Clock', new \Database\Hydrator\Strategy\MemorySlots\Clock);
+        $this->_hydrator->addStrategy('speed', new \Database\Hydrator\Strategy\MemorySlots\Clock);
 
         $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,

@@ -1,6 +1,6 @@
 <?php
 /**
- * Strategy for Size attribute
+ * Strategy for Clock attribute
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,19 +22,19 @@
 namespace Database\Hydrator\Strategy\MemorySlots;
 
 /**
- * Strategy for Size attribute
+ * Strategy for Clock attribute
  *
- * Some agents report 0 or non-integer values which are converted to NULL. This
- * conversion is not reverted on extraction.
+ * Some agents report 0 or non-integer values which are converted to NULL. Some
+ * raw values are suffixed (like "800 MHz") in which case data gets truncated to
+ * the integer part. This conversion is not reverted on extraction.
  */
-class Size implements \Zend\Stdlib\Hydrator\Strategy\StrategyInterface
+class Clock implements \Zend\Stdlib\Hydrator\Strategy\StrategyInterface
 {
     /** {@inheritdoc} */
     public function hydrate($value)
     {
-        if (ctype_digit((string) $value) and $value != 0) {
-            $value = (integer) $value;
-        } else {
+        $value = (integer) $value;
+        if ($value == 0) {
             $value = null;
         }
         return $value;

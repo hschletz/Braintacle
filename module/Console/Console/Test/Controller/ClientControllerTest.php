@@ -1474,9 +1474,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
             array(
                 'SlotNumber' => 1,
-                'Size' => 0,
+                'Size' => null,
                 'Type' => 'type1',
-                'Clock' => 'invalid',
+                'Clock' => null,
                 'Serial' => 'serial1',
                 'Caption' => 'caption1',
                 'Description' => 'description1',
@@ -1497,7 +1497,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXPathQuery("//tr[2]/td[2][text()='\n1024\xC2\xA0MB\n']");
         $this->assertXPathQuery("//tr[2]/td[4][text()='\n333\xC2\xA0MHz\n']");
         $this->assertXPathQuery("//tr[3]/td[2][text()='\n\n']");
-        $this->assertXPathQuery("//tr[3]/td[4][text()='\ninvalid\n']");
+        $this->assertXPathQuery("//tr[3]/td[4][text()='\n\n']");
     }
 
     public function testSystemActionExtensionSlots()

@@ -38,17 +38,15 @@ $headers = array(
 
 $renderCallbacks = array (
     'Size' => function ($view, $memorySlot) {
-        $size = $memorySlot['Size'];
+        $size = $view->escapeHtml((string) $memorySlot['Size']);
         if ($size) {
             $size .= '&nbsp;MB';
-        } else {
-            $size = ''; // Suppress literal '0'
         }
         return $size;
     },
     'Clock' => function ($view, $memorySlot) {
-        $clock = $view->escapeHtml($memorySlot['Clock']);
-        if (is_numeric($clock)) {
+        $clock = $view->escapeHtml((string) $memorySlot['Clock']);
+        if ($clock) {
             $clock .= '&nbsp;MHz';
         }
         return $clock;

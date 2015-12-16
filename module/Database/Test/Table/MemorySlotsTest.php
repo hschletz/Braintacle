@@ -53,7 +53,9 @@ class MemorySlotsTest extends AbstractTest
         $this->assertEquals('serialnumber', $map->extract('Serial'));
 
         $this->assertInstanceOf('Database\Hydrator\Strategy\MemorySlots\Size', $hydrator->getStrategy('Size'));
-        $this->assertFalse($hydrator->hasStrategy('capacity'));
+        $this->assertInstanceOf('Database\Hydrator\Strategy\MemorySlots\Size', $hydrator->getStrategy('capacity'));
+        $this->assertInstanceOf('Database\Hydrator\Strategy\MemorySlots\Clock', $hydrator->getStrategy('Clock'));
+        $this->assertInstanceOf('Database\Hydrator\Strategy\MemorySlots\Clock', $hydrator->getStrategy('speed'));
 
         $resultSet = static::$_table->getResultSetPrototype();
         $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);

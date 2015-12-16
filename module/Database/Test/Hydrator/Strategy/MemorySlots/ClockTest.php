@@ -1,6 +1,6 @@
 <?php
 /**
- * Strategy for Size attribute
+ * Tests for Clock strategy
  *
  * Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,30 +19,29 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Database\Hydrator\Strategy\MemorySlots;
+namespace Database\Test\Hydrator\Strategy\MemorySlots;
 
-/**
- * Strategy for Size attribute
- *
- * Some agents report 0 or non-integer values which are converted to NULL. This
- * conversion is not reverted on extraction.
- */
-class Size implements \Zend\Stdlib\Hydrator\Strategy\StrategyInterface
+class ClockTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
 {
-    /** {@inheritdoc} */
-    public function hydrate($value)
+    public function hydrateProvider()
     {
-        if (ctype_digit((string) $value) and $value != 0) {
-            $value = (integer) $value;
-        } else {
-            $value = null;
-        }
-        return $value;
+        return array(
+            array('800', 800),
+            array(800, 800),
+            array('800 MHz', 800),
+            array('Unknown', null),
+            array('0', null),
+            array(0, null),
+            array(null, null),
+        );
     }
 
-    /** {@inheritdoc} */
-    public function extract($value)
+    public function extractProvider()
     {
-        return $value;
+        return array(
+            array('800', '800'),
+            array('0', '0'),
+            array(null, null),
+        );
     }
 }
