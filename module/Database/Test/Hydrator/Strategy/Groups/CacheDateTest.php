@@ -30,7 +30,6 @@ class CacheDateTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTes
             array('0', null),
             array(0, null),
             array(null, null),
-            array('1436898782', new \DateTime('2015-07-14 20:33:02')),
         );
     }
 
@@ -38,8 +37,15 @@ class CacheDateTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTes
     {
         return array(
             array(null, 0),
-            array(new \DateTime('2015-07-14 20:33:02'), '1436898782'),
+            array(new \DateTime('2015-07-14 20:33:02'), 1436898782),
         );
+    }
+
+    public function testHydrateWithoutOffset()
+    {
+        // testHydrate() cannot compare objects
+        $hydrator = new \Database\Hydrator\Strategy\Groups\CacheDate;
+        $this->assertEquals(new \DateTime('2015-07-14 20:33:02'), $hydrator->hydrate('1436898782'));
     }
 
     public function testHydrateWithOffset()

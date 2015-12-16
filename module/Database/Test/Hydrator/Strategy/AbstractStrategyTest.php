@@ -50,7 +50,7 @@ abstract class AbstractStrategyTest extends \PHPUnit_Framework_TestCase
      */
     public function testHydrate($value, $expected)
     {
-        $this->assertEquals($expected, $this->_strategy->hydrate($value));
+        $this->assertSame($expected, $this->_strategy->hydrate($value));
     }
 
     /**
@@ -58,6 +58,6 @@ abstract class AbstractStrategyTest extends \PHPUnit_Framework_TestCase
      */
     public function testExtract($value, $expected)
     {
-        $this->assertEquals($expected, $this->_strategy->extract($value));
+        $this->assertSame($expected, $this->_strategy->extract($value));
     }
 }

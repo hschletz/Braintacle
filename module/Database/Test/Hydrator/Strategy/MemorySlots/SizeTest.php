@@ -26,7 +26,7 @@ class SizeTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
     public function hydrateProvider()
     {
         return array(
-            array('128', 128),
+            array('128', '128'),
             array(128, 128),
             array('128a', 0),
         );
