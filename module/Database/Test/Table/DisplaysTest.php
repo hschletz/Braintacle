@@ -39,13 +39,13 @@ class DisplaysTest extends AbstractTest
         $this->assertEquals('Manufacturer', $map->hydrate('manufacturer'));
         $this->assertEquals('Description', $map->hydrate('caption'));
         $this->assertEquals('Serial', $map->hydrate('serial'));
-        $this->assertEquals('ProductionDate', $map->hydrate('description'));
+        $this->assertEquals('Edid', $map->hydrate('description'));
         $this->assertEquals('Type', $map->hydrate('type'));
 
         $this->assertEquals('manufacturer', $map->extract('Manufacturer'));
         $this->assertEquals('caption', $map->extract('Description'));
         $this->assertEquals('serial', $map->extract('Serial'));
-        $this->assertEquals('description', $map->extract('ProductionDate'));
+        $this->assertEquals('description', $map->extract('Edid'));
         $this->assertEquals('type', $map->extract('Type'));
 
         $resultSet = static::$_table->getResultSetPrototype();

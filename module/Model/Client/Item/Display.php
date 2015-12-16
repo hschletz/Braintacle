@@ -27,7 +27,7 @@ namespace Model\Client\Item;
  * @property string $Manufacturer
  * @property string $Description
  * @property string $Serial
- * @property string $ProductionDate
+ * @property string $Edid EDID
  * @property string $Type
  */
 class Display extends \ArrayObject

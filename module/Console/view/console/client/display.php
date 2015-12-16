@@ -66,7 +66,7 @@ if (count($displays)) {
         'Manufacturer' => $this->translate('Manufacturer'),
         'Description' => $this->translate('Description'),
         'Serial' => $this->translate('Serial number'),
-        'ProductionDate' => $this->translate('Production date'),
+        'Edid' => $this->translate('EDID'),
         'Type' => $this->translate('Type'),
     );
 

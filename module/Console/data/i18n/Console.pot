@@ -851,7 +851,7 @@ msgid "Monitor: serial"
 msgstr ""
 
 #: Console/Form/Search.php view/console/client/index.php
-msgid "Monitor: production date"
+msgid "Monitor: EDID"
 msgstr ""
 
 #: Console/Form/Search.php view/console/client/index.php
@@ -1156,7 +1156,7 @@ msgid "Display controllers"
 msgstr ""
 
 #: view/console/client/display.php
-msgid "Production date"
+msgid "EDID"
 msgstr ""
 
 #: view/console/client/display.php

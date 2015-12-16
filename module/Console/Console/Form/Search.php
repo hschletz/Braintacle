@@ -131,7 +131,7 @@ class Search extends Form
             'Display.Manufacturer' => $translator->translate('Monitor: manufacturer'),
             'Display.Description' => $translator->translate('Monitor: description'),
             'Display.Serial' => $translator->translate('Monitor: serial'),
-            'Display.ProductionDate' => $translator->translate('Monitor: production date'),
+            'Display.Edid' => $translator->translate('Monitor: EDID'),
             'DisplayController.Name' => $translator->translate('Display controller'),
             'DisplayController.Memory' => $translator->translate('GPU memory'),
             'Modem.Name' => $translator->translate('Modem'),

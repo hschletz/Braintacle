@@ -41,7 +41,7 @@ class Displays extends \Database\AbstractTable
                     'manufacturer' => 'Manufacturer',
                     'caption' => 'Description',
                     'serial' => 'Serial',
-                    'description' => 'ProductionDate',
+                    'description' => 'Edid',
                     'type' => 'Type',
                 )
             )

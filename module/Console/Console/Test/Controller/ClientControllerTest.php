@@ -1371,7 +1371,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Manufacturer' => 'manufacturer',
             'Description' => 'description',
             'Serial' => 'serial',
-            'ProductionDate' => 'date',
+            'Edid' => 'EDID',
             'Type' => 'type',
         );
         $client = array(

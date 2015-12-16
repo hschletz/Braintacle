@@ -768,16 +768,16 @@ msgid "Modem"
 msgstr "Modem"
 
 #: Console/Form/Search.php view/console/client/index.php
+msgid "Monitor: EDID"
+msgstr "Monitor: EDID"
+
+#: Console/Form/Search.php view/console/client/index.php
 msgid "Monitor: description"
 msgstr "Monitor: Beschreibung"
 
 #: Console/Form/Search.php view/console/client/index.php
 msgid "Monitor: manufacturer"
 msgstr "Monitor: Hersteller"
-
-#: Console/Form/Search.php view/console/client/index.php
-msgid "Monitor: production date"
-msgstr "Monitor: Produktionsdatum"
 
 #: Console/Form/Search.php view/console/client/index.php
 msgid "Monitor: serial"
@@ -1160,14 +1160,14 @@ msgstr "Display-Controller"
 msgid "Displays"
 msgstr "Anzeigegeräte"
 
+#: view/console/client/display.php
+msgid "EDID"
+msgstr "EDID"
+
 #: view/console/client/display.php view/console/client/index.php
 #: view/console/client/virtualmachines.php
 msgid "Memory"
 msgstr "Speicher"
-
-#: view/console/client/display.php
-msgid "Production date"
-msgstr "Produktionsdatum"
 
 #: view/console/client/general.php view/console/client/index.php
 msgid "CPU clock"
