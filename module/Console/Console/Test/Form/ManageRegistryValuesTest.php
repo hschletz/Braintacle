@@ -237,7 +237,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         $this->assertEquals("\na\b\c\n", $result[1]->textContent);
 
         $result = Query::execute(
-            '//td//a[@href="/console/preferences/deleteregistryvalue/?id=1"]',
+            '//td//a[@href="/console/preferences/deleteregistryvalue/?name=Test1"]',
             $document
         );
         $this->assertCount(1, $result);

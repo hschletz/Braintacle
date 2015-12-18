@@ -230,7 +230,7 @@ class ManageRegistryValues extends Form
                                 'href' => $view->consoleUrl(
                                     'preferences',
                                     'deleteregistryvalue',
-                                    array('id' => $id,)
+                                    array('name' => $value['Name'],)
                                 )
                             )
                         )

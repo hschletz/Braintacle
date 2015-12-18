@@ -283,19 +283,19 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Delete a registry value definition
      *
-     * URL parameter: 'id'
+     * URL parameter: name
+     *
      * @return array|\Zend\Http\Response Array(name) or redirect response
      */
     public function deleteregistryvalueAction()
     {
         if ($this->getRequest()->isPost()) {
             if ($this->params()->fromPost('yes')) {
-                $this->_registryManager->deleteValueDefinition($this->params()->fromQuery('id'));
+                $this->_registryManager->deleteValueDefinition($this->params()->fromQuery('name'));
             }
             return $this->redirectToRoute('preferences', 'registryvalues');
         } else {
-            $value = $this->_registryManager->getValueDefinition($this->params()->fromQuery('id'));
-            return array('name' => $value['Name']);
+            return array('name' => $this->params()->fromQuery('name'));
         }
     }
 

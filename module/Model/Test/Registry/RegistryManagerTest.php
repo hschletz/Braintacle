@@ -44,7 +44,7 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
     public function testGetValueDefinition()
     {
         $model = $this->_getModel();
-        $value = $model->getValueDefinition(2);
+        $value = $model->getValueDefinition('name1');
         $this->assertInstanceOf('Model\Registry\Value', $value);
         $this->assertEquals(
             array (
@@ -60,9 +60,9 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
 
     public function testGetValueDefinitionInvalid()
     {
-        $this->setExpectedException('Model\Registry\RuntimeException', 'Invalid registry value ID: 3');
+        $this->setExpectedException('Model\Registry\RuntimeException', 'Invalid registry value name: invalid');
         $model = $this->_getModel();
-        $model->getValueDefinition(3);
+        $model->getValueDefinition('invalid');
     }
 
     public function testAddValueDefinitionWithValue()
@@ -242,7 +242,7 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
     public function testDeleteValueDefinition()
     {
         $model = $this->_getModel();
-        $model->deleteValueDefinition(1);
+        $model->deleteValueDefinition('name2');
         $dataSet = $this->_loadDataSet('DeleteValueDefinition');
         $this->assertTablesEqual(
             $dataSet->getTable('regconfig'),
@@ -263,7 +263,7 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
     public function testDeleteValueDefinitionNonexistentId()
     {
         $model = $this->_getModel();
-        $model->deleteValueDefinition(3);
+        $model->deleteValueDefinition('invalid');
         $dataSet = $this->_loadDataSet();
         $this->assertTablesEqual(
             $dataSet->getTable('regconfig'),

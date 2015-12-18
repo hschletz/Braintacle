@@ -66,20 +66,20 @@ class RegistryManager
     }
 
     /**
-     * Get registry value definition with given ID
+     * Get registry value definition with given name
      *
-     * @param integer $id ID of an existing value definition
+     * @param string $name Name of an existing value definition
      * @return \Model\Registry\Value
-     * @throws \RuntimeException if given ID id invalid
+     * @throws \RuntimeException if given name is invalid
      **/
-    public function getValueDefinition($id)
+    public function getValueDefinition($name)
     {
         $select = $this->_registryValueDefinitions->getSql()->select();
         $select->columns(array('id', 'name', 'regtree', 'regkey', 'regvalue'));
-        $select->where(array('id' => $id));
+        $select->where(array('name' => $name));
         $value = $this->_registryValueDefinitions->selectWith($select)->current();
         if (!$value) {
-            throw new RuntimeException('Invalid registry value ID: ' . $id);
+            throw new RuntimeException('Invalid registry value name: ' . $name);
         }
         return $value;
     }
@@ -156,19 +156,19 @@ class RegistryManager
     /**
      * Delete a value definition and its inventoried data
      *
-     * @param integer $id ID of value definition. Nonexistent ID is ignored.
+     * @param string $name Name of value definition. Nonexistent name is ignored.
      **/
-    public function deleteValueDefinition($id)
+    public function deleteValueDefinition($name)
     {
         try {
-            $value = $this->getValueDefinition($id);
+            $value = $this->getValueDefinition($name);
         } catch (RuntimeException $e) {
             return;
         }
         $connection = $this->_registryValueDefinitions->getAdapter()->getDriver()->getConnection();
         $connection->beginTransaction();
         $this->_registryData->delete(array('name' => $value['Name']));
-        $this->_registryValueDefinitions->delete(array('id' => $id));
+        $this->_registryValueDefinitions->delete(array('id' => $value['Id']));
         $connection->commit();
     }
 }

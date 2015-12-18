@@ -666,14 +666,13 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteregistryvalueActionGet()
     {
-        $this->_registryManager->expects($this->once())
-                               ->method('getValueDefinition')
-                               ->with('1')
-                               ->willReturn(array('Name' => 'name'));
         $this->_registryManager->expects($this->never())->method('deleteValueDefinition');
-        $this->dispatch('/console/preferences/deleteregistryvalue/?id=1');
+        $this->dispatch('/console/preferences/deleteregistryvalue/?name=value_name');
         $this->assertResponseStatusCode(200);
-        $this->assertContains("'name'", $this->getResponse()->getContent());
+        $this->assertQueryContentContains(
+            '//p',
+            "Der Registry-Wert 'value_name' wird aus dem Inventar gelöscht. Fortfahren?"
+        );
     }
 
     public function testDeleteregistryvalueActionPostNo()
@@ -685,8 +684,8 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteregistryvalueActionPostYes()
     {
-        $this->_registryManager->expects($this->once())->method('deleteValueDefinition')->with(1);
-        $this->dispatch('/console/preferences/deleteregistryvalue/?id=1', 'POST', array('yes' => 'Yes'));
+        $this->_registryManager->expects($this->once())->method('deleteValueDefinition')->with('value_name');
+        $this->dispatch('/console/preferences/deleteregistryvalue/?name=value_name', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/preferences/registryvalues/');
     }
 }
