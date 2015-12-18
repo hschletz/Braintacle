@@ -76,6 +76,7 @@ class Module implements
             }
             $config['db'] = $configFileContent['database'];
         }
+        $config['db']['options']['buffer_results'] = true;
         $config['db']['charset'] = 'utf8';
 
         return $config;
