@@ -47,11 +47,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $this->assertFileExists($url);
         $this->assertEquals($url, $fileObject->getPathname()); // Test parent constructor invocation
 
-        $reflectionObject = new \ReflectionClass($fileObject);
-        $reflectionProperty = $reflectionObject->getProperty('_file');
-        $reflectionProperty->setAccessible(true);
-        $file = $reflectionProperty->getValue($fileObject);
-
+        $file = \PHPUnit_Framework_Assert::readAttribute($fileObject, '_file');
         $metadata = stream_get_meta_data($file);
         $this->assertEquals($url, $metadata['uri']);
         $this->assertEquals('w', $metadata['mode']);
@@ -68,16 +64,13 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $fileObject = new FileObject($url); // default mode 'r'
     }
 
-    public function testSetFlags()
+    public function testFlags()
     {
         $url = $this->_root->url() . '/test.txt';
         $fileObject = new FileObject($url, 'w');
         $fileObject->setFlags('test_flags');
 
-        $reflectionObject = new \ReflectionClass($fileObject);
-        $reflectionProperty = $reflectionObject->getProperty('_flags');
-        $reflectionProperty->setAccessible(true);
-        $this->assertEquals('test_flags', $reflectionProperty->getValue($fileObject));
+        $this->assertEquals('test_flags', $fileObject->getFlags());
     }
 
     public function testSetFlagsUnimplementedFlag()

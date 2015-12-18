@@ -106,6 +106,16 @@ class FileObject extends \SplFileInfo implements \Iterator
     }
 
     /**
+     * Get flags set via setFlags()
+     *
+     * @return integer
+     */
+    public function getFlags()
+    {
+        return $this->_flags;
+    }
+
+    /**
      * Return EOF status
      *
      * @return bool

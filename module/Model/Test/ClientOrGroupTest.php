@@ -159,15 +159,14 @@ class ClientOrGroupTest extends AbstractTest
         $this->assertSame($success, $model->lock());
 
         // Reuse $_currentTimestamp before it gets overwritten by _loadDataSet()
-        $expire = new \ReflectionProperty($model, '_lockTimeout');
-        $expire->setAccessible(true);
+        $expire = \PHPUnit_Framework_Assert::readAttribute($model, '_lockTimeout');
         if ($success) {
             $this->assertThat(
-                $expire->getValue($model)->getTimestamp(),
+                $expire->getTimestamp(),
                 $this->equalTo($this->_currentTimestamp->getTimestamp() + $timeout, 1) // fuzzy match
             );
         } else {
-            $this->assertNull($expire->getValue($model));
+            $this->assertNull($expire);
         }
 
         $this->assertLocksTableEquals($dataSetName);
@@ -476,10 +475,7 @@ class ClientOrGroupTest extends AbstractTest
         $model['Id'] = $id;
 
         $this->assertSame($value, $model->getConfig($option));
-
-        $cache = new \ReflectionProperty($model, '_configCache');
-        $cache->setAccessible(true);
-        $this->assertSame($value, $cache->getValue($model)[$option]);
+        $this->assertSame($value, \PHPUnit_Framework_Assert::readAttribute($model, '_configCache')[$option]);
     }
 
     public function testGetConfigCached()
@@ -553,9 +549,7 @@ class ClientOrGroupTest extends AbstractTest
             )
         );
 
-        $cache = new \ReflectionProperty($model, '_configCache');
-        $cache->setAccessible(true);
-        $this->assertSame($normalizedValue, $cache->getValue($model)[$option]);
+        $this->assertSame($normalizedValue, \PHPUnit_Framework_Assert::readAttribute($model, '_configCache')[$option]);
     }
 
     public function testSetConfigUnchanged()
@@ -588,9 +582,7 @@ class ClientOrGroupTest extends AbstractTest
 
         $model->setConfig('inventoryInterval', '23');
 
-        $cache = new \ReflectionProperty($model, '_configCache');
-        $cache->setAccessible(true);
-        $this->assertSame(23, $cache->getValue($model)['inventoryInterval']);
+        $this->assertSame(23, \PHPUnit_Framework_Assert::readAttribute($model, '_configCache')['inventoryInterval']);
     }
 
     public function getAllConfigProvider()

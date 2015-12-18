@@ -68,10 +68,6 @@ class InventoryUploaderTest extends \PHPUnit_Framework_TestCase
         $uploader = new InventoryUploader('http://example.net/server', $adapter);
         $uploader->uploadData($content);
 
-        // No public method available to test "strictredirects" option - use reflection
-        $reflectionClass = new \ReflectionClass($adapter);
-        $reflectionProperty = $reflectionClass->getProperty('config');
-        $reflectionProperty->setAccessible(true);
-        $this->assertTrue($reflectionProperty->getValue($adapter)['strictredirects']);
+        $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($adapter, 'config')['strictredirects']);
     }
 }

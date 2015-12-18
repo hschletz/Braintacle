@@ -84,9 +84,7 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
                     if (!$writer instanceof \Zend\Log\Writer\Stream) {
                         return false;
                     };
-                    $stream = new \ReflectionProperty($writer, 'stream');
-                    $stream->setAccessible(true);
-                    $stream = $stream->getValue($writer);
+                    $stream = \PHPUnit_Framework_Assert::readAttribute($writer, 'stream');
                     if (!is_resource($stream) or get_resource_type($stream) != 'stream') {
                         return false;
                     }
@@ -94,20 +92,16 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
                         return false;
                     }
 
-                    $filters = new \ReflectionProperty($writer, 'filters');
-                    $filters->setAccessible(true);
-                    $filter = $filters->getValue($writer)[0];
+                    $filter = \PHPUnit_Framework_Assert::readAttribute($writer, 'filters')[0];
                     if (!$filter instanceof \Zend\Log\Filter\Priority) {
                         return false;
                     }
-                    $priority = new \ReflectionProperty($filter, 'priority');
-                    $priority->setAccessible(true);
-                    if ($priority->getValue($filter) !== $expectedPriority) {
+                    $priority = \PHPUnit_Framework_Assert::readAttribute($filter, 'priority');
+                    if ($priority !== $expectedPriority) {
                         return false;
                     }
-                    $operator = new \ReflectionProperty($filter, 'operator');
-                    $operator->setAccessible(true);
-                    if ($operator->getValue($filter) != '<=') {
+                    $operator = \PHPUnit_Framework_Assert::readAttribute($filter, 'operator');
+                    if ($operator != '<=') {
                         return false;
                     }
 

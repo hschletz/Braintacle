@@ -74,8 +74,7 @@ class MacAddressTest extends \PHPUnit_Framework_TestCase
                 'vendor' => 'short6',
             ),
         );
-        $reflectionClass = new \ReflectionClass('Library\MacAddress');
-        $this->assertEquals($expected, $reflectionClass->getStaticProperties()['_vendorList']);
+        $this->assertAttributeEquals($expected, '_vendorList', 'Library\MacAddress');
     }
 
     public function testLoadVendorDatabaseBadMask()
@@ -123,8 +122,7 @@ class MacAddressTest extends \PHPUnit_Framework_TestCase
                 'vendor' => 'short',
             ),
         );
-        $reflectionClass = new \ReflectionClass('Library\MacAddress');
-        $this->assertEquals($expected, $reflectionClass->getStaticProperties()['_vendorList']);
+        $this->assertAttributeEquals($expected, '_vendorList', 'Library\MacAddress');
     }
 
     public function testLoadVendorDatabaseFromFile()
@@ -133,8 +131,7 @@ class MacAddressTest extends \PHPUnit_Framework_TestCase
         MacAddress::loadVendorDatabase(array());
         // Pass default database. It should load without errors.
         MacAddress::loadVendorDatabaseFromFile(\Library\Module::getPath('data/MacAddress/manuf'));
-        $reflectionClass = new \ReflectionClass('Library\MacAddress');
-        $this->assertNotEmpty($reflectionClass->getStaticProperties()['_vendorList']);
+        $this->assertAttributeNotEmpty('_vendorList', 'Library\MacAddress');
     }
 
     public function testToSting()
