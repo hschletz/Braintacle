@@ -1,9 +1,0 @@
-# Fixture for AbstractTableTest
-test1:
-  -
-    col1: "col1a"
-    col2: "col2a"
-  -
-    col1: "col1b"
-    col2: "col2b"
-test2:

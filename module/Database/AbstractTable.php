@@ -155,7 +155,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
      */
     public function fetchCol($name)
     {
-        $select = $this->sql->select();
+        $select = $this->getSql()->select();
         $select->columns(array($name), false);
         $resultSet = $this->selectWith($select);
 
