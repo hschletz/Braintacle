@@ -5,7 +5,7 @@
         {
             "name": "assettag",
             "type": "varchar",
-            "length": 255,
+            "length": 191,
             "notnull": true,
             "default": null,
             "autoincrement": false,

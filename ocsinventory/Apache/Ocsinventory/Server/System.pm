@@ -180,10 +180,11 @@ sub _database_connect{
 
   # Connection...
   my $dbh = DBI->connect("DBI:$type:database=$database;host=$host;port=$port", $user, $password, \%params);
-  $dbh->do("SET NAMES 'utf8'") if($dbh && $ENV{'OCS_OPT_UNICODE_SUPPORT'});
   if ($type eq 'Pg') {
+      $dbh->do("SET NAMES 'utf8'");
       $dbh->do('SET timezone TO UTC');
   } elsif ($type eq 'mysql') {
+      $dbh->do("SET NAMES 'utf8mb4'");
       $dbh->do("SET time_zone = '+00:00'");
       $dbh->do("SET sql_mode='NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'");
   }

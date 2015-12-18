@@ -25,6 +25,9 @@ Upgrading from previous versions:
   used both applications in parallel, see the migration section in INSTALL.md
   for further instructions.
 
+- Required: Connections to MySql/MariaDB databases use the "utf8mb4" encoding.
+  Convert existing databases to that encoding. This is not done automatically.
+
 - Recommended: If you generated the API documentation, remove the doc/api
   directory before re-generating.
 

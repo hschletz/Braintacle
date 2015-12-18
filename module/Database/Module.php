@@ -77,7 +77,8 @@ class Module implements
             $config['db'] = $configFileContent['database'];
         }
         $config['db']['options']['buffer_results'] = true;
-        $config['db']['charset'] = 'utf8';
+        // Set charset to utf8mb4 for MySQL, utf8 for everything else.
+        $config['db']['charset'] = ((stripos($config['db']['driver'], 'mysql') === false) ? 'utf8' : 'utf8mb4');
 
         return $config;
     }

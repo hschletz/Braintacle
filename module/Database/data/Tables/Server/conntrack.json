@@ -5,7 +5,7 @@
         {
             "name": "ip",
             "type": "varchar",
-            "length": 255,
+            "length": 45,
             "notnull": true,
             "default": null,
             "autoincrement": false,

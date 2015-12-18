@@ -5,7 +5,7 @@
         {
             "name": "macaddress",
             "type": "varchar",
-            "length": 255,
+            "length": 17,
             "notnull": true,
             "default": null,
             "autoincrement": false,

@@ -89,7 +89,7 @@ For PostgreSQL, run:
 For MySQL, run:
 
     CREATE USER username IDENTIFIED BY 'passwd';
-    CREATE DATABASE braintacle CHARACTER SET utf8;
+    CREATE DATABASE braintacle CHARACTER SET utf8mb4;
     GRANT ALL ON braintacle.* TO username;
 
 You can choose any database name, user name and password.
@@ -343,7 +343,8 @@ Converting the database
 
 Backing up the database before conversion is strongly recommended. Run
 database-manager.php as documented above; it should be able to convert the
-database.
+database. It does not handle the database charset. Convert it to "utf8mb4" if
+it still uses a different charset.
 
 
 Replacing the server component
