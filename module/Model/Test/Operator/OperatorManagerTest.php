@@ -29,10 +29,10 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
     /** {@inheritdoc} */
     protected static $_tables = array('Operators');
 
-    public function testFetchAllDefaultOrder()
+    public function testGetOperatorsDefaultOrder()
     {
         $model = $this->_getModel();
-        $resultSet = $model->fetchAll();
+        $resultSet = $model->getOperators();
         $this->assertInstanceOf('Zend\Db\ResultSet\AbstractResultSet', $resultSet);
         $operators = iterator_to_array($resultSet);
         $this->assertContainsOnlyInstancesOf('Model\Operator\Operator', $operators);
@@ -41,10 +41,10 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         $this->assertEquals('user2', $operators[1]['Id']);
     }
 
-    public function testFetchAllCustomOrder()
+    public function testGetOperatorsCustomOrder()
     {
         $model = $this->_getModel();
-        $resultSet = $model->fetchAll('Id', 'desc');
+        $resultSet = $model->getOperators('Id', 'desc');
         $this->assertInstanceOf('Zend\Db\ResultSet\AbstractResultSet', $resultSet);
         $operators = iterator_to_array($resultSet);
         $this->assertContainsOnlyInstancesOf('Model\Operator\Operator', $operators);
@@ -59,10 +59,10 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         $this->assertEquals(array('user1', 'user2'), $model->getAllIds());
     }
 
-    public function testGet()
+    public function testGetOperator()
     {
         $model = $this->_getModel();
-        $operator = $model->get('user1');
+        $operator = $model->getOperator('user1');
         $this->assertInstanceOf('Model\Operator\Operator', $operator);
         $this->assertEquals(
             array(
@@ -76,31 +76,31 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         );
     }
 
-    public function testGetWithoutId()
+    public function testGetOperatorWithoutId()
     {
         $this->setExpectedException('InvalidArgumentException', 'No login name supplied');
         $model = $this->_getModel();
-        $model->get(null);
+        $model->getOperator(null);
     }
 
-    public function testGetWithInvalidArgument()
+    public function testGetOperatorWithInvalidArgument()
     {
         $this->setExpectedException('InvalidArgumentException', 'No login name supplied');
         $model = $this->_getModel();
-        $model->get(array('user2'));
+        $model->getOperator(array('user2'));
     }
 
-    public function testGetWithInvalidId()
+    public function testGetOperatorWithInvalidId()
     {
         $this->setExpectedException('RuntimeException', 'Invalid login name supplied');
         $model = $this->_getModel();
-        $model->get('invalid');
+        $model->getOperator('invalid');
     }
 
-    public function testCreateMinimal()
+    public function testCreateOperatorMinimal()
     {
         $model = $this->_getModel();
-        $model->create(array('Id' => 'new_id'), 'new_passwd');
+        $model->createOperator(array('Id' => 'new_id'), 'new_passwd');
         $this->assertTablesEqual(
             $this->_loadDataset('CreateMinimal')->getTable('operators'),
             $this->getConnection()->createQueryTable('operators', 'SELECT * from operators')
@@ -111,10 +111,10 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         $this->assertEquals('new_id', $auth->getIdentity());
     }
 
-    public function testCreateFull()
+    public function testCreateOperatorFull()
     {
         $model = $this->_getModel();
-        $model->create(
+        $model->createOperator(
             array(
                 'Id' => 'new_id',
                 'FirstName' => 'new_first',
@@ -135,11 +135,11 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         $this->assertEquals('new_id', $auth->getIdentity());
     }
 
-    public function testCreateWithoutId()
+    public function testCreateOperatorWithoutId()
     {
         $model = $this->_getModel();
         try {
-            $model->create(array(), 'new_passwd');
+            $model->createOperator(array(), 'new_passwd');
             $this->fail('Expected Exception was not thrown');
         } catch (\InvalidArgumentException $e) {
             $this->assertEquals('No login name supplied', $e->getMessage());
@@ -150,11 +150,11 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         );
     }
 
-    public function testCreateWithoutPassword()
+    public function testCreateOperatorWithoutPassword()
     {
         $model = $this->_getModel();
         try {
-            $model->create(array('Id' => 'id'), '');
+            $model->createOperator(array('Id' => 'id'), '');
             $this->fail('Expected Exception was not thrown');
         } catch (\InvalidArgumentException $e) {
             $this->assertEquals('No password supplied', $e->getMessage());
@@ -165,7 +165,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         );
     }
 
-    public function updateProvider()
+    public function updateOperatorProvider()
     {
         return array(
             array(
@@ -186,16 +186,16 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
     }
 
     /**
-     * @dataProvider updateProvider
+     * @dataProvider updateOperatorProvider
      */
-    public function testUpdate($data, $password, $dataSet)
+    public function testUpdateOperator($data, $password, $dataSet)
     {
         $authService = $this->getMock('Model\Operator\AuthenticationService');
         $authService->method('getIdentity')->willReturn('user2');
         $authService->expects($this->never())->method('changeIdentity');
 
         $model = $this->_getModel(array('Zend\Authentication\AuthenticationService' => $authService));
-        $model->update('user1', $data, $password);
+        $model->updateOperator('user1', $data, $password);
         $this->assertTablesEqual(
             $this->_loadDataSet($dataSet)->getTable('operators'),
             $this->getConnection()->createQueryTable(
@@ -205,14 +205,14 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         );
     }
 
-    public function testUpdateCurrentIdentity()
+    public function testUpdateOperatorCurrentIdentity()
     {
         $authService = $this->getMock('Model\Operator\AuthenticationService');
         $authService->method('getIdentity')->willReturn('user1');
         $authService->expects($this->once())->method('changeIdentity')->with('new_id');
 
         $model = $this->_getModel(array('Zend\Authentication\AuthenticationService' => $authService));
-        $model->update('user1', array('Id' => 'new_id'), '');
+        $model->updateOperator('user1', array('Id' => 'new_id'), '');
         $this->assertTablesEqual(
             $this->_loadDataSet('UpdateIdentity')->getTable('operators'),
             $this->getConnection()->createQueryTable(
@@ -222,11 +222,11 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         );
     }
 
-    public function testUpdateInvalidUser()
+    public function testUpdateOperatorInvalidUser()
     {
         $model = $this->_getModel();
         try {
-            $model->update('invalid', array('Id' => 'new_id'), '');
+            $model->updateOperator('invalid', array('Id' => 'new_id'), '');
             $this->fail('Expected exception was not thrown');
         } catch (\RuntimeException $e) {
             $this->assertEquals('Invalid user name: invalid', $e->getMessage());
@@ -240,33 +240,33 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         }
     }
 
-    public function testDelete()
+    public function testDeleteOperator()
     {
         $model = $this->_getModel();
-        $model->delete('user2');
+        $model->deleteOperator('user2');
         $this->assertTablesEqual(
             $this->_loadDataset('Delete')->getTable('operators'),
             $this->getConnection()->createQueryTable('operators', 'SELECT * from operators')
         );
     }
 
-    public function testDeleteNonexistent()
+    public function testDeleteOperatorNonexistent()
     {
         $model = $this->_getModel();
-        $model->delete('user3');
+        $model->deleteOperator('user3');
         $this->assertTablesEqual(
             $this->_loadDataset()->getTable('operators'),
             $this->getConnection()->createQueryTable('operators', 'SELECT * from operators')
         );
     }
 
-    public function testDeleteCurrentUser()
+    public function testDeleteOperatorCurrentUser()
     {
         $authService = $this->getMock('Model\Operator\AuthenticationService');
         $authService->expects($this->once())->method('getIdentity')->willReturn('user2');
         $model = $this->_getModel(array('Zend\Authentication\AuthenticationService' => $authService));
         try {
-            $model->delete('user2');
+            $model->deleteOperator('user2');
             $this->fail('Expected Exception was not thrown');
         } catch (\RuntimeException $e) {
             $this->assertEquals('Cannot delete account of current user', $e->getMessage());

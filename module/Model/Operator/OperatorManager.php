@@ -59,7 +59,7 @@ class OperatorManager
      * @param string $direction Sorting order (asc|desc)
      * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Operator\Operator
      */
-    public function fetchAll($order = 'Id', $direction = 'asc')
+    public function getOperators($order = 'Id', $direction = 'asc')
     {
         $select = $this->_operators->getSql()->select();
         $select->columns(array('id', 'firstname', 'lastname', 'email', 'comments'));
@@ -88,7 +88,7 @@ class OperatorManager
      * @throws \InvalidArgumentException if no ID is given.
      * @throws \RuntimeException if no account with given name exists
      */
-    public function get($id)
+    public function getOperator($id)
     {
         if (!is_string($id) or $id == '') {
             throw new \InvalidArgumentException('No login name supplied');
@@ -110,7 +110,7 @@ class OperatorManager
      * @param string $password Password for the new account, must not be empty.
      * @throws \InvalidArgumentException if no ID or password is given.
      */
-    public function create($data, $password)
+    public function createOperator($data, $password)
     {
         if (!@$data['Id']) {
             throw new \InvalidArgumentException('No login name supplied');
@@ -134,7 +134,7 @@ class OperatorManager
      * @param string[] $data List of properties to set. Unknown keys will be ignored.
      * @param string $password New password. If empty, password will remain unchanged.
      */
-    public function update($id, $data, $password)
+    public function updateOperator($id, $data, $password)
     {
         // Compose array of columns to set
         $update = @$this->_operators->getHydrator()->extract(new \ArrayObject($data));
@@ -159,7 +159,7 @@ class OperatorManager
      * @param string $id Login name of account to delete
      * @throws \RuntimeException if the account to delete is logged in for the current session
      */
-    public function delete($id)
+    public function deleteOperator($id)
     {
         if ($id == $this->_authenticationService->getIdentity()) {
             throw new \RuntimeException('Cannot delete account of current user');

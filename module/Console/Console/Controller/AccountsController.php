@@ -69,7 +69,7 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
     public function indexAction()
     {
         $response = $this->getOrder('Id');
-        $response['accounts'] = $this->_operatorManager->fetchAll(
+        $response['accounts'] = $this->_operatorManager->getOperators(
             $response['order'],
             $response['direction']
         );
@@ -89,7 +89,7 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $data = $form->getData();
-                $this->_operatorManager->create($data, $data['Password']);
+                $this->_operatorManager->createOperator($data, $data['Password']);
                 return $this->redirectToRoute('accounts', 'index');
             }
         }
@@ -111,11 +111,11 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $data = $form->getData();
-                $this->_operatorManager->update($data['OriginalId'], $data, $data['Password']);
+                $this->_operatorManager->updateOperator($data['OriginalId'], $data, $data['Password']);
                 return $this->redirectToRoute('accounts', 'index');
             }
         } else {
-            $operator = $this->_operatorManager->get($this->params()->fromQuery('id'));
+            $operator = $this->_operatorManager->getOperator($this->params()->fromQuery('id'));
             $data = $operator->getArrayCopy();
             $data['OriginalId'] = $data['Id'];
             $form->setData($data);
@@ -136,7 +136,7 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
 
         if ($this->getRequest()->isPost()) {
             if ($this->params()->fromPost('yes')) {
-                $this->_operatorManager->delete($id);
+                $this->_operatorManager->deleteOperator($id);
             }
             return $this->redirectToRoute('accounts', 'index');
         } else {

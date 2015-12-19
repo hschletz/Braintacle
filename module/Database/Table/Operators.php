@@ -84,7 +84,10 @@ class Operators extends \Database\AbstractTable
         // If no account exists yet, create a default account.
         $logger->debug('Checking for existing account.');
         if ($this->select()->count() == 0) {
-            $this->_serviceLocator->get('Model\Operator\OperatorManager')->create(array('Id' => 'admin'), 'admin');
+            $this->_serviceLocator->get('Model\Operator\OperatorManager')->createOperator(
+                array('Id' => 'admin'),
+                'admin'
+            );
             $logger->notice(
                 'Default account \'admin\' created with password \'admin\'.'
             );
