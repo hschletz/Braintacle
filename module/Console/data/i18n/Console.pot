@@ -298,6 +298,11 @@ msgstr ""
 msgid "Delete interfaces from network listing"
 msgstr ""
 
+#: Console/Form/Form.php
+#, php-format
+msgid "The post_max_size value of %s has been exceeded."
+msgstr ""
+
 #: Console/Form/GroupMemberships.php view/console/client/groups.php
 #: view/console/group/members.php
 msgid "automatic"

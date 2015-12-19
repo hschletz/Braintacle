@@ -37,12 +37,20 @@ namespace Console\Form;
  *
  * - init() adds automatic CSRF protection via hidden "_csrf" element.
  *
+ * - isValid() handles oversized POST requests gracefully.
+ *
  * - Default rendering methods.
  *
  * - Helper methods for dealing with localized integer, float and date formats.
  */
 class Form extends \Zend\Form\Form
 {
+    /**
+     * Flag to indicate exceeded post_max_size;
+     * @var bool
+     */
+    protected $_errorPostMaxSize = false;
+
     /** {@inheritdoc} */
     public function init()
     {
@@ -58,6 +66,19 @@ class Form extends \Zend\Form\Form
         $this->add($csrf);
     }
 
+    /** {@inheritdoc} */
+    public function isValid()
+    {
+        if (empty($_POST) and empty($_FILES) and strtoupper(@$_SERVER['REQUEST_METHOD']) == 'POST') {
+            // post_max_size has been exceeded. Set a flag for further
+            // evaluation and fail without further validation which would not
+            // give any useful results in this situation.
+            $this->_errorPostMaxSize = true;
+            return false;
+        }
+        return parent::isValid();
+    }
+
     /**
      * Render the form
      *
@@ -66,8 +87,19 @@ class Form extends \Zend\Form\Form
      */
     public function render(\Zend\View\Renderer\PhpRenderer $view)
     {
+        $output = '';
+        if ($this->_errorPostMaxSize) {
+            $output .= $view->htmlTag(
+                'p',
+                sprintf(
+                    $view->translate('The post_max_size value of %s has been exceeded.'),
+                    ini_get('post_max_size')
+                ),
+                array('class' => 'error')
+            );
+        }
         $this->prepare();
-        $output  = $view->form()->openTag($this);
+        $output .= $view->form()->openTag($this);
         $output .= "\n";
         if ($this->has('_csrf')) {
             $output .= "<div>";

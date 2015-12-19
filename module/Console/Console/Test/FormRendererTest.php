@@ -43,6 +43,56 @@ class FormRendererTest extends \PHPUnit_Framework_TestCase
         return $view;
     }
 
+    public function testRenderPostMaxSizeExceeded()
+    {
+        // Preserve global state
+        $post = $_POST;
+        $files = $_FILES;
+        if (array_key_exists('REQUEST_METHOD', $_SERVER)) {
+            $requestMethod = $_SERVER['REQUEST_METHOD'];
+        }
+
+        // Simulate oversized POST request
+        $_POST = array();
+        $_FILES = array();
+        $_SERVER['REQUEST_METHOD'] = 'post';
+
+        $form = $this->getMockBuilder('Console\Form\Form')
+                     ->setMethods(null)
+                     ->getMock();
+
+        $expected = <<<EOT
+<p class="error">
+Der Wert für post_max_size (%s) wurde überschritten.
+</p>
+<form action="" method="POST">
+<div class="table"></div>
+
+</form>
+
+EOT;
+        // Catch failure to allow cleanup
+        try {
+            $this->assertFalse($form->isValid());
+            $this->assertEquals(
+                sprintf($expected, ini_get('post_max_size')),
+                $form->render($this->_createView())
+            );
+        } catch (\Exception $e) {
+            // Just re-throw exception, cleanup is done later
+            throw $e;
+        } finally {
+            // Cleanup
+            $_POST = $post;
+            $_FILES = $files;
+            if (isset($requestMethod)) {
+                $_SERVER['REQUEST_METHOD'] = $requestMethod;
+            } else {
+                unset($_SERVER['REQUEST_METHOD']);
+            }
+        }
+    }
+
     /**
      * Test default form tags
      */
