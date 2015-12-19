@@ -205,9 +205,6 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         $this->assertCount(3, $this->_form->getMessages()['new_value']);
     }
 
-    /**
-     * Tests for render()
-     */
     public function testRender()
     {
         $this->_form->get('existing')->get('value_1_name')->setMessages(array('test' => 'Message1'));
@@ -224,6 +221,9 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         $this->assertCount(1, $result);
 
         // Test table with existing values
+        $result = Query::execute("//h2[text()='\nWerte\n']", $document);
+        $this->assertCount(1, $result);
+
         $result = Query::execute('//tr', $document);
         $this->assertCount(2, $result);
 
@@ -264,6 +264,33 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         $this->assertCount(2, $result);
         $this->assertEquals("Message1", $result[0]->textContent);
         $this->assertEquals("Message2", $result[1]->textContent);
+    }
+
+    public function testRenderNoExistingValues()
+    {
+        $this->_registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')
+                                       ->disableOriginalconstructor()
+                                       ->getMock();
+        $this->_registryManager->expects($this->once())
+                               ->method('getValueDefinitions')
+                               ->willReturn(new \ArrayIterator);
+
+        $document = new \Zend\Dom\Document(
+            $this->_getForm()->render($this->_createView())
+        );
+
+        $result = Query::execute("//h2[text()='\nWerte\n']", $document);
+        $this->assertCount(0, $result);
+
+        $result = Query::execute('//tr', $document);
+        $this->assertCount(0, $result);
+
+        // Other fieldsets must exist
+        $result = Query::execute('//input[@name="inspect[inspect]"][@type="checkbox"]', $document);
+        $this->assertCount(1, $result);
+
+        $result = Query::execute('//input[@name="new_value[name]"]', $document);
+        $this->assertCount(1, $result);
     }
 
     public function testProcessSetInspect()
