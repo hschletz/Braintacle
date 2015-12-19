@@ -238,7 +238,7 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
         $name = $data['Name'];
 
         try {
-            $this->_packageManager->build($data, true);
+            $this->_packageManager->buildPackage($data, true);
             $flashMessenger->addSuccessMessage(
                 array($this->_('Package \'%s\' was successfully created.') => $name)
             );
@@ -260,7 +260,7 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
     {
         $flashMessenger = $this->flashMessenger();
         try {
-            $this->_packageManager->delete($name);
+            $this->_packageManager->deletePackage($name);
             $flashMessenger->addSuccessMessage(
                 array($this->_('Package \'%s\' was successfully deleted.') => $name)
             );

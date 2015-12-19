@@ -168,7 +168,7 @@ class PackageManager
      * @throws RuntimeException if a package with the requested name already exists or an error occurs
      * @throws \InvalidArgumentException if 'Platform' key is not a valid value
      */
-    public function build($data, $deleteSource)
+    public function buildPackage($data, $deleteSource)
     {
         if ($this->packageExists($data['Name'])) {
             throw new RuntimeException("Package '$data[Name]' already exists");
@@ -215,7 +215,7 @@ class PackageManager
             $packages->insert($insert);
         } catch (\Exception $e) {
             try {
-                $this->delete($data['Name']);
+                $this->deletePackage($data['Name']);
             } catch (\Exception $e2) {
                 // Ignore error (package does probably not exist at this point)
                 // and return original exception instead
@@ -290,7 +290,7 @@ class PackageManager
      * @param string $name Package name
      * @throws RuntimeException if an error occurs
      */
-    public function delete($name)
+    public function deletePackage($name)
     {
         $packages = $this->_serviceManager->get('Database\Table\Packages');
         $clientConfig = $this->_serviceManager->get('Database\Table\ClientConfig');

@@ -158,7 +158,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $this->assertEquals(array(), $model->getAllNames());
     }
 
-    public function buildProvider()
+    public function buildPackageProvider()
     {
         $sourceContent = 'abcdef';
         $sourceHash = sha1($sourceContent);
@@ -179,7 +179,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     }
 
     /**
-     * Test build() method
+     * Test buildPackage() method
      *
      * @param string $platform Internal platform descriptor (windows, linux, mac)
      * @param mixed $platformValue Database identifier (WINDOWS, LINUX, MacOSX)
@@ -187,9 +187,9 @@ class PackageManagerTest extends \Model\Test\AbstractTest
      * @param bool $createArchive Create archive, otherwise source file is assumed to be archive
      * @param string $hash Expected hash
      * @param integer $size Expected size
-     * @param bool $deleteSource Passed to build()
+     * @param bool $deleteSource Passed to buildPackage()
      * @param bool $deleteArchive Expected argument for StorageInterface::write()
-     * @dataProvider buildProvider
+     * @dataProvider buildPackageProvider
      */
     public function testBuild(
         $platform,
@@ -271,7 +271,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
         // Model mock
         $model = $this->getMockBuilder($this->_getClass())
-                      ->setMethods(array('packageExists', 'autoArchive', 'delete'))
+                      ->setMethods(array('packageExists', 'autoArchive', 'deletePackage'))
                       ->setConstructorArgs(array($serviceManager))
                       ->getMock();
         $model->expects($this->once())->method('packageExists')->willReturn(false);
@@ -283,10 +283,10 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                   $deleteSource
               )
               ->willReturn($archive);
-        $model->expects($this->never())->method('delete');
+        $model->expects($this->never())->method('deletePackage');
 
-        // Invoke build method
-        $model->build($data, $deleteSource);
+        // Invoke buildPackage method
+        $model->buildPackage($data, $deleteSource);
 
         // Test database results
         $connection = $this->getConnection();
@@ -332,14 +332,14 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         );
 
         $model = $this->getMockBuilder($this->_getClass())
-                      ->setMethods(array('packageExists', 'autoArchive', 'delete'))
+                      ->setMethods(array('packageExists', 'autoArchive', 'deletePackage'))
                       ->setConstructorArgs(array($serviceManager))
                       ->getMock();
         $model->method('packageExists')->with('test')->willReturn(false);
-        $model->expects($this->once())->method('delete')->with('test');
+        $model->expects($this->once())->method('deletePackage')->with('test');
 
         try {
-            $model->build($data, false);
+            $model->buildPackage($data, false);
             $this->fail('Expected exception was not thrown');
         } catch (\Model\Package\RuntimeException $e) {
             $this->assertEquals('Invalid platform: invalid', $e->getMessage());
@@ -374,14 +374,14 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                       ->getMock();
         $model->expects($this->once())->method('packageExists')->with('package1')->willReturn(true);
         try {
-            $model->build($data, false);
+            $model->buildPackage($data, false);
             $this->fail('Expected exception was not thrown');
         } catch (\Model\Package\RuntimeException $e) {
             $this->assertEquals("Package 'package1' already exists", $e->getMessage());
         }
     }
 
-    public function buildFileErrorProvider()
+    public function buildPackageFileErrorProvider()
     {
         return array(
             array(false, "Could not determine size of 'vfs://root/nonexistent'"),
@@ -394,7 +394,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
      *
      * @param bool $fileExists Simulate read failure on existing file
      * @param string $message Expected exception message
-     * @dataProvider buildFileErrorProvider
+     * @dataProvider buildPackageFileErrorProvider
      */
     public function testBuildFileError($fileExists, $message)
     {
@@ -429,15 +429,15 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         );
 
         $model = $this->getMockBuilder($this->_getClass())
-                      ->setMethods(array('packageExists', 'autoArchive', 'delete'))
+                      ->setMethods(array('packageExists', 'autoArchive', 'deletePackage'))
                       ->setConstructorArgs(array($serviceManager))
                       ->getMock();
         $model->expects($this->once())->method('packageExists')->willReturn(false);
         $model->expects($this->once())->method('autoArchive')->willReturn($source);
-        $model->expects($this->once())->method('delete')->with('package_new');
+        $model->expects($this->once())->method('deletePackage')->with('package_new');
 
         $this->setExpectedException('Model\Package\RuntimeException', $message);
-        $model->build($data, false);
+        $model->buildPackage($data, false);
     }
 
     public function testAutoArchiveWindowsCreateArchiveKeepSource()
@@ -665,7 +665,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
         $storage->expects($this->once())->method('cleanup')->with('1415958319');
         $model = $this->_getModel(array('Model\Package\Storage\Direct' => $storage));
-        $model->delete('package1');
+        $model->deletePackage('package1');
 
         $connection = $this->getConnection();
         $dataset = $this->_loadDataSet('Delete');
@@ -690,7 +690,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     {
         $this->setExpectedException('Model\Package\RuntimeException', "Package 'invalid' does not exist");
         $model = $this->_getModel();
-        $model->delete('invalid');
+        $model->deletePackage('invalid');
     }
 
     public function testUpdateAssignmentsNoActionRequired()

@@ -284,7 +284,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_buildForm->expects($this->once())
                          ->method('render')
                          ->willReturn('<form></form>');
-        $this->_packageManager->expects($this->never())->method('build');
+        $this->_packageManager->expects($this->never())->method('buildPackage');
         $this->dispatch('/console/package/build');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//form');
@@ -304,7 +304,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_buildForm->expects($this->once())
                          ->method('render')
                          ->willReturn('<form></form>');
-        $this->_packageManager->expects($this->never())->method('build');
+        $this->_packageManager->expects($this->never())->method('buildPackage');
         $this->dispatch('/console/package/build', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//form');
@@ -349,7 +349,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionGet()
     {
-        $this->_packageManager->expects($this->never())->method('delete');
+        $this->_packageManager->expects($this->never())->method('deletePackage');
         $this->dispatch('/console/package/delete/?name=Name');
         $this->assertResponseStatusCode(200);
         $this->assertContains("'Name'", $this->getResponse()->getContent());
@@ -357,7 +357,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionPostNo()
     {
-        $this->_packageManager->expects($this->never())->method('delete');
+        $this->_packageManager->expects($this->never())->method('deletePackage');
         $this->dispatch('/console/package/delete/?name=Name', 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/package/index/');
     }
@@ -419,9 +419,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                               ->method('getPackage')
                               ->with('oldName')
                               ->willReturn($packageData);
-        $this->_packageManager->expects($this->never())->method('build');
+        $this->_packageManager->expects($this->never())->method('buildPackage');
         $this->_packageManager->expects($this->never())->method('updateAssignments');
-        $this->_packageManager->expects($this->never())->method('delete');
+        $this->_packageManager->expects($this->never())->method('deletePackage');
         $this->dispatch('/console/package/update/?name=oldName');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//form');
@@ -441,9 +441,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_updateForm->expects($this->once())
                           ->method('render')
                           ->willReturn('<form></form>');
-        $this->_packageManager->expects($this->never())->method('build');
+        $this->_packageManager->expects($this->never())->method('buildPackage');
         $this->_packageManager->expects($this->never())->method('updateAssignments');
-        $this->_packageManager->expects($this->never())->method('delete');
+        $this->_packageManager->expects($this->never())->method('deletePackage');
 
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
         $this->assertResponseStatusCode(200);
@@ -509,12 +509,12 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                                   )
                               );
         $this->_packageManager->expects($this->once())
-                              ->method('build')
+                              ->method('buildPackage')
                               ->with($packageData, true);
         $this->_packageManager->expects($this->once())
                               ->method('updateAssignments')
                               ->with('1', '2', '1', '0', '1', '0', '1');
-        $this->_packageManager->expects($this->once())->method('delete');
+        $this->_packageManager->expects($this->once())->method('deletePackage');
 
         $this->_testBuildPackage(
             '/console/package/update/?name=oldName',
@@ -588,7 +588,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                                   )
                               );
         $this->_packageManager->expects($this->once())
-                              ->method('build')
+                              ->method('buildPackage')
                               ->with($packageData, true);
         $this->_packageManager->expects($this->once())
                               ->method('updateAssignments')
@@ -645,7 +645,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                           ->method('render');
         $this->_packageManager->expects($this->once())->method('getPackage')->with('oldName');
         $this->_packageManager->expects($this->never())->method('updateAssignments');
-        $this->_packageManager->expects($this->never())->method('delete');
+        $this->_packageManager->expects($this->never())->method('deletePackage');
         $this->_testBuildPackage(
             '/console/package/update/?name=oldName',
             $postData,
@@ -671,9 +671,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                               ->method('getPackage')
                               ->with('oldName')
                               ->will($this->throwException(new \Model\Package\RuntimeException('getPackage() error')));
-        $this->_packageManager->expects($this->never())->method('build');
+        $this->_packageManager->expects($this->never())->method('buildPackage');
         $this->_packageManager->expects($this->never())->method('updateAssignments');
-        $this->_packageManager->expects($this->never())->method('delete');
+        $this->_packageManager->expects($this->never())->method('deletePackage');
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
         $this->assertRedirectTo('/console/package/index/');
         $this->assertEquals(
@@ -701,10 +701,10 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
 
         if ($success) {
-            $this->_packageManager->expects($this->once())->method('build')->with($packageData, true);
+            $this->_packageManager->expects($this->once())->method('buildPackage')->with($packageData, true);
         } else {
             $this->_packageManager->expects($this->once())
-                                  ->method('build')
+                                  ->method('buildPackage')
                                   ->with($packageData, true)
                                   ->will($this->throwException(new \Model\Package\RuntimeException('build error')));
         }
@@ -761,10 +761,10 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             array('format2' => array('arg3', 'arg4')),
         );
         if ($success) {
-            $this->_packageManager->expects($this->once())->method('delete')->with($name);
+            $this->_packageManager->expects($this->once())->method('deletePackage')->with($name);
         } else {
             $this->_packageManager->expects($this->once())
-                                  ->method('delete')
+                                  ->method('deletePackage')
                                   ->with($name)
                                   ->will($this->throwException(new \Model\Package\RuntimeException('delete error')));
         }
