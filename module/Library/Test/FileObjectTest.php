@@ -362,6 +362,14 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($content, file_get_contents($filename));
     }
 
+    public function testFilePutContentsSuccessWithEmptyContent()
+    {
+        $content = '';
+        $filename = $this->_root->url() . '/test.txt';
+        FileObject::filePutContents($filename, $content);
+        $this->assertSame($content, file_get_contents($filename));
+    }
+
     public function testFilePutContentsOpenError()
     {
         $this->setExpectedException('RuntimeException', 'Error writing to file vfs://root/test.txt');

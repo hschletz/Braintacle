@@ -294,7 +294,9 @@ class FileObject extends \SplFileInfo implements \Iterator
     public static function filePutContents($filename, $content)
     {
         $result = @file_put_contents($filename, $content);
-        if ($result === false) {
+        // Comparing against content length is the most reliable way to check
+        // for errors.
+        if ($result !== strlen($content)) {
             throw new \RuntimeException("Error writing to file $filename");
         }
     }
