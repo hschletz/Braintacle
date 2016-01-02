@@ -2,7 +2,7 @@
 
 # Update the copyright year for all project files
 #
-# Copyright (C) 2011-2015 Holger Schletz <holger.schletz@web.de>
+# Copyright (C) 2011-2016 Holger Schletz <holger.schletz@web.de>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -30,7 +30,8 @@ grep -r -l --null \
     --exclude-dir=.git \
     --exclude=update-copyright.sh \
     --exclude-dir="$BASEDIR/doc/api/*" \
-    'Copyright (C) 2011-2014 Holger Schletz' \
+    --exclude-dir="$BASEDIR/doc/CodeCoverage/*" \
+    'Copyright (C) 2011-2015 Holger Schletz' \
     "$BASEDIR" \
     | xargs --null --no-run-if-empty \
-        sed -i 's/Copyright (C) 2011-2014 Holger Schletz/Copyright (C) 2011-2015 Holger Schletz/'
+        sed -i 's/Copyright (C) 2011-2015 Holger Schletz/Copyright (C) 2011-2016 Holger Schletz/'
