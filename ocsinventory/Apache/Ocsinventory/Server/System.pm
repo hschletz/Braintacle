@@ -80,7 +80,7 @@ sub _get_sys_options{
 
   return 0 if $ENV{OCS_OPT_OPTIONS_NOT_OVERLOADED};
 
-  # Wich options enabled ?
+  # Which options enabled ?
   #############
   # We read the table config looking for the ivalues of these options
   my $dbh = $Apache::Ocsinventory::CURRENT_CONTEXT{'DBI_HANDLE'};
@@ -97,11 +97,12 @@ sub _get_sys_options{
     }
   }
   $ENV{'OCS_OPT_INVENTORY_CACHE_ENABLED'} = 0; # broken, no plans to fix
+  $ENV{'OCS_OPT_SNMP_PRINT_HTTPS_ERROR'} = 1; # always log this error (if verbose logging is enabled)
   $request->finish;
   0;
 }
 
-# Try other compress algorythm
+# Try other compress algorithm
 sub _inflate{
   my @inflate_subs = (
     # gzip file content

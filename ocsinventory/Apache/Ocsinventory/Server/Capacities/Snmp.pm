@@ -63,11 +63,9 @@ sub snmp_prolog_resp{
   my $select_communities_req;
   my $select_deviceid_req;
   my $select_network_req;
-  my $select_mibs_req;
   my @devicesToScan;
   my @networksToScan;
   my @communities;
-  my @mibs;
 
   #Verify if SNMP is enable for this computer or in config
   my $snmpSwitch = &_get_snmp_switch($current_context);
@@ -154,37 +152,16 @@ sub snmp_prolog_resp{
           if (@communities) {
             foreach my $community (@communities) {
               push @snmp,{
-                'VERSION'       => $community->{'VERSION'}?$community->{'VERSION'}:'',
-                'NAME'       => $community->{'NAME'}?$community->{'NAME'}:'',
-              'USERNAME'=> $community->{'USERNAME'}?$community->{'USERNAME'}:'',
-                'AUTHKEY'   => $community->{'AUTHKEY'}?$community->{'AUTHKEY'}:'',
-                'AUTHPASSWD'   => $community->{'AUTHPASSWD'}?$community->{'AUTHPASSWD'}:'',
-                'TYPE'   => 'COMMUNITY',
+                'VERSION' => $community->{'VERSION'}?$community->{'VERSION'}:'',
+                'NAME' => $community->{'NAME'}?$community->{'NAME'}:'',
+                'USERNAME'=> $community->{'USERNAME'}?$community->{'USERNAME'}:'',
+                'AUTHKEY'  => $community->{'AUTHKEY'}?$community->{'AUTHKEY'}:'',
+                'AUTHPASSWD' => $community->{'AUTHPASSWD'}?$community->{'AUTHPASSWD'}:'',
+                'TYPE' => 'COMMUNITY',
               };
             }
           }
 
-        #Getting custom mibs informations 
-        $select_mibs_req = $dbh->prepare('SELECT VENDOR,URL,CHECKSUM,VERSION,PARSER FROM snmp_mibs');
-        $select_mibs_req->execute();
-
-        while(my $row = $select_mibs_req->fetchrow_hashref){
-          push @mibs,$row;
-        }
-
-        if (@mibs) {
-          foreach my $mib (@mibs) {
-            push @snmp,{
-              'VENDOR' => $mib->{'VENDOR'}?$mib->{'VENDOR'}:'',
-              'URL'=> $mib->{'URL'}?$mib->{'URL'}:'',
-              'CHECKSUM' => $mib->{'CHECKSUM'}?$mib->{'CHECKSUM'}:'',
-              'VERSION' => $mib->{'VERSION'}?$mib->{'VERSION'}:'',
-              'PARSER' => $mib->{'PARSER'}?$mib->{'PARSER'}:'',
-              'TYPE' => 'MIB',
-            };
-          }
-        }
-	
           #Final XML
           push @{ $resp->{'OPTION'} },{
             'NAME' => ['SNMP'],
@@ -192,8 +169,8 @@ sub snmp_prolog_resp{
           };
       } 
 
-        } else { &_log(104,'snmp',"error: agent must have a deviceid in database !!"); }
-      } else { &_log(103,'snmp',"error: agent must communicate using https to be able to get SNMP communities (only affects OCS unix agent) !!"); } 
+    } else { &_log(104,'snmp',"error: agent must have a deviceid in database !!") if $ENV{'OCS_OPT_LOGLEVEL'}; }
+  } else { &_log(103,'snmp',"error: agent must communicate using https to be able to get SNMP communities (only affects OCS unix agent) !!") if $ENV{'OCS_OPT_LOGLEVEL'} and $ENV{'OCS_OPT_SNMP_PRINT_HTTPS_ERROR'} } 
 
 }
 

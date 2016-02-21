@@ -403,7 +403,7 @@ our %CONFIG = (
     type => 'IVALUE',
     default => 1,
     unit => 'NA',
-    description => 'Configure engine to try other compress algorythm than raw zlib',
+    description => 'Configure engine to try other compress algorithm than raw zlib',
     level => CANSKIP,
     filter => qr '^(1|0)$'
   },

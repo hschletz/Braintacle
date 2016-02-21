@@ -1,5 +1,17 @@
 Revision history for Apache::Ocsinventory
 
+2.2 RC
+        * Add plugins web service which is used by the plugin engine to install plugin ( Use SOAP::Lite )
+        * Add compatibility with Apache 2.4 and more : https://github.com/OCSInventory-NG/OCSInventory-Server/commit/861dcb17f826d9580f0f5f0937bd1ae7376e6602
+
+2.2beta1
+        * Add <EXCLUDE_TAG> and <EXCLUDE_ID> requests tags in SOAP engine to be able to exclude tags or ids during SOAP requests
+        * Add new 'batteries' inventory section to get various batteries data
+        * New OCS_OPT_SNMP_PRINT_HTTPS_ERROR configuration option to enable or disable error message display about agent https communication in logfile
+        * Fix bug in SOAP engine while retrieving data from type tables
+
+2.1.2
+
 2.1.1
         * Fix Bug #1315004 about MySQL replication broken using MySQL 5.6
         * Fix Bug #1311852 and Bug #1296633 about CHECKSUM updated for all computers
@@ -21,7 +33,7 @@ Revision history for Apache::Ocsinventory
         * Remove OCS_OPT_SUPPORT configuration option and <SUPPORT_LOG> XML tag in PROLOG 
         * Add availibility to reforce a package deployment
         * Add availability to specify custom MIBS for SNMP scans
-        * Add availability to specify a custom network adress for SNMP scans 
+        * Add availability to specify a custom network address for SNMP scans 
         * New OCS_OPT_DOWNLOAD_EXECUTION_TIMEOUT configuration option to prevent package commands to run indefinitely
         * setup.sh script can now detect Suse/OpenSuse distributions      
         * Add new 'cpus' inventory section to get various CPU data     
@@ -191,7 +203,7 @@ Revision history for Apache::Ocsinventory
 	* Fix the duplicate error in packages history (download)
 
 1.02 RC1
-	* As the dictionnary and "all softs" are inventory cache dependant = INVENTORY_CACHE_REVALIDATE default => 7
+	* As the dictionary and "all softs" are inventory cache dependant = INVENTORY_CACHE_REVALIDATE default => 7
 	* Fixed the DEVICEID checking
 	* Important fix in "on the fly deletion" in inventory cache
 	* Added fallback values for '??' (unix agents prior than 0.8)

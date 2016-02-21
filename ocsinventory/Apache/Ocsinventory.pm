@@ -27,8 +27,8 @@ BEGIN{
   }
 }
 
-$Apache::Ocsinventory::VERSION = '2.1';
-$Apache::Ocsinventory::BUILD_VERSION = '726';
+$Apache::Ocsinventory::VERSION = '2.2';
+$Apache::Ocsinventory::BUILD_VERSION = '735';
 $XML::Simple::PREFERRED_PARSER = 'XML::Parser';
 
 # Ocs modules
@@ -132,7 +132,7 @@ sub handler{
   }
   
   # First, we determine the http method
-  # The get method will be only available for the bootstrap to manage the deploy, and maybe, sometime to give files wich will be stored in the database
+  # The get method will be only available for the bootstrap to manage the deploy, and maybe, sometime to give files which will be stored in the database
   if($r->method() eq 'GET'){
 
     # To manage the first contact with the bootstrap
@@ -172,7 +172,7 @@ sub handler{
   
     # Read the request
     # Possibilities :
-    # prolog : The agent wants to know if he have to send an inventory(and with wich options)
+    # prolog : The agent wants to know if he have to send an inventory (and with which options)
     # update : The agent wants to know if there is a newer version available
     # inventory : It is an inventory
     # system : Request to know the server's time response (and if it's alive) not yet implemented

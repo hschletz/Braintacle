@@ -56,23 +56,43 @@ sub search_engine{
 
 sub engine_first {
   my ($request, $ids, $begin, $main_table, $accountinfo_table, $deviceid_column, $pk) = @_;
-  my $parsed_request = XML::Simple::XMLin( $request, ForceArray => ['ID', 'TAG', 'USERID'], SuppressEmpty => 1 ) or die;
+  my $parsed_request = XML::Simple::XMLin( $request, ForceArray => ['ID', 'EXCLUDE_ID', 'TAG', 'EXCLUDE_TAG', 'USERID'], SuppressEmpty => 1 ) or die;
   my ($id, $name, $userid, $checksum, $tag);
     
   # Database ids criteria
+  die("BAD_REQUEST") if ( $parsed_request->{ID} and $parsed_request->{EXCLUDE_ID} );
+
   if( $parsed_request->{ID} ){
     if( my @ids = untaint_int_lst( @{ $parsed_request->{ID} } )){
       $id .= ' AND';
       $id .= ' '.$main_table.'.ID IN('.join(',', @ids ).')';
     }
   }
+
+  if( $parsed_request->{EXCLUDE_ID} ){
+    if( my @exclude_ids = untaint_int_lst( @{ $parsed_request->{EXCLUDE_ID} } )){
+      $id .= ' AND';
+      $id .= ' '.$main_table.'.ID NOT IN('.join(',', @exclude_ids ).')';
+    }
+  }
+
   # Tag criteria
+  die("BAD_REQUEST") if ( $parsed_request->{TAG} and $parsed_request->{EXCLUDE_TAG} );
+
   if( $parsed_request->{TAG} ){
     if( my @tags = untaint_dbstring_lst( @{ $parsed_request->{TAG} } )){
       $tag .= ' AND';
       $tag .= ' '.$accountinfo_table.'.TAG IN("'.join('","', @tags ).'")';
     }
   }
+
+  if( $parsed_request->{EXCLUDE_TAG} ){
+    if( my @exclude_tags = untaint_dbstring_lst( @{ $parsed_request->{EXCLUDE_TAG} } )){
+      $tag .= ' AND';
+      $tag .= ' '.$accountinfo_table.'.TAG NOT IN("'.join('","', @exclude_tags ).'")';
+    }
+  }
+
   # Checksum criteria (only positive "&" will match
   if( $parsed_request->{CHECKSUM} ){
     die("BAD_CHECKSUM") if !untaint_int( $parsed_request->{CHECKSUM} );
@@ -119,9 +139,14 @@ sub build_xml_standard_section{
       next if $DATA_MAP{ $section }->{fields}->{$_}->{noSql};
       # New DB schema support
       if( $DATA_MAP{ $section }->{fields}->{$_}->{type} ){
-        $row->{ $_ } = get_type_name($section, $_, $row->{ $_ });
+        my $field = $_;
+        $field =~ s/_ID//g;    #We delete the _ID pattern to be in concordance with table name
+        $row->{ $_ } = get_type_name($section, $field, $row->{ $_ });
+        $element{$field} = [ $row->{ $_ } ];
       }
+      else {
       $element{$_} = [ $row->{ $_ } ];
+    }
     }
 
     push @tmp, { %element };

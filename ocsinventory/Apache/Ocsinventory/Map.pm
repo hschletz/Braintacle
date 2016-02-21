@@ -432,6 +432,29 @@ our %DATA_MAP= (
     }
   },
 
+  batteries =>  {
+    mask => 1048576,
+    multi => 0,
+    auto => 1,
+    delOnReplace => 1,
+    sortBy => 'NAME',
+    writeDiff => 1,
+    cache => 0,
+    fields => {
+      LOCATION => {},
+      MANUFACTURER => {},
+      MANUFACTUREDATE => {},
+      SERIALNUMBER => {},
+      NAME => {},
+      CHEMISTRY => {},
+      DESIGNCAPACITY => {},
+      DESIGNVOLTAGE => {},
+      SBDSVERSION => {},
+      MAXERROR => {},
+      OEMSPECIFIC => {}
+    }
+  },
+
   javainfos => {
     mask => 0,
     multi => 0,
@@ -707,7 +730,6 @@ our %DATA_MAP= (
    }
   },
 
-
   snmp_drives => {
    mask => 1024,
    multi => 1,
@@ -767,7 +789,6 @@ our %DATA_MAP= (
        TYPE => {}
    }
   },
-
 
   snmp_cards => {
    mask => 8192,
