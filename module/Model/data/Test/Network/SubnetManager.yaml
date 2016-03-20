@@ -10,7 +10,6 @@
 #
 # The first and last entry have the same address but a different mask and are
 # considered different subnets.
-# Various entries will be ignord for the reasons documented below.
 
 subnet:
   -
@@ -18,9 +17,9 @@ subnet:
     mask: "255.255.255.128"
     name: "NAME"
   -
-    # Ignored because no inventoried interface exists in this subnet
+    # Ignored because no interface exists in this subnet
     netid: "198.51.100.0"
-    mask: "255.255.255.0"
+    mask: "255.255.255.128"
     name: "ignored"
 
 network_devices:
@@ -34,12 +33,14 @@ network_devices:
 
 networks:
   -
+    # scanned
     macaddr: "00:00:5E:00:53:01"
     ipsubnet: "192.0.2.0"
     ipmask: "255.255.255.0"
     description: ""
     hardware_id: 1
   -
+    # not scanned
     macaddr: "00:00:5E:00:53:02"
     ipsubnet: "192.0.2.0"
     ipmask: "255.255.255.128"
@@ -71,12 +72,6 @@ netmap:
   -
     mac: "00:00:5E:00:53:01"
     ip: "192.0.2.1"
-    netid: "192.0.2.0"
-    mask: "255.255.255.0"
-    date: "2015-01-11T12:58:00"
-  -
-    mac: "00:00:5E:00:53:02"
-    ip: "192.0.2.2"
     netid: "192.0.2.0"
     mask: "255.255.255.0"
     date: "2015-01-11T12:58:00"

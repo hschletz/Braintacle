@@ -56,7 +56,7 @@ class SubnetManager
         if ($order) {
             $direction = ($direction == 'desc' ? 'DESC' : 'ASC');
             if ($order == 'CidrAddress') {
-                $orderBy = "ORDER BY ipsubnet $direction, ipmask $direction";
+                $orderBy = "ORDER BY netid $direction, mask $direction";
             } else {
                 $order = $this->_subnets->getHydrator()->extractName($order);
                 if ($order) {
@@ -64,6 +64,11 @@ class SubnetManager
                 }
             }
         }
+        // The first query covers only subnets with at least 1 inventoried
+        // interface, but includes subnets without scanned interfaces.
+        // The second query covers only subnets with at least 1 scanned
+        // interface, but includes subnets without inventoried interfaces.
+        // The UNION eliminates possible overlap.
         $query = <<<EOT
             SELECT
                 networks.ipsubnet AS netid,
@@ -89,6 +94,31 @@ class SubnetManager
                 NOT(ipsubnet = '127.0.0.0' AND ipmask='255.0.0.0') AND
                 description NOT LIKE '%PPP%'
             GROUP BY ipsubnet, ipmask, name
+            UNION
+            SELECT
+                netmap.netid,
+                netmap.mask,
+                (SELECT COUNT(*) FROM networks WHERE
+                    networks.ipsubnet = netmap.netid AND
+                    networks.ipmask = netmap.mask AND
+                    networks.description NOT LIKE '%PPP%'
+                ) AS num_inventoried,
+                (SELECT COUNT(mac) FROM netmap netmap3 WHERE
+                    netmap3.netid = netmap.netid AND
+                    netmap3.mask = netmap.mask AND
+                    netmap3.mac NOT IN(SELECT macaddr FROM networks) AND
+                    netmap3.mac IN(SELECT macaddr FROM network_devices)
+                ) AS num_identified,
+                (SELECT COUNT(mac) FROM netmap netmap3 WHERE
+                    netmap3.netid = netmap.netid AND
+                    netmap3.mask = netmap.mask AND
+                    netmap3.mac NOT IN(SELECT macaddr FROM networks) AND
+                    netmap3.mac NOT IN(SELECT macaddr FROM network_devices)
+                ) AS num_unknown,
+                subnet.name
+            FROM netmap
+            LEFT JOIN subnet ON netmap.netid=subnet.netid AND netmap.mask=subnet.mask
+            GROUP BY netmap.netid, netmap.mask, subnet.name
             $orderBy
 EOT;
 

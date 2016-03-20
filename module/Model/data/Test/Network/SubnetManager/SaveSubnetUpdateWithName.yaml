@@ -5,5 +5,5 @@ subnet:
     name: "new_name"
   -
     netid: "198.51.100.0"
-    mask: "255.255.255.0"
+    mask: "255.255.255.128"
     name: "ignored"
