@@ -97,4 +97,5 @@ if (count($args) >= 2) {
     testModule('Console');
     testModule('DatabaseManager');
     testModule('Export');
+    testModule('PackageBuilder');
 }
