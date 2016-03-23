@@ -55,7 +55,7 @@ class Module implements
                 ),
                 'factories' => array(
                     'Library\InventoryUploader' => 'Library\Service\InventoryUploaderFactory',
-                    '\Library\Logger' => 'Library\Log\LoggerServiceFactory',
+                    'Library\Logger' => 'Library\Log\LoggerServiceFactory',
                 ),
                 'invokables' => array(
                     'Library\ArchiveManager' => 'Library\ArchiveManager',
