@@ -24,7 +24,7 @@ namespace Library\Hydrator\Filter;
 /**
  * Filter to keep only whitelisted properties
  */
-class Whitelist implements \Zend\Stdlib\Hydrator\Filter\FilterInterface
+class Whitelist implements \Zend\Hydrator\Filter\FilterInterface
 {
     /**
      * Whitelisted properties

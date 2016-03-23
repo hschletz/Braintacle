@@ -98,7 +98,7 @@ EOT;
      */
     public function testRenderWithCsrf()
     {
-        $view = \Library\Application::getService('ViewManager')->getRenderer();
+        $view = $this->_createView();
 
         $csrf = $this->getMockBuilder('Zend\Form\Element\Csrf')
                      ->setMethods(array('getValue'))
@@ -132,7 +132,7 @@ EOT;
 
     public function testRenderWithoutCsrf()
     {
-        $view = \Library\Application::getService('ViewManager')->getRenderer();
+        $view = $this->_createView();
 
         $form = $this->getMockBuilder('Console\Form\Form')
                      ->setMethods(array('renderFieldset'))
@@ -225,7 +225,7 @@ EOT;
 
     public function testRenderFieldsetWithoutLabel()
     {
-        $view = \Library\Application::getService('ViewManager')->getRenderer();
+        $view = $this->_createView();
 
         $text1 = new \Zend\Form\Element\Text('text1');
         $text2 = new \Zend\Form\Element\Text('text2');

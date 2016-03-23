@@ -27,9 +27,23 @@ use Zend\Db\Sql\Predicate;
 /**
  * Client manager
  */
-class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
+class ClientManager
 {
-    use \Zend\ServiceManager\ServiceLocatorAwareTrait;
+    /**
+     * Service Locator
+     * @var \Zend\ServiceManager\ServiceLocatorInterface
+     */
+    protected $_serviceLocator;
+
+    /**
+     * Constructor
+     *
+     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     */
+    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    {
+        $this->_serviceLocator = $serviceLocator;
+    }
 
     /**
      * Return clients matching criteria
@@ -60,7 +74,7 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
         $distinct = false,
         $query = true
     ) {
-        $clients = $this->serviceLocator->get('Database\Table\Clients');
+        $clients = $this->_serviceLocator->get('Database\Table\Clients');
         $map = $clients->getHydrator()->getExtractorMap();
 
         $fromClients = array();
@@ -71,7 +85,7 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
             if (isset($map[$property])) {
                 $fromClients[] = $map[$property];
             } elseif (preg_match('/^Windows\.(.*)/', $property, $matches)) {
-                $column = $this->serviceLocator->get('Database\Table\WindowsInstallations')
+                $column = $this->_serviceLocator->get('Database\Table\WindowsInstallations')
                                                ->getHydrator()
                                                ->extractName($matches[1]);
                 $fromWindows["windows_$column"] = $column;
@@ -85,7 +99,7 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
 
         // Set up Select object manually instead of pulling it from a table
         // gateway because the base table might be changed later.
-        $sql = new \Zend\Db\Sql\Sql($this->serviceLocator->get('Db'));
+        $sql = new \Zend\Db\Sql\Sql($this->_serviceLocator->get('Db'));
         $select = $sql->select();
         $select->from('clients');
         $select->columns($fromClients);
@@ -254,7 +268,7 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
                 default:
                     if (preg_match('#^CustomFields\\.(.*)#', $type, $matches)) {
                         $property = $matches[1];
-                        $fieldType = $this->serviceLocator->get('Model\Client\CustomFieldManager')
+                        $fieldType = $this->_serviceLocator->get('Model\Client\CustomFieldManager')
                                                           ->getFields()[$property];
                         switch ($fieldType) {
                             case 'text':
@@ -330,10 +344,10 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
             } elseif ($order == 'Membership') {
                 $order = 'groups_cache.static';
             } elseif (preg_match('/^CustomFields\\.(.+)/', $order, $matches)) {
-                $order = 'customfields_' . $this->serviceLocator->get('Model\Client\CustomFieldManager')
+                $order = 'customfields_' . $this->_serviceLocator->get('Model\Client\CustomFieldManager')
                                                                 ->getColumnMap()[$matches[1]];
             } elseif (preg_match('/^Windows\.(.+)/', $order, $matches)) {
-                $hydrator = $this->serviceLocator->get('Database\Table\WindowsInstallations')->getHydrator();
+                $hydrator = $this->_serviceLocator->get('Database\Table\WindowsInstallations')->getHydrator();
                 $order = 'windows_' . $hydrator->extractName($matches[1]);
             } elseif (preg_match('/^Registry\./', $order)) {
                 $order = 'registry_content';
@@ -341,7 +355,7 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
                 $model = $matches[1];
                 $property = $matches[2];
                 // Assume column alias 'model_column'
-                $tableGateway = $this->serviceLocator->get('Model\Client\ItemManager')->getTable($model);
+                $tableGateway = $this->_serviceLocator->get('Model\Client\ItemManager')->getTable($model);
                 $column = $tableGateway->getHydrator()->extractName($property);
                 $order = strtolower("{$model}_$column");
             } else {
@@ -446,12 +460,12 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
             // If $arg contains '%' and '_', they are currently not escaped, i.e. they operate as wildcards too.
             // The result is encapsulated within '%' to support searching for arbitrary substrings.
             $arg = '%' . strtr($arg, '*?', '%_') . '%';
-            $operator = $this->serviceLocator->get('Database\Nada')->iLike();
+            $operator = $this->_serviceLocator->get('Database\Nada')->iLike();
         }
         $where = "$table.$column $operator ?";
         if ($invertResult) {
             // include NULL values
-            $where = "($where) IS NOT " . $this->serviceLocator->get('Database\Nada')->booleanLiteral(true);
+            $where = "($where) IS NOT " . $this->_serviceLocator->get('Database\Nada')->booleanLiteral(true);
         }
         $select->where(array($where => $arg));
 
@@ -502,7 +516,7 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
         $where = $tableGateway->getTable() . ".$column $operator ?";
         if ($invertResult) {
             // include NULL values
-            $where = "($where) IS NOT " . $this->serviceLocator->get('Database\Nada')->booleanLiteral(true);
+            $where = "($where) IS NOT " . $this->_serviceLocator->get('Database\Nada')->booleanLiteral(true);
         }
         $select->where(array($where => $arg));
 
@@ -553,7 +567,7 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
         // < 00:00:00 of the next day.
         // Other operations (<, >) are defined accordingly.
 
-        $nada = $this->serviceLocator->get('Database\Nada');
+        $nada = $this->_serviceLocator->get('Database\Nada');
 
         // Get beginning of day
         $dayStart->modify('midnight');
@@ -601,7 +615,7 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
             }
             // include NULL values
             $where = array(
-                "($conditions) IS NOT " . $this->serviceLocator->get('Database\Nada')->booleanLiteral(true) => $operands
+                "($conditions) IS NOT " . $this->_serviceLocator->get('Database\Nada')->booleanLiteral(true) => $operands
             );
         }
         $select->where($where);
@@ -669,13 +683,13 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
         switch ($model) {
             case 'Client':
                 $table = 'Clients';
-                $hydrator = $this->serviceLocator->get('Database\Table\Clients')->getHydrator();
+                $hydrator = $this->_serviceLocator->get('Database\Table\Clients')->getHydrator();
                 $column = $hydrator->extractName($property);
                 $columnAlias = $column;
                 break;
             case 'CustomFields':
                 $table = 'CustomFields';
-                $column = $this->serviceLocator->get('Model\Client\CustomFieldManager')->getColumnMap()[$property];
+                $column = $this->_serviceLocator->get('Model\Client\CustomFieldManager')->getColumnMap()[$property];
                 $columnAlias = 'customfields_' . $column;
                 $fk = 'hardware_id';
                 break;
@@ -688,20 +702,20 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
                 break;
             case 'Windows':
                 $table = 'WindowsInstallations';
-                $hydrator = $this->serviceLocator->get('Database\Table\WindowsInstallations')->getHydrator();
+                $hydrator = $this->_serviceLocator->get('Database\Table\WindowsInstallations')->getHydrator();
                 $column = $hydrator->extractName($property);
                 $columnAlias = 'windows_' . $column;
                 $fk = 'client_id';
                 break;
             default:
-                $tableGateway = $this->serviceLocator->get('Model\Client\ItemManager')->getTable($model);
+                $tableGateway = $this->_serviceLocator->get('Model\Client\ItemManager')->getTable($model);
                 $column = $tableGateway->getHydrator()->extractName($property);
                 $columnAlias = strtolower($model) . '_' . $column;
                 $fk = 'hardware_id';
         }
 
         if (!isset($tableGateway)) {
-            $tableGateway = $this->serviceLocator->get("Database\Table\\$table");
+            $tableGateway = $this->_serviceLocator->get("Database\Table\\$table");
         }
         $table = $tableGateway->getTable();
 
@@ -777,7 +791,7 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
             throw new \RuntimeException('Could not lock client for deletion');
         }
 
-        $connection = $this->serviceLocator->get('Db')->getDriver()->getConnection();
+        $connection = $this->_serviceLocator->get('Db')->getDriver()->getConnection();
         $id = $client['Id'];
 
         // Start transaction to keep database consistent in case of errors
@@ -795,13 +809,13 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
             // If requested, delete client's network interfaces from the list of
             // scanned interfaces. Also delete any manually entered description.
             if ($deleteInterfaces) {
-                $macAddresses = $this->serviceLocator->get('Database\Table\NetworkInterfaces')->getSql()->select();
+                $macAddresses = $this->_serviceLocator->get('Database\Table\NetworkInterfaces')->getSql()->select();
                 $macAddresses->columns(array('macaddr'));
                 $macAddresses->where(array('hardware_id' => $id));
-                $this->serviceLocator->get('Database\Table\NetworkDevicesIdentified')->delete(
+                $this->_serviceLocator->get('Database\Table\NetworkDevicesIdentified')->delete(
                     new \Zend\Db\Sql\Predicate\In('macaddr', $macAddresses)
                 );
-                $this->serviceLocator->get('Database\Table\NetworkDevicesScanned')->delete(
+                $this->_serviceLocator->get('Database\Table\NetworkDevicesScanned')->delete(
                     new \Zend\Db\Sql\Predicate\In('mac', $macAddresses)
                 );
             }
@@ -818,18 +832,18 @@ class ClientManager implements \Zend\ServiceManager\ServiceLocatorAwareInterface
                 'ClientConfig',
             );
             foreach ($tables as $table) {
-                $this->serviceLocator->get("Database\\Table\\$table")->delete(array('hardware_id' => $id));
+                $this->_serviceLocator->get("Database\\Table\\$table")->delete(array('hardware_id' => $id));
             }
-            $this->serviceLocator->get('Database\Table\Attachments')->delete(
+            $this->_serviceLocator->get('Database\Table\Attachments')->delete(
                 array(
                     'id_dde' => $id,
                     'table_name' => \Database\Table\Attachments::OBJECT_TYPE_CLIENT
                 )
             );
-            $this->serviceLocator->get('Model\Client\ItemManager')->deleteItems($id);
+            $this->_serviceLocator->get('Model\Client\ItemManager')->deleteItems($id);
 
             // Delete row in clients table
-            $this->serviceLocator->get('Database\Table\ClientsAndGroups')->delete(array('id' => $id));
+            $this->_serviceLocator->get('Database\Table\ClientsAndGroups')->delete(array('id' => $id));
         } catch (\Exception $exception) {
             if ($transactionStarted) {
                 $connection->rollback();

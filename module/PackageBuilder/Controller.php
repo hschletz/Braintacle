@@ -27,6 +27,30 @@ namespace PackageBuilder;
 class Controller extends \Zend\Mvc\Controller\AbstractConsoleController
 {
     /**
+     * Config
+     * @var \Model\Config
+     */
+    protected $_config;
+
+    /**
+     * Package manager
+     * @var \Model\Package\PackageManager
+     */
+    protected $_packageManager;
+
+    /**
+     * Constructor
+     *
+     * @param \Model\Config $config
+     * @param \Model\Package\PackageManager $packageManager
+     */
+    public function __construct(\Model\Config $config, \Model\Package\PackageManager $packageManager)
+    {
+        $this->_config = $config;
+        $this->_packageManager = $packageManager;
+    }
+
+    /**
      * Build a package
      */
     public function packageBuilderAction()
@@ -35,25 +59,23 @@ class Controller extends \Zend\Mvc\Controller\AbstractConsoleController
         $name = $request->getParam('name');
         $file = $request->getParam('file');
 
-        $serviceManager = $this->getServiceLocator();
-        $config = $serviceManager->get('Model\Config');
-        $serviceManager->get('Model\Package\PackageManager')->build(
+        $this->_packageManager->buildPackage(
             array(
                 'Name' => $name,
                 'Comment' => null,
                 'FileName' => basename($file),
                 'FileLocation' => $file,
-                'Priority' => $config->defaultPackagePriority,
-                'Platform' => $config->defaultPlatform,
-                'DeployAction' => $config->defaultAction,
-                'ActionParam' => $config->defaultActionParam,
-                'Warn' => $config->defaultWarn,
-                'WarnMessage' => $config->defaultWarnMessage,
-                'WarnCountdown' => $config->defaultWarnCountdown,
-                'WarnAllowAbort' => $config->defaultWarnAllowAbort,
-                'WarnAllowDelay' => $config->defaultWarnAllowDelay,
-                'PostInstMessage' => $config->defaultPostInstMessage,
-                'MaxFragmentSize' => $config->defaultMaxFragmentSize,
+                'Priority' => $this->_config->defaultPackagePriority,
+                'Platform' => $this->_config->defaultPlatform,
+                'DeployAction' => $this->_config->defaultAction,
+                'ActionParam' => $this->_config->defaultActionParam,
+                'Warn' => $this->_config->defaultWarn,
+                'WarnMessage' => $this->_config->defaultWarnMessage,
+                'WarnCountdown' => $this->_config->defaultWarnCountdown,
+                'WarnAllowAbort' => $this->_config->defaultWarnAllowAbort,
+                'WarnAllowDelay' => $this->_config->defaultWarnAllowDelay,
+                'PostInstMessage' => $this->_config->defaultPostInstMessage,
+                'MaxFragmentSize' => $this->_config->defaultMaxFragmentSize,
             ),
             false
         );

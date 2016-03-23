@@ -26,7 +26,7 @@ namespace Database\Hydrator;
  *
  * Sanitizes incompatible structures produced by different agents.
  */
-class Controllers implements \Zend\Stdlib\Hydrator\HydratorInterface
+class Controllers implements \Zend\Hydrator\HydratorInterface
 {
     /** {@inheritdoc} */
     public function hydrate(array $data, $object)

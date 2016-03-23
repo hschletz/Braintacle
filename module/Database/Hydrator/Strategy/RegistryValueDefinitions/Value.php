@@ -24,7 +24,7 @@ namespace Database\Hydrator\Strategy\RegistryValueDefinitions;
 /**
  * Strategy for Value attribute
  */
-class Value implements \Zend\Stdlib\Hydrator\Strategy\StrategyInterface
+class Value implements \Zend\Hydrator\Strategy\StrategyInterface
 {
     /** {@inheritdoc} */
     public function hydrate($value)

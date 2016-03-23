@@ -1,6 +1,6 @@
 <?php
 /**
- * Strategy for CurrentResolution attribute
+ * Factory for Model\Group\Group
  *
  * Copyright (C) 2011-2016 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,28 +19,20 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Database\Hydrator\Strategy\DisplayControllers;
+namespace Model\Service\Group;
 
 /**
- * Strategy for CurrentResolution attribute
- *
- * A value of '0 x 0' is converted to NULL. This conversion is not reverted on
- * extraction.
+ * Factory for Model\Group\Group
  */
-class CurrentResolution implements \Zend\Hydrator\Strategy\StrategyInterface
+class GroupFactory implements \Zend\ServiceManager\FactoryInterface
 {
-    /** {@inheritdoc} */
-    public function hydrate($value)
+    /**
+     * @internal
+     */
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        if ($value === '0 x 0') {
-            $value = null;
-        }
-        return $value;
-    }
-
-    /** {@inheritdoc} */
-    public function extract($value)
-    {
-        return $value;
+        $group = new \Model\Group\Group;
+        $group->setServiceLocator($serviceLocator);
+        return $group;
     }
 }

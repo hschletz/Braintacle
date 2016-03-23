@@ -27,6 +27,21 @@ namespace Export;
 class Controller extends \Zend\Mvc\Controller\AbstractConsoleController
 {
     /**
+     * Client manager
+     * @var \Model\Client\ClientManager
+     */
+    protected $_clientManager;
+
+    /**
+     * Constructor
+     *
+     * @param \Model\Client\ClientManager $clientManager
+     */
+    public function __construct(\Model\Client\ClientManager $clientManager)
+    {
+        $this->_clientManager = $clientManager;
+    }
+    /**
      * Export all clients
      */
     public function exportAction()
@@ -42,7 +57,7 @@ class Controller extends \Zend\Mvc\Controller\AbstractConsoleController
             return $model;
         }
 
-        $clients = $this->getServiceLocator()->get('Model\Client\ClientManager')->getClients(
+        $clients = $this->_clientManager->getClients(
             null,
             'IdString'
         );

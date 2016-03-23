@@ -140,7 +140,7 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
         $authService->method('hasIdentity')->willReturn(true);
         $authService->method('getIdentity')->willReturn('identity');
         $this->_view->plugin('identity')->setAuthenticationService($authService);
-        $this->_view->plugin('navigation')->setInjectTranslator(false);
+        $this->_view->plugin('navigation')->menu()->setTranslator(null);
 
         $menu = \Zend\Navigation\Page\AbstractPage::factory(
             array(

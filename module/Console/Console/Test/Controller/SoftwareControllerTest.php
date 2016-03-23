@@ -55,17 +55,20 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
 
     public function setUp()
     {
+        parent::setUp();
+
+        $this->_session = new \Zend\Session\Container('ManageSoftware');
+
         $this->_softwareManager = $this->getMockBuilder('Model\SoftwareManager')
                                        ->disableOriginalConstructor()
                                        ->getMock();
         $this->_form = $this->getMock('Console\Form\SoftwareFilter');
-        $this->_session = new \Zend\Session\Container('ManageSoftware');
-        parent::setUp();
-    }
 
-    protected function _createController()
-    {
-        return new \Console\Controller\SoftwareController($this->_softwareManager, $this->_form);
+        $this->getApplicationServiceLocator()
+             ->setAllowOverride(true)
+             ->setService('Model\SoftwareManager', $this->_softwareManager)
+             ->get('FormElementManager')
+             ->setService('Console\Form\SoftwareFilter', $this->_form);
     }
 
     public function testIndexActionDefaultFilterAccepted()

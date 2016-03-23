@@ -31,10 +31,8 @@ namespace Model;
  * the implementation of this functionality, this class implements the common
  * functionality for both objects.
  */
-abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManager\ServiceLocatorAwareInterface
+abstract class ClientOrGroup extends \ArrayObject
 {
-    use \Zend\ServiceManager\ServiceLocatorAwareTrait;
-
     /**
      * @internal
      * Scan value in 'devices' table
@@ -46,6 +44,12 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
      * Scan value in 'devices' table
      */
     const SCAN_EXPLICIT = 2;
+
+    /**
+     * Service Locator
+     * @var \Zend\ServiceManager\ServiceLocatorInterface
+     */
+    protected $_serviceLocator;
 
     /**
      * Cache for getConfig() results
@@ -74,6 +78,18 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
             $this->_lockNestCount = 1;
         }
         $this->unlock();
+    }
+
+    /**
+     * Set service locator
+     *
+     * This should usually be called by a factory.
+     *
+     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     */
+    public function setServiceLocator(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    {
+        $this->_serviceLocator = $serviceLocator;
     }
 
     /**
@@ -108,11 +124,11 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
         $currentTimestamp = new \Zend\Db\Sql\Literal(
             sprintf(
                 'CAST(CURRENT_TIMESTAMP AS %s)',
-                $this->serviceLocator->get('Database\Nada')->getNativeDatatype(\Nada::DATATYPE_TIMESTAMP, null, true)
+                $this->_serviceLocator->get('Database\Nada')->getNativeDatatype(\Nada::DATATYPE_TIMESTAMP, null, true)
             )
         );
         $current = new \DateTime(
-            $this->serviceLocator->get('Db')->query(
+            $this->_serviceLocator->get('Db')->query(
                 sprintf('SELECT %s AS current', $currentTimestamp->getLiteral()),
                 \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
             )->current()['current'],
@@ -122,10 +138,10 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
         $expireInterval = new \DateInterval(
             sprintf(
                 'PT%dS',
-                $this->serviceLocator->get('Model\Config')->lockValidity
+                $this->_serviceLocator->get('Model\Config')->lockValidity
             )
         );
-        $locks = $this->serviceLocator->get('Database\Table\Locks');
+        $locks = $this->_serviceLocator->get('Database\Table\Locks');
 
         // Check if a lock already exists
         $select = $locks->getSql()->select();
@@ -194,10 +210,10 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
 
         // Query time from database for consistent reference across all operations
         $current = new \DateTime(
-            $this->serviceLocator->get('Db')->query(
+            $this->_serviceLocator->get('Db')->query(
                 sprintf(
                     'SELECT CAST(CURRENT_TIMESTAMP AS %s) AS current',
-                    $this->serviceLocator->get('Database\Nada')->getNativeDatatype(
+                    $this->_serviceLocator->get('Database\Nada')->getNativeDatatype(
                         \Nada::DATATYPE_TIMESTAMP,
                         null,
                         true
@@ -220,7 +236,7 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
             // @codeCoverageIgnoreStart
         } else {
             // @codeCoverageIgnoreEnd
-            $this->serviceLocator->get('Database\Table\Locks')->delete(array('hardware_id' => $this['Id']));
+            $this->_serviceLocator->get('Database\Table\Locks')->delete(array('hardware_id' => $this['Id']));
         }
     }
 
@@ -244,7 +260,7 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
      */
     public function getAssignablePackages()
     {
-        $packages = $this->serviceLocator->get('Database\Table\Packages');
+        $packages = $this->_serviceLocator->get('Database\Table\Packages');
         $select = $packages->getSql()->select();
         $select->columns(array('name'))
                ->join(
@@ -299,14 +315,14 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
     public function assignPackage($name)
     {
         if (in_array($name, $this->getAssignablePackages())) {
-            $package = $this->serviceLocator->get('Model\Package\PackageManager')->getPackage($name);
-            $this->serviceLocator->get('Database\Table\ClientConfig')->insert(
+            $package = $this->_serviceLocator->get('Model\Package\PackageManager')->getPackage($name);
+            $this->_serviceLocator->get('Database\Table\ClientConfig')->insert(
                 array(
                     'hardware_id' => $this['Id'],
                     'name' => 'DOWNLOAD',
                     'ivalue' => $package['Id'],
                     'tvalue' => \Model\Package\Assignment::PENDING,
-                    'comments' => $this->serviceLocator->get('Library\Now')->format(
+                    'comments' => $this->_serviceLocator->get('Library\Now')->format(
                         \Model\Package\Assignment::DATEFORMAT
                     ),
                 )
@@ -321,8 +337,8 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
      */
     public function removePackage($name)
     {
-        $package = $this->serviceLocator->get('Model\Package\PackageManager')->getPackage($name);
-        $this->serviceLocator->get('Database\Table\ClientConfig')->delete(
+        $package = $this->_serviceLocator->get('Model\Package\PackageManager')->getPackage($name);
+        $this->_serviceLocator->get('Database\Table\ClientConfig')->delete(
             array(
                 'hardware_id' => $this['Id'],
                 'ivalue' => $package['Id'],
@@ -384,9 +400,9 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
                 $name = 'SNMP_SWITCH'; // differs from global database option name
                 break;
             default:
-                $name = $this->serviceLocator->get('Model\Config')->getDbIdentifier($option);
+                $name = $this->_serviceLocator->get('Model\Config')->getDbIdentifier($option);
         }
-        $clientConfig = $this->serviceLocator->get('Database\Table\ClientConfig');
+        $clientConfig = $this->_serviceLocator->get('Database\Table\ClientConfig');
         $select = $clientConfig->getSql()->select();
         $select->columns(array($column))
                ->where(
@@ -425,7 +441,7 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
         if ($option == 'allowScan' or $option == 'scanThisNetwork') {
             $name = 'IPDISCOVER';
         } else {
-            $name = $this->serviceLocator->get('Model\Config')->getDbIdentifier($option);
+            $name = $this->_serviceLocator->get('Model\Config')->getDbIdentifier($option);
             if ($option == 'packageDeployment' or $option == 'scanSnmp') {
                 $name .= '_SWITCH';
             }
@@ -452,7 +468,7 @@ abstract class ClientOrGroup extends \ArrayObject implements \Zend\ServiceManage
             'name' => $name,
         );
 
-        $clientConfig = $this->serviceLocator->get('Database\Table\ClientConfig');
+        $clientConfig = $this->_serviceLocator->get('Database\Table\ClientConfig');
         $connection = $clientConfig->getAdapter()->getDriver()->getConnection();
         $connection->beginTransaction();
         if ($value === null) {

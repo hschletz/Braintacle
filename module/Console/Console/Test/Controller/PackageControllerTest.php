@@ -55,32 +55,22 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
      */
     public function setUp()
     {
+        parent::setUp();
+
         $this->_packageManager = $this->getMockBuilder('Model\Package\PackageManager')
                                       ->disableOriginalConstructor()
                                       ->getMock();
         $this->_config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
         $this->_buildForm = $this->getMock('Console\Form\Package\Build');
         $this->_updateForm = $this->getMock('Console\Form\Package\Update');
-        parent::setUp();
-    }
 
-    /** {@inheritdoc} */
-    protected function _createController()
-    {
-        return new \Console\Controller\PackageController(
-            $this->_packageManager,
-            $this->_config,
-            $this->_buildForm,
-            $this->_updateForm
-        );
-    }
-
-    /** {@inheritdoc} */
-    public function testService()
-    {
-        $this->_overrideService('Console\Form\Package\Build', $this->_buildForm);
-        $this->_overrideService('Console\Form\Package\Update', $this->_updateForm);
-        parent::testService();
+        $this->getApplicationServiceLocator()
+             ->setAllowOverride(true)
+             ->setService('Model\Package\PackageManager', $this->_packageManager)
+             ->setService('Model\Config', $this->_config)
+             ->get('FormElementManager')
+             ->setService('Console\Form\Package\Build', $this->_buildForm)
+             ->setService('Console\Form\Package\Update', $this->_updateForm);
     }
 
     public function testIndexActionPackageList()

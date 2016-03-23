@@ -27,7 +27,7 @@ namespace Database\Hydrator;
  * Sanitizes incompatible structures produced by different agents and calculates
  * UsedSpace property on hydration.
  */
-class Filesystems implements \Zend\Stdlib\Hydrator\HydratorInterface
+class Filesystems implements \Zend\Hydrator\HydratorInterface
 {
     /**
      * Map for hydrateName()

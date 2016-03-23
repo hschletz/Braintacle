@@ -29,10 +29,10 @@ class GroupMenuFactory extends \Library\Navigation\AbstractNavigationFactory
     /**
      * @internal
      */
-    protected function getPages(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    protected function getPages(\Interop\Container\ContainerInterface $container)
     {
-        parent::getPages($serviceLocator);
-        $name = array('name' => $serviceLocator->get('Request')->getQuery('name'));
+        parent::getPages($container);
+        $name = array('name' => $container->get('Request')->getQuery('name'));
         foreach ($this->pages as &$page) {
             $page['query'] = $name;
         }

@@ -34,7 +34,7 @@ class NetworkDevicesScanned extends \Database\AbstractTable
     {
         $this->table = 'netmap';
 
-        $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
+        $this->_hydrator = new \Zend\Hydrator\ArraySerializable;
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(
@@ -48,7 +48,7 @@ class NetworkDevicesScanned extends \Database\AbstractTable
             )
         );
 
-        $dateTimeFormatter = new \Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy(
+        $dateTimeFormatter = new \Zend\Hydrator\Strategy\DateTimeFormatterStrategy(
             $serviceLocator->get('Database\Nada')->timestampFormatPhp(),
             new \DateTimeZone('UTC')
         );

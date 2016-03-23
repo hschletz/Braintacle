@@ -37,11 +37,11 @@ abstract class AbstractNavigationFactory extends \Zend\Navigation\Service\Defaul
     /**
      * @internal
      */
-    protected function getPages(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    protected function getPages(\Interop\Container\ContainerInterface $container)
     {
         if (!$this->pages) {
             $pages = $this->getPagesFromConfig($this->_getConfig());
-            $this->pages = $this->preparePages($serviceLocator, $pages);
+            $this->pages = $this->preparePages($container, $pages);
         }
         return $this->pages;
     }

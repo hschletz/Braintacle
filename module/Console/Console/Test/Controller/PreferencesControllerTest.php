@@ -61,6 +61,8 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
      */
     public function setUp()
     {
+        parent::setUp();
+
         $this->_formManager = $this->getMock('Zend\Form\FormElementManager');
         $this->_customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
                                           ->disableOriginalConstructor()
@@ -72,19 +74,14 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
                                        ->disableOriginalConstructor()
                                        ->getMock();
         $this->_config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
-        parent::setUp();
-    }
 
-    /** {@inheritdoc} */
-    protected function _createController()
-    {
-        return new \Console\Controller\PreferencesController(
-            $this->_formManager,
-            $this->_customFieldManager,
-            $this->_deviceManager,
-            $this->_registryManager,
-            $this->_config
-        );
+        $this->getApplicationServiceLocator()
+             ->setAllowOverride(true)
+             ->setService('FormElementManager', $this->_formManager)
+             ->setService('Model\Client\CustomFieldManager', $this->_customFieldManager)
+             ->setService('Model\Network\DeviceManager', $this->_deviceManager)
+             ->setService('Model\Registry\RegistryManager', $this->_registryManager)
+             ->setService('model\Config', $this->_config);
     }
 
     /**

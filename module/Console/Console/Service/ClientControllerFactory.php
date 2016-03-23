@@ -32,15 +32,14 @@ class ClientControllerFactory implements \Zend\ServiceManager\FactoryInterface
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $serviceManager = $serviceLocator->getServiceLocator();
-        $config = $serviceManager->get('Model\Config');
         return new \Console\Controller\ClientController(
             $serviceManager->get('Model\Client\ClientManager'),
             $serviceManager->get('Model\Group\GroupManager'),
             $serviceManager->get('Model\Registry\RegistryManager'),
             $serviceManager->get('Model\SoftwareManager'),
             $serviceManager->get('FormElementManager'),
-            $config,
-            new \Library\InventoryUploader($config->communicationServerUri)
+            $serviceManager->get('Model\Config'),
+            $serviceManager->get('Library\InventoryUploader')
         );
     }
 }

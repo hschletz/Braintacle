@@ -65,7 +65,7 @@ class GroupInfoTest extends AbstractTest
         $table->initialize();
 
         $hydrator = $table->getHydrator();
-        $this->assertInstanceOf('Zend\Stdlib\Hydrator\ArraySerializable', $hydrator);
+        $this->assertInstanceOf('Zend\Hydrator\ArraySerializable', $hydrator);
 
         $map = $hydrator->getNamingStrategy();
         $this->assertInstanceOf('Database\Hydrator\NamingStrategy\MapNamingStrategy', $map);
@@ -88,7 +88,7 @@ class GroupInfoTest extends AbstractTest
 
         $dateTimeFormatterStrategy = $hydrator->getStrategy('CreationDate');
         $this->assertInstanceOf(
-            'Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy',
+            'Zend\Hydrator\Strategy\DateTimeFormatterStrategy',
             $dateTimeFormatterStrategy
         );
         $this->assertSame($dateTimeFormatterStrategy, $hydrator->getStrategy('lastdate'));

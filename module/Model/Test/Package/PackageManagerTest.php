@@ -312,7 +312,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     {
         $data = array('Name' => 'test', 'FileLocation' => null, 'Platform' => 'invalid');
 
-        $hydrator = $this->getMock('Zend\Stdlib\Hydrator\ArraySerializable');
+        $hydrator = $this->getMock('Zend\Hydrator\ArraySerializable');
         $hydrator->expects($this->once())->method('extract')->willReturn(array('osname' => null));
 
         $packages = $this->getMockBuilder('Database\Table\Packages')->disableOriginalConstructor()->getMock();

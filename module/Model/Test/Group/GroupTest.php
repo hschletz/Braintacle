@@ -65,7 +65,7 @@ class GroupTest extends AbstractGroupTest
      */
     public function testSetMembersFromQuery($type, $simulateLockFailure, $dataSet)
     {
-        $clientManager = $this->getMock('Model\Client\ClientManager');
+        $clientManager = $this->getMockBuilder('Model\Client\ClientManager')->disableOriginalConstructor()->getMock();
         $clientManager->expects($this->once())
                       ->method('getClients')
                       ->with(
@@ -120,7 +120,7 @@ class GroupTest extends AbstractGroupTest
 
     public function testSetMembersFromQueryExceptionInTransaction()
     {
-        $clientManager = $this->getMock('Model\Client\ClientManager');
+        $clientManager = $this->getMockBuilder('Model\Client\ClientManager')->disableOriginalConstructor()->getMock();
         $clientManager->method('getClients')->willReturn(array(array('Id' => 1)));
 
         $connection = $this->getMock('Zend\Db\Adapter\Driver\AbstractConnection');
@@ -198,7 +198,7 @@ class GroupTest extends AbstractGroupTest
                );
         $select->method('getSqlString')->with($platform)->willReturn('query_new');
 
-        $clientManager = $this->getMock('Model\Client\ClientManager');
+        $clientManager = $this->getMockBuilder('Model\Client\ClientManager')->disableOriginalConstructor()->getMock();
         $clientManager->expects($this->once())
                       ->method('getClients')
                       ->with(
@@ -273,7 +273,7 @@ class GroupTest extends AbstractGroupTest
                );
         $select->expects($this->never())->method('getSqlString');
 
-        $clientManager = $this->getMock('Model\Client\ClientManager');
+        $clientManager = $this->getMockBuilder('Model\Client\ClientManager')->disableOriginalConstructor()->getMock();
         $clientManager->method('getClients')->willReturn($select);
 
         $model = $this->_getModel(array('Model\Client\ClientManager' => $clientManager));

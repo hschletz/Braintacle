@@ -63,8 +63,14 @@ class Module implements
                 )
             ),
             'controllers' => array(
-                'invokables' => array(
-                    'DatabaseManager\Controller' => 'DatabaseManager\Controller',
+                'factories' => array(
+                    'DatabaseManager\Controller' => function ($serviceLocator) {
+                        $serviceManager = $serviceLocator->getServiceLocator();
+                        return new Controller(
+                            $serviceManager->get('Database\SchemaManager'),
+                            $serviceManager->get('Library\Logger')
+                        );
+                    }
                 )
             ),
         );

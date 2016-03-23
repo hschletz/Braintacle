@@ -26,7 +26,7 @@ namespace Database\Hydrator;
  *
  * Picks relevant OS-specific fields and decorates some values.
  */
-class Software implements \Zend\Stdlib\Hydrator\HydratorInterface
+class Software implements \Zend\Hydrator\HydratorInterface
 {
     /**
      * Filter for hydration of "Name"

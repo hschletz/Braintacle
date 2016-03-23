@@ -992,7 +992,10 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $resultSet->method('current')->willReturn('client');
         $resultSet->method('count')->willReturn(1);
 
-        $model = $this->getMockBuilder($this->_getClass())->setMethods(array('getClients'))->getMock();
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->disableOriginalConstructor()
+                      ->setMethods(array('getClients'))
+                      ->getMock();
         $model->method('getClients')->with(null, null, null, 'Id', 42)->willReturn($resultSet);
         $this->assertEquals('client', $model->getClient(42));
     }
@@ -1004,7 +1007,10 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $resultSet = $this->getMock('Zend\Db\ResultSet\HydratingResultSet');
         $resultSet->method('count')->willReturn(0);
 
-        $model = $this->getMockBuilder($this->_getClass())->setMethods(array('getClients'))->getMock();
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->disableOriginalConstructor()
+                      ->setMethods(array('getClients'))
+                      ->getMock();
         $model->method('getClients')->with(null, null, null, 'Id', 42)->willReturn($resultSet);
         $model->getClient(42);
     }

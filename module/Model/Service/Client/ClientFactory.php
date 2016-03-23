@@ -1,6 +1,6 @@
 <?php
 /**
- * Strategy for CurrentResolution attribute
+ * Factory for Model\Client\Client
  *
  * Copyright (C) 2011-2016 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,28 +19,20 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Database\Hydrator\Strategy\DisplayControllers;
+namespace Model\Service\Client;
 
 /**
- * Strategy for CurrentResolution attribute
- *
- * A value of '0 x 0' is converted to NULL. This conversion is not reverted on
- * extraction.
+ * Factory for Model\Client\Client
  */
-class CurrentResolution implements \Zend\Hydrator\Strategy\StrategyInterface
+class ClientFactory implements \Zend\ServiceManager\FactoryInterface
 {
-    /** {@inheritdoc} */
-    public function hydrate($value)
+    /**
+     * @internal
+     */
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        if ($value === '0 x 0') {
-            $value = null;
-        }
-        return $value;
-    }
-
-    /** {@inheritdoc} */
-    public function extract($value)
-    {
-        return $value;
+        $client = new \Model\Client\Client;
+        $client->setServiceLocator($serviceLocator);
+        return $client;
     }
 }

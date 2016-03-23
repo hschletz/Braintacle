@@ -62,8 +62,10 @@ class Module implements
                 )
             ),
             'controllers' => array(
-                'invokables' => array(
-                    'Export\Controller' => 'Export\Controller',
+                'factories' => array(
+                    'Export\Controller' => function ($serviceLocator) {
+                        return new Controller($serviceLocator->getServiceLocator()->get('Model\Client\ClientManager'));
+                    }
                 )
             ),
         );

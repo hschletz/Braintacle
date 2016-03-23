@@ -65,7 +65,7 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
         $packageManager = $this->getMockBuilder('Model\Package\PackageManager')
                                ->disableOriginalConstructor()
                                ->getMock();
-        $packageManager->expects($this->once())->method('build')->with(
+        $packageManager->expects($this->once())->method('buildPackage')->with(
             array(
                 'Name' => 'packageName',
                 'Comment' => null,

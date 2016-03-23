@@ -54,6 +54,7 @@ class Module implements
                     'MvcTranslator' => array('Library\I18n\Translator\DelegatorFactory'),
                 ),
                 'factories' => array(
+                    'Library\InventoryUploader' => 'Library\Service\InventoryUploaderFactory',
                     '\Library\Logger' => 'Library\Log\LoggerServiceFactory',
                 ),
                 'invokables' => array(

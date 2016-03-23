@@ -55,6 +55,8 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
      */
     public function setUp()
     {
+        parent::setUp();
+
         $this->_deviceManager = $this->getMockBuilder('Model\Network\DeviceManager')
                                      ->disableOriginalConstructor()
                                      ->getMock();
@@ -63,24 +65,14 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                                      ->getMock();
         $this->_subnetForm = $this->getMock('Console\Form\Subnet');
         $this->_deviceForm = $this->getMock('Console\Form\NetworkDevice');
-        parent::setUp();
-    }
 
-    /** {@inheritdoc} */
-    protected function _createController()
-    {
-        return new \Console\Controller\NetworkController(
-            $this->_deviceManager,
-            $this->_subnetManager,
-            $this->_subnetForm,
-            $this->_deviceForm
-        );
-    }
-
-    public function testService()
-    {
-        $this->_overrideService('Console\Form\NetworkDevice', $this->_deviceForm);
-        parent::testService();
+        $this->getApplicationServiceLocator()
+             ->setAllowOverride(true)
+             ->setService('Model\Network\DeviceManager', $this->_deviceManager)
+             ->setService('Model\Network\SubnetManager', $this->_subnetManager)
+             ->get('FormElementManager')
+             ->setService('Console\Form\Subnet', $this->_subnetForm)
+             ->setService('Console\Form\NetworkDevice', $this->_deviceForm);
     }
 
     public function testIndexAction()
@@ -378,9 +370,6 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testPropertiesActionMissingParams()
     {
-        $this->_subnetManager = $this->getMockBuilder('Model\Network\SubnetManager')
-                                     ->disableOriginalConstructor()
-                                     ->getMock();
         $this->_subnetManager->expects($this->once())
                              ->method('getSubnet')
                              ->with(null, null)
@@ -423,18 +412,21 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         // Since form elements are rendered manually, mocking the entire form
         // would be very complicated. Just stub the pivotal methods and leave
         // elements as is.
-        $this->_deviceForm = $this->getMockBuilder('Console\Form\NetworkDevice')
-                                  ->setMethods(array('isValid', 'prepare', 'setData'))
-                                  ->getMock();
-        $this->_deviceForm->expects($this->once())
-                          ->method('setData')
-                          ->with(array('Type' => 'type1', 'Description' => 'description1'));
-        $this->_deviceForm->expects($this->never())
-                          ->method('isValid');
-        $this->_deviceForm->expects($this->once())
-                          ->method('prepare');
-        $this->_deviceForm->setOption('DeviceManager', $this->_deviceManager);
-        $this->_deviceForm->init();
+        $deviceForm = $this->getMockBuilder('Console\Form\NetworkDevice')
+                           ->setMethods(array('isValid', 'prepare', 'setData'))
+                           ->getMock();
+        $deviceForm->expects($this->once())
+                   ->method('setData')
+                   ->with(array('Type' => 'type1', 'Description' => 'description1'));
+        $deviceForm->expects($this->never())->method('isValid');
+        $deviceForm->expects($this->once())->method('prepare');
+        $deviceForm->setOption('DeviceManager', $this->_deviceManager);
+        $deviceForm->init();
+
+        $this->getApplicationServiceLocator()
+             ->get('FormElementManager')
+             ->setService('Console\Form\NetworkDevice', $deviceForm);
+ 
         $this->dispatch('/console/network/edit/?macaddress=00:00:5E:00:53:00');
         $this->assertResponseStatusCode(200);
         $this->assertXPathQuery('//form[@action=""][@method="POST"]');
@@ -475,20 +467,21 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->_deviceManager->expects($this->once())
                              ->method('getTypes')
                              ->willReturn(array());
-        $this->_deviceForm = $this->getMockBuilder('Console\Form\NetworkDevice')
-                                  ->setMethods(array('isValid', 'prepare', 'setData'))
-                                  ->getMock();
-        $this->_deviceForm->expects($this->once())
-                          ->method('setData')
-                          ->with($postData);
-        $this->_deviceForm->expects($this->once())
-                          ->method('isValid')
-                          ->will($this->returnValue(false));
-        $this->_deviceForm->expects($this->once())
-                          ->method('prepare');
-        $this->_deviceForm->setOption('DeviceManager', $this->_deviceManager);
-        $this->_deviceForm->init();
-        $this->_deviceForm->get('Description')->setMessages(array('message'));
+
+        $deviceForm = $this->getMockBuilder('Console\Form\NetworkDevice')
+                           ->setMethods(array('isValid', 'prepare', 'setData'))
+                           ->getMock();
+        $deviceForm->expects($this->once())->method('setData')->with($postData);
+        $deviceForm->expects($this->once())->method('isValid')->willReturn(false);
+        $deviceForm->expects($this->once())->method('prepare');
+        $deviceForm->setOption('DeviceManager', $this->_deviceManager);
+        $deviceForm->init();
+        $deviceForm->get('Description')->setMessages(array('message'));
+
+        $this->getApplicationServiceLocator()
+             ->get('FormElementManager')
+             ->setService('Console\Form\NetworkDevice', $deviceForm);
+ 
         $this->dispatch('/console/network/edit/?macaddress=00:00:5E:00:53:00', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//*[@class="error"]//*[text()="message"]');

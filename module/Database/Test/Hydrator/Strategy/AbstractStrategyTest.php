@@ -25,7 +25,7 @@ abstract class AbstractStrategyTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Strategy instance
-     * @var \Zend\Stdlib\Hydrator\Strategy\StrategyInterface
+     * @var \Zend\Hydrator\Strategy\StrategyInterface
      */
     protected $_strategy;
 
@@ -40,7 +40,7 @@ abstract class AbstractStrategyTest extends \PHPUnit_Framework_TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            'Zend\Stdlib\Hydrator\Strategy\StrategyInterface',
+            'Zend\Hydrator\Strategy\StrategyInterface',
             $this->_strategy
         );
     }

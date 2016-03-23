@@ -59,7 +59,7 @@ This will download all dependencies and set up the autoloader so that no
 additional PHP configuration is required. Omit the `--no-dev` option if you want
 to run tests via the development/run-tests.php script.
 
-If you don't want to use Composer, download and extract [Zend Framework 2.4.8 or
+If you don't want to use Composer, download and extract [Zend Framework 2.5.3 or
 later](http://framework.zend.com/downloads/latest#ZF2) and
 [NADA](https://github.com/hschletz/NADA/archive/master.zip) to an arbitrary
 location (for example, /usr/local/share/php). These libraries don't need extra

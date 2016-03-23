@@ -27,7 +27,7 @@ namespace Database\Hydrator\Strategy\Groups;
  * Converts UNIX timestamps to \DateTime objects and vice versa, with an
  * optional offset to add/subtract. An extracted value of 0 is treated as NULL.
  */
-class CacheDate implements \Zend\Stdlib\Hydrator\Strategy\StrategyInterface
+class CacheDate implements \Zend\Hydrator\Strategy\StrategyInterface
 {
     /**
      * Seconds to add on hydration, subtract on extraction

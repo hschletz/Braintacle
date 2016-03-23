@@ -34,7 +34,7 @@ class Displays extends \Database\AbstractTable
     {
         $this->table = 'monitors';
 
-        $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
+        $this->_hydrator = new \Zend\Hydrator\ArraySerializable;
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(

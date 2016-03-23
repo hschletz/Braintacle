@@ -79,7 +79,7 @@ class AbstractTableTest extends \PHPUnit_Framework_TestCase
 
     public function testFetchColWithAbstractHydrator()
     {
-        $hydrator = $this->getMockBuilder('Zend\Stdlib\Hydrator\AbstractHydrator')
+        $hydrator = $this->getMockBuilder('Zend\Hydrator\AbstractHydrator')
                          ->setMethods(array('hydrateName'))
                          ->getMockForAbstractClass();
         $hydrator->method('hydrateName')->with('col')->willReturn('hydrated');
@@ -101,7 +101,7 @@ class AbstractTableTest extends \PHPUnit_Framework_TestCase
 
     public function testFetchColWithOtherHydrator()
     {
-        $hydrator = $this->getMockBuilder('Zend\Stdlib\Hydrator\DelegatingHydrator')
+        $hydrator = $this->getMockBuilder('Zend\Hydrator\DelegatingHydrator')
                          ->disableOriginalConstructor()
                          ->getMock();
         $hydrator->expects($this->never())->method('hydrateName');

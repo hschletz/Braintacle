@@ -285,7 +285,7 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
         $model->method('getColumnMap')->willReturn(array('TAG' => 'tag', 'Date' => 'fields_2'));
 
         $hydrator = $model->getHydrator();
-        $this->assertInstanceOf('Zend\Stdlib\Hydrator\ArraySerializable', $hydrator);
+        $this->assertInstanceOf('Zend\Hydrator\ArraySerializable', $hydrator);
 
         $namingStrategy = $hydrator->getNamingStrategy();
         $this->assertInstanceOf('Database\Hydrator\NamingStrategy\MapNamingStrategy', $namingStrategy);
@@ -295,11 +295,11 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
         $this->assertEquals('fields_2', $namingStrategy->extract('Date'));
 
         $this->assertInstanceOf(
-            'Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy',
+            'Zend\Hydrator\Strategy\DateTimeFormatterStrategy',
             $hydrator->getStrategy('Date')
         );
         $this->assertInstanceOf(
-            'Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy',
+            'Zend\Hydrator\Strategy\DateTimeFormatterStrategy',
             $hydrator->getStrategy('fields_2')
         );
 
@@ -322,7 +322,7 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
         $model->method('getColumnMap')->willReturn(array('TAG' => 'tag'));
 
         // Add a simple strategy to test hydration of values
-        $model->getHydrator()->addStrategy('TAG', new \Zend\Stdlib\Hydrator\Strategy\ExplodeStrategy);
+        $model->getHydrator()->addStrategy('TAG', new \Zend\Hydrator\Strategy\ExplodeStrategy);
 
         $fields = $model->read(2);
         $this->assertInstanceOf('Model\Client\CustomFields', $fields);
@@ -365,7 +365,7 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
         $model->method('getColumnMap')->willReturn(array('TAG' => 'tag'));
 
         // Add a simple strategy to test extraction of values
-        $model->getHydrator()->addStrategy('tag', new \Zend\Stdlib\Hydrator\Strategy\BooleanStrategy('new_value', ''));
+        $model->getHydrator()->addStrategy('tag', new \Zend\Hydrator\Strategy\BooleanStrategy('new_value', ''));
 
         $model->write(2, array('TAG' => true));
         $this->assertTablesEqual(

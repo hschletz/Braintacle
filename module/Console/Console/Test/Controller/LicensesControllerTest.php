@@ -32,18 +32,21 @@ class LicensesControllerTest extends \Console\Test\AbstractControllerTest
      */
     protected $_softwareManager;
 
-    /** {@inheritdoc} */
-    protected function _createController()
+    public function setUp()
     {
-        return new \Console\Controller\LicensesController($this->_softwareManager);
+        parent::setUp();
+
+        $this->_softwareManager = $this->getMockBuilder('Model\SoftwareManager')
+                                       ->disableOriginalConstructor()
+                                       ->getMock();
+        $this->getApplicationServiceLocator()
+             ->setAllowOverride(true)
+             ->setService('Model\SoftwareManager', $this->_softwareManager);
     }
 
     public function testIndexActionNoManualKeys()
     {
         // Zero manual product keys produce <dd>0</dd>.
-        $this->_softwareManager = $this->getMockBuilder('Model\SoftwareManager')
-                                       ->disableOriginalConstructor()
-                                       ->getMock();
         $this->_softwareManager->expects($this->once())->method('getNumManualProductKeys')->willReturn(0);
 
         $this->dispatch('/console/licenses/index/');
@@ -54,9 +57,6 @@ class LicensesControllerTest extends \Console\Test\AbstractControllerTest
     public function testIndexActionManualKeys()
     {
         // Nonzero manual product keys produce <dd><a...>n</a></dd>.
-        $this->_softwareManager = $this->getMockBuilder('Model\SoftwareManager')
-                                       ->disableOriginalConstructor()
-                                       ->getMock();
         $this->_softwareManager->expects($this->once())->method('getNumManualProductKeys')->willReturn(1);
 
         $this->dispatch('/console/licenses/index/');

@@ -31,10 +31,10 @@ class ClientMenuFactory extends \Library\Navigation\AbstractNavigationFactory
     /**
      * @internal
      */
-    protected function getPages(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    protected function getPages(\Interop\Container\ContainerInterface $container)
     {
-        parent::getPages($serviceLocator);
-        $id = array('id' => $serviceLocator->get('Request')->getQuery('id'));
+        parent::getPages($container);
+        $id = array('id' => $container->get('Request')->getQuery('id'));
         foreach ($this->pages as &$page) {
             $page['query'] = $id;
         }

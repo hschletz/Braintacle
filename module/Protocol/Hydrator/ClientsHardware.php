@@ -27,7 +27,7 @@ namespace Protocol\Hydrator;
  * Unlike with other hydrators, objects are not reset by hydrate(), i.e. data is
  * merged with previous content. Unknown names are ignored.
  */
-class ClientsHardware implements \Zend\Stdlib\Hydrator\HydratorInterface
+class ClientsHardware implements \Zend\Hydrator\HydratorInterface
 {
     /**
      * WindowsInstallation prototype

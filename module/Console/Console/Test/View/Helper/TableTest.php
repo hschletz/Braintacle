@@ -222,7 +222,9 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
               ->method('row')
               ->with($this->anything(), $this->anything(), array())
               ->will($this->returnCallback(array($this, 'mockRow')));
-        $table->setView(\Library\Application::getService('ViewManager')->getRenderer());
+        $table->setView(
+            $this->getMockBuilder('Zend\View\Renderer\PhpRenderer')->disableOriginalConstructor()->getMock()
+        );
 
         $this->_renderCallbackData = array();
         $this->assertEquals(

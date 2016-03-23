@@ -33,7 +33,7 @@ namespace Database\Hydrator;
  * - **registry_content**: result from a registry filter, converted to "Registry.Content" property.
  * - ***model*.*column***: result from an item filter, converted to "*Model*.*Property*" property.
  */
-class Clients implements \Zend\Stdlib\Hydrator\HydratorInterface
+class Clients implements \Zend\Hydrator\HydratorInterface
 {
     /**
      * Service locator

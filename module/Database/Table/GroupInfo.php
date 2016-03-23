@@ -43,7 +43,7 @@ class GroupInfo extends \Database\AbstractTable
     /** {@inheritdoc} */
     public function initialize()
     {
-        $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
+        $this->_hydrator = new \Zend\Hydrator\ArraySerializable;
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(
@@ -58,7 +58,7 @@ class GroupInfo extends \Database\AbstractTable
             )
         );
 
-        $dateTimeFormatter = new \Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy(
+        $dateTimeFormatter = new \Zend\Hydrator\Strategy\DateTimeFormatterStrategy(
             $this->_serviceLocator->get('Database\Nada')->timestampFormatPhp()
         );
         $this->_hydrator->addStrategy('CreationDate', $dateTimeFormatter);

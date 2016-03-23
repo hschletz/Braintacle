@@ -138,7 +138,7 @@ class Client extends \Model\ClientOrGroup
             // Virtual properties from database queries
             switch ($index) {
                 case 'Windows':
-                    $windowsInstallations = $this->serviceLocator->get('Database\Table\WindowsInstallations');
+                    $windowsInstallations = $this->_serviceLocator->get('Database\Table\WindowsInstallations');
                     $select = $windowsInstallations->getSql()->select();
                     $select->columns(
                         array(
@@ -156,14 +156,14 @@ class Client extends \Model\ClientOrGroup
                     $value = $windowsInstallations->selectWith($select)->current() ?: null;
                     break;
                 case 'CustomFields':
-                    $value = $this->serviceLocator->get('Model\Client\CustomFieldManager')->read($this['Id']);
+                    $value = $this->_serviceLocator->get('Model\Client\CustomFieldManager')->read($this['Id']);
                     break;
                 case 'IsSerialBlacklisted':
-                    $duplicateSerials = $this->serviceLocator->get('Database\Table\DuplicateSerials');
+                    $duplicateSerials = $this->_serviceLocator->get('Database\Table\DuplicateSerials');
                     $value = (bool) $duplicateSerials->select(array('serial' => $this['Serial']))->count();
                     break;
                 case 'IsAssetTagBlacklisted':
-                    $duplicateAssetTags = $this->serviceLocator->get('Database\Table\DuplicateAssetTags');
+                    $duplicateAssetTags = $this->_serviceLocator->get('Database\Table\DuplicateAssetTags');
                     $value = (bool) $duplicateAssetTags->select(array('assettag' => $this['AssetTag']))->count();
                     break;
                 default:
@@ -183,7 +183,7 @@ class Client extends \Model\ClientOrGroup
             return $this->_configDefault[$option];
         }
 
-        $config = $this->serviceLocator->get('Model\Config');
+        $config = $this->_serviceLocator->get('Model\Config');
 
         // Get non-NULL values from groups
         $groupValues = array();
@@ -291,7 +291,7 @@ class Client extends \Model\ClientOrGroup
 
         switch ($option) {
             case 'inventoryInterval':
-                $globalValue = $this->serviceLocator->get('Model\Config')->inventoryInterval;
+                $globalValue = $this->_serviceLocator->get('Model\Config')->inventoryInterval;
                 // Special global values 0 and -1 always take precedence.
                 if ($globalValue <= 0) {
                     $value = $globalValue;
@@ -351,7 +351,7 @@ class Client extends \Model\ClientOrGroup
      */
     public function getPackageAssignments($order = 'PackageName', $direction = 'asc')
     {
-        $hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
+        $hydrator = new \Zend\Hydrator\ArraySerializable;
         $hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(
@@ -363,12 +363,12 @@ class Client extends \Model\ClientOrGroup
         );
         $hydrator->addStrategy(
             'Timestamp',
-            new \Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy(
+            new \Zend\Hydrator\Strategy\DateTimeFormatterStrategy(
                 \Model\Package\Assignment::DATEFORMAT
             )
         );
 
-        $sql = $this->serviceLocator->get('Database\Table\ClientConfig')->getSql();
+        $sql = $this->_serviceLocator->get('Database\Table\ClientConfig')->getSql();
         $select = $sql->select();
         $select->columns(array('tvalue', 'comments'))
                ->join(
@@ -382,7 +382,7 @@ class Client extends \Model\ClientOrGroup
 
         $resultSet = new \Zend\Db\ResultSet\HydratingResultSet(
             $hydrator,
-            clone $this->serviceLocator->get('Model\Package\Assignment')
+            clone $this->_serviceLocator->get('Model\Package\Assignment')
         );
         $resultSet->initialize($sql->prepareStatementForSqlObject($select)->execute());
 
@@ -396,7 +396,7 @@ class Client extends \Model\ClientOrGroup
      */
     public function getDownloadedPackageIds()
     {
-        $packageHistory = $this->serviceLocator->get('Database\Table\PackageHistory');
+        $packageHistory = $this->_serviceLocator->get('Database\Table\PackageHistory');
         $select = $packageHistory->getSql()->select();
         $select->columns(array('pkg_id'))
                ->where(array('hardware_id' => $this['Id']))
@@ -416,7 +416,7 @@ class Client extends \Model\ClientOrGroup
     public function getItems($type, $order = null, $direction = null, $filters = array())
     {
         $filters['Client'] = $this['Id'];
-        return $this->serviceLocator->get('Model\Client\ItemManager')->getItems(
+        return $this->_serviceLocator->get('Model\Client\ItemManager')->getItems(
             $type,
             $filters,
             $order,
@@ -434,12 +434,12 @@ class Client extends \Model\ClientOrGroup
      */
     public function setGroupMemberships($newMemberships)
     {
-        $groupMemberships = $this->serviceLocator->get('Database\Table\GroupMemberships');
+        $groupMemberships = $this->_serviceLocator->get('Database\Table\GroupMemberships');
 
         // Build lookup tables
         $groupsById = array();
         $groupsByName = array();
-        foreach ($this->serviceLocator->get('Model\Group\GroupManager')->getGroups() as $group) {
+        foreach ($this->_serviceLocator->get('Model\Group\GroupManager')->getGroups() as $group) {
             $groupsById[$group['Id']] = $group;
             $groupsByName[$group['Name']] = $group;
         }
@@ -523,7 +523,7 @@ class Client extends \Model\ClientOrGroup
      */
     public function getGroupMemberships($membershipType)
     {
-        $groupMemberships = $this->serviceLocator->get('Database\Table\GroupMemberships');
+        $groupMemberships = $this->_serviceLocator->get('Database\Table\GroupMemberships');
         $select = $groupMemberships->getSql()->select();
         $select->columns(array('group_id', 'static'));
 
@@ -545,7 +545,7 @@ class Client extends \Model\ClientOrGroup
         }
         $select->where(array('hardware_id' => $this['Id']));
 
-        $this->serviceLocator->get('Model\Group\GroupManager')->updateCache();
+        $this->_serviceLocator->get('Model\Group\GroupManager')->updateCache();
 
         $result = array();
         foreach ($groupMemberships->selectWith($select) as $row) {
@@ -565,7 +565,7 @@ class Client extends \Model\ClientOrGroup
     {
         if ($this->_groups === null) {
             $this->_groups = iterator_to_array(
-                $this->serviceLocator->get('Model\Group\GroupManager')->getGroups('Member', $this['Id'])
+                $this->_serviceLocator->get('Model\Group\GroupManager')->getGroups('Member', $this['Id'])
             );
         }
         return $this->_groups;
@@ -577,7 +577,7 @@ class Client extends \Model\ClientOrGroup
      */
     public function setCustomFields($values)
     {
-        $this->serviceLocator->get('Model\Client\CustomFieldManager')->write($this['Id'], $values);
+        $this->_serviceLocator->get('Model\Client\CustomFieldManager')->write($this['Id'], $values);
     }
 
     /**
@@ -587,8 +587,8 @@ class Client extends \Model\ClientOrGroup
      */
     public function toDomDocument()
     {
-        $document = clone $this->serviceLocator->get('Protocol\Message\InventoryRequest');
-        $document->loadClient($this, $this->serviceLocator);
+        $document = clone $this->_serviceLocator->get('Protocol\Message\InventoryRequest');
+        $document->loadClient($this, $this->_serviceLocator);
         return $document;
     }
 }

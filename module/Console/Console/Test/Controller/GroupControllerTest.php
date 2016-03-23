@@ -61,6 +61,8 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
      */
     public function setUp()
     {
+        parent::setUp();
+
         $this->_groupManager = $this->getMockBuilder('Model\Group\GroupManager')
                                     ->disableOriginalConstructor()
                                     ->getMock();
@@ -70,25 +72,15 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_packageAssignmentForm = $this->getMock('Console\Form\Package\Assign');
         $this->_addToGroupForm = $this->getMock('Console\Form\AddToGroup');
         $this->_clientConfigForm = $this->getMock('Console\Form\ClientConfig');
-        parent::setUp();
-    }
 
-    /** {@inheritdoc} */
-    protected function _createController()
-    {
-        return new \Console\Controller\GroupController(
-            $this->_groupManager,
-            $this->_clientManager,
-            $this->_packageAssignmentForm,
-            $this->_addToGroupForm,
-            $this->_clientConfigForm
-        );
-    }
-
-    public function testService()
-    {
-        $this->_overrideService('Console\Form\AddToGroup', $this->_addToGroupForm);
-        parent::testService();
+        $this->getApplicationServiceLocator()
+             ->setAllowOverride(true)
+             ->setService('Model\Group\GroupManager', $this->_groupManager)
+             ->setService('Model\Client\ClientManager', $this->_clientManager)
+             ->get('FormElementManager')
+             ->setService('Console\Form\Package\Assign', $this->_packageAssignmentForm)
+             ->setService('Console\Form\AddToGroup', $this->_addToGroupForm)
+             ->setService('Console\Form\ClientConfig', $this->_clientConfigForm);
     }
 
     public function testInvalidGroup()

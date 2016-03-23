@@ -41,18 +41,16 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
     /** {@inheritdoc} */
     public function setUp()
     {
+        parent::setUp();
+
         $this->_authenticationService = $this->getMock('\Model\Operator\AuthenticationService');
         $this->_form = $this->getMock('Console\Form\Login');
-        parent::setUp();
-    }
 
-    /** {@inheritdoc} */
-    protected function _createController()
-    {
-        return new \Console\Controller\LoginController(
-            $this->_authenticationService,
-            $this->_form
-        );
+        $this->getApplicationServiceLocator()
+             ->setAllowOverride(true)
+             ->setService('Model\Operator\AuthenticationService', $this->_authenticationService)
+             ->get('FormElementManager')
+             ->setService('Console\Form\Login', $this->_form);
     }
 
     /**

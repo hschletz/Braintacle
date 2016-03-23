@@ -49,7 +49,7 @@ class Packages extends \Database\AbstractTable
             'num_success' => 'NumSuccess',
             'num_error' => 'NumError',
         );
-        $this->_hydrator = new \Zend\Stdlib\Hydrator\ArraySerializable;
+        $this->_hydrator = new \Zend\Hydrator\ArraySerializable;
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy($map)
         );

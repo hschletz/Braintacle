@@ -42,7 +42,7 @@ class Group extends \Model\ClientOrGroup
     /** {@inheritdoc} */
     public function getDefaultConfig($option)
     {
-        $config = $this->serviceLocator->get('Model\Config');
+        $config = $this->_serviceLocator->get('Model\Config');
         if ($option == 'allowScan') {
             if ($config->scannersPerSubnet == 0) {
                 $value = 0;
@@ -75,7 +75,7 @@ class Group extends \Model\ClientOrGroup
     public function setMembersFromQuery($type, $filter, $search, $operator, $invert)
     {
         $id = $this['Id'];
-        $members = $this->serviceLocator->get('Model\Client\ClientManager')->getClients(
+        $members = $this->_serviceLocator->get('Model\Client\ClientManager')->getClients(
             array('Id'),
             null,
             null,
@@ -96,9 +96,9 @@ class Group extends \Model\ClientOrGroup
             if ($numCols != 1) {
                 throw new \LogicException('Expected 1 column, got ' . $numCols);
             }
-            $sql = new \Zend\Db\Sql\Sql($this->serviceLocator->get('Db'));
+            $sql = new \Zend\Db\Sql\Sql($this->_serviceLocator->get('Db'));
             $query = $sql->buildSqlString($members);
-            $this->serviceLocator->get('Database\Table\GroupInfo')->update(
+            $this->_serviceLocator->get('Database\Table\GroupInfo')->update(
                 array('request' => $query),
                 array('hardware_id' => $id)
             );
@@ -111,7 +111,7 @@ class Group extends \Model\ClientOrGroup
             }
             // Get list of existing memberships
             $existingMemberships = array();
-            $groupMemberships = $this->serviceLocator->get('Database\Table\GroupMemberships');
+            $groupMemberships = $this->_serviceLocator->get('Database\Table\GroupMemberships');
             $select = $groupMemberships->getSql()->select();
             $select->columns(array('hardware_id', 'static'))->where(array('group_id' => $id));
             foreach ($groupMemberships->selectWith($select) as $membership) {
@@ -162,7 +162,7 @@ class Group extends \Model\ClientOrGroup
             return; // Nothing to do if no SQL query is defined for this group
         }
 
-        $now = $this->serviceLocator->get('Library\Now');
+        $now = $this->_serviceLocator->get('Library\Now');
         // Do nothing if cache has not expired yet and update is not forced.
         if (!$force and $this['CacheExpirationDate'] > $now) {
             return;
@@ -172,10 +172,10 @@ class Group extends \Model\ClientOrGroup
             return; // Another process is currently updating this group.
         }
 
-        $clients = $this->serviceLocator->get('Database\Table\Clients');
-        $groupInfo = $this->serviceLocator->get('Database\Table\GroupInfo');
-        $groupMemberships = $this->serviceLocator->get('Database\Table\GroupMemberships');
-        $config = $this->serviceLocator->get('Model\Config');
+        $clients = $this->_serviceLocator->get('Database\Table\Clients');
+        $groupInfo = $this->_serviceLocator->get('Database\Table\GroupInfo');
+        $groupMemberships = $this->_serviceLocator->get('Database\Table\GroupMemberships');
+        $config = $this->_serviceLocator->get('Model\Config');
 
         // Remove dynamic memberships where client no longer meets the criteria
         $groupMemberships->delete(
@@ -211,7 +211,7 @@ class Group extends \Model\ClientOrGroup
         $minExpires->modify(
             sprintf(
                 '+%d seconds',
-                $this->serviceLocator->get('Library\Random')->getInteger(
+                $this->_serviceLocator->get('Library\Random')->getInteger(
                     0,
                     $config->groupCacheExpirationFuzz
                 )
@@ -240,7 +240,7 @@ class Group extends \Model\ClientOrGroup
      */
     public function getPackages($direction = 'asc')
     {
-        $packages = $this->serviceLocator->get('Database\Table\Packages');
+        $packages = $this->_serviceLocator->get('Database\Table\Packages');
         $select = $packages->getSql()->select();
         $select->columns(array('name'))
                ->join('devices', 'ivalue = fileid', array())

@@ -155,7 +155,7 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
                             ->getMock();
         $itemTypes = $itemManager->getItemTypes();
 
-        $itemHydrator = $this->getMock('Zend\Stdlib\Hydrator\ArraySerializable');
+        $itemHydrator = $this->getMock('Zend\Hydrator\ArraySerializable');
         $itemHydrator->method('extract')->will(
             $this->returnCallback(
                 function ($data) {

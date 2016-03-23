@@ -40,23 +40,18 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function setUp()
     {
+        parent::setUp();
+
         $this->_duplicates = $this->getMockBuilder('Model\Client\DuplicatesManager')
                                   ->disableOriginalconstructor()
                                   ->getMock();
         $this->_showDuplicates = $this->getMock('Console\Form\ShowDuplicates');
-        parent::setUp();
-    }
 
-    protected function _createController()
-    {
-        return new \Console\Controller\DuplicatesController($this->_duplicates, $this->_showDuplicates);
-    }
-
-    public function testService()
-    {
-        $this->_overrideService('Model\Client\DuplicatesManager', $this->_duplicates);
-        $this->_overrideService('Console\Form\ShowDuplicates', $this->_showDuplicates, 'FormElementManager');
-        parent::testService();
+        $this->getApplicationServiceLocator()
+             ->setAllowOverride(true)
+             ->setService('Model\Client\DuplicatesManager', $this->_duplicates)
+             ->get('FormElementManager')
+             ->setService('Console\Form\ShowDuplicates', $this->_showDuplicates);
     }
 
     public function testIndexActionNoDuplicates()

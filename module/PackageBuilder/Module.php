@@ -62,8 +62,14 @@ class Module implements
                 )
             ),
             'controllers' => array(
-                'invokables' => array(
-                    'PackageBuilder\Controller' => 'PackageBuilder\Controller',
+                'factories' => array(
+                    'PackageBuilder\Controller' => function ($serviceLocator) {
+                        $serviceManager = $serviceLocator->getServiceLocator();
+                        return new Controller(
+                            $serviceManager->get('Model\Config'),
+                            $serviceManager->get('Model\Package\PackageManager')
+                        );
+                    }
                 )
             ),
         );

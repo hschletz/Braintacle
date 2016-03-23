@@ -51,12 +51,6 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     protected $_softwareManager;
 
     /**
-     * Form manager mock
-     * @var \Zend\Form\FormElementManager
-     */
-    protected $_formManager;
-
-    /**
      * Config mock
      * @var \Model\Config
      */
@@ -113,6 +107,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function setUp()
     {
+        parent::setUp();
+
         $this->_clientManager = $this->getMockBuilder('Model\Client\ClientManager')
                                      ->disableOriginalConstructor()
                                      ->getMock();
@@ -125,46 +121,28 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_softwareManager = $this->getMockBuilder('Model\SoftwareManager')
                                        ->disableOriginalConstructor()
                                        ->getMock();
-        $this->_formManager = new \Zend\Form\FormElementManager;
-        $this->_formManager->setService('Console\Form\Package\Assign', $this->getMock('Console\Form\Package\Assign'));
-        $this->_formManager->setService('Console\Form\ClientConfig', $this->getMock('Console\Form\ClientConfig'));
-        $this->_formManager->setService('Console\Form\CustomFields', $this->getMock('Console\Form\CustomFields'));
-        $this->_formManager->setService('Console\Form\DeleteClient', $this->getMock('Console\Form\DeleteClient'));
-        $this->_formManager->setService(
-            'Console\Form\GroupMemberships',
-            $this->getMock('Console\Form\GroupMemberships')
-        );
-        $this->_formManager->setService('Console\Form\Import', $this->getMock('Console\Form\Import'));
-        $this->_formManager->setService('Console\Form\ProductKey', $this->getMock('Console\Form\ProductKey'));
-        $this->_formManager->setService('Console\Form\Search', $this->getMock('Console\Form\Search'));
-
         $this->_config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
-        $this->_inventoryUploader = $this->getMockBuilder('\Library\InventoryUploader')
+        $this->_inventoryUploader = $this->getMockBuilder('Library\InventoryUploader')
                                          ->disableOriginalConstructor()
                                          ->getMock();
 
-        parent::setUp();
-    }
-
-    /** {@inheritdoc} */
-    protected function _createController()
-    {
-        return new \Console\Controller\ClientController(
-            $this->_clientManager,
-            $this->_groupManager,
-            $this->_registryManager,
-            $this->_softwareManager,
-            $this->_formManager,
-            $this->_config,
-            $this->_inventoryUploader
-        );
-    }
-
-    public function testService()
-    {
-        $this->_overrideService('Model\Client\ClientManager', $this->_clientManager);
-        $this->_overrideService('Model\Config', $this->_config);
-        parent::testService();
+        $this->getApplicationServiceLocator()
+             ->setAllowOverride(true)
+             ->setService('Model\Client\ClientManager', $this->_clientManager)
+             ->setService('Model\Group\GroupManager', $this->_groupManager)
+             ->setService('Model\Registry\RegistryManager', $this->_registryManager)
+             ->setService('Model\SoftwareManager', $this->_softwareManager)
+             ->setService('Model\Config', $this->_config)
+             ->setService('Library\InventoryUploader', $this->_inventoryUploader)
+             ->get('FormElementManager')
+             ->setService('Console\Form\Package\Assign', $this->getMock('Console\Form\Package\Assign'))
+             ->setService('Console\Form\ClientConfig', $this->getMock('Console\Form\ClientConfig'))
+             ->setService('Console\Form\CustomFields', $this->getMock('Console\Form\CustomFields'))
+             ->setService('Console\Form\DeleteClient', $this->getMock('Console\Form\DeleteClient'))
+             ->setService('Console\Form\GroupMemberships', $this->getMock('Console\Form\GroupMemberships'))
+             ->setService('Console\Form\Import', $this->getMock('Console\Form\Import'))
+             ->setService('Console\Form\ProductKey', $this->getMock('Console\Form\ProductKey'))
+             ->setService('Console\Form\Search', $this->getMock('Console\Form\Search'));
     }
 
     public function testInvalidClient()
@@ -215,7 +193,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionWithoutParams()
     {
-        $form = $this->_formManager->get('Console\Form\Search');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->never())
              ->method('setData');
         $this->_clientManager->expects($this->once())
@@ -243,7 +221,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionWithColumnList()
     {
-        $form = $this->_formManager->get('Console\Form\Search');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->never())
              ->method('setData');
         $this->_clientManager->expects($this->once())
@@ -290,7 +268,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionWithValidJumpto()
     {
-        $form = $this->_formManager->get('Console\Form\Search');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->never())
              ->method('setData');
         $this->_clientManager->expects($this->once())->method('getClients')->willReturn($this->_sampleClients);
@@ -305,7 +283,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionWithInvalidJumpto()
     {
-        $form = $this->_formManager->get('Console\Form\Search');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->never())
              ->method('setData');
         $this->_clientManager->expects($this->once())->method('getClients')->willReturn($this->_sampleClients);
@@ -320,7 +298,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionWithBuiltinSingleFilter()
     {
-        $form = $this->_formManager->get('Console\Form\Search');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->never())
              ->method('setData');
         $this->_clientManager->expects($this->once())
@@ -345,7 +323,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionWithBuiltinMultiFilter()
     {
-        $form = $this->_formManager->get('Console\Form\Search');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->never())
              ->method('setData');
         $this->_clientManager->expects($this->once())
@@ -374,7 +352,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionWithBuiltinSoftwareFilter()
     {
-        $form = $this->_formManager->get('Console\Form\Search');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->never())
              ->method('setData');
         $this->_clientManager->expects($this->once())
@@ -406,7 +384,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'invert' => '1',
             'customSearch' => 'button',
         );
-        $form = $this->_formManager->get('Console\Form\Search');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
              ->method('setData')
              ->with($formData);
@@ -445,7 +423,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testIndexActionWithCustomEqualitySearchOnDateColumn()
     {
         $date = new \DateTime('2014-05-12');
-        $form = $this->_formManager->get('Console\Form\Search');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
              ->method('setData')
              ->with(
@@ -496,7 +474,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testIndexActionWithCustomEqualitySearchOnNonDefaultColumn()
     {
         // Equality search should not add the searched column.
-        $form = $this->_formManager->get('Console\Form\Search');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
              ->method('isValid')
              ->will($this->returnValue(true));
@@ -533,7 +511,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testIndexActionWithCustomNonEqualitySearchOnNonDefaultColumn()
     {
         // Non-equality search should add the searched column.
-        $form = $this->_formManager->get('Console\Form\Search');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
              ->method('isValid')
              ->will($this->returnValue(true));
@@ -570,7 +548,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testIndexActionWithCustomInvertedEqualitySearchOnNonDefaultColumn()
     {
         // Inverted equality search should add the searched column.
-        $form = $this->_formManager->get('Console\Form\Search');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
              ->method('isValid')
              ->will($this->returnValue(true));
@@ -613,7 +591,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'invert' => '0',
             'customSearch' => 'button',
         );
-        $form = $this->_formManager->get('Console\Form\Search');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
              ->method('setData')
              ->with($formData);
@@ -650,7 +628,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'invert' => '0',
             'customSearch' => 'button',
         );
-        $form = $this->_formManager->get('Console\Form\Search');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
              ->method('setData')
              ->with($formData);
@@ -689,7 +667,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'invert' => '0',
             'customSearch' => 'button',
         );
-        $form = $this->_formManager->get('Console\Form\Search');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
              ->method('setData')
              ->with($formData);
@@ -732,7 +710,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'invert' => '0',
             'customSearch' => 'button',
         );
-        $form = $this->_formManager->get('Console\Form\Search');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
              ->method('setData')
              ->with($formData);
@@ -764,7 +742,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionWithInvalidCustomSearch()
     {
-        $form = $this->_formManager->get('Console\Form\Search');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
              ->method('setData');
         $form->expects($this->once())
@@ -969,8 +947,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('prepare');
         $form->init();
-        $this->_formManager = new \Zend\Form\FormElementManager;
-        $this->_formManager->setService('Console\Form\ProductKey', $form);
+
+        $this->getApplicationServiceLocator()->get('FormElementManager')->setService('Console\Form\ProductKey', $form);
+
         $windows = array(
             'Company' => 'company',
             'Owner' => 'owner',
@@ -1018,8 +997,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->method('prepare');
         $form->init();
         $form->get('Key')->setMessages(array('message'));
-        $this->_formManager = new \Zend\Form\FormElementManager;
-        $this->_formManager->setService('Console\Form\ProductKey', $form);
+
+        $this->getApplicationServiceLocator()->get('FormElementManager')->setService('Console\Form\ProductKey', $form);
+
         $this->_softwareManager->expects($this->never())->method('setProductKey');
         $this->dispatch('/console/client/windows/?id=1', 'POST', $postData);
         $this->assertResponseStatusCode(200);
@@ -1029,7 +1009,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testWindowsActionPostValid()
     {
         $postData = array('Key' => 'entered_key');
-        $form = $this->_formManager->get('Console\Form\ProductKey');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\ProductKey');
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -2112,7 +2092,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'CustomFields' => $customFields,
         );
         $this->_clientManager->method('getClient')->willReturn($client);
-        $form = $this->_formManager->get('Console\Form\CustomFields');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\CustomFields');
         $form->expects($this->never())
              ->method('isValid');
         $form->expects($this->never())
@@ -2139,7 +2119,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             '_csrf' => 'csrf',
             'Fields' => array('field1' => 'value1', 'field2' => 'value2')
         );
-        $form = $this->_formManager->get('Console\Form\CustomFields');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\CustomFields');
         $form->expects($this->once())
              ->method('isValid')
              ->will($this->returnValue(false));
@@ -2165,7 +2145,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             '_csrf' => 'csrf',
             'Fields' => array('field1' => 'value1', 'field2' => 'value2')
         );
-        $form = $this->_formManager->get('Console\Form\CustomFields');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\CustomFields');
         $form->expects($this->once())
              ->method('isValid')
              ->will($this->returnValue(true));
@@ -2195,7 +2175,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testPackagesActionNoPackages()
     {
-        $form = $this->_formManager->get('Console\Form\Package\Assign');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Package\Assign');
         $form->expects($this->never())
              ->method('setPackages');
         $form->expects($this->never())
@@ -2220,7 +2200,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testPackagesActionAssigned()
     {
-        $form = $this->_formManager->get('Console\Form\Package\Assign');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Package\Assign');
         $form->expects($this->never())
              ->method('setPackages');
         $form->expects($this->never())
@@ -2281,7 +2261,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testPackagesActionInstallable()
     {
         $packages = array('package1', 'package2');
-        $form = $this->_formManager->get('Console\Form\Package\Assign');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Package\Assign');
         $form->expects($this->once())
              ->method('setPackages')
              ->with($packages);
@@ -2318,7 +2298,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
         $resultSet->initialize(array());
-        $form = $this->_formManager->get('Console\Form\GroupMemberships');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
         $form->expects($this->never())
              ->method('render');
         $client = $this->getMock('Model\Client\Client');
@@ -2347,7 +2327,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'group1' => \Model\Client\Client::MEMBERSHIP_NEVER,
             'group2' => \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
         );
-        $form = $this->_formManager->get('Console\Form\GroupMemberships');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
         $form->expects($this->once())
              ->method('render')
              ->will($this->returnValue('<form></form>'));
@@ -2393,7 +2373,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'group1' => \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
             'group2' => \Model\Client\Client::MEMBERSHIP_ALWAYS,
         );
-        $form = $this->_formManager->get('Console\Form\GroupMemberships');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
         $form->expects($this->once())
              ->method('render')
              ->will($this->returnValue('<form></form>'));
@@ -2438,7 +2418,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client = $this->getMock('Model\Client\Client');
         $client->expects($this->once())->method('getAllConfig')->willReturn($config);
         $this->_clientManager->method('getClient')->willReturn($client);
-        $form = $this->_formManager->get('Console\Form\ClientConfig');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\ClientConfig');
         $form->expects($this->once())
              ->method('setClientObject')
              ->with($client);
@@ -2462,7 +2442,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $postData = array('key' => 'value');
         $client = $this->getMock('Model\Client\Client');
         $this->_clientManager->method('getClient')->willReturn($client);
-        $form = $this->_formManager->get('Console\Form\ClientConfig');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\ClientConfig');
         $form->expects($this->once())
              ->method('setClientObject')
              ->with($client);
@@ -2490,7 +2470,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client->method('offsetGet')->will($this->returnValueMap(array(array('Id', 1))));
         $this->_clientManager->method('getClient')->willReturn($client);
 
-        $form = $this->_formManager->get('Console\Form\ClientConfig');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\ClientConfig');
         $form->expects($this->once())
              ->method('setClientObject')
              ->with($client);
@@ -2511,7 +2491,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionGet()
     {
-        $form = $this->_formManager->get('Console\Form\DeleteClient');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\DeleteClient');
         $form->expects($this->once())
              ->method('render')
              ->will($this->returnValue('<form></form>'));
@@ -2535,7 +2515,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionPostNo()
     {
-        $form = $this->_formManager->get('Console\Form\DeleteClient');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\DeleteClient');
         $form->expects($this->never())
              ->method('render');
         $map = array(
@@ -2553,7 +2533,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionPostYesDeleteInterfacesSuccess()
     {
-        $form = $this->_formManager->get('Console\Form\DeleteClient');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\DeleteClient');
         $form->expects($this->never())
              ->method('render');
         $map = array(
@@ -2578,7 +2558,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionPostYesKeepInterfacesError()
     {
-        $form = $this->_formManager->get('Console\Form\DeleteClient');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\DeleteClient');
         $form->expects($this->never())
              ->method('render');
         $map = array(
@@ -2648,7 +2628,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testassignpackageActionGet()
     {
-        $form = $this->_formManager->get('Console\Form\Package\Assign');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Package\Assign');
         $form->expects($this->never())
              ->method('isValid');
         $form->expects($this->never())
@@ -2670,7 +2650,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testassignpackageActionPostInvalid()
     {
         $postData = array('package1' => '1', 'package2' => '1');
-        $form = $this->_formManager->get('Console\Form\Package\Assign');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Package\Assign');
         $form->expects($this->once())
              ->method('isValid')
              ->will($this->returnValue(false));
@@ -2694,7 +2674,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testassignpackageActionPostValid()
     {
         $postData = array('Packages' => array('package1' => '0', 'package2' => '1'));
-        $form = $this->_formManager->get('Console\Form\Package\Assign');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Package\Assign');
         $form->expects($this->once())
              ->method('isValid')
              ->will($this->returnValue(true));
@@ -2718,7 +2698,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testManagegroupsActionGet()
     {
-        $form = $this->_formManager->get('Console\Form\GroupMemberships');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
         $form->expects($this->never())
              ->method('setData');
         $form->expects($this->never())
@@ -2742,7 +2722,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $postData = array(
             'Groups' => array('group1' => '1', 'group2' => '2')
         );
-        $form = $this->_formManager->get('Console\Form\GroupMemberships');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -2768,7 +2748,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $postData = array(
             'Groups' => array('group1' => '1', 'group2' => '2')
         );
-        $form = $this->_formManager->get('Console\Form\GroupMemberships');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -2792,7 +2772,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testSearchActionNoPreset()
     {
-        $form = $this->_formManager->get('Console\Form\Search');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->never())
              ->method('setData');
         $form->expects($this->never())
@@ -2814,7 +2794,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testSearchActionPreset()
     {
-        $form = $this->_formManager->get('Console\Form\Search');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
              ->method('setData')
              ->with(array('filter' => 'Name', 'search' => 'value'));
@@ -2837,7 +2817,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testImportActionGet()
     {
-        $form = $this->_formManager->get('Console\Form\Import');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Import');
         $form->expects($this->never())
              ->method('isValid');
         $form->expects($this->never())
@@ -2859,7 +2839,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testImportActionPostInvalid()
     {
         $postData = array('key' => 'value');
-        $form = $this->_formManager->get('Console\Form\Import');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Import');
         $form->expects($this->once())
              ->method('isValid')
              ->will($this->returnValue(false));
@@ -2883,7 +2863,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $fileSpec = array('tmp_name' => 'uploaded_file');
         $this->getRequest()->getFiles()->set('File', $fileSpec);
         $postData = array('key' => 'value');
-        $form = $this->_formManager->get('Console\Form\Import');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Import');
         $form->expects($this->once())
              ->method('isValid')
              ->will($this->returnValue(true));
@@ -2925,7 +2905,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $fileSpec = array('tmp_name' => 'uploaded_file');
         $this->getRequest()->getFiles()->set('File', $fileSpec);
         $postData = array('key' => 'value');
-        $form = $this->_formManager->get('Console\Form\Import');
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Import');
         $form->expects($this->once())
              ->method('isValid')
              ->will($this->returnValue(true));
@@ -2949,6 +2929,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                                  ->with('uploaded_file')
                                  ->will($this->returnValue($response));
         $this->dispatch('/console/client/import/', 'POST', $postData);
+        error_log($this->getResponse()->getContent());
         $this->assertRedirectTo('/console/client/index/');
     }
 

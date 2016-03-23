@@ -31,7 +31,7 @@ class NetworkInterfacesTest extends AbstractTest
     public function testHydrator()
     {
         $hydrator = static::$_table->getHydrator();
-        $this->assertInstanceOf('Zend\Stdlib\Hydrator\ArraySerializable', $hydrator);
+        $this->assertInstanceOf('Zend\Hydrator\ArraySerializable', $hydrator);
 
         $map = $hydrator->getNamingStrategy();
         $this->assertInstanceOf('Database\Hydrator\NamingStrategy\MapNamingStrategy', $map);

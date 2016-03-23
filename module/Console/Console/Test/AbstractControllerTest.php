@@ -29,12 +29,6 @@ namespace Console\Test;
 abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
 {
     /**
-     * ControllerManager mock
-     * @var \Zend\Mvc\Controller\ControllerManager
-     */
-    protected $_controllerManager;
-
-    /**
      * Set up application config
      */
     public function setUp()
@@ -43,82 +37,6 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
 
         $this->setTraceError(true);
         $this->setApplicationConfig(\Library\Application::getService('ApplicationConfig'));
-        $this->_controllerManager = $this->getMock('Zend\Mvc\Controller\ControllerManager');
-        $this->_controllerManager->expects($this->any())
-                                 ->method('has')
-                                 ->will($this->returnValue(true));
-        $this->_controllerManager->expects($this->any())
-                                 ->method('get')
-                                 ->will($this->returnCallback(array($this, 'createController')));
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('ControllerManager', $this->_controllerManager);
-    }
-
-    /**
-     * Get the name of the controller, derived from the test class name
-     *
-     * @return string Controller name
-     */
-    protected function _getControllerName()
-    {
-        // Derive controller name from test class name (minus namespace and 'ControllerTest' suffix)
-        return substr(strrchr(get_class($this), '\\'), 1, -14);
-    }
-
-    /**
-     * Get the name of the controller class, derived from the test class name
-     *
-     * @return string Controller class name
-     */
-    protected function _getControllerClass()
-    {
-        // Derive controller class from test class name (minus \Test namespace and 'Test' suffix)
-        return substr(str_replace('\Test', '', get_class($this)), 0, -4);
-    }
-
-    /**
-     * Create the controller
-     *
-     * @return \Zend\Stdlib\DispatchableInterface Controller instance
-     */
-    public function createController()
-    {
-        $controller = $this->_createController();
-        $controller->setPluginManager($this->getApplicationServiceLocator()->get('ControllerPluginManager'));
-        return $controller;
-    }
-
-    /**
-     * Create controller instance
-     *
-     * This abstract method must be implemented by derived classes. It returns a
-     * controller instance, with all controller-specific dependencies injected.
-     *
-     * @return \Zend\Stdlib\DispatchableInterface
-     */
-    abstract protected function _createController();
-
-    /**
-     * Override a service globally
-     *
-     * @param string $name Service name
-     * @param mixed $service New service (a mock object, for example)
-     * @param string $serviceLocatorName Service locator to manipulate (default: 'ServiceManager')
-     */
-    protected function _overrideService($name, $service, $serviceLocatorName = 'ServiceManager')
-    {
-        $serviceLocator = \Library\Application::getService($serviceLocatorName);
-        $serviceLocator->setAllowOverride(true)->setService($name, $service);
-    }
-
-    /**
-     * Test if the controller is properly registered with the service manager
-     */
-    public function testService()
-    {
-        $controller = \Library\Application::getService('ControllerManager')->get($this->_getControllerName());
-        $this->assertInstanceOf($this->_getControllerClass(), $controller);
     }
 
     /**

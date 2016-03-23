@@ -27,7 +27,7 @@ namespace Database\Hydrator\NamingStrategy;
  * Extends MapNamingStrategy to throw an exception on undefined values.
  * Hydrated/extracted names must differ from the original name.
  */
-class MapNamingStrategy extends \Zend\Stdlib\Hydrator\NamingStrategy\MapNamingStrategy
+class MapNamingStrategy extends \Zend\Hydrator\NamingStrategy\MapNamingStrategy
 {
     /**
      * {@inheritdoc}

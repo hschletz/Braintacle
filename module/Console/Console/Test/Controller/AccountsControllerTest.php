@@ -47,29 +47,20 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
     /** {@inheritdoc} */
     public function setUp()
     {
+        parent::setUp();
+
         $this->_operatorManager = $this->getMockBuilder('Model\Operator\OperatorManager')
                                        ->disableOriginalConstructor()
                                        ->getMock();
         $this->_formAccountAdd = $this->getMock('Console\Form\Account\Add');
         $this->_formAccountEdit = $this->getMock('Console\Form\Account\Edit');
-        parent::setUp();
-    }
 
-    /** {@inheritdoc} */
-    protected function _createController()
-    {
-        return new \Console\Controller\AccountsController(
-            $this->_operatorManager,
-            $this->_formAccountAdd,
-            $this->_formAccountEdit
-        );
-    }
-
-    public function testService()
-    {
-        $this->_overrideService('Console\Form\Account\Add', $this->_formAccountAdd, 'FormElementManager');
-        $this->_overrideService('Console\Form\Account\Edit', $this->_formAccountEdit, 'FormElementManager');
-        parent::testService();
+        $this->getApplicationServiceLocator()
+             ->setAllowOverride(true)
+             ->setService('Model\Operator\OperatorManager', $this->_operatorManager)
+             ->get('FormElementManager')
+             ->setService('Console\Form\Account\Add', $this->_formAccountAdd)
+             ->setService('Console\Form\Account\Edit', $this->_formAccountEdit);
     }
 
     public function testIndexActionCurrentAccount()

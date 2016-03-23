@@ -38,7 +38,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
 
     /**
      * Hydrator
-     * @var \Zend\Stdlib\Hydrator\AbstractHydrator
+     * @var \Zend\Hydrator\AbstractHydrator
      */
     protected $_hydrator;
 
@@ -63,7 +63,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
     /**
      * Get hydrator suitable for bridging with model
      *
-     * @return \Zend\Stdlib\Hydrator\AbstractHydrator|null
+     * @return \Zend\Hydrator\AbstractHydrator|null
      */
     public function getHydrator()
     {
@@ -162,7 +162,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
         // Map column name to corresponding result key
         if ($resultSet instanceof \Zend\Db\ResultSet\HydratingResultSet) {
             $hydrator = $resultSet->getHydrator();
-            if ($hydrator instanceof \Zend\Stdlib\Hydrator\AbstractHydrator) {
+            if ($hydrator instanceof \Zend\Hydrator\AbstractHydrator) {
                 $name = $hydrator->hydrateName($name);
             }
         }

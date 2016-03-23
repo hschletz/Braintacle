@@ -28,6 +28,18 @@ use Zend\Log\Logger;
  */
 class Controller extends \Zend\Mvc\Controller\AbstractConsoleController
 {
+    /**
+     * Schema manager
+     * @var \Database\SchemaManager
+     */
+    protected $_schemaManager;
+
+    /**
+     * Logger
+     * @var \Zend\Log\LoggerInterface
+     */
+    protected $_logger;
+
     protected $_priorities = array(
         'emerg' => Logger::EMERG,
         'alert' => Logger::ALERT,
@@ -40,12 +52,22 @@ class Controller extends \Zend\Mvc\Controller\AbstractConsoleController
     );
 
     /**
+     * Constructor
+     *
+     * @param \Database\SchemaManager $schemaManager
+     * @param \Zend\Log\LoggerInterface $logger
+     */
+    public function __construct(\Database\SchemaManager $schemaManager, \Zend\Log\LoggerInterface $logger)
+    {
+        $this->_schemaManager = $schemaManager;
+        $this->_logger = $logger;
+    }
+
+    /**
      * Manage database schema
      */
     public function schemaManagerAction()
     {
-        $serviceManager = $this->getServiceLocator();
-
         // Set up logger. Log level is already validated by route.
         $writer = new \Zend\Log\Writer\Stream('php://stderr');
         $writer->addFilter(
@@ -53,9 +75,8 @@ class Controller extends \Zend\Mvc\Controller\AbstractConsoleController
             array('priority' => $this->_priorities[$this->getRequest()->getParam('loglevel', 'info')])
         );
         $writer->setFormatter('Simple', array('format' => '%priorityName%: %message%'));
-        $logger = $serviceManager->get('Library\Logger');
-        $logger->addWriter($writer);
+        $this->_logger->addWriter($writer);
 
-        $serviceManager->get('Database\SchemaManager')->updateAll();
+        $this->_schemaManager->updateAll();
     }
 }
