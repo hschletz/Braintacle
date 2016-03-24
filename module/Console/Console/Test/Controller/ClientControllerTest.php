@@ -2929,7 +2929,6 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                                  ->with('uploaded_file')
                                  ->will($this->returnValue($response));
         $this->dispatch('/console/client/import/', 'POST', $postData);
-        error_log($this->getResponse()->getContent());
         $this->assertRedirectTo('/console/client/index/');
     }
 
