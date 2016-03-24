@@ -440,6 +440,30 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $model->buildPackage($data, false);
     }
 
+    public function testBuildPackageExceptionIgnoresDeleteError()
+    {
+        $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
+        $storage->expects($this->once())->method('prepare')->willThrowException(new \Exception('relevant error'));
+
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')->willReturnMap(
+            array(
+                array('Library\Now', true, new \DateTime),
+                array('Model\Package\Storage\Direct', true, $storage),
+            )
+        );
+
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethods(array('packageExists', 'deletePackage'))
+                      ->setConstructorArgs(array($serviceManager))
+                      ->getMock();
+        $model->expects($this->once())->method('packageExists')->willReturn(false);
+        $model->expects($this->once())->method('deletePackage')->willThrowException(new \Exception('ignored'));
+
+        $this->setExpectedException('Exception', 'relevant error');
+        $model->buildPackage(array('Name' => 'name'), false);
+    }
+
     public function testAutoArchiveWindowsCreateArchiveKeepSource()
     {
         $root = vfsstream::setup('root');
