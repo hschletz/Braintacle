@@ -19,8 +19,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-print "<div class=\"table_network_devices\">\n";
-
 $headers = array(
     'MacAddress' => $this->translate('MAC address'),
     'IpAddress' => $this->translate('IP address'),
@@ -68,5 +66,3 @@ print $this->table(
     $this->ordering,
     $renderCallbacks
 );
-
-print "</div\n>";

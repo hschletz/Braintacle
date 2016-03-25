@@ -337,14 +337,6 @@ input[size="8"]
     width: 8em;
 }
 
-.table_network_devices, .form_manageregistryvalues table {
-    font-size: 80%;
-}
-
-.table_registry_values td {
-    padding-top: 2ex;
-}
-
 .table label {
     display: table-row;
 }
@@ -515,10 +507,6 @@ input[size="8"]
 
 .form_manageregistryvalues td input {
     margin: 1.2ex 0em 1.2ex 0em;
-}
-
-.form_networkdevicetypes input {
-    display: inline;
 }
 
 .form_networkdevicetypes label span {
