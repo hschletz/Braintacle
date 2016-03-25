@@ -81,9 +81,17 @@ networks:
     macaddr: "00:00:5E:00:53:00"
     description: ""
   -
+    hardware_id: 1
+    macaddr: "00:00:5E:00:53:00"
+    description: "Duplicate MAC address on same client, should count as 1"
+  -
     hardware_id: 2
     macaddr: "00:00:5E:00:53:01"
     description: ""
+  -
+    hardware_id: 2
+    macaddr: "00:00:5E:00:53:01"
+    description: "Duplicate MAC address on same client, should count as 1"
   -
     hardware_id: 3
     macaddr: "00:00:5E:00:53:01"

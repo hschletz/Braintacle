@@ -134,20 +134,24 @@ class DuplicatesManager
             case 'Name':
                 $table = $this->_clients;
                 $column = 'name';
+                $count = 'name';
                 break;
             case 'AssetTag':
                 $table = $this->_clients;
                 $column = 'assettag';
+                $count = 'assettag';
                 $where = 'assettag NOT IN(SELECT assettag FROM braintacle_blacklist_assettags)';
                 break;
             case 'Serial':
                 $table = $this->_clients;
                 $column = 'ssn';
+                $count = 'ssn';
                 $where = 'ssn NOT IN(SELECT serial FROM blacklist_serials)';
                 break;
             case 'MacAddress':
                 $table = $this->_networkInterfaces;
                 $column = 'macaddr';
+                $count = 'DISTINCT hardware_id'; // Count MAC addresses only once per client
                 $where = 'macaddr NOT IN(SELECT macaddress FROM blacklist_macaddresses)';
                 break;
             default:
@@ -156,7 +160,7 @@ class DuplicatesManager
         $select = $table->getSql()->select();
         $select->columns(array($column))
                ->group($column)
-               ->having("COUNT($column) > 1");
+               ->having("COUNT($count) > 1");
         if (isset($where)) {
             $select->where($where);
         }
@@ -175,15 +179,17 @@ class DuplicatesManager
         $column = $subQuery->getRawState($subQuery::COLUMNS)[0];
         if ($criteria == 'MacAddress') {
             $table = $this->_networkInterfaces;
+            $count = 'DISTINCT hardware_id'; // Count clients only once
         } else {
             $table = $this->_clients;
+            $count = $column;
         }
 
         $sql = $table->getSql();
         $select = $sql->select();
         $select->columns(
             array(
-                'num_clients' => new \Zend\Db\Sql\Literal("COUNT($column)")
+                'num_clients' => new \Zend\Db\Sql\Literal("COUNT($count)")
             )
         );
         $select->where(array(new \Zend\Db\Sql\Predicate\In($column, $subQuery)));
@@ -216,6 +222,7 @@ class DuplicatesManager
             false,
             false
         );
+        $select->quantifier(\Zend\Db\Sql\Select::QUANTIFIER_DISTINCT);
         $select->join(
             'networks',
             'networks.hardware_id = clients.id',
