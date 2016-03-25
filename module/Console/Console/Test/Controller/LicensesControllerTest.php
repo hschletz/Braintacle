@@ -46,23 +46,21 @@ class LicensesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionNoManualKeys()
     {
-        // Zero manual product keys produce <dd>0</dd>.
         $this->_softwareManager->expects($this->once())->method('getNumManualProductKeys')->willReturn(0);
 
         $this->dispatch('/console/licenses/index/');
         $this->assertResponseStatusCode(200);
-        $this->assertQueryContentContains('dd', "\n0\n");
+        $this->assertQueryContentContains('p', 'Manuell eingegebene Windows-Lizenzschlüssel: 0');
     }
 
     public function testIndexActionManualKeys()
     {
-        // Nonzero manual product keys produce <dd><a...>n</a></dd>.
         $this->_softwareManager->expects($this->once())->method('getNumManualProductKeys')->willReturn(1);
 
         $this->dispatch('/console/licenses/index/');
         $this->assertResponseStatusCode(200);
         $this->assertXPathQueryContentContains(
-            '//dd/a[@href="/console/client/index/?' .
+            '//p/a[@href="/console/client/index/?' .
             'columns=Name,OsName,Windows.ProductKey,Windows.ManualProductKey&' .
             'filter=Windows.ManualProductKey&order=Name&direction=asc"]',
             "\n1\n"

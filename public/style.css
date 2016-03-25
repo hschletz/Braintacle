@@ -239,6 +239,10 @@ th a {
     white-space: nowrap;
 }
 
+.topspacing {
+    margin-top: 2ex;
+}
+
 .blacklisted {
     color: gray;
 }
@@ -294,19 +298,6 @@ td.label {
 }
 
 /* used for forms */
-dt {
-    width: 30em;
-    margin-bottom: 2ex;
-    float: left;
-    clear: both;
-    text-align: right;
-}
-dd {
-    margin-left: 1em;
-    margin-bottom: 1.8ex;
-    float: left;
-    clear: right;
-}
 ul.errors {
     margin-top: 0;
     margin-bottom: 0.8ex;

@@ -816,7 +816,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/client/general/?id=1');
         $this->assertResponseStatusCode(200);
 
-        $query = "//dl/dt[text()='\n%s\n']/following::dd[1][text()='\n%s\n']";
+        $query = "//table/tr/td[text()='\n%s\n']/following::td[1][text()='\n%s\n']";
         $this->assertXPathQuery(sprintf($query, 'ID', 1));
         $this->assertXPathQuery(sprintf($query, 'ID-String', 'id_string'));
         $this->assertXPathQuery(sprintf($query, 'Datum der Inventarinformationen', 'inventory_date'));
@@ -836,8 +836,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXPathQuery(sprintf($query, 'Auslagerungsspeicher', "5678\xC2\xA0MB"));
         $this->assertXPathQuery(sprintf($query, 'Letzter angemeldeter Benutzer', 'user_name'));
         $this->assertXPathQuery(sprintf($query, 'UUID', 'uuid'));
-        $this->assertXpathQuery("//dd[text()='\nserial\n'][not(@class)]");
-        $this->assertXpathQuery("//dd[text()='\nasset_tag\n'][not(@class)]");
+        $this->assertXpathQuery("//table/tr/td[text()='\nserial\n'][not(@class)]");
+        $this->assertXpathQuery("//table/tr/td[text()='\nasset_tag\n'][not(@class)]");
     }
 
     public function testGeneralActionSerialBlacklisted()
@@ -854,8 +854,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/general/?id=1');
-        $this->assertXpathQuery("//dd[text()='\nserial\n'][@class='blacklisted']");
-        $this->assertXpathQuery("//dd[text()='\nasset_tag\n'][not(@class)]");
+        $this->assertXpathQuery("//td[text()='\nserial\n'][@class='blacklisted']");
+        $this->assertXpathQuery("//td[text()='\nasset_tag\n'][not(@class)]");
     }
 
     public function testGeneralActionAssetTagBlacklisted()
@@ -872,8 +872,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/general/?id=1');
-        $this->assertXpathQuery("//dd[text()='\nserial\n'][not(@class)]");
-        $this->assertXpathQuery("//dd[text()='\nasset_tag\n'][@class='blacklisted']");
+        $this->assertXpathQuery("//td[text()='\nserial\n'][not(@class)]");
+        $this->assertXpathQuery("//td[text()='\nasset_tag\n'][@class='blacklisted']");
     }
 
     public function testGeneralActionWindowsUser()
@@ -888,7 +888,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/general/?id=1');
-        $this->assertXpathQueryContentContains('//dd', "\nuser_name @ user_domain\n");
+        $this->assertXpathQueryContentContains('//td', "\nuser_name @ user_domain\n");
     }
 
     public function testGeneralActionWindowsNoArch()
@@ -906,7 +906,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $this->dispatch('/console/client/general/?id=1');
         $this->assertXpathQueryContentContains(
-            '//dd',
+            '//td',
             "\nos_name os_version_string (os_version_number)\n"
         );
     }
@@ -926,7 +926,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $this->dispatch('/console/client/general/?id=1');
         $this->assertXpathQueryContentContains(
-            '//dd',
+            '//td',
             "\nos_name os_version_string (os_version_number) \xE2\x80\x93 cpu_architecture\n"
         );
     }
@@ -1381,10 +1381,10 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $this->dispatch('/console/client/bios/?id=1');
         $this->assertResponseStatusCode(200);
-        $query = "//dl/dt[text()='\n%s\n']/following::dd[1][text()='\n%s\n']";
+        $query = "//table/tr/td[text()='\n%s\n']/following::td[1][text()='\n%s\n']";
         $this->assertXPathQuery(sprintf($query, 'Hersteller', 'manufacturer'));
         $this->assertXPathQuery(sprintf($query, 'Datum', 'date'));
-        $this->assertXpathQueryContentContains('//dd[3][name(node()[2])="br"]', "\nline1\nline2\n");
+        $this->assertXpathQueryContentContains('//table/tr[3]/td[2][name(node()[2])="br"]', "\nline1\nline2\n");
     }
 
     public function testSystemActionUnixNoSlots()

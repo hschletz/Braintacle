@@ -22,35 +22,26 @@
 require 'header.php';
 
 $client = $this->client;
-
-print "<dl>\n";
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Manufacturer')
-);
-print $this->htmlTag(
-    'dd',
-    $this->escapeHtml($client['BiosManufacturer'])
-);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Date')
-);
-print $this->htmlTag(
-    'dd',
-    $this->escapeHtml($client['BiosDate'])
-);
-
+$table = $this->plugin('table');
+$classes = array('label');
 $version = strtr($client['BiosVersion'], ';', "\n");
-print $this->htmlTag(
-    'dt',
-    $this->translate('Version')
+
+print "<table class='topspacing textnormalsize'>\n";
+
+print $table->row(
+    array($this->translate('Manufacturer'), $this->escapeHtml($client['BiosManufacturer'])),
+    false,
+    $classes
 );
-print $this->htmlTag(
-    'dd',
-    nl2br($this->escapeHtml($version), $this->doctype()->isXhtml())
+print $table->row(
+    array($this->translate('Date'), $this->escapeHtml($client['BiosDate'])),
+    false,
+    $classes
+);
+print $table->row(
+    array($this->translate('Version'), nl2br($this->escapeHtml($version), $this->doctype()->isXhtml())),
+    false,
+    $classes
 );
 
-print "</dl>\n";
+print "</table>\n";

@@ -22,91 +22,8 @@
 require 'header.php';
 
 $client = $this->client;
-
-print "<dl>\n";
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('ID')
-);
-print $this->htmlTag(
-    'dd',
-    $client['Id']
-);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('ID string')
-);
-print $this->htmlTag(
-    'dd',
-    $this->escapeHtml($client['IdString'])
-);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Inventory date')
-);
-print $this->htmlTag(
-    'dd',
-    $this->dateFormat($client['InventoryDate'], \IntlDateFormatter::FULL, \IntlDateFormatter::LONG)
-);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Last contact')
-);
-print $this->htmlTag(
-    'dd',
-    $this->dateFormat($client['LastContactDate'], \IntlDateFormatter::FULL, \IntlDateFormatter::LONG)
-);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('User Agent')
-);
-print $this->htmlTag(
-    'dd',
-    $this->escapeHtml($client['UserAgent'])
-);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Model')
-);
-print $this->htmlTag(
-    'dd',
-    $this->escapeHtml($client['Manufacturer'] . ' ' . $client['Model'])
-);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Serial number')
-);
-print $this->htmlTag(
-    'dd',
-    $this->escapeHtml($client['Serial']),
-    $client['IsSerialBlacklisted'] ? array('class' => 'blacklisted') : null
-);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Asset tag')
-);
-print $this->htmlTag(
-    'dd',
-    $this->escapeHtml($client['AssetTag']),
-    $client['IsAssetTagBlacklisted'] ? array('class' => 'blacklisted') : null
-);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Type')
-);
-print $this->htmlTag(
-    'dd',
-    $this->escapeHtml($client['Type'])
-);
+$table = $this->plugin('table');
+$classes = array('label');
 
 $os = $this->escapeHtml(
     sprintf(
@@ -119,102 +36,122 @@ $os = $this->escapeHtml(
 if (isset($client['Windows']['CpuArchitecture'])) {
     $os .= ' &ndash; ' . $this->escapeHtml($client['Windows']['CpuArchitecture']);
 }
-print $this->htmlTag(
-    'dt',
-    $this->translate('Operating System')
-);
-print $this->htmlTag('dd', $os);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Comment')
-);
-print $this->htmlTag(
-    'dd',
-    $this->escapeHtml($client['OsComment'])
-);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('CPU type')
-);
-print $this->htmlTag(
-    'dd',
-    $this->escapeHtml($client['CpuType'])
-);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('CPU clock')
-);
-print $this->htmlTag(
-    'dd',
-    $client['CpuClock'] . '&nbsp;MHz'
-);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Number of CPU cores')
-);
-print $this->htmlTag(
-    'dd',
-    $client['CpuCores']
-);
 
 $physicalRam = 0;
 foreach ($client['MemorySlot'] as $slot) {
     $physicalRam += $slot['Size'];
 }
-print $this->htmlTag(
-    'dt',
-    $this->translate('RAM detected by agent')
-);
-print $this->htmlTag(
-    'dd',
-    $physicalRam . '&nbsp;MB'
-);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('RAM reported by OS')
-);
-print $this->htmlTag(
-    'dd',
-    $client['PhysicalMemory'] . '&nbsp;MB'
-);
-
-print $this->htmlTag(
-    'dt',
-    $this->translate('Swap memory')
-);
-print $this->htmlTag(
-    'dd',
-    $client['SwapMemory'] . '&nbsp;MB'
-);
 
 $user = $client['UserName'];
 $domain = $client['Windows']['UserDomain'];
 if ($domain) {
     $user .= ' @ ' . $domain;
 }
-print $this->htmlTag(
-    'dt',
-    $this->translate('Last user logged in')
-);
-print $this->htmlTag(
-    'dd',
-    $this->escapeHtml($user)
-);
 
+print "<table class='topspacing textnormalsize'>\n";
+
+print $table->row(
+    array($this->translate('ID'), $client['Id']),
+    false,
+    $classes
+);
+print $table->row(
+    array($this->translate('ID string'), $this->escapeHtml($client['IdString'])),
+    false,
+    $classes
+);
+print $table->row(
+    array(
+        $this->translate('Inventory date'),
+        $this->dateFormat($client['InventoryDate'], \IntlDateFormatter::FULL, \IntlDateFormatter::LONG)
+    ),
+    false,
+    $classes
+);
+print $table->row(
+    array(
+        $this->translate('Last contact'),
+        $this->dateFormat($client['LastContactDate'], \IntlDateFormatter::FULL, \IntlDateFormatter::LONG)
+    ),
+    false,
+    $classes
+);
+print $table->row(
+    array($this->translate('User Agent'), $this->escapeHtml($client['UserAgent'])),
+    false,
+    $classes
+);
+print $table->row(
+    array($this->translate('Model'), $this->escapeHtml($client['Manufacturer'] . ' ' . $client['Model'])),
+    false,
+    $classes
+);
+print $table->row(
+    array($this->translate('Serial number'), $this->escapeHtml($client['Serial'])),
+    false,
+    $client['IsSerialBlacklisted'] ? $classes + array(1 => 'blacklisted') : $classes
+);
+print $table->row(
+    array($this->translate('Asset tag'), $this->escapeHtml($client['AssetTag'])),
+    false,
+    $client['IsAssetTagBlacklisted'] ? $classes + array(1 => 'blacklisted') : $classes
+);
+print $table->row(
+    array($this->translate('Type'), $this->escapeHtml($client['Type'])),
+    false,
+    $classes
+);
+print $table->row(
+    array($this->translate('Operating System'), $os),
+    false,
+    $classes
+);
+print $table->row(
+    array($this->translate('Comment'), $this->escapeHtml($client['OsComment'])),
+    false,
+    $classes
+);
+print $table->row(
+    array($this->translate('CPU type'), $this->escapeHtml($client['CpuType'])),
+    false,
+    $classes
+);
+print $table->row(
+    array($this->translate('CPU clock'), $client['CpuClock'] . '&nbsp;MHz'),
+    false,
+    $classes
+);
+print $table->row(
+    array($this->translate('Number of CPU cores'), $client['CpuCores']),
+    false,
+    $classes
+);
+print $table->row(
+    array($this->translate('RAM detected by agent'), $physicalRam . '&nbsp;MB'),
+    false,
+    $classes
+);
+print $table->row(
+    array($this->translate('RAM reported by OS'), $client['PhysicalMemory'] . '&nbsp;MB'),
+    false,
+    $classes
+);
+print $table->row(
+    array($this->translate('Swap memory'), $client['SwapMemory'] . '&nbsp;MB'),
+    false,
+    $classes
+);
+print $table->row(
+    array($this->translate('Last user logged in'), $this->escapeHtml($user)),
+    false,
+    $classes
+);
 if ($client['Uuid']) {
-    print $this->htmlTag(
-        'dt',
-        $this->translate('UUID')
-    );
-    print $this->htmlTag(
-        'dd',
-        $this->escapeHtml($client['Uuid'])
+    print $table->row(
+        array($this->translate('UUID'), $this->escapeHtml($client['Uuid'])),
+        false,
+        $classes
     );
 }
 
-print "</dl>\n";
+print "</table>\n";

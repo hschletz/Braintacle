@@ -20,34 +20,29 @@
  *
  */
 
-print "<dl>\n";
+print "<p class='textcenter'>";
+print $this->translate('Manually entered Windows product keys');
+print ': ';
 
-print $this->htmlTag(
-    'dt',
-    $this->translate('Manually entered Windows product keys')
-);
 if ($this->windowsProductKeys) {
     print $this->htmlTag(
-        'dd',
-        $this->htmlTag(
-            'a',
-            $this->windowsProductKeys,
-            array(
-                'href' => $this->consoleUrl(
-                    'client',
-                    'index',
-                    array(
-                        'columns' => 'Name,OsName,Windows.ProductKey,Windows.ManualProductKey',
-                        'filter' => 'Windows.ManualProductKey',
-                        'order' => 'Name',
-                        'direction' => 'asc',
-                    )
-                ),
+        'a',
+        $this->windowsProductKeys,
+        array(
+            'href' => $this->consoleUrl(
+                'client',
+                'index',
+                array(
+                    'columns' => 'Name,OsName,Windows.ProductKey,Windows.ManualProductKey',
+                    'filter' => 'Windows.ManualProductKey',
+                    'order' => 'Name',
+                    'direction' => 'asc',
+                )
             )
         )
     );
 } else {
-    print $this->htmlTag('dd', 0);
+    print '0';
 }
 
-print "</dl>\n";
+print "</p>\n";
