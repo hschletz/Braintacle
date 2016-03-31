@@ -488,7 +488,7 @@ input[size="8"]
 }
 
 .form_groupmemberships legend {
-    display: inline-block;
+    float: left;
 }
 
 .form_groupmemberships input[type=submit] {
