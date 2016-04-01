@@ -354,6 +354,65 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
     }
 
+    public function testBuildActionPostValidError()
+    {
+        $postData = array(
+            'Name' => 'packageName',
+        );
+        $fileSpec = array(
+            'name' => 'file_name',
+            'tmp_name' => 'file_tmp_name',
+            'type' => 'file_type',
+        );
+        $packageData = array(
+            'Name' => 'packageName',
+            'File' => array(
+                'name' => 'file_name',
+                'tmp_name' => 'file_tmp_name',
+                'type' => 'file_type',
+            ),
+            'FileName' => 'file_name',
+            'FileLocation' => 'file_tmp_name',
+        );
+        $formData = $postData + array('File' => $fileSpec);
+
+        $this->getRequest()->getFiles()->set('File', $fileSpec);
+
+        $this->_buildForm->expects($this->once())
+                         ->method('setData')
+                         ->with($formData);
+        $this->_buildForm->expects($this->once())
+                         ->method('getData')
+                         ->willReturn($formData);
+        $this->_buildForm->expects($this->once())
+                         ->method('isValid')
+                         ->willReturn(true);
+        $this->_buildForm->expects($this->never())
+                         ->method('render');
+
+        $this->_packageManager->expects($this->once())
+                              ->method('buildPackage')
+                              ->with($packageData, true)
+                              ->willThrowException(new \Model\Package\RuntimeException('build error'));
+
+        $this->dispatch('/console/package/build', 'POST', $postData);
+        $this->assertRedirectTo('/console/package/index/');
+
+        $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
+        $this->assertEquals(
+            array(),
+            $flashMessenger->getCurrentSuccessMessages()
+        );
+        $this->assertEquals(
+            array('build error'),
+            $flashMessenger->getCurrentErrorMessages()
+        );
+        $this->assertEquals(
+            array(),
+            $flashMessenger->getCurrentMessagesFromNamespace('packageName')
+        );
+    }
+
     public function testDeleteActionGet()
     {
         $this->_packageManager->expects($this->never())->method('deletePackage');
