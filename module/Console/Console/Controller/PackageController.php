@@ -151,13 +151,11 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function updateAction()
     {
-        $flashMessenger = $this->flashMessenger();
-
         $oldName = $this->params()->fromQuery('name');
         try {
-            $oldPackage = $this->_packageManager->getPackage($oldName);
+            $package = $this->_packageManager->getPackage($oldName);
         } catch (\Model\Package\RuntimeException $e) {
-            $flashMessenger->addErrorMessage($e->getMessage());
+            $this->flashMessenger()->addErrorMessage($e->getMessage());
             return $this->redirectToRoute('package', 'index');
         }
 
@@ -166,29 +164,29 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
             $form->setData($this->params()->fromPost() + $this->params()->fromFiles());
             if ($form->isValid()) {
                 $data = $form->getData();
-                $names = array($oldName, $data['Name']);
-                if ($this->_buildPackage($data)) {
-                    $newPackage = $this->_packageManager->getPackage($data['Name']);
-                    $this->_packageManager->updateAssignments(
-                        $oldPackage['Id'],
-                        $newPackage['Id'],
+                $data['FileName'] = $data['File']['name'];
+                $data['FileLocation'] = $data['File']['tmp_name'];
+                try {
+                    $this->_packageManager->updatePackage(
+                        $package,
+                        $data,
+                        true,
                         $data['Deploy']['Pending'],
                         $data['Deploy']['Running'],
                         $data['Deploy']['Success'],
                         $data['Deploy']['Error'],
                         $data['Deploy']['Groups']
                     );
-                    $success = $this->_deletePackage($oldName);
-                } else {
-                    $success = false;
-                }
-                if ($success) {
-                    $flashMessenger->addSuccessMessage(
-                        array($this->_('Package \'%s\' was successfully changed to \'%s\'.') => $names)
+                    $names = array($oldName, $data['Name']);
+                    $this->flashMessenger()->addSuccessMessage(
+                        array(
+                            $this->_('Package \'%s\' was successfully changed to \'%s\'.') => $names
+                        )
                     );
-                } else {
-                    $flashMessenger->addErrorMessage(
-                        "Error changing Package '$oldName' to '$data[Name]'"
+                    $this->flashMessenger()->addMessage($data['Name'], 'packageName');
+                } catch (\Model\Package\RuntimeException $e) {
+                    $this->flashMessenger()->addErrorMessage(
+                        "Error changing Package '$oldName' to '$data[Name]': " . $e->getMessage()
                     );
                 }
                 return $this->redirectToRoute('package', 'index');
@@ -205,18 +203,18 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
                         'Groups' => $this->_config->defaultDeployGroups,
                     ),
                     'MaxFragmentSize' => $this->_config->defaultMaxFragmentSize,
-                    'Name' => $oldPackage['Name'],
-                    'Comment' => $oldPackage['Comment'],
-                    'Platform' => $oldPackage['Platform'],
-                    'DeployAction' => $oldPackage['DeployAction'],
-                    'ActionParam' => $oldPackage['ActionParam'],
-                    'Priority' => $oldPackage['Priority'],
-                    'Warn' => $oldPackage['Warn'],
-                    'WarnMessage' => $oldPackage['WarnMessage'],
-                    'WarnCountdown' => $oldPackage['WarnCountdown'],
-                    'WarnAllowAbort' => $oldPackage['WarnAllowAbort'],
-                    'WarnAllowDelay' => $oldPackage['WarnAllowDelay'],
-                    'PostInstMessage' => $oldPackage['PostInstMessage'],
+                    'Name' => $package['Name'],
+                    'Comment' => $package['Comment'],
+                    'Platform' => $package['Platform'],
+                    'DeployAction' => $package['DeployAction'],
+                    'ActionParam' => $package['ActionParam'],
+                    'Priority' => $package['Priority'],
+                    'Warn' => $package['Warn'],
+                    'WarnMessage' => $package['WarnMessage'],
+                    'WarnCountdown' => $package['WarnCountdown'],
+                    'WarnAllowAbort' => $package['WarnAllowAbort'],
+                    'WarnAllowDelay' => $package['WarnAllowDelay'],
+                    'PostInstMessage' => $package['PostInstMessage'],
                 )
             );
         }

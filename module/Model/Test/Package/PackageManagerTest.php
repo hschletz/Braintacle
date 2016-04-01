@@ -717,6 +717,30 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $model->deletePackage('invalid');
     }
 
+    public function testUpdatePackage()
+    {
+        $newPackageData = array('Name' => 'new_name');
+
+        $newPackage = $this->getMock('Model\Package\Package');
+
+        $package = $this->getMock('Model\Package\Package');
+        $package->expects($this->at(0))->method('offsetGet')->with('Id')->willReturn('old_id');
+        $package->expects($this->at(1))->method('offsetGet')->with('Name')->willReturn('old_name');
+        $package->expects($this->at(2))->method('exchangeArray')->with($this->identicalTo($newPackage));
+        $package->expects($this->at(3))->method('offsetGet')->with('Id')->willReturn('new_id');
+
+        $model = $this->getMockBuilder('Model\Package\PackageManager')
+                      ->disableOriginalConstructor()
+                      ->setMethods(array('buildPackage', 'getPackage', 'updateAssignments', 'deletePackage'))
+                      ->getMock();
+        $model->expects($this->at(0))->method('buildPackage')->with($newPackageData, 'delete');
+        $model->expects($this->at(1))->method('getPackage')->with('new_name')->willReturn($newPackage);
+        $model->expects($this->at(2))->method('updateAssignments')->with('old_id', 'new_id', 'p', 'r', 's', 'e', 'g');
+        $model->expects($this->at(3))->method('deletePackage')->with('old_name');
+
+        $model->updatePackage($package, $newPackageData, 'delete', 'p', 'r', 's', 'e', 'g');
+    }
+
     public function testUpdateAssignmentsNoActionRequired()
     {
         $this->_getModel()->updateAssignments(1, 3, false, false, false, false, false);

@@ -317,6 +317,53 @@ class PackageManager
     }
 
     /**
+     * Update a package
+     *
+     * Builds a new package from $newPackageData, calls updateAssignments() with
+     * given parameters and deletes the old package. The passed package object
+     * is updated with new package data.
+     *
+     * @param \Model\Package\Package $package package to be updated
+     * @param array $newPackageData new package data
+     * @param bool $deleteSource Delete source file as soon as possible
+     * @param bool $deployPending Update assignments with status 'pending'
+     * @param bool $deployRunning Update assignments with status 'running'
+     * @param bool $deploySuccess Update assignments with status 'success'
+     * @param bool $deployError Update assignments with status 'error'
+     * @param bool $deployGroups Update assignments for groups
+     */
+    public function updatePackage(
+        \Model\Package\Package $package,
+        array $newPackageData,
+        $deleteSource,
+        $deployPending,
+        $deployRunning,
+        $deploySuccess,
+        $deployError,
+        $deployGroups
+    ) {
+        // Preserve attributes because they get overwritten
+        $oldId = $package['Id'];
+        $oldName = $package['Name'];
+
+        $this->buildPackage($newPackageData, $deleteSource);
+
+        // Update package object
+        $package->exchangeArray($this->getPackage($newPackageData['Name']));
+
+        $this->updateAssignments(
+            $oldId,
+            $package['Id'],
+            $deployPending,
+            $deployRunning,
+            $deploySuccess,
+            $deployError,
+            $deployGroups
+        );
+        $this->deletePackage($oldName);
+    }
+
+    /**
      * Update package assignments
      *
      * Sets a new package on existing assignments. Updated assignments have

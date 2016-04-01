@@ -409,9 +409,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                               ->method('getPackage')
                               ->with('oldName')
                               ->willReturn($packageData);
-        $this->_packageManager->expects($this->never())->method('buildPackage');
-        $this->_packageManager->expects($this->never())->method('updateAssignments');
-        $this->_packageManager->expects($this->never())->method('deletePackage');
+        $this->_packageManager->expects($this->never())->method('updatePackage');
         $this->dispatch('/console/package/update/?name=oldName');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//form');
@@ -431,9 +429,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_updateForm->expects($this->once())
                           ->method('render')
                           ->willReturn('<form></form>');
-        $this->_packageManager->expects($this->never())->method('buildPackage');
-        $this->_packageManager->expects($this->never())->method('updateAssignments');
-        $this->_packageManager->expects($this->never())->method('deletePackage');
+        $this->_packageManager->expects($this->never())->method('updatePackage');
 
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
         $this->assertResponseStatusCode(200);
@@ -476,7 +472,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->getRequest()->getFiles()->set('File', $fileSpec);
         $formData = $postData + array('File' => $fileSpec);
-        $oldPackage = array('Id' => '1', 'Name' => 'oldName');
+        $oldPackage = $this->getMock('Model\Package\Package');
 
         $this->_updateForm->expects($this->once())
                           ->method('setData')
@@ -489,45 +485,43 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                           ->willReturn(true);
         $this->_updateForm->expects($this->never())
                           ->method('render');
-        $this->_packageManager->expects($this->exactly(2))
+        $this->_packageManager->expects($this->once())
                               ->method('getPackage')
-                              ->withConsecutive(array('oldName'), array('newName'))
-                              ->will(
-                                  $this->onConsecutiveCalls(
-                                      $oldPackage,
-                                      array('Id' => '2')
-                                  )
-                              );
+                              ->with('oldName')
+                              ->willReturn($oldPackage);
         $this->_packageManager->expects($this->once())
-                              ->method('buildPackage')
-                              ->with($packageData, true);
-        $this->_packageManager->expects($this->once())
-                              ->method('updateAssignments')
-                              ->with('1', '2', '1', '0', '1', '0', '1');
-        $this->_packageManager->expects($this->once())->method('deletePackage');
+                              ->method('updatePackage')
+                              ->with($oldPackage, $packageData, true, '1', '0', '1', '0', '1');
 
-        $this->_testBuildPackage(
-            '/console/package/update/?name=oldName',
-            $postData,
-            $packageData,
-            true,
+        $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
+        $this->assertRedirectTo('/console/package/index/');
+
+        $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
+        $this->assertEquals(
             array(
-                array("Package '%s' was successfully deleted." => 'oldName'),
                 array("Package '%s' was successfully changed to '%s'." => array('oldName', 'newName'))
-            )
+            ),
+            $flashMessenger->getCurrentSuccessMessages()
         );
-        $this->assertRedirectTo('/console/package/index/');
+        $this->assertEquals(
+            array(),
+            $flashMessenger->getCurrentErrorMessages()
+        );
+        $this->assertEquals(
+            array('newName'),
+            $flashMessenger->getCurrentMessagesFromNamespace('packageName')
+        );
     }
 
-    public function testUpdateActionPostValidSuccessDelete()
+    public function testUpdateActionPostValidUpdateError()
     {
         $postData = array(
             'Deploy' => array(
-                'Pending' => '0',
-                'Running' => '1',
-                'Success' => '0',
-                'Error' => '1',
-                'Groups' => '0',
+                'Pending' => '1',
+                'Running' => '0',
+                'Success' => '1',
+                'Error' => '0',
+                'Groups' => '1',
             ),
             'Name' => 'newName',
         );
@@ -538,11 +532,11 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
         $packageData = array(
             'Deploy' => array(
-                'Pending' => '0',
-                'Running' => '1',
-                'Success' => '0',
-                'Error' => '1',
-                'Groups' => '0',
+                'Pending' => '1',
+                'Running' => '0',
+                'Success' => '1',
+                'Error' => '0',
+                'Groups' => '1',
             ),
             'Name' => 'newName',
             'File' => array(
@@ -553,9 +547,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             'FileName' => 'file_name',
             'FileLocation' => 'file_tmp_name',
         );
-        $oldPackage = array('Id' => '1', 'Name' => 'oldName');
         $this->getRequest()->getFiles()->set('File', $fileSpec);
         $formData = $postData + array('File' => $fileSpec);
+        $oldPackage = $this->getMock('Model\Package\Package');
 
         $this->_updateForm->expects($this->once())
                           ->method('setData')
@@ -568,82 +562,31 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                           ->willReturn(true);
         $this->_updateForm->expects($this->never())
                           ->method('render');
-        $this->_packageManager->expects($this->exactly(2))
+        $this->_packageManager->expects($this->once())
                               ->method('getPackage')
-                              ->withConsecutive(array('oldName'), array('newName'))
-                              ->will(
-                                  $this->onConsecutiveCalls(
-                                      $oldPackage,
-                                      array('Id' => '2')
-                                  )
-                              );
+                              ->with('oldName')
+                              ->willReturn($oldPackage);
         $this->_packageManager->expects($this->once())
-                              ->method('buildPackage')
-                              ->with($packageData, true);
-        $this->_packageManager->expects($this->once())
-                              ->method('updateAssignments')
-                              ->with('1', '2', '0', '1', '0', '1', '0');
-        $this->_testDeletePackage('/console/package/update/?name=oldName', $postData, 'oldName', true);
-    }
+                              ->method('updatePackage')
+                              ->with($oldPackage, $packageData, true, '1', '0', '1', '0', '1')
+                              ->willThrowException(new \Model\Package\RuntimeException('error message'));
 
-    public function testUpdateActionPostValidBuildError()
-    {
-        $postData = array(
-            'Deploy' => array(
-                'Pending' => '1',
-                'Running' => '0',
-                'Success' => '1',
-                'Error' => '0',
-                'Groups' => '1',
-            ),
-            'Name' => 'newName',
-        );
-        $fileSpec = array(
-            'name' => 'file_name',
-            'tmp_name' => 'file_tmp_name',
-            'type' => 'file_type',
-        );
-        $packageData = array(
-            'Deploy' => array(
-                'Pending' => '1',
-                'Running' => '0',
-                'Success' => '1',
-                'Error' => '0',
-                'Groups' => '1',
-            ),
-            'Name' => 'newName',
-            'File' => array(
-                'name' => 'file_name',
-                'tmp_name' => 'file_tmp_name',
-                'type' => 'file_type',
-            ),
-            'FileName' => 'file_name',
-            'FileLocation' => 'file_tmp_name',
-        );
-        $this->getRequest()->getFiles()->set('File', $fileSpec);
-        $formData = $postData + array('File' => $fileSpec);
-        $this->_updateForm->expects($this->once())
-                          ->method('setData')
-                          ->with($formData);
-        $this->_updateForm->expects($this->once())
-                          ->method('getData')
-                          ->willReturn($formData);
-        $this->_updateForm->expects($this->once())
-                          ->method('isValid')
-                          ->willReturn(true);
-        $this->_updateForm->expects($this->never())
-                          ->method('render');
-        $this->_packageManager->expects($this->once())->method('getPackage')->with('oldName');
-        $this->_packageManager->expects($this->never())->method('updateAssignments');
-        $this->_packageManager->expects($this->never())->method('deletePackage');
-        $this->_testBuildPackage(
-            '/console/package/update/?name=oldName',
-            $postData,
-            $packageData,
-            false,
-            array("Error changing Package 'oldName' to 'newName'")
-        );
+        $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
         $this->assertRedirectTo('/console/package/index/');
+
+        $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
+        $this->assertEquals(
+            array(),
+            $flashMessenger->getCurrentSuccessMessages()
+        );
+        $this->assertEquals(
+            array("Error changing Package 'oldName' to 'newName': error message"),
+            $flashMessenger->getCurrentErrorMessages()
+        );
+        $this->assertEquals(
+            array(),
+            $flashMessenger->getCurrentMessagesFromNamespace('packageName')
+        );
     }
 
     public function testUpdateActionPostValidReconstructionError()
@@ -661,9 +604,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                               ->method('getPackage')
                               ->with('oldName')
                               ->will($this->throwException(new \Model\Package\RuntimeException('getPackage() error')));
-        $this->_packageManager->expects($this->never())->method('buildPackage');
-        $this->_packageManager->expects($this->never())->method('updateAssignments');
-        $this->_packageManager->expects($this->never())->method('deletePackage');
+        $this->_packageManager->expects($this->never())->method('updatePackage');
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
         $this->assertRedirectTo('/console/package/index/');
         $this->assertEquals(
