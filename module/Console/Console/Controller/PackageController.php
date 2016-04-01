@@ -97,7 +97,20 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
         if ($this->getRequest()->isPost()) {
             $this->_buildForm->setData($this->params()->fromPost() + $this->params()->fromFiles());
             if ($this->_buildForm->isValid()) {
-                $this->_buildPackage($this->_buildForm->getData());
+                $data = $this->_buildForm->getData();
+                $data['FileName'] = $data['File']['name'];
+                $data['FileLocation'] = $data['File']['tmp_name'];
+
+                $flashMessenger = $this->flashMessenger();
+                try {
+                    $this->_packageManager->buildPackage($data, true);
+                    $flashMessenger->addSuccessMessage(
+                        array($this->_('Package \'%s\' was successfully created.') => $data['Name'])
+                    );
+                    $flashMessenger->addMessage($data['Name'], 'packageName');
+                } catch (\Model\Package\RuntimeException $e) {
+                    $flashMessenger->addErrorMessage($e->getMessage());
+                }
                 return $this->redirectToRoute('package', 'index');
             }
         } else {
@@ -133,7 +146,15 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
 
         if ($this->getRequest()->isPost()) {
             if ($this->params()->fromPost('yes')) {
-                $this->_deletePackage($name);
+                $flashMessenger = $this->flashMessenger();
+                try {
+                    $this->_packageManager->deletePackage($name);
+                    $flashMessenger->addSuccessMessage(
+                        array($this->_('Package \'%s\' was successfully deleted.') => $name)
+                    );
+                } catch (\Model\Package\RuntimeException $e) {
+                    $flashMessenger->addErrorMessage($e->getMessage());
+                }
             }
             return $this->redirectToRoute('package', 'index');
         } else {
@@ -219,53 +240,5 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
             );
         }
         return $this->printForm($form);
-    }
-
-    /**
-     * Build a package and send feedback via flashMessenger
-     *
-     * @param array $data Package data
-     * @return bool Success
-     */
-    protected function _buildPackage($data)
-    {
-        $data['FileName'] = $data['File']['name'];
-        $data['FileLocation'] = $data['File']['tmp_name'];
-
-        $flashMessenger = $this->flashMessenger();
-        $name = $data['Name'];
-
-        try {
-            $this->_packageManager->buildPackage($data, true);
-            $flashMessenger->addSuccessMessage(
-                array($this->_('Package \'%s\' was successfully created.') => $name)
-            );
-            $flashMessenger->addMessage($name, 'packageName');
-            return true;
-        } catch (\Model\Package\RuntimeException $e) {
-            $flashMessenger->addErrorMessage($e->getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * Delete a package and send feedback via flashMessenger
-     *
-     * @param string $name Package name
-     * @return bool Success
-     */
-    protected function _deletePackage($name)
-    {
-        $flashMessenger = $this->flashMessenger();
-        try {
-            $this->_packageManager->deletePackage($name);
-            $flashMessenger->addSuccessMessage(
-                array($this->_('Package \'%s\' was successfully deleted.') => $name)
-            );
-            return true;
-        } catch (\Model\Package\RuntimeException $e) {
-            $flashMessenger->addErrorMessage($e->getMessage());
-            return false;
-        }
     }
 }
