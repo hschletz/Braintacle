@@ -57,22 +57,34 @@ class SchemaManager
      *
      * This is the simplest way to update the database. It performs all
      * necessary steps to update the database schema and migrate data.
+     *
+     * Database updates are wrapped in a transaction to prevent incomplete and
+     * possibly inconsistent updates in case of an error. Transaction support
+     * may be limited by the database.
      */
     public function updateAll()
     {
         $nada = $this->_serviceLocator->get('Database\Nada');
-        $convertedTimestamps = $nada->convertTimestampColumns();
-        if ($convertedTimestamps) {
-            $this->_serviceLocator->get('Library\Logger')->info(
-                sprintf(
-                    '%d columns converted to %s.',
-                    $convertedTimestamps,
-                    $nada->getNativeDatatype(\Nada::DATATYPE_TIMESTAMP)
-                )
-            );
+        $connection = $this->_serviceLocator->get('Db')->getDriver()->getConnection();
+        $connection->beginTransaction();
+        try {
+            $convertedTimestamps = $nada->convertTimestampColumns();
+            if ($convertedTimestamps) {
+                $this->_serviceLocator->get('Library\Logger')->info(
+                    sprintf(
+                        '%d columns converted to %s.',
+                        $convertedTimestamps,
+                        $nada->getNativeDatatype(\Nada::DATATYPE_TIMESTAMP)
+                    )
+                );
+            }
+            $this->updateTables();
+            $this->_serviceLocator->get('Model\Config')->schemaVersion = self::SCHEMA_VERSION;
+            $connection->commit();
+        } catch (\Exception $e) {
+            $connection->rollback();
+            throw $e;
         }
-        $this->updateTables();
-        $this->_serviceLocator->get('Model\Config')->schemaVersion = self::SCHEMA_VERSION;
     }
 
     /**
