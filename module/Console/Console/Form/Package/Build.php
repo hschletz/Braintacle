@@ -97,6 +97,8 @@ class Build extends \Console\Form\Form
         $platform = new Element\Select('Platform');
         $platform->setLabel('Platform')
                  ->setAttribute('type', 'select_untranslated')
+                 ->setAttribute('id', 'form_package_build_platform')
+                 ->setAttribute('onchange', 'changePlatform()')
                  ->setValueOptions(
                      array(
                         'windows' => 'Windows',
@@ -263,6 +265,27 @@ class Build extends \Console\Form\Form
         }
 
         /*
+         * Event handler for Platform combobox. Also called for form
+         * initialization. Hides/displays notification elements which have no
+         * effect on non-Windows platforms.
+         */
+        function changePlatform()
+        {
+            if (document.getElementById('form_package_build_platform').value == 'windows') {
+                display('Warn', true);
+                display('PostInstMessage', true);
+                toggleWarn();
+            } else {
+                display('Warn', false);
+                display('WarnMessage', false);
+                display('WarnCountdown', false);
+                display('WarnAllowAbort', false);
+                display('WarnAllowDelay', false);
+                display('PostInstMessage', false);
+            }
+        }
+
+        /*
          * Event handler for Action combobox. Also called for form initialization.
          * Changes label of parameter input field according to selected action.
          */
@@ -278,7 +301,8 @@ class Build extends \Console\Form\Form
          */
         function toggleWarn()
         {
-            var checked = document.getElementById('form_package_build_warn').checked;
+            var checked = document.getElementById('form_package_build_warn').checked &&
+                          document.getElementById('form_package_build_platform').value == 'windows';
             display('WarnMessage', checked);
             display('WarnCountdown', checked);
             display('WarnAllowAbort', checked);
@@ -288,6 +312,7 @@ class Build extends \Console\Form\Form
         <?php
         $view->headScript()->captureEnd();
 
+        $view->placeholder('BodyOnLoad')->append('changePlatform()');
         $view->placeholder('BodyOnLoad')->append('changeParam()');
         $view->placeholder('BodyOnLoad')->append('toggleWarn()');
         $view->placeholder('BodyOnLoad')->append('document.getElementsByName("Name")[0].focus()');
