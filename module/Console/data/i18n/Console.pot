@@ -63,17 +63,17 @@ msgstr ""
 
 #: Console/Controller/PackageController.php
 #, php-format
-msgid "Package '%s' was successfully changed to '%s'."
-msgstr ""
-
-#: Console/Controller/PackageController.php
-#, php-format
 msgid "Package '%s' was successfully created."
 msgstr ""
 
 #: Console/Controller/PackageController.php
 #, php-format
 msgid "Package '%s' was successfully deleted."
+msgstr ""
+
+#: Console/Controller/PackageController.php
+#, php-format
+msgid "Package '%s' was successfully changed to '%s'."
 msgstr ""
 
 #: Console/Form/Account/AbstractForm.php view/console/accounts/index.php
