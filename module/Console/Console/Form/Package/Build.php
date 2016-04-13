@@ -177,6 +177,16 @@ class Build extends \Console\Form\Form
                 'filters' => array(
                     array('name' => 'StringTrim'),
                 ),
+                'validators' => array(
+                    array(
+                        'name' => 'Callback',
+                        'options' => array(
+                            'callback' => array($this, 'validateNotificationMessage'),
+                            'message' => $this->_('Message must not contain double quotes.'),
+                            'translatorTextDomain' => 'default',
+                        ),
+                    ),
+                ),
             )
         );
 
@@ -215,6 +225,16 @@ class Build extends \Console\Form\Form
                 'filters' => array(
                     array('name' => 'StringTrim'),
                 ),
+                'validators' => array(
+                    array(
+                        'name' => 'Callback',
+                        'options' => array(
+                            'callback' => array($this, 'validateNotificationMessage'),
+                            'message' => $this->_('Message must not contain double quotes.'),
+                            'translatorTextDomain' => 'default',
+                        ),
+                    ),
+                ),
             )
         );
 
@@ -224,6 +244,31 @@ class Build extends \Console\Form\Form
         $this->add($submit);
 
         $this->setInputFilter($inputFilter);
+    }
+
+    /**
+     * Validation callback for notification messages
+     *
+     * @param string $value
+     * @param array $context
+     * @return bool
+     * @internal
+     */
+    public function validateNotificationMessage($value, $context)
+    {
+        // The Windows agent handles notification messages through a separate
+        // application (OcsNotifyUser.exe). Message strings and other parameters
+        // are passed via command line. This application's command line parser
+        // unconditionally treats double quotes as argument delimiters.
+        // Arguments with (escaped) double quotes are not possible and would
+        // lead to incorrect parsing results. This is avoided by forbidding
+        // double quotes altogether.
+        // Other agents do not support user notifications and ignore the
+        // message. If the console user enters an invalid message and then
+        // switches the platform to Linux or MacOS, the validation message would
+        // be invisible. Validation always succeeds for these platforms to avoid
+        // this problem.
+        return $context['Platform'] != 'windows' or strpos($value, '"') === false;
     }
 
     /** {@inheritdoc} */

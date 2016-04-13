@@ -406,6 +406,10 @@ msgid "Message"
 msgstr ""
 
 #: Console/Form/Package/Build.php
+msgid "Message must not contain double quotes."
+msgstr ""
+
+#: Console/Form/Package/Build.php
 msgid "Countdown (seconds)"
 msgstr ""
 

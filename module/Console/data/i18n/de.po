@@ -412,6 +412,10 @@ msgstr "Maximale Fragmentgröße (kB)"
 msgid "Message"
 msgstr "Nachricht"
 
+#: Console/Form/Package/Build.php
+msgid "Message must not contain double quotes."
+msgstr "Meldung darf keine doppelten Anführungszeichen enthalten."
+
 #: Console/Form/Package/Build.php Console/Form/Preferences/Packages.php
 msgid "Optionally download package, execute command"
 msgstr "Optional Paket herunterladen, Befehl ausführen"

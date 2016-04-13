@@ -403,6 +403,86 @@ class BuildTest extends \Console\Test\AbstractFormTest
         $this->assertArrayHasKey('WarnCountdown', $messages);
     }
 
+    public function testInputFilterInvalidNotificationMessages()
+    {
+        $data = array(
+            'Name' => 'name2',
+            'Comment' => '',
+            'Platform' => 'windows',
+            'DeployAction' => 'execute',
+            'ActionParam' => 'param',
+            'File' => '',
+            'Priority' => '0',
+            'MaxFragmentSize' => '',
+            'Warn' => '0',
+            'WarnMessage' => '"',
+            'WarnCountdown' => '',
+            'WarnAllowAbort' => '0',
+            'WarnAllowDelay' => '0',
+            'PostInstMessage' => 'a "b" c',
+            '_csrf' => $this->_form->get('_csrf')->getValue(),
+        );
+        $this->_form->setData($data);
+        $this->assertFalse($this->_form->isValid());
+        $this->assertEquals(
+            array(
+                'WarnMessage' => array(
+                    'callbackValue' => 'Meldung darf keine doppelten Anführungszeichen enthalten.',
+                ),
+                'PostInstMessage' => array(
+                    'callbackValue' => 'Meldung darf keine doppelten Anführungszeichen enthalten.',
+                ),
+            ),
+            $this->_form->getMessages()
+        );
+    }
+
+    public function testInputFilterInvalidNotificationMessagesIgnoredOnLinux()
+    {
+        $data = array(
+            'Name' => 'name2',
+            'Comment' => '',
+            'Platform' => 'linux',
+            'DeployAction' => 'execute',
+            'ActionParam' => 'param',
+            'File' => '',
+            'Priority' => '0',
+            'MaxFragmentSize' => '',
+            'Warn' => '0',
+            'WarnMessage' => '"',
+            'WarnCountdown' => '',
+            'WarnAllowAbort' => '0',
+            'WarnAllowDelay' => '0',
+            'PostInstMessage' => 'a "b" c',
+            '_csrf' => $this->_form->get('_csrf')->getValue(),
+        );
+        $this->_form->setData($data);
+        $this->assertTrue($this->_form->isValid());
+    }
+
+    public function testInputFilterInvalidNotificationMessagesIgnoredOnMac()
+    {
+        $data = array(
+            'Name' => 'name2',
+            'Comment' => '',
+            'Platform' => 'mac',
+            'DeployAction' => 'execute',
+            'ActionParam' => 'param',
+            'File' => '',
+            'Priority' => '0',
+            'MaxFragmentSize' => '',
+            'Warn' => '0',
+            'WarnMessage' => '"',
+            'WarnCountdown' => '',
+            'WarnAllowAbort' => '0',
+            'WarnAllowDelay' => '0',
+            'PostInstMessage' => 'a "b" c',
+            '_csrf' => $this->_form->get('_csrf')->getValue(),
+        );
+        $this->_form->setData($data);
+        $this->assertTrue($this->_form->isValid());
+    }
+
     public function testSetDataIntegerValues()
     {
         $data = array(
