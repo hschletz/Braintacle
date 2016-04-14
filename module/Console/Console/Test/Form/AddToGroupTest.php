@@ -120,7 +120,7 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = array(
-            'NewGroup' => array('callbackValue' => "Eingabe erforderlich")
+            'NewGroup' => array('callbackValue' => "Es wird eine Eingabe benötigt")
         );
         $this->assertEquals($messages, $this->_form->getMessages());
     }
@@ -138,7 +138,7 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = array(
-            'NewGroup' => array('callbackValue' => "Eingabe erforderlich")
+            'NewGroup' => array('callbackValue' => "Es wird eine Eingabe benötigt")
         );
         $this->assertEquals($messages, $this->_form->getMessages());
     }

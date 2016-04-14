@@ -83,24 +83,6 @@ class AddToGroup extends Form
         $submit->setLabel('OK');
         $this->add($submit);
 
-        $lengthValidator = new \Zend\Validator\Callback;
-        $lengthValidator->setCallback(array($this, 'validateLength'))
-                        ->setCallbackOptions(array(0, 255))
-                        ->setTranslatorTextDomain('default')
-                        ->setMessage('The input is more than 255 characters long');
-        $requiredValidator = new \Zend\Validator\Callback;
-        $requiredValidator->setCallback(array($this, 'validateLength'))
-                          ->setCallbackOptions(array(1, 255))
-                          ->setTranslatorTextDomain('default')
-                          ->setMessage("Value is required and can't be empty");
-        $existsValidator = new \Zend\Validator\Callback;
-        $existsValidator->setCallback(array($this, 'validateGroupExists'))
-                        ->setTranslatorTextDomain('default')
-                        ->setMessage('The name already exists');
-        $validatorChain = new \Zend\Validator\ValidatorChain;
-        $validatorChain->attach($lengthValidator, true)
-                       ->attach($requiredValidator, true)
-                       ->attach($existsValidator, true);
         $inputFilter = new \Zend\InputFilter\InputFilter;
         $inputFilter->add(
             array(
@@ -109,14 +91,35 @@ class AddToGroup extends Form
                 'filters' => array(
                     array('name' => 'StringTrim'),
                 ),
-                'validators' => array($validatorChain),
+                'validators' => array(
+                    array(
+                        'name' => 'Callback',
+                        'options' => array(
+                            'callback' => array($this, 'validateLength'),
+                            'callbackOptions' => array(0, 255),
+                            'message' => $this->_('The input is more than 255 characters long'),
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
+                    array(
+                        'name' => 'Callback',
+                        'options' => array(
+                            'callback' => array($this, 'validateLength'),
+                            'callbackOptions' => array(1, 255),
+                            'message' => "Value is required and can't be empty", // default notEmpty message
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
+                    array(
+                        'name' => 'Callback',
+                        'options' => array(
+                            'callback' => array($this, 'validateGroupExists'),
+                            'message' => $this->_('The name already exists'),
+                        ),
+                    ),
+                ),
             )
         );
-        $lengthValidator = new \Zend\Validator\Callback;
-        $lengthValidator->setCallback(array($this, 'validateLength'))
-                        ->setCallbackOptions(array(0, 255))
-                        ->setTranslatorTextDomain('default')
-                        ->setMessage('The input is more than 255 characters long');
         $inputFilter->add(
             array(
                 'name' => 'Description',
@@ -126,7 +129,14 @@ class AddToGroup extends Form
                     array('name' => 'Null', 'options' => array('type' => 'string')),
                 ),
                 'validators' => array(
-                    $lengthValidator
+                    array(
+                        'name' => 'Callback',
+                        'options' => array(
+                            'callback' => array($this, 'validateLength'),
+                            'callbackOptions' => array(0, 255),
+                            'message' => $this->_('The input is more than 255 characters long'),
+                        ),
+                    )
                 ),
             )
         );

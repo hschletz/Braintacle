@@ -187,10 +187,6 @@ msgstr "Die Eingabe ist länger als 255 Zeichen"
 msgid "The name already exists"
 msgstr "Der Name existiert bereits"
 
-#: Console/Form/AddToGroup.php Console/Form/ManageRegistryValues.php
-msgid "Value is required and can't be empty"
-msgstr "Eingabe erforderlich"
-
 #: Console/Form/ClientConfig.php Console/Navigation/MainMenuFactory.php
 msgid "Agent"
 msgstr "Agent"

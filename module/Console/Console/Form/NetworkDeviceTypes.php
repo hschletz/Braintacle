@@ -50,11 +50,6 @@ class NetworkDeviceTypes extends Form
             $element->setValue($name);
             $types->add($element);
 
-            $callback = new \Zend\Validator\Callback;
-            $callback->setCallback(array($this, 'validateName'))
-                     ->setCallbackOptions($name)
-                     ->setTranslatorTextDomain('default')
-                     ->setMessage('The name already exists');
             $filter = array(
                 'name' => $name,
                 'required' => true,
@@ -66,7 +61,14 @@ class NetworkDeviceTypes extends Form
                         'name' => 'StringLength',
                         'options' => array('min' => 1, 'max' => 255),
                     ),
-                    $callback,
+                    array(
+                        'name' => 'Callback',
+                        'options' => array(
+                            'callback' => array($this, 'validateName'),
+                            'callbackOptions' => $name,
+                            'message' => $this->_('The name already exists'),
+                        ),
+                    ),
                 ),
             );
             $inputFilterTypes->add($filter);
@@ -80,10 +82,6 @@ class NetworkDeviceTypes extends Form
         $submit->setLabel('Change');
         $this->add($submit);
 
-        $callback = new \Zend\Validator\Callback;
-        $callback->setCallback(array($this, 'validateName'))
-                 ->setTranslatorTextDomain('default')
-                 ->setMessage('The name already exists');
         $inputFilter = new \Zend\InputFilter\InputFilter;
         $inputFilter->add($inputFilterTypes, 'Types');
         $inputFilter->add(
@@ -98,7 +96,13 @@ class NetworkDeviceTypes extends Form
                         'name' => 'StringLength',
                         'options' => array('max' => 255),
                     ),
-                    $callback,
+                    array(
+                        'name' => 'Callback',
+                        'options' => array(
+                            'callback' => array($this, 'validateName'),
+                            'message' => $this->_('The name already exists'),
+                        ),
+                    ),
                 ),
             )
         );

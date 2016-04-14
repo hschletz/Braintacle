@@ -38,9 +38,6 @@ class DirectoryWritable extends \Zend\Validator\AbstractValidator
         self::WRITABLE => "Directory '%value%' is not writable",
     );
 
-    /** {@inheritdoc} */
-    protected static $defaultTranslatorTextDomain = 'default';
-
     /**
      * Returns true if $value is a directory and writable
      *

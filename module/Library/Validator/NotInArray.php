@@ -57,9 +57,6 @@ class NotInArray extends \Zend\Validator\AbstractValidator
         self::IN_ARRAY => "'%value%' is in the list of invalid values",
     );
 
-    /** {@inheritdoc} */
-    protected static $defaultTranslatorTextDomain = 'default';
-
     /**
      * Haystack option
      * @var array

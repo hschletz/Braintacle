@@ -42,9 +42,6 @@ class ProductKey extends \Zend\Validator\AbstractValidator
         self::PRODUCT_KEY => "'%value%' is not a valid product key",
     );
 
-    /** {@inheritdoc} */
-    protected static $defaultTranslatorTextDomain = 'default';
-
     /**
      * Returns TRUE if $value is a valid product key
      *

@@ -47,22 +47,22 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             // Messages from Library module
-            array('en', 'default', "File '%value%' is not readable", "File '%value%' is not readable"),
-            array('en_UK', 'default', "File '%value%' is not readable", "File '%value%' is not readable"),
-            array('de', 'default', "File '%value%' is not readable", "Datei '%value%' ist nicht lesbar"),
-            array('de_DE', 'default', "File '%value%' is not readable", "Datei '%value%' ist nicht lesbar"),
+            array('en', "File '%value%' is not readable", "File '%value%' is not readable"),
+            array('en_UK', "File '%value%' is not readable", "File '%value%' is not readable"),
+            array('de', "File '%value%' is not readable", "Datei '%value%' ist nicht lesbar"),
+            array('de_DE', "File '%value%' is not readable", "Datei '%value%' ist nicht lesbar"),
             // Messages from ZF resources
-            array('en', 'Zend', "Value is required and can't be empty", "Value is required and can't be empty"),
-            array('en_UK', 'Zend', "Value is required and can't be empty", "Value is required and can't be empty"),
-            array('de', 'Zend', "Value is required and can't be empty", 'Es wird eine Eingabe benötigt'),
-            array('de_DE', 'Zend', "Value is required and can't be empty", 'Es wird eine Eingabe benötigt'),
+            array('en', "Value is required and can't be empty", "Value is required and can't be empty"),
+            array('en_UK', "Value is required and can't be empty", "Value is required and can't be empty"),
+            array('de', "Value is required and can't be empty", 'Es wird eine Eingabe benötigt'),
+            array('de_DE', "Value is required and can't be empty", 'Es wird eine Eingabe benötigt'),
         );
     }
 
     /**
      * @dataProvider translatorSetupProvider
      */
-    public function testTranslatorSetup($locale, $textDomain, $message, $expectedMessage)
+    public function testTranslatorSetup($locale, $message, $expectedMessage)
     {
         \Locale::setDefault($locale);
         $application = \Zend\Mvc\Application::init(
@@ -76,7 +76,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
             )
         );
         $translator = $application->getServiceManager()->get('MvcTranslator');
-        $this->assertEquals($expectedMessage, $translator->translate($message, $textDomain));
+        $this->assertEquals($expectedMessage, $translator->translate($message));
     }
 
     public function missingTranslationForDevelopmentProvider()

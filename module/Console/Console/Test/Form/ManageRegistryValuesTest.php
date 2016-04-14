@@ -180,7 +180,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $this->assertEquals(
-            array('callbackValue' => "Eingabe erforderlich"),
+            array('callbackValue' => "Es wird eine Eingabe benötigt"),
             $this->_form->getMessages()['new_value']['subkeys']
         );
         $this->assertEquals('test', $this->_form->getData()['new_value']['name']);

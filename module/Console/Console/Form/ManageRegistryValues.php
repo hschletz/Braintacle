@@ -137,13 +137,6 @@ class ManageRegistryValues extends Form
                 ),
             )
         );
-        $subkeysValidator = new \Zend\Validator\Callback;
-        $subkeysValidator->setCallback(array($this, 'validateEmptySubkeys'))
-                         ->setTranslatorTextDomain('default')
-                         ->setMessage(
-                             "Value is required and can't be empty",
-                             \Zend\Validator\Callback::INVALID_VALUE
-                         );
         $inputFilterNew->add(
             array(
                 'name' => 'subkeys',
@@ -152,7 +145,13 @@ class ManageRegistryValues extends Form
                     array('name' => 'StringTrim'),
                 ),
                 'validators' => array(
-                    $subkeysValidator,
+                    array(
+                        'name' => 'Callback',
+                        'options' => array(
+                            'callback' => array($this, 'validateEmptySubkeys'),
+                            'message' => "Value is required and can't be empty", // default notEmpty message
+                        ),
+                    ),
                     array(
                         'name' => 'StringLength',
                         'options' => array('max' => 255)

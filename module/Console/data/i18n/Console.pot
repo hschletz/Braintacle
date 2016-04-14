@@ -179,10 +179,6 @@ msgstr ""
 msgid "The input is more than 255 characters long"
 msgstr ""
 
-#: Console/Form/AddToGroup.php Console/Form/ManageRegistryValues.php
-msgid "Value is required and can't be empty"
-msgstr ""
-
 #: Console/Form/AddToGroup.php Console/Form/DefineFields.php
 #: Console/Form/NetworkDeviceTypes.php
 msgid "The name already exists"

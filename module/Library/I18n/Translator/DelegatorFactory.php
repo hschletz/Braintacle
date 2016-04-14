@@ -55,8 +55,7 @@ class DelegatorFactory implements \Zend\ServiceManager\DelegatorFactoryInterface
             $translator->addTranslationFilePattern(
                 'phpArray',
                 \Zend\I18n\Translator\Resources::getBasePath(),
-                \Zend\I18n\Translator\Resources::getPatternForValidator(),
-                'Zend'
+                \Zend\I18n\Translator\Resources::getPatternForValidator()
             );
         } elseif ($primaryLanguage != 'en') {
             // Fall back to manual configuration
@@ -65,8 +64,7 @@ class DelegatorFactory implements \Zend\ServiceManager\DelegatorFactoryInterface
                 $translator->addTranslationFilePattern(
                     'phpArray',
                     $zfTranslations,
-                    '%s/Zend_Validate.php',
-                    'Zend'
+                    '%s/Zend_Validate.php'
                 );
             }
         }

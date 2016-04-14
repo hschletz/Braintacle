@@ -183,7 +183,6 @@ class Build extends \Console\Form\Form
                         'options' => array(
                             'callback' => array($this, 'validateNotificationMessage'),
                             'message' => $this->_('Message must not contain double quotes.'),
-                            'translatorTextDomain' => 'default',
                         ),
                     ),
                 ),
@@ -231,7 +230,6 @@ class Build extends \Console\Form\Form
                         'options' => array(
                             'callback' => array($this, 'validateNotificationMessage'),
                             'message' => $this->_('Message must not contain double quotes.'),
-                            'translatorTextDomain' => 'default',
                         ),
                     ),
                 ),

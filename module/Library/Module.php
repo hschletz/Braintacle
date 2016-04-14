@@ -131,8 +131,7 @@ class Module implements
         // This cannot be done by the delegator because it is invoked after form
         // validation messages get translated.
         \Zend\Validator\AbstractValidator::setDefaultTranslator(
-            $serviceManager->get('MvcTranslator'),
-            'Zend'
+            $serviceManager->get('MvcTranslator')
         );
     }
 
