@@ -102,7 +102,7 @@ abstract class AbstractForm extends \Console\Form\Form
                 ),
                 'validators' => array(
                     array(
-                        'name' => 'Library\Validator\StringLength',
+                        'name' => 'StringLength',
                         'options' => array('max' => 255)
                     )
                 )
@@ -122,7 +122,7 @@ abstract class AbstractForm extends \Console\Form\Form
                 ),
                 'validators' => array(
                     array(
-                        'name' => 'Library\Validator\StringLength',
+                        'name' => 'StringLength',
                         'options' => array('max' => 255)
                     )
                 )
@@ -142,7 +142,7 @@ abstract class AbstractForm extends \Console\Form\Form
                 ),
                 'validators' => array(
                     array(
-                        'name' => 'Library\Validator\StringLength',
+                        'name' => 'StringLength',
                         'options' => array('max' => 255)
                     ),
                     array(
