@@ -42,7 +42,8 @@ class NetworkDeviceTypes extends \Database\AbstractTable
      */
     protected function _postSetSchema($logger, $schema, $database)
     {
-        if (!\Library\Application::isTest() and isset($database->getTables()['network_devices'])) {
+        // Create entries for orphaned types in NetworkDevicesIdentified table
+        if (isset($database->getTables()['network_devices'])) {
             $definedTypes = $this->fetchCol('name');
             foreach ($this->adapter->query('SELECT DISTINCT type FROM network_devices')->execute() as $type) {
                 $type = $type['type'];
