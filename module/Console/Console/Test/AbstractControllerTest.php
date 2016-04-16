@@ -47,6 +47,26 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
              ->setService('Model\Operator\AuthenticationService', $auth);
     }
 
+    public function testRedirectToLoginPage()
+    {
+        $serviceLocator = $this->getApplicationServiceLocator();
+
+        // Call method on overridden service to satisfy atLeastOnce constraint
+        $serviceLocator->get('Model\Operator\AuthenticationService')->hasIdentity();
+
+        // Reset application to unauthenticated state
+        $auth = $this->getMock('Model\Operator\AuthenticationService');
+        $auth->expects($this->atLeastOnce())->method('hasIdentity')->willReturn(false);
+        $serviceLocator->setService('Model\Operator\AuthenticationService', $auth);
+
+        $uri = '/console/' . strtolower(preg_replace('/(.*\\\\|ControllerTest)/', '', get_class($this)));
+        $this->dispatch($uri);
+        $this->assertRedirectTo('/console/login/login/');
+
+        $session = new \Zend\Session\Container('login');
+        $this->assertEquals($uri, $session->originalUri);
+    }
+
     /**
      * Get instance of a controller plugin
      *

@@ -55,6 +55,11 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
         $serviceLocator->get('FormElementManager')->setService('Console\Form\Login', $this->_form);
     }
 
+    public function testRedirectToLoginPage()
+    {
+        // Skip Test for Login controller
+    }
+
     /**
      * Set up mock AuthenticationService
      *
