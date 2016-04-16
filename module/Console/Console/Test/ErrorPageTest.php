@@ -24,19 +24,8 @@ namespace Console\Test;
 /**
  * Tests for the error page
  */
-class ErrorPageTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
+class ErrorPageTest extends AbstractControllerTest
 {
-
-    /**
-     * Set up application config
-     */
-    public function setUp()
-    {
-        $this->setTraceError(true);
-        $this->setApplicationConfig(\Library\Application::getService('ApplicationConfig'));
-        parent::setUp();
-    }
-
     /**
      * Test 404 case
      */

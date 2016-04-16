@@ -46,11 +46,13 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
         $this->_authenticationService = $this->getMock('\Model\Operator\AuthenticationService');
         $this->_form = $this->getMock('Console\Form\Login');
 
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('Model\Operator\AuthenticationService', $this->_authenticationService)
-             ->get('FormElementManager')
-             ->setService('Console\Form\Login', $this->_form);
+        $serviceLocator = $this->getApplicationServiceLocator();
+
+        // Call method on overridden service to satisfy atLeastOnce constraint
+        $serviceLocator->get('Model\Operator\AuthenticationService')->hasIdentity();
+
+        $serviceLocator->setService('Model\Operator\AuthenticationService', $this->_authenticationService);
+        $serviceLocator->get('FormElementManager')->setService('Console\Form\Login', $this->_form);
     }
 
     /**

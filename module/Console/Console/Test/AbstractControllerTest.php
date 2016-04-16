@@ -37,6 +37,14 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
 
         $this->setTraceError(true);
         $this->setApplicationConfig(\Library\Application::getService('ApplicationConfig'));
+
+        // Put application in authenticated state
+        $auth = $this->getMock('Model\Operator\AuthenticationService');
+        $auth->expects($this->atLeastOnce())->method('hasIdentity')->willReturn(true);
+
+        $this->getApplicationServiceLocator()
+             ->setAllowOverride(true)
+             ->setService('Model\Operator\AuthenticationService', $auth);
     }
 
     /**

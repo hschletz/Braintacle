@@ -93,8 +93,7 @@ class Module implements
         // an infinite loop.
         $serviceManager = $e->getApplication()->getServiceManager();
         if (!$serviceManager->get('Zend\Authentication\AuthenticationService')->hasIdentity() and
-            $e->getRouteMatch()->getParam('controller') != 'login' and
-            !\Library\Application::isTest() // TODO: Provide test case
+            $e->getRouteMatch()->getParam('controller') != 'login'
         ) {
             // Preserve URI of current request for redirect after successful login
             $session = new \Zend\Session\Container('login');
