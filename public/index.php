@@ -32,4 +32,7 @@ if (\Library\Application::isProduction()) {
     ini_set('display_startup_errors', true);
 }
 
-\Library\Application::init('Console');
+\Library\Application::init(
+    (getenv('BRAINTACLE_CONFIG') ?: (__DIR__ . '/../config/braintacle.ini')),
+    'Console'
+);

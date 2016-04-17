@@ -32,4 +32,8 @@ if (!is_dir(__DIR__ . '/../../../../vendor')) {
 }
 \Zend\Console\Console::overrideIsConsole(false);
 
-\Library\Application::init('Console', false);
+\Library\Application::init(
+    array('database' => array('driver' => 'Pdo_Sqlite')),
+    'Console',
+    false
+);

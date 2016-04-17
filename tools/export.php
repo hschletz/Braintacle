@@ -31,4 +31,4 @@ if (extension_loaded('xdebug')) {
 }
 
 require_once __DIR__ . '/../module/Library/Application.php';
-\Library\Application::init('Export');
+\Library\Application::init(__DIR__ . '/../config/braintacle.ini', 'Export');

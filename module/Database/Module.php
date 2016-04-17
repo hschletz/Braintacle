@@ -65,17 +65,12 @@ class Module implements
             ),
         );
 
-        if (\Library\Application::isTest()) {
-            // Test setup with in-memory database
-            $config['db'] = array('driver' => 'Pdo_Sqlite');
-        } else {
-            // Merge database configuration from config file
-            $configFileContent = \Library\Application::getConfig();
-            if (!is_array($configFileContent['database'])) {
-                throw new \RuntimeException('Config file has no "database" section');
-            }
-            $config['db'] = $configFileContent['database'];
+        // Merge database configuration from config file
+        $configFileContent = \Library\Application::getConfig();
+        if (!is_array($configFileContent['database'])) {
+            throw new \RuntimeException('Config file has no "database" section');
         }
+        $config['db'] = $configFileContent['database'];
         $config['db']['options']['buffer_results'] = true;
         // Set charset to utf8mb4 for MySQL, utf8 for everything else.
         $config['db']['charset'] = ((stripos($config['db']['driver'], 'mysql') === false) ? 'utf8' : 'utf8mb4');

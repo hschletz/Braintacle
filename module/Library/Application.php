@@ -45,15 +45,14 @@ class Application
      * Set up application environment, optionally run the application
      *
      * This sets up the PHP environment and autoloaders, loads the provided
-     * module and optionally runs the MVC application. The default behavior for
-     * the $run option depends on the module. This should rarely need to be
-     * overridden except for testing.
+     * module and optionally runs the MVC application.
      *
+     * @param string|array $config Path to config file or array with compatible structure
      * @param string $module Module to load
      * @param bool $run Run the application after initialization. Default: TRUE
      * @codeCoverageIgnore
      */
-    public static function init($module, $run = true)
+    public static function init($config, $module, $run = true)
     {
         // Set up PHP environment.
         session_cache_limiter('nocache'); // Default headers to prevent caching
@@ -78,6 +77,13 @@ class Application
                 $autoloader['namespaces'] = array('org\bovigo\vfs' => $vfsStreamPath);
             }
             \Zend\Loader\AutoloaderFactory::factory(array('\Zend\Loader\StandardAutoloader' => $autoloader));
+        }
+
+        if (is_string($config)) {
+            $reader = new \Zend\Config\Reader\Ini;
+            static::$_config = $reader->fromFile($config);
+        } else {
+            static::$_config = $config;
         }
 
         $application = \Zend\Mvc\Application::init(
@@ -122,24 +128,13 @@ class Application
     }
 
     /**
-     * Get application configuration from config file
+     * Get application configuration set via init()
      *
-     * Loads and caches the config file. By default, the config file is expected
-     * at config/braintacle.ini, but a different file name and path can be set
-     * via the BRAINTACLE_CONFIG environment variable.
-     *
-     * @throws \RuntimeException if file cannot be parsed
+     * @return mixed
      * @codeCoverageIgnore
      */
     public static function getConfig()
     {
-        if (!static::$_config) {
-            $filename = getenv('BRAINTACLE_CONFIG') ?: static::getPath('config/braintacle.ini');
-            static::$_config = parse_ini_file($filename, true);
-            if (!static::$_config) {
-                throw new \RuntimeException('Could not read config file ' . $filename);
-            }
-        }
         return static::$_config;
     }
 

@@ -43,4 +43,8 @@ class StreamWrapperStatOnly
 stream_wrapper_register('statonly', 'Model\StreamWrapperStatOnly');
 
 require_once(__DIR__ . '/../../Library/Application.php');
-\Library\Application::init('Model', false);
+\Library\Application::init(
+    array('database' => array('driver' => 'Pdo_Sqlite')),
+    'Model',
+    false
+);
