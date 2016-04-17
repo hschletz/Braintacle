@@ -150,7 +150,7 @@ class Application
     public static function getEnvironment()
     {
         $environment = getenv('APPLICATION_ENV') ?: 'production';
-        if ($environment != 'production' and $environment != 'development' and $environment != 'test') {
+        if ($environment != 'production' and $environment != 'development') {
             throw new \DomainException('APPLICATION_ENV environment variable has invalid value: ' . $environment);
         }
         return $environment;
@@ -178,16 +178,6 @@ class Application
     {
         $environment = self::getEnvironment();
         return ($environment == 'development' or $environment == 'test');
-    }
-
-    /**
-     * Check for test environment used by unit tests
-     *
-     * @return bool
-     */
-    public static function isTest()
-    {
-        return self::getEnvironment() == 'test';
     }
 
     /**

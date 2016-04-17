@@ -79,26 +79,23 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedMessage, $translator->translate($message));
     }
 
-    public function missingTranslationForDevelopmentProvider()
+    public function missingTranslationProvider()
     {
         return array(
-            array('development', 'de'),
-            array('development', 'de_DE'),
-            array('test', 'de'),
-            array('test', 'de_DE'),
+            array('de'),
+            array('de_DE'),
         );
     }
 
     /**
-     * @dataProvider missingTranslationForDevelopmentProvider
+     * @dataProvider missingTranslationProvider
      */
-    public function testMissingTranslationTriggersNoticeInDevelopmentOrTestMode($mode, $locale)
+    public function testMissingTranslationTriggersNoticeInDevelopmentMode($locale)
     {
         $this->setExpectedException(
             'PHPUnit_Framework_Error_Notice',
             'Missing translation: this_string_is_not_translated'
         );
-        putenv('APPLICATION_ENV=' . $mode);
         \Locale::setDefault($locale);
         $application = \Zend\Mvc\Application::init(
             array(
@@ -114,16 +111,8 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('this_string_is_not_translated', $translator->translate('this_string_is_not_translated'));
     }
 
-    public function missingTranslationWithoutEnvironmentProvider()
-    {
-        return array(
-            array('de'),
-            array('de_DE')
-        );
-    }
-
     /**
-     * @dataProvider missingTranslationWithoutEnvironmentProvider
+     * @dataProvider missingTranslationProvider
      */
     public function testMissingTranslationDoesNotTriggerNoticeInProductionMode($locale)
     {
@@ -141,29 +130,5 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
         );
         $translator = $application->getServiceManager()->get('MvcTranslator');
         $this->assertEquals('this_string_is_not_translated', $translator->translate('this_string_is_not_translated'));
-    }
-
-    /**
-     * @dataProvider missingTranslationForDevelopmentProvider
-     */
-    public function testMissingTranslationDoesNotTriggerNoticeForZendResources($mode, $locale)
-    {
-        putenv('APPLICATION_ENV=' . $mode);
-        \Locale::setDefault($locale);
-        $application = \Zend\Mvc\Application::init(
-            array(
-                'modules' => array('Library'),
-                'module_listener_options' => array(
-                    'module_paths' => array(
-                        'Library' => \Library\Application::getPath('module/Library')
-                    ),
-                ),
-            )
-        );
-        $translator = $application->getServiceManager()->get('MvcTranslator');
-        $this->assertEquals(
-            'this_string_is_not_translated',
-            $translator->translate('this_string_is_not_translated', 'Zend')
-        );
     }
 }

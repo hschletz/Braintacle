@@ -43,37 +43,28 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testEnvironment()
     {
         // Assume that the tests have been invoked with APPLICATION_ENV set to
-        // "test". Otherwise the tests might be incomplete.
-        $this->assertEquals('test', getenv('APPLICATION_ENV'));
-        $this->assertEquals('test', Application::getEnvironment());
+        // "development". Otherwise the tests might be incomplete.
+        $this->assertEquals('development', getenv('APPLICATION_ENV'));
+        $this->assertEquals('development', Application::getEnvironment());
         $this->assertFalse(Application::isProduction());
         $this->assertTrue(Application::isDevelopment());
-        $this->assertTrue(Application::isTest());
 
         // Unset APPLICATION_ENV, equivalent to "production"
         putenv('APPLICATION_ENV');
         $this->assertEquals('production', Application::getEnvironment());
         $this->assertTrue(Application::isProduction());
         $this->assertFalse(Application::isDevelopment());
-        $this->assertFalse(Application::isTest());
-
-        // Test "development" environment
-        putenv('APPLICATION_ENV=development');
-        $this->assertEquals('development', Application::getEnvironment());
-        $this->assertFalse(Application::isProduction());
-        $this->assertTrue(Application::isDevelopment());
-        $this->assertFalse(Application::isTest());
 
         // Test invalid environment. Ensure that the variable is reset to its
         // default in either case.
-        putenv('APPLICATION_ENV=invalid');
+        putenv('APPLICATION_ENV=test');
         try {
             Application::getEnvironment();
         } catch (\DomainException $expected) {
             $invalidEnvironmmentDetected = true;
         }
         // Reset to default.
-        putenv('APPLICATION_ENV=test');
+        putenv('APPLICATION_ENV=development');
         if (!isset($invalidEnvironmmentDetected)) {
             $this->fail('Invalid environment was undetected.');
         }

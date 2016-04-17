@@ -65,9 +65,8 @@ function testModule($module, $filter = null)
 // Change to application root directory to allow relative paths
 chdir(dirname(__DIR__));
 
-// Special application environment, allows application code to skip actions not
-// appropriate in a unit test environment.
-putenv('APPLICATION_ENV=test');
+// Tests assume "development" environment
+putenv('APPLICATION_ENV=development');
 
 // Use phpunit from vendor directory if available
 $vendorBin = __DIR__ . '/../vendor/phpunit/phpunit/';
