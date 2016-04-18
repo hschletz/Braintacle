@@ -124,12 +124,7 @@ class Module implements
         $formElementHelper->addClass('Library\Form\Element\SelectSimple', 'formselectsimple');
         $formElementHelper->addType('select_untranslated', 'formselectuntranslated');
 
-        // Validators have no translator by default. Attach translator, but use
-        // a different text domain to avoid warnings if the Zend translations
-        // are not loaded. For custom messages, the text domain must be reset
-        // manually to 'default' for individual validators.
-        // This cannot be done by the delegator because it is invoked after form
-        // validation messages get translated.
+        // Attach translator to validators
         \Zend\Validator\AbstractValidator::setDefaultTranslator(
             $serviceManager->get('MvcTranslator')
         );
