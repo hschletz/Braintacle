@@ -49,6 +49,11 @@ class Module implements
                     'UrlFromRoute' => 'Library\Mvc\Controller\Plugin\UrlFromRoute',
                 )
             ),
+            'filters' => array(
+                'invokables' => array(
+                    'Library\FixEncodingErrors' => 'Library\Filter\FixEncodingErrors',
+                ),
+            ),
             'service_manager' => array(
                 'delegators' => array(
                     'MvcTranslator' => array('Library\I18n\Translator\DelegatorFactory'),
@@ -80,6 +85,14 @@ class Module implements
                 'invokables' => array(
                     'Po' => 'Library\I18n\Translator\Loader\Po',
                 )
+            ),
+            'validators' => array(
+                'invokables' => array(
+                    'Library\DirectoryWritable' => 'Library\Validator\DirectoryWritable',
+                    'Library\FileReadable' => 'Library\Validator\FileReadable',
+                    'Library\NotInArray' => 'Library\Validator\NotInArray',
+                    'Library\ProductKey' => 'Library\Validator\ProductKey',
+                ),
             ),
             'view_helpers' => array(
                 'factories' => array(
@@ -113,16 +126,15 @@ class Module implements
      */
     public function onBootstrap(\Zend\EventManager\EventInterface $e)
     {
-        \Zend\Filter\StaticFilter::getPluginManager()->setInvokableClass(
-            'Library\FixEncodingErrors',
-            'Library\Filter\FixEncodingErrors'
-        );
         $serviceManager = $e->getApplication()->getServiceManager();
 
         // Register form element view helpers
         $formElementHelper = $serviceManager->get('ViewHelperManager')->get('formElement');
         $formElementHelper->addClass('Library\Form\Element\SelectSimple', 'formselectsimple');
         $formElementHelper->addType('select_untranslated', 'formselectuntranslated');
+
+        \Zend\Filter\StaticFilter::setPluginManager($serviceManager->get('FilterManager'));
+        \Zend\Validator\StaticValidator::setPluginManager($serviceManager->get('ValidatorManager'));
 
         // Attach translator to validators
         \Zend\Validator\AbstractValidator::setDefaultTranslator(
