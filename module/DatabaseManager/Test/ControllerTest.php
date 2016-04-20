@@ -38,8 +38,6 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
         return array(
             array('--loglevel'),
             array('--loglevel='),
-            array('--loglevel=inf'),
-            array('--loglevel=infos'),
         );
     }
 
@@ -48,7 +46,26 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
      */
     public function testInvalidRoute($route)
     {
+        $validator = $this->getMock('Library\Validator\LogLevel');
+        $validator->expects($this->never())->method('isValid');
+        $this->getApplicationServiceLocator()->get('ValidatorManager')->setService('Library\LogLevel', $validator);
+
         $this->dispatch($route);
+        $this->assertResponseStatusCode(1);
+        $this->assertEquals(
+            \Zend\Mvc\Application::ERROR_ROUTER_NO_MATCH,
+            $this->getResponse()->getMetadata()['error']
+        );
+        $this->assertConsoleOutputContains('Usage:');
+    }
+
+    public function testInvalidLogLevel()
+    {
+        $validator = $this->getMock('Library\Validator\LogLevel');
+        $validator->expects($this->once())->method('isValid')->with('0')->willReturn(false);
+        $this->getApplicationServiceLocator()->get('ValidatorManager')->setService('Library\LogLevel', $validator);
+
+        $this->dispatch('--loglevel=0');
         $this->assertResponseStatusCode(1);
         $this->assertEquals(
             \Zend\Mvc\Application::ERROR_ROUTER_NO_MATCH,
@@ -61,13 +78,6 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
     {
         return array(
             array('', Logger::INFO),
-            array('--loglevel=emerg', Logger::EMERG),
-            array('--loglevel=alert', Logger::ALERT),
-            array('--loglevel=crit', Logger::CRIT),
-            array('--loglevel=err', Logger::ERR),
-            array('--loglevel=warn', Logger::WARN),
-            array('--loglevel=notice', Logger::NOTICE),
-            array('--loglevel=info', Logger::INFO),
             array('--loglevel=debug', Logger::DEBUG),
         );
     }
@@ -77,6 +87,18 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
      */
     public function testSchemaManagerAction($cmdLine, $expectedPriority)
     {
+        $validator = $this->getMock('Library\Validator\LogLevel');
+        $filter = $this->getMock('Library\Filter\LogLevel');
+        if ($cmdLine) {
+            $validator->expects($this->once())->method('isValid')->with('debug')->willReturn(true);
+            $filter->expects($this->once())->method('filter')->with('debug')->willReturn($expectedPriority);
+        } else {
+            $validator->expects($this->never())->method('isValid');
+            $filter->expects($this->once())->method('filter')->with('info')->willReturn($expectedPriority);
+        }
+        $this->getApplicationServiceLocator()->get('ValidatorManager')->setService('Library\LogLevel', $validator);
+        $this->getApplicationServiceLocator()->get('FilterManager')->setService('Library\LogLevel', $filter);
+
         $logger = $this->getMock('Zend\Log\Logger');
         $logger->expects($this->once())->method('addWriter')->with(
             $this->callback(

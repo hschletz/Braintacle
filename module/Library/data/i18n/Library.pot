@@ -38,6 +38,10 @@ msgstr ""
 msgid "File '%value%' is not readable"
 msgstr ""
 
+#: Validator/LogLevel.php
+msgid "'%value%' is not a valid log level"
+msgstr ""
+
 #: Validator/NotInArray.php
 msgid "'%value%' is in the list of invalid values"
 msgstr ""

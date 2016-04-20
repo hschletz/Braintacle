@@ -52,6 +52,7 @@ class Module implements
             'filters' => array(
                 'invokables' => array(
                     'Library\FixEncodingErrors' => 'Library\Filter\FixEncodingErrors',
+                    'Library\LogLevel' => 'Library\Filter\LogLevel',
                 ),
             ),
             'service_manager' => array(
@@ -90,6 +91,7 @@ class Module implements
                 'invokables' => array(
                     'Library\DirectoryWritable' => 'Library\Validator\DirectoryWritable',
                     'Library\FileReadable' => 'Library\Validator\FileReadable',
+                    'Library\LogLevel' => 'Library\Validator\LogLevel',
                     'Library\NotInArray' => 'Library\Validator\NotInArray',
                     'Library\ProductKey' => 'Library\Validator\ProductKey',
                 ),

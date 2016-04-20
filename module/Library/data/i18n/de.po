@@ -35,6 +35,10 @@ msgstr "'%value%' ist keine Datei oder nicht zugänglich"
 msgid "File '%value%' is not readable"
 msgstr "Datei '%value%' ist nicht lesbar"
 
+#: Validator/LogLevel.php
+msgid "'%value%' is not a valid log level"
+msgstr "'%value%' ist kein gültiger Loglevel"
+
 #: Validator/NotInArray.php
 msgid "'%value%' is in the list of invalid values"
 msgstr "'%value%' ist in der Liste ungültiger Werte"

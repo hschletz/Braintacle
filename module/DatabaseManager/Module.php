@@ -105,10 +105,8 @@ class Module implements
     {
         // Validate loglevel value. Invalid content will cause the route to fail
         // and trigger the usage message.
-        if (!preg_match(
-            '/^(emerg|alert|crit|err|warn|notice|info|debug)?$/',
-            $e->getRouteMatch()->getParam('loglevel')
-        )) {
+        $logLevel = $e->getRouteMatch()->getParam('loglevel');
+        if ($logLevel != '' and !\Zend\Validator\StaticValidator::execute($logLevel, 'Library\LogLevel')) {
             $e->setError(\Zend\Mvc\Application::ERROR_ROUTER_NO_MATCH);
             $e->getTarget()->getEventManager()->trigger(\Zend\Mvc\MvcEvent::EVENT_DISPATCH_ERROR, $e);
         }
