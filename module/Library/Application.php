@@ -92,13 +92,7 @@ class Application
                 'module_listener_options' => array(
                     'module_paths' => array(
                         'Console' => self::getPath('module/Console/Console'),
-                        'Database' => self::getPath('module/Database'),
-                        'Export' => self::getPath('module/Export'),
-                        'Library' => self::getPath('module/Library'),
-                        'Model' => self::getPath('module/Model'),
-                        'PackageBuilder' => self::getPath('module/PackageBuilder'),
-                        'Protocol' => self::getPath('module/Protocol'),
-                        'DatabaseManager' => self::getPath('module/DatabaseManager'),
+                        self::getPath('module'),
                     ),
                 ),
             )
