@@ -42,17 +42,17 @@ class Application
     protected static $_serviceManager;
 
     /**
-     * Set up application environment, optionally run the application
+     * Set up application environment
      *
-     * This sets up the PHP environment and autoloaders, loads the provided
-     * module and optionally runs the MVC application.
+     * This sets up the PHP environment and autoloaders, reads the config file,
+     * loads the provided module and returns the MVC application.
      *
      * @param string|array $config Path to config file or array with compatible structure
      * @param string $module Module to load
-     * @param bool $run Run the application after initialization. Default: TRUE
+     * @return \Zend\Mvc\Application
      * @codeCoverageIgnore
      */
-    public static function init($config, $module, $run = true)
+    public static function init($config, $module)
     {
         // Set up PHP environment.
         session_cache_limiter('nocache'); // Default headers to prevent caching
@@ -105,9 +105,7 @@ class Application
         );
         self::$_serviceManager = $application->getServiceManager();
 
-        if ($run) {
-            $application->run();
-        }
+        return $application;
     }
 
     /**

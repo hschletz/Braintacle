@@ -25,6 +25,5 @@ date_default_timezone_set('Europe/Berlin');
 require_once(__DIR__ . '/../../Library/Application.php');
 \Library\Application::init(
     array('database' => array('driver' => 'Pdo_Sqlite')),
-    'Protocol',
-    false
+    'Protocol'
 );

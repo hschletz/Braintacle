@@ -24,6 +24,5 @@ error_reporting(-1);
 require_once(__DIR__ . '/../../Library/Application.php');
 \Library\Application::init(
     array('database' => array('driver' => 'Pdo_Sqlite')),
-    'PackageBuilder',
-    false
+    'PackageBuilder'
 );

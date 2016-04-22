@@ -35,4 +35,4 @@ if (\Library\Application::isProduction()) {
 \Library\Application::init(
     (getenv('BRAINTACLE_CONFIG') ?: (__DIR__ . '/../config/braintacle.ini')),
     'Console'
-);
+)->run();

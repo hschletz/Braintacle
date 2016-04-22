@@ -34,6 +34,5 @@ if (!is_dir(__DIR__ . '/../../../../vendor')) {
 
 \Library\Application::init(
     array('database' => array('driver' => 'Pdo_Sqlite')),
-    'Console',
-    false
+    'Console'
 );
