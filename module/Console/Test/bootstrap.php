@@ -24,10 +24,10 @@ ini_set('memory_limit', '350M');
 date_default_timezone_set('Europe/Berlin');
 \Locale::setDefault('de');
 
-require_once(__DIR__ . '/../../../Library/Application.php');
+require_once(__DIR__ . '/../../Library/Application.php');
 
 // Pretend to be not on a console to force choice of HTTP route over console route.
-if (!is_dir(__DIR__ . '/../../../../vendor')) {
+if (!is_dir(__DIR__ . '/../../../vendor')) {
     require_once 'Zend/Console/Console.php';
 }
 \Zend\Console\Console::overrideIsConsole(false);

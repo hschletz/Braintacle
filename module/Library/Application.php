@@ -90,10 +90,7 @@ class Application
             array(
                 'modules' => array($module),
                 'module_listener_options' => array(
-                    'module_paths' => array(
-                        'Console' => self::getPath('module/Console/Console'),
-                        self::getPath('module'),
-                    ),
+                    'module_paths' => array(self::getPath('module')),
                 ),
             )
         );

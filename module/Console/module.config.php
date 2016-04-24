@@ -127,7 +127,7 @@ return array(
     'view_manager' => array(
         'doctype' => 'HTML4_STRICT',
         'template_path_stack' => array(
-            'console' => __DIR__ . '/view',
+            'console' => __DIR__ . '/views',
         ),
         'default_template_suffix' => 'php',
         'display_exceptions' => true,

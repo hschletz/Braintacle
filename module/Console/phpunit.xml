@@ -18,21 +18,21 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
-<phpunit bootstrap="Console/Test/bootstrap.php">
+<phpunit bootstrap="Test/bootstrap.php">
     <testsuites>
         <testsuite name="Console">
-            <directory>Console/Test</directory>
+            <directory>Test</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">Console</directory>
+            <directory suffix=".php">.</directory>
             <exclude>
-                <directory>Console/Test</directory>
+                <directory>Test</directory>
             </exclude>
         </whitelist>
         <whitelist processUncoveredFilesFromWhitelist="false"><!-- View scripts cannot be executed without class context -->
-            <directory suffix=".php">view</directory>
+            <directory suffix=".php">views</directory>
         </whitelist>
     </filter>
     <logging>
