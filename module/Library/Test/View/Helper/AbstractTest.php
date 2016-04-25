@@ -90,7 +90,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     public function testHelperService()
     {
         $this->assertInstanceOf(
-            'Zend\View\Helper\HelperInterface',
+            static::_getHelperClass(),
             static::$_helperManager->get($this->_getHelperName())
         );
     }
