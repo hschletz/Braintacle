@@ -86,17 +86,26 @@ class Application
             static::$_config = $config;
         }
 
-        $application = \Zend\Mvc\Application::init(
-            array(
-                'modules' => array($module),
-                'module_listener_options' => array(
-                    'module_paths' => array(self::getPath('module')),
-                ),
-            )
-        );
+        $application = \Zend\Mvc\Application::init(static::getApplicationConfig($module));
         self::$_serviceManager = $application->getServiceManager();
 
         return $application;
+    }
+
+    /**
+     * Get module config for application initialization
+     *
+     * @param string $module Module to load
+     * @return array
+     */
+    public static function getApplicationConfig($module)
+    {
+        return array(
+            'modules' => array($module),
+            'module_listener_options' => array(
+                'module_paths' => array(static::getPath('module')),
+            ),
+        );
     }
 
     /**

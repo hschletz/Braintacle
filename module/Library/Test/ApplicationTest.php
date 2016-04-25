@@ -33,6 +33,19 @@ use \org\bovigo\vfs\vfsStream;
  */
 class ApplicationTest extends \PHPUnit_Framework_TestCase
 {
+    public function testGetApplicationConfig()
+    {
+        $this->assertEquals(
+            array(
+                'modules' => array('moduleName'),
+                'module_listener_options' => array(
+                    'module_paths' => array(realpath(__DIR__ . '/../..')),
+                ),
+            ),
+            Application::getApplicationConfig('moduleName')
+        );
+    }
+
     /**
      * Tests for environment detection methods
      *
