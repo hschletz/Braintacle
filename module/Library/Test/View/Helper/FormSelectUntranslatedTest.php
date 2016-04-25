@@ -35,10 +35,9 @@ class FormSelectUntranslatedTest extends AbstractTest
 <select name="test"><option value="0">Yes&lt;b&gt;</option>
 <option value="1">No</option></select>
 EOT;
-        $plugins = clone \Library\Application::getService('ViewHelperManager');
         $view = new \Zend\View\Renderer\PhpRenderer;
-        $view->setHelperPluginManager($plugins);
-        $helper = $plugins->get('formElement');
+        $view->setHelperPluginManager(static::$_helperManager);
+        $helper = static::$_helperManager->get('formElement');
         $helper->setView($view);
         $this->assertEquals($expected, $helper($element));
     }

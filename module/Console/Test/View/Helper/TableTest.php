@@ -137,7 +137,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testInvokeNoData()
     {
-        $table = $this->getMockBuilder($this->_getHelperClass())
+        $table = $this->getMockBuilder(static::_getHelperClass())
                       ->setConstructorArgs(
                           array($this->_escapeHtml, $this->_htmlTag, $this->_consoleUrl, $this->_dateFormat)
                       )
@@ -151,7 +151,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
         $this->_escapeHtml->expects($this->exactly(4)) // once per non-header cell
                           ->method('__invoke')
                           ->will($this->returnArgument(0));
-        $table = $this->getMockBuilder($this->_getHelperClass())
+        $table = $this->getMockBuilder(static::_getHelperClass())
                       ->setConstructorArgs(
                           array($this->_escapeHtml, $this->_htmlTag, $this->_consoleUrl, $this->_dateFormat)
                       )
@@ -172,7 +172,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
         $this->_escapeHtml->expects($this->exactly(4)) // once per non-header cell
                           ->method('__invoke')
                           ->will($this->returnArgument(0));
-        $table = $this->getMockBuilder($this->_getHelperClass())
+        $table = $this->getMockBuilder(static::_getHelperClass())
                       ->setConstructorArgs(
                           array($this->_escapeHtml, $this->_htmlTag, $this->_consoleUrl, $this->_dateFormat)
                       )
@@ -210,7 +210,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
         $this->_escapeHtml->expects($this->exactly(2)) // once per non-header cell that is not rendered via callback
                           ->method('__invoke')
                           ->will($this->returnArgument(0));
-        $table = $this->getMockBuilder($this->_getHelperClass())
+        $table = $this->getMockBuilder(static::_getHelperClass())
                       ->setConstructorArgs(
                           array($this->_escapeHtml, $this->_htmlTag, $this->_consoleUrl, $this->_dateFormat)
                       )
@@ -247,7 +247,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
         $this->_escapeHtml->expects($this->exactly(4)) // once per non-header cell
                           ->method('__invoke')
                           ->will($this->returnArgument(0));
-        $table = $this->getMockBuilder($this->_getHelperClass())
+        $table = $this->getMockBuilder(static::_getHelperClass())
                       ->setConstructorArgs(
                           array($this->_escapeHtml, $this->_htmlTag, $this->_consoleUrl, $this->_dateFormat)
                       )
@@ -282,7 +282,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
         $this->_escapeHtml->expects($this->exactly(4)) // once per non-header cell that is not rendered via callback
                           ->method('__invoke')
                           ->will($this->returnArgument(0));
-        $table = $this->getMockBuilder($this->_getHelperClass())
+        $table = $this->getMockBuilder(static::_getHelperClass())
                       ->setConstructorArgs(
                           array($this->_escapeHtml, $this->_htmlTag, $this->_consoleUrl, $this->_dateFormat)
                       )

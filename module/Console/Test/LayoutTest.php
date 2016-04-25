@@ -32,8 +32,9 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $application = \Zend\Mvc\Application::init(\Library\Application::getApplicationConfig('Console'));
         $this->_view = new \Zend\View\Renderer\PhpRenderer;
-        $this->_view->setHelperPluginManager(clone \Library\Application::getService('ViewHelperManager'));
+        $this->_view->setHelperPluginManager($application->getServiceManager()->get('ViewHelperManager'));
         $this->_view->setResolver(
             new \Zend\View\Resolver\TemplateMapResolver(
                 array('layout' => \Console\Module::getPath('views/layout/layout.php'))

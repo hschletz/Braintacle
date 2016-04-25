@@ -161,7 +161,7 @@ class Module implements
      */
     public function setLayoutTitle(\Zend\Mvc\MvcEvent $e)
     {
-        $headTitleHelper = $e->getApplication()->getServiceManager()->get('viewHelperManager')->get('headTitle');
+        $headTitleHelper = $e->getApplication()->getServiceManager()->get('ViewHelperManager')->get('headTitle');
         $headTitleHelper->setTranslatorEnabled(false);
         $headTitleHelper->append('Braintacle'); // TODO: append page-specific information
     }

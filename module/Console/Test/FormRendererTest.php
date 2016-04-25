@@ -36,10 +36,9 @@ class FormRendererTest extends \PHPUnit_Framework_TestCase
      */
     protected function _createView()
     {
-        // Clone helper plugin manager to prevent state changes leaking into other tests
-        $plugins = clone \Library\Application::getService('ViewHelperManager');
+        $application = \Zend\Mvc\Application::init(\Library\Application::getApplicationConfig('Console'));
         $view = new \Zend\View\Renderer\PhpRenderer;
-        $view->setHelperPluginManager($plugins);
+        $view->setHelperPluginManager($application->getServiceManager()->get('ViewHelperManager'));
         return $view;
     }
 

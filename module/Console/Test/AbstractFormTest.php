@@ -90,13 +90,9 @@ abstract class AbstractFormTest extends \PHPUnit_Framework_TestCase
      */
     protected function _createView()
     {
-        // Clone helper plugin manager to get the helpers in a fresh state.
-        // This is important for helpers like HeadScript that store information
-        // across invocations. These state changes must not leak into other
-        // tests.
-        $plugins = clone \Library\Application::getService('ViewHelperManager');
+        $application = \Zend\Mvc\Application::init(\Library\Application::getApplicationConfig('Console'));
         $view = new \Zend\View\Renderer\PhpRenderer;
-        $view->setHelperPluginManager($plugins);
+        $view->setHelperPluginManager($application->getServiceManager()->get('ViewHelperManager'));
         return $view;
     }
 

@@ -33,6 +33,22 @@ use Library\Application;
 abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * View helper manager
+     * @var \Zend\View\HelperPluginManager
+     */
+    protected static $_helperManager;
+
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+
+        $helperClass = static::_getHelperClass();
+        $moduleName = substr($helperClass, 0, strpos($helperClass, '\\'));
+        $application = \Zend\Mvc\Application::init(\Library\Application::getApplicationConfig($moduleName));
+        static::$_helperManager = $application->getServiceManager()->get('ViewHelperManager');
+    }
+
+    /**
      * Get the name of the view helper, derived from the test class name
      *
      * @return string Helper name
@@ -46,12 +62,12 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     /**
      * Get the name of the view helper class, derived from the test class name
      *
-     * @return string Helper name
+     * @return string Helper class name
      */
-    protected function _getHelperClass()
+    protected static function _getHelperClass()
     {
         // Derive helper class from test class name (minus \Test namespace and 'Test' suffix)
-        return substr(str_replace('\Test', '', get_class($this)), 0, -4);
+        return substr(str_replace('\Test', '', get_called_class()), 0, -4);
     }
 
     /**
@@ -65,18 +81,17 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
         if (!$name) {
             $name = $this->_getHelperName();
         }
-        return \Library\Application::getService('ViewHelperManager')->get($name);
+        return static::$_helperManager->get($name);
     }
 
     /**
      * Test if the helper is properly registered with the service manager
      */
-    public function testHelperInterface()
+    public function testHelperService()
     {
-        // Test if the helper is registered with the application's service manager
-        $this->assertTrue(\Library\Application::getService('ViewHelperManager')->has($this->_getHelperName()));
-
-        // Get helper instance through service manager and test for required interface
-        $this->assertInstanceOf('Zend\View\Helper\HelperInterface', $this->_getHelper());
+        $this->assertInstanceOf(
+            'Zend\View\Helper\HelperInterface',
+            static::$_helperManager->get($this->_getHelperName())
+        );
     }
 }
