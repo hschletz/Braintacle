@@ -922,6 +922,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $client = $this->getMock('Model\Client\Client');
         $client->method('offsetGet')->willReturnMap($map);
+        $client->method('offsetExists')->with('Windows')->willReturn(true);
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/general/?id=1');
