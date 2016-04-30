@@ -36,7 +36,7 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
         parent::setUp();
 
         $this->setTraceError(true);
-        $this->setApplicationConfig(\Library\Application::getService('ApplicationConfig'));
+        $this->setApplicationConfig(\Library\Application::getApplicationConfig('Console'));
 
         // Put application in authenticated state
         $auth = $this->getMock('Model\Operator\AuthenticationService');
@@ -75,7 +75,7 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
      */
     protected function _getControllerPlugin($name)
     {
-        return \Library\Application::getService('ControllerPluginManager')->get($name);
+        return $this->getApplicationServiceLocator()->get('ControllerPluginManager')->get($name);
     }
 
     /**

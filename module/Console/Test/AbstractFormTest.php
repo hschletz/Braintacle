@@ -57,15 +57,17 @@ abstract class AbstractFormTest extends \PHPUnit_Framework_TestCase
     /**
      * Hook to provide form instance
      *
-     * The default implementation pulls an instance from the form element
-     * manager using a name derived from the test class name. Override this
-     * method to use another name or construct the form instance manually. In
-     * the latter case, the overridden method is responsible for calling
-     * init() on the form.
+     * The default implementation instantiates an object of a class derived from
+     * the test class name. Override this method to use another name or
+     * construct the form instance manually. The overridden method is
+     * responsible for calling init() on the form.
      */
     protected function _getForm()
     {
-        return \Library\Application::getService('FormElementManager')->get($this->_getFormClass());
+        $class = $this->_getFormClass();
+        $form = new $class;
+        $form->init();
+        return $form;
     }
 
     /**

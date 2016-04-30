@@ -21,8 +21,6 @@
 
 namespace Console\Test\Navigation;
 
-use Library\Application;
-
 /**
  * Tests for the main menu
  */
@@ -34,7 +32,7 @@ class MainMenuTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerT
     public function setUp()
     {
         $this->setTraceError(true);
-        $this->setApplicationConfig(\Library\Application::getService('ApplicationConfig'));
+        $this->setApplicationConfig(\Library\Application::getApplicationConfig('Console'));
         parent::setUp();
     }
 
@@ -45,7 +43,7 @@ class MainMenuTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerT
     {
         $this->assertInstanceOf(
             'Zend\Navigation\Navigation',
-            Application::getService('Console\Navigation\MainMenu')
+            $this->getApplicationServiceLocator()->get('Console\Navigation\MainMenu')
         );
     }
 
