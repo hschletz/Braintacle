@@ -103,6 +103,21 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->_packageManager->expects($this->once())->method('getPackages')->willReturn($packages);
 
+        $viewHelperManager = $this->getApplicationServiceLocator()->get('ViewHelperManager');
+
+        $flashMessenger = $this->getMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
+        $flashMessenger->method('__call')
+                       ->willReturnMap(
+                           array(
+                               array('getMessagesFromNamespace', array('packageName'), array()),
+                               array('getSuccessMessages', array(), array()),
+                           )
+                       );
+        $flashMessenger->expects($this->once())->method('setTranslator')->with(null);
+        $flashMessenger->expects($this->once())->method('render')->with('error')->willReturn('');
+        $viewHelperManager->setService('FlashMessenger', $flashMessenger);
+
         $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->exactly(2))
                    ->method('__invoke')
@@ -111,7 +126,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                        array($timestamp2, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
                    )
                    ->will($this->onConsecutiveCalls('date1', 'date2'));
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
+        $viewHelperManager->setService('DateFormat', $dateFormat);
 
         $this->dispatch('/console/package/index/');
 
@@ -185,11 +200,23 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionPackageFlashMessages()
     {
-        $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
-        $flashMessenger->addErrorMessage('error');
-        $flashMessenger->addSuccessMessage('success');
-        $flashMessenger->addInfoMessage('info');
-        $flashMessenger->addMessage('<br>', 'packageName');
+        $flashMessenger = $this->getMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
+        $flashMessenger->method('__call')
+                       ->willReturnMap(
+                           array(
+                               array('getMessagesFromNamespace', array('packageName'), array('<br>')),
+                               array('getSuccessMessages', array(), array('success')),
+                           )
+                       );
+        $flashMessenger->expects($this->once())->method('setTranslator')->with(null);
+        $flashMessenger->expects($this->once())
+                       ->method('render')
+                       ->with('error')
+                       ->willReturn('<ul class="error"><li>error</li></ul>');
+        $this->getApplicationServiceLocator()
+             ->get('ViewHelperManager')
+             ->setService('FlashMessenger', $flashMessenger);
 
         $this->_packageManager->expects($this->once())->method('getPackages')->willReturn(array());
         $this->_disableTranslator();
@@ -232,8 +259,21 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                 'NumError' => 0,
             ),
         );
-        $this->_getControllerPlugin('FlashMessenger')->addMessage('name1', 'packageName');
         $this->_packageManager->expects($this->once())->method('getPackages')->willReturn($packages);
+
+        $flashMessenger = $this->getMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
+        $flashMessenger->method('__call')
+                       ->willReturnMap(
+                           array(
+                               array('getMessagesFromNamespace', array('packageName'), array('name1')),
+                               array('getSuccessMessages', array(), array()),
+                           )
+                       );
+        $flashMessenger->expects($this->once())->method('setTranslator')->with(null);
+        $flashMessenger->expects($this->once())->method('render')->with('error')->willReturn('');
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('FlashMessenger', $flashMessenger);
+
         $this->dispatch('/console/package/index/');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryCount(

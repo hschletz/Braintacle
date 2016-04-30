@@ -758,9 +758,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionMessages()
     {
-        $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
-        $flashMessenger->addErrorMessage('error');
-        $flashMessenger->addSuccessMessage(array('success %d' => 42));
+        $flashMessenger = $this->getMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
+        $flashMessenger->method('__call')
+                       ->withConsecutive(
+                           array('getMessagesFromNamespace', array('error')),
+                           array('getMessagesFromNamespace', array('success'))
+                       )->willReturnOnConsecutiveCalls(
+                           array('error'),
+                           array(array('success %d' => 42))
+                       );
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('FlashMessenger', $flashMessenger);
+
         $this->_clientManager->expects($this->once())->method('getClients')->willReturn(array());
         $this->_disableTranslator();
         $this->dispatch('/console/client/index/');
@@ -2071,7 +2080,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->_clientManager->method('getClient')->willReturn($client);
 
-        $this->_getControllerPlugin('FlashMessenger')->addSuccessMessage('successMessage');
+        $flashMessenger = $this->getMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
+        $flashMessenger->expects($this->once())
+                       ->method('render')
+                       ->with('success')
+                       ->willReturn('<ul class="success"><li>successMessage</li></ul>');
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('FlashMessenger', $flashMessenger);
+
         $this->_disableTranslator();
         $this->dispatch('/console/client/customfields/?id=1');
         $this->assertXpathQueryContentContains(

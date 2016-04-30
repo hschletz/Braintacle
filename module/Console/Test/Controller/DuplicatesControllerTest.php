@@ -78,6 +78,13 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionNoFlashMessages()
     {
+        $flashMessenger = $this->getMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
+        $flashMessenger->method('__call')
+                       ->with('getMessagesFromNamespace')
+                       ->willReturn(array());
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('FlashMessenger', $flashMessenger);
+
         $this->_duplicates->method('count')
                           ->will($this->returnValue(0));
         $this->dispatch('/console/duplicates/index/');
@@ -87,13 +94,20 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionRenderFlashMessages()
     {
-        $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
-        $flashMessenger->addInfoMessage(
-            'At least 2 different clients have to be selected'
-        );
-        $flashMessenger->addSuccessMessage(
-            array("'%s' is no longer considered duplicate." => 'abc')
-        );
+        $flashMessenger = $this->getMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
+        $flashMessenger->method('__call')
+                       ->withConsecutive(
+                           array('getMessagesFromNamespace', array('error')),
+                           array('getMessagesFromNamespace', array('info')),
+                           array('getMessagesFromNamespace', array('success'))
+                       )->willReturnOnConsecutiveCalls(
+                           array(),
+                           array('At least 2 different clients have to be selected'),
+                           array(array("'%s' is no longer considered duplicate." => 'abc'))
+                       );
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('FlashMessenger', $flashMessenger);
+
         $this->_duplicates->method('count')
                           ->will($this->returnValue(0));
         $this->dispatch('/console/duplicates/index/');

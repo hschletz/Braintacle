@@ -158,9 +158,16 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
         $resultSet->initialize(array());
         $this->_groupManager->expects($this->once())->method('getGroups')->willReturn($resultSet);
-        $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
-        $flashMessenger->addErrorMessage('error');
-        $flashMessenger->addSuccessMessage('success');
+
+        $flashMessenger = $this->getMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
+        $flashMessenger->method('__call')
+                       ->withConsecutive(
+                           array('getMessagesFromNamespace', array('error')),
+                           array('getMessagesFromNamespace', array('success'))
+                       )->willReturnOnConsecutiveCalls(array('error'), array('success'));
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('FlashMessenger', $flashMessenger);
+
         $this->_disableTranslator();
         $this->dispatch('/console/group/index/');
         $this->assertXpathQuery('//ul[@class="error"]/li[text()="error"]');
