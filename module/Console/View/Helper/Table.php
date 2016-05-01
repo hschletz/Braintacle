@@ -33,10 +33,10 @@ class Table extends \Zend\View\Helper\AbstractHelper
     protected $_escapeHtml;
 
     /**
-     * HtmlTag view helper
-     * @var \Library\View\Helper\HtmlTag
+     * HtmlElement view helper
+     * @var \Library\View\Helper\HtmlElement
      */
-    protected $_htmlTag;
+    protected $_htmlElement;
 
     /**
      * ConsoleUrl view helper
@@ -54,18 +54,18 @@ class Table extends \Zend\View\Helper\AbstractHelper
      * Constructor
      *
      * @param \Zend\View\Helper\EscapeHtml $escapeHtml
-     * @param \Library\View\Helper\HtmlTag $htmlTag
+     * @param \Library\View\Helper\HtmlElement $htmlElement
      * @param \Console\View\Helper\ConsoleUrl $consoleUrl
      * @param \Zend\I18n\View\Helper\DateFormat $dateFormat
      */
     public function __construct(
         \Zend\View\Helper\EscapeHtml $escapeHtml,
-        \Library\View\Helper\HtmlTag $htmlTag,
+        \Library\View\Helper\HtmlElement $htmlElement,
         \Console\View\Helper\ConsoleUrl $consoleUrl,
         \Zend\I18n\View\Helper\DateFormat $dateFormat
     ) {
         $this->_escapeHtml = $escapeHtml;
-        $this->_htmlTag = $htmlTag;
+        $this->_htmlElement = $htmlElement;
         $this->_consoleUrl = $consoleUrl;
         $this->_dateFormat = $dateFormat;
     }
@@ -207,7 +207,7 @@ class Table extends \Zend\View\Helper\AbstractHelper
             'order' => $key,
             'direction' => $linkDirection
         );
-        return $this->_htmlTag->__invoke(
+        return $this->_htmlElement->__invoke(
             'a',
             $label,
             array('href' => $this->_consoleUrl->__invoke(null, null, $params, true)),
@@ -228,13 +228,13 @@ class Table extends \Zend\View\Helper\AbstractHelper
     {
         $row = '';
         foreach ($columns as $key => $column) {
-            $row .= $this->_htmlTag->__invoke(
+            $row .= $this->_htmlElement->__invoke(
                 $isHeader ? 'th' : 'td',
                 $column,
                 isset($columnClasses[$key]) ? array('class' => $columnClasses[$key]) : null
             );
         }
-        return $this->_htmlTag->__invoke(
+        return $this->_htmlElement->__invoke(
             'tr',
             $row,
             $rowClass ? array('class' => $rowClass) : null

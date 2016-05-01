@@ -20,13 +20,13 @@
  *
  */
 
-print $this->htmlTag(
+print $this->htmlElement(
     'h1',
     $this->translate('Login to Braintacle')
 );
 
 if (isset($this->invalidCredentials)) {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'p',
         $this->translate('Invalid username or password'),
         array('class' => 'error')

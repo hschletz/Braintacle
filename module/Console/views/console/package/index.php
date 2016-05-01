@@ -72,7 +72,7 @@ $renderNumPackages = function ($view, $package, $property) {
     }
     $num = $package[$property];
     if ($num) {
-        return $view->htmlTag(
+        return $view->htmlElement(
             'a',
             $num,
             array(
@@ -107,7 +107,7 @@ $renderCallbacks = array(
         if ($package['Comment']) {
             $attributes['title'] = $package['Comment'];
         }
-        return $view->htmlTag(
+        return $view->htmlElement(
             'a',
             $view->escapeHtml($package['Name']),
             $attributes,
@@ -129,7 +129,7 @@ $renderCallbacks = array(
         return $view->escapeHtml(ucfirst($package['Platform']));
     },
     'Delete' => function ($view, $package) {
-        return $view->htmlTag(
+        return $view->htmlElement(
             'a',
             $view->translate('Delete'),
             array(

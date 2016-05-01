@@ -33,7 +33,7 @@ class FormatMessagesFactory implements \Zend\ServiceManager\FactoryInterface
     {
         return new \Console\View\Helper\FormatMessages(
             $serviceLocator->get('EscapeHtml'),
-            $serviceLocator->get('HtmlTag'),
+            $serviceLocator->get('HtmlElement'),
             $serviceLocator->get('Translate')
         );
     }

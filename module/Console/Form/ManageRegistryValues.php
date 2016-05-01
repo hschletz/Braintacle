@@ -212,17 +212,17 @@ class ManageRegistryValues extends Form
                 foreach ($this->_definedValues as $value) {
                     $id = $value['Id'];
                     $element = $fieldset->get("value_{$id}_name");
-                    $row = $view->htmlTag(
+                    $row = $view->htmlElement(
                         'td',
                         $view->formElement($element) . $view->formElementErrors($element, array('class' => 'errors'))
                     );
-                    $row .= $view->htmlTag(
+                    $row .= $view->htmlElement(
                         'td',
                         $view->escapeHtml($element->getLabel())
                     );
-                    $row .= $view->htmlTag(
+                    $row .= $view->htmlElement(
                         'td',
-                        $view->htmlTag(
+                        $view->htmlElement(
                             'a',
                             $view->translate('Delete'),
                             array(
@@ -234,9 +234,9 @@ class ManageRegistryValues extends Form
                             )
                         )
                     );
-                    $table .= $view->htmlTag('tr', $row);
+                    $table .= $view->htmlElement('tr', $row);
                 }
-                $output .= $view->htmlTag('table', $table);
+                $output .= $view->htmlElement('table', $table);
                 break;
             case 'new_value':
                 $output .= parent::renderFieldset($view, $fieldset);
@@ -245,10 +245,10 @@ class ManageRegistryValues extends Form
                 if ($fieldset == $this) {
                     $output .= $this->renderFieldset($view, $fieldset->get('inspect'));
                     if (count($this->_definedValues)) {
-                        $output .= $view->htmlTag('h2', $view->translate('Values'));
+                        $output .= $view->htmlElement('h2', $view->translate('Values'));
                         $output .= $this->renderFieldset($view, $fieldset->get('existing'));
                     }
-                    $output .= $view->htmlTag('h2', $view->translate('Add'));
+                    $output .= $view->htmlElement('h2', $view->translate('Add'));
                     $output .= $this->renderFieldset($view, $fieldset->get('new_value'));
                 }
                 break;

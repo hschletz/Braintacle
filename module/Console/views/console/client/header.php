@@ -19,7 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-print $this->htmlTag(
+print $this->htmlElement(
     'h1',
     sprintf(
         $this->translate('Details for client \'%s\''),

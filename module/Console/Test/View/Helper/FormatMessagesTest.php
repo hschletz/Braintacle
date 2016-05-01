@@ -38,11 +38,13 @@ class FormatMessagesTest extends \Library\Test\View\Helper\AbstractTest
                        return "escape($value)";
                    });
 
-        $htmlTag = $this->getMockBuilder('Library\View\Helper\HtmlTag')->disableOriginalConstructor()->getMock();
-        $htmlTag->expects($this->once())
-                ->method('__invoke')
-                ->with('a', 'escape(http://example.net)', array('href' => 'http://example.net'), true)
-                ->will($this->returnValue('Uri'));
+        $htmlElement = $this->getMockBuilder('Library\View\Helper\HtmlElement')
+                            ->disableOriginalConstructor()
+                            ->getMock();
+        $htmlElement->expects($this->once())
+                    ->method('__invoke')
+                    ->with('a', 'escape(http://example.net)', array('href' => 'http://example.net'), true)
+                    ->will($this->returnValue('Uri'));
 
         $translate = $this->getMock('Zend\I18n\View\Helper\Translate');
         $translate->expects($this->any())
@@ -66,7 +68,7 @@ class FormatMessagesTest extends \Library\Test\View\Helper\AbstractTest
             'translate(message2 escape(arg))',
             'translate(message3 escape(arg1) Uri)'
         );
-        $helper = new \Console\View\Helper\FormatMessages($escapeHtml, $htmlTag, $translate);
+        $helper = new \Console\View\Helper\FormatMessages($escapeHtml, $htmlElement, $translate);
         $this->assertEquals($expected, $helper($messages));
     }
 }

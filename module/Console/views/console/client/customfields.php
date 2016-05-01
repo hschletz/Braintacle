@@ -23,9 +23,9 @@ require 'header.php';
 
 print $this->flashMessenger()->render('success');
 print $this->form->render($this);
-print $this->htmlTag(
+print $this->htmlElement(
     'p',
-    $this->htmlTag(
+    $this->htmlElement(
         'a',
         $this->translate('Define fields'),
         array('href' => $this->consoleUrl('preferences', 'customfields')),

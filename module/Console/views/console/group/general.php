@@ -54,7 +54,7 @@ printf(
 printf(
     $format,
     $this->translate('SQL query'),
-    $this->htmlTag(
+    $this->htmlElement(
         'code',
         $this->escapeHtml($this->group['DynamicMembersSql'])
     )

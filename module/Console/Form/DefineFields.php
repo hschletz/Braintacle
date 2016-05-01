@@ -172,10 +172,10 @@ class DefineFields extends Form
                 $element->setAttribute('class', 'input-error');
             }
             $row = $view->formText($element) . "\n";
-            $row .= $view->htmlTag('span', $view->translate($type), array('class' => 'cell'));
-            $row .= $view->htmlTag(
+            $row .= $view->htmlElement('span', $view->translate($type), array('class' => 'cell'));
+            $row .= $view->htmlElement(
                 'span',
-                $view->htmlTag(
+                $view->htmlElement(
                     'a',
                     $view->translate('Delete'),
                     array(
@@ -189,13 +189,13 @@ class DefineFields extends Form
                 ),
                 array('class' => 'cell')
             );
-            $output .= $view->htmlTag('div', $row, array('class' => 'row'));
+            $output .= $view->htmlElement('div', $row, array('class' => 'row'));
             $output .= $view->formElementErrors($element, array('class' => 'error'));
             $output .= "\n";
         }
 
         $newName = $this->get('NewName');
-        $output .= $view->htmlTag(
+        $output .= $view->htmlElement(
             'div',
             $view->formRow($newName, null, false) . $view->formRow($this->get('NewType')),
             array('class' => 'row')

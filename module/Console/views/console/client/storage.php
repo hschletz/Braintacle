@@ -83,7 +83,7 @@ if ($client['Windows'] instanceof \Model\Client\WindowsInstallation) {
     unset($headers['Type']); // not available
 }
 
-print $this->htmlTag(
+print $this->htmlElement(
     'h2',
     $this->translate('Storage devices')
 );
@@ -131,7 +131,7 @@ $renderCallbacks = array(
     }
 );
 
-print $this->htmlTag(
+print $this->htmlElement(
     'h2',
     $this->translate('Filesystems')
 );

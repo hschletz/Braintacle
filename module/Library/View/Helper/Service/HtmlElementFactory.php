@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for HtmlTag
+ * Factory for HtmlElement
  *
  * Copyright (C) 2011-2016 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,16 +22,16 @@
 namespace Library\View\Helper\Service;
 
 /**
- * Factory for HtmlTag
+ * Factory for HtmlElement
  */
-class HtmlTagFactory implements \Zend\ServiceManager\FactoryInterface
+class HtmlElementFactory implements \Zend\ServiceManager\FactoryInterface
 {
     /**
      * @internal
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        return new \Library\View\Helper\HtmlTag(
+        return new \Library\View\Helper\HtmlElement(
             $serviceLocator->get('EscapeHtmlAttr'),
             $serviceLocator->get('Doctype')
         );

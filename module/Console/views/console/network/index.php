@@ -20,7 +20,7 @@
  *
  */
 
-print $this->htmlTag(
+print $this->htmlElement(
     'h2',
     $this->translate('Identified network devices')
 );
@@ -34,7 +34,7 @@ $renderCallbacks = array(
     'Count' => function ($view, $deviceType, $property) {
         $count = $deviceType['Count'];
         if ($count) {
-            return $view->htmlTag(
+            return $view->htmlElement(
                 'a',
                 $count,
                 array(
@@ -59,9 +59,9 @@ print $this->table(
     array(),
     $renderCallbacks
 );
-print $this->htmlTag(
+print $this->htmlElement(
     'p',
-    $this->htmlTag(
+    $this->htmlElement(
         'a',
         $this->translate('Manage device types'),
         array('href' => $this->consoleUrl('preferences', 'networkdevices')),
@@ -70,7 +70,7 @@ print $this->htmlTag(
     array('class' => 'textcenter')
 );
 
-print $this->htmlTag(
+print $this->htmlElement(
     'h2',
     $this->translate('Subnets')
 );
@@ -86,7 +86,7 @@ $headers = array(
 $renderUninventoried = function ($view, $subnet, $property) {
     $count = $subnet[$property];
     if ($count) {
-        return $view->htmlTag(
+        return $view->htmlElement(
             'a',
             $count,
             array(
@@ -125,7 +125,7 @@ $renderCallbacks = array(
             $name = $view->translate('Edit');
             $attributes['class'] = 'blur';
         }
-        return $view->htmlTag(
+        return $view->htmlElement(
             'a',
             $name,
             $attributes,
@@ -134,7 +134,7 @@ $renderCallbacks = array(
     },
     'NumInventoried' => function ($view, $subnet, $property) {
         // The number is always >= 1. There is no need to check for 0.
-        return $view->htmlTag(
+        return $view->htmlElement(
             'a',
             $view->escapeHtml($subnet['NumInventoried']),
             array(

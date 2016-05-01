@@ -31,7 +31,7 @@ $headers = array(
 );
 $audio = $client['AudioDevice'];
 if (count($audio)) {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'h2',
         $this->translate('Audio devices')
     );
@@ -62,7 +62,7 @@ $renderCallbacks = array (
 );
 $input = $client['InputDevice'];
 if (count($input)) {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'h2',
         $this->translate('Input devices')
     );
@@ -79,7 +79,7 @@ if (count($ports)) {
     if (!$client['Windows'] instanceof \Model\Client\WindowsInstallation) {
         $headers['Connector'] = $this->translate('Connector');
     }
-    print $this->htmlTag(
+    print $this->htmlElement(
         'h2',
         $this->translate('Ports')
     );

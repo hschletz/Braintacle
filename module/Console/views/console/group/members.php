@@ -35,7 +35,7 @@ $types = array(
 
 $renderCallbacks = array(
     'Name' => function ($view, $client) {
-        return $view->htmlTag(
+        return $view->htmlElement(
             'a',
             $view->escapeHtml($client['Name']),
             array(
@@ -79,7 +79,7 @@ printf(
 
 print "</table>\n";
 
-print $this->htmlTag(
+print $this->htmlElement(
     'p',
     sprintf(
         $this->translate('Number of clients: %d'),

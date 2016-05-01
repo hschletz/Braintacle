@@ -33,7 +33,7 @@ $renderCallbacks = array(
     'MailAddress' => function ($view, $account) {
         $address = $account['MailAddress'];
         if ($address) {
-            return $view->htmlTag(
+            return $view->htmlElement(
                 'a',
                 $view->escapeHtml($address),
                 array(
@@ -44,7 +44,7 @@ $renderCallbacks = array(
         }
     },
     'edit' => function ($view, $account) {
-        return $view->htmlTag(
+        return $view->htmlElement(
             'a',
             $view->translate('Edit'),
             array(
@@ -63,7 +63,7 @@ $renderCallbacks = array(
         if ($account['Id'] == $this->identity()) {
             return '';
         } else {
-            return $view->htmlTag(
+            return $view->htmlElement(
                 'a',
                 $view->translate('Delete'),
                 array(
@@ -88,9 +88,9 @@ print $this->table(
     $renderCallbacks
 );
 
-print $this->htmlTag(
+print $this->htmlElement(
     'p',
-    $this->htmlTag(
+    $this->htmlElement(
         'a',
         $this->translate('Add user'),
         array('href' => $this->consoleUrl('accounts', 'add'))

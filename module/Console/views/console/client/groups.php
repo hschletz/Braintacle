@@ -35,7 +35,7 @@ $types = array(
 
 $renderCallbacks = array(
     'GroupName' => function ($view, $membership) {
-        return $view->htmlTag(
+        return $view->htmlElement(
             'a',
             $view->escapeHtml($membership['GroupName']),
             array(
@@ -54,7 +54,7 @@ $renderCallbacks = array(
 );
 
 if (count($this->memberships)) {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'h2',
         $this->translate('Group memberships')
     );
@@ -67,7 +67,7 @@ if (count($this->memberships)) {
 }
 
 if (isset($this->form)) {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'h2',
         $this->translate('Manage memberships')
     );

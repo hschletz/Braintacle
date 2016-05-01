@@ -29,18 +29,18 @@ if (!isset($this->controller)) {
 }
 
 print "<h1>An error occurred</h1>\n";
-print $this->htmlTag('h2', $this->message);
+print $this->htmlElement('h2', $this->message);
 
 // @codeCoverageIgnoreStart
 if (\Library\Application::isDevelopment() and isset($this->exception)) {
     print "<h3>Exception Message trace:</h3>\n";
     $exception = $this->exception;
     while ($exception) {
-        print $this->htmlTag(
+        print $this->htmlElement(
             'p',
             '<strong>Message:</strong> ' . $this->escapeHtml($exception->getMessage())
         );
-        print $this->htmlTag(
+        print $this->htmlElement(
             'p',
             sprintf(
                 '<strong>Source:</strong> %s, line %d',
@@ -49,7 +49,7 @@ if (\Library\Application::isDevelopment() and isset($this->exception)) {
             )
         );
         print "<h4>Stack trace:</h4>\n";
-        print $this->htmlTag('pre', $this->escapeHtml($exception->getTraceAsString()));
+        print $this->htmlElement('pre', $this->escapeHtml($exception->getTraceAsString()));
 
         $exception = $exception->getPrevious();
     }
@@ -64,7 +64,7 @@ if (\Library\Application::isDevelopment() and isset($this->exception)) {
     print "<h3>Request Parameters:</h3>\n";
 
     print "<h4>Method</h4>\n";
-    print $this->htmlTag('p', $this->escapeHtml($request->getMethod()));
+    print $this->htmlElement('p', $this->escapeHtml($request->getMethod()));
 
     print "<h4>URL parameters</h4>\n";
     \Zend\Debug\Debug::dump($request->getQuery());

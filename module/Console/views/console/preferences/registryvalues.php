@@ -20,7 +20,7 @@
  *
  */
 
-print $this->htmlTag(
+print $this->htmlElement(
     'h1',
     $this->translate('Manage registry values')
 );

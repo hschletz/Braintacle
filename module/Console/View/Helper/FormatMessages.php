@@ -33,10 +33,10 @@ class FormatMessages extends \Zend\View\Helper\AbstractHelper
     protected $_escapeHtml;
 
     /**
-     * HtmlTag view helper
-     * @var \Library\View\Helper\HtmlTag
+     * HtmlElement view helper
+     * @var \Library\View\Helper\HtmlElement
      */
-    protected $_htmlTag;
+    protected $_htmlElement;
 
     /**
      * DateFormat view helper
@@ -48,16 +48,16 @@ class FormatMessages extends \Zend\View\Helper\AbstractHelper
      * Constructor
      *
      * @param \Zend\View\Helper\EscapeHtml $escapeHtml
-     * @param \Library\View\Helper\HtmlTag $htmlTag
+     * @param \Library\View\Helper\HtmlElement $htmlElement
      * @param \Zend\I18n\View\Helper\Translate $translate
      */
     public function __construct(
         \Zend\View\Helper\EscapeHtml $escapeHtml,
-        \Library\View\Helper\HtmlTag $htmlTag,
+        \Library\View\Helper\HtmlElement $htmlElement,
         \Zend\I18n\View\Helper\Translate $translate
     ) {
         $this->_escapeHtml = $escapeHtml;
-        $this->_htmlTag = $htmlTag;
+        $this->_htmlElement = $htmlElement;
         $this->_translate = $translate;
     }
 
@@ -102,7 +102,7 @@ class FormatMessages extends \Zend\View\Helper\AbstractHelper
                 }
                 foreach ($args as &$arg) {
                     if ($arg instanceof \Zend\Uri\Http) {
-                        $arg = $this->_htmlTag->__invoke(
+                        $arg = $this->_htmlElement->__invoke(
                             'a',
                             $this->_escapeHtml->__invoke($arg),
                             array('href' => $arg),

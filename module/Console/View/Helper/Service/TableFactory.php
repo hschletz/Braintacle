@@ -33,7 +33,7 @@ class TableFactory implements \Zend\ServiceManager\FactoryInterface
     {
         return new \Console\View\Helper\Table(
             $serviceLocator->get('EscapeHtml'),
-            $serviceLocator->get('HtmlTag'),
+            $serviceLocator->get('HtmlElement'),
             $serviceLocator->get('ConsoleUrl'),
             $serviceLocator->get('DateFormat')
         );

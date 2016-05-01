@@ -46,7 +46,7 @@ $renderCallbacks = array (
     },
 );
 
-print $this->htmlTag(
+print $this->htmlElement(
     'h2',
     $this->translate('Display controllers')
 );
@@ -70,7 +70,7 @@ if (count($displays)) {
         'Type' => $this->translate('Type'),
     );
 
-    print $this->htmlTag(
+    print $this->htmlElement(
         'h2',
         $this->translate('Displays')
     );

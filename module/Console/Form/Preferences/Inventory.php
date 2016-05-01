@@ -57,9 +57,9 @@ class Inventory extends AbstractForm
     public function render(\Zend\View\Renderer\PhpRenderer $view)
     {
         $output = parent::render($view);
-        $output .= $view->htmlTag(
+        $output .= $view->htmlElement(
             'p',
-            $view->htmlTag(
+            $view->htmlElement(
                 'a',
                 '[' . $view->translate('Manage inventoried registry values') . ']',
                 array('href' => $view->consoleUrl('preferences', 'registryvalues'))

@@ -156,7 +156,7 @@ class NetworkDeviceTypes extends Form
             }
             $row = $view->formText($element);
             if ($count == 0) {
-                $row .= $view->htmlTag(
+                $row .= $view->htmlElement(
                     'a',
                     $view->translate('Delete'),
                     array(
@@ -169,7 +169,7 @@ class NetworkDeviceTypes extends Form
                     true
                 );
             }
-            $output .= $view->htmlTag('div', $row);
+            $output .= $view->htmlElement('div', $row);
             $output .= $view->formElementErrors($element, array('class' => 'error'));
             $output .= "\n";
         }

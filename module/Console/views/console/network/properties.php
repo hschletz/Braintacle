@@ -20,7 +20,7 @@
  *
  */
 
-print $this->htmlTag(
+print $this->htmlElement(
     'h1',
     sprintf(
         $this->translate('Properties of subnet %s'),

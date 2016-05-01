@@ -32,7 +32,7 @@ $renderCallbacks = array(
         return $view->escapeHtml($packageName);
     },
     'remove' => function ($view, $packageName) {
-        return $view->htmlTag(
+        return $view->htmlElement(
             'a',
             $view->translate('remove'),
             array(
@@ -51,7 +51,7 @@ $renderCallbacks = array(
 );
 
 if (count($this->packageNames)) {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'h2',
         $this->translate('Assigned packages')
     );
@@ -64,7 +64,7 @@ if (count($this->packageNames)) {
 }
 
 if (isset($this->form)) {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'h2',
         $this->translate('Assign packages')
     );

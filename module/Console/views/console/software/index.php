@@ -32,7 +32,7 @@ $renderCallbacks = array (
     'AcceptIgnore' => function ($view, $software) {
         $links = array();
         if ($view->filter == 'ignored' or $view->filter == 'new') {
-            $links[] = $view->htmlTag(
+            $links[] = $view->htmlElement(
                 'a',
                 $view->translate('Accept'),
                 array(
@@ -46,7 +46,7 @@ $renderCallbacks = array (
             );
         }
         if ($view->filter == 'accepted' or $view->filter == 'new') {
-            $links[] = $view->htmlTag(
+            $links[] = $view->htmlElement(
                 'a',
                 $view->translate('Ignore'),
                 array(
@@ -65,7 +65,7 @@ $renderCallbacks = array (
         return $view->escapeHtml($nameFilter->filter($software['name']));
     },
     'num_clients' => function ($view, $software) {
-        return $view->htmlTag(
+        return $view->htmlElement(
             'a',
             $software['num_clients'],
             array(

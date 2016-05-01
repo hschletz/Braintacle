@@ -43,13 +43,13 @@ if (count($this->duplicates)) {
     print "<table class='textnormalsize'>\n";
     foreach ($this->duplicates as $type => $num) {
         print '<tr>';
-        print $this->htmlTag(
+        print $this->htmlElement(
             'td',
             $labels[$type]
         );
-        print $this->htmlTag(
+        print $this->htmlElement(
             'td',
-            $this->htmlTag(
+            $this->htmlElement(
                 'a',
                 $num,
                 array(

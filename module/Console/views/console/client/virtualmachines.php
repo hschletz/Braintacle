@@ -44,7 +44,7 @@ $renderCallbacks = array(
 
 $vms = $client->getItems('VirtualMachine', $this->order, $this->direction);
 if (count($vms)) {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'h2',
         $this->translate('Virtual machines hosted on this client')
     );

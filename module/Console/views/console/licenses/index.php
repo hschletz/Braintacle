@@ -25,7 +25,7 @@ print $this->translate('Manually entered Windows product keys');
 print ': ';
 
 if ($this->windowsProductKeys) {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'a',
         $this->windowsProductKeys,
         array(

@@ -39,7 +39,7 @@ $headers = array(
 
 $renderCallbacks = array(
     'Name' => function ($view, $group) {
-        return $view->htmlTag(
+        return $view->htmlElement(
             'a',
             $view->escapeHtml($group['Name']),
             array(
@@ -65,7 +65,7 @@ if (count($this->groups)) {
         array('CreationDate' => 'nowrap')
     );
 } else {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'p',
         $this->translate('No groups defined.'),
         array('class' => 'textcenter')

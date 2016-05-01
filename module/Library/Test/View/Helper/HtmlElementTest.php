@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for the HtmlTag helper
+ * Tests for the HtmlElement helper
  *
  * Copyright (C) 2011-2016 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,9 +22,9 @@
 namespace Library\Test\View\Helper;
 
 /**
- * Tests for the HtmlTag helper
+ * Tests for the HtmlElement helper
  */
-class HtmlTagTest extends AbstractTest
+class HtmlElementTest extends AbstractTest
 {
     /**
      * Tests for the __invoke() method
@@ -35,7 +35,7 @@ class HtmlTagTest extends AbstractTest
 
         // Start tests with no doctype - assume HTML4.
         $doctype = new \Zend\View\Helper\Doctype;
-        $helper = new \Library\View\Helper\HtmlTag($escapeHtmlAttr, $doctype);
+        $helper = new \Library\View\Helper\HtmlElement($escapeHtmlAttr, $doctype);
         // Empty br element, non-inline
         $this->assertEquals("<br>\n", $helper('br'));
 
@@ -67,14 +67,14 @@ class HtmlTagTest extends AbstractTest
 
         // Test empty HTML5 elements
         $doctype->setDoctype('HTML5');
-        $helper = new \Library\View\Helper\HtmlTag($escapeHtmlAttr, $doctype);
+        $helper = new \Library\View\Helper\HtmlElement($escapeHtmlAttr, $doctype);
         $this->assertEquals("<command>\n", $helper('command'));
         $this->assertEquals("<br>\n", $helper('br'));
         $this->assertEquals("<a></a>\n", $helper('a'));
 
         // Empty XHTML Elements
         $doctype->setDoctype('XHTML11');
-        $helper = new \Library\View\Helper\HtmlTag($escapeHtmlAttr, $doctype);
+        $helper = new \Library\View\Helper\HtmlElement($escapeHtmlAttr, $doctype);
         $this->assertEquals("<command />\n", $helper('command'));
         $this->assertEquals("<br />\n", $helper('br'));
         $this->assertEquals("<a />\n", $helper('a'));

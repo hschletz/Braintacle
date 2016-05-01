@@ -114,7 +114,7 @@ $columnClasses = array(
 $headers = array();
 $renderCallbacks = array(
     'Name' => function ($view, $client) {
-        return $view->htmlTag(
+        return $view->htmlElement(
             'a',
             $view->escapeHtml($client['Name']),
             array(
@@ -173,14 +173,14 @@ if ($filter) {
         );
         $header = sprintf($this->translate('%d matches'), $count)
                 . "<br>\n"
-                . $this->htmlTag(
+                . $this->htmlElement(
                     'a',
                     $this->translate('Edit filter'),
                     array('href' => $this->consoleUrl('client', 'search', $params)),
                     true
                 )
                 . "\n&nbsp;&nbsp;&nbsp;\n"
-                . $this->htmlTag(
+                . $this->htmlElement(
                     'a',
                     $this->translate('Save to group'),
                     array('href' => $this->consoleUrl('group', 'add', $params)),
@@ -200,7 +200,7 @@ if ($filter) {
     );
 }
 
-print $this->htmlTag(
+print $this->htmlElement(
     'p',
     $header,
     array('class' => 'textcenter')

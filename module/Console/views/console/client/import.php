@@ -20,7 +20,7 @@
  */
 
 if (isset($this->response)) {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'p',
         sprintf(
             $this->translate(
@@ -34,7 +34,7 @@ if (isset($this->response)) {
     );
 }
 
-print $this->htmlTag(
+print $this->htmlElement(
     'h1',
     $this->translate('Import locally generated inventory data')
 );

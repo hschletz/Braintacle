@@ -29,7 +29,7 @@ $dnsServer = $client['DnsServer'];
 $defaultGateway = $client['DefaultGateway'];
 $workgroup = $client['Windows']['Workgroup'];
 if ($dnsDomain or $dnsServer or $defaultGateway or $workgroup) {
-    print $this->htmlTag('h2', $this->translate('Global network configuration'));
+    print $this->htmlElement('h2', $this->translate('Global network configuration'));
     $table = $this->plugin('table');
     print "<table class='textnormalsize'>\n";
     if ($dnsDomain) {
@@ -99,7 +99,7 @@ $renderCallbacks = array(
 
 $interfaces = $client['NetworkInterface'];
 if (count($interfaces)) {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'h2',
         $this->translate('Network interfaces')
     );
@@ -121,7 +121,7 @@ $headers = array(
 
 $modems = $client['Modem'];
 if (count($modems)) {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'h2',
         $this->translate('Modems')
     );

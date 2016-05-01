@@ -24,7 +24,7 @@ namespace Library\View\Helper;
 /**
  * Render a single HTML element with provided name, content and attributes
  */
-class HtmlTag extends \Zend\View\Helper\AbstractHelper
+class HtmlElement extends \Zend\View\Helper\AbstractHelper
 {
     /**
      * EscapeHtmlAttr view helper

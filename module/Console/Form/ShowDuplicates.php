@@ -167,7 +167,7 @@ class ShowDuplicates extends Form
                 $property = 'MacAddress';
             }
             // Hyperlink to blacklist form
-            return $view->htmlTag(
+            return $view->htmlElement(
                 'a',
                 $view->escapeHtml($value),
                 array(
@@ -198,7 +198,7 @@ class ShowDuplicates extends Form
             'Name' => function ($view, $client) {
                 // Hyperlink to "customfields" page of given client.
                 // This allows for easy review of the information about to be merged.
-                return $view->htmlTag(
+                return $view->htmlElement(
                     'a',
                     $view->escapeHtml($client['Name']),
                     array(

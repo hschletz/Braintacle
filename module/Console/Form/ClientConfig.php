@@ -234,18 +234,22 @@ class ClientConfig extends Form
                 if ($element->getMessages()) {
                     $element->setAttribute('class', 'input-error');
                 }
-                $row = $view->htmlTag('span', $view->formElement($element) . $row, array('class' => 'values'));
-                $row = $view->htmlTag('span', $view->translate($element->getLabel()), array('class' => 'label')) . $row;
-                $output .= $view->htmlTag('label', $row);
+                $row = $view->htmlElement('span', $view->formElement($element) . $row, array('class' => 'values'));
+                $row = $view->htmlElement(
+                    'span',
+                    $view->translate($element->getLabel()),
+                    array('class' => 'label')
+                ) . $row;
+                $output .= $view->htmlElement('label', $row);
                 if ($element->getMessages()) {
-                    $output .= $view->htmlTag('span', null, array('class' => 'cell'));
+                    $output .= $view->htmlElement('span', null, array('class' => 'cell'));
                     $output .= $view->formElementErrors($element, array('class' => 'error'));
                 }
             }
             $output .= "</div>\n";
-            $output = $view->htmlTag(
+            $output = $view->htmlElement(
                 'fieldset',
-                $view->htmlTag('legend', $legend) . $output
+                $view->htmlElement('legend', $legend) . $output
             );
         } else {
             $output = "<div class='table'>\n";

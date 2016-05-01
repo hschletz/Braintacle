@@ -66,7 +66,7 @@ class GroupMemberships extends Form
                 $output = "<div>\n";
                 foreach ($groups as $element) {
                     if ($element instanceof \Zend\Form\Element\Radio) {
-                        $label = $view->htmlTag(
+                        $label = $view->htmlElement(
                             'a',
                             $view->escapeHtml($element->getLabel()),
                             array(
@@ -77,7 +77,7 @@ class GroupMemberships extends Form
                                 )
                             )
                         );
-                        $output .= $view->htmlTag(
+                        $output .= $view->htmlElement(
                             'fieldset',
                             "<legend>$label</legend>\n" . $view->formRadio($element)
                         );

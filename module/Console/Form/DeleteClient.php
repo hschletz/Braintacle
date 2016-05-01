@@ -54,11 +54,11 @@ class DeleteClient extends Form
     /** {@inheritdoc} */
     public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset)
     {
-        $output = $view->htmlTag(
+        $output = $view->htmlElement(
             'div',
             $view->formRow($fieldset->get('DeleteInterfaces'), 'append')
         );
-        $output .= $view->htmlTag(
+        $output .= $view->htmlElement(
             'div',
             $view->formRow($fieldset->get('yes')) . $view->formRow($fieldset->get('no'))
         );

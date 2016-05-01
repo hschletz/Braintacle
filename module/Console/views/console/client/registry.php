@@ -31,7 +31,7 @@ $headers = array(
 
 $renderCallbacks = array(
     'Value' => function ($view, $data) use ($values) {
-        return $view->htmlTag(
+        return $view->htmlElement(
             'span',
             $view->escapeHtml($data['Value']),
             array('title' => $values[$data['Value']]['FullPath'])
@@ -41,7 +41,7 @@ $renderCallbacks = array(
 
 $data = $client->getItems('RegistryData', $this->order, $this->direction);
 if (count($data)) {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'h2',
         $this->translate('Registry Keys')
     );
@@ -53,9 +53,9 @@ if (count($data)) {
     );
 }
 
-print $this->htmlTag(
+print $this->htmlElement(
     'p',
-    $this->htmlTag(
+    $this->htmlElement(
         'a',
         $this->translate('Manage inventoried values'),
         array('href' => $this->ConsoleUrl('preferences', 'registryvalues')),

@@ -22,7 +22,7 @@
 
 $device = $this->device;
 
-print $this->htmlTag('h1', $this->translate('Edit network device'));
+print $this->htmlElement('h1', $this->translate('Edit network device'));
 
 $this->form->prepare();
 print $this->plugin('Form')->openTag($this->form);

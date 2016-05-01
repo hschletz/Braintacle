@@ -55,7 +55,7 @@ $renderCallbacks = array (
 
 $memSlots = $client['MemorySlot'];
 if (count($memSlots)) {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'h2',
         $this->translate('Memory slots')
     );
@@ -77,7 +77,7 @@ if ($this->client['Windows'] instanceof \Model\Client\WindowsInstallation) { // 
 $headers['Name'] = $this->translate('Name');
 $headers['Type'] = $this->translate('Type');
 
-print $this->htmlTag(
+print $this->htmlElement(
     'h2',
     $this->translate('Controllers')
 );
@@ -107,7 +107,7 @@ $renderCallbacks = array (
 
 $extSlots = $client['ExtensionSlot'];
 if (count($extSlots)) {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'h2',
         $this->translate('Extension slots')
     );

@@ -89,7 +89,7 @@ class Form extends \Zend\Form\Form
     {
         $output = '';
         if ($this->_errorPostMaxSize) {
-            $output .= $view->htmlTag(
+            $output .= $view->htmlElement(
                 'p',
                 sprintf(
                     $view->translate('The post_max_size value of %s has been exceeded.'),
@@ -133,13 +133,13 @@ class Form extends \Zend\Form\Form
                 $row .= "<span class='cell'></span>\n";
                 $row .= $view->formSubmit($element);
             } elseif ($element instanceof \Zend\Form\Fieldset) {
-                $row .= $view->htmlTag(
+                $row .= $view->htmlElement(
                     'span',
                     $view->translate($element->getLabel()),
                     array('class' => 'label'),
                     true
                 ) . "\n";
-                $row .= $view->htmlTag(
+                $row .= $view->htmlElement(
                     'fieldset',
                     "<legend></legend>\n" . $this->renderFieldset($view, $element)
                 );

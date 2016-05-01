@@ -50,10 +50,10 @@ $renderCallbacks = array(
                 $content = $view->escapeHtml($status);
                 $class = 'package_error';
         }
-        return $view->htmlTag('span', $content, array('class' => $class), true);
+        return $view->htmlElement('span', $content, array('class' => $class), true);
     },
     'remove' => function ($view, $assignment) {
-        return $view->htmlTag(
+        return $view->htmlElement(
             'a',
             $view->translate('remove'),
             array(
@@ -73,7 +73,7 @@ $renderCallbacks = array(
 
 $assignments = $client->getPackageAssignments($this->order, $this->direction);
 if (count($assignments)) {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'h2',
         $this->translate('Assigned packages')
     );
@@ -86,7 +86,7 @@ if (count($assignments)) {
 }
 
 if (isset($this->form)) {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'h2',
         $this->translate('Assign packages')
     );

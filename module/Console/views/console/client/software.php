@@ -43,7 +43,7 @@ $renderCallbacks = array(
     'Name' => function ($view, $software) {
         $content = $view->escapeHtml($software['Name']);
         if ($software['Comment']) {
-            $content = $view->htmlTag(
+            $content = $view->htmlElement(
                 'span',
                 $content,
                 array('title' => $software['Comment']),
@@ -52,7 +52,7 @@ $renderCallbacks = array(
         }
         if ($software['NumInstances'] > 1) {
             $content .= ' ';
-            $content .= $view->htmlTag(
+            $content .= $view->htmlElement(
                 'span',
                 sprintf('(%d)', $software['NumInstances']),
                 array(

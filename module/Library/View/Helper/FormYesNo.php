@@ -38,23 +38,23 @@ class FormYesNo extends \Zend\View\Helper\AbstractHelper
     protected $_translate;
 
     /**
-     * HtmlTag view helper
-     * @var \Library\View\Helper\HtmlTag
+     * HtmlElement view helper
+     * @var \Library\View\Helper\HtmlElement
      */
-    protected $_htmlTag;
+    protected $_htmlElement;
 
     /**
      * Constructor
      *
      * @param \Zend\I18n\View\Helper\Translate $translate
-     * @param \Library\View\Helper\HtmlTag $htmlTag
+     * @param \Library\View\Helper\HtmlElement $htmlElement
      */
     public function __construct(
         \Zend\I18n\View\Helper\Translate $translate,
-        \Library\View\Helper\HtmlTag $htmlTag
+        \Library\View\Helper\HtmlElement $htmlElement
     ) {
         $this->_translate = $translate;
-        $this->_htmlTag = $htmlTag;
+        $this->_htmlElement = $htmlElement;
     }
 
     /**
@@ -68,7 +68,7 @@ class FormYesNo extends \Zend\View\Helper\AbstractHelper
     {
         $hiddenFields = '';
         foreach ($params as $name => $value) {
-            $hiddenFields .= $this->_htmlTag->__invoke(
+            $hiddenFields .= $this->_htmlElement->__invoke(
                 'input',
                 null,
                 array(

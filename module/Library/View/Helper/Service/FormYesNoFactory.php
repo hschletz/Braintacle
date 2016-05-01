@@ -33,7 +33,7 @@ class FormYesNoFactory implements \Zend\ServiceManager\FactoryInterface
     {
         return new \Library\View\Helper\FormYesNo(
             $serviceLocator->get('Translate'),
-            $serviceLocator->get('HtmlTag')
+            $serviceLocator->get('HtmlElement')
         );
     }
 }

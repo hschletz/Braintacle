@@ -39,7 +39,7 @@ $renderCallbacks = array(
         }
         $guid = $product['Guid'];
         if ($guid) {
-            return $view->htmlTag(
+            return $view->htmlElement(
                 'span',
                 $name,
                 array('title' => "GUID: $guid"),
@@ -61,7 +61,7 @@ $installedProducts = $client->getItems(
     array('Type' => \Model\Client\Item\MsOfficeProduct::TYPE_INSTALLED_PRODUCT)
 );
 if (count($installedProducts)) {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'h2',
         $this->translate('Installed Microsoft Office products')
     );
@@ -80,7 +80,7 @@ $unusedLicenses = $client->getItems(
     array('Type' => \Model\Client\Item\MsOfficeProduct::TYPE_UNUSED_LICENSE)
 );
 if (count($unusedLicenses)) {
-    print $this->htmlTag(
+    print $this->htmlElement(
         'h2',
         $this->translate('Unused Microsoft Office licenses')
     );
