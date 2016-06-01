@@ -26,57 +26,82 @@ namespace Library\Test\View\Helper;
  */
 class HtmlElementTest extends AbstractTest
 {
-    /**
-     * Tests for the __invoke() method
-     */
-    public function testInvoke()
+    public function testInvokeNewline()
     {
-        $escapeHtmlAttr = $this->_getHelper('escapeHtmlAttr');
+        $helper = $this->_getHelper();
 
-        // Start tests with no doctype - assume HTML4.
-        $doctype = new \Zend\View\Helper\Doctype;
-        $helper = new \Library\View\Helper\HtmlElement($escapeHtmlAttr, $doctype);
-        // Empty br element, non-inline
-        $this->assertEquals("<br>\n", $helper('br'));
+        $this->assertEquals("<a>\ncontent\n</a>\n", $helper('a', 'content'));
+    }
 
-        // Empty br element, inline
-        $this->assertEquals('<br>', $helper('br', null, null, true));
+    public function testInvokeInline()
+    {
+        $helper = $this->_getHelper();
 
-        // Empty br element with escaped attribute, inline
+        $this->assertEquals('<a>content</a>', $helper('a', 'content', null, true));
+    }
+
+    public function testInvokeStringCast()
+    {
+        $helper = $this->_getHelper();
+
+        $this->assertEquals('<a>0</a>', $helper('a', 0, null, true));
+    }
+
+    public function testInvokeAttributes()
+    {
+        $attribs = array('attrib' => 'value');
+
+        $helper = $this->getMockBuilder($this->_getHelperClass())->setMethods(array('htmlAttribs'))->getMock();
+        $helper->method('htmlAttribs')->with($attribs)->willReturn(' attribs');
+
         $this->assertEquals(
-            '<br attribute="value&quot;value">',
+            '<a attribs>content</a>',
             $helper(
-                'br',
-                null,
-                array('attribute' => 'value"value'),
+                'a',
+                'content',
+                $attribs,
                 true
             )
         );
+    }
 
-        // Element with integer content '0' (tests sideeffects from PHP's type juggling), inline
-        $this->assertEquals(
-            '<element>0</element>',
-            $helper('element', 0, null, true)
+    public function invokeEmptyElementsProvider()
+    {
+        return array(
+            // HTML 4
+            array(false, false, 'a', '<a></a>'),
+            array(false, false, 'br', '<br>'),
+            array(false, false, 'command', '<command></command>'),
+            // HTML 5
+            array(false, true, 'a', '<a></a>'),
+            array(false, true, 'br', '<br>'),
+            array(false, true, 'command', '<command>'),
+            // XHTML
+            array(true, false, 'a', '<a />'),
+            array(true, false, 'br', '<br />'),
+            array(true, false, 'command', '<command />'),
+        );
+    }
+
+    /**
+     * @dataProvider invokeEmptyElementsProvider
+     */
+    public function testInvokeEmptyElements($isXhtml, $isHtml5, $element, $output)
+    {
+        $doctype = $this->getMock('Zend\View\Helper\Doctype');
+        $doctype->method('isXhtml')->willReturn($isXhtml);
+        $doctype->method('isHtml5')->willReturn($isHtml5);
+
+        $view = $this->getMock('Zend\View\Renderer\PhpRenderer');
+        $view->method('plugin')->willReturnMap(
+            array(
+                array('doctype', null, $doctype),
+            )
         );
 
-        // Empty string as content (tests sideeffects from PHP's type juggling), regardless of type
-        $this->assertEquals('<br></br>', $helper('br', '', null, true));
+        $helper = $this->_getHelper();
+        $helper->setView($view);
 
-        // Empty command element (HTML5 only) should get closing tag
-        $this->assertEquals("<command></command>\n", $helper('command'));
-
-        // Test empty HTML5 elements
-        $doctype->setDoctype('HTML5');
-        $helper = new \Library\View\Helper\HtmlElement($escapeHtmlAttr, $doctype);
-        $this->assertEquals("<command>\n", $helper('command'));
-        $this->assertEquals("<br>\n", $helper('br'));
-        $this->assertEquals("<a></a>\n", $helper('a'));
-
-        // Empty XHTML Elements
-        $doctype->setDoctype('XHTML11');
-        $helper = new \Library\View\Helper\HtmlElement($escapeHtmlAttr, $doctype);
-        $this->assertEquals("<command />\n", $helper('command'));
-        $this->assertEquals("<br />\n", $helper('br'));
-        $this->assertEquals("<a />\n", $helper('a'));
+        $this->assertEquals($output, $helper($element, null, null, true));
     }
 }

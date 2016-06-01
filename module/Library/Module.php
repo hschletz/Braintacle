@@ -99,11 +99,11 @@ class Module implements
             'view_helpers' => array(
                 'factories' => array(
                     'formYesNo' => 'Library\View\Helper\Service\FormYesNoFactory',
-                    'htmlElement' => 'Library\View\Helper\Service\HtmlElementFactory',
                 ),
                 'invokables' => array(
                     'formSelectSimple' => 'Library\View\Helper\FormSelectSimple',
                     'formSelectUntranslated' => 'Library\View\Helper\FormSelectUntranslated',
+                    'htmlElement' => 'Library\View\Helper\HtmlElement',
                 ),
             ),
         );

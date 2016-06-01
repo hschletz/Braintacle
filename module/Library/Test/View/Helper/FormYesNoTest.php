@@ -33,7 +33,28 @@ class FormYesNoTest extends AbstractTest
      */
     public function testInvoke()
     {
-        $helper = $this->_getHelper();
+        $translate = $this->getMock('Zend\I18n\View\Helper\Translate');
+        $translate->method('__invoke')->willReturnCallback(
+            function ($message) {
+                return "_($message)";
+            }
+        );
+
+        $htmlElement = $this->getMock('Library\View\Helper\HtmlElement');
+        $htmlElement->expects($this->once())
+                    ->method('__invoke')
+                    ->with(
+                        'input',
+                        null,
+                        array(
+                            'type' => 'hidden',
+                            'name' => 'hiddenName',
+                            'value' => 'hiddenValue',
+                        )
+                    )->willReturn('<input type="hidden" name="hiddenName" value="hiddenValue">');
+
+        $helper = new \Library\View\Helper\FormYesNo($translate, $htmlElement);
+
         $result = $helper('TestCaption', array('hiddenName' => 'hiddenValue'));
         $document = new \Zend\Dom\Document($result);
 
@@ -43,7 +64,7 @@ class FormYesNoTest extends AbstractTest
             1,
             Query::execute('//input[@type="hidden"][@name="hiddenName"][@value="hiddenValue"]', $document)
         );
-        $this->assertCount(1, Query::execute('//input[@type="submit"][@name="yes"][@value="Ja"]', $document));
-        $this->assertCount(1, Query::execute('//input[@type="submit"][@name="no"][@value="Nein"]', $document));
+        $this->assertCount(1, Query::execute('//input[@type="submit"][@name="yes"][@value="_(Yes)"]', $document));
+        $this->assertCount(1, Query::execute('//input[@type="submit"][@name="no"][@value="_(No)"]', $document));
     }
 }

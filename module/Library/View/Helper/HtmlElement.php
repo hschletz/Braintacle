@@ -24,37 +24,42 @@ namespace Library\View\Helper;
 /**
  * Render a single HTML element with provided name, content and attributes
  */
-class HtmlElement extends \Zend\View\Helper\AbstractHelper
+class HtmlElement extends \Zend\View\Helper\AbstractHtmlElement
 {
     /**
-     * EscapeHtmlAttr view helper
-     * @var \Zend\View\Helper\EscapeHtmlAttr
+     * List of elements without closing tag for HTML 4
      */
-    protected $_escapeHtmlAttr;
+    protected static $_emptyTagsHtml4 = array(
+        'area',
+        'base',
+        'br',
+        'col',
+        'hr',
+        'img',
+        'input',
+        'link',
+        'meta',
+        'param',
+    );
 
     /**
-     * List of elements without closing tag, depending on doctype
+     * List of elements without closing tag for HTML 5
      */
-    protected $_emptyTags;
-
-    /**
-     * Constructor
-     *
-     * @param \Zend\View\Helper\EscapeHtmlAttr $escapeHtmlAttr EscapeHtmlAttr helper
-     * @param \Zend\View\Helper\Doctype $doctype Doctype helper
-     */
-    public function __construct(
-        \Zend\View\Helper\EscapeHtmlAttr $escapeHtmlAttr,
-        \Zend\View\Helper\Doctype $doctype
-    ) {
-        $this->_escapeHtmlAttr = $escapeHtmlAttr;
-        if (!$doctype->isXhtml()) {
-            $this->_emptyTags = array('area', 'base', 'br', 'col', 'hr', 'img', 'input', 'link', 'meta', 'param');
-            if ($doctype->isHtml5()) {
-                $this->_emptyTags = array_merge($this->_emptyTags, array('command', 'keygen', 'source'));
-            }
-        }
-    }
+    protected static $_emptyTagsHtml5 = array(
+        'area',
+        'base',
+        'br',
+        'col',
+        'command',
+        'hr',
+        'img',
+        'input',
+        'keygen',
+        'link',
+        'meta',
+        'param',
+        'source',
+    );
 
     /**
      * Render a single HTML element
@@ -72,19 +77,19 @@ class HtmlElement extends \Zend\View\Helper\AbstractHelper
         // opening tag
         $output  = "<$element";
         if (is_array($attributes)) {
-            foreach ($attributes as $attribute => $value) {
-                $output .= " $attribute=\"" . $this->_escapeHtmlAttr->__invoke($value) . '"';
-            }
+            $output .= $this->htmlAttribs($attributes);
         }
         if ($content === null) {
-            if ($this->_emptyTags) { // HTML
-                if (in_array(strtolower($element), $this->_emptyTags)) {
+            $doctype = $this->getView()->plugin('doctype');
+            if ($doctype->isXhtml()) {
+                $output .= ' />';
+            } else { // HTML
+                $emptyTags = $doctype->isHtml5() ? static::$_emptyTagsHtml5 : static::$_emptyTagsHtml4;
+                if (in_array(strtolower($element), $emptyTags)) {
                     $output .= '>';
                 } else {
                     $output .= "></$element>";
                 }
-            } else { // XHTML
-                $output .= ' />';
             }
             $output .= $newline;
             return $output;
