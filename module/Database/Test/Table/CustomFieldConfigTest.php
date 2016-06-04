@@ -33,11 +33,10 @@ class CustomFieldConfigTest extends AbstractTest
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        static::$_nada = \Library\Application::getService('Database\Nada');
+        static::$_nada = static::$serviceManager->get('Database\Nada');
 
         // Add columns to CustomFields table, matching config from fixture
-        $customFields = \Library\Application::getService('Database\Table\CustomFields');
-        $customFields->setSchema();
+        static::$serviceManager->get('Database\Table\CustomFields')->setSchema();
         $fields = static::$_nada->getTable('accountinfo');
         $fields->addColumn('fields_3', \Nada::DATATYPE_VARCHAR, 255);
         $fields->addColumn('fields_4', \Nada::DATATYPE_INTEGER, 32);

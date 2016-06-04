@@ -25,9 +25,9 @@ class WindowsInstallationsTest extends AbstractTest
 {
     public static function setUpBeforeClass()
     {
-        // This table must exist before the view can be created
-        \Library\Application::getService('Database\Table\ClientsAndGroups')->setSchema();
-        \Library\Application::getService('Database\Table\WindowsProductKeys')->setSchema();
+        // These tables must exist before the view can be created
+        static::$serviceManager->get('Database\Table\ClientsAndGroups')->setSchema();
+        static::$serviceManager->get('Database\Table\WindowsProductKeys')->setSchema();
         parent::setUpBeforeClass();
     }
 

@@ -30,6 +30,12 @@ namespace Database\Test\Table;
 abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
 {
     /**
+     * Service manager
+     * @var \Zend\ServiceManager\ServiceManager
+     */
+    public static $serviceManager;
+
+    /**
      * Table class, provided by setUpBeforeClass();
      * @var \Database\AbstractTable
      */
@@ -46,7 +52,7 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
      */
     public static function setUpBeforeClass()
     {
-        static::$_table = \Library\Application::getService(static::_getClass());
+        static::$_table = static::$serviceManager->get(static::_getClass());
         static::$_table->setSchema();
         parent::setUpBeforeClass();
     }
