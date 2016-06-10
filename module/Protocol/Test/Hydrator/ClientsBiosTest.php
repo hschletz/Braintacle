@@ -46,14 +46,6 @@ class ClientsBiosTest extends \Library\Test\Hydrator\AbstractHydratorTest
         'IdString' => 'ignored',
     );
 
-    public function testService()
-    {
-        $this->assertInstanceOf(
-            'Protocol\Hydrator\ClientsBios',
-            \Library\Application::getService('Protocol\Hydrator\ClientsBios')
-        );
-    }
-
     public function hydrateProvider()
     {
         return array(array($this->_extracted + array('IGNORED' => 'ignored'), $this->_hydrated));

@@ -23,14 +23,6 @@ namespace Protocol\Test\Hydrator;
 
 class SoftwareTest extends \PHPUnit_Framework_TestCase
 {
-    public function testService()
-    {
-        $this->assertInstanceOf(
-            'Protocol\Hydrator\Software',
-            \Library\Application::getService('Protocol\Hydrator\Software')
-        );
-    }
-
     public function testHydrateWindows()
     {
         $hydrator = $this->getMockBuilder('Protocol\Hydrator\Software')->setMethods(array('hydrateValue'))->getMock();

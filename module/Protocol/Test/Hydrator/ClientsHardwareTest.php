@@ -23,19 +23,20 @@ namespace Protocol\Test\Hydrator;
 
 class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
 {
-    protected function _getHydrator()
+    /**
+     * WindowsInstallation prototype injected into hydrator
+     * @param Model\Client\WindowsInstallation
+     */
+    protected $_windowsInstallation;
+
+    public function setUp()
     {
-        return new \Protocol\Hydrator\ClientsHardware(
-            \Library\Application::getService('Model\Client\WindowsInstallation')
-        );
+        $this->_windowsInstallation = $this->getMock('Model\Client\WindowsInstallation');
     }
 
-    public function testService()
+    protected function _getHydrator()
     {
-        $this->assertInstanceOf(
-            'Protocol\Hydrator\ClientsHardware',
-            \Library\Application::getService('Protocol\Hydrator\ClientsHardware')
-        );
+        return new \Protocol\Hydrator\ClientsHardware($this->_windowsInstallation);
     }
 
     public function hydrateProvider()
@@ -92,21 +93,17 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
             'IdString' => 'ignored',
         );
         $hydratedWindows = array(
-            'Windows' => new \Model\Client\WindowsInstallation(
-                array(
-                    'UserDomain' => 'user domain',
-                    'Company' => 'company',
-                    'Owner' => 'owner',
-                    'ProductId' => 'product id',
-                    'ProductKey' => 'product key',
-                    'Workgroup' => 'workgroup',
-                    'CpuArchitecture' => 'CPU architecture',
-                )
-            ),
+            'UserDomain' => 'user domain',
+            'Company' => 'company',
+            'Owner' => 'owner',
+            'ProductId' => 'product id',
+            'ProductKey' => 'product key',
+            'Workgroup' => 'workgroup',
+            'CpuArchitecture' => 'CPU architecture',
         );
         return array(
             array($extracted + array('WORKGROUP' => 'domain'), $hydrated + array('DnsDomain' => 'domain')),
-            array($extracted + $extractedWindows, $hydrated + $hydratedWindows),
+            array($extracted + $extractedWindows, $hydrated + array('Windows' => $hydratedWindows)),
         );
     }
 
@@ -115,6 +112,17 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
      */
     public function testHydrate(array $data, array $objectData)
     {
+        if (isset($objectData['Windows'])) {
+            // Set up prototype with new mock object to validate hydrated data.
+            $this->_windowsInstallation = $this->getMockBuilder('Model\Client\WindowsInstallation')
+                                               ->setMethods(array('exchangeArray'))
+                                               ->getMock();
+            $this->_windowsInstallation->expects($this->once())->method('exchangeArray')->with($objectData['Windows']);
+
+            // Replace array with mock object (which hydrate() will clone)
+            $objectData['Windows'] = $this->_windowsInstallation;
+        }
+
         $hydrator = $this->_getHydrator();
         $object = new \ArrayObject;
         $object['IdString'] = 'ignored';
