@@ -21,8 +21,6 @@
 
 namespace Library\Test\Mvc\Controller\Plugin;
 
-use \Library\Application;
-
 /**
  * Base class for controller plugin tests
  *
@@ -33,10 +31,23 @@ use \Library\Application;
 abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * Service manager
+     * @var \Zend\ServiceManager\ServiceManager
+     */
+    protected static $_serviceManager;
+
+    /**
      * Controller used for tests, if set by _getPlugin()
      * @var \Zend\Stdlib\DispatchableInterface
      */
     protected $_controller;
+
+    public static function setUpBeforeClass()
+    {
+        $module = strtok(get_called_class(), '\\');
+        $application = \Zend\Mvc\Application::init(\Library\Application::getApplicationConfig($module));
+        static::$_serviceManager = $application->getServiceManager();
+    }
 
     /**
      * Get the name of the controller plugin, derived from the test class name
@@ -56,14 +67,14 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
      */
     protected function _getPluginManager()
     {
-        return Application::getService('ControllerPluginManager');
+        return static::$_serviceManager->get('ControllerPluginManager');
     }
 
     /**
      * Get an initialized instance of the controller plugin
      *
      * If controller setup is requested, the controller will be a
-     * \Library\Test\Mvc\Controller\TestController. Its MvcEvent will be
+     * \Zend\Mvc\Controller\AbstractActionController mock. Its MvcEvent will be
      * initialized with a standard route 'test' (/module/controller/action/)
      * with defaults of "defaultcontroller" and "defaultaction".
      * The RouteMatch is initialized with "currentcontroller" and
@@ -106,11 +117,10 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
             $event->setRouteMatch($routeMatch);
             $event->setResponse(new \Zend\Http\Response);
 
-            // Register TestController with the service manager because this is
-            // not done in the module setup
-            $manager = Application::getService('ControllerManager');
-            $manager->setInvokableClass('test', 'Library\Test\Mvc\Controller\TestController');
-            $this->_controller = $manager->get('test');
+            $this->_controller = $this->getMockBuilder('Zend\Mvc\Controller\AbstractActionController')
+                                      ->setMethods(null)
+                                      ->getMockForAbstractClass();
+            $this->_controller->setPluginManager($this->_getPluginManager());
             $this->_controller->setEvent($event);
 
             return $this->_controller->plugin($this->_getPluginName());
