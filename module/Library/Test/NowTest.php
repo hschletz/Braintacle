@@ -25,7 +25,9 @@ class NowTest extends \PHPUnit_Framework_TestCase
 {
     public function testService()
     {
-        $serviceManager = \Library\Application::getService('serviceManager');
+        $application = \Zend\Mvc\Application::init(\Library\Application::getApplicationConfig('Library'));
+        $serviceManager = $application->getServiceManager();
+
         // Service must not be shared so that a different result is returned
         // each time.
         $now1 = $serviceManager->get('Library\Now');

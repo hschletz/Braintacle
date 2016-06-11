@@ -31,7 +31,8 @@ class LoggerServiceFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoggerService()
     {
-        $logger = \Library\Application::getService('Library\Logger');
+        $application = \Zend\Mvc\Application::init(\Library\Application::getApplicationConfig('Library'));
+        $logger = $application->getServiceManager()->get('Library\Logger');
 
         $this->assertInstanceOf('\Zend\Log\Logger', $logger);
 

@@ -191,6 +191,7 @@ class Application
      *
      * @param string $name Service name
      * @return mixed Registered service
+     * @codeCoverageIgnore
      */
     public static function getService($name)
     {
