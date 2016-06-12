@@ -312,8 +312,8 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
         $model = $this->getMockBuilder($this->_getClass())
                       ->setConstructorArgs(
                           array(
-                              \Library\Application::getService('Database\Table\CustomFieldConfig'),
-                              \Library\Application::getService('Database\Table\CustomFields'),
+                              static::$serviceManager->get('Database\Table\CustomFieldConfig'),
+                              static::$serviceManager->get('Database\Table\CustomFields'),
                           )
                       )
                       ->setMethods(array('getFields', 'getColumnMap'))
@@ -337,8 +337,8 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
         $model = $this->getMockBuilder($this->_getClass())
                       ->setConstructorArgs(
                           array(
-                              \Library\Application::getService('Database\Table\CustomFieldConfig'),
-                              \Library\Application::getService('Database\Table\CustomFields'),
+                              static::$serviceManager->get('Database\Table\CustomFieldConfig'),
+                              static::$serviceManager->get('Database\Table\CustomFields'),
                           )
                       )
                       ->setMethods(array('getFields', 'getColumnMap'))
@@ -355,8 +355,8 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
         $model = $this->getMockBuilder($this->_getClass())
                       ->setConstructorArgs(
                           array(
-                              \Library\Application::getService('Database\Table\CustomFieldConfig'),
-                              \Library\Application::getService('Database\Table\CustomFields'),
+                              static::$serviceManager->get('Database\Table\CustomFieldConfig'),
+                              static::$serviceManager->get('Database\Table\CustomFields'),
                           )
                       )
                       ->setMethods(array('getFields', 'getColumnMap'))

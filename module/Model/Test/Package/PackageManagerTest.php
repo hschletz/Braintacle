@@ -154,7 +154,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     public function testGetAllNamesEmpty()
     {
         $model = $this->_getModel();
-        \Library\Application::getService('Database\Table\Packages')->delete(true);
+        static::$serviceManager->get('Database\Table\Packages')->delete(true);
         $this->assertEquals(array(), $model->getAllNames());
     }
 
@@ -256,7 +256,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                 )
                 ->willReturn(23);
 
-        $packages = \Library\Application::getService('Database\Table\Packages');
+        $packages = static::$serviceManager->get('Database\Table\Packages');
 
         $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(

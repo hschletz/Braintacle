@@ -80,7 +80,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         parent::setUpBeforeClass();
 
         // Add columns to CustomFields table
-        static::$_customFields = \Library\Application::getService('Database\Nada')->getTable('accountinfo');
+        static::$_customFields = static::$serviceManager->get('Database\Nada')->getTable('accountinfo');
         static::$_customFields->addColumn('col_text', \Nada::DATATYPE_VARCHAR, 255);
         static::$_customFields->addColumn('col_clob', \Nada::DATATYPE_CLOB);
         static::$_customFields->addColumn('col_integer', \Nada::DATATYPE_INTEGER, 32);

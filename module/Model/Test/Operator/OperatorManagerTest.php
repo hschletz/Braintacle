@@ -105,7 +105,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
             $this->_loadDataset('CreateMinimal')->getTable('operators'),
             $this->getConnection()->createQueryTable('operators', 'SELECT * from operators')
         );
-        $auth = clone \Library\Application::getService('Zend\Authentication\AuthenticationService');
+        $auth = clone static::$serviceManager->get('Zend\Authentication\AuthenticationService');
         $this->assertFalse($auth->hasIdentity());
         $this->assertTrue($auth->login('new_id', 'new_passwd'));
         $this->assertEquals('new_id', $auth->getIdentity());
@@ -129,7 +129,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
             $this->_loadDataset('CreateFull')->getTable('operators'),
             $this->getConnection()->createQueryTable('operators', 'SELECT * from operators')
         );
-        $auth = clone \Library\Application::getService('Zend\Authentication\AuthenticationService');
+        $auth = clone static::$serviceManager->get('Zend\Authentication\AuthenticationService');
         $this->assertFalse($auth->hasIdentity());
         $this->assertTrue($auth->login('new_id', 'new_passwd'));
         $this->assertEquals('new_id', $auth->getIdentity());

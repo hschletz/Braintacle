@@ -136,7 +136,7 @@ class GroupManagerTest extends AbstractGroupTest
         );
         $model->createGroup('name3', $description);
 
-        $table = \Library\Application::getService('Database\Table\ClientsAndGroups');
+        $table = static::$serviceManager->get('Database\Table\ClientsAndGroups');
         $id = $table->select(array('name' => 'name3', 'deviceid' => '_SYSTEMGROUP_'))->current()['id'];
         $dataSet = new \PHPUnit_Extensions_Database_DataSet_ReplacementDataSet($this->_loadDataSet('CreateGroup'));
         $dataSet->addFullReplacement('#ID#', $id);

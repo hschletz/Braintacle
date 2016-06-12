@@ -105,9 +105,9 @@ class ClientOrGroupTest extends AbstractTest
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
-                    array('Database\Nada', true, \Library\Application::getService('Database\Nada')),
-                    array('Database\Table\Locks', true, \Library\Application::getService('Database\Table\Locks')),
-                    array('Db', true, \Library\Application::getService('Db')),
+                    array('Database\Nada', true, static::$serviceManager->get('Database\Nada')),
+                    array('Database\Table\Locks', true, static::$serviceManager->get('Database\Table\Locks')),
+                    array('Db', true, static::$serviceManager->get('Db')),
                     array('Model\Config', true, $config),
                 )
             )
@@ -144,9 +144,9 @@ class ClientOrGroupTest extends AbstractTest
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
-                    array('Database\Nada', true, \Library\Application::getService('Database\Nada')),
-                    array('Database\Table\Locks', true, \Library\Application::getService('Database\Table\Locks')),
-                    array('Db', true, \Library\Application::getService('Db')),
+                    array('Database\Nada', true, static::$serviceManager->get('Database\Nada')),
+                    array('Database\Table\Locks', true, static::$serviceManager->get('Database\Table\Locks')),
+                    array('Db', true, static::$serviceManager->get('Db')),
                     array('Model\Config', true, $config),
                 )
             )
@@ -188,9 +188,9 @@ class ClientOrGroupTest extends AbstractTest
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
-                    array('Database\Nada', true, \Library\Application::getService('Database\Nada')),
+                    array('Database\Nada', true, static::$serviceManager->get('Database\Nada')),
                     array('Database\Table\Locks', true, $locks),
-                    array('Db', true, \Library\Application::getService('Db')),
+                    array('Db', true, static::$serviceManager->get('Db')),
                     array('Model\Config', true, $config),
                 )
             )
@@ -218,9 +218,9 @@ class ClientOrGroupTest extends AbstractTest
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
-                    array('Database\Nada', true, \Library\Application::getService('Database\Nada')),
-                    array('Database\Table\Locks', true, \Library\Application::getService('Database\Table\Locks')),
-                    array('Db', true, \Library\Application::getService('Db')),
+                    array('Database\Nada', true, static::$serviceManager->get('Database\Nada')),
+                    array('Database\Table\Locks', true, static::$serviceManager->get('Database\Table\Locks')),
+                    array('Db', true, static::$serviceManager->get('Db')),
                 )
             )
         );
@@ -250,8 +250,8 @@ class ClientOrGroupTest extends AbstractTest
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
-                    array('Database\Nada', true, \Library\Application::getService('Database\Nada')),
-                    array('Db', true, \Library\Application::getService('Db')),
+                    array('Database\Nada', true, static::$serviceManager->get('Database\Nada')),
+                    array('Db', true, static::$serviceManager->get('Db')),
                 )
             )
         );
@@ -305,9 +305,9 @@ class ClientOrGroupTest extends AbstractTest
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
-                    array('Database\Nada', true, \Library\Application::getService('Database\Nada')),
-                    array('Database\Table\Locks', true, \Library\Application::getService('Database\Table\Locks')),
-                    array('Db', true, \Library\Application::getService('Db')),
+                    array('Database\Nada', true, static::$serviceManager->get('Database\Nada')),
+                    array('Database\Table\Locks', true, static::$serviceManager->get('Database\Table\Locks')),
+                    array('Db', true, static::$serviceManager->get('Db')),
                     array('Model\Config', true, $config),
                 )
             )
@@ -328,7 +328,7 @@ class ClientOrGroupTest extends AbstractTest
     public function testGetAssignablePackages()
     {
         $model = $this->getMockBuilder($this->_getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
-        $model->setServiceLocator(\Library\Application::getService('ServiceManager'));
+        $model->setServiceLocator(static::$serviceManager);
         $model['Id'] = 1;
         $this->assertEquals(array('package1', 'package3'), $model->getAssignablePackages());
     }
@@ -363,7 +363,7 @@ class ClientOrGroupTest extends AbstractTest
                     array(
                         'Database\Table\ClientConfig',
                         true,
-                        \Library\Application::getService('Database\Table\ClientConfig')
+                        static::$serviceManager->get('Database\Table\ClientConfig')
                     ),
                     array('Library\Now', true, $now),
                     array('Model\Package\PackageManager', true, $packageManager),
@@ -410,7 +410,7 @@ class ClientOrGroupTest extends AbstractTest
                     array(
                         'Database\Table\ClientConfig',
                         true,
-                        \Library\Application::getService('Database\Table\ClientConfig')
+                        static::$serviceManager->get('Database\Table\ClientConfig')
                     ),
                     array('Model\Package\PackageManager', true, $packageManager),
                 )
@@ -463,7 +463,7 @@ class ClientOrGroupTest extends AbstractTest
                     array(
                         'Database\Table\ClientConfig',
                         true,
-                        \Library\Application::getService('Database\Table\ClientConfig')
+                        static::$serviceManager->get('Database\Table\ClientConfig')
                     ),
                     array('Model\Config', true, $config),
                 )
@@ -521,7 +521,7 @@ class ClientOrGroupTest extends AbstractTest
                 array(
                     array('Database\Table\ClientConfig',
                         true,
-                        \Library\Application::getService('Database\Table\ClientConfig')
+                        static::$serviceManager->get('Database\Table\ClientConfig')
                     ),
                     array('Model\Config', true, $config),
                 )
@@ -558,7 +558,7 @@ class ClientOrGroupTest extends AbstractTest
         $config->method('getDbIdentifier')->with('inventoryInterval')->willReturn('FREQUENCY');
 
         $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
-        $clientConfig->method('getAdapter')->willReturn(\Library\Application::getService('Db'));
+        $clientConfig->method('getAdapter')->willReturn(static::$serviceManager->get('Db'));
         $clientConfig->expects($this->never())->method('insert');
         $clientConfig->expects($this->never())->method('update');
         $clientConfig->expects($this->never())->method('delete');

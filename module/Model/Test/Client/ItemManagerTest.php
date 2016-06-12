@@ -217,7 +217,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
             if ($table == 'ClientsAndGroups' or $table == 'DuplicateMacAddresses' or $table == 'SoftwareDefinitions') {
                 continue;
             }
-            $table = \Library\Application::getService("Database\\Table\\$table")->table;
+            $table = static::$serviceManager->get("Database\\Table\\$table")->table;
             $dataSet->addTable($table, "SELECT hardware_id FROM $table");
         }
         $this->assertDataSetsEqual($this->_loadDataSet('DeleteItems'), $dataSet);

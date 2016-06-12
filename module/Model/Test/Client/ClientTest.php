@@ -55,7 +55,7 @@ class ClientTest extends \Model\Test\AbstractTest
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
                 // that the service is used only once.
-                return \Library\Application::getService($name);
+                return static::$serviceManager->get($name);
             }
         );
 
@@ -87,7 +87,7 @@ class ClientTest extends \Model\Test\AbstractTest
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
                 // that the service is used only once.
-                return \Library\Application::getService($name);
+                return static::$serviceManager->get($name);
             }
         );
 
@@ -137,7 +137,7 @@ class ClientTest extends \Model\Test\AbstractTest
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
                 // that the service is used only once.
-                return \Library\Application::getService($name);
+                return static::$serviceManager->get($name);
             }
         );
         $model = new \Model\Client\Client(array($initialIndex => $initialValue));

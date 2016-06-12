@@ -54,9 +54,9 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $this->assertEquals(2, $duplicates->count('Name'));
 
         // Clear list of allowed duplicate values and re-check.
-        \Library\Application::getService('Database\Table\DuplicateMacAddresses')->delete(true);
-        \Library\Application::getService('Database\Table\DuplicateSerials')->delete(true);
-        \Library\Application::getService('Database\Table\DuplicateAssetTags')->delete(true);
+        static::$serviceManager->get('Database\Table\DuplicateMacAddresses')->delete(true);
+        static::$serviceManager->get('Database\Table\DuplicateSerials')->delete(true);
+        static::$serviceManager->get('Database\Table\DuplicateAssetTags')->delete(true);
         $this->assertEquals(2, $duplicates->count('MacAddress'));
         $this->assertEquals(2, $duplicates->count('Serial'));
         $this->assertEquals(2, $duplicates->count('AssetTag'));
@@ -119,9 +119,9 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
     public function testFind($criteria, $order, $direction, $clearBlacklist, $expectedOrder, $expectedResult)
     {
         if ($clearBlacklist) {
-            \Library\Application::getService('Database\Table\DuplicateMacAddresses')->delete(true);
-            \Library\Application::getService('Database\Table\DuplicateSerials')->delete(true);
-            \Library\Application::getService('Database\Table\DuplicateAssetTags')->delete(true);
+            static::$serviceManager->get('Database\Table\DuplicateMacAddresses')->delete(true);
+            static::$serviceManager->get('Database\Table\DuplicateSerials')->delete(true);
+            static::$serviceManager->get('Database\Table\DuplicateAssetTags')->delete(true);
         }
 
         $ordercolumns = array(
@@ -130,7 +130,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
             'NetworkInterface.MacAddress' => 'networkinterface_macaddr',
         );
 
-        $sql = new \Zend\Db\Sql\Sql(\Library\Application::getService('Db'), 'clients');
+        $sql = new \Zend\Db\Sql\Sql(static::$serviceManager->get('Db'), 'clients');
 
         $select = $sql->select()
                       ->columns(array('id', 'name', 'lastcome', 'ssn', 'assettag'))

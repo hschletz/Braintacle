@@ -42,12 +42,15 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
     private $_db;
 
     /**
-     * Set up tables
+     * Service manager
+     * @var \Zend\ServiceManager\ServiceManager
      */
+    public static $serviceManager;
+
     public static function setUpBeforeClass()
     {
         foreach (static::$_tables as $table) {
-            \Library\Application::getService("Database\Table\\$table")->setSchema();
+            static::$serviceManager->get("Database\Table\\$table")->setSchema();
         }
         parent::setUpBeforeClass();
     }
@@ -60,7 +63,7 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
     public function getConnection()
     {
         if (!$this->_db) {
-            $pdo = \Library\Application::getService('Db')->getDriver()->getConnection()->getResource();
+            $pdo = static::$serviceManager->get('Db')->getDriver()->getConnection()->getResource();
             $this->_db = $this->createDefaultDBConnection($pdo, ':memory:');
         }
         return $this->_db;
@@ -119,7 +122,7 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
      */
     protected function _getModel(array $overrideServices = array())
     {
-        $serviceManager = \Library\Application::getService('ServiceManager');
+        $serviceManager = static::$serviceManager;
         if (!empty($overrideServices)) {
             // Clone service manager to keep changes local.
             $serviceManager = clone $serviceManager;

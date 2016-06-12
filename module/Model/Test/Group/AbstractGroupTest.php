@@ -43,11 +43,11 @@ abstract class AbstractGroupTest extends \Model\Test\AbstractTest
             $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
             $serviceManager->method('get')->willReturnMap(
                 array(
-                    array('Db', true, \Library\Application::getService('Db')),
-                    array('Database\Nada', true, \Library\Application::getService('Database\Nada')),
-                    array('Library\Logger', true, \Library\Application::getService('Library\Logger')),
+                    array('Db', true, static::$serviceManager->get('Db')),
+                    array('Database\Nada', true, static::$serviceManager->get('Database\Nada')),
+                    array('Library\Logger', true, static::$serviceManager->get('Library\Logger')),
                     array('Model\Config', true, $this->_config),
-                    array('Model\Group\Group', true, \Library\Application::getService('Model\Group\Group')),
+                    array('Model\Group\Group', true, static::$serviceManager->get('Model\Group\Group')),
                 )
             );
 

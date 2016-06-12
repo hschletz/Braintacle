@@ -24,8 +24,11 @@ namespace Model\Test\Operator;
 /**
  * Tests for AuthenticationService
  */
-class AuthenticationServiceTest extends \PHPUnit_Framework_TestCase
+class AuthenticationServiceTest extends \Model\Test\AbstractTest
 {
+    /** {@inheritdoc} */
+    protected static $_tables = array('Operators');
+
     /**
      * An AuthenticationService instance pulled in by setUp()
      *
@@ -33,26 +36,20 @@ class AuthenticationServiceTest extends \PHPUnit_Framework_TestCase
      */
     protected $_auth;
 
-    /**
-     * @ignore
-     */
     protected function setUp()
     {
-        // Create table and default account
-        \Library\Application::getService('Database\Table\Operators')->setSchema();
-
-        $this->_auth = \Library\Application::getService('Zend\Authentication\AuthenticationService');
+        parent::setUp();
+        $this->_auth = clone static::$serviceManager->get('Zend\Authentication\AuthenticationService');
     }
 
-    /**
-     * Test service retrieval
-     */
+    public function getDataSet()
+    {
+        return new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet;
+    }
+
     public function testService()
     {
-        $this->assertInstanceOf(
-            'Model\Operator\AuthenticationService',
-            \Library\Application::getService('Zend\Authentication\AuthenticationService')
-        );
+        $this->assertInstanceOf('Model\Operator\AuthenticationService', $this->_auth);
     }
 
     /**
@@ -66,9 +63,6 @@ class AuthenticationServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($this->_auth->login('admin', 'admin'));
         $this->assertEquals('admin', $this->_auth->getIdentity());
-
-        // clean up
-        $this->_auth->clearIdentity();
     }
 
     public function testChangeIdentityValid()

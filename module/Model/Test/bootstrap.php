@@ -43,7 +43,9 @@ class StreamWrapperStatOnly
 stream_wrapper_register('statonly', 'Model\StreamWrapperStatOnly');
 
 require_once(__DIR__ . '/../../Library/Application.php');
-\Library\Application::init(
+$application = \Library\Application::init(
     array('database' => array('driver' => 'Pdo_Sqlite')),
     'Model'
 );
+\Model\Test\AbstractTest::$serviceManager = $application->getServiceManager();
+unset($application); // Prevent backup/restore by PHPUnit

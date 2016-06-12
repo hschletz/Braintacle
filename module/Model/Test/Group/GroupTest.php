@@ -90,7 +90,7 @@ class GroupTest extends AbstractGroupTest
                                    array(
                                        'Database\Table\GroupMemberships',
                                        true,
-                                       \Library\Application::getService('Database\Table\GroupMemberships')
+                                       static::$serviceManager->get('Database\Table\GroupMemberships')
                                    )
                                )
                            )
@@ -328,7 +328,7 @@ class GroupTest extends AbstractGroupTest
                                    array(
                                        'Database\Table\Clients',
                                        true,
-                                       \Library\Application::getService('Database\Table\Clients')
+                                       static::$serviceManager->get('Database\Table\Clients')
                                    ),
                                    array(
                                        'Database\Table\GroupInfo', true, $this->_groupInfo
@@ -336,7 +336,7 @@ class GroupTest extends AbstractGroupTest
                                    array(
                                        'Database\Table\GroupMemberships',
                                        true,
-                                       \Library\Application::getService('Database\Table\GroupMemberships')
+                                       static::$serviceManager->get('Database\Table\GroupMemberships')
                                    ),
                                    array('Library\Now', true, $now),
                                    array('Library\Random', true, $random),
