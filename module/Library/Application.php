@@ -36,12 +36,6 @@ class Application
     protected static $_config;
 
     /**
-     * The application's service manager instance
-     * @var \Zend\ServiceManager\ServiceManager
-     */
-    protected static $_serviceManager;
-
-    /**
      * Set up application environment
      *
      * This sets up the PHP environment and autoloaders, reads the config file,
@@ -86,10 +80,7 @@ class Application
             static::$_config = $config;
         }
 
-        $application = \Zend\Mvc\Application::init(static::getApplicationConfig($module));
-        self::$_serviceManager = $application->getServiceManager();
-
-        return $application;
+        return \Zend\Mvc\Application::init(static::getApplicationConfig($module));
     }
 
     /**
@@ -176,25 +167,5 @@ class Application
     {
         $environment = self::getEnvironment();
         return ($environment == 'development' or $environment == 'test');
-    }
-
-    /**
-     * Get a service from the application's service manager.
-     *
-     * Objects created through the service manager (view helpers etc.) should
-     * preferrably implement \Zend\ServiceManager\ServicLocatorAwareInterface
-     * instead of calling this method, making the code more portable by reducing
-     * external depenencies. Other objects should have the service manager
-     * instance injected manually. This method should only be used where this
-     * functionality is not available. One use case is unit testing where the
-     * initialization code bypasses this part of the Zend Framework.
-     *
-     * @param string $name Service name
-     * @return mixed Registered service
-     * @codeCoverageIgnore
-     */
-    public static function getService($name)
-    {
-        return self::$_serviceManager->get($name);
     }
 }
