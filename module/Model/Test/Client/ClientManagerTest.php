@@ -21,6 +21,8 @@
 
 namespace Model\Test\Client;
 
+use Nada\Column\AbstractColumn as Column;
+
 class ClientManagerTest extends \Model\Test\AbstractTest
 {
     protected static $_tables = array(
@@ -81,11 +83,11 @@ class ClientManagerTest extends \Model\Test\AbstractTest
 
         // Add columns to CustomFields table
         static::$_customFields = static::$serviceManager->get('Database\Nada')->getTable('accountinfo');
-        static::$_customFields->addColumn('col_text', \Nada::DATATYPE_VARCHAR, 255);
-        static::$_customFields->addColumn('col_clob', \Nada::DATATYPE_CLOB);
-        static::$_customFields->addColumn('col_integer', \Nada::DATATYPE_INTEGER, 32);
-        static::$_customFields->addColumn('col_float', \Nada::DATATYPE_FLOAT);
-        static::$_customFields->addColumn('col_date', \Nada::DATATYPE_DATE);
+        static::$_customFields->addColumn('col_text', Column::TYPE_VARCHAR, 255);
+        static::$_customFields->addColumn('col_clob', Column::TYPE_CLOB);
+        static::$_customFields->addColumn('col_integer', Column::TYPE_INTEGER, 32);
+        static::$_customFields->addColumn('col_float', Column::TYPE_FLOAT);
+        static::$_customFields->addColumn('col_date', Column::TYPE_DATE);
     }
 
     public static function tearDownAfterClass()

@@ -40,19 +40,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hschletz/NADA.git",
-                "reference": "28643a2f6a68db7104c3fc9793a12db446f50c9c"
+                "reference": "a92397a382feff17c00167355ffccc7cdbc28ca2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hschletz/NADA/zipball/28643a2f6a68db7104c3fc9793a12db446f50c9c",
-                "reference": "28643a2f6a68db7104c3fc9793a12db446f50c9c",
+                "url": "https://api.github.com/repos/hschletz/NADA/zipball/a92397a382feff17c00167355ffccc7cdbc28ca2",
+                "reference": "a92397a382feff17c00167355ffccc7cdbc28ca2",
                 "shasum": ""
             },
             "type": "library",
             "autoload": {
-                "classmap": [
-                    "Nada.php"
-                ]
+                "psr-4": {
+                    "Nada\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -66,7 +66,7 @@
             ],
             "description": "A high level SQL abstraction library for PHP, complementing and operating on top of a conventional database abstraction layer",
             "homepage": "https://github.com/hschletz/NADA",
-            "time": "2015-12-03 20:28:02"
+            "time": "2016-06-18 10:13:42"
         },
         {
             "name": "psr/http-message",

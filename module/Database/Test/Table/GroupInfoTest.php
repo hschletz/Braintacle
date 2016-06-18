@@ -47,7 +47,7 @@ class GroupInfoTest extends AbstractTest
                     array(
                         'Database\Nada',
                         true,
-                        $this->getMockBuilder('Nada_Database')->disableOriginalConstructor()->getMock()
+                        $this->getMockBuilder('Nada\Database\AbstractDatabase')->disableOriginalConstructor()->getMock()
                     ),
                     array(
                         'Db',

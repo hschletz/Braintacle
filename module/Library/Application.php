@@ -63,12 +63,16 @@ class Application
             require_once "$vendorDir/autoload.php";
         } else {
             // manual setup
-            require_once 'Nada.php';
             require_once 'Zend/Loader/AutoloaderFactory.php';
-            $autoloader = array('autoregister_zf' => true);
+            $autoloader = array(
+                'autoregister_zf' => true,
+                'namespaces' => array(
+                    'Nada' => stream_resolve_include_path('NADA/src'),
+                ),
+            );
             $vfsStreamPath = stream_resolve_include_path('org/bovigo/vfs');
             if ($vfsStreamPath) {
-                $autoloader['namespaces'] = array('org\bovigo\vfs' => $vfsStreamPath);
+                $autoloader['namespaces']['org\bovigo\vfs'] = $vfsStreamPath;
             }
             \Zend\Loader\AutoloaderFactory::factory(array('\Zend\Loader\StandardAutoloader' => $autoloader));
         }

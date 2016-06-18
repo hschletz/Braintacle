@@ -21,6 +21,8 @@
 
 namespace Database\Table;
 
+use Nada\Column\AbstractColumn as Column;
+
 /**
  * "accountinfo_config" table
  */
@@ -108,13 +110,13 @@ class CustomFieldConfig extends \Database\AbstractTable
                     case self::INTERNALTYPE_TEXT:
                         // Can be text, integer or float. Evaluate column datatype.
                         switch ($column->getDatatype()) {
-                            case \Nada::DATATYPE_VARCHAR:
+                            case Column::TYPE_VARCHAR:
                                 $type = 'text';
                                 break;
-                            case \Nada::DATATYPE_INTEGER:
+                            case Column::TYPE_INTEGER:
                                 $type = 'integer';
                                 break;
-                            case \Nada::DATATYPE_FLOAT:
+                            case Column::TYPE_FLOAT:
                                 $type = 'float';
                                 break;
                         }
@@ -127,7 +129,7 @@ class CustomFieldConfig extends \Database\AbstractTable
                         // and stores values in a non-ISO format. Silently
                         // ignore these fields. Only accept real date
                         // columns.
-                        if ($column->getDatatype() == \Nada::DATATYPE_DATE) {
+                        if ($column->getDatatype() == Column::TYPE_DATE) {
                             $type = 'date';
                         }
                         break;
@@ -156,24 +158,24 @@ class CustomFieldConfig extends \Database\AbstractTable
         $length = null;
         switch ($type) {
             case 'text':
-                $datatype = \Nada::DATATYPE_VARCHAR;
+                $datatype = Column::TYPE_VARCHAR;
                 $length = 255;
                 $internalType = self::INTERNALTYPE_TEXT;
                 break;
             case 'integer':
-                $datatype = \Nada::DATATYPE_INTEGER;
+                $datatype = Column::TYPE_INTEGER;
                 $internalType = self::INTERNALTYPE_TEXT;
                 break;
             case 'float':
-                $datatype = \Nada::DATATYPE_FLOAT;
+                $datatype = Column::TYPE_FLOAT;
                 $internalType = self::INTERNALTYPE_TEXT;
                 break;
             case 'date':
-                $datatype = \Nada::DATATYPE_DATE;
+                $datatype = Column::TYPE_DATE;
                 $internalType = self::INTERNALTYPE_DATE;
                 break;
             case 'clob':
-                $datatype = \Nada::DATATYPE_CLOB;
+                $datatype = Column::TYPE_CLOB;
                 $internalType = self::INTERNALTYPE_TEXTAREA;
                 break;
             default:

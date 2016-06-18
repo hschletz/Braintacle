@@ -21,6 +21,7 @@
 
 namespace Database\Table;
 
+use Nada\Column\AbstractColumn as Column;
 use Zend\Db\Sql\Literal;
 
 /**
@@ -59,7 +60,7 @@ class PackageDownloadInfo extends \Database\AbstractTable
                     'ivalue' => new \Zend\Db\Sql\Expression(
                         sprintf(
                             '(SELECT CAST(fileid AS %s) FROM download_enable WHERE id = ivalue)',
-                            $database->getNativeDatatype(\Nada::DATATYPE_INTEGER, 32, true)
+                            $database->getNativeDatatype(Column::TYPE_INTEGER, 32, true)
                         )
                     )
                 ),
@@ -74,8 +75,8 @@ class PackageDownloadInfo extends \Database\AbstractTable
 
         if (!in_array('download_enable', $database->getViewNames())) {
             $logger->info("Creating view 'download_enable'");
-            $typeText =$database->getNativeDatatype(\Nada::DATATYPE_VARCHAR, 255, true);
-            $typeInt = $database->getNativeDatatype(\Nada::DATATYPE_INTEGER, 32, true);
+            $typeText =$database->getNativeDatatype(Column::TYPE_VARCHAR, 255, true);
+            $typeInt = $database->getNativeDatatype(Column::TYPE_INTEGER, 32, true);
             $null = 'CAST(NULL AS %s)';
             $sql = $this->_serviceLocator->get('Database\Table\Packages')->getSql();
             $select = $sql->select();

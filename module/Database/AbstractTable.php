@@ -106,7 +106,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
      *
      * @param \Zend\Log\Logger $logger Logger instance
      * @param array $schema Parsed table schema
-     * @param \Nada_Database $database Database object
+     * @param \Nada\Database\AbstractDatabase $database Database object
      * @codeCoverageIgnore
      */
     protected function _preSetSchema($logger, $schema, $database)
@@ -118,7 +118,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
      *
      * @param \Zend\Log\Logger $logger Logger instance
      * @param array $schema Parsed table schema
-     * @param \Nada_Database $database Database object
+     * @param \Nada\Database\AbstractDatabase $database Database object
      * @codeCoverageIgnore
      */
     protected function _postSetSchema($logger, $schema, $database)
@@ -129,7 +129,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
      * Drop a column if it exists
      *
      * @param \Zend\Log\Logger $logger Logger instance
-     * @param \Nada_Database $database Database object
+     * @param \Nada\Database\AbstractDatabase $database Database object
      * @param string $column column name
      * @codeCoverageIgnore
      */

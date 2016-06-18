@@ -21,6 +21,8 @@
 
 namespace Model;
 
+use Nada\Column\AbstractColumn as Column;
+
 /**
  * Base class for clients and groups
  *
@@ -124,7 +126,7 @@ abstract class ClientOrGroup extends \ArrayObject
         $currentTimestamp = new \Zend\Db\Sql\Literal(
             sprintf(
                 'CAST(CURRENT_TIMESTAMP AS %s)',
-                $this->_serviceLocator->get('Database\Nada')->getNativeDatatype(\Nada::DATATYPE_TIMESTAMP, null, true)
+                $this->_serviceLocator->get('Database\Nada')->getNativeDatatype(Column::TYPE_TIMESTAMP, null, true)
             )
         );
         $current = new \DateTime(
@@ -214,7 +216,7 @@ abstract class ClientOrGroup extends \ArrayObject
                 sprintf(
                     'SELECT CAST(CURRENT_TIMESTAMP AS %s) AS current',
                     $this->_serviceLocator->get('Database\Nada')->getNativeDatatype(
-                        \Nada::DATATYPE_TIMESTAMP,
+                        Column::TYPE_TIMESTAMP,
                         null,
                         true
                     )

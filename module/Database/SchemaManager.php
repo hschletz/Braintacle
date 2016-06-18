@@ -74,7 +74,7 @@ class SchemaManager
                     sprintf(
                         '%d columns converted to %s.',
                         $convertedTimestamps,
-                        $nada->getNativeDatatype(\Nada::DATATYPE_TIMESTAMP)
+                        $nada->getNativeDatatype(\Nada\Column\AbstractColumn::TYPE_TIMESTAMP)
                     )
                 );
             }
@@ -135,7 +135,7 @@ class SchemaManager
      *
      * @param \Zend\Log\Logger $logger Logger instance
      * @param array $schema Parsed table schema
-     * @param \Nada_Database $database Database object
+     * @param \Nada\Database\AbstractDatabase $database Database object
      */
     public static function setSchema($logger, $schema, $database)
     {

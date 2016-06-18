@@ -22,6 +22,7 @@
 namespace Database\Test\Table;
 
 use Database\Table\CustomFieldConfig;
+use Nada\Column\AbstractColumn as Column;
 
 /**
  * Tests for the CustomFieldConfig class
@@ -38,13 +39,13 @@ class CustomFieldConfigTest extends AbstractTest
         // Add columns to CustomFields table, matching config from fixture
         static::$serviceManager->get('Database\Table\CustomFields')->setSchema();
         $fields = static::$_nada->getTable('accountinfo');
-        $fields->addColumn('fields_3', \Nada::DATATYPE_VARCHAR, 255);
-        $fields->addColumn('fields_4', \Nada::DATATYPE_INTEGER, 32);
-        $fields->addColumn('fields_5', \Nada::DATATYPE_FLOAT);
-        $fields->addColumn('fields_6', \Nada::DATATYPE_CLOB);
-        $fields->addColumn('fields_7', \Nada::DATATYPE_DATE);
-        $fields->addColumn('fields_8', \Nada::DATATYPE_VARCHAR, 255);
-        $fields->addColumn('fields_9', \Nada::DATATYPE_VARCHAR, 255);
+        $fields->addColumn('fields_3', Column::TYPE_VARCHAR, 255);
+        $fields->addColumn('fields_4', Column::TYPE_INTEGER, 32);
+        $fields->addColumn('fields_5', Column::TYPE_FLOAT);
+        $fields->addColumn('fields_6', Column::TYPE_CLOB);
+        $fields->addColumn('fields_7', Column::TYPE_DATE);
+        $fields->addColumn('fields_8', Column::TYPE_VARCHAR, 255);
+        $fields->addColumn('fields_9', Column::TYPE_VARCHAR, 255);
     }
 
     public static function tearDownAfterClass()
@@ -78,11 +79,11 @@ class CustomFieldConfigTest extends AbstractTest
     public function addFieldProvider()
     {
         return array(
-            array('text', \Nada::DATATYPE_VARCHAR, $this->equalTo(255), CustomFieldConfig::INTERNALTYPE_TEXT),
-            array('integer', \Nada::DATATYPE_INTEGER, $this->anything(), CustomFieldConfig::INTERNALTYPE_TEXT),
-            array('float', \Nada::DATATYPE_FLOAT, $this->anything(), CustomFieldConfig::INTERNALTYPE_TEXT),
-            array('date', \Nada::DATATYPE_DATE, $this->anything(), CustomFieldConfig::INTERNALTYPE_DATE),
-            array('clob', \Nada::DATATYPE_CLOB, $this->anything(), CustomFieldConfig::INTERNALTYPE_TEXTAREA),
+            array('text', Column::TYPE_VARCHAR, $this->equalTo(255), CustomFieldConfig::INTERNALTYPE_TEXT),
+            array('integer', Column::TYPE_INTEGER, $this->anything(), CustomFieldConfig::INTERNALTYPE_TEXT),
+            array('float', Column::TYPE_FLOAT, $this->anything(), CustomFieldConfig::INTERNALTYPE_TEXT),
+            array('date', Column::TYPE_DATE, $this->anything(), CustomFieldConfig::INTERNALTYPE_DATE),
+            array('clob', Column::TYPE_CLOB, $this->anything(), CustomFieldConfig::INTERNALTYPE_TEXTAREA),
         );
     }
 
@@ -157,7 +158,7 @@ class CustomFieldConfigTest extends AbstractTest
         $columns = $table->getColumns();
 
         // Reset table before any assertions
-        $table->addColumn('fields_3', \Nada::DATATYPE_VARCHAR, 255);
+        $table->addColumn('fields_3', Column::TYPE_VARCHAR, 255);
 
         $this->assertArrayNotHasKey('fields_3', $columns);
         $this->assertTablesEqual(
