@@ -34,7 +34,6 @@ use Zend\ModuleManager\Feature;
 class Module implements
     Feature\AutoloaderProviderInterface,
     Feature\ConfigProviderInterface,
-    Feature\BootstrapListenerInterface,
     Feature\InitProviderInterface
 {
     /**
@@ -55,25 +54,28 @@ class Module implements
         $config = array(
             'service_manager' => array(
                 'abstract_factories' => array(
+                    'Database\Service\AbstractDatabaseFactory',
                     'Database\Service\AbstractTableFactory',
                 ),
                 'factories' => array(
-                    'Db' => 'Zend\Db\Adapter\AdapterServiceFactory',
-                    'Database\Nada' => 'Database\Service\NadaFactory',
                     'Database\SchemaManager' => 'Database\Service\SchemaManagerFactory',
                 ),
             ),
         );
 
-        // Merge database configuration from config file
+        // Merge database configuration from config file.
+        // It may not exist in test environments.
         $configFileContent = \Library\Application::getConfig();
-        if (!is_array($configFileContent['database'])) {
-            throw new \RuntimeException('Config file has no "database" section');
+        if (isset($configFileContent['database'])) {
+            $config['db'] = $configFileContent['database'];
+            $config['db']['options']['buffer_results'] = true;
+            // Set charset to utf8mb4 for MySQL, utf8 for everything else.
+            if (stripos($config['db']['driver'], 'mysql') === false) {
+                $config['db']['charset'] = 'utf8';
+            } else {
+                $config['db']['charset'] = 'utf8mb4';
+            }
         }
-        $config['db'] = $configFileContent['database'];
-        $config['db']['options']['buffer_results'] = true;
-        // Set charset to utf8mb4 for MySQL, utf8 for everything else.
-        $config['db']['charset'] = ((stripos($config['db']['driver'], 'mysql') === false) ? 'utf8' : 'utf8mb4');
 
         return $config;
     }
@@ -101,13 +103,5 @@ class Module implements
     public static function getPath($path = '')
     {
         return \Library\Application::getPath('module/Database/' . $path);
-    }
-
-    /**
-     * @internal
-     */
-    public function onBootstrap(\Zend\EventManager\EventInterface $e)
-    {
-        $e->getParam('application')->getServiceManager()->get('Database\Nada')->setTimezone();
     }
 }

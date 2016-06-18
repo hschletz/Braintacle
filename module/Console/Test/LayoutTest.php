@@ -29,12 +29,21 @@ use \Zend\Dom\Document\Query;
 class LayoutTest extends \PHPUnit_Framework_TestCase
 {
     protected $_view;
+    protected $_authService;
 
     public function setUp()
     {
+        $this->_authService = $this->getMock('Model\Operator\AuthenticationService');
+
         $application = \Zend\Mvc\Application::init(\Library\Application::getApplicationConfig('Console'));
+        $serviceManager = $application->getServiceManager();
+        $serviceManager->setAllowOverride(true)->setService(
+            'Zend\Authentication\AuthenticationService',
+            $this->_authService
+        );
+
         $this->_view = new \Zend\View\Renderer\PhpRenderer;
-        $this->_view->setHelperPluginManager($application->getServiceManager()->get('ViewHelperManager'));
+        $this->_view->setHelperPluginManager($serviceManager->get('ViewHelperManager'));
         $this->_view->setResolver(
             new \Zend\View\Resolver\TemplateMapResolver(
                 array('layout' => \Console\Module::getPath('views/layout/layout.php'))
@@ -119,6 +128,9 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 
     public function testNoIdentity()
     {
+        $this->_authService = $this->getMock('Model\Operator\AuthenticationService');
+        $this->_authService->method('hasIdentity')->willReturn(false);
+
         $html = $this->_view->render('layout');
         $document = new \Zend\Dom\Document($html);
         $this->assertCount(0, Query::execute('//div[@id="menu"]', $document));
@@ -126,10 +138,9 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 
     public function testIdentityButNoRoute()
     {
-        $authService = $this->getMock('Model\Operator\AuthenticationService');
-        $authService->method('hasIdentity')->willReturn(true);
-        $authService->method('getIdentity')->willReturn('identity');
-        $this->_view->plugin('identity')->setAuthenticationService($authService);
+        $this->_authService->method('hasIdentity')->willReturn(true);
+        $this->_authService->method('getIdentity')->willReturn('identity');
+
         $html = $this->_view->render('layout', array('noRoute' => true));
         $document = new \Zend\Dom\Document($html);
         $this->assertCount(0, Query::execute('//div[@id="menu"]', $document));
@@ -137,10 +148,9 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 
     public function testMenu()
     {
-        $authService = $this->getMock('Model\Operator\AuthenticationService');
-        $authService->method('hasIdentity')->willReturn(true);
-        $authService->method('getIdentity')->willReturn('identity');
-        $this->_view->plugin('identity')->setAuthenticationService($authService);
+        $this->_authService->method('hasIdentity')->willReturn(true);
+        $this->_authService->method('getIdentity')->willReturn('identity');
+
         $this->_view->plugin('navigation')->menu()->setTranslator(null);
 
         $menu = \Zend\Navigation\Page\AbstractPage::factory(
