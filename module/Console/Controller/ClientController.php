@@ -676,7 +676,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     public function exportAction()
     {
         $document = $this->_currentClient->toDomDocument();
-        if (\Library\Application::isDevelopment()) {
+        if ($this->_config->validateXml) {
             $document->forceValid();
         }
         $filename = $document->getFilename();

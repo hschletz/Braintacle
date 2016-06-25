@@ -78,6 +78,10 @@ class System extends AbstractForm
                  ->setValueOptions(array(0, 1, 2));
         $preferences->add($logLevel);
 
+        $validateXml = new \Zend\Form\Element\Checkbox('validateXml');
+        $validateXml->setLabel('Validate XML data');
+        $preferences->add($validateXml);
+
         $autoMergeDuplicates = new \Zend\Form\Element\Checkbox('autoMergeDuplicates');
         $autoMergeDuplicates->setLabel('Merge duplicates automatically (not recommended)');
         $preferences->add($autoMergeDuplicates);

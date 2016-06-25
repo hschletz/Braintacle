@@ -205,6 +205,23 @@ class DirectTest extends \Model\Test\AbstractTest
         $model->writeMetadata($data);
     }
 
+    public function testWriteMetadataValidate()
+    {
+        $data = array('Id' => 'id');
+
+        $metadata = $this->getMock('Model\Package\Metadata');
+        $metadata->expects($this->once())->method('setPackageData')->with($data, 'validate');
+
+        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config->expects($this->once())->method('__get')->with('validateXml')->willReturn('validate');
+
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setConstructorArgs(array($config, $metadata))
+                      ->setMethods(array('getPath'))
+                      ->getMock();
+        $model->writeMetadata($data);
+    }
+
     public function testReadMetadata()
     {
         $metadata = $this->getMock('Model\Package\Metadata');

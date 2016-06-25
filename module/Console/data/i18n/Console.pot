@@ -643,6 +643,10 @@ msgid "Log level"
 msgstr ""
 
 #: Form/Preferences/System.php
+msgid "Validate XML data"
+msgstr ""
+
+#: Form/Preferences/System.php
 msgid "Merge duplicates automatically (not recommended)"
 msgstr ""
 

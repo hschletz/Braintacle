@@ -34,6 +34,7 @@ class SystemTest extends \Console\Test\AbstractFormTest
         $logLevel = $preferences->get('logLevel');
         $this->assertInstanceOf('Library\Form\Element\SelectSimple', $logLevel);
         $this->assertEquals(array(0, 1, 2), $logLevel->getValueOptions());
+        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('validateXml'));
         $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('autoMergeDuplicates'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
@@ -47,6 +48,7 @@ class SystemTest extends \Console\Test\AbstractFormTest
             'sessionCleanupInterval' => ' 3.456 ',
             'sessionRequired' => '0',
             'logLevel' => '0',
+            'validateXml' => '0',
             'autoMergeDuplicates' => '0',
         );
         $this->_form->setValidationGroup('Preferences');
@@ -67,6 +69,7 @@ class SystemTest extends \Console\Test\AbstractFormTest
             'sessionCleanupInterval' => ' 1 ',
             'sessionRequired' => '0',
             'logLevel' => '0',
+            'validateXml' => '0',
             'autoMergeDuplicates' => '0',
         );
         $this->_form->setValidationGroup('Preferences');
@@ -83,6 +86,7 @@ class SystemTest extends \Console\Test\AbstractFormTest
             'sessionCleanupInterval' => ' 0 ',
             'sessionRequired' => '0',
             'logLevel' => '0',
+            'validateXml' => '0',
             'autoMergeDuplicates' => '0',
         );
         $this->_form->setValidationGroup('Preferences');
@@ -107,6 +111,7 @@ class SystemTest extends \Console\Test\AbstractFormTest
             'sessionCleanupInterval' => ' 3.456a ',
             'sessionRequired' => '0',
             'logLevel' => '0',
+            'validateXml' => '0',
             'autoMergeDuplicates' => '0',
         );
         $this->_form->setValidationGroup('Preferences');
@@ -131,6 +136,7 @@ class SystemTest extends \Console\Test\AbstractFormTest
             'sessionCleanupInterval' => '',
             'sessionRequired' => '0',
             'logLevel' => '0',
+            'validateXml' => '0',
             'autoMergeDuplicates' => '0',
         );
         $this->_form->setValidationGroup('Preferences');
@@ -157,6 +163,7 @@ class SystemTest extends \Console\Test\AbstractFormTest
             'sessionCleanupInterval' => 3456,
             'sessionRequired' => '0',
             'logLevel' => '0',
+            'validateXml' => '0',
             'autoMergeDuplicates' => '0',
         );
         $this->_form->setData(array('Preferences' => $preferences));
@@ -183,6 +190,7 @@ class SystemTest extends \Console\Test\AbstractFormTest
             'sessionCleanupInterval' => ' 3.456 ',
             'sessionRequired' => '0',
             'logLevel' => '0',
+            'validateXml' => '0',
             'autoMergeDuplicates' => '0',
         );
         $this->_form->setValidationGroup('Preferences');
@@ -203,6 +211,7 @@ class SystemTest extends \Console\Test\AbstractFormTest
             'sessionCleanupInterval' => ' 3.456 ',
             'sessionRequired' => '0',
             'logLevel' => '0',
+            'validateXml' => '0',
             'autoMergeDuplicates' => '0',
         );
         $this->_form->setValidationGroup('Preferences');
@@ -223,6 +232,7 @@ class SystemTest extends \Console\Test\AbstractFormTest
             'sessionCleanupInterval' => ' 3.456 ',
             'sessionRequired' => '0',
             'logLevel' => '0',
+            'validateXml' => '0',
             'autoMergeDuplicates' => '0',
         );
         $this->_form->setValidationGroup('Preferences');

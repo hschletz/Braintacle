@@ -88,6 +88,7 @@ class Config extends \Database\AbstractTable
         'sessionValidity' => 'SESSION_VALIDITY_TIME',
         'setGroupPackageStatus' => 'DOWNLOAD_GROUPS_TRACE_EVENTS',
         'trustedNetworksOnly' => 'PROLOG_FILTER_ON',
+        'validateXml' => 'BRAINTACLE_VALIDATE_XML',
     );
 
     /**
@@ -147,6 +148,7 @@ class Config extends \Database\AbstractTable
         'defaultWarnCountdown',
         'displayBlacklistedSoftware',
         'schemaVersion',
+        'validateXml',
     );
 
     /**

@@ -651,6 +651,10 @@ msgstr "Duplikate automatisch zusammenführen (nicht empfohlen)"
 msgid "Session required for inventory"
 msgstr "Sitzung erforderlich für Inventar"
 
+#: Form/Preferences/System.php
+msgid "Validate XML data"
+msgstr "XML-Daten validieren"
+
 #: Form/ProductKey.php
 msgid "Product key (if different)"
 msgstr "Lizenzschlüssel (falls verschieden)"

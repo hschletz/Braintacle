@@ -115,6 +115,7 @@ class Config
         'defaultPackagePriority' => 5,
         'defaultPlatform' => 'windows',
         'defaultWarn' => 0,
+        'validateXml' => 0,
         // Defaults below this point are defined by communication server.
         'autoMergeDuplicates' => 0,
         'contactInterval' => 12,

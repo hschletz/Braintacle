@@ -42,8 +42,9 @@ class Metadata extends \Library\DomDocument
      * hardcoded defaults.
      *
      * @param array $data Package data
+     * @param bool $validate validate document (default: FALSE)
      */
-    public function setPackageData($data)
+    public function setPackageData($data, $validate = false)
     {
         $node = $this->createElement('DOWNLOAD');
 
@@ -72,7 +73,7 @@ class Metadata extends \Library\DomDocument
         } else {
             $this->appendChild($node);
         }
-        if (!\Library\Application::isProduction()) {
+        if ($validate) {
             $this->forceValid();
         }
     }

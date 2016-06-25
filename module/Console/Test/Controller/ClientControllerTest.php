@@ -2970,4 +2970,34 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseHeaderContains('Content-Length', strlen($xmlContent));
         $this->assertEquals($xmlContent, $this->getResponse()->getContent());
     }
+
+    public function testExportActionNoValidate()
+    {
+        $this->_config->expects($this->once())->method('__get')->with('validateXml')->willReturn('0');
+
+        $document = $this->getMock('\Protocol\Message\InventoryRequest');
+        $document->expects($this->never())->method('forceValid');
+
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->once())->method('toDomDocument')->willReturn($document);
+        $this->_clientManager->method('getClient')->willReturn($client);
+
+        $this->dispatch('/console/client/export/?id=1');
+        $this->assertResponseStatusCode(200);
+    }
+
+    public function testExportActionValidate()
+    {
+        $this->_config->expects($this->once())->method('__get')->with('validateXml')->willReturn('1');
+
+        $document = $this->getMock('\Protocol\Message\InventoryRequest');
+        $document->expects($this->once())->method('forceValid');
+
+        $client = $this->getMock('Model\Client\Client');
+        $client->expects($this->once())->method('toDomDocument')->willReturn($document);
+        $this->_clientManager->method('getClient')->willReturn($client);
+
+        $this->dispatch('/console/client/export/?id=1');
+        $this->assertResponseStatusCode(200);
+    }
 }

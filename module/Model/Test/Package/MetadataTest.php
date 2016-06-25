@@ -222,6 +222,54 @@ class MetadataTest extends \Model\Test\AbstractTest
         $this->assertEquals(7, $model->firstChild->getAttribute('PRI'));
     }
 
+    public function testSetPackageDataNoValidate()
+    {
+        $data = array(
+            'Id' => '12345678',
+            'Priority' => '5',
+            'DeployAction' => 'store',
+            'ActionParam' => '',
+            'Hash' => 'hash',
+            'NumFragments' => '42',
+            'Warn' => '0',
+            'WarnMessage' => '',
+            'WarnCountdown' => '0',
+            'WarnAllowAbort' => '0',
+            'WarnAllowDelay' => '0',
+            'PostInstMessage' => '',
+        );
+
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethods(array('_escapeMessage', 'forceValid'))
+                      ->getMock();
+        $model->expects($this->never())->method('forceValid');
+        $model->setPackageData($data, '0');
+    }
+
+    public function testSetPackageDataValidate()
+    {
+        $data = array(
+            'Id' => '12345678',
+            'Priority' => '5',
+            'DeployAction' => 'store',
+            'ActionParam' => '',
+            'Hash' => 'hash',
+            'NumFragments' => '42',
+            'Warn' => '0',
+            'WarnMessage' => '',
+            'WarnCountdown' => '0',
+            'WarnAllowAbort' => '0',
+            'WarnAllowDelay' => '0',
+            'PostInstMessage' => '',
+        );
+
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethods(array('_escapeMessage', 'forceValid'))
+                      ->getMock();
+        $model->expects($this->once())->method('forceValid');
+        $model->setPackageData($data, true);
+    }
+
     /**
      * Test getPackageData()
      * @dataProvider packageDataActionParamsProvider
