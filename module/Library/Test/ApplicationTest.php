@@ -46,26 +46,17 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * Tests for environment detection methods
-     *
-     * The tests cover getEnvironment(), isProduction(), isDevelopment() and
-     * isTest() with all relevant values for the APPLICATION_ENV environment
-     * variable.
-     */
     public function testEnvironment()
     {
         // Assume that the tests have been invoked with APPLICATION_ENV set to
         // "development". Otherwise the tests might be incomplete.
         $this->assertEquals('development', getenv('APPLICATION_ENV'));
         $this->assertEquals('development', Application::getEnvironment());
-        $this->assertFalse(Application::isProduction());
         $this->assertTrue(Application::isDevelopment());
 
         // Unset APPLICATION_ENV, equivalent to "production"
         putenv('APPLICATION_ENV');
         $this->assertEquals('production', Application::getEnvironment());
-        $this->assertTrue(Application::isProduction());
         $this->assertFalse(Application::isDevelopment());
 
         // Test invalid environment. Ensure that the variable is reset to its

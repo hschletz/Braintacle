@@ -134,9 +134,6 @@ class Application
     /**
      * Determine application environment
      *
-     * This should rarely be used directly. Use isProduction(), isDevelopment()
-     * or isTest() instead.
-     *
      * @return string Either the APPLICATION_ENV environment variable or 'production' if this is undefined.
      * @throws \DomainException if the value is invalid
      */
@@ -147,16 +144,6 @@ class Application
             throw new \DomainException('APPLICATION_ENV environment variable has invalid value: ' . $environment);
         }
         return $environment;
-    }
-
-    /**
-     * Check for production environment
-     *
-     * @return bool
-     */
-    public static function isProduction()
-    {
-        return self::getEnvironment() == 'production';
     }
 
     /**
