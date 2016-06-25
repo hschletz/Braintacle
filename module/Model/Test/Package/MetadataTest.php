@@ -34,7 +34,7 @@ class MetadataTest extends \Model\Test\AbstractTest
         return new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet;
     }
 
-    public function testsetPackageData()
+    public function testSetPackageData()
     {
         $data = array(
             'Id' => '12345678',
@@ -88,7 +88,7 @@ class MetadataTest extends \Model\Test\AbstractTest
      * @param string $name Expected value for "NAME" attribute
      * @param string $command Expected value for "COMMAND" attribute
      */
-    public function testsetPackageDataActionParams($action, $act, $path, $name, $command)
+    public function testSetPackageDataActionParams($action, $act, $path, $name, $command)
     {
         $data = array(
             'Id' => '12345678',
@@ -199,7 +199,7 @@ class MetadataTest extends \Model\Test\AbstractTest
         $this->assertSame($documentMessage, $node->getAttribute('NEED_DONE_ACTION_TEXT'));
     }
 
-    public function testsetPackageDataOverwrite()
+    public function testSetPackageDataOverwrite()
     {
         $data = array(
             'Id' => '12345678',
