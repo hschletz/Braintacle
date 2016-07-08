@@ -37,10 +37,6 @@ Alias /braintacle /usr/local/share/braintacle/public
     # Default: config/braintacle.ini relative to the Braintacle root directory
     #SetEnv BRAINTACLE_CONFIG /usr/local/share/braintacle/config/braintacle.ini
 
-    # Uncomment and adjust paths if Zend Framework and/or NADA are installed
-    # manually (not via Composer) and not in the global include path.
-    # php_value include_path /usr/local/share/php/Zend/library:/usr/local/share/php/NADA
-
     # Change "Allow" to restrict access
     Order Deny,Allow
     Deny from all

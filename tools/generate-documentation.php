@@ -22,32 +22,10 @@
  * @package Tools
  */
 
-/*
- * USAGE: generate-documentation.php [ApiGen path]
- *
- * If no argument is given, Apigen is invoked via the 'apigen' command. If this
- * is not available or a different version (a development snapshot, for example)
- * should be used, specify the path to the ApiGen script/PHAR.
- */
-
 error_reporting(-1);
 
-// Determine ApiGen invocation method
-if (isset($_SERVER['argv'][1])) {
-    $apigenCmd = $_SERVER['argv'][1];
-} else {
-    // Use apigen from vendor directory if available
-    $apigenCmd = __DIR__ . '/../vendor/bin/apigen';
-    if (file_exists($apigenCmd)) {
-        $apigenCmd = escapeshellarg(realpath($apigenCmd));
-    } else {
-        $apigenCmd = 'apigen'; // fall back to globally installed version
-    }
-}
-
-// Invoke ApiGen
 $cmd = array(
-    $apigenCmd,
+    escapeshellarg(realpath(__DIR__ . '/../vendor/bin/apigen')),
     'generate',
     '-s ' . escapeshellarg(realpath(__DIR__ . '/../module')),
     '-d ' . escapeshellarg(realpath(__DIR__ . '/../doc') . DIRECTORY_SEPARATOR . 'api'),

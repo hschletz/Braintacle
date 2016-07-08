@@ -15,9 +15,9 @@ Upgrading from previous versions:
   the database.ini file from earlier versions. This file must be set up from
   scratch (see the instructions in the template) - renaming is not sufficient.
 
-- Required: Update dependencies, either via the new Composer support, or
-  manually (upgrade Zend Framework to 2.4.8 or later, upgrade NADA to the latest
-  snapshot).
+- Required: Run "composer install" from the Braintacle root directory to
+  download dependencies. Previous installations of Zend Framework and NADA and
+  their include_path configuration can be removed if not used otherwise.
 
 - Required: Run tools/database-manager.php to update the database schema.
 

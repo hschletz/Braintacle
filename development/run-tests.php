@@ -30,7 +30,6 @@ error_reporting(-1);
  */
 function testModule($module, $filter = null)
 {
-    global $vendorBin;
     global $doCoverage;
 
     print "\nRunning tests on $module module\n\n";
@@ -38,7 +37,9 @@ function testModule($module, $filter = null)
     if ($doCoverage) {
         $cmd .= ' -dzend_extension=xdebug.' . PHP_SHLIB_SUFFIX;
     }
-    $cmd .= " {$vendorBin}phpunit -c module/$module/phpunit.xml --colors --report-useless-tests --disallow-test-output";
+    // Avoid vendor/bin/phpunit for Windows compatibility
+    $cmd .= ' ' . __DIR__ . '/../vendor/phpunit/phpunit/phpunit';
+    $cmd .= " -c module/$module/phpunit.xml --colors --report-useless-tests --disallow-test-output";
     if ($doCoverage) {
         $cmd .= " --coverage-html=doc/CodeCoverage/$module";
     }
@@ -67,12 +68,6 @@ chdir(dirname(__DIR__));
 
 // Tests assume "development" environment
 putenv('APPLICATION_ENV=development');
-
-// Use phpunit from vendor directory if available
-$vendorBin = __DIR__ . '/../vendor/phpunit/phpunit/';
-if (!file_exists($vendorBin . 'phpunit')) {
-    $vendorBin = ''; // fall back to globally installed version
-}
 
 // Look for --coverage argument anywhere in the command line, remove it for subsequent processing
 $args = $_SERVER['argv'];

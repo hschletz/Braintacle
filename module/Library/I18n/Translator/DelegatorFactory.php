@@ -48,27 +48,12 @@ class DelegatorFactory implements \Zend\ServiceManager\DelegatorFactoryInterface
             $translator->setFallbackLocale($primaryLanguage);
         }
 
-        // Load translations for ZF validator messages if available
-        // @codeCoverageIgnoreStart
-        if (class_exists('Zend\I18n\Translator\Resources')) {
-            // Provided by composer
-            $translator->addTranslationFilePattern(
-                'phpArray',
-                \Zend\I18n\Translator\Resources::getBasePath(),
-                \Zend\I18n\Translator\Resources::getPatternForValidator()
-            );
-        } elseif ($primaryLanguage != 'en') {
-            // Fall back to manual configuration
-            $zfTranslations = @\Library\Application::getConfig()['paths']['Zend translations'];
-            if (is_dir($zfTranslations)) {
-                $translator->addTranslationFilePattern(
-                    'phpArray',
-                    $zfTranslations,
-                    '%s/Zend_Validate.php'
-                );
-            }
-        }
-        // @codeCoverageIgnoreEnd
+        // Load translations for ZF validator messages
+        $translator->addTranslationFilePattern(
+            'phpArray',
+            \Zend\I18n\Translator\Resources::getBasePath(),
+            \Zend\I18n\Translator\Resources::getPatternForValidator()
+        );
 
         // Set up event listener for missing translations
         if ($primaryLanguage != 'en' and \Library\Application::isDevelopment()) {
