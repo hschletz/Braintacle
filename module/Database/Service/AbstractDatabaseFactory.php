@@ -59,7 +59,17 @@ class AbstractDatabaseFactory implements \Zend\ServiceManager\AbstractFactoryInt
         if ($serviceLocator->has('Db', false)) {
             $adapter = $serviceLocator->get('Db');
         } else {
-            $adapter = new \Zend\Db\Adapter\Adapter($serviceLocator->get('config')['db']);
+            // Retreive database configuration from config file.
+            $config = \Library\Application::getConfig()['database'];
+            $config['options']['buffer_results'] = true;
+            // Set charset to utf8mb4 for MySQL, utf8 for everything else.
+            if (stripos($config['driver'], 'mysql') === false) {
+                $config['charset'] = 'utf8';
+            } else {
+                $config['charset'] = 'utf8mb4';
+            }
+
+            $adapter = new \Zend\Db\Adapter\Adapter($config);
 
             // Create service unless it was explicitly requested, in which case
             // the servive manager will store it later.

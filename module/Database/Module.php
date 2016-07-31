@@ -50,8 +50,7 @@ class Module implements
      */
     public function getConfig()
     {
-        // Static configuration part
-        $config = array(
+        return array(
             'service_manager' => array(
                 'abstract_factories' => array(
                     'Database\Service\AbstractDatabaseFactory',
@@ -62,22 +61,6 @@ class Module implements
                 ),
             ),
         );
-
-        // Merge database configuration from config file.
-        // It may not exist in test environments.
-        $configFileContent = \Library\Application::getConfig();
-        if (isset($configFileContent['database'])) {
-            $config['db'] = $configFileContent['database'];
-            $config['db']['options']['buffer_results'] = true;
-            // Set charset to utf8mb4 for MySQL, utf8 for everything else.
-            if (stripos($config['db']['driver'], 'mysql') === false) {
-                $config['db']['charset'] = 'utf8';
-            } else {
-                $config['db']['charset'] = 'utf8mb4';
-            }
-        }
-
-        return $config;
     }
 
     /**
