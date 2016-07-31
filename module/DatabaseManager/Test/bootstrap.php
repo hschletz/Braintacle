@@ -21,5 +21,4 @@
 
 error_reporting(-1);
 
-require_once(__DIR__ . '/../../Library/Application.php');
 \Library\Application::init(array(), 'DatabaseManager');

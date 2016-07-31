@@ -12,6 +12,11 @@
     "support": {
         "issues": "https://github.com/hschletz/Braintacle/issues"
     },
+    "autoload": {
+        "files": [
+            "module/Library/Application.php"
+        ]
+    },
     "require": {
         "php": ">=5.5",
         "ext-intl": "*",

@@ -49,5 +49,4 @@ class StreamWrapperFail
 // @codingStandardsIgnoreEnd
 stream_wrapper_register('fail', 'Library\StreamWrapperFail');
 
-require_once(__DIR__ . '/../../Library/Application.php');
 \Library\Application::init(array(), 'Library');

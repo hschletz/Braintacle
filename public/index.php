@@ -21,7 +21,7 @@
 
 error_reporting(-1);
 
-require_once('../module/Library/Application.php');
+require_once('../vendor/autoload.php');
 
 \Library\Application::init(
     (getenv('BRAINTACLE_CONFIG') ?: (__DIR__ . '/../config/braintacle.ini')),

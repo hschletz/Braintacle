@@ -21,7 +21,6 @@
 
 error_reporting(-1);
 date_default_timezone_set('Europe/Berlin');
-require_once(__DIR__ . '/../../Library/Application.php');
 
 $application = \Library\Application::init(
     array('database' => array('driver' => 'Pdo_Sqlite')),

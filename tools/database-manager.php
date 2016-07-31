@@ -34,5 +34,5 @@
  * --loglevel=emerg|alert|crit|err|warn|notice|info|debug
  */
 
-require_once __DIR__ . "/../module/Library/Application.php";
+require_once __DIR__ . "/../vendor/autoload.php";
 \Library\Application::init(__DIR__ . '/../config/braintacle.ini', 'DatabaseManager')->run();

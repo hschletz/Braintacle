@@ -35,5 +35,5 @@
 
 error_reporting(E_ALL);
 
-require(__DIR__ . '/../module/Library/Application.php');
+require(__DIR__ . '/../vendor/autoload.php');
 \Library\Application::init(__DIR__ . '/../config/braintacle.ini', 'PackageBuilder')->run();

@@ -30,5 +30,5 @@ if (extension_loaded('xdebug')) {
     xdebug_disable(); // Prevents printing backtraces on validation errors
 }
 
-require_once __DIR__ . '/../module/Library/Application.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 \Library\Application::init(__DIR__ . '/../config/braintacle.ini', 'Export')->run();

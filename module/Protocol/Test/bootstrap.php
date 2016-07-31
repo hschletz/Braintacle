@@ -22,5 +22,4 @@
 error_reporting(-1);
 date_default_timezone_set('Europe/Berlin');
 
-require_once(__DIR__ . '/../../Library/Application.php');
 \Library\Application::init(array(), 'Protocol');
