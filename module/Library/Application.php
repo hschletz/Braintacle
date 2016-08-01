@@ -30,23 +30,16 @@ namespace Library;
 class Application
 {
     /**
-     * Cached content of config file, managed and accessed via getConfig()
-     * @var array
-     */
-    protected static $_config;
-
-    /**
      * Set up application environment
      *
-     * This sets up the PHP environment and autoloaders, reads the config file,
-     * loads the provided module and returns the MVC application.
+     * This sets up the PHP environment, loads the provided module and returns
+     * the MVC application.
      *
-     * @param string|array $config Path to config file or array with compatible structure
      * @param string $module Module to load
      * @return \Zend\Mvc\Application
      * @codeCoverageIgnore
      */
-    public static function init($config, $module)
+    public static function init($module)
     {
         // Set up PHP environment.
         session_cache_limiter('nocache'); // Default headers to prevent caching
@@ -54,13 +47,6 @@ class Application
         // Evaluate locale from HTTP header. Affects translations, date/time rendering etc.
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             \Locale::setDefault(\Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']));
-        }
-
-        if (is_string($config)) {
-            $reader = new \Zend\Config\Reader\Ini;
-            static::$_config = $reader->fromFile($config);
-        } else {
-            static::$_config = $config;
         }
 
         return \Zend\Mvc\Application::init(static::getApplicationConfig($module));
@@ -97,17 +83,6 @@ class Application
             throw new \LogicException("Invalid application path: $path");
         }
         return $realPath;
-    }
-
-    /**
-     * Get application configuration set via init()
-     *
-     * @return mixed
-     * @codeCoverageIgnore
-     */
-    public static function getConfig()
-    {
-        return static::$_config;
     }
 
     /**

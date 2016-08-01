@@ -42,9 +42,12 @@ class StreamWrapperStatOnly
 }
 stream_wrapper_register('statonly', 'Model\StreamWrapperStatOnly');
 
-$application = \Library\Application::init(
-    array('database' => array('driver' => 'Pdo_Sqlite')),
-    'Model'
+$application = \Library\Application::init('Model');
+$serviceManager = $application->getServiceManager();
+$serviceManager->setAllowOverride(true)->setService(
+    'Library\UserConfig',
+    array('database' => array('driver' => 'Pdo_Sqlite'))
 );
-\Model\Test\AbstractTest::$serviceManager = $application->getServiceManager();
-unset($application); // Prevent backup/restore by PHPUnit
+\Model\Test\AbstractTest::$serviceManager = $serviceManager;
+unset($serviceManager);
+unset($application);

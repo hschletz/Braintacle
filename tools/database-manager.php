@@ -35,4 +35,4 @@
  */
 
 require_once __DIR__ . "/../vendor/autoload.php";
-\Library\Application::init(__DIR__ . '/../config/braintacle.ini', 'DatabaseManager')->run();
+\Library\Application::init('DatabaseManager')->run();

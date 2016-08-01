@@ -64,6 +64,9 @@ Fixed bugs:
 
 Misc:
 
+- An alternative config file can be set via the BRAINTACLE_CONFIG environment
+  variable for all applications.
+
 - Support for some previously deprecated options has been dropped. They are
   removed from the database during upgrade, enforcing sensible default behavior
   by legacy code that tries to evaluate them. They also no longer show up in the

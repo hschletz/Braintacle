@@ -244,6 +244,12 @@ The typical origin of duplicates is a reinstall, where this would just get in th
 <p>
 The tools directory contains some scripts that are not part of the application, but intended to be invoked directly via command line when needed.
 </p>
+<p>
+All tools that require a config file support the BRAINTACLE_CONFIG environment
+variable for an alternative config file. If not given, the default file
+config/braintacle.ini is used.
+</p>
+
 
 <h3>database-manager.php</h3>
 

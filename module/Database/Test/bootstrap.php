@@ -22,9 +22,12 @@
 error_reporting(-1);
 date_default_timezone_set('Europe/Berlin');
 
-$application = \Library\Application::init(
-    array('database' => array('driver' => 'Pdo_Sqlite')),
-    'Database'
+$application = \Library\Application::init('Database');
+$serviceManager = $application->getServiceManager();
+$serviceManager->setAllowOverride(true)->setService(
+    'Library\UserConfig',
+    array('database' => array('driver' => 'Pdo_Sqlite'))
 );
-\Database\Test\Table\AbstractTest::$serviceManager = $application->getServiceManager();
+\Database\Test\Table\AbstractTest::$serviceManager = $serviceManager;
+unset($serviceManager);
 unset($application);

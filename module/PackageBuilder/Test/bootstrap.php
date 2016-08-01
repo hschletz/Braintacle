@@ -21,4 +21,4 @@
 
 error_reporting(-1);
 
-\Library\Application::init(array(), 'PackageBuilder');
+\Library\Application::init('PackageBuilder');

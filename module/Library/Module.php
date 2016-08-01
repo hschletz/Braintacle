@@ -62,6 +62,7 @@ class Module implements
                 'factories' => array(
                     'Library\InventoryUploader' => 'Library\Service\InventoryUploaderFactory',
                     'Library\Logger' => 'Library\Log\LoggerServiceFactory',
+                    'Library\UserConfig' => 'Library\Service\UserConfigFactory',
                 ),
                 'invokables' => array(
                     'Library\ArchiveManager' => 'Library\ArchiveManager',

@@ -23,7 +23,4 @@ error_reporting(-1);
 
 require_once('../vendor/autoload.php');
 
-\Library\Application::init(
-    (getenv('BRAINTACLE_CONFIG') ?: (__DIR__ . '/../config/braintacle.ini')),
-    'Console'
-)->run();
+\Library\Application::init('Console')->run();

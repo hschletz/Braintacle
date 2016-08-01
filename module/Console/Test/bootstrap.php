@@ -27,4 +27,4 @@ date_default_timezone_set('Europe/Berlin');
 // Pretend to be not on a console to force choice of HTTP route over console route.
 \Zend\Console\Console::overrideIsConsole(false);
 
-\Library\Application::init(array(), 'Console');
+\Library\Application::init('Console');

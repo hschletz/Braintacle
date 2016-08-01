@@ -49,4 +49,4 @@ class StreamWrapperFail
 // @codingStandardsIgnoreEnd
 stream_wrapper_register('fail', 'Library\StreamWrapperFail');
 
-\Library\Application::init(array(), 'Library');
+\Library\Application::init('Library');
