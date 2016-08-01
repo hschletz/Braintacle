@@ -34,3 +34,12 @@ database = braintacle
 ; Username and password for database connection.
 username = ocs
 password = ocs
+
+
+; Debugging options
+
+[debug]
+
+; Display backtrace for exceptions, useful for debugging. Not recommended in
+; production environments. The exception message gets logged instead.
+display backtrace = false

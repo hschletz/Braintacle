@@ -259,6 +259,11 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
 
     protected function _testManageActionMissingName($action)
     {
+        // Suppress error logging
+        $this->getApplicationServiceLocator()->setAllowOverride(true)->setService(
+            'Library\UserConfig',
+            array('debug' => array('display backtrace' => true))
+        );
         $this->dispatch("/console/software/$action/");
         $this->assertApplicationException('RuntimeException', 'Missing name parameter');
     }

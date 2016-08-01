@@ -32,54 +32,64 @@ print "<h1>An error occurred</h1>\n";
 print $this->htmlElement('h2', $this->message);
 
 // @codeCoverageIgnoreStart
-if (\Library\Application::isDevelopment() and isset($this->exception)) {
-    print "<h3>Exception Message trace:</h3>\n";
-    $exception = $this->exception;
-    while ($exception) {
-        print $this->htmlElement(
-            'p',
-            '<strong>Message:</strong> ' . $this->escapeHtml($exception->getMessage())
-        );
-        print $this->htmlElement(
-            'p',
-            sprintf(
-                '<strong>Source:</strong> %s, line %d',
-                $this->escapeHtml($exception->getFile()),
-                $this->escapeHtml($exception->getLine())
-            )
-        );
-        print "<h4>Stack trace:</h4>\n";
-        print $this->htmlElement('pre', $this->escapeHtml($exception->getTraceAsString()));
-
-        $exception = $exception->getPrevious();
-    }
-
-    // The additional debug information below might contain sensitive data.
-    if ($this->controller == 'login') {
-        print 'Details hidden for security reasons.';
+if (isset($this->exception)) {
+    try {
+        $config = $this->getHelperPluginManager()->getServiceLocator()->get('Library\UserConfig');
+    } catch (\Exception $e) {
+        error_log($e->getMessage());
+        print "<p>Cannot load config file. See web server error log for details.</p>\n";
         return;
     }
+    if (@$config['debug']['display backtrace']) {
+        print "<h3>Exception Message trace:</h3>\n";
+        $exception = $this->exception;
+        while ($exception) {
+            print $this->htmlElement(
+                'p',
+                '<strong>Message:</strong> ' . $this->escapeHtml($exception->getMessage())
+            );
+            print $this->htmlElement(
+                'p',
+                sprintf(
+                    '<strong>Source:</strong> %s, line %d',
+                    $this->escapeHtml($exception->getFile()),
+                    $this->escapeHtml($exception->getLine())
+                )
+            );
+            print "<h4>Backtrace:</h4>\n";
+            print $this->htmlElement('pre', $this->escapeHtml($exception->getTraceAsString()));
 
-    $request = $this->request;
-    print "<h3>Request Parameters:</h3>\n";
+            $exception = $exception->getPrevious();
+        }
 
-    print "<h4>Method</h4>\n";
-    print $this->htmlElement('p', $this->escapeHtml($request->getMethod()));
+        // The additional debug information below might contain sensitive data.
+        if ($this->controller == 'login') {
+            print 'Details hidden for security reasons.';
+            return;
+        }
 
-    print "<h4>URL parameters</h4>\n";
-    \Zend\Debug\Debug::dump($request->getQuery());
+        $request = $this->request;
+        print "<h3>Request Parameters:</h3>\n";
 
-    print "<h4>POST parameters</h4>\n";
-    \Zend\Debug\Debug::dump($request->getPost());
+        print "<h4>Method</h4>\n";
+        print $this->htmlElement('p', $this->escapeHtml($request->getMethod()));
 
-    print "<h4>Files</h4>\n";
-    \Zend\Debug\Debug::dump($request->getFiles());
+        print "<h4>URL parameters</h4>\n";
+        \Zend\Debug\Debug::dump($request->getQuery());
 
-    print "<h4>HTTP headers</h4>\n";
-    \Zend\Debug\Debug::dump($request->getHeaders()->toArray());
+        print "<h4>POST parameters</h4>\n";
+        \Zend\Debug\Debug::dump($request->getPost());
 
-    print "<h4>Environment variables</h4>\n";
-    \Zend\Debug\Debug::dump($request->getEnv());
-} else {
-    print "<p class='textcenter'>Details can be found in the web server error log.</p>\n";
+        print "<h4>Files</h4>\n";
+        \Zend\Debug\Debug::dump($request->getFiles());
+
+        print "<h4>HTTP headers</h4>\n";
+        \Zend\Debug\Debug::dump($request->getHeaders()->toArray());
+
+        print "<h4>Environment variables</h4>\n";
+        \Zend\Debug\Debug::dump($request->getEnv());
+    } else {
+        error_log($this->exception->getMessage());
+        print "<p class='textcenter'>See web server error log for details.</p>\n";
+    }
 }

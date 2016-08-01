@@ -134,6 +134,12 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
                           ->with(null)
                           ->will($this->throwException(new \InvalidArgumentException('Invalid criteria')));
         $this->_duplicates->expects($this->never())->method('merge');
+
+        // Suppress error logging
+        $this->getApplicationServiceLocator()->setAllowOverride(true)->setService(
+            'Library\UserConfig',
+            array('debug' => array('display backtrace' => true))
+        );
         $this->dispatch('/console/duplicates/manage/');
         $this->assertApplicationException('InvalidArgumentException');
     }
@@ -149,6 +155,12 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
                           ->with('invalid')
                           ->will($this->throwException(new \InvalidArgumentException('Invalid criteria')));
         $this->_duplicates->expects($this->never())->method('merge');
+
+        // Suppress error logging
+        $this->getApplicationServiceLocator()->setAllowOverride(true)->setService(
+            'Library\UserConfig',
+            array('debug' => array('display backtrace' => true))
+        );
         $this->dispatch('/console/duplicates/manage/?criteria=invalid');
         $this->assertApplicationException('InvalidArgumentException');
     }
