@@ -78,6 +78,7 @@ class Application
             $config['Library\UserConfig'] = array(
                 'debug' => array(
                     'display backtrace' => true,
+                    'report missing translations' => true,
                 ),
             );
         }

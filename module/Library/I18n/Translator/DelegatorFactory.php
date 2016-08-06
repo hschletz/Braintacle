@@ -56,7 +56,9 @@ class DelegatorFactory implements \Zend\ServiceManager\DelegatorFactoryInterface
         );
 
         // Set up event listener for missing translations
-        if ($primaryLanguage != 'en' and \Library\Application::isDevelopment()) {
+        if ($primaryLanguage != 'en' and
+            @$services->get('Library\UserConfig')['debug']['report missing translations']
+        ) {
             $translator->enableEventManager();
             $translator->getEventManager()->attach(
                 \Zend\I18n\Translator\Translator::EVENT_MISSING_TRANSLATION,

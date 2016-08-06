@@ -43,3 +43,7 @@ password = ocs
 ; Display backtrace for exceptions, useful for debugging. Not recommended in
 ; production environments. The exception message gets logged instead.
 display backtrace = false
+
+; Generate notice when a translation for a message string is missing.
+; Useful for developers working on translation files.
+report missing translations = false

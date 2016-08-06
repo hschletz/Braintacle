@@ -57,6 +57,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
                 'Library\UserConfig' => array(
                     'debug' => array(
                         'display backtrace' => true,
+                        'report missing translations' => true,
                     ),
                 ),
             ),

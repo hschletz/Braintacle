@@ -27,20 +27,17 @@ namespace Library\Test;
 class TranslatorTest extends \PHPUnit_Framework_TestCase
 {
     protected static $_defaultLocale;
-    protected static $_applicationEnvironment;
 
     public static function setUpBeforeClass()
     {
         // Preserve global state
         static::$_defaultLocale = \Locale::getDefault();
-        static::$_applicationEnvironment = \Library\Application::getEnvironment();
     }
 
     public function tearDown()
     {
         // Reset after every test to avoid interference
         \Locale::setDefault(static::$_defaultLocale);
-        putenv('APPLICATION_ENV=' . static::$_applicationEnvironment);
     }
 
     public function translatorSetupProvider()
@@ -81,7 +78,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider missingTranslationProvider
      */
-    public function testMissingTranslationTriggersNoticeInDevelopmentMode($locale)
+    public function testMissingTranslationTriggersNoticeWhenEnabled($locale)
     {
         $this->setExpectedException(
             'PHPUnit_Framework_Error_Notice',
@@ -96,11 +93,20 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider missingTranslationProvider
      */
-    public function testMissingTranslationDoesNotTriggerNoticeInProductionMode($locale)
+    public function testMissingTranslationDoesNotTriggerNoticeWhenDisabled($locale)
     {
-        putenv('APPLICATION_ENV=production');
         \Locale::setDefault($locale);
-        $application = \Library\Application::init('Library', true);
+        $application = \Library\Application::init(
+            'Library',
+            true,
+            array(
+                'Library\UserConfig' => array(
+                    'debug' => array(
+                        'report missing translations' => false,
+                    )
+                )
+            )
+        );
         $translator = $application->getServiceManager()->get('MvcTranslator');
         $this->assertEquals('this_string_is_not_translated', $translator->translate('this_string_is_not_translated'));
     }
