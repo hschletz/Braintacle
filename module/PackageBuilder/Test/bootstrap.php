@@ -20,5 +20,3 @@
  */
 
 error_reporting(-1);
-
-\Library\Application::init('PackageBuilder');

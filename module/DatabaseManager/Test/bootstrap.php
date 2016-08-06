@@ -21,4 +21,4 @@
 
 error_reporting(-1);
 
-\Library\Application::init('DatabaseManager');
+\Library\Application::init('DatabaseManager', true); // Required to set up autoloaders for some test classes

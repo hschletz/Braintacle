@@ -33,7 +33,7 @@ use \org\bovigo\vfs\vfsStream;
  */
 class ApplicationTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGetApplicationConfig()
+    public function testGetApplicationConfigWithoutTestEnvironment()
     {
         $this->assertEquals(
             array(
@@ -42,7 +42,25 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
                     'module_paths' => array(realpath(__DIR__ . '/../..')),
                 ),
             ),
-            Application::getApplicationConfig('moduleName')
+            Application::getApplicationConfig('moduleName', false)
+        );
+    }
+
+    public function testGetApplicationConfigWithTestEnvironment()
+    {
+        $this->assertEquals(
+            array(
+                'modules' => array('moduleName'),
+                'module_listener_options' => array(
+                    'module_paths' => array(realpath(__DIR__ . '/../..')),
+                ),
+                'Library\UserConfig' => array(
+                    'debug' => array(
+                        'display backtrace' => true,
+                    ),
+                ),
+            ),
+            Application::getApplicationConfig('moduleName', true)
         );
     }
 

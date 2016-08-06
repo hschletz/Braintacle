@@ -65,16 +65,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
     public function testTranslatorSetup($locale, $message, $expectedMessage)
     {
         \Locale::setDefault($locale);
-        $application = \Zend\Mvc\Application::init(
-            array(
-                'modules' => array('Library'),
-                'module_listener_options' => array(
-                    'module_paths' => array(
-                        'Library' => \Library\Application::getPath('module/Library')
-                    ),
-                ),
-            )
-        );
+        $application = \Library\Application::init('Library', true);
         $translator = $application->getServiceManager()->get('MvcTranslator');
         $this->assertEquals($expectedMessage, $translator->translate($message));
     }
@@ -97,16 +88,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
             'Missing translation: this_string_is_not_translated'
         );
         \Locale::setDefault($locale);
-        $application = \Zend\Mvc\Application::init(
-            array(
-                'modules' => array('Library'),
-                'module_listener_options' => array(
-                    'module_paths' => array(
-                        'Library' => \Library\Application::getPath('module/Library')
-                    ),
-                ),
-            )
-        );
+        $application = \Library\Application::init('Library', true);
         $translator = $application->getServiceManager()->get('MvcTranslator');
         $this->assertEquals('this_string_is_not_translated', $translator->translate('this_string_is_not_translated'));
     }
@@ -118,16 +100,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
     {
         putenv('APPLICATION_ENV=production');
         \Locale::setDefault($locale);
-        $application = \Zend\Mvc\Application::init(
-            array(
-                'modules' => array('Library'),
-                'module_listener_options' => array(
-                    'module_paths' => array(
-                        'Library' => \Library\Application::getPath('module/Library')
-                    ),
-                ),
-            )
-        );
+        $application = \Library\Application::init('Library', true);
         $translator = $application->getServiceManager()->get('MvcTranslator');
         $this->assertEquals('this_string_is_not_translated', $translator->translate('this_string_is_not_translated'));
     }

@@ -45,7 +45,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         $module = strtok(get_called_class(), '\\');
-        $application = \Zend\Mvc\Application::init(\Library\Application::getApplicationConfig($module));
+        $application = \Library\Application::init($module, true);
         static::$_serviceManager = $application->getServiceManager();
     }
 

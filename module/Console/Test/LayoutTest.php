@@ -35,7 +35,7 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
     {
         $this->_authService = $this->getMock('Model\Operator\AuthenticationService');
 
-        $application = \Zend\Mvc\Application::init(\Library\Application::getApplicationConfig('Console'));
+        $application = \Library\Application::init('Console', true);
         $serviceManager = $application->getServiceManager();
         $serviceManager->setAllowOverride(true)->setService(
             'Zend\Authentication\AuthenticationService',

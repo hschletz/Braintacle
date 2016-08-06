@@ -33,7 +33,7 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
      */
     protected function _createView()
     {
-        $application = \Zend\Mvc\Application::init(\Library\Application::getApplicationConfig('Console'));
+        $application = \Library\Application::init('Console', true);
         $view = new \Zend\View\Renderer\PhpRenderer;
         $view->setHelperPluginManager($application->getServiceManager()->get('ViewHelperManager'));
         return $view;

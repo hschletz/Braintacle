@@ -375,11 +375,6 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                              ->with(null, null)
                              ->will($this->throwException(new \InvalidArgumentException));
 
-        // Suppress error logging
-        $this->getApplicationServiceLocator()->setAllowOverride(true)->setService(
-            'Library\UserConfig',
-            array('debug' => array('display backtrace' => true))
-        );
         $this->dispatch('/console/network/properties');
         $this->assertApplicationException('InvalidArgumentException');
     }

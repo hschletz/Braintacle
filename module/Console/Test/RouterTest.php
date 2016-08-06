@@ -31,7 +31,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testRouter()
     {
-        $application = \Zend\Mvc\Application::init(\Library\Application::getApplicationConfig('Console'));
+        $application = \Library\Application::init('Console', true);
         $router = $application->getServiceManager()->get('HttpRouter');
         $request = new \Zend\Http\Request;
 

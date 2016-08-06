@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for Config object from INI file
+ * Factory for Config from INI file
  *
  * Copyright (C) 2011-2016 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,10 +22,11 @@
 namespace Library\Service;
 
 /**
- * Factory for Config object from INI file
+ * Factory for Config from INI file
  *
- * Looks for the user config file in the following locations and reads the first
- * one found:
+ * Returns the Library\UserConfig entry from the ApplicationConfig service. If
+ * it does not exist, the following locations are searched for a user config
+ * file and the first one found is read and its content returned:
  *
  * 1. The path set in the BRAINTACLE_CONFIG environment variable (if the
  *    variable exists).
@@ -41,9 +42,14 @@ class UserConfigFactory implements \Zend\ServiceManager\FactoryInterface
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $reader = new \Zend\Config\Reader\Ini;
-        return $reader->fromFile(
-            getenv('BRAINTACLE_CONFIG') ?: (\Library\Application::getPath('config/braintacle.ini'))
-        );
+        $applicationConfig = $serviceLocator->get('ApplicationConfig');
+        if (isset($applicationConfig['Library\UserConfig'])) {
+            return $applicationConfig['Library\UserConfig'];
+        } else {
+            $reader = new \Zend\Config\Reader\Ini;
+            return $reader->fromFile(
+                getenv('BRAINTACLE_CONFIG') ?: (\Library\Application::getPath('config/braintacle.ini'))
+            );
+        }
     }
 }

@@ -36,10 +36,12 @@ class Application
      * the MVC application.
      *
      * @param string $module Module to load
+     * @param bool $addTestConfig Add config for test environment (enable all debug options, no config file)
+     * @param array $applicationConfig Extends default application config
      * @return \Zend\Mvc\Application
      * @codeCoverageIgnore
      */
-    public static function init($module)
+    public static function init($module, $addTestConfig = false, $applicationConfig = array())
     {
         // Set up PHP environment.
         session_cache_limiter('nocache'); // Default headers to prevent caching
@@ -49,23 +51,37 @@ class Application
             \Locale::setDefault(\Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']));
         }
 
-        return \Zend\Mvc\Application::init(static::getApplicationConfig($module));
+        return \Zend\Mvc\Application::init(
+            array_replace_recursive(
+                static::getApplicationConfig($module, $addTestConfig),
+                $applicationConfig
+            )
+        );
     }
 
     /**
      * Get module config for application initialization
      *
      * @param string $module Module to load
+     * @param bool $addTestConfig Add config for test environment (enable all debug options, no config file)
      * @return array
      */
-    public static function getApplicationConfig($module)
+    public static function getApplicationConfig($module, $addTestConfig)
     {
-        return array(
+        $config = array(
             'modules' => array($module),
             'module_listener_options' => array(
                 'module_paths' => array(static::getPath('module')),
             ),
         );
+        if ($addTestConfig) {
+            $config['Library\UserConfig'] = array(
+                'debug' => array(
+                    'display backtrace' => true,
+                ),
+            );
+        }
+        return $config;
     }
 
     /**

@@ -22,4 +22,4 @@
 error_reporting(-1);
 date_default_timezone_set('Europe/Berlin');
 
-\Library\Application::init('Protocol');
+\Library\Application::init('Protocol', true);

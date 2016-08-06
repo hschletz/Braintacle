@@ -30,7 +30,7 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
         parent::setUp();
 
         $this->setTraceError(true);
-        $this->setApplicationConfig(\Library\Application::getApplicationConfig('PackageBuilder'));
+        $this->setApplicationConfig(\Library\Application::getApplicationConfig('PackageBuilder', true));
     }
 
     public function invalidRouteProvider()

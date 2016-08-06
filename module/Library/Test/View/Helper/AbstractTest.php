@@ -44,7 +44,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 
         $helperClass = static::_getHelperClass();
         $moduleName = substr($helperClass, 0, strpos($helperClass, '\\'));
-        $application = \Zend\Mvc\Application::init(\Library\Application::getApplicationConfig($moduleName));
+        $application = \Library\Application::init($moduleName, true);
         static::$_helperManager = $application->getServiceManager()->get('ViewHelperManager');
     }
 
