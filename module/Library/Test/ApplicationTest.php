@@ -22,7 +22,6 @@
 namespace Library\Test;
 
 use \Library\Application;
-use \org\bovigo\vfs\vfsStream;
 
 /**
  * Tests for the Application class
