@@ -373,7 +373,7 @@ class ClientManager
          * In that case, clients.id can be replaced by the 'hardware_id' or
          * 'client_id' column from the joined table.
         */
-        $joinedTables = $select->getRawState(Select::JOINS);
+        $joinedTables = $select->getRawState(Select::JOINS)->getJoins();
         $clientColumns = $select->getRawState(Select::COLUMNS);
         if (count($joinedTables) == 1 and $clientColumns == array('id')) {
             $joinedTable = $joinedTables[0];
@@ -731,7 +731,7 @@ class ClientManager
         } else {
             // Join table if not already present
             $rewriteJoins = false;
-            $joinedTables = $select->getRawState(Select::JOINS);
+            $joinedTables = $select->getRawState(Select::JOINS)->getJoins();
             $tablePresent = false;
             foreach ($joinedTables as $joinedTable) {
                 if ($joinedTable['name'] == $table) {
