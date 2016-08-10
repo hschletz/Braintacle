@@ -64,32 +64,4 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
             Application::getApplicationConfig('moduleName', true)
         );
     }
-
-    public function testEnvironment()
-    {
-        // Assume that the tests have been invoked with APPLICATION_ENV set to
-        // "development". Otherwise the tests might be incomplete.
-        $this->assertEquals('development', getenv('APPLICATION_ENV'));
-        $this->assertEquals('development', Application::getEnvironment());
-        $this->assertTrue(Application::isDevelopment());
-
-        // Unset APPLICATION_ENV, equivalent to "production"
-        putenv('APPLICATION_ENV');
-        $this->assertEquals('production', Application::getEnvironment());
-        $this->assertFalse(Application::isDevelopment());
-
-        // Test invalid environment. Ensure that the variable is reset to its
-        // default in either case.
-        putenv('APPLICATION_ENV=test');
-        try {
-            Application::getEnvironment();
-        } catch (\DomainException $expected) {
-            $invalidEnvironmmentDetected = true;
-        }
-        // Reset to default.
-        putenv('APPLICATION_ENV=development');
-        if (!isset($invalidEnvironmmentDetected)) {
-            $this->fail('Invalid environment was undetected.');
-        }
-    }
 }

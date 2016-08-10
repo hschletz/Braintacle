@@ -51,9 +51,6 @@ Alias /braintacle /usr/local/share/braintacle/public
     # php_value post_max_size 128m
     # php_value memory_limit 128m
 
-    # Set to 'development' to see more (non-fatal) errors
-    SetEnv APPLICATION_ENV production
-
     # Enable static, site-independent configuration via .htaccess file.
     # Don't touch this!
     AllowOverride FileInfo Options=php_flag

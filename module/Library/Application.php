@@ -101,33 +101,4 @@ class Application
         }
         return $realPath;
     }
-
-    /**
-     * Determine application environment
-     *
-     * @return string Either the APPLICATION_ENV environment variable or 'production' if this is undefined.
-     * @throws \DomainException if the value is invalid
-     */
-    public static function getEnvironment()
-    {
-        $environment = getenv('APPLICATION_ENV') ?: 'production';
-        if ($environment != 'production' and $environment != 'development') {
-            throw new \DomainException('APPLICATION_ENV environment variable has invalid value: ' . $environment);
-        }
-        return $environment;
-    }
-
-    /**
-     * Check for development environment
-     *
-     * This returns true if the APPLICATION_ENV environment variable is either
-     * "development" or "test". Check isTest() additionally if you need to need
-     * to check for "development" explicitly.
-     * @return bool
-     */
-    public static function isDevelopment()
-    {
-        $environment = self::getEnvironment();
-        return ($environment == 'development' or $environment == 'test');
-    }
 }

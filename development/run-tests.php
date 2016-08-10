@@ -66,9 +66,6 @@ function testModule($module, $filter = null)
 // Change to application root directory to allow relative paths
 chdir(dirname(__DIR__));
 
-// Tests assume "development" environment
-putenv('APPLICATION_ENV=development');
-
 // Look for --coverage argument anywhere in the command line, remove it for subsequent processing
 $args = $_SERVER['argv'];
 $coveragePos = array_search('--coverage', $args);
