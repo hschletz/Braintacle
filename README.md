@@ -39,6 +39,10 @@ Requirements
   - The "zip" extension is optional. If present, the package builder can create ZIP
     archives on the fly.
 
+  - The "gmp" extension is required on PHP installations with 32 bit integers
+    (see <http://php.net/manual/en/language.types.integer.php>). It is not used
+    where 64 bit integers are available.
+
 - [Composer](https://getcomposer.org/)
 
 - On every client that should be managed through Braintacle, either the

@@ -59,5 +59,8 @@
         "squizlabs/php_codesniffer": "2.*",
         "zendframework/zend-dom": "^2.5",
         "zendframework/zend-test": "^2.5"
+    },
+    "suggest": {
+        "ext-gmp": "Required for PHP installations without 64 bit integer support"
     }
 }

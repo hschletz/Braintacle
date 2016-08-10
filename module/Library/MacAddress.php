@@ -43,6 +43,16 @@ namespace Library;
 class MacAddress
 {
     /**
+     * The length of a MAC address in bits
+     */
+    const LENGTH_BITS = 48;
+
+    /**
+     * The length of a MAC address in hex digits
+     */
+    const LENGTH_HEX = 12;
+
+    /**
      * The address passed to the constructor (uppercase)
      * @var string
      */
@@ -53,8 +63,8 @@ class MacAddress
      *
      * This is static so that the database is shared across instances.
      * Each entry is an associative array with 3 fields:
-     * - address: Address (full or partial), uppercase without separators
-     * - length: Significant characters of address fragment used to match an address
+     * - address: Address as 48 bit integer
+     * - mask: bitmask used to match an address
      * - vendor: Vendor name
      * @var array[]
      */
@@ -115,53 +125,59 @@ class MacAddress
     {
         self::$_vendorList = array();
         foreach ($input as $line) {
-            /* This regular expression matches lines of the following pattern:
-
-               <MAC address><TAB><short name>[<whitespace># <long name>]
-
-               Matching lines leave $data as an array with exaxtly 5 elements:
-               [0] unused
-               [1] MAC address with optional mask suffix ("/36")
-               [2] short vendor name (used if [4] is empty)
-               [3] unused
-               [4] long vendor name or empty string
-            */
-            if (!preg_match("/^(\H+)\t(\H+)\h*(# )?(.*)/", $line, $data)) {
+            // The regex produces a $matches array with these elements of interest:
+            // [1] MAC address or prefix, with optional mask suffix ("/36")
+            // [2] short vendor name (used if [4] is empty)
+            // [4] long vendor name or empty string
+            if ($line == '' or
+                $line[0] == '#' or
+                !preg_match("/^(\H+)\t(\H+)\h*(# )?(.*)/", $line, $matches)
+            ) {
                 continue;
             }
             // remove ':' and '-' delimiters
-            $mac = str_replace(array(':', '-'), '', $data[1]);
-            // extract bitmask if present
+            $mac = str_replace(array(':', '-'), '', $matches[1]);
+
             $pos = strpos($mac, '/');
-            if ($pos !== false) {
-                $mask = substr($mac, $pos + 1);
-                if ($mask % 4 != 0) {
-                    // The precision of this string-based implementation is
-                    // limited to 4 bits (1 hex digit). Entries with a number
-                    // of mask bits that is not a multiple of 4 cannot be
-                    // matched and are ignored.
-                    if (\Library\Application::isDevelopment()) {
-                        trigger_error(
-                            "Ignoring MAC address $data[1] because mask is not a multiple of 4.",
-                            E_USER_NOTICE
-                        );
-                    }
-                    continue;
-                }
-                $numDigits = $mask / 4;
-                $mac = substr($mac, 0, $pos);
-                $mac = str_pad($mac, $numDigits, '0'); // Fill with zeroes if too short
-                $mac = substr($mac, 0, $numDigits); // Crop to maximun length if too long
+            if ($pos === false) {
+                // No mask suffix. $mac is a prefix. Derive mask length (number
+                // of bits) from prefix length (1 digit => 4 bits).
+                $address = $mac;
+                $length = strlen($mac) * 4;
             } else {
-                $numDigits = strlen($mac);
+                // Split string at delimiter. Left part is the address or
+                // prefix, right part is the mask length in bits.
+                $address = substr($mac, 0, $pos);
+                $length = substr($mac, $pos + 1);
             }
 
             self::$_vendorList[] = array(
-                'address' => strtoupper($mac),
-                'length' => $numDigits,
-                'vendor' => $data[4] ?: $data[2],
+                'address' => str_pad($address, self::LENGTH_HEX, '0'),
+                'mask' => $length,
+                'vendor' => $matches[4] ?: $matches[2],
             );
         }
+
+        // Convert raw data to platform-specific values. Use native 64 bit
+        // integers if available, GMP objects otherwise (requires GMP
+        // extension).
+        // The mask length is converted to a bitmask.
+        // @codeCoverageIgnoreStart
+        if (PHP_INT_SIZE < 8) {
+            if (!extension_loaded('gmp')) {
+                throw new \ErrorException('64 bit integers not available, install GMP extension');
+            }
+            foreach (self::$_vendorList as &$entry) {
+                $entry['address'] = gmp_init($entry['address'], 16);
+                $entry['mask'] = ((gmp_init(1) << $entry['mask']) - 1) << (self::LENGTH_BITS - $entry['mask']);
+            }
+        } else {
+            foreach (self::$_vendorList as &$entry) {
+                $entry['address'] = hexdec($entry['address']);
+                $entry['mask'] = ((1 << $entry['mask']) - 1) << (self::LENGTH_BITS - $entry['mask']);
+            }
+        }
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -177,17 +193,24 @@ class MacAddress
             self::loadVendorDatabaseFromFile(\Library\Module::getPath('data/MacAddress/manuf'));
         }
         $addr = str_replace(':', '', $this->_address);
+
+        // @codeCoverageIgnoreStart
+        if (PHP_INT_SIZE < 8) {
+            $addr = gmp_init($addr, 16);
+        } else {
+            $addr = hexdec($addr);
+        }
+        // @codeCoverageIgnoreEnd
+
         $longest = 0;
         $vendor = null;
         foreach (self::$_vendorList as $entry) {
-            $length = $entry['length'];
-            // Compare strings only if this entry is more specific than the
-            // last matching one. The === operator is necessary to prevent
-            // implicit casts that would lead to false positives with
-            // "00:00:00" and similar.
-            if ($length > $longest and substr($addr, 0, $length) === $entry['address']) {
+            $mask = $entry['mask'];
+            // Compare addresses only if this entry is more specific than the
+            // last matching one.
+            if ($mask > $longest and ($addr & $mask) == $entry['address']) {
                 $vendor = $entry['vendor'];
-                $longest = $length;
+                $longest = $mask;
             }
         }
         return $vendor;
