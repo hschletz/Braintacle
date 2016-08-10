@@ -11,6 +11,8 @@ CHANGES IN VERSION 1.0
 
 Upgrading from previous versions:
 
+- Required: Check the additional dependencies listed in README.md.
+
 - Required: Braintacle uses a new config file (braintacle.ini) which replaces
   the database.ini file from earlier versions. This file must be set up from
   scratch (see the instructions in the template) - renaming is not sufficient.
