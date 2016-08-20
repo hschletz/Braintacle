@@ -23,11 +23,22 @@ namespace Library\Test;
 
 class RandomTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGetInteger()
+    public function getIntegerProvider()
+    {
+        return array(
+            array(true),
+            array(false),
+        );
+    }
+
+    /**
+     * @dataProvider getIntegerProvider
+     */
+    public function testGetInteger($strong)
     {
         $random = new \Library\Random;
         for ($i = 0; $i < 20; $i++) {
-            $value = $random->getInteger(0, 5);
+            $value = $random->getInteger(0, 5, $strong);
             $this->assertGreaterThanOrEqual(0, $value);
             $this->assertLessThanOrEqual(5, $value);
         }

@@ -24,27 +24,22 @@ namespace Library;
 /**
  * Service for generating random values
  *
- * This is a wrapper for various builtin random value generator functions. It
- * has the advantage of being replaceable by a mock object that generates
- * predictable values for testing.
- *
- * **WARNING: the implemented methods are not cryptographically secure and must
- * not be used where strong randomness is critical!**
+ * This is a wrapper for various random value generator functions. It has the
+ * advantage of being available as the Library\Random service which can be
+ * replaced by a mock object that generates predictable values for testing.
  */
 class Random
 {
     /**
      * Generate random integer value
      *
-     * Generates an integer value via mt_rand(). See the PHP documentation for
-     * characteristics of the random number generator.
-     *
      * @param integer $min lowest value to be returned
      * @param integer $max highest value to be returned
+     * @param bool $strong TRUE for a cryptographically strong random generator
      * @return integer
      */
-    public function getInteger($min, $max)
+    public function getInteger($min, $max, $strong = false)
     {
-        return mt_rand($min, $max);
+        return \Zend\Math\Rand::getInteger($min, $max, $strong = false);
     }
 }
