@@ -522,6 +522,5 @@ class BuildTest extends \Console\Test\AbstractFormTest
         $bodyOnLoad = $view->placeholder('BodyOnLoad');
         $this->assertContains('toggleWarn()', $bodyOnLoad);
         $this->assertContains('changeParam()', $bodyOnLoad);
-
     }
 }

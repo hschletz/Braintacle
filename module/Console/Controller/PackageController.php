@@ -160,7 +160,6 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
         } else {
             return array('name' => $name);
         }
-
     }
 
     /**
