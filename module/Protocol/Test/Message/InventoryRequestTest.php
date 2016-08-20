@@ -147,7 +147,7 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
                             ->getMock();
         $itemTypes = $itemManager->getItemTypes();
 
-        $itemHydrator = $this->getMock('Zend\Hydrator\ArraySerializable');
+        $itemHydrator = $this->createMock('Zend\Hydrator\ArraySerializable');
         $itemHydrator->method('extract')->will(
             $this->returnCallback(
                 function ($data) {
@@ -171,7 +171,7 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
             }
         }
 
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->willReturnMap(
             array(
                 array('IdString', 'id_string'),
@@ -183,15 +183,13 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
                ->method('getItems')
                ->will($this->returnValueMap($mapGetItems));
 
-        $hardwareHydrator = $this->getMockBuilder('Protocol\Hydrator\ClientsHardware')
-                                 ->disableOriginalConstructor()
-                                 ->getMock();
+        $hardwareHydrator = $this->createMock('Protocol\Hydrator\ClientsHardware');
         $hardwareHydrator->expects($this->once())
                          ->method('extract')
                          ->with($client)
                          ->willReturn($hardwareData);
 
-        $biosHydrator = $this->getMock('Protocol\Hydrator\ClientsBios');
+        $biosHydrator = $this->createMock('Protocol\Hydrator\ClientsBios');
         $biosHydrator->expects($this->once())
                      ->method('extract')
                      ->with($client)
@@ -201,7 +199,7 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
         $services[] = array('Protocol\Hydrator\ClientsHardware', true, $hardwareHydrator);
         $services[] = array('Protocol\Hydrator\ClientsBios', true, $biosHydrator);
 
-        $serviceLocator = $this->getMock('\Zend\ServiceManager\ServiceManager');
+        $serviceLocator = $this->createMock('\Zend\ServiceManager\ServiceManager');
         $serviceLocator->method('get')->willReturnMap($services);
 
         $document = new \Protocol\Message\InventoryRequest;

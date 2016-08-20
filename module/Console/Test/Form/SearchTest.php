@@ -44,15 +44,11 @@ class SearchTest extends \Console\Test\AbstractFormTest
     {
         $resultSet = new \Zend\Db\ResultSet\ResultSet();
         $resultSet->initialize(array(array('Name' => 'RegValue')));
-        $this->_registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')
-                                       ->disableOriginalConstructor()
-                                       ->getMock();
+        $this->_registryManager = $this->createMock('Model\Registry\RegistryManager');
         $this->_registryManager->expects($this->once())
                                ->method('getValueDefinitions')
                                ->willReturn($resultSet);
-        $this->_customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
-                                          ->disableOriginalConstructor()
-                                          ->getMock();
+        $this->_customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $this->_customFieldManager->expects($this->once())
                             ->method('getFields')
                             ->will(
@@ -103,13 +99,9 @@ class SearchTest extends \Console\Test\AbstractFormTest
     {
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
         $resultSet->initialize(array());
-        $registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')
-                                ->disableOriginalConstructor()
-                                ->getMock();
+        $registryManager = $this->createMock('Model\Registry\RegistryManager');
         $registryManager->method('getValueDefinitions')->willReturn($resultSet);
-        $customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
-                                   ->disableOriginalConstructor()
-                                   ->getMock();
+        $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $customFieldManager->expects($this->once())->method('getFields')->willReturn(array('test' => 'invalid'));
         $form = new \Console\Form\Search(
             null,

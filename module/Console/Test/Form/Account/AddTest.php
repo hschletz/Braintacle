@@ -30,9 +30,7 @@ class AddTest extends \Console\Test\AbstractFormTest
 
     public function setUp()
     {
-        $this->_operatorManager = $this->getMockBuilder('Model\Operator\OperatorManager')
-                                       ->disableOriginalConstructor()
-                                       ->getMock();
+        $this->_operatorManager = $this->createMock('Model\Operator\OperatorManager');
         $this->_operatorManager->method('getAllIds')->willReturn(array('User'));
         parent::setUp();
     }

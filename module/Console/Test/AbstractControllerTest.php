@@ -39,7 +39,7 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
         $this->setApplicationConfig(\Library\Application::getApplicationConfig('Console', true));
 
         // Put application in authenticated state
-        $auth = $this->getMock('Model\Operator\AuthenticationService');
+        $auth = $this->createMock('Model\Operator\AuthenticationService');
         $auth->expects($this->atLeastOnce())->method('hasIdentity')->willReturn(true);
 
         $this->getApplicationServiceLocator()
@@ -55,7 +55,7 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
         $serviceLocator->get('Model\Operator\AuthenticationService')->hasIdentity();
 
         // Reset application to unauthenticated state
-        $auth = $this->getMock('Model\Operator\AuthenticationService');
+        $auth = $this->createMock('Model\Operator\AuthenticationService');
         $auth->expects($this->atLeastOnce())->method('hasIdentity')->willReturn(false);
         $serviceLocator->setService('Model\Operator\AuthenticationService', $auth);
 

@@ -33,14 +33,14 @@ class FormYesNoTest extends AbstractTest
      */
     public function testInvoke()
     {
-        $translate = $this->getMock('Zend\I18n\View\Helper\Translate');
+        $translate = $this->createMock('Zend\I18n\View\Helper\Translate');
         $translate->method('__invoke')->willReturnCallback(
             function ($message) {
                 return "_($message)";
             }
         );
 
-        $htmlElement = $this->getMock('Library\View\Helper\HtmlElement');
+        $htmlElement = $this->createMock('Library\View\Helper\HtmlElement');
         $htmlElement->expects($this->once())
                     ->method('__invoke')
                     ->with(

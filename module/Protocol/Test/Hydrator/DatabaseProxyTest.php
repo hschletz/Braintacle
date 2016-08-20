@@ -34,7 +34,7 @@ class DatabaseProxyTest extends \PHPUnit_Framework_TestCase
     {
         $data = array('KEY1' => 'value1', 'KEY2' => 'value2');
         $object = new \ArrayObject;
-        $hydrator = $this->getMock('Zend\Hydrator\ArraySerializable');
+        $hydrator = $this->createMock('Zend\Hydrator\ArraySerializable');
         $hydrator->expects($this->once())
                  ->method('hydrate')
                  ->with(array('key1' => 'value1', 'key2' => 'value2'))
@@ -46,7 +46,7 @@ class DatabaseProxyTest extends \PHPUnit_Framework_TestCase
     public function testExtract()
     {
         $object = new \ArrayObject;
-        $hydrator = $this->getMock('Zend\Hydrator\ArraySerializable');
+        $hydrator = $this->createMock('Zend\Hydrator\ArraySerializable');
         $hydrator->expects($this->once())
                  ->method('extract')
                  ->with($object)

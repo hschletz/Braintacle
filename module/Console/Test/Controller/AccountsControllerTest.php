@@ -49,11 +49,9 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
     {
         parent::setUp();
 
-        $this->_operatorManager = $this->getMockBuilder('Model\Operator\OperatorManager')
-                                       ->disableOriginalConstructor()
-                                       ->getMock();
-        $this->_formAccountAdd = $this->getMock('Console\Form\Account\Add');
-        $this->_formAccountEdit = $this->getMock('Console\Form\Account\Edit');
+        $this->_operatorManager = $this->createMock('Model\Operator\OperatorManager');
+        $this->_formAccountAdd = $this->createMock('Console\Form\Account\Add');
+        $this->_formAccountEdit = $this->createMock('Console\Form\Account\Edit');
 
         $this->getApplicationServiceLocator()
              ->setAllowOverride(true)
@@ -74,7 +72,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->_operatorManager->expects($this->once())->method('getOperators')->willReturn(array($account));
 
-        $identity = $this->getMock('Zend\View\Helper\Identity');
+        $identity = $this->createMock('Zend\View\Helper\Identity');
         $identity->expects($this->atLeastOnce())->method('__invoke')->willReturn('testId');
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('Identity', $identity);
 
@@ -96,7 +94,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->_operatorManager->expects($this->once())->method('getOperators')->willReturn(array($account));
 
-        $identity = $this->getMock('Zend\View\Helper\Identity');
+        $identity = $this->createMock('Zend\View\Helper\Identity');
         $identity->expects($this->atLeastOnce())->method('__invoke')->willReturn('otherId');
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('Identity', $identity);
 
@@ -186,7 +184,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testEditActionGet()
     {
-        $operator = $this->getMock('Model\Operator\Operator');
+        $operator = $this->createMock('Model\Operator\Operator');
         $operator->expects($this->once())->method('getArrayCopy')->willReturn(array('Id' => 'testId'));
 
         $this->_operatorManager->expects($this->once())->method('getOperator')->with('testId')->willReturn($operator);

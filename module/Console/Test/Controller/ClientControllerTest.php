@@ -109,22 +109,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         parent::setUp();
 
-        $this->_clientManager = $this->getMockBuilder('Model\Client\ClientManager')
-                                     ->disableOriginalConstructor()
-                                     ->getMock();
-        $this->_groupManager = $this->getMockBuilder('Model\Group\GroupManager')
-                                    ->disableOriginalConstructor()
-                                    ->getMock();
-        $this->_registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')
-                                       ->disableOriginalConstructor()
-                                       ->getMock();
-        $this->_softwareManager = $this->getMockBuilder('Model\SoftwareManager')
-                                       ->disableOriginalConstructor()
-                                       ->getMock();
-        $this->_config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
-        $this->_inventoryUploader = $this->getMockBuilder('Library\InventoryUploader')
-                                         ->disableOriginalConstructor()
-                                         ->getMock();
+        $this->_clientManager = $this->createMock('Model\Client\ClientManager');
+        $this->_groupManager = $this->createMock('Model\Group\GroupManager');
+        $this->_registryManager = $this->createMock('Model\Registry\RegistryManager');
+        $this->_softwareManager = $this->createMock('Model\SoftwareManager');
+        $this->_config = $this->createMock('Model\Config');
+        $this->_inventoryUploader = $this->createMock('Library\InventoryUploader');
 
         $this->getApplicationServiceLocator()
              ->setAllowOverride(true)
@@ -135,14 +125,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->setService('Model\Config', $this->_config)
              ->setService('Library\InventoryUploader', $this->_inventoryUploader)
              ->get('FormElementManager')
-             ->setService('Console\Form\Package\Assign', $this->getMock('Console\Form\Package\Assign'))
-             ->setService('Console\Form\ClientConfig', $this->getMock('Console\Form\ClientConfig'))
-             ->setService('Console\Form\CustomFields', $this->getMock('Console\Form\CustomFields'))
-             ->setService('Console\Form\DeleteClient', $this->getMock('Console\Form\DeleteClient'))
-             ->setService('Console\Form\GroupMemberships', $this->getMock('Console\Form\GroupMemberships'))
-             ->setService('Console\Form\Import', $this->getMock('Console\Form\Import'))
-             ->setService('Console\Form\ProductKey', $this->getMock('Console\Form\ProductKey'))
-             ->setService('Console\Form\Search', $this->getMock('Console\Form\Search'));
+             ->setService('Console\Form\Package\Assign', $this->createMock('Console\Form\Package\Assign'))
+             ->setService('Console\Form\ClientConfig', $this->createMock('Console\Form\ClientConfig'))
+             ->setService('Console\Form\CustomFields', $this->createMock('Console\Form\CustomFields'))
+             ->setService('Console\Form\DeleteClient', $this->createMock('Console\Form\DeleteClient'))
+             ->setService('Console\Form\GroupMemberships', $this->createMock('Console\Form\GroupMemberships'))
+             ->setService('Console\Form\Import', $this->createMock('Console\Form\Import'))
+             ->setService('Console\Form\ProductKey', $this->createMock('Console\Form\ProductKey'))
+             ->setService('Console\Form\Search', $this->createMock('Console\Form\Search'));
     }
 
     public function testInvalidClient()
@@ -163,7 +153,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $client = array(
             'Name' => 'name',
-            'Windows' => $this->getMock('Model\Client\WindowsInstallation'),
+            'Windows' => $this->createMock('Model\Client\WindowsInstallation'),
             'Printer' => array(),
         );
         $this->_clientManager->method('getClient')->willReturn($client);
@@ -758,7 +748,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionMessages()
     {
-        $flashMessenger = $this->getMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock('Zend\View\Helper\FlashMessenger');
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->withConsecutive(
@@ -782,7 +772,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $inventoryDate = new \DateTime('2014-05-29 11:16:15');
         $lastContactDate = new \DateTime('2014-05-29 11:17:34');
 
-        $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock('Zend\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->exactly(2))
                    ->method('__invoke')
                    ->withConsecutive(
@@ -858,7 +848,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             array('AssetTag', 'asset_tag'),
             array('MemorySlot', array()),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -876,7 +866,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             array('AssetTag', 'asset_tag'),
             array('MemorySlot', array()),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -892,7 +882,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             array('UserName', 'user_name'),
             array('MemorySlot', array()),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -909,7 +899,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             array('Windows', array('CpuArchitecture' => null, 'UserDomain' => 'domain')),
             array('MemorySlot', array()),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->willReturnMap($map);
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -929,7 +919,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             array('Windows', array('CpuArchitecture' => 'cpu_architecture', 'UserDomain' => 'domain')),
             array('MemorySlot', array()),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->willReturnMap($map);
         $client->method('offsetExists')->with('Windows')->willReturn(true);
         $this->_clientManager->method('getClient')->willReturn($client);
@@ -1033,7 +1023,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -1096,7 +1086,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testNetworkActionInterfacesOnly()
     {
-        $macAddress = $this->getMockBuilder('Library\MacAddress')->disableOriginalConstructor()->getMock();
+        $macAddress = $this->createMock('Library\MacAddress');
         $macAddress->expects($this->exactly(2))
                    ->method('getAddress')
                    ->will($this->onConsecutiveCalls('mac_address_regular', 'mac_address_blacklisted'));
@@ -1244,7 +1234,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $client = array(
             'Name' => 'name',
-            'Windows' => $this->getMock('Model\Client\WindowsInstallation'),
+            'Windows' => $this->createMock('Model\Client\WindowsInstallation'),
             'StorageDevice' => $devices,
             'Filesystem' => $filesystems,
         );
@@ -1435,7 +1425,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $client = array(
             'Name' => 'name',
-            'Windows' => $this->getMock('Model\Client\WindowsInstallation'),
+            'Windows' => $this->createMock('Model\Client\WindowsInstallation'),
             'MemorySlot' => array(),
             'Controller' => $controllers,
             'ExtensionSlot' => array(),
@@ -1570,9 +1560,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Architecture' => '',
         );
         $map = array(
-            array('Windows', $this->getMock('Model\Client\WindowsInstallation')),
+            array('Windows', $this->createMock('Model\Client\WindowsInstallation')),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $client->expects($this->once())
                ->method('getItems')
@@ -1602,7 +1592,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Windows', null),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $client->expects($this->once())
                ->method('getItems')
@@ -1637,7 +1627,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Windows', null),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $client->expects($this->once())
                ->method('getItems')
@@ -1690,9 +1680,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Architecture' => '',
         );
         $map = array(
-            array('Windows', $this->getMock('Model\Client\WindowsInstallation')),
+            array('Windows', $this->createMock('Model\Client\WindowsInstallation')),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $client->expects($this->once())
                ->method('getItems')
@@ -1712,7 +1702,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                       ->method('__get')
                       ->with('displayBlacklistedSoftware')
                       ->willReturn(0);
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())
                ->method('getItems')
                ->with('Software', 'Name', 'asc', array('Software.NotIgnored' => null))
@@ -1729,7 +1719,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                       ->method('__get')
                       ->with('displayBlacklistedSoftware')
                       ->willReturn(1);
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())
                ->method('getItems')
                ->with('Software', 'Name', 'asc', array())
@@ -1752,7 +1742,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Guid' => null,
             ),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->exactly(2))
                ->method('getItems')
                ->will($this->onConsecutiveCalls($products, array()));
@@ -1777,7 +1767,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Guid' => null,
             ),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->exactly(2))
                ->method('getItems')
                ->will($this->onConsecutiveCalls(array(), $products));
@@ -1810,7 +1800,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Guid' => null,
             ),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->exactly(2))
                ->method('getItems')
                ->will($this->onConsecutiveCalls($products, array()));
@@ -1842,7 +1832,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Guid' => 'guid',
             ),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->exactly(2))
                ->method('getItems')
                ->will($this->onConsecutiveCalls($products, array()));
@@ -1856,7 +1846,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testRegistryActionNoValues()
     {
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())
                ->method('getItems')
                ->with('RegistryData', 'Value', 'asc')
@@ -1885,7 +1875,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'FullPath' => 'full_path',
             )
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())
                ->method('getItems')
                ->with('RegistryData', 'Value', 'asc')
@@ -1901,7 +1891,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testVirtualmachinesActionNoMachines()
     {
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())
                ->method('getItems')
                ->with('VirtualMachine', 'Name', 'asc')
@@ -1933,7 +1923,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'GuestMemory' => '',
             ),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())
                ->method('getItems')
                ->with('VirtualMachine', 'Name', 'asc')
@@ -2024,7 +2014,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $client = array(
             'Name' => 'name',
-            'Windows' => $this->getMock('Model\Client\WindowsInstallation'),
+            'Windows' => $this->createMock('Model\Client\WindowsInstallation'),
             'AudioDevice' => array(),
             'InputDevice' => array(),
             'Port' => array($port),
@@ -2069,7 +2059,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testCustomfieldsActionFlashMessage()
     {
-        $customFields = $this->getMockBuilder('Model\Client\CustomFields')->disableOriginalConstructor()->getMock();
+        $customFields = $this->createMock('Model\Client\CustomFields');
         $customFields->expects($this->once())
                      ->method('getArrayCopy')
                      ->will($this->returnValue(array()));
@@ -2080,7 +2070,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->_clientManager->method('getClient')->willReturn($client);
 
-        $flashMessenger = $this->getMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock('Zend\View\Helper\FlashMessenger');
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->expects($this->once())
                        ->method('render')
@@ -2099,7 +2089,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testCustomfieldsActionGet()
     {
         $data = array('field1' => 'value1', 'field2' => 'value2');
-        $customFields = $this->getMockBuilder('Model\Client\CustomFields')->disableOriginalConstructor()->getMock();
+        $customFields = $this->createMock('Model\Client\CustomFields');
         $customFields->expects($this->once())
                      ->method('getArrayCopy')
                      ->will($this->returnValue($data));
@@ -2177,7 +2167,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $client->expects($this->once())->method('setCustomFields')->with($postData['Fields']);
         $this->_clientManager->method('getClient')->willReturn($client);
@@ -2199,7 +2189,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->method('render');
         $assignments = new \Zend\Db\ResultSet\ResultSet;
         $assignments->initialize(array());
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())
                ->method('getPackageAssignments')
                ->with('PackageName', 'asc')
@@ -2247,7 +2237,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 ),
             )
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap(array(array('Id', 1))));
         $client->expects($this->once())
                ->method('getPackageAssignments')
@@ -2293,7 +2283,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $assignments = new \Zend\Db\ResultSet\ResultSet;
         $assignments->initialize(array());
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $client->expects($this->once())
                ->method('getPackageAssignments')
@@ -2318,7 +2308,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
         $form->expects($this->never())
              ->method('render');
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->never())->method('getGroupMemberships');
 
         $this->_clientManager->method('getClient')->willReturn($client);
@@ -2354,7 +2344,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('setAttribute')
              ->with('action', '/console/client/managegroups/?id=1');
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())
                ->method('getGroupMemberships')
                ->with(\Model\Client\Client::MEMBERSHIP_ANY)
@@ -2400,7 +2390,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('setAttribute')
              ->with('action', '/console/client/managegroups/?id=1');
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())
                ->method('getGroupMemberships')
                ->with(\Model\Client\Client::MEMBERSHIP_ANY)
@@ -2432,7 +2422,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testConfigurationActionGet()
     {
         $config = array('name' => 'value');
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())->method('getAllConfig')->willReturn($config);
         $this->_clientManager->method('getClient')->willReturn($client);
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\ClientConfig');
@@ -2457,7 +2447,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testConfigurationActionPostInvalid()
     {
         $postData = array('key' => 'value');
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $this->_clientManager->method('getClient')->willReturn($client);
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\ClientConfig');
         $form->expects($this->once())
@@ -2483,7 +2473,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $postData = array('key' => 'value');
 
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap(array(array('Id', 1))));
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -2515,7 +2505,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Name', 'name'),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
 
         $this->_clientManager->method('getClient')->willReturn($client);
@@ -2538,7 +2528,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
 
         $this->_clientManager->method('getClient')->willReturn($client);
@@ -2556,7 +2546,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Name', 'name'),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
 
         $this->_clientManager->method('getClient')->willReturn($client);
@@ -2581,7 +2571,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Name', 'name'),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
 
         $this->_clientManager->method('getClient')->willReturn($client);
@@ -2603,7 +2593,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testRemovepackageActionGet()
     {
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->never())->method('removePackage');
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -2620,7 +2610,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $client->expects($this->never())->method('removePackage');
         $this->_clientManager->method('getClient')->willReturn($client);
@@ -2634,7 +2624,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $client->expects($this->once())->method('removePackage')->with('name');
         $this->_clientManager->method('getClient')->willReturn($client);
@@ -2655,7 +2645,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $client->expects($this->never())->method('assignPackage');
         $this->_clientManager->method('getClient')->willReturn($client);
@@ -2679,7 +2669,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $client->expects($this->never())->method('assignPackage');
         $this->_clientManager->method('getClient')->willReturn($client);
@@ -2704,7 +2694,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $client->expects($this->once())->method('assignPackage')->with('package2');
         $this->_clientManager->method('getClient')->willReturn($client);
@@ -2725,7 +2715,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $client->expects($this->never())->method('setGroupMemberships');
         $this->_clientManager->method('getClient')->willReturn($client);
@@ -2751,7 +2741,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $client->expects($this->never())->method('setGroupMemberships');
         $this->_clientManager->method('getClient')->willReturn($client);
@@ -2778,7 +2768,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $client->expects($this->once())->method('setGroupMemberships')->with($postData['Groups']);
         $this->_clientManager->method('getClient')->willReturn($client);
@@ -2952,14 +2942,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testExportAction()
     {
         $xmlContent = "xml_content\n";
-        $document = $this->getMock('\Protocol\Message\InventoryRequest');
+        $document = $this->createMock('\Protocol\Message\InventoryRequest');
         $document->expects($this->once())
                  ->method('getFilename')
                  ->will($this->returnValue('filename.xml'));
         $document->expects($this->once())
                  ->method('saveXml')
                  ->will($this->returnValue($xmlContent));
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())->method('toDomDocument')->willReturn($document);
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -2975,10 +2965,10 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $this->_config->expects($this->once())->method('__get')->with('validateXml')->willReturn('0');
 
-        $document = $this->getMock('\Protocol\Message\InventoryRequest');
+        $document = $this->createMock('\Protocol\Message\InventoryRequest');
         $document->expects($this->never())->method('forceValid');
 
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())->method('toDomDocument')->willReturn($document);
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -2990,10 +2980,10 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $this->_config->expects($this->once())->method('__get')->with('validateXml')->willReturn('1');
 
-        $document = $this->getMock('\Protocol\Message\InventoryRequest');
+        $document = $this->createMock('\Protocol\Message\InventoryRequest');
         $document->expects($this->once())->method('forceValid');
 
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())->method('toDomDocument')->willReturn($document);
         $this->_clientManager->method('getClient')->willReturn($client);
 

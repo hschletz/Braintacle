@@ -50,7 +50,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testOffsetGetWindowsNotNull()
     {
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
@@ -82,7 +82,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testOffsetGetWindowsNull()
     {
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
@@ -100,9 +100,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testOffsetGetCustomFields()
     {
-        $customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
-                                   ->disableOriginalConstructor()
-                                   ->getMock();
+        $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $customFieldManager->expects($this->once())->method('read')->with(2)->willReturn('custom_fields');
 
         $model = $this->_getModel(array('Model\Client\CustomFieldManager' => $customFieldManager));
@@ -132,7 +130,7 @@ class ClientTest extends \Model\Test\AbstractTest
      */
     public function testOffsetGetBlacklisted($index, $initialIndex, $initialValue, $result)
     {
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
@@ -198,17 +196,17 @@ class ClientTest extends \Model\Test\AbstractTest
     {
         $globalOption = (($option == 'allowScan') ? 'scannersPerSubnet' : $option);
 
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config = $this->createMock('Model\Config');
         $config->method('__get')->with($globalOption)->willReturn($globalValue);
 
         $groups = array();
         foreach ($groupValues as $groupValue) {
-            $group = $this->getMock('Model\Group\Group');
+            $group = $this->createMock('Model\Group\Group');
             $group->method('getConfig')->with($option)->willReturn($groupValue);
             $groups[] = $group;
         }
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->with('Model\Config')->willReturn($config);
 
         $model = $this->getMockBuilder($this->_getClass())
@@ -223,13 +221,13 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testGetDefaultConfigCache()
     {
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config = $this->createMock('Model\Config');
         $config->expects($this->exactly(2))
                ->method('__get')
                ->withConsecutive(array('option1'), array('option2'))
                ->willReturnOnConsecutiveCalls('value1', 'value2');
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->expects($this->exactly(2))->method('get')->with('Model\Config')->willReturn($config);
 
         $model = $this->getMockBuilder($this->_getClass())
@@ -363,17 +361,17 @@ class ClientTest extends \Model\Test\AbstractTest
         $clientValue,
         $expectedValue
     ) {
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config = $this->createMock('Model\Config');
         $config->method('__get')->with('inventoryInterval')->willReturn($globalValue);
 
         $groups = array();
         foreach ($groupValues as $groupValue) {
-            $group = $this->getMock('Model\Group\Group');
+            $group = $this->createMock('Model\Group\Group');
             $group->method('getConfig')->with('inventoryInterval')->willReturn($groupValue);
             $groups[] = $group;
         }
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->with('Model\Config')->willReturn($config);
 
         $model = $this->getMockBuilder($this->_getClass())
@@ -477,13 +475,13 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testGetItemsDefaultArgs()
     {
-        $itemManager = $this->getMockBuilder('Model\Client\ItemManager')->disableOriginalConstructor()->getMock();
+        $itemManager = $this->createMock('Model\Client\ItemManager');
         $itemManager->expects($this->once())
                     ->method('getItems')
                     ->with('type', array('Client' => 42), null, null)
                     ->willReturn('result');
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->with('Model\Client\ItemManager')->willReturn($itemManager);
 
         $model = $this->getMockBuilder('Model\Client\Client')->setMethods(array('offsetGet'))->getMock();
@@ -495,13 +493,13 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testGetItemsCustomArgs()
     {
-        $itemManager = $this->getMockBuilder('Model\Client\ItemManager')->disableOriginalConstructor()->getMock();
+        $itemManager = $this->createMock('Model\Client\ItemManager');
         $itemManager->expects($this->once())
                     ->method('getItems')
                     ->with('type', array('filter' => 'arg', 'Client' => 42), 'order', 'direction')
                     ->willReturn('result');
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->with('Model\Client\ItemManager')->willReturn($itemManager);
 
         $model = $this->getMockBuilder('Model\Client\Client')->setMethods(array('offsetGet'))->getMock();
@@ -550,14 +548,12 @@ class ClientTest extends \Model\Test\AbstractTest
      */
     public function testSetGroupMembershipsNoAction($oldMemberships, $newMemberships)
     {
-        $groupMemberships = $this->getMockBuilder('Database\Table\GroupMemberships')
-                                 ->disableOriginalConstructor()
-                                 ->getMock();
+        $groupMemberships = $this->createMock('Database\Table\GroupMemberships');
         $groupMemberships->expects($this->never())->method('insert');
         $groupMemberships->expects($this->never())->method('update');
         $groupMemberships->expects($this->never())->method('delete');
 
-        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
+        $groupManager = $this->createMock('Model\Group\GroupManager');
         $groupManager->method('getGroups')->with()->willReturn(
             array(
                 array('Id' => 1, 'Name' => 'group1'),
@@ -565,7 +561,7 @@ class ClientTest extends \Model\Test\AbstractTest
             )
         );
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -616,9 +612,7 @@ class ClientTest extends \Model\Test\AbstractTest
      */
     public function testSetGroupMembershipsInsert($oldMemberships, $newMembership)
     {
-        $groupMemberships = $this->getMockBuilder('Database\Table\GroupMemberships')
-                                 ->disableOriginalConstructor()
-                                 ->getMock();
+        $groupMemberships = $this->createMock('Database\Table\GroupMemberships');
         $groupMemberships->expects($this->once())->method('insert')->with(
             array(
                 'hardware_id' => 42,
@@ -629,7 +623,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $groupMemberships->expects($this->never())->method('update');
         $groupMemberships->expects($this->never())->method('delete');
 
-        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
+        $groupManager = $this->createMock('Model\Group\GroupManager');
         $groupManager->method('getGroups')->with()->willReturn(
             array(
                 array('Id' => 1, 'Name' => 'group1'),
@@ -637,7 +631,7 @@ class ClientTest extends \Model\Test\AbstractTest
             )
         );
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -688,9 +682,7 @@ class ClientTest extends \Model\Test\AbstractTest
      */
     public function testSetGroupMembershipsUpdate($oldMembership, $newMembership)
     {
-        $groupMemberships = $this->getMockBuilder('Database\Table\GroupMemberships')
-                                 ->disableOriginalConstructor()
-                                 ->getMock();
+        $groupMemberships = $this->createMock('Database\Table\GroupMemberships');
         $groupMemberships->expects($this->never())->method('insert');
         $groupMemberships->expects($this->once())->method('update')->with(
             array('static' => $newMembership),
@@ -701,7 +693,7 @@ class ClientTest extends \Model\Test\AbstractTest
         );
         $groupMemberships->expects($this->never())->method('delete');
 
-        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
+        $groupManager = $this->createMock('Model\Group\GroupManager');
         $groupManager->method('getGroups')->with()->willReturn(
             array(
                 array('Id' => 1, 'Name' => 'group1'),
@@ -709,7 +701,7 @@ class ClientTest extends \Model\Test\AbstractTest
             )
         );
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -746,21 +738,19 @@ class ClientTest extends \Model\Test\AbstractTest
      */
     public function testSetGroupMembershipsDelete($oldMembership)
     {
-        $group1 = $this->getMock('Model\Group\Group');
+        $group1 = $this->createMock('Model\Group\Group');
         $group1->method('offsetGet')->willReturnMap(
             array(array('Id', 1), array('Name', 'group1'))
         );
         $group1->expects($this->once())->method('update')->with(true);
 
-        $group2 = $this->getMock('Model\Group\Group');
+        $group2 = $this->createMock('Model\Group\Group');
         $group2->method('offsetGet')->willReturnMap(
             array(array('Id', 2), array('Name', 'group2'))
         );
         $group2->expects($this->never())->method('update');
 
-        $groupMemberships = $this->getMockBuilder('Database\Table\GroupMemberships')
-                                 ->disableOriginalConstructor()
-                                 ->getMock();
+        $groupMemberships = $this->createMock('Database\Table\GroupMemberships');
         $groupMemberships->expects($this->never())->method('insert');
         $groupMemberships->expects($this->never())->method('update');
         $groupMemberships->expects($this->once())->method('delete')->with(
@@ -770,10 +760,10 @@ class ClientTest extends \Model\Test\AbstractTest
             )
         );
 
-        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
+        $groupManager = $this->createMock('Model\Group\GroupManager');
         $groupManager->method('getGroups')->with()->willReturn(array($group1, $group2));
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -799,9 +789,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testSetGroupMembershipsMixedKeys()
     {
-        $groupMemberships = $this->getMockBuilder('Database\Table\GroupMemberships')
-                                 ->disableOriginalConstructor()
-                                 ->getMock();
+        $groupMemberships = $this->createMock('Database\Table\GroupMemberships');
         $groupMemberships->expects($this->exactly(2))->method('insert')->withConsecutive(
             array(
                 array(
@@ -821,7 +809,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $groupMemberships->expects($this->never())->method('update');
         $groupMemberships->expects($this->never())->method('delete');
 
-        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
+        $groupManager = $this->createMock('Model\Group\GroupManager');
         $groupManager->method('getGroups')->with()->willReturn(
             array(
                 array('Id' => 1, 'Name' => 'group1'),
@@ -830,7 +818,7 @@ class ClientTest extends \Model\Test\AbstractTest
             )
         );
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -857,12 +845,12 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testSetGroupMembershipsInvalidMembership()
     {
-        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
+        $groupManager = $this->createMock('Model\Group\GroupManager');
         $groupManager->method('getGroups')->with()->willReturn(
             array(array('Id' => 1, 'Name' => 'group1'))
         );
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(array('Model\Group\GroupManager', true, $groupManager))
@@ -917,7 +905,7 @@ class ClientTest extends \Model\Test\AbstractTest
      */
     public function testGetGroupMemberships($type, $expected)
     {
-        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
+        $groupManager = $this->createMock('Model\Group\GroupManager');
         $groupManager->expects($this->once())->method('updateCache');
 
         $model = $this->_getModel(array('Model\Group\GroupManager' => $groupManager));
@@ -938,7 +926,7 @@ class ClientTest extends \Model\Test\AbstractTest
     {
         $groups = array('group1', 'group2');
 
-        $groupManager = $this->getMockBuilder('Model\Group\GroupManager')->disableOriginalConstructor()->getMock();
+        $groupManager = $this->createMock('Model\Group\GroupManager');
         $groupManager->expects($this->once())->method('getGroups')->with('Member', 42)->willReturn(
             new \ArrayIterator($groups)
         );
@@ -952,9 +940,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testSetCustomFields()
     {
-        $customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
-                                   ->disableOriginalConstructor()
-                                   ->getMock();
+        $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $customFieldManager->expects($this->once())->method('write')->with(42, 'data');
 
         $model = $this->_getModel(array('Model\Client\CustomFieldManager' => $customFieldManager));
@@ -965,12 +951,12 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testToDomDocument()
     {
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
 
         $model = $this->_getModel();
         $model->setServiceLocator($serviceManager);
 
-        $inventoryRequest = $this->getMock('Protocol\Message\InventoryRequest');
+        $inventoryRequest = $this->createMock('Protocol\Message\InventoryRequest');
         $inventoryRequest->expects($this->exactly(2))->method('loadClient')->with(
             $model,
             $serviceManager

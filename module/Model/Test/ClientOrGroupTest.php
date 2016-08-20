@@ -98,10 +98,10 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testDestructorWithNestedLocks()
     {
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config = $this->createMock('Model\Config');
         $config->method('__get')->with('lockValidity')->willReturn(42);
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
@@ -137,10 +137,10 @@ class ClientOrGroupTest extends AbstractTest
      */
     public function testLockWithDatabaseTime($id, $timeout, $success, $dataSetName)
     {
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config = $this->createMock('Model\Config');
         $config->expects($this->once())->method('__get')->with('lockValidity')->willreturn($timeout);
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
@@ -174,17 +174,17 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testLockRaceCondition()
     {
-        $sql = $this->getMockBuilder('\Zend\Db\Sql\Sql')->disableOriginalConstructor()->getMock();
+        $sql = $this->createMock('\Zend\Db\Sql\Sql');
         $sql->method('select')->willReturn(new \Zend\Db\Sql\Select);
 
-        $locks = $this->getMockBuilder('Database\Table\Locks')->disableOriginalConstructor()->getMock();
+        $locks = $this->createMock('Database\Table\Locks');
         $locks->method('getSql')->willReturn($sql);
         $locks->method('selectWith')->willReturn(new \ArrayIterator);
         $locks->method('insert')->will($this->throwException(new \RuntimeException('race condition')));
 
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config = $this->createMock('Model\Config');
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
@@ -214,7 +214,7 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testUnlockWithReleasedLock()
     {
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
@@ -246,7 +246,7 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testUnlockWithExpiredLock()
     {
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
@@ -298,10 +298,10 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testNestedLocks()
     {
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config = $this->createMock('Model\Config');
         $config->method('__get')->with('lockValidity')->willReturn(42);
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
@@ -346,17 +346,15 @@ class ClientOrGroupTest extends AbstractTest
      */
     public function testAssignPackage($name, $id, $dataSet)
     {
-        $packageManager = $this->getMockBuilder('Model\Package\PackageManager')
-                               ->disableOriginalConstructor()
-                               ->getMock();
+        $packageManager = $this->createMock('Model\Package\PackageManager');
         $packageManager->method('getPackage')
                        ->with($name)
                        ->willReturn(array('Id' => $id));
 
-        $now = $this->getMock('DateTime');
+        $now = $this->createMock('DateTime');
         $now->method('format')->with('D M d H:i:s Y')->willReturn('current timestamp');
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
@@ -396,14 +394,12 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testRemovePackage()
     {
-        $packageManager = $this->getMockBuilder('Model\Package\PackageManager')
-                               ->disableOriginalConstructor()
-                               ->getMock();
+        $packageManager = $this->createMock('Model\Package\PackageManager');
         $packageManager->method('getPackage')
                        ->with('package5')
                        ->willReturn(array('Id' => 5));
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
@@ -453,10 +449,10 @@ class ClientOrGroupTest extends AbstractTest
      */
     public function testGetConfig($id, $option, $value)
     {
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config = $this->createMock('Model\Config');
         $config->method('getDbIdentifier')->with('inventoryInterval')->willReturn('FREQUENCY');
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
@@ -512,10 +508,10 @@ class ClientOrGroupTest extends AbstractTest
      */
     public function testSetConfig($id, $option, $identifier, $value, $oldValue, $normalizedValue, $dataSet)
     {
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config = $this->createMock('Model\Config');
         $config->method('getDbIdentifier')->with($option)->willReturn($identifier);
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
@@ -554,16 +550,16 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testSetConfigUnchanged()
     {
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config = $this->createMock('Model\Config');
         $config->method('getDbIdentifier')->with('inventoryInterval')->willReturn('FREQUENCY');
 
-        $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
+        $clientConfig = $this->createMock('Database\Table\ClientConfig');
         $clientConfig->method('getAdapter')->willReturn(static::$serviceManager->get('Db'));
         $clientConfig->expects($this->never())->method('insert');
         $clientConfig->expects($this->never())->method('update');
         $clientConfig->expects($this->never())->method('delete');
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(

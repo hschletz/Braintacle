@@ -36,9 +36,7 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
 
     public function setUp()
     {
-        $this->_customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
-                                          ->disableOriginalConstructor()
-                                          ->getMock();
+        $this->_customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $this->_customFieldManager->expects($this->once())
                                   ->method('getFields')
                                   ->willReturn(

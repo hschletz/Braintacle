@@ -190,7 +190,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
      */
     public function testUpdateOperator($data, $password, $dataSet)
     {
-        $authService = $this->getMock('Model\Operator\AuthenticationService');
+        $authService = $this->createMock('Model\Operator\AuthenticationService');
         $authService->method('getIdentity')->willReturn('user2');
         $authService->expects($this->never())->method('changeIdentity');
 
@@ -207,7 +207,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
 
     public function testUpdateOperatorCurrentIdentity()
     {
-        $authService = $this->getMock('Model\Operator\AuthenticationService');
+        $authService = $this->createMock('Model\Operator\AuthenticationService');
         $authService->method('getIdentity')->willReturn('user1');
         $authService->expects($this->once())->method('changeIdentity')->with('new_id');
 
@@ -262,7 +262,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteOperatorCurrentUser()
     {
-        $authService = $this->getMock('Model\Operator\AuthenticationService');
+        $authService = $this->createMock('Model\Operator\AuthenticationService');
         $authService->expects($this->once())->method('getIdentity')->willReturn('user2');
         $model = $this->_getModel(array('Zend\Authentication\AuthenticationService' => $authService));
         try {

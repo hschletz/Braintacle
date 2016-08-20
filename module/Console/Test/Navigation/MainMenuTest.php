@@ -50,7 +50,7 @@ class MainMenuTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerT
     public function testActive()
     {
         // Mock AuthenticationService to provide an identity
-        $auth = $this->getMock('Model\Operator\AuthenticationService');
+        $auth = $this->createMock('Model\Operator\AuthenticationService');
         $auth->expects($this->any())
              ->method('hasIdentity')
              ->will($this->returnValue(true));
@@ -58,7 +58,7 @@ class MainMenuTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerT
              ->method('getIdentity')
              ->will($this->returnValue('test'));
 
-        $model = $this->getMockBuilder('Model\SoftwareManager')->disableOriginalConstructor()->getMock();
+        $model = $this->createMock('Model\SoftwareManager');
         $model->expects($this->any())
               ->method('getNumManualProductKeys')
               ->will($this->returnValue(0));

@@ -37,22 +37,22 @@ class GroupInfoTest extends AbstractTest
 
     public function testHydrator()
     {
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config = $this->createMock('Model\Config');
         $config->expects($this->once())->method('__get')->with('groupCacheExpirationInterval')->willReturn(42);
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
                     array(
                         'Database\Nada',
                         true,
-                        $this->getMockBuilder('Nada\Database\AbstractDatabase')->disableOriginalConstructor()->getMock()
+                        $this->createMock('Nada\Database\AbstractDatabase')
                     ),
                     array(
                         'Db',
                         true,
-                        $this->getMockBuilder('Zend\Db\Adapter\Adapter')->disableOriginalConstructor()->getMock()
+                        $this->createMock('Zend\Db\Adapter\Adapter')
                     ),
                     array('Model\Config', true, $config),
                     array('Model\Group\Group', true, new \Model\Group\Group),

@@ -41,9 +41,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
             'name0' => 'text',
             'name1' => 'integer',
         );
-        $this->_customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
-                                          ->disableOriginalConstructor()
-                                          ->getMock();
+        $this->_customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $this->_customFieldManager->expects($this->once())->method('getFields')->willReturn($fields);
         parent::setUp();
     }
@@ -420,9 +418,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
 
     public function testProcessRenameNoAdd()
     {
-        $customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
-                                   ->disableOriginalConstructor()
-                                   ->getMock();
+        $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $customFieldManager->expects($this->once())->method('getFields')->willReturn(array());
         $customFieldManager->expects($this->never())->method('addField');
         $customFieldManager->expects($this->once())->method('renameField')->with('old_name', 'new_name');
@@ -443,9 +439,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
 
     public function testProcessAdd()
     {
-        $customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
-                                   ->disableOriginalConstructor()
-                                   ->getMock();
+        $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $customFieldManager->expects($this->once())->method('getFields')->willReturn(array());
         $customFieldManager->expects($this->once())->method('addField')->with('new_name', 'text');
         $customFieldManager->expects($this->never())->method('renameField');

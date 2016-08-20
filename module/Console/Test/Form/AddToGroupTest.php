@@ -36,9 +36,7 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
 
     public function setUp()
     {
-        $this->_groupManager = $this->getMockBuilder('Model\Group\GroupManager')
-                                    ->disableOriginalConstructor()
-                                    ->getMock();
+        $this->_groupManager = $this->createMock('Model\Group\GroupManager');
         parent::setUp();
     }
 
@@ -270,7 +268,7 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
 
     public function testProcessNewGroup()
     {
-        $group = $this->getMock('Model\Group\Group');
+        $group = $this->createMock('Model\Group\Group');
         $group->expects($this->once())
               ->method('setMembersFromQuery')
               ->with('what', 'filter', 'search', 'operator', 'invert');
@@ -297,7 +295,7 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
 
     public function testProcessExistingGroup()
     {
-        $group = $this->getMock('Model\Group\Group');
+        $group = $this->createMock('Model\Group\Group');
         $group->expects($this->once())
               ->method('setMembersFromQuery')
               ->with('what', 'filter', 'search', 'operator', 'invert');

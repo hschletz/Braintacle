@@ -28,9 +28,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
 {
     protected function _getForm()
     {
-        $packageManager = $this->getMockBuilder('Model\Package\PackageManager')
-                               ->disableOriginalConstructor()
-                               ->getMock();
+        $packageManager = $this->createMock('Model\Package\PackageManager');
         $packageManager->method('getAllNames')->willReturn(array('name1'));
         $form = new \Console\Form\Package\Build;
         $form->setOption('packageManager', $packageManager);

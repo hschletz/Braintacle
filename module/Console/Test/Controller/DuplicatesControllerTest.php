@@ -42,10 +42,8 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
     {
         parent::setUp();
 
-        $this->_duplicates = $this->getMockBuilder('Model\Client\DuplicatesManager')
-                                  ->disableOriginalconstructor()
-                                  ->getMock();
-        $this->_showDuplicates = $this->getMock('Console\Form\ShowDuplicates');
+        $this->_duplicates = $this->createMock('Model\Client\DuplicatesManager');
+        $this->_showDuplicates = $this->createMock('Console\Form\ShowDuplicates');
 
         $this->getApplicationServiceLocator()
              ->setAllowOverride(true)
@@ -78,7 +76,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionNoFlashMessages()
     {
-        $flashMessenger = $this->getMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock('Zend\View\Helper\FlashMessenger');
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->with('getMessagesFromNamespace')
@@ -94,7 +92,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionRenderFlashMessages()
     {
-        $flashMessenger = $this->getMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock('Zend\View\Helper\FlashMessenger');
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->withConsecutive(

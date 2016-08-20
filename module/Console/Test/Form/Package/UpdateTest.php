@@ -30,9 +30,7 @@ class UpdateTest extends \Console\Test\AbstractFormTest
 {
     protected function _getForm()
     {
-        $packageManager = $this->getMockBuilder('Model\Package\PackageManager')
-                               ->disableOriginalConstructor()
-                               ->getMock();
+        $packageManager = $this->createMock('Model\Package\PackageManager');
         $form = new \Console\Form\Package\Update;
         $form->setOption('packageManager', $packageManager);
         $form->init();

@@ -30,9 +30,7 @@ class NetworkDeviceTest extends \Console\Test\AbstractFormTest
 
     protected function _getForm()
     {
-        $this->_deviceManager = $this->getMockBuilder('Model\Network\DeviceManager')
-                                     ->disableOriginalConstructor()
-                                     ->getMock();
+        $this->_deviceManager = $this->createMock('Model\Network\DeviceManager');
         $this->_deviceManager->method('getTypes')
                              ->will($this->returnValue(array()));
         $form = new \Console\Form\NetworkDevice;
@@ -43,7 +41,7 @@ class NetworkDeviceTest extends \Console\Test\AbstractFormTest
 
     public function testInit()
     {
-        $deviceManager = $this->getMockBuilder('Model\Network\DeviceManager')->disableOriginalConstructor()->getMock();
+        $deviceManager = $this->createMock('Model\Network\DeviceManager');
         $deviceManager->method('getTypes')
                       ->will($this->returnValue(array('cat1', 'cat2')));
         $form = new \Console\Form\NetworkDevice;

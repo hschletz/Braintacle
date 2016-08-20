@@ -59,7 +59,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             'WarnAllowDelay' => 'WarnAllowDelay',
             'PostInstMessage' => 'PostInstMessage',
         );
-        $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
+        $storage = $this->createMock('Model\Package\Storage\Direct');
         $storage->expects($this->once())->method('readMetadata')->with('1415958320')->willReturn($metadata);
         $model = $this->_getModel(array('Model\Package\Storage\Direct' => $storage));
         $package = $model->getPackage('package2');
@@ -80,7 +80,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     public function testGetPackageError()
     {
         $this->setExpectedException('Model\Package\RuntimeException', 'metadata error');
-        $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
+        $storage = $this->createMock('Model\Package\Storage\Direct');
         $storage->method('readMetadata')->will($this->throwException(new \RuntimeException('metadata error')));
         $model = $this->_getModel(array('Model\Package\Storage\Direct' => $storage));
         $model->getPackage('package1');
@@ -239,7 +239,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         };
 
         // Storage mock
-        $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
+        $storage = $this->createMock('Model\Package\Storage\Direct');
         $storage->expects($this->once())
                 ->method('prepare')
                 ->with($this->callback($checkStaticData))
@@ -258,7 +258,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
         $packages = static::$serviceManager->get('Database\Table\Packages');
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
@@ -312,15 +312,15 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     {
         $data = array('Name' => 'test', 'FileLocation' => null, 'Platform' => 'invalid');
 
-        $hydrator = $this->getMock('Zend\Hydrator\ArraySerializable');
+        $hydrator = $this->createMock('Zend\Hydrator\ArraySerializable');
         $hydrator->expects($this->once())->method('extract')->willReturn(array('osname' => null));
 
-        $packages = $this->getMockBuilder('Database\Table\Packages')->disableOriginalConstructor()->getMock();
+        $packages = $this->createMock('Database\Table\Packages');
         $packages->expects($this->once())->method('getHydrator')->willReturn($hydrator);
 
-        $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
+        $storage = $this->createMock('Model\Package\Storage\Direct');
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
@@ -352,12 +352,12 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             'Platform' => 'linux',
             'Name' => 'package1',
         );
-        $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
+        $storage = $this->createMock('Model\Package\Storage\Direct');
         $storage->expects($this->never())->method('write');
-        $packages = $this->getMockBuilder('Database\Table\Packages')->disableOriginalConstructor()->getMock();
+        $packages = $this->createMock('Database\Table\Packages');
         $packages->expects($this->never())->method('insert');
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
@@ -410,14 +410,14 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             'FileLocation' => $source,
         );
 
-        $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
+        $storage = $this->createMock('Model\Package\Storage\Direct');
         $storage->expects($this->once())->method('prepare');
         $storage->expects($this->never())->method('write');
 
-        $packages = $this->getMockBuilder('Database\Table\Packages')->disableOriginalConstructor()->getMock();
+        $packages = $this->createMock('Database\Table\Packages');
         $packages->expects($this->never())->method('insert');
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
@@ -442,10 +442,10 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
     public function testBuildPackageExceptionIgnoresDeleteError()
     {
-        $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
+        $storage = $this->createMock('Model\Package\Storage\Direct');
         $storage->expects($this->once())->method('prepare')->willThrowException(new \Exception('relevant error'));
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Library\Now', true, new \DateTime),
@@ -469,7 +469,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $root = vfsstream::setup('root');
         $source = vfsStream::newFile('source')->at($root)->url();
         $data = array('FileLocation' => $source, 'FileName' => 'FileName', 'Platform' => 'windows');
-        $archiveManager = $this->getMock('Library\ArchiveManager');
+        $archiveManager = $this->createMock('Library\ArchiveManager');
         $archiveManager->expects($this->once())
                        ->method('isSupported')
                        ->with(\Library\ArchiveManager::ZIP)
@@ -498,7 +498,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $root = vfsstream::setup('root');
         $source = vfsStream::newFile('source')->at($root)->url();
         $data = array('FileLocation' => $source, 'FileName' => 'FileName', 'Platform' => 'windows');
-        $archiveManager = $this->getMock('Library\ArchiveManager');
+        $archiveManager = $this->createMock('Library\ArchiveManager');
         $archiveManager->expects($this->once())
                        ->method('isSupported')
                        ->with(\Library\ArchiveManager::ZIP)
@@ -527,7 +527,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $root = vfsstream::setup('root');
         $source = vfsStream::newFile('source')->at($root)->url();
         $data = array('FileLocation' => $source, 'FileName' => 'FileName', 'Platform' => 'windows');
-        $archiveManager = $this->getMock('Library\ArchiveManager');
+        $archiveManager = $this->createMock('Library\ArchiveManager');
         $archiveManager->expects($this->once())
                        ->method('isSupported')
                        ->with(\Library\ArchiveManager::ZIP)
@@ -560,7 +560,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $source = vfsStream::newFile('source')->at($root)->url();
         $archive = $root->url() . '/archive';
         $data = array('FileLocation' => $source, 'FileName' => 'FileName', 'Platform' => 'windows');
-        $archiveManager = $this->getMock('Library\ArchiveManager');
+        $archiveManager = $this->createMock('Library\ArchiveManager');
         $archiveManager->expects($this->once())
                        ->method('isSupported')
                        ->with(\Library\ArchiveManager::ZIP)
@@ -601,7 +601,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $root = vfsstream::setup('root');
         $source = vfsStream::newFile('source')->at($root)->url();
         $data = array('FileLocation' => $source, 'FileName' => 'FileName', 'Platform' => 'windows');
-        $archiveManager = $this->getMock('Library\ArchiveManager');
+        $archiveManager = $this->createMock('Library\ArchiveManager');
         $archiveManager->expects($this->once())
                        ->method('isSupported')
                        ->with(\Library\ArchiveManager::ZIP)
@@ -626,7 +626,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $root = vfsstream::setup('root');
         $source = vfsStream::newFile('source')->at($root)->url();
         $data = array('FileLocation' => $source, 'FileName' => 'FileName', 'Platform' => 'windows');
-        $archiveManager = $this->getMock('Library\ArchiveManager');
+        $archiveManager = $this->createMock('Library\ArchiveManager');
         $archiveManager->expects($this->once())
                        ->method('isSupported')
                        ->with(\Library\ArchiveManager::ZIP)
@@ -649,7 +649,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $root = vfsstream::setup('root');
         $source = vfsStream::newFile('source')->at($root)->url();
         $data = array('FileLocation' => $source, 'FileName' => 'FileName', 'Platform' => 'linux');
-        $archiveManager = $this->getMock('Library\ArchiveManager');
+        $archiveManager = $this->createMock('Library\ArchiveManager');
         $archiveManager->expects($this->never())
                        ->method('isSupported');
         $archiveManager->expects($this->never())
@@ -669,7 +669,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     {
         $source = '';
         $data = array('FileLocation' => $source);
-        $archiveManager = $this->getMock('Library\ArchiveManager');
+        $archiveManager = $this->createMock('Library\ArchiveManager');
         $archiveManager->expects($this->never())
                        ->method('isSupported');
         $archiveManager->expects($this->never())
@@ -686,7 +686,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
     public function testDelete()
     {
-        $storage = $this->getMockBuilder('Model\Package\Storage\Direct')->disableOriginalConstructor()->getMock();
+        $storage = $this->createMock('Model\Package\Storage\Direct');
         $storage->expects($this->once())->method('cleanup')->with('1415958319');
         $model = $this->_getModel(array('Model\Package\Storage\Direct' => $storage));
         $model->deletePackage('package1');
@@ -721,9 +721,9 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     {
         $newPackageData = array('Name' => 'new_name');
 
-        $newPackage = $this->getMock('Model\Package\Package');
+        $newPackage = $this->createMock('Model\Package\Package');
 
-        $package = $this->getMock('Model\Package\Package');
+        $package = $this->createMock('Model\Package\Package');
         $package->expects($this->at(0))->method('offsetGet')->with('Id')->willReturn('old_id');
         $package->expects($this->at(1))->method('offsetGet')->with('Name')->willReturn('old_name');
         $package->expects($this->at(2))->method('exchangeArray')->with($this->identicalTo($newPackage));
@@ -804,7 +804,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     {
         $this->setExpectedException('Model\Package\RuntimeException', 'database error');
         $data = array('Timestamp' => new \DateTime('@1415958319'));
-        $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')->disableOriginalConstructor()->getMock();
+        $clientConfig = $this->createMock('Database\Table\ClientConfig');
         $clientConfig->method('getSql')->will($this->throwException(new \RuntimeException('database error')));
         $model = $this->_getModel(array('Database\Table\ClientConfig' => $clientConfig));
         $model->updateAssignments(1, 2, true, true, true, true, true);

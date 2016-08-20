@@ -57,14 +57,10 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     {
         parent::setUp();
 
-        $this->_deviceManager = $this->getMockBuilder('Model\Network\DeviceManager')
-                                     ->disableOriginalConstructor()
-                                     ->getMock();
-        $this->_subnetManager = $this->getMockBuilder('Model\Network\SubnetManager')
-                                     ->disableOriginalConstructor()
-                                     ->getMock();
-        $this->_subnetForm = $this->getMock('Console\Form\Subnet');
-        $this->_deviceForm = $this->getMock('Console\Form\NetworkDevice');
+        $this->_deviceManager = $this->createMock('Model\Network\DeviceManager');
+        $this->_subnetManager = $this->createMock('Model\Network\SubnetManager');
+        $this->_subnetForm = $this->createMock('Console\Form\Subnet');
+        $this->_deviceForm = $this->createMock('Console\Form\NetworkDevice');
 
         $this->getApplicationServiceLocator()
              ->setAllowOverride(true)
@@ -172,7 +168,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                              ->with($filters, 'DiscoveryDate', 'desc')
                              ->willReturn($result);
 
-        $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock('Zend\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->once())
                    ->method('__invoke')
                    ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
@@ -223,7 +219,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     public function testShowunknownActionWithoutParameters()
     {
         $filters = array('Identified' => false);
-        $macAddress = $this->getMockBuilder('Library\MacAddress')->disableOriginalConstructor()->getMock();
+        $macAddress = $this->createMock('Library\MacAddress');
         $macAddress->method('__toString')->willReturn('00:00:5E:00:53:00');
         $macAddress->method('getVendor')->willReturn('<vendor>');
         $date = new \DateTime;
@@ -240,7 +236,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                              ->with($filters, 'DiscoveryDate', 'desc')
                              ->willReturn($result);
 
-        $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock('Zend\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->once())
                    ->method('__invoke')
                    ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
@@ -271,7 +267,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
             'Subnet' => '192.0.2.0',
             'Mask' => '255.255.255.0',
         );
-        $macAddress = $this->getMockBuilder('Library\MacAddress')->disableOriginalConstructor()->getMock();
+        $macAddress = $this->createMock('Library\MacAddress');
         $macAddress->method('__toString')->willReturn('00:00:5E:00:53:00');
         $macAddress->method('getVendor')->willReturn('<vendor>');
         $result = array(
@@ -381,7 +377,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testEditActionGet()
     {
-        $macAddress = $this->getMockBuilder('Library\MacAddress')->disableOriginalConstructor()->getMock();
+        $macAddress = $this->createMock('Library\MacAddress');
         $macAddress->expects($this->any())
                    ->method('__toString')
                    ->will($this->returnValue('00:00:5E:00:53:00'));
@@ -397,7 +393,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
             'Type' => 'type1',
             'Description' => 'description1',
         );
-        $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock('Zend\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->once())
                    ->method('__invoke')
                    ->with($date, \IntlDateFormatter::MEDIUM, \IntlDateFormatter::MEDIUM)
@@ -449,7 +445,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     public function testEditActionPostInvalid()
     {
         $postData = array('Type' => 'type', 'Description' => 'description');
-        $macAddress = $this->getMockBuilder('Library\MacAddress')->disableOriginalConstructor()->getMock();
+        $macAddress = $this->createMock('Library\MacAddress');
         $macAddress->expects($this->any())
                    ->method('__toString')
                    ->will($this->returnValue('00:00:5E:00:53:00'));
@@ -521,7 +517,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDeleteActionGet()
     {
-        $macAddress = $this->getMockBuilder('Library\MacAddress')->disableOriginalConstructor()->getMock();
+        $macAddress = $this->createMock('Library\MacAddress');
         $macAddress->expects($this->any())
                    ->method('__toString')
                    ->will($this->returnValue('00:00:5E:00:53:00'));

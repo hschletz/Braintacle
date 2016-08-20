@@ -61,7 +61,7 @@ class GroupManagerTest extends AbstractGroupTest
      */
     public function testGetGroups($filter, $filterArg, $order, $direction, $expected, $updateCache)
     {
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Database\Table\GroupInfo', true, $this->_groupInfo),
@@ -214,7 +214,7 @@ class GroupManagerTest extends AbstractGroupTest
 
     public function testDeleteGroup()
     {
-        $group = $this->getMock('Model\Group\Group');
+        $group = $this->createMock('Model\Group\Group');
         $group->expects($this->at(0))->method('lock')->willReturn(true);
         $group->expects($this->at(1))->method('offsetGet')->with('Id')->willReturn(1);
         $group->expects($this->at(2))->method('unlock');
@@ -256,7 +256,7 @@ class GroupManagerTest extends AbstractGroupTest
 
     public function testDeleteGroupLocked()
     {
-        $group = $this->getMock('Model\Group\Group');
+        $group = $this->createMock('Model\Group\Group');
         $group->expects($this->at(0))->method('lock')->willReturn(false);
 
         $model = $this->_getModel();
@@ -300,12 +300,10 @@ class GroupManagerTest extends AbstractGroupTest
 
     public function testDeleteGroupDatabaseError()
     {
-        $group = $this->getMock('Model\Group\Group');
+        $group = $this->createMock('Model\Group\Group');
         $group->expects($this->at(0))->method('lock')->willReturn(true);
 
-        $clientsAndGroups = $this->getMockBuilder('Database\Table\ClientsAndGroups')
-                                 ->disableOriginalConstructor()
-                                 ->getMock();
+        $clientsAndGroups = $this->createMock('Database\Table\ClientsAndGroups');
         $clientsAndGroups->method('delete')->will($this->throwException(new \RuntimeException('database error')));
 
         $model = $this->_getModel(
@@ -354,7 +352,7 @@ class GroupManagerTest extends AbstractGroupTest
 
     public function testUpdateCache()
     {
-        $group = $this->getMock('Model\Group\Group');
+        $group = $this->createMock('Model\Group\Group');
         $group->expects($this->once())->method('update')->with(true);
 
         $model = $this->getMockBuilder($this->_getClass())

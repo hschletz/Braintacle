@@ -66,10 +66,7 @@ class ServicesTest extends \PHPUnit_Framework_TestCase
     {
         // Complete test setup on first run (cannot create mock object in static setup)
         if (!static::$_serviceManager->has('Db', false)) {
-            static::$_serviceManager->setService(
-                'Db',
-                $this->getMockBuilder('Zend\Db\Adapter\Adapter')->disableOriginalConstructor()->getMock()
-            );
+            static::$_serviceManager->setService('Db', $this->createMock('Zend\Db\Adapter\Adapter'));
         }
         $this->assertEquals($class, get_class(static::$_serviceManager->get($service)));
     }

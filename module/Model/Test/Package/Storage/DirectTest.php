@@ -181,7 +181,7 @@ class DirectTest extends \Model\Test\AbstractTest
 
     public function testGetPath()
     {
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config = $this->createMock('Model\Config');
         $config->method('__get')->with('packagePath')->willReturn('packagePath');
         $model = new Direct($config, new Metadata);
         $this->assertEquals('packagePath/id', $model->getPath('id'));
@@ -191,11 +191,11 @@ class DirectTest extends \Model\Test\AbstractTest
     {
         $data = array('Id' => 'id');
 
-        $metadata = $this->getMock('Model\Package\Metadata');
+        $metadata = $this->createMock('Model\Package\Metadata');
         $metadata->expects($this->once())->method('setPackageData')->with($data);
         $metadata->expects($this->once())->method('save')->with('/path/info');
 
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config = $this->createMock('Model\Config');
         $model = $this->getMockBuilder('Model\Package\Storage\Direct')
                       ->setMethods(array('getPath'))
                       ->setConstructorArgs(array($config, $metadata))
@@ -209,10 +209,10 @@ class DirectTest extends \Model\Test\AbstractTest
     {
         $data = array('Id' => 'id');
 
-        $metadata = $this->getMock('Model\Package\Metadata');
+        $metadata = $this->createMock('Model\Package\Metadata');
         $metadata->expects($this->once())->method('setPackageData')->with($data, 'validate');
 
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config = $this->createMock('Model\Config');
         $config->expects($this->once())->method('__get')->with('validateXml')->willReturn('validate');
 
         $model = $this->getMockBuilder($this->_getClass())
@@ -224,11 +224,11 @@ class DirectTest extends \Model\Test\AbstractTest
 
     public function testReadMetadata()
     {
-        $metadata = $this->getMock('Model\Package\Metadata');
+        $metadata = $this->createMock('Model\Package\Metadata');
         $metadata->expects($this->once())->method('load')->with('/path/info');
         $metadata->expects($this->once())->method('getPackageData')->willReturn('packageData');
 
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config = $this->createMock('Model\Config');
         $model = $this->getMockBuilder('Model\Package\Storage\Direct')
                       ->setMethods(array('getPath'))
                       ->setConstructorArgs(array($config, $metadata))
@@ -244,7 +244,7 @@ class DirectTest extends \Model\Test\AbstractTest
             'Id' => 'id',
             'FileLocation' => '',
         );
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config = $this->createMock('Model\Config');
         $model = $this->_getModel(array('Model\Config' => $config));
         $this->assertSame(0, $model->writeContent($data, null, null));
     }
@@ -289,8 +289,8 @@ class DirectTest extends \Model\Test\AbstractTest
             'MaxFragmentSize' => $maxFragmentSize,
         );
 
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
-        $metadata = $this->getMock('Model\Package\Metadata');
+        $config = $this->createMock('Model\Config');
+        $metadata = $this->createMock('Model\Package\Metadata');
         $model = $this->getMockBuilder('Model\Package\Storage\Direct')
                       ->setMethods(array('getPath'))
                       ->setConstructorArgs(array($config, $metadata))

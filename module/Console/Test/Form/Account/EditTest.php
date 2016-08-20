@@ -30,9 +30,7 @@ class EditTest extends \Console\Test\AbstractFormTest
 
     public function setUp()
     {
-        $this->_operatorManager = $this->getMockBuilder('Model\Operator\OperatorManager')
-                                       ->disableOriginalConstructor()
-                                       ->getMock();
+        $this->_operatorManager = $this->createMock('Model\Operator\OperatorManager');
         $this->_operatorManager->method('getAllIds')->willReturn(array('User1', 'User2'));
         parent::setUp();
     }

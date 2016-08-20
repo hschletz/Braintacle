@@ -692,9 +692,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $addSearchColumns,
         $expected
     ) {
-        $customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
-                                   ->disableOriginalConstructor()
-                                   ->getMock();
+        $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $customFieldManager->method('getFields')->willReturn(
             array(
                 'type_text' => 'text',
@@ -715,7 +713,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
             )
         );
 
-        $resultSetPrototype = $this->getMock('Zend\Db\ResultSet\HydratingResultSet');
+        $resultSetPrototype = $this->createMock('Zend\Db\ResultSet\HydratingResultSet');
         $resultSetPrototype->expects($this->once())
                            ->method('initialize')
                            ->with(
@@ -729,7 +727,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                                })
                            )->willReturnSelf();
 
-        $hydrator = $this->getMockBuilder('Database\Hydrator\Clients')->disableOriginalConstructor()->getMock();
+        $hydrator = $this->createMock('Database\Hydrator\Clients');
         $hydrator->method('getExtractorMap')->willReturn($this->_map);
         $hydrator->method('extractName')->willReturnCallback(
             function ($name) {
@@ -737,7 +735,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
             }
         );
 
-        $clients = $this->getMockBuilder('Database\Table\Clients')->disableOriginalConstructor()->getMock();
+        $clients = $this->createMock('Database\Table\Clients');
         $clients->method('getResultSetPrototype')->willReturn($resultSetPrototype);
         $clients->method('getTable')->willReturn('clients');
         $clients->method('getHydrator')->willReturn($hydrator);
@@ -805,11 +803,11 @@ class ClientManagerTest extends \Model\Test\AbstractTest
      */
     public function testGetClientsGroupFilter($filter, $order, $direction, $groupId, $addColumn, $expected)
     {
-        $group = $this->getMock('Model\Group\Group');
+        $group = $this->createMock('Model\Group\Group');
         $group->method('offsetGet')->with('Id')->willReturn($groupId);
         $group->expects($this->once())->method('update');
 
-        $resultSetPrototype = $this->getMock('Zend\Db\ResultSet\HydratingResultSet');
+        $resultSetPrototype = $this->createMock('Zend\Db\ResultSet\HydratingResultSet');
         $resultSetPrototype->expects($this->once())
                            ->method('initialize')
                            ->with(
@@ -823,10 +821,10 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                                })
                            )->willReturnSelf();
 
-        $hydrator = $this->getMockBuilder('Database\Hydrator\Clients')->disableOriginalConstructor()->getMock();
+        $hydrator = $this->createMock('Database\Hydrator\Clients');
         $hydrator->method('getExtractorMap')->willReturn($this->_map);
 
-        $clients = $this->getMockBuilder('Database\Table\Clients')->disableOriginalConstructor()->getMock();
+        $clients = $this->createMock('Database\Table\Clients');
         $clients->method('getResultSetPrototype')->willReturn($resultSetPrototype);
         $clients->method('getHydrator')->willReturn($hydrator);
 
@@ -861,7 +859,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
      */
     public function testGetClientsDistinct($distinct, $expected)
     {
-        $resultSetPrototype = $this->getMock('Zend\Db\ResultSet\HydratingResultSet');
+        $resultSetPrototype = $this->createMock('Zend\Db\ResultSet\HydratingResultSet');
         $resultSetPrototype->expects($this->once())
                            ->method('initialize')
                            ->with(
@@ -875,10 +873,10 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                                })
                            )->willReturnSelf();
 
-        $hydrator = $this->getMockBuilder('Database\Hydrator\Clients')->disableOriginalConstructor()->getMock();
+        $hydrator = $this->createMock('Database\Hydrator\Clients');
         $hydrator->method('getExtractorMap')->willReturn($this->_map);
 
-        $clients = $this->getMockBuilder('Database\Table\Clients')->disableOriginalConstructor()->getMock();
+        $clients = $this->createMock('Database\Table\Clients');
         $clients->method('getResultSetPrototype')->willReturn($resultSetPrototype);
         $clients->method('getHydrator')->willReturn($hydrator);
 
@@ -968,9 +966,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
     {
         $this->setExpectedException($exceptionType, $message);
 
-        $customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
-                                   ->disableOriginalConstructor()
-                                   ->getMock();
+        $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $customFieldManager->method('getFields')->willReturn(
             array(
                 'invalid' => 'invalid',
@@ -990,7 +986,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
 
     public function testGetClient()
     {
-        $resultSet = $this->getMock('Zend\Db\ResultSet\HydratingResultSet');
+        $resultSet = $this->createMock('Zend\Db\ResultSet\HydratingResultSet');
         $resultSet->method('current')->willReturn('client');
         $resultSet->method('count')->willReturn(1);
 
@@ -1006,7 +1002,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
     {
         $this->setExpectedException('RuntimeException', 'Invalid client ID: 42');
 
-        $resultSet = $this->getMock('Zend\Db\ResultSet\HydratingResultSet');
+        $resultSet = $this->createMock('Zend\Db\ResultSet\HydratingResultSet');
         $resultSet->method('count')->willReturn(0);
 
         $model = $this->getMockBuilder($this->_getClass())
@@ -1019,12 +1015,12 @@ class ClientManagerTest extends \Model\Test\AbstractTest
 
     public function deleteClientNoDeleteInterfacesProvider()
     {
-        $connection1 = $this->getMock('Zend\Db\Adapter\Driver\Pdo\Connection');
+        $connection1 = $this->createMock('Zend\Db\Adapter\Driver\Pdo\Connection');
         $connection1->expects($this->once())->method('beginTransaction');
         $connection1->expects($this->once())->method('commit');
         $connection1->expects($this->never())->method('rollback');
 
-        $connection2 = $this->getMock('Zend\Db\Adapter\Driver\Pdo\Connection');
+        $connection2 = $this->createMock('Zend\Db\Adapter\Driver\Pdo\Connection');
         $connection2->expects($this->once())->method('beginTransaction')->willThrowException(new \RuntimeException);
         $connection2->expects($this->never())->method('commit');
         $connection2->expects($this->never())->method('rollback');
@@ -1040,70 +1036,50 @@ class ClientManagerTest extends \Model\Test\AbstractTest
      */
     public function testDeleteClientNoDeleteInterfaces($connection)
     {
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())->method('lock')->willReturn(true);
         $client->expects($this->once())->method('offsetGet')->with('Id')->willReturn(42);
         $client->expects($this->once())->method('unlock');
 
-        $driver = $this->getMockBuilder('Zend\Db\Adapter\Driver\Pdo\Pdo')->disableOriginalConstructor()->getMock();
+        $driver = $this->createMock('Zend\Db\Adapter\Driver\Pdo\Pdo');
         $driver->method('getConnection')->willReturn($connection);
 
-        $adapter = $this->getMockBuilder('Zend\Db\Adapter\Adapter')->disableOriginalConstructor()->getMock();
+        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
 
-        $androidInstallations = $this->getMockBuilder('Database\Table\AndroidInstallations')
-                                     ->disableOriginalConstructor()
-                                     ->getMock();
+        $androidInstallations = $this->createMock('Database\Table\AndroidInstallations');
         $androidInstallations->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
 
-        $clientSystemInfo = $this->getMockBuilder('Database\Table\ClientSystemInfo')
-                                 ->disableOriginalConstructor()
-                                 ->getMock();
+        $clientSystemInfo = $this->createMock('Database\Table\ClientSystemInfo');
         $clientSystemInfo->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
 
-        $comments = $this->getMockBuilder('Database\Table\Comments')
-                         ->disableOriginalConstructor()
-                         ->getMock();
+        $comments = $this->createMock('Database\Table\Comments');
         $comments->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
 
-        $customFields = $this->getMockBuilder('Database\Table\CustomFields')
-                             ->disableOriginalConstructor()
-                             ->getMock();
+        $customFields = $this->createMock('Database\Table\CustomFields');
         $customFields->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
 
-        $packageHistory = $this->getMockBuilder('Database\Table\PackageHistory')
-                               ->disableOriginalConstructor()
-                               ->getMock();
+        $packageHistory = $this->createMock('Database\Table\PackageHistory');
         $packageHistory->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
 
-        $windowsProductKeys = $this->getMockBuilder('Database\Table\WindowsProductKeys')
-                                   ->disableOriginalConstructor()
-                                   ->getMock();
+        $windowsProductKeys = $this->createMock('Database\Table\WindowsProductKeys');
         $windowsProductKeys->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
 
-        $groupMemberships = $this->getMockBuilder('Database\Table\GroupMemberships')
-                                 ->disableOriginalConstructor()
-                                 ->getMock();
+        $groupMemberships = $this->createMock('Database\Table\GroupMemberships');
         $groupMemberships->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
 
-        $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')
-                             ->disableOriginalConstructor()
-                             ->getMock();
+        $clientConfig = $this->createMock('Database\Table\ClientConfig');
         $clientConfig->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
 
-        $attachments = $this->getMockBuilder('Database\Table\Attachments')
-                            ->disableOriginalConstructor()
-                            ->getMock();
+        $attachments = $this->createMock('Database\Table\Attachments');
         $attachments->expects($this->once())->method('delete')->with(
             array('id_dde' => 42, 'table_name' => \Database\Table\Attachments::OBJECT_TYPE_CLIENT)
         );
 
-        $itemManager = $this->getMockBuilder('Model\Client\ItemManager')->disableOriginalConstructor()->getMock();
+        $itemManager = $this->createMock('Model\Client\ItemManager');
         $itemManager->expects($this->once())->method('deleteItems')->with(42);
 
-        $clientsAndGroups = $this->getMockBuilder('Database\Table\ClientsAndGroups')
-                                 ->disableOriginalConstructor()
-                                 ->getMock();
+        $clientsAndGroups = $this->createMock('Database\Table\ClientsAndGroups');
         $clientsAndGroups->expects($this->once())->method('delete')->with(array('id' => 42));
 
         $clientManager = $this->_getModel(
@@ -1127,64 +1103,44 @@ class ClientManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteClientDeleteInterfaces()
     {
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())->method('lock')->willReturn(true);
         $client->expects($this->once())->method('offsetGet')->with('Id')->willReturn(4);
         $client->expects($this->once())->method('unlock');
 
-        $androidInstallations = $this->getMockBuilder('Database\Table\AndroidInstallations')
-                                     ->disableOriginalConstructor()
-                                     ->getMock();
+        $androidInstallations = $this->createMock('Database\Table\AndroidInstallations');
         $androidInstallations->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
 
-        $clientSystemInfo = $this->getMockBuilder('Database\Table\ClientSystemInfo')
-                                 ->disableOriginalConstructor()
-                                 ->getMock();
+        $clientSystemInfo = $this->createMock('Database\Table\ClientSystemInfo');
         $clientSystemInfo->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
 
-        $comments = $this->getMockBuilder('Database\Table\Comments')
-                         ->disableOriginalConstructor()
-                         ->getMock();
+        $comments = $this->createMock('Database\Table\Comments');
         $comments->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
 
-        $customFields = $this->getMockBuilder('Database\Table\CustomFields')
-                             ->disableOriginalConstructor()
-                             ->getMock();
+        $customFields = $this->createMock('Database\Table\CustomFields');
         $customFields->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
 
-        $packageHistory = $this->getMockBuilder('Database\Table\PackageHistory')
-                               ->disableOriginalConstructor()
-                               ->getMock();
+        $packageHistory = $this->createMock('Database\Table\PackageHistory');
         $packageHistory->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
 
-        $windowsProductKeys = $this->getMockBuilder('Database\Table\WindowsProductKeys')
-                                   ->disableOriginalConstructor()
-                                   ->getMock();
+        $windowsProductKeys = $this->createMock('Database\Table\WindowsProductKeys');
         $windowsProductKeys->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
 
-        $groupMemberships = $this->getMockBuilder('Database\Table\GroupMemberships')
-                                 ->disableOriginalConstructor()
-                                 ->getMock();
+        $groupMemberships = $this->createMock('Database\Table\GroupMemberships');
         $groupMemberships->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
 
-        $clientConfig = $this->getMockBuilder('Database\Table\ClientConfig')
-                             ->disableOriginalConstructor()
-                             ->getMock();
+        $clientConfig = $this->createMock('Database\Table\ClientConfig');
         $clientConfig->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
 
-        $attachments = $this->getMockBuilder('Database\Table\Attachments')
-                            ->disableOriginalConstructor()
-                            ->getMock();
+        $attachments = $this->createMock('Database\Table\Attachments');
         $attachments->expects($this->once())->method('delete')->with(
             array('id_dde' => 4, 'table_name' => \Database\Table\Attachments::OBJECT_TYPE_CLIENT)
         );
 
-        $itemManager = $this->getMockBuilder('Model\Client\ItemManager')->disableOriginalConstructor()->getMock();
+        $itemManager = $this->createMock('Model\Client\ItemManager');
         $itemManager->expects($this->once())->method('deleteItems')->with(4);
 
-        $clientsAndGroups = $this->getMockBuilder('Database\Table\ClientsAndGroups')
-                                 ->disableOriginalConstructor()
-                                 ->getMock();
+        $clientsAndGroups = $this->createMock('Database\Table\ClientsAndGroups');
         $clientsAndGroups->expects($this->once())->method('delete')->with(array('id' => 4));
 
         $clientManager = $this->_getModel(
@@ -1220,11 +1176,11 @@ class ClientManagerTest extends \Model\Test\AbstractTest
     {
         $this->setExpectedException('RuntimeException', 'Could not lock client for deletion');
 
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())->method('lock')->willReturn(false);
         $client->expects($this->never())->method('unlock');
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->expects($this->never())->method('get');
 
         $clientManager = $this->_getModel(array('ServiceManager' => $serviceManager));
@@ -1234,12 +1190,12 @@ class ClientManagerTest extends \Model\Test\AbstractTest
 
     public function deleteClientExceptionProvider()
     {
-        $connection1 = $this->getMock('Zend\Db\Adapter\Driver\Pdo\Connection');
+        $connection1 = $this->createMock('Zend\Db\Adapter\Driver\Pdo\Connection');
         $connection1->expects($this->once())->method('beginTransaction');
         $connection1->expects($this->never())->method('commit');
         $connection1->expects($this->once())->method('rollback');
 
-        $connection2 = $this->getMock('Zend\Db\Adapter\Driver\Pdo\Connection');
+        $connection2 = $this->createMock('Zend\Db\Adapter\Driver\Pdo\Connection');
         $connection2->expects($this->once())->method('beginTransaction')->willThrowException(new \RuntimeException);
         $connection2->expects($this->never())->method('commit');
         $connection2->expects($this->never())->method('rollback');
@@ -1257,20 +1213,18 @@ class ClientManagerTest extends \Model\Test\AbstractTest
     {
         $this->setExpectedException('RuntimeException', 'message');
 
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())->method('lock')->willReturn(true);
         $client->expects($this->once())->method('offsetGet')->with('Id')->willReturn(42);
         $client->expects($this->once())->method('unlock');
 
-        $driver = $this->getMockBuilder('Zend\Db\Adapter\Driver\Pdo\Pdo')->disableOriginalConstructor()->getMock();
+        $driver = $this->createMock('Zend\Db\Adapter\Driver\Pdo\Pdo');
         $driver->method('getConnection')->willReturn($connection);
 
-        $adapter = $this->getMockBuilder('Zend\Db\Adapter\Adapter')->disableOriginalConstructor()->getMock();
+        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
 
-        $androidInstallations = $this->getMockBuilder('Database\Table\AndroidInstallations')
-                                     ->disableOriginalConstructor()
-                                     ->getMock();
+        $androidInstallations = $this->createMock('Database\Table\AndroidInstallations');
         $androidInstallations->method('delete')->willThrowException(new \RuntimeException('message'));
 
         $clientManager = $this->_getModel(

@@ -124,14 +124,10 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
     public function setUp()
     {
-        $this->_escapeHtml = $this->getMock('Zend\View\Helper\EscapeHtml');
-        $this->_htmlElement = $this->getMockBuilder('Library\View\Helper\HtmlElement')
-                                   ->disableOriginalConstructor()
-                                   ->getMock();
-        $this->_consoleUrl = $this->getMockBuilder('Console\View\Helper\ConsoleUrl')
-                                  ->disableOriginalConstructor()
-                                  ->getMock();
-        $this->_dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
+        $this->_escapeHtml = $this->createMock('Zend\View\Helper\EscapeHtml');
+        $this->_htmlElement = $this->createMock('Library\View\Helper\HtmlElement');
+        $this->_consoleUrl = $this->createMock('Console\View\Helper\ConsoleUrl');
+        $this->_dateFormat = $this->createMock('Zend\I18n\View\Helper\DateFormat');
         parent::setUp();
     }
 
@@ -222,9 +218,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
               ->method('row')
               ->with($this->anything(), $this->anything(), array())
               ->will($this->returnCallback(array($this, 'mockRow')));
-        $table->setView(
-            $this->getMockBuilder('Zend\View\Renderer\PhpRenderer')->disableOriginalConstructor()->getMock()
-        );
+        $table->setView($this->createMock('Zend\View\Renderer\PhpRenderer'));
 
         $this->_renderCallbackData = array();
         $this->assertEquals(

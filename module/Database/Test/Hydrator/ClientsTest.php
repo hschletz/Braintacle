@@ -25,12 +25,10 @@ class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
 {
     protected function _getHydrator()
     {
-        $nada = $this->getMockBuilder('Nada\Database\AbstractDatabase')
-                     ->disableOriginalConstructor()
-                     ->getMockForAbstractClass();
+        $nada = $this->createMock('Nada\Database\AbstractDatabase');
         $nada->method('timestampFormatPhp')->willReturn('Y-m-d H:i:s');
 
-        $hydrator = $this->getMock('Zend\Hydrator\ArraySerializable');
+        $hydrator = $this->createMock('Zend\Hydrator\ArraySerializable');
         $hydrator->method('hydrateName')->willReturnMap(
             array(
                 array('fields_3', null, 'Custom field'),
@@ -46,14 +44,10 @@ class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
             )
         );
 
-        $customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
-                                   ->disableOriginalConstructor()
-                                   ->getMock();
+        $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $customFieldManager->method('getHydrator')->willReturn($hydrator);
 
-        $windowsInstallations = $this->getMockBuilder('Database\Table\WindowsInstallations')
-                                     ->disableOriginalConstructor()
-                                     ->getMock();
+        $windowsInstallations = $this->createMock('Database\Table\WindowsInstallations');
         $windowsInstallations->method('getHydrator')->willReturn($hydrator);
 
         $resultSet = $this->getMockBuilder('Zend\Db\ResultSet\AbstractResultSet')
@@ -68,7 +62,7 @@ class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         $itemTable->method('getResultSetPrototype')->willReturn($resultSet);
         $itemTable->method('getHydrator')->willReturn($hydrator);
 
-        $itemManager = $this->getMockBuilder('Model\Client\ItemManager')->disableOriginalConstructor()->getMock();
+        $itemManager = $this->createMock('Model\Client\ItemManager');
         $itemManager->method('getTable')->willReturnMap(
             array(
                 array('item', $itemTable),
@@ -76,7 +70,7 @@ class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
             )
         );
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Database\Nada', true, $nada),

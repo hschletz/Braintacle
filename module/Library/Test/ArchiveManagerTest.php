@@ -98,7 +98,7 @@ class ArchiveManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCloseArchiveZipErrorIgnore()
     {
-        $archive = $this->getMock('ZipArchive');
+        $archive = $this->createMock('ZipArchive');
         $archive->expects($this->once())->method('close');
         $manager = new ArchiveManager;
         $manager->closeArchive($archive, true);

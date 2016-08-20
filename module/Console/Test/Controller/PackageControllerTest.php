@@ -57,12 +57,10 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
     {
         parent::setUp();
 
-        $this->_packageManager = $this->getMockBuilder('Model\Package\PackageManager')
-                                      ->disableOriginalConstructor()
-                                      ->getMock();
-        $this->_config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
-        $this->_buildForm = $this->getMock('Console\Form\Package\Build');
-        $this->_updateForm = $this->getMock('Console\Form\Package\Update');
+        $this->_packageManager = $this->createMock('Model\Package\PackageManager');
+        $this->_config = $this->createMock('Model\Config');
+        $this->_buildForm = $this->createMock('Console\Form\Package\Build');
+        $this->_updateForm = $this->createMock('Console\Form\Package\Update');
 
         $this->getApplicationServiceLocator()
              ->setAllowOverride(true)
@@ -105,7 +103,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
         $viewHelperManager = $this->getApplicationServiceLocator()->get('ViewHelperManager');
 
-        $flashMessenger = $this->getMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock('Zend\View\Helper\FlashMessenger');
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->willReturnMap(
@@ -118,7 +116,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $flashMessenger->expects($this->once())->method('render')->with('error')->willReturn('');
         $viewHelperManager->setService('FlashMessenger', $flashMessenger);
 
-        $dateFormat = $this->getMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock('Zend\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->exactly(2))
                    ->method('__invoke')
                    ->withConsecutive(
@@ -200,7 +198,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionPackageFlashMessages()
     {
-        $flashMessenger = $this->getMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock('Zend\View\Helper\FlashMessenger');
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->willReturnMap(
@@ -261,7 +259,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->_packageManager->expects($this->once())->method('getPackages')->willReturn($packages);
 
-        $flashMessenger = $this->getMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock('Zend\View\Helper\FlashMessenger');
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->willReturnMap(
@@ -615,7 +613,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->getRequest()->getFiles()->set('File', $fileSpec);
         $formData = $postData + array('File' => $fileSpec);
-        $oldPackage = $this->getMock('Model\Package\Package');
+        $oldPackage = $this->createMock('Model\Package\Package');
 
         $this->_updateForm->expects($this->once())
                           ->method('setData')
@@ -692,7 +690,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->getRequest()->getFiles()->set('File', $fileSpec);
         $formData = $postData + array('File' => $fileSpec);
-        $oldPackage = $this->getMock('Model\Package\Package');
+        $oldPackage = $this->createMock('Model\Package\Package');
 
         $this->_updateForm->expects($this->once())
                           ->method('setData')

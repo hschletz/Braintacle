@@ -43,8 +43,8 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
     {
         parent::setUp();
 
-        $this->_authenticationService = $this->getMock('\Model\Operator\AuthenticationService');
-        $this->_form = $this->getMock('Console\Form\Login');
+        $this->_authenticationService = $this->createMock('\Model\Operator\AuthenticationService');
+        $this->_form = $this->createMock('Console\Form\Login');
 
         $serviceLocator = $this->getApplicationServiceLocator();
 

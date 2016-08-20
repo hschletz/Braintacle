@@ -39,9 +39,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
      */
     public function setUp()
     {
-        $this->_config = $this->getMockBuilder('Model\Config')
-                              ->disableOriginalconstructor()
-                              ->getMock();
+        $this->_config = $this->createMock('Model\Config');
         $this->_config->expects($this->any())
                       ->method('__get')
                       ->will(

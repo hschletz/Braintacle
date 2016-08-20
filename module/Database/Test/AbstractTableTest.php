@@ -42,9 +42,9 @@ class AbstractTableTest extends \PHPUnit_Framework_TestCase
     {
         // Set up mock objects for getCol()
 
-        $this->_select = $this->getMock('Zend\Db\Sql\Select');
+        $this->_select = $this->createMock('Zend\Db\Sql\Select');
 
-        $sql = $this->getMockBuilder('Zend\Db\Sql\Sql')->disableOriginalConstructor()->getMock();
+        $sql = $this->createMock('Zend\Db\Sql\Sql');
         $sql->method('select')->willReturn($this->_select);
 
         $this->_table = $this->getMockBuilder('Database\AbstractTable')
@@ -84,7 +84,7 @@ class AbstractTableTest extends \PHPUnit_Framework_TestCase
                          ->getMockForAbstractClass();
         $hydrator->method('hydrateName')->with('col')->willReturn('hydrated');
 
-        $resultSet = $this->getMock('Zend\Db\ResultSet\HydratingResultSet');
+        $resultSet = $this->createMock('Zend\Db\ResultSet\HydratingResultSet');
         $resultSet->method('getHydrator')->willReturn($hydrator);
         $resultSet->method('valid')->willReturnOnConsecutiveCalls(true, true, false);
         $resultSet->method('key')->willReturnOnConsecutiveCalls(0, 1);
@@ -99,14 +99,27 @@ class AbstractTableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('value1', 'value2'), $this->_table->fetchCol('col'));
     }
 
+    /**
+     * @requires PHP 7.0
+     */
     public function testFetchColWithOtherHydrator()
     {
-        $hydrator = $this->getMockBuilder('Zend\Hydrator\DelegatingHydrator')
-                         ->disableOriginalConstructor()
-                         ->getMock();
-        $hydrator->expects($this->never())->method('hydrateName');
+        $hydrator = new class implements \Zend\Hydrator\HydratorInterface {
+            public function hydrate(array $data, $object)
+            {
+            }
 
-        $resultSet = $this->getMock('Zend\Db\ResultSet\HydratingResultSet');
+            public function extract($object)
+            {
+            }
+
+            public function hydrateName()
+            {
+                throw new \LogicException('hydrateName() must not be called');
+            }
+        };
+
+        $resultSet = $this->createMock('Zend\Db\ResultSet\HydratingResultSet');
         $resultSet->method('getHydrator')->willReturn($hydrator);
         $resultSet->method('valid')->willReturnOnConsecutiveCalls(true, true, false);
         $resultSet->method('key')->willReturnOnConsecutiveCalls(0, 1);

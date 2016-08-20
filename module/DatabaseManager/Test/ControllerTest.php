@@ -46,7 +46,7 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
      */
     public function testInvalidRoute($route)
     {
-        $validator = $this->getMock('Library\Validator\LogLevel');
+        $validator = $this->createMock('Library\Validator\LogLevel');
         $validator->expects($this->never())->method('isValid');
         $this->getApplicationServiceLocator()->get('ValidatorManager')->setService('Library\LogLevel', $validator);
 
@@ -61,7 +61,7 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
 
     public function testInvalidLogLevel()
     {
-        $validator = $this->getMock('Library\Validator\LogLevel');
+        $validator = $this->createMock('Library\Validator\LogLevel');
         $validator->expects($this->once())->method('isValid')->with('0')->willReturn(false);
         $this->getApplicationServiceLocator()->get('ValidatorManager')->setService('Library\LogLevel', $validator);
 
@@ -87,8 +87,8 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
      */
     public function testSchemaManagerAction($cmdLine, $expectedPriority)
     {
-        $validator = $this->getMock('Library\Validator\LogLevel');
-        $filter = $this->getMock('Library\Filter\LogLevel');
+        $validator = $this->createMock('Library\Validator\LogLevel');
+        $filter = $this->createMock('Library\Filter\LogLevel');
         if ($cmdLine) {
             $validator->expects($this->once())->method('isValid')->with('debug')->willReturn(true);
             $filter->expects($this->once())->method('filter')->with('debug')->willReturn($expectedPriority);
@@ -99,7 +99,7 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
         $this->getApplicationServiceLocator()->get('ValidatorManager')->setService('Library\LogLevel', $validator);
         $this->getApplicationServiceLocator()->get('FilterManager')->setService('Library\LogLevel', $filter);
 
-        $logger = $this->getMock('Zend\Log\Logger');
+        $logger = $this->createMock('Zend\Log\Logger');
         $logger->expects($this->once())->method('addWriter')->with(
             $this->callback(
                 function ($writer) use ($expectedPriority) {
@@ -132,7 +132,7 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
             )
         );
 
-        $schemaManager = $this->getMockBuilder('Database\SchemaManager')->disableOriginalConstructor()->getMock();
+        $schemaManager = $this->createMock('Database\SchemaManager');
         $schemaManager->expects($this->once())->method('updateAll');
 
         $this->getApplicationServiceLocator()

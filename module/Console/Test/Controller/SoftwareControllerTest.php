@@ -59,10 +59,8 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
 
         $this->_session = new \Zend\Session\Container('ManageSoftware');
 
-        $this->_softwareManager = $this->getMockBuilder('Model\SoftwareManager')
-                                       ->disableOriginalConstructor()
-                                       ->getMock();
-        $this->_form = $this->getMock('Console\Form\SoftwareFilter');
+        $this->_softwareManager = $this->createMock('Model\SoftwareManager');
+        $this->_form = $this->createMock('Console\Form\SoftwareFilter');
 
         $this->getApplicationServiceLocator()
              ->setAllowOverride(true)

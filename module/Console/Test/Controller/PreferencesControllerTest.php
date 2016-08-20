@@ -63,17 +63,11 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     {
         parent::setUp();
 
-        $this->_formManager = $this->getMock('Zend\Form\FormElementManager');
-        $this->_customFieldManager = $this->getMockBuilder('Model\Client\CustomFieldManager')
-                                          ->disableOriginalConstructor()
-                                          ->getMock();
-        $this->_deviceManager = $this->getMockBuilder('Model\Network\DeviceManager')
-                                     ->disableOriginalConstructor()
-                                     ->getMock();
-        $this->_registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')
-                                       ->disableOriginalConstructor()
-                                       ->getMock();
-        $this->_config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $this->_formManager = $this->createMock('Zend\Form\FormElementManager');
+        $this->_customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
+        $this->_deviceManager = $this->createMock('Model\Network\DeviceManager');
+        $this->_registryManager = $this->createMock('Model\Registry\RegistryManager');
+        $this->_config = $this->createMock('Model\Config');
 
         $this->getApplicationServiceLocator()
              ->setAllowOverride(true)
@@ -151,7 +145,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
                 'pref2' => 'value2',
             ),
         );
-        $form = $this->getMock("Console\Form\Preferences\Packages");
+        $form = $this->createMock("Console\Form\Preferences\Packages");
         $form->method('get')
              ->willReturn($preferences);
         $form->expects($this->once())
@@ -191,7 +185,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
                 'pref2' => 'value2',
             )
         );
-        $form = $this->getMock("Console\Form\Preferences\Packages");
+        $form = $this->createMock("Console\Form\Preferences\Packages");
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -323,7 +317,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $formData = array(
             'Preferences' => array('pref1' => 'value1', 'pref2' => 'value2')
         );
-        $form = $this->getMock("Console\Form\Preferences\\$formClass");
+        $form = $this->createMock("Console\Form\Preferences\\$formClass");
         $form->method('get')
              ->willReturn($preferences);
         $form->expects($this->once())
@@ -360,7 +354,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $postData = array(
             'Preferences' => array('pref1' => 'value1', 'pref2' => 'value2')
         );
-        $form = $this->getMock("Console\Form\Preferences\\$formClass");
+        $form = $this->createMock("Console\Form\Preferences\\$formClass");
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -394,7 +388,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $postData = array(
             'Preferences' => array('pref1' => 'value1', 'pref2' => 'value2')
         );
-        $form = $this->getMock("Console\Form\Preferences\\$formClass");
+        $form = $this->createMock("Console\Form\Preferences\\$formClass");
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -424,7 +418,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testCustomfieldsActionGet()
     {
-        $form = $this->getMock('Console\Form\DefineFields');
+        $form = $this->createMock('Console\Form\DefineFields');
         $form->expects($this->never())
              ->method('setData');
         $form->expects($this->never())
@@ -447,7 +441,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     public function testCustomfieldsActionPostInvalid()
     {
         $postData = array('key' => 'value');
-        $form = $this->getMock('Console\Form\DefineFields');
+        $form = $this->createMock('Console\Form\DefineFields');
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -471,7 +465,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     public function testCustomfieldsActionPostValid()
     {
         $postData = array('key' => 'value');
-        $form = $this->getMock('Console\Form\DefineFields');
+        $form = $this->createMock('Console\Form\DefineFields');
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -514,7 +508,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testNetworkdevicesActionGet()
     {
-        $form = $this->getMock('Console\Form\NetworkDeviceTypes');
+        $form = $this->createMock('Console\Form\NetworkDeviceTypes');
         $form->expects($this->never())
              ->method('setData');
         $form->expects($this->never())
@@ -537,7 +531,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     public function testNetworkdevicesActionPostInvalid()
     {
         $postData = array('key' => 'value');
-        $form = $this->getMock('Console\Form\NetworkDeviceTypes');
+        $form = $this->createMock('Console\Form\NetworkDeviceTypes');
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -561,7 +555,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     public function testNetworkdevicesActionPostValid()
     {
         $postData = array('key' => 'value');
-        $form = $this->getMock('Console\Form\NetworkDeviceTypes');
+        $form = $this->createMock('Console\Form\NetworkDeviceTypes');
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -604,7 +598,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testRegistryValuesActionGet()
     {
-        $form = $this->getMock('Console\Form\ManageRegistryValues');
+        $form = $this->createMock('Console\Form\ManageRegistryValues');
         $form->expects($this->never())
              ->method('process');
         $form->expects($this->once())
@@ -620,7 +614,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     public function testRegistryValuesActionPostInvalid()
     {
         $postData = array('key' => 'value');
-        $form = $this->getMock('Console\Form\ManageRegistryValues');
+        $form = $this->createMock('Console\Form\ManageRegistryValues');
         $form->expects($this->never())
              ->method('process');
         $form->expects($this->once())
@@ -642,7 +636,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     public function testRegistryValuesActionPostValid()
     {
         $postData = array('key' => 'value');
-        $form = $this->getMock('Console\Form\ManageRegistryValues');
+        $form = $this->createMock('Console\Form\ManageRegistryValues');
         $form->expects($this->once())
              ->method('process');
         $form->expects($this->once())

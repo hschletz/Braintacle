@@ -37,10 +37,10 @@ abstract class AbstractGroupTest extends \Model\Test\AbstractTest
         // The setup is done only once, but cannot be done in setUpBeforeClass()
         // because mock objects cannot be created in a static method.
         if (!$this->_config) {
-            $this->_config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+            $this->_config = $this->createMock('Model\Config');
             $this->_config->method('__get')->willReturnMap(array(array('groupCacheExpirationInterval', 30)));
 
-            $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+            $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
             $serviceManager->method('get')->willReturnMap(
                 array(
                     array('Db', true, static::$serviceManager->get('Db')),

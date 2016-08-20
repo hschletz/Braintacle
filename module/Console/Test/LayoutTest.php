@@ -33,7 +33,7 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->_authService = $this->getMock('Model\Operator\AuthenticationService');
+        $this->_authService = $this->createMock('Model\Operator\AuthenticationService');
 
         $application = \Library\Application::init('Console', true);
         $serviceManager = $application->getServiceManager();
@@ -128,7 +128,7 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 
     public function testNoIdentity()
     {
-        $this->_authService = $this->getMock('Model\Operator\AuthenticationService');
+        $this->_authService = $this->createMock('Model\Operator\AuthenticationService');
         $this->_authService->method('hasIdentity')->willReturn(false);
 
         $html = $this->_view->render('layout');

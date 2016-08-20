@@ -36,9 +36,7 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
 
     public function setUp()
     {
-        $this->_deviceManager = $this->getMockBuilder('Model\Network\DeviceManager')
-                                     ->disableOriginalConstructor()
-                                     ->getMock();
+        $this->_deviceManager = $this->createMock('Model\Network\DeviceManager');
         $this->_deviceManager->expects($this->once())
                              ->method('getTypeCounts')
                              ->willReturn(array('name0' => 0, 'name1' => 1));
@@ -359,7 +357,7 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
 
     public function testProcessRenameNoAdd()
     {
-        $deviceManager = $this->getMockBuilder('Model\Network\DeviceManager')->disableOriginalConstructor()->getMock();
+        $deviceManager = $this->createMock('Model\Network\DeviceManager');
         $deviceManager->expects($this->once())->method('getTypeCounts')->willReturn(array('name0' => 0, 'name1' => 1));
         $deviceManager->expects($this->never())->method('addType');
         $deviceManager->expects($this->once())->method('renameType')->with('name1', 'new_name');
@@ -381,7 +379,7 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
 
     public function testProcessAdd()
     {
-        $deviceManager = $this->getMockBuilder('Model\Network\DeviceManager')->disableOriginalConstructor()->getMock();
+        $deviceManager = $this->createMock('Model\Network\DeviceManager');
         $deviceManager->expects($this->once())->method('getTypeCounts')->willReturn(array('name0' => 0, 'name1' => 1));
         $deviceManager->expects($this->once())->method('addType')->with('new_name');
         $deviceManager->expects($this->never())->method('renameType');

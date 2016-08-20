@@ -259,7 +259,7 @@ EOT;
 
     public function testRenderFieldsetRenderFieldsetAsElement()
     {
-        $translator = $this->getMock('Zend\I18n\Translator\Translator');
+        $translator = $this->createMock('Zend\I18n\Translator\Translator');
         $translator->method('translate')
                    ->willReturnCallback(function ($string) {
                        return "$string-translated";

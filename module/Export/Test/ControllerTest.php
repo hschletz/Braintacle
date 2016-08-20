@@ -63,25 +63,25 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
     {
         $directory = vfsStream::newDirectory('test')->at(vfsStream::setup('root'))->url();
 
-        $document1 = $this->getMock('Protocol\Message\InventoryRequest');
+        $document1 = $this->createMock('Protocol\Message\InventoryRequest');
         $document1->method('getFilename')->willReturn('filename1');
         $document1->expects($this->once())->method('save')->with("$directory/filename1");
         $document1->expects($this->never())->method('isValid');
 
-        $document2 = $this->getMock('Protocol\Message\InventoryRequest');
+        $document2 = $this->createMock('Protocol\Message\InventoryRequest');
         $document2->method('getFilename')->willReturn('filename2');
         $document2->expects($this->once())->method('save')->with("$directory/filename2");
         $document2->expects($this->never())->method('isValid');
 
-        $client1 = $this->getMock('Model\Client\Client');
+        $client1 = $this->createMock('Model\Client\Client');
         $client1->method('offsetGet')->with('IdString')->willReturn('client1');
         $client1->method('toDomDocument')->willReturn($document1);
 
-        $client2 = $this->getMock('Model\Client\Client');
+        $client2 = $this->createMock('Model\Client\Client');
         $client2->method('offsetGet')->with('IdString')->willReturn('client2');
         $client2->method('toDomDocument')->willReturn($document2);
 
-        $clientManager = $this->getMockBuilder('Model\Client\ClientManager')->disableOriginalConstructor()->getMock();
+        $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->method('getClients')->with(null, 'IdString')->willReturn(array($client1, $client2));
 
         $console = $this->getMockBuilder('Zend\Console\Adapter\AbstractAdapter')
@@ -106,7 +106,7 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
     {
         $directory = vfsStream::setup('root')->url() . '/invalid';
 
-        $clientManager = $this->getMockBuilder('Model\Client\ClientManager')->disableOriginalConstructor()->getMock();
+        $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->expects($this->never())->method('getClients');
 
         $this->getApplicationServiceLocator()
@@ -123,7 +123,7 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
     {
         $directory = vfsStream::newDirectory('test', 0000)->at(vfsStream::setup('root'))->url();
 
-        $clientManager = $this->getMockBuilder('Model\Client\ClientManager')->disableOriginalConstructor()->getMock();
+        $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->expects($this->never())->method('getClients');
 
         $this->getApplicationServiceLocator()
@@ -140,7 +140,7 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
     {
         $directory = vfsStream::newFile('test')->at(vfsStream::setup('root'))->url();
 
-        $clientManager = $this->getMockBuilder('Model\Client\ClientManager')->disableOriginalConstructor()->getMock();
+        $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->expects($this->never())->method('getClients');
 
         $this->getApplicationServiceLocator()
@@ -164,34 +164,34 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
     {
         $directory = vfsStream::newDirectory('test')->at(vfsStream::setup('root'))->url();
 
-        $document1 = $this->getMock('Protocol\Message\InventoryRequest');
+        $document1 = $this->createMock('Protocol\Message\InventoryRequest');
         $document1->method('getFilename')->willReturn('filename1');
         $document1->expects($this->once())->method('save')->with("$directory/filename1");
         $document1->expects($this->once())->method('isValid')->willReturn(true);
 
-        $document2 = $this->getMock('Protocol\Message\InventoryRequest');
+        $document2 = $this->createMock('Protocol\Message\InventoryRequest');
         $document2->method('getFilename')->willReturn('filename2');
         $document2->expects($this->once())->method('save')->with("$directory/filename2");
         $document2->expects($this->once())->method('isValid')->willReturn(false);
 
-        $document3 = $this->getMock('Protocol\Message\InventoryRequest');
+        $document3 = $this->createMock('Protocol\Message\InventoryRequest');
         $document3->expects($this->never())->method('getFilename');
         $document3->expects($this->never())->method('save');
         $document3->expects($this->never())->method('isValid');
 
-        $client1 = $this->getMock('Model\Client\Client');
+        $client1 = $this->createMock('Model\Client\Client');
         $client1->method('offsetGet')->with('IdString')->willReturn('client1');
         $client1->method('toDomDocument')->willReturn($document1);
 
-        $client2 = $this->getMock('Model\Client\Client');
+        $client2 = $this->createMock('Model\Client\Client');
         $client2->method('offsetGet')->with('IdString')->willReturn('client2');
         $client2->method('toDomDocument')->willReturn($document2);
 
-        $client3 = $this->getMock('Model\Client\Client');
+        $client3 = $this->createMock('Model\Client\Client');
         $client3->expects($this->never())->method('offsetGet');
         $client3->expects($this->never())->method('toDomDocument');
 
-        $clientManager = $this->getMockBuilder('Model\Client\ClientManager')->disableOriginalConstructor()->getMock();
+        $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->method('getClients')->with(null, 'IdString')->willReturn(array($client1, $client2, $client3));
 
         $console = $this->getMockBuilder('Zend\Console\Adapter\AbstractAdapter')

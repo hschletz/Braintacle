@@ -62,18 +62,14 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
      */
     public function setUp()
     {
-        $this->_config = $this->getMockBuilder('Model\Config')
-                              ->disableOriginalconstructor()
-                              ->getMock();
+        $this->_config = $this->createMock('Model\Config');
         $this->_config->expects($this->any())
                       ->method('__get')
                       ->with('inspectRegistry')
                       ->willReturn(1);
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
         $resultSet->initialize($this->_values);
-        $this->_registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')
-                                       ->disableOriginalconstructor()
-                                       ->getMock();
+        $this->_registryManager = $this->createMock('Model\Registry\RegistryManager');
         $this->_registryManager->expects($this->once())
                                ->method('getValueDefinitions')
                                ->willReturn($resultSet);
@@ -268,9 +264,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
 
     public function testRenderNoExistingValues()
     {
-        $this->_registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')
-                                       ->disableOriginalconstructor()
-                                       ->getMock();
+        $this->_registryManager = $this->createMock('Model\Registry\RegistryManager');
         $this->_registryManager->expects($this->once())
                                ->method('getValueDefinitions')
                                ->willReturn(new \ArrayIterator);
@@ -310,9 +304,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
 
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
         $resultSet->initialize(array());
-        $registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')
-                                ->disableOriginalconstructor()
-                                ->getMock();
+        $registryManager = $this->createMock('Model\Registry\RegistryManager');
         $registryManager->expects($this->once())
                         ->method('getValueDefinitions')
                         ->willReturn($resultSet);
@@ -356,9 +348,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
 
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
         $resultSet->initialize(array());
-        $registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')
-                                ->disableOriginalconstructor()
-                                ->getMock();
+        $registryManager = $this->createMock('Model\Registry\RegistryManager');
         $registryManager->expects($this->once())
                         ->method('getValueDefinitions')
                         ->willReturn($resultSet);
@@ -406,9 +396,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
 
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
         $resultSet->initialize(array($value1, $value2));
-        $registryManager = $this->getMockBuilder('Model\Registry\RegistryManager')
-                                ->disableOriginalconstructor()
-                                ->getMock();
+        $registryManager = $this->createMock('Model\Registry\RegistryManager');
         $registryManager->expects($this->once())
                         ->method('getValueDefinitions')
                         ->willReturn($resultSet);

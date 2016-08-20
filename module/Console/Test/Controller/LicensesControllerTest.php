@@ -36,9 +36,7 @@ class LicensesControllerTest extends \Console\Test\AbstractControllerTest
     {
         parent::setUp();
 
-        $this->_softwareManager = $this->getMockBuilder('Model\SoftwareManager')
-                                       ->disableOriginalConstructor()
-                                       ->getMock();
+        $this->_softwareManager = $this->createMock('Model\SoftwareManager');
         $this->getApplicationServiceLocator()
              ->setAllowOverride(true)
              ->setService('Model\SoftwareManager', $this->_softwareManager);

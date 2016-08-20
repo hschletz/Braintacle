@@ -31,7 +31,7 @@ class PrintFormTest extends \Library\Test\Mvc\Controller\Plugin\AbstractTest
         $plugin = $this->_getPlugin(false);
 
         // Set up \Console\Form\Form using default renderer
-        $form = $this->getMock('Console\Form\Form');
+        $form = $this->createMock('Console\Form\Form');
         $form->expects($this->once())
              ->method('render')
              ->will($this->returnValue('\Console\Form\Form default renderer'));

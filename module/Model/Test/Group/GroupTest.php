@@ -46,7 +46,7 @@ class GroupTest extends AbstractGroupTest
      */
     public function testGetDefaultConfig($option, $expectedValue, $globalOptionName, $globalOptionValue)
     {
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config = $this->createMock('Model\Config');
         $config->expects($this->once())->method('__get')->with($globalOptionName)->willReturn($globalOptionValue);
         $model = $this->_getModel(array('Model\Config' => $config));
         $this->assertSame($expectedValue, $model->getDefaultConfig($option));
@@ -65,7 +65,7 @@ class GroupTest extends AbstractGroupTest
      */
     public function testSetMembersFromQuery($type, $simulateLockFailure, $dataSet)
     {
-        $clientManager = $this->getMockBuilder('Model\Client\ClientManager')->disableOriginalConstructor()->getMock();
+        $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->expects($this->once())
                       ->method('getClients')
                       ->with(
@@ -81,7 +81,7 @@ class GroupTest extends AbstractGroupTest
                           true
                       )->willReturn(array(array('Id' => 1), array('Id' => 2), array('Id' => 3), array('Id' => 5)));
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->will(
                            $this->returnValueMap(
@@ -120,33 +120,31 @@ class GroupTest extends AbstractGroupTest
 
     public function testSetMembersFromQueryExceptionInTransaction()
     {
-        $clientManager = $this->getMockBuilder('Model\Client\ClientManager')->disableOriginalConstructor()->getMock();
+        $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->method('getClients')->willReturn(array(array('Id' => 1)));
 
-        $connection = $this->getMock('Zend\Db\Adapter\Driver\AbstractConnection');
+        $connection = $this->createMock('Zend\Db\Adapter\Driver\AbstractConnection');
         $connection->expects($this->once())->method('beginTransaction');
         $connection->expects($this->once())->method('rollback');
         $connection->expects($this->never())->method('commit');
 
-        $driver = $this->getMockBuilder('Zend\Db\Adapter\Driver\Pdo\Pdo')->disableOriginalConstructor()->getMock();
+        $driver = $this->createMock('Zend\Db\Adapter\Driver\Pdo\Pdo');
         $driver->method('getConnection')->willReturn($connection);
-        $adapter = $this->getMockBuilder('Zend\Db\Adapter\Adapter')->disableOriginalConstructor()->getMock();
+        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
 
-        $select = $this->getMock('Zend\Db\Sql\Select');
+        $select = $this->createMock('Zend\Db\Sql\Select');
         $select->method('columns')->will($this->returnSelf());
-        $sql = $this->getMockBuilder('Zend\Db\Sql\Sql')->disableOriginalConstructor()->getMock();
+        $sql = $this->createMock('Zend\Db\Sql\Sql');
         $sql->method('select')->willReturn($select);
 
-        $groupMemberships = $this->getMockBuilder('Database\Table\GroupMemberships')
-                                 ->disableOriginalConstructor()
-                                 ->getMock();
+        $groupMemberships = $this->createMock('Database\Table\GroupMemberships');
         $groupMemberships->method('getAdapter')->willReturn($adapter);
         $groupMemberships->method('getSql')->willReturn($sql);
         $groupMemberships->method('selectWith')->willReturn(array());
         $groupMemberships->method('insert')->will($this->throwException(new \RuntimeException('test')));
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->will(
                            $this->returnValueMap(
@@ -182,10 +180,10 @@ class GroupTest extends AbstractGroupTest
     {
         $platform = $this->getMockForAbstractClass('Zend\Db\Adapter\Platform\AbstractPlatform');
 
-        $adapter = $this->getMockBuilder('Zend\Db\Adapter\Adapter')->disableOriginalConstructor()->getMock();
+        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
         $adapter->method('getPlatform')->willReturn($platform);
 
-        $select = $this->getMock('Zend\Db\Sql\Select');
+        $select = $this->createMock('Zend\Db\Sql\Select');
         $select->expects($this->exactly(2))
                ->method('getRawState')
                ->will(
@@ -198,7 +196,7 @@ class GroupTest extends AbstractGroupTest
                );
         $select->method('getSqlString')->with($platform)->willReturn('query_new');
 
-        $clientManager = $this->getMockBuilder('Model\Client\ClientManager')->disableOriginalConstructor()->getMock();
+        $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->expects($this->once())
                       ->method('getClients')
                       ->with(
@@ -214,7 +212,7 @@ class GroupTest extends AbstractGroupTest
                           false
                       )->willReturn($select);
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->will(
                            $this->returnValueMap(
@@ -260,7 +258,7 @@ class GroupTest extends AbstractGroupTest
             array('columns' => array()),
             array('columns' => array('name')),
         );
-        $select = $this->getMock('Zend\Db\Sql\Select');
+        $select = $this->createMock('Zend\Db\Sql\Select');
         $select->expects($this->exactly(2))
                ->method('getRawState')
                ->will(
@@ -273,7 +271,7 @@ class GroupTest extends AbstractGroupTest
                );
         $select->expects($this->never())->method('getSqlString');
 
-        $clientManager = $this->getMockBuilder('Model\Client\ClientManager')->disableOriginalConstructor()->getMock();
+        $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->method('getClients')->willReturn($select);
 
         $model = $this->_getModel(array('Model\Client\ClientManager' => $clientManager));
@@ -307,10 +305,10 @@ class GroupTest extends AbstractGroupTest
     {
         $now = new \DateTime('2015-07-23 20:20:00');
 
-        $random = $this->getMock('Library\Random');
+        $random = $this->createMock('Library\Random');
         $random->method('getInteger')->willReturn(42);
 
-        $config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $config = $this->createMock('Model\Config');
         $config->method('__get')->will(
             $this->returnValueMap(
                 array(
@@ -320,7 +318,7 @@ class GroupTest extends AbstractGroupTest
             )
         );
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->will(
                            $this->returnValueMap(

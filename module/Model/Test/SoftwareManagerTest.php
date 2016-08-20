@@ -118,7 +118,7 @@ class SoftwareManagerTest extends AbstractTest
      */
     public function testSetProductKey($clientId, $productKey, $dataSet)
     {
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will(
             $this->returnValueMap(
                 array(
@@ -140,7 +140,7 @@ class SoftwareManagerTest extends AbstractTest
 
     public function testSetProductKeyInvalid()
     {
-        $client = $this->getMock('Model\Client\Client');
+        $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->willReturn(array('ProductKey' => 'ABCDE-FGHIJ-KLMNO-PQRST-UVWXY'));
 
         $model = $this->_getModel();

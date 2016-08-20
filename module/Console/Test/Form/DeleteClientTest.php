@@ -36,7 +36,7 @@ class DeleteClientTest extends \Console\Test\AbstractFormTest
 
     public function setUp()
     {
-        $this->_config = $this->getMockBuilder('Model\Config')->disableOriginalConstructor()->getMock();
+        $this->_config = $this->createMock('Model\Config');
         return parent::setUp();
     }
 
