@@ -30,7 +30,7 @@ abstract class AbstractGroupTest extends \Model\Test\AbstractTest
     public function setUp()
     {
         // GroupInfo::initialize() table has a dependency on Model\Config which
-        // can have side effects on oter tests. For better test isolation, set
+        // can have side effects on other tests. For better test isolation, set
         // up a GroupInfo instance with a Model\Config mock object. Every test
         // that relies on the GroupInfo table should override the
         // Database\Table\GroupInfo service with $this->_groupInfo.
