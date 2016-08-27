@@ -46,6 +46,9 @@ Requirements
     (see <http://php.net/manual/en/language.types.integer.php>). It is not used
     where 64 bit integers are available.
 
+  - The "zlib" extension and PHP 7 are required for the
+    decode-inventory-file.php tool.
+
 - [Composer](https://getcomposer.org/)
 
 - On every client that should be managed through Braintacle, either the

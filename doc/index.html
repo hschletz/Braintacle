@@ -297,6 +297,16 @@ You could also use <code>su</code> to run this script with the UID of the webser
 su -c 'php tools/createpackage-php PackageName install-Package.exe' www-data
 </pre>
 
+<h3>decode-inventory-file.php</h3>
+
+<p>
+This script decodes a compressed inventory file as created locally by some agents.
+It takes the file name as argument and prints the uncompressed XML data on the console.
+</p>
+<p>
+PHP 7 and the zlib extension are required for this tool.
+</p>
+
 <h3>generate-documentation.php</h3>
 
 <p>

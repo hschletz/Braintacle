@@ -87,6 +87,7 @@ if (count($args) >= 2) {
     testModule('Protocol');
     testModule('Console');
     testModule('DatabaseManager');
+    testModule('DecodeInventory');
     testModule('Export');
     testModule('PackageBuilder');
 }

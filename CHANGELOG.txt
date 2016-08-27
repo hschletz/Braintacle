@@ -110,6 +110,9 @@ Misc:
 
 - Tools: The schema-manager.php script has been renamed to database-manager.php.
 
+- Tools: The decode-ocsfiles.pl script has been replaced with
+  decode-inventory-file.php. This script requires PHP 7 and the zlib extension.
+
 - Tools: API documentation is now generated using ApiGen.
 
 

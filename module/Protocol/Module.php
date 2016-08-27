@@ -51,6 +51,11 @@ class Module implements
     public function getConfig()
     {
         return array(
+            'filters' => array(
+                'invokables' => array(
+                    'Protocol\InventoryDecode' => 'Protocol\Filter\InventoryDecode',
+                ),
+            ),
             'service_manager' => array(
                 'abstract_factories' => array(
                     'Protocol\Service\AbstractHydratorFactory',
