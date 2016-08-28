@@ -88,11 +88,11 @@ according to the comments within the file. This file must be readable by the
 webserver, but should not be readable for the rest of the world. For example, if
 the webserver runs in the 'www-data' group:
 
-    chown root:www-data /usr/local/share/braintacle/config/database.ini
-    chmod 640 /usr/local/share/braintacle/config/database.ini
+    chown root:www-data /usr/local/share/braintacle/config/braintacle.ini
+    chmod 640 /usr/local/share/braintacle/config/braintacle.ini
 
 If you prefer all config files within /etc or /usr/local/etc, make
-/usr/local/share/braintacle/config/database.ini a symbolic link to the actual
+/usr/local/share/braintacle/config/braintacle.ini a symbolic link to the actual
 file.
 
 To create and initialize the tables, log out from the database and run the
