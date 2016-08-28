@@ -6,7 +6,7 @@
 # Instead, you should keep it in a different location and include it in the
 # appropriate <VirtualHost> sections, like this:
 #
-# Include /usr/local/share/braintacle/config/braintacle-download.conf
+# Include /usr/local/share/braintacle/user_config/braintacle-download.conf
 #
 # Note that the package directory needs to be visible via both HTTP and HTTPS.
 #

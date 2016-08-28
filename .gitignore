@@ -1,7 +1,7 @@
-# The config/ directory contains user-provided files. Ignore its content...
-config/*
+# The user_config/ directory contains user-provided files. Ignore its content...
+user_config/*
 # ... except for the project-defined templates
-!config/*.template
+!user_config/*.template
 
 # The doc/api/ directory contains the generated API documentation.
 doc/api/

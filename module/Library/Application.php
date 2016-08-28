@@ -68,12 +68,9 @@ class Application
      */
     public static function getApplicationConfig($module, $addTestConfig)
     {
-        $config = array(
-            'modules' => array($module),
-            'module_listener_options' => array(
-                'module_paths' => array(static::getPath('module')),
-            ),
-        );
+        $config = require static::getPath('config/application.config.php');
+        $config['modules'][] = $module;
+        $config['module_listener_options']['module_paths'][] = static::getPath('module');
         if ($addTestConfig) {
             $config['Library\UserConfig'] = array(
                 'debug' => array(

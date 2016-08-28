@@ -6,7 +6,5 @@ without any warranty.
 ====================================================================
 
 
-This directory contains site specific configuration and templates for all
-configuration files.
-
-See the documentation and the comments inside the files for instructions.
+This directory contains application code that is not to be edited by the user.
+End-user configuration resides in the user_config directory.

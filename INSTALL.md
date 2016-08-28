@@ -82,18 +82,18 @@ For MySQL, run:
 
 You can choose any database name, user name and password.
 
-Copy or rename the file /usr/local/share/braintacle/config/braintacle.ini.template
-to /usr/local/share/braintacle/config/braintacle.ini and adjust its content
+Copy or rename the file /usr/local/share/braintacle/user_config/braintacle.ini.template
+to /usr/local/share/braintacle/user_config/braintacle.ini and adjust its content
 according to the comments within the file. This file must be readable by the
 webserver, but should not be readable for the rest of the world. For example, if
 the webserver runs in the 'www-data' group:
 
-    chown root:www-data /usr/local/share/braintacle/config/braintacle.ini
-    chmod 640 /usr/local/share/braintacle/config/braintacle.ini
+    chown root:www-data /usr/local/share/braintacle/user_config/braintacle.ini
+    chmod 640 /usr/local/share/braintacle/user_config/braintacle.ini
 
 If you prefer all config files within /etc or /usr/local/etc, make
-/usr/local/share/braintacle/config/braintacle.ini a symbolic link to the actual
-file.
+/usr/local/share/braintacle/user_config/braintacle.ini a symbolic link to the
+actual file.
 
 To create and initialize the tables, log out from the database and run the
 database manager script:
@@ -149,30 +149,30 @@ webserver, but should not be readable for the rest of the world. It is included
 from braintacle-server.conf.
 
 Create a copy of the sample configuration file
-config/braintacle-server.conf.template and make it known to Apache. If you don't
-run multiple virtual hosts or want to make the application accessible on all
-virtual hosts, you can simply copy it to a directory where Apache will read it
-(typically /etc/apache2/conf.d or similar):
+user_config/braintacle-server.conf.template and make it known to Apache. If you
+don't run multiple virtual hosts or want to make the application accessible on
+all virtual hosts, you can simply copy it to a directory where Apache will read
+it (typically /etc/apache2/conf.d or similar):
 
-    cp /usr/local/share/braintacle/config/braintacle-server.conf.template \
+    cp /usr/local/share/braintacle/user_config/braintacle-server.conf.template \
        /etc/apache2/conf.d/braintacle-server.conf
 
 To limit the application to a particular virtual host, copy the file somewhere
 else and include it in the `<VirtualHost>` block:
 
-    Include /usr/local/share/braintacle/config/braintacle-server.conf
+    Include /usr/local/share/braintacle/user_config/braintacle-server.conf
 
 The `PerlSwitches` directive in that file has no effect inside a `<VirtualHost>`
 section. Place it outside the section (i.e. as a global setting) to make it
 work.
 
-Create a copy of config/braintacle-server-app.conf.template in a place *outside*
-the Apache configuration and restrict read access, for example:
+Create a copy of user_config/braintacle-server-app.conf.template in a place
+*outside* the Apache configuration and restrict read access, for example:
 
-    cp /usr/local/share/braintacle/config/braintacle-server-app.conf.template \
-       /usr/local/share/braintacle/config/braintacle-server-app.conf
-    chgrp www-data /usr/local/share/braintacle/config/braintacle-server-app.conf
-    chmod 640 /usr/local/share/braintacle/config/braintacle-server-app.conf
+    cp /usr/local/share/braintacle/user_config/braintacle-server-app.conf.template \
+       /usr/local/share/braintacle/user_config/braintacle-server-app.conf
+    chgrp www-data /usr/local/share/braintacle/user_config/braintacle-server-app.conf
+    chmod 640 /usr/local/share/braintacle/user_config/braintacle-server-app.conf
 
 Edit both files to match your environment. Do not edit the template files
 directly as they will be overwritten upon upgrading.
@@ -203,8 +203,8 @@ you just created.
 
 You may want to rotate the logs regularly to prevent them from growing
 infinitely. A sample logrotate configuration file is shipped in
-config/logrotate.template. Copy this file to /etc/logrotate.d/braintacle and
-edit it to suit your needs.
+user_config/logrotate.template. Copy this file to /etc/logrotate.d/braintacle
+and edit it to suit your needs.
 
 To finish installation, reload the Apache configuration. Your system is now
 ready to accept client connections.
@@ -229,8 +229,8 @@ The console requires *mod_rewrite* and *mod_env* enabled in your Apache
 configuration. Both modules are shipped with Apache httpd, but may need to be
 enabled first. Refer to your distribution's documentation for details.
 
-Create a copy of config/braintacle-console.conf.template and make it known to
-Apache, either by placing it in a directory where Apache will read it or by
+Create a copy of user_config/braintacle-console.conf.template and make it known
+to Apache, either by placing it in a directory where Apache will read it or by
 including it in a particular VirtualHost definition. Edit the file to suit your
 needs.
 
@@ -254,7 +254,7 @@ access for the web server. Uploaded packages will be stored in this directory.
 In the administration console, enter the path unter Preferences->Packages. In
 the same dialog, you have to specify 2 URLs (1 for HTTP, 1 for HTTPS) which must
 point to this directory. An Apache template
-(config/braintacle-download.conf.template) is provided for this purpose.
+(user_config/braintacle-download.conf.template) is provided for this purpose.
 
 
 Set up the clients for inventory
@@ -269,7 +269,8 @@ the URL of Braintacle's server component.
 
 To be able to use agents other than the OCS Inventory NG agent, a file with
 whitelisted agent names is required. Such a file is provided in
-config/allowed-agents.template. Setup instructions are provided in that file.
+user_config/allowed-agents.template. Setup instructions are provided in that
+file.
 
 
 
@@ -278,7 +279,7 @@ Upgrading from previous versions
 
 To upgrade your installation to a new Braintacle version, copy the files over
 the installation directory. To prevent keeping obsolete files, it is best to
-delete the content (except for the config/ directory!) first. Additional
+delete the content (except for the user_config/ directory!) first. Additional
 required steps will be noted in the [changelog](./CHANGELOG.txt). If you skipped
 a release, follow the instructions for the skipped releases first.
 
