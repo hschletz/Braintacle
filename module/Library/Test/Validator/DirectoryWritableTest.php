@@ -49,10 +49,7 @@ class DirectoryWritableTest extends \PHPUnit_Framework_TestCase
         $url = vfsStream::newDirectory('test', 0000)->at($this->_root)->url();
         $validator = new DirectoryWritable;
         $this->assertFalse($validator->isValid($url));
-        $this->assertEquals(
-            array(DirectoryWritable::WRITABLE => "Verzeichnis '$url' ist nicht schreibbar"),
-            $validator->getMessages()
-        );
+        $this->assertEquals(DirectoryWritable::WRITABLE, key($validator->getMessages()));
     }
 
     public function testFileWritable()
@@ -60,10 +57,7 @@ class DirectoryWritableTest extends \PHPUnit_Framework_TestCase
         $url = vfsStream::newFile('test', 0777)->at($this->_root)->url();
         $validator = new DirectoryWritable;
         $this->assertFalse($validator->isValid($url));
-        $this->assertEquals(
-            array(DirectoryWritable::DIRECTORY => "'$url' ist kein Verzeichnis oder nicht zugänglich"),
-            $validator->getMessages()
-        );
+        $this->assertEquals(DirectoryWritable::DIRECTORY, key($validator->getMessages()));
     }
 
     public function testFileReadOnly()
@@ -71,10 +65,7 @@ class DirectoryWritableTest extends \PHPUnit_Framework_TestCase
         $url = vfsStream::newFile('test', 0000)->at($this->_root)->url();
         $validator = new DirectoryWritable;
         $this->assertFalse($validator->isValid($url));
-        $this->assertEquals(
-            array(DirectoryWritable::DIRECTORY => "'$url' ist kein Verzeichnis oder nicht zugänglich"),
-            $validator->getMessages()
-        );
+        $this->assertEquals(DirectoryWritable::DIRECTORY, key($validator->getMessages()));
     }
 
     public function testNonExistent()
@@ -82,10 +73,7 @@ class DirectoryWritableTest extends \PHPUnit_Framework_TestCase
         $url = $this->_root->url() . '/test';
         $validator = new DirectoryWritable;
         $this->assertFalse($validator->isValid($url));
-        $this->assertEquals(
-            array(DirectoryWritable::DIRECTORY => "'$url' ist kein Verzeichnis oder nicht zugänglich"),
-            $validator->getMessages()
-        );
+        $this->assertEquals(DirectoryWritable::DIRECTORY, key($validator->getMessages()));
     }
 
     public function testEmpty()
@@ -93,8 +81,27 @@ class DirectoryWritableTest extends \PHPUnit_Framework_TestCase
         $url = '';
         $validator = new DirectoryWritable;
         $this->assertFalse($validator->isValid($url));
+        $this->assertEquals(DirectoryWritable::DIRECTORY, key($validator->getMessages()));
+    }
+
+    public function testDirectoryMessage()
+    {
+        $url = $this->_root->url() . '/test';
+        $validator = new DirectoryWritable;
+        $validator->isValid($url);
         $this->assertEquals(
             array(DirectoryWritable::DIRECTORY => "'$url' ist kein Verzeichnis oder nicht zugänglich"),
+            $validator->getMessages()
+        );
+    }
+
+    public function testWritableMessage()
+    {
+        $url = vfsStream::newDirectory('test', 0000)->at($this->_root)->url();
+        $validator = new DirectoryWritable;
+        $validator->isValid($url);
+        $this->assertEquals(
+            array(DirectoryWritable::WRITABLE => "Verzeichnis '$url' ist nicht schreibbar"),
             $validator->getMessages()
         );
     }

@@ -39,13 +39,14 @@ class LogLevelTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($validator->isValid('Notice'));
         $this->assertTrue($validator->isValid('Info'));
         $this->assertTrue($validator->isValid('Debug'));
-    }
-
-    public function testInvalidLogLevel()
-    {
-        $validator = new LogLevel;
         $this->assertFalse($validator->isValid('eErr')); // extra characters before valid string
         $this->assertFalse($validator->isValid('Error')); // extra characters after valid string
+    }
+
+    public function testMessage()
+    {
+        $validator = new LogLevel;
+        $validator->isValid('Error');
         $this->assertEquals(
             array(LogLevel::LOG_LEVEL => "'Error' ist kein gültiger Loglevel"),
             $validator->getMessages()

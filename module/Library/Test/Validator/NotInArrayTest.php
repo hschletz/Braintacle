@@ -28,59 +28,81 @@ use Library\Validator\NotInArray;
  */
 class NotInArrayTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Validation tests
-     */
-    public function testValidation()
+    public function testGetHaystackSetViaConstructor()
     {
         $haystack = array('one', 'two');
-
-        // Case sensitive match (default)
-        $validator = new NotInArray(
-            array(
-                'haystack' => $haystack,
-            )
-        );
+        $validator = new NotInArray(array('haystack' => $haystack));
         $this->assertEquals($haystack, $validator->getHaystack());
-        $this->assertEquals(NotInArray::CASE_SENSITIVE, $validator->getCaseSensitivity());
-        $this->assertTrue($validator->isValid('three'));
-        $this->assertTrue($validator->isValid('One'));
-        $this->assertFalse($validator->isValid('one'));
-        $this->assertEquals(
-            array('inArray' => "'one' ist in der Liste ungültiger Werte"),
-            $validator->getMessages()
-        );
-
-        // Case insensitive match
-        $validator = new NotInArray(
-            array(
-                'haystack' => $haystack,
-                'caseSensitivity' => NotInArray::CASE_INSENSITIVE,
-            )
-        );
-        $this->assertEquals($haystack, $validator->getHaystack());
-        $this->assertEquals(NotInArray::CASE_INSENSITIVE, $validator->getCaseSensitivity());
-        $this->assertTrue($validator->isValid('three'));
-        $this->assertFalse($validator->isValid('One'));
-        $this->assertFalse($validator->isValid('one'));
     }
 
-    /**
-     * Test for Exception on invalid haystack
-     */
+    public function testGetHaystackSetViaSetHaystack()
+    {
+        $haystack = array('one', 'two');
+        $validator = new NotInArray;
+        $validator->setHaystack($haystack);
+        $this->assertEquals($haystack, $validator->getHaystack());
+    }
+
     public function testInvalidHaystack()
     {
-        $this->setExpectedException('RuntimeException');
+        $this->setExpectedException('RuntimeException', 'Haystack is not an array');
         $validator = new NotInArray;
         $validator->isValid('test');
     }
 
-    /**
-     * Test for Exception on invalid caseSensitivity option
-     */
+    public function testCaseSensitivityFlagDefaultCaseSensitive()
+    {
+        $validator = new NotInArray;
+        $this->assertEquals(NotInArray::CASE_SENSITIVE, $validator->getCaseSensitivity());
+    }
+
+    public function testCaseSensitivityFlagCaseInsensitive()
+    {
+        $validator = new NotInArray(array('caseSensitivity' => NotInArray::CASE_INSENSITIVE));
+        $this->assertEquals(NotInArray::CASE_INSENSITIVE, $validator->getCaseSensitivity());
+    }
+
     public function testInvalidCaseSensitivity()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->setExpectedException('InvalidArgumentException', 'Invalid value for caseSensitivity option: 1');
         $validator = new NotInArray(array('caseSensitivity' => true));
+    }
+
+    public function validationProvider()
+    {
+        return array(
+            array('three', NotInArray::CASE_SENSITIVE, true),
+            array('One', NotInArray::CASE_SENSITIVE, true),
+            array('one', NotInArray::CASE_SENSITIVE, false),
+            array('three', NotInArray::CASE_INSENSITIVE, true),
+            array('One', NotInArray::CASE_INSENSITIVE, false),
+            array('one', NotInArray::CASE_INSENSITIVE, false),
+        );
+    }
+
+    /**
+     * @dataProvider validationProvider
+     */
+    public function testValidation($value, $caseSensitivity, $expectedResult)
+    {
+        $haystack = array('one', 'two');
+
+        $validator = new NotInArray(
+            array(
+                'haystack' => $haystack,
+                'caseSensitivity' => $caseSensitivity,
+            )
+        );
+        $this->assertSame($expectedResult, $validator->isValid($value));
+    }
+
+    public function testMessage()
+    {
+        $validator = new NotInArray(array('haystack' => array('one')));
+        $validator->isValid('one');
+        $this->assertEquals(
+            array(NotInArray::IN_ARRAY => "'one' ist in der Liste ungültiger Werte"),
+            $validator->getMessages()
+        );
     }
 }
