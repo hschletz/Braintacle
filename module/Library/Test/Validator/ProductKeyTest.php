@@ -58,9 +58,22 @@ class ProductKeyTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($validator->isValid(''));
     }
 
-    public function testMessage()
+    public function testMessageUntranslated()
     {
         $validator = new ProductKey;
+        $validator->isValid('invalid');
+        $this->assertEquals(
+            array(ProductKey::PRODUCT_KEY => "'invalid' is not a valid product key"),
+            $validator->getMessages()
+        );
+    }
+
+    public function testMessageTranslated()
+    {
+        $validator = new ProductKey;
+        $validator->setTranslator(
+            \Library\Application::init('Library', true)->getServiceManager()->get('MvcTranslator')
+        );
         $validator->isValid('invalid');
         $this->assertEquals(
             array(ProductKey::PRODUCT_KEY => "'invalid' ist kein gültiger Lizenzschlüssel"),

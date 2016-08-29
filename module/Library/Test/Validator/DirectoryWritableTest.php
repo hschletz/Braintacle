@@ -84,10 +84,24 @@ class DirectoryWritableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(DirectoryWritable::DIRECTORY, key($validator->getMessages()));
     }
 
-    public function testDirectoryMessage()
+    public function testDirectoryMessageUntranslated()
     {
         $url = $this->_root->url() . '/test';
         $validator = new DirectoryWritable;
+        $validator->isValid($url);
+        $this->assertEquals(
+            array(DirectoryWritable::DIRECTORY => "'$url' is not a directory or inaccessible"),
+            $validator->getMessages()
+        );
+    }
+
+    public function testDirectoryMessageTranslated()
+    {
+        $url = $this->_root->url() . '/test';
+        $validator = new DirectoryWritable;
+        $validator->setTranslator(
+            \Library\Application::init('Library', true)->getServiceManager()->get('MvcTranslator')
+        );
         $validator->isValid($url);
         $this->assertEquals(
             array(DirectoryWritable::DIRECTORY => "'$url' ist kein Verzeichnis oder nicht zugänglich"),
@@ -95,10 +109,24 @@ class DirectoryWritableTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testWritableMessage()
+    public function testWritableMessageUntranslated()
     {
         $url = vfsStream::newDirectory('test', 0000)->at($this->_root)->url();
         $validator = new DirectoryWritable;
+        $validator->isValid($url);
+        $this->assertEquals(
+            array(DirectoryWritable::WRITABLE => "Directory '$url' is not writable"),
+            $validator->getMessages()
+        );
+    }
+
+    public function testWritableMessageTranslated()
+    {
+        $url = vfsStream::newDirectory('test', 0000)->at($this->_root)->url();
+        $validator = new DirectoryWritable;
+        $validator->setTranslator(
+            \Library\Application::init('Library', true)->getServiceManager()->get('MvcTranslator')
+        );
         $validator->isValid($url);
         $this->assertEquals(
             array(DirectoryWritable::WRITABLE => "Verzeichnis '$url' ist nicht schreibbar"),

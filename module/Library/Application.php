@@ -46,11 +46,6 @@ class Application
         // Set up PHP environment.
         session_cache_limiter('nocache'); // Default headers to prevent caching
 
-        // Evaluate locale from HTTP header. Affects translations, date/time rendering etc.
-        if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            \Locale::setDefault(\Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']));
-        }
-
         return \Zend\Mvc\Application::init(
             array_replace_recursive(
                 static::getApplicationConfig($module, $addTestConfig),

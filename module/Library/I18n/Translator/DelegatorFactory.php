@@ -66,9 +66,6 @@ class DelegatorFactory implements \Zend\ServiceManager\DelegatorFactoryInterface
             );
         }
 
-        // Validator translator is injected in bootstrap because the delegator
-        // is invoked after form validation messages get translated.
-
         return $mvcTranslator;
     }
 

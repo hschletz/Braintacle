@@ -84,10 +84,24 @@ class FileReadableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(FileReadable::FILE, key($validator->getMessages()));
     }
 
-    public function testFileMessage()
+    public function testFileMessageUntranslated()
     {
         $url = $this->_root->url() . '/test';
         $validator = new FileReadable;
+        $validator->isValid($url);
+        $this->assertEquals(
+            array(FileReadable::FILE => "'$url' is not a file or inaccessible"),
+            $validator->getMessages()
+        );
+    }
+
+    public function testFileMessageTranslated()
+    {
+        $url = $this->_root->url() . '/test';
+        $validator = new FileReadable;
+        $validator->setTranslator(
+            \Library\Application::init('Library', true)->getServiceManager()->get('MvcTranslator')
+        );
         $validator->isValid($url);
         $this->assertEquals(
             array(FileReadable::FILE => "'$url' ist keine Datei oder nicht zugänglich"),
@@ -95,10 +109,24 @@ class FileReadableTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testReadableMessage()
+    public function testReadableMessageUntranslated()
     {
         $url = vfsStream::newFile('test', 0000)->at($this->_root)->url();
         $validator = new FileReadable;
+        $validator->isValid($url);
+        $this->assertEquals(
+            array(FileReadable::READABLE => "File '$url' is not readable"),
+            $validator->getMessages()
+        );
+    }
+
+    public function testReadableMessageTranslated()
+    {
+        $url = vfsStream::newFile('test', 0000)->at($this->_root)->url();
+        $validator = new FileReadable;
+        $validator->setTranslator(
+            \Library\Application::init('Library', true)->getServiceManager()->get('MvcTranslator')
+        );
         $validator->isValid($url);
         $this->assertEquals(
             array(FileReadable::READABLE => "Datei '$url' ist nicht lesbar"),

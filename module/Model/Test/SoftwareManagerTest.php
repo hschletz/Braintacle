@@ -148,7 +148,7 @@ class SoftwareManagerTest extends AbstractTest
             $model->setProductKey($client, 'invalid');
             $this->fail('Expected exception was not thrown');
         } catch (\InvalidArgumentException $e) {
-            $this->assertEquals("'invalid' ist kein gültiger Lizenzschlüssel", $e->getMessage());
+            $this->assertEquals("'invalid' is not a valid product key", $e->getMessage());
         }
         $this->assertTablesEqual(
             $this->_loadDataSet()->getTable('braintacle_windows'),

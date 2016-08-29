@@ -138,11 +138,6 @@ class Module implements
 
         \Zend\Filter\StaticFilter::setPluginManager($serviceManager->get('FilterManager'));
         \Zend\Validator\StaticValidator::setPluginManager($serviceManager->get('ValidatorManager'));
-
-        // Attach translator to validators
-        \Zend\Validator\AbstractValidator::setDefaultTranslator(
-            $serviceManager->get('MvcTranslator')
-        );
     }
 
     /**
