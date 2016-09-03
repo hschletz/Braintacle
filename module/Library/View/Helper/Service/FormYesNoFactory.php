@@ -24,16 +24,20 @@ namespace Library\View\Helper\Service;
 /**
  * Factory for FormYesNo
  */
-class FormYesNoFactory implements \Zend\ServiceManager\FactoryInterface
+class FormYesNoFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
+        $plugins = $container->get('ViewHelperManager');
         return new \Library\View\Helper\FormYesNo(
-            $serviceLocator->get('Translate'),
-            $serviceLocator->get('HtmlElement')
+            $plugins->get('Translate'),
+            $plugins->get('HtmlElement')
         );
     }
 }

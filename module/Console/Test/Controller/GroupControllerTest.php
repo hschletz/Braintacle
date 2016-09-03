@@ -69,14 +69,13 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_addToGroupForm = $this->createMock('Console\Form\AddToGroup');
         $this->_clientConfigForm = $this->createMock('Console\Form\ClientConfig');
 
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('Model\Group\GroupManager', $this->_groupManager)
-             ->setService('Model\Client\ClientManager', $this->_clientManager)
-             ->get('FormElementManager')
-             ->setService('Console\Form\Package\Assign', $this->_packageAssignmentForm)
-             ->setService('Console\Form\AddToGroup', $this->_addToGroupForm)
-             ->setService('Console\Form\ClientConfig', $this->_clientConfigForm);
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setService('Model\Group\GroupManager', $this->_groupManager);
+        $serviceManager->setService('Model\Client\ClientManager', $this->_clientManager);
+        $formManager = $serviceManager->get('FormElementManager');
+        $formManager->setService('Console\Form\Package\Assign', $this->_packageAssignmentForm);
+        $formManager->setService('Console\Form\AddToGroup', $this->_addToGroupForm);
+        $formManager->setService('Console\Form\ClientConfig', $this->_clientConfigForm);
     }
 
     public function testInvalidGroup()
@@ -162,7 +161,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                            array('getMessagesFromNamespace', array('error')),
                            array('getMessagesFromNamespace', array('success'))
                        )->willReturnOnConsecutiveCalls(array('error'), array('success'));
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('FlashMessenger', $flashMessenger);
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
         $this->_disableTranslator();
         $this->dispatch('/console/group/index/');
@@ -191,7 +190,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                    ->method('__invoke')
                    ->with($creationDate, \IntlDateFormatter::FULL, \IntlDateFormatter::MEDIUM)
                    ->willReturn('date_create');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('dateFormat', $dateFormat);
 
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
@@ -252,7 +251,9 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                        array($inventoryDate, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
                    )
                    ->will($this->onConsecutiveCalls('date_create', 'date_expire', 'date_client'));
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
+        $viewHelperManager = $this->getApplicationServiceLocator()->get('ViewHelperManager');
+        $viewHelperManager->setService('dateFormat', $dateFormat);
+        $viewHelperManager->setService('DateFormat', $dateFormat);
 
         $this->dispatch($url);
 

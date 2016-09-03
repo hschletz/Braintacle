@@ -161,7 +161,6 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
         foreach ($itemTypes as $type) {
             $services[] = array(
                 'Protocol\Hydrator\\' . $itemManager->getTableName($type),
-                true,
                 $itemHydrator
             );
             if (isset($items[$type])) {
@@ -195,9 +194,9 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
                      ->with($client)
                      ->willReturn($biosData);
 
-        $services[] = array('Model\Client\ItemManager', true, $itemManager);
-        $services[] = array('Protocol\Hydrator\ClientsHardware', true, $hardwareHydrator);
-        $services[] = array('Protocol\Hydrator\ClientsBios', true, $biosHydrator);
+        $services[] = array('Model\Client\ItemManager', $itemManager);
+        $services[] = array('Protocol\Hydrator\ClientsHardware', $hardwareHydrator);
+        $services[] = array('Protocol\Hydrator\ClientsBios', $biosHydrator);
 
         $serviceLocator = $this->createMock('\Zend\ServiceManager\ServiceManager');
         $serviceLocator->method('get')->willReturnMap($services);

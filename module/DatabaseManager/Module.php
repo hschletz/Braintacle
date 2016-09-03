@@ -64,11 +64,10 @@ class Module implements
             ),
             'controllers' => array(
                 'factories' => array(
-                    'DatabaseManager\Controller' => function ($serviceLocator) {
-                        $serviceManager = $serviceLocator->getServiceLocator();
+                    'DatabaseManager\Controller' => function ($container) {
                         return new Controller(
-                            $serviceManager->get('Database\SchemaManager'),
-                            $serviceManager->get('Library\Logger')
+                            $container->get('Database\SchemaManager'),
+                            $container->get('Library\Logger')
                         );
                     }
                 )
@@ -108,7 +107,8 @@ class Module implements
         $logLevel = $e->getRouteMatch()->getParam('loglevel');
         if ($logLevel != '' and !\Zend\Validator\StaticValidator::execute($logLevel, 'Library\LogLevel')) {
             $e->setError(\Zend\Mvc\Application::ERROR_ROUTER_NO_MATCH);
-            $e->getTarget()->getEventManager()->trigger(\Zend\Mvc\MvcEvent::EVENT_DISPATCH_ERROR, $e);
+            $e->setName(\Zend\Mvc\MvcEvent::EVENT_DISPATCH_ERROR);
+            $e->getTarget()->getEventManager()->triggerEvent($e);
         }
     }
 

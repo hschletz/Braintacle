@@ -24,16 +24,19 @@ namespace Model\Service\Registry;
 /**
  * Factory for Model\RegistryManager
  */
-class RegistryManagerFactory implements \Zend\ServiceManager\FactoryInterface
+class RegistryManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Model\Registry\RegistryManager(
-            $serviceLocator->get('Database\Table\RegistryValueDefinitions'),
-            $serviceLocator->get('Database\Table\RegistryData')
+            $container->get('Database\Table\RegistryValueDefinitions'),
+            $container->get('Database\Table\RegistryData')
         );
     }
 }

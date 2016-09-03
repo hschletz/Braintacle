@@ -63,8 +63,8 @@ class Module implements
             ),
             'controllers' => array(
                 'factories' => array(
-                    'Export\Controller' => function ($serviceLocator) {
-                        return new Controller($serviceLocator->getServiceLocator()->get('Model\Client\ClientManager'));
+                    'Export\Controller' => function ($container) {
+                        return new Controller($container->get('Model\Client\ClientManager'));
                     }
                 )
             ),

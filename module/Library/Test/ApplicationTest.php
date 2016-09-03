@@ -35,11 +35,14 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testGetApplicationConfigWithoutTestEnvironment()
     {
         $this->assertEquals(
-            array(
-                'modules' => array('moduleName'),
-                'module_listener_options' => array(
-                    'module_paths' => array(realpath(__DIR__ . '/../..')),
-                ),
+            array_merge_recursive(
+                require Application::getPath('config/application.config.php'),
+                array(
+                    'modules' => array('moduleName'),
+                    'module_listener_options' => array(
+                        'module_paths' => array(realpath(__DIR__ . '/../..')),
+                    ),
+                )
             ),
             Application::getApplicationConfig('moduleName', false)
         );
@@ -48,17 +51,20 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testGetApplicationConfigWithTestEnvironment()
     {
         $this->assertEquals(
-            array(
-                'modules' => array('moduleName'),
-                'module_listener_options' => array(
-                    'module_paths' => array(realpath(__DIR__ . '/../..')),
-                ),
-                'Library\UserConfig' => array(
-                    'debug' => array(
-                        'display backtrace' => true,
-                        'report missing translations' => true,
+            array_merge_recursive(
+                require Application::getPath('config/application.config.php'),
+                array(
+                    'modules' => array('moduleName'),
+                    'module_listener_options' => array(
+                        'module_paths' => array(realpath(__DIR__ . '/../..')),
                     ),
-                ),
+                    'Library\UserConfig' => array(
+                        'debug' => array(
+                            'display backtrace' => true,
+                            'report missing translations' => true,
+                        ),
+                    ),
+                )
             ),
             Application::getApplicationConfig('moduleName', true)
         );

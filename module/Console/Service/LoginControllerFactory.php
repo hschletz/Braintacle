@@ -24,17 +24,19 @@ namespace Console\Service;
 /**
  * Factory for LoginController
  */
-class LoginControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class LoginControllerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $serviceManager = $serviceLocator->getServiceLocator();
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Console\Controller\LoginController(
-            $serviceManager->get('Zend\Authentication\AuthenticationService'),
-            $serviceManager->get('FormElementManager')->get('Console\Form\Login')
+            $container->get('Zend\Authentication\AuthenticationService'),
+            $container->get('FormElementManager')->get('Console\Form\Login')
         );
     }
 }

@@ -24,13 +24,16 @@ namespace Model\Service\Client;
 /**
  * Factory for Model\Client\ItemManager
  */
-class ItemManagerFactory implements \Zend\ServiceManager\FactoryInterface
+class ItemManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        return new \Model\Client\ItemManager($serviceLocator);
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
+        return new \Model\Client\ItemManager($container);
     }
 }

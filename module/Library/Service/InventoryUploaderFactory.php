@@ -25,13 +25,16 @@ namespace Library\Service;
  * Factory for InventoryUploader instance
  * @codeCoverageIgnore
  */
-class InventoryUploaderFactory implements \Zend\ServiceManager\FactoryInterface
+class InventoryUploaderFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        return new \Library\InventoryUploader($serviceLocator->get('Model\Config')->communicationServerUri);
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
+        return new \Library\InventoryUploader($container->get('Model\Config')->communicationServerUri);
     }
 }

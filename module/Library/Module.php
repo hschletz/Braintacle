@@ -43,6 +43,10 @@ class Module implements
     {
         return array(
             'controller_plugins' => array(
+                'aliases' => array(
+                    'redirectToRoute' => 'RedirectToRoute',
+                    'urlFromRoute' => 'UrlFromRoute',
+                ),
                 'invokables' => array(
                     '_' => 'Library\Mvc\Controller\Plugin\TranslationHelper',
                     'RedirectToRoute' => 'Library\Mvc\Controller\Plugin\RedirectToRoute',
@@ -57,7 +61,7 @@ class Module implements
             ),
             'service_manager' => array(
                 'delegators' => array(
-                    'MvcTranslator' => array('Library\I18n\Translator\DelegatorFactory'),
+                    'Zend\Mvc\I18n\Translator' => array('Library\I18n\Translator\DelegatorFactory'),
                 ),
                 'factories' => array(
                     'Library\InventoryUploader' => 'Library\Service\InventoryUploaderFactory',
@@ -98,13 +102,19 @@ class Module implements
                 ),
             ),
             'view_helpers' => array(
+                'aliases' => array(
+                    'formSelectSimple' => 'FormSelectSimple',
+                    'formSelectUntranslated' => 'FormSelectUntranslated',
+                    'formYesNo' => 'FormYesNo',
+                    'htmlElement' => 'HtmlElement',
+                ),
                 'factories' => array(
-                    'formYesNo' => 'Library\View\Helper\Service\FormYesNoFactory',
+                    'FormYesNo' => 'Library\View\Helper\Service\FormYesNoFactory',
                 ),
                 'invokables' => array(
-                    'formSelectSimple' => 'Library\View\Helper\FormSelectSimple',
-                    'formSelectUntranslated' => 'Library\View\Helper\FormSelectUntranslated',
-                    'htmlElement' => 'Library\View\Helper\HtmlElement',
+                    'FormSelectSimple' => 'Library\View\Helper\FormSelectSimple',
+                    'FormSelectUntranslated' => 'Library\View\Helper\FormSelectUntranslated',
+                    'HtmlElement' => 'Library\View\Helper\HtmlElement',
                 ),
             ),
         );
@@ -133,8 +143,8 @@ class Module implements
 
         // Register form element view helpers
         $formElementHelper = $serviceManager->get('ViewHelperManager')->get('formElement');
-        $formElementHelper->addClass('Library\Form\Element\SelectSimple', 'formselectsimple');
-        $formElementHelper->addType('select_untranslated', 'formselectuntranslated');
+        $formElementHelper->addClass('Library\Form\Element\SelectSimple', 'FormSelectSimple');
+        $formElementHelper->addType('select_untranslated', 'FormSelectUntranslated');
 
         \Zend\Filter\StaticFilter::setPluginManager($serviceManager->get('FilterManager'));
         \Zend\Validator\StaticValidator::setPluginManager($serviceManager->get('ValidatorManager'));

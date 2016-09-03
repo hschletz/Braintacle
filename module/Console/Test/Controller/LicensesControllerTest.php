@@ -37,9 +37,7 @@ class LicensesControllerTest extends \Console\Test\AbstractControllerTest
         parent::setUp();
 
         $this->_softwareManager = $this->createMock('Model\SoftwareManager');
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('Model\SoftwareManager', $this->_softwareManager);
+        $this->getApplicationServiceLocator()->setService('Model\SoftwareManager', $this->_softwareManager);
     }
 
     public function testIndexActionNoManualKeys()

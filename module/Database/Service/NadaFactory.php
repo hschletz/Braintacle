@@ -28,14 +28,17 @@ namespace Database\Service;
  *
  * @codeCoverageIgnore
  */
-class NadaFactory implements \Zend\ServiceManager\FactoryInterface
+class NadaFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $database = \Nada\Factory::getDatabase($serviceLocator->get('Db'));
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
+        $database = \Nada\Factory::getDatabase($container->get('Db'));
         if ($database->isSqlite()) {
             $database->emulatedDatatypes = array('bool', 'date', 'decimal', 'timestamp');
         } elseif ($database->isMySql()) {

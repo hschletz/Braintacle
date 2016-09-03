@@ -25,17 +25,19 @@ namespace Console\Form\Service;
  * Factory for AddToGroup form
  * @codeCoverageIgnore
  */
-class AddToGroupFactory implements \Zend\ServiceManager\FactoryInterface
+class AddToGroupFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $serviceManager = $serviceLocator->getServiceLocator();
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Console\Form\AddToGroup(
             null,
-            array('GroupManager' => $serviceManager->get('Model\Group\GroupManager'))
+            array('GroupManager' => $container->get('Model\Group\GroupManager'))
         );
     }
 }

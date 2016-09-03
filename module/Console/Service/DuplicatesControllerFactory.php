@@ -24,17 +24,19 @@ namespace Console\Service;
 /**
  * Factory for DuplicatesController
  */
-class DuplicatesControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class DuplicatesControllerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $serviceManager = $serviceLocator->getServiceLocator();
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Console\Controller\DuplicatesController(
-            $serviceManager->get('Model\Client\DuplicatesManager'),
-            $serviceManager->get('FormElementManager')->get('Console\Form\ShowDuplicates')
+            $container->get('Model\Client\DuplicatesManager'),
+            $container->get('FormElementManager')->get('Console\Form\ShowDuplicates')
         );
     }
 }

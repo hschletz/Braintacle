@@ -25,20 +25,22 @@ namespace Console\Form\Service;
  * Factory for Search form
  * @codeCoverageIgnore
  */
-class SearchFactory implements \Zend\ServiceManager\FactoryInterface
+class SearchFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $serviceManager = $serviceLocator->getServiceLocator();
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Console\Form\Search(
             null,
             array(
-                'translator' => $serviceManager->get('MvcTranslator'),
-                'registryManager' => $serviceManager->get('Model\Registry\RegistryManager'),
-                'customFieldManager' => $serviceManager->get('Model\Client\CustomFieldManager'),
+                'translator' => $container->get('MvcTranslator'),
+                'registryManager' => $container->get('Model\Registry\RegistryManager'),
+                'customFieldManager' => $container->get('Model\Client\CustomFieldManager'),
             )
         );
     }

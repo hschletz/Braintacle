@@ -24,7 +24,7 @@ namespace Export;
 /**
  * Export application controller
  */
-class Controller extends \Zend\Mvc\Controller\AbstractConsoleController
+class Controller extends \Zend\Mvc\Console\Controller\AbstractConsoleController
 {
     /**
      * Client manager
@@ -51,7 +51,7 @@ class Controller extends \Zend\Mvc\Controller\AbstractConsoleController
         $validate = $request->getParam('validate') || $request->getParam('v');
 
         if (!is_dir($directory) or !is_writable($directory)) {
-            $model = new \Zend\View\Model\ConsoleModel;
+            $model = new \Zend\Mvc\Console\View\ViewModel;
             $model->setErrorLevel(10);
             $model->setResult("Directory '$directory' does not exist or is not writable.\n");
             return $model;
@@ -67,7 +67,7 @@ class Controller extends \Zend\Mvc\Controller\AbstractConsoleController
             $document = $client->toDomDocument();
             $document->save($directory . '/' . $document->getFilename());
             if ($validate and !$document->isValid()) {
-                $model = new \Zend\View\Model\ConsoleModel;
+                $model = new \Zend\Mvc\Console\View\ViewModel;
                 $model->setErrorLevel(11);
                 $model->setResult("Validation failed for $id.\n");
                 return $model;

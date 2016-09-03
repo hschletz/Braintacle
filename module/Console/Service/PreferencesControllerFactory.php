@@ -24,20 +24,22 @@ namespace Console\Service;
 /**
  * Factory for PreferencesController
  */
-class PreferencesControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class PreferencesControllerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $serviceManager = $serviceLocator->getServiceLocator();
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Console\Controller\PreferencesController(
-            $serviceManager->get('FormElementManager'),
-            $serviceManager->get('Model\Client\CustomFieldManager'),
-            $serviceManager->get('Model\Network\DeviceManager'),
-            $serviceManager->get('Model\Registry\RegistryManager'),
-            $serviceManager->get('Model\Config')
+            $container->get('FormElementManager'),
+            $container->get('Model\Client\CustomFieldManager'),
+            $container->get('Model\Network\DeviceManager'),
+            $container->get('Model\Registry\RegistryManager'),
+            $container->get('Model\Config')
         );
     }
 }

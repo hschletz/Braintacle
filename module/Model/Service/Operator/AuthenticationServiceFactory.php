@@ -24,18 +24,21 @@ namespace Model\Service\Operator;
 /**
  * Factory for Model\Operator\AuthenticationService
  */
-class AuthenticationServiceFactory implements \Zend\ServiceManager\FactoryInterface
+class AuthenticationServiceFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      * @codeCoverageIgnore
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Model\Operator\AuthenticationService(
             null,
             new \Zend\Authentication\Adapter\DbTable\CredentialTreatmentAdapter(
-                $serviceLocator->get('Db'),
+                $container->get('Db'),
                 'operators',
                 'id',
                 'passwd'

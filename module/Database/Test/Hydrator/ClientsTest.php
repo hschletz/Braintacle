@@ -73,10 +73,10 @@ class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
-                array('Database\Nada', true, $nada),
-                array('Database\Table\WindowsInstallations', true, $windowsInstallations),
-                array('Model\Client\CustomFieldManager', true, $customFieldManager),
-                array('Model\Client\ItemManager', true, $itemManager),
+                array('Database\Nada', $nada),
+                array('Database\Table\WindowsInstallations', $windowsInstallations),
+                array('Model\Client\CustomFieldManager', $customFieldManager),
+                array('Model\Client\ItemManager', $itemManager),
             )
         );
 

@@ -24,19 +24,20 @@ namespace Library\I18n\Translator;
 /**
  * Delegator for Translator initialization
  */
-class DelegatorFactory implements \Zend\ServiceManager\DelegatorFactoryInterface
+class DelegatorFactory implements \Zend\ServiceManager\Factory\DelegatorFactoryInterface
 {
     /** {@inheritdoc} */
-    public function createDelegatorWithName(
-        \Zend\ServiceManager\ServiceLocatorInterface $services,
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
         $name,
-        $requestedName,
-        $callback
+        callable $callback,
+        array $options = null
     ) {
         $locale = \Locale::getDefault();
         $primaryLanguage = \Locale::getPrimaryLanguage($locale);
 
         $mvcTranslator = $callback();
+        $mvcTranslator->setPluginManager($container->get('TranslatorPluginManager'));
         $translator = $mvcTranslator->getTranslator();
 
         // Set language
@@ -50,20 +51,21 @@ class DelegatorFactory implements \Zend\ServiceManager\DelegatorFactoryInterface
 
         // Load translations for ZF validator messages
         $translator->addTranslationFilePattern(
-            'phpArray',
+            'phparray',
             \Zend\I18n\Translator\Resources::getBasePath(),
             \Zend\I18n\Translator\Resources::getPatternForValidator()
         );
 
         // Set up event listener for missing translations
-        if ($primaryLanguage != 'en' and
-            @$services->get('Library\UserConfig')['debug']['report missing translations']
-        ) {
-            $translator->enableEventManager();
-            $translator->getEventManager()->attach(
-                \Zend\I18n\Translator\Translator::EVENT_MISSING_TRANSLATION,
-                array($this, 'onMissingTranslation')
-            );
+        if ($primaryLanguage != 'en') {
+            $config = $container->get('Library\UserConfig');
+            if (@$config['debug']['report missing translations']) {
+                $translator->enableEventManager();
+                $translator->getEventManager()->attach(
+                    \Zend\I18n\Translator\Translator::EVENT_MISSING_TRANSLATION,
+                    array($this, 'onMissingTranslation')
+                );
+            }
         }
 
         return $mvcTranslator;

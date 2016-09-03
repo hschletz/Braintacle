@@ -37,7 +37,8 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 
         $application = \Library\Application::init('Console', true);
         $serviceManager = $application->getServiceManager();
-        $serviceManager->setAllowOverride(true)->setService(
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService(
             'Zend\Authentication\AuthenticationService',
             $this->_authService
         );

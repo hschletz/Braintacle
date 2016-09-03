@@ -29,20 +29,16 @@ namespace Database\Service;
  * on a configured adapter.
  *
  * Since circular dependencies are not supported, this abstract factory creates
- * both services if they don't already exist and performs all necessary
- * initializations.
+ * both services and performs all necessary initializations.
  */
-class AbstractDatabaseFactory implements \Zend\ServiceManager\AbstractFactoryInterface
+class AbstractDatabaseFactory implements \Zend\ServiceManager\Factory\AbstractFactoryInterface
 {
     /**
      * @internal
      * @codeCoverageIgnore
      */
-    public function canCreateServiceWithName(
-        \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
-        $name,
-        $requestedName
-    ) {
+    public function canCreate(\Interop\Container\ContainerInterface $container, $requestedName)
+    {
         return $requestedName == 'Db' or $requestedName == 'Database\Nada';
     }
 
@@ -50,55 +46,38 @@ class AbstractDatabaseFactory implements \Zend\ServiceManager\AbstractFactoryInt
      * @internal
      * @codeCoverageIgnore
      */
-    public function createServiceWithName(
-        \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
-        $name,
-        $requestedName
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
     ) {
-        // Create or retrieve adapter
-        if ($serviceLocator->has('Db', false)) {
-            $adapter = $serviceLocator->get('Db');
+        // Retreive database configuration from config file.
+        $config = $container->get('Library\UserConfig')['database'];
+        $config['options']['buffer_results'] = true;
+        // Set charset to utf8mb4 for MySQL, utf8 for everything else.
+        if (stripos($config['driver'], 'mysql') === false) {
+            $config['charset'] = 'utf8';
         } else {
-            // Retreive database configuration from config file.
-            $config = $serviceLocator->get('Library\UserConfig')['database'];
-            $config['options']['buffer_results'] = true;
-            // Set charset to utf8mb4 for MySQL, utf8 for everything else.
-            if (stripos($config['driver'], 'mysql') === false) {
-                $config['charset'] = 'utf8';
-            } else {
-                $config['charset'] = 'utf8mb4';
-            }
-
-            $adapter = new \Zend\Db\Adapter\Adapter($config);
-
-            // Create service unless it was explicitly requested, in which case
-            // the servive manager will store it later.
-            if ($requestedName != 'Db') {
-                $serviceLocator->setService('Db', $adapter);
-            }
+            $config['charset'] = 'utf8mb4';
         }
 
-        // Create or retrieve NADA interface
-        if ($serviceLocator->has('Database\Nada', false)) {
-            $database = $serviceLocator->get('Database\Nada');
-        } else {
-            $database = \Nada\Factory::getDatabase($adapter);
+        $adapter = new \Zend\Db\Adapter\Adapter($config);
+        $database = \Nada\Factory::getDatabase($adapter);
 
-            if ($database->isSqlite()) {
-                $database->emulatedDatatypes = array('bool', 'date', 'decimal', 'timestamp');
-            } elseif ($database->isMySql()) {
-                $database->emulatedDatatypes = array('bool');
-            }
-            $database->setTimezone();
-
-            // Create service unless it was explicitly requested, in which case
-            // the servive manager will store it later.
-            if ($requestedName != 'Database\Nada') {
-                $serviceLocator->setService('Database\Nada', $database);
-            }
+        if ($database->isSqlite()) {
+            $database->emulatedDatatypes = array('bool', 'date', 'decimal', 'timestamp');
+        } elseif ($database->isMySql()) {
+            $database->emulatedDatatypes = array('bool');
         }
+        $database->setTimezone();
 
-        // Return requested service
-        return ($requestedName == 'Db') ? $adapter : $database;
+        // Return requested service, store instance of other service first
+        if ($requestedName == 'Db') {
+            $container->setService('Database\Nada', $database);
+            return $adapter;
+        } else {
+            $container->setService('Db', $adapter);
+            return $database;
+        }
     }
 }

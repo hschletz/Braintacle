@@ -24,13 +24,16 @@ namespace Model\Service;
 /**
  * Factory for Model\Config
  */
-class ConfigFactory implements \Zend\ServiceManager\FactoryInterface
+class ConfigFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        return new \Model\Config($serviceLocator->get('Database\Table\Config'));
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
+        return new \Model\Config($container->get('Database\Table\Config'));
     }
 }

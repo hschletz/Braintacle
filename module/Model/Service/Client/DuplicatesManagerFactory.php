@@ -24,21 +24,24 @@ namespace Model\Service\Client;
 /**
  * Factory for Model\Client\DuplicatesManager
  */
-class DuplicatesManagerFactory implements \Zend\ServiceManager\FactoryInterface
+class DuplicatesManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Model\Client\DuplicatesManager(
-            $serviceLocator->get('Database\Table\Clients'),
-            $serviceLocator->get('Database\Table\NetworkInterfaces'),
-            $serviceLocator->get('Database\Table\DuplicateAssetTags'),
-            $serviceLocator->get('Database\Table\DuplicateSerials'),
-            $serviceLocator->get('Database\Table\DuplicateMacAddresses'),
-            $serviceLocator->get('Database\Table\ClientConfig'),
-            $serviceLocator->get('Model\Client\ClientManager')
+            $container->get('Database\Table\Clients'),
+            $container->get('Database\Table\NetworkInterfaces'),
+            $container->get('Database\Table\DuplicateAssetTags'),
+            $container->get('Database\Table\DuplicateSerials'),
+            $container->get('Database\Table\DuplicateMacAddresses'),
+            $container->get('Database\Table\ClientConfig'),
+            $container->get('Model\Client\ClientManager')
         );
     }
 }

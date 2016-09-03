@@ -35,14 +35,17 @@ namespace Library\Service;
  *
  * @codeCoverageIgnore
  */
-class UserConfigFactory implements \Zend\ServiceManager\FactoryInterface
+class UserConfigFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $applicationConfig = $serviceLocator->get('ApplicationConfig');
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
+        $applicationConfig = $container->get('ApplicationConfig');
         if (isset($applicationConfig['Library\UserConfig'])) {
             return $applicationConfig['Library\UserConfig'];
         } else {

@@ -28,17 +28,14 @@ namespace Database\Service;
  * instantiate an object of the same name, injecting the service locator into
  * its constructor.
  */
-class AbstractTableFactory implements \Zend\ServiceManager\AbstractFactoryInterface
+class AbstractTableFactory implements \Zend\ServiceManager\Factory\AbstractFactoryInterface
 {
     /**
      * @internal
      * @codeCoverageIgnore
      */
-    public function canCreateServiceWithName(
-        \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
-        $name,
-        $requestedName
-    ) {
+    public function canCreate(\Interop\Container\ContainerInterface $container, $requestedName)
+    {
         return strpos($requestedName, 'Database\Table\\') === 0;
     }
 
@@ -46,12 +43,12 @@ class AbstractTableFactory implements \Zend\ServiceManager\AbstractFactoryInterf
      * @internal
      * @codeCoverageIgnore
      */
-    public function createServiceWithName(
-        \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
-        $name,
-        $requestedName
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
     ) {
-        $table = new $requestedName($serviceLocator);
+        $table = new $requestedName($container);
         $table->initialize();
         return $table;
     }

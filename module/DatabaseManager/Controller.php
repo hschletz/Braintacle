@@ -24,7 +24,7 @@ namespace DatabaseManager;
 /**
  * Database manager application controller
  */
-class Controller extends \Zend\Mvc\Controller\AbstractConsoleController
+class Controller extends \Zend\Mvc\Console\Controller\AbstractConsoleController
 {
     /**
      * Schema manager
@@ -61,8 +61,8 @@ class Controller extends \Zend\Mvc\Controller\AbstractConsoleController
             'Library\LogLevel'
         );
         $writer = new \Zend\Log\Writer\Stream('php://stderr');
-        $writer->addFilter('Priority', array('priority' => $priority));
-        $writer->setFormatter('Simple', array('format' => '%priorityName%: %message%'));
+        $writer->addFilter('priority', array('priority' => $priority));
+        $writer->setFormatter('simple', array('format' => '%priorityName%: %message%'));
         $this->_logger->addWriter($writer);
 
         $this->_schemaManager->updateAll();

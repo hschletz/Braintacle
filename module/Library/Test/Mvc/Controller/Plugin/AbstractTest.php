@@ -86,10 +86,10 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     protected function _getPlugin($setController = true)
     {
         if ($setController) {
-            $router = new \Zend\Mvc\Router\Http\TreeRouteStack;
+            $router = new \Zend\Router\Http\TreeRouteStack;
             $router->addRoute(
                 'test',
-                \Zend\Mvc\Router\Http\Segment::factory(
+                \Zend\Router\Http\Segment::factory(
                     array(
                         // Match "module" prefix, followed by controller and action
                         // names. All three components are optional except the
@@ -104,7 +104,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
                 )
             );
 
-            $routeMatch = new \Zend\Mvc\Router\RouteMatch(
+            $routeMatch = new \Zend\Router\RouteMatch(
                 array(
                     'controller' => 'currentcontroller',
                     'action' => 'currentaction',
@@ -134,10 +134,10 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testPluginInterface()
     {
-        // Test if the plugin is registered with the application's service manager
-        $this->assertTrue($this->_getPluginManager()->has($this->_getPluginName()));
-
-        // Get plugin instance through service manager and test for required interface
-        $this->assertInstanceOf('Zend\Mvc\Controller\Plugin\PluginInterface', $this->_getPlugin(false));
+        $class = substr(str_replace('\Test', '', get_called_class()), 0, -4);
+        // Uppercase
+        $this->assertInstanceOf($class, $this->_getPluginManager()->get($this->_getPluginName()));
+        // Lowercase
+        $this->assertInstanceOf($class, $this->_getPluginManager()->get(lcfirst($this->_getPluginName())));
     }
 }

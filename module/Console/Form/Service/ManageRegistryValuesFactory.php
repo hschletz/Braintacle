@@ -25,19 +25,21 @@ namespace Console\Form\Service;
  * Factory for ManageRegistryValues
  * @codeCoverageIgnore
  */
-class ManageRegistryValuesFactory implements \Zend\ServiceManager\FactoryInterface
+class ManageRegistryValuesFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $serviceManager = $serviceLocator->getServiceLocator();
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Console\Form\ManageRegistryValues(
             null,
             array(
-                'config' => $serviceManager->get('Model\Config'),
-                'registryManager' => $serviceManager->get('Model\Registry\RegistryManager'),
+                'config' => $container->get('Model\Config'),
+                'registryManager' => $container->get('Model\Registry\RegistryManager'),
             )
         );
     }

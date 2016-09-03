@@ -25,31 +25,27 @@ namespace Console\Form\Service;
  * Abstract factory for Package forms
  * @codeCoverageIgnore
  */
-class PackageFactory implements \Zend\ServiceManager\AbstractFactoryInterface
+class PackageFactory implements \Zend\ServiceManager\Factory\AbstractFactoryInterface
 {
     /**
      * @internal
      */
-    public function canCreateServiceWithName(
-        \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
-        $name,
-        $requestedName
-    ) {
+    public function canCreate(\Interop\Container\ContainerInterface $container, $requestedName)
+    {
         return (strpos($requestedName, 'Console\Form\Package\\') === 0);
     }
 
     /**
      * @internal
      */
-    public function createServiceWithName(
-        \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
-        $name,
-        $requestedName
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
     ) {
         $form = new $requestedName;
         if ($form instanceof \Console\Form\Package\Build) {
-            $serviceManager = $serviceLocator->getServiceLocator();
-            $form->setOption('packageManager', $serviceManager->get('Model\Package\PackageManager'));
+            $form->setOption('packageManager', $container->get('Model\Package\PackageManager'));
         }
         return $form;
     }

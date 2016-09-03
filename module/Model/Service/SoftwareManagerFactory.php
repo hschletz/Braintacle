@@ -24,18 +24,21 @@ namespace Model\Service;
 /**
  * Factory for Model\SoftwareManager
  */
-class SoftwareManagerFactory implements \Zend\ServiceManager\FactoryInterface
+class SoftwareManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Model\SoftwareManager(
-            $serviceLocator->get('Database\Table\Software'),
-            $serviceLocator->get('Database\Table\SoftwareDefinitions'),
-            $serviceLocator->get('Database\Table\WindowsInstallations'),
-            $serviceLocator->get('Database\Table\WindowsProductKeys')
+            $container->get('Database\Table\Software'),
+            $container->get('Database\Table\SoftwareDefinitions'),
+            $container->get('Database\Table\WindowsInstallations'),
+            $container->get('Database\Table\WindowsProductKeys')
         );
     }
 }

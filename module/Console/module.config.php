@@ -21,6 +21,11 @@
 
 return array(
     'controller_plugins' => array(
+        'aliases' => array(
+            'getOrder' => 'GetOrder',
+            'printForm' => 'PrintForm',
+            'setActiveMenu' => 'SetActiveMenu',
+        ),
         'factories' => array(
             'SetActiveMenu' => 'Console\Mvc\Controller\Plugin\Service\SetActiveMenuFactory',
         ),
@@ -115,13 +120,19 @@ return array(
         ),
     ),
     'view_helpers' => array(
+        'aliases' => array(
+            'consoleUrl' => 'ConsoleUrl',
+            'filterDescription' => 'FilterDescription',
+            'formatMessages' => 'FormatMessages',
+            'table' => 'Table',
+        ),
         'factories' => array(
-            'consoleUrl' => 'Console\View\Helper\Service\ConsoleUrlFactory',
-            'formatMessages' => 'Console\View\Helper\Service\FormatMessagesFactory',
-            'table' => 'Console\View\Helper\Service\TableFactory',
+            'ConsoleUrl' => 'Console\View\Helper\Service\ConsoleUrlFactory',
+            'FormatMessages' => 'Console\View\Helper\Service\FormatMessagesFactory',
+            'Table' => 'Console\View\Helper\Service\TableFactory',
         ),
         'invokables' => array(
-            'filterDescription' => 'Console\View\Helper\FilterDescription',
+            'FilterDescription' => 'Console\View\Helper\FilterDescription',
         ),
     ),
     'view_manager' => array(

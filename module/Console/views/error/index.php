@@ -34,7 +34,7 @@ print $this->htmlElement('h2', $this->message);
 // @codeCoverageIgnoreStart
 if (isset($this->exception)) {
     try {
-        $config = $this->getHelperPluginManager()->getServiceLocator()->get('Library\UserConfig');
+        $config = $this->serviceManager->get('Library\UserConfig');
     } catch (\Exception $e) {
         error_log($e->getMessage());
         print "<p>Cannot load config file. See web server error log for details.</p>\n";

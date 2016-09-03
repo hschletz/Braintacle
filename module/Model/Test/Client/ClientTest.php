@@ -565,8 +565,8 @@ class ClientTest extends \Model\Test\AbstractTest
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
-                               array('Database\Table\GroupMemberships', true, $groupMemberships),
-                               array('Model\Group\GroupManager', true, $groupManager),
+                               array('Database\Table\GroupMemberships', $groupMemberships),
+                               array('Model\Group\GroupManager', $groupManager),
                            )
                        );
 
@@ -635,8 +635,8 @@ class ClientTest extends \Model\Test\AbstractTest
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
-                               array('Database\Table\GroupMemberships', true, $groupMemberships),
-                               array('Model\Group\GroupManager', true, $groupManager),
+                               array('Database\Table\GroupMemberships', $groupMemberships),
+                               array('Model\Group\GroupManager', $groupManager),
                            )
                        );
 
@@ -705,8 +705,8 @@ class ClientTest extends \Model\Test\AbstractTest
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
-                               array('Database\Table\GroupMemberships', true, $groupMemberships),
-                               array('Model\Group\GroupManager', true, $groupManager),
+                               array('Database\Table\GroupMemberships', $groupMemberships),
+                               array('Model\Group\GroupManager', $groupManager),
                            )
                        );
 
@@ -767,8 +767,8 @@ class ClientTest extends \Model\Test\AbstractTest
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
-                               array('Database\Table\GroupMemberships', true, $groupMemberships),
-                               array('Model\Group\GroupManager', true, $groupManager),
+                               array('Database\Table\GroupMemberships', $groupMemberships),
+                               array('Model\Group\GroupManager', $groupManager),
                            )
                        );
 
@@ -822,8 +822,8 @@ class ClientTest extends \Model\Test\AbstractTest
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
-                               array('Database\Table\GroupMemberships', true, $groupMemberships),
-                               array('Model\Group\GroupManager', true, $groupManager),
+                               array('Database\Table\GroupMemberships', $groupMemberships),
+                               array('Model\Group\GroupManager', $groupManager),
                            )
                        );
 
@@ -853,7 +853,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->willReturnMap(
-                           array(array('Model\Group\GroupManager', true, $groupManager))
+                           array(array('Model\Group\GroupManager', $groupManager))
                        );
 
         $model = $this->getMockBuilder($this->_getClass())

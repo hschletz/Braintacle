@@ -83,16 +83,13 @@ class GroupTest extends AbstractGroupTest
 
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')
-                       ->will(
-                           $this->returnValueMap(
-                               array(
-                                   array('Model\Client\ClientManager', true, $clientManager),
-                                   array(
-                                       'Database\Table\GroupMemberships',
-                                       true,
-                                       static::$serviceManager->get('Database\Table\GroupMemberships')
-                                   )
-                               )
+                       ->willReturnMap(
+                           array(
+                                array('Model\Client\ClientManager', $clientManager),
+                                array(
+                                    'Database\Table\GroupMemberships',
+                                    static::$serviceManager->get('Database\Table\GroupMemberships')
+                                )
                            )
                        );
 
@@ -146,12 +143,10 @@ class GroupTest extends AbstractGroupTest
 
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')
-                       ->will(
-                           $this->returnValueMap(
-                               array(
-                                   array('Model\Client\ClientManager', true, $clientManager),
-                                   array('Database\Table\GroupMemberships', true, $groupMemberships)
-                               )
+                       ->willReturnMap(
+                           array(
+                                array('Model\Client\ClientManager', $clientManager),
+                                array('Database\Table\GroupMemberships', $groupMemberships)
                            )
                        );
 
@@ -186,12 +181,10 @@ class GroupTest extends AbstractGroupTest
         $select = $this->createMock('Zend\Db\Sql\Select');
         $select->expects($this->exactly(2))
                ->method('getRawState')
-               ->will(
-                   $this->returnValueMap(
-                       array(
-                           array(\Zend\Db\Sql\Select::COLUMNS, array('id')),
-                           array(\Zend\Db\Sql\Select::JOINS, $joins),
-                       )
+               ->willReturnMap(
+                   array(
+                        array(\Zend\Db\Sql\Select::COLUMNS, array('id')),
+                        array(\Zend\Db\Sql\Select::JOINS, $joins),
                    )
                );
         $select->method('getSqlString')->with($platform)->willReturn('query_new');
@@ -214,15 +207,13 @@ class GroupTest extends AbstractGroupTest
 
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')
-                       ->will(
-                           $this->returnValueMap(
-                               array(
-                                   array('Db', true, $adapter),
-                                   array('Model\Client\ClientManager', true, $clientManager),
-                                   array('Database\Table\GroupInfo', true, $this->_groupInfo
-                                   )
-                               )
-                           )
+                       ->willReturnMap(
+                           array(
+                                array('Db', $adapter),
+                                array('Model\Client\ClientManager', $clientManager),
+                                array('Database\Table\GroupInfo', $this->_groupInfo
+                                )
+                            )
                        );
 
         $model = $this->getMockBuilder($this->_getClass())->setMethods(array('update'))->getMock();
@@ -320,26 +311,20 @@ class GroupTest extends AbstractGroupTest
 
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')
-                       ->will(
-                           $this->returnValueMap(
-                               array(
-                                   array(
-                                       'Database\Table\Clients',
-                                       true,
-                                       static::$serviceManager->get('Database\Table\Clients')
-                                   ),
-                                   array(
-                                       'Database\Table\GroupInfo', true, $this->_groupInfo
-                                   ),
-                                   array(
-                                       'Database\Table\GroupMemberships',
-                                       true,
-                                       static::$serviceManager->get('Database\Table\GroupMemberships')
-                                   ),
-                                   array('Library\Now', true, $now),
-                                   array('Library\Random', true, $random),
-                                   array('Model\Config', true, $config),
-                               )
+                       ->willReturnMap(
+                           array(
+                                array(
+                                    'Database\Table\Clients',
+                                    static::$serviceManager->get('Database\Table\Clients')
+                                ),
+                                array('Database\Table\GroupInfo', $this->_groupInfo),
+                                array(
+                                    'Database\Table\GroupMemberships',
+                                    static::$serviceManager->get('Database\Table\GroupMemberships')
+                                ),
+                                array('Library\Now', $now),
+                                array('Library\Random', $random),
+                                array('Model\Config', $config),
                            )
                        );
 

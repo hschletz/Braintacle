@@ -24,7 +24,7 @@ namespace PackageBuilder;
 /**
  * Package builder application controller
  */
-class Controller extends \Zend\Mvc\Controller\AbstractConsoleController
+class Controller extends \Zend\Mvc\Console\Controller\AbstractConsoleController
 {
     /**
      * Config

@@ -62,11 +62,9 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $this->_softwareManager = $this->createMock('Model\SoftwareManager');
         $this->_form = $this->createMock('Console\Form\SoftwareFilter');
 
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('Model\SoftwareManager', $this->_softwareManager)
-             ->get('FormElementManager')
-             ->setService('Console\Form\SoftwareFilter', $this->_form);
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setService('Model\SoftwareManager', $this->_softwareManager);
+        $serviceManager->get('FormElementManager')->setService('Console\Form\SoftwareFilter', $this->_form);
     }
 
     public function testIndexActionDefaultFilterAccepted()

@@ -25,17 +25,19 @@ namespace Console\Form\Service;
  * Factory for CustomFields form
  * @codeCoverageIgnore
  */
-class CustomFieldsFactory implements \Zend\ServiceManager\FactoryInterface
+class CustomFieldsFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $serviceManager = $serviceLocator->getServiceLocator();
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Console\Form\CustomFields(
             null,
-            array('customFieldManager' => $serviceManager->get('Model\Client\CustomFieldManager'))
+            array('customFieldManager' => $container->get('Model\Client\CustomFieldManager'))
         );
     }
 }

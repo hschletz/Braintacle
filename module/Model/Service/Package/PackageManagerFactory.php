@@ -24,14 +24,17 @@ namespace Model\Service\Package;
 /**
  * Factory for Model\Package\PackageManager
  */
-class PackageManagerFactory implements \Zend\ServiceManager\FactoryInterface
+class PackageManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      * @codeCoverageIgnore
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        return new \Model\Package\PackageManager($serviceLocator);
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
+        return new \Model\Package\PackageManager($container);
     }
 }

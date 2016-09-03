@@ -64,11 +64,9 @@ class Module implements
             ),
             'controllers' => array(
                 'factories' => array(
-                    'DecodeInventory\Controller' => function ($serviceLocator) {
+                    'DecodeInventory\Controller' => function ($container) {
                         return new Controller(
-                            $serviceLocator->getServiceLocator()
-                                           ->get('FilterManager')
-                                           ->get('Protocol\InventoryDecode')
+                            $container->get('FilterManager')->get('Protocol\InventoryDecode')
                         );
                     },
                 )

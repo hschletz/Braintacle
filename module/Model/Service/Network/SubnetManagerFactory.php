@@ -24,16 +24,19 @@ namespace Model\Service\Network;
 /**
  * Factory for Model\Network\SubnetManager
  */
-class SubnetManagerFactory implements \Zend\ServiceManager\FactoryInterface
+class SubnetManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      * @codeCoverageIgnore
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Model\Network\SubnetManager(
-            $serviceLocator->get('Database\Table\Subnets')
+            $container->get('Database\Table\Subnets')
         );
     }
 }

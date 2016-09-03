@@ -31,7 +31,7 @@ class ConsoleUrlTest extends \Library\Test\View\Helper\AbstractTest
     public function setUp()
     {
         // Inject mock RouteMatch into Url helper which is used by ConsoleUrl
-        $routeMatch = new \Zend\Mvc\Router\RouteMatch(
+        $routeMatch = new \Zend\Router\RouteMatch(
             array(
                 'controller' => 'currentcontroller',
                 'action' => 'currentaction',

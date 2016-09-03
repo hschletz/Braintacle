@@ -67,7 +67,9 @@ class LocalizationTest extends \PHPUnit_Framework_TestCase
         // Run test initializion after application initialization because it
         // would be overwritten otherwise
         \Zend\Validator\AbstractValidator::setDefaultTranslator(null);
-        $application->getServiceManager()->setAllowOverride(true)->setService('MvcTranslator', $translator);
+        $serviceManager = $application->getServiceManager();
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService('MvcTranslator', $translator);
 
         // Invoke bootstrap event handler manually. It has already been run
         // during application initialization, but we changed the default

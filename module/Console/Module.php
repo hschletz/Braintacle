@@ -186,6 +186,7 @@ class Module implements
     public function onError(\Zend\Mvc\MvcEvent $e)
     {
         $result = $e->getResult();
+        $result->serviceManager = $e->getApplication()->getServiceManager();
         $result->request = $e->getRequest();
         $routeMatch = $e->getRouteMatch();
         if ($routeMatch) {

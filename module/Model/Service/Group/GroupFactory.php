@@ -24,15 +24,18 @@ namespace Model\Service\Group;
 /**
  * Factory for Model\Group\Group
  */
-class GroupFactory implements \Zend\ServiceManager\FactoryInterface
+class GroupFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         $group = new \Model\Group\Group;
-        $group->setServiceLocator($serviceLocator);
+        $group->setServiceLocator($container);
         return $group;
     }
 }

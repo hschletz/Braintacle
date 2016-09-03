@@ -24,18 +24,21 @@ namespace Model\Service\Network;
 /**
  * Factory for Model\Network\DeviceManager
  */
-class DeviceManagerFactory implements \Zend\ServiceManager\FactoryInterface
+class DeviceManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      * @codeCoverageIgnore
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Model\Network\DeviceManager(
-            $serviceLocator->get('Database\Table\NetworkDeviceTypes'),
-            $serviceLocator->get('Database\Table\NetworkDevicesScanned'),
-            $serviceLocator->get('Database\Table\NetworkDevicesIdentified')
+            $container->get('Database\Table\NetworkDeviceTypes'),
+            $container->get('Database\Table\NetworkDevicesScanned'),
+            $container->get('Database\Table\NetworkDevicesIdentified')
         );
     }
 }

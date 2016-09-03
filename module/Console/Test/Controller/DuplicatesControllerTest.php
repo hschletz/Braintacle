@@ -45,11 +45,9 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_duplicates = $this->createMock('Model\Client\DuplicatesManager');
         $this->_showDuplicates = $this->createMock('Console\Form\ShowDuplicates');
 
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('Model\Client\DuplicatesManager', $this->_duplicates)
-             ->get('FormElementManager')
-             ->setService('Console\Form\ShowDuplicates', $this->_showDuplicates);
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setService('Model\Client\DuplicatesManager', $this->_duplicates);
+        $serviceManager->get('FormElementManager')->setService('Console\Form\ShowDuplicates', $this->_showDuplicates);
     }
 
     public function testIndexActionNoDuplicates()
@@ -104,7 +102,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
                            array('At least 2 different clients have to be selected'),
                            array(array("'%s' is no longer considered duplicate." => 'abc'))
                        );
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('FlashMessenger', $flashMessenger);
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
         $this->_duplicates->method('count')
                           ->will($this->returnValue(0));

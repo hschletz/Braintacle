@@ -24,7 +24,7 @@ namespace DecodeInventory;
 /**
  * DecodeInventory application controller
  */
-class Controller extends \Zend\Mvc\Controller\AbstractConsoleController
+class Controller extends \Zend\Mvc\Console\Controller\AbstractConsoleController
 {
     /**
      * Filter instance
@@ -50,7 +50,7 @@ class Controller extends \Zend\Mvc\Controller\AbstractConsoleController
         $input = $this->getRequest()->getParam('input_file');
 
         if (!is_file($input) or !is_readable($input)) {
-            $model = new \Zend\View\Model\ConsoleModel;
+            $model = new \Zend\Mvc\Console\View\ViewModel;
             $model->setErrorLevel(10);
             $model->setResult("Input file does not exist or is not readable.\n");
             return $model;
@@ -59,7 +59,7 @@ class Controller extends \Zend\Mvc\Controller\AbstractConsoleController
         try {
             return $this->_inventoryDecode->filter(\Library\FileObject::fileGetContents($input));
         } catch (\InvalidArgumentException $e) {
-            $model = new \Zend\View\Model\ConsoleModel;
+            $model = new \Zend\Mvc\Console\View\ViewModel;
             $model->setErrorLevel(11);
             $model->setResult($e->getMessage() . "\n");
             return $model;

@@ -102,14 +102,12 @@ class ClientOrGroupTest extends AbstractTest
         $config->method('__get')->with('lockValidity')->willReturn(42);
 
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->will(
-            $this->returnValueMap(
-                array(
-                    array('Database\Nada', true, static::$serviceManager->get('Database\Nada')),
-                    array('Database\Table\Locks', true, static::$serviceManager->get('Database\Table\Locks')),
-                    array('Db', true, static::$serviceManager->get('Db')),
-                    array('Model\Config', true, $config),
-                )
+        $serviceManager->method('get')->willReturnMap(
+            array(
+                array('Database\Nada', static::$serviceManager->get('Database\Nada')),
+                array('Database\Table\Locks', static::$serviceManager->get('Database\Table\Locks')),
+                array('Db', static::$serviceManager->get('Db')),
+                array('Model\Config', $config),
             )
         );
 
@@ -141,14 +139,12 @@ class ClientOrGroupTest extends AbstractTest
         $config->expects($this->once())->method('__get')->with('lockValidity')->willreturn($timeout);
 
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->will(
-            $this->returnValueMap(
-                array(
-                    array('Database\Nada', true, static::$serviceManager->get('Database\Nada')),
-                    array('Database\Table\Locks', true, static::$serviceManager->get('Database\Table\Locks')),
-                    array('Db', true, static::$serviceManager->get('Db')),
-                    array('Model\Config', true, $config),
-                )
+        $serviceManager->method('get')->willReturnMap(
+            array(
+                array('Database\Nada', static::$serviceManager->get('Database\Nada')),
+                array('Database\Table\Locks', static::$serviceManager->get('Database\Table\Locks')),
+                array('Db', static::$serviceManager->get('Db')),
+                array('Model\Config', $config),
             )
         );
 
@@ -185,14 +181,12 @@ class ClientOrGroupTest extends AbstractTest
         $config = $this->createMock('Model\Config');
 
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->will(
-            $this->returnValueMap(
-                array(
-                    array('Database\Nada', true, static::$serviceManager->get('Database\Nada')),
-                    array('Database\Table\Locks', true, $locks),
-                    array('Db', true, static::$serviceManager->get('Db')),
-                    array('Model\Config', true, $config),
-                )
+        $serviceManager->method('get')->willReturnMap(
+            array(
+                array('Database\Nada', static::$serviceManager->get('Database\Nada')),
+                array('Database\Table\Locks', $locks),
+                array('Db', static::$serviceManager->get('Db')),
+                array('Model\Config', $config),
             )
         );
 
@@ -215,13 +209,11 @@ class ClientOrGroupTest extends AbstractTest
     public function testUnlockWithReleasedLock()
     {
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->will(
-            $this->returnValueMap(
-                array(
-                    array('Database\Nada', true, static::$serviceManager->get('Database\Nada')),
-                    array('Database\Table\Locks', true, static::$serviceManager->get('Database\Table\Locks')),
-                    array('Db', true, static::$serviceManager->get('Db')),
-                )
+        $serviceManager->method('get')->willReturnMap(
+            array(
+                array('Database\Nada', static::$serviceManager->get('Database\Nada')),
+                array('Database\Table\Locks', static::$serviceManager->get('Database\Table\Locks')),
+                array('Db', static::$serviceManager->get('Db')),
             )
         );
 
@@ -247,12 +239,10 @@ class ClientOrGroupTest extends AbstractTest
     public function testUnlockWithExpiredLock()
     {
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->will(
-            $this->returnValueMap(
-                array(
-                    array('Database\Nada', true, static::$serviceManager->get('Database\Nada')),
-                    array('Db', true, static::$serviceManager->get('Db')),
-                )
+        $serviceManager->method('get')->willReturnMap(
+            array(
+                array('Database\Nada', static::$serviceManager->get('Database\Nada')),
+                array('Db', static::$serviceManager->get('Db')),
             )
         );
 
@@ -302,14 +292,12 @@ class ClientOrGroupTest extends AbstractTest
         $config->method('__get')->with('lockValidity')->willReturn(42);
 
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->will(
-            $this->returnValueMap(
-                array(
-                    array('Database\Nada', true, static::$serviceManager->get('Database\Nada')),
-                    array('Database\Table\Locks', true, static::$serviceManager->get('Database\Table\Locks')),
-                    array('Db', true, static::$serviceManager->get('Db')),
-                    array('Model\Config', true, $config),
-                )
+        $serviceManager->method('get')->willReturnMap(
+            array(
+                array('Database\Nada', static::$serviceManager->get('Database\Nada')),
+                array('Database\Table\Locks', static::$serviceManager->get('Database\Table\Locks')),
+                array('Db', static::$serviceManager->get('Db')),
+                array('Model\Config', $config),
             )
         );
 
@@ -355,17 +343,14 @@ class ClientOrGroupTest extends AbstractTest
         $now->method('format')->with('D M d H:i:s Y')->willReturn('current timestamp');
 
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->will(
-            $this->returnValueMap(
+        $serviceManager->method('get')->willReturnMap(
+            array(
                 array(
-                    array(
-                        'Database\Table\ClientConfig',
-                        true,
-                        static::$serviceManager->get('Database\Table\ClientConfig')
-                    ),
-                    array('Library\Now', true, $now),
-                    array('Model\Package\PackageManager', true, $packageManager),
-                )
+                    'Database\Table\ClientConfig',
+                    static::$serviceManager->get('Database\Table\ClientConfig')
+                ),
+                array('Library\Now', $now),
+                array('Model\Package\PackageManager', $packageManager),
             )
         );
 
@@ -400,16 +385,13 @@ class ClientOrGroupTest extends AbstractTest
                        ->willReturn(array('Id' => 5));
 
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->will(
-            $this->returnValueMap(
+        $serviceManager->method('get')->willReturnMap(
+            array(
                 array(
-                    array(
-                        'Database\Table\ClientConfig',
-                        true,
-                        static::$serviceManager->get('Database\Table\ClientConfig')
-                    ),
-                    array('Model\Package\PackageManager', true, $packageManager),
-                )
+                    'Database\Table\ClientConfig',
+                    static::$serviceManager->get('Database\Table\ClientConfig')
+                ),
+                array('Model\Package\PackageManager', $packageManager),
             )
         );
 
@@ -453,16 +435,13 @@ class ClientOrGroupTest extends AbstractTest
         $config->method('getDbIdentifier')->with('inventoryInterval')->willReturn('FREQUENCY');
 
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->will(
-            $this->returnValueMap(
+        $serviceManager->method('get')->willReturnMap(
+            array(
                 array(
-                    array(
-                        'Database\Table\ClientConfig',
-                        true,
-                        static::$serviceManager->get('Database\Table\ClientConfig')
-                    ),
-                    array('Model\Config', true, $config),
-                )
+                    'Database\Table\ClientConfig',
+                    static::$serviceManager->get('Database\Table\ClientConfig')
+                ),
+                array('Model\Config', $config),
             )
         );
 
@@ -512,15 +491,12 @@ class ClientOrGroupTest extends AbstractTest
         $config->method('getDbIdentifier')->with($option)->willReturn($identifier);
 
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->will(
-            $this->returnValueMap(
-                array(
-                    array('Database\Table\ClientConfig',
-                        true,
-                        static::$serviceManager->get('Database\Table\ClientConfig')
-                    ),
-                    array('Model\Config', true, $config),
-                )
+        $serviceManager->method('get')->willReturnMap(
+            array(
+                array('Database\Table\ClientConfig',
+                    static::$serviceManager->get('Database\Table\ClientConfig')
+                ),
+                array('Model\Config', $config),
             )
         );
 
@@ -560,12 +536,10 @@ class ClientOrGroupTest extends AbstractTest
         $clientConfig->expects($this->never())->method('delete');
 
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->will(
-            $this->returnValueMap(
-                array(
-                    array('Database\Table\ClientConfig', true, $clientConfig),
-                    array('Model\Config', true, $config),
-                )
+        $serviceManager->method('get')->willReturnMap(
+            array(
+                array('Database\Table\ClientConfig', $clientConfig),
+                array('Model\Config', $config),
             )
         );
 

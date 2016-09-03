@@ -24,17 +24,19 @@ namespace Console\Service;
 /**
  * Factory for AccountsController
  */
-class AccountsControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class AccountsControllerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $serviceManager = $serviceLocator->getServiceLocator();
-        $formManager = $serviceManager->get('FormElementManager');
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
+        $formManager = $container->get('FormElementManager');
         return new \Console\Controller\AccountsController(
-            $serviceManager->get('Model\Operator\OperatorManager'),
+            $container->get('Model\Operator\OperatorManager'),
             $formManager->get('Console\Form\Account\Add'),
             $formManager->get('Console\Form\Account\Edit')
         );

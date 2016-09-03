@@ -62,13 +62,12 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->_subnetForm = $this->createMock('Console\Form\Subnet');
         $this->_deviceForm = $this->createMock('Console\Form\NetworkDevice');
 
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('Model\Network\DeviceManager', $this->_deviceManager)
-             ->setService('Model\Network\SubnetManager', $this->_subnetManager)
-             ->get('FormElementManager')
-             ->setService('Console\Form\Subnet', $this->_subnetForm)
-             ->setService('Console\Form\NetworkDevice', $this->_deviceForm);
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setService('Model\Network\DeviceManager', $this->_deviceManager);
+        $serviceManager->setService('Model\Network\SubnetManager', $this->_subnetManager);
+        $formManager = $serviceManager->get('FormElementManager');
+        $formManager->setService('Console\Form\Subnet', $this->_subnetForm);
+        $formManager->setService('Console\Form\NetworkDevice', $this->_deviceForm);
     }
 
     public function testIndexAction()
@@ -398,7 +397,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                    ->method('__invoke')
                    ->with($date, \IntlDateFormatter::MEDIUM, \IntlDateFormatter::MEDIUM)
                    ->willReturn('date_format');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('dateFormat', $dateFormat);
 
         $this->_deviceManager->method('getDevice')
                              ->with('00:00:5E:00:53:00')
@@ -420,9 +419,9 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $deviceForm->setOption('DeviceManager', $this->_deviceManager);
         $deviceForm->init();
 
-        $this->getApplicationServiceLocator()
-             ->get('FormElementManager')
-             ->setService('Console\Form\NetworkDevice', $deviceForm);
+        $formManager = $this->getApplicationServiceLocator()->get('FormElementManager');
+        $formManager->setAllowOverride(true);
+        $formManager->setService('Console\Form\NetworkDevice', $deviceForm);
  
         $this->dispatch('/console/network/edit/?macaddress=00:00:5E:00:53:00');
         $this->assertResponseStatusCode(200);
@@ -475,9 +474,9 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $deviceForm->init();
         $deviceForm->get('Description')->setMessages(array('message'));
 
-        $this->getApplicationServiceLocator()
-             ->get('FormElementManager')
-             ->setService('Console\Form\NetworkDevice', $deviceForm);
+        $formManager = $this->getApplicationServiceLocator()->get('FormElementManager');
+        $formManager->setAllowOverride(true);
+        $formManager->setService('Console\Form\NetworkDevice', $deviceForm);
  
         $this->dispatch('/console/network/edit/?macaddress=00:00:5E:00:53:00', 'POST', $postData);
         $this->assertResponseStatusCode(200);

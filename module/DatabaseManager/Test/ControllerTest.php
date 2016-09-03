@@ -87,6 +87,8 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
      */
     public function testSchemaManagerAction($cmdLine, $expectedPriority)
     {
+        $serviceManager = $this->getApplicationServiceLocator();
+
         $validator = $this->createMock('Library\Validator\LogLevel');
         $filter = $this->createMock('Library\Filter\LogLevel');
         if ($cmdLine) {
@@ -96,8 +98,8 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
             $validator->expects($this->never())->method('isValid');
             $filter->expects($this->once())->method('filter')->with('info')->willReturn($expectedPriority);
         }
-        $this->getApplicationServiceLocator()->get('ValidatorManager')->setService('Library\LogLevel', $validator);
-        $this->getApplicationServiceLocator()->get('FilterManager')->setService('Library\LogLevel', $filter);
+        $serviceManager->get('ValidatorManager')->setService('Library\LogLevel', $validator);
+        $serviceManager->get('FilterManager')->setService('Library\LogLevel', $filter);
 
         $logger = $this->createMock('Zend\Log\Logger');
         $logger->expects($this->once())->method('addWriter')->with(
@@ -135,10 +137,8 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
         $schemaManager = $this->createMock('Database\SchemaManager');
         $schemaManager->expects($this->once())->method('updateAll');
 
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('Library\Logger', $logger)
-             ->setService('Database\SchemaManager', $schemaManager);
+        $serviceManager->setService('Library\Logger', $logger);
+        $serviceManager->setService('Database\SchemaManager', $schemaManager);
 
         $this->dispatch($cmdLine);
 

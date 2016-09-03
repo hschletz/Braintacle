@@ -24,17 +24,20 @@ namespace Model\Service\Operator;
 /**
  * Factory for Model\Operator\OperatorManager
  */
-class OperatorManagerFactory implements \Zend\ServiceManager\FactoryInterface
+class OperatorManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      * @codeCoverageIgnore
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Model\Operator\OperatorManager(
-            $serviceLocator->get('Zend\Authentication\AuthenticationService'),
-            $serviceLocator->get('Database\Table\Operators')
+            $container->get('Zend\Authentication\AuthenticationService'),
+            $container->get('Database\Table\Operators')
         );
     }
 }

@@ -63,11 +63,10 @@ class Module implements
             ),
             'controllers' => array(
                 'factories' => array(
-                    'PackageBuilder\Controller' => function ($serviceLocator) {
-                        $serviceManager = $serviceLocator->getServiceLocator();
+                    'PackageBuilder\Controller' => function ($container) {
                         return new Controller(
-                            $serviceManager->get('Model\Config'),
-                            $serviceManager->get('Model\Package\PackageManager')
+                            $container->get('Model\Config'),
+                            $container->get('Model\Package\PackageManager')
                         );
                     }
                 )

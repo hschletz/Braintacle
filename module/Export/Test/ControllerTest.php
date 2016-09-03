@@ -92,10 +92,9 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
             array('Exporting client2')
         );
 
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('Model\Client\ClientManager', $clientManager)
-             ->setService('console', $console);
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setService('Model\Client\ClientManager', $clientManager);
+        $serviceManager->setService('Console', $console);
 
         $this->dispatch($directory);
 
@@ -109,9 +108,7 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
         $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->expects($this->never())->method('getClients');
 
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('Model\Client\ClientManager', $clientManager);
+        $this->getApplicationServiceLocator()->setService('Model\Client\ClientManager', $clientManager);
 
         $this->dispatch($directory);
 
@@ -126,9 +123,7 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
         $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->expects($this->never())->method('getClients');
 
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('Model\Client\ClientManager', $clientManager);
+        $this->getApplicationServiceLocator()->setService('Model\Client\ClientManager', $clientManager);
 
         $this->dispatch($directory);
 
@@ -143,9 +138,7 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
         $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->expects($this->never())->method('getClients');
 
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('Model\Client\ClientManager', $clientManager);
+        $this->getApplicationServiceLocator()->setService('Model\Client\ClientManager', $clientManager);
 
         $this->dispatch($directory);
 
@@ -202,10 +195,9 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
             array('Exporting client2')
         );
 
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('Model\Client\ClientManager', $clientManager)
-             ->setService('console', $console);
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setService('Model\Client\ClientManager', $clientManager);
+        $serviceManager->setService('Console', $console);
 
         $this->dispatch("$option $directory");
 

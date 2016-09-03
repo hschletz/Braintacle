@@ -25,17 +25,19 @@ namespace Console\Form\Service;
  * Factory for DefineFields form
  * @codeCoverageIgnore
  */
-class DefineFieldsFactory implements \Zend\ServiceManager\FactoryInterface
+class DefineFieldsFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $serviceManager = $serviceLocator->getServiceLocator();
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Console\Form\DefineFields(
             null,
-            array('CustomFieldManager' => $serviceManager->get('Model\Client\CustomFieldManager'))
+            array('CustomFieldManager' => $container->get('Model\Client\CustomFieldManager'))
         );
     }
 }

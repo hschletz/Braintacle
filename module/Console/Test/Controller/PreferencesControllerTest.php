@@ -69,13 +69,12 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_registryManager = $this->createMock('Model\Registry\RegistryManager');
         $this->_config = $this->createMock('Model\Config');
 
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('FormElementManager', $this->_formManager)
-             ->setService('Model\Client\CustomFieldManager', $this->_customFieldManager)
-             ->setService('Model\Network\DeviceManager', $this->_deviceManager)
-             ->setService('Model\Registry\RegistryManager', $this->_registryManager)
-             ->setService('model\Config', $this->_config);
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setService('FormElementManager', $this->_formManager);
+        $serviceManager->setService('Model\Client\CustomFieldManager', $this->_customFieldManager);
+        $serviceManager->setService('Model\Network\DeviceManager', $this->_deviceManager);
+        $serviceManager->setService('Model\Registry\RegistryManager', $this->_registryManager);
+        $serviceManager->setService('Model\Config', $this->_config);
     }
 
     /**

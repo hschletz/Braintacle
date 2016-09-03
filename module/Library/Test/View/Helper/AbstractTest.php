@@ -89,9 +89,15 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testHelperService()
     {
+        // Uppercase
         $this->assertInstanceOf(
             static::_getHelperClass(),
             static::$_helperManager->get($this->_getHelperName())
+        );
+        // Lowercase
+        $this->assertInstanceOf(
+            static::_getHelperClass(),
+            static::$_helperManager->get(lcfirst($this->_getHelperName()))
         );
     }
 }

@@ -44,18 +44,10 @@ class GroupInfoTest extends AbstractTest
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
-                    array(
-                        'Database\Nada',
-                        true,
-                        $this->createMock('Nada\Database\AbstractDatabase')
-                    ),
-                    array(
-                        'Db',
-                        true,
-                        $this->createMock('Zend\Db\Adapter\Adapter')
-                    ),
-                    array('Model\Config', true, $config),
-                    array('Model\Group\Group', true, new \Model\Group\Group),
+                    array('Database\Nada', $this->createMock('Nada\Database\AbstractDatabase')),
+                    array('Db', $this->createMock('Zend\Db\Adapter\Adapter')),
+                    array('Model\Config', $config),
+                    array('Model\Group\Group', new \Model\Group\Group),
                 )
             )
         );

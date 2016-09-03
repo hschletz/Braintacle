@@ -32,9 +32,12 @@ class LoggerServiceFactory extends \Zend\Log\LoggerServiceFactory
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $logger = parent::createService($serviceLocator);
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
+        $logger = parent::__invoke($container, $requestedName, $options);
         $logger->addWriter(new \Zend\Log\Writer\Noop);
         return $logger;
     }

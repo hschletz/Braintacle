@@ -64,9 +64,9 @@ class GroupManagerTest extends AbstractGroupTest
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
-                array('Database\Table\GroupInfo', true, $this->_groupInfo),
-                array('Library\Now', true, new \DateTime('2015-02-08 19:36:29')),
-                array('Model\Config', true, $this->_config),
+                array('Database\Table\GroupInfo', $this->_groupInfo),
+                array('Library\Now', new \DateTime('2015-02-08 19:36:29')),
+                array('Model\Config', $this->_config),
             )
         );
 

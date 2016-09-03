@@ -24,17 +24,19 @@ namespace Console\Service;
 /**
  * Factory for SoftwareController
  */
-class SoftwareControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class SoftwareControllerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $serviceManager = $serviceLocator->getServiceLocator();
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Console\Controller\SoftwareController(
-            $serviceManager->get('Model\SoftwareManager'),
-            $serviceManager->get('FormElementManager')->get('Console\Form\SoftwareFilter')
+            $container->get('Model\SoftwareManager'),
+            $container->get('FormElementManager')->get('Console\Form\SoftwareFilter')
         );
     }
 }

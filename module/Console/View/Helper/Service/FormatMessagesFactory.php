@@ -24,17 +24,21 @@ namespace Console\View\Helper\Service;
 /**
  * Factory for FormatMessages
  */
-class FormatMessagesFactory implements \Zend\ServiceManager\FactoryInterface
+class FormatMessagesFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
+        $viewHelperManager = $container->get('ViewHelperManager');
         return new \Console\View\Helper\FormatMessages(
-            $serviceLocator->get('EscapeHtml'),
-            $serviceLocator->get('HtmlElement'),
-            $serviceLocator->get('Translate')
+            $viewHelperManager->get('EscapeHtml'),
+            $viewHelperManager->get('HtmlElement'),
+            $viewHelperManager->get('Translate')
         );
     }
 }

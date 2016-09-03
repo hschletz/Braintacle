@@ -24,13 +24,16 @@ namespace Protocol\Service\Hydrator;
 /**
  * Factory for Protocol\Hydrator\ClientsHardware
  */
-class ClientsHardwareFactory implements \Zend\ServiceManager\FactoryInterface
+class ClientsHardwareFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        return new \Protocol\Hydrator\ClientsHardware($serviceLocator->get('Model\Client\WindowsInstallation'));
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
+        return new \Protocol\Hydrator\ClientsHardware($container->get('Model\Client\WindowsInstallation'));
     }
 }

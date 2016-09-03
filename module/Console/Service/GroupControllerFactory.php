@@ -24,18 +24,20 @@ namespace Console\Service;
 /**
  * Factory for GroupController
  */
-class GroupControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class GroupControllerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $serviceManager = $serviceLocator->getServiceLocator();
-        $formManager = $serviceManager->get('FormElementManager');
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
+        $formManager = $container->get('FormElementManager');
         return new \Console\Controller\GroupController(
-            $serviceManager->get('Model\Group\GroupManager'),
-            $serviceManager->get('Model\Client\ClientManager'),
+            $container->get('Model\Group\GroupManager'),
+            $container->get('Model\Client\ClientManager'),
             $formManager->get('Console\Form\Package\Assign'),
             $formManager->get('Console\Form\AddToGroup'),
             $formManager->get('Console\Form\ClientConfig')

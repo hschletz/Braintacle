@@ -24,16 +24,19 @@ namespace Console\View\Helper\Service;
 /**
  * Factory for ConsoleUrl
  */
-class ConsoleUrlFactory implements \Zend\ServiceManager\FactoryInterface
+class ConsoleUrlFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Console\View\Helper\ConsoleUrl(
-            $serviceLocator->getServiceLocator()->get('Request'),
-            $serviceLocator->get('Url')
+            $container->get('Request'),
+            $container->get('ViewHelperManager')->get('Url')
         );
     }
 }

@@ -122,24 +122,29 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
      */
     protected function _getModel(array $overrideServices = array())
     {
-        $serviceManager = static::$serviceManager;
-        if (!empty($overrideServices)) {
-            // Clone service manager to keep changes local.
-            $serviceManager = clone $serviceManager;
-            $serviceManager->setAllowOverride(true);
-            // Reset SM config. This will force a new instance of our model to
-            // be created with overriden services.
-            $module = $serviceManager->get('ModuleManager')->getModule('Model');
-            $config = new \Zend\ServiceManager\Config($module->getConfig()['service_manager']);
-            $config->configureServiceManager($serviceManager);
+        if (empty($overrideServices)) {
+            $serviceManager = static::$serviceManager;
+        } else {
+            // Create temporary service manager with identical configuration.
+            $config = static::$serviceManager->get('config');
+            $serviceManager = new \Zend\ServiceManager\ServiceManager($config['service_manager']);
+            // Clone 'config' service
+            $serviceManager->setService('config', $config);
+            // If not explicitly overridden, copy database services to avoid
+            // expensive reconnect or table setup which has already been done.
+            if (!isset($overrideServices['Db'])) {
+                $serviceManager->setService('Db', static::$serviceManager->get('Db'));
+            }
+            if (!isset($overrideServices['Database\Nada'])) {
+                $serviceManager->setService('Database\Nada', static::$serviceManager->get('Database\Nada'));
+            }
             // Override specified services
             foreach ($overrideServices as $name => $service) {
                 $serviceManager->setService($name, $service);
             }
         }
-
-        $model = $serviceManager->get($this->_getClass());
-        return clone $model;
+        // Always build a new instance.
+        return $serviceManager->build($this->_getClass());
     }
 
     /**

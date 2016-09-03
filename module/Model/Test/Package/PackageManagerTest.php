@@ -259,13 +259,11 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $packages = static::$serviceManager->get('Database\Table\Packages');
 
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->will(
-            $this->returnValueMap(
-                array(
-                    array('Database\Table\Packages', true, $packages),
-                    array('Library\Now', true, new \DateTime('2015-02-08 14:17:32')),
-                    array('Model\Package\Storage\Direct', true, $storage),
-                )
+        $serviceManager->method('get')->willReturnMap(
+            array(
+                array('Database\Table\Packages', $packages),
+                array('Library\Now', new \DateTime('2015-02-08 14:17:32')),
+                array('Model\Package\Storage\Direct', $storage),
             )
         );
 
@@ -321,13 +319,11 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $storage = $this->createMock('Model\Package\Storage\Direct');
 
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->will(
-            $this->returnValueMap(
-                array(
-                    array('Database\Table\Packages', true, $packages),
-                    array('Library\Now', true, new \DateTime),
-                    array('Model\Package\Storage\Direct', true, $storage),
-                )
+        $serviceManager->method('get')->willReturnMap(
+            array(
+                array('Database\Table\Packages', $packages),
+                array('Library\Now', new \DateTime),
+                array('Model\Package\Storage\Direct', $storage),
             )
         );
 
@@ -418,13 +414,11 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $packages->expects($this->never())->method('insert');
 
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->will(
-            $this->returnValueMap(
-                array(
-                    array('Database\Table\Packages', true, $packages),
-                    array('Library\Now', true, new \DateTime),
-                    array('Model\Package\Storage\Direct', true, $storage),
-                )
+        $serviceManager->method('get')->willReturnMap(
+            array(
+                array('Database\Table\Packages', $packages),
+                array('Library\Now', new \DateTime),
+                array('Model\Package\Storage\Direct', $storage),
             )
         );
 
@@ -448,8 +442,8 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
-                array('Library\Now', true, new \DateTime),
-                array('Model\Package\Storage\Direct', true, $storage),
+                array('Library\Now', new \DateTime),
+                array('Model\Package\Storage\Direct', $storage),
             )
         );
 

@@ -116,23 +116,22 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_config = $this->createMock('Model\Config');
         $this->_inventoryUploader = $this->createMock('Library\InventoryUploader');
 
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('Model\Client\ClientManager', $this->_clientManager)
-             ->setService('Model\Group\GroupManager', $this->_groupManager)
-             ->setService('Model\Registry\RegistryManager', $this->_registryManager)
-             ->setService('Model\SoftwareManager', $this->_softwareManager)
-             ->setService('Model\Config', $this->_config)
-             ->setService('Library\InventoryUploader', $this->_inventoryUploader)
-             ->get('FormElementManager')
-             ->setService('Console\Form\Package\Assign', $this->createMock('Console\Form\Package\Assign'))
-             ->setService('Console\Form\ClientConfig', $this->createMock('Console\Form\ClientConfig'))
-             ->setService('Console\Form\CustomFields', $this->createMock('Console\Form\CustomFields'))
-             ->setService('Console\Form\DeleteClient', $this->createMock('Console\Form\DeleteClient'))
-             ->setService('Console\Form\GroupMemberships', $this->createMock('Console\Form\GroupMemberships'))
-             ->setService('Console\Form\Import', $this->createMock('Console\Form\Import'))
-             ->setService('Console\Form\ProductKey', $this->createMock('Console\Form\ProductKey'))
-             ->setService('Console\Form\Search', $this->createMock('Console\Form\Search'));
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setService('Model\Client\ClientManager', $this->_clientManager);
+        $serviceManager->setService('Model\Group\GroupManager', $this->_groupManager);
+        $serviceManager->setService('Model\Registry\RegistryManager', $this->_registryManager);
+        $serviceManager->setService('Model\SoftwareManager', $this->_softwareManager);
+        $serviceManager->setService('Model\Config', $this->_config);
+        $serviceManager->setService('Library\InventoryUploader', $this->_inventoryUploader);
+        $formManager = $serviceManager->get('FormElementManager');
+        $formManager->setService('Console\Form\Package\Assign', $this->createMock('Console\Form\Package\Assign'));
+        $formManager->setService('Console\Form\ClientConfig', $this->createMock('Console\Form\ClientConfig'));
+        $formManager->setService('Console\Form\CustomFields', $this->createMock('Console\Form\CustomFields'));
+        $formManager->setService('Console\Form\DeleteClient', $this->createMock('Console\Form\DeleteClient'));
+        $formManager->setService('Console\Form\GroupMemberships', $this->createMock('Console\Form\GroupMemberships'));
+        $formManager->setService('Console\Form\Import', $this->createMock('Console\Form\Import'));
+        $formManager->setService('Console\Form\ProductKey', $this->createMock('Console\Form\ProductKey'));
+        $formManager->setService('Console\Form\Search', $this->createMock('Console\Form\Search'));
     }
 
     public function testInvalidClient()
@@ -758,7 +757,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                            array('error'),
                            array(array('success %d' => 42))
                        );
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('FlashMessenger', $flashMessenger);
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
         $this->_clientManager->expects($this->once())->method('getClients')->willReturn(array());
         $this->_disableTranslator();
@@ -780,7 +779,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                        array($lastContactDate, \IntlDateFormatter::FULL, \IntlDateFormatter::LONG)
                    )
                    ->willReturnOnConsecutiveCalls('inventory_date', 'last_contact_date');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('dateFormat', $dateFormat);
 
         $client = array(
             'Id' => 1,
@@ -948,7 +947,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->method('prepare');
         $form->init();
 
-        $this->getApplicationServiceLocator()->get('FormElementManager')->setService('Console\Form\ProductKey', $form);
+        $formManager = $this->getApplicationServiceLocator()->get('FormElementManager');
+        $formManager->setAllowOverride(true);
+        $formManager->setService('Console\Form\ProductKey', $form);
 
         $windows = array(
             'Company' => 'company',
@@ -998,7 +999,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->init();
         $form->get('Key')->setMessages(array('message'));
 
-        $this->getApplicationServiceLocator()->get('FormElementManager')->setService('Console\Form\ProductKey', $form);
+        $formManager = $this->getApplicationServiceLocator()->get('FormElementManager');
+        $formManager->setAllowOverride(true);
+        $formManager->setService('Console\Form\ProductKey', $form);
 
         $this->_softwareManager->expects($this->never())->method('setProductKey');
         $this->dispatch('/console/client/windows/?id=1', 'POST', $postData);
@@ -2076,7 +2079,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                        ->method('render')
                        ->with('success')
                        ->willReturn('<ul class="success"><li>successMessage</li></ul>');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('FlashMessenger', $flashMessenger);
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
         $this->_disableTranslator();
         $this->dispatch('/console/client/customfields/?id=1');

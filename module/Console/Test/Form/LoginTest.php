@@ -41,7 +41,7 @@ class LoginTest extends \Console\Test\AbstractFormTest
         $this->assertCount(1, \Zend\Dom\Document\Query::execute('//form', $document));
         $this->assertContains(
             'document.forms["form_login"]["User"].focus()',
-            $view->placeHolder('BodyOnLoad')
+            $view->placeholder('BodyOnLoad')
         );
     }
 

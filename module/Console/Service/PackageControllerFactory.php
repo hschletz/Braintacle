@@ -24,18 +24,20 @@ namespace Console\Service;
 /**
  * Factory for PackageController
  */
-class PackageControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class PackageControllerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $serviceManager = $serviceLocator->getServiceLocator();
-        $formManager = $serviceManager->get('FormElementManager');
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
+        $formManager = $container->get('FormElementManager');
         return new \Console\Controller\PackageController(
-            $serviceManager->get('Model\Package\PackageManager'),
-            $serviceManager->get('Model\Config'),
+            $container->get('Model\Package\PackageManager'),
+            $container->get('Model\Config'),
             $formManager->get('Console\Form\Package\Build'),
             $formManager->get('Console\Form\Package\Update')
         );

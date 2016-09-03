@@ -25,16 +25,19 @@ namespace Console\Form\Service;
  * Factory for NetworkDevice
  * @codeCoverageIgnore
  */
-class NetworkDeviceFactory implements \Zend\ServiceManager\FactoryInterface
+class NetworkDeviceFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Console\Form\NetworkDevice(
             null,
-            array('DeviceManager' => $serviceLocator->getServiceLocator()->get('Model\Network\DeviceManager'))
+            array('DeviceManager' => $container->get('Model\Network\DeviceManager'))
         );
     }
 }

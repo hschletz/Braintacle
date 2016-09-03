@@ -24,17 +24,20 @@ namespace Model\Service\Package\Storage;
 /**
  * Factory for Model\Package\Storage\Direct
  */
-class DirectFactory implements \Zend\ServiceManager\FactoryInterface
+class DirectFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      * @codeCoverageIgnore
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Model\Package\Storage\Direct(
-            $serviceLocator->get('Model\Config'),
-            $serviceLocator->get('Model\Package\Metadata')
+            $container->get('Model\Config'),
+            $container->get('Model\Package\Metadata')
         );
     }
 }

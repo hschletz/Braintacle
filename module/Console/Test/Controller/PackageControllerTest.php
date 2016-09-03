@@ -62,13 +62,12 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_buildForm = $this->createMock('Console\Form\Package\Build');
         $this->_updateForm = $this->createMock('Console\Form\Package\Update');
 
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('Model\Package\PackageManager', $this->_packageManager)
-             ->setService('Model\Config', $this->_config)
-             ->get('FormElementManager')
-             ->setService('Console\Form\Package\Build', $this->_buildForm)
-             ->setService('Console\Form\Package\Update', $this->_updateForm);
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setService('Model\Package\PackageManager', $this->_packageManager);
+        $serviceManager->setService('Model\Config', $this->_config);
+        $formManager = $serviceManager->get('FormElementManager');
+        $formManager->setService('Console\Form\Package\Build', $this->_buildForm);
+        $formManager->setService('Console\Form\Package\Update', $this->_updateForm);
     }
 
     public function testIndexActionPackageList()
@@ -114,7 +113,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                        );
         $flashMessenger->expects($this->once())->method('setTranslator')->with(null);
         $flashMessenger->expects($this->once())->method('render')->with('error')->willReturn('');
-        $viewHelperManager->setService('FlashMessenger', $flashMessenger);
+        $viewHelperManager->setService('flashMessenger', $flashMessenger);
 
         $dateFormat = $this->createMock('Zend\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->exactly(2))
@@ -214,7 +213,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                        ->willReturn('<ul class="error"><li>error</li></ul>');
         $this->getApplicationServiceLocator()
              ->get('ViewHelperManager')
-             ->setService('FlashMessenger', $flashMessenger);
+             ->setService('flashMessenger', $flashMessenger);
 
         $this->_packageManager->expects($this->once())->method('getPackages')->willReturn(array());
         $this->_disableTranslator();
@@ -270,7 +269,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                        );
         $flashMessenger->expects($this->once())->method('setTranslator')->with(null);
         $flashMessenger->expects($this->once())->method('render')->with('error')->willReturn('');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('FlashMessenger', $flashMessenger);
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
         $this->dispatch('/console/package/index/');
         $this->assertResponseStatusCode(200);

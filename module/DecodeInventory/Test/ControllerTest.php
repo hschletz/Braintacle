@@ -69,7 +69,6 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
 
         $this->getApplicationServiceLocator()
              ->get('FilterManager')
-             ->setAllowOverride(true)
              ->setService('Protocol\InventoryDecode', $inventoryDecode);
 
         $this->dispatch($inputFile);
@@ -107,7 +106,6 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
 
         $this->getApplicationServiceLocator()
              ->get('FilterManager')
-             ->setAllowOverride(true)
              ->setService('Protocol\InventoryDecode', $inventoryDecode);
 
         $this->dispatch($inputFile);

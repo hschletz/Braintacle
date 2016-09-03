@@ -63,10 +63,10 @@ class MainMenuTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerT
               ->method('getNumManualProductKeys')
               ->will($this->returnValue(0));
 
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('Zend\Authentication\AuthenticationService', $auth)
-             ->setService('Model\SoftwareManager', $model);
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService('Zend\Authentication\AuthenticationService', $auth);
+        $serviceManager->setService('Model\SoftwareManager', $model);
 
         // Dispatch arbitrary action and test corresponding menu entry
         $this->dispatch('/console/licenses/index/');

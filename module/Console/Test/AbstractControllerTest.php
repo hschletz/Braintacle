@@ -42,9 +42,9 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
         $auth = $this->createMock('Model\Operator\AuthenticationService');
         $auth->expects($this->atLeastOnce())->method('hasIdentity')->willReturn(true);
 
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('Model\Operator\AuthenticationService', $auth);
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService('Model\Operator\AuthenticationService', $auth);
     }
 
     public function testRedirectToLoginPage()

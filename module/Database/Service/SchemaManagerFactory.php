@@ -26,13 +26,16 @@ namespace Database\Service;
  *
  * @codeCoverageIgnore
  */
-class SchemaManagerFactory implements \Zend\ServiceManager\FactoryInterface
+class SchemaManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        return new \Database\SchemaManager($serviceLocator);
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
+        return new \Database\SchemaManager($container);
     }
 }

@@ -25,31 +25,28 @@ namespace Console\Form\Service;
  * Abstract factory for Account forms
  * @codeCoverageIgnore
  */
-class AccountFactory implements \Zend\ServiceManager\AbstractFactoryInterface
+class AccountFactory implements \Zend\ServiceManager\Factory\AbstractFactoryInterface
 {
     /**
      * @internal
      */
-    public function canCreateServiceWithName(
-        \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
-        $name,
-        $requestedName
-    ) {
+    public function canCreate(\Interop\Container\ContainerInterface $container, $requestedName)
+    {
         return (strpos($requestedName, 'Console\Form\Account\\') === 0);
     }
 
     /**
      * @internal
      */
-    public function createServiceWithName(
-        \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
-        $name,
-        $requestedName
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
     ) {
         $form = new $requestedName;
         $form->setOption(
             'operatorManager',
-            $serviceLocator->getServiceLocator()->get('Model\Operator\OperatorManager')
+            $container->get('Model\Operator\OperatorManager')
         );
         return $form;
     }

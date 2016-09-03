@@ -30,25 +30,22 @@ namespace Protocol\Service;
  *
  * @codeCoverageIgnore
  */
-class AbstractHydratorFactory implements \Zend\ServiceManager\AbstractFactoryInterface
+class AbstractHydratorFactory implements \Zend\ServiceManager\Factory\AbstractFactoryInterface
 {
     /** {@inheritdoc} */
-    public function canCreateServiceWithName(
-        \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
-        $name,
-        $requestedName
-    ) {
+    public function canCreate(\Interop\Container\ContainerInterface $container, $requestedName)
+    {
         return strpos($requestedName, 'Protocol\Hydrator\\') === 0;
     }
 
     /** {@inheritdoc} */
-    public function createServiceWithName(
-        \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator,
-        $name,
-        $requestedName
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
     ) {
         return new \Protocol\Hydrator\DatabaseProxy(
-            clone $serviceLocator->get(
+            clone $container->get(
                 'Database\Table' . substr($requestedName, strrpos($requestedName, '\\'))
             )->getHydrator()
         );

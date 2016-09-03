@@ -24,15 +24,18 @@ namespace Console\Service;
 /**
  * Factory for LicensesController
  */
-class LicensesControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class LicensesControllerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Console\Controller\LicensesController(
-            $serviceLocator->getServiceLocator()->get('Model\SoftwareManager')
+            $container->get('Model\SoftwareManager')
         );
     }
 }

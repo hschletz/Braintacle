@@ -89,11 +89,10 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
                         ->getMockForAbstractClass();
         $console->expects($this->once())->method('writeLine')->with('Package successfully built.');
 
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('Model\Config', $config)
-             ->setService('Model\Package\packageManager', $packageManager)
-             ->setService('console', $console);
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setService('Model\Config', $config);
+        $serviceManager->setService('Model\Package\PackageManager', $packageManager);
+        $serviceManager->setService('Console', $console);
 
         $this->dispatch('packageName path/fileName');
 

@@ -25,17 +25,19 @@ namespace Console\Form\Service;
  * Factory for DeleteClient form
  * @codeCoverageIgnore
  */
-class DeleteClientFactory implements \Zend\ServiceManager\FactoryInterface
+class DeleteClientFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $serviceManager = $serviceLocator->getServiceLocator();
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Console\Form\DeleteClient(
             null,
-            array('config' => $serviceManager->get('Model\Config'))
+            array('config' => $container->get('Model\Config'))
         );
     }
 }

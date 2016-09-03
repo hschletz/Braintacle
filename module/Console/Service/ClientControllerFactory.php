@@ -24,22 +24,24 @@ namespace Console\Service;
 /**
  * Factory for ClientController
  */
-class ClientControllerFactory implements \Zend\ServiceManager\FactoryInterface
+class ClientControllerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $serviceManager = $serviceLocator->getServiceLocator();
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Console\Controller\ClientController(
-            $serviceManager->get('Model\Client\ClientManager'),
-            $serviceManager->get('Model\Group\GroupManager'),
-            $serviceManager->get('Model\Registry\RegistryManager'),
-            $serviceManager->get('Model\SoftwareManager'),
-            $serviceManager->get('FormElementManager'),
-            $serviceManager->get('Model\Config'),
-            $serviceManager->get('Library\InventoryUploader')
+            $container->get('Model\Client\ClientManager'),
+            $container->get('Model\Group\GroupManager'),
+            $container->get('Model\Registry\RegistryManager'),
+            $container->get('Model\SoftwareManager'),
+            $container->get('FormElementManager'),
+            $container->get('Model\Config'),
+            $container->get('Library\InventoryUploader')
         );
     }
 }

@@ -24,16 +24,19 @@ namespace Model\Service\Client;
 /**
  * Factory for Model\Client\CustomFieldManager
  */
-class CustomFieldManagerFactory implements \Zend\ServiceManager\FactoryInterface
+class CustomFieldManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
      * @internal
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
         return new \Model\Client\CustomFieldManager(
-            $serviceLocator->get('Database\Table\CustomFieldConfig'),
-            $serviceLocator->get('Database\Table\CustomFields')
+            $container->get('Database\Table\CustomFieldConfig'),
+            $container->get('Database\Table\CustomFields')
         );
     }
 }

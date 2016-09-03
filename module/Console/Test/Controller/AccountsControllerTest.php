@@ -53,12 +53,11 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         $this->_formAccountAdd = $this->createMock('Console\Form\Account\Add');
         $this->_formAccountEdit = $this->createMock('Console\Form\Account\Edit');
 
-        $this->getApplicationServiceLocator()
-             ->setAllowOverride(true)
-             ->setService('Model\Operator\OperatorManager', $this->_operatorManager)
-             ->get('FormElementManager')
-             ->setService('Console\Form\Account\Add', $this->_formAccountAdd)
-             ->setService('Console\Form\Account\Edit', $this->_formAccountEdit);
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setService('Model\Operator\OperatorManager', $this->_operatorManager);
+        $formManager = $serviceManager->get('FormElementManager');
+        $formManager->setService('Console\Form\Account\Add', $this->_formAccountAdd);
+        $formManager->setService('Console\Form\Account\Edit', $this->_formAccountEdit);
     }
 
     public function testIndexActionCurrentAccount()
@@ -74,7 +73,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
 
         $identity = $this->createMock('Zend\View\Helper\Identity');
         $identity->expects($this->atLeastOnce())->method('__invoke')->willReturn('testId');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('Identity', $identity);
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('identity', $identity);
 
         $this->dispatch('/console/accounts/index/');
         $this->assertResponseStatusCode(200);
@@ -96,7 +95,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
 
         $identity = $this->createMock('Zend\View\Helper\Identity');
         $identity->expects($this->atLeastOnce())->method('__invoke')->willReturn('otherId');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('Identity', $identity);
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('identity', $identity);
 
         $this->dispatch('/console/accounts/index/');
         $this->assertResponseStatusCode(200);
