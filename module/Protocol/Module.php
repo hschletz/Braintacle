@@ -52,8 +52,11 @@ class Module implements
     {
         return array(
             'filters' => array(
-                'invokables' => array(
+                'aliases' => array(
                     'Protocol\InventoryDecode' => 'Protocol\Filter\InventoryDecode',
+                ),
+                'factories' => array(
+                    'Protocol\Filter\InventoryDecode' => 'Zend\ServiceManager\Factory\InvokableFactory',
                 ),
             ),
             'service_manager' => array(
@@ -61,13 +64,11 @@ class Module implements
                     'Protocol\Service\AbstractHydratorFactory',
                 ),
                 'factories' => array(
+                    'Protocol\Hydrator\ClientsBios' => 'Zend\ServiceManager\Factory\InvokableFactory',
                     'Protocol\Hydrator\ClientsHardware' => 'Protocol\Service\Hydrator\ClientsHardwareFactory',
-                ),
-                'invokables' => array(
-                    'Protocol\Hydrator\ClientsBios' => 'Protocol\Hydrator\ClientsBios',
-                    'Protocol\Hydrator\Filesystems' => 'Protocol\Hydrator\Filesystems',
-                    'Protocol\Hydrator\Software' => 'Protocol\Hydrator\Software',
-                    'Protocol\Message\InventoryRequest' => 'Protocol\Message\InventoryRequest',
+                    'Protocol\Hydrator\Filesystems' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Protocol\Hydrator\Software' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Protocol\Message\InventoryRequest' => 'Zend\ServiceManager\Factory\InvokableFactory',
                 ),
             ),
         );

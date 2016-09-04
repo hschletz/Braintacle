@@ -44,19 +44,26 @@ class Module implements
         return array(
             'controller_plugins' => array(
                 'aliases' => array(
-                    'redirectToRoute' => 'RedirectToRoute',
-                    'urlFromRoute' => 'UrlFromRoute',
-                ),
-                'invokables' => array(
                     '_' => 'Library\Mvc\Controller\Plugin\TranslationHelper',
                     'RedirectToRoute' => 'Library\Mvc\Controller\Plugin\RedirectToRoute',
+                    'redirectToRoute' => 'Library\Mvc\Controller\Plugin\RedirectToRoute',
                     'UrlFromRoute' => 'Library\Mvc\Controller\Plugin\UrlFromRoute',
+                    'urlFromRoute' => 'Library\Mvc\Controller\Plugin\UrlFromRoute',
+                ),
+                'factories' => array(
+                    'Library\Mvc\Controller\Plugin\TranslationHelper' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\Mvc\Controller\Plugin\RedirectToRoute' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\Mvc\Controller\Plugin\UrlFromRoute' => 'Zend\ServiceManager\Factory\InvokableFactory',
                 )
             ),
             'filters' => array(
-                'invokables' => array(
+                'aliases' => array(
                     'Library\FixEncodingErrors' => 'Library\Filter\FixEncodingErrors',
                     'Library\LogLevel' => 'Library\Filter\LogLevel',
+                ),
+                'factories' => array(
+                    'Library\Filter\FixEncodingErrors' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\Filter\LogLevel' => 'Zend\ServiceManager\Factory\InvokableFactory',
                 ),
             ),
             'service_manager' => array(
@@ -64,15 +71,15 @@ class Module implements
                     'Zend\Mvc\I18n\Translator' => array('Library\I18n\Translator\DelegatorFactory'),
                 ),
                 'factories' => array(
+                    'Library\ArchiveManager' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\I18n\Translator\DelegatorFactory' => 'Zend\ServiceManager\Factory\InvokableFactory',
                     'Library\InventoryUploader' => 'Library\Service\InventoryUploaderFactory',
                     'Library\Logger' => 'Library\Log\LoggerServiceFactory',
+                    'Library\Now' => function () {
+                        return new \DateTime;
+                    },
+                    'Library\Random' => 'Zend\ServiceManager\Factory\InvokableFactory',
                     'Library\UserConfig' => 'Library\Service\UserConfigFactory',
-                ),
-                'invokables' => array(
-                    'Library\ArchiveManager' => 'Library\ArchiveManager',
-                    'Library\I18n\Translator\DelegatorFactory' => 'Library\I18n\Translator\DelegatorFactory',
-                    'Library\Now' => 'DateTime',
-                    'Library\Random' => 'Library\Random',
                 ),
                 'shared' => array(
                     'Library\Now' => false,
@@ -88,33 +95,45 @@ class Module implements
                 ),
             ),
             'translator_plugins' => array(
-                'invokables' => array(
+                'aliases' => array(
                     'Po' => 'Library\I18n\Translator\Loader\Po',
-                )
+                ),
+                'factories' => array(
+                    'Library\I18n\Translator\Loader\Po' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                ),
             ),
             'validators' => array(
-                'invokables' => array(
+                'aliases' => array(
                     'Library\DirectoryWritable' => 'Library\Validator\DirectoryWritable',
                     'Library\FileReadable' => 'Library\Validator\FileReadable',
                     'Library\LogLevel' => 'Library\Validator\LogLevel',
                     'Library\NotInArray' => 'Library\Validator\NotInArray',
                     'Library\ProductKey' => 'Library\Validator\ProductKey',
                 ),
+                'factories' => array(
+                    'Library\Validator\DirectoryWritable' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\Validator\FileReadable' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\Validator\LogLevel' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\Validator\NotInArray' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\Validator\ProductKey' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                ),
             ),
             'view_helpers' => array(
                 'aliases' => array(
-                    'formSelectSimple' => 'FormSelectSimple',
-                    'formSelectUntranslated' => 'FormSelectUntranslated',
-                    'formYesNo' => 'FormYesNo',
-                    'htmlElement' => 'HtmlElement',
+                    'FormSelectSimple' => 'Library\View\Helper\FormSelectSimple',
+                    'formSelectSimple' => 'Library\View\Helper\FormSelectSimple',
+                    'FormSelectUntranslated' => 'Library\View\Helper\FormSelectUntranslated',
+                    'formSelectUntranslated' => 'Library\View\Helper\FormSelectUntranslated',
+                    'FormYesNo' => 'Library\View\Helper\FormYesNo',
+                    'formYesNo' => 'Library\View\Helper\FormYesNo',
+                    'HtmlElement' => 'Library\View\Helper\HtmlElement',
+                    'htmlElement' => 'Library\View\Helper\HtmlElement',
                 ),
                 'factories' => array(
-                    'FormYesNo' => 'Library\View\Helper\Service\FormYesNoFactory',
-                ),
-                'invokables' => array(
-                    'FormSelectSimple' => 'Library\View\Helper\FormSelectSimple',
-                    'FormSelectUntranslated' => 'Library\View\Helper\FormSelectUntranslated',
-                    'HtmlElement' => 'Library\View\Helper\HtmlElement',
+                    'Library\View\Helper\FormSelectSimple' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\View\Helper\FormSelectUntranslated' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\View\Helper\FormYesNo' => 'Library\View\Helper\Service\FormYesNoFactory',
+                    'Library\View\Helper\HtmlElement' => 'Zend\ServiceManager\Factory\InvokableFactory',
                 ),
             ),
         );
