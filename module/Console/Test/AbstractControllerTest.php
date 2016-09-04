@@ -43,13 +43,13 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
         $auth->expects($this->atLeastOnce())->method('hasIdentity')->willReturn(true);
 
         $serviceManager = $this->getApplicationServiceLocator();
-        $serviceManager->setAllowOverride(true);
         $serviceManager->setService('Model\Operator\AuthenticationService', $auth);
     }
 
     public function testRedirectToLoginPage()
     {
         $serviceLocator = $this->getApplicationServiceLocator();
+        $serviceLocator->setAllowOverride(true);
 
         // Call method on overridden service to satisfy atLeastOnce constraint
         $serviceLocator->get('Model\Operator\AuthenticationService')->hasIdentity();
@@ -83,7 +83,9 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
      */
     protected function _disableTranslator()
     {
-        $this->getApplication()->getServiceManager()->setService(
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService(
             'MvcTranslator',
             new \Zend\Mvc\I18n\Translator(new \Zend\I18n\Translator\Translator)
         );

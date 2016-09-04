@@ -64,7 +64,6 @@ class MainMenuTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerT
               ->will($this->returnValue(0));
 
         $serviceManager = $this->getApplicationServiceLocator();
-        $serviceManager->setAllowOverride(true);
         $serviceManager->setService('Zend\Authentication\AuthenticationService', $auth);
         $serviceManager->setService('Model\SoftwareManager', $model);
 

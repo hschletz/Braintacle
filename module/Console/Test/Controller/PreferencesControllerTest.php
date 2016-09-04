@@ -70,6 +70,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_config = $this->createMock('Model\Config');
 
         $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
         $serviceManager->setService('FormElementManager', $this->_formManager);
         $serviceManager->setService('Model\Client\CustomFieldManager', $this->_customFieldManager);
         $serviceManager->setService('Model\Network\DeviceManager', $this->_deviceManager);
