@@ -39,7 +39,7 @@
         "zendframework/zend-json": "^2.5",
         "zendframework/zend-loader": "^2.5",
         "zendframework/zend-log": "^2.9",
-        "zendframework/zend-math": "^2.5",
+        "zendframework/zend-math": "^3.0",
         "zendframework/zend-modulemanager": "^2.5",
         "zendframework/zend-mvc": "^3.0",
         "zendframework/zend-mvc-console": "^1.1",
@@ -69,8 +69,6 @@
     },
     "suggest": {
         "ext-zlib": "Required for the decode-inventory-file.php tool (PHP 7 only)",
-        "ext-gmp": "Required for PHP installations without 64 bit integer support",
-        "ext-mcrypt": "Required for PHP 5.6 if ircmaxell/random-lib is not installed",
-        "ircmaxell/random-lib": "Required for PHP 5.6 if mcrypt extension is not installed"
+        "ext-gmp": "Required for PHP installations without 64 bit integer support"
     }
 }

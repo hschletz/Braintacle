@@ -36,8 +36,7 @@ Requirements
 
   - The "intl" extension
 
-  - The "mcrypt" extension is required for PHP 5.6, unless the
-    ircmaxell/random-lib module is available. These are not required for PHP 7.
+  - The "mbstring" extension
 
   - The "zip" extension is optional. If present, the package builder can create ZIP
     archives on the fly.
