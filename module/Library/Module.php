@@ -66,6 +66,17 @@ class Module implements
                     'Library\Filter\LogLevel' => 'Zend\ServiceManager\Factory\InvokableFactory',
                 ),
             ),
+            'log' => array(
+                'Library\Logger' => array(
+                    // Ready-to-use logger instance with a noop writer attached.
+                    // Applications can add their own writer.
+                    'writers' => array(
+                        array(
+                            'name' => 'noop',
+                        ),
+                    ),
+                ),
+            ),
             'service_manager' => array(
                 'delegators' => array(
                     'Zend\Mvc\I18n\Translator' => array('Library\I18n\Translator\DelegatorFactory'),
@@ -74,7 +85,6 @@ class Module implements
                     'Library\ArchiveManager' => 'Zend\ServiceManager\Factory\InvokableFactory',
                     'Library\I18n\Translator\DelegatorFactory' => 'Zend\ServiceManager\Factory\InvokableFactory',
                     'Library\InventoryUploader' => 'Library\Service\InventoryUploaderFactory',
-                    'Library\Logger' => 'Library\Log\LoggerServiceFactory',
                     'Library\Now' => function () {
                         return new \DateTime;
                     },
