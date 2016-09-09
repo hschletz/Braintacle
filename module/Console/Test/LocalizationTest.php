@@ -53,10 +53,10 @@ class LocalizationTest extends \PHPUnit_Framework_TestCase
 
     public function testDefaultLocaleFromHttpHeader()
     {
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'se-SE,se;q=0.8,en-US;q=0.6,en;q=0.4';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'sv-se,sv;q=0.8,en-us;q=0.6,en;q=0.4';
         \Locale::setDefault('fi');
         \Library\Application::init('Console', true);
-        $this->assertEquals('se_SE', \Locale::getDefault());
+        $this->assertEquals('sv_SE', \Locale::getDefault());
     }
 
     public function testDefaultTranslator()
