@@ -132,7 +132,7 @@ return array(
         ),
         'factories' => array(
             'Console\View\Helper\ConsoleUrl' => 'Console\View\Helper\Service\ConsoleUrlFactory',
-            'Console\View\Helper\FilterDescription' => 'Zend\ServiceManager\Factory\InvokableFactory',
+            'Console\View\Helper\FilterDescription' => 'Console\View\Helper\Service\FilterDescriptionFactory',
             'Console\View\Helper\FormatMessages' => 'Console\View\Helper\Service\FormatMessagesFactory',
             'Console\View\Helper\Table' => 'Console\View\Helper\Service\TableFactory',
         ),

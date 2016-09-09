@@ -28,12 +28,30 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
 {
     public function testInterfaceInSubnet()
     {
+        $subnet = $this->createMock('Model\Network\Subnet');
+        $subnet->expects($this->at(0))->method('offsetSet')->with('Address', 'address1');
+        $subnet->expects($this->at(1))->method('offsetSet')->with('Mask', 'mask1');
+        $subnet->expects($this->at(2))->method('offsetGet')->with('CidrAddress')->willReturn('<cidrAddress1>');
+        $subnet->expects($this->at(3))->method('offsetSet')->with('Address', 'address2');
+        $subnet->expects($this->at(4))->method('offsetSet')->with('Mask', 'mask2');
+        $subnet->expects($this->at(5))->method('offsetGet')->with('CidrAddress')->willReturn('<cidrAddress2>');
+        static::$_serviceManager->setService('Model\Network\Subnet', $subnet);
+
         // Escaped characters should not occur, but are theoretically possible.
         $this->assertEquals(
-            "42 Clients mit Interface in Netzwerk &gt;192.0.2.0/24",
+            '42 Clients mit Interface in Netzwerk &lt;cidrAddress1&gt;',
             $this->_getHelper()->__invoke(
                 array('NetworkInterface.Subnet', 'NetworkInterface.Netmask'),
-                array('>192.0.2.0', '255.255.255.0'),
+                array('address1', 'mask1'),
+                42
+            )
+        );
+        // Repeat test to rule out interference over internal subnet instance
+        $this->assertEquals(
+            '42 Clients mit Interface in Netzwerk &lt;cidrAddress2&gt;',
+            $this->_getHelper()->__invoke(
+                array('NetworkInterface.Subnet', 'NetworkInterface.Netmask'),
+                array('address2', 'mask2'),
                 42
             )
         );

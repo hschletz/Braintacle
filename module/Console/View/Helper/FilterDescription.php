@@ -27,6 +27,17 @@ namespace Console\View\Helper;
 class FilterDescription extends \Zend\View\Helper\AbstractHelper
 {
     /**
+     * Subnet instance for address calculations
+     * @var \Model\Network\Subnet
+     */
+    protected $_subnet;
+
+    public function __construct(\Model\Network\Subnet $subnet)
+    {
+        $this->_subnet = $subnet;
+    }
+
+    /**
      * Get description for builtin client filter specification
      *
      * The following filters are recognized:
@@ -53,7 +64,9 @@ class FilterDescription extends \Zend\View\Helper\AbstractHelper
                 $description = $this->view->translate(
                     '%1$d clients with an interface in network %2$s'
                 );
-                $subnet = new \Model\Network\Subnet(array('Address' => $search[0], 'Mask' => $search[1]));
+                $subnet = clone $this->_subnet;
+                $subnet['Address'] = $search[0];
+                $subnet['Mask'] = $search[1];
                 return $this->view->escapeHtml(sprintf($description, $count, $subnet['CidrAddress']));
             }
             // No other multi-filters defined.

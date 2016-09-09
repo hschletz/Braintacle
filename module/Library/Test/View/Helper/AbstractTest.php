@@ -33,6 +33,12 @@ use Library\Application;
 abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * Service manager
+     * @var \Zend\ServiceManager\ServiceManager
+     */
+    protected static $_serviceManager;
+
+    /**
      * View helper manager
      * @var \Zend\View\HelperPluginManager
      */
@@ -45,7 +51,8 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
         $helperClass = static::_getHelperClass();
         $moduleName = substr($helperClass, 0, strpos($helperClass, '\\'));
         $application = \Library\Application::init($moduleName, true);
-        static::$_helperManager = $application->getServiceManager()->get('ViewHelperManager');
+        static::$_serviceManager = $application->getServiceManager();
+        static::$_helperManager = static::$_serviceManager->get('ViewHelperManager');
     }
 
     /**
