@@ -33,6 +33,7 @@ class InventoryDecodeTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider filterProvider
+     * @requires PHP 7.0
      */
     public function testFilter($suffix)
     {
@@ -51,6 +52,9 @@ class InventoryDecodeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @requires PHP 7.0
+     */
     public function testFilterInvalidInput()
     {
         $this->setExpectedException('InvalidArgumentException', 'Input does not appear to be a zlib stream');
