@@ -86,7 +86,7 @@ class SubnetManager
                     mac NOT IN(SELECT macaddr FROM networks) AND
                     mac NOT IN(SELECT macaddr FROM network_devices)
                 ) AS num_unknown,
-                subnet.name
+                name
             FROM networks
             LEFT JOIN subnet ON networks.ipsubnet=subnet.netid AND networks.ipmask=subnet.mask
             WHERE
