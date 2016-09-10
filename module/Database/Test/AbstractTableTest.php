@@ -99,25 +99,9 @@ class AbstractTableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('value1', 'value2'), $this->_table->fetchCol('col'));
     }
 
-    /**
-     * @requires PHP 7.0
-     */
     public function testFetchColWithOtherHydrator()
     {
-        $hydrator = new class implements \Zend\Hydrator\HydratorInterface {
-            public function hydrate(array $data, $object)
-            {
-            }
-
-            public function extract($object)
-            {
-            }
-
-            public function hydrateName()
-            {
-                throw new \LogicException('hydrateName() must not be called');
-            }
-        };
+        $hydrator = new \Database\Test\TestHydrator;
 
         $resultSet = $this->createMock('Zend\Db\ResultSet\HydratingResultSet');
         $resultSet->method('getHydrator')->willReturn($hydrator);
