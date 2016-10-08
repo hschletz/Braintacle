@@ -34,23 +34,26 @@ require_once(__DIR__ . '/../vendor/autoload.php');
 function testModule($module, $filter, $doCoverage)
 {
     print "\nRunning tests on $module module\n\n";
-    $cmd = PHP_BINARY;
+
+    $baseDir = dirname(__DIR__);
+    $cmd = array(PHP_BINARY);
     if ($doCoverage) {
-        $cmd .= ' -dzend_extension=xdebug.' . PHP_SHLIB_SUFFIX;
+        $cmd[] = '-d zend_extension=xdebug.' . PHP_SHLIB_SUFFIX;
     }
     // Avoid vendor/bin/phpunit for Windows compatibility
-    $cmd .= ' ' . __DIR__ . '/../vendor/phpunit/phpunit/phpunit';
-    $cmd .= " -c module/$module/phpunit.xml --colors --report-useless-tests --disallow-test-output";
+    $cmd[] = escapeshellarg(__DIR__ . '/../vendor/phpunit/phpunit/phpunit');
+    $cmd[] = '-c ' . escapeshellarg("$baseDir/module/$module/phpunit.xml");
+    $cmd[] = '--colors --report-useless-tests --disallow-test-output';
     if ($doCoverage) {
-        $cmd .= " --coverage-html=doc/CodeCoverage/$module";
+        $cmd[] = '--coverage-html=' . escapeshellarg("$baseDir/doc/CodeCoverage/$module");
     }
     if ($filter) {
-        $cmd .= ' --filter ' .escapeshellarg($filter);
+        $cmd[] = '--filter ' . escapeshellarg($filter);
     }
 
     // Pass descriptors explicitly to make PHPUnit 4.4 recognize a TTY which is
     // required for color output and terminal size detection.
-    if ($handle = proc_open($cmd, array(STDIN, STDOUT, STDERR), $pipes)) {
+    if ($handle = proc_open(implode(' ', $cmd), array(STDIN, STDOUT, STDERR), $pipes)) {
         $exitCode = proc_close($handle);
         if ($exitCode) {
             printf("\n\nUnit tests for module '%s' failed with status %d. Aborting.\n", $module, $exitCode);
@@ -63,9 +66,6 @@ function testModule($module, $filter, $doCoverage)
         exit(1);
     }
 }
-
-// Change to application root directory to allow relative paths
-chdir(dirname(__DIR__));
 
 try {
     $opts = new \Zend\Console\Getopt(
