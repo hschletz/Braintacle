@@ -98,6 +98,7 @@ sub _get_sys_options{
   }
   $ENV{'OCS_OPT_INVENTORY_CACHE_ENABLED'} = 0; # broken, no plans to fix
   $ENV{'OCS_OPT_SNMP_PRINT_HTTPS_ERROR'} = 1; # always log this error (if verbose logging is enabled)
+  $ENV{'OCS_OPT_UNICODE_SUPPORT'} = 1; # always enabled
   $request->finish;
   0;
 }

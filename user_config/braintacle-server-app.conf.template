@@ -52,9 +52,6 @@ PerlSetVar OCS_DB_PWD ocs
 # are unavailable.
 PerlSetEnv OCS_OPT_DBI_PRINT_ERROR 0
 
-# Unicode support - leave it enabled.
-PerlSetEnv OCS_OPT_UNICODE_SUPPORT 1
-
 # If you want to ignore any configuration stored within the database (which can
 # be modified through the web console), set this to 1 and provide any non-default
 # option values in this file.
