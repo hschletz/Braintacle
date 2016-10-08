@@ -22,16 +22,17 @@
 
 error_reporting(-1);
 
+require_once(__DIR__ . '/../vendor/autoload.php');
+
 /**
  * Run tests for specified module
  *
  * @param string $module Module name
- * @param string $filter optional filter for tests, used as phpunit's --filter option
+ * @param string $filter if not empty, pass to phpunit's --filter option
+ * @param bool $doCoverage generate code coverage report
  */
-function testModule($module, $filter = null)
+function testModule($module, $filter, $doCoverage)
 {
-    global $doCoverage;
-
     print "\nRunning tests on $module module\n\n";
     $cmd = PHP_BINARY;
     if ($doCoverage) {
@@ -66,28 +67,43 @@ function testModule($module, $filter = null)
 // Change to application root directory to allow relative paths
 chdir(dirname(__DIR__));
 
-// Look for --coverage argument anywhere in the command line, remove it for subsequent processing
-$args = $_SERVER['argv'];
-$coveragePos = array_search('--coverage', $args);
-if ($coveragePos === false) {
-    $doCoverage = false;
-} else {
-    $doCoverage = true;
-    array_splice($args, $coveragePos, 1);
+try {
+    $opts = new \Zend\Console\Getopt(
+        array(
+            'module|m=w' => 'run only tests for given module',
+            'filter|f=s' => 'run only tests whose names match given regex',
+            'coverage|c' => 'generate code coverage report (slow, requires Xdebug extension)',
+        )
+    );
+    $opts->parse();
+    if ($opts->getRemainingArgs()) {
+        throw new \Zend\Console\Exception\RuntimeException(
+            'Non-option arguments not allowed',
+            $opts->getUsageMessage()
+        );
+    }
+} catch (\Zend\Console\Exception\RuntimeException $e) {
+    print $e->getUsageMessage();
+    exit(1);
 }
 
-if (count($args) >= 2) {
-    // Run tests for explicit module and optional filter
-    testModule(ucfirst($args[1]), @$args[2]);
+$doCoverage = $opts->coverage ?: false;
+
+if ($opts->module) {
+    testModule(ucfirst($opts->module), $opts->filter, $doCoverage);
 } else {
-    // Run tests for all modules that have tests defined
-    testModule('Library');
-    testModule('Database');
-    testModule('Model');
-    testModule('Protocol');
-    testModule('Console');
-    testModule('DatabaseManager');
-    testModule('DecodeInventory');
-    testModule('Export');
-    testModule('PackageBuilder');
+    $modules = array(
+        'Library',
+        'Database',
+        'Model',
+        'Protocol',
+        'Console',
+        'DatabaseManager',
+        'DecodeInventory',
+        'Export',
+        'PackageBuilder',
+    );
+    foreach ($modules as $module) {
+        testModule($module, $opts->filter, $doCoverage);
+    }
 }
