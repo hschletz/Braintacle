@@ -70,7 +70,7 @@ function testModule($module, $filter, $doCoverage)
 try {
     $opts = new \Zend\Console\Getopt(
         array(
-            'module|m=w' => 'run only tests for given module',
+            'module|m=w' => 'run only tests for given module (case insensitive)',
             'filter|f=s' => 'run only tests whose names match given regex',
             'coverage|c' => 'generate code coverage report (slow, requires Xdebug extension)',
         )
@@ -89,20 +89,34 @@ try {
 
 $doCoverage = $opts->coverage ?: false;
 
+// Generate list of available modules.
+// The following basic modules are tested first. Other modules are added
+// dynamically.
+$modules = array(
+    'Library',
+    'Database',
+    'Model',
+);
+foreach (new \FilesystemIterator(__DIR__ . '/../module') as $entry) {
+    if ($entry->isDir() and !in_array($entry->getFilename(), $modules)) {
+        $modules[] = $entry->getFilename();
+    }
+}
+
 if ($opts->module) {
-    testModule(ucfirst($opts->module), $opts->filter, $doCoverage);
+    $testedModule = null;
+    foreach ($modules as $module) {
+        if (strcasecmp($module, $opts->module) == 0) {
+            $testedModule = $module;
+            break;
+        }
+    }
+    if (!$testedModule) {
+        print "Invalid module name: {$opts->module}\n";
+        exit(1);
+    }
+    testModule($testedModule, $opts->filter, $doCoverage);
 } else {
-    $modules = array(
-        'Library',
-        'Database',
-        'Model',
-        'Protocol',
-        'Console',
-        'DatabaseManager',
-        'DecodeInventory',
-        'Export',
-        'PackageBuilder',
-    );
     foreach ($modules as $module) {
         testModule($module, $opts->filter, $doCoverage);
     }
