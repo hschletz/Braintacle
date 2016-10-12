@@ -70,7 +70,7 @@ function testModule($module, $filter, $doCoverage)
 try {
     $opts = new \Zend\Console\Getopt(
         array(
-            'module|m=w' => 'run only tests for given module (case insensitive)',
+            'modules|m=s' => 'comma-separated list of modules to test (case insensitive), test all modules if not set',
             'filter|f=s' => 'run only tests whose names match given regex',
             'coverage|c' => 'generate code coverage report (slow, requires Xdebug extension)',
         )
@@ -87,37 +87,40 @@ try {
     exit(1);
 }
 
-$doCoverage = $opts->coverage ?: false;
-
 // Generate list of available modules.
 // The following basic modules are tested first. Other modules are added
 // dynamically.
-$modules = array(
+$modulesAvailable = array(
     'Library',
     'Database',
     'Model',
 );
 foreach (new \FilesystemIterator(__DIR__ . '/../module') as $entry) {
-    if ($entry->isDir() and !in_array($entry->getFilename(), $modules)) {
-        $modules[] = $entry->getFilename();
+    if ($entry->isDir() and !in_array($entry->getFilename(), $modulesAvailable)) {
+        $modulesAvailable[] = $entry->getFilename();
     }
 }
 
-if ($opts->module) {
-    $testedModule = null;
-    foreach ($modules as $module) {
-        if (strcasecmp($module, $opts->module) == 0) {
-            $testedModule = $module;
-            break;
+// Compose list of modules to test
+$modules = array();
+if ($opts->modules) {
+    foreach (explode(',', $opts->modules) as $module) {
+        // Case insensitive test for valid module name
+        $moduleFiltered = preg_grep('/^' . preg_quote($module, '/') . '$/i', $modulesAvailable);
+        if ($moduleFiltered) {
+            $modules[] = array_shift($moduleFiltered);
+        } else {
+            print "Invalid module name: $module\n";
+            exit(1);
         }
     }
-    if (!$testedModule) {
-        print "Invalid module name: {$opts->module}\n";
-        exit(1);
-    }
-    testModule($testedModule, $opts->filter, $doCoverage);
+    $modules = array_unique($modules);
 } else {
-    foreach ($modules as $module) {
-        testModule($module, $opts->filter, $doCoverage);
-    }
+    // No module requested, test all modules
+    $modules = $modulesAvailable;
+}
+
+// Run tests for all requested modules
+foreach ($modules as $module) {
+    testModule($module, $opts->filter, ($opts->coverage ?: false));
 }
