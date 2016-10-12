@@ -47,3 +47,22 @@ display backtrace = false
 ; Generate notice when a translation for a message string is missing.
 ; Useful for developers working on translation files.
 report missing translations = false
+
+
+; Test databases
+
+; Specify additional databases to use for unit tests. Each section can have an
+; arbitrary name which can be passed to the test runner script. If no test
+; database is configured, an SQLite in-memory database is used for testing.
+
+; DO NOT USE A PRODUCTION DATABASE OR A DATABASE THAT HOLDS ANY PERMANENT TEST
+; DATA! Contents of the test databases are deleted during tests! You should also
+; make sure to have exclusive access to the test database to avoid conflicts
+; with concurrent database usage.
+
+;[database-test]
+;driver =
+;hostname =
+;database =
+;username =
+;password =

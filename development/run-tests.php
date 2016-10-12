@@ -33,8 +33,6 @@ require_once(__DIR__ . '/../vendor/autoload.php');
  */
 function testModule($module, $filter, $doCoverage)
 {
-    print "\nRunning tests on $module module\n\n";
-
     $baseDir = dirname(__DIR__);
     $cmd = array(PHP_BINARY);
     if ($doCoverage) {
@@ -72,6 +70,7 @@ try {
         array(
             'modules|m=s' => 'comma-separated list of modules to test (case insensitive), test all modules if not set',
             'filter|f=s' => 'run only tests whose names match given regex',
+            'database|d-s' => 'comma-separated list of INI sections with database config (use all sections if empty)',
             'coverage|c' => 'generate code coverage report (slow, requires Xdebug extension)',
         )
     );
@@ -120,7 +119,56 @@ if ($opts->modules) {
     $modules = $modulesAvailable;
 }
 
+// Compose list of database configurations to test
+$databases = array();
+if ($opts->database) {
+    // Get available sections
+    $reader = new \Zend\Config\Reader\Ini;
+    $config = $reader->fromFile(__DIR__ . '/../user_config/braintacle.ini');
+
+    // Remove reserved sections
+    unset($config['database']); // Production database cannot be used
+    unset($config['debug']);
+
+    if (is_string($opts->database)) {
+        // Comma-separated list: validate and add each requested section
+        foreach (explode(',', $opts->database) as $section) {
+            if (!isset($section, $config)) {
+                print "Invalid config section: $section\n";
+                exit(1);
+            }
+            $databases[$section] = $config[$section];
+        }
+    } else {
+        // database option set without values: use all sections
+        $databases = $config;
+    }
+} else {
+    // Database option not set: use builtin default config
+    $databases[] = null;
+}
+
 // Run tests for all requested modules
 foreach ($modules as $module) {
-    testModule($module, $opts->filter, ($opts->coverage ?: false));
+    foreach ($databases as $name => $database) {
+        print "\nRunning tests on $module module with ";
+        if ($database) {
+            print "config '$name'";
+            // Set database config as environment variable which will be
+            // evaluated in test bootstrap scripts. This overrides the default
+            // config in phpunit.xml.
+            putenv('BRAINTACLE_TEST_DATABASE=' . json_encode($database));
+        } else {
+            print 'default config';
+            // Unset environment variable (if set) to avoid conflicts if this
+            // variable is set for whatever reason. This affects only the
+            // current process. The calling shell is unaffected.
+            // Bootstrap scripts will use the default config defined in
+            // phpunit.xml.
+            putenv('BRAINTACLE_TEST_DATABASE');
+        }
+        print "\n\n";
+
+        testModule($module, $opts->filter, ($opts->coverage ?: false));
+    }
 }

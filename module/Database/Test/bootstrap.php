@@ -27,7 +27,7 @@ $application = \Library\Application::init(
     true,
     array(
         'Library\UserConfig' => array(
-            'database' => array('driver' => 'Pdo_Sqlite'),
+            'database' => json_decode(getenv('BRAINTACLE_TEST_DATABASE'), true),
         )
     )
 );

@@ -35,4 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
     <logging>
         <log type="coverage-text" target="php://stdout" showOnlySummary="true" />
     </logging>
+    <php>
+        <env name="BRAINTACLE_TEST_DATABASE" value='{"driver" : "Pdo_Sqlite"}' />
+    </php>
 </phpunit>
