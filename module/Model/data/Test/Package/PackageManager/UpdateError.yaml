@@ -12,11 +12,35 @@ devices:
     tvalue: "1"
     comments: null
   -
+    hardware_id: 1
+    name: "DOWNLOAD_SWITCH"
+    ivalue: 1
+    tvalue: null
+    comments: null
+  -
+    hardware_id: 1
+    name: "OTHER"
+    ivalue: 1415958319
+    tvalue: null
+    comments: null
+  -
     hardware_id: 2
     name: "DOWNLOAD"
     ivalue: 1415958319
     tvalue: "NOTIFIED"
     comments: "Mon Dec 01 11:07:17 2014"
+  -
+    hardware_id: 2
+    name: "DOWNLOAD"
+    ivalue: 1415958320
+    tvalue: null
+    comments: "Mon Dec 01 11:07:17 2014"
+  -
+    hardware_id: 2
+    name: "DOWNLOAD_FORCE"
+    ivalue: 1415958320
+    tvalue: "1"
+    comments: null
   -
     hardware_id: 2
     name: "DOWNLOAD_POSTCMD"
@@ -47,27 +71,3 @@ devices:
     ivalue: 1415958319
     tvalue: null
     comments: "Mon Dec 01 11:07:17 2014"
-  -
-    hardware_id: 1
-    name: "OTHER"
-    ivalue: 1415958319
-    tvalue: null
-    comments: null
-  -
-    hardware_id: 1
-    name: "DOWNLOAD_SWITCH"
-    ivalue: 1
-    tvalue: null
-    comments: null
-  -
-    hardware_id: 2
-    name: "DOWNLOAD"
-    ivalue: 1415958320
-    tvalue: null
-    comments: "Mon Dec 01 11:07:17 2014"
-  -
-    hardware_id: 2
-    name: "DOWNLOAD_FORCE"
-    ivalue: 1415958320
-    tvalue: "1"
-    comments: null

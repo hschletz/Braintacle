@@ -145,7 +145,7 @@ class CustomFieldConfigTest extends AbstractTest
             $this->_loadDataSet('RenameField')->getTable('accountinfo_config'),
             $this->getConnection()->createQueryTable(
                 'accountinfo_config',
-                'SELECT id, name, type, account_type, show_order FROM accountinfo_config'
+                'SELECT id, name, type, account_type, show_order FROM accountinfo_config ORDER BY id'
             )
         );
     }

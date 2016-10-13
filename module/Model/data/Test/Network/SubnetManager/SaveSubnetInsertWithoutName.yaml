@@ -1,13 +1,13 @@
 subnet:
   -
     netid: "192.0.2.0"
+    mask: "255.255.255.0"
+    name: null
+  -
+    netid: "192.0.2.0"
     mask: "255.255.255.128"
     name: "NAME"
   -
     netid: "198.51.100.0"
     mask: "255.255.255.128"
     name: "ignored"
-  -
-    netid: "192.0.2.0"
-    mask: "255.255.255.0"
-    name: null

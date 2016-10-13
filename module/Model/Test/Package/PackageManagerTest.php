@@ -743,7 +743,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             $this->_loadDataSet()->getTable('devices'),
             $this->getConnection()->createQueryTable(
                 'devices',
-                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices'
+                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ORDER BY hardware_id, name, ivalue'
             )
         );
     }
@@ -789,7 +789,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             $dataset->getTable('devices'),
             $this->getConnection()->createQueryTable(
                 'devices',
-                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices'
+                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ORDER BY hardware_id, name, ivalue'
             )
         );
     }

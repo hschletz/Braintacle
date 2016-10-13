@@ -56,7 +56,9 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
     public function testGetAllIds()
     {
         $model = $this->_getModel();
-        $this->assertEquals(array('user1', 'user2'), $model->getAllIds());
+        $ids = $model->getAllIds();
+        sort($ids); // Result order is undefined, sort for comparison
+        $this->assertEquals(array('user1', 'user2'), $ids);
     }
 
     public function testGetOperator()

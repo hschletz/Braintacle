@@ -160,7 +160,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
             array('sim', array('Client' => 2), null, null, array('name2'), 'OperatorName'),
             array('Software', null, 'id', 'asc', array('name1', 'name2', 'name3', 'name4', ''), 'Name'),
             array('Software', null, 'Version', 'desc', array('name4', 'name3', 'name1', 'name2', ''), 'Name'),
-            array('Software', null, null, 'something', array('', 'name1', 'name2', 'name3', 'name4'), 'Name'),
+            array('Software', null, null, 'something', array('name1', 'name2', 'name3', 'name4', ''), 'Name'),
             array('software', array('Client' => 2), null, null, array('name2'), 'Name'),
             array(
                 'software',
@@ -190,22 +190,27 @@ class ItemManagerTest extends \Model\Test\AbstractTest
     /**
      * @dataProvider getItemsProvider
      */
-    public function testGetItems($type, $filters, $order, $direction, $result, $keyColumn)
+    public function testGetItems($type, $filters, $order, $direction, $expectedResult, $keyColumn)
     {
         $model = $this->_getModel();
         $items = $model->getItems($type, $filters, $order, $direction);
         $this->assertInstanceOf('Zend\Db\Resultset\AbstractResultset', $items);
         $items = iterator_to_array($items);
         $this->assertContainsOnlyInstancesOf("Model\\Client\\Item\\$type", $items);
-        $this->assertEquals(
-            $result,
-            array_map(
-                function ($element) use ($keyColumn) {
-                    return $element[$keyColumn];
-                },
-                $items
-            )
+
+        $result = array_map(
+            function ($element) use ($keyColumn) {
+                return $element[$keyColumn];
+            },
+            $items
         );
+        // Move eventual empty values at the beginning to the end of the array.
+        // This comes from different ordering of NULL values by DBMS.
+        if ($result and $result[0] === '') {
+            array_shift($result);
+            $result[] = '';
+        }
+        $this->assertEquals($expectedResult, $result);
     }
 
     public function testDeleteItems()

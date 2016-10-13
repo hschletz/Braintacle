@@ -1,11 +1,11 @@
 devicetype:
   -
-    name: "present, inventoried interfaces"
+    name: "new type"
   -
     name: "not present, inventoried interfaces"
   -
-    name: "present, no inventoried interfaces"
-  -
     name: "not present, no inventoried interfaces"
   -
-    name: "new type"
+    name: "present, inventoried interfaces"
+  -
+    name: "present, no inventoried interfaces"

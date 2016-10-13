@@ -133,7 +133,7 @@ class SoftwareManagerTest extends AbstractTest
             $this->_loadDataSet($dataSet)->getTable('braintacle_windows'),
             $this->getConnection()->createQueryTable(
                 'braintacle_windows',
-                'SELECT hardware_id, manual_product_key FROM braintacle_windows'
+                'SELECT hardware_id, manual_product_key FROM braintacle_windows ORDER BY hardware_id'
             )
         );
     }

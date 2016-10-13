@@ -517,7 +517,7 @@ class ClientOrGroupTest extends AbstractTest
             $this->getConnection()->createQueryTable(
                 'devices',
                 'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ' .
-                'WHERE hardware_id >= 10 ORDER BY hardware_id, name'
+                'WHERE hardware_id >= 10 ORDER BY hardware_id, name, ivalue'
             )
         );
 

@@ -4,9 +4,9 @@ devicetype:
   -
     name: "not present, inventoried interfaces"
   -
-    name: "present, no inventoried interfaces"
-  -
     name: "not present, no inventoried interfaces"
+  -
+    name: "present, no inventoried interfaces"
 
 network_devices:
   -

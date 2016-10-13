@@ -240,7 +240,10 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
         $model->saveSubnet($address, $mask, $name, $dataSet);
         $this->assertTablesEqual(
             $this->_loadDataset($dataSet)->getTable('subnet'),
-            $this->getConnection()->createQueryTable('subnet', 'SELECT netid, mask, name FROM subnet')
+            $this->getConnection()->createQueryTable(
+                'subnet',
+                'SELECT netid, mask, name FROM subnet ORDER BY netid, mask'
+            )
         );
     }
 

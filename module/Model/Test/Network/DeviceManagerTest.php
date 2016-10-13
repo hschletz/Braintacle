@@ -187,7 +187,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
         );
         $this->assertTablesEqual(
             $dataSet->getTable('netmap'),
-            $connection->createQueryTable('netmap', 'SELECT mac FROM netmap')
+            $connection->createQueryTable('netmap', 'SELECT mac FROM netmap ORDER BY mac')
         );
     }
 
@@ -203,7 +203,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
         );
         $this->assertTablesEqual(
             $dataSet->getTable('netmap'),
-            $connection->createQueryTable('netmap', 'SELECT mac FROM netmap')
+            $connection->createQueryTable('netmap', 'SELECT mac FROM netmap ORDER BY mac')
         );
     }
 
@@ -241,7 +241,10 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
         $model->addType('new type');
         $this->assertTablesEqual(
             $this->_loadDataSet('AddType')->getTable('devicetype'),
-            $this->getConnection()->createQueryTable('devicetype', 'SELECT name FROM devicetype')
+            $this->getConnection()->createQueryTable(
+                'devicetype',
+                'SELECT name FROM devicetype ORDER BY name'
+            )
         );
     }
 
@@ -270,11 +273,17 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
         $dataSet = $this->_loadDataSet('RenameType');
         $this->assertTablesEqual(
             $dataSet->getTable('devicetype'),
-            $this->getConnection()->createQueryTable('devicetype', 'SELECT name FROM devicetype')
+            $this->getConnection()->createQueryTable(
+                'devicetype',
+                'SELECT name FROM devicetype ORDER BY name'
+            )
         );
         $this->assertTablesEqual(
             $dataSet->getTable('network_devices'),
-            $this->getConnection()->createQueryTable('network_devices', 'SELECT macaddr, type FROM network_devices')
+            $this->getConnection()->createQueryTable(
+                'network_devices',
+                'SELECT macaddr, type FROM network_devices ORDER BY macaddr'
+            )
         );
     }
 
@@ -337,7 +346,10 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
         $dataSet = $this->_loadDataSet('DeleteType');
         $this->assertTablesEqual(
             $dataSet->getTable('devicetype'),
-            $this->getConnection()->createQueryTable('devicetype', 'SELECT name FROM devicetype')
+            $this->getConnection()->createQueryTable(
+                'devicetype',
+                'SELECT name FROM devicetype ORDER BY name'
+            )
         );
         $this->assertTablesEqual(
             $dataSet->getTable('network_devices'),
@@ -385,7 +397,10 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
             $dataSet = $this->_loadDataSet();
             $this->assertTablesEqual(
                 $this->_loadDataSet()->getTable('devicetype'),
-                $this->getConnection()->createQueryTable('devicetype', 'SELECT name FROM devicetype')
+                $this->getConnection()->createQueryTable(
+                    'devicetype',
+                    'SELECT name FROM devicetype ORDER BY name'
+                )
             );
             $this->assertTablesEqual(
                 $dataSet->getTable('network_devices'),
