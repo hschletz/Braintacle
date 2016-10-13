@@ -844,16 +844,16 @@ class ClientManager
 
             // Delete row in clients table
             $this->_serviceLocator->get('Database\Table\ClientsAndGroups')->delete(array('id' => $id));
+
+            if ($transactionStarted) {
+                $connection->commit();
+            }
         } catch (\Exception $exception) {
             if ($transactionStarted) {
                 $connection->rollback();
             }
             $client->unlock();
             throw $exception;
-        }
-
-        if ($transactionStarted) {
-            $connection->commit();
         }
 
         $client->unlock();

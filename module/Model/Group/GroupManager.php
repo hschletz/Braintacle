@@ -152,22 +152,27 @@ class GroupManager
 
         $connection = $this->_serviceManager->get('Db')->getDriver()->getConnection();
         $connection->beginTransaction();
-        $clientsAndGroups->insert(
-            array(
-                'name' => $name,
-                'description' => $description,
-                'deviceid' => '_SYSTEMGROUP_',
-                'lastdate' => $now->format($this->_serviceManager->get('Database\Nada')->timestampFormatPhp()),
-            )
-        );
-        $id = $clientsAndGroups->select(array('name' => $name, 'deviceid' => '_SYSTEMGROUP_'))->current()['id'];
-        $this->_serviceManager->get('Database\Table\GroupInfo')->insert(
-            array(
-                'hardware_id' => $id,
-                'create_time' => $now->getTimestamp(),
-            )
-        );
-        $connection->commit();
+        try {
+            $clientsAndGroups->insert(
+                array(
+                    'name' => $name,
+                    'description' => $description,
+                    'deviceid' => '_SYSTEMGROUP_',
+                    'lastdate' => $now->format($this->_serviceManager->get('Database\Nada')->timestampFormatPhp()),
+                )
+            );
+            $id = $clientsAndGroups->select(array('name' => $name, 'deviceid' => '_SYSTEMGROUP_'))->current()['id'];
+            $this->_serviceManager->get('Database\Table\GroupInfo')->insert(
+                array(
+                    'hardware_id' => $id,
+                    'create_time' => $now->getTimestamp(),
+                )
+            );
+            $connection->commit();
+        } catch (\Exception $e) {
+            $connection->rollback();
+            throw $e;
+        }
     }
 
     /**
@@ -190,12 +195,12 @@ class GroupManager
             $this->_serviceManager->get('Database\Table\ClientConfig')->delete(array('hardware_id' => $id));
             $this->_serviceManager->get('Database\Table\GroupInfo')->delete(array('hardware_id' => $id));
             $this->_serviceManager->get('Database\Table\ClientsAndGroups')->delete(array('id' => $id));
+            $connection->commit();
         } catch (\Exception $e) {
             $connection->rollBack();
             $group->unlock();
             throw $e;
         }
-        $connection->commit();
         $group->unlock();
     }
 

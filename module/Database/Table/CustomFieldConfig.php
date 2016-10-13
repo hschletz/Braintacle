@@ -187,26 +187,31 @@ class CustomFieldConfig extends \Database\AbstractTable
 
         $connection->beginTransaction();
 
-        $select = $this->getSql()->select();
-        $select->columns(array('show_order' => new \Zend\Db\Sql\Literal('MAX(show_order) + 1')))
-               ->where(array('account_type' => 'COMPUTERS'));
-        $order = $this->selectWith($select)->current()['show_order'];
+        try {
+            $select = $this->getSql()->select();
+            $select->columns(array('show_order' => new \Zend\Db\Sql\Literal('MAX(show_order) + 1')))
+                ->where(array('account_type' => 'COMPUTERS'));
+            $order = $this->selectWith($select)->current()['show_order'];
 
-        $this->insert(
-            array(
-                'type' => $internalType,
-                'name' => $name,
-                'show_order' => $order,
-                'account_type' => 'COMPUTERS'
-            )
-        );
-        $select = $this->getSql()->select();
-        $select->columns(array('id'))->where(array('account_type' => 'COMPUTERS', 'name' => $name));
-        $id = $this->selectWith($select)->current()['id'];
+            $this->insert(
+                array(
+                    'type' => $internalType,
+                    'name' => $name,
+                    'show_order' => $order,
+                    'account_type' => 'COMPUTERS'
+                )
+            );
+            $select = $this->getSql()->select();
+            $select->columns(array('id'))->where(array('account_type' => 'COMPUTERS', 'name' => $name));
+            $id = $this->selectWith($select)->current()['id'];
 
-        $nada->getTable('accountinfo')->addColumn("fields_$id", $datatype, $length);
+            $nada->getTable('accountinfo')->addColumn("fields_$id", $datatype, $length);
 
-        $connection->commit();
+            $connection->commit();
+        } catch (\Exception $e) {
+            $connection->rollback();
+            throw $e;
+        }
     }
 
     /**
@@ -238,13 +243,18 @@ class CustomFieldConfig extends \Database\AbstractTable
         $connection = $this->adapter->getDriver()->getConnection();
         $connection->beginTransaction();
 
-        $select = $this->getSql()->select();
-        $select->columns(array('id'))->where(array('name' => $name, 'account_type' => 'COMPUTERS'));
-        $id = $this->selectWith($select)->current()['id'];
+        try {
+            $select = $this->getSql()->select();
+            $select->columns(array('id'))->where(array('name' => $name, 'account_type' => 'COMPUTERS'));
+            $id = $this->selectWith($select)->current()['id'];
 
-        $this->delete(array('id' => $id));
-        $this->_serviceLocator->get('Database\Nada')->getTable('accountinfo')->dropColumn('fields_' . $id);
+            $this->delete(array('id' => $id));
+            $this->_serviceLocator->get('Database\Nada')->getTable('accountinfo')->dropColumn('fields_' . $id);
 
-        $connection->commit();
+            $connection->commit();
+        } catch (\Exception $e) {
+            $connection->rollback();
+            throw $e;
+        }
     }
 }

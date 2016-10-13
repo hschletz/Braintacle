@@ -142,15 +142,20 @@ class RegistryManager
 
         $connection = $this->_registryValueDefinitions->getAdapter()->getDriver()->getConnection();
         $connection->beginTransaction();
-        $this->_registryData->update(
-            array('name' => $newName),
-            array('name' => $oldName)
-        );
-        $this->_registryValueDefinitions->update(
-            array('name' => $newName),
-            array('name' => $oldName)
-        );
-        $connection->commit();
+        try {
+            $this->_registryData->update(
+                array('name' => $newName),
+                array('name' => $oldName)
+            );
+            $this->_registryValueDefinitions->update(
+                array('name' => $newName),
+                array('name' => $oldName)
+            );
+            $connection->commit();
+        } catch (\Exception $e) {
+            $connection->rollback();
+            throw $e;
+        }
     }
 
     /**
@@ -167,8 +172,13 @@ class RegistryManager
         }
         $connection = $this->_registryValueDefinitions->getAdapter()->getDriver()->getConnection();
         $connection->beginTransaction();
-        $this->_registryData->delete(array('name' => $value['Name']));
-        $this->_registryValueDefinitions->delete(array('id' => $value['Id']));
-        $connection->commit();
+        try {
+            $this->_registryData->delete(array('name' => $value['Name']));
+            $this->_registryValueDefinitions->delete(array('id' => $value['Id']));
+            $connection->commit();
+        } catch (\Exception $e) {
+            $connection->rollback();
+            throw $e;
+        }
     }
 }

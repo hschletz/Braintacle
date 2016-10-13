@@ -267,12 +267,16 @@ class DeviceManager
         }
         $connection = $this->_networkDeviceTypes->getAdapter()->getDriver()->getConnection();
         $connection->beginTransaction();
-        if ($this->_networkDeviceTypes->update(array('name' => $new), array('name' => $old)) != 1) {
+        try {
+            if ($this->_networkDeviceTypes->update(array('name' => $new), array('name' => $old)) != 1) {
+                throw new \RuntimeException('Network device type does not exist: ' . $old);
+            }
+            $this->_networkDevicesIdentified->update(array('type' => $new), array('type' => $old));
+            $connection->commit();
+        } catch (\Exception $e) {
             $connection->rollback();
-            throw new \RuntimeException('Network device type does not exist: ' . $old);
+            throw $e;
         }
-        $this->_networkDevicesIdentified->update(array('type' => $new), array('type' => $old));
-        $connection->commit();
     }
 
     /**
@@ -285,22 +289,24 @@ class DeviceManager
     {
         $connection = $this->_networkDeviceTypes->getAdapter()->getDriver()->getConnection();
         $connection->beginTransaction();
+        try {
+            $this->_networkDevicesIdentified->delete(
+                array(
+                    'type' => $description,
+                    'macaddr IN(SELECT macaddr FROM networks)'
+                )
+            );
+            if ($this->_networkDevicesIdentified->select(array('type' => $description))->count()) {
+                throw new \RuntimeException('Network device type still in use: ' . $description);
+            }
+            if ($this->_networkDeviceTypes->delete(array('name' => $description)) != 1) {
+                throw new \RuntimeException('Network device type does not exist: ' . $description);
+            }
 
-        $this->_networkDevicesIdentified->delete(
-            array(
-                'type' => $description,
-                'macaddr IN(SELECT macaddr FROM networks)'
-            )
-        );
-        if ($this->_networkDevicesIdentified->select(array('type' => $description))->count()) {
+            $connection->commit();
+        } catch (\Exception $e) {
             $connection->rollback();
-            throw new \RuntimeException('Network device type still in use: ' . $description);
+            throw $e;
         }
-        if ($this->_networkDeviceTypes->delete(array('name' => $description)) != 1) {
-            $connection->rollback();
-            throw new \RuntimeException('Network device type does not exist: ' . $description);
-        }
-
-        $connection->commit();
     }
 }

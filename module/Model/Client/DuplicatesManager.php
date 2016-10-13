@@ -327,11 +327,11 @@ class DuplicatesManager
             }
             // Unlock remaining client
             $newest->unlock();
+            $connection->commit();
         } catch (\Exception $exception) {
             $connection->rollback();
             throw ($exception);
         }
-        $connection->commit();
     }
 
     /**

@@ -473,39 +473,44 @@ abstract class ClientOrGroup extends \ArrayObject
         $clientConfig = $this->_serviceLocator->get('Database\Table\ClientConfig');
         $connection = $clientConfig->getAdapter()->getDriver()->getConnection();
         $connection->beginTransaction();
-        if ($value === null) {
-            // Unset option. For scan options, also check ivalue to prevent
-            // accidental deletion of unrelated setting.
-            if ($option == 'allowScan') {
-                $condition['ivalue'] = self::SCAN_DISABLED;
-            } elseif ($option == 'scanThisNetwork') {
-                $condition['ivalue'] = self::SCAN_EXPLICIT;
-            }
-            $clientConfig->delete($condition);
-        } else {
-            $oldValue = $this->getConfig($option);
-            if ($oldValue === null) {
-                // Not set yet, insert new record
-                if ($name == 'IPDISCOVER' or $name == 'DOWNLOAD_SWITCH' or $name == 'SNMP_SWITCH') {
-                    // There may already be a record with a different ivalue.
-                    // For IPDISCOVER, this can happen because different $option
-                    // values map to it. For *_SWITCH, this can happen if the
-                    // database value is 1 (which is only possible if the record
-                    // was not written by Braintacle), which getConfig() reports
-                    // as NULL.
-                    // Since there may only be 1 record per hardware_id/name,
-                    // the old record must be deleted first.
-                    $clientConfig->delete($condition);
+        try {
+            if ($value === null) {
+                // Unset option. For scan options, also check ivalue to prevent
+                // accidental deletion of unrelated setting.
+                if ($option == 'allowScan') {
+                    $condition['ivalue'] = self::SCAN_DISABLED;
+                } elseif ($option == 'scanThisNetwork') {
+                    $condition['ivalue'] = self::SCAN_EXPLICIT;
                 }
-                $columns['hardware_id'] = $this['Id'];
-                $columns['name'] = $name;
-                $clientConfig->insert($columns);
-            } elseif ($oldValue != $value) {
-                // Already set to a different value, update record
-                $clientConfig->update($columns, $condition);
+                $clientConfig->delete($condition);
+            } else {
+                $oldValue = $this->getConfig($option);
+                if ($oldValue === null) {
+                    // Not set yet, insert new record
+                    if ($name == 'IPDISCOVER' or $name == 'DOWNLOAD_SWITCH' or $name == 'SNMP_SWITCH') {
+                        // There may already be a record with a different ivalue.
+                        // For IPDISCOVER, this can happen because different $option
+                        // values map to it. For *_SWITCH, this can happen if the
+                        // database value is 1 (which is only possible if the record
+                        // was not written by Braintacle), which getConfig() reports
+                        // as NULL.
+                        // Since there may only be 1 record per hardware_id/name,
+                        // the old record must be deleted first.
+                        $clientConfig->delete($condition);
+                    }
+                    $columns['hardware_id'] = $this['Id'];
+                    $columns['name'] = $name;
+                    $clientConfig->insert($columns);
+                } elseif ($oldValue != $value) {
+                    // Already set to a different value, update record
+                    $clientConfig->update($columns, $condition);
+                }
             }
+            $connection->commit();
+        } catch (\Exception $e) {
+            $connection->rollback();
+            throw $e;
         }
-        $connection->commit();
         $this->_configCache[$option] = $value;
     }
 
