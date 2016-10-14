@@ -94,7 +94,9 @@ class CustomFieldConfigTest extends AbstractTest
     {
         static::$_table->addField('New field', $type);
 
-        $id = static::$_table->getLastInsertValue();
+        // getLastInsertValue() is not portable. Query database instead. The
+        // name filter is sufficient for this particular test case.
+        $id = static::$_table->select(array('name' => 'New field'))->current()['id'];
         $table = static::$_nada->getTable('accountinfo');
         $column = $table->getColumn('fields_' . $id);
 
