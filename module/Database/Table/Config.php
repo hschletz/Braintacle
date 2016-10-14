@@ -286,6 +286,9 @@ class Config extends \Database\AbstractTable
                 throw new \InvalidArgumentException(
                     sprintf('Tried to set non-integer value "%s" to integer option "%s"', $value, $option)
                 );
+            } else {
+                // Explicit cast to ensure proper handling of boolean input
+                $value = (integer) $value;
             }
         }
         $valueChanged = $this->_set($name, $column, $value);
@@ -309,7 +312,8 @@ class Config extends \Database\AbstractTable
         $this->columns = array($column);
         $row = $this->select(array('name' => $name))->current();
         if ($row) {
-            $oldValue = $row->$column;
+            // Compare values as strings for portability
+            $oldValue = (string) $row->$column;
             if ($oldValue === (string) $value) {
                 $valueChanged = false;
             } else {
