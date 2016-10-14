@@ -50,6 +50,10 @@ class SubnetsTest extends AbstractTest
         $this->assertEquals('num_identified', $map->extract('NumIdentified'));
         $this->assertEquals('num_unknown', $map->extract('NumUnknown'));
 
+        $this->assertInstanceOf('Library\Hydrator\Strategy\Integer', $hydrator->getStrategy('NumInventoried'));
+        $this->assertInstanceOf('Library\Hydrator\Strategy\Integer', $hydrator->getStrategy('NumIdentified'));
+        $this->assertInstanceOf('Library\Hydrator\Strategy\Integer', $hydrator->getStrategy('NumUnknown'));
+
         $resultSet = static::$_table->getResultSetPrototype();
         $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);
         $this->assertEquals($hydrator, $resultSet->getHydrator());

@@ -47,6 +47,11 @@ class Subnets extends \Database\AbstractTable
                 )
             )
         );
+        // Strategies are only required on hydration.
+        $integerStrategy = new \Library\Hydrator\Strategy\Integer;
+        $this->_hydrator->addStrategy('NumInventoried', $integerStrategy);
+        $this->_hydrator->addStrategy('NumIdentified', $integerStrategy);
+        $this->_hydrator->addStrategy('NumUnknown', $integerStrategy);
 
         $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,

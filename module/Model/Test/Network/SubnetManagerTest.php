@@ -63,9 +63,9 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
             array(
                 'Address' => '203.0.113.0',
                 'Mask' => '255.255.255.0',
-                'NumInventoried' => '0',
-                'NumIdentified' => '0',
-                'NumUnknown' => '1',
+                'NumInventoried' => 0,
+                'NumIdentified' => 0,
+                'NumUnknown' => 1,
                 'Name' => null,
             ),
             $subnets[0]->getArrayCopy()
@@ -74,9 +74,9 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
             array(
                 'Address' => '198.51.100.0',
                 'Mask' => '255.255.255.0',
-                'NumInventoried' => '0',
-                'NumIdentified' => '1',
-                'NumUnknown' => '0',
+                'NumInventoried' => 0,
+                'NumIdentified' => 1,
+                'NumUnknown' => 0,
                 'Name' => null,
             ),
             $subnets[1]->getArrayCopy()
@@ -85,9 +85,9 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
             array(
                 'Address' => '192.0.2.0',
                 'Mask' => '255.255.255.128',
-                'NumInventoried' => '1',
-                'NumIdentified' => '1',
-                'NumUnknown' => '1',
+                'NumInventoried' => 1,
+                'NumIdentified' => 1,
+                'NumUnknown' => 1,
                 'Name' => 'NAME',
             ),
             $subnets[2]->getArrayCopy()
@@ -96,9 +96,9 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
             array(
                 'Address' => '192.0.2.0',
                 'Mask' => '255.255.255.0',
-                'NumInventoried' => '1',
-                'NumIdentified' => '0',
-                'NumUnknown' => '0',
+                'NumInventoried' => 1,
+                'NumIdentified' => 0,
+                'NumUnknown' => 0,
                 'Name' => null,
             ),
             $subnets[3]->getArrayCopy()
@@ -108,13 +108,13 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
     public function getSubnetsOrderingProvider()
     {
         return array(
-            array('NumInventoried', 'invalid', array('0', '0', '1', '1')), // becomes 'ASC'
-            array('NumInventoried', 'asc', array('0', '0', '1', '1')),
-            array('NumInventoried', 'desc', array('1', '1', '0', '0')),
-            array('NumIdentified', 'asc', array('0', '0', '1', '1')),
-            array('NumIdentified', 'desc', array('1', '1', '0', '0')),
-            array('NumUnknown', 'asc', array('0', '0', '1', '1')),
-            array('NumUnknown', 'desc', array('1', '1', '0', '0')),
+            array('NumInventoried', 'invalid', array(0, 0, 1, 1)), // becomes 'ASC'
+            array('NumInventoried', 'asc', array(0, 0, 1, 1)),
+            array('NumInventoried', 'desc', array(1, 1, 0, 0)),
+            array('NumIdentified', 'asc', array(0, 0, 1, 1)),
+            array('NumIdentified', 'desc', array(1, 1, 0, 0)),
+            array('NumUnknown', 'asc', array(0, 0, 1, 1)),
+            array('NumUnknown', 'desc', array(1, 1, 0, 0)),
             array(
                 'CidrAddress',
                 'asc',
