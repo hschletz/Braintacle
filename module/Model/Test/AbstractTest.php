@@ -99,6 +99,46 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
     }
 
     /**
+     * Wrap dataset with platform specific boolean emulation for result comparison
+     *
+     * When comparing database query results with a dataset, boolean columns
+     * cannot be compared directly due to platform-specific implementations.
+     * This method returns a wrapper that replaces the given values for
+     * TRUE/FALSE with their platform-specific counterparts.
+     *
+     * Due to the ReplacementDataSet implementation, real booleans cannot be
+     * used in the source dataset.
+     *
+     * @param \PHPUnit_Extensions_Database_DataSet_IDataSet $dataSet Dataset to wrap
+     * @param mixed $falseValue FALSE value used in $dataset
+     * @param mixed $trueValue TRUE value used in $dataset
+     * @return \PHPUnit_Extensions_Database_DataSet_ReplacementDataSet
+     */
+    protected function _getBooleanDataSetWrapper(
+        \PHPUnit_Extensions_Database_DataSet_IDataSet $dataSet,
+        $falseValue,
+        $trueValue
+    ) {
+        switch (static::$serviceManager->get('Db')->getPlatform()->getName()) {
+            case 'MySQL':
+                $falseReplacement = 0;
+                $trueReplacement = 1;
+                break;
+            case 'SQLite':
+                $falseReplacement = '0';
+                $trueReplacement = '1';
+                break;
+            default:
+                $falseReplacement = false;
+                $trueReplacement = true;
+        }
+        return new \PHPUnit_Extensions_Database_DataSet_ReplacementDataSet(
+            $dataSet,
+            array($falseValue => $falseReplacement, $trueValue => $trueReplacement)
+        );
+    }
+
+    /**
      * Get the model class name, derived from the test class name
      *
      * @return string

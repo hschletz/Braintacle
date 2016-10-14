@@ -87,8 +87,10 @@ class SoftwareManagerTest extends AbstractTest
         $model->setDisplay('new2', true);
         $model->setDisplay('new3', false);
         $model->setDisplay('new4', false);
+
+        $dataSet = $this->_getBooleanDataSetWrapper($this->_loadDataset('SetDisplay'), 0, 1);
         $this->assertTablesEqual(
-            $this->_loadDataset('SetDisplay')->getTable('software_definitions'),
+            $dataSet->getTable('software_definitions'),
             $this->getConnection()->createQueryTable(
                 'software_definitions',
                 'SELECT name, display FROM software_definitions ORDER BY name'

@@ -1,22 +1,22 @@
 software_definitions:
   -
     name: "accepted"
-    display: "1"
+    display: 1
   -
     name: "ignored"
-    display: "0"
+    display: 0
   -
     name: "new1"
-    display: "1"
+    display: 1
   -
     name: "new2"
-    display: "1"
+    display: 1
   -
     name: "new3"
-    display: "0"
+    display: 0
   -
     name: "new4"
-    display: "0"
+    display: 0
   -
     name: "orphaned"
-    display: "1"
+    display: 1
