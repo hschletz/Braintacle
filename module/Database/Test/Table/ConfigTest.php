@@ -132,7 +132,7 @@ class ConfigTest extends AbstractTest
         static::$_table->set('limitInventoryInterval', '0');
         $this->assertSame(
             '0',
-            static::$_table->select(array('name' => 'INVENTORY_FILTER_FLOOD_IP'))->current()['ivalue']
+            (string) static::$_table->select(array('name' => 'INVENTORY_FILTER_FLOOD_IP'))->current()['ivalue']
         );
     }
 
@@ -141,7 +141,7 @@ class ConfigTest extends AbstractTest
         static::$_table->set('limitInventoryInterval', '42');
         $this->assertSame(
             '1',
-            static::$_table->select(array('name' => 'INVENTORY_FILTER_FLOOD_IP'))->current()['ivalue']
+            (string) static::$_table->select(array('name' => 'INVENTORY_FILTER_FLOOD_IP'))->current()['ivalue']
         );
     }
 }
