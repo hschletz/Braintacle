@@ -273,20 +273,16 @@ class Config extends \Database\AbstractTable
     {
         $name = $this->getDbIdentifier($option);
         $column = $this->_getColumnName($option);
-        if ($value === false) {
-            // Would otherwise be cast to empty string
-            $value = 0;
-        }
-        if ($column == 'ivalue') {
+        if (is_bool($value)) {
+            // Prevent improper bool-to-string conversion in PHP and/or database
+            $value = (integer) $value;
+        } elseif ($column == 'ivalue') {
             if ($value === '') {
                 $value = null;
             } elseif (!preg_match('/^-?[0-9]+$/', $value)) {
                 throw new \InvalidArgumentException(
                     sprintf('Tried to set non-integer value "%s" to integer option "%s"', $value, $option)
                 );
-            } else {
-                // Explicit cast to ensure proper handling of boolean input
-                $value = (integer) $value;
             }
         }
         $valueChanged = $this->_set($name, $column, $value);

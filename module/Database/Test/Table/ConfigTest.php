@@ -78,6 +78,24 @@ class ConfigTest extends AbstractTest
         );
     }
 
+    public function testSetStringColumnFromBooleanFalse()
+    {
+        static::$_table->set('defaultWarn', false);
+        $this->assertSame(
+            '0',
+            static::$_table->select(array('name' => 'BRAINTACLE_DEFAULT_WARN'))->current()['tvalue']
+        );
+    }
+
+    public function testSetStringColumnFromBooleanTrue()
+    {
+        static::$_table->set('defaultWarn', true);
+        $this->assertSame(
+            '1',
+            static::$_table->select(array('name' => 'BRAINTACLE_DEFAULT_WARN'))->current()['tvalue']
+        );
+    }
+
     public function testSetInvalidOption()
     {
         $this->setExpectedException('InvalidArgumentException', 'Invalid option: invalid');
