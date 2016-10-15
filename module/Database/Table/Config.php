@@ -167,7 +167,6 @@ class Config extends \Database\AbstractTable
 
         // If no communication server URI is set, try to generate it from the
         // obsolete Host/Port options
-        $this->columns = array();
         $server = array();
         foreach ($this->select("name LIKE 'LOCAL%'") as $option) {
             $server[$option->name] = array(
@@ -250,7 +249,6 @@ class Config extends \Database\AbstractTable
         }
         $name = $this->getDbIdentifier($option);
         $column = $this->_getColumnName($option);
-        $this->columns = array($column);
         $row = $this->select(array('name' => $name))->current();
         if ($row) {
             $value = $row[$column];
@@ -309,7 +307,6 @@ class Config extends \Database\AbstractTable
     protected function _set($name, $column, $value)
     {
         $valueChanged = true;
-        $this->columns = array($column);
         $row = $this->select(array('name' => $name))->current();
         if ($row) {
             // Compare values as strings for portability
