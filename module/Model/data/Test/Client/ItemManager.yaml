@@ -29,10 +29,10 @@ blacklist_macaddresses:
 software_definitions:
   -
     name: "name1"
-    display: false
+    display: 0
   -
     name: "name2"
-    display: true
+    display: 1
   -
     name: "name3"
     display: null

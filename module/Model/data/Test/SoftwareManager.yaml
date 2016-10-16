@@ -55,7 +55,7 @@ softwares:
 software_definitions:
   -
     name: "orphaned"
-    display: true
+    display: 1
   -
     name: "accepted"
     display: 1
