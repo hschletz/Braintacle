@@ -42,11 +42,6 @@ class AuthenticationServiceTest extends \Model\Test\AbstractTest
         $this->_auth = clone static::$serviceManager->get('Zend\Authentication\AuthenticationService');
     }
 
-    public function getDataSet()
-    {
-        return new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet;
-    }
-
     public function testService()
     {
         $this->assertInstanceOf('Model\Operator\AuthenticationService', $this->_auth);
@@ -57,18 +52,18 @@ class AuthenticationServiceTest extends \Model\Test\AbstractTest
      */
     public function testLogin()
     {
-        $this->assertFalse($this->_auth->login('', 'admin')); // Should not throw exception
-        $this->assertFalse($this->_auth->login('baduser', 'admin'));
-        $this->assertFalse($this->_auth->login('admin', 'badpassword'));
+        $this->assertFalse($this->_auth->login('', 'password1')); // Should not throw exception
+        $this->assertFalse($this->_auth->login('baduser', 'password1'));
+        $this->assertFalse($this->_auth->login('user1', 'badpassword'));
 
-        $this->assertTrue($this->_auth->login('admin', 'admin'));
-        $this->assertEquals('admin', $this->_auth->getIdentity());
+        $this->assertTrue($this->_auth->login('user1', 'password1'));
+        $this->assertEquals('user1', $this->_auth->getIdentity());
     }
 
     public function testChangeIdentityValid()
     {
         // Get valid identity first
-        $this->_auth->login('admin', 'admin');
+        $this->_auth->login('user1', 'password1');
         $this->_auth->changeIdentity('test');
         $this->assertEquals('test', $this->_auth->getIdentity());
     }

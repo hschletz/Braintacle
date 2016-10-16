@@ -1,0 +1,11 @@
+# Fixture for AuthenticationServiceTest
+
+operators:
+  -
+    id: "user1"
+    firstname: "First"
+    lastname: "Last"
+    # password is "password1"
+    passwd: "7c6a180b36896a0a8c02787eeafb0e4c"
+    comments: "Comment"
+    email: "test@example.net"
