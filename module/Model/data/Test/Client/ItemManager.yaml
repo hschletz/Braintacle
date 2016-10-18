@@ -37,18 +37,17 @@ software_definitions:
     name: "name3"
     display: null
 
-# Different columns map to "Name" property depending on agent type
 controllers:
   -
     id: 2
     hardware_id: 2
-    name: null
-    manufacturer: "name2"
+    name: "name2"
+    manufacturer: "manufacturer2"
   -
     id: 1
     hardware_id: 1
     name: "name1"
-    manufacturer: null
+    manufacturer: "manufacturer1"
 
 cpus:
   -

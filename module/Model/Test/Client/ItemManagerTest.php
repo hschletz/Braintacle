@@ -94,9 +94,10 @@ class ItemManagerTest extends \Model\Test\AbstractTest
             array('AudioDevice', null, 'Name', 'desc', array('name2', 'name1'), 'Name'),
             array('AudioDevice', null, null, 'something', array('name2', 'name1'), 'Name'),
             array('audiodevice', array('Client' => 2), null, null, array('name2'), 'Name'),
-            array('Controller', null, 'id', 'desc', array('name2', 'name1'), 'Name'),
-            array('Controller', null, null, 'something', array('name1', 'name2'), 'Name'),
-            array('controller', array('Client' => 2), null, null, array('name2'), 'Name'),
+            # For controllers, different columns map to the "Name" property depending on agent type
+            array('Controller', null, 'id', 'desc', array('manufacturer2', 'name1'), 'Name'),
+            array('Controller', null, null, 'something', array('name1', 'manufacturer2'), 'Name'),
+            array('controller', array('Client' => 2), null, null, array('manufacturer2'), 'Name'),
             array('Cpu', array('Client' => 3), 'id', 'asc', array('type3a', 'type3b'), 'Type'),
             array('Cpu', array('Client' => 4), 'Manufacturer', 'desc', array('type4b', 'type4a'), 'Type'),
             array(
