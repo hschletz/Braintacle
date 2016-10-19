@@ -212,17 +212,17 @@ registry:
     id: 2
     hardware_id: 2
     name: "name2"
-    regvalue: "data"
+    regvalue: "data2"
   -
     id: 1
     hardware_id: 1
     name: "name1"
-    regvalue: "value=data2"
+    regvalue: "data1a"
   -
     id: 3
     hardware_id: 1
     name: "name1"
-    regvalue: "=data1"
+    regvalue: "data1b"
 
 sim:
   -
