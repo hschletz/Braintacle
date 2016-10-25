@@ -471,6 +471,52 @@ EOT
         );
     }
 
+    public function testMergePackagesNoPackagesToMerge()
+    {
+        $client1 = $this->createMock('Model\Client\Client');
+        $client1->method('offsetGet')
+                ->withConsecutive(array('LastContactDate'), array('Id'))
+                ->willReturnOnConsecutiveCalls(new \DateTime('2013-12-23 13:01:33'), 1);
+        $client1->method('lock')->willReturn(true);
+        $client1->expects($this->never())->method('setCustomFields');
+        $client1->expects($this->never())->method('setGroupMemberships');
+
+        $client4 = $this->createMock('Model\Client\Client');
+        $client4->method('offsetGet')
+                ->withConsecutive(array('LastContactDate'), array('Id'))
+                ->willReturnOnConsecutiveCalls(new \DateTime('2013-12-23 13:02:33'), 4);
+        $client4->method('lock')->willReturn(true);
+        $client4->expects($this->once())->method('unlock');
+        $client4->expects($this->never())->method('setCustomFields');
+        $client4->expects($this->never())->method('setGroupMemberships');
+
+        $clientManager = $this->createMock('Model\Client\ClientManager');
+        $clientManager->method('getClient')
+                      ->withConsecutive(array(4), array(1))
+                      ->willReturnOnConsecutiveCalls($client1, $client4);
+        $clientManager->expects($this->once())->method('deleteClient')->with($this->identicalTo($client1), false);
+
+        $model = $this->_getModel(
+            array(
+                'Model\Client\ClientManager' => $clientManager,
+            )
+        );
+        $model->merge(array(4, 1), false, false, true);
+
+        // Table should be unchanged
+        $this->assertTablesEqual(
+            $this->_loadDataSet()->getTable('devices'),
+            $this->getConnection()->createQueryTable(
+                'devices',
+                <<<EOT
+                    SELECT hardware_id, name, ivalue, tvalue
+                    FROM devices
+                    ORDER BY hardware_id, name, ivalue
+EOT
+            )
+        );
+    }
+
     /**
      * Tests for allow()
      */

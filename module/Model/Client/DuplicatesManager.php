@@ -309,15 +309,18 @@ class DuplicatesManager
                 $notIn->columns(array('ivalue'))
                       ->where(array('hardware_id' => $id, 'name' => 'DOWNLOAD'));
                 foreach ($clients as $client) {
-                    $this->_clientConfig->update(
-                        array('hardware_id' => $id),
-                        array(
-                            'hardware_id' => $client['Id'],
-                            new \Zend\Db\Sql\Predicate\Operator('name', '!=', 'DOWNLOAD_SWITCH'),
-                            new \Zend\Db\Sql\Predicate\Like('name', 'DOWNLOAD%'),
-                            new \Zend\Db\Sql\Predicate\NotIn('ivalue', $notIn),
-                        )
+                    $where = array(
+                        'hardware_id' => $client['Id'],
+                        new \Zend\Db\Sql\Predicate\Operator('name', '!=', 'DOWNLOAD_SWITCH'),
+                        new \Zend\Db\Sql\Predicate\Like('name', 'DOWNLOAD%'),
                     );
+                    // Construct list of package IDs because MySQL does not support subquery here
+                    $exclude = array_column($this->_clientConfig->selectWith($notIn)->toArray(), 'ivalue');
+                    // Avoid empty list
+                    if ($exclude) {
+                        $where[] = new \Zend\Db\Sql\Predicate\NotIn('ivalue', $exclude);
+                    }
+                    $this->_clientConfig->update(array('hardware_id' => $id), $where);
                 }
             }
 

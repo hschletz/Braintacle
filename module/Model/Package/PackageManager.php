@@ -428,13 +428,22 @@ class PackageManager
                                      ->select()
                                      ->columns(array('hardware_id'))
                                      ->where($where);
-            $delete = new \Zend\Db\Sql\Where;
-            $delete->equalTo('ivalue', $oldPackageId)
-                   ->in('hardware_id', $subquery)
-                   ->notEqualTo('name', 'DOWNLOAD_SWITCH')
-                   ->like('name', 'DOWNLOAD_%');
-
-            $clientConfig->delete($delete);
+            // @codeCoverageIgnoreStart
+            if ($clientConfig->getAdapter()->getPlatform()->getName() == 'MySQL') {
+                // MySQL does not allow subquery on the same table for DELETE
+                // statements. Fetch result as a list instead.
+                $subquery = array_column($clientConfig->selectWith($subquery)->toArray(), 'hardware_id');
+            }
+            // @codeCoverageIgnoreEnd
+            if ($subquery) {
+                // $subquery is either an SQL statement or a non-empty array.
+                $delete = new \Zend\Db\Sql\Where;
+                $delete->equalTo('ivalue', $oldPackageId)
+                       ->notEqualTo('name', 'DOWNLOAD_SWITCH')
+                       ->in('hardware_id', $subquery)
+                       ->like('name', 'DOWNLOAD_%');
+                $clientConfig->delete($delete);
+            }
 
             // Update package ID and reset status
             $clientConfig->update(
