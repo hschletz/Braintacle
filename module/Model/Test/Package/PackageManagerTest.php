@@ -737,7 +737,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
     public function testUpdateAssignmentsNoActionRequired()
     {
-        $this->_getModel()->updateAssignments(1, 3, false, false, false, false, false);
+        $this->_getModel()->updateAssignments(1415958319, 3, false, false, false, false, false);
 
         $this->assertTablesEqual(
             $this->_loadDataSet()->getTable('devices'),
