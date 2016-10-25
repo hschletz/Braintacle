@@ -397,6 +397,7 @@ class PackageManager
 
         $where = new \Zend\Db\Sql\Where;
         $where->equalTo('ivalue', $oldPackageId);
+        $where->equalTo('name', 'DOWNLOAD');
 
         // Additional filters are only necessary if not all conditions are set
         if (!($deployPending and $deployRunning and $deploySuccess and $deployError and $deployGroups)) {
@@ -426,7 +427,7 @@ class PackageManager
             $subquery = $clientConfig->getSql()
                                      ->select()
                                      ->columns(array('hardware_id'))
-                                     ->where(array('name' => 'DOWNLOAD', $where));
+                                     ->where($where);
             $delete = new \Zend\Db\Sql\Where;
             $delete->equalTo('ivalue', $oldPackageId)
                    ->in('hardware_id', $subquery)
@@ -442,7 +443,7 @@ class PackageManager
                     'tvalue' => \Model\Package\Assignment::PENDING,
                     'comments' => $now,
                 ),
-                array('name' => 'DOWNLOAD', $where)
+                $where
             );
         } catch (\Exception $e) {
             throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
