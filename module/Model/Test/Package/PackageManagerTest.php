@@ -748,6 +748,19 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         );
     }
 
+    public function testUpdateAssignmentsNoMatch()
+    {
+        $this->_getModel()->updateAssignments(1415958320, 3, false, true, false, false, false);
+
+        $this->assertTablesEqual(
+            $this->_loadDataSet()->getTable('devices'),
+            $this->getConnection()->createQueryTable(
+                'devices',
+                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ORDER BY hardware_id, name, ivalue'
+            )
+        );
+    }
+
     public function updateAssignmentsProvider()
     {
         return array(

@@ -54,7 +54,6 @@ devices:
     tvalue: "NOTIFIED"
     comments: "Mon Dec 01 11:07:17 2014"
   -
-    # Other package, not affected by tests
     hardware_id: 2
     name: "DOWNLOAD"
     ivalue: 1415958320
