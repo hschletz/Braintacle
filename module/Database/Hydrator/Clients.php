@@ -80,7 +80,6 @@ class Clients implements \Zend\Hydrator\HydratorInterface
         'smanufacturer' => 'Manufacturer',
         'smodel' => 'ProductName',
         'name' => 'Name',
-        'useragent' => 'UserAgent',
         'description' => 'OsComment',
         'osname' => 'OsName',
         'osversion' => 'OsVersionNumber',
@@ -89,6 +88,7 @@ class Clients implements \Zend\Hydrator\HydratorInterface
         'ssn' => 'Serial',
         'swap' => 'SwapMemory',
         'type' => 'Type',
+        'useragent' => 'UserAgent',
         'userid' => 'UserName',
         'uuid' => 'Uuid',
     );
@@ -117,7 +117,6 @@ class Clients implements \Zend\Hydrator\HydratorInterface
         'LastContactDate' => 'lastcome',
         'Manufacturer' => 'smanufacturer',
         'Name' => 'name',
-        'UserAgent' => 'useragent',
         'OsComment' => 'description',
         'OsName' => 'osname',
         'OsVersionNumber' => 'osversion',
@@ -127,6 +126,7 @@ class Clients implements \Zend\Hydrator\HydratorInterface
         'Serial' => 'ssn',
         'SwapMemory' => 'swap',
         'Type' => 'type',
+        'UserAgent' => 'useragent',
         'UserName' => 'userid',
         'Uuid' => 'uuid',
     );

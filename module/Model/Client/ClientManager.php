@@ -147,13 +147,13 @@ class ClientManager
                 case 'DefaultGateway':
                 case 'Manufacturer':
                 case 'Name':
-                case 'UserAgent':
                 case 'OsName':
                 case 'OsVersionNumber':
                 case 'OsVersionString':
                 case 'OsComment':
                 case 'ProductName':
                 case 'Serial':
+                case 'UserAgent':
                 case 'UserName':
                     $select = $this->_filterByString(
                         $select,
