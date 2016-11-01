@@ -146,13 +146,13 @@ class ClientManager
                 case 'DnsServer':
                 case 'DefaultGateway':
                 case 'Manufacturer':
-                case 'Model':
                 case 'Name':
                 case 'UserAgent':
                 case 'OsName':
                 case 'OsVersionNumber':
                 case 'OsVersionString':
                 case 'OsComment':
+                case 'ProductName':
                 case 'Serial':
                 case 'UserName':
                     $select = $this->_filterByString(

@@ -78,7 +78,7 @@ bios:
     hardware_id: 1
     ssn: "serial1"
     smanufacturer: "manufacturer.1"
-    smodel: "model1"
+    smodel: "product_name1"
     type: "type1"
     bmanufacturer: "bios_manufacturer1"
     bversion: "bios_version1"
@@ -88,7 +88,7 @@ bios:
     hardware_id: 2
     ssn: "serial2"
     smanufacturer: "manufacturer2"
-    smodel: "model2"
+    smodel: "product_name2"
     type: "type2"
     bmanufacturer: "bios_manufacturer2"
     bversion: "bios_version2"

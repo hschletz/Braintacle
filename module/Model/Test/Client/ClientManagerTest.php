@@ -62,7 +62,6 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         'IpAddress' => 'ipaddr',
         'LastContactDate' => 'lastcome',
         'Manufacturer' => 'smanufacturer',
-        'Model' => 'smodel',
         'Name' => 'name',
         'UserAgent' => 'useragent',
         'OsComment' => 'description',
@@ -70,6 +69,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         'OsVersionNumber' => 'osversion',
         'OsVersionString' => 'oscomments',
         'PhysicalMemory' => 'memory',
+        'ProductName' => 'smodel',
         'Serial' => 'ssn',
         'SwapMemory' => 'swap',
         'Type' => 'type',
@@ -216,7 +216,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                         'userid' => 'user_name2',
                         'uuid' => 'uuid2',
                         'smanufacturer' => 'manufacturer2',
-                        'smodel' => 'model2',
+                        'smodel' => 'product_name2',
                         'ssn' => 'serial2',
                         'type' => 'type2',
                         'bmanufacturer' => 'bios_manufacturer2',
@@ -273,7 +273,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                 array('Id'), 'Id', 'asc', 'Manufacturer', 'manufacturer.', 'like', true, false, $client234
             ),
             array(
-                array('Id'), 'Id', 'asc', 'Model', 'model2', 'eq', false, false, $client2
+                array('Id'), 'Id', 'asc', 'ProductName', 'product_name2', 'eq', false, false, $client2
             ),
             array(
                 array('Id'), 'Id', 'asc', 'Serial', 'serial2', 'eq', false, false, $client2

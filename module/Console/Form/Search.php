@@ -111,7 +111,7 @@ class Search extends Form
             'PhysicalMemory' => $translator->translate('Physical memory'),
             'SwapMemory' => $translator->translate('Swap memory'),
             'Manufacturer' => $translator->translate('Manufacturer'),
-            'Model' => $translator->translate('Model'),
+            'ProductName' => $translator->translate('Model'),
             'Serial' => $translator->translate('Serial number'),
             'AssetTag' => $translator->translate('Asset tag'),
             'BiosVersion' => $translator->translate('BIOS version'),

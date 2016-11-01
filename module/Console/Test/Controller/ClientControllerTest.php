@@ -789,7 +789,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'LastContactDate' => $lastContactDate,
             'UserAgent' => 'user_agent',
             'Manufacturer' => 'manufacturer',
-            'Model' => 'model',
+            'ProductName' => 'product_name',
             'IsSerialBlacklisted' => false,
             'Serial' => 'serial',
             'IsAssetTagBlacklisted' => false,
@@ -820,7 +820,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXPathQuery(sprintf($query, 'Datum der Inventarinformationen', 'inventory_date'));
         $this->assertXPathQuery(sprintf($query, 'Letzter Kontakt', 'last_contact_date'));
         $this->assertXPathQuery(sprintf($query, 'User-Agent', 'user_agent'));
-        $this->assertXPathQuery(sprintf($query, 'Modell', 'manufacturer model'));
+        $this->assertXPathQuery(sprintf($query, 'Modell', 'manufacturer product_name'));
         $this->assertXPathQuery(sprintf($query, 'Seriennummer', 'serial'));
         $this->assertXPathQuery(sprintf($query, 'Asset tag', 'asset_tag'));
         $this->assertXPathQuery(sprintf($query, 'Typ', 'type'));

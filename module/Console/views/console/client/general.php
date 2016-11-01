@@ -82,7 +82,7 @@ print $table->row(
     $classes
 );
 print $table->row(
-    array($this->translate('Model'), $this->escapeHtml($client['Manufacturer'] . ' ' . $client['Model'])),
+    array($this->translate('Model'), $this->escapeHtml($client['Manufacturer'] . ' ' . $client['ProductName'])),
     false,
     $classes
 );

@@ -32,7 +32,7 @@ namespace Model\Client;
  * @property string $Name Name
  * @property string $Type Type (Desktop, Notebook...) as reported by BIOS
  * @property string $Manufacturer system manufacturer
- * @property string $Model system model
+ * @property string $ProductName product name
  * @property string $Serial serial number
  * @property string $AssetTag asset tag
  * @property integer $CpuClock CPU clock in MHz
