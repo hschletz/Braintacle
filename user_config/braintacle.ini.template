@@ -13,8 +13,8 @@
 [database]
 
 ; Zend\Db Adapter.
-; See http://framework.zend.com/manual/2.4/en/modules/zend.db.adapter.html
-; for a list of available drivers.
+; See https://docs.zendframework.com/zend-db/adapter for a list of available
+; drivers. Only PDO drivers have been tested.
 driver = Pdo_Pgsql
 ; For MySQL:
 ; driver = Pdo_Mysql
