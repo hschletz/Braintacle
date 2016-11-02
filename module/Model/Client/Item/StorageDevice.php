@@ -26,7 +26,7 @@ namespace Model\Client\Item;
  *
  * @property string $Type Hard disk, DVD writer... (Windows only)
  * @property string $ProductFamily Manufacturer/Series (UNIX only)
- * @property string $Model Model description (supplied by manufacturer)
+ * @property string $ProductName Product name (supplied by manufacturer)
  * @property string $Device Windows: Device path (ex. "//./PHYSICALDRIVE0") for hard disks, UNIX: device node
  * @property integer $Size Size in MB
  * @property string $Serial Serial number

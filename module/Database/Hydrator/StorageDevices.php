@@ -41,7 +41,7 @@ class StorageDevices implements \Zend\Hydrator\HydratorInterface
             } else {
                 $object['Type'] = $data['type'];
             }
-            $object['Model'] = $data['name'];
+            $object['ProductName'] = $data['name'];
             // For removable media, 'model' is identical to 'name' and thus
             // useless. For Hard disks and USB storage, 'model' contains the
             // device path.
@@ -52,7 +52,7 @@ class StorageDevices implements \Zend\Hydrator\HydratorInterface
             }
         } else {
             $object['ProductFamily'] = $data['manufacturer'];
-            $object['Model'] = $data['model'];
+            $object['ProductName'] = $data['model'];
             $object['Device'] = $data['name'];
         }
         $object['Size'] = ($data['disksize'] == '0') ? null : $data['disksize'];
@@ -69,7 +69,7 @@ class StorageDevices implements \Zend\Hydrator\HydratorInterface
             // Windows
             $data = array(
                 'manufacturer' => null,
-                'name' => $object['Model'],
+                'name' => $object['ProductName'],
                 'model' => $object['Device'],
                 'type' => $object['Type'],
                 'description' => null,
@@ -79,7 +79,7 @@ class StorageDevices implements \Zend\Hydrator\HydratorInterface
             $data = array(
                 'manufacturer' => $object['ProductFamily'],
                 'name' => $object['Device'],
-                'model' => $object['Model'],
+                'model' => $object['ProductName'],
                 'type' => null,
                 'description' => null,
             );

@@ -27,7 +27,7 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
     {
         $windowsAgentTypePrimary = array(
             'manufacturer' => 'ignored',
-            'name' => '_model',
+            'name' => '_productName',
             'model' => '_device',
             'type' => '_type',
             'description' => 'ignored',
@@ -38,7 +38,7 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
         );
         $windowsAgentTypeEmpty = array(
             'manufacturer' => 'ignored',
-            'name' => '_model',
+            'name' => '_productName',
             'model' => '_device',
             'type' => null,
             'description' => '_type',
@@ -49,7 +49,7 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
         );
         $windowsAgentTypeUnknown = array(
             'manufacturer' => 'ignored',
-            'name' => '_model',
+            'name' => '_productName',
             'model' => '_device',
             'type' => 'UNKNOWN',
             'description' => '_type',
@@ -60,8 +60,8 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
         );
         $windowsAgentRemovableMedia = array(
             'manufacturer' => 'ignored',
-            'name' => '_model',
-            'model' => '_model',
+            'name' => '_productName',
+            'model' => '_productName',
             'type' => '_type',
             'description' => 'ignored',
             'disksize' => '0',
@@ -72,7 +72,7 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
         $unixAgent = array(
             'manufacturer' => '_productFamily',
             'name' => '_device',
-            'model' => '_model',
+            'model' => '_productName',
             'type' => 'ignored',
             'description' => 'ignored',
             'disksize' => '42',
@@ -82,7 +82,7 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
         );
         $windowsStorageDevice = array(
             'Type' => '_type',
-            'Model' => '_model',
+            'ProductName' => '_productName',
             'Device' => '_device',
             'Size' => '42',
             'Serial' => '_serial',
@@ -90,7 +90,7 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
         );
         $windowsStorageDeviceRemovableMedia = array(
             'Type' => '_type',
-            'Model' => '_model',
+            'ProductName' => '_productName',
             'Device' => null,
             'Size' => null,
             'Serial' => '_serial',
@@ -98,7 +98,7 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
         );
         $unixStorageDevice = array(
             'ProductFamily' => '_productFamily',
-            'Model' => '_model',
+            'ProductName' => '_productName',
             'Device' => '_device',
             'Size' => '42',
             'Serial' => '_serial',
@@ -117,7 +117,7 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
     {
         $windowsStorageDevice = array(
             'Type' => '_type',
-            'Model' => '_model',
+            'ProductName' => '_productName',
             'Device' => '_device',
             'Size' => '42',
             'Serial' => '_serial',
@@ -125,7 +125,7 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
         );
         $unixStorageDevice = array(
             'ProductFamily' => '_productFamily',
-            'Model' => '_model',
+            'ProductName' => '_productName',
             'Device' => '_device',
             'Size' => '42',
             'Serial' => '_serial',
@@ -133,7 +133,7 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
         );
         $windowsAgent = array(
             'manufacturer' => null,
-            'name' => '_model',
+            'name' => '_productName',
             'model' => '_device',
             'type' => '_type',
             'description' => null,
@@ -144,7 +144,7 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
         $unixAgent = array(
             'manufacturer' => '_productFamily',
             'name' => '_device',
-            'model' => '_model',
+            'model' => '_productName',
             'type' => null,
             'description' => null,
             'disksize' => '42',

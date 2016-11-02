@@ -28,7 +28,7 @@ $client = $this->client;
 
 $headers = array(
     'ProductFamily' => $this->translate('Product family'),
-    'Model' => $this->translate('Model'),
+    'ProductName' => $this->translate('Model'),
     'Type' => $this->translate('Type'),
     'Size' => $this->translate('Size'),
     'Device' => $this->translate('Device'),

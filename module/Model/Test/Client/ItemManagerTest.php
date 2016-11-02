@@ -179,8 +179,8 @@ class ItemManagerTest extends \Model\Test\AbstractTest
                 array('name3', 'name4'),
                 'Name'
             ),
-            array('StorageDevice', null, null, 'something', array('name1', 'name2'), 'Model'),
-            array('storagedevice', array('Client' => 2), null, null, array('name2'), 'Model'),
+            array('StorageDevice', null, null, 'something', array('name1', 'name2'), 'ProductName'),
+            array('storagedevice', array('Client' => 2), null, null, array('name2'), 'ProductName'),
             array('VirtualMachine', null, 'id', 'asc', array('name1', 'name2'), 'Name'),
             array('VirtualMachine', null, 'Type', 'desc', array('name1', 'name2'), 'Name'),
             array('VirtualMachine', null, null, 'something', array('name1', 'name2'), 'Name'),

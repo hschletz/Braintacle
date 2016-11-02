@@ -1160,7 +1160,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $devices = array(
             array(
                 'Type' => 'DVD Writer', // translated
-                'Model' => 'model',
+                'ProductName' => 'product name',
                 'Size' => 1024,
                 'Device' => 'device',
                 'Serial' => 'serial',
@@ -1168,7 +1168,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
             array(
                 'Type' => 'Fixed hard disk media', // translated
-                'Model' => 'model',
+                'ProductName' => 'product name',
                 'Size' => 1024,
                 'Device' => 'device',
                 'Serial' => 'serial',
@@ -1176,7 +1176,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
             array(
                 'Type' => 'Fixedxhard disk media', // translated
-                'Model' => 'model',
+                'ProductName' => 'product name',
                 'Size' => 1024,
                 'Device' => 'device',
                 'Serial' => 'serial',
@@ -1184,7 +1184,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
             array(
                 'Type' => 'Removable Media', // translated
-                'Model' => 'model',
+                'ProductName' => 'product name',
                 'Size' => 1024,
                 'Device' => 'device',
                 'Serial' => 'serial',
@@ -1192,7 +1192,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
             array(
                 'Type' => 'Removable media other than floppy', // translated
-                'Model' => 'model',
+                'ProductName' => 'product name',
                 'Size' => 1024,
                 'Device' => 'device',
                 'Serial' => 'serial',
@@ -1200,7 +1200,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
             array(
                 'Type' => 'Removable media other thanxfloppy', // translated
-                'Model' => 'model',
+                'ProductName' => 'product name',
                 'Size' => 1024,
                 'Device' => 'device',
                 'Serial' => 'serial',
@@ -1208,7 +1208,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
             array(
                 'Type' => '<DVD Writer>', // not translated, but escaped
-                'Model' => 'model',
+                'ProductName' => 'product name',
                 'Size' => 1024,
                 'Device' => 'device',
                 'Serial' => 'serial',
@@ -1271,7 +1271,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $devices = array(
             array(
                 'ProductFamily' => 'product family',
-                'Model' => 'model',
+                'ProductName' => 'product name',
                 'Size' => 1024,
                 'Device' => 'device',
                 'Serial' => 'serial',
