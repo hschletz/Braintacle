@@ -718,11 +718,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                            ->method('initialize')
                            ->with(
                                $this->callback(function ($dataSource) use (&$result) {
-                                // Callback is invoked more than once.
-                                // Prevent multiple iterations over forward-only result set.
-                                if (!isset($result)) {
-                                    $result = iterator_to_array($dataSource);
-                                }
+                                $result = iterator_to_array($dataSource);
                                 return true;
                                })
                            )->willReturnSelf();
@@ -812,11 +808,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                            ->method('initialize')
                            ->with(
                                $this->callback(function ($dataSource) use (&$result) {
-                                // Callback is invoked more than once.
-                                // Prevent multiple iterations over forward-only result set.
-                                if (!isset($result)) {
-                                    $result = iterator_to_array($dataSource);
-                                }
+                                $result = iterator_to_array($dataSource);
                                 return true;
                                })
                            )->willReturnSelf();
@@ -864,11 +856,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
                            ->method('initialize')
                            ->with(
                                $this->callback(function ($dataSource) use (&$result) {
-                                // Callback is invoked more than once.
-                                // Prevent multiple iterations over forward-only result set.
-                                if (!isset($result)) {
-                                    $result = iterator_to_array($dataSource);
-                                }
+                                $result = iterator_to_array($dataSource);
                                 return true;
                                })
                            )->willReturnSelf();
