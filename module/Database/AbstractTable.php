@@ -140,9 +140,9 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
             $table = $tables[$this->table];
             $columns = $table->getColumns();
             if (isset($columns[$column])) {
-                $logger->info("Dropping column $this->table.$column...");
+                $logger->notice("Dropping column $this->table.$column...");
                 $table->dropColumn($column);
-                $logger->info('done.');
+                $logger->notice('done.');
             }
         }
     }
