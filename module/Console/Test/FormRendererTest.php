@@ -77,9 +77,6 @@ EOT;
                 sprintf($expected, ini_get('post_max_size')),
                 $form->render($this->_createView())
             );
-        } catch (\Exception $e) {
-            // Just re-throw exception, cleanup is done later
-            throw $e;
         } finally {
             // Cleanup
             $_POST = $post;
