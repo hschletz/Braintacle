@@ -55,9 +55,11 @@ class Controller extends \Zend\Mvc\Console\Controller\AbstractConsoleController
      */
     public function schemaManagerAction()
     {
+        $request = $this->getRequest();
+
         // Set up logger. Log level is already validated by route.
         $priority = \Zend\Filter\StaticFilter::execute(
-            $this->getRequest()->getParam('loglevel', 'info'),
+            $request->getParam('loglevel', 'info'),
             'Library\LogLevel'
         );
         $writer = new \Zend\Log\Writer\Stream('php://stderr');
@@ -65,6 +67,6 @@ class Controller extends \Zend\Mvc\Console\Controller\AbstractConsoleController
         $writer->setFormatter('simple', array('format' => '%priorityName%: %message%'));
         $this->_logger->addWriter($writer);
 
-        $this->_schemaManager->updateAll();
+        $this->_schemaManager->updateAll($request->getParam('prune'));
     }
 }

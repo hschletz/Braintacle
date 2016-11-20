@@ -35,4 +35,26 @@ class CustomFields extends \Database\AbstractTable
         $this->table = 'accountinfo';
         parent::__construct($serviceLocator);
     }
+
+    /**
+     * {@inheritdoc}
+     * @codeCoverageIgnore
+     */
+    public static function getObsoleteColumns($logger, $schema, $database)
+    {
+        $obsoleteColumns = parent::getObsoleteColumns($logger, $schema, $database);
+        // Preserve columns which were added through the user interface.
+        $preserveColumns = array();
+        // accountinfo_config may not exist yet when populating an empty
+        // database. In that case, there are no obsolete columns.
+        if (in_array('accountinfo_config', $database->getTableNames())) {
+            $fields = $database->query(
+                "SELECT id FROM accountinfo_config WHERE name_accountinfo IS NULL AND account_type = 'COMPUTERS'"
+            );
+            foreach ($fields as $field) {
+                $preserveColumns[] = "fields_$field[id]";
+            }
+        }
+        return array_diff($obsoleteColumns, $preserveColumns);
+    }
 }

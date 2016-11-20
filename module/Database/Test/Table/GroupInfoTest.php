@@ -26,7 +26,7 @@ class GroupInfoTest extends AbstractTest
     public static function setUpBeforeClass()
     {
         // GroupInfo initialization depends on Config table
-        static::$serviceManager->get('Database\Table\Config')->setSchema();
+        static::$serviceManager->get('Database\Table\Config')->setSchema(true);
         parent::setUpBeforeClass();
     }
 

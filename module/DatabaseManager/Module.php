@@ -52,7 +52,7 @@ class Module implements
                     'routes' => array(
                         'schemaManager' => array(
                             'options' => array(
-                                'route' => '[--loglevel=]',
+                                'route' => '[--loglevel=] [--prune]',
                                 'defaults' => array(
                                     'controller' => 'DatabaseManager\Controller',
                                     'action'     => 'schemaManager'
@@ -118,8 +118,9 @@ class Module implements
     public function getConsoleUsage(\Zend\Console\Adapter\AdapterInterface $console)
     {
         return array(
-            '[--loglevel=emerg|alert|crit|err|warn|notice|info|debug]' => 'Update the database',
+            '[--loglevel=emerg|alert|crit|err|warn|notice|info|debug] [--prune]' => 'Update the database',
             array('--loglevel', 'Set maximum log level, default: info'),
+            array('--prune', 'Drop obsolete tables and columns (default: just warn)'),
         );
     }
 }

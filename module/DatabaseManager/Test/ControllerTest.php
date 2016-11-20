@@ -77,21 +77,24 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
     public function schemaManagerActionProvider()
     {
         return array(
-            array('', Logger::INFO),
-            array('--loglevel=debug', Logger::DEBUG),
+            array('', Logger::INFO, false),
+            array('--loglevel=debug', Logger::DEBUG, false),
+            array('--loglevel=debug --prune', Logger::DEBUG, true),
+            array('--prune --loglevel=debug', Logger::DEBUG, true),
+            array('--prune', Logger::INFO, true),
         );
     }
 
     /**
      * @dataProvider schemaManagerActionProvider
      */
-    public function testSchemaManagerAction($cmdLine, $expectedPriority)
+    public function testSchemaManagerAction($cmdLine, $expectedPriority, $expectedPrune)
     {
         $serviceManager = $this->getApplicationServiceLocator();
 
         $validator = $this->createMock('Library\Validator\LogLevel');
         $filter = $this->createMock('Library\Filter\LogLevel');
-        if ($cmdLine) {
+        if (strpos($cmdLine, '--loglevel=debug') !== false) {
             $validator->expects($this->once())->method('isValid')->with('debug')->willReturn(true);
             $filter->expects($this->once())->method('filter')->with('debug')->willReturn($expectedPriority);
         } else {
@@ -135,7 +138,7 @@ class ControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractConsoleContro
         );
 
         $schemaManager = $this->createMock('Database\SchemaManager');
-        $schemaManager->expects($this->once())->method('updateAll');
+        $schemaManager->expects($this->once())->method('updateAll')->with($expectedPrune);
 
         $serviceManager->setService('Library\Logger', $logger);
         $serviceManager->setService('Database\SchemaManager', $schemaManager);

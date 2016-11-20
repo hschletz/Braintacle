@@ -26,8 +26,8 @@ class ClientsTest extends AbstractTest
     public static function setUpBeforeClass()
     {
         // These tables must exist before the view can be created
-        static::$serviceManager->get('Database\Table\ClientsAndGroups')->setSchema();
-        static::$serviceManager->get('Database\Table\ClientSystemInfo')->setSchema();
+        static::$serviceManager->get('Database\Table\ClientsAndGroups')->setSchema(true);
+        static::$serviceManager->get('Database\Table\ClientSystemInfo')->setSchema(true);
         parent::setUpBeforeClass();
     }
 

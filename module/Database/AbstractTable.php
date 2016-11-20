@@ -86,9 +86,11 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
      *
      * The schema file is located in ./data/ClassName.json and contains all
      * information required to create or alter the table.
+     *
+     * @param bool $prune Drop obsolete columns
      * @codeCoverageIgnore
      */
-    public function setSchema()
+    public function setSchema($prune = false)
     {
         $logger = $this->_serviceLocator->get('Library\Logger');
         $schema = \Zend\Config\Factory::fromFile(
@@ -97,7 +99,13 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
         $database = $this->_serviceLocator->get('Database\Nada');
 
         $this->_preSetSchema($logger, $schema, $database);
-        \Database\SchemaManager::setSchema($logger, $schema, $database);
+        \Database\SchemaManager::setSchema(
+            $logger,
+            $schema,
+            $database,
+            static::getObsoleteColumns($logger, $schema, $database),
+            $prune
+        );
         $this->_postSetSchema($logger, $schema, $database);
     }
 
@@ -123,6 +131,27 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
      */
     protected function _postSetSchema($logger, $schema, $database)
     {
+    }
+
+    /**
+     * Get names of columns that are present in the current database but not in
+     * the given schema
+     *
+     * @param \Zend\Log\Logger $logger Logger instance
+     * @param array $schema Parsed table schema
+     * @param \Nada\Database\AbstractDatabase $database Database object
+     * @return string[]
+     */
+    public static function getObsoleteColumns($logger, $schema, $database)
+    {
+        // Table may not exist yet if it's just about to be created
+        if (in_array($schema['name'], $database->getTableNames())) {
+            $schemaColumns = array_column($schema['columns'], 'name');
+            $tableColumns = array_keys($database->getTable($schema['name'])->getColumns());
+            return array_diff($tableColumns, $schemaColumns);
+        } else {
+            return array();
+        }
     }
 
     /**

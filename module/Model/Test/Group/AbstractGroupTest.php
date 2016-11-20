@@ -52,7 +52,7 @@ abstract class AbstractGroupTest extends \Model\Test\AbstractTest
             );
 
             $this->_groupInfo = new \Database\Table\GroupInfo($serviceManager);
-            $this->_groupInfo->setSchema();
+            $this->_groupInfo->setSchema(true);
             $this->_groupInfo->initialize();
         }
         return parent::setUp();

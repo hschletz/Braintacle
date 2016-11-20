@@ -44,5 +44,20 @@ class NetworkDevicesIdentified extends \Database\AbstractTable
     {
         // Drop obsolete autoincrement column to avoid MySQL error when setting new PK
         $this->_dropColumnIfExists($logger, $database, 'id');
+
+        // There used to be a column named "user". On PostgreSQL, dropping that
+        // column would fail without quoting. Since the default pruning code
+        // does not quote, delete the column manually with quoting temporarily
+        // enabled.
+        if ($database->isPgsql()) {
+            $keywords = $database->quoteKeywords;
+            $database->quoteKeywords[] = 'user';
+            try {
+                $this->_dropColumnIfExists($logger, $database, 'user');
+            } finally {
+                // Always reset quoteKeywords.
+                $database->quoteKeywords = $keywords;
+            }
+        }
     }
 }

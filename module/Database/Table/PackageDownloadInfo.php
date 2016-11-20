@@ -44,7 +44,7 @@ class PackageDownloadInfo extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function setSchema()
+    public function setSchema($prune = false)
     {
         // Reimplementation to provide a view instead of previous table
 

@@ -48,7 +48,7 @@ class Clients extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function setSchema()
+    public function setSchema($prune = false)
     {
         // Reimplementation to provide a view
         $logger = $this->_serviceLocator->get('Library\Logger');

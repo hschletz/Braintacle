@@ -50,7 +50,7 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
     public static function setUpBeforeClass()
     {
         foreach (static::$_tables as $table) {
-            static::$serviceManager->get("Database\Table\\$table")->setSchema();
+            static::$serviceManager->get("Database\Table\\$table")->setSchema(true);
         }
         parent::setUpBeforeClass();
     }

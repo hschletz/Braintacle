@@ -61,8 +61,10 @@ class SchemaManager
      * Database updates are wrapped in a transaction to prevent incomplete and
      * possibly inconsistent updates in case of an error. Transaction support
      * may be limited by the database.
+     *
+     * @param bool $prune Drop obsolete tables/columns
      */
-    public function updateAll()
+    public function updateAll($prune)
     {
         $nada = $this->_serviceLocator->get('Database\Nada');
         $connection = $this->_serviceLocator->get('Db')->getDriver()->getConnection();
@@ -78,7 +80,7 @@ class SchemaManager
                     )
                 );
             }
-            $this->updateTables();
+            $this->updateTables($prune);
             $this->_serviceLocator->get('Model\Config')->schemaVersion = self::SCHEMA_VERSION;
             $connection->commit();
         } catch (\Exception $e) {
@@ -93,14 +95,20 @@ class SchemaManager
      * This method iterates over all JSON schema files in ./data, instantiates
      * table objects of the same name for each file and calls their setSchema()
      * method.
+     *
+     * @param bool $prune Drop obsolete tables/columns
      */
-    public function updateTables()
+    public function updateTables($prune)
     {
+        $database = $this->_serviceLocator->get('Database\Nada');
+        $handledTables = array();
+
         $glob = new \GlobIterator(Module::getPath('data/Tables') . '/*.json');
         foreach ($glob as $fileinfo) {
             $tableClass = $fileinfo->getBaseName('.json');
             $table = $this->_serviceLocator->get('Database\Table\\' . $tableClass);
-            $table->setSchema();
+            $table->setSchema($prune);
+            $handledTables[] = $table->table;
         }
         // Views need manual invocation.
         $this->_serviceLocator->get('Database\Table\Clients')->setSchema();
@@ -112,21 +120,69 @@ class SchemaManager
         // Server tables have no table class
         $glob = new \GlobIterator(Module::getPath('data/Tables/Server') . '/*.json');
         foreach ($glob as $fileinfo) {
+            $schema = \Zend\Config\Factory::fromFile($fileinfo->getPathname());
             self::setSchema(
                 $logger,
-                \Zend\Config\Factory::fromFile($fileinfo->getPathname()),
-                $this->_serviceLocator->get('Database\Nada')
+                $schema,
+                $database,
+                \Database\AbstractTable::getObsoleteColumns($logger, $schema, $database),
+                $prune
             );
+            $handledTables[] = $schema['name'];
         }
 
         // SNMP tables have no table class
         $glob = new \GlobIterator(Module::getPath('data/Tables/Snmp') . '/*.json');
         foreach ($glob as $fileinfo) {
+            $schema = \Zend\Config\Factory::fromFile($fileinfo->getPathname());
+            $obsoleteColumns = \Database\AbstractTable::getObsoleteColumns(
+                $logger,
+                $schema,
+                $database
+            );
+
+            if ($schema['name'] == 'snmp_accountinfo') {
+                // Preserve columns which were added through the user interface.
+                $preserveColumns = array();
+                // accountinfo_config may not exist yet when populating an empty
+                // database. In that case, there are no obsolete columns.
+                if (in_array('accountinfo_config', $database->getTableNames())) {
+                    $customFieldConfig = $this->_serviceLocator->get('Database\Table\CustomFieldConfig');
+                    $select = $customFieldConfig->getSql()->select();
+                    $select->columns(array('id'))
+                           ->where(
+                               array(
+                                    'name_accountinfo' => null, // exclude system columns (TAG)
+                                    'account_type' => 'SNMP'
+                                )
+                           );
+                    foreach ($customFieldConfig->selectWith($select) as $field) {
+                        $preserveColumns[] = "fields_$field[id]";
+                    }
+                    $obsoleteColumns = array_diff($obsoleteColumns, $preserveColumns);
+                }
+            }
             self::setSchema(
                 $logger,
-                \Zend\Config\Factory::fromFile($fileinfo->getPathname()),
-                $this->_serviceLocator->get('Database\Nada')
+                $schema,
+                $database,
+                $obsoleteColumns,
+                $prune
             );
+            $handledTables[] = $schema['name'];
+        }
+
+        // Detect obsolete tables that are present in the database but not in
+        // any of the schema files.
+        $obsoleteTables = array_diff($database->getTableNames(), $handledTables);
+        foreach ($obsoleteTables as $table) {
+            if ($prune) {
+                $logger->notice("Dropping table $table...");
+                $database->dropTable($table);
+                $logger->notice("Done.");
+            } else {
+                $logger->warn("Obsolete table $table detected.");
+            }
         }
     }
 
@@ -136,9 +192,16 @@ class SchemaManager
      * @param \Zend\Log\Logger $logger Logger instance
      * @param array $schema Parsed table schema
      * @param \Nada\Database\AbstractDatabase $database Database object
+     * @param string[] $obsoleteColumns List of obsolete columns to prune or warn about
+     * @param bool $prune Drop obsolete tables/columns
      */
-    public static function setSchema($logger, $schema, $database)
-    {
+    public static function setSchema(
+        $logger,
+        $schema,
+        $database,
+        array $obsoleteColumns = array(),
+        $prune = false
+    ) {
         $tableName = $schema['name'];
         if (in_array($tableName, $database->getTableNames())) {
             // Table exists
@@ -238,6 +301,18 @@ class SchemaManager
                     $table->createIndex($index['name'], $index['columns'], $index['unique']);
                     $logger->info('done.');
                 }
+            }
+        }
+
+        // Detect obsolete columns that are present in the database but not in
+        // the current schema.
+        foreach ($obsoleteColumns as $column) {
+            if ($prune) {
+                $logger->notice("Dropping column $tableName.$column...");
+                $table->dropColumn($column);
+                $logger->notice('done.');
+            } else {
+                $logger->warn("Obsolete column $tableName.$column detected.");
             }
         }
     }

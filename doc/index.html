@@ -261,7 +261,12 @@ There is an optional parameter for the log level (default: info):
 <p><code>
 --loglevel=emerg|alert|crit|err|warn|notice|info|debug
 </code></p>
-
+<p>
+By default, obsolete tables and columns are only dropped if they would block the
+upgrade otherwise.
+A warning is issued for other obsolete tables and columns.
+The --prune option will unconditionally drop these objects too.
+</p>
 
 <h3>update-from-git.sh</h3>
 
