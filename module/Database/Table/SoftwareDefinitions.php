@@ -52,7 +52,7 @@ class SoftwareDefinitions extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _preSetSchema($logger, $schema, $database)
+    protected function _preSetSchema($logger, $schema, $database, $prune)
     {
         $tables = $database->getTableNames();
         $tableExists = in_array('software_definitions', $tables);

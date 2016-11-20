@@ -50,7 +50,7 @@ class Attachments extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _preSetSchema($logger, $schema, $database)
+    protected function _preSetSchema($logger, $schema, $database, $prune)
     {
         if (in_array($this->table, $database->getTableNames())) {
             $count = $this->delete(

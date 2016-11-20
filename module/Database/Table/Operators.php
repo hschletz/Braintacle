@@ -56,7 +56,7 @@ class Operators extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _preSetSchema($logger, $schema, $database)
+    protected function _preSetSchema($logger, $schema, $database, $prune)
     {
         // Drop non-admin accounts
         $logger->debug('Checking for non-admin accounts.');

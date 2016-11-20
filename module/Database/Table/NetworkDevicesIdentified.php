@@ -40,7 +40,7 @@ class NetworkDevicesIdentified extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _preSetSchema($logger, $schema, $database)
+    protected function _preSetSchema($logger, $schema, $database, $prune)
     {
         // Drop obsolete autoincrement column to avoid MySQL error when setting new PK
         $this->_dropColumnIfExists($logger, $database, 'id');
@@ -49,7 +49,7 @@ class NetworkDevicesIdentified extends \Database\AbstractTable
         // column would fail without quoting. Since the default pruning code
         // does not quote, delete the column manually with quoting temporarily
         // enabled.
-        if ($database->isPgsql()) {
+        if ($prune and $database->isPgsql()) {
             $keywords = $database->quoteKeywords;
             $database->quoteKeywords[] = 'user';
             try {

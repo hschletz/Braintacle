@@ -40,7 +40,7 @@ class Comments extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _preSetSchema($logger, $schema, $database)
+    protected function _preSetSchema($logger, $schema, $database, $prune)
     {
         // Migration: if the "visible" column still exists, permanently delete
         // rows that are marked as deleted before the column gets dropped.
