@@ -155,7 +155,7 @@ class Config extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _postSetSchema($logger, $schema, $database)
+    protected function _postSetSchema($logger, $schema, $database, $prune)
     {
         // If packagePath has not been converted yet, append /download directory
         // with had previously been appended automatically.

@@ -64,7 +64,7 @@ class SoftwareDefinitions extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _postSetSchema($logger, $schema, $database)
+    protected function _postSetSchema($logger, $schema, $database, $prune)
     {
         if ($this->_migrateAccepted) {
             $logger->info('Migrating accepted software definitions');

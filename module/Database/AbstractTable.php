@@ -106,7 +106,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
             static::getObsoleteColumns($logger, $schema, $database),
             $prune
         );
-        $this->_postSetSchema($logger, $schema, $database);
+        $this->_postSetSchema($logger, $schema, $database, $prune);
     }
 
     /**
@@ -128,9 +128,10 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
      * @param \Zend\Log\Logger $logger Logger instance
      * @param array $schema Parsed table schema
      * @param \Nada\Database\AbstractDatabase $database Database object
+     * @param bool $prune Drop obsolete columns
      * @codeCoverageIgnore
      */
-    protected function _postSetSchema($logger, $schema, $database)
+    protected function _postSetSchema($logger, $schema, $database, $prune)
     {
     }
 

@@ -79,7 +79,7 @@ class Operators extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _postSetSchema($logger, $schema, $database)
+    protected function _postSetSchema($logger, $schema, $database, $prune)
     {
         // If no account exists yet, create a default account.
         $logger->debug('Checking for existing account.');

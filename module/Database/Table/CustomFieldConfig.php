@@ -57,7 +57,7 @@ class CustomFieldConfig extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _postSetSchema($logger, $schema, $database)
+    protected function _postSetSchema($logger, $schema, $database, $prune)
     {
         // If table is empty, create default entries
         $logger->debug('Checking for existing custom field config.');
