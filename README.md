@@ -51,7 +51,7 @@ Requirements
 - [Composer](https://getcomposer.org/)
 
 - On every client that should be managed through Braintacle, either the
-  [OCS Inventory NG agent](http://www.ocsinventory-ng.org/en/download/download-agent.html) or
+  [OCS Inventory NG agent](https://github.com/OCSInventory-NG/Releases) or
   [FusionInventory Agent](http://www.fusioninventory.org/documentation/agent/installation/)
   must be installed.
 
@@ -82,7 +82,6 @@ This project contains some third party code:
 - A patched version of the [OCS inventory NG server
   components](http://www.ocsinventory-ng.org/), licensed under the GNU General
   Public License v2) is included in the ocsinventory/ directory.
-  See <http://www.ocsinventory-ng.org/en/about/licence.html>.
 
 - The file module/Library/data/MacAddress/manuf is taken from the
   [Wireshark](http://wireshark.org) project. GPLv2 and copyright information are
