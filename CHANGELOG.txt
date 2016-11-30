@@ -119,6 +119,8 @@ Misc:
 
 - Tools: API documentation is now generated using ApiGen.
 
+- Tools: Removed update-from-git.sh.
+
 
 CHANGES IN VERSION 0.16
 =======================
