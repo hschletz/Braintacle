@@ -1,6 +1,6 @@
 <?php
 /**
- * Export application controller
+ * Export controller
  *
  * Copyright (C) 2011-2016 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,12 +19,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Export;
+namespace Tools\Controller;
 
 /**
- * Export application controller
+ * Export controller
  */
-class Controller extends \Zend\Mvc\Console\Controller\AbstractConsoleController
+class Export
 {
     /**
      * Client manager
@@ -41,37 +41,44 @@ class Controller extends \Zend\Mvc\Console\Controller\AbstractConsoleController
     {
         $this->_clientManager = $clientManager;
     }
+
     /**
      * Export all clients
+     *
+     * @param \ZF\Console\Route $route
+     * @param \Zend\Console\Adapter\AdapterInterface $console
+     * @return integer Exit code
      */
-    public function exportAction()
+    public function __invoke(\ZF\Console\Route $route, \Zend\Console\Adapter\AdapterInterface $console)
     {
-        $request = $this->getRequest();
-        $directory = $request->getParam('directory');
-        $validate = $request->getParam('validate') || $request->getParam('v');
+        $directory = $route->getMatchedParam('directory');
+        $validate = $route->getMatchedParam('validate') || $route->getMatchedParam('v');
 
         if (!is_dir($directory) or !is_writable($directory)) {
-            $model = new \Zend\Mvc\Console\View\ViewModel;
-            $model->setErrorLevel(10);
-            $model->setResult("Directory '$directory' does not exist or is not writable.\n");
-            return $model;
+            $console->writeLine("Directory '$directory' does not exist or is not writable.");
+            return 10;
         }
 
-        $clients = $this->_clientManager->getClients(
-            null,
-            'IdString'
-        );
+        if ($validate) {
+            ini_set('display_errors', true); // Print reason for validation failure
+            ini_set('log_errors', false); // Prevent duplicate message in case of validation failure
+            if (extension_loaded('xdebug')) {
+                // Prevent printing backtraces on validation errors
+                xdebug_disable();
+            }
+        }
+
+        $clients = $this->_clientManager->getClients(null, 'IdString');
         foreach ($clients as $client) {
             $id = $client['IdString'];
-            $this->console->writeLine("Exporting $id");
+            $console->writeLine("Exporting $id");
             $document = $client->toDomDocument();
             $document->save($directory . '/' . $document->getFilename());
             if ($validate and !$document->isValid()) {
-                $model = new \Zend\Mvc\Console\View\ViewModel;
-                $model->setErrorLevel(11);
-                $model->setResult("Validation failed for $id.\n");
-                return $model;
+                $console->writeLine("Validation failed for $id.");
+                return 11;
             }
         }
+        return 0;
     }
 }

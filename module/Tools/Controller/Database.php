@@ -1,6 +1,6 @@
 <?php
 /**
- * Database manager application controller
+ * Database controller
  *
  * Copyright (C) 2011-2016 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,12 +19,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace DatabaseManager;
+namespace Tools\Controller;
 
 /**
- * Database manager application controller
+ * Database controller
  */
-class Controller extends \Zend\Mvc\Console\Controller\AbstractConsoleController
+class Database
 {
     /**
      * Schema manager
@@ -52,21 +52,22 @@ class Controller extends \Zend\Mvc\Console\Controller\AbstractConsoleController
 
     /**
      * Manage database schema
+     *
+     * @param \ZF\Console\Route $route
+     * @param \Zend\Console\Adapter\AdapterInterface $console
+     * @return integer Exit code
      */
-    public function schemaManagerAction()
+    public function __invoke(\ZF\Console\Route $route, \Zend\Console\Adapter\AdapterInterface $console)
     {
-        $request = $this->getRequest();
+        $loglevel = $route->getMatchedParam('loglevel', \Zend\Log\Logger::INFO);
+        $prune = $route->getMatchedParam('prune') || $route->getMatchedParam('p');
 
-        // Set up logger. Log level is already validated by route.
-        $priority = \Zend\Filter\StaticFilter::execute(
-            $request->getParam('loglevel', 'info'),
-            'Library\LogLevel'
-        );
         $writer = new \Zend\Log\Writer\Stream('php://stderr');
-        $writer->addFilter('priority', array('priority' => $priority));
+        $writer->addFilter('priority', array('priority' => $loglevel));
         $writer->setFormatter('simple', array('format' => '%priorityName%: %message%'));
         $this->_logger->addWriter($writer);
 
-        $this->_schemaManager->updateAll($request->getParam('prune'));
+        $this->_schemaManager->updateAll($prune);
+        return 0;
     }
 }

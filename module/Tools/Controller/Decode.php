@@ -1,6 +1,6 @@
 <?php
 /**
- * DecodeInventory application controller
+ * Decode controller
  *
  * Copyright (C) 2011-2016 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,12 +19,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace DecodeInventory;
+namespace Tools\Controller;
 
 /**
- * DecodeInventory application controller
+ * Decode controller
  */
-class Controller extends \Zend\Mvc\Console\Controller\AbstractConsoleController
+class Decode
 {
     /**
      * Filter instance
@@ -44,25 +44,26 @@ class Controller extends \Zend\Mvc\Console\Controller\AbstractConsoleController
 
     /**
      * Decode a compressed inventory file
+     *
+     * @param \ZF\Console\Route $route
+     * @param \Zend\Console\Adapter\AdapterInterface $console
+     * @return integer Exit code
      */
-    public function decodeInventoryAction()
+    public function __invoke(\ZF\Console\Route $route, \Zend\Console\Adapter\AdapterInterface $console)
     {
-        $input = $this->getRequest()->getParam('input_file');
+        $input = $route->getMatchedParam('input_file');
 
         if (!is_file($input) or !is_readable($input)) {
-            $model = new \Zend\Mvc\Console\View\ViewModel;
-            $model->setErrorLevel(10);
-            $model->setResult("Input file does not exist or is not readable.\n");
-            return $model;
+            $console->writeLine('Input file does not exist or is not readable.');
+            return 10;
         }
 
         try {
-            return $this->_inventoryDecode->filter(\Library\FileObject::fileGetContents($input));
+            $console->write($this->_inventoryDecode->filter(\Library\FileObject::fileGetContents($input)));
+            return 0;
         } catch (\InvalidArgumentException $e) {
-            $model = new \Zend\Mvc\Console\View\ViewModel;
-            $model->setErrorLevel(11);
-            $model->setResult($e->getMessage() . "\n");
-            return $model;
+            $console->writeLine($e->getMessage());
+            return 11;
         }
     }
 }

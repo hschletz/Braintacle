@@ -98,7 +98,7 @@ actual file.
 To create and initialize the tables, log out from the database and run the
 database manager script:
 
-    /usr/local/share/braintacle/tools/database-manager.php
+    /usr/local/share/braintacle/braintacle-tool.php database
 
 If everything ran correctly, you should now be able to log into the database
 with the configured credentials and see the tables.
@@ -284,9 +284,9 @@ required steps will be noted in the [changelog](./CHANGELOG.txt). If you skipped
 a release, follow the instructions for the skipped releases first.
 
 A common upgrade step is the database schema update. This is done with the
-database-manager.php script:
+database manager script:
 
-    /usr/local/share/braintacle/tools/database-manager.php
+    /usr/local/share/braintacle/braintacle-tool.php database
 
 Although the schema update is usually safe, a database backup is recommended. It
 is also safe to run the script even if there is nothing to update.
@@ -327,9 +327,9 @@ Converting the database
 -----------------------
 
 Backing up the database before conversion is strongly recommended. Run
-database-manager.php as documented above; it should be able to convert the
-database. It does not handle the database charset. Convert it to "utf8mb4" if
-it still uses a different charset.
+database manager as documented above; it should be able to convert the database.
+It does not handle the database charset. Convert it to "utf8mb4" if it still
+uses a different charset.
 
 
 Replacing the server component

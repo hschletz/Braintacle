@@ -20,7 +20,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 -->
 <phpunit bootstrap="Test/bootstrap.php">
     <testsuites>
-        <testsuite name="Export">
+        <testsuite name="Tools">
             <directory>Test</directory>
         </testsuite>
     </testsuites>

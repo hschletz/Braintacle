@@ -1,6 +1,7 @@
+#!/usr/bin/php
 <?php
 /**
- * Bootstrap for unit tests
+ * Braintacle command line tools collection
  *
  * Copyright (C) 2011-2016 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,4 +20,17 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-error_reporting(-1);
+error_reporting(E_ALL);
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+$mvcApplication = \Library\Application::init('Tools');
+$consoleApplication = new ZF\Console\Application(
+    'Braintacle command line tool',
+    \Library\FileObject::fileGetContents(__DIR__ . '/VERSION'),
+    $mvcApplication->getConfig()['tool_routes'],
+    null,
+    new ZF\Console\Dispatcher($mvcApplication->getServiceManager())
+);
+
+exit($consoleApplication->run());

@@ -30,7 +30,6 @@ $cmd = array(
     escapeshellarg($baseDir . 'development'),
     escapeshellarg($baseDir . 'module'),
     escapeshellarg($baseDir . 'public'),
-    escapeshellarg($baseDir . 'tools'),
 );
 passthru(implode(' ', $cmd), $result);
 exit($result);

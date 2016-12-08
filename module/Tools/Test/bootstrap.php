@@ -1,7 +1,6 @@
-#!/usr/bin/php
 <?php
 /**
- * Update the database schema and adjust some data to the new schema.
+ * Bootstrap for unit tests
  *
  * Copyright (C) 2011-2016 Holger Schletz <holger.schletz@web.de>
  *
@@ -18,21 +17,14 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Tools
  */
 
-/**
- * This script updates Braintacle's database schema.
- *
- * Run this script every time the schema has changed. It is safe to run it more
- * than once, even if the schema has not changed. However, it won't hurt to
- * back up your database first.
- *
- * There is an optional parameter for the log level (default: info):
- *
- * --loglevel=emerg|alert|crit|err|warn|notice|info|debug
- */
+namespace Tools;
 
-require_once __DIR__ . "/../vendor/autoload.php";
-\Library\Application::init('DatabaseManager')->run();
+error_reporting(-1);
+date_default_timezone_set('Europe/Berlin');
+
+$application = \Library\Application::init('Tools', true);
+Test\Controller\AbstractControllerTest::$serviceManager = $application->getServiceManager();
+Test\Controller\AbstractControllerTest::$serviceManager->setAllowOverride(true);
+unset($application);

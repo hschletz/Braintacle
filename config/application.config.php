@@ -8,7 +8,6 @@ return array(
         'Zend\Form',
         'Zend\I18n',
         'Zend\Log',
-        'Zend\Mvc\Console',
         'Zend\Mvc\I18n',
         'Zend\Mvc\Plugin\FlashMessenger',
         'Zend\Navigation',

@@ -25,7 +25,7 @@ Upgrading from previous versions:
   download dependencies. Previous installations of Zend Framework and NADA and
   their include_path configuration can be removed if not used otherwise.
 
-- Required: Run tools/database-manager.php to update the database schema.
+- Required: Run "braintacle-tool.php database" to update the database schema.
 
 - Required: The database is no longer compatible with OCS Inventory NG. If you
   used both applications in parallel, see the migration section in INSTALL.md
@@ -46,6 +46,10 @@ New features:
 - Console: The search form has been simplified a bit, with the "Exact match"
   field merged into the "Operator" field, which now describes the previously
   undocumented wildcard usage.
+
+- Tools: All end-user CLI scripts, previously present in the "tools" directory,
+  have been merged into a single script "braintacle-tool.php" in the main
+  directory.
 
 Fixed bugs:
 
@@ -111,11 +115,6 @@ Misc:
 - Console: The "invert results" search operation now behaves consistently across
   all argument types (string, numeric, date). Previously, the operation behaved
   differently for string arguments.
-
-- Tools: The schema-manager.php script has been renamed to database-manager.php.
-
-- Tools: The decode-ocsfiles.pl script has been replaced with
-  decode-inventory-file.php. This script requires PHP 7 and the zlib extension.
 
 - Tools: API documentation is now generated using ApiGen.
 

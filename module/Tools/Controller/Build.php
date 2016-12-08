@@ -1,6 +1,6 @@
 <?php
 /**
- * Package builder application controller
+ * Build controller
  *
  * Copyright (C) 2011-2016 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,12 +19,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace PackageBuilder;
+namespace Tools\Controller;
 
 /**
- * Package builder application controller
+ * Build controller
  */
-class Controller extends \Zend\Mvc\Console\Controller\AbstractConsoleController
+class Build
 {
     /**
      * Config
@@ -52,12 +52,15 @@ class Controller extends \Zend\Mvc\Console\Controller\AbstractConsoleController
 
     /**
      * Build a package
+     *
+     * @param \ZF\Console\Route $route
+     * @param \Zend\Console\Adapter\AdapterInterface $console
+     * @return integer Exit code
      */
-    public function packageBuilderAction()
+    public function __invoke(\ZF\Console\Route $route, \Zend\Console\Adapter\AdapterInterface $console)
     {
-        $request = $this->getRequest();
-        $name = $request->getParam('name');
-        $file = $request->getParam('file');
+        $name = $route->getMatchedParam('name');
+        $file = $route->getMatchedParam('file');
 
         $this->_packageManager->buildPackage(
             array(
@@ -79,6 +82,7 @@ class Controller extends \Zend\Mvc\Console\Controller\AbstractConsoleController
             ),
             false
         );
-        $this->console->writeLine('Package successfully built.');
+        $console->writeLine('Package successfully built.');
+        return 0;
     }
 }
