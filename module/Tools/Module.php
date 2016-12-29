@@ -111,10 +111,11 @@ class Module implements
                 ),
                 array(
                     'name' => 'decode',
-                    'route' => '<input_file>',
+                    'route' => '<input_file> [<output_file>]',
                     'short_description' => 'Decode a compressed inventory file as created by agents',
                     'options_descriptions' => array(
                         '<input_file>' => 'compressed input file',
+                        '<output_file>' => 'XML output file (default: print to STDOUT)',
                     ),
                     'handler' => 'Tools\Controller\Decode',
                 ),

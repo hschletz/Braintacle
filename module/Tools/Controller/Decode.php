@@ -52,6 +52,7 @@ class Decode
     public function __invoke(\ZF\Console\Route $route, \Zend\Console\Adapter\AdapterInterface $console)
     {
         $input = $route->getMatchedParam('input_file');
+        $output = $route->getMatchedParam('output_file');
 
         if (!is_file($input) or !is_readable($input)) {
             $console->writeLine('Input file does not exist or is not readable.');
@@ -59,7 +60,12 @@ class Decode
         }
 
         try {
-            $console->write($this->_inventoryDecode->filter(\Library\FileObject::fileGetContents($input)));
+            $content = $this->_inventoryDecode->filter(\Library\FileObject::fileGetContents($input));
+            if ($output) {
+                \Library\FileObject::filePutContents($output, $content);
+            } else {
+                $console->write($content);
+            }
             return 0;
         } catch (\InvalidArgumentException $e) {
             $console->writeLine($e->getMessage());

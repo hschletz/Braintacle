@@ -22,6 +22,7 @@
 namespace Tools\Test\Controller;
 
 use \org\bovigo\vfs\vfsStream;
+use \org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 
 class DecodeTest extends AbstractControllerTest
 {
@@ -46,41 +47,126 @@ class DecodeTest extends AbstractControllerTest
         $inputFile = vfsStream::newFile('test')->withContent('input data')
                                                ->at(vfsStream::setup('root'))
                                                ->url();
-        $this->_route->method('getMatchedParam')->with('input_file')->willReturn($inputFile);
+        $this->_route->method('getMatchedParam')
+                     ->willReturnMap(
+                         array(
+                            array('input_file', null, $inputFile),
+                            array('output_file', null, null)
+                         )
+                     );
         $this->_console->expects($this->once())->method('write')->with('output data');
 
         $this->assertEquals(0, $this->_dispatch());
+        $this->assertEquals(
+            array(
+                'root' => array(
+                    'test' => 'input data',
+                ),
+            ),
+            vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure()
+        );
+    }
+
+    public function testSuccessWithOutputFile()
+    {
+        $this->_inventoryDecode->method('filter')->with('input data')->willReturn('output data');
+
+        $dir = vfsStream::setup('root');
+        $inputFile = vfsStream::newFile('test')->withContent('input data')->at($dir)->url();
+        $outputFile = $dir->url() . '/output_file';
+
+        $this->_route->method('getMatchedParam')
+                     ->willReturnMap(
+                         array(
+                            array('input_file', null, $inputFile),
+                            array('output_file', null, $outputFile)
+                         )
+                     );
+        $this->_console->expects($this->never())->method('write');
+
+        $this->assertEquals(0, $this->_dispatch());
+        $this->assertEquals(
+            array(
+                'root' => array(
+                    'test' => 'input data',
+                    'output_file' => 'output data',
+                ),
+            ),
+            vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure()
+        );
     }
 
     public function testInputNotFile()
     {
         $inputFile = vfsStream::newDirectory('test')->at(vfsStream::setup('root'))->url();
-        $this->_route->method('getMatchedParam')->with('input_file')->willReturn($inputFile);
+        $this->_route->method('getMatchedParam')
+                     ->willReturnMap(
+                         array(
+                            array('input_file', null, $inputFile),
+                            array('output_file', null, null)
+                         )
+                     );
         $this->_console->expects($this->once())->method('writeLine')->with(
             'Input file does not exist or is not readable.'
         );
 
         $this->assertEquals(10, $this->_dispatch());
+        $this->assertEquals(
+            array(
+                'root' => array(
+                    'test' => array(),
+                ),
+            ),
+            vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure()
+        );
     }
 
     public function testInputFileNotReadable()
     {
         $inputFile = vfsStream::newFile('test', 0000)->at(vfsStream::setup('root'))->url();
-        $this->_route->method('getMatchedParam')->with('input_file')->willReturn($inputFile);
+        $this->_route->method('getMatchedParam')
+                     ->willReturnMap(
+                         array(
+                            array('input_file', null, $inputFile),
+                            array('output_file', null, null)
+                         )
+                     );
         $this->_console->expects($this->once())->method('writeLine')->with(
             'Input file does not exist or is not readable.'
         );
 
         $this->assertEquals(10, $this->_dispatch());
+        $this->assertEquals(
+            array(
+                'root' => array(
+                    'test' => null,
+                ),
+            ),
+            vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure()
+        );
     }
 
     public function testInvalidInputData()
     {
         $this->_inventoryDecode->method('filter')->willThrowException(new \InvalidArgumentException('message'));
         $inputFile = vfsStream::newFile('test')->at(vfsStream::setup('root'))->url();
-        $this->_route->method('getMatchedParam')->with('input_file')->willReturn($inputFile);
+        $this->_route->method('getMatchedParam')
+                     ->willReturnMap(
+                         array(
+                            array('input_file', null, $inputFile),
+                            array('output_file', null, null)
+                         )
+                     );
         $this->_console->expects($this->once())->method('writeLine')->with('message');
 
         $this->assertEquals(11, $this->_dispatch());
+        $this->assertEquals(
+            array(
+                'root' => array(
+                    'test' => null,
+                ),
+            ),
+            vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure()
+        );
     }
 }
