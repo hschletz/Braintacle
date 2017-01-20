@@ -68,9 +68,9 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
     {
         $url = $this->_root->url() . '/test.txt';
         $fileObject = new FileObject($url, 'w');
-        $fileObject->setFlags('test_flags');
+        $fileObject->setFlags(7);
 
-        $this->assertEquals('test_flags', $fileObject->getFlags());
+        $this->assertEquals(7, $fileObject->getFlags());
     }
 
     public function testSetFlagsUnimplementedFlag()
