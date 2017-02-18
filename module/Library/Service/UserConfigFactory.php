@@ -22,15 +22,17 @@
 namespace Library\Service;
 
 /**
- * Factory for Config from INI file
+ * Factory for user config from INI file
  *
  * Returns the Library\UserConfig entry from the ApplicationConfig service. If
- * it does not exist, the following locations are searched for a user config
- * file and the first one found is read and its content returned:
+ * it does not exist or is not an array, the following locations are searched
+ * for a user config file and the first one found is read and its content
+ * returned:
  *
- * 1. The path set in the BRAINTACLE_CONFIG environment variable (if the
+ * 1. The path set in the Library\UserConfig service (if it is a string).
+ * 2. The path set in the BRAINTACLE_CONFIG environment variable (if the
  *    variable exists).
- * 2. Fall back to user_config/braintacle.ini relative to the Braintacle root
+ * 3. Fall back to user_config/braintacle.ini relative to the Braintacle root
  *    directory.
  *
  * @codeCoverageIgnore
@@ -45,14 +47,21 @@ class UserConfigFactory implements \Zend\ServiceManager\Factory\FactoryInterface
         $requestedName,
         array $options = null
     ) {
+        $userConfig = null;
         $applicationConfig = $container->get('ApplicationConfig');
         if (isset($applicationConfig['Library\UserConfig'])) {
-            return $applicationConfig['Library\UserConfig'];
-        } else {
-            $reader = new \Zend\Config\Reader\Ini;
-            return $reader->fromFile(
-                getenv('BRAINTACLE_CONFIG') ?: (\Library\Application::getPath('user_config/braintacle.ini'))
-            );
+            $userConfig = $applicationConfig['Library\UserConfig'];
+            if (is_array($userConfig)) {
+                return $userConfig;
+            }
         }
+        if (!$userConfig) {
+            $userConfig = getenv('BRAINTACLE_CONFIG');
+        }
+        if (!$userConfig) {
+            $userConfig = \Library\Application::getPath('user_config/braintacle.ini');
+        }
+        $reader = new \Zend\Config\Reader\Ini;
+        return $reader->fromFile($userConfig);
     }
 }

@@ -30,7 +30,7 @@ $consoleApplication = new ZF\Console\Application(
     \Library\FileObject::fileGetContents(__DIR__ . '/VERSION'),
     $mvcApplication->getConfig()['tool_routes'],
     null,
-    new ZF\Console\Dispatcher($mvcApplication->getServiceManager())
+    new Tools\Dispatcher($mvcApplication->getServiceManager())
 );
 
 exit($consoleApplication->run());

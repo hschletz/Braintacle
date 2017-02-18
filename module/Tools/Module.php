@@ -49,7 +49,7 @@ class Module implements
      */
     public function getConfig()
     {
-        return array(
+        $config = array(
             'service_manager' => array(
                 'factories' => array(
                     'Tools\Controller\Apidoc' => 'Zend\ServiceManager\Factory\InvokableFactory',
@@ -131,6 +131,16 @@ class Module implements
                 ),
             )
         );
+        // Add common options for all routes
+        foreach ($config['tool_routes'] as &$route) {
+            // Options may not be present for all routes
+            $route['route'] = '[--config=] ' . @$route['route'];
+            $route['options_descriptions'] = array_merge(
+                array('--config' => 'Alternative config file'),
+                isset($route['options_descriptions']) ? $route['options_descriptions'] : array()
+            );
+        }
+        return $config;
     }
 
     /**
