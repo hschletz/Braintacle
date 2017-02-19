@@ -49,7 +49,10 @@ class DirectoryWritableTest extends \PHPUnit_Framework_TestCase
         $url = vfsStream::newDirectory('test', 0000)->at($this->_root)->url();
         $validator = new DirectoryWritable;
         $this->assertFalse($validator->isValid($url));
-        $this->assertEquals(DirectoryWritable::WRITABLE, key($validator->getMessages()));
+        $this->assertEquals(
+            array(DirectoryWritable::WRITABLE => "Directory '$url' is not writable"),
+            $validator->getMessages()
+        );
     }
 
     public function testFileWritable()
@@ -84,52 +87,13 @@ class DirectoryWritableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(DirectoryWritable::DIRECTORY, key($validator->getMessages()));
     }
 
-    public function testDirectoryMessageUntranslated()
+    public function testDirectoryMessage()
     {
         $url = $this->_root->url() . '/test';
         $validator = new DirectoryWritable;
         $validator->isValid($url);
         $this->assertEquals(
             array(DirectoryWritable::DIRECTORY => "'$url' is not a directory or inaccessible"),
-            $validator->getMessages()
-        );
-    }
-
-    public function testDirectoryMessageTranslated()
-    {
-        $url = $this->_root->url() . '/test';
-        $validator = new DirectoryWritable;
-        $validator->setTranslator(
-            \Library\Application::init('Library', true)->getServiceManager()->get('MvcTranslator')
-        );
-        $validator->isValid($url);
-        $this->assertEquals(
-            array(DirectoryWritable::DIRECTORY => "'$url' ist kein Verzeichnis oder nicht zugänglich"),
-            $validator->getMessages()
-        );
-    }
-
-    public function testWritableMessageUntranslated()
-    {
-        $url = vfsStream::newDirectory('test', 0000)->at($this->_root)->url();
-        $validator = new DirectoryWritable;
-        $validator->isValid($url);
-        $this->assertEquals(
-            array(DirectoryWritable::WRITABLE => "Directory '$url' is not writable"),
-            $validator->getMessages()
-        );
-    }
-
-    public function testWritableMessageTranslated()
-    {
-        $url = vfsStream::newDirectory('test', 0000)->at($this->_root)->url();
-        $validator = new DirectoryWritable;
-        $validator->setTranslator(
-            \Library\Application::init('Library', true)->getServiceManager()->get('MvcTranslator')
-        );
-        $validator->isValid($url);
-        $this->assertEquals(
-            array(DirectoryWritable::WRITABLE => "Verzeichnis '$url' ist nicht schreibbar"),
             $validator->getMessages()
         );
     }

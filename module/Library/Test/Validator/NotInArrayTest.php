@@ -96,25 +96,12 @@ class NotInArrayTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedResult, $validator->isValid($value));
     }
 
-    public function testMessageUntranslated()
+    public function testMessage()
     {
         $validator = new NotInArray(array('haystack' => array('one')));
         $validator->isValid('one');
         $this->assertEquals(
             array(NotInArray::IN_ARRAY => "'one' is in the list of invalid values"),
-            $validator->getMessages()
-        );
-    }
-
-    public function testMessageTranslated()
-    {
-        $validator = new NotInArray(array('haystack' => array('one')));
-        $validator->setTranslator(
-            \Library\Application::init('Library', true)->getServiceManager()->get('MvcTranslator')
-        );
-        $validator->isValid('one');
-        $this->assertEquals(
-            array(NotInArray::IN_ARRAY => "'one' ist in der Liste ungültiger Werte"),
             $validator->getMessages()
         );
     }

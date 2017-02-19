@@ -43,25 +43,12 @@ class LogLevelTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($validator->isValid('Error')); // extra characters after valid string
     }
 
-    public function testMessageUntranslated()
+    public function testMessage()
     {
         $validator = new LogLevel;
         $validator->isValid('Error');
         $this->assertEquals(
             array(LogLevel::LOG_LEVEL => "'Error' is not a valid log level"),
-            $validator->getMessages()
-        );
-    }
-
-    public function testMessageTranslated()
-    {
-        $validator = new LogLevel;
-        $validator->setTranslator(
-            \Library\Application::init('Library', true)->getServiceManager()->get('MvcTranslator')
-        );
-        $validator->isValid('Error');
-        $this->assertEquals(
-            array(LogLevel::LOG_LEVEL => "'Error' ist kein gültiger Loglevel"),
             $validator->getMessages()
         );
     }
