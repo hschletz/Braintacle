@@ -62,7 +62,7 @@ class LocalizationTest extends \PHPUnit_Framework_TestCase
     public function testDefaultTranslator()
     {
         $translator = $this->createMock('Zend\Mvc\I18n\Translator');
-        $application = \Library\Application::init('Console', true);
+        $application = \Library\Application::init('Console');
 
         // Run test initializion after application initialization because it
         // would be overwritten otherwise
@@ -70,11 +70,17 @@ class LocalizationTest extends \PHPUnit_Framework_TestCase
         $serviceManager = $application->getServiceManager();
         $serviceManager->setAllowOverride(true);
         $serviceManager->setService('MvcTranslator', $translator);
+        $serviceManager->setService('Library\UserConfig', array());
 
-        // Invoke bootstrap event handler manually. It has already been run
-        // during application initialization, but we changed the default
-        // translator in the meantime.
-        (new \Console\Module)->onBootstrap($application->getMvcEvent());
+        // Trigger route event which has a handler taking care of the
+        // initialization. Detach other listeners first which are irrelevant for
+        // this test and which would require additional dependencies.
+        $event = $application->getMvcEvent();
+        $event->setName(\Zend\Mvc\MvcEvent::EVENT_ROUTE);
+        $eventManager = $application->getEventManager();
+        $eventManager->detach(array($serviceManager->get('ModuleManager')->getModule('Console'), 'forceLogin'));
+        $eventManager->triggerEvent($event);
+
         $this->assertSame($translator, \Zend\Validator\AbstractValidator::getDefaultTranslator());
     }
 }

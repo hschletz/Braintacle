@@ -36,7 +36,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
      * Service manager
      * @var \Zend\ServiceManager\ServiceManager
      */
-    protected static $_serviceManager;
+    public static $serviceManager;
 
     /**
      * View helper manager
@@ -48,11 +48,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUpBeforeClass();
 
-        $helperClass = static::_getHelperClass();
-        $moduleName = substr($helperClass, 0, strpos($helperClass, '\\'));
-        $application = \Library\Application::init($moduleName, true);
-        static::$_serviceManager = $application->getServiceManager();
-        static::$_helperManager = static::$_serviceManager->get('ViewHelperManager');
+        static::$_helperManager = static::$serviceManager->get('ViewHelperManager');
     }
 
     /**
@@ -88,7 +84,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
         if (!$name) {
             $name = $this->_getHelperName();
         }
-        return static::$_helperManager->get($name);
+        return static::$_helperManager->build($name);
     }
 
     /**
@@ -99,12 +95,12 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
         // Uppercase
         $this->assertInstanceOf(
             static::_getHelperClass(),
-            static::$_helperManager->get($this->_getHelperName())
+            $this->_getHelper($this->_getHelperName())
         );
         // Lowercase
         $this->assertInstanceOf(
             static::_getHelperClass(),
-            static::$_helperManager->get(lcfirst($this->_getHelperName()))
+            $this->_getHelper(lcfirst($this->_getHelperName()))
         );
     }
 }

@@ -27,4 +27,15 @@ date_default_timezone_set('Europe/Berlin');
 // Pretend to be not on a console to force choice of HTTP route over console route.
 \Zend\Console\Console::overrideIsConsole(false);
 
-\Library\Application::init('Console', true); // Required to set up autoloaders for some test classes
+$serviceManager = \Library\Application::init('Console')->getServiceManager();
+$serviceManager->setService(
+    'Library\UserConfig',
+    array(
+        'debug' => array(
+            'display backtrace' => true,
+            'report missing translations' => true,
+        ),
+    )
+);
+\Library\Test\View\Helper\AbstractTest::$serviceManager = $serviceManager;
+unset($serviceManager);

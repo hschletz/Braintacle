@@ -36,7 +36,7 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
         parent::setUp();
 
         $this->setTraceError(true);
-        $this->setApplicationConfig(\Library\Application::getApplicationConfig('Console', true));
+        $this->setApplicationConfig(\Library\Application::getApplicationConfig('Console', false));
 
         // Put application in authenticated state
         $auth = $this->createMock('Model\Operator\AuthenticationService');
@@ -44,6 +44,15 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
 
         $serviceManager = $this->getApplicationServiceLocator();
         $serviceManager->setService('Model\Operator\AuthenticationService', $auth);
+        $serviceManager->setService(
+            'Library\UserConfig',
+            array(
+                'debug' => array(
+                    'display backtrace' => true,
+                    'report missing translations' => true,
+                ),
+            )
+        );
     }
 
     public function testRedirectToLoginPage()

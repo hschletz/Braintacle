@@ -49,4 +49,14 @@ class StreamWrapperFail
 // @codingStandardsIgnoreEnd
 stream_wrapper_register('fail', 'Library\StreamWrapperFail');
 
-\Library\Application::init('Library', true);
+$serviceManager = \Library\Application::init('Library')->getServiceManager();
+$serviceManager->setService(
+    'Library\UserConfig',
+    array(
+        'debug' => array(
+            'report missing translations' => true,
+        ),
+    )
+);
+\Library\Test\View\Helper\AbstractTest::$serviceManager = $serviceManager;
+unset($serviceManager);

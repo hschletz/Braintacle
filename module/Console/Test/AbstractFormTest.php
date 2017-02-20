@@ -92,9 +92,17 @@ abstract class AbstractFormTest extends \PHPUnit_Framework_TestCase
      */
     protected function _createView()
     {
-        $application = \Library\Application::init('Console', true);
+        $serviceManager = \Library\Application::init('Console')->getServiceManager();
+        $serviceManager->setService(
+            'Library\UserConfig',
+            array(
+                'debug' => array(
+                    'report missing translations' => true,
+                ),
+            )
+        );
         $view = new \Zend\View\Renderer\PhpRenderer;
-        $view->setHelperPluginManager($application->getServiceManager()->get('ViewHelperManager'));
+        $view->setHelperPluginManager($serviceManager->get('ViewHelperManager'));
         return $view;
     }
 

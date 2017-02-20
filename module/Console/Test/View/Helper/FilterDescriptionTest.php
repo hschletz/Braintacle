@@ -35,7 +35,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
         $subnet->expects($this->at(3))->method('offsetSet')->with('Address', 'address2');
         $subnet->expects($this->at(4))->method('offsetSet')->with('Mask', 'mask2');
         $subnet->expects($this->at(5))->method('offsetGet')->with('CidrAddress')->willReturn('<cidrAddress2>');
-        static::$_serviceManager->setService('Model\Network\Subnet', $subnet);
+        static::$serviceManager->setService('Model\Network\Subnet', $subnet);
 
         // Escaped characters should not occur, but are theoretically possible.
         $this->assertEquals(

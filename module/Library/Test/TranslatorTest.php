@@ -62,8 +62,9 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
     public function testTranslatorSetup($locale, $message, $expectedMessage)
     {
         \Locale::setDefault($locale);
-        $application = \Library\Application::init('Library', true);
-        $translator = $application->getServiceManager()->get('MvcTranslator');
+        $serviceManager = \Library\Application::init('Library')->getServiceManager();
+        $serviceManager->setService('Library\UserConfig', array());
+        $translator = $serviceManager->get('MvcTranslator');
         $this->assertEquals($expectedMessage, $translator->translate($message));
     }
 
@@ -85,8 +86,14 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
             'Missing translation: this_string_is_not_translated'
         );
         \Locale::setDefault($locale);
-        $application = \Library\Application::init('Library', true);
-        $translator = $application->getServiceManager()->get('MvcTranslator');
+        $serviceManager = \Library\Application::init('Library')->getServiceManager();
+        $serviceManager->setService(
+            'Library\UserConfig',
+            array(
+                'debug' => array('report missing translations' => true),
+            )
+        );
+        $translator = $serviceManager->get('MvcTranslator');
         $this->assertEquals('this_string_is_not_translated', $translator->translate('this_string_is_not_translated'));
     }
 
@@ -96,18 +103,26 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
     public function testMissingTranslationDoesNotTriggerNoticeWhenDisabled($locale)
     {
         \Locale::setDefault($locale);
-        $application = \Library\Application::init(
-            'Library',
-            true,
+        $serviceManager = \Library\Application::init('Library')->getServiceManager();
+        $serviceManager->setService(
+            'Library\UserConfig',
             array(
-                'Library\UserConfig' => array(
-                    'debug' => array(
-                        'report missing translations' => false,
-                    )
-                )
+                'debug' => array('report missing translations' => false),
             )
         );
-        $translator = $application->getServiceManager()->get('MvcTranslator');
+        $translator = $serviceManager->get('MvcTranslator');
+        $this->assertEquals('this_string_is_not_translated', $translator->translate('this_string_is_not_translated'));
+    }
+
+    /**
+     * @dataProvider missingTranslationProvider
+     */
+    public function testMissingTranslationDoesNotTriggerNoticebyDefault($locale)
+    {
+        \Locale::setDefault($locale);
+        $serviceManager = \Library\Application::init('Library')->getServiceManager();
+        $serviceManager->setService('Library\UserConfig', array());
+        $translator = $serviceManager->get('MvcTranslator');
         $this->assertEquals('this_string_is_not_translated', $translator->translate('this_string_is_not_translated'));
     }
 }

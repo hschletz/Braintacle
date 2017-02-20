@@ -72,6 +72,7 @@ class Module implements
     public function onBootstrap(\Zend\EventManager\EventInterface $e)
     {
         $eventManager = $e->getParam('application')->getEventManager();
+        $eventManager->attach(MvcEvent::EVENT_ROUTE, array($this, 'setValidatorTranslator'));
         $eventManager->attach(MvcEvent::EVENT_ROUTE, array($this, 'forceLogin'));
         $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'setStrictVars'));
         $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'setMenu'));
@@ -83,8 +84,18 @@ class Module implements
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             \Locale::setDefault(\Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']));
         }
+    }
 
-        // Attach translator to validators
+    /**
+     * Hook to set the default translator for validators
+     *
+     * This is invoked by the "route" event to avoid invocation of factories
+     * within the bootstrap event which would cause problems for testing.
+     *
+     * @param \Zend\Mvc\MvcEvent $e MVC event
+     */
+    public function setValidatorTranslator(\Zend\Mvc\MvcEvent $e)
+    {
         \Zend\Validator\AbstractValidator::setDefaultTranslator(
             $e->getApplication()->getServiceManager()->get('MvcTranslator')
         );

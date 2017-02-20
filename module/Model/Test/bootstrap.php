@@ -42,14 +42,12 @@ class StreamWrapperStatOnly
 }
 stream_wrapper_register('statonly', 'Model\StreamWrapperStatOnly');
 
-$application = \Library\Application::init(
-    'Model',
-    true,
+$serviceManager = \Library\Application::init('Model')->getServiceManager();
+$serviceManager->setService(
+    'Library\UserConfig',
     array(
-        'Library\UserConfig' => array(
-            'database' => json_decode(getenv('BRAINTACLE_TEST_DATABASE'), true),
-        )
+        'database' => json_decode(getenv('BRAINTACLE_TEST_DATABASE'), true),
     )
 );
-\Model\Test\AbstractTest::$serviceManager = $application->getServiceManager();
-unset($application);
+\Model\Test\AbstractTest::$serviceManager = $serviceManager;
+unset($serviceManager);

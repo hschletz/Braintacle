@@ -32,7 +32,8 @@ class MainMenuTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerT
     public function setUp()
     {
         $this->setTraceError(true);
-        $this->setApplicationConfig(\Library\Application::getApplicationConfig('Console', true));
+        $this->setApplicationConfig(\Library\Application::getApplicationConfig('Console', false));
+
         parent::setUp();
     }
 
@@ -66,6 +67,7 @@ class MainMenuTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerT
         $serviceManager = $this->getApplicationServiceLocator();
         $serviceManager->setService('Zend\Authentication\AuthenticationService', $auth);
         $serviceManager->setService('Model\SoftwareManager', $model);
+        $serviceManager->setService('Library\UserConfig', array());
 
         // Dispatch arbitrary action and test corresponding menu entry
         $this->dispatch('/console/licenses/index/');

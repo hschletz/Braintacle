@@ -22,14 +22,12 @@
 error_reporting(-1);
 date_default_timezone_set('Europe/Berlin');
 
-$application = \Library\Application::init(
-    'Database',
-    true,
+$serviceManager = \Library\Application::init('Database')->getServiceManager();
+$serviceManager->setService(
+    'Library\UserConfig',
     array(
-        'Library\UserConfig' => array(
-            'database' => json_decode(getenv('BRAINTACLE_TEST_DATABASE'), true),
-        )
+        'database' => json_decode(getenv('BRAINTACLE_TEST_DATABASE'), true),
     )
 );
-\Database\Test\Table\AbstractTest::$serviceManager = $application->getServiceManager();
-unset($application);
+\Database\Test\Table\AbstractTest::$serviceManager = $serviceManager;
+unset($serviceManager);
