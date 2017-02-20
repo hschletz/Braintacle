@@ -25,7 +25,7 @@ class NowTest extends \PHPUnit_Framework_TestCase
 {
     public function testService()
     {
-        $application = \Library\Application::init('Library', true);
+        $application = \Library\Application::init('Library');
         $serviceManager = $application->getServiceManager();
 
         // Service must not be shared so that a different result is returned

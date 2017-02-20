@@ -47,7 +47,7 @@ class LocalizationTest extends \PHPUnit_Framework_TestCase
     {
         unset($_SERVER['HTTP_ACCEPT_LANGUAGE']);
         \Locale::setDefault('fi');
-        \Library\Application::init('Console', true);
+        \Library\Application::init('Console');
         $this->assertEquals('fi', \Locale::getDefault());
     }
 
@@ -55,7 +55,7 @@ class LocalizationTest extends \PHPUnit_Framework_TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'sv-se,sv;q=0.8,en-us;q=0.6,en;q=0.4';
         \Locale::setDefault('fi');
-        \Library\Application::init('Console', true);
+        \Library\Application::init('Console');
         $this->assertEquals('sv_SE', \Locale::getDefault());
     }
 

@@ -43,7 +43,7 @@ class PrintFormTest extends \Library\Test\Mvc\Controller\Plugin\AbstractTest
         $this->assertEquals($form, $viewModel->form);
 
         // Invoke template and test output
-        $application = \Library\Application::init('Console', true);
+        $application = \Library\Application::init('Console');
         $renderer = $application->getServiceManager()->get('ViewRenderer');
         $output = $renderer->render($viewModel);
         $this->assertEquals('\Console\Form\Form default renderer', $output);

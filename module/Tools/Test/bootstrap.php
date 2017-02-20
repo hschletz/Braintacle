@@ -24,7 +24,7 @@ namespace Tools;
 error_reporting(-1);
 date_default_timezone_set('Europe/Berlin');
 
-$application = \Library\Application::init('Tools', true);
+$application = \Library\Application::init('Tools');
 Test\Controller\AbstractControllerTest::$serviceManager = $application->getServiceManager();
 Test\Controller\AbstractControllerTest::$serviceManager->setAllowOverride(true);
 unset($application);

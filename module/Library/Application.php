@@ -36,44 +36,28 @@ class Application
      * the MVC application.
      *
      * @param string $module Module to load
-     * @param bool $addTestConfig Add config for test environment (enable all debug options, no config file)
-     * @param array $applicationConfig Extends default application config
      * @return \Zend\Mvc\Application
      * @codeCoverageIgnore
      */
-    public static function init($module, $addTestConfig = false, $applicationConfig = array())
+    public static function init($module)
     {
         // Set up PHP environment.
         session_cache_limiter('nocache'); // Default headers to prevent caching
 
-        return \Zend\Mvc\Application::init(
-            array_replace_recursive(
-                static::getApplicationConfig($module, $addTestConfig),
-                $applicationConfig
-            )
-        );
+        return \Zend\Mvc\Application::init(static::getApplicationConfig($module));
     }
 
     /**
      * Get module config for application initialization
      *
      * @param string $module Module to load
-     * @param bool $addTestConfig Add config for test environment (enable all debug options, no config file)
      * @return array
      */
-    public static function getApplicationConfig($module, $addTestConfig)
+    public static function getApplicationConfig($module)
     {
         $config = require static::getPath('config/application.config.php');
         $config['modules'][] = $module;
         $config['module_listener_options']['module_paths'][] = static::getPath('module');
-        if ($addTestConfig) {
-            $config['Library\UserConfig'] = array(
-                'debug' => array(
-                    'display backtrace' => true,
-                    'report missing translations' => true,
-                ),
-            );
-        }
         return $config;
     }
 
