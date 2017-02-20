@@ -23,9 +23,6 @@ namespace Library;
 
 /**
  * Bootstrap class for all applications that use the Braintacle API.
- *
- * To bootstrap a Braintacle application, include this class manually and call
- * init().
  */
 class Application
 {
