@@ -34,8 +34,6 @@ namespace Library\Service;
  *    variable exists).
  * 3. Fall back to user_config/braintacle.ini relative to the Braintacle root
  *    directory.
- *
- * @codeCoverageIgnore
  */
 class UserConfigFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
