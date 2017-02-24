@@ -82,6 +82,33 @@
             "default": null,
             "autoincrement": false,
             "comment": "BIOS/UEFI date (no guarantee on format)"
+        },
+        {
+            "name": "mmanufacturer",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Mainboard manufacturer name"
+        },
+        {
+            "name": "mmodel",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Mainboard product name"
+        },
+        {
+            "name": "msn",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Mainboard serial number"
         }
     ],
     "primary_key": [

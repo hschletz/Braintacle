@@ -118,6 +118,15 @@
             "default": null,
             "autoincrement": false,
             "comment": "IPv4 address of DHCP server for current subnet"
+        },
+        {
+            "name": "mtu",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Link MTU"
         }
     ],
     "primary_key": [

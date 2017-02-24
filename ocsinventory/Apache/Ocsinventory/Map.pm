@@ -1,11 +1,23 @@
 ###############################################################################
-## OCSINVENTORY-NG 
-## Copyleft Pascal DANEK 2006
-## Web : http://www.ocsinventory-ng.org
+## Copyright 2005-2016 OCSInventory-NG/OCSInventory-Server contributors.
+## See the Contributors file for more details about them.
 ##
-## This code is open source and may be copied and modified as long as the source
-## code is always made freely available.
-## Please refer to the General Public Licence http://www.gnu.org/ or Licence.txt
+## This file is part of OCSInventory-NG/OCSInventory-ocsreports.
+##
+## OCSInventory-NG/OCSInventory-Server is free software: you can redistribute
+## it and/or modify it under the terms of the GNU General Public License as
+## published by the Free Software Foundation, either version 2 of the License,
+## or (at your option) any later version.
+##
+## OCSInventory-NG/OCSInventory-Server is distributed in the hope that it
+## will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+## of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with OCSInventory-NG/OCSInventory-ocsreports. if not, write to the
+## Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+## MA 02110-1301, USA.
 ################################################################################
 package Apache::Ocsinventory::Map;
 
@@ -289,6 +301,7 @@ our %DATA_MAP= (
        TYPE => {},
        TYPEMIB => {},
        SPEED => {},
+       MTU => {},
        MACADDR => { fallback => '00:00:00:00:00:00' },
        STATUS => {},
        IPGATEWAY => {},
@@ -452,6 +465,23 @@ our %DATA_MAP= (
       SBDSVERSION => {},
       MAXERROR => {},
       OEMSPECIFIC => {}
+    }
+  },
+
+  usbdevices => {
+    mask => 2097152,
+    multi => 0,
+    auto => 1,
+    delOnReplace => 1,
+    sortBy => 'DESCRIPTION',
+    writeDiff => 1,
+    cache => 0,
+    fields => {
+      DESCRIPTION => {},
+      INTERFACE => {},
+      MANUFACTURER => {},
+      SERIAL => {},
+      TYPE => {} 
     }
   },
 
