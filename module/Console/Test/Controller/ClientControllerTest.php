@@ -968,7 +968,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $this->dispatch('/console/client/windows/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXPathQuery('//form[@action=""][@method="POST"]');
+        $this->assertXPathQuery('//form[not(@action)][@method="POST"]');
         $query = '//td[@class="label"][text()="%s"]/following::td[1][text()="%s"]';
         $this->assertXPathQuery(sprintf($query, 'Firma', 'company'));
         $this->assertXPathQuery(sprintf($query, 'Besitzer', 'owner'));

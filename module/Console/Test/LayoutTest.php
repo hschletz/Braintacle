@@ -59,9 +59,9 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
         $dom = $document->getDomDocument();
 
         $doctype = $dom->doctype;
-        $this->assertEquals('HTML', $doctype->name);
-        $this->assertEquals('-//W3C//DTD HTML 4.01//EN', $doctype->publicId);
-        $this->assertEquals('http://www.w3.org/TR/html4/strict.dtd', $doctype->systemId);
+        $this->assertEquals('html', $doctype->name);
+        $this->assertEquals('', $doctype->publicId);
+        $this->assertEquals('', $doctype->systemId);
 
         $this->assertCount(1, Query::execute('/html', $document));
         $this->assertCount(

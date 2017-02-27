@@ -65,7 +65,7 @@ class FormRendererTest extends \PHPUnit_Framework_TestCase
 <p class="error">
 Der Wert für post_max_size (%s) wurde überschritten.
 </p>
-<form action="" method="POST">
+<form method="POST">
 <div class="table"></div>
 
 </form>
@@ -118,7 +118,7 @@ EOT;
         $form->add($csrf);
 
         $expected = <<<EOT
-<form action="" method="POST" class="form&#x20;mock" id="mock">
+<form method="POST" class="form&#x20;mock" id="mock">
 <div><input type="hidden" name="_csrf" value="csrf"></div>
 fieldset
 </form>
@@ -143,7 +143,7 @@ EOT;
         $form->remove('_csrf');
 
         $expected = <<<EOT
-<form action="" method="POST" class="form&#x20;mock" id="mock">
+<form method="POST" class="form&#x20;mock" id="mock">
 fieldset
 </form>
 

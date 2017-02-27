@@ -138,7 +138,7 @@ return array(
         ),
     ),
     'view_manager' => array(
-        'doctype' => 'HTML4_STRICT',
+        'doctype' => 'HTML5',
         'template_path_stack' => array(
             'console' => __DIR__ . '/views',
         ),

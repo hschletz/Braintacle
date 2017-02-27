@@ -425,7 +425,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
  
         $this->dispatch('/console/network/edit/?macaddress=00:00:5E:00:53:00');
         $this->assertResponseStatusCode(200);
-        $this->assertXPathQuery('//form[@action=""][@method="POST"]');
+        $this->assertXPathQuery('//form[not(@action)][@method="POST"]');
         $query = '//td[@class="label"][text()="%s"]/following::td[1][text()="%s"]';
         $this->assertXPathQuery(sprintf($query, 'MAC-Adresse', '00:00:5E:00:53:00'));
         $this->assertXPathQuery(sprintf($query, 'Hersteller', 'vendor'));
