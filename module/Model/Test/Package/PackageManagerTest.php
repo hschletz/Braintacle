@@ -700,7 +700,10 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         );
         $this->assertTablesEqual(
             $dataset->getTable('devices'),
-            $connection->createQueryTable('devices', 'SELECT hardware_id, name, ivalue FROM devices ORDER BY ivalue')
+            $connection->createQueryTable(
+                'devices',
+                'SELECT hardware_id, name, ivalue FROM devices ORDER BY ivalue, name'
+            )
         );
     }
 
