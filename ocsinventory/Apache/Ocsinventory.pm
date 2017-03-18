@@ -40,7 +40,7 @@ BEGIN{
 }
 
 $Apache::Ocsinventory::VERSION = '2.3';
-$Apache::Ocsinventory::BUILD_VERSION = '736';
+$Apache::Ocsinventory::BUILD_VERSION = '737';
 $XML::Simple::PREFERRED_PARSER = 'XML::Parser';
 
 # Ocs modules
@@ -223,10 +223,14 @@ sub handler{
     # Parse the XML request
     # Retrieving xml parsing options if needed
     &_get_xml_parser_opt( \%XML_PARSER_OPT ) unless %XML_PARSER_OPT;
-    unless($query = XML::Simple::XMLin( $inflated, %XML_PARSER_OPT )){
+    eval {
+        $query = XML::Simple::XMLin( $inflated, %XML_PARSER_OPT );
+    } or do {
+        unless($query = XML::Simple::XMLin( encode('utf8',$inflated), %XML_PARSER_OPT )){
       &_log(507,'handler','Xml stage');
       return &_end(APACHE_BAD_REQUEST);
     }
+    };
     # Convert MAC addresses to uppercase.
     if ($query->{'CONTENT'}->{'NETWORKS'}) {
         my $i = 0;

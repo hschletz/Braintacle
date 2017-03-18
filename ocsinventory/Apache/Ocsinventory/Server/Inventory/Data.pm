@@ -123,6 +123,7 @@ sub _get_bind_values{
   my ($bind_value, $xmlvalue, $xmlfield);
 
   for my $field ( @{ $sectionMeta->{field_arrayref} } ) {
+    if(ref($refXml) eq 'HASH'){
     if(defined($refXml->{$field}) && !defined($sectionMeta->{fields}->{$field}->{type}) && $refXml->{$field} ne '' && $refXml->{$field} ne '??' && $refXml->{$field}!~/^N\/?A$/) {
       $bind_value = $refXml->{$field}
     }
@@ -135,6 +136,7 @@ sub _get_bind_values{
          &_log( 000, 'generic-fallback', "$field:".$sectionMeta->{fields}->{$field}->{fallback}) if $ENV{'OCS_OPT_LOGLEVEL'}>1;
          $bind_value = undef;
        }
+    }
     }
 
     # We have to substitute the value with the ID matching "type_section_field.name" if the field is tagged "type".

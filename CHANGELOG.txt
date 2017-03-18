@@ -120,7 +120,7 @@ Misc:
 
 - Tools: Removed update-from-git.sh.
 
-- Server: Updated server to version 2.3.
+- Server: Updated server to version 2.3.1.
 
 
 CHANGES IN VERSION 0.16
