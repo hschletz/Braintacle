@@ -24,7 +24,6 @@ package Apache::Ocsinventory::Server::Communication::Session;
 use strict;
 
 use Apache::Ocsinventory::Server::System(qw/ :server /);
-use Apache::Ocsinventory::Interface::Database;
 
 require Exporter;
 

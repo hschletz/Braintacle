@@ -34,7 +34,6 @@ BEGIN{
 }
 
 use Apache::Ocsinventory::Server::System(qw/ :server /);
-use Apache::Ocsinventory::Interface::Database;
 
 require Exporter;
 

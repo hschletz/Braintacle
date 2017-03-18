@@ -209,14 +209,6 @@ and edit it to suit your needs.
 To finish installation, reload the Apache configuration. Your system is now
 ready to accept client connections.
 
-Depending on your configuration, you may see some errors in the Apache log file
-like this:
-
-    braintacle-server: Can't load SOAP::Transport::HTTP* - Web service will be unavailable
-
-These messages are harmless and can be ignored if you don't plan to use the
-(unsupported) SOAP service.
-
 
 Set up the administration console
 ---------------------------------
@@ -317,7 +309,7 @@ Some features are not supported and assumed not to be used in the database:
 - Braintacle assumes exactly 1 download server per package. Delete additional
   server entries. Use the same server URL for all packages.
 
-- The SOAP service us unsupported and untested.
+- The SOAP service is unavailable.
 
 See the [main documentation](./doc/index.html) for a more detailed description
 of differences.

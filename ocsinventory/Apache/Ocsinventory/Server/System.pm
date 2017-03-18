@@ -22,7 +22,6 @@
 package Apache::Ocsinventory::Server::System;
 
 use Apache::Ocsinventory::Server::System::Config;
-use Apache::Ocsinventory::Interface::Database;
 
 use strict;
 
@@ -47,6 +46,7 @@ our @EXPORT = qw /
   _lock
   _unlock
   _send_file
+  compose_unix_timestamp
 /;
 
 our %EXPORT_TAGS = (
@@ -65,6 +65,7 @@ our %EXPORT_TAGS = (
     _inflate
     _get_spec_params
     _get_spec_params_g
+    compose_unix_timestamp
     /
   ]
 );
@@ -79,6 +80,7 @@ our @EXPORT_OK = (
   _modules_get_prolog_readers
   _modules_get_prolog_writers
   _modules_get_duplicate_handlers
+  compose_unix_timestamp
   /
 );
 
@@ -506,5 +508,18 @@ sub _params_from_devices{
     }
   }
   return %result;
+}
+
+sub compose_unix_timestamp {
+  my $expression = shift;
+  if( $ENV{'OCS_DB_TYPE'} eq 'Pg' ){
+    return "EXTRACT (EPOCH FROM DATE_TRUNC ('seconds', CAST (($expression) AS TIMESTAMP)))";
+  } elsif( $ENV{'OCS_DB_TYPE'} eq 'mysql' ){
+    return "UNIX_TIMESTAMP($expression)";
+  } elsif( $ENV{'OCS_DB_TYPE'} eq 'Oracle' ){
+    return "((CAST(($expression) AS DATE) - to_date(\'19700101\', \'YYYYMMDD\') + CAST(SYS_EXTRACT_UTC(SYSTIMESTAMP) AS DATE) - CAST(SYSTIMESTAMP AS DATE)) * 86400 seconds)";
+  } else {
+    die ('FIXME: compose_unix_timestamp() not yet implemented for driver ' . $ENV{'OCS_DB_TYPE'} . "\n");
+  }
 }
 1;

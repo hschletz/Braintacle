@@ -33,7 +33,6 @@ BEGIN{
   }
 }
 
-use Apache::Ocsinventory::Interface::Database;
 use Apache::Ocsinventory::Server::Communication;
 use Apache::Ocsinventory::Server::System;
 use Apache::Ocsinventory::Server::Constants;

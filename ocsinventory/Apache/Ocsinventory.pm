@@ -56,7 +56,6 @@ use Apache::Ocsinventory::Server::Capacities::Notify;
 use Apache::Ocsinventory::Server::Capacities::Registry;
 use Apache::Ocsinventory::Server::Capacities::Snmp;
 use Apache::Ocsinventory::Server::Capacities::Update;
-use Apache::Ocsinventory::Interface::Database;
 
 # To compress the tx and read the rx
 use Compress::Zlib;
