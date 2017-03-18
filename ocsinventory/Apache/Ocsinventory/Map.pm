@@ -68,7 +68,6 @@ our %DATA_MAP= (
        CHECKSUM => {},
        QUALITY => {},
        FIDELITY => {},
-       SSTATE => { noXml => 1 },
        USERAGENT => { noXml => 1 },
        IPSRC => {},
        ARCH => {}
@@ -141,8 +140,7 @@ our %DATA_MAP= (
        DESCRIPTION => {},
        DESIGNATION => {},
        PURPOSE => {},
-       STATUS => {},
-       PSHARE => { fallback=>0 }
+       STATUS => {}
    }
   },
   
