@@ -136,7 +136,7 @@ EOT;
                          ->willReturn(array());
 
         $reader = new \Zend\Config\Reader\Ini;
-        $iniContentParsed = $reader->fromFile(\Library\Application::getPath('user_config/braintacle.ini'));
+        $iniContentParsed = $reader->fromFile(\Library\Application::getPath('config/braintacle.ini'));
 
         $this->assertEquals($iniContentParsed, $this->_factory->__invoke($this->_container, 'foo'));
     }
@@ -151,7 +151,7 @@ EOT;
                          ->willReturn(array());
 
         $reader = new \Zend\Config\Reader\Ini;
-        $iniContentParsed = $reader->fromFile(\Library\Application::getPath('user_config/braintacle.ini'));
+        $iniContentParsed = $reader->fromFile(\Library\Application::getPath('config/braintacle.ini'));
 
         $this->assertEquals($iniContentParsed, $this->_factory->__invoke($this->_container, 'foo'));
     }

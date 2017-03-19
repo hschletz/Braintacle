@@ -35,14 +35,22 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testGetApplicationConfig()
     {
         $this->assertEquals(
-            array_merge_recursive(
-                require Application::getPath('config/application.config.php'),
-                array(
-                    'modules' => array('moduleName'),
-                    'module_listener_options' => array(
-                        'module_paths' => array(realpath(__DIR__ . '/../..')),
-                    ),
-                )
+            array(
+                'modules' => array(
+                    'Zend\Filter',
+                    'Zend\Form',
+                    'Zend\I18n',
+                    'Zend\Log',
+                    'Zend\Mvc\I18n',
+                    'Zend\Mvc\Plugin\FlashMessenger',
+                    'Zend\Navigation',
+                    'Zend\Router',
+                    'Zend\Validator',
+                    'moduleName',
+                ),
+                'module_listener_options' => array(
+                    'module_paths' => array(realpath(__DIR__ . '/../..')),
+                ),
             ),
             Application::getApplicationConfig('moduleName')
         );

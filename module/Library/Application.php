@@ -52,10 +52,23 @@ class Application
      */
     public static function getApplicationConfig($module)
     {
-        $config = require static::getPath('config/application.config.php');
-        $config['modules'][] = $module;
-        $config['module_listener_options']['module_paths'][] = static::getPath('module');
-        return $config;
+        return array(
+            'modules' => array(
+                'Zend\Filter',
+                'Zend\Form',
+                'Zend\I18n',
+                'Zend\Log',
+                'Zend\Mvc\I18n',
+                'Zend\Mvc\Plugin\FlashMessenger',
+                'Zend\Navigation',
+                'Zend\Router',
+                'Zend\Validator',
+                $module,
+            ),
+            'module_listener_options' => array(
+                'module_paths' => array(static::getPath('module'))
+            )
+        );
     }
 
     /**

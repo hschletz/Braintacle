@@ -124,7 +124,7 @@ $databases = array();
 if ($opts->database) {
     // Get available sections
     $reader = new \Zend\Config\Reader\Ini;
-    $config = $reader->fromFile(__DIR__ . '/../user_config/braintacle.ini');
+        $config = $reader->fromFile(__DIR__ . '/../config/braintacle.ini');
 
     // Remove reserved sections
     unset($config['database']); // Production database cannot be used

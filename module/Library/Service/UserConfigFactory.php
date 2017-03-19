@@ -32,7 +32,7 @@ namespace Library\Service;
  * 1. The path set in the Library\UserConfig service (if it is a string).
  * 2. The path set in the BRAINTACLE_CONFIG environment variable (if the
  *    variable exists).
- * 3. Fall back to user_config/braintacle.ini relative to the Braintacle root
+ * 3. Fall back to config/braintacle.ini relative to the Braintacle root
  *    directory.
  */
 class UserConfigFactory implements \Zend\ServiceManager\Factory\FactoryInterface
@@ -57,7 +57,7 @@ class UserConfigFactory implements \Zend\ServiceManager\Factory\FactoryInterface
             $userConfig = getenv('BRAINTACLE_CONFIG');
         }
         if (!$userConfig) {
-            $userConfig = \Library\Application::getPath('user_config/braintacle.ini');
+            $userConfig = \Library\Application::getPath('config/braintacle.ini');
         }
         $reader = new \Zend\Config\Reader\Ini;
         return $reader->fromFile($userConfig);

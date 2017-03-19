@@ -13,10 +13,6 @@ Upgrading from previous versions:
 
 - Required: Check the additional dependencies listed in README.md.
 
-- Required: The config files and templates were moved from the "config"
-  directory to "user_config". Rename your existing config directory and adjust
-  paths in the web server config if necessary.
-
 - Required: Braintacle uses a new config file (braintacle.ini) which replaces
   the database.ini file from earlier versions. This file must be set up from
   scratch (see the instructions in the template) - renaming is not sufficient.
