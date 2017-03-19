@@ -133,7 +133,7 @@ if ($opts->database) {
     if (is_string($opts->database)) {
         // Comma-separated list: validate and add each requested section
         foreach (explode(',', $opts->database) as $section) {
-            if (!isset($section, $config)) {
+            if (!isset($config[$section])) {
                 print "Invalid config section: $section\n";
                 exit(1);
             }
