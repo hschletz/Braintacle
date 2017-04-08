@@ -143,6 +143,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
      * @param array $schema Parsed table schema
      * @param \Nada\Database\AbstractDatabase $database Database object
      * @return string[]
+     * @codeCoverageIgnore
      */
     public static function getObsoleteColumns($logger, $schema, $database)
     {

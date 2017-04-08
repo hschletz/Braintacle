@@ -212,6 +212,38 @@ class GroupManagerTest extends AbstractGroupTest
         }
     }
 
+    public function testCreateGroupRollbackOnException()
+    {
+        $connection = $this->createMock('Zend\Db\Adapter\Driver\AbstractConnection');
+        $connection->expects($this->at(0))->method('beginTransaction');
+        $connection->expects($this->at(1))->method('rollback');
+        $connection->expects($this->never())->method('commit');
+
+        $driver = $this->createMock('Zend\Db\Adapter\Driver\DriverInterface');
+        $driver->method('getConnection')->willReturn($connection);
+
+        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
+        $adapter->method('getDriver')->willReturn($driver);
+
+        $resultSet = $this->createMock('Zend\Db\ResultSet\AbstractResultSet');
+        $resultSet->method('count')->willReturn(0);
+
+        $clientsAndGroups = $this->createMock('Database\Table\ClientsAndGroups');
+        $clientsAndGroups->method('select')->willReturn($resultSet);
+        $clientsAndGroups->method('insert')->willThrowException(new \RuntimeException('test message'));
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('test message');
+
+        $model = $this->_getModel(
+            array(
+                'Db' => $adapter,
+                'Database\Table\ClientsAndGroups' => $clientsAndGroups,
+            )
+        );
+        $model->createGroup('name', 'description');
+    }
+
     public function testDeleteGroup()
     {
         $group = $this->createMock('Model\Group\Group');

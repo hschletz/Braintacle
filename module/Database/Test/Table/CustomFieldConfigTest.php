@@ -140,6 +140,41 @@ class CustomFieldConfigTest extends AbstractTest
         }
     }
 
+    public function testAddFieldRollbackOnException()
+    {
+        $connection = $this->createMock('Zend\Db\Adapter\Driver\AbstractConnection');
+        $connection->expects($this->at(0))->method('beginTransaction');
+        $connection->expects($this->at(1))->method('rollback');
+        $connection->expects($this->never())->method('commit');
+
+        $driver = $this->createMock('Zend\Db\Adapter\Driver\DriverInterface');
+        $driver->method('getConnection')->willReturn($connection);
+
+        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
+        $adapter->method('getDriver')->willReturn($driver);
+
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+
+        $table = $this->getMockBuilder('Database\Table\CustomFieldConfig')
+                      ->disableOriginalConstructor()
+                      ->setMethods(array('getSql'))
+                      ->getMock();
+        $table->method('getSql')->willThrowException(new \RuntimeException('test message'));
+
+        $adapterProperty = new \ReflectionProperty(get_class($table), 'adapter');
+        $adapterProperty->setAccessible(true);
+        $adapterProperty->setValue($table, $adapter);
+
+        $serviceLocatorProperty = new \ReflectionProperty(get_class($table), '_serviceLocator');
+        $serviceLocatorProperty->setAccessible(true);
+        $serviceLocatorProperty->setValue($table, $serviceManager);
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('test message');
+
+        $table->addField('name', 'text');
+    }
+
     public function testRenameField()
     {
         static::$_table->renameField('Text', 'Renamed field');
@@ -170,5 +205,34 @@ class CustomFieldConfigTest extends AbstractTest
                 'SELECT id, name, type, account_type, show_order FROM accountinfo_config'
             )
         );
+    }
+
+    public function testDeleteFieldRollbackOnException()
+    {
+        $connection = $this->createMock('Zend\Db\Adapter\Driver\AbstractConnection');
+        $connection->expects($this->at(0))->method('beginTransaction');
+        $connection->expects($this->at(1))->method('rollback');
+        $connection->expects($this->never())->method('commit');
+
+        $driver = $this->createMock('Zend\Db\Adapter\Driver\DriverInterface');
+        $driver->method('getConnection')->willReturn($connection);
+
+        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
+        $adapter->method('getDriver')->willReturn($driver);
+
+        $table = $this->getMockBuilder('Database\Table\CustomFieldConfig')
+                      ->disableOriginalConstructor()
+                      ->setMethods(array('getSql'))
+                      ->getMock();
+        $table->method('getSql')->willThrowException(new \RuntimeException('test message'));
+
+        $adapterProperty = new \ReflectionProperty(get_class($table), 'adapter');
+        $adapterProperty->setAccessible(true);
+        $adapterProperty->setValue($table, $adapter);
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('test message');
+
+        $table->deleteField('name');
     }
 }

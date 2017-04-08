@@ -555,6 +555,38 @@ class ClientOrGroupTest extends AbstractTest
         $this->assertSame(23, \PHPUnit_Framework_Assert::readAttribute($model, '_configCache')['inventoryInterval']);
     }
 
+    public function testSetConfigRollbackOnException()
+    {
+        $connection = $this->createMock('Zend\Db\Adapter\Driver\AbstractConnection');
+        $connection->expects($this->at(0))->method('beginTransaction');
+        $connection->expects($this->at(1))->method('rollback');
+        $connection->expects($this->never())->method('commit');
+
+        $driver = $this->createMock('Zend\Db\Adapter\Driver\DriverInterface');
+        $driver->method('getConnection')->willReturn($connection);
+
+        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
+        $adapter->method('getDriver')->willReturn($driver);
+
+        $clientConfig = $this->createMock('Database\Table\ClientConfig');
+        $clientConfig->method('getAdapter')->willReturn($adapter);
+        $clientConfig->method('delete')->willThrowException(new \RuntimeException('test message'));
+
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->method('get')->with('Database\Table\ClientConfig')->willReturn($clientConfig);
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('test message');
+
+        $model = $this->getMockBuilder('Model\ClientOrGroup')
+                      ->disableOriginalConstructor()
+                      ->setMethods(array('offsetGet'))
+                      ->getMockForAbstractClass();
+        $model->method('offsetGet')->willReturn(1);
+        $model->setServiceLocator($serviceManager);
+        $model->setConfig('allowScan', null);
+    }
+
     public function getAllConfigProvider()
     {
         return array(

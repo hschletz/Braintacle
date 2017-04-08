@@ -239,6 +239,34 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
         );
     }
 
+    public function testRenameValueDefinitionRollbackOnException()
+    {
+        $connection = $this->createMock('Zend\Db\Adapter\Driver\AbstractConnection');
+        $connection->expects($this->at(0))->method('beginTransaction');
+        $connection->expects($this->at(1))->method('rollback');
+        $connection->expects($this->never())->method('commit');
+
+        $driver = $this->createMock('Zend\Db\Adapter\Driver\DriverInterface');
+        $driver->method('getConnection')->willReturn($connection);
+
+        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
+        $adapter->method('getDriver')->willReturn($driver);
+
+        $resultSet = $this->createMock('Zend\Db\ResultSet\AbstractResultSet');
+        $resultSet->method('count')->willReturn(0);
+
+        $registryValueDefinitions = $this->createMock('Database\Table\RegistryValueDefinitions');
+        $registryValueDefinitions->method('getAdapter')->willReturn($adapter);
+        $registryValueDefinitions->method('select')->willReturn($resultSet);
+        $registryValueDefinitions->method('update')->willThrowException(new \RuntimeException('test message'));
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('test message');
+
+        $model = $this->_getModel(array('Database\Table\RegistryValueDefinitions' => $registryValueDefinitions));
+        $model->renameValueDefinition('name1', 'name2');
+    }
+
     public function testDeleteValueDefinition()
     {
         $model = $this->_getModel();
@@ -279,5 +307,35 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
                 'SELECT hardware_id, name FROM registry ORDER BY name'
             )
         );
+    }
+
+    public function testDeleteValueDefinitionRollbackOnException()
+    {
+        $connection = $this->createMock('Zend\Db\Adapter\Driver\AbstractConnection');
+        $connection->expects($this->at(0))->method('beginTransaction');
+        $connection->expects($this->at(1))->method('rollback');
+        $connection->expects($this->never())->method('commit');
+
+        $driver = $this->createMock('Zend\Db\Adapter\Driver\DriverInterface');
+        $driver->method('getConnection')->willReturn($connection);
+
+        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
+        $adapter->method('getDriver')->willReturn($driver);
+
+        $registryValueDefinitions = $this->createMock('Database\Table\RegistryValueDefinitions');
+        $registryValueDefinitions->method('getAdapter')->willReturn($adapter);
+
+        $registryData = $this->createMock('Database\Table\RegistryData');
+        $registryData->method('delete')->willThrowException(new \RuntimeException('test message'));
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('test message');
+
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setConstructorArgs(array($registryValueDefinitions, $registryData))
+                      ->setMethods(array('getValueDefinition'))
+                      ->getMock();
+        $model->method('getValueDefinition')->willReturn(array('Name' => 'name'));
+        $model->deleteValueDefinition('name');
     }
 }
