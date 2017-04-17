@@ -168,6 +168,6 @@ class MacAddressTest extends \PHPUnit_Framework_TestCase
         // Reset database to force loading from file
         MacAddress::loadVendorDatabase(array());
         $addr = new MacAddress('00:00:5E:00:53:00');
-        $this->assertEquals('ICANN, IANA Department', $addr->getVendor());
+        $this->assertEquals('U.S. Department of Defense (IANA)', $addr->getVendor());
     }
 }
