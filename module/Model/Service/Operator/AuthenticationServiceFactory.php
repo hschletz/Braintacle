@@ -37,12 +37,7 @@ class AuthenticationServiceFactory implements \Zend\ServiceManager\Factory\Facto
     ) {
         return new \Model\Operator\AuthenticationService(
             null,
-            new \Zend\Authentication\Adapter\DbTable\CredentialTreatmentAdapter(
-                $container->get('Db'),
-                'operators',
-                'id',
-                'passwd'
-            )
+            new \Model\Operator\AuthenticationAdapter($container->get('Database\Table\Operators'))
         );
     }
 }

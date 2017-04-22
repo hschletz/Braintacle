@@ -1,0 +1,25 @@
+# Fixture for AuthenticationAdapterTest
+
+operators:
+  -
+    # Legacy MD5 hash. Password is "password1".
+    id: "user1"
+    passwd: "7c6a180b36896a0a8c02787eeafb0e4c"
+    password_version: 0
+  -
+    # Default hash with standard method. Password is "password2".
+    id: "user2"
+    passwd: "$2y$10$aA/.DiN0Vhb0emJ8jkRScuLb4ncdBbLvnUdM7GggoPJSm4r8EPQ6S"
+    password_version: 1
+  -
+    # Default hash with outdated method (MD5). This particular hash type will
+    # not occur in the wild, but can be used to test re-hashing.
+    # Password is "password3".
+    id: "user3"
+    passwd: "$1$i.L4MX9p$bjGxsIMKCB/WLvDkBXRdu1"
+    password_version: 1
+  -
+    # Invalid hash type
+    id: "user4"
+    passwd: "password4"
+    password_version: 2

@@ -29,54 +29,96 @@ class AuthenticationServiceTest extends \Model\Test\AbstractTest
     /** {@inheritdoc} */
     protected static $_tables = array('Operators');
 
-    /**
-     * An AuthenticationService instance pulled in by setUp()
-     *
-     * @var \Model\Operator\AuthenticationService
-     */
-    protected $_auth;
-
-    protected function setUp()
+    public function getDataSet()
     {
-        parent::setUp();
-        $this->_auth = clone static::$serviceManager->get('Zend\Authentication\AuthenticationService');
+        return new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet;
     }
 
     public function testService()
     {
-        $this->assertInstanceOf('Model\Operator\AuthenticationService', $this->_auth);
+        $service = static::$serviceManager->build('Zend\Authentication\AuthenticationService');
+        $this->assertInstanceOf('Model\Operator\AuthenticationService', $service);
+        $this->assertInstanceOf('Model\Operator\AuthenticationAdapter', $service->getAdapter());
     }
 
-    /**
-     * Test login() method with valid and invalid credentials
-     */
     public function testLogin()
     {
-        $this->assertFalse($this->_auth->login('', 'password1')); // Should not throw exception
-        $this->assertFalse($this->_auth->login('baduser', 'password1'));
-        $this->assertFalse($this->_auth->login('user1', 'badpassword'));
+        $result = $this->createMock('Zend\Authentication\Result');
+        $result->method('isValid')->willReturn('is_valid');
 
-        $this->assertTrue($this->_auth->login('user1', 'password1'));
-        $this->assertEquals('user1', $this->_auth->getIdentity());
+        $adapter = $this->createMock('Model\Operator\AuthenticationAdapter');
+        $adapter->expects($this->at(0))->method('setIdentity')->with('user')->willReturnSelf();
+        $adapter->expects($this->at(1))->method('setCredential')->with('password')->willReturnSelf();
+        $adapter->expects($this->at(2))->method('authenticate')->willReturn($result);
+
+        $service = $this->getMockBuilder($this->_getClass())
+                        ->disableOriginalConstructor()
+                        ->setMethods(array('getAdapter', 'authenticate'))
+                        ->getMock();
+        $service->expects($this->at(0))->method('getAdapter')->willReturn($adapter);
+        $service->expects($this->at(1))->method('authenticate')->with(null)->willReturnCallback(
+            function () use ($adapter) {
+                return $adapter->authenticate();
+            }
+        );
+
+        $this->assertEquals('is_valid', $service->login('user', 'password'));
+    }
+
+    public function testLoginEmptyUser()
+    {
+        $service = $this->getMockBuilder($this->_getClass())
+                        ->disableOriginalConstructor()
+                        ->setMethods(array('getAdapter', 'authenticate'))
+                        ->getMock();
+        $service->expects($this->never())->method('getAdapter');
+        $service->expects($this->never())->method('authenticate');
+
+        $this->assertFalse($service->login('', 'password'));
     }
 
     public function testChangeIdentityValid()
     {
-        // Get valid identity first
-        $this->_auth->login('user1', 'password1');
-        $this->_auth->changeIdentity('test');
-        $this->assertEquals('test', $this->_auth->getIdentity());
+        $storage = $this->createMock('Zend\Authentication\Storage\StorageInterface');
+        $storage->expects($this->once())->method('write')->with('user');
+
+        $service = $this->getMockBuilder($this->_getClass())
+                        ->disableOriginalConstructor()
+                        ->setMethods(array('getStorage', 'hasIdentity'))
+                        ->getMock();
+        $service->method('getStorage')->willReturn($storage);
+        $service->expects($this->once())->method('hasIdentity')->willReturn(true);
+
+        $service->changeIdentity('user');
     }
 
     public function testChangeIdentityUnauthenticated()
     {
-        $this->setExpectedException('LogicException');
-        $this->_auth->changeIdentity('test');
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('Cannot change identity: not authenticated yet');
+
+        $service = $this->getMockBuilder($this->_getClass())
+                        ->disableOriginalConstructor()
+                        ->setMethods(array('getStorage', 'hasIdentity'))
+                        ->getMock();
+        $service->expects($this->never())->method('getStorage');
+        $service->expects($this->once())->method('hasIdentity')->willReturn(false);
+
+        $service->changeIdentity('user');
     }
 
     public function testChangeIdentityNoIdentity()
     {
-        $this->setExpectedException('InvalidArgumentException', 'No identity provided');
-        $this->_auth->changeIdentity('');
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('No identity provided');
+
+        $service = $this->getMockBuilder($this->_getClass())
+                        ->disableOriginalConstructor()
+                        ->setMethods(array('getStorage', 'hasIdentity'))
+                        ->getMock();
+        $service->expects($this->never())->method('getStorage');
+        $service->method('hasIdentity')->willReturn(true);
+
+        $service->changeIdentity('');
     }
 }

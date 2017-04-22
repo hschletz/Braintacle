@@ -42,7 +42,7 @@ class AuthenticationService extends \Zend\Authentication\AuthenticationService
         if (!$id) {
             return false;
         }
-        $this->adapter->setIdentity($id)->setCredential(md5($password));
+        $this->getAdapter()->setIdentity($id)->setCredential($password);
         return $this->authenticate()->isValid();
     }
 
@@ -65,6 +65,6 @@ class AuthenticationService extends \Zend\Authentication\AuthenticationService
         if (!$this->hasIdentity()) {
             throw new \LogicException('Cannot change identity: not authenticated yet');
         }
-        $this->storage->write($id);
+        $this->getStorage()->write($id);
     }
 }

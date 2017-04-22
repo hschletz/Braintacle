@@ -99,13 +99,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
         $database = $this->_serviceLocator->get('Database\Nada');
 
         $this->_preSetSchema($logger, $schema, $database, $prune);
-        \Database\SchemaManager::setSchema(
-            $logger,
-            $schema,
-            $database,
-            static::getObsoleteColumns($logger, $schema, $database),
-            $prune
-        );
+        $this->_setSchema($logger, $schema, $database, $prune);
         $this->_postSetSchema($logger, $schema, $database, $prune);
     }
 
@@ -120,6 +114,28 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
      */
     protected function _preSetSchema($logger, $schema, $database, $prune)
     {
+    }
+
+    /**
+     * Create or update table
+     *
+     * The default implementation calls \Database\SchemaManager::setSchema().
+     *
+     * @param \Zend\Log\Logger $logger Logger instance
+     * @param array $schema Parsed table schema
+     * @param \Nada\Database\AbstractDatabase $database Database object
+     * @param bool $prune Drop obsolete columns
+     * @codeCoverageIgnore
+     */
+    protected function _setSchema($logger, $schema, $database, $prune)
+    {
+        \Database\SchemaManager::setSchema(
+            $logger,
+            $schema,
+            $database,
+            static::getObsoleteColumns($logger, $schema, $database),
+            $prune
+        );
     }
 
     /**

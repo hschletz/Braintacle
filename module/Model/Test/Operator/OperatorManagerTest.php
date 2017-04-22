@@ -101,21 +101,32 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
 
     public function testCreateOperatorMinimal()
     {
-        $model = $this->_getModel();
+        $adapter = $this->createMock('Model\Operator\AuthenticationAdapter');
+        $adapter->method('generateHash')->willReturn('new_hash');
+
+        $authenticationService = $this->createMock('Model\Operator\AuthenticationService');
+        $authenticationService->method('getAdapter')->willReturn($adapter);
+
+        $model = $this->_getModel(array('Zend\Authentication\AuthenticationService' => $authenticationService));
         $model->createOperator(array('Id' => 'new_id'), 'new_passwd');
         $this->assertTablesEqual(
             $this->_loadDataset('CreateMinimal')->getTable('operators'),
-            $this->getConnection()->createQueryTable('operators', 'SELECT * from operators')
+            $this->getConnection()->createQueryTable(
+                'operators',
+                'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'
+            )
         );
-        $auth = clone static::$serviceManager->get('Zend\Authentication\AuthenticationService');
-        $this->assertFalse($auth->hasIdentity());
-        $this->assertTrue($auth->login('new_id', 'new_passwd'));
-        $this->assertEquals('new_id', $auth->getIdentity());
     }
 
     public function testCreateOperatorFull()
     {
-        $model = $this->_getModel();
+        $adapter = $this->createMock('Model\Operator\AuthenticationAdapter');
+        $adapter->method('generateHash')->willReturn('new_hash');
+
+        $authenticationService = $this->createMock('Model\Operator\AuthenticationService');
+        $authenticationService->method('getAdapter')->willReturn($adapter);
+
+        $model = $this->_getModel(array('Zend\Authentication\AuthenticationService' => $authenticationService));
         $model->createOperator(
             array(
                 'Id' => 'new_id',
@@ -129,12 +140,11 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         );
         $this->assertTablesEqual(
             $this->_loadDataset('CreateFull')->getTable('operators'),
-            $this->getConnection()->createQueryTable('operators', 'SELECT * from operators')
+            $this->getConnection()->createQueryTable(
+                'operators',
+                'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'
+            )
         );
-        $auth = clone static::$serviceManager->get('Zend\Authentication\AuthenticationService');
-        $this->assertFalse($auth->hasIdentity());
-        $this->assertTrue($auth->login('new_id', 'new_passwd'));
-        $this->assertEquals('new_id', $auth->getIdentity());
     }
 
     public function testCreateOperatorWithoutId()
@@ -148,7 +158,10 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         }
         $this->assertTablesEqual(
             $this->_loadDataset()->getTable('operators'),
-            $this->getConnection()->createQueryTable('operators', 'SELECT * from operators')
+            $this->getConnection()->createQueryTable(
+                'operators',
+                'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'
+            )
         );
     }
 
@@ -163,7 +176,10 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         }
         $this->assertTablesEqual(
             $this->_loadDataset()->getTable('operators'),
-            $this->getConnection()->createQueryTable('operators', 'SELECT * from operators')
+            $this->getConnection()->createQueryTable(
+                'operators',
+                'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'
+            )
         );
     }
 
@@ -192,8 +208,12 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
      */
     public function testUpdateOperator($data, $password, $dataSet)
     {
+        $adapter = $this->createMock('Model\Operator\AuthenticationAdapter');
+        $adapter->method('generateHash')->willReturn('new_hash');
+
         $authService = $this->createMock('Model\Operator\AuthenticationService');
         $authService->method('getIdentity')->willReturn('user2');
+        $authService->method('getAdapter')->willReturn($adapter);
         $authService->expects($this->never())->method('changeIdentity');
 
         $model = $this->_getModel(array('Zend\Authentication\AuthenticationService' => $authService));
@@ -202,7 +222,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
             $this->_loadDataSet($dataSet)->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
-                'SELECT id, firstname, lastname, passwd, comments, email FROM operators ORDER BY id'
+                'SELECT id, firstname, lastname, passwd, password_version, comments, email FROM operators ORDER BY id'
             )
         );
     }
@@ -219,7 +239,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
             $this->_loadDataSet('UpdateIdentity')->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
-                'SELECT id, firstname, lastname, passwd, comments, email FROM operators ORDER BY id'
+                'SELECT id, firstname, lastname, passwd, password_version, comments, email FROM operators ORDER BY id'
             )
         );
     }
@@ -232,11 +252,13 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
             $this->fail('Expected exception was not thrown');
         } catch (\RuntimeException $e) {
             $this->assertEquals('Invalid user name: invalid', $e->getMessage());
+
             $this->assertTablesEqual(
                 $this->_loadDataSet()->getTable('operators'),
                 $this->getConnection()->createQueryTable(
                     'operators',
-                    'SELECT * FROM operators ORDER BY id DESC'
+                    'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators ' .
+                    'ORDER BY id DESC'
                 )
             );
         }
@@ -248,7 +270,10 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         $model->deleteOperator('user2');
         $this->assertTablesEqual(
             $this->_loadDataset('Delete')->getTable('operators'),
-            $this->getConnection()->createQueryTable('operators', 'SELECT * from operators')
+            $this->getConnection()->createQueryTable(
+                'operators',
+                'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'
+            )
         );
     }
 
@@ -258,7 +283,10 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         $model->deleteOperator('user3');
         $this->assertTablesEqual(
             $this->_loadDataset()->getTable('operators'),
-            $this->getConnection()->createQueryTable('operators', 'SELECT * from operators')
+            $this->getConnection()->createQueryTable(
+                'operators',
+                'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'
+            )
         );
     }
 
@@ -275,7 +303,10 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         }
         $this->assertTablesEqual(
             $this->_loadDataset()->getTable('operators'),
-            $this->getConnection()->createQueryTable('operators', 'SELECT * from operators')
+            $this->getConnection()->createQueryTable(
+                'operators',
+                'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'
+            )
         );
     }
 }

@@ -5,6 +5,7 @@ operators:
     firstname: null
     lastname: 'A'
     passwd: "0cc175b9c0f1b6a831c399e269772661"
+    password_version: 0
     comments: null
     email: null
   -
@@ -12,5 +13,6 @@ operators:
     firstname: "First"
     lastname: "Last"
     passwd: "0cc175b9c0f1b6a831c399e269772661"
+    password_version: 0
     comments: "Comment"
     email: "test@example.net"

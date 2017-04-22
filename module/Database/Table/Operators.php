@@ -27,6 +27,16 @@ namespace Database\Table;
 class Operators extends \Database\AbstractTable
 {
     /**
+     * Indicator for legacy (MD5) hash
+     */
+    const HASH_LEGACY = 0;
+
+    /**
+     * Indicator for password_hash() default hash type
+     */
+    const HASH_DEFAULT = 1;
+
+    /**
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
@@ -79,11 +89,32 @@ class Operators extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
+    protected function _setSchema($logger, $schema, $database, $prune)
+    {
+        $index = array_search('password_version', array_column($schema['columns'], 'name'));
+        if (in_array($this->table, $database->getTableNames()) and
+            !array_key_exists('password_version', $database->getTable($this->table)->getColumns())
+        ) {
+            $schema['columns'][$index]['notnull'] = false;
+        }
+        parent::_setSchema($logger, $schema, $database, $prune);
+        if ($schema['columns'][$index]['notnull'] == false) {
+            $logger->info('Setting legacy hash type on existing accounts');
+            $this->update(array('password_version' => self::HASH_LEGACY));
+            $schema['columns'][$index]['notnull'] = true;
+            parent::_setSchema($logger, $schema, $database, $prune);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     * @codeCoverageIgnore
+     */
     protected function _postSetSchema($logger, $schema, $database, $prune)
     {
-        // If no account exists yet, create a default account.
         $logger->debug('Checking for existing account.');
         if ($this->select()->count() == 0) {
+            // No account exists yet, create a default account.
             $this->_serviceLocator->get('Model\Operator\OperatorManager')->createOperator(
                 array('Id' => 'admin'),
                 'admin'
@@ -95,10 +126,29 @@ class Operators extends \Database\AbstractTable
 
         // Warn about default password 'admin'
         $logger->debug('Checking for accounts with default password.');
-        if ($this->select(array('passwd' => md5('admin')))->count() > 0) {
-            $logger->warn(
-                'Account with default password detected. It should be changed as soon as possible!'
-            );
+        $md5Default = md5('admin');
+        $sql = $this->getSql();
+        $select = $sql->select();
+        $select->columns(array('id', 'passwd', 'password_version'));
+        foreach ($sql->prepareStatementForSqlObject($select)->execute() as $operator) {
+            if ($operator['password_version'] == self::HASH_LEGACY) {
+                $logger->warn(
+                    sprintf(
+                        'Account "%s" has an unsafe hash and should log in to have it automatically updated.',
+                        $operator['id']
+                    )
+                );
+            }
+            if (($operator['password_version'] == self::HASH_LEGACY and $operator['passwd'] == $md5Default) or
+                ($operator['password_version'] == self::HASH_DEFAULT and password_verify('admin', $operator['passwd']))
+            ) {
+                $logger->warn(
+                    sprintf(
+                        'Account "%s" has default password. It should be changed as soon as possible!',
+                        $operator['id']
+                    )
+                );
+            }
         }
     }
 }

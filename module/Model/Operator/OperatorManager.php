@@ -122,7 +122,8 @@ class OperatorManager
         // Compose array of columns to set
         $insert = @$this->_operators->getHydrator()->extract(new \ArrayObject($data));
         unset($insert['']); // caused by unrecognized key, ignore
-        $insert['passwd'] = md5($password);
+        $insert['passwd'] = $this->_authenticationService->getAdapter()->generateHash($password);
+        $insert['password_version'] = \Database\Table\Operators::HASH_DEFAULT;
 
         $this->_operators->insert($insert);
     }
@@ -141,7 +142,8 @@ class OperatorManager
         unset($update['']); // caused by unrecognized key, ignore
         // Set password if specified
         if ($password) {
-            $update['passwd'] = md5($password);
+            $update['passwd'] = $this->_authenticationService->getAdapter()->generateHash($password);
+            $update['password_version'] = \Database\Table\Operators::HASH_DEFAULT;
         }
         if (!$this->_operators->update($update, array('id' => $id))) {
             throw new \RuntimeException('Invalid user name: ' . $id);

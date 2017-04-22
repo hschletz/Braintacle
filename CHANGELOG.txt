@@ -30,6 +30,10 @@ Upgrading from previous versions:
 - Required: Connections to MySql/MariaDB databases use the "utf8mb4" encoding.
   Convert existing databases to that encoding. This is not done automatically.
 
+- Recommended: Passwords are now stored as a bcrypt hash. All users should log
+  in once to have their hash updated automatically. The database update script
+  will warn about any old hashes.
+
 - Recommended: If you generated the API documentation, remove the doc/api
   directory before re-generating.
 

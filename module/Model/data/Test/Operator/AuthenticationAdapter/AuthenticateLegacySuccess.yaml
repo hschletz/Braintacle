@@ -1,0 +1,20 @@
+# Fixture for AuthenticationAdapterTest
+
+operators:
+  -
+    # updated
+    id: "user1"
+    passwd: "new_hash"
+    password_version: 1
+  -
+    id: "user2"
+    passwd: "$2y$10$aA/.DiN0Vhb0emJ8jkRScuLb4ncdBbLvnUdM7GggoPJSm4r8EPQ6S"
+    password_version: 1
+  -
+    id: "user3"
+    passwd: "$1$i.L4MX9p$bjGxsIMKCB/WLvDkBXRdu1"
+    password_version: 1
+  -
+    id: "user4"
+    passwd: "password4"
+    password_version: 2
