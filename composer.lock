@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d861b89106119adbfb927f8e7c69a2f",
+    "content-hash": "6445390f2f2020f6a7b639bf92d7be55",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -39,16 +39,16 @@
         },
         {
             "name": "hschletz/nada",
-            "version": "dev-master",
+            "version": "v1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hschletz/NADA.git",
-                "reference": "a92397a382feff17c00167355ffccc7cdbc28ca2"
+                "reference": "933f6fa1340b079eddcbdd5c8e84f94238ced1ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hschletz/NADA/zipball/a92397a382feff17c00167355ffccc7cdbc28ca2",
-                "reference": "a92397a382feff17c00167355ffccc7cdbc28ca2",
+                "url": "https://api.github.com/repos/hschletz/NADA/zipball/933f6fa1340b079eddcbdd5c8e84f94238ced1ce",
+                "reference": "933f6fa1340b079eddcbdd5c8e84f94238ced1ce",
                 "shasum": ""
             },
             "type": "library",
@@ -69,7 +69,7 @@
             ],
             "description": "A high level SQL abstraction library for PHP, complementing and operating on top of a conventional database abstraction layer",
             "homepage": "https://github.com/hschletz/NADA",
-            "time": "2016-06-18 10:13:42"
+            "time": "2017-04-23T18:41:40+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -5806,9 +5806,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "hschletz/nada": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
