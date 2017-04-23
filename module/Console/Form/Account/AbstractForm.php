@@ -56,6 +56,24 @@ abstract class AbstractForm extends \Console\Form\Form
         $password = new Element\Password('Password');
         $password->setLabel('Password');
         $this->add($password);
+        // Avoid exceeding the upper limit of the bcrypt hash method which
+        // truncates passwords to 72 bytes. It is unaware of character encoding,
+        // so we use the native string wrapper which counts bytes, not
+        // characters.
+        // The minimum length is checked with a different, encoding-aware
+        // validator. So the length constraint is at least 8 characters, but not
+        // more than 72 bytes.
+        $passwordMax = new \Zend\Validator\StringLength(
+            array(
+                'max' => \Model\Operator\AuthenticationAdapter::PASSWORD_MAX_BYTES,
+                'encoding' => '8BIT',
+            )
+        );
+        $passwordMax->setStringWrapper(new \Zend\Stdlib\StringWrapper\Native);
+        $passwordMax->setMessage(
+            'The password is longer than %max% bytes',
+            \Zend\Validator\StringLength::TOO_LONG
+        );
         $inputFilter->add(
             array(
                 'name' => 'Password',
@@ -63,7 +81,8 @@ abstract class AbstractForm extends \Console\Form\Form
                     array(
                         'name' => 'StringLength',
                         'options' => array('min' => 8)
-                    )
+                    ),
+                    $passwordMax
                 )
             )
         );

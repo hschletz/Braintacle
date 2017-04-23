@@ -137,8 +137,8 @@ class AddTest extends \Console\Test\AbstractFormTest
         $string = str_repeat("\xC3\x84", 256);
         $data = array(
             'Id' => $string,
-            'Password' => $string, // valid
-            'PasswordRepeat' => $string, // valid
+            'Password' => '12345678',
+            'PasswordRepeat' => '12345678',
             'FirstName' => $string,
             'LastName' => $string,
             'MailAddress' => $string,
@@ -212,12 +212,54 @@ class AddTest extends \Console\Test\AbstractFormTest
         $this->assertArrayHasKey('isEmpty', $messages['Password']);
     }
 
+    public function testInputFilterInvalidPasswordMaxLength()
+    {
+        $password = str_repeat('a', 72);
+        $data = array(
+            'Id' => ' User2 ',
+            'Password' => $password,
+            'PasswordRepeat' => $password,
+            'FirstName' => '',
+            'LastName' => '',
+            'MailAddress' => '',
+            'Comment' => '',
+            '_csrf' => $this->_form->get('_csrf')->getValue(),
+        );
+        $this->_form->setData($data);
+        $this->assertTrue($this->_form->isValid());
+    }
+
+    public function testInputFilterInvalidPasswordTooLong()
+    {
+        $password = str_repeat("\xC3\x84", 36) . 'a';
+        $data = array(
+            'Id' => ' User2 ',
+            'Password' => $password,
+            'PasswordRepeat' => $password,
+            'FirstName' => '',
+            'LastName' => '',
+            'MailAddress' => '',
+            'Comment' => '',
+            '_csrf' => $this->_form->get('_csrf')->getValue(),
+        );
+        $this->_form->setData($data);
+        $this->assertFalse($this->_form->isValid());
+        $messages = $this->_form->getMessages();
+        $this->assertCount(1, $messages);
+        $this->assertEquals(
+            array(
+                'stringLengthTooLong' => 'Das Passwort ist länger als 72 Bytes',
+            ),
+            $messages['Password']
+        );
+    }
+
     public function testInputFilterInvalidPasswordTooShort()
     {
         $data = array(
             'Id' => ' User2 ',
-            'Password' => '1234567',
-            'PasswordRepeat' => '1234567',
+            'Password' => "\xC3\x84\xC3\x84\xC3\x84\xC3\x84\xC3\x84", // 10 bytes, but only 5 characters
+            'PasswordRepeat' => "\xC3\x84\xC3\x84\xC3\x84\xC3\x84\xC3\x84",
             'FirstName' => '',
             'LastName' => '',
             'MailAddress' => '',

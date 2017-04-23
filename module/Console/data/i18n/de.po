@@ -105,6 +105,10 @@ msgid "Repeat password"
 msgstr "Passwort wiederholen"
 
 #: Form/Account/AbstractForm.php
+msgid "The password is longer than %max% bytes"
+msgstr "Das Passwort ist länger als %max% Bytes"
+
+#: Form/Account/AbstractForm.php
 msgid "The passwords do not match"
 msgstr "Die Passwörter stimmen nicht überein"
 

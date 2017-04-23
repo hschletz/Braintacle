@@ -85,6 +85,10 @@ msgid "Password"
 msgstr ""
 
 #: Form/Account/AbstractForm.php
+msgid "The password is longer than %max% bytes"
+msgstr ""
+
+#: Form/Account/AbstractForm.php
 msgid "Repeat password"
 msgstr ""
 
