@@ -161,20 +161,20 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     public function buildPackageProvider()
     {
         $sourceContent = 'abcdef';
-        $sourceHash = sha1($sourceContent);
+        $sourceSha1 = '1f8ac10f23c5b5bc1167bda84b833e5c057a77d2';
         $sourceSize = strlen($sourceContent);
 
         $archiveContent = 'ghi';
-        $archiveHash = sha1($archiveContent);
+        $archiveSha256 = '50ae61e841fac4e8f9e40baf2ad36ec868922ea48368c18f9535e47db56dd7fb';
         $archiveSize = strlen($archiveContent);
 
         return array(
-            array('windows', 'WINDOWS', $archiveContent, true, $archiveHash, $archiveSize, true, true),
-            array('windows', 'WINDOWS', $archiveContent, true, $archiveHash, $archiveSize, false, true),
-            array('linux', 'LINUX', $sourceContent, false, $sourceHash, $sourceSize, true, true),
-            array('linux', 'LINUX', $sourceContent, false, $sourceHash, $sourceSize, false, false),
-            array('mac', 'MacOSX',  null, false, null, 0, true, true),
-            array('mac', 'MacOSX',  null, false, null, 0, false, false),
+            array('windows', 'WINDOWS', $archiveContent, true, 'SHA256', $archiveSha256, $archiveSize, true, true),
+            array('windows', 'WINDOWS', $archiveContent, true, 'SHA256', $archiveSha256, $archiveSize, false, true),
+            array('linux', 'LINUX', $sourceContent, false, 'SHA1', $sourceSha1, $sourceSize, true, true),
+            array('linux', 'LINUX', $sourceContent, false, 'SHA1', $sourceSha1, $sourceSize, false, false),
+            array('mac', 'MacOSX',  null, false, 'SHA1', null, 0, true, true),
+            array('mac', 'MacOSX',  null, false, 'SHA1', null, 0, false, false),
         );
     }
 
@@ -185,6 +185,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
      * @param mixed $platformValue Database identifier (WINDOWS, LINUX, MacOSX)
      * @param string $content File content to validate (NULL to simulate no source file and no archive)
      * @param bool $createArchive Create archive, otherwise source file is assumed to be archive
+     * @param string $hashType Expected hash type
      * @param string $hash Expected hash
      * @param integer $size Expected size
      * @param bool $deleteSource Passed to buildPackage()
@@ -196,6 +197,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $platformValue,
         $content,
         $createArchive,
+        $hashType,
         $hash,
         $size,
         $deleteSource,
@@ -224,6 +226,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             'Priority' => '7',
             'Comment' => 'New package',
             'FileLocation' => $fileLocation,
+            'HashType' => $hashType,
         );
 
         // Callback to test the static part of package data (input values)

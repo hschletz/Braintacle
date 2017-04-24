@@ -187,14 +187,19 @@ class PackageManager
             $archiveCreated = ($file != $data['FileLocation']);
 
             // Determine file size and hash if available
+            if ($data['Platform'] == 'windows') {
+                $data['HashType'] = 'SHA256';
+            } else {
+                $data['HashType'] = 'SHA1'; // UNIX agent only supports SHA1 and MD5
+            }
             if ($data['FileLocation']) {
                 $fileSize = @filesize($file);
                 if (!$fileSize) {
                     throw new \RuntimeException("Could not determine size of '$file'");
                 }
-                $hash = @sha1_file($file);
+                $hash = @hash_file($data['HashType'], $file);
                 if (!$hash) {
-                    throw new \RuntimeException("Could not compute SHA1 hash of '$file'");
+                    throw new \RuntimeException("Could not compute $data[HashType] hash of '$file'");
                 }
             } else {
                 // No file

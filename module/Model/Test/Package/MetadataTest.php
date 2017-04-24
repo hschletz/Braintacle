@@ -41,6 +41,7 @@ class MetadataTest extends \Model\Test\AbstractTest
             'Priority' => '5',
             'DeployAction' => 'store',
             'ActionParam' => '',
+            'HashType' => 'hash_type',
             'Hash' => 'hash',
             'NumFragments' => '42',
             'Warn' => '0',
@@ -63,7 +64,7 @@ class MetadataTest extends \Model\Test\AbstractTest
         $this->assertEquals('hash', $node->getAttribute('DIGEST'));
         $this->assertEquals('HTTP', $node->getAttribute('PROTO'));
         $this->assertEquals('42', $node->getAttribute('FRAGS'));
-        $this->assertEquals('SHA1', $node->getAttribute('DIGEST_ALGO'));
+        $this->assertEquals('HASH_TYPE', $node->getAttribute('DIGEST_ALGO'));
         $this->assertEquals('Hexa', $node->getAttribute('DIGEST_ENCODE'));
         $this->assertEquals('warn_message&quot;<br><br>', $node->getAttribute('NOTIFY_TEXT'));
         $this->assertEquals('23', $node->getAttribute('NOTIFY_COUNTDOWN'));
@@ -95,6 +96,7 @@ class MetadataTest extends \Model\Test\AbstractTest
             'Priority' => '5',
             'DeployAction' => $action,
             'ActionParam' => 'action_param',
+            'HashType' => 'hash_type',
             'Hash' => 'hash',
             'NumFragments' => '0',
             'Warn' => '0',
@@ -141,6 +143,7 @@ class MetadataTest extends \Model\Test\AbstractTest
             'Priority' => '5',
             'DeployAction' => 'store',
             'ActionParam' => '',
+            'HashType' => 'hash_type',
             'Hash' => '',
             'NumFragments' => '0',
             'Warn' => $input,
@@ -183,6 +186,7 @@ class MetadataTest extends \Model\Test\AbstractTest
             'Priority' => '5',
             'DeployAction' => 'store',
             'ActionParam' => '',
+            'HashType' => 'hash_type',
             'Hash' => 'hash',
             'NumFragments' => '42',
             'Warn' => '0',
@@ -206,6 +210,7 @@ class MetadataTest extends \Model\Test\AbstractTest
             'Priority' => '5',
             'DeployAction' => 'store',
             'ActionParam' => '',
+            'HashType' => 'hash_type',
             'Hash' => '',
             'NumFragments' => '0',
             'Warn' => '0',
@@ -229,6 +234,7 @@ class MetadataTest extends \Model\Test\AbstractTest
             'Priority' => '5',
             'DeployAction' => 'store',
             'ActionParam' => '',
+            'HashType' => 'hash_type',
             'Hash' => 'hash',
             'NumFragments' => '42',
             'Warn' => '0',
@@ -253,6 +259,7 @@ class MetadataTest extends \Model\Test\AbstractTest
             'Priority' => '5',
             'DeployAction' => 'store',
             'ActionParam' => '',
+            'HashType' => 'hash_type',
             'Hash' => 'hash',
             'NumFragments' => '42',
             'Warn' => '0',

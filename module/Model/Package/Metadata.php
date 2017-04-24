@@ -54,7 +54,7 @@ class Metadata extends \Library\DomDocument
         $node->setAttribute('DIGEST', $data['Hash']);
         $node->setAttribute('PROTO', 'HTTP');
         $node->setAttribute('FRAGS', $data['NumFragments']);
-        $node->setAttribute('DIGEST_ALGO', 'SHA1');
+        $node->setAttribute('DIGEST_ALGO', strtoupper($data['HashType']));
         $node->setAttribute('DIGEST_ENCODE', 'Hexa');
         $node->setAttribute('PATH', ($data['DeployAction'] == 'store' ? $data['ActionParam'] : ''));
         $node->setAttribute('NAME', ($data['DeployAction'] == 'launch' ? $data['ActionParam'] : ''));

@@ -44,8 +44,8 @@ namespace Model\Package;
  * provided by PackageManager::getPackages()
  * @property integer $NumError Number of clients with unsuccessful deployment,
  * provided by PackageManager::getPackages()
- * @property string $Hash SHA1 hash of assembled package,
- * provided by PackageManager::getPackage()
+ * @property string $HashType Hash type (recommended: SHA256 for Windows packages, SHA1 for others)
+ * @property string $Hash Hash of assembled package,
  * @property string $DeployAction One of 'store', 'execute', 'launch',
  * provided by PackageManager::getPackage()
  * @property string $ActionParam Path for storage or command to execute, depending on action,
