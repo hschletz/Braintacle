@@ -60,6 +60,32 @@ This will download all dependencies and set up the autoloader. Omit the
 script.
 
 
+Set up the configuration file
+-----------------------------
+
+The file config/braintacle.ini.template is a template for the configuration
+file. Don't edit it directly because it may be overwritten upon upgrades. Copy,
+move or rename it instead.
+
+By default, Braintacle will look for a file config/braintacle.ini relative to
+the Braintacle root directory. If you prefer a different location (/etc,
+/usr/local/etc ...), you can set the BRAINTACLE_CONFIG environment variable to
+the full path (including filename) of your config file. The command line tool
+(braintacle-tool.php) additionally accepts an optional "--config" argument which
+will take precedence over the environment variable or the default location.
+
+The file must be readable by the webserver, but should not be readable for the
+rest of the world if it contains a sensitive database password. For example, if
+the webserver runs in the 'www-data' group:
+
+    chown root:www-data /usr/local/share/braintacle/config/braintacle.ini
+    chmod 640 /usr/local/share/braintacle/config/braintacle.ini
+
+Edit your configuration according to the comments within the file. As a minimum,
+the "database" section must be set up for the database you're about to create in
+the next step. Everything else is mostly useful for development purposes.
+
+
 Set up the database
 -------------------
 
@@ -82,23 +108,12 @@ For MySQL, run:
 
 You can choose any database name, user name and password.
 
-Copy or rename the file /usr/local/share/braintacle/config/braintacle.ini.template
-to /usr/local/share/braintacle/config/braintacle.ini and adjust its content
-according to the comments within the file. This file must be readable by the
-webserver, but should not be readable for the rest of the world. For example, if
-the webserver runs in the 'www-data' group:
-
-    chown root:www-data /usr/local/share/braintacle/config/braintacle.ini
-    chmod 640 /usr/local/share/braintacle/config/braintacle.ini
-
-If you prefer all config files within /etc or /usr/local/etc, make
-/usr/local/share/braintacle/config/braintacle.ini a symbolic link to the actual
-file.
-
 To create and initialize the tables, log out from the database and run the
-database manager script:
+database manager script (the --config option can be omitted if your config file
+resides in the default location or is set via the BRAINTACLE_CONFIG environment
+variable, see previous section for details):
 
-    /usr/local/share/braintacle/braintacle-tool.php database
+    braintacle-tool.php database --config=/etc/braintacle.ini
 
 If everything ran correctly, you should now be able to log into the database
 with the configured credentials and see the tables.
