@@ -269,7 +269,7 @@ Set up the clients for inventory
 
 Braintacle does not provide its own client application. On the client machines,
 install either the
-[OCS Inventory NG agent](https://github.com/OCSInventory-NG/Releases) or
+[OCS Inventory NG agent](https://github.com/OCSInventory-NG/) or
 [FusionInventory Agent](http://www.fusioninventory.org/documentation/agent/installation/).
 Refer to the agent documentation for details. The agent must be configured for
 the URL of Braintacle's server component.
