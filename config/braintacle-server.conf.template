@@ -82,11 +82,3 @@ PerlModule Apache::DBI
 # PerlSetEnv OCS_PLUGINS_PERL_DIR /usr/local/share/braintacle/plugins/perl
 # PerlSetEnv OCS_PLUGINS_CONF_DIR /usr/local/share/braintacle/plugins/conf
 # PerlModule Apache::Ocsinventory::Plugins
-
-# Don't touch this!
-<IfDefine MODPERL2>
-    PerlSetEnv OCS_MODPERL_VERSION 2
-</IfDefine>
-<IfDefine !MODPERL2>
-    PerlSetEnv OCS_MODPERL_VERSION 1
-</IfDefine>

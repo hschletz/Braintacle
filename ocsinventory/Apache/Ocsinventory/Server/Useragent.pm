@@ -23,16 +23,7 @@
 package Apache::Ocsinventory::Server::Useragent;
 use strict;
 
-# This block specify which wrapper will be used ( your module will be compliant with all mod_perl versions )
-BEGIN{
-  if($ENV{'OCS_MODPERL_VERSION'} == 1){
-    require Apache::Ocsinventory::Server::Modperl1;
-    Apache::Ocsinventory::Server::Modperl1->import();
-  }elsif($ENV{'OCS_MODPERL_VERSION'} == 2){
-    require Apache::Ocsinventory::Server::Modperl2;
-    Apache::Ocsinventory::Server::Modperl2->import();
-  }
-}
+use Apache::Ocsinventory::Server::Modperl2;
 
 require Exporter;
 

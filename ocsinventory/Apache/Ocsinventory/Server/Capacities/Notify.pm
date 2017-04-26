@@ -23,16 +23,7 @@ package Apache::Ocsinventory::Server::Capacities::Notify;
 
 use strict;
 
-BEGIN{
-  if($ENV{'OCS_MODPERL_VERSION'} == 1){
-    require Apache::Ocsinventory::Server::Modperl1;
-    Apache::Ocsinventory::Server::Modperl1->import();
-  }elsif($ENV{'OCS_MODPERL_VERSION'} == 2){
-    require Apache::Ocsinventory::Server::Modperl2;
-    Apache::Ocsinventory::Server::Modperl2->import();
-  }
-}
-
+use Apache::Ocsinventory::Server::Modperl2;
 use Apache::Ocsinventory::Map;
 use Apache::Ocsinventory::Server::System;
 use Apache::Ocsinventory::Server::Communication;

@@ -23,31 +23,13 @@ package Apache::Ocsinventory::Capacities::Update;
 
 use strict;
 
-BEGIN{
-	if($ENV{'OCS_MODPERL_VERSION'} == 1){
-		require Apache::Ocsinventory::Server::Modperl1;
-		Apache::Ocsinventory::Server::Modperl1->import();
-	}elsif($ENV{'OCS_MODPERL_VERSION'} == 2){
-		require Apache::Ocsinventory::Server::Modperl2;
-		Apache::Ocsinventory::Server::Modperl2->import();
-	}
-}
+use Apache::Ocsinventory::Server::Modperl2;
 
 require Exporter;
 
 our @ISA = qw /Exporter/;
 
 our @EXPORT = qw //;
-
-BEGIN{
-	if($ENV{'OCS_MODPERL_VERSION'} == 1){
-		require Apache::Ocsinventory::Server::Modperl1;
-		Apache::Ocsinventory::Server::Modperl1->import();
-	}elsif($ENV{'OCS_MODPERL_VERSION'} == 2){
-		require Apache::Ocsinventory::Server::Modperl2;
-		Apache::Ocsinventory::Server::Modperl2->import();
-	}
-}
 
 use Apache::Ocsinventory::Server::System;
 use Apache::Ocsinventory::Server::Communication;

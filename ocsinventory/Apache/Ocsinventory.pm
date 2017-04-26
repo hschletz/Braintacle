@@ -23,21 +23,7 @@ package Apache::Ocsinventory;
 
 use strict;
 
-BEGIN{
-  if($ENV{'OCS_MODPERL_VERSION'} == 1){
-    require Apache::Ocsinventory::Server::Modperl1;
-    Apache::Ocsinventory::Server::Modperl1->import();
-  }elsif($ENV{'OCS_MODPERL_VERSION'} == 2){
-    require Apache::Ocsinventory::Server::Modperl2;
-    Apache::Ocsinventory::Server::Modperl2->import();
-  }else{
-    if(!defined($ENV{'OCS_MODPERL_VERSION'})){
-      die("OCS_MODPERL_VERSION not defined. Abort\n");
-    }else{
-      die("OCS_MODPERL_VERSION set to, a bad parameter. Must be '1' or '2'. Abort\n");
-    }
-  }
-}
+use Apache::Ocsinventory::Server::Modperl2;
 
 $Apache::Ocsinventory::VERSION = '2.3';
 $Apache::Ocsinventory::BUILD_VERSION = '737';

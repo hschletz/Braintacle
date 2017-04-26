@@ -29,18 +29,7 @@ BEGIN {
 }
 
 #Loading plugins modules
-if($ENV{'OCS_MODPERL_VERSION'} == 1){
-	Apache->httpd_conf("Include $ENV{OCS_PLUGINS_CONF_DIR}");
-}elsif($ENV{'OCS_MODPERL_VERSION'} == 2){
-        use Apache2::ServerUtil();
-        Apache2::ServerUtil->server->add_config(["Include $ENV{OCS_PLUGINS_CONF_DIR}"]);
-	
-}else{
-  if(!defined($ENV{'OCS_MODPERL_VERSION'})){
-    die("OCS_MODPERL_VERSION not defined. Abort\n");
-  }else{
-    die("OCS_MODPERL_VERSION set to, a bad parameter. Must be '1' or '2'. Abort\n");
-  }
-}
+use Apache2::ServerUtil();
+Apache2::ServerUtil->server->add_config(["Include $ENV{OCS_PLUGINS_CONF_DIR}"]);
  
 1;

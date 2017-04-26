@@ -23,7 +23,7 @@ Requirements
 - A [PostgreSQL](http://postgresql.org) or [MySQL](http://mysql.org) database.
   Support for other database backends may be added in the future.
 
-- [Apache httpd](http://httpd.apache.org) web server with
+- [Apache httpd](http://httpd.apache.org) 2.2 or later with
   [mod_perl](http://perl.apache.org) and a database-specific DBD module for the
   main server component.
 

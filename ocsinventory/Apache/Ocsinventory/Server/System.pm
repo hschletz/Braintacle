@@ -26,13 +26,8 @@ use Apache::Ocsinventory::Server::System::Config;
 use strict;
 
 BEGIN{
-  if($ENV{'OCS_MODPERL_VERSION'} == 1){
-    require Apache::Ocsinventory::Server::Modperl1;
-    Apache::Ocsinventory::Server::Modperl1->import();
-  }elsif($ENV{'OCS_MODPERL_VERSION'} == 2){
-    require Apache::Ocsinventory::Server::Modperl2;
-    Apache::Ocsinventory::Server::Modperl2->import();
-  }
+  require Apache::Ocsinventory::Server::Modperl2;
+  Apache::Ocsinventory::Server::Modperl2->import();
   &check_config();
 }
 
