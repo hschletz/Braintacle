@@ -37,10 +37,14 @@ Alias /braintacle /usr/local/share/braintacle/public
     # Default: config/braintacle.ini relative to the Braintacle root directory
     #SetEnv BRAINTACLE_CONFIG /usr/local/share/braintacle/config/braintacle.ini
 
-    # Change "Allow" to restrict access
-    Order Deny,Allow
-    Deny from all
-    Allow from all
+    # Change to restrict access
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Allow from all
+    </IfModule>
 
     # Uncomment this to force HTTPS connection
     # SSLRequireSSL
