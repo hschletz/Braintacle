@@ -2,7 +2,7 @@
 # This file contains the application-specific part. It gets included from
 # the general configuration file and should NOT be placed in the Apache
 # configuration directory.
-# See ocsinventory/README.html for more instructions.
+# See INSTALL.md for more instructions.
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright

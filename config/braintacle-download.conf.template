@@ -10,8 +10,6 @@
 #
 # Note that the package directory needs to be visible via both HTTP and HTTPS.
 #
-# See README.txt for more instructions.
-#
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
 # notice and this notice are preserved. This file is offered as-is,
@@ -24,18 +22,18 @@
 # DO NOT TAKE THIS FILE AS IS!
 #
 # The default configuration may not work for your particular Apache setup,
-# or expose the packages to places where it should not be visible.
+# or expose the packages to places where they should not be visible.
 #
 # Carefully review it and adapt it to your needs.
 #
 
-# Make the package directory visible as /download.
-# You can choose any other name, but it has to match the URLs in the package
+# Make the package directory visible as /braintacle-download.
+# You can choose any other path, but it has to match the URLs in the package
 # configuration.
-# Adapt the path if necessary.
-Alias /download /var/lib/braintacle/download
+# Adapt the filesystem path if necessary.
+Alias /braintacle-download /var/lib/braintacle/download
 
-<Location /download>
+<Location /braintacle-download>
 
     # Change to restrict access
     <IfModule mod_authz_core.c>

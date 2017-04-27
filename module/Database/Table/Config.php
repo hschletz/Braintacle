@@ -180,7 +180,7 @@ class Config extends \Database\AbstractTable
             if (isset($server['LOCAL_PORT'])) {
                 $uri->setPort($server['LOCAL_PORT']['ivalue']);
             }
-            $uri->setPath('/ocsinventory');
+            $uri->setPath('/braintacle-server');
             $uri = $uri->toString();
 
             $logger->info(

@@ -261,7 +261,9 @@ access for the web server. Uploaded packages will be stored in this directory.
 In the administration console, enter the path unter Preferences->Packages. In
 the same dialog, you have to specify 2 URLs (1 for HTTP, 1 for HTTPS) which must
 point to this directory. An Apache template
-(config/braintacle-download.conf.template) is provided for this purpose.
+(config/braintacle-download.conf.template) is provided for this purpose. The
+default path (unless configured differently in braintacle-download.conf) is
+/braintacle-download, i.e. http://example.net/braintacle-download .
 
 
 Set up the clients for inventory
@@ -272,7 +274,9 @@ install either the
 [OCS Inventory NG agent](https://github.com/OCSInventory-NG/) or
 [FusionInventory Agent](http://www.fusioninventory.org/documentation/agent/installation/).
 Refer to the agent documentation for details. The agent must be configured for
-the URL of Braintacle's server component.
+the URL of Braintacle's server component. The default path (unless configured 
+differently in braintacle-server.conf) is /braintacle-server, i.e.
+http://example.net/braintacle-server .
 
 To be able to use agents other than the OCS Inventory NG agent, a file with
 whitelisted agent names is required. Such a file is provided in

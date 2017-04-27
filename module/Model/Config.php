@@ -37,7 +37,7 @@ namespace Model;
  *
  * @property string $agentWhitelistFile  Server-side path to file with allowed non-OCS agents (FusionInventory etc.)
  * @property integer $autoMergeDuplicates  Detect and merge duplicates automatically. Default: FALSE (recommended)
- * @property string $communicationServerUri  URI of communication server. Default: http://localhost/ocsinventory
+ * @property string $communicationServerUri  URI of communication server. Default: http://localhost/braintacle-server
  * @property string $defaultAction  Default action for new packages (one of store, execute, launch). Default: launch
  * @property string $defaultActionParam  Default action parameter for new packages
  * @property bool $defaultDeleteInterfaces  Default for deleting network interfaces along with client. Default: true
@@ -102,7 +102,7 @@ class Config
      * @var array
      */
     protected $_defaults = array(
-        'communicationServerUri' => 'http://localhost/ocsinventory',
+        'communicationServerUri' => 'http://localhost/braintacle-server',
         'defaultAction' => 'launch',
         'defaultDeleteInterfaces' => 1,
         'defaultDeployError' => 1,

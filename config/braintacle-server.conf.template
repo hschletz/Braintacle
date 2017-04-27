@@ -10,8 +10,7 @@
 #
 # Include /usr/local/share/braintacle/config/braintacle-server.conf
 #
-# Take care of the PerlSwitches directive below. See ocsinventory/README.html
-# for more instructions.
+# Take care of the PerlSwitches directive below.
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -44,9 +43,10 @@ PerlSwitches -I /usr/local/share/braintacle/ocsinventory
 # NOTE: This affects ALL mod_perl applications.
 PerlModule Apache::DBI
 
-# Expose the application as /ocsinventory. Older agents have this path hardcoded.
-# For recent agents, this can be configured to a different path.
-<Location /ocsinventory>
+# Expose the application as /braintacle-server. Any other path can be chosen.
+# Agents must be configured to contact the server with this URL path. Some very
+# old agents have the path hardcoded to /ocsinventory.
+<Location /braintacle-server>
 
     # Include application-specific configuration (database connection).
     # Adjust path if necessary.
@@ -67,7 +67,7 @@ PerlModule Apache::DBI
     # Uncomment and adjust the next lines to password-protect access.
     # This requires proper agent configuration.
     #AuthType Basic
-    #AuthName "OCS Inventory agent area"
+    #AuthName "Braintacle server"
     #AuthUserFile "/path/to/auth/file"
     #Require valid-user
 
