@@ -37,7 +37,7 @@
 # Adjust the path if Braintacle is installed anywhere other than /usr/local/share/braintacle
 # This line must appear outside of any <VirtualHost> section to have any effect!
 # If you include this file from a <VirtualHost> section, place this line somewhere else outside.
-PerlSwitches -I /usr/local/share/braintacle/ocsinventory
+PerlSwitches -I /usr/local/share/braintacle/server
 
 # Use persistent database connections. Disable at your own risk - this has not been tested.
 # NOTE: This affects ALL mod_perl applications.

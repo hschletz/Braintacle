@@ -23,6 +23,10 @@ Upgrading from previous versions:
 
 - Required: Run "braintacle-tool.php database" to update the database schema.
 
+- Required: The directory with the server code has been renamed to "server".
+  Adjust the "PerlSwitches -I" directive in your Apache configuration to point
+  to the new path.
+
 - Required: The database is no longer compatible with OCS Inventory NG. If you
   used both applications in parallel, see the migration section in INSTALL.md
   for further instructions.

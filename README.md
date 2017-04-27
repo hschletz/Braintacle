@@ -81,7 +81,7 @@ This project contains some third party code:
 
 - A patched version of the [OCS inventory NG server
   components](http://www.ocsinventory-ng.org/), licensed under the GNU General
-  Public License v2) is included in the ocsinventory/ directory.
+  Public License v2) is included in the server/ directory.
 
 - The file module/Library/data/MacAddress/manuf is taken from the
   [Wireshark](http://wireshark.org) project. GPLv2 and copyright information are
