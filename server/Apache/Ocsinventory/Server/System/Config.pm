@@ -473,11 +473,11 @@ sub check_config{
       $ENV{$truename} = $CONFIG{$name}->{default};
     }
     elsif( $ENV{$truename}  !~ $CONFIG{$name}->{filter} ){
-      print STDERR "ocsinventory-server: Bad setting. `$name` is set to `$ENV{$truename}`. Default: `$CONFIG{$name}->{default}`\n";
+      print STDERR "braintacle-server: Bad setting. `$name` is set to `$ENV{$truename}`. Default: `$CONFIG{$name}->{default}`\n";
       $ENV{$truename} = $CONFIG{$name}->{default};
     }
     else{
-      print STDERR "ocsinventory-server: Parameter `$truename` is ok\n" if $verbose;
+      print STDERR "braintacle-server: Parameter `$truename` is ok\n" if $verbose;
     }
   }
   return undef;
