@@ -128,33 +128,7 @@ sub handler{
     return &_end(APACHE_SERVER_ERROR);
   }
   
-  # First, we determine the http method
-  # The get method will be only available for the bootstrap to manage the deploy, and maybe, sometime to give files which will be stored in the database
-  if($r->method() eq 'GET'){
-
-    # To manage the first contact with the bootstrap
-    # The uri must be '/ocsinventory/deploy/[filename]'
-    if($r->uri()=~/deploy\/([^\/]+)\/?$/){
-      if($ENV{'OCS_OPT_DEPLOY'}){
-        return &_end(&_send_file('deploy',$1));
-      }else{
-        return &_end(APACHE_FORBIDDEN);
-      }
-    }elsif($r->uri()=~/update\/(.+)\/(.+)\/(\d+)\/?/){
-    # We use the GET method for the update to use the proxies
-    # The URL is built like that : [OCSFSERVER]/ocsinventory/[os]/[name]/[version]
-      if($ENV{'OCS_OPT_UPDATE'}){
-        return &_end(&_send_file('update',$1,$2,$3));
-      }else{
-        return &_end(APACHE_FORBIDDEN);
-      }
-    }else{
-    # If the url is invalid
-      return &_end(APACHE_BAD_REQUEST);
-    }
-
-  # Here is the post method management
-  }elsif($r->method eq 'POST'){
+  if($r->method eq 'POST'){
     
     # Get the data
     if( !read(STDIN, $data, $ENV{'CONTENT_LENGTH'}) ){
