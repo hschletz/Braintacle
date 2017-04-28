@@ -63,12 +63,6 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     protected $_config;
 
     /**
-     * Inventory uploader
-     * @var \Library\InventoryUploader
-     */
-    protected $_inventoryUploader;
-
-    /**
      * Client selected for client-specific actions
      * @var \Model\Client\Client
      */
@@ -83,7 +77,6 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
      * @param \Model\SoftwareManager $softwareManager
      * @param \Zend\Form\FormElementManager $formManager
      * @param \Model\Config $config
-     * @param \Library\InventoryUploader $inventoryUploader
      */
     public function __construct(
         \Model\Client\ClientManager $clientManager,
@@ -91,8 +84,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
         \Model\Registry\RegistryManager $registryManager,
         \Model\SoftwareManager $softwareManager,
         \Zend\Form\FormElementManager $formManager,
-        \Model\Config $config,
-        \Library\InventoryUploader $inventoryUploader
+        \Model\Config $config
     ) {
         $this->_clientManager = $clientManager;
         $this->_groupManager = $groupManager;
@@ -100,7 +92,6 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
         $this->_softwareManager = $softwareManager;
         $this->_formManager = $formManager;
         $this->_config = $config;
-        $this->_inventoryUploader = $inventoryUploader;
     }
 
     /** {@inheritdoc} */
@@ -656,12 +647,11 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
             $form->setData($this->params()->fromFiles() + $this->params()->fromPost());
             if ($form->isValid()) {
                 $data = $form->getData();
-                $response = $this->_inventoryUploader->uploadFile($data['File']['tmp_name']);
-                if ($response->isSuccess()) {
+                try {
+                    $this->_clientManager->importFile($data['File']['tmp_name']);
                     return $this->redirectToRoute('client', 'index');
-                } else {
-                    $vars['response'] = $response;
-                    $vars['uri'] = $this->_config->communicationServerUri;
+                } catch (\RuntimeException $e) {
+                    $vars['error'] = $e->getMessage();
                 }
             }
         }

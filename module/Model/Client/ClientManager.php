@@ -858,4 +858,49 @@ class ClientManager
 
         $client->unlock();
     }
+
+    /**
+     * Import client from a file (compressed or uncompressed XML)
+     *
+     * @param string $fileName File name
+     * @throws \RuntimeException if server responds with error
+     */
+    public function importFile($fileName)
+    {
+        return $this->importClient(\Library\FileObject::fileGetContents($fileName));
+    }
+
+    /**
+     * Import client
+     *
+     * @param string $data Inventory data (compressed or uncompressed XML)
+     * @param string|\Zend\Http\Client\Adapter\AdapterInterface HTTP adapter
+     * @throws \RuntimeException if server responds with error
+     */
+    public function importClient($data, $adapter = 'Zend\Http\Client\Adapter\Socket')
+    {
+        $uri = $this->_serviceLocator->get('Model\Config')->communicationServerUri;
+        $httpClient = new \Zend\Http\Client(
+            $uri,
+            array(
+                'adapter' => $adapter,
+                'strictredirects' => true, // required for POST requests
+                'useragent' => 'Braintacle_local_upload', // Substring 'local' required for correct server operation
+            )
+        );
+        $httpClient->setMethod('POST')
+                   ->setHeaders(array('Content-Type' => 'application/x-compress'))
+                   ->setRawBody($data);
+        $response = $httpClient->send();
+        if (!$response->isSuccess()) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Upload error. Server %s responded with error %d: %s',
+                    $uri,
+                    $response->getStatusCode(),
+                    $response->getReasonPhrase()
+                )
+            );
+        }
+    }
 }

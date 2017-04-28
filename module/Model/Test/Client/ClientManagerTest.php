@@ -22,6 +22,7 @@
 namespace Model\Test\Client;
 
 use Nada\Column\AbstractColumn as Column;
+use \org\bovigo\vfs\vfsStream;
 
 class ClientManagerTest extends \Model\Test\AbstractTest
 {
@@ -1222,5 +1223,69 @@ class ClientManagerTest extends \Model\Test\AbstractTest
             )
         );
         $clientManager->deleteClient($client, false);
+    }
+
+    public function testImportFile()
+    {
+        $content = "testUploadFile\nline1\nline2\n";
+        $root = vfsstream::setup('root');
+        $url = vfsStream::newFile('test.txt')->withContent($content)->at($root)->url();
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->disableOriginalConstructor()
+                      ->setMethods(array('importClient'))
+                      ->getMock();
+        $model->expects($this->once())
+              ->method('importClient')
+              ->with($content)
+              ->willReturn('response');
+        $this->assertEquals('response', $model->importFile($url));
+    }
+
+    public function testImportClientSuccess()
+    {
+        $content = "testUploadFile\nline1\nline2\n";
+        $adapter = $this->getMockBuilder('Zend\Http\Client\Adapter\Test')->setMethods(array('write'))->getMock();
+        $adapter->expects($this->once())
+                ->method('write')
+                ->with(
+                    'POST',
+                    'http://example.net/server',
+                    '1.1',
+                    $this->callback(
+                        function ($headers) {
+                            return (
+                                $headers['User-Agent'] == 'Braintacle_local_upload' and
+                                $headers['Content-Type'] == 'application/x-compress'
+                            );
+                        }
+                    ),
+                    $content
+                );
+        $adapter->setResponse("HTTP/1.1 200 OK\r\n");
+
+        $config = $this->createMock('Model\Config');
+        $config->method('__get')->with('communicationServerUri')->willReturn('http://example.net/server');
+
+        $model = $this->_getModel(array('Model\Config' => $config));
+        $model->importClient($content, $adapter);
+
+        $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($adapter, 'config')['strictredirects']);
+    }
+
+    public function testImportClientHttpError()
+    {
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage(
+            "Upload error. Server http://example.net/server responded with error 418: I'm a teapot"
+        );
+
+        $adapter = new \Zend\Http\Client\Adapter\Test;
+        $adapter->setResponse("HTTP/1.1 418 I'm a teapot\r\n");
+
+        $config = $this->createMock('Model\Config');
+        $config->method('__get')->with('communicationServerUri')->willReturn('http://example.net/server');
+
+        $model = $this->_getModel(array('Model\Config' => $config));
+        $model->importClient('content', $adapter);
     }
 }

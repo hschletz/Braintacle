@@ -40,8 +40,7 @@ class ClientControllerFactory implements \Zend\ServiceManager\Factory\FactoryInt
             $container->get('Model\Registry\RegistryManager'),
             $container->get('Model\SoftwareManager'),
             $container->get('FormElementManager'),
-            $container->get('Model\Config'),
-            $container->get('Library\InventoryUploader')
+            $container->get('Model\Config')
         );
     }
 }

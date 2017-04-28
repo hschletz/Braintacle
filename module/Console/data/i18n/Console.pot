@@ -1232,11 +1232,6 @@ msgid "Details for client '%s'"
 msgstr ""
 
 #: views/console/client/import.php
-#, php-format
-msgid "Upload error. Server %1$s responded with error %2$d: %3$s"
-msgstr ""
-
-#: views/console/client/import.php
 msgid "Import locally generated inventory data"
 msgstr ""
 

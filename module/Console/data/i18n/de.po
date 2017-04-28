@@ -1241,11 +1241,6 @@ msgstr "Einzelheiten für Client '%s'"
 msgid "Import locally generated inventory data"
 msgstr "Import lokal erzeugter Inventardaten"
 
-#: views/console/client/import.php
-#, php-format
-msgid "Upload error. Server %1$s responded with error %2$d: %3$s"
-msgstr "Fehler beim Hochladen. Server %1$s antwortete mit Fehler %2$d: %3$s"
-
 #: views/console/client/index.php
 #, php-format
 msgid "%d matches"

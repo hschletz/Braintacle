@@ -84,7 +84,6 @@ class Module implements
                 'factories' => array(
                     'Library\ArchiveManager' => 'Zend\ServiceManager\Factory\InvokableFactory',
                     'Library\I18n\Translator\DelegatorFactory' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Library\InventoryUploader' => 'Library\Service\InventoryUploaderFactory',
                     'Library\Now' => function () {
                         return new \DateTime;
                     },

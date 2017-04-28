@@ -56,8 +56,6 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
      */
     protected $_config;
 
-    protected $_inventoryUploader;
-
     /**
      * Sample client data
      * @var array[]
@@ -114,7 +112,6 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_registryManager = $this->createMock('Model\Registry\RegistryManager');
         $this->_softwareManager = $this->createMock('Model\SoftwareManager');
         $this->_config = $this->createMock('Model\Config');
-        $this->_inventoryUploader = $this->createMock('Library\InventoryUploader');
 
         $serviceManager = $this->getApplicationServiceLocator();
         $serviceManager->setService('Model\Client\ClientManager', $this->_clientManager);
@@ -122,7 +119,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $serviceManager->setService('Model\Registry\RegistryManager', $this->_registryManager);
         $serviceManager->setService('Model\SoftwareManager', $this->_softwareManager);
         $serviceManager->setService('Model\Config', $this->_config);
-        $serviceManager->setService('Library\InventoryUploader', $this->_inventoryUploader);
+
         $formManager = $serviceManager->get('FormElementManager');
         $formManager->setService('Console\Form\Package\Assign', $this->createMock('Console\Form\Package\Assign'));
         $formManager->setService('Console\Form\ClientConfig', $this->createMock('Console\Form\ClientConfig'));
@@ -2837,8 +2834,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('render')
              ->will($this->returnValue('<form></form>'));
-        $this->_inventoryUploader->expects($this->never())
-                                 ->method('uploadFile');
+
+        $this->_clientManager->expects($this->never())->method('importFile');
+
         $this->dispatch('/console/client/import/');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//p[@class="error"]');
@@ -2860,8 +2858,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->method('getData');
         $form->expects($this->once())
              ->method('render');
-        $this->_inventoryUploader->expects($this->never())
-                                 ->method('uploadFile');
+
+        $this->_clientManager->expects($this->never())->method('importFile');
+
         $this->dispatch('/console/client/import/', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//p[@class="error"]');
@@ -2890,22 +2889,17 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->will($this->returnValue(array('File' => $fileSpec)));
         $form->expects($this->once())
              ->method('render');
-        $this->_config->expects($this->once())
-                      ->method('__get')
-                      ->with('communicationServerUri')
-                      ->will($this->returnValue('http://example.net/server'));
-        $response = new \Zend\Http\Response;
-        $response->setStatusCode(500)
-                 ->setReasonPhrase('reason_phrase');
-        $this->_inventoryUploader->expects($this->once())
-                                 ->method('uploadFile')
-                                 ->with('uploaded_file')
-                                 ->will($this->returnValue($response));
+
+        $this->_clientManager->expects($this->once())
+                             ->method('importFile')
+                             ->with('uploaded_file')
+                             ->willThrowException(new \RuntimeException('<error message>'));
+
         $this->dispatch('/console/client/import/', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
             '//p[@class="error"]',
-            "\nFehler beim Hochladen. Server http://example.net/server antwortete mit Fehler 500: reason_phrase\n"
+            "\n<error message>\n"
         );
         $this->assertXpathQueryContentContains('//h1', "\nImport lokal erzeugter Inventardaten\n");
     }
@@ -2932,12 +2926,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->will($this->returnValue(array('File' => $fileSpec)));
         $form->expects($this->never())
              ->method('render');
-        $response = new \Zend\Http\Response;
-        $response->setStatusCode(200);
-        $this->_inventoryUploader->expects($this->once())
-                                 ->method('uploadFile')
-                                 ->with('uploaded_file')
-                                 ->will($this->returnValue($response));
+
+        $this->_clientManager->expects($this->once())
+                             ->method('importFile')
+                             ->with('uploaded_file');
+
         $this->dispatch('/console/client/import/', 'POST', $postData);
         $this->assertRedirectTo('/console/client/index/');
     }

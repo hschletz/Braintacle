@@ -19,17 +19,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-if (isset($this->response)) {
+if (isset($this->error)) {
     print $this->htmlElement(
         'p',
-        sprintf(
-            $this->translate(
-                'Upload error. Server %1$s responded with error %2$d: %3$s'
-            ),
-            $this->escapeHtml($this->uri),
-            $this->response->getStatusCode(),
-            $this->escapeHtml($this->response->getReasonPhrase())
-        ),
+        $this->escapeHtml($this->error),
         array('class' => 'error')
     );
 }
