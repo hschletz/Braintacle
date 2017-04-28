@@ -75,6 +75,11 @@ class Module implements
                             $container->get('Model\Client\ClientManager')
                         );
                     },
+                    'Tools\Controller\Import' => function ($container) {
+                        return new Controller\Import(
+                            $container->get('Model\Client\ClientManager')
+                        );
+                    },
                 ),
             ),
             'tool_routes' => array(
@@ -128,6 +133,12 @@ class Module implements
                         '--validate|-v' => 'validate output documents, abort on error',
                     ),
                     'handler' => 'Tools\Controller\Export',
+                ),
+                array(
+                    'name' => 'import',
+                    'route' => '<filename>',
+                    'short_description' => 'Import clients from compressed or uncompressed XML files',
+                    'handler' => 'Tools\Controller\Import',
                 ),
             )
         );
