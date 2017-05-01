@@ -32,7 +32,7 @@ class Module implements
     Feature\AutoloaderProviderInterface
 {
     /**
-     * @internal
+     * {@inheritdoc}
      * @codeCoverageIgnore
      */
     public function init(\Zend\ModuleManager\ModuleManagerInterface $manager)
@@ -44,7 +44,7 @@ class Module implements
     }
 
     /**
-     * @internal
+     * {@inheritdoc}
      * @codeCoverageIgnore
      */
     public function getConfig()
@@ -155,7 +155,7 @@ class Module implements
     }
 
     /**
-     * @internal
+     * {@inheritdoc}
      * @codeCoverageIgnore
      */
     public function getAutoloaderConfig()

@@ -27,7 +27,7 @@ namespace Model\Service\Operator;
 class OperatorManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
-     * @internal
+     * {@inheritdoc}
      * @codeCoverageIgnore
      */
     public function __invoke(

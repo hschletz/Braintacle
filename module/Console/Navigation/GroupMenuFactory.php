@@ -26,9 +26,7 @@ namespace Console\Navigation;
  */
 class GroupMenuFactory extends \Library\Navigation\AbstractNavigationFactory
 {
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     protected function getPages(\Interop\Container\ContainerInterface $container)
     {
         parent::getPages($container);

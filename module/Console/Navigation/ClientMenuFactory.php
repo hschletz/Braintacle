@@ -28,9 +28,7 @@ namespace Console\Navigation;
  */
 class ClientMenuFactory extends \Library\Navigation\AbstractNavigationFactory
 {
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     protected function getPages(\Interop\Container\ContainerInterface $container)
     {
         parent::getPages($container);

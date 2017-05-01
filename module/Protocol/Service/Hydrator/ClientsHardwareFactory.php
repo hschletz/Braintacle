@@ -26,9 +26,7 @@ namespace Protocol\Service\Hydrator;
  */
 class ClientsHardwareFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     public function __invoke(
         \Interop\Container\ContainerInterface $container,
         $requestedName,

@@ -27,7 +27,7 @@ namespace Model\Service\Network;
 class DeviceManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
-     * @internal
+     * {@inheritdoc}
      * @codeCoverageIgnore
      */
     public function __invoke(

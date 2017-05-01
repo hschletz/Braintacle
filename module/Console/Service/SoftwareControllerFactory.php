@@ -26,9 +26,7 @@ namespace Console\Service;
  */
 class SoftwareControllerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     public function __invoke(
         \Interop\Container\ContainerInterface $container,
         $requestedName,

@@ -44,7 +44,6 @@ class NotInArray extends \Zend\Validator\AbstractValidator
     const CASE_INSENSITIVE = 1;
 
     /**
-     * @internal
      * Key for in_array message template
      */
     const IN_ARRAY = 'inArray';

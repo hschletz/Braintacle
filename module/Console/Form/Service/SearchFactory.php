@@ -27,9 +27,7 @@ namespace Console\Form\Service;
  */
 class SearchFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     public function __invoke(
         \Interop\Container\ContainerInterface $container,
         $requestedName,

@@ -26,9 +26,7 @@ namespace Model\Service\Group;
  */
 class GroupManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     public function __invoke(
         \Interop\Container\ContainerInterface $container,
         $requestedName,

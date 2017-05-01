@@ -34,7 +34,7 @@ namespace Database\Service;
 class AbstractDatabaseFactory implements \Zend\ServiceManager\Factory\AbstractFactoryInterface
 {
     /**
-     * @internal
+     * {@inheritdoc}
      * @codeCoverageIgnore
      */
     public function canCreate(\Interop\Container\ContainerInterface $container, $requestedName)
@@ -43,7 +43,7 @@ class AbstractDatabaseFactory implements \Zend\ServiceManager\Factory\AbstractFa
     }
 
     /**
-     * @internal
+     * {@inheritdoc}
      * @codeCoverageIgnore
      */
     public function __invoke(

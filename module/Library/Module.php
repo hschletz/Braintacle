@@ -36,9 +36,7 @@ class Module implements
     Feature\AutoloaderProviderInterface,
     Feature\ConfigProviderInterface
 {
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     public function getConfig()
     {
         return array(
@@ -148,9 +146,7 @@ class Module implements
         );
     }
 
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     public function getAutoloaderConfig()
     {
         return array(
@@ -162,9 +158,7 @@ class Module implements
         );
     }
 
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     public function onBootstrap(\Zend\EventManager\EventInterface $e)
     {
         $serviceManager = $e->getApplication()->getServiceManager();

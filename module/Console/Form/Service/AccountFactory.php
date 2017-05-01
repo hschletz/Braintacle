@@ -27,17 +27,13 @@ namespace Console\Form\Service;
  */
 class AccountFactory implements \Zend\ServiceManager\Factory\AbstractFactoryInterface
 {
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     public function canCreate(\Interop\Container\ContainerInterface $container, $requestedName)
     {
         return (strpos($requestedName, 'Console\Form\Account\\') === 0);
     }
 
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     public function __invoke(
         \Interop\Container\ContainerInterface $container,
         $requestedName,

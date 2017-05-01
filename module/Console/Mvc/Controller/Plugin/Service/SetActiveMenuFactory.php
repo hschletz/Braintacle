@@ -26,9 +26,7 @@ namespace Console\Mvc\Controller\Plugin\Service;
  */
 class SetActiveMenuFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     public function __invoke(
         \Interop\Container\ContainerInterface $container,
         $requestedName,

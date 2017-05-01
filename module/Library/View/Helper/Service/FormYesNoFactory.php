@@ -26,9 +26,7 @@ namespace Library\View\Helper\Service;
  */
 class FormYesNoFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     public function __invoke(
         \Interop\Container\ContainerInterface $container,
         $requestedName,

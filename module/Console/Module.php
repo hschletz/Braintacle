@@ -34,9 +34,7 @@ class Module implements
     Feature\AutoloaderProviderInterface,
     Feature\BootstrapListenerInterface
 {
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     public function init(\Zend\ModuleManager\ModuleManagerInterface $manager)
     {
         $manager->loadModule('Library');
@@ -44,17 +42,13 @@ class Module implements
         $manager->loadModule('Protocol');
     }
 
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     public function getConfig()
     {
         return require(__DIR__ . '/module.config.php');
     }
 
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     public function getAutoloaderConfig()
     {
         return array(
@@ -66,9 +60,7 @@ class Module implements
         );
     }
 
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     public function onBootstrap(\Zend\EventManager\EventInterface $e)
     {
         $eventManager = $e->getParam('application')->getEventManager();

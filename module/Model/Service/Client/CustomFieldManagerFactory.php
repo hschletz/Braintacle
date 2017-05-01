@@ -26,9 +26,7 @@ namespace Model\Service\Client;
  */
 class CustomFieldManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     public function __invoke(
         \Interop\Container\ContainerInterface $container,
         $requestedName,

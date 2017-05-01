@@ -27,7 +27,7 @@ namespace Model\Service\Package\Storage;
 class DirectFactory implements \Zend\ServiceManager\Factory\FactoryInterface
 {
     /**
-     * @internal
+     * {@inheritdoc}
      * @codeCoverageIgnore
      */
     public function __invoke(

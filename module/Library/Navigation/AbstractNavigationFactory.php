@@ -34,9 +34,7 @@ namespace Library\Navigation;
  */
 abstract class AbstractNavigationFactory extends \Zend\Navigation\Service\DefaultNavigationFactory
 {
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     protected function getPages(\Interop\Container\ContainerInterface $container)
     {
         if (!$this->pages) {

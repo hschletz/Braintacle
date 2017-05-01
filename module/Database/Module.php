@@ -36,18 +36,14 @@ class Module implements
     Feature\ConfigProviderInterface,
     Feature\InitProviderInterface
 {
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     public function init(\Zend\ModuleManager\ModuleManagerInterface $manager)
     {
         $manager->loadModule('Library');
         $manager->loadModule('Model');
     }
 
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     public function getConfig()
     {
         return array(
@@ -63,9 +59,7 @@ class Module implements
         );
     }
 
-    /**
-     * @internal
-     */
+    /** {@inheritdoc} */
     public function getAutoloaderConfig()
     {
         return array(

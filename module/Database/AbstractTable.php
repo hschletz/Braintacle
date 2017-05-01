@@ -72,8 +72,9 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
 
     /**
      * Helper method to get class name without namespace
-     * @internal
+     *
      * @return string Class name
+     * @internal
      * @codeCoverageIgnore
      */
     protected function _getClassName()
