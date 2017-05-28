@@ -31,6 +31,7 @@ grep -r -l --null \
     --exclude=update-copyright.sh \
     --exclude-dir="$BASEDIR/doc/api/*" \
     --exclude-dir="$BASEDIR/doc/CodeCoverage/*" \
+    --exclude-dir="$BASEDIR/vendor/*" \
     'Copyright (C) 2011-2016 Holger Schletz' \
     "$BASEDIR" \
     | xargs --null --no-run-if-empty \
