@@ -1,0 +1,31 @@
+devices:
+  -
+    hardware_id: 1
+    name: "DOWNLOAD"
+    ivalue: 1
+    tvalue: "SUCCESS"
+    comments: "Tue Dec 30 19:02:23 2014"
+  -
+    hardware_id: 1
+    name: "DOWNLOAD"
+    ivalue: 2
+    tvalue: null
+    comments: "Sat May 27 19:39:25 2017"
+  -
+    hardware_id: 1
+    name: "DOWNLOAD_FORCE"
+    ivalue: 2
+    tvalue: "1"
+    comments: null
+  -
+    hardware_id: 1
+    name: "other"
+    ivalue: 1
+    tvalue: null
+    comments: null
+  -
+    hardware_id: 2
+    name: "DOWNLOAD"
+    ivalue: 3
+    tvalue: "SUCCESS"
+    comments: "Tue Dec 30 19:01:23 2014"

@@ -592,6 +592,28 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     }
 
     /**
+     * Reset package status to 'pending', display confirmation form
+     *
+     * @return array|\Zend\Http\Response array(packageName) or redirect response
+     */
+    public function resetpackageAction()
+    {
+        $params = $this->params();
+        if ($this->getRequest()->isPost()) {
+            if ($params->fromPost('yes')) {
+                $this->_currentClient->resetPackage($params->fromQuery('package'));
+            }
+            return $this->redirectToRoute(
+                'client',
+                'packages',
+                array('id' => $this->_currentClient['Id'])
+            );
+        } else {
+            return array('packageName' => $params->fromQuery('package'));
+        }
+    }
+
+    /**
      * Set group memberships from Console\Form\GroupMemberships (POST only)
      *
      * @return \Zend\Http\Response redirect response

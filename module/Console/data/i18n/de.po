@@ -1411,6 +1411,10 @@ msgstr "Zeitpunkt"
 msgid "remove"
 msgstr "entfernen"
 
+#: views/console/client/packages.php
+msgid "reset"
+msgstr "zurücksetzen"
+
 #: views/console/client/printers.php
 msgid "Driver"
 msgstr "Treiber"
@@ -1435,6 +1439,11 @@ msgstr "Registry-Schlüssel"
 #, php-format
 msgid "Package '%s' will no longer be assigned to this client. Continue?"
 msgstr "Paket '%s' wird nicht mehr diesem Client zugewiesen sein. Fortfahren?"
+
+#: views/console/client/retrypackage.php
+#, php-format
+msgid "Status of package '%s' will be reset to 'Pending'. Continue?"
+msgstr "Der Status des Pakets '%s' wird auf 'Ausstehend' zurückgesetzt. Fortfahren?"
 
 #: views/console/client/software.php
 msgid "Location"

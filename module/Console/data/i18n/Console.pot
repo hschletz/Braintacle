@@ -1393,6 +1393,10 @@ msgstr ""
 msgid "Timestamp"
 msgstr ""
 
+#: views/console/client/packages.php
+msgid "reset"
+msgstr ""
+
 #: views/console/client/packages.php views/console/group/packages.php
 msgid "remove"
 msgstr ""
@@ -1428,6 +1432,11 @@ msgstr ""
 #: views/console/client/removepackage.php
 #, php-format
 msgid "Package '%s' will no longer be assigned to this client. Continue?"
+msgstr ""
+
+#: views/console/client/retrypackage.php
+#, php-format
+msgid "Status of package '%s' will be reset to 'Pending'. Continue?"
 msgstr ""
 
 #: views/console/client/software.php

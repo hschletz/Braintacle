@@ -473,6 +473,159 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->assertEquals(array(1, 2), $model->getDownloadedPackageIds());
     }
 
+    public function resetPackageProvider()
+    {
+        return array(
+            array(1, 'resetPackageNotResetYet'),
+            array(2, 'resetPackageAlreadyReset'),
+        );
+    }
+
+    /**
+     * @dataProvider resetPackageProvider
+     */
+    public function testResetPackage($packageId, $dataset)
+    {
+        $package = array('Id' => $packageId);
+
+        $packageManager = $this->createMock('Model\Package\PackageManager');
+        $packageManager->method('getPackage')->with('packageName')->willReturn($package);
+
+        $model = $this->_getModel(
+            array(
+                'Library\Now' => new \DateTime('2017-05-27T19:39:25'),
+                'Model\Package\PackageManager' => $packageManager,
+            )
+        );
+        $model['Id'] = 1;
+
+        $model->resetPackage('packageName');
+
+        $this->assertTablesEqual(
+            $this->_loadDataSet($dataset)->getTable('devices'),
+            $this->getConnection()->createQueryTable(
+                'devices',
+                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ORDER BY hardware_id, name, ivalue'
+            )
+        );
+    }
+
+    public function testResetPackageNotAssigned()
+    {
+        $package = array('Id' => 3);
+
+        $packageManager = $this->createMock('Model\Package\PackageManager');
+        $packageManager->method('getPackage')->with('packageName')->willReturn($package);
+
+        $model = $this->_getModel(array('Model\Package\PackageManager' => $packageManager));
+        $model['Id'] = 1;
+
+        try {
+            $model->resetPackage('packageName');
+            $this->fail('Expected exception was not thrown');
+        } catch (\RuntimeException $e) {
+            $this->assertEquals('Package "packageName" is not assigned to client 1', $e->getMessage());
+        }
+
+        $this->assertTablesEqual(
+            $this->_loadDataSet()->getTable('devices'),
+            $this->getConnection()->createQueryTable(
+                'devices',
+                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ORDER BY hardware_id, name, ivalue'
+            )
+        );
+    }
+
+    public function testResetPackageCommit()
+    {
+        $package = array('Id' => 1);
+
+        $packageManager = $this->createMock('Model\Package\PackageManager');
+        $packageManager->method('getPackage')->with('packageName')->willReturn($package);
+
+        $connection = $this->createMock('Zend\Db\Adapter\Driver\AbstractConnection');
+        $connection->expects($this->at(0))->method('beginTransaction');
+        $connection->expects($this->at(1))->method('commit');
+
+        $driver = $this->createMock('Zend\Db\Adapter\Driver\DriverInterface');
+        $driver->method('getConnection')->willReturn($connection);
+
+        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
+        $adapter->method('getDriver')->willReturn($driver);
+
+        $resultSet = $this->createMock('Zend\Db\ResultSet\AbstractResultSet');
+        $resultSet->method('current')->willReturn(array('num' => 1));
+
+        $select = $this->createMock('Zend\Db\Sql\Select');
+
+        $sql = $this->createMock('Zend\Db\Sql\Sql');
+        $sql->method('select')->willReturn($select);
+
+        $clientConfig = $this->createMock('Database\Table\ClientConfig');
+        $clientConfig->method('getSql')->willReturn($sql);
+        $clientConfig->method('selectWith')->willReturn($resultSet);
+        $clientConfig->method('getAdapter')->willReturn($adapter);
+
+        $model = $this->_getModel(
+            array(
+                'Database\Table\ClientConfig' => $clientConfig,
+                'Model\Package\PackageManager' => $packageManager,
+            )
+        );
+        $model['Id'] = 1;
+
+        $model->resetPackage('packageName');
+    }
+
+    public function testResetPackageRollbackOnException()
+    {
+        $package = array('Id' => 1);
+
+        $packageManager = $this->createMock('Model\Package\PackageManager');
+        $packageManager->method('getPackage')->with('packageName')->willReturn($package);
+
+        $connection = $this->createMock('Zend\Db\Adapter\Driver\AbstractConnection');
+        $connection->expects($this->at(0))->method('beginTransaction');
+        $connection->expects($this->at(1))->method('rollback');
+        $connection->expects($this->never())->method('commit');
+
+        $driver = $this->createMock('Zend\Db\Adapter\Driver\DriverInterface');
+        $driver->method('getConnection')->willReturn($connection);
+
+        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
+        $adapter->method('getDriver')->willReturn($driver);
+
+        $resultSet = $this->createMock('Zend\Db\ResultSet\AbstractResultSet');
+        $resultSet->method('current')->willReturn(array('num' => 1));
+
+        $select = $this->createMock('Zend\Db\Sql\Select');
+
+        $sql = $this->createMock('Zend\Db\Sql\Sql');
+        $sql->method('select')->willReturn($select);
+
+        $clientConfig = $this->createMock('Database\Table\ClientConfig');
+        $clientConfig->expects($this->at(0))->method('getSql')->willReturn($sql);
+        $clientConfig->expects($this->at(1))->method('selectWith')->willReturn($resultSet);
+        $clientConfig->expects($this->at(2))->method('getAdapter')->willReturn($adapter);
+        $clientConfig->expects($this->at(3))->method('getSql')->willReturn($sql);
+        $clientConfig->expects($this->at(4))->method('selectWith')->willThrowException(
+            new \RuntimeException('test message')
+        );
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('test message');
+
+        $model = $this->_getModel(
+            array(
+                'Database\Table\ClientConfig' => $clientConfig,
+                'Model\Package\PackageManager' => $packageManager,
+            )
+        );
+        $model['Id'] = 1;
+
+        $model->resetPackage('packageName');
+    }
+
     public function testGetItemsDefaultArgs()
     {
         $itemManager = $this->createMock('Model\Client\ItemManager');

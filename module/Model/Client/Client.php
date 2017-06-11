@@ -405,6 +405,70 @@ class Client extends \Model\ClientOrGroup
     }
 
     /**
+     * Reset status of a package to "pending"
+     *
+     * @param string $name Package name
+     */
+    public function resetPackage($name)
+    {
+        $package = $this->_serviceLocator->get('Model\Package\PackageManager')->getPackage($name);
+        $clientConfig = $this->_serviceLocator->get('Database\Table\ClientConfig');
+
+        // Common filter for all operations
+        $where = array(
+            'hardware_id' => $this['Id'],
+            'ivalue' => $package['Id'],
+        );
+
+        $select = $clientConfig->getSql()->select();
+        $select->columns(array('num' => new \Zend\Db\Sql\Literal('COUNT(*)')));
+        $select->where($where);
+        $select->where(array('name' => 'DOWNLOAD'));
+        if ($clientConfig->selectWith($select)->current()['num'] != 1) {
+            throw new \RuntimeException(
+                sprintf('Package "%s" is not assigned to client %d', $name, $this['Id'])
+            );
+        }
+
+        $connection = $clientConfig->getAdapter()->getDriver()->getConnection();
+        $connection->beginTransaction();
+        try {
+            // Create DOWNLOAD_FORCE row if it does not already exist. This row
+            // is required for overriding the client's package history.
+            $select = $clientConfig->getSql()->select();
+            $select->columns(array('num' => new \Zend\Db\Sql\Literal('COUNT(*)')));
+            $select->where($where);
+            $select->where(array('name' => 'DOWNLOAD_FORCE'));
+            if ($clientConfig->selectWith($select)->current()['num'] != 1) {
+                $clientConfig->insert(
+                    array(
+                        'hardware_id' => $this['Id'],
+                        'name' => 'DOWNLOAD_FORCE',
+                        'ivalue' => $package['Id'],
+                        'tvalue' => '1',
+                    )
+                );
+            }
+
+            // Reset assignment row
+            $clientConfig->update(
+                array(
+                    'tvalue' => \Model\Package\Assignment::PENDING,
+                    'comments' => $this->_serviceLocator->get('Library\Now')->format(
+                        \Model\Package\Assignment::DATEFORMAT
+                    ),
+                ),
+                $where + array('name' => 'DOWNLOAD')
+            );
+
+            $connection->commit();
+        } catch (\Exception $e) {
+            $connection->rollback();
+            throw $e;
+        }
+    }
+
+    /**
      * Get all items of given type
      *
      * @param string $type Item type

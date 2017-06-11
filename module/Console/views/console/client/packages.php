@@ -27,6 +27,7 @@ $headers = array(
     'PackageName' => $this->translate('Name'),
     'Status' => $this->translate('Status'),
     'Timestamp' => $this->translate('Timestamp'),
+    'reset' => '',
     'remove' => '',
 );
 
@@ -51,6 +52,27 @@ $renderCallbacks = array(
                 $class = 'package_error';
         }
         return $view->htmlElement('span', $content, array('class' => $class), true);
+    },
+    'reset' => function ($view, $assignment) {
+        if ($assignment['Status'] != \Model\Package\Assignment::PENDING) {
+            return $view->htmlElement(
+                'a',
+                $view->translate('reset'),
+                array(
+                    'href' => $view->consoleUrl(
+                        'client',
+                        'resetpackage',
+                        array(
+                            'id' => $view->client['Id'],
+                            'package' => $assignment['PackageName'],
+                        )
+                    )
+                ),
+                true
+            );
+        } else {
+            return '';
+        }
     },
     'remove' => function ($view, $assignment) {
         return $view->htmlElement(

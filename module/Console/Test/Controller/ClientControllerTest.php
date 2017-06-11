@@ -2252,15 +2252,32 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//h2', "\nZugewiesene Pakete\n");
         $this->assertXpathQueryCount('//h2', 1);
-        $this->assertXpathQueryContentContains(
-            '//tr[2]/td[2]/span[@class="package_pending"]',
-            'Ausstehend'
-        );
+
+        $this->assertXpathQueryContentContains('//tr[2]/td[2]/span[@class="package_pending"]', 'Ausstehend');
         $this->assertXpathQueryContentContains('//tr[3]/td[2]/span[@class="package_running"]', 'Laufend');
         $this->assertXpathQueryContentContains('//tr[4]/td[2]/span[@class="package_success"]', 'Erfolg');
         $this->assertXpathQueryContentContains('//tr[5]/td[2]/span[@class="package_error"]', '<ERROR>');
+
+        // Pending package must not have "reset" link
+        $this->assertXpathQueryContentContains('//tr[2]/td[4]', "\n\n");
+        // Other packages must have "reset" link
         $this->assertXpathQueryContentContains(
-            '//tr[3]/td[4]/a[@href="/console/client/removepackage/?id=1&package=package2"]',
+            '//tr[3]/td[4]/a[@href="/console/client/resetpackage/?id=1&package=package2"]',
+            'zurücksetzen'
+        );
+        $this->assertXpathQueryContentContains(
+            '//tr[4]/td[4]/a[@href="/console/client/resetpackage/?id=1&package=package3"]',
+            'zurücksetzen'
+        );
+        $this->assertXpathQueryContentContains(
+            '//tr[5]/td[4]/a[@href="/console/client/resetpackage/?id=1&package=package4"]',
+            'zurücksetzen'
+        );
+
+        // "remove" link
+        $this->assertXpathQueryCount('//tr/td[5]/a', 4);
+        $this->assertXpathQueryContentContains(
+            '//tr[3]/td[5]/a[@href="/console/client/removepackage/?id=1&package=package2"]',
             'entfernen'
         );
     }
@@ -2700,6 +2717,42 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/assignpackage/?id=1', 'POST', $postData);
+        $this->assertRedirectTo('/console/client/packages/?id=1');
+    }
+
+    public function testResetpackageActionGet()
+    {
+        $client = $this->createMock('Model\Client\Client');
+        $client->expects($this->never())->method('resetPackage');
+        $this->_clientManager->method('getClient')->willReturn($client);
+
+        $this->dispatch('/console/client/resetpackage/?id=1&package=name');
+        $this->assertResponseStatusCode(200);
+        $this->assertXpathQueryContentContains(
+            '//p',
+            "Der Status des Pakets 'name' wird auf 'Ausstehend' zurückgesetzt. Fortfahren?"
+        );
+    }
+
+    public function testResetpackageActionPostNo()
+    {
+        $client = $this->createMock('Model\Client\Client');
+        $client->method('offsetGet')->with('Id')->willReturn(1);
+        $client->expects($this->never())->method('resetPackage');
+        $this->_clientManager->method('getClient')->willReturn($client);
+
+        $this->dispatch('/console/client/resetpackage/?id=1&package=name', 'POST', array('no' => 'No'));
+        $this->assertRedirectTo('/console/client/packages/?id=1');
+    }
+
+    public function testResetpackageActionPostYes()
+    {
+        $client = $this->createMock('Model\Client\Client');
+        $client->method('offsetGet')->with('Id')->willReturn(1);
+        $client->expects($this->once())->method('resetPackage')->with('name');
+        $this->_clientManager->method('getClient')->willReturn($client);
+
+        $this->dispatch('/console/client/resetpackage/?id=1&package=name', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/client/packages/?id=1');
     }
 
