@@ -54,8 +54,6 @@ class DisplayControllersTest extends AbstractTest
             'Database\Hydrator\Strategy\DisplayControllers\CurrentResolution',
             $hydrator->getStrategy('CurrentResolution')
         );
-        $this->assertFalse($hydrator->hasStrategy('memory'));
-        $this->assertFalse($hydrator->hasStrategy('resolution'));
 
         $resultSet = static::$_table->getResultSetPrototype();
         $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);

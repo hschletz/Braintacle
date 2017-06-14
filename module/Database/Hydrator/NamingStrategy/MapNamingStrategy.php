@@ -25,7 +25,8 @@ namespace Database\Hydrator\NamingStrategy;
  * Naming strategy using a map
  *
  * Extends MapNamingStrategy to throw an exception on undefined values.
- * Hydrated/extracted names must differ from the original name.
+ * hydrate() accepts both extracted and hydrated names for compatibility with
+ * ZF's internal usage.
  */
 class MapNamingStrategy extends \Zend\Hydrator\NamingStrategy\MapNamingStrategy
 {
@@ -36,7 +37,10 @@ class MapNamingStrategy extends \Zend\Hydrator\NamingStrategy\MapNamingStrategy
     public function hydrate($name)
     {
         $hydratedName = parent::hydrate($name);
-        if ($hydratedName == $name) {
+        if ($hydratedName == $name and
+            !isset($this->reverse[$name]) and
+            !in_array($name, $this->mapping)
+        ) {
             throw new \InvalidArgumentException('Unknown column name: ' . $name);
         }
         return $hydratedName;
