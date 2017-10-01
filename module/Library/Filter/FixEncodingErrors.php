@@ -34,7 +34,7 @@ namespace Library\Filter;
  * their original counterparts. It's safe to apply this filter to arbitrary
  * UTF-8 strings, even if it's not affected by the bug.
  */
-class FixEncodingErrors implements \Zend\Filter\FilterInterface
+class FixEncodingErrors extends \Zend\Filter\AbstractFilter
 {
     /**
      * UTF-8 sequences of characters to replace

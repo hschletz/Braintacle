@@ -25,6 +25,11 @@ use Zend\Log\Logger;
 
 class LogLevelTest extends \PHPUnit_Framework_TestCase
 {
+    public function testInterface()
+    {
+        $this->assertInstanceOf('Zend\Filter\AbstractFilter', new \Library\Filter\LogLevel);
+    }
+
     public function filterProvider()
     {
         return array(

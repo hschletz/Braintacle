@@ -26,7 +26,7 @@ use Zend\Log\Logger;
 /**
  * Convert log level descriptor strings (case insensitive) to Zend\Log\Logger constants
  */
-class LogLevel implements \Zend\Filter\FilterInterface
+class LogLevel extends \Zend\Filter\AbstractFilter
 {
     /**
      * Priority map

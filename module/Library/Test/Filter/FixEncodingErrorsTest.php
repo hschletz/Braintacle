@@ -26,9 +26,11 @@ namespace Library\Test\Filter;
  */
 class FixEncodingErrorsTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Test filter() method
-     */
+    public function testInterface()
+    {
+        $this->assertInstanceOf('Zend\Filter\AbstractFilter', new \Library\Filter\FixEncodingErrors);
+    }
+
     public function testFilter()
     {
         // 2 common example characters

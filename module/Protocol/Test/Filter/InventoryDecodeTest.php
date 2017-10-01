@@ -23,6 +23,11 @@ namespace Protocol\Test\Filter;
 
 class InventoryDecodeTest extends \PHPUnit_Framework_TestCase
 {
+    public function testInterface()
+    {
+        $this->assertInstanceOf('Zend\Filter\AbstractFilter', new \Protocol\Filter\InventoryDecode);
+    }
+
     public function filterProvider()
     {
         return array(
