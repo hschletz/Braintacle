@@ -92,6 +92,8 @@ class SubnetManager
             WHERE
                 ipsubnet != '0.0.0.0' AND
                 NOT(ipsubnet = '127.0.0.0' AND ipmask='255.0.0.0') AND
+                ipsubnet != '169.254.0.0' AND
+                ipsubnet NOT LIKE 'fe80%' AND
                 description NOT LIKE '%PPP%'
             GROUP BY ipsubnet, ipmask, name
             UNION

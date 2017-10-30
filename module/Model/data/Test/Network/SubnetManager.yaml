@@ -61,6 +61,20 @@ networks:
     description: ""
     hardware_id: 1
   -
+    # ignored because it has an IPv4 link-local address
+    macaddr: "00:00:5E:00:53:08"
+    ipsubnet: "169.254.0.0"
+    ipmask: "255.255.0.0"
+    description: "This is an interface with an IPv4 link-local address"
+    hardware_id: 1
+  -
+    # ignored because it has an IPv6 link-local address
+    macaddr: "00:00:5E:00:53:09"
+    ipsubnet: "fe80::1"
+    ipmask: "ffff:ffff:ffff:ffff:0000:0000:0000:0000"
+    description: "This is an interface with an IPv6 link-local address"
+    hardware_id: 1
+  -
     # ignored because it's a PPP interface
     macaddr: "00:00:00:00:00:00"
     ipsubnet: "192.0.2.0"
