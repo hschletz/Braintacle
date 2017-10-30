@@ -40,7 +40,13 @@ class SubnetTest extends \Model\Test\AbstractTest
         return array(
             array('0.0.0.0', 0),
             array('255.255.0.0', 16),
-            array('255.255.255.255', 32)
+            array('255.255.255.255', 32),
+            array('0000:0000:0000:0000:0000:0000:0000:0000', 0),
+            array('ffff:ffff:ffff:ffff:8000:0000:0000:0000', 65),
+            array('ffff:ffff:ffff:ffff:c000:0000:0000:0000', 66),
+            array('ffff:ffff:ffff:ffff:e000:0000:0000:0000', 67),
+            array('ffff:ffff:ffff:ffff:f000:0000:0000:0000', 68),
+            array('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff', 128),
         );
     }
 
@@ -57,19 +63,29 @@ class SubnetTest extends \Model\Test\AbstractTest
 
     public function testGetCidrAddressInvalidSyntax()
     {
-        $this->setExpectedException('DomainException', 'Not a CIDR mask: 255.0.555.0');
+        $this->expectException('DomainException');
+        $this->expectExceptionMessage('Not an IP address mask: 255.0.555.0');
         $model = $this->_getModel();
         $model['Address'] = '192.0.2.0';
         $model['Mask'] = '255.0.555.0';
         $model['CidrAddress'];
     }
 
-    public function testGetCidrAddressNotCidr()
+    public function testGetCidrAddressNotCidrIpV4()
     {
-        $this->setExpectedException('DomainException', 'Not a CIDR mask: 255.0.255.0');
+        $this->expectException('DomainException');
+        $this->expectExceptionMessage('Not a CIDR mask: 255.0.255.0');
         $model = $this->_getModel();
-        $model['Address'] = '192.0.2.0';
         $model['Mask'] = '255.0.255.0';
+        $model['CidrAddress'];
+    }
+
+    public function testGetCidrAddressNotCidrIpV6()
+    {
+        $this->expectException('DomainException');
+        $this->expectExceptionMessage('Not a CIDR mask: ffff:ffff:ffff:ffff:f0f0:0000:0000:0000');
+        $model = $this->_getModel();
+        $model['Mask'] = 'ffff:ffff:ffff:ffff:f0f0:0000:0000:0000';
         $model['CidrAddress'];
     }
 }
