@@ -17,6 +17,12 @@ Fixed bugs:
 
 - Fixed uninstallable dependency on PHP 5.6.
 
+Misc:
+
+- Console: link-local address ranges are no longer listed as networks.
+
+- Added basic support for inventoried network information with IPv6 addresses.
+
 
 CHANGES IN VERSION 1.0
 =======================
