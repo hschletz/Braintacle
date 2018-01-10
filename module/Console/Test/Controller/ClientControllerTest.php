@@ -2188,7 +2188,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->never())
              ->method('render');
         $assignments = new \Zend\Db\ResultSet\ResultSet;
-        $assignments->initialize(array());
+        $assignments->initialize(new \EmptyIterator);
+
         $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())
                ->method('getPackageAssignments')
@@ -2299,7 +2300,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             array('Id', 1),
         );
         $assignments = new \Zend\Db\ResultSet\ResultSet;
-        $assignments->initialize(array());
+        $assignments->initialize(new \EmptyIterator);
+
         $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $client->expects($this->once())
@@ -2321,7 +2323,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testGroupsActionNoGroups()
     {
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
-        $resultSet->initialize(array());
+        $resultSet->initialize(new \EmptyIterator);
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
         $form->expects($this->never())
              ->method('render');

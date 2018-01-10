@@ -264,14 +264,20 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
         $this->_form->setMessages(array('Agent' => array('contactInterval' => array('message&1'))));
         $this->_form->prepare();
 
+        $formElementErrors = $this->createMock('Zend\Form\View\Helper\FormElementErrors');
+        $formElementErrors->method('__invoke')
+                          ->with($this->isInstanceOf('Zend\Form\ElementInterface'), array('class' => 'error'))
+                          ->willReturnCallback(array($this, 'formElementErrorsMock'));
+
         $view = $this->_createView();
+        $view->getHelperPluginManager()->setService('formElementErrors', $formElementErrors);
+
         $html = $this->_form->renderFieldset($view, $this->_form->get('Agent'));
         $document = new \Zend\Dom\Document($html);
 
         $this->assertCount(1, Query::execute('//input[@class="input-error"]', $document));
-        $this->assertCount(1, Query::execute('//ul[@class="error"]', $document));
-        $this->assertCount(1, Query::execute('//ul[@class="error"]/li', $document));
-        $this->assertCount(1, Query::execute('//ul[@class="error"]/li[text()="message&1"]', $document));
+        $this->assertCount(1, Query::execute('//ul[@class="errorMock"]', $document));
+        $this->assertCount(1, Query::execute('//ul[@class="errorMock"]/li[text()="message&1"]', $document));
     }
 
     public function testRenderFieldsetForm()

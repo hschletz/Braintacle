@@ -27,20 +27,14 @@ namespace Library;
 class Application
 {
     /**
-     * Set up application environment
+     * Initialize MVC application
      *
-     * This sets up the PHP environment, loads the provided module and returns
-     * the MVC application.
-     *
-     * @param string $module Module to load
+     * @param string $module Module that provides the application
      * @return \Zend\Mvc\Application
      * @codeCoverageIgnore
      */
     public static function init($module)
     {
-        // Set up PHP environment.
-        session_cache_limiter('nocache'); // Default headers to prevent caching
-
         return \Zend\Mvc\Application::init(static::getApplicationConfig($module));
     }
 

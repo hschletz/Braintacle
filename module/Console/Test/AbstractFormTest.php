@@ -102,8 +102,35 @@ abstract class AbstractFormTest extends \PHPUnit_Framework_TestCase
             )
         );
         $view = new \Zend\View\Renderer\PhpRenderer;
-        $view->setHelperPluginManager($serviceManager->get('ViewHelperManager'));
+        $view->setHelperPluginManager(clone $serviceManager->get('ViewHelperManager'));
         return $view;
+    }
+
+    /**
+     * Callback for mocking formElementErrors helper
+     *
+     * Can be used to replace the formElementErrors helper with a simplified
+     * function which bypasses some of the original helper's functionality,
+     * in particular the translator.
+     *
+     * If the element contains messages, the first one will be rendered in an UL
+     * element with class "errorMock".
+     *
+     * $attributes is ignored here. The parameter should be checked by the mock
+     * object.
+     *
+     * @param \Zend\Form\ElementInterface $element
+     * @param array $attributes
+     * @return string
+     */
+    public function formElementErrorsMock($element, $attributes)
+    {
+        $messages = $element->getMessages();
+        if ($messages) {
+            return sprintf('<ul class="errorMock"><li>%s</li></ul>', $messages[0]);
+        } else {
+            return '';
+        }
     }
 
     /**

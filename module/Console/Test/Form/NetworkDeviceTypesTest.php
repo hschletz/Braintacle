@@ -335,19 +335,28 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
     {
         $this->_form->get('Types')->get('name0')->setMessages(array('message_name0'));
         $this->_form->get('Add')->setMessages(array('message_add'));
-        $html = $this->_form->renderFieldset($this->_createView(), $this->_form);
+
+        $formElementErrors = $this->createMock('Zend\Form\View\Helper\FormElementErrors');
+        $formElementErrors->method('__invoke')
+                          ->with($this->isInstanceOf('Zend\Form\ElementInterface'), array('class' => 'error'))
+                          ->willReturnCallback(array($this, 'formElementErrorsMock'));
+
+        $view = $this->_createView();
+        $view->getHelperPluginManager()->setService('formElementErrors', $formElementErrors);
+
+        $html = $this->_form->renderFieldset($view, $this->_form);
         $document = new \Zend\Dom\Document($html);
         $this->assertCount(
             1,
             Query::execute(
-                '//input[@name="name0"]/following::ul[1][@class="error"]/li[text()="message_name0"]',
+                '//input[@name="name0"]/following::ul[1][@class="errorMock"]/li[text()="message_name0"]',
                 $document
             )
         );
         $this->assertCount(
             1,
             Query::execute(
-                '//input[@name="Add"]/following::ul[1][@class="error"]/li[text()="message_add"]',
+                '//input[@name="Add"]/following::ul[1][@class="errorMock"]/li[text()="message_add"]',
                 $document
             )
         );

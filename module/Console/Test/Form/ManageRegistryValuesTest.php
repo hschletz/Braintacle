@@ -203,10 +203,19 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
 
     public function testRender()
     {
-        $this->_form->get('existing')->get('value_1_name')->setMessages(array('test' => 'Message1'));
-        $this->_form->get('new_value')->get('subkeys')->setMessages(array('test' => 'Message2'));
+        $this->_form->get('existing')->get('value_1_name')->setMessages(array('Message1'));
+        $this->_form->get('new_value')->get('subkeys')->setMessages(array('Message2'));
+
+        $formElementErrors = $this->createMock('Zend\Form\View\Helper\FormElementErrors');
+        $formElementErrors->method('__invoke')
+                          ->with($this->isInstanceOf('Zend\Form\ElementInterface'), array('class' => 'errors'))
+                          ->willReturnCallback(array($this, 'formElementErrorsMock'));
+
+        $view = $this->_createView();
+        $view->getHelperPluginManager()->setService('formElementErrors', $formElementErrors);
+
         $document = new \Zend\Dom\Document(
-            $this->_form->render($this->_createView())
+            $this->_form->render($view)
         );
 
         // Test state of inspect checkbox
@@ -256,7 +265,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         $this->assertCount(1, $result);
 
         // Test message rendering
-        $result = Query::execute('//ul[@class="errors"]/li', $document);
+        $result = Query::execute('//ul[@class="errorMock"]/li', $document);
         $this->assertCount(2, $result);
         $this->assertEquals("Message1", $result[0]->textContent);
         $this->assertEquals("Message2", $result[1]->textContent);
@@ -303,7 +312,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         );
 
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
-        $resultSet->initialize(array());
+        $resultSet->initialize(new \EmptyIterator);
         $registryManager = $this->createMock('Model\Registry\RegistryManager');
         $registryManager->expects($this->once())
                         ->method('getValueDefinitions')
@@ -347,7 +356,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         );
 
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
-        $resultSet->initialize(array());
+        $resultSet->initialize(new \EmptyIterator);
         $registryManager = $this->createMock('Model\Registry\RegistryManager');
         $registryManager->expects($this->once())
                         ->method('getValueDefinitions')

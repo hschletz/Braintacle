@@ -244,7 +244,15 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
     public function testRender()
     {
         $this->_form->get('NewGroup')->setMessages(array('message'));
+
+        $formElementErrors = $this->createMock('Zend\Form\View\Helper\FormElementErrors');
+        $formElementErrors->method('__invoke')
+                          ->with($this->isInstanceOf('Zend\Form\ElementInterface'), array('class' => 'error'))
+                          ->willReturnCallback(array($this, 'formElementErrorsMock'));
+
         $view = $this->_createView();
+        $view->getHelperPluginManager()->setService('formElementErrors', $formElementErrors);
+
         $html = $this->_form->render($view);
         $this->assertContains('function selectElements()', $view->headScript()->toString());
         $this->assertContains('selectElements()', $view->placeholder('BodyOnLoad')->getValue());
@@ -263,7 +271,7 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
         $this->assertCount(1, Query::execute('//input[@type="text"][@name="Description"]', $document));
         $this->assertCount(1, Query::execute('//select[@name="ExistingGroup"]', $document));
         $this->assertCount(1, Query::execute('//input[@type="submit"]', $document));
-        $this->assertCount(1, Query::execute('//ul[@class="error"]/li[text()="message"]', $document));
+        $this->assertCount(1, Query::execute('//ul[@class="errorMock"]/li[text()="message"]', $document));
     }
 
     public function testProcessNewGroup()

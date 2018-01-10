@@ -9,6 +9,9 @@ without any warranty.
 CHANGES IN VERSION 1.2
 =======================
 
+Misc:
+
+- Fixed PHP 7.2 compatibility.
 
 
 CHANGES IN VERSION 1.1

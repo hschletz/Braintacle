@@ -95,7 +95,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     public function testIndexActionNoData()
     {
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
-        $resultSet->initialize(array());
+        $resultSet->initialize(new \EmptyIterator);
         $this->_groupManager->expects($this->once())
                             ->method('getGroups')
                             ->with(null, null, 'Name', 'asc')
@@ -151,7 +151,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     public function testIndexActionMessages()
     {
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
-        $resultSet->initialize(array());
+        $resultSet->initialize(new \EmptyIterator);
         $this->_groupManager->expects($this->once())->method('getGroups')->willReturn($resultSet);
 
         $flashMessenger = $this->createMock('Zend\View\Helper\FlashMessenger');

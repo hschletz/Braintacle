@@ -98,7 +98,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     public function testInitInvalidDatatype()
     {
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
-        $resultSet->initialize(array());
+        $resultSet->initialize(new \EmptyIterator);
         $registryManager = $this->createMock('Model\Registry\RegistryManager');
         $registryManager->method('getValueDefinitions')->willReturn($resultSet);
         $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');

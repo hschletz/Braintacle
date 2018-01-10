@@ -81,6 +81,11 @@ class Module implements
     /**
      * Hook to set the default translator for validators
      *
+     * Also disables translations in the FormElementErrors view helper.
+     * Otherwise it would try to translate the already translated messages from
+     * the validators. Translation must be left to the validators because only
+     * validators can handle placeholders in message templates.
+     *
      * This is invoked by the "route" event to avoid invocation of factories
      * within the bootstrap event which would cause problems for testing.
      *
@@ -88,9 +93,9 @@ class Module implements
      */
     public function setValidatorTranslator(\Zend\Mvc\MvcEvent $e)
     {
-        \Zend\Validator\AbstractValidator::setDefaultTranslator(
-            $e->getApplication()->getServiceManager()->get('MvcTranslator')
-        );
+        $serviceManager = $e->getApplication()->getServiceManager();
+        \Zend\Validator\AbstractValidator::setDefaultTranslator($serviceManager->get('MvcTranslator'));
+        $serviceManager->get('ViewHelperManager')->get('FormElementErrors')->setTranslatorEnabled(false);
     }
 
     /**

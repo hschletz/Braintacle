@@ -71,7 +71,8 @@ class Cpu extends DefaultPlugin
         unset($row);
 
         $resultSet = clone $this->_table->getResultSetPrototype();
-        $resultSet->initialize($result);
+        // Wrap in ArrayIterator to work around https://github.com/zendframework/zend-db/issues/295
+        $resultSet->initialize(new \ArrayIterator($result));
         return $resultSet;
     }
 

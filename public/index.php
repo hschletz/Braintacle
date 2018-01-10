@@ -20,6 +20,7 @@
  */
 
 error_reporting(-1);
+session_cache_limiter('nocache'); // Default headers to prevent caching
 
 require_once('../vendor/autoload.php');
 
