@@ -13,6 +13,8 @@ Misc:
 
 - Fixed PHP 7.2 compatibility.
 
+- Server: Updated server to version 2.4.
+
 
 CHANGES IN VERSION 1.1
 =======================
