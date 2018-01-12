@@ -9,6 +9,10 @@ without any warranty.
 CHANGES IN VERSION 1.2
 =======================
 
+Fixed bugs:
+
+- Fixed insufficient validation in Preferences/Groups form.
+
 Misc:
 
 - Fixed PHP 7.2 compatibility.

@@ -113,6 +113,22 @@ class GroupsTest extends \Console\Test\AbstractFormTest
         $this->assertArrayHasKey('isEmpty', $messages['groupCacheExpirationFuzz']);
     }
 
+    public function testInputFilterOnlyFirstIntegerInvalid()
+    {
+        $preferences = array(
+            'groupCacheExpirationInterval' => '1a',
+            'groupCacheExpirationFuzz' => '2',
+            'setGroupPackageStatus' => '0',
+        );
+        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setData(array('Preferences' => $preferences));
+        $this->assertFalse($this->_form->isValid());
+        $messages = $this->_form->getMessages()['Preferences'];
+        $this->assertCount(1, $messages);
+        $this->assertCount(1, $messages['groupCacheExpirationInterval']);
+        $this->assertArrayHasKey('callbackValue', $messages['groupCacheExpirationInterval']);
+    }
+
     public function testLocalizeIntegers()
     {
         $preferences = array(

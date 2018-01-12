@@ -61,7 +61,7 @@ class Groups extends AbstractForm
             array(
                 'name' => 'groupCacheExpirationInterval',
                 'filters' => array($integerFilter),
-                'validators' => $validatorChain,
+                'validators' => clone $validatorChain,
             )
         );
 
@@ -73,7 +73,7 @@ class Groups extends AbstractForm
             array(
                 'name' => 'groupCacheExpirationFuzz',
                 'filters' => array($integerFilter),
-                'validators' => $validatorChain,
+                'validators' => clone $validatorChain,
             )
         );
 
