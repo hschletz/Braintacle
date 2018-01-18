@@ -2,7 +2,7 @@
     "name": "hschletz/braintacle",
     "description": "A set of applications for managing hard- and software on a network",
     "homepage": "https://github.com/hschletz/Braintacle",
-    "license": "GPL-2.0+",
+    "license": "GPL-2.0-or-later",
     "authors": [
         {
             "name": "Holger Schletz",
