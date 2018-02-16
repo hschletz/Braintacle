@@ -28,10 +28,20 @@ use \Zend\Dom\Document\Query as Query;
  */
 class FormYesNoTest extends AbstractTest
 {
+    public function invokeAttributesProvider()
+    {
+        return array(
+            array(array(), array('method' => 'post')),
+            array(array('foo' => 'bar'), array('foo' => 'bar', 'method' => 'post')),
+            array(array('method' => 'get'), array('method' => 'get')),
+            array(array('method' => 'get', 'foo' => 'bar'), array('method' => 'get', 'foo' => 'bar')),
+        );
+    }
+
     /**
-     * Tests for the __invoke() method
+     * @dataProvider invokeAttributesProvider
      */
-    public function testInvoke()
+    public function testInvoke($attributesOrig, $attributesUpdated)
     {
         $translate = $this->createMock('Zend\I18n\View\Helper\Translate');
         $translate->method('__invoke')->willReturnCallback(
@@ -52,14 +62,15 @@ class FormYesNoTest extends AbstractTest
                             'value' => 'hiddenValue',
                         )
                     )->willReturn('<input type="hidden" name="hiddenName" value="hiddenValue">');
+        $htmlElement->method('htmlAttribs')->with($attributesUpdated)->willReturn(' method="_method"');
 
         $helper = new \Library\View\Helper\FormYesNo($translate, $htmlElement);
 
-        $result = $helper('TestCaption', array('hiddenName' => 'hiddenValue'));
+        $result = $helper('TestCaption', array('hiddenName' => 'hiddenValue'), $attributesOrig);
         $document = new \Zend\Dom\Document($result);
 
         $this->assertCount(1, Query::execute('//p[text()="TestCaption"]', $document));
-        $this->assertCount(1, Query::execute('//form[@action=""][@method="POST"]', $document));
+        $this->assertCount(1, Query::execute('//form[@method="_method"]', $document));
         $this->assertCount(
             1,
             Query::execute('//input[@type="hidden"][@name="hiddenName"][@value="hiddenValue"]', $document)
