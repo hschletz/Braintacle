@@ -104,4 +104,10 @@ class HtmlElementTest extends AbstractTest
 
         $this->assertEquals($output, $helper($element, null, null, true));
     }
+
+    public function testHtmlAttribs()
+    {
+        $helper = $this->_getHelper();
+        $this->assertEquals(' foo="bar"', $helper->htmlAttribs(array('foo' => 'bar')));
+    }
 }

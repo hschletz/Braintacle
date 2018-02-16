@@ -107,4 +107,11 @@ class HtmlElement extends \Zend\View\Helper\AbstractHtmlElement
 
         return $output;
     }
+
+    /** {@inheritdoc} */
+    public function htmlAttribs($attribs)
+    {
+        // This is simply a public wrapper for the parent's protected method.
+        return parent::htmlAttribs($attribs);
+    }
 }
