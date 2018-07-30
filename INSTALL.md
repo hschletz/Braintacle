@@ -258,7 +258,7 @@ access for the web server. Uploaded packages will be stored in this directory.
     chown www-data:www-data /var/lib/braintacle/download
     chmod 775 /var/lib/braintacle/download
 
-In the administration console, enter the path unter Preferences->Packages. In
+In the administration console, enter the path unter Preferences->Download. In
 the same dialog, you have to specify 2 URLs (1 for HTTP, 1 for HTTPS) which must
 point to this directory. An Apache template
 (config/braintacle-download.conf.template) is provided for this purpose. The
