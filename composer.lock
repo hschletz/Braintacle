@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2626bb6ecae5405d1251c39c91df8781",
+    "content-hash": "9d32db65e2dd835a1a3a38f85abba3d1",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -2212,6 +2212,7 @@
                 "version",
                 "zf2"
             ],
+            "abandoned": "ocramius/package-versions",
             "time": "2015-06-04T15:41:05+00:00"
         },
         {
@@ -5925,6 +5926,7 @@
     "prefer-lowest": false,
     "platform": {
         "php": ">=5.6",
+        "ext-dom": "*",
         "ext-intl": "*",
         "ext-zip": "*"
     },

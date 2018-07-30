@@ -19,6 +19,7 @@
     },
     "require": {
         "php": ">=5.6",
+        "ext-dom": "*",
         "ext-intl": "*",
         "ext-zip": "*",
         "hschletz/nada": "^1.0",
