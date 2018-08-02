@@ -119,8 +119,8 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
         $messages = array(
             'Types' => array(
-                'name0' => array('callbackValue' => 'Der Name existiert bereits'),
-                'name1' => array('callbackValue' => 'Der Name existiert bereits'),
+                'name0' => array('callbackValue' => 'TRANSLATE(The name already exists)'),
+                'name1' => array('callbackValue' => 'TRANSLATE(The name already exists)'),
             ),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
@@ -140,7 +140,7 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
         $messages = array(
             'Types' => array(
-                'name1' => array('callbackValue' => 'Der Name existiert bereits'),
+                'name1' => array('callbackValue' => 'TRANSLATE(The name already exists)'),
             ),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
@@ -160,7 +160,7 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
         $messages = array(
             'Types' => array(
-                'name1' => array('callbackValue' => 'Der Name existiert bereits'),
+                'name1' => array('callbackValue' => 'TRANSLATE(The name already exists)'),
             ),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
@@ -180,8 +180,8 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
         $messages = array(
             'Types' => array(
-                'name0' => array('callbackValue' => 'Der Name existiert bereits'),
-                'name1' => array('callbackValue' => 'Der Name existiert bereits'),
+                'name0' => array('callbackValue' => 'TRANSLATE(The name already exists)'),
+                'name1' => array('callbackValue' => 'TRANSLATE(The name already exists)'),
             ),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
@@ -232,7 +232,7 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = array(
-            'Add' => array('callbackValue' => 'Der Name existiert bereits'),
+            'Add' => array('callbackValue' => 'TRANSLATE(The name already exists)'),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
     }
@@ -250,7 +250,7 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = array(
-            'Add' => array('callbackValue' => 'Der Name existiert bereits'),
+            'Add' => array('callbackValue' => 'TRANSLATE(The name already exists)'),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
     }

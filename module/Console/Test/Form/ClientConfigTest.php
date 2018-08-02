@@ -398,8 +398,8 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = array(
-            'contactInterval' => array('callbackValue' => "Die Eingabe ist nicht größer oder gleich '1'"),
-            'inventoryInterval' => array('callbackValue' => "Die Eingabe ist nicht größer oder gleich '-1'"),
+            'contactInterval' => array('callbackValue' => "TRANSLATE(The input is not greater or equal than '1')"),
+            'inventoryInterval' => array('callbackValue' => "TRANSLATE(The input is not greater or equal than '-1')"),
         );
         $this->assertEquals($messages, $this->_form->getMessages()['Agent']);
     }
@@ -500,7 +500,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
         $this->_form->setValidationGroup('Download');
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
-        $message = array('callbackValue' => "Die Eingabe ist nicht größer oder gleich '1'");
+        $message = array('callbackValue' => "TRANSLATE(The input is not greater or equal than '1')");
         $messages = array(
             'downloadPeriodDelay' => $message,
             'downloadCycleDelay' => $message,

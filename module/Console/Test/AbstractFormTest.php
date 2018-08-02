@@ -41,17 +41,38 @@ abstract class AbstractFormTest extends \PHPUnit_Framework_TestCase
     const HTML_HEADER = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">';
 
     /**
+     * Backup of default translator
+     * @var \Zend\Validator\Translator\TranslatorInterface
+     */
+    protected $_defaultTranslatorBackup;
+
+    /**
      * Form instance provided by setUp()
      * @var \Console\Form\Form
      */
     protected $_form;
 
-    /**
-     * Set up form instance
-     */
     public function setUp()
     {
+        $translator = $this->createMock('\Zend\Validator\Translator\TranslatorInterface');
+        $translator->method('translate')->willReturnCallback(array($this, 'translatorMock'));
+        $this->_defaultTranslatorBackup = \Zend\Validator\AbstractValidator::getDefaultTranslator();
+        \Zend\Validator\AbstractValidator::setDefaultTranslator($translator);
+
         $this->_form = $this->_getForm();
+    }
+
+    public function tearDown()
+    {
+        \Zend\Validator\AbstractValidator::setDefaultTranslator($this->_defaultTranslatorBackup);
+    }
+
+    /**
+     * Replacement for translator
+     */
+    public function translatorMock($message)
+    {
+        return "TRANSLATE($message)";
     }
 
     /**

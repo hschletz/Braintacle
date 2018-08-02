@@ -141,7 +141,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
         $this->assertCount(2, $this->_form->getMessages());
         $this->assertCount(1, $this->_form->getMessages('mergeGroups'));
         $this->assertEquals(
-            array('Es müssen mindestens 2 verschiedene Clients ausgewählt werden'),
+            array('TRANSLATE(At least 2 different clients have to be selected)'),
             $this->_form->getMessages('clients')
         );
     }
@@ -161,7 +161,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
 
         $this->assertCount(1, $this->_form->getMessages());
         $this->assertEquals(
-            array('Es müssen mindestens 2 verschiedene Clients ausgewählt werden'),
+            array('TRANSLATE(At least 2 different clients have to be selected)'),
             $this->_form->getMessages('clients')
         );
     }

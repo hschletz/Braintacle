@@ -425,10 +425,10 @@ class BuildTest extends \Console\Test\AbstractFormTest
         $this->assertEquals(
             array(
                 'WarnMessage' => array(
-                    'callbackValue' => 'Meldung darf keine doppelten Anführungszeichen enthalten.',
+                    'callbackValue' => 'TRANSLATE(Message must not contain double quotes.)',
                 ),
                 'PostInstMessage' => array(
-                    'callbackValue' => 'Meldung darf keine doppelten Anführungszeichen enthalten.',
+                    'callbackValue' => 'TRANSLATE(Message must not contain double quotes.)',
                 ),
             ),
             $this->_form->getMessages()

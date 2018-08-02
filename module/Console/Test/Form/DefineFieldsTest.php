@@ -126,8 +126,8 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
         $messages = array(
             'Fields' => array(
-                'name0' => array('callbackValue' => 'Der Name existiert bereits'),
-                'name1' => array('callbackValue' => 'Der Name existiert bereits'),
+                'name0' => array('callbackValue' => 'TRANSLATE(The name already exists)'),
+                'name1' => array('callbackValue' => 'TRANSLATE(The name already exists)'),
             ),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
@@ -148,7 +148,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
         $messages = array(
             'Fields' => array(
-                'name1' => array('callbackValue' => 'Der Name existiert bereits'),
+                'name1' => array('callbackValue' => 'TRANSLATE(The name already exists)'),
             ),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
@@ -169,7 +169,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
         $messages = array(
             'Fields' => array(
-                'name1' => array('callbackValue' => 'Der Name existiert bereits'),
+                'name1' => array('callbackValue' => 'TRANSLATE(The name already exists)'),
             ),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
@@ -190,8 +190,8 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
         $messages = array(
             'Fields' => array(
-                'name0' => array('callbackValue' => 'Der Name existiert bereits'),
-                'name1' => array('callbackValue' => 'Der Name existiert bereits'),
+                'name0' => array('callbackValue' => 'TRANSLATE(The name already exists)'),
+                'name1' => array('callbackValue' => 'TRANSLATE(The name already exists)'),
             ),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
@@ -245,7 +245,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = array(
-            'NewName' => array('callbackValue' => 'Der Name existiert bereits'),
+            'NewName' => array('callbackValue' => 'TRANSLATE(The name already exists)'),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
     }
@@ -264,7 +264,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = array(
-            'NewName' => array('callbackValue' => 'Der Name existiert bereits'),
+            'NewName' => array('callbackValue' => 'TRANSLATE(The name already exists)'),
         );
         $this->assertEquals($messages, $this->_form->getMessages());
     }
