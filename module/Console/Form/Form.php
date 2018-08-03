@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
 namespace Console\Form;
@@ -39,18 +38,12 @@ namespace Console\Form;
  *
  * - isValid() handles oversized POST requests gracefully.
  *
- * - Default rendering methods.
+ * - Default rendering methods (deprecated).
  *
  * - Helper methods for dealing with localized integer, float and date formats.
  */
 class Form extends \Zend\Form\Form
 {
-    /**
-     * Flag to indicate exceeded post_max_size;
-     * @var bool
-     */
-    protected $_errorPostMaxSize = false;
-
     /** {@inheritdoc} */
     public function init()
     {
@@ -70,10 +63,8 @@ class Form extends \Zend\Form\Form
     public function isValid()
     {
         if (empty($_POST) and empty($_FILES) and strtoupper(@$_SERVER['REQUEST_METHOD']) == 'POST') {
-            // post_max_size has been exceeded. Set a flag for further
-            // evaluation and fail without further validation which would not
-            // give any useful results in this situation.
-            $this->_errorPostMaxSize = true;
+            // post_max_size has been exceeded. Fail without further validation
+            // which would not give any useful results in this situation.
             return false;
         }
         return parent::isValid();
@@ -84,33 +75,12 @@ class Form extends \Zend\Form\Form
      *
      * @param \Zend\View\Renderer\PhpRenderer $view
      * @return string HTML form code
+     * @deprecated write and invoke a view helper instead
      */
     public function render(\Zend\View\Renderer\PhpRenderer $view)
     {
-        $output = '';
-        if ($this->_errorPostMaxSize) {
-            $output .= $view->htmlElement(
-                'p',
-                sprintf(
-                    $view->translate('The post_max_size value of %s has been exceeded.'),
-                    ini_get('post_max_size')
-                ),
-                array('class' => 'error')
-            );
-        }
-        $this->prepare();
-        $output .= $view->form()->openTag($this);
-        $output .= "\n";
-        if ($this->has('_csrf')) {
-            $output .= "<div>";
-            $output .= $view->formHidden($this->get('_csrf'));
-            $output .= "</div>\n";
-        }
-        $output .= $this->renderFieldset($view, $this);
-        $output .= "\n";
-        $output .= $view->form()->closeTag();
-        $output .= "\n";
-        return $output;
+        $helper = $view->plugin('Console\View\Helper\Form\LegacyHelper');
+        return $helper($this);
     }
 
     /**
@@ -123,6 +93,7 @@ class Form extends \Zend\Form\Form
      * @param \Zend\View\Renderer\PhpRenderer $view
      * @param \Zend\Form\Fieldset $fieldset
      * @return string HTML code
+     * @deprecated to be implemented/replaced by view helper
      */
     public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset)
     {
