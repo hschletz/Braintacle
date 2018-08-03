@@ -13,3 +13,4 @@ doc/CodeCoverage/*
 
 # generated and managed by composer
 vendor/
+public/components/

@@ -9,6 +9,11 @@ without any warranty.
 CHANGES IN VERSION 1.3
 =======================
 
+Upgrading from previous versions:
+
+- Required: Run "composer install" from the Braintacle root directory to
+  update dependencies.
+
 
 CHANGES IN VERSION 1.2
 =======================

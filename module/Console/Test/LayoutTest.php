@@ -82,6 +82,16 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
             1,
             Query::execute(
                 sprintf(
+                    '/html/head/script[@src="/components/jquery/jquery.min.js?%d"]',
+                    filemtime(__DIR__ . '/../../../public/components/jquery/jquery.min.js')
+                ),
+                $document
+            )
+        );
+        $this->assertCount(
+            1,
+            Query::execute(
+                sprintf(
                     '/html/head/script[@src="/braintacle.js?%d"]',
                     filemtime(__DIR__ . '/../../../public/braintacle.js')
                 ),

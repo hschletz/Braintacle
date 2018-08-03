@@ -22,6 +22,7 @@
         "ext-dom": "*",
         "ext-intl": "*",
         "ext-zip": "*",
+        "components/jquery": "^3.0",
         "hschletz/nada": "^1.0",
         "zendframework/zend-authentication": "^2.5",
         "zendframework/zend-cache": "^2.5",
@@ -77,6 +78,7 @@
     "config": {
         "platform": {
             "php": "5.6.30"
-        }
+        },
+        "component-dir": "public/components"
     }
 }

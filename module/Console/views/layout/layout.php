@@ -31,8 +31,13 @@ print "\n";
 print $this->HeadLink()->appendStylesheet($this->basePath('style.css'));
 print "\n";
 
-// Load JS ressource with its mtime appended as URL parameter to force a reload
+// Load JS ressources with its mtime appended as URL parameter to force a reload
 // (bypassing stale cache) on each change.
+printf(
+    "<script src='%s?%d'></script>\n",
+    $this->basePath('components/jquery/jquery.min.js'),
+    filemtime(__DIR__ . '/../../../../public/components/jquery/jquery.min.js')
+);
 printf(
     "<script src='%s?%d'></script>\n",
     $this->basePath('braintacle.js'),
