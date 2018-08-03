@@ -78,6 +78,16 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
                 $document
             )
         );
+        $this->assertCount(
+            1,
+            Query::execute(
+                sprintf(
+                    '/html/head/script[@src="/braintacle.js?%d"]',
+                    filemtime(__DIR__ . '/../../../public/braintacle.js')
+                ),
+                $document
+            )
+        );
     }
 
     public function testTitle()
