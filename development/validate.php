@@ -27,6 +27,7 @@ $cmd = array(
     escapeshellarg(realpath(__DIR__ . '/../vendor/bin/phpcs')),
     '-n', // suppress warnings
     '--standard=PSR2',
+    '--extensions=php',
     escapeshellarg($baseDir . 'development'),
     escapeshellarg($baseDir . 'module'),
     escapeshellarg($baseDir . 'public'),
