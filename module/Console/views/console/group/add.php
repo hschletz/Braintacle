@@ -23,4 +23,4 @@ print $this->htmlElement(
     'h1',
     $this->translate('Save to group')
 );
-print $this->form->render($this);
+print $this->consoleForm($this->form);

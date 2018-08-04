@@ -67,12 +67,13 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
         $this->assertInstanceOf('Zend\Form\Element\Radio', $what);
         $this->assertCount(3, $what->getValueOptions());
         $this->assertEquals(\Model\Client\Client::MEMBERSHIP_AUTOMATIC, $what->getValue());
+        $this->assertEquals(array('class' => 'what'), $what->getLabelAttributes());
 
         $where = $this->_form->get('Where');
         $this->assertInstanceOf('Zend\Form\Element\Radio', $where);
         $this->assertCount(2, $where->getValueOptions());
         $this->assertEquals('new', $where->getValue());
-        $this->assertEquals('selectElements()', $where->getAttribute('onchange'));
+        $this->assertEquals(array('class' => 'where'), $where->getLabelAttributes());
 
         $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('NewGroup'));
         $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('Description'));
@@ -239,39 +240,6 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
         );
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
-    }
-
-    public function testRender()
-    {
-        $this->_form->get('NewGroup')->setMessages(array('message'));
-
-        $formElementErrors = $this->createMock('Zend\Form\View\Helper\FormElementErrors');
-        $formElementErrors->method('__invoke')
-                          ->with($this->isInstanceOf('Zend\Form\ElementInterface'), array('class' => 'error'))
-                          ->willReturnCallback(array($this, 'formElementErrorsMock'));
-
-        $view = $this->_createView();
-        $view->getHelperPluginManager()->setService('formElementErrors', $formElementErrors);
-
-        $html = $this->_form->render($view);
-        $this->assertContains('function selectElements()', $view->headScript()->toString());
-        $this->assertContains('selectElements()', $view->placeholder('BodyOnLoad')->getValue());
-        $document = new \Zend\Dom\Document($html);
-        $this->assertCount(1, Query::execute('//legend//*[text()="What to save"]', $document));
-        $this->assertCount(3, Query::execute('//input[@type="radio"][@name="What"]', $document));
-        $this->assertCount(1, Query::execute('//legend//*[text()="Where to save"]', $document));
-        $this->assertCount(2, Query::execute('//input[@type="radio"][@name="Where"]', $document));
-        $this->assertCount(
-            1,
-            Query::execute(
-                '//input[@type="text"][@name="NewGroup"][@class="input-error"]',
-                $document
-            )
-        );
-        $this->assertCount(1, Query::execute('//input[@type="text"][@name="Description"]', $document));
-        $this->assertCount(1, Query::execute('//select[@name="ExistingGroup"]', $document));
-        $this->assertCount(1, Query::execute('//input[@type="submit"]', $document));
-        $this->assertCount(1, Query::execute('//ul[@class="errorMock"]/li[text()="message"]', $document));
     }
 
     public function testProcessNewGroup()

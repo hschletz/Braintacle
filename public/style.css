@@ -360,6 +360,33 @@ input[size="8"]
     margin-top: 3ex;
 }
 
+/* Rules for individual forms */
+
+form.form_addtogroup {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+}
+form.form_addtogroup > * {
+    display: block;
+    margin-top: 2ex;
+}
+.form_addtogroup .what + .where {
+    margin-top: 4ex;
+}
+.form_addtogroup ul {
+    color: red;
+}
+.form_addtogroup input, .form_addtogroup select {
+    margin-left: 0;
+}
+.form_addtogroup label span {
+    display: block;
+    margin-bottom: .5ex;
+}
+
+/* The following rules are for forms still using the deprecated render() method. */
+
 .form_yesno {
     text-align: center;
 }
@@ -370,39 +397,6 @@ input[size="8"]
 
 .form_package_assign input[type="submit"] {
     margin-left: 0;
-}
-
-.form_addtogroup fieldset {
-    border: none;
-    padding: 0;
-}
-
-.form_addtogroup fieldset + fieldset {
-    margin-top: 2ex;
-}
-
-.form_addtogroup legend span{
-    display: none;
-}
-
-.form_addtogroup input, .form_addtogroup select {
-    margin-left: 0;
-}
-
-.form_addtogroup input[type="radio"] {
-    display: inline;
-}
-
-.form_addtogroup label span {
-    display: block;
-    text-align: left;
-    margin: 1ex 0 0;
-}
-
-.form_addtogroup .error {
-    margin: 0;
-    padding: 0;
-    text-align: left;
 }
 
 .form_clientconfig .label {

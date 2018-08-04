@@ -49,6 +49,7 @@ class AddToGroup extends Form
             )
         );
         $what->setValue(\Model\Client\Client::MEMBERSHIP_AUTOMATIC);
+        $what->setLabelAttributes(array('class' => 'what'));
         $this->add($what);
 
         $where = new \Zend\Form\Element\Radio('Where');
@@ -58,8 +59,8 @@ class AddToGroup extends Form
                 'existing' => $this->_('Store in existing group')
             )
         );
-        $where->setValue('new')
-              ->setAttribute('onchange', 'selectElements()');
+        $where->setValue('new');
+        $where->setLabelAttributes(array('class' => 'where'));
         $this->add($where);
 
         $newGroup = new \Zend\Form\Element\Text('NewGroup');
@@ -183,82 +184,6 @@ class AddToGroup extends Form
             $result = true; // Field is ignored for existing groups
         }
         return $result;
-    }
-
-    /** {@inheritdoc} */
-    public function render(\Zend\View\Renderer\PhpRenderer $view)
-    {
-        $view->headScript()->captureStart();
-        ?>
-
-        /**
-         * Show/hide elements according to selected "Where" radio button
-         */
-        function selectElements()
-        {
-            var buttons = document.getElementsByName('Where');
-            var newGroup;
-            for (var i = 0; i < buttons.length; i++) {
-                if (buttons[i].value == 'new') {
-                    newGroup = buttons[i].checked;
-                    break;
-                }
-            }
-            if (newGroup) {
-                display('NewGroup', true);
-                display('Description', true);
-                display('ExistingGroup', false);
-            } else {
-                display('NewGroup', false);
-                display('Description', false);
-                display('ExistingGroup', true);
-            }
-            var errors = document.getElementsByClassName('error');
-            for (i = 0; i < errors.length; i++) {
-                errors[i].style.display = newGroup ? 'block' : 'none';
-            }
-        }
-
-        /**
-         * Hide or show a form element
-         *
-         * name (string): element name
-         * show (bool): true to show, false to hide
-         */
-        function display(name, show)
-        {
-            document.getElementsByName(name)[0].parentNode.style.display = show ? 'table-row' : 'none';
-        }
-
-        <?php
-        $view->headScript()->captureEnd();
-        $view->placeholder('BodyOnLoad')->append('selectElements()');
-
-        return parent::render($view);
-    }
-
-    /** {@inheritdoc} */
-    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset)
-    {
-        $output = "<div class='table'>\n";
-
-        $output .= "<fieldset><legend><span>What to save</span></legend>\n";
-        $output .= $view->formRow($fieldset->get('What'));
-        $output .= "</fieldset>\n";
-
-        $output .= "<fieldset><legend><span>Where to save</span></legend>\n";
-        $output .= $view->formRow($fieldset->get('Where'));
-        foreach (array('NewGroup', 'Description') as $name) {
-            $element = $fieldset->get($name);
-            $output .= $view->formRow($element, null, false);
-            $output .= $view->formElementErrors($element, array('class' => 'error'));
-        }
-        $output .= $view->formRow($fieldset->get('ExistingGroup'));
-        $output .= "</fieldset>\n";
-
-        $output .= $view->formRow($fieldset->get('Submit'));
-        $output .= "</div>\n";
-        return $output;
     }
 
     /**

@@ -485,9 +485,11 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                               ->method('isValid');
         $this->_addToGroupForm->expects($this->never())
                               ->method('process');
-        $this->_addToGroupForm->expects($this->once())
-                              ->method('render')
-                              ->will($this->returnValue('<form></form>'));
+
+        $formHelper = $this->createMock('Console\View\Helper\Form\Form');
+        $formHelper->method('__invoke')->with($this->_addToGroupForm)->willReturn('<form></form>');
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('consoleForm', $formHelper);
+
         $this->dispatch(
             '/console/group/add?filter=filter&search=search&invert=invert&operator=operator'
         );
@@ -506,9 +508,11 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                               ->will($this->returnValue(false));
         $this->_addToGroupForm->expects($this->never())
                               ->method('process');
-        $this->_addToGroupForm->expects($this->once())
-                              ->method('render')
-                              ->will($this->returnValue('<form></form>'));
+
+        $formHelper = $this->createMock('Console\View\Helper\Form\Form');
+        $formHelper->method('__invoke')->with($this->_addToGroupForm)->willReturn('<form></form>');
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('consoleForm', $formHelper);
+
         $this->dispatch(
             '/console/group/add?filter=filter&search=search&invert=invert&operator=operator',
             'POST',
@@ -531,8 +535,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                               ->method('process')
                               ->with('filter', 'search', 'operator', 'invert')
                               ->will($this->returnValue(array('Name' => 'test')));
-        $this->_addToGroupForm->expects($this->never())
-                              ->method('render');
+
         $this->dispatch(
             '/console/group/add?filter=filter&search=search&invert=invert&operator=operator',
             'POST',
