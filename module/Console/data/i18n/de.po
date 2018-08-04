@@ -1440,10 +1440,11 @@ msgstr "Registry-Schlüssel"
 msgid "Package '%s' will no longer be assigned to this client. Continue?"
 msgstr "Paket '%s' wird nicht mehr diesem Client zugewiesen sein. Fortfahren?"
 
-#: views/console/client/retrypackage.php
+#: views/console/client/resetpackage.php
 #, php-format
 msgid "Status of package '%s' will be reset to 'Pending'. Continue?"
-msgstr "Der Status des Pakets '%s' wird auf 'Ausstehend' zurückgesetzt. Fortfahren?"
+msgstr ""
+"Der Status des Pakets '%s' wird auf 'Ausstehend' zurückgesetzt. Fortfahren?"
 
 #: views/console/client/software.php
 msgid "Location"

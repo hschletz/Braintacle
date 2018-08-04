@@ -1434,7 +1434,7 @@ msgstr ""
 msgid "Package '%s' will no longer be assigned to this client. Continue?"
 msgstr ""
 
-#: views/console/client/retrypackage.php
+#: views/console/client/resetpackage.php
 #, php-format
 msgid "Status of package '%s' will be reset to 'Pending'. Continue?"
 msgstr ""
