@@ -184,12 +184,20 @@ msgstr ""
 msgid "The name already exists"
 msgstr ""
 
+#: Form/ClientConfig.php Navigation/MainMenuFactory.php
+msgid "Agent"
+msgstr ""
+
 #: Form/ClientConfig.php Form/Preferences/Agent.php
 msgid "Agent contact interval (in hours)"
 msgstr ""
 
 #: Form/ClientConfig.php Form/Preferences/Agent.php
 msgid "Inventory interval (in days, 0 = always, -1 = never)"
+msgstr ""
+
+#: Form/ClientConfig.php Navigation/MainMenuFactory.php
+msgid "Download"
 msgstr ""
 
 #: Form/ClientConfig.php Form/Preferences/Download.php
@@ -216,6 +224,10 @@ msgstr ""
 msgid "Timeout (in days)"
 msgstr ""
 
+#: Form/ClientConfig.php Navigation/MainMenuFactory.php
+msgid "Network scanning"
+msgstr ""
+
 #: Form/ClientConfig.php
 msgid "Allow network scanning"
 msgstr ""
@@ -226,34 +238,6 @@ msgstr ""
 
 #: Form/ClientConfig.php Form/Preferences/NetworkScanning.php
 msgid "Use SNMP"
-msgstr ""
-
-#: Form/ClientConfig.php
-msgid "Default"
-msgstr ""
-
-#: Form/ClientConfig.php
-msgid "Effective"
-msgstr ""
-
-#: Form/ClientConfig.php Form/DeleteClient.php
-msgid "Yes"
-msgstr ""
-
-#: Form/ClientConfig.php Form/DeleteClient.php
-msgid "No"
-msgstr ""
-
-#: Form/ClientConfig.php Navigation/MainMenuFactory.php
-msgid "Agent"
-msgstr ""
-
-#: Form/ClientConfig.php Navigation/MainMenuFactory.php
-msgid "Download"
-msgstr ""
-
-#: Form/ClientConfig.php Navigation/MainMenuFactory.php
-msgid "Network scanning"
 msgstr ""
 
 #: Form/CustomFields.php Form/Search.php views/console/client/index.php
@@ -291,6 +275,14 @@ msgstr ""
 
 #: Form/DeleteClient.php
 msgid "Delete interfaces from network listing"
+msgstr ""
+
+#: Form/DeleteClient.php View/Helper/Form/ClientConfig.php
+msgid "Yes"
+msgstr ""
+
+#: Form/DeleteClient.php View/Helper/Form/ClientConfig.php
+msgid "No"
 msgstr ""
 
 #: Form/GroupMemberships.php views/console/client/groups.php
@@ -1095,6 +1087,14 @@ msgstr ""
 #: View/Helper/FilterDescription.php
 #, php-format
 msgid "%1$d clients with manually entered product key"
+msgstr ""
+
+#: View/Helper/Form/ClientConfig.php
+msgid "Default"
+msgstr ""
+
+#: View/Helper/Form/ClientConfig.php
+msgid "Effective"
 msgstr ""
 
 #: View/Helper/Form/Form.php

@@ -51,6 +51,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
     {
         $agent = $this->_form->get('Agent');
         $this->assertInstanceOf('Zend\Form\Fieldset', $agent);
+        $this->assertEquals('Agent', $agent->getLabel());
 
         $this->assertInstanceOf('Zend\Form\Element\Text', $agent->get('contactInterval'));
         $this->assertEquals(5, $agent->get('contactInterval')->getAttribute('size'));
@@ -60,9 +61,10 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
 
         $download = $this->_form->get('Download');
         $this->assertInstanceOf('Zend\Form\Fieldset', $download);
+        $this->assertEquals('Download', $download->getLabel());
 
         $this->assertInstanceOf('Zend\Form\Element\Checkbox', $download->get('packageDeployment'));
-        $this->assertEquals('toggle(this)', $download->get('packageDeployment')->getAttribute('onchange'));
+        $this->assertEquals('toggle', $download->get('packageDeployment')->getAttribute('class'));
 
         $this->assertInstanceOf('Zend\Form\Element\Text', $download->get('downloadPeriodDelay'));
         $this->assertEquals(5, $download->get('downloadPeriodDelay')->getAttribute('size'));
@@ -81,9 +83,10 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
 
         $scan = $this->_form->get('Scan');
         $this->assertInstanceOf('Zend\Form\Fieldset', $scan);
+        $this->assertEquals('Network scanning', $scan->getLabel());
 
         $this->assertInstanceOf('Zend\Form\Element\Checkbox', $scan->get('allowScan'));
-        $this->assertEquals('toggle(this)', $scan->get('allowScan')->getAttribute('onchange'));
+        $this->assertEquals('toggle', $scan->get('allowScan')->getAttribute('class'));
 
         $this->assertInstanceOf('Library\Form\Element\SelectSimple', $scan->get('scanThisNetwork'));
         $this->assertSame('', $scan->get('scanThisNetwork')->getEmptyOption());
@@ -91,209 +94,6 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
         $this->assertInstanceOf('Zend\Form\Element\Checkbox', $scan->get('scanSnmp'));
 
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
-    }
-
-    public function testRender()
-    {
-        $view = $this->_createView();
-        $form = $this->getMockBuilder($this->_getFormClass())->setMethods(array('renderFieldset'))->getMock();
-        $form->expects($this->once())
-             ->method('renderFieldset')
-             ->with($view, $form)
-             ->will($this->returnValue('fieldset'));
-        $this->assertContains('fieldset', $form->render($view));
-
-        $headScript = $view->headScript()->toString();
-        $this->assertContains('function toggle(element)', $headScript);
-        $this->assertContains('function toggleByName(name)', $headScript);
-
-        $bodyOnLoad = $view->placeholder('BodyOnLoad');
-        $this->assertContains('toggleByName("Download[packageDeployment]")', $bodyOnLoad);
-        $this->assertContains('toggleByName("Scan[allowScan]")', $bodyOnLoad);
-    }
-
-    public function testRenderFieldsetFieldset()
-    {
-        $this->_form->setClientObject($this->_group);
-        $this->_form->prepare();
-
-        $view = $this->_createView();
-        $html = $this->_form->renderFieldset($view, $this->_form->get('Agent'));
-        $document = new \Zend\Dom\Document($html);
-
-        $this->assertCount(2, Query::execute('//fieldset/div[@class="table"]//input[@type="text"]', $document));
-        $queryResult = Query::execute(
-            "//fieldset/div[@class='table']/label/span[@class='label']" .
-            "[text()='\nAgenten-Kontaktintervall (in Stunden)\n']",
-            $document
-        );
-        $this->assertCount(1, $queryResult);
-    }
-
-    public function testRenderFieldsetTextDefaultsForGroup()
-    {
-        $defaults = array(
-            array('contactInterval', 'default&1'),
-            array('inventoryInterval', 'default&2'),
-        );
-        $this->_group->expects($this->any())
-                     ->method('getDefaultConfig')
-                     ->will($this->returnValueMap($defaults));
-
-        $this->_form->setClientObject($this->_group);
-        $this->_form->prepare();
-
-        $view = $this->_createView();
-        $html = $this->_form->renderFieldset($view, $this->_form->get('Agent'));
-        $document = new \Zend\Dom\Document($html);
-
-        $query = "//input[@name='Agent[%s]']/following-sibling::text()[string()='(Standard: %s)\n']";
-        $this->assertCount(1, Query::execute(sprintf($query, 'contactInterval', 'default&1'), $document));
-        $this->assertCount(1, Query::execute(sprintf($query, 'inventoryInterval', 'default&2'), $document));
-    }
-
-    public function testRenderFieldsetTextDefaultsForClient()
-    {
-        $defaults = array(
-            array('contactInterval', 'default&1'),
-            array('inventoryInterval', 'default&2'),
-        );
-        $effective = array(
-            array('contactInterval', 'effective&1'),
-            array('inventoryInterval', 'effective&2'),
-        );
-        $this->_client->method('getDefaultConfig')->will($this->returnValueMap($defaults));
-        $this->_client->method('getEffectiveConfig')->will($this->returnValueMap($effective));
-        $this->_client->method('getItems')->willReturn(array());
-
-        $this->_form->setClientObject($this->_client);
-        $this->_form->prepare();
-
-        $view = $this->_createView();
-        $html = $this->_form->renderFieldset($view, $this->_form->get('Agent'));
-        $document = new \Zend\Dom\Document($html);
-
-        $query = "//input[@name='Agent[%s]']/following-sibling::text()[string()='(Standard: %s, Effektiv: %s)\n']";
-        $this->assertCount(
-            1,
-            Query::execute(sprintf($query, 'contactInterval', 'default&1', 'effective&1'), $document)
-        );
-        $this->assertCount(
-            1,
-            Query::execute(sprintf($query, 'inventoryInterval', 'default&2', 'effective&2'), $document)
-        );
-    }
-
-    public function testRenderFieldsetCheckboxDefaultsForGroup()
-    {
-        $defaults = array(
-            array('allowScan', '1'),
-            array('scanSnmp', '0'),
-        );
-        $this->_group->expects($this->any())
-                     ->method('getDefaultConfig')
-                     ->will($this->returnValueMap($defaults));
-
-        $this->_form->setClientObject($this->_group);
-        $this->_form->prepare();
-
-        $view = $this->_createView();
-        $html = $this->_form->renderFieldset($view, $this->_form->get('Scan'));
-        $document = new \Zend\Dom\Document($html);
-
-        $query = "//input[@name='Scan[%s]']/following-sibling::text()[string()='(Standard: %s)\n']";
-        $this->assertCount(1, Query::execute(sprintf($query, 'allowScan', 'Ja'), $document));
-        $this->assertCount(1, Query::execute(sprintf($query, 'scanSnmp', 'Nein'), $document));
-    }
-
-    public function testRenderFieldsetCheckboxDefaultsForClient()
-    {
-        $defaults = array(
-            array('allowScan', '1'),
-            array('scanSnmp', '0'),
-        );
-        $effective = array(
-            array('allowScan', '0'),
-            array('scanSnmp', '1'),
-        );
-        $this->_client->method('getDefaultConfig')->will($this->returnValueMap($defaults));
-        $this->_client->method('getEffectiveConfig')->will($this->returnValueMap($effective));
-        $this->_client->method('getItems')->willReturn(array());
-
-        $this->_form->setClientObject($this->_client);
-        $this->_form->prepare();
-
-        $view = $this->_createView();
-        $html = $this->_form->renderFieldset($view, $this->_form->get('Scan'));
-        $document = new \Zend\Dom\Document($html);
-
-        $query = "//input[@name='Scan[%s]']/following-sibling::text()[string()='(Standard: %s, Effektiv: %s)\n']";
-        $this->assertCount(1, Query::execute(sprintf($query, 'allowScan', 'Ja', 'Nein'), $document));
-        $this->assertCount(1, Query::execute(sprintf($query, 'scanSnmp', 'Nein', 'Ja'), $document));
-    }
-
-    public function testRenderFieldsetWithNetworks()
-    {
-        $this->_client->method('getItems')->will($this->returnValue(array(array('Subnet' => '192.9.2.0'))));
-
-        $this->_form->setClientObject($this->_client);
-        $this->_form->prepare();
-
-        $view = $this->_createView();
-        $html = $this->_form->renderFieldset($view, $this->_form->get('Scan'));
-        $document = new \Zend\Dom\Document($html);
-
-        $this->assertCount(1, Query::execute('//select', $document));
-    }
-
-    public function testRenderFieldsetNoNetworks()
-    {
-        $this->_form->setClientObject($this->_group);
-        $this->_form->prepare();
-
-        $view = $this->_createView();
-        $html = $this->_form->renderFieldset($view, $this->_form->get('Scan'));
-        $document = new \Zend\Dom\Document($html);
-
-        $this->assertCount(0, Query::execute('//select', $document));
-    }
-
-    public function testRenderFieldsetMessages()
-    {
-        $this->_form->setClientObject($this->_group);
-        $this->_form->setMessages(array('Agent' => array('contactInterval' => array('message&1'))));
-        $this->_form->prepare();
-
-        $formElementErrors = $this->createMock('Zend\Form\View\Helper\FormElementErrors');
-        $formElementErrors->method('__invoke')
-                          ->with($this->isInstanceOf('Zend\Form\ElementInterface'), array('class' => 'error'))
-                          ->willReturnCallback(array($this, 'formElementErrorsMock'));
-
-        $view = $this->_createView();
-        $view->getHelperPluginManager()->setService('formElementErrors', $formElementErrors);
-
-        $html = $this->_form->renderFieldset($view, $this->_form->get('Agent'));
-        $document = new \Zend\Dom\Document($html);
-
-        $this->assertCount(1, Query::execute('//input[@class="input-error"]', $document));
-        $this->assertCount(1, Query::execute('//ul[@class="errorMock"]', $document));
-        $this->assertCount(1, Query::execute('//ul[@class="errorMock"]/li[text()="message&1"]', $document));
-    }
-
-    public function testRenderFieldsetForm()
-    {
-        $this->_form->setClientObject($this->_group);
-        $this->_form->prepare();
-
-        $view = $this->_createView();
-        $html = $this->_form->renderFieldset($view, $this->_form);
-        $document = new \Zend\Dom\Document($html);
-
-        $this->assertCount(3, Query::execute('//div[@class="table"]/fieldset', $document));
-        $this->assertCount(1, Query::execute("//fieldset[1]/legend[text()='\nAgent\n']", $document));
-        $this->assertCount(1, Query::execute("//fieldset[2]/legend[text()='\nDownload\n']", $document));
-        $this->assertCount(1, Query::execute("//fieldset[3]/legend[text()='\nNetzwerk-Scans\n']", $document));
-        $this->assertCount(1, Query::execute('//div[@class="table"]/input[@type="submit"]', $document));
     }
 
     public function testSetDataWithoutClientObject()
@@ -305,6 +105,8 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
     public function testSetClientObjectGroup()
     {
         $this->_form->setClientObject($this->_group);
+
+        $this->assertEquals($this->_group, \PHPUnit_Framework_Assert::readAttribute($this->_form, '_object'));
         $scan = $this->_form->get('Scan');
         $scanThisNetwork = $scan->get('scanThisNetwork');
         $this->assertTrue($scanThisNetwork->getAttribute('disabled'));
@@ -317,7 +119,10 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
                       ->method('getItems')
                       ->with('NetworkInterface', 'Subnet')
                       ->willReturn(array());
+
         $this->_form->setClientObject($this->_client);
+
+        $this->assertEquals($this->_client, \PHPUnit_Framework_Assert::readAttribute($this->_form, '_object'));
         $scan = $this->_form->get('Scan');
         $scanThisNetwork = $scan->get('scanThisNetwork');
         $this->assertTrue($scanThisNetwork->getAttribute('disabled'));
@@ -333,7 +138,10 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
                       ->method('getItems')
                       ->with('NetworkInterface', 'Subnet')
                       ->willReturn($networks);
+
         $this->_form->setClientObject($this->_client);
+
+        $this->assertEquals($this->_client, \PHPUnit_Framework_Assert::readAttribute($this->_form, '_object'));
         $scan = $this->_form->get('Scan');
         $scanThisNetwork = $scan->get('scanThisNetwork');
         $this->assertTrue($scanThisNetwork->getAttribute('disabled'));
@@ -352,11 +160,23 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
                       ->method('getItems')
                       ->with('NetworkInterface', 'Subnet')
                       ->willReturn($networks);
+
         $this->_form->setClientObject($this->_client);
+
+        $this->assertEquals($this->_client, \PHPUnit_Framework_Assert::readAttribute($this->_form, '_object'));
         $scan = $this->_form->get('Scan');
         $scanThisNetwork = $scan->get('scanThisNetwork');
         $this->assertFalse($scanThisNetwork->getAttribute('disabled'));
         $this->assertEquals(array('192.0.2.0', '198.51.100.0'), $scanThisNetwork->getValueOptions());
+    }
+
+    public function testGetClientObject()
+    {
+        $object = new \ReflectionProperty($this->_form, '_object');
+        $object->setAccessible(true);
+        $object->setValue($this->_form, $this->_client);
+
+        $this->assertEquals($this->_client, $this->_form->getClientObject());
     }
 
     public function testInputFilterAgentEmpty()

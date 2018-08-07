@@ -45,6 +45,7 @@ class ClientConfig extends Form
 
         // Agent options
         $agent = new \Zend\Form\Fieldset('Agent');
+        $agent->setLabel('Agent');
         $inputFilterAgent = new \Zend\InputFilter\InputFilter;
 
         $contactInterval = new Element\Text('contactInterval');
@@ -64,11 +65,12 @@ class ClientConfig extends Form
 
         // Download options
         $download = new \Zend\Form\Fieldset('Download');
+        $download->setLabel('Download');
         $inputFilterDownload = new \Zend\InputFilter\InputFilter;
 
         $packageDeployment = new Element\Checkbox('packageDeployment');
-        $packageDeployment->setLabel('Enable package download')
-                            ->setAttribute('onchange', 'toggle(this)');
+        $packageDeployment->setLabel('Enable package download');
+        $packageDeployment->setAttribute('class', 'toggle');
         $download->add($packageDeployment);
 
         $downloadPeriodDelay = new Element\Text('downloadPeriodDelay');
@@ -106,11 +108,12 @@ class ClientConfig extends Form
 
         // Network scanning options
         $scan = new \Zend\Form\Fieldset('Scan');
+        $scan->setLabel('Network scanning');
         $inputFilterScan = new \Zend\InputFilter\InputFilter;
 
         $allowScan = new Element\Checkbox('allowScan');
-        $allowScan->setLabel('Allow network scanning')
-                  ->setAttribute('onchange', 'toggle(this)');
+        $allowScan->setLabel('Allow network scanning');
+        $allowScan->setAttribute('class', 'toggle');
         $scan->add($allowScan);
 
         $subnets = new \Library\Form\Element\SelectSimple('scanThisNetwork');
@@ -140,128 +143,6 @@ class ClientConfig extends Form
             throw new \LogicException('No client or group object set');
         }
         return parent::setData($data);
-    }
-
-    /** {@inheritdoc} */
-    public function render(\Zend\View\Renderer\PhpRenderer $view)
-    {
-        $view->headScript()->captureStart();
-        ?>
-
-        // Hide or show all label elements following the checkbox within the same fieldset
-        function toggle(element)
-        {
-            var node = element.parentNode.parentNode;
-            while (node = node.nextSibling) {
-                switch (node.nodeName) {
-                    case 'LABEL':
-                        node.style.display = element.checked ? 'table-row' : 'none';
-                        break;
-                    case 'UL':
-                        node.style.display = element.checked ? 'block' : 'none';
-                        break;
-                    default:
-                        // Invisible text node, nothing to be changed
-                }
-            }
-        }
-
-        // Initialize display of fieldset content
-        function toggleByName(name)
-        {
-            var elements = document.getElementsByName(name);
-            for (var i = elements.length - 1; i >= 0; i--) {
-                if (elements[i].type == 'checkbox') {
-                    toggle(elements[i]);
-                    break;
-                }
-            }
-        }
-
-        <?php
-        $view->headScript()->captureEnd();
-        $view->placeholder('BodyOnLoad')->append('toggleByName("Download[packageDeployment]")');
-        $view->placeholder('BodyOnLoad')->append('toggleByName("Scan[allowScan]")');
-
-        return parent::render($view);
-    }
-
-    /** {@inheritdoc} */
-    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset)
-    {
-        $name = $fieldset->getName();
-        if ($name) {
-            $default = $view->translate('Default');
-            $effective = $view->translate('Effective');
-            $yes = $view->translate('Yes');
-            $no = $view->translate('No');
-            switch ($name) {
-                case 'Agent':
-                    $legend = $view->translate('Agent');
-                    break;
-                case 'Download':
-                    $legend = $view->translate('Download');
-                    break;
-                case 'Scan':
-                    $legend = $view->translate('Network scanning');
-                    break;
-            }
-
-            $output = "<div class='table'>\n";
-            foreach ($fieldset as $element) {
-                if ($element->getAttribute('disabled')) {
-                    continue;
-                }
-                preg_match('/.*\[(.*)\]$/', $element->getName(), $matches);
-                $option = $matches[1];
-                if ($option == 'scanThisNetwork') {
-                    $row = '';
-                } else {
-                    $defaultValue = $this->_object->getDefaultConfig($option);
-                    if ($element instanceof Element\Checkbox) {
-                        $defaultValue = $defaultValue ? $yes : $no;
-                    }
-                    $row = sprintf('%s: %s', $default, $defaultValue);
-                    if ($this->_object instanceof \Model\Client\Client) {
-                        $effectiveValue = $this->_object->getEffectiveConfig($option);
-                        if ($element instanceof Element\Checkbox) {
-                            $effectiveValue = $effectiveValue ? $yes : $no;
-                        }
-                        $row .= sprintf(', %s: %s', $effective, $effectiveValue);
-                    }
-                    $row = $view->escapeHtml("($row)");
-                }
-                if ($element->getMessages()) {
-                    $element->setAttribute('class', 'input-error');
-                }
-                $row = $view->htmlElement('span', $view->formElement($element) . $row, array('class' => 'values'));
-                $row = $view->htmlElement(
-                    'span',
-                    $view->translate($element->getLabel()),
-                    array('class' => 'label')
-                ) . $row;
-                $output .= $view->htmlElement('label', $row);
-                if ($element->getMessages()) {
-                    $output .= $view->htmlElement('span', null, array('class' => 'cell'));
-                    $output .= $view->formElementErrors($element, array('class' => 'error'));
-                }
-            }
-            $output .= "</div>\n";
-            $output = $view->htmlElement(
-                'fieldset',
-                $view->htmlElement('legend', $legend) . $output
-            );
-        } else {
-            $output = "<div class='table'>\n";
-            foreach ($fieldset as $element) {
-                if ($element instanceof \Zend\Form\Fieldset) {
-                    $output .= $this->renderFieldset($view, $element);
-                }
-            }
-            $output .= $view->formRow($fieldset->get('Submit'));
-            $output .= "</div>\n";
-        }
-        return $output;
     }
 
     /**
@@ -367,6 +248,16 @@ class ClientConfig extends Form
         }
         $this->get('Scan')->get('scanThisNetwork')->setValueOptions($addresses)
                                                   ->setAttribute('disabled', !$addresses);
+    }
+
+    /**
+     * Get client/group object on which the form will operate
+     *
+     * @return \Model\ClientOrGroup
+     */
+    public function getClientObject()
+    {
+        return $this->_object;
     }
 
     /**

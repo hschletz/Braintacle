@@ -13,4 +13,15 @@ $(window).on('load', function() {
         element.closest('form').find('ul').toggle(isNewGroup);
 
     }).filter(':checked').change();
+
+    // Show/hide all rows following the triggering checkbox within the same fieldset
+    $('.form_clientconfig .toggle').change(function() {
+
+        var element = $(this);
+        var checked = element.prop('checked');
+        element.parent().nextAll().each(function() {
+            $(this).toggle(checked);
+        });
+
+    }).change();
 });

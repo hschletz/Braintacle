@@ -20,4 +20,4 @@
  */
 
 require('header.php');
-print $this->form->render($this);
+print $this->consoleFormClientConfig($this->form);

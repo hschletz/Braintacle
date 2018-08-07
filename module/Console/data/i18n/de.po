@@ -203,10 +203,6 @@ msgstr "Netzwerk-Scans erlauben"
 msgid "Always scan this network"
 msgstr "Dieses Netzwerk immer scannen"
 
-#: Form/ClientConfig.php
-msgid "Default"
-msgstr "Standard"
-
 #: Form/ClientConfig.php Form/Preferences/Download.php
 msgid "Delay (in seconds) between cycles"
 msgstr "Pause (in Sekunden) zwischen Zyklen"
@@ -222,10 +218,6 @@ msgstr "Pause (in Sekunden) zwischen Perioden"
 #: Form/ClientConfig.php Navigation/MainMenuFactory.php
 msgid "Download"
 msgstr "Download"
-
-#: Form/ClientConfig.php
-msgid "Effective"
-msgstr "Effektiv"
 
 #: Form/ClientConfig.php Form/Preferences/Download.php
 msgid "Enable package download"
@@ -243,10 +235,6 @@ msgstr "Maximale Paket-Priorität"
 msgid "Network scanning"
 msgstr "Netzwerk-Scans"
 
-#: Form/ClientConfig.php Form/DeleteClient.php
-msgid "No"
-msgstr "Nein"
-
 #: Form/ClientConfig.php Form/Preferences/Download.php
 msgid "Timeout (in days)"
 msgstr "Timeout (in Tagen)"
@@ -254,10 +242,6 @@ msgstr "Timeout (in Tagen)"
 #: Form/ClientConfig.php Form/Preferences/NetworkScanning.php
 msgid "Use SNMP"
 msgstr "SNMP verwenden"
-
-#: Form/ClientConfig.php Form/DeleteClient.php
-msgid "Yes"
-msgstr "Ja"
 
 #: Form/CustomFields.php Form/Search.php views/console/client/index.php
 msgid "Category"
@@ -295,6 +279,14 @@ msgstr "Text"
 #: Form/DeleteClient.php
 msgid "Delete interfaces from network listing"
 msgstr "Interfaces aus Netzwerkliste löschen"
+
+#: Form/DeleteClient.php View/Helper/Form/ClientConfig.php
+msgid "No"
+msgstr "Nein"
+
+#: Form/DeleteClient.php View/Helper/Form/ClientConfig.php
+msgid "Yes"
+msgstr "Ja"
 
 #: Form/GroupMemberships.php
 msgid "always"
@@ -1102,6 +1094,14 @@ msgstr "%1$d Clients mit manuell eingegebenem Windows-Lizenzschlüssel"
 #, php-format
 msgid "%1$d clients with package '%2$s' successfully deployed"
 msgstr "%1$d Clients mit erfolgreich installiertem Paket '%2$s'"
+
+#: View/Helper/Form/ClientConfig.php
+msgid "Default"
+msgstr "Standard"
+
+#: View/Helper/Form/ClientConfig.php
+msgid "Effective"
+msgstr "Effektiv"
 
 #: View/Helper/Form/Form.php
 #, php-format

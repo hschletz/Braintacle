@@ -130,6 +130,7 @@ return array(
             'Table' => 'Console\View\Helper\Table',
             'table' => 'Console\View\Helper\Table',
             'consoleForm' => 'Console\View\Helper\Form\Form',
+            'consoleFormClientConfig' => 'Console\View\Helper\Form\ClientConfig',
         ),
         'factories' => array(
             'Console\View\Helper\ConsoleUrl' => 'Console\View\Helper\Service\ConsoleUrlFactory',
@@ -137,6 +138,7 @@ return array(
             'Console\View\Helper\FormatMessages' => 'Console\View\Helper\Service\FormatMessagesFactory',
             'Console\View\Helper\Table' => 'Console\View\Helper\Service\TableFactory',
             'Console\View\Helper\Form\Form' => 'Zend\ServiceManager\Factory\InvokableFactory',
+            'Console\View\Helper\Form\ClientConfig' => 'Zend\ServiceManager\Factory\InvokableFactory',
         ),
     ),
     'view_manager' => array(

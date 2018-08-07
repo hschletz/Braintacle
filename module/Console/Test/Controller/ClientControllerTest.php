@@ -2455,9 +2455,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->method('isValid');
         $form->expects($this->never())
              ->method('process');
-        $form->expects($this->once())
-             ->method('render')
-             ->will($this->returnValue('<form></form>'));
+
+        $formHelper = $this->createMock('Console\View\Helper\Form\ClientConfig');
+        $formHelper->method('__invoke')->with($form)->willReturn('<form></form>');
+        $this->getApplicationServiceLocator()
+             ->get('ViewHelperManager')
+             ->setService('consoleFormClientConfig', $formHelper);
+
         $this->dispatch('/console/client/configuration/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXPathQuery('//form');
@@ -2480,9 +2484,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->will($this->returnValue(false));
         $form->expects($this->never())
              ->method('process');
-        $form->expects($this->once())
-             ->method('render')
-             ->will($this->returnValue('<form></form>'));
+
+        $formHelper = $this->createMock('Console\View\Helper\Form\ClientConfig');
+        $formHelper->method('__invoke')->with($form)->willReturn('<form></form>');
+        $this->getApplicationServiceLocator()
+             ->get('ViewHelperManager')
+             ->setService('consoleFormClientConfig', $formHelper);
+
         $this->dispatch('/console/client/configuration/?id=1', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertXPathQuery('//form');
@@ -2508,8 +2516,6 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->will($this->returnValue(true));
         $form->expects($this->once())
              ->method('process');
-        $form->expects($this->never())
-             ->method('render');
 
         $this->dispatch('/console/client/configuration/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/configuration/?id=1');

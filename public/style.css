@@ -385,6 +385,45 @@ form.form_addtogroup > * {
     margin-bottom: .5ex;
 }
 
+.form_clientconfig fieldset {
+    margin-top: 2ex;
+}
+.form_clientconfig fieldset > div {
+    display: grid;
+    grid-template-columns: [label-start] 50% [label-end element-start] 50% [element-end];
+    grid-gap: 1em;
+}
+.form_clientconfig label {
+    grid-column: label;
+    text-align: right;
+}
+.form_clientconfig fieldset > div > span {
+    grid-column: element;
+}
+.form_clientconfig fieldset input {
+    margin-right: 1em;
+}
+.form_clientconfig ul {
+    grid-column: element;
+    color: red;
+    margin: 0;
+    padding-left: 1em;
+}
+.form_clientconfig legend {
+    margin: auto;
+    padding-left: .5em;
+    padding-right: .5em;
+    font-weight: bold;
+}
+.form_clientconfig label span {
+    margin-right: 1em;
+}
+.form_clientconfig [type=submit] {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 /* The following rules are for forms still using the deprecated render() method. */
 
 .form_yesno {
@@ -397,42 +436,6 @@ form.form_addtogroup > * {
 
 .form_package_assign input[type="submit"] {
     margin-left: 0;
-}
-
-.form_clientconfig .label {
-    width: 50%;
-}
-
-.form_clientconfig .values {
-    text-align: left;
-    white-space: nowrap;
-}
-
-.form_clientconfig > .table {
-    width: 90%;
-    text-align: center;
-    font-size: 90%;
-}
-
-.form_clientconfig input {
-    display: inline;
-}
-
-.form_clientconfig fieldset {
-    margin-top: 2ex;
-}
-
-.form_clientconfig .error {
-    margin: 0;
-    text-align: left;
-    padding-left: 1em;
-}
-
-.form_clientconfig legend {
-    margin: auto;
-    padding-left: .5em;
-    padding-right: .5em;
-    font-weight: bold;
 }
 
 .form_definefields .cell {
