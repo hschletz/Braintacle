@@ -74,7 +74,10 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(
             1,
             Query::execute(
-                '/html/head/link[@href="/style.css"][@media="screen"][@rel="stylesheet"][@type="text/css"]',
+                sprintf(
+                    '/html/head/link[@href="/style.css?%d"][@media="screen"][@rel="stylesheet"][@type="text/css"]',
+                    filemtime(__DIR__ . '/../../../public/style.css')
+                ),
                 $document
             )
         );

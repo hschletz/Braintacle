@@ -28,7 +28,9 @@ print $this->headMeta();
 print "\n";
 print $this->headTitle();
 print "\n";
-print $this->HeadLink()->appendStylesheet($this->basePath('style.css'));
+print $this->HeadLink()->appendStylesheet(
+    $this->basePath('style.css') . '?' . filemtime(__DIR__ . '/../../../../public/style.css')
+);
 print "\n";
 
 // Load JS ressources with its mtime appended as URL parameter to force a reload
