@@ -111,14 +111,21 @@ class FormTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRender()
     {
+        $form = $this->createMock('Zend\Form\Form');
+        $form->expects($this->once())->method('prepare');
+
+        $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $view->method('__call')->with('consoleFormFieldset', array($form))->willReturn('content');
+
         $helper = $this->getMockBuilder($this->_getHelperClass())
                        ->disableOriginalConstructor()
-                       ->setMethods(array('postMaxSizeExceeded'))
+                       ->setMethodsExcept(array('render'))
                        ->getMock();
         $helper->method('postMaxSizeExceeded')->willReturn('exceeded');
+        $helper->method('openTag')->willReturn('<form>');
+        $helper->method('getView')->willReturn($view);
+        $helper->method('closeTag')->willReturn('</form>');
 
-        $form = new \Zend\Form\Form;
-
-        $this->assertStringStartsWith('exceeded<form', $helper->render($form));
+        $this->assertEquals('exceeded<form>content</form>', $helper->render($form));
     }
 }

@@ -53,6 +53,15 @@ class Form extends \Zend\Form\View\Helper\Form
     /** {@inheritdoc} */
     public function render(\Zend\Form\FormInterface $form)
     {
-        return $this->postMaxSizeExceeded() . parent::render($form);
+        if (method_exists($form, 'prepare')) {
+            $form->prepare();
+        }
+
+        $formContent = $this->postMaxSizeExceeded();
+        $formContent .= $this->openTag($form);
+        $formContent .= $this->getView()->consoleFormFieldset($form);
+        $formContent .= $this->closeTag();
+
+        return $formContent;
     }
 }

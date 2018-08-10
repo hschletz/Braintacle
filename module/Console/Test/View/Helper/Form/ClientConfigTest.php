@@ -122,6 +122,22 @@ class ClientConfigTest extends \Library\Test\View\Helper\AbstractTest
         $elementWithoutInfo->method('getAttribute')->with('disabled')->willReturn(false);
         $elementWithoutInfo->method('getName')->willReturn('Scan[scanThisNetwork]');
 
+        $fieldset = $this->createMock('Zend\Form\Fieldset');
+        $fieldset->method('getIterator')->willReturn(
+            new \ArrayIterator(
+                array(
+                    $elementDisabled,
+                    $elementCheckboxDefaultTrue,
+                    $elementCheckboxDefaultFalse,
+                    $elementText,
+                    $elementWithoutInfo
+                )
+            )
+        );
+
+        $fieldsetHelper = $this->createMock('Console\View\Helper\Form\Fieldset');
+        $fieldsetHelper->method('renderFieldsetElement')->with($fieldset, $elements)->willReturn('FIELDSET');
+
         $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
         $view->method('__call')->willReturnMap(
             array(
@@ -129,7 +145,6 @@ class ClientConfigTest extends \Library\Test\View\Helper\AbstractTest
                 array('translate', array('Effective'), 'EFFECTIVE'),
                 array('translate', array('Yes'), 'YES'),
                 array('translate', array('No'), 'NO'),
-                array('translate', array('fieldset_label'), 'FIELDSET_LABEL'),
                 array('formLabel', array($elementCheckboxDefaultTrue), '(LABEL_TRUE)'),
                 array('formLabel', array($elementCheckboxDefaultFalse), '(LABEL_FALSE)'),
                 array('formLabel', array($elementText), '(LABEL_TEXT)'),
@@ -145,24 +160,9 @@ class ClientConfigTest extends \Library\Test\View\Helper\AbstractTest
                 array('escapeHtml', array($infoTrue), '(INFO_TRUE)'),
                 array('escapeHtml', array($infoFalse), '(INFO_FALSE)'),
                 array('escapeHtml', array($infoText), '(INFO_TEXT)'),
-                array('htmlElement', array('legend', 'FIELDSET_LABEL'), '(FIELDSET_LABEL)'),
-                array('htmlElement', array('fieldset', "(FIELDSET_LABEL)<div>$elements</div>"), 'FIELDSET'),
             )
         );
-
-        $fieldset = $this->createMock('Zend\Form\Fieldset');
-        $fieldset->method('getLabel')->willReturn('fieldset_label');
-        $fieldset->method('getIterator')->willReturn(
-            new \ArrayIterator(
-                array(
-                    $elementDisabled,
-                    $elementCheckboxDefaultTrue,
-                    $elementCheckboxDefaultFalse,
-                    $elementText,
-                    $elementWithoutInfo
-                )
-            )
-        );
+        $view->method('plugin')->with('consoleFormFieldset')->willReturn($fieldsetHelper);
 
         $helper = $this->getMockBuilder($this->_getHelperClass())
                        ->disableOriginalConstructor()

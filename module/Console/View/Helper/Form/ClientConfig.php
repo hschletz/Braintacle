@@ -87,11 +87,6 @@ class ClientConfig extends AbstractHelper
             $output .= $view->formElementErrors($element);
         }
 
-        // Workaround for Chromium bug: Create div element a grid container
-        // because fieldset elements do not work.
-        return $view->htmlElement(
-            'fieldset',
-            $view->htmlElement('legend', $view->translate($fieldset->getLabel())) . "<div>$output</div>"
-        );
+        return $view->plugin('consoleFormFieldset')->renderFieldsetElement($fieldset, $output);
     }
 }
