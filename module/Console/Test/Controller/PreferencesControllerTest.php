@@ -601,12 +601,18 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $form = $this->createMock('Console\Form\ManageRegistryValues');
         $form->expects($this->never())
              ->method('process');
-        $form->expects($this->once())
-             ->method('render');
+
         $this->_formManager->expects($this->once())
                            ->method('get')
                            ->with('Console\Form\ManageRegistryValues')
                            ->will($this->returnValue($form));
+
+        $formHelper = $this->createMock('Console\View\Helper\Form\ManageRegistryValues');
+        $formHelper->expects($this->once())->method('__invoke')->with($form);
+        $this->getApplicationServiceLocator()
+             ->get('ViewHelperManager')
+             ->setService('consoleFormManageRegistryValues', $formHelper);
+
         $this->dispatch('/console/preferences/registryvalues/');
         $this->assertResponseStatusCode(200);
     }
@@ -623,12 +629,18 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('isValid')
              ->will($this->returnValue(false));
-        $form->expects($this->once())
-             ->method('render');
+
         $this->_formManager->expects($this->once())
                            ->method('get')
                            ->with('Console\Form\ManageRegistryValues')
                            ->will($this->returnValue($form));
+
+        $formHelper = $this->createMock('Console\View\Helper\Form\ManageRegistryValues');
+        $formHelper->expects($this->once())->method('__invoke')->with($form);
+        $this->getApplicationServiceLocator()
+             ->get('ViewHelperManager')
+             ->setService('consoleFormManageRegistryValues', $formHelper);
+
         $this->dispatch('/console/preferences/registryvalues/', 'POST', $postData);
         $this->assertResponseStatusCode(200);
     }
@@ -645,8 +657,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('isValid')
              ->will($this->returnValue(true));
-        $form->expects($this->never())
-             ->method('render');
+
         $this->_formManager->expects($this->once())
                            ->method('get')
                            ->with('Console\Form\ManageRegistryValues')

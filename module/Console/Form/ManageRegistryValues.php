@@ -28,7 +28,6 @@ use Zend\Form\Element;
  *
  * The form requires the following options to be set:
  *
- * - **config:** \Model\Config instance, required by init().
  * - **registryManager:** \Model\Registry\RegistryManager instance, required by
  *   init() and process()
  *
@@ -51,22 +50,14 @@ class ManageRegistryValues extends Form
         // Create list of values as array because nested iteration does not work with ResultSet objects.
         $this->_definedValues = iterator_to_array($this->getOption('registryManager')->getValueDefinitions());
 
-        // Subform for enabling/disabling registry inspection, in addition to
-        // the same setting in preferences.
-        $fieldsetInspect = new \Zend\Form\Fieldset('inspect');
-        $inspect = new Element\Checkbox('inspect');
-        $inspect->setLabel('Inspect registry')
-                ->setChecked($this->getOption('config')->inspectRegistry);
-        $fieldsetInspect->add($inspect);
-        $this->add($fieldsetInspect);
-
         // Subform for existing values
         $fieldsetExisting = new \Zend\Form\Fieldset('existing');
+        $fieldsetExisting->setLabel('Values');
         $inputFilterExisting = new \Zend\InputFilter\InputFilter;
         // Create text elements for existing values to rename them
         foreach ($this->_definedValues as $value) {
             $name = $value['Name'];
-            $elementName = "value_$value[Id]_name";
+            $elementName = base64_encode($name);
             $element = new Element\Text($elementName);
             $element->setValue($name)
                     ->setLabel($value['FullPath']);
@@ -93,6 +84,7 @@ class ManageRegistryValues extends Form
 
         // Subform for new value
         $fieldsetNew = new \Zend\Form\Fieldset('new_value');
+        $fieldsetNew->setLabel('Add');
 
         $newName = new Element\Text('name');
         $newName->setLabel('Name');
@@ -114,11 +106,11 @@ class ManageRegistryValues extends Form
         $newValue->setLabel('Only this value (optional)');
         $fieldsetNew->add($newValue);
 
+        $this->add($fieldsetNew);
+
         $submit = new \Library\Form\Element\Submit('submit');
         $submit->setLabel('Change');
-        $fieldsetNew->add($submit);
-
-        $this->add($fieldsetNew);
+        $this->add($submit);
 
         $inputFilterNew = new \Zend\InputFilter\InputFilter;
         $inputFilterNew->add(
@@ -196,66 +188,6 @@ class ManageRegistryValues extends Form
         }
     }
 
-    /** {@inheritdoc} */
-    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset = null)
-    {
-        $output = '';
-        $name = $fieldset->getName();
-        switch ($name) {
-            case 'inspect':
-                $output .= "<div class='textcenter'>\n";
-                $output .= $view->formRow($fieldset->get('inspect'), 'append') . "\n";
-                $output .= "</div>\n";
-                break;
-            case 'existing':
-                $table = '';
-                foreach ($this->_definedValues as $value) {
-                    $id = $value['Id'];
-                    $element = $fieldset->get("value_{$id}_name");
-                    $row = $view->htmlElement(
-                        'td',
-                        $view->formElement($element) . $view->formElementErrors($element, array('class' => 'errors'))
-                    );
-                    $row .= $view->htmlElement(
-                        'td',
-                        $view->escapeHtml($element->getLabel())
-                    );
-                    $row .= $view->htmlElement(
-                        'td',
-                        $view->htmlElement(
-                            'a',
-                            $view->translate('Delete'),
-                            array(
-                                'href' => $view->consoleUrl(
-                                    'preferences',
-                                    'deleteregistryvalue',
-                                    array('name' => $value['Name'],)
-                                )
-                            )
-                        )
-                    );
-                    $table .= $view->htmlElement('tr', $row);
-                }
-                $output .= $view->htmlElement('table', $table);
-                break;
-            case 'new_value':
-                $output .= parent::renderFieldset($view, $fieldset);
-                break;
-            default:
-                if ($fieldset == $this) {
-                    $output .= $this->renderFieldset($view, $fieldset->get('inspect'));
-                    if (count($this->_definedValues)) {
-                        $output .= $view->htmlElement('h2', $view->translate('Values'));
-                        $output .= $this->renderFieldset($view, $fieldset->get('existing'));
-                    }
-                    $output .= $view->htmlElement('h2', $view->translate('Add'));
-                    $output .= $this->renderFieldset($view, $fieldset->get('new_value'));
-                }
-                break;
-        }
-        return $output;
-    }
-
     /**
      * Create a validator that forbids any existing name except the given one
      *
@@ -286,9 +218,6 @@ class ManageRegistryValues extends Form
     public function process()
     {
         $data = $this->getData();
-
-        $this->getOption('config')->inspectRegistry = $data['inspect']['inspect'];
-
         $registryManager = $this->getOption('registryManager');
         $name = $data['new_value']['name'];
         if ($name) {
@@ -302,7 +231,7 @@ class ManageRegistryValues extends Form
         foreach ($this->_definedValues as $value) {
             $registryManager->renameValueDefinition(
                 $value['Name'],
-                $data['existing']["value_$value[Id]_name"]
+                $data['existing'][base64_encode($value['Name'])]
             );
         }
     }

@@ -424,6 +424,69 @@ form.form_addtogroup > * {
     margin-right: auto;
 }
 
+.form_manageregistryvalues fieldset {
+    border: none;
+    margin-top: 3ex;
+}
+.form_manageregistryvalues legend {
+    margin: auto;
+    font-weight: bold;
+}
+.form_manageregistryvalues label {
+    display: table-row;
+}
+.form_manageregistryvalues fieldset[name=existing] > div {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+}
+.form_manageregistryvalues fieldset[name=existing] label * {
+    margin-top: 1ex;
+    margin-bottom: 1ex;
+}
+.form_manageregistryvalues fieldset[name=existing] label span {
+    margin-left: .5em;
+    margin-right: 1em;
+}
+.form_manageregistryvalues fieldset[name=existing] a {
+    display: table-cell;
+}
+.form_manageregistryvalues fieldset[name=existing] ul {
+    color: red;
+    margin-top: 0;
+    padding-left: 1.5em;
+}
+.form_manageregistryvalues fieldset[name=new_value] > div {
+    display: table;
+    width: 100%;
+}
+.form_manageregistryvalues fieldset[name=new_value] label * {
+    display: table-cell;
+    margin-left: .5em;
+    margin-top: 1ex;
+    margin-bottom: 1ex;
+}
+.form_manageregistryvalues fieldset[name=new_value] label select {
+    max-width: 30em;
+}
+.form_manageregistryvalues fieldset[name=new_value] label span {
+    width: 50%;
+    text-align: right;
+    padding-right: .5em;
+}
+.form_manageregistryvalues fieldset[name=new_value] ul {
+    color: red;
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: 1ex;
+    margin-left: 1.5em;
+    padding-left: 100%;
+}
+.form_manageregistryvalues [type=submit] {
+    display: block;
+    margin: auto;
+}
+
 /* The following rules are for forms still using the deprecated render() method. */
 
 .form_yesno {
@@ -492,14 +555,6 @@ form.form_addtogroup > * {
 
 .form_login input[type="text"], .form_login input[type="password"] {
     width: 12em;
-}
-
-.form_manageregistryvalues h2 {
-    margin: 0;
-}
-
-.form_manageregistryvalues td input {
-    margin: 1.2ex 0em 1.2ex 0em;
 }
 
 .form_networkdevicetypes label span {

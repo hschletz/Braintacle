@@ -132,6 +132,7 @@ return array(
             'consoleForm' => 'Console\View\Helper\Form\Form',
             'consoleFormFieldset' => 'Console\View\Helper\Form\Fieldset',
             'consoleFormClientConfig' => 'Console\View\Helper\Form\ClientConfig',
+            'consoleFormManageRegistryValues' => 'Console\View\Helper\Form\ManageRegistryValues',
         ),
         'factories' => array(
             'Console\View\Helper\ConsoleUrl' => 'Console\View\Helper\Service\ConsoleUrlFactory',
@@ -141,6 +142,7 @@ return array(
             'Console\View\Helper\Form\Form' => 'Zend\ServiceManager\Factory\InvokableFactory',
             'Console\View\Helper\Form\Fieldset' => 'Zend\ServiceManager\Factory\InvokableFactory',
             'Console\View\Helper\Form\ClientConfig' => 'Zend\ServiceManager\Factory\InvokableFactory',
+            'Console\View\Helper\Form\ManageRegistryValues' => 'Zend\ServiceManager\Factory\InvokableFactory',
         ),
     ),
     'view_manager' => array(

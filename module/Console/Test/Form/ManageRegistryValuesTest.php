@@ -29,12 +29,6 @@ use Zend\Dom\Document\Query as Query;
 class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
 {
     /**
-     * Config mock object
-     * @var \Model\Config
-     */
-    protected $_config;
-
-    /**
      * RegistryManager mock object
      * @var \Model\Registry\RegistryManager
      */
@@ -58,15 +52,13 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
     );
 
     /**
-     * Set up Config mock object
+     * "Test1" and "Test2"
      */
+    protected $_name1 = 'VGVzdDE=';
+    protected $_name2 = 'VGVzdDI=';
+
     public function setUp()
     {
-        $this->_config = $this->createMock('Model\Config');
-        $this->_config->expects($this->any())
-                      ->method('__get')
-                      ->with('inspectRegistry')
-                      ->willReturn(1);
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
         $resultSet->initialize($this->_values);
         $this->_registryManager = $this->createMock('Model\Registry\RegistryManager');
@@ -81,10 +73,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
     {
         $form = new \Console\Form\ManageRegistryValues(
             null,
-            array(
-                'config' => $this->_config,
-                'registryManager' => $this->_registryManager,
-            )
+            array('registryManager' => $this->_registryManager)
         );
         $form->init();
         return $form;
@@ -95,28 +84,28 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
      */
     public function testInit()
     {
-        $fieldset = $this->_form->get('inspect');
-        $this->assertInstanceOf('Zend\Form\Fieldset', $fieldset);
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $fieldset->get('inspect'));
-        $this->assertTrue($fieldset->get('inspect')->isChecked());
-
         $fieldset = $this->_form->get('existing');
         $this->assertInstanceOf('Zend\Form\Fieldset', $fieldset);
-        $this->assertInstanceOf('Zend\Form\Element\Text', $fieldset->get('value_1_name'));
-        $this->assertEquals('Test1', $fieldset->get('value_1_name')->getValue());
-        $this->assertEquals('a\b\c', $fieldset->get('value_1_name')->getLabel());
-        $this->assertInstanceOf('Zend\Form\Element\Text', $fieldset->get('value_2_name'));
-        $this->assertEquals('Test2', $fieldset->get('value_2_name')->getValue());
-        $this->assertEquals('d\e\f', $fieldset->get('value_2_name')->getLabel());
+        $this->assertEquals('Values', $fieldset->getLabel());
+        $value1 = $fieldset->get($this->_name1);
+        $this->assertInstanceOf('Zend\Form\Element\Text', $value1);
+        $this->assertEquals('Test1', $value1->getValue());
+        $this->assertEquals('a\b\c', $value1->getLabel());
+        $value2 = $fieldset->get($this->_name2);
+        $this->assertInstanceOf('Zend\Form\Element\Text', $value2);
+        $this->assertEquals('Test2', $value2->getValue());
+        $this->assertEquals('d\e\f', $value2->getLabel());
 
         $fieldset = $this->_form->get('new_value');
+        $this->assertEquals('Add', $fieldset->getLabel());
         $this->assertInstanceOf('Zend\Form\Fieldset', $fieldset);
         $this->assertInstanceOf('Zend\Form\Element\Text', $fieldset->get('name'));
         $this->assertInstanceOf('Zend\Form\Element\Select', $fieldset->get('root_key'));
         $this->assertEquals(\Model\Registry\Value::rootKeys(), $fieldset->get('root_key')->getValueOptions());
         $this->assertInstanceOf('Zend\Form\Element\Text', $fieldset->get('subkeys'));
         $this->assertInstanceOf('Zend\Form\Element\Text', $fieldset->get('value'));
-        $this->assertInstanceOf('\Library\Form\Element\Submit', $fieldset->get('submit'));
+
+        $this->assertInstanceOf('\Library\Form\Element\Submit', $this->_form->get('submit'));
     }
 
     /**
@@ -126,12 +115,9 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
     {
         // Unchanged values (valid)
         $data = array(
-            'inspect' => array(
-                'inspect' => '1',
-            ),
             'existing' => array(
-                'value_1_name' => 'Test1',
-                'value_2_name' => 'Test2',
+                $this->_name1 => 'Test1',
+                $this->_name2 => 'Test2',
             ),
             'new_value' => array(
                 'name' => ' ', // Trimmed to empty string
@@ -148,28 +134,28 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         $this->assertTrue($this->_form->isValid());
 
         // Fieldset "existing": empty value should fail
-        $data['existing']['value_1_name'] = '';
+        $data['existing'][$this->_name1] = '';
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
-        $this->assertArrayHasKey('isEmpty', $this->_form->getMessages()['existing']['value_1_name']);
+        $this->assertArrayHasKey('isEmpty', $this->_form->getMessages()['existing'][$this->_name1]);
 
         // Fieldset "existing": too long value should fail
-        $data['existing']['value_1_name'] = $string256;
+        $data['existing'][$this->_name1] = $string256;
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
-        $this->assertArrayHasKey('stringLengthTooLong', $this->_form->getMessages()['existing']['value_1_name']);
+        $this->assertArrayHasKey('stringLengthTooLong', $this->_form->getMessages()['existing'][$this->_name1]);
 
         // Fieldset "existing": existing value should fail (test StringTrim too)
-        $data['existing']['value_1_name'] = ' test2';
+        $data['existing'][$this->_name1] = ' test2';
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
-        $this->assertArrayHasKey('inArray', $this->_form->getMessages()['existing']['value_1_name']);
+        $this->assertArrayHasKey('inArray', $this->_form->getMessages()['existing'][$this->_name1]);
 
         // Fieldset "existing": Renaming value, including mere case change, should pass (test StringTrim too)
-        $data['existing']['value_1_name'] = ' test1';
+        $data['existing'][$this->_name1] = ' test1';
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
-        $this->assertEquals('test1', $this->_form->getData()['existing']['value_1_name']);
+        $this->assertEquals('test1', $this->_form->getData()['existing'][$this->_name1]);
 
         // Fieldset "new_value": If 'name' is nonempty, 'subkeys' must also be nonempty (test StringTrim too)
         $data['new_value']['name'] = ' test';
@@ -199,145 +185,6 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $this->assertCount(3, $this->_form->getMessages()['new_value']);
-    }
-
-    public function testRender()
-    {
-        $this->_form->get('existing')->get('value_1_name')->setMessages(array('Message1'));
-        $this->_form->get('new_value')->get('subkeys')->setMessages(array('Message2'));
-
-        $formElementErrors = $this->createMock('Zend\Form\View\Helper\FormElementErrors');
-        $formElementErrors->method('__invoke')
-                          ->with($this->isInstanceOf('Zend\Form\ElementInterface'), array('class' => 'errors'))
-                          ->willReturnCallback(array($this, 'formElementErrorsMock'));
-
-        $view = $this->_createView();
-        $view->getHelperPluginManager()->setService('formElementErrors', $formElementErrors);
-
-        $document = new \Zend\Dom\Document(
-            $this->_form->render($view)
-        );
-
-        // Test state of inspect checkbox
-        $result = Query::execute(
-            '//input[@name="inspect[inspect]"][@checked="checked"]',
-            $document
-        );
-        $this->assertCount(1, $result);
-
-        // Test table with existing values
-        $result = Query::execute("//h2[text()='\nWerte\n']", $document);
-        $this->assertCount(1, $result);
-
-        $result = Query::execute('//tr', $document);
-        $this->assertCount(2, $result);
-
-        $result = Query::execute(
-            '//td//input[@name="existing[value_1_name]"][@value="Test1"]',
-            $document
-        );
-        $this->assertCount(1, $result);
-
-        $result = Query::execute('//td', $document);
-        $this->assertEquals("\na\b\c\n", $result[1]->textContent);
-
-        $result = Query::execute(
-            '//td//a[@href="/console/preferences/deleteregistryvalue/?name=Test1"]',
-            $document
-        );
-        $this->assertCount(1, $result);
-
-        // Test elements for new value
-        $result = Query::execute('//input[@name="new_value[name]"]', $document);
-        $this->assertCount(1, $result);
-
-        $result = Query::execute('//select[@name="new_value[root_key]"]', $document);
-        $this->assertCount(1, $result);
-
-        $result = Query::execute('//input[@name="new_value[subkeys]"]', $document);
-        $this->assertCount(1, $result);
-
-        $result = Query::execute('//input[@name="new_value[value]"]', $document);
-        $this->assertCount(1, $result);
-
-        // Test submit button
-        $result = Query::execute('//input[@type="submit"]', $document);
-        $this->assertCount(1, $result);
-
-        // Test message rendering
-        $result = Query::execute('//ul[@class="errorMock"]/li', $document);
-        $this->assertCount(2, $result);
-        $this->assertEquals("Message1", $result[0]->textContent);
-        $this->assertEquals("Message2", $result[1]->textContent);
-    }
-
-    public function testRenderNoExistingValues()
-    {
-        $this->_registryManager = $this->createMock('Model\Registry\RegistryManager');
-        $this->_registryManager->expects($this->once())
-                               ->method('getValueDefinitions')
-                               ->willReturn(new \ArrayIterator);
-
-        $document = new \Zend\Dom\Document(
-            $this->_getForm()->render($this->_createView())
-        );
-
-        $result = Query::execute("//h2[text()='\nWerte\n']", $document);
-        $this->assertCount(0, $result);
-
-        $result = Query::execute('//tr', $document);
-        $this->assertCount(0, $result);
-
-        // Other fieldsets must exist
-        $result = Query::execute('//input[@name="inspect[inspect]"][@type="checkbox"]', $document);
-        $this->assertCount(1, $result);
-
-        $result = Query::execute('//input[@name="new_value[name]"]', $document);
-        $this->assertCount(1, $result);
-    }
-
-    public function testProcessSetInspect()
-    {
-        $data = array(
-            'inspect' => array(
-                'inspect' => '1',
-            ),
-            'existing' => array(),
-            'new_value' => array(
-                'name' => '',
-                'root_key' => 'root_key',
-                'subkeys' => 'subkeys',
-                'value' => 'value'
-            ),
-        );
-
-        $resultSet = new \Zend\Db\ResultSet\ResultSet;
-        $resultSet->initialize(new \EmptyIterator);
-        $registryManager = $this->createMock('Model\Registry\RegistryManager');
-        $registryManager->expects($this->once())
-                        ->method('getValueDefinitions')
-                        ->willReturn($resultSet);
-        $registryManager->expects($this->never())->method('addValueDefinition');
-        $registryManager->expects($this->never())->method('renameValueDefinition');
-
-        $this->_config->expects($this->once())
-                      ->method('__set')
-                      ->with('inspectRegistry', '1');
-
-        $form = $this->getMockBuilder('Console\Form\ManageRegistryValues')
-                     ->setMethods(array('getData'))
-                     ->setConstructorArgs(
-                         array(
-                            null,
-                            array(
-                                'config' => $this->_config,
-                                'registryManager' => $registryManager,
-                            ),
-                         )
-                     )->getMock();
-        $form->expects($this->once())->method('getData')->willReturn($data);
-        $form->init();
-        $form->process();
     }
 
     public function testProcessAdd()
@@ -371,10 +218,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
                      ->setConstructorArgs(
                          array(
                             null,
-                            array(
-                                'config' => $this->_config,
-                                'registryManager' => $registryManager,
-                            ),
+                            array('registryManager' => $registryManager),
                          )
                      )->getMock();
         $form->expects($this->once())->method('getData')->willReturn($data);
@@ -389,8 +233,8 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
                 'inspect' => '1',
             ),
             'existing' => array(
-                'value_1_name' => 'name1_new',
-                'value_2_name' => 'name2',
+                $this->_name1 => 'Test1_new',
+                $this->_name2 => 'Test2',
             ),
             'new_value' => array(
                 'name' => '',
@@ -400,8 +244,8 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
             ),
         );
 
-        $value1 = array('Id' => 1, 'Name' => 'name1', 'FullPath' => 'path1');
-        $value2 = array('Id' => 2, 'Name' => 'name2', 'FullPath' => 'path2');
+        $value1 = array('Id' => 1, 'Name' => 'Test1', 'FullPath' => 'path1');
+        $value2 = array('Id' => 2, 'Name' => 'Test2', 'FullPath' => 'path2');
 
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
         $resultSet->initialize(array($value1, $value2));
@@ -413,8 +257,8 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         $registryManager->expects($this->exactly(2))
                         ->method('renameValueDefinition')
                         ->withConsecutive(
-                            array('name1', 'name1_new'),
-                            array('name2', 'name2')
+                            array('Test1', 'Test1_new'),
+                            array('Test2', 'Test2')
                         );
 
         $form = $this->getMockBuilder('Console\Form\ManageRegistryValues')
@@ -422,10 +266,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
                      ->setConstructorArgs(
                          array(
                             null,
-                            array(
-                                'config' => $this->_config,
-                                'registryManager' => $registryManager,
-                            ),
+                            array('registryManager' => $registryManager),
                          )
                      )->getMock();
         $form->expects($this->once())->method('getData')->willReturn($data);
