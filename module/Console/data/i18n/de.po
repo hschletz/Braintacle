@@ -252,9 +252,9 @@ msgstr "Kategorie"
 msgid "Date"
 msgstr "Datum"
 
-#: Form/DefineFields.php Form/ManageRegistryValues.php
-#: Form/NetworkDeviceTypes.php Navigation/ClientMenuFactory.php
-#: Navigation/GroupMenuFactory.php views/console/accounts/index.php
+#: Form/DefineFields.php Form/NetworkDeviceTypes.php
+#: Navigation/ClientMenuFactory.php Navigation/GroupMenuFactory.php
+#: View/Helper/Form/ManageRegistryValues.php views/console/accounts/index.php
 #: views/console/network/showidentified.php
 #: views/console/network/showunknown.php views/console/package/index.php
 msgid "Delete"
@@ -316,10 +316,6 @@ msgstr "Anmelden"
 #: Form/Login.php
 msgid "Username"
 msgstr "Benutzername"
-
-#: Form/ManageRegistryValues.php Form/Preferences/Inventory.php
-msgid "Inspect registry"
-msgstr "Registry durchsuchen"
 
 #: Form/ManageRegistryValues.php
 msgid "Only this value (optional)"
@@ -509,6 +505,10 @@ msgstr "Status von durch Gruppe zugewiesenen Paketen bei Clients setzen "
 #: Form/Preferences/Inventory.php
 msgid "Delete interfaces from network listing by default"
 msgstr "'Interfaces aus Netzwerkliste löschen' als Vorgabe"
+
+#: Form/Preferences/Inventory.php
+msgid "Inspect registry"
+msgstr "Registry durchsuchen"
 
 #: Form/Preferences/Inventory.php
 msgid "Manage inventoried registry values"

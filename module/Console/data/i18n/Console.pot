@@ -265,9 +265,9 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: Form/DefineFields.php Form/ManageRegistryValues.php
-#: Form/NetworkDeviceTypes.php Navigation/ClientMenuFactory.php
-#: Navigation/GroupMenuFactory.php views/console/accounts/index.php
+#: Form/DefineFields.php Form/NetworkDeviceTypes.php
+#: Navigation/ClientMenuFactory.php Navigation/GroupMenuFactory.php
+#: View/Helper/Form/ManageRegistryValues.php views/console/accounts/index.php
 #: views/console/network/showidentified.php
 #: views/console/network/showunknown.php views/console/package/index.php
 msgid "Delete"
@@ -314,8 +314,8 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
-#: Form/ManageRegistryValues.php Form/Preferences/Inventory.php
-msgid "Inspect registry"
+#: Form/ManageRegistryValues.php
+msgid "Values"
 msgstr ""
 
 #: Form/ManageRegistryValues.php
@@ -328,10 +328,6 @@ msgstr ""
 
 #: Form/ManageRegistryValues.php
 msgid "Only this value (optional)"
-msgstr ""
-
-#: Form/ManageRegistryValues.php
-msgid "Values"
 msgstr ""
 
 #: Form/NetworkDevice.php views/console/client/display.php
@@ -499,6 +495,10 @@ msgstr ""
 
 #: Form/Preferences/Groups.php
 msgid "Set package status on clients for group-assigned packages"
+msgstr ""
+
+#: Form/Preferences/Inventory.php
+msgid "Inspect registry"
 msgstr ""
 
 #: Form/Preferences/Inventory.php
