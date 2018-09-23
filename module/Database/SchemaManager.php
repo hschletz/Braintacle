@@ -217,9 +217,7 @@ class SchemaManager
                     $columnObj = $table->getColumn($column['name']);
                     $columnObj->setComment($column['comment']);
                     // Change datatype if different.
-                    if ($columnObj->getDatatype() != $column['type'] or
-                        $columnObj->getLength() != $column['length']
-                    ) {
+                    if ($columnObj->isDifferent($column, ['type', 'length'])) {
                         $logger->info(
                             "Setting column $tableName.$column[name] type to $column[type]($column[length])..."
                         );
