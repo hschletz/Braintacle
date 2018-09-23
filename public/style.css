@@ -231,6 +231,10 @@ th a {
     text-align: center;
 }
 
+.textcenter ul {
+    display: inline-block;
+}
+
 .textnormalsize {
     font-size: 100%;
 }
@@ -601,4 +605,8 @@ form.form_addtogroup > * {
     display: block;
     text-align: center;
     margin: 2ex auto 0 auto;
+}
+
+.form_software input[type="submit"] {
+    margin-bottom: 2ex;
 }

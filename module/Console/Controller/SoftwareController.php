@@ -33,92 +33,133 @@ class SoftwareController extends \Zend\Mvc\Controller\AbstractActionController
     protected $_softwareManager;
 
     /**
-     * Software filter form
-     * @var \Console\Form\SoftwareFilter
+     * Form manager
+     * @var \Zend\Form\FormElementManager
      */
-    protected $_form;
+    protected $_formManager;
+
+    /**
+     * Filter to fix incorrectly encoded names
+     * @var \Library\Filter\FixEncodingErrors
+     */
+    protected $_fixEncodingErrors;
 
     /**
      * Constructor
      *
      * @param \Model\SoftwareManager $softwareManager
-     * @param \Console\Form\SoftwareFilter $form
+     * @param \Zend\Form\FormElementManager $formManager
+     * @param \Library\Filter\FixEncodingErrors $fixEncodingErrors
      */
-    public function __construct(\Model\softwareManager $softwareManager, \Console\Form\SoftwareFilter $form)
-    {
+    public function __construct(
+        \Model\SoftwareManager $softwareManager,
+        \Zend\Form\FormElementManager $formManager,
+        \Library\Filter\FixEncodingErrors $fixEncodingErrors
+    ) {
         $this->_softwareManager = $softwareManager;
-        $this->_form = $form;
+        $this->_formManager = $formManager;
+        $this->_fixEncodingErrors = $fixEncodingErrors;
     }
 
     /**
-     * Display filter form and all software according to selected filter (default: accepted)
+     * Display filter and software forms according to selected filter (default: accepted)
      *
-     * @return array filter, form, software[]
+     * @return array filter, software[], order, filterForm, softwareForm
      */
     public function indexAction()
     {
         $filter = $this->params()->fromQuery('filter', 'accepted');
-        $this->_form->setFilter($filter);
-        $this->_form->remove('_csrf');
+        $order = $this->getOrder('name');
+
+        $software = $this->_softwareManager->getSoftware(
+            array(
+                'Os' => $this->params()->fromQuery('os', 'windows'),
+                'Status' => $filter,
+            ),
+            $order['order'],
+            $order['direction']
+        )->toArray();
+
+        $filterForm = $this->_formManager->get('Console\Form\SoftwareFilter');
+        $filterForm->setFilter($filter);
+
+        $softwareForm = $this->_formManager->get('Console\Form\Software');
+        $softwareForm->setSoftware($software);
+
         $session = new \Zend\Session\Container('ManageSoftware');
         $session->filter = $filter;
 
-        $order = $this->getOrder('name');
         return array(
-            'filter' => $filter,
-            'form' => $this->_form,
-            'software' => $this->_softwareManager->getSoftware(
-                array(
-                    'Os' => $this->params()->fromQuery('os', 'windows'),
-                    'Status' => $filter,
-                ),
-                $order['order'],
-                $order['direction']
-            ),
+            'filterForm' => $filterForm,
+            'softwareForm' => $softwareForm,
+            'software' => $software,
             'order' => $order,
+            'filter' => $filter,
         );
     }
 
     /**
-     * Ignore selected software
+     * Confirm software definition actions
      *
-     * @return mixed array(name) or redirect response
+     * @return array|\Zend\Http\Response array(software, display)
      */
-    public function ignoreAction()
+    public function confirmAction()
     {
-        return $this->_manage(false);
-    }
+        $post = $this->params()->fromPost();
 
-    /**
-     * Accept selected software
-     *
-     * @return mixed array(name) or redirect response
-     */
-    public function acceptAction()
-    {
-        return $this->_manage(true);
-    }
-
-    /**
-     * Accept or ignore selected software
-     *
-     * @param bool $display Display status to set
-     * @return mixed array(name) or redirect response
-     */
-    protected function _manage($display)
-    {
-        $name = $this->params()->fromQuery('name');
-        if ($name === null) {
-            throw new \RuntimeException('Missing name parameter');
-        }
-        if ($this->getRequest()->isGet()) {
-            return array('name' => $name); // Display confirmation form
-        } else {
-            if ($this->params()->fromPost('yes')) {
-                $this->_softwareManager->setDisplay($name, $display);
-            }
+        if (isset($post['Accept']) or isset($post['Ignore'])) {
             $session = new \Zend\Session\Container('ManageSoftware');
-            return $this->redirectToRoute('software', 'index', array('filter' => $session->filter));
+            $form = $this->_formManager->get('Console\Form\Software');
+            $form->setData($post);
+            if ($form->isValid()) {
+                $software = $form->getData()['Software'];
+                if ($software) {
+                    $session->setExpirationHops(1);
+                    $session['software'] = array();
+                    foreach ($software as $name => $value) {
+                        $session['software'][] = base64_decode($name);
+                    }
+                    $session['display'] = isset($post['Accept']);
+
+                    $vars = $session->getArrayCopy();
+                    foreach ($vars['software'] as &$name) {
+                        $name = $this->_fixEncodingErrors->filter($name);
+                    }
+                    return $vars;
+                }
+            }
+            return $this->redirectToRoute('software', 'index', array('filter' => $session['filter']));
+        } else {
+            $response = $this->getResponse();
+            $response->setStatusCode(400);
+            return $response;
+        }
+    }
+
+    /**
+     * Accept/Ignore software definitions
+     *
+     * @return \Zend\Http\Response
+     */
+    public function manageAction()
+    {
+        $post = $this->params()->fromPost();
+        $session = new \Zend\Session\Container('ManageSoftware');
+
+        if (isset($post['no'])) {
+            return $this->redirectToRoute('software', 'index', array('filter' => $session['filter']));
+        } elseif (isset($post['yes'])) {
+            $software = $session['software'];
+            if ($software) {
+                foreach ($software as $name) {
+                    $this->_softwareManager->setDisplay($name, $session['display']);
+                }
+            }
+            return $this->redirectToRoute('software', 'index', array('filter' => $session['filter']));
+        } else {
+            $response = $this->getResponse();
+            $response->setStatusCode(400);
+            return $response;
         }
     }
 }

@@ -34,7 +34,8 @@ class SoftwareControllerFactory implements \Zend\ServiceManager\Factory\FactoryI
     ) {
         return new \Console\Controller\SoftwareController(
             $container->get('Model\SoftwareManager'),
-            $container->get('FormElementManager')->get('Console\Form\SoftwareFilter')
+            $container->get('FormElementManager'),
+            $container->get('FilterManager')->get('Library\FixEncodingErrors')
         );
     }
 }

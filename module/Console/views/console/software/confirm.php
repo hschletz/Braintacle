@@ -1,6 +1,6 @@
 <?php
 /**
- * Display confirmation form for software whitelisting
+ * Display confirmation form for software black-/whitelisting
  *
  * Copyright (C) 2011-2018 Holger Schletz <holger.schletz@web.de>
  *
@@ -20,13 +20,17 @@
  *
  */
 
+if ($this->display) {
+    $message = $this->translate('The following software will be marked as known and accepted. Continue?');
+} else {
+    $message = $this->translate('The following software will be marked as known but ignored. Continue?');
+}
 print $this->formYesNo(
-    sprintf(
-        $this->translate(
-            'Software \'%s\' will be marked as known and accepted. Continue?'
-        ),
-        $this->escapeHtml(
-            \Zend\Filter\StaticFilter::execute($this->name, 'Library\FixEncodingErrors')
-        )
-    )
+    $message,
+    array(),
+    array('action' => $this->consoleUrl('software', 'manage'))
 );
+
+print "<div class='textcenter'>\n";
+print $this->htmlList($this->software);
+print "\n</div>\n";

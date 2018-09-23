@@ -33,10 +33,16 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
     protected $_softwareManager;
 
     /**
-     * Form mock
+     * Filter form mock
      * @var \Console\Form\SoftwareFilter
      */
-    protected $_form;
+    protected $_filterForm;
+
+    /**
+     * Software form mock
+     * @var \Console\Form\Software
+     */
+    protected $_softwareForm;
 
     /**
      * Sample result data
@@ -60,202 +66,264 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $this->_session = new \Zend\Session\Container('ManageSoftware');
 
         $this->_softwareManager = $this->createMock('Model\SoftwareManager');
-        $this->_form = $this->createMock('Console\Form\SoftwareFilter');
+        $this->_filterForm = $this->createMock('Console\Form\SoftwareFilter');
+        $this->_softwareForm = $this->createMock('Console\Form\Software');
 
         $serviceManager = $this->getApplicationServiceLocator();
         $serviceManager->setService('Model\SoftwareManager', $this->_softwareManager);
-        $serviceManager->get('FormElementManager')->setService('Console\Form\SoftwareFilter', $this->_form);
+
+        $formManager = $serviceManager->get('FormElementManager');
+        $formManager->setService('Console\Form\SoftwareFilter', $this->_filterForm);
+        $formManager->setService('Console\Form\Software', $this->_softwareForm);
     }
 
-    public function testIndexActionDefaultFilterAccepted()
+    public function testIndexAction()
     {
-        $filters = array(
-            'Os' => 'windows',
-            'Status' => 'accepted',
+        $serviceManager = $this->getApplicationServiceLocator();
+
+        $params = $this->createMock('Zend\Mvc\Controller\Plugin\Params');
+        $params->method('__invoke')->willReturnSelf();
+        $params->method('fromQuery')->willReturnMap(
+            array(
+                array('filter', 'accepted', 'filterName'),
+                array('os', 'windows', 'osName'),
+            )
         );
-        $this->_softwareManager->expects($this->once())
-                               ->method('getSoftware')
-                               ->with($filters, 'name', 'asc')
-                               ->willReturn($this->_result);
-        $this->_form->expects($this->once())
-                    ->method('setFilter')
-                    ->with('accepted');
-        $this->_form->expects($this->once())->method('render');
-        unset($this->_session->filter);
+
+        $getOrder = $this->createMock('Console\Mvc\Controller\Plugin\GetOrder');
+        $getOrder->method('__invoke')->with('name')->willReturn(array('order' => '_order', 'direction' => '_direction'));
+
+        $controllerPluginManager = $serviceManager->get('ControllerPluginManager');
+        $controllerPluginManager->setService('params', $params);
+        $controllerPluginManager->setService('getOrder', $getOrder);
+
+        $filters = array(
+            'Os' => 'osName',
+            'Status' => 'filterName',
+        );
+
+        $result = $this->createMock('Zend\Db\ResultSet\ResultSet');
+        $result->method('toArray')->willReturn($this->_result);
+
+        $this->_softwareManager->method('getSoftware')->with($filters, '_order', '_direction')->willReturn($result);
+
+        $consoleUrl = $this->createMock('Console\View\Helper\ConsoleUrl');
+        $consoleUrl->method('__invoke')->with('software', 'confirm')->willReturn('/console/software/confirm');
+
+        $viewHelperManager = $serviceManager->get('ViewHelperManager');
+        $viewHelperManager->setService('consoleUrl', $consoleUrl);
+
+        $view = $serviceManager->get('ViewRenderer');
+
+        $this->_filterForm->expects($this->once())->method('setFilter')->with('filterName');
+        $this->_filterForm->expects($this->once())->method('render')->with($view)->willReturn("FILTER_FORM\n");
+
+        $this->_softwareForm->expects($this->once())->method('setSoftware')->with($this->_result);
+        $this->_softwareForm->expects($this->exactly(2))->method('setAttribute')->withConsecutive(
+            array('action', '/console/software/confirm'),
+            array('method', 'POST')
+        );
+
+        $softwareFormHelper = $this->createMock('Console\View\Helper\Form\Software');
+        $softwareFormHelper->method('__invoke')->with(
+            $this->_softwareForm,
+            $this->_result,
+            ['order' => '_order', 'direction' => '_direction'],
+            'filterName'
+        )->willReturn("SOFTWARE_FORM\n");
+
+        $serviceManager->get('ViewHelperManager')->setService('consoleFormSoftware', $softwareFormHelper);
+
         $this->dispatch('/console/software/index/');
-        $this->assertEquals('accepted', $this->_session->filter);
+
+        $this->assertEquals('filterName', $this->_session->filter);
         $this->assertResponseStatusCode(200);
-        $this->assertNotQueryContentContains(
-            'td a',
-            'Akzeptieren'
-        );
-        $this->assertQueryContentContains(
-            'td a[href="/console/software/ignore/?name=%3Cname%C2%96%3E"]',
-            'Ignorieren'
-        );
-        $this->assertQueryContentContains(
-            'td',
-            "\n<name\xE2\x80\x93>\n"
-        );
-        $this->assertQueryContentContains(
-            'td[class="textright"] a[href*="/console/client/index/"][href*="search=%3Cname%C2%96%3E"]',
-            '2'
+        $this->assertQueryContentRegex(
+            'div',
+            "/FILTER_FORM\nSOFTWARE_FORM\n/"
         );
     }
 
-    public function testIndexActionFilterIgnored()
+    public function confirmActionButtonProvider()
     {
-        $filters = array(
-            'Os' => 'windows',
-            'Status' => 'ignored',
+        return array(
+            array('Accept'),
+            array('Ignore'),
         );
-        $this->_softwareManager->expects($this->once())
-                               ->method('getSoftware')
-                               ->with($filters, 'name', 'asc')
-                               ->willReturn($this->_result);
-        $this->_form->expects($this->once())
-                    ->method('setFilter')
-                    ->with('ignored');
-        $this->_form->expects($this->once())->method('render');
-        $this->dispatch('/console/software/index/?filter=ignored');
-        $this->assertEquals('ignored', $this->_session->filter);
+    }
+
+    /**
+     * @dataProvider confirmActionButtonProvider
+     */
+    public function testConfirmActionPostConfirmInvalid($button)
+    {
+        $postData = array($button => 'button label');
+
+        $this->_softwareForm->expects($this->once())->method('setData')->with($postData);
+        $this->_softwareForm->method('isValid')->willReturn(false);
+
+        $this->_session['filter'] = 'filterName';
+
+        $this->dispatch('/console/software/confirm/', 'POST', $postData);
+
+        $this->assertRedirectTo('/console/software/index/?filter=filterName');
+        $this->assertEquals(array('filter' => 'filterName'), $this->_session->getArrayCopy());
+    }
+
+    /**
+     * @dataProvider confirmActionButtonProvider
+     */
+    public function testConfirmActionPostConfirmValidEmptyList($button)
+    {
+        $postData = array($button => 'button label');
+        $formData = array('Software' => array());
+
+        $this->_softwareForm->expects($this->once())->method('setData')->with($postData);
+        $this->_softwareForm->method('isValid')->willReturn(true);
+        $this->_softwareForm->expects($this->once())->method('getData')->willReturn($formData);
+
+        $this->_session['filter'] = 'filterName';
+
+        $this->dispatch('/console/software/confirm/', 'POST', $postData);
+
+        $this->assertRedirectTo('/console/software/index/?filter=filterName');
+        $this->assertEquals(array('filter' => 'filterName'), $this->_session->getArrayCopy());
+    }
+
+    public function confirmActionPostConfirmValidNonEmptyListProvider()
+    {
+        return array(
+            array('Accept', true, 'The following software will be marked as known and accepted. Continue?'),
+            array('Ignore', false, 'The following software will be marked as known but ignored. Continue?'),
+        );
+    }
+
+    /**
+     * @dataProvider confirmActionPostConfirmValidNonEmptyListProvider
+     */
+    public function testConfirmActionPostConfirmValidNonEmptyList($button, $accept, $message)
+    {
+        $postData = array($button => 'button label');
+        $formData = array(
+            'Software' => array(
+                'cmF3MQ==' => '1', // 'raw1'
+                'cmF3Mg==' => '1', // 'raw2'
+            )
+        );
+
+        $this->_softwareForm->expects($this->once())->method('setData')->with($postData);
+        $this->_softwareForm->method('isValid')->willReturn(true);
+        $this->_softwareForm->expects($this->once())->method('getData')->willReturn($formData);
+
+        $this->_session['filter'] = 'filterName';
+
+        $serviceManager = $this->getApplicationServiceLocator();
+
+        $fixEncodingErrors = $this->createMock('Library\Filter\FixEncodingErrors');
+        $fixEncodingErrors->method('filter')
+                          ->withConsecutive(array('raw1'), array('raw2'))
+                          ->willReturnOnConsecutiveCalls('filtered1', 'filtered2');
+        $serviceManager->get('FilterManager')->setService('Library\Filter\FixEncodingErrors', $fixEncodingErrors);
+
+        $viewHelperManager = $serviceManager->get('ViewHelperManager');
+
+        $translate = $this->createMock('Zend\I18n\View\Helper\Translate');
+        $translate->method('__invoke')->with($message)->willReturn('MESSAGE');
+        $viewHelperManager->setService('Zend\I18n\View\Helper\Translate', $translate);
+
+        $consoleUrl = $this->createMock('Console\View\Helper\ConsoleUrl');
+        $consoleUrl->method('__invoke')->with('software', 'manage')->willReturn('URL');
+        $viewHelperManager->setService('consoleUrl', $consoleUrl);
+
+        $formYesNo = $this->createMock('Library\View\Helper\FormYesNo');
+        $formYesNo->method('__invoke')->with('MESSAGE', array(), array('action' => 'URL'))->willReturn('<form>FORM</form>');
+        $viewHelperManager->setService('Library\View\Helper\FormYesNo', $formYesNo);
+
+        $htmlList = $this->createMock('Zend\View\Helper\HtmlList');
+        $htmlList->method('__invoke')->with(array('filtered1', 'filtered2'))->willReturn('LIST');
+        $viewHelperManager->setService('Zend\View\Helper\HtmlList', $htmlList);
+
+        $this->dispatch('/console/software/confirm/', 'POST', $postData);
+
         $this->assertResponseStatusCode(200);
-        $this->assertQueryContentContains(
-            'td a[href="/console/software/accept/?name=%3Cname%C2%96%3E"]',
-            'Akzeptieren'
+        $this->assertQueryContentContains('//form', 'FORM');
+        $this->assertQueryContentContains('//div[@class="textcenter"]', "\nLIST\n");
+
+        $this->assertEquals(
+            1,
+            $this->_session->getManager()->getStorage()->getMetadata('ManageSoftware')['EXPIRE_HOPS']['hops']
         );
-        $this->assertNotQueryContentContains(
-            'td a',
-            'Ignorieren'
+        $this->assertEquals(
+            array('raw1', 'raw2'),
+            $this->_session['software']
         );
+        $this->assertSame($accept, $this->_session['display']);
     }
 
-    public function testIndexActionFilterNew()
+    public function testConfirmActionGet()
     {
-        $filters = array(
-            'Os' => 'windows',
-            'Status' => 'new',
-        );
-        $this->_softwareManager->expects($this->once())
-                               ->method('getSoftware')
-                               ->with($filters, 'name', 'asc')
-                               ->willReturn($this->_result);
-        $this->_form->expects($this->once())
-                    ->method('setFilter')
-                    ->with('new');
-        $this->_form->expects($this->once())->method('render');
-        $this->dispatch('/console/software/index/?filter=new');
-        $this->assertEquals('new', $this->_session->filter);
-        $this->assertResponseStatusCode(200);
-        $this->assertQueryContentContains(
-            'td a[href="/console/software/accept/?name=%3Cname%C2%96%3E"]',
-            'Akzeptieren'
-        );
-        $this->assertQueryContentContains(
-            'td a[href="/console/software/ignore/?name=%3Cname%C2%96%3E"]',
-            'Ignorieren'
-        );
+        $this->dispatch('/console/software/confirm/');
+        $this->assertResponseStatusCode(400);
+        $this->assertEmpty($this->_session->getArrayCopy());
     }
 
-    public function testIndexActionFilterAll()
+    public function testConfirmActionPostBadRequest()
     {
-        $filters = array(
-            'Os' => 'windows',
-            'Status' => 'all',
-        );
-        $this->_softwareManager->expects($this->once())
-                               ->method('getSoftware')
-                               ->with($filters, 'name', 'asc')
-                               ->willReturn($this->_result);
-        $this->_form->expects($this->once())
-                    ->method('setFilter')
-                    ->with('all');
-        $this->_form->expects($this->once())->method('render');
-        $this->dispatch('/console/software/index/?filter=all');
-        $this->assertEquals('all', $this->_session->filter);
-        $this->assertResponseStatusCode(200);
-        $this->assertNotQueryContentContains(
-            'td a',
-            'Akzeptieren'
-        );
-        $this->assertNotQueryContentContains(
-            'td a',
-            'Ignorieren'
-        );
+        $this->dispatch('/console/software/confirm/', 'POST', array());
+        $this->assertResponseStatusCode(400);
+        $this->assertEmpty($this->_session->getArrayCopy());
     }
 
-    public function testAcceptActionGet()
-    {
-        $this->_testManageActionGet('accept');
-    }
-
-    public function testAcceptActionPostNo()
-    {
-        $this->_testManageActionPostNo('accept');
-    }
-
-    public function testAcceptActionPostYes()
-    {
-        $this->_testManageActionPostYes('accept', true);
-    }
-
-    public function testAcceptActionMissingName()
-    {
-        $this->_testManageActionMissingName('accept');
-    }
-
-    public function testIgnoreActionGet()
-    {
-        $this->_testManageActionGet('ignore');
-    }
-
-    public function testIgnoreActionPostNo()
-    {
-        $this->_testManageActionPostNo('ignore');
-    }
-
-    public function testIgnoreActionPostYes()
-    {
-        $this->_testManageActionPostYes('ignore', false);
-    }
-
-    public function testIgnoreActionMissingName()
-    {
-        $this->_testManageActionMissingName('ignore');
-    }
-
-    protected function _testManageActionGet($action)
-    {
-        $tmBad = chr(0xc2) . chr(0x99); // Incorrect representation of TM symbol, filtered where necessary
-        $tmGood  = chr(0xe2) . chr(0x84) . chr(0xa2); // Corrected representation of TM symbol
-        $this->dispatch("/console/software/$action/?name=" . urlencode($tmBad));
-        $this->assertResponseStatusCode(200);
-        $this->assertQuery('form');
-        $this->assertQueryContentRegex('p', "/$tmGood/");
-    }
-
-    protected function _testManageActionPostNo($action)
+    public function testManageActionPostNo()
     {
         $this->_softwareManager->expects($this->never())->method('setDisplay');
-        $session = new \Zend\Session\Container('ManageSoftware');
-        $session->filter = 'test';
-        $this->dispatch("/console/software/$action/?name=test", 'POST', array('no' => 'No'));
-        $this->assertRedirectTo('/console/software/index/?filter=test');
+        $this->_session['filter'] = 'FILTER';
+
+        $this->dispatch('/console/software/manage/', 'POST', array('no' => 'No'));
+
+        $this->assertRedirectTo('/console/software/index/?filter=FILTER');
     }
 
-    protected function _testManageActionPostYes($action, $display)
+    public function testManageActionPostYesEmptyList()
     {
-        $tmBad = chr(0xc2) . chr(0x99); // Incorrect representation of TM symbol
-        $this->_softwareManager->expects($this->once())->method('setDisplay')->with($tmBad, $display);
-        $session = new \Zend\Session\Container('ManageSoftware');
-        $session->filter = 'test';
-        $this->dispatch("/console/software/$action/?name=$tmBad", 'POST', array('yes' => 'Yes'));
-        $this->assertRedirectTo('/console/software/index/?filter=test');
+        $this->_softwareManager->expects($this->never())->method('setDisplay');
+
+        $this->_session['filter'] = 'FILTER';
+        $this->_session['software'] = array();
+
+        $this->dispatch('/console/software/manage/', 'POST', array('yes' => 'Yes'));
+
+        $this->assertRedirectTo('/console/software/index/?filter=FILTER');
     }
 
-    protected function _testManageActionMissingName($action)
+    public function testManageActionPostYesNonEmptyList()
     {
-        $this->dispatch("/console/software/$action/");
-        $this->assertApplicationException('RuntimeException', 'Missing name parameter');
+        $this->_softwareManager->expects($this->exactly(2))
+                               ->method('setDisplay')
+                               ->withConsecutive(array('name1'), array('name2'));
+
+        $this->_session['filter'] = 'FILTER';
+        $this->_session['software'] = array('name1', 'name2');
+        $this->_session['display'] = 'DISPLAY';
+
+        $this->dispatch('/console/software/manage/', 'POST', array('yes' => 'Yes'));
+
+        $this->assertRedirectTo('/console/software/index/?filter=FILTER');
+    }
+
+    public function testManageActionGet()
+    {
+        $this->_softwareManager->expects($this->never())->method('setDisplay');
+
+        $this->dispatch('/console/software/manage/');
+        $this->assertResponseStatusCode(400);
+    }
+
+    public function testManageActionPostBadRequest()
+    {
+        $this->_softwareManager->expects($this->never())->method('setDisplay');
+
+        $this->dispatch('/console/software/manage/', 'POST', array());
+        $this->assertResponseStatusCode(400);
     }
 }

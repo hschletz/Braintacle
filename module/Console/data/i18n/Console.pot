@@ -147,15 +147,15 @@ msgstr ""
 
 #: Form/AddToGroup.php Form/ManageRegistryValues.php Form/Package/Build.php
 #: Form/Search.php Form/ShowDuplicates.php Form/Subnet.php
-#: views/console/client/display.php views/console/client/index.php
-#: views/console/client/misc.php views/console/client/network.php
-#: views/console/client/packages.php views/console/client/printers.php
-#: views/console/client/software.php views/console/client/system.php
-#: views/console/client/virtualmachines.php views/console/duplicates/index.php
-#: views/console/group/excluded.php views/console/group/general.php
-#: views/console/group/index.php views/console/group/members.php
-#: views/console/group/packages.php views/console/network/index.php
-#: views/console/package/index.php views/console/software/index.php
+#: View/Helper/Form/Software.php views/console/client/display.php
+#: views/console/client/index.php views/console/client/misc.php
+#: views/console/client/network.php views/console/client/packages.php
+#: views/console/client/printers.php views/console/client/software.php
+#: views/console/client/system.php views/console/client/virtualmachines.php
+#: views/console/duplicates/index.php views/console/group/excluded.php
+#: views/console/group/general.php views/console/group/index.php
+#: views/console/group/members.php views/console/group/packages.php
+#: views/console/network/index.php views/console/package/index.php
 msgid "Name"
 msgstr ""
 
@@ -921,6 +921,14 @@ msgstr ""
 msgid "At least 2 different clients have to be selected"
 msgstr ""
 
+#: Form/Software.php
+msgid "Accept selected"
+msgstr ""
+
+#: Form/Software.php
+msgid "Ignore selected"
+msgstr ""
+
 #: Form/SoftwareFilter.php
 msgid "Filter"
 msgstr ""
@@ -1100,6 +1108,10 @@ msgstr ""
 #: View/Helper/Form/Form.php
 #, php-format
 msgid "The post_max_size value of %s has been exceeded."
+msgstr ""
+
+#: View/Helper/Form/Software.php views/console/network/index.php
+msgid "Count"
 msgstr ""
 
 #: views/console/accounts/add.php
@@ -1638,10 +1650,6 @@ msgstr ""
 msgid "Identified network devices"
 msgstr ""
 
-#: views/console/network/index.php views/console/software/index.php
-msgid "Count"
-msgstr ""
-
 #: views/console/network/index.php views/console/preferences/networkdevices.php
 msgid "Manage device types"
 msgstr ""
@@ -1705,22 +1713,12 @@ msgstr ""
 msgid "Manage registry values"
 msgstr ""
 
-#: views/console/software/accept.php
-#, php-format
-msgid "Software '%s' will be marked as known and accepted. Continue?"
+#: views/console/software/confirm.php
+msgid "The following software will be marked as known and accepted. Continue?"
 msgstr ""
 
-#: views/console/software/ignore.php
-#, php-format
-msgid "Software '%s' will be no longer be displayed. Continue?"
-msgstr ""
-
-#: views/console/software/index.php
-msgid "Accept"
-msgstr ""
-
-#: views/console/software/index.php
-msgid "Ignore"
+#: views/console/software/confirm.php
+msgid "The following software will be marked as known but ignored. Continue?"
 msgstr ""
 
 #: views/layout/layout.php

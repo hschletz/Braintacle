@@ -14,6 +14,10 @@ Upgrading from previous versions:
 - Required: Run "composer install" from the Braintacle root directory to
   update dependencies.
 
+New features:
+
+- Software can be accepted/ignored in bulk.
+
 
 CHANGES IN VERSION 1.2
 =======================

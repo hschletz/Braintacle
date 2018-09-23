@@ -92,7 +92,7 @@ class SoftwareManager
      * @param array $filters Associative array of filters. Default: none.
      * @param string $order One of "name" or "num_clients", default: "name"
      * @param string $direction Onde of "asc" or "desc", default: "asc"
-     * @return \Traversable Iterator producing array objects with "name" and "num_clients" keys
+     * @return \Zend\Db\ResultSet\ResultSet Result set producing arrays with "name" and "num_clients" keys
      */
     public function getSoftware($filters = null, $order = 'name', $direction = 'asc')
     {
@@ -172,7 +172,10 @@ class SoftwareManager
                 break;
         }
 
-        return $sql->prepareStatementForSqlObject($select)->execute();
+        // Wrap into a ResultSet to support buffering
+        $resultSet = new \Zend\Db\ResultSet\ResultSet(\Zend\Db\ResultSet\ResultSet::TYPE_ARRAY);
+        $resultSet->initialize($sql->prepareStatementForSqlObject($select)->execute());
+        return $resultSet;
     }
 
     /**

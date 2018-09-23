@@ -80,6 +80,7 @@ return array(
             'Console\Form\ProductKey' => 'Zend\ServiceManager\Factory\InvokableFactory',
             'Console\Form\Search' => 'Console\Form\Service\SearchFactory',
             'Console\Form\ShowDuplicates' => 'Console\Form\Service\ShowDuplicatesFactory',
+            'Console\Form\Software' => 'Console\Form\Service\SoftwareFactory',
             'Console\Form\SoftwareFilter' => 'Zend\ServiceManager\Factory\InvokableFactory',
             'Console\Form\Subnet' => 'Zend\ServiceManager\Factory\InvokableFactory',
         ),
@@ -133,6 +134,7 @@ return array(
             'consoleFormFieldset' => 'Console\View\Helper\Form\Fieldset',
             'consoleFormClientConfig' => 'Console\View\Helper\Form\ClientConfig',
             'consoleFormManageRegistryValues' => 'Console\View\Helper\Form\ManageRegistryValues',
+            'consoleFormSoftware' => 'Console\View\Helper\Form\Software',
         ),
         'factories' => array(
             'Console\View\Helper\ConsoleUrl' => 'Console\View\Helper\Service\ConsoleUrlFactory',
@@ -143,6 +145,7 @@ return array(
             'Console\View\Helper\Form\Fieldset' => 'Zend\ServiceManager\Factory\InvokableFactory',
             'Console\View\Helper\Form\ClientConfig' => 'Zend\ServiceManager\Factory\InvokableFactory',
             'Console\View\Helper\Form\ManageRegistryValues' => 'Zend\ServiceManager\Factory\InvokableFactory',
+            'Console\View\Helper\Form\Software' => 'Zend\ServiceManager\Factory\InvokableFactory',
         ),
     ),
     'view_manager' => array(

@@ -1,6 +1,6 @@
 <?php
 /**
- * Display confirmation form for software blacklisting
+ * Factory for Software form
  *
  * Copyright (C) 2011-2018 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,16 +17,25 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-print $this->formYesNo(
-    sprintf(
-        $this->translate(
-            'Software \'%s\' will be no longer be displayed. Continue?'
-        ),
-        $this->escapeHtml(
-            \Zend\Filter\StaticFilter::execute($this->name, 'Library\FixEncodingErrors')
-        )
-    )
-);
+namespace Console\Form\Service;
+
+/**
+ * Factory for Software form
+ * @codeCoverageIgnore
+ */
+class SoftwareFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+{
+    /** {@inheritdoc} */
+    public function __invoke(
+        \Interop\Container\ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ) {
+        return new \Console\Form\Software(
+            null,
+            array('fixEncodingErrors' => $container->get('FilterManager')->get('Library\FixEncodingErrors'))
+        );
+    }
+}
