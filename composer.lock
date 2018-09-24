@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cabb26e58be20ed80b8d559f08190bc3",
+    "content-hash": "16b5d2534cc2fde8b4c126f38a2aacea",
     "packages": [
         {
             "name": "components/jquery",
@@ -163,52 +163,6 @@
             "time": "2018-07-04T16:31:37+00:00"
         },
         {
-            "name": "psr/cache",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/cache.git",
-                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/cache/zipball/d11b50ad223250cf17b86e38383413f5a6764bf8",
-                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\Cache\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interface for caching libraries",
-            "keywords": [
-                "cache",
-                "psr",
-                "psr-6"
-            ],
-            "time": "2016-08-06T20:24:11+00:00"
-        },
-        {
             "name": "psr/container",
             "version": "1.0.0",
             "source": {
@@ -305,54 +259,6 @@
             "time": "2016-10-10T12:19:37+00:00"
         },
         {
-            "name": "psr/simple-cache",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/simple-cache.git",
-                "reference": "408d5eafb83c57f6365a3ca330ff23aa4a5fa39b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/simple-cache/zipball/408d5eafb83c57f6365a3ca330ff23aa4a5fa39b",
-                "reference": "408d5eafb83c57f6365a3ca330ff23aa4a5fa39b",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\SimpleCache\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interfaces for simple caching",
-            "keywords": [
-                "cache",
-                "caching",
-                "psr",
-                "psr-16",
-                "simple-cache"
-            ],
-            "time": "2017-10-23T01:57:42+00:00"
-        },
-        {
             "name": "zendframework/zend-authentication",
             "version": "2.6.0",
             "source": {
@@ -413,89 +319,6 @@
                 "zf"
             ],
             "time": "2018-04-12T21:09:22+00:00"
-        },
-        {
-            "name": "zendframework/zend-cache",
-            "version": "2.8.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zendframework/zend-cache.git",
-                "reference": "4983dff629956490c78b88adcc8ece4711d7d8a3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-cache/zipball/4983dff629956490c78b88adcc8ece4711d7d8a3",
-                "reference": "4983dff629956490c78b88adcc8ece4711d7d8a3",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.6 || ^7.0",
-                "psr/cache": "^1.0",
-                "psr/simple-cache": "^1.0",
-                "zendframework/zend-eventmanager": "^2.6.3 || ^3.2",
-                "zendframework/zend-servicemanager": "^2.7.8 || ^3.3",
-                "zendframework/zend-stdlib": "^2.7.7 || ^3.1"
-            },
-            "provide": {
-                "psr/cache-implementation": "1.0",
-                "psr/simple-cache-implementation": "1.0"
-            },
-            "require-dev": {
-                "cache/integration-tests": "^0.16",
-                "phpbench/phpbench": "^0.13",
-                "phpunit/phpunit": "^5.7.27 || ^6.5.8 || ^7.1.2",
-                "zendframework/zend-coding-standard": "~1.0.0",
-                "zendframework/zend-serializer": "^2.6",
-                "zendframework/zend-session": "^2.7.4"
-            },
-            "suggest": {
-                "ext-apc": "APC or compatible extension, to use the APC storage adapter",
-                "ext-apcu": "APCU >= 5.1.0, to use the APCu storage adapter",
-                "ext-dba": "DBA, to use the DBA storage adapter",
-                "ext-memcache": "Memcache >= 2.0.0 to use the Memcache storage adapter",
-                "ext-memcached": "Memcached >= 1.0.0 to use the Memcached storage adapter",
-                "ext-mongo": "Mongo, to use MongoDb storage adapter",
-                "ext-mongodb": "MongoDB, to use the ExtMongoDb storage adapter",
-                "ext-redis": "Redis, to use Redis storage adapter",
-                "ext-wincache": "WinCache, to use the WinCache storage adapter",
-                "ext-xcache": "XCache, to use the XCache storage adapter",
-                "mongodb/mongodb": "Required for use with the ext-mongodb adapter",
-                "mongofill/mongofill": "Alternative to ext-mongo - a pure PHP implementation designed as a drop in replacement",
-                "zendframework/zend-serializer": "Zend\\Serializer component",
-                "zendframework/zend-session": "Zend\\Session component"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.8.x-dev",
-                    "dev-develop": "2.9.x-dev"
-                },
-                "zf": {
-                    "component": "Zend\\Cache",
-                    "config-provider": "Zend\\Cache\\ConfigProvider"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "autoload/patternPluginManagerPolyfill.php"
-                ],
-                "psr-4": {
-                    "Zend\\Cache\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Caching implementation with a variety of storage options, as well as codified caching strategies for callbacks, classes, and output",
-            "keywords": [
-                "ZendFramework",
-                "cache",
-                "psr-16",
-                "psr-6",
-                "zf"
-            ],
-            "time": "2018-05-01T21:58:00+00:00"
         },
         {
             "name": "zendframework/zend-code",
@@ -1296,61 +1119,6 @@
             "time": "2018-05-14T17:38:03+00:00"
         },
         {
-            "name": "zendframework/zend-json",
-            "version": "2.6.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zendframework/zend-json.git",
-                "reference": "4c8705dbe4ad7d7e51b2876c5b9eea0ef916ba28"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-json/zipball/4c8705dbe4ad7d7e51b2876c5b9eea0ef916ba28",
-                "reference": "4c8705dbe4ad7d7e51b2876c5b9eea0ef916ba28",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.5 || ^7.0"
-            },
-            "require-dev": {
-                "fabpot/php-cs-fixer": "1.7.*",
-                "phpunit/phpunit": "~4.0",
-                "zendframework/zend-http": "^2.5.4",
-                "zendframework/zend-server": "^2.6.1",
-                "zendframework/zend-stdlib": "^2.5 || ^3.0",
-                "zendframework/zendxml": "^1.0.2"
-            },
-            "suggest": {
-                "zendframework/zend-http": "Zend\\Http component, required to use Zend\\Json\\Server",
-                "zendframework/zend-server": "Zend\\Server component, required to use Zend\\Json\\Server",
-                "zendframework/zend-stdlib": "Zend\\Stdlib component, for use with caching Zend\\Json\\Server responses",
-                "zendframework/zendxml": "To support Zend\\Json\\Json::fromXml() usage"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.6-dev",
-                    "dev-develop": "2.7-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Zend\\Json\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "provides convenience methods for serializing native PHP to JSON and decoding JSON to native PHP",
-            "homepage": "https://github.com/zendframework/zend-json",
-            "keywords": [
-                "json",
-                "zf2"
-            ],
-            "time": "2016-02-04T21:20:26+00:00"
-        },
-        {
             "name": "zendframework/zend-loader",
             "version": "2.6.0",
             "source": {
@@ -1930,63 +1698,6 @@
             "time": "2018-08-01T22:24:35+00:00"
         },
         {
-            "name": "zendframework/zend-serializer",
-            "version": "2.9.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zendframework/zend-serializer.git",
-                "reference": "0172690db48d8935edaf625c4cba38b79719892c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-serializer/zipball/0172690db48d8935edaf625c4cba38b79719892c",
-                "reference": "0172690db48d8935edaf625c4cba38b79719892c",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.6 || ^7.0",
-                "zendframework/zend-json": "^2.5 || ^3.0",
-                "zendframework/zend-stdlib": "^2.7 || ^3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^5.7.25 || ^6.4.4",
-                "zendframework/zend-coding-standard": "~1.0.0",
-                "zendframework/zend-math": "^2.6 || ^3.0",
-                "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3"
-            },
-            "suggest": {
-                "zendframework/zend-math": "(^2.6 || ^3.0) To support Python Pickle serialization",
-                "zendframework/zend-servicemanager": "(^2.7.5 || ^3.0.3) To support plugin manager support"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.9.x-dev",
-                    "dev-develop": "2.10.x-dev"
-                },
-                "zf": {
-                    "component": "Zend\\Serializer",
-                    "config-provider": "Zend\\Serializer\\ConfigProvider"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Zend\\Serializer\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "provides an adapter based interface to simply generate storable representation of PHP types by different facilities, and recover",
-            "keywords": [
-                "ZendFramework",
-                "serializer",
-                "zf"
-            ],
-            "time": "2018-05-14T18:45:18+00:00"
-        },
-        {
             "name": "zendframework/zend-servicemanager",
             "version": "3.3.2",
             "source": {
@@ -2168,54 +1879,6 @@
             "time": "2018-08-28T21:34:05+00:00"
         },
         {
-            "name": "zendframework/zend-text",
-            "version": "2.7.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zendframework/zend-text.git",
-                "reference": "ca987dd4594f5f9508771fccd82c89bc7fbb39ac"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-text/zipball/ca987dd4594f5f9508771fccd82c89bc7fbb39ac",
-                "reference": "ca987dd4594f5f9508771fccd82c89bc7fbb39ac",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.6 || ^7.0",
-                "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
-                "zendframework/zend-stdlib": "^2.7 || ^3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^5.7.27 || ^6.5.8 || ^7.1.4",
-                "zendframework/zend-coding-standard": "~1.0.0",
-                "zendframework/zend-config": "^2.6"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.7.x-dev",
-                    "dev-develop": "2.8.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Zend\\Text\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Create FIGlets and text-based tables",
-            "keywords": [
-                "ZendFramework",
-                "text",
-                "zf"
-            ],
-            "time": "2018-04-30T14:55:10+00:00"
-        },
-        {
             "name": "zendframework/zend-uri",
             "version": "2.6.1",
             "source": {
@@ -2332,57 +1995,6 @@
                 "zf2"
             ],
             "time": "2018-02-01T17:05:33+00:00"
-        },
-        {
-            "name": "zendframework/zend-version",
-            "version": "2.5.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zendframework/zend-version.git",
-                "reference": "e30c55dc394eaf396f0347887af0a7bef471fe08"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-version/zipball/e30c55dc394eaf396f0347887af0a7bef471fe08",
-                "reference": "e30c55dc394eaf396f0347887af0a7bef471fe08",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.23",
-                "zendframework/zend-json": "~2.5"
-            },
-            "require-dev": {
-                "fabpot/php-cs-fixer": "1.7.*",
-                "phpunit/phpunit": "~4.0",
-                "zendframework/zend-http": "~2.5"
-            },
-            "suggest": {
-                "zendframework/zend-http": "Allows use of Zend\\Http\\Client to check version information",
-                "zendframework/zend-json": "To check latest version hosted in GitHub"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.5-dev",
-                    "dev-develop": "2.6-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Zend\\Version\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "homepage": "https://github.com/zendframework/zend-version",
-            "keywords": [
-                "version",
-                "zf2"
-            ],
-            "abandoned": "ocramius/package-versions",
-            "time": "2015-06-04T15:41:05+00:00"
         },
         {
             "name": "zendframework/zend-view",
