@@ -102,7 +102,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
         $viewHelperManager = $this->getApplicationServiceLocator()->get('ViewHelperManager');
 
-        $flashMessenger = $this->createMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock('Zend\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->willReturnMap(
@@ -197,7 +197,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionPackageFlashMessages()
     {
-        $flashMessenger = $this->createMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock('Zend\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->willReturnMap(
@@ -258,7 +258,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->_packageManager->expects($this->once())->method('getPackages')->willReturn($packages);
 
-        $flashMessenger = $this->createMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock('Zend\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->willReturnMap(

@@ -154,7 +154,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $resultSet->initialize(new \EmptyIterator);
         $this->_groupManager->expects($this->once())->method('getGroups')->willReturn($resultSet);
 
-        $flashMessenger = $this->createMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock('Zend\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->withConsecutive(

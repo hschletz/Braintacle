@@ -744,7 +744,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionMessages()
     {
-        $flashMessenger = $this->createMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock('Zend\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->withConsecutive(
@@ -2070,7 +2070,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->_clientManager->method('getClient')->willReturn($client);
 
-        $flashMessenger = $this->createMock('Zend\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock('Zend\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->expects($this->once())
                        ->method('render')
