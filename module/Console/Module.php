@@ -95,7 +95,7 @@ class Module implements
     {
         $serviceManager = $e->getApplication()->getServiceManager();
         \Zend\Validator\AbstractValidator::setDefaultTranslator($serviceManager->get('MvcTranslator'));
-        $serviceManager->get('ViewHelperManager')->get('FormElementErrors')->setTranslatorEnabled(false);
+        $serviceManager->get('ViewHelperManager')->get('FormElementErrors')->setTranslateMessages(false);
     }
 
     /**
