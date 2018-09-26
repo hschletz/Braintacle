@@ -39,8 +39,7 @@ class Apidoc
     public function __invoke(\ZF\Console\Route $route, \Zend\Console\Adapter\AdapterInterface $console)
     {
         $cmd = array(
-            escapeshellarg(\Library\Application::getPath('vendor/bin/apigen')),
-            'generate',
+            'apigen generate',
             '-s ' . escapeshellarg(\Library\Application::getPath('module')),
             '-d ' . escapeshellarg(\Library\Application::getPath('doc') . DIRECTORY_SEPARATOR . 'api'),
             '--deprecated',

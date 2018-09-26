@@ -56,7 +56,6 @@
         "zfcampus/zf-console": "^1.3"
     },
     "require-dev": {
-        "apigen/apigen": ">=4.1",
         "mikey179/vfsStream": "*",
         "phpunit/dbunit": "*",
         "squizlabs/php_codesniffer": "2.*",
