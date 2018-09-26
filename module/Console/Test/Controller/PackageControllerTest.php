@@ -123,7 +123,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                        array($timestamp2, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
                    )
                    ->will($this->onConsecutiveCalls('date1', 'date2'));
-        $viewHelperManager->setService('DateFormat', $dateFormat);
+        $viewHelperManager->setService('dateFormat', $dateFormat);
 
         $this->dispatch('/console/package/index/');
 

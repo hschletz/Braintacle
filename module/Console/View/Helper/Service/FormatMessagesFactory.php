@@ -34,9 +34,9 @@ class FormatMessagesFactory implements \Zend\ServiceManager\Factory\FactoryInter
     ) {
         $viewHelperManager = $container->get('ViewHelperManager');
         return new \Console\View\Helper\FormatMessages(
-            $viewHelperManager->get('EscapeHtml'),
-            $viewHelperManager->get('HtmlElement'),
-            $viewHelperManager->get('Translate')
+            $viewHelperManager->get('escapeHtml'),
+            $viewHelperManager->get('htmlElement'),
+            $viewHelperManager->get('translate')
         );
     }
 }

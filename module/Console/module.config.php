@@ -122,13 +122,9 @@ return array(
     ),
     'view_helpers' => array(
         'aliases' => array(
-            'ConsoleUrl' => 'Console\View\Helper\ConsoleUrl',
             'consoleUrl' => 'Console\View\Helper\ConsoleUrl',
-            'FilterDescription' => 'Console\View\Helper\FilterDescription',
             'filterDescription' => 'Console\View\Helper\FilterDescription',
-            'FormatMessages' => 'Console\View\Helper\FormatMessages',
             'formatMessages' => 'Console\View\Helper\FormatMessages',
-            'Table' => 'Console\View\Helper\Table',
             'table' => 'Console\View\Helper\Table',
             'consoleForm' => 'Console\View\Helper\Form\Form',
             'consoleFormFieldset' => 'Console\View\Helper\Form\Fieldset',

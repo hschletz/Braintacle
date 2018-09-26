@@ -34,10 +34,10 @@ class TableFactory implements \Zend\ServiceManager\Factory\FactoryInterface
     ) {
         $viewHelperManager = $container->get('ViewHelperManager');
         return new \Console\View\Helper\Table(
-            $viewHelperManager->get('EscapeHtml'),
-            $viewHelperManager->get('HtmlElement'),
-            $viewHelperManager->get('ConsoleUrl'),
-            $viewHelperManager->get('DateFormat')
+            $viewHelperManager->get('escapeHtml'),
+            $viewHelperManager->get('htmlElement'),
+            $viewHelperManager->get('consoleUrl'),
+            $viewHelperManager->get('dateFormat')
         );
     }
 }

@@ -129,7 +129,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                    ->method('__invoke')
                    ->with($creationDate, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
                    ->willReturn('date_create');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('dateFormat', $dateFormat);
 
         $this->dispatch('/console/group/index/');
         $this->assertResponseStatusCode(200);
@@ -253,7 +253,6 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                    ->will($this->onConsecutiveCalls('date_create', 'date_expire', 'date_client'));
         $viewHelperManager = $this->getApplicationServiceLocator()->get('ViewHelperManager');
         $viewHelperManager->setService('dateFormat', $dateFormat);
-        $viewHelperManager->setService('DateFormat', $dateFormat);
 
         $this->dispatch($url);
 

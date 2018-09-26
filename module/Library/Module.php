@@ -127,13 +127,9 @@ class Module implements
             ),
             'view_helpers' => array(
                 'aliases' => array(
-                    'FormSelectSimple' => 'Library\View\Helper\FormSelectSimple',
                     'formSelectSimple' => 'Library\View\Helper\FormSelectSimple',
-                    'FormSelectUntranslated' => 'Library\View\Helper\FormSelectUntranslated',
                     'formSelectUntranslated' => 'Library\View\Helper\FormSelectUntranslated',
-                    'FormYesNo' => 'Library\View\Helper\FormYesNo',
                     'formYesNo' => 'Library\View\Helper\FormYesNo',
-                    'HtmlElement' => 'Library\View\Helper\HtmlElement',
                     'htmlElement' => 'Library\View\Helper\HtmlElement',
                 ),
                 'factories' => array(
@@ -165,8 +161,8 @@ class Module implements
 
         // Register form element view helpers
         $formElementHelper = $serviceManager->get('ViewHelperManager')->get('formElement');
-        $formElementHelper->addClass('Library\Form\Element\SelectSimple', 'FormSelectSimple');
-        $formElementHelper->addType('select_untranslated', 'FormSelectUntranslated');
+        $formElementHelper->addClass('Library\Form\Element\SelectSimple', 'formSelectSimple');
+        $formElementHelper->addType('select_untranslated', 'formSelectUntranslated');
 
         \Zend\Filter\StaticFilter::setPluginManager($serviceManager->get('FilterManager'));
         \Zend\Validator\StaticValidator::setPluginManager($serviceManager->get('ValidatorManager'));

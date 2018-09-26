@@ -58,7 +58,7 @@ print $this->htmlElement(
     $this->htmlElement(
         'a',
         $this->translate('Manage inventoried values'),
-        array('href' => $this->ConsoleUrl('preferences', 'registryvalues')),
+        array('href' => $this->consoleUrl('preferences', 'registryvalues')),
         true
     ),
     array('class' => 'textcenter')

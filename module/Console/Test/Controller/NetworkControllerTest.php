@@ -172,7 +172,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                    ->method('__invoke')
                    ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
                    ->willReturn('date1');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('dateFormat', $dateFormat);
 
         $this->dispatch('/console/network/showidentified/');
         $this->assertResponseStatusCode(200);
@@ -240,7 +240,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                    ->method('__invoke')
                    ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
                    ->willReturn('date1');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('DateFormat', $dateFormat);
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('dateFormat', $dateFormat);
 
         $this->dispatch('/console/network/showunknown/');
         $this->assertResponseStatusCode(200);

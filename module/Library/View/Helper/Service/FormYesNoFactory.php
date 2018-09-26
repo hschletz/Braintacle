@@ -34,8 +34,8 @@ class FormYesNoFactory implements \Zend\ServiceManager\Factory\FactoryInterface
     ) {
         $plugins = $container->get('ViewHelperManager');
         return new \Library\View\Helper\FormYesNo(
-            $plugins->get('Translate'),
-            $plugins->get('HtmlElement')
+            $plugins->get('translate'),
+            $plugins->get('htmlElement')
         );
     }
 }

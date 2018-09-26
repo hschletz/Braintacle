@@ -59,7 +59,7 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
     protected function _getHelperName()
     {
         // Derive helper name from test class name (minus namespace and 'Test' suffix)
-        return substr(strrchr(get_class($this), '\\'), 1, -4);
+        return lcfirst(substr(strrchr(get_class($this), '\\'), 1, -4));
     }
 
     /**
