@@ -32,7 +32,7 @@ Requirements
   PHP extensions are required:
 
   - A database-specific PHP extension,
-  <http://framework.zend.com/manual/2.4/en/modules/zend.db.adapter.html>
+  <https://docs.zendframework.com/zend-db/adapter/>
 
   - The "intl" extension
 
