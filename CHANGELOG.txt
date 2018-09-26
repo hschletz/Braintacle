@@ -11,6 +11,8 @@ CHANGES IN VERSION 1.3
 
 Upgrading from previous versions:
 
+- Braintacle 1.3 requires PHP 7.0 or later.
+
 - Required: Run "composer install" from the Braintacle root directory to
   update dependencies.
 
