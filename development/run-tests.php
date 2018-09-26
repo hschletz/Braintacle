@@ -41,7 +41,7 @@ function testModule($module, $filter, $doCoverage)
     // Avoid vendor/bin/phpunit for Windows compatibility
     $cmd[] = escapeshellarg(__DIR__ . '/../vendor/phpunit/phpunit/phpunit');
     $cmd[] = '-c ' . escapeshellarg("$baseDir/module/$module/phpunit.xml");
-    $cmd[] = '--colors --report-useless-tests --disallow-test-output';
+    $cmd[] = '--colors --disallow-test-output';
     if ($doCoverage) {
         $cmd[] = '--coverage-html=' . escapeshellarg("$baseDir/doc/CodeCoverage/$module");
     }

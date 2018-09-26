@@ -24,7 +24,7 @@ namespace Database\Test\Table;
 /**
  * Tests for AbstractTable helper methods
  */
-class AbstractTableTest extends \PHPUnit_Framework_TestCase
+class AbstractTableTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Table class

@@ -119,7 +119,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
 
         // Test non-array input on "clients"
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $data['clients'] = '';
         $this->_form->setData($data);
         $this->_form->isValid();

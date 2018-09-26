@@ -24,7 +24,7 @@ namespace Library\Test;
 /**
  * Tests for the Translator setup
  */
-class TranslatorTest extends \PHPUnit_Framework_TestCase
+class TranslatorTest extends \PHPUnit\Framework\TestCase
 {
     protected static $_defaultLocale;
 
@@ -81,8 +81,8 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testMissingTranslationTriggersNoticeWhenEnabled($locale)
     {
-        $this->setExpectedException(
-            'PHPUnit_Framework_Error_Notice',
+        $this->expectException(
+            'PHPUnit\Framework\Error\Notice',
             'Missing translation: this_string_is_not_translated'
         );
         \Locale::setDefault($locale);

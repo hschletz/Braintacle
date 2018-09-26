@@ -24,7 +24,7 @@ namespace Library\Test\Log;
 /**
  * Tests for the LoggerServiceFactory class
  */
-class LoggerServiceFactoryTest extends \PHPUnit_Framework_TestCase
+class LoggerServiceFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test service

@@ -62,7 +62,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $this->assertEquals(2, $duplicates->count('AssetTag'));
 
         // Test invalid criteria
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $duplicates->count('invalid');
     }
 
@@ -189,7 +189,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
     public function testFindInvalidCriteria()
     {
         // Test invalid criteria
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $this->_getModel()->find('invalid');
     }
 
@@ -234,7 +234,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $clientConfig = $this->createMock('Database\Table\ClientConfig');
         $clientConfig->expects($this->never())->method('update');
 
-        $this->setExpectedException('RuntimeException', 'Cannot lock client 2');
+        $this->expectException('RuntimeException', 'Cannot lock client 2');
         $model = $this->_getModel(
             array(
                 'Model\Client\ClientManager' => $clientManager,
@@ -583,7 +583,7 @@ EOT
             )
         );
 
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $duplicates->allow('invalid', 'test');
     }
 }

@@ -88,7 +88,7 @@ class GroupManagerTest extends AbstractGroupTest
 
     public function testGetGroupsInvalidFilter()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Invalid group filter: invalid');
+        $this->expectException('InvalidArgumentException', 'Invalid group filter: invalid');
         $model = $this->_getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
         $resultSet = $model->getGroups('invalid');
     }
@@ -103,14 +103,14 @@ class GroupManagerTest extends AbstractGroupTest
 
     public function testGetGroupNonExistentGroup()
     {
-        $this->setExpectedException('RuntimeException', 'Unknown group name: invalid');
+        $this->expectException('RuntimeException', 'Unknown group name: invalid');
         $model = $this->_getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
         $group = $model->getGroup('invalid');
     }
 
     public function testGetGroupNoName()
     {
-        $this->setExpectedException('InvalidArgumentException', 'No group name given');
+        $this->expectException('InvalidArgumentException', 'No group name given');
         $model = $this->_getModel();
         $group = $model->getGroup('');
     }
@@ -138,7 +138,7 @@ class GroupManagerTest extends AbstractGroupTest
 
         $table = static::$serviceManager->get('Database\Table\ClientsAndGroups');
         $id = $table->select(array('name' => 'name3', 'deviceid' => '_SYSTEMGROUP_'))->current()['id'];
-        $dataSet = new \PHPUnit_Extensions_Database_DataSet_ReplacementDataSet($this->_loadDataSet('CreateGroup'));
+        $dataSet = new \PHPUnit\DbUnit\DataSet\ReplacementDataSet($this->_loadDataSet('CreateGroup'));
         $dataSet->addFullReplacement('#ID#', $id);
         $dataSet->addFullReplacement('#DESCRIPTION#', $expectedDescription);
         $connection = $this->getConnection();

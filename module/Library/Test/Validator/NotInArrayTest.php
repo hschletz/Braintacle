@@ -26,7 +26,7 @@ use Library\Validator\NotInArray;
 /**
  * Tests for NotInArray validator
  */
-class NotInArrayTest extends \PHPUnit_Framework_TestCase
+class NotInArrayTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetHaystackSetViaConstructor()
     {
@@ -45,7 +45,7 @@ class NotInArrayTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidHaystack()
     {
-        $this->setExpectedException('RuntimeException', 'Haystack is not an array');
+        $this->expectException('RuntimeException', 'Haystack is not an array');
         $validator = new NotInArray;
         $validator->isValid('test');
     }
@@ -64,7 +64,7 @@ class NotInArrayTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidCaseSensitivity()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Invalid value for caseSensitivity option: 1');
+        $this->expectException('InvalidArgumentException', 'Invalid value for caseSensitivity option: 1');
         $validator = new NotInArray(array('caseSensitivity' => true));
     }
 

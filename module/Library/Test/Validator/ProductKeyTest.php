@@ -26,7 +26,7 @@ use Library\Validator\ProductKey;
 /**
  * Tests for ProductKey validator
  */
-class ProductKeyTest extends \PHPUnit_Framework_TestCase
+class ProductKeyTest extends \PHPUnit\Framework\TestCase
 {
     public function testValidKey()
     {

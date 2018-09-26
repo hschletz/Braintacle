@@ -74,7 +74,7 @@ class SoftwareFilterTest extends \Console\Test\AbstractFormTest
 
     public function testSetFilterInvalid()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Invalid filter value: invalid');
+        $this->expectException('InvalidArgumentException', 'Invalid filter value: invalid');
         $this->_form->setFilter('invalid');
     }
 }

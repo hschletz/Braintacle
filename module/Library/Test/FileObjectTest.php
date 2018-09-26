@@ -27,7 +27,7 @@ use \org\bovigo\vfs\vfsStream;
 /**
  * Tests for the FileObject class
  */
-class FileObjectTest extends \PHPUnit_Framework_TestCase
+class FileObjectTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * vfsStream root container
@@ -47,7 +47,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $this->assertFileExists($url);
         $this->assertEquals($url, $fileObject->getPathname()); // Test parent constructor invocation
 
-        $file = \PHPUnit_Framework_Assert::readAttribute($fileObject, '_file');
+        $file = \PHPUnit\Framework\Assert::readAttribute($fileObject, '_file');
         $metadata = stream_get_meta_data($file);
         $this->assertEquals($url, $metadata['uri']);
         $this->assertEquals('w', $metadata['mode']);
@@ -60,7 +60,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
     public function testOpenError()
     {
         $url = $this->_root->url() . '/test.txt';
-        $this->setExpectedException('RuntimeException', "Error opening file '$url', mode 'r'");
+        $this->expectException('RuntimeException', "Error opening file '$url', mode 'r'");
         $fileObject = new FileObject($url); // default mode 'r'
     }
 
@@ -75,7 +75,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
 
     public function testSetFlagsUnimplementedFlag()
     {
-        $this->setExpectedException('LogicException', 'READ_CSV not implemented');
+        $this->expectException('LogicException', 'READ_CSV not implemented');
         $url = $this->_root->url() . '/test.txt';
         $fileObject = new FileObject($url, 'w');
         $fileObject->setFlags(\SplFileObject::DROP_NEW_LINE | \SplFileObject::READ_CSV);
@@ -131,14 +131,14 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
     public function testFreadInvalidLength()
     {
         $url = vfsStream::newFile('test.txt')->withContent('test')->at($this->_root)->url();
-        $this->setExpectedException('InvalidArgumentException', 'fread() length must be > 0, 0 given');
+        $this->expectException('InvalidArgumentException', 'fread() length must be > 0, 0 given');
         $fileObject = new FileObject($url, 'r');
         $fileObject->fread(0);
     }
 
     public function testFreadError()
     {
-        $this->setExpectedException('RuntimeException', 'Error reading from file fail:');
+        $this->expectException('RuntimeException', 'Error reading from file fail:');
         $fileObject = new FileObject('fail://', 'r');
         $fileObject->fread(10);
     }
@@ -180,21 +180,21 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
 
     public function testFgetsReadError()
     {
-        $this->setExpectedException('RuntimeException', 'Error reading from file fail:');
+        $this->expectException('RuntimeException', 'Error reading from file fail:');
         $fileObject = new FileObject('fail://', 'r');
         $fileObject->fgets();
     }
 
     public function testNextReadError()
     {
-        $this->setExpectedException('RuntimeException', 'Error reading from file fail:');
+        $this->expectException('RuntimeException', 'Error reading from file fail:');
         $fileObject = new FileObject('fail://', 'r');
         $fileObject->next();
     }
 
     public function testRewindError()
     {
-        $this->setExpectedException('RuntimeException', 'Error rewinding file fail:');
+        $this->expectException('RuntimeException', 'Error rewinding file fail:');
         $fileObject = new FileObject('fail://', 'r');
         $fileObject->rewind();
     }
@@ -315,7 +315,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
 
     public function testFileGetContentsError()
     {
-        $this->setExpectedException('RuntimeException', 'Error reading from file vfs://root/test.txt');
+        $this->expectException('RuntimeException', 'Error reading from file vfs://root/test.txt');
         // Force error by requesting nonexistent file
         FileObject::fileGetContents('vfs://root/test.txt');
     }
@@ -349,7 +349,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
 
     public function testFileGetContentsAsArrayError()
     {
-        $this->setExpectedException('RuntimeException', 'Error reading from file vfs://root/test.txt');
+        $this->expectException('RuntimeException', 'Error reading from file vfs://root/test.txt');
         // Force error by requesting nonexistent file
         FileObject::fileGetContentsAsArray('vfs://root/test.txt');
     }
@@ -372,7 +372,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
 
     public function testFilePutContentsOpenError()
     {
-        $this->setExpectedException('RuntimeException', 'Error writing to file vfs://root/test.txt');
+        $this->expectException('RuntimeException', 'Error writing to file vfs://root/test.txt');
         // Force error by writing to write-protected file
         $filename = vfsStream::newFile('test.txt', 0000)->at($this->_root)->url();
         FileObject::filePutContents($filename, 'content');
@@ -418,7 +418,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
     {
         $oldFile = vfsStream::newDirectory('test')->at($this->_root)->url();
         $newFile = $this->_root->url() . '/test2';
-        $this->setExpectedException('RuntimeException', "Error copying '$oldFile' to '$newFile'");
+        $this->expectException('RuntimeException', "Error copying '$oldFile' to '$newFile'");
         FileObject::copy($oldFile, $newFile);
     }
 
@@ -427,7 +427,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
         $content = '1234';
         $oldFile = vfsStream::newFile('test.txt')->withContent($content)->at($this->_root)->url();
         $newFile = vfsStream::newDirectory('test2')->at($this->_root)->url();
-        $this->setExpectedException('RuntimeException', "Error copying '$oldFile' to '$newFile'");
+        $this->expectException('RuntimeException', "Error copying '$oldFile' to '$newFile'");
         FileObject::copy($oldFile, $newFile);
     }
 
@@ -435,7 +435,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
     {
         $oldFile = $this->_root->url() . '/test1.txt';
         $newFile = $this->_root->url() . '/test2.txt';
-        $this->setExpectedException('RuntimeException', "Error copying '$oldFile' to '$newFile'");
+        $this->expectException('RuntimeException', "Error copying '$oldFile' to '$newFile'");
         FileObject::copy($oldFile, $newFile);
     }
 
@@ -443,7 +443,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
     {
         $oldFile = vfsStream::newFile('test.txt')->at($this->_root)->url();
         $newFile = $this->_root->url() . '/invalid/test2.txt';
-        $this->setExpectedException('RuntimeException', "Error copying '$oldFile' to '$newFile'");
+        $this->expectException('RuntimeException', "Error copying '$oldFile' to '$newFile'");
         FileObject::copy($oldFile, $newFile);
     }
 
@@ -495,7 +495,7 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
     {
         $oldFile = $this->_root->url() . '/test1.txt';
         $newFile = $this->_root->url() . '/test2.txt';
-        $this->setExpectedException('RuntimeException', "Error renaming '$oldFile' to '$newFile'");
+        $this->expectException('RuntimeException', "Error renaming '$oldFile' to '$newFile'");
         FileObject::rename($oldFile, $newFile);
     }
 
@@ -542,14 +542,14 @@ class FileObjectTest extends \PHPUnit_Framework_TestCase
     public function testMkdirErrorCantCreateRecursive()
     {
         $pathname = $this->_root->url() . '/test/test';
-        $this->setExpectedException('RuntimeException', "Error creating directory '$pathname'");
+        $this->expectException('RuntimeException', "Error creating directory '$pathname'");
         FileObject::mkdir($pathname);
     }
 
     public function testMkdirErrorDirectoryExists()
     {
         $pathname = vfsStream::newDirectory('test')->at($this->_root)->url();
-        $this->setExpectedException('RuntimeException', "Error creating directory '$pathname': path exists");
+        $this->expectException('RuntimeException', "Error creating directory '$pathname': path exists");
         FileObject::mkdir($pathname);
     }
 

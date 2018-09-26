@@ -1016,7 +1016,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $model->method('getGroupMemberships')->willReturn(array());
         $model->setServiceLocator($serviceManager);
 
-        $this->setExpectedException('InvalidArgumentException', 'Invalid membership type: 23');
+        $this->expectException('InvalidArgumentException', 'Invalid membership type: 23');
         $model->setGroupMemberships(array('group1' => 23));
     }
 
@@ -1069,7 +1069,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testGetGroupMembershipsInvalidType()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Bad value for membership: 42');
+        $this->expectException('InvalidArgumentException', 'Bad value for membership: 42');
 
         $model = $this->_getModel();
         $model->getGroupMemberships(42);

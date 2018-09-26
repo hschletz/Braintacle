@@ -26,7 +26,7 @@ use \Zend\Dom\Document\Query;
 /**
  * Tests for the main layout template
  */
-class LayoutTest extends \PHPUnit_Framework_TestCase
+class LayoutTest extends \PHPUnit\Framework\TestCase
 {
     protected $_view;
     protected $_authService;

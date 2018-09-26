@@ -27,7 +27,7 @@ use org\bovigo\vfs\vfsStream;
 /**
  * Tests for DomDocument
  */
-class DomDocumentTest extends \PHPUnit_Framework_TestCase
+class DomDocumentTest extends \PHPUnit\Framework\TestCase
 {
     public function testConstructorDefaults()
     {
@@ -40,14 +40,14 @@ class DomDocumentTest extends \PHPUnit_Framework_TestCase
 
     public function testGetSchemaFilenameThrowsException()
     {
-        $this->setExpectedException('LogicException', 'Library\DomDocument has no schema defined');
+        $this->expectException('LogicException', 'Library\DomDocument has no schema defined');
         $document = new DomDocument;
         $document->getSchemaFilename();
     }
 
     public function testIsValidThrowsException()
     {
-        $this->setExpectedException('LogicException', 'Library\DomDocument has no schema defined');
+        $this->expectException('LogicException', 'Library\DomDocument has no schema defined');
         $document = new DomDocument;
         $document->isValid();
     }
@@ -76,7 +76,7 @@ class DomDocumentTest extends \PHPUnit_Framework_TestCase
 
     public function testForceValidNotValid()
     {
-        $this->setExpectedException('RuntimeException', 'Validation of XML document failed');
+        $this->expectException('RuntimeException', 'Validation of XML document failed');
         $document = $this->getMockBuilder('Library\DomDocument')->setMethods(array('isValid'))->getMock();
         $document->expects($this->once())
                  ->method('isValid')
@@ -104,14 +104,14 @@ class DomDocumentTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateElementWithContentArray()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Unsupported content type');
+        $this->expectException('InvalidArgumentException', 'Unsupported content type');
         $document = new DomDocument;
         $element = $document->createElementWithContent('name', array());
     }
 
     public function testCreateElementWithContentObject()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Unsupported content type');
+        $this->expectException('InvalidArgumentException', 'Unsupported content type');
         $document = new DomDocument;
         $element = $document->createElementWithContent('name', new \stdClass);
     }
@@ -194,7 +194,7 @@ class DomDocumentTest extends \PHPUnit_Framework_TestCase
         $root = vfsStream::setup('root');
         $content = '';
         $filename = vfsStream::newFile('test.xml')->withContent($content)->at($root)->url();
-        $this->setExpectedException('RuntimeException', "$filename is unreadable or has invalid content");
+        $this->expectException('RuntimeException', "$filename is unreadable or has invalid content");
         $document = new DomDocument;
         $document->load($filename);
     }
@@ -204,7 +204,7 @@ class DomDocumentTest extends \PHPUnit_Framework_TestCase
         $root = vfsStream::setup('root');
         $content = "test";
         $filename = $root->url() . '/test.xml';
-        $this->setExpectedException('RuntimeException', "$filename is unreadable or has invalid content");
+        $this->expectException('RuntimeException', "$filename is unreadable or has invalid content");
         $document = new DomDocument;
         $document->load($filename);
     }

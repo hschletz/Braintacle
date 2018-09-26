@@ -28,7 +28,7 @@ namespace Library\Test\Mvc\Controller\Plugin;
  * convenience functions. Additionally, the testPluginInterface() test is
  * executed for all derived tests.
  */
-abstract class AbstractTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Service manager

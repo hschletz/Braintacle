@@ -21,7 +21,7 @@
 
 namespace Protocol\Test\Hydrator;
 
-class DatabaseProxyTest extends \PHPUnit_Framework_TestCase
+class DatabaseProxyTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetHydrator()
     {

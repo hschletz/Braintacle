@@ -107,7 +107,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testInvalidArrayFilter()
     {
-        $this->setExpectedException(
+        $this->expectException(
             'InvalidArgumentException',
             'No description available for this set of multiple filters'
         );
@@ -116,7 +116,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testInvalidStringFilter()
     {
-        $this->setExpectedException(
+        $this->expectException(
             'InvalidArgumentException',
             'No description available for filter invalid'
         );

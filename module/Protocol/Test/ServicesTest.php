@@ -21,7 +21,7 @@
 
 namespace Protocol\Test;
 
-class ServicesTest extends \PHPUnit_Framework_TestCase
+class ServicesTest extends \PHPUnit\Framework\TestCase
 {
     protected static $_serviceManager;
 

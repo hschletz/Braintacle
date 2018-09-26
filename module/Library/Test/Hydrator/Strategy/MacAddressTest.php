@@ -21,7 +21,7 @@
 
 namespace Library\Test\Hydrator\Strategy;
 
-class MacAddressTest extends \PHPUnit_Framework_TestCase
+class MacAddressTest extends \PHPUnit\Framework\TestCase
 {
     public function testHydrate()
     {

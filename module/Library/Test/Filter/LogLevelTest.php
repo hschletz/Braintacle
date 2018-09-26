@@ -23,7 +23,7 @@ namespace Library\Test\Filter;
 
 use Zend\Log\Logger;
 
-class LogLevelTest extends \PHPUnit_Framework_TestCase
+class LogLevelTest extends \PHPUnit\Framework\TestCase
 {
     public function testInterface()
     {
@@ -57,7 +57,7 @@ class LogLevelTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidArgument()
     {
-        $this->setExpectedException('PHPUnit_Framework_Error_Notice', 'Undefined index: error');
+        $this->expectException('PHPUnit\Framework\Error\Notice', 'Undefined index: error');
         \Zend\Filter\StaticFilter::execute('error', 'Library\LogLevel');
     }
 }

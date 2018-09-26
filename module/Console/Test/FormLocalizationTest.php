@@ -24,7 +24,7 @@ namespace Console\Test;
 /**
  * Tests for form localization
  */
-class FormLocalizationTest extends \PHPUnit_Framework_TestCase
+class FormLocalizationTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test form object

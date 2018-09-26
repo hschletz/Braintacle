@@ -111,7 +111,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
                 'customFieldManager' => $customFieldManager,
             )
         );
-        $this->setExpectedException('UnexpectedValueException');
+        $this->expectException('UnexpectedValueException');
         $form->init();
     }
 
@@ -334,19 +334,19 @@ class SearchTest extends \Console\Test\AbstractFormTest
 
     public function testInvalidFilter()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Invalid filter: invalidFilter');
+        $this->expectException('InvalidArgumentException', 'Invalid filter: invalidFilter');
         $this->_form->setData(array('filter' => 'invalidFilter'));
     }
 
     public function testMissingFilterOnSearchValidation()
     {
-        $this->setExpectedException('LogicException', 'No filter submitted');
+        $this->expectException('LogicException', 'No filter submitted');
         $this->_form->validateSearch('value', array('search' => 'value'));
     }
 
     public function testMissingFilterOnOperatorValidation()
     {
-        $this->setExpectedException('LogicException', 'No filter submitted');
+        $this->expectException('LogicException', 'No filter submitted');
         $this->_form->validateOperator('value', array('search' => 'value'));
     }
 

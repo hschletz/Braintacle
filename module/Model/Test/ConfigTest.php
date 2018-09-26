@@ -36,7 +36,7 @@ class ConfigTest extends AbstractTest
     {
         $model = $this->_getModel();
         $this->assertEquals('FREQUENCY', $model->getDbIdentifier('inventoryInterval'));
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $model->getDbIdentifier('invalid');
     }
 
@@ -53,7 +53,7 @@ class ConfigTest extends AbstractTest
         // Test default for unpopulated option
         $this->assertSame(12, $config->contactInterval);
         // Test invalid option
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $config->invalid;
     }
 
@@ -78,13 +78,13 @@ class ConfigTest extends AbstractTest
 
     public function testMagicSetInvalidOption()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Invalid option: invalid');
+        $this->expectException('InvalidArgumentException', 'Invalid option: invalid');
         $this->_getModel()->invalid = 0;
     }
 
     public function testMagicSetInvalidValue()
     {
-        $this->setExpectedException(
+        $this->expectException(
             'InvalidArgumentException',
             'Tried to set non-integer value "invalid" to integer option "inventoryInterval"'
         );

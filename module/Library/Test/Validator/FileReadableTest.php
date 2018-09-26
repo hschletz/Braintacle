@@ -24,7 +24,7 @@ namespace Library\Test\Validator;
 use Library\Validator\FileReadable;
 use \org\bovigo\vfs\vfsStream;
 
-class FileReadableTest extends \PHPUnit_Framework_TestCase
+class FileReadableTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * vfsStream root container

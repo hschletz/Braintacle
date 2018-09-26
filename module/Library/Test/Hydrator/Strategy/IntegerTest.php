@@ -21,7 +21,7 @@
 
 namespace Library\Test\Hydrator\Strategy;
 
-class IntegerTest extends \PHPUnit_Framework_TestCase
+class IntegerTest extends \PHPUnit\Framework\TestCase
 {
     public function hydrateProvider()
     {

@@ -31,7 +31,7 @@ class MetadataTest extends \Model\Test\AbstractTest
     /** {@inheritdoc} */
     public function getDataSet()
     {
-        return new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet;
+        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet;
     }
 
     public function testSetPackageData()
@@ -374,7 +374,7 @@ class MetadataTest extends \Model\Test\AbstractTest
 
     public function testGetPackageDataForcesValidDocument()
     {
-        $this->setExpectedException('RuntimeException', 'Validation of XML document failed');
+        $this->expectException('RuntimeException', 'Validation of XML document failed');
         $model = new Metadata;
         @$model->getPackageData();
     }

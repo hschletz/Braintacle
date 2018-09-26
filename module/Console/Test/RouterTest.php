@@ -24,7 +24,7 @@ namespace Console\Test;
 /**
  * Tests for the module's router
  */
-class RouterTest extends \PHPUnit_Framework_TestCase
+class RouterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test route matches against various URIs

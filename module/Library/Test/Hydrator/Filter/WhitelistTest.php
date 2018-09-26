@@ -21,7 +21,7 @@
 
 namespace Library\Test\Hydrator\Filter;
 
-class WhitelistTest extends \PHPUnit_Framework_TestCase
+class WhitelistTest extends \PHPUnit\Framework\TestCase
 {
     public function testFilter()
     {

@@ -21,7 +21,7 @@
 
 namespace Database\Test\Hydrator;
 
-class SoftwareTest extends \PHPUnit_Framework_TestCase
+class SoftwareTest extends \PHPUnit\Framework\TestCase
 {
     public function testHydrateWindows()
     {
@@ -189,7 +189,7 @@ class SoftwareTest extends \PHPUnit_Framework_TestCase
 
     public function testHydrateNameInvalid()
     {
-        $this->setExpectedException('DomainException', 'Cannot hydrate name: invalid');
+        $this->expectException('DomainException', 'Cannot hydrate name: invalid');
         $hydrator = new \Database\Hydrator\Software;
         $hydrator->hydrateName('invalid');
     }
@@ -222,7 +222,7 @@ class SoftwareTest extends \PHPUnit_Framework_TestCase
 
     public function testExtractNameInvalid()
     {
-        $this->setExpectedException('DomainException', 'Cannot extract name: Invalid');
+        $this->expectException('DomainException', 'Cannot extract name: Invalid');
         $hydrator = new \Database\Hydrator\Software;
         $hydrator->extractName('Invalid');
     }

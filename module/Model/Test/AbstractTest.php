@@ -27,7 +27,7 @@ namespace Model\Test;
  * Tables that are given in $_tables are automatically set up, the fixture is
  * loaded and the service is automatically tested.
  */
-abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
+abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
 {
     /**
      * Array of tables to set up (table class names without Database\Table prefix)
@@ -72,7 +72,7 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
     /**
      * Set up fixture from data/Test/Classname.yaml
      *
-     * @return \PHPUnit_Extensions_Database_DataSet_IDataSet
+     * @return \PHPUnit\DbUnit\DataSet\IDataSet
      */
     public function getDataSet()
     {
@@ -83,7 +83,7 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
      * Load dataset from data/Test/Classname[/$testName].yaml
      *
      * @param string $testName Test name. If NULL, the fixture dataset for the test class is loaded.
-     * @return \PHPUnit_Extensions_Database_DataSet_IDataSet
+     * @return \PHPUnit\DbUnit\DataSet\IDataSet
      */
     protected function _loadDataSet($testName = null)
     {
@@ -93,7 +93,7 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
         if ($testName) {
             $file .= "/$testName";
         }
-        return new \PHPUnit_Extensions_Database_DataSet_YamlDataSet(
+        return new \PHPUnit\DbUnit\DataSet\YamlDataSet(
             \Model\Module::getPath("$file.yaml")
         );
     }
@@ -109,13 +109,13 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
      * Due to the ReplacementDataSet implementation, real booleans cannot be
      * used in the source dataset.
      *
-     * @param \PHPUnit_Extensions_Database_DataSet_IDataSet $dataSet Dataset to wrap
+     * @param \PHPUnit\DbUnit\DataSet\IDataSet $dataSet Dataset to wrap
      * @param mixed $falseValue FALSE value used in $dataset
      * @param mixed $trueValue TRUE value used in $dataset
-     * @return \PHPUnit_Extensions_Database_DataSet_ReplacementDataSet
+     * @return \PHPUnit\DbUnit\DataSet\ReplacementDataSet
      */
     protected function _getBooleanDataSetWrapper(
-        \PHPUnit_Extensions_Database_DataSet_IDataSet $dataSet,
+        \PHPUnit\DbUnit\DataSet\IDataSet $dataSet,
         $falseValue,
         $trueValue
     ) {
@@ -132,7 +132,7 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
                 $falseReplacement = false;
                 $trueReplacement = true;
         }
-        return new \PHPUnit_Extensions_Database_DataSet_ReplacementDataSet(
+        return new \PHPUnit\DbUnit\DataSet\ReplacementDataSet(
             $dataSet,
             array($falseValue => $falseReplacement, $trueValue => $trueReplacement)
         );

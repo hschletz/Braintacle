@@ -33,7 +33,7 @@ class DirectTest extends \Model\Test\AbstractTest
     /** {@inheritdoc} */
     public function getDataSet()
     {
-        return new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet;
+        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet;
     }
 
     public function testPrepare()
@@ -92,7 +92,7 @@ class DirectTest extends \Model\Test\AbstractTest
         $model->expects($this->once())
               ->method('cleanup')
               ->with('id');
-        $this->setExpectedException('RuntimeException', 'test');
+        $this->expectException('RuntimeException', 'test');
         $model->write($data, $file, $deleteSource);
     }
 
@@ -114,7 +114,7 @@ class DirectTest extends \Model\Test\AbstractTest
         $model->expects($this->once())
               ->method('cleanup')
               ->with('id');
-        $this->setExpectedException('RuntimeException', 'test');
+        $this->expectException('RuntimeException', 'test');
         $model->write($data, $file, $deleteSource);
     }
 

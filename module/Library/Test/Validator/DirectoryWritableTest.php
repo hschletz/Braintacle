@@ -24,7 +24,7 @@ namespace Library\Test\Validator;
 use Library\Validator\DirectoryWritable;
 use \org\bovigo\vfs\vfsStream;
 
-class DirectoryWritableTest extends \PHPUnit_Framework_TestCase
+class DirectoryWritableTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * vfsStream root container

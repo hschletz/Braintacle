@@ -24,7 +24,7 @@ namespace Library\Test\Form\Element;
 /**
  * Tests for \Library\Form\Element\SelectSimple
  */
-class SelectSimpleTest extends \PHPUnit_Framework_TestCase
+class SelectSimpleTest extends \PHPUnit\Framework\TestCase
 {
     public function testInArrayValidator()
     {
@@ -42,7 +42,7 @@ class SelectSimpleTest extends \PHPUnit_Framework_TestCase
 
     public function testUncallableCode()
     {
-        $this->setExpectedException(
+        $this->expectException(
             'LogicException',
             'Library\Form\Element\SelectSimple::getOptionValue() should never be called'
         );

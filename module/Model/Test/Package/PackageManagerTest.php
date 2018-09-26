@@ -72,14 +72,14 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
     public function testGetPackageInvalidName()
     {
-        $this->setExpectedException('Model\Package\RuntimeException', "There is no package with name 'invalid'");
+        $this->expectException('Model\Package\RuntimeException', "There is no package with name 'invalid'");
         $model = $this->_getModel();
         $model->getPackage('invalid');
     }
 
     public function testGetPackageError()
     {
-        $this->setExpectedException('Model\Package\RuntimeException', 'metadata error');
+        $this->expectException('Model\Package\RuntimeException', 'metadata error');
         $storage = $this->createMock('Model\Package\Storage\Direct');
         $storage->method('readMetadata')->will($this->throwException(new \RuntimeException('metadata error')));
         $model = $this->_getModel(array('Model\Package\Storage\Direct' => $storage));
@@ -291,7 +291,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
         // Test database results
         $connection = $this->getConnection();
-        $dataset = new \PHPUnit_Extensions_Database_DataSet_ReplacementDataSet(
+        $dataset = new \PHPUnit\DbUnit\DataSet\ReplacementDataSet(
             $this->_loadDataSet('Build')
         );
         $dataset->addFullReplacement('#PLATFORM#', $platformValue);
@@ -433,7 +433,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $model->expects($this->once())->method('autoArchive')->willReturn($source);
         $model->expects($this->once())->method('deletePackage')->with('package_new');
 
-        $this->setExpectedException('Model\Package\RuntimeException', $message);
+        $this->expectException('Model\Package\RuntimeException', $message);
         $model->buildPackage($data, false);
     }
 
@@ -457,7 +457,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $model->expects($this->once())->method('packageExists')->willReturn(false);
         $model->expects($this->once())->method('deletePackage')->willThrowException(new \Exception('ignored'));
 
-        $this->setExpectedException('Exception', 'relevant error');
+        $this->expectException('Exception', 'relevant error');
         $model->buildPackage(array('Name' => 'name'), false);
     }
 
@@ -712,7 +712,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteException()
     {
-        $this->setExpectedException('Model\Package\RuntimeException', "Package 'invalid' does not exist");
+        $this->expectException('Model\Package\RuntimeException', "Package 'invalid' does not exist");
         $model = $this->_getModel();
         $model->deletePackage('invalid');
     }
@@ -815,7 +815,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
     public function testUpdateAssignmentsException()
     {
-        $this->setExpectedException('Model\Package\RuntimeException', 'database error');
+        $this->expectException('Model\Package\RuntimeException', 'database error');
         $data = array('Timestamp' => new \DateTime('@1415958319'));
         $clientConfig = $this->createMock('Database\Table\ClientConfig');
         $clientConfig->method('getSql')->will($this->throwException(new \RuntimeException('database error')));

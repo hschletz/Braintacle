@@ -21,7 +21,7 @@
 
 namespace Console\Test\View\Helper\Form;
 
-class AbstractHelperTest extends \PHPUnit_Framework_TestCase
+class AbstractHelperTest extends \PHPUnit\Framework\TestCase
 {
     public function testRenderWithoutPrepare()
     {

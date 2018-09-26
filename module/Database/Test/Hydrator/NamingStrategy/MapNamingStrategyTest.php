@@ -21,7 +21,7 @@
 
 namespace Database\Test\Hydrator\NamingStrategy;
 
-class MapNamingStrategyTest extends \PHPUnit_Framework_TestCase
+class MapNamingStrategyTest extends \PHPUnit\Framework\TestCase
 {
     public function testHydrateValid()
     {

@@ -953,7 +953,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
      */
     public function testGetClientsExceptions($order, $filter, $operator, $exceptionType, $message)
     {
-        $this->setExpectedException($exceptionType, $message);
+        $this->expectException($exceptionType, $message);
 
         $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $customFieldManager->method('getFields')->willReturn(
@@ -989,7 +989,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
 
     public function testGetClientInvalidId()
     {
-        $this->setExpectedException('RuntimeException', 'Invalid client ID: 42');
+        $this->expectException('RuntimeException', 'Invalid client ID: 42');
 
         $resultSet = $this->createMock('Zend\Db\ResultSet\HydratingResultSet');
         $resultSet->method('count')->willReturn(0);
@@ -1163,7 +1163,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteClientLockingFailure()
     {
-        $this->setExpectedException('RuntimeException', 'Could not lock client for deletion');
+        $this->expectException('RuntimeException', 'Could not lock client for deletion');
 
         $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())->method('lock')->willReturn(false);
@@ -1200,7 +1200,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
      */
     public function testDeleteClientException($connection)
     {
-        $this->setExpectedException('RuntimeException', 'message');
+        $this->expectException('RuntimeException', 'message');
 
         $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())->method('lock')->willReturn(true);
@@ -1269,7 +1269,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $model = $this->_getModel(array('Model\Config' => $config));
         $model->importClient($content, $adapter);
 
-        $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($adapter, 'config')['strictredirects']);
+        $this->assertTrue(\PHPUnit\Framework\Assert::readAttribute($adapter, 'config')['strictredirects']);
     }
 
     public function testImportClientHttpError()

@@ -30,7 +30,7 @@ use \Library\Application;
  * are invoked as part of the bootstrap process which would most likely fail if
  * these methods didn't work correctly.
  */
-class ApplicationTest extends \PHPUnit_Framework_TestCase
+class ApplicationTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetApplicationConfig()
     {

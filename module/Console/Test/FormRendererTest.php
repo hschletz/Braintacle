@@ -26,7 +26,7 @@ namespace Console\Test;
  *
  * Tests for Console\Form\Form rendering capabilities
  */
-class FormRendererTest extends \PHPUnit_Framework_TestCase
+class FormRendererTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

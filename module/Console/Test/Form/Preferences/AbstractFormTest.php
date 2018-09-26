@@ -24,7 +24,7 @@ namespace Console\Test\Form\Preferences;
 /**
  * Tests for AbstractForm
  */
-class AbstractFormTest extends \PHPUnit_Framework_TestCase
+class AbstractFormTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Create a new view renderer

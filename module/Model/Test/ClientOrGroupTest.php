@@ -45,7 +45,7 @@ class ClientOrGroupTest extends AbstractTest
         if ($locks) {
             // Replace offsets with timestamps (current - offset)
             $count = $locks->getRowCount();
-            $replacement = new \PHPUnit_Extensions_Database_DataSet_ReplacementDataSet($dataSet);
+            $replacement = new \PHPUnit\DbUnit\DataSet\ReplacementDataSet($dataSet);
             for ($i = 0; $i < $count; $i++) {
                 $offset = $locks->getValue($i, 'since');
                 $interval = new \DateInterval(sprintf('PT%dS', trim($offset, '#')));
@@ -155,7 +155,7 @@ class ClientOrGroupTest extends AbstractTest
         $this->assertSame($success, $model->lock());
 
         // Reuse $_currentTimestamp before it gets overwritten by _loadDataSet()
-        $expire = \PHPUnit_Framework_Assert::readAttribute($model, '_lockTimeout');
+        $expire = \PHPUnit\Framework\Assert::readAttribute($model, '_lockTimeout');
         if ($success) {
             $this->assertThat(
                 $expire->getTimestamp(),
@@ -262,7 +262,7 @@ class ClientOrGroupTest extends AbstractTest
         try {
             $model->unlock();
             $this->fail('Expected exception was not thrown.');
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit\Framework\Error\Warning $e) {
             $this->assertEquals('Lock expired prematurely. Increase lock lifetime.', $e->getMessage());
         }
         $this->assertLocksTableEquals(null);
@@ -450,7 +450,7 @@ class ClientOrGroupTest extends AbstractTest
         $model['Id'] = $id;
 
         $this->assertSame($value, $model->getConfig($option));
-        $this->assertSame($value, \PHPUnit_Framework_Assert::readAttribute($model, '_configCache')[$option]);
+        $this->assertSame($value, \PHPUnit\Framework\Assert::readAttribute($model, '_configCache')[$option]);
     }
 
     public function testGetConfigCached()
@@ -521,7 +521,7 @@ class ClientOrGroupTest extends AbstractTest
             )
         );
 
-        $this->assertSame($normalizedValue, \PHPUnit_Framework_Assert::readAttribute($model, '_configCache')[$option]);
+        $this->assertSame($normalizedValue, \PHPUnit\Framework\Assert::readAttribute($model, '_configCache')[$option]);
     }
 
     public function testSetConfigUnchanged()
@@ -552,7 +552,7 @@ class ClientOrGroupTest extends AbstractTest
 
         $model->setConfig('inventoryInterval', '23');
 
-        $this->assertSame(23, \PHPUnit_Framework_Assert::readAttribute($model, '_configCache')['inventoryInterval']);
+        $this->assertSame(23, \PHPUnit\Framework\Assert::readAttribute($model, '_configCache')['inventoryInterval']);
     }
 
     public function testSetConfigRollbackOnException()

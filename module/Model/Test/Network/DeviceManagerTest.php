@@ -146,7 +146,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
 
     public function testGetDeviceUnknownAddress()
     {
-        $this->setExpectedException('Model\Network\RuntimeException', 'Unknown MAC address: 00:00:5E:00:53:00');
+        $this->expectException('Model\Network\RuntimeException', 'Unknown MAC address: 00:00:5E:00:53:00');
         $model = $this->_getModel();
         $device = $model->getDevice('00:00:5E:00:53:00');
     }

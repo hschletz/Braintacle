@@ -24,7 +24,7 @@ namespace Library\Test\I18n\Translator\Loader;
 /**
  * Tests for the Po class
  */
-class PoTest extends \PHPUnit_Framework_TestCase
+class PoTest extends \PHPUnit\Framework\TestCase
 {
     public function testLoad()
     {

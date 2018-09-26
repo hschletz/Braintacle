@@ -27,7 +27,7 @@ namespace Console\Test;
  * This base class performs common setup and tests for all forms derived from
  * \Console\Form\Form.
  */
-abstract class AbstractFormTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractFormTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * HTML header to declare document encoding

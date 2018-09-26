@@ -23,7 +23,7 @@ namespace Library\Test\Service;
 
 use org\bovigo\vfs\vfsStream;
 
-class UserConfigFactoryTest extends \PHPUnit_Framework_TestCase
+class UserConfigFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Per-test factory instance

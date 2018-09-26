@@ -21,7 +21,7 @@
 
 namespace Protocol\Test\Message;
 
-class InventoryRequestTest extends \PHPUnit_Framework_TestCase
+class InventoryRequestTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetSchemaFilename()
     {
@@ -219,7 +219,7 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFilenameInvalidName()
     {
-        $this->setExpectedException(
+        $this->expectException(
             'UnexpectedValueException',
             '!Name2015-06-04-18-22-06 is not a valid filename part'
         );
@@ -230,7 +230,7 @@ class InventoryRequestTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFilenameElementNotSet()
     {
-        $this->setExpectedException('LogicException', 'DEVICEID element has not been set');
+        $this->expectException('LogicException', 'DEVICEID element has not been set');
         $document = new \Protocol\Message\InventoryRequest;
         $document->getFilename();
     }

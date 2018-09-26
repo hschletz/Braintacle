@@ -32,7 +32,7 @@ class ConfigTest extends AbstractTest
     public function testGetDbIdentifier()
     {
         $this->assertEquals('FREQUENCY', static::$_table->getDbIdentifier('inventoryInterval'));
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         static::$_table->getDbIdentifier('Invalid');
     }
 
@@ -50,7 +50,7 @@ class ConfigTest extends AbstractTest
         // Test unpopulated option
         $this->assertNull(static::$_table->get('contactInterval'));
         // Test invalid option
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         static::$_table->get('invalid');
     }
 
@@ -98,13 +98,13 @@ class ConfigTest extends AbstractTest
 
     public function testSetInvalidOption()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Invalid option: invalid');
+        $this->expectException('InvalidArgumentException', 'Invalid option: invalid');
         static::$_table->set('invalid', 0);
     }
 
     public function testSetInvalidValue()
     {
-        $this->setExpectedException(
+        $this->expectException(
             'InvalidArgumentException',
             'Tried to set non-integer value "invalid" to integer option "inventoryInterval"'
         );

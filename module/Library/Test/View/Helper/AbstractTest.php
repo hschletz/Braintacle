@@ -30,7 +30,7 @@ use Library\Application;
  * functions. Additionally, the testHelperInterface() test is executed for all
  * derived tests.
  */
-abstract class AbstractTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Service manager

@@ -106,7 +106,7 @@ class CustomFieldConfigTest extends AbstractTest
         $this->assertEquals($columnType, $column->getDatatype());
         $this->assertThat($column->getLength(), $length);
 
-        $dataSet = new \PHPUnit_Extensions_Database_DataSet_ReplacementDataSet(
+        $dataSet = new \PHPUnit\DbUnit\DataSet\ReplacementDataSet(
             $this->_loadDataSet('AddField')
         );
         $dataSet->addFullReplacement("##ID##", $id);

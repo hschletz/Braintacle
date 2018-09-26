@@ -56,7 +56,7 @@ class DatabaseTest extends AbstractControllerTest
                     if (!$writer instanceof \Zend\Log\Writer\Stream) {
                         return false;
                     };
-                    $stream = \PHPUnit_Framework_Assert::readAttribute($writer, 'stream');
+                    $stream = \PHPUnit\Framework\Assert::readAttribute($writer, 'stream');
                     if (!is_resource($stream) or get_resource_type($stream) != 'stream') {
                         return false;
                     }
@@ -64,15 +64,15 @@ class DatabaseTest extends AbstractControllerTest
                         return false;
                     }
 
-                    $filter = \PHPUnit_Framework_Assert::readAttribute($writer, 'filters')[0];
+                    $filter = \PHPUnit\Framework\Assert::readAttribute($writer, 'filters')[0];
                     if (!$filter instanceof \Zend\Log\Filter\Priority) {
                         return false;
                     }
-                    $priority = \PHPUnit_Framework_Assert::readAttribute($filter, 'priority');
+                    $priority = \PHPUnit\Framework\Assert::readAttribute($filter, 'priority');
                     if ($priority !== \Zend\Log\Logger::DEBUG) {
                         return false;
                     }
-                    $operator = \PHPUnit_Framework_Assert::readAttribute($filter, 'operator');
+                    $operator = \PHPUnit\Framework\Assert::readAttribute($filter, 'operator');
                     if ($operator != '<=') {
                         return false;
                     }

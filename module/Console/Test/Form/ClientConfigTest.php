@@ -98,7 +98,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
 
     public function testSetDataWithoutClientObject()
     {
-        $this->setExpectedException('LogicException', 'No client or group object set');
+        $this->expectException('LogicException', 'No client or group object set');
         $this->_form->setData(array());
     }
 
@@ -106,7 +106,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
     {
         $this->_form->setClientObject($this->_group);
 
-        $this->assertEquals($this->_group, \PHPUnit_Framework_Assert::readAttribute($this->_form, '_object'));
+        $this->assertEquals($this->_group, \PHPUnit\Framework\Assert::readAttribute($this->_form, '_object'));
         $scan = $this->_form->get('Scan');
         $scanThisNetwork = $scan->get('scanThisNetwork');
         $this->assertTrue($scanThisNetwork->getAttribute('disabled'));
@@ -122,7 +122,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
 
         $this->_form->setClientObject($this->_client);
 
-        $this->assertEquals($this->_client, \PHPUnit_Framework_Assert::readAttribute($this->_form, '_object'));
+        $this->assertEquals($this->_client, \PHPUnit\Framework\Assert::readAttribute($this->_form, '_object'));
         $scan = $this->_form->get('Scan');
         $scanThisNetwork = $scan->get('scanThisNetwork');
         $this->assertTrue($scanThisNetwork->getAttribute('disabled'));
@@ -141,7 +141,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
 
         $this->_form->setClientObject($this->_client);
 
-        $this->assertEquals($this->_client, \PHPUnit_Framework_Assert::readAttribute($this->_form, '_object'));
+        $this->assertEquals($this->_client, \PHPUnit\Framework\Assert::readAttribute($this->_form, '_object'));
         $scan = $this->_form->get('Scan');
         $scanThisNetwork = $scan->get('scanThisNetwork');
         $this->assertTrue($scanThisNetwork->getAttribute('disabled'));
@@ -163,7 +163,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
 
         $this->_form->setClientObject($this->_client);
 
-        $this->assertEquals($this->_client, \PHPUnit_Framework_Assert::readAttribute($this->_form, '_object'));
+        $this->assertEquals($this->_client, \PHPUnit\Framework\Assert::readAttribute($this->_form, '_object'));
         $scan = $this->_form->get('Scan');
         $scanThisNetwork = $scan->get('scanThisNetwork');
         $this->assertFalse($scanThisNetwork->getAttribute('disabled'));

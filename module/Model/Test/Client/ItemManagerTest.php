@@ -77,13 +77,13 @@ class ItemManagerTest extends \Model\Test\AbstractTest
     }
     public function testGetTableNameInvalidType()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Invalid item type: invalid');
+        $this->expectException('InvalidArgumentException', 'Invalid item type: invalid');
         $this->_getModel()->getTableName('invalid');
     }
 
     public function testGetTableInvalidType()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Invalid item type: invalid');
+        $this->expectException('InvalidArgumentException', 'Invalid item type: invalid');
         $this->_getModel()->getTable('invalid');
     }
 
@@ -218,7 +218,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
     {
         $model = $this->_getModel();
         $model->deleteItems(1);
-        $dataSet = new \PHPUnit_Extensions_Database_DataSet_QueryDataSet($this->getConnection());
+        $dataSet = new \PHPUnit\DbUnit\DataSet\QueryDataSet($this->getConnection());
         foreach (static::$_tables as $table) {
             if ($table == 'ClientsAndGroups' or $table == 'DuplicateMacAddresses' or $table == 'SoftwareDefinitions') {
                 continue;

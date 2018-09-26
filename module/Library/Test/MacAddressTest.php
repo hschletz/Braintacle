@@ -26,7 +26,7 @@ use \Library\MacAddress;
 /**
  * Tests for the MacAddress class
  */
-class MacAddressTest extends \PHPUnit_Framework_TestCase
+class MacAddressTest extends \PHPUnit\Framework\TestCase
 {
     public function testLoadVendorDatabase()
     {
@@ -101,7 +101,7 @@ class MacAddressTest extends \PHPUnit_Framework_TestCase
         MacAddress::loadVendorDatabase($input);
 
         // Builtin assertions don't work with GMP objects. Iterate and compare manually.
-        $vendorList = \PHPUnit_Framework_Assert::readAttribute('Library\MacAddress', '_vendorList');
+        $vendorList = \PHPUnit\Framework\Assert::readAttribute('Library\MacAddress', '_vendorList');
         $this->assertCount(count($expected), $vendorList);
         foreach ($vendorList as $key => $entry) {
             $expectedEntry = $expected[$key];

@@ -24,7 +24,7 @@ namespace Library\Test\Filter;
 /**
  * Tests for FixEncodingErrors filter
  */
-class FixEncodingErrorsTest extends \PHPUnit_Framework_TestCase
+class FixEncodingErrorsTest extends \PHPUnit\Framework\TestCase
 {
     public function testInterface()
     {

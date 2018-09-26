@@ -21,7 +21,7 @@
 
 namespace Database\Test\Hydrator\Strategy;
 
-abstract class AbstractStrategyTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractStrategyTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Strategy instance

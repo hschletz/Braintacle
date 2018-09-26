@@ -23,7 +23,7 @@ namespace Library\Test;
 
 use \Library\ArchiveManager;
 
-class ArchiveManagerTest extends \PHPUnit_Framework_TestCase
+class ArchiveManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @requires extension zip
@@ -36,7 +36,7 @@ class ArchiveManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testIsSupportedInvalid()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Unsupported archive type: invalid');
+        $this->expectException('InvalidArgumentException', 'Unsupported archive type: invalid');
         $manager = new ArchiveManager;
         $this->assertTrue($manager->isSupported('invalid'));
     }
@@ -52,7 +52,7 @@ class ArchiveManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testIsArchiveInvalid()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Unsupported archive type: invalid');
+        $this->expectException('InvalidArgumentException', 'Unsupported archive type: invalid');
         $manager = new ArchiveManager;
         $this->assertFalse($manager->isArchive('invalid', __FILE__));
     }
@@ -62,14 +62,14 @@ class ArchiveManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateArchiveZipError()
     {
-        $this->setExpectedException('RuntimeException', "Error creating ZIP archive '', code ");
+        $this->expectException('RuntimeException', "Error creating ZIP archive '', code ");
         $manager = new ArchiveManager;
         @$manager->createArchive(ArchiveManager::ZIP, '');
     }
 
     public function testCreateArchiveInvalid()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Unsupported archive type: invalid');
+        $this->expectException('InvalidArgumentException', 'Unsupported archive type: invalid');
         $manager = new ArchiveManager;
         $manager->createArchive('invalid', '');
     }
@@ -78,7 +78,7 @@ class ArchiveManagerTest extends \PHPUnit_Framework_TestCase
     {
         $tmpFile = tmpfile();
         $filename = stream_get_meta_data($tmpFile)['uri'];
-        $this->setExpectedException('RuntimeException', 'Archive already exists: ' . $filename);
+        $this->expectException('RuntimeException', 'Archive already exists: ' . $filename);
         $manager = new ArchiveManager;
         $manager->createArchive('something', $filename);
     }
@@ -88,7 +88,7 @@ class ArchiveManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCloseArchiveZipError()
     {
-        $this->setExpectedException('RuntimeException', 'Error closing ZIP archive');
+        $this->expectException('RuntimeException', 'Error closing ZIP archive');
         $manager = new ArchiveManager;
         $manager->closeArchive(new \ZipArchive);
     }
@@ -106,7 +106,7 @@ class ArchiveManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testCloseArchiveInvalid()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Unsupported archive');
+        $this->expectException('InvalidArgumentException', 'Unsupported archive');
         $manager = new ArchiveManager;
         $manager->closeArchive(null);
     }
@@ -116,14 +116,14 @@ class ArchiveManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddFileZipError()
     {
-        $this->setExpectedException('RuntimeException', "Error adding file 'file' to archive as 'name'");
+        $this->expectException('RuntimeException', "Error adding file 'file' to archive as 'name'");
         $manager = new ArchiveManager;
         $manager->addFile(new \ZipArchive, 'file', 'name');
     }
 
     public function testAddFileInvalid()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Unsupported archive');
+        $this->expectException('InvalidArgumentException', 'Unsupported archive');
         $manager = new ArchiveManager;
         $manager->addFile(null, 'file', 'name');
     }

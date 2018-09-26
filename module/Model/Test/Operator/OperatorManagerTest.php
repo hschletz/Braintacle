@@ -80,21 +80,21 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
 
     public function testGetOperatorWithoutId()
     {
-        $this->setExpectedException('InvalidArgumentException', 'No login name supplied');
+        $this->expectException('InvalidArgumentException', 'No login name supplied');
         $model = $this->_getModel();
         $model->getOperator(null);
     }
 
     public function testGetOperatorWithInvalidArgument()
     {
-        $this->setExpectedException('InvalidArgumentException', 'No login name supplied');
+        $this->expectException('InvalidArgumentException', 'No login name supplied');
         $model = $this->_getModel();
         $model->getOperator(array('user2'));
     }
 
     public function testGetOperatorWithInvalidId()
     {
-        $this->setExpectedException('RuntimeException', 'Invalid login name supplied');
+        $this->expectException('RuntimeException', 'Invalid login name supplied');
         $model = $this->_getModel();
         $model->getOperator('invalid');
     }

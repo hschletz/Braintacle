@@ -21,7 +21,7 @@
 
 namespace Library\Test;
 
-class NowTest extends \PHPUnit_Framework_TestCase
+class NowTest extends \PHPUnit\Framework\TestCase
 {
     public function testService()
     {

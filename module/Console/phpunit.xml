@@ -25,14 +25,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
         </testsuite>
     </testsuites>
     <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
+        <whitelist>
             <directory suffix=".php">.</directory>
             <exclude>
                 <directory>Test</directory>
             </exclude>
-        </whitelist>
-        <whitelist processUncoveredFilesFromWhitelist="false"><!-- View scripts cannot be executed without class context -->
-            <directory suffix=".php">views</directory>
         </whitelist>
     </filter>
     <logging>

@@ -21,7 +21,7 @@
 
 namespace Protocol\Test\Filter;
 
-class InventoryDecodeTest extends \PHPUnit_Framework_TestCase
+class InventoryDecodeTest extends \PHPUnit\Framework\TestCase
 {
     public function testInterface()
     {
@@ -58,7 +58,7 @@ class InventoryDecodeTest extends \PHPUnit_Framework_TestCase
 
     public function testFilterInvalidInput()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Input does not appear to be a zlib stream');
+        $this->expectException('InvalidArgumentException', 'Input does not appear to be a zlib stream');
         \Zend\Filter\StaticFilter::execute('not a zlib stream', 'Protocol\InventoryDecode');
     }
 }

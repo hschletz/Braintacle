@@ -26,7 +26,7 @@ use Library\Validator\LogLevel;
 /**
  * Tests for LogLevel validator
  */
-class LogLevelTest extends \PHPUnit_Framework_TestCase
+class LogLevelTest extends \PHPUnit\Framework\TestCase
 {
     public function testValidation()
     {

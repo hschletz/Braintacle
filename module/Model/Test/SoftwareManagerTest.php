@@ -75,7 +75,7 @@ class SoftwareManagerTest extends AbstractTest
      */
     public function testGetSoftwareInvalidArgument($filters, $order, $message)
     {
-        $this->setExpectedException('InvalidArgumentException', $message);
+        $this->expectException('InvalidArgumentException', $message);
         $model = $this->_getModel();
         $software = $model->getSoftware($filters, $order);
     }

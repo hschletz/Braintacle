@@ -27,7 +27,7 @@ namespace Database\Test\Table;
  * The table, class and fixture are automatically set up and the service is
  * automatically tested.
  */
-abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
+abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
 {
     /**
      * Service manager
@@ -74,7 +74,7 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
     /**
      * Set up fixture from data/Test/Classname.yaml
      *
-     * @return \PHPUnit_Extensions_Database_DataSet_IDataSet
+     * @return \PHPUnit\DbUnit\DataSet\IDataSet
      */
     public function getDataSet()
     {
@@ -85,7 +85,7 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
      * Load dataset from data/Test/Classname[/$testName].yaml
      *
      * @param string $testName Test name. If NULL, the fixture dataset for the test class is loaded.
-     * @return \PHPUnit_Extensions_Database_DataSet_IDataSet
+     * @return \PHPUnit\DbUnit\DataSet\IDataSet
      */
     protected function _loadDataSet($testName = null)
     {
@@ -95,7 +95,7 @@ abstract class AbstractTest extends \PHPUnit_Extensions_Database_TestCase
         if ($testName) {
             $file .= "/$testName";
         }
-        return new \PHPUnit_Extensions_Database_DataSet_YamlDataSet(
+        return new \PHPUnit\DbUnit\DataSet\YamlDataSet(
             \Database\Module::getPath("$file.yaml")
         );
     }

@@ -21,7 +21,7 @@
 
 namespace Console\Test;
 
-class FormValidationTest extends \PHPUnit_Framework_TestCase
+class FormValidationTest extends \PHPUnit\Framework\TestCase
 {
     protected $_postBackup;
     protected $_filesBackup;

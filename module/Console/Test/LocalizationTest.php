@@ -21,7 +21,7 @@
 
 namespace Console\Test;
 
-class LocalizationTest extends \PHPUnit_Framework_TestCase
+class LocalizationTest extends \PHPUnit\Framework\TestCase
 {
     protected $serverBackup;
     protected $localeBackup;
