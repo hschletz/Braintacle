@@ -203,6 +203,10 @@ sub _database_connect{
 
   # Connection...
   my $dbh = DBI->connect("DBI:$type:database=$database;host=$host;port=$port", $user, $password, \%params);
+  unless($dbh) {
+    &_log(521, 'database_connect', DBI->errstr);
+    return undef;
+  }
   if ($type eq 'Pg') {
       $dbh->do("SET NAMES 'utf8'");
       $dbh->do('SET timezone TO UTC');

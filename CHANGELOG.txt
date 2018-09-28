@@ -20,6 +20,10 @@ New features:
 
 - Software can be accepted/ignored in bulk.
 
+Misc:
+
+- Server: Backported changes from version 2.5.
+
 
 CHANGES IN VERSION 1.2
 =======================

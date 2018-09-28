@@ -73,7 +73,7 @@ our %DATA_MAP= (
        ARCH => {}
      },
   },
-  
+
   accountinfo =>  {
    mask => 0,
    multi => 1,
@@ -86,7 +86,7 @@ our %DATA_MAP= (
        TAG => {}
    }
   },
-     
+
   bios =>  {
    mask => 2,
    multi => 0,
@@ -106,7 +106,7 @@ our %DATA_MAP= (
        ASSETTAG => {},
    }
   },
-     
+
   memories => {
    mask => 4,
    multi => 1,
@@ -115,7 +115,7 @@ our %DATA_MAP= (
    sortBy => 'CAPTION',
    writeDiff => 1,
    cache => 0,
-   fields =>  {  
+   fields =>  {
        CAPACITY => {},
        SPEED => {},
        CAPTION => {},
@@ -126,7 +126,7 @@ our %DATA_MAP= (
        SERIALNUMBER => {}
    }
   },
-  
+
   slots => {
    mask => 8,
    multi => 1,
@@ -143,7 +143,7 @@ our %DATA_MAP= (
        STATUS => {}
    }
   },
-  
+
   registry => {
    mask => 16,
    multi => 1,
@@ -157,7 +157,7 @@ our %DATA_MAP= (
        REGVALUE => { cache => 1 }
    }
   },
-  
+
   controllers => {
    mask => 32,
    multi => 1,
@@ -175,7 +175,7 @@ our %DATA_MAP= (
        TYPE => {}
    }
   },
-  
+
   monitors => {
    mask => 64,
    multi => 1,
@@ -192,7 +192,7 @@ our %DATA_MAP= (
        SERIAL => {}
    }
   },
-  
+
   ports => {
    mask => 128,
    multi => 1,
@@ -208,7 +208,7 @@ our %DATA_MAP= (
        TYPE => {}
    }
   },
-    
+
   storages => {
    mask => 256,
    multi => 1,
@@ -228,7 +228,7 @@ our %DATA_MAP= (
        FIRMWARE => {}
    }
   },
-  
+
   drives => {
    mask => 512,
    multi => 1,
@@ -248,7 +248,7 @@ our %DATA_MAP= (
        CREATEDATE => {}
    }
   },
-  
+
   inputs => {
    mask => 1024,
    multi => 1,
@@ -266,7 +266,7 @@ our %DATA_MAP= (
        POINTTYPE => {}
    }
   },
-  
+
   modems => {
    mask => 2048,
    multi => 1,
@@ -282,7 +282,7 @@ our %DATA_MAP= (
        TYPE => {}
    }
   },
-  
+
   networks => {
    mask => 4096,
    multi => 1,
@@ -306,7 +306,7 @@ our %DATA_MAP= (
        IPDHCP => {}
    }
   },
-  
+
   printers => {
    mask => 8192,
    multi => 1,
@@ -343,7 +343,7 @@ our %DATA_MAP= (
        DESCRIPTION => {}
    }
   },
-  
+
   videos => {
    mask => 32768,
    multi => 1,
@@ -359,7 +359,7 @@ our %DATA_MAP= (
        RESOLUTION => {}
    }
   },
-  
+
   softwares => {
    mask => 65536,
    multi => 1,
@@ -383,7 +383,7 @@ our %DATA_MAP= (
        BITSWIDTH => {}
    }
   },
-  
+
   virtualmachines => {
     mask => 131072,
     multi => 1,
@@ -417,7 +417,7 @@ our %DATA_MAP= (
       SERIALNUMBER => {},
       SPEED => {},
       CORES => {},
-      L2CACHESIZE => {}, 
+      L2CACHESIZE => {},
       CPUARCH => {},
       DATA_WIDTH => {},
       VOLTAGE => {},
@@ -479,7 +479,31 @@ our %DATA_MAP= (
       INTERFACE => {},
       MANUFACTURER => {},
       SERIAL => {},
-      TYPE => {} 
+      TYPE => {}
+    }
+  },
+
+  repository =>  {
+    mask => 0,
+    multi => 1,
+    auto => 1,
+    delOnReplace => 1,
+    sortBy => 'NAME',
+    writeDiff => 0,
+    cache => 0,
+    fields => {
+      BASEURL => {},
+      EXCLUDE => {},
+      EXCLUDED => {},
+      EXPIRE => {},
+      FILENAME => {},
+      MIRRORS => {},
+      NAME => {},
+      PKGS => {},
+      REVISION => {},
+      SIZE => {},
+      TAG => {},
+      UPDATED => {}
     }
   },
 
@@ -513,7 +537,7 @@ our %DATA_MAP= (
       DATE_INSERT => {}
     }
   },
-  
+
   devices => {
    mask => 0,
    multi => 1,
@@ -523,8 +547,8 @@ our %DATA_MAP= (
    writeDiff => 0,
    cache => 0,
    fields =>  {
-      NAME => {}, 
-      IVALUE => {}, 
+      NAME => {},
+      IVALUE => {},
       TVALUE  => {},
       COMMENTS => {}
     }
@@ -555,7 +579,7 @@ our %DATA_MAP= (
     fields =>  {
       GROUP_ID => {},
       STATIC => {}
-    } 
+    }
   },
 
   snmp => {
@@ -1016,7 +1040,7 @@ our %DATA_MAP= (
        NAME => {},
        OS => {},
        POWER => {},
-       UUID => {} 
+       UUID => {}
    }
   },
 
