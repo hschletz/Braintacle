@@ -45,8 +45,7 @@ Requirements
     (see <http://php.net/manual/en/language.types.integer.php>). It is not used
     where 64 bit integers are available.
 
-  - The "zlib" extension and PHP 7 are required for the
-    decode-inventory-file.php tool.
+  - The "zlib" extension is required for "braintacle-tool.php decode".
 
 - [Composer](https://getcomposer.org/)
 
