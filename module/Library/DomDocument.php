@@ -115,7 +115,7 @@ class DomDocument extends \DOMDocument
     /**
      * Write XML content to file
      *
-     * This is a reimplementation of \DomDocument::save() with improved error
+     * This is a reimplementation of \DOMDocument::save() with improved error
      * handling. An exception is thrown on error, and no file remains on disk.
      *
      * @param string $filename
@@ -140,7 +140,7 @@ class DomDocument extends \DOMDocument
     /**
      * Load XML content from file
      *
-     * This is an extension of \DomDocument::load() with improved error
+     * This is an extension of \DOMDocument::load() with improved error
      * handling. An exception is thrown on error.
      *
      * @param string $filename

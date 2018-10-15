@@ -26,9 +26,15 @@ namespace Library\Validator;
  */
 class FileReadable extends \Zend\Validator\AbstractValidator
 {
+    /**
+     * Key for message template: not a file or inaccessible
+     */
     const FILE = 'file';
-    const READABLE = 'readable';
 
+    /**
+     * Key for message template: file not readable
+     */
+    const READABLE = 'readable';
 
     /**
      * Validation failure message template definitions

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2a5f126f55d870f6226a80b5e7f701fb",
+    "content-hash": "c25f1c31d6eaffe19b0cdb38d18b17af",
     "packages": [
         {
             "name": "components/jquery",
@@ -81,16 +81,16 @@
         },
         {
             "name": "hschletz/nada",
-            "version": "v1.1",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hschletz/NADA.git",
-                "reference": "5c435cdcfc00a72e24ed547b0eef6c554f30ca8e"
+                "reference": "4ead798354089fd360f917ce64dd1432d5650df0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hschletz/NADA/zipball/5c435cdcfc00a72e24ed547b0eef6c554f30ca8e",
-                "reference": "5c435cdcfc00a72e24ed547b0eef6c554f30ca8e",
+                "url": "https://api.github.com/repos/hschletz/NADA/zipball/4ead798354089fd360f917ce64dd1432d5650df0",
+                "reference": "4ead798354089fd360f917ce64dd1432d5650df0",
                 "shasum": ""
             },
             "type": "library",
@@ -111,7 +111,7 @@
             ],
             "description": "A high level SQL abstraction library for PHP, complementing and operating on top of a conventional database abstraction layer",
             "homepage": "https://github.com/hschletz/NADA",
-            "time": "2018-09-23T16:07:37+00:00"
+            "time": "2018-10-01T14:44:30+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -2193,6 +2193,42 @@
             "time": "2015-06-14T21:17:01+00:00"
         },
         {
+            "name": "hschletz/doxygen-phpdoc",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hschletz/doxygen-phpdoc.git",
+                "reference": "249c0485c8731244d5f0c38f23d870816e8a372b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hschletz/doxygen-phpdoc/zipball/249c0485c8731244d5f0c38f23d870816e8a372b",
+                "reference": "249c0485c8731244d5f0c38f23d870816e8a372b",
+                "shasum": ""
+            },
+            "require": {
+                "zendframework/zend-dom": "^2.7"
+            },
+            "bin": [
+                "doxygen-phpdoc-filter.php",
+                "doxygen-phpdoc-fixhtml.php"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Holger Schletz",
+                    "email": "holger.schletz@web.de"
+                }
+            ],
+            "description": "PHPDoc support for Doxygen",
+            "homepage": "https://github.com/hschletz/doxygen-phpdoc",
+            "time": "2018-10-13T09:48:43+00:00"
+        },
+        {
             "name": "mikey179/vfsStream",
             "version": "v1.6.5",
             "source": {
@@ -3738,6 +3774,55 @@
                 "portable"
             ],
             "time": "2018-08-06T14:22:27+00:00"
+        },
+        {
+            "name": "symfony/process",
+            "version": "v3.4.17",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/process.git",
+                "reference": "1dc2977afa7d70f90f3fefbcd84152813558910e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/process/zipball/1dc2977afa7d70f90f3fefbcd84152813558910e",
+                "reference": "1dc2977afa7d70f90f3fefbcd84152813558910e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.5.9|>=7.0.8"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Process\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Process Component",
+            "homepage": "https://symfony.com",
+            "time": "2018-10-02T12:28:39+00:00"
         },
         {
             "name": "symfony/yaml",

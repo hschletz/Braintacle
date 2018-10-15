@@ -1,0 +1,25 @@
+PROJECT_NAME           = "Braintacle"
+OUTPUT_DIRECTORY       = doc
+ABBREVIATE_BRIEF       =
+JAVADOC_AUTOBRIEF      = YES
+ALIASES                += codeCoverageIgnore=
+EXTRACT_STATIC         = YES
+EXTRACT_ANON_NSPACES   = YES
+QUIET                  = YES
+INPUT                  = INSTALL.md README.md module
+RECURSIVE              = YES
+EXCLUDE                = module/Console/views
+EXCLUDE_PATTERNS       = */module/*/Test
+FILTER_PATTERNS        = *.php=vendor/bin/doxygen-phpdoc-filter.php
+USE_MDFILE_AS_MAINPAGE = README.md
+SOURCE_BROWSER         = YES
+STRIP_CODE_COMMENTS    = NO
+SOURCE_TOOLTIPS        = NO
+COLS_IN_ALPHA_INDEX    = 3
+HTML_OUTPUT            = api
+HTML_TIMESTAMP         = YES
+HTML_INDEX_NUM_ENTRIES = 1
+GENERATE_TREEVIEW      = YES
+SEARCHENGINE           = YES
+GENERATE_LATEX         = NO
+TAGFILES               = doxygen/dependencies.tag=dependencies doxygen/php-builtin.tag=https://php.net/manual/en/

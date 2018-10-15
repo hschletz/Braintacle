@@ -32,6 +32,11 @@ class FilterDescription extends \Zend\View\Helper\AbstractHelper
      */
     protected $_subnet;
 
+    /**
+     * Constructor
+     *
+     * @param \Model\Network\Subnet $subnet
+     */
     public function __construct(\Model\Network\Subnet $subnet)
     {
         $this->_subnet = $subnet;

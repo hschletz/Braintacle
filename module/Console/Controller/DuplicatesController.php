@@ -110,7 +110,7 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Allow given criteria and value as duplicate
      *
-     * @return array|Zend\Http\Response criteria/value for GET, redirect response for POST
+     * @return array|\Zend\Http\Response criteria/value for GET, redirect response for POST
      */
     public function allowAction()
     {

@@ -26,7 +26,14 @@ namespace Library\Validator;
  */
 class DirectoryWritable extends \Zend\Validator\AbstractValidator
 {
+    /**
+     * Key for message template: not a directory or inaccessible
+     */
     const DIRECTORY = 'directory';
+
+    /**
+     * Key for message template: directory not writable
+     */
     const WRITABLE = 'writable';
 
     /**

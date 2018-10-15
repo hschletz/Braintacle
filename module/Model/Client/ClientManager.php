@@ -874,7 +874,7 @@ class ClientManager
      * Import client
      *
      * @param string $data Inventory data (compressed or uncompressed XML)
-     * @param string|\Zend\Http\Client\Adapter\AdapterInterface HTTP adapter
+     * @param string|\Zend\Http\Client\Adapter\AdapterInterface $adapter HTTP adapter
      * @throws \RuntimeException if server responds with error
      */
     public function importClient($data, $adapter = 'Zend\Http\Client\Adapter\Socket')

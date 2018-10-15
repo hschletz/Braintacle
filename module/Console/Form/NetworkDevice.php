@@ -29,7 +29,7 @@ namespace Console\Form;
  * - Type
  * - Description
  *
- * The init() method requires a \ModelNetwork\DeviceManager instance injected
+ * The init() method requires a \Model\Network\DeviceManager instance injected
  * via the DeviceManager option. The factory does this automatically.
  */
 class NetworkDevice extends Form

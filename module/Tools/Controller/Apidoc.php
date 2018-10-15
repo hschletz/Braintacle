@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @package Tools
  */
 
 namespace Tools\Controller;
+
+use \Symfony\Component\Process\Process;
 
 /**
  * Apidoc controller
@@ -38,24 +38,42 @@ class Apidoc
      */
     public function __invoke(\ZF\Console\Route $route, \Zend\Console\Adapter\AdapterInterface $console)
     {
-        $cmd = array(
-            'apigen generate',
-            '-s ' . escapeshellarg(\Library\Application::getPath('module')),
-            '-d ' . escapeshellarg(\Library\Application::getPath('doc') . DIRECTORY_SEPARATOR . 'api'),
-            '--deprecated',
-            '--todo',
-            '--php',
-            '--exclude ' . escapeshellarg('*/Test'),
-            '--title ' . escapeshellarg('Braintacle API documentation'),
-        );
-        $cmd = implode(' ', $cmd);
-        passthru($cmd, $result); // system() would swallow or delay some output
-        if ($result) {
-            $console->writeLine("ERROR: ApiGen returned with error code $result. Command line was:");
-            $console->writeLine();
-            $console->writeLine($cmd);
-            $console->writeLine();
-            return 1;
+        $console->writeLine('Running Doxygen to generate documentation for dependencies...');
+
+        // Delete tagfile if it exists. Otherwise it wouldn't be used reliably.
+        try {
+            unlink(\Library\Application::getPath('doxygen/dependencies.tag'));
+        } catch (\Exception $e) {
+            // No error if it doesn't exist
         }
+        $process = new Process(['doxygen', \Library\Application::getPath('doxygen/dependencies.Doxyfile')]);
+        $process->run(); // Ignore warnings
+
+        $console->writeLine('Running Doxygen to generate Braintacle API documentation...');
+
+        $process = new Process(['doxygen', \Library\Application::getPath('doxygen/braintacle.Doxyfile')]);
+        $process->run(function ($type, $buffer) use ($console) {
+            if (strpos($buffer, '<unknown>:1: warning: Detected potential recursive class relation') !== 0 and
+                strpos($buffer, 'warning: Internal inconsistency: scope for class') === false and
+                !preg_match('/^deprecated:\d+: warning: Illegal command \w+ as part of a <dt> tag/', $buffer)
+            ) {
+                $console->write($buffer);
+            }
+        });
+
+        $console->writeLine('Postprocessing documentation...');
+
+        $ignoreMessage = 'WARNING: could not parse ' . \Library\Application::getPath('doc/api/dependencies');
+        $process = new Process([
+            (new \Symfony\Component\Process\PhpExecutableFinder)->find(),
+            \Library\Application::getPath('vendor/bin/doxygen-phpdoc-fixhtml.php'),
+            \Library\Application::getPath('doc/api')
+        ]);
+        $process->run(function ($type, $buffer) use ($console, $ignoreMessage) {
+            if (strpos($buffer, $ignoreMessage) !== 0) {
+                $console->write($buffer);
+            }
+        });
+        $console->writeLine('Done.');
     }
 }

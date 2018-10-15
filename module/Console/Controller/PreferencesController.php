@@ -60,7 +60,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      * Constructor
      *
      * @param \Zend\Form\FormElementManager $formManager
-     * @param \Model\Client $customFieldManager
+     * @param \Model\Client\CustomFieldManager $customFieldManager
      * @param \Model\Network\DeviceManager $deviceManager
      * @param \Model\Registry\RegistryManager $registryManager
      * @param \Model\Config $config

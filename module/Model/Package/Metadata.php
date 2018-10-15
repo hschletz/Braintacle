@@ -138,7 +138,7 @@ class Metadata extends \Library\DomDocument
      *
      * The returned string may not be identical to the original string because
      * _escapeMessage() is not fully reversible, but should sufficiently match
-     * the original content. Line breaks are returned as \n.
+     * the original content. Line breaks are returned as \\n.
      *
      * @param string $message Escaped user notification message
      * @return string Unescaped string

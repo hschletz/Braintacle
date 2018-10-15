@@ -29,7 +29,7 @@ class Software extends \Zend\View\Helper\AbstractHelper
     /**
      * Render all
      *
-     * @param \Console\Form\Software $fieldset Software form main fieldset
+     * @param \Console\Form\Software $form Software form
      * @param array[] $software Software list
      * @param array $sorting Sorting for table helper
      * @param string $filter Current filter (accepted, ignored, new, all)
