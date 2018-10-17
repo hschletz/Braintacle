@@ -29,38 +29,42 @@ require_once(__DIR__ . '/../vendor/autoload.php');
  *
  * @param string $module Module name
  * @param string $filter if not empty, pass to phpunit's --filter option
+ * @param mixed $database Array with database config. If empty, default config is used.
  * @param bool $doCoverage generate code coverage report
  */
-function testModule($module, $filter, $doCoverage)
+function testModule($module, $filter, $database, $doCoverage)
 {
-    $baseDir = dirname(__DIR__);
-    $cmd = array(PHP_BINARY);
+    $cmd = [(new \Symfony\Component\Process\PhpExecutableFinder)->find()];
     if ($doCoverage) {
         $cmd[] = '-d zend_extension=xdebug.' . PHP_SHLIB_SUFFIX;
     }
     // Avoid vendor/bin/phpunit for Windows compatibility
-    $cmd[] = escapeshellarg(__DIR__ . '/../vendor/phpunit/phpunit/phpunit');
-    $cmd[] = '-c ' . escapeshellarg("$baseDir/module/$module/phpunit.xml");
-    $cmd[] = '--colors --disallow-test-output';
+    $cmd[] = \Library\Application::getPath('vendor/phpunit/phpunit/phpunit');
+    $cmd[] = '-c';
+    $cmd[] = \Library\Application::getPath("module/$module/phpunit.xml");
+    $cmd[] = '--colors=always';
+    $cmd[] = '--disallow-test-output';
     if ($doCoverage) {
-        $cmd[] = '--coverage-html=' . escapeshellarg("$baseDir/doc/CodeCoverage/$module");
+        $cmd[] = '--coverage-html=';
+        $cmd[] = \Library\Application::getPath("doc/CodeCoverage/$module");
     }
     if ($filter) {
-        $cmd[] = '--filter ' . escapeshellarg($filter);
+        $cmd[] = '--filter';
+        $cmd[] = $filter;
     }
 
-    // Pass descriptors explicitly to make PHPUnit 4.4 recognize a TTY which is
-    // required for color output and terminal size detection.
-    if ($handle = proc_open(implode(' ', $cmd), array(STDIN, STDOUT, STDERR), $pipes)) {
-        $exitCode = proc_close($handle);
-        if ($exitCode) {
-            printf("\n\nUnit tests for module '%s' failed with status %d. Aborting.\n", $module, $exitCode);
-            exit(1);
-        } else {
-            print "\n";
-        }
-    } else {
-        print "Could not invoke PHPUnit. Aborting.\n";
+    $process = new \Symfony\Component\Process\Process($cmd);
+    $process->setTimeout(null);
+    $process->start(
+        null,
+        $database ? ['BRAINTACLE_TEST_DATABASE' => json_encode($database)] : []
+    );
+    foreach ($process as $type => $data) {
+        print $data;
+    }
+
+    if (!$process->isSuccessful()) {
+        printf("\n\nUnit tests for module '%s' failed with status %d. Aborting.\n", $module, $process->getExitCode());
         exit(1);
     }
 }
@@ -124,7 +128,7 @@ $databases = array();
 if ($opts->database) {
     // Get available sections
     $reader = new \Zend\Config\Reader\Ini;
-        $config = $reader->fromFile(__DIR__ . '/../config/braintacle.ini');
+    $config = $reader->fromFile(\Library\Application::getPath('config/braintacle.ini'));
 
     // Remove reserved sections
     unset($config['database']); // Production database cannot be used
@@ -154,21 +158,11 @@ foreach ($modules as $module) {
         print "\nRunning tests on $module module with ";
         if ($database) {
             print "config '$name'";
-            // Set database config as environment variable which will be
-            // evaluated in test bootstrap scripts. This overrides the default
-            // config in phpunit.xml.
-            putenv('BRAINTACLE_TEST_DATABASE=' . json_encode($database));
         } else {
             print 'default config';
-            // Unset environment variable (if set) to avoid conflicts if this
-            // variable is set for whatever reason. This affects only the
-            // current process. The calling shell is unaffected.
-            // Bootstrap scripts will use the default config defined in
-            // phpunit.xml.
-            putenv('BRAINTACLE_TEST_DATABASE');
         }
         print "\n\n";
 
-        testModule($module, $opts->filter, ($opts->coverage ?: false));
+        testModule($module, $opts->filter, $database, ($opts->coverage ?: false));
     }
 }

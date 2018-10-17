@@ -22,15 +22,21 @@
 
 error_reporting(-1);
 
-$baseDir = dirname(__DIR__) . DIRECTORY_SEPARATOR;
-$cmd = array(
-    escapeshellarg(realpath(__DIR__ . '/../vendor/bin/phpcs')),
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$cmd = [
+    (new \Symfony\Component\Process\PhpExecutableFinder)->find(),
+    \Library\Application::getPath('vendor/bin/phpcs'),
     '-n', // suppress warnings
     '--standard=PSR2',
     '--extensions=php',
-    escapeshellarg($baseDir . 'development'),
-    escapeshellarg($baseDir . 'module'),
-    escapeshellarg($baseDir . 'public'),
-);
-passthru(implode(' ', $cmd), $result);
-exit($result);
+    \Library\Application::getPath('development'),
+    \Library\Application::getPath('module'),
+    \Library\Application::getPath('public'),
+];
+$process = new \Symfony\Component\Process\Process($cmd);
+$process->start();
+foreach ($process as $type => $data) {
+    print $data;
+}
+exit($process->getExitCode());

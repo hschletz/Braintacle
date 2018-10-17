@@ -25,6 +25,8 @@
 // manually. For these modules only the .po files are updated.
 
 error_reporting(-1);
+
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../module/Library/FileObject.php';
 
 // Module configuration
@@ -71,26 +73,23 @@ msgstr ""
 %s\n
 EOT;
 
-// All paths are relative to this script's parent directory
-$basePath = dirname(__DIR__);
-
 foreach ($modules as $module => $config) {
     // Use DIRECTORY_SEPARATOR for paths that are used as shell arguments
-    $modulePath = $basePath . DIRECTORY_SEPARATOR . 'module' . DIRECTORY_SEPARATOR . $module;
-    $translationPath = $modulePath . DIRECTORY_SEPARATOR . $config['translationPath'];
-    $potFileName = $translationPath . DIRECTORY_SEPARATOR . "$module.pot";
+    $modulePath = \Library\Application::getPath("module/$module");
+    $translationPath = \Library\Application::getPath("module/$module/$config[translationPath]");
+    $potFileName = \Library\Application::getPath("module/$module/$config[translationPath]/$module.pot");
     if (isset($config['subdirs'])) {
         // STAGE 1: Let xgettext extract all strings from module to $newPot
         print "Extracting strings fron $module module...";
-        $cmd = array(
+        $cmd = [
             'xgettext',
-            '--directory=' . escapeshellarg($modulePath),
+            '--directory=' . $modulePath,
             '--output=-',
             '--language=PHP',
             '--omit-header',
             '--sort-by-file',
             '--add-location=file',
-        );
+        ];
         foreach ($config['keywords'] as $keyword) {
             $cmd[] = "--keyword=$keyword";
         }
@@ -103,18 +102,19 @@ foreach ($modules as $module => $config) {
             ) as $file) {
                 $file = $file->getSubPathName();
                 if (substr($file, -4) == '.php') {
-                    $cmd[] = escapeshellarg($subdir . DIRECTORY_SEPARATOR . $file);
+                    $cmd[] = $subdir . DIRECTORY_SEPARATOR . $file;
                 }
             }
         }
-        $cmd = implode(' ', $cmd);
-        exec($cmd, $newPot, $result);
-        if ($result) {
-            print "ERROR: xgettext returned with error code $result.\n";
+        $process = new \Symfony\Component\Process\Process($cmd);
+        if ($process->run()) {
+            printf("ERROR: xgettext returned with error code %d.\n", $process->getExitCode());
             print "Command line was:\n\n";
-            print "$cmd\n\n";
+            print $process->getCommandLine();
+            print "\n\n";
             exit(1);
         }
+        $newPot = explode("\n", trim($process->getOutput()));
         print " done.\n";
 
         if (in_array('--force', $_SERVER['argv'])) {
@@ -145,21 +145,21 @@ foreach ($modules as $module => $config) {
     // STAGE 2: Update .po files if necessary
     print "Updating .po files for $module module...";
     foreach (new \GlobIterator("$translationPath/*.po", \GlobIterator::CURRENT_AS_PATHNAME) as $poFileName) {
-        $cmd = array(
+        $cmd = [
             'msgmerge',
             '--quiet',
             '--update',
             '--backup=off',
             '--sort-by-file',
-            escapeshellarg($poFileName),
-            escapeshellarg($potFileName),
-        );
-        $cmd = implode(' ', $cmd);
-        exec($cmd, $output, $result);
-        if ($result) {
-            print "ERROR: msgmerge returned with error code $result.\n";
+            $poFileName,
+            $potFileName,
+        ];
+        $process = new \Symfony\Component\Process\Process($cmd);
+        if ($process->run()) {
+            printf("ERROR: msgmerge returned with error code %d.\n", $process->getExitCode());
             print "Command line was:\n\n";
-            print "$cmd\n\n";
+            print $process->getCommandLine();
+            print "\n\n";
             exit(1);
         }
     }
