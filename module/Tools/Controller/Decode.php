@@ -62,7 +62,8 @@ class Decode
         try {
             $content = $this->_inventoryDecode->filter(\Library\FileObject::fileGetContents($input));
             if ($output) {
-                \Library\FileObject::filePutContents($output, $content);
+                $fileSystem = new \Symfony\Component\Filesystem\Filesystem;
+                $fileSystem->dumpFile($output, $content);
             } else {
                 $console->write($content);
             }

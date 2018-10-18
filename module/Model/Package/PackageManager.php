@@ -277,12 +277,14 @@ class PackageManager
             $archiveManager->addFile($archive, $source, $data['FileName']);
             $archiveManager->closeArchive($archive);
             if ($deleteSource) {
-                \Library\FileObject::unlink($source);
+                $fileSystem = new \Symfony\Component\Filesystem\Filesystem;
+                $fileSystem->remove($source);
             }
         } catch (\Exception $e) {
             if (isset($archive)) {
                 $archiveManager->closeArchive($archive, true);
-                \Library\FileObject::unlink($filename);
+                $fileSystem = new \Symfony\Component\Filesystem\Filesystem;
+                $fileSystem->remove($filename);
             }
             throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
         }

@@ -145,28 +145,7 @@ class DirectTest extends \Model\Test\AbstractTest
         $this->assertFileNotExists($path);
     }
 
-    public function testCleanupError()
-    {
-        $root = vfsStream::setup('root');
-        $dir = vfsStream::newDirectory('path')->at($root);
-        $path = $dir->url();
-        $dirInvalid = vfsStream::newDirectory('test_dir')->at($dir)->url();
-        $fileValid = vfsStream::newFile('test_file')->at($dir)->url();
-        $model = $this->getMockBuilder('Model\Package\Storage\Direct')
-                      ->setMethods(array('getPath'))
-                      ->disableOriginalConstructor()
-                      ->getMock();
-        $model->method('getPath')->with('id')->willReturn($path);
-        try {
-            $model->cleanup('id');
-            $this->fail('Expected exception was not thrown');
-        } catch (\Exception $e) {
-            $this->assertFileExists($dirInvalid);
-            $this->assertFileNotExists($fileValid);
-        }
-    }
-
-    public function testCreateDirectory()
+    public function testCreateDirectorySuccess()
     {
         $root = vfsStream::setup('root');
         $path = $root->url() . '/path';
@@ -177,6 +156,40 @@ class DirectTest extends \Model\Test\AbstractTest
         $model->method('getPath')->with('id')->willReturn($path);
         $this->assertEquals($path, $model->createDirectory('id'));
         $this->assertTrue(is_dir($path));
+    }
+
+    public function testCreateDirectoryFailDirectoryExists()
+    {
+        $root = vfsStream::setup('root');
+        $path = $root->url() . '/path';
+        vfsStream::newDirectory('path')->at($root);
+        $model = $this->getMockBuilder('Model\Package\Storage\Direct')
+                      ->setMethods(array('getPath'))
+                      ->disableOriginalConstructor()
+                      ->getMock();
+        $model->method('getPath')->with('id')->willReturn($path);
+
+        $this->expectException('Model\Package\RuntimeException');
+        $this->expectExceptionMessage('Package directory already exists: ' . $path);
+
+        $model->createDirectory('id');
+    }
+
+    public function testCreateDirectoryFailDirectoryNotWritable()
+    {
+        $root = vfsStream::setup('root', 0000);
+        $path = $root->url() . '/path';
+        $model = $this->getMockBuilder('Model\Package\Storage\Direct')
+                      ->setMethods(array('getPath'))
+                      ->disableOriginalConstructor()
+                      ->getMock();
+        $model->method('getPath')->with('id')->willReturn($path);
+
+        $this->expectException('Model\Package\RuntimeException');
+        $this->expectExceptionMessage('Could not create package directory: ' . $path);
+
+        $model->createDirectory('id');
+        $this->assertFalse(is_dir($path));
     }
 
     public function testGetPath()

@@ -132,7 +132,8 @@ foreach ($modules as $module => $config) {
             $update = ($newPot != $oldPot);
         }
         if ($update) {
-            \Library\FileObject::FilePutContents(
+            $fileSystem = new Symfony\Component\Filesystem\Filesystem;
+            $fileSystem->dumpFile(
                 $potFileName,
                 sprintf($template, $module, implode("\n", $newPot))
             );

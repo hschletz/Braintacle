@@ -77,19 +77,8 @@ class Direct implements StorageInterface
     {
         $dir = $this->getPath($id);
         if (is_dir($dir)) {
-            foreach (new \DirectoryIterator($dir) as $file) {
-                // There should be no subdirectories, no need for recursion.
-                // Every object should be a regular file or "dotfile". Errors
-                // can be ignored because a nonempty directory cannot be
-                // removed, causing an exception in the final step.
-                if (!$file->isDot()) {
-                    try {
-                        \Library\FileObject::unlink($file->getPathname());
-                    } catch (\Exception $e) {
-                    }
-                }
-            }
-            \Library\FileObject::rmdir($dir);
+            $fileSystem = new \Symfony\Component\Filesystem\Filesystem;
+            $fileSystem->remove($dir);
         }
     }
 
@@ -102,7 +91,13 @@ class Direct implements StorageInterface
     public function createDirectory($id)
     {
         $dir = $this->getPath($id);
-        \Library\FileObject::mkdir($dir);
+        if (!@mkdir($dir)) {
+            if (is_dir($dir)) {
+                throw new \Model\Package\RuntimeException('Package directory already exists: ' . $dir);
+            } else {
+                throw new \Model\Package\RuntimeException('Could not create package directory: ' . $dir);
+            }
+        }
         return $dir;
     }
 
@@ -154,15 +149,16 @@ class Direct implements StorageInterface
         $baseName = $this->getPath($id) . "/$id-";
         $fileSize = @$data['Size'];
         $maxFragmentSize = @$data['MaxFragmentSize'] * 1024; // Kilobytes => Bytes
+        $fileSystem = new \Symfony\Component\Filesystem\Filesystem;
         if (!$data['FileLocation']) {
             // No file
             $numFragments = 0;
         } elseif ($fileSize == 0 or $maxFragmentSize == 0 or $fileSize <= $maxFragmentSize) {
             // Don't split, just copy/move/rename the file
             if ($deleteSource) {
-                \Library\FileObject::rename($file, $baseName . '1');
+                $fileSystem->rename($file, $baseName . '1', true);
             } else {
-                \Library\FileObject::copy($file, $baseName . '1');
+                $fileSystem->copy($file, $baseName . '1');
             }
             $numFragments = 1;
         } else {
@@ -173,11 +169,11 @@ class Direct implements StorageInterface
             $input = new \Library\FileObject($file, 'rb');
             while ($fragment = $input->fread($fragmentSize)) {
                 $numFragments++;
-                \Library\FileObject::filePutContents($baseName . $numFragments, $fragment);
+                $fileSystem->dumpFile($baseName . $numFragments, $fragment);
             }
             unset($input); // Close file before eventually trying to delete it
             if ($deleteSource) {
-                \Library\FileObject::unlink($file);
+                $fileSystem->remove($file);
             }
         }
         return $numFragments;

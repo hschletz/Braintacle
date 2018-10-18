@@ -148,21 +148,6 @@ class DomDocumentTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(strlen($expectedContent), $length);
     }
 
-    public function testSaveRemovesFileOnError()
-    {
-        $root = vfsStream::setup('root');
-        $filename = $root->url() . '/test.xml';
-        $document = new DomDocument;
-        vfsStream::setQuota(1); // File is opened, written but truncated
-        try {
-            $document->save($filename);
-            $this->fail('Expected exception has not been thrown');
-        } catch (\RuntimeException $e) {
-            $this->assertEquals("Error writing to file $filename", $e->getMessage());
-            $this->assertFileNotExists($filename);
-        }
-    }
-
     public function testLoadSuccessWithXmlDeclaration()
     {
         $root = vfsStream::setup('root');

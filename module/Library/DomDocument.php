@@ -126,14 +126,8 @@ class DomDocument extends \DOMDocument
     public function save($filename, $options = 0)
     {
         $xml = $this->saveXml(null, $options);
-        try {
-            \Library\FileObject::filePutContents($filename, $xml);
-        } catch (\Exception $e) {
-            if (is_file($filename)) {
-                unlink($filename);
-            }
-            throw $e;
-        }
+        $fileSystem = new \Symfony\Component\Filesystem\Filesystem;
+        $fileSystem->dumpFile($filename, $xml);
         return strlen($xml);
     }
 
