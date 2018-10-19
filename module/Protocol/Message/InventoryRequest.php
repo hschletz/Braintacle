@@ -71,14 +71,12 @@ class InventoryRequest extends \Library\DomDocument
         $itemManager = $serviceLocator->get('Model\Client\ItemManager');
 
         // Root element
-        $request = $this->createElement('REQUEST');
-        $this->appendChild($request);
+        $request = $this->appendElement('REQUEST');
         // Additional elements
-        $request->appendChild($this->createElementWithContent('DEVICEID', $client['IdString']));
-        $request->appendChild($this->createElement('QUERY', 'INVENTORY'));
+        $request->appendElement('DEVICEID', $client['IdString'], true);
+        $request->appendElement('QUERY', 'INVENTORY');
         // Main inventory section
-        $content = $this->createElement('CONTENT');
-        $request->appendChild($content);
+        $content = $request->appendElement('CONTENT');
 
         $sections = array('HARDWARE' => 'ClientsHardware', 'BIOS' => 'ClientsBios');
         foreach ($sections as $section => $hydratorName) {
@@ -87,7 +85,7 @@ class InventoryRequest extends \Library\DomDocument
             $element = $this->createElement($section);
             foreach ($data as $name => $value) {
                 if ((string) $value != '') {
-                    $element->appendChild($this->createElementWithContent($name, $value));
+                    $element->appendElement($name, $value, true);
                 }
             }
             if ($element->hasChildNodes()) {
@@ -100,28 +98,20 @@ class InventoryRequest extends \Library\DomDocument
                 $value = $value->format('Y-m-d');
             }
             if ((string) $value != '') {
-                $element = $this->createElement('ACCOUNTINFO');
-                $element->appendChild(
-                    $this->createElementWithContent('KEYNAME', $property)
-                );
-                $element->appendChild(
-                    $this->createElementWithContent('KEYVALUE', $value)
-                );
-                $content->appendChild($element);
+                $element = $content->appendElement('ACCOUNTINFO');
+                $element->appendElement('KEYNAME', $property, true);
+                $element->appendElement('KEYVALUE', $value, true);
             }
         }
         // DOWNLOAD section
         $packages = $client->getDownloadedPackageIds();
         if ($packages) {
             // DOWNLOAD section has 1 HISTORY element with 1 PACKAGE element per package.
-            $download = $this->createElement('DOWNLOAD');
-            $content->appendChild($download);
-            $history = $this->createElement('HISTORY');
-            $download->appendChild($history);
+            $download = $content->appendElement('DOWNLOAD');
+            $history = $download->appendElement('HISTORY');
             foreach ($packages as $id) {
-                $package = $this->createElement('PACKAGE');
+                $package = $history->appendElement('PACKAGE');
                 $package->setAttribute('ID', $id);
-                $history->appendChild($package);
             }
         }
         // Item sections
@@ -131,13 +121,12 @@ class InventoryRequest extends \Library\DomDocument
                 $table = $itemManager->getTableName($type);
                 $hydrator = $serviceLocator->get("Protocol\\Hydrator\\$table");
                 foreach ($items as $object) {
-                    $element = $this->createElement($section);
+                    $element = $content->appendElement($section);
                     foreach ($hydrator->extract($object) as $name => $value) {
                         if ((string) $value != '') {
-                            $element->appendChild($this->createElementWithContent($name, $value));
+                            $element->appendElement($name, $value, true);
                         }
                     }
-                    $content->appendChild($element);
                 }
             }
         }

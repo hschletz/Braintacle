@@ -1109,7 +1109,9 @@ class ClientTest extends \Model\Test\AbstractTest
         $model = $this->_getModel();
         $model->setServiceLocator($serviceManager);
 
-        $inventoryRequest = $this->createMock('Protocol\Message\InventoryRequest');
+        // DomDocument constructor must be preserved. Otherwise setting the
+        // formatOutput property would have no effect for whatever reason.
+        $inventoryRequest = $this->getMockBuilder('Protocol\Message\InventoryRequest')->getMock();
         $inventoryRequest->expects($this->exactly(2))->method('loadClient')->with(
             $model,
             $serviceManager
@@ -1119,6 +1121,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
         $document1 = $model->toDomDocument();
         $this->assertInstanceOf('Protocol\Message\InventoryRequest', $document1);
+        $this->assertTrue($document1->formatOutput);
 
         $document2 = $model->toDomDocument();
         $this->assertInstanceOf('Protocol\Message\InventoryRequest', $document2);

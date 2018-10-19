@@ -652,6 +652,7 @@ class Client extends \Model\ClientOrGroup
     public function toDomDocument()
     {
         $document = clone $this->_serviceLocator->get('Protocol\Message\InventoryRequest');
+        $document->formatOutput = true;
         $document->loadClient($this, $this->_serviceLocator);
         return $document;
     }

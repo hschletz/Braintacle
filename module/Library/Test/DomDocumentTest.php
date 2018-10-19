@@ -29,15 +29,6 @@ use org\bovigo\vfs\vfsStream;
  */
 class DomDocumentTest extends \PHPUnit\Framework\TestCase
 {
-    public function testConstructorDefaults()
-    {
-        $document = new DomDocument;
-        $this->assertEquals('1.0', $document->xmlVersion);
-        $this->assertEquals('UTF-8', $document->xmlEncoding);
-        $this->assertEquals('UTF-8', $document->encoding);
-        $this->assertTrue($document->formatOutput);
-    }
-
     public function testGetSchemaFilenameThrowsException()
     {
         $this->expectException('LogicException', 'Library\DomDocument has no schema defined');
@@ -84,38 +75,6 @@ class DomDocumentTest extends \PHPUnit\Framework\TestCase
         $document->forceValid();
     }
 
-    public function testCreateElementWithContentScalar()
-    {
-        $document = new DomDocument;
-        $element = $document->createElementWithContent('name', '<content&>'); // Test escaping
-        $this->assertEquals('name', $element->tagName);
-        $this->assertEquals('name', $element->nodeName);
-        $this->assertEquals('<content&>', $element->nodeValue);
-    }
-
-    public function testCreateElementWithContentNull()
-    {
-        $document = new DomDocument;
-        $element = $document->createElementWithContent('name', null);
-        $this->assertEquals('name', $element->tagName);
-        $this->assertEquals('name', $element->nodeName);
-        $this->assertEquals('', $element->nodeValue);
-    }
-
-    public function testCreateElementWithContentArray()
-    {
-        $this->expectException('InvalidArgumentException', 'Unsupported content type');
-        $document = new DomDocument;
-        $element = $document->createElementWithContent('name', array());
-    }
-
-    public function testCreateElementWithContentObject()
-    {
-        $this->expectException('InvalidArgumentException', 'Unsupported content type');
-        $document = new DomDocument;
-        $element = $document->createElementWithContent('name', new \stdClass);
-    }
-
     public function testSaveDefaultOptions()
     {
         $root = vfsStream::setup('root');
@@ -124,7 +83,7 @@ class DomDocumentTest extends \PHPUnit\Framework\TestCase
         $node = $document->createElement('test');
         $document->appendChild($node);
         $length = $document->save($filename);
-        $expectedContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<test/>\n";
+        $expectedContent = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<test/>\n";
         $this->assertEquals(
             $expectedContent,
             file_get_contents($filename)
@@ -140,57 +99,11 @@ class DomDocumentTest extends \PHPUnit\Framework\TestCase
         $node = $document->createElement('test');
         $document->appendChild($node);
         $length = $document->save($filename, LIBXML_NOEMPTYTAG);
-        $expectedContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<test></test>\n";
+        $expectedContent = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<test></test>\n";
         $this->assertEquals(
             $expectedContent,
             file_get_contents($filename)
         );
         $this->assertEquals(strlen($expectedContent), $length);
-    }
-
-    public function testLoadSuccessWithXmlDeclaration()
-    {
-        $root = vfsStream::setup('root');
-        $content = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<test>\xC4</test>\n";
-        $filename = vfsStream::newFile('test.xml')->withContent($content)->at($root)->url();
-        $document = new DomDocument;
-        $this->assertTrue($document->load($filename));
-        $this->assertEquals('ISO-8859-1', $document->xmlEncoding);
-        $this->assertEquals('ISO-8859-1', $document->encoding);
-        $node = $document->firstChild;
-        $this->assertEquals('test', $node->tagName);
-        $this->assertEquals("\xC3\x84", $node->nodeValue);
-    }
-
-    public function testLoadSuccessWithoutXmlDeclaration()
-    {
-        $root = vfsStream::setup('root');
-        $content = "<test>\xC3\x84</test>\n";
-        $filename = vfsStream::newFile('test.xml')->withContent($content)->at($root)->url();
-        $document = new DomDocument;
-        $this->assertTrue($document->load($filename));
-        $node = $document->firstChild;
-        $this->assertEquals('test', $node->tagName);
-        $this->assertEquals("\xC3\x84", $node->nodeValue);
-    }
-
-    public function testLoadInvalidContent()
-    {
-        $root = vfsStream::setup('root');
-        $content = '';
-        $filename = vfsStream::newFile('test.xml')->withContent($content)->at($root)->url();
-        $this->expectException('RuntimeException', "$filename is unreadable or has invalid content");
-        $document = new DomDocument;
-        $document->load($filename);
-    }
-
-    public function testLoadFileUnreadable()
-    {
-        $root = vfsStream::setup('root');
-        $content = "test";
-        $filename = $root->url() . '/test.xml';
-        $this->expectException('RuntimeException', "$filename is unreadable or has invalid content");
-        $document = new DomDocument;
-        $document->load($filename);
     }
 }

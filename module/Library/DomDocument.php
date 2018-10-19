@@ -23,27 +23,9 @@ namespace Library;
 
 /**
  * DOM document
- *
- * This class extends \DOMDocument with some convenience functions.
  */
-class DomDocument extends \DOMDocument
+class DomDocument extends \TheSeer\fDOM\fDOMDocument
 {
-    /**
-     * Constructor
-     *
-     * This constructor provides reasonable defaults, so that it can typically
-     * be invoked without arguments and subsequent initialization. String output
-     * is formatted by default (formatOutput property).
-     *
-     * @param string $version Default: 1.0
-     * @param string $encoding Default: UTF-8
-     */
-    public function __construct($version = '1.0', $encoding = 'UTF-8')
-    {
-        parent::__construct($version, $encoding);
-        $this->formatOutput = true;
-    }
-
     /**
      * Retrieve full path to the RELAX NG schema file defining this document type
      *
@@ -90,33 +72,10 @@ class DomDocument extends \DOMDocument
     }
 
     /**
-     * Create element with text content
-     *
-     * This is similar to the 2-argument variant of createElement(), but the
-     * text gets properly escaped.
-     *
-     * @param string $name Element name
-     * @param mixed $content Element content
-     * @return \DOMElement
-     * @throws \InvalidArgumentException if $content has non-scalar type
-     */
-    public function createElementWithContent($name, $content)
-    {
-        if (is_scalar($content) or is_null($content)) {
-            $content = $this->createTextNode($content);
-        } else {
-            throw new \InvalidArgumentException('Unsupported content type');
-        }
-        $element = $this->createElement($name);
-        $element->appendChild($content);
-        return $element;
-    }
-
-    /**
      * Write XML content to file
      *
-     * This is a reimplementation of \DOMDocument::save() with improved error
-     * handling. An exception is thrown on error, and no file remains on disk.
+     * This is a reimplementation with improved error handling. An exception is
+     * thrown on error, and no file remains on disk.
      *
      * @param string $filename
      * @param integer $options
@@ -125,29 +84,11 @@ class DomDocument extends \DOMDocument
      */
     public function save($filename, $options = 0)
     {
+        // Don't use parent::save(). It won't report a disk full condition, and
+        // a truncated file would remain on disk.
         $xml = $this->saveXml(null, $options);
         $fileSystem = new \Symfony\Component\Filesystem\Filesystem;
         $fileSystem->dumpFile($filename, $xml);
         return strlen($xml);
-    }
-
-    /**
-     * Load XML content from file
-     *
-     * This is an extension of \DOMDocument::load() with improved error
-     * handling. An exception is thrown on error.
-     *
-     * @param string $filename
-     * @param integer $options
-     * @return bool always TRUE for compatibility with original implementation
-     * @throws \RuntimeException if file is unreadable or has unparseable content
-     */
-    public function load($filename, $options = 0)
-    {
-        if (@parent::load($filename, $options)) {
-            return true;
-        } else {
-            throw new \RuntimeException($filename . ' is unreadable or has invalid content');
-        }
     }
 }
