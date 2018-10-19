@@ -2504,16 +2504,16 @@
         },
         {
             "name": "hschletz/doxygen-phpdoc",
-            "version": "v1.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hschletz/doxygen-phpdoc.git",
-                "reference": "249c0485c8731244d5f0c38f23d870816e8a372b"
+                "reference": "9fa9488cd62828b06246ea607139c624d3c44c94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hschletz/doxygen-phpdoc/zipball/249c0485c8731244d5f0c38f23d870816e8a372b",
-                "reference": "249c0485c8731244d5f0c38f23d870816e8a372b",
+                "url": "https://api.github.com/repos/hschletz/doxygen-phpdoc/zipball/9fa9488cd62828b06246ea607139c624d3c44c94",
+                "reference": "9fa9488cd62828b06246ea607139c624d3c44c94",
                 "shasum": ""
             },
             "require": {
@@ -2536,7 +2536,7 @@
             ],
             "description": "PHPDoc support for Doxygen",
             "homepage": "https://github.com/hschletz/doxygen-phpdoc",
-            "time": "2018-10-13T09:48:43+00:00"
+            "time": "2018-10-19T15:19:20+00:00"
         },
         {
             "name": "mikey179/vfsStream",
