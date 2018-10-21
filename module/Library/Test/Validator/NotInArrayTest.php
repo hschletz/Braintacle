@@ -45,7 +45,8 @@ class NotInArrayTest extends \PHPUnit\Framework\TestCase
 
     public function testInvalidHaystack()
     {
-        $this->expectException('RuntimeException', 'Haystack is not an array');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Haystack is not an array');
         $validator = new NotInArray;
         $validator->isValid('test');
     }
@@ -64,7 +65,8 @@ class NotInArrayTest extends \PHPUnit\Framework\TestCase
 
     public function testInvalidCaseSensitivity()
     {
-        $this->expectException('InvalidArgumentException', 'Invalid value for caseSensitivity option: 1');
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid value for caseSensitivity option: 1');
         $validator = new NotInArray(array('caseSensitivity' => true));
     }
 

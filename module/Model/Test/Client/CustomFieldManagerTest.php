@@ -328,7 +328,8 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
         $model->method('getFields')->willReturn(array('TAG' => 'text'));
         $model->method('getColumnMap')->willReturn(array('TAG' => 'tag'));
 
-        $this->expectException('RuntimeException', 'Invalid client ID: 42');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Invalid client ID: 42');
         $model->read(42);
     }
 

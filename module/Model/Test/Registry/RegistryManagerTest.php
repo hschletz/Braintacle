@@ -60,7 +60,8 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
 
     public function testGetValueDefinitionInvalid()
     {
-        $this->expectException('Model\Registry\RuntimeException', 'Invalid registry value name: invalid');
+        $this->expectException('Model\Registry\RuntimeException');
+        $this->expectExceptionMessage('Invalid registry value name: invalid');
         $model = $this->_getModel();
         $model->getValueDefinition('invalid');
     }

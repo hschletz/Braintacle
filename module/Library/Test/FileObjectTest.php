@@ -60,7 +60,8 @@ class FileObjectTest extends \PHPUnit\Framework\TestCase
     public function testOpenError()
     {
         $url = $this->_root->url() . '/test.txt';
-        $this->expectException('RuntimeException', "Error opening file '$url', mode 'r'");
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage("Error opening file '$url', mode 'r'");
         $fileObject = new FileObject($url); // default mode 'r'
     }
 
@@ -75,7 +76,8 @@ class FileObjectTest extends \PHPUnit\Framework\TestCase
 
     public function testSetFlagsUnimplementedFlag()
     {
-        $this->expectException('LogicException', 'READ_CSV not implemented');
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('READ_CSV not implemented');
         $url = $this->_root->url() . '/test.txt';
         $fileObject = new FileObject($url, 'w');
         $fileObject->setFlags(\SplFileObject::DROP_NEW_LINE | \SplFileObject::READ_CSV);
@@ -131,14 +133,16 @@ class FileObjectTest extends \PHPUnit\Framework\TestCase
     public function testFreadInvalidLength()
     {
         $url = vfsStream::newFile('test.txt')->withContent('test')->at($this->_root)->url();
-        $this->expectException('InvalidArgumentException', 'fread() length must be > 0, 0 given');
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('fread() length must be > 0, 0 given');
         $fileObject = new FileObject($url, 'r');
         $fileObject->fread(0);
     }
 
     public function testFreadError()
     {
-        $this->expectException('RuntimeException', 'Error reading from file fail:');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Error reading from file fail:');
         $fileObject = new FileObject('fail://', 'r');
         $fileObject->fread(10);
     }
@@ -180,21 +184,24 @@ class FileObjectTest extends \PHPUnit\Framework\TestCase
 
     public function testFgetsReadError()
     {
-        $this->expectException('RuntimeException', 'Error reading from file fail:');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Error reading from file fail:');
         $fileObject = new FileObject('fail://', 'r');
         $fileObject->fgets();
     }
 
     public function testNextReadError()
     {
-        $this->expectException('RuntimeException', 'Error reading from file fail:');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Error reading from file fail:');
         $fileObject = new FileObject('fail://', 'r');
         $fileObject->next();
     }
 
     public function testRewindError()
     {
-        $this->expectException('RuntimeException', 'Error rewinding file fail:');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Error rewinding file fail:');
         $fileObject = new FileObject('fail://', 'r');
         $fileObject->rewind();
     }
@@ -315,7 +322,8 @@ class FileObjectTest extends \PHPUnit\Framework\TestCase
 
     public function testFileGetContentsError()
     {
-        $this->expectException('RuntimeException', 'Error reading from file vfs://root/test.txt');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Error reading from file vfs://root/test.txt');
         // Force error by requesting nonexistent file
         FileObject::fileGetContents('vfs://root/test.txt');
     }
@@ -349,7 +357,8 @@ class FileObjectTest extends \PHPUnit\Framework\TestCase
 
     public function testFileGetContentsAsArrayError()
     {
-        $this->expectException('RuntimeException', 'Error reading from file vfs://root/test.txt');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Error reading from file vfs://root/test.txt');
         // Force error by requesting nonexistent file
         FileObject::fileGetContentsAsArray('vfs://root/test.txt');
     }

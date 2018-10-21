@@ -58,7 +58,8 @@ class InventoryDecodeTest extends \PHPUnit\Framework\TestCase
 
     public function testFilterInvalidInput()
     {
-        $this->expectException('InvalidArgumentException', 'Input does not appear to be a zlib stream');
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Input does not appear to be a zlib stream');
         \Zend\Filter\StaticFilter::execute('not a zlib stream', 'Protocol\InventoryDecode');
     }
 }

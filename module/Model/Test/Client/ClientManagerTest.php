@@ -989,7 +989,8 @@ class ClientManagerTest extends \Model\Test\AbstractTest
 
     public function testGetClientInvalidId()
     {
-        $this->expectException('RuntimeException', 'Invalid client ID: 42');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Invalid client ID: 42');
 
         $resultSet = $this->createMock('Zend\Db\ResultSet\HydratingResultSet');
         $resultSet->method('count')->willReturn(0);
@@ -1163,7 +1164,8 @@ class ClientManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteClientLockingFailure()
     {
-        $this->expectException('RuntimeException', 'Could not lock client for deletion');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Could not lock client for deletion');
 
         $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())->method('lock')->willReturn(false);
@@ -1200,7 +1202,8 @@ class ClientManagerTest extends \Model\Test\AbstractTest
      */
     public function testDeleteClientException($connection)
     {
-        $this->expectException('RuntimeException', 'message');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('message');
 
         $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())->method('lock')->willReturn(true);

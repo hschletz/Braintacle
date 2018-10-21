@@ -98,7 +98,8 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
 
     public function testSetDataWithoutClientObject()
     {
-        $this->expectException('LogicException', 'No client or group object set');
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('No client or group object set');
         $this->_form->setData(array());
     }
 

@@ -88,7 +88,8 @@ class GroupManagerTest extends AbstractGroupTest
 
     public function testGetGroupsInvalidFilter()
     {
-        $this->expectException('InvalidArgumentException', 'Invalid group filter: invalid');
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid group filter: invalid');
         $model = $this->_getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
         $resultSet = $model->getGroups('invalid');
     }
@@ -103,14 +104,16 @@ class GroupManagerTest extends AbstractGroupTest
 
     public function testGetGroupNonExistentGroup()
     {
-        $this->expectException('RuntimeException', 'Unknown group name: invalid');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Unknown group name: invalid');
         $model = $this->_getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
         $group = $model->getGroup('invalid');
     }
 
     public function testGetGroupNoName()
     {
-        $this->expectException('InvalidArgumentException', 'No group name given');
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('No group name given');
         $model = $this->_getModel();
         $group = $model->getGroup('');
     }

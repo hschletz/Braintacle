@@ -272,13 +272,15 @@ class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
 
     public function testHydrateNameInvalid()
     {
-        $this->expectException('DomainException', 'Cannot hydrate name: invalid_');
+        $this->expectException('DomainException');
+        $this->expectExceptionMessage('Cannot hydrate name: invalid_');
         $this->_getHydrator()->hydrateName('invalid_');
     }
 
     public function testExtractNameInvalid()
     {
-        $this->expectException('DomainException', 'Cannot extract name: invalid');
+        $this->expectException('DomainException');
+        $this->expectExceptionMessage('Cannot extract name: invalid');
         $this->_getHydrator()->extractName('invalid');
     }
 }

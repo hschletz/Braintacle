@@ -334,19 +334,22 @@ class SearchTest extends \Console\Test\AbstractFormTest
 
     public function testInvalidFilter()
     {
-        $this->expectException('InvalidArgumentException', 'Invalid filter: invalidFilter');
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid filter: invalidFilter');
         $this->_form->setData(array('filter' => 'invalidFilter'));
     }
 
     public function testMissingFilterOnSearchValidation()
     {
-        $this->expectException('LogicException', 'No filter submitted');
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('No filter submitted');
         $this->_form->validateSearch('value', array('search' => 'value'));
     }
 
     public function testMissingFilterOnOperatorValidation()
     {
-        $this->expectException('LogicException', 'No filter submitted');
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('No filter submitted');
         $this->_form->validateOperator('value', array('search' => 'value'));
     }
 

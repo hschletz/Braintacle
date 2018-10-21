@@ -133,7 +133,8 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
 
     public function testHydrateNameInvalid()
     {
-        $this->expectException('DomainException', 'Cannot hydrate name: invalid');
+        $this->expectException('DomainException');
+        $this->expectExceptionMessage('Cannot hydrate name: invalid');
         $hydrator = $this->_getHydrator();
         $hydrator->hydrateName('invalid');
     }
@@ -164,7 +165,8 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
 
     public function testExtractNameInvalid()
     {
-        $this->expectException('DomainException', 'Cannot extract name: Invalid');
+        $this->expectException('DomainException');
+        $this->expectExceptionMessage('Cannot extract name: Invalid');
         $hydrator = $this->_getHydrator();
         $hydrator->extractName('Invalid');
     }

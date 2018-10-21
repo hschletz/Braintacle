@@ -98,7 +98,8 @@ class ConfigTest extends AbstractTest
 
     public function testSetInvalidOption()
     {
-        $this->expectException('InvalidArgumentException', 'Invalid option: invalid');
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid option: invalid');
         static::$_table->set('invalid', 0);
     }
 

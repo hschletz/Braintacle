@@ -234,7 +234,8 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $clientConfig = $this->createMock('Database\Table\ClientConfig');
         $clientConfig->expects($this->never())->method('update');
 
-        $this->expectException('RuntimeException', 'Cannot lock client 2');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Cannot lock client 2');
         $model = $this->_getModel(
             array(
                 'Model\Client\ClientManager' => $clientManager,

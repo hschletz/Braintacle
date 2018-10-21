@@ -77,13 +77,15 @@ class ItemManagerTest extends \Model\Test\AbstractTest
     }
     public function testGetTableNameInvalidType()
     {
-        $this->expectException('InvalidArgumentException', 'Invalid item type: invalid');
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid item type: invalid');
         $this->_getModel()->getTableName('invalid');
     }
 
     public function testGetTableInvalidType()
     {
-        $this->expectException('InvalidArgumentException', 'Invalid item type: invalid');
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid item type: invalid');
         $this->_getModel()->getTable('invalid');
     }
 

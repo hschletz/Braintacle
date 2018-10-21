@@ -78,7 +78,8 @@ class ConfigTest extends AbstractTest
 
     public function testMagicSetInvalidOption()
     {
-        $this->expectException('InvalidArgumentException', 'Invalid option: invalid');
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid option: invalid');
         $this->_getModel()->invalid = 0;
     }
 

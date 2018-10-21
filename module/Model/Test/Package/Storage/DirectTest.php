@@ -92,7 +92,8 @@ class DirectTest extends \Model\Test\AbstractTest
         $model->expects($this->once())
               ->method('cleanup')
               ->with('id');
-        $this->expectException('RuntimeException', 'test');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('test');
         $model->write($data, $file, $deleteSource);
     }
 
@@ -114,7 +115,8 @@ class DirectTest extends \Model\Test\AbstractTest
         $model->expects($this->once())
               ->method('cleanup')
               ->with('id');
-        $this->expectException('RuntimeException', 'test');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('test');
         $model->write($data, $file, $deleteSource);
     }
 

@@ -31,14 +31,16 @@ class DomDocumentTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetSchemaFilenameThrowsException()
     {
-        $this->expectException('LogicException', 'Library\DomDocument has no schema defined');
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('Library\DomDocument has no schema defined');
         $document = new DomDocument;
         $document->getSchemaFilename();
     }
 
     public function testIsValidThrowsException()
     {
-        $this->expectException('LogicException', 'Library\DomDocument has no schema defined');
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('Library\DomDocument has no schema defined');
         $document = new DomDocument;
         $document->isValid();
     }
@@ -67,7 +69,8 @@ class DomDocumentTest extends \PHPUnit\Framework\TestCase
 
     public function testForceValidNotValid()
     {
-        $this->expectException('RuntimeException', 'Validation of XML document failed');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Validation of XML document failed');
         $document = $this->getMockBuilder('Library\DomDocument')->setMethods(array('isValid'))->getMock();
         $document->expects($this->once())
                  ->method('isValid')

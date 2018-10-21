@@ -471,13 +471,15 @@ class EditTest extends \Console\Test\AbstractFormTest
 
     public function testSetDataWithoutOriginalId()
     {
-        $this->expectException('LogicException', 'OriginalId not set or empty');
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('OriginalId not set or empty');
         $this->_form->setData(array());
     }
 
     public function testSetDataWithOriginalIdEmpty()
     {
-        $this->expectException('LogicException', 'OriginalId not set or empty');
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('OriginalId not set or empty');
         $this->_form->setData(array('OriginalId' => ''));
     }
 }

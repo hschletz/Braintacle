@@ -57,7 +57,8 @@ class LogLevelTest extends \PHPUnit\Framework\TestCase
 
     public function testInvalidArgument()
     {
-        $this->expectException('PHPUnit\Framework\Error\Notice', 'Undefined index: error');
+        $this->expectException('PHPUnit\Framework\Error\Notice');
+        $this->expectExceptionMessage('Undefined index: error');
         \Zend\Filter\StaticFilter::execute('error', 'Library\LogLevel');
     }
 }

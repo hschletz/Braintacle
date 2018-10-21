@@ -230,7 +230,8 @@ class InventoryRequestTest extends \PHPUnit\Framework\TestCase
 
     public function testGetFilenameElementNotSet()
     {
-        $this->expectException('LogicException', 'DEVICEID element has not been set');
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('DEVICEID element has not been set');
         $document = new \Protocol\Message\InventoryRequest;
         $document->getFilename();
     }

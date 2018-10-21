@@ -374,7 +374,8 @@ class MetadataTest extends \Model\Test\AbstractTest
 
     public function testGetPackageDataForcesValidDocument()
     {
-        $this->expectException('RuntimeException', 'Validation of XML document failed');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Validation of XML document failed');
         $model = new Metadata;
         @$model->getPackageData();
     }

@@ -156,7 +156,8 @@ class GroupTest extends AbstractGroupTest
         $model['Id'] = 10;
         $model->setServiceLocator($serviceManager);
 
-        $this->expectException('RuntimeException', 'test');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('test');
         $model->setMembersFromQuery(\Model\Client\Client::MEMBERSHIP_ALWAYS, 'filter', 'search', 'operator', 'invert');
     }
 
@@ -268,7 +269,8 @@ class GroupTest extends AbstractGroupTest
         $model = $this->_getModel(array('Model\Client\ClientManager' => $clientManager));
         $model['Id'] = 10;
 
-        $this->expectException('LogicException', 'Expected 1 column, got 2');
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('Expected 1 column, got 2');
         $model->setMembersFromQuery(
             \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
             'filter',
