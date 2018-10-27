@@ -77,48 +77,16 @@ class Table extends \Zend\View\Helper\AbstractHelper
      * match corresponding fields in the other arguments. For each header, a
      * corresponding field must be set in the table data or in $renderCallbacks.
      *
-     * $data is an array of row objects. Row objects are typically associative
-     * arrays or objects implementing the \ArrayAccess interface. A default
-     * rendering method is available for these types. For any other type, all
-     * columns must be rendered by a callback. If no rows are present, an
-     * empty string is returned.
-     *
-     * By default, cell data is retrieved from $data and escaped automatically.
-     * \DateTime objects are rendered as short timestamps (yy-mm-dd hh:mm). The
-     * application's default locale controls the date/time format.
-     * Alternatively, a callback can be provided in the $renderCallbacks array.
-     * If a callback is defined for a column, the callback is responsible for
-     * escaping cell data. It gets called with the following arguments:
-     *
-     * 1. The view renderer
-     * 2. The row object
-     * 3. The key of the column to be rendered. This is useful for callbacks
-     *    that render more than 1 column.
-     *
-     * The optional $columnClasses array may contain values for a "class"
-     * attribute which gets applied to all cells of a specified column. The
-     * $columnClasses keys are matched against the keys of each row.
-     *
-     * $rowClassCallback, if given, is called for every non-header row. It
-     * receives the unprocessed column data for each row and delivers a string
-     * that is set as the row's class attribute if it is not empty.
-     *
      * If the optional $sorting array contains the "order" and "direction"
-     * elements (other elements are ignored), headers are generated as
-     * hyperlinks with "order" and "direction" parameters set to the
-     * corresponding column. The values denote the sorting in effect for the
-     * current request - the header will be marked with an arrow indicating the
-     * current sorting. The controller action should evaluate these parameters,
-     * sort the data and provide the sorting to the view renderer. The
-     * \Console\Mvc\Controller\Plugin\GetOrder controller plugin simplifies
-     * these tasks.
+     * elements (other elements are ignored), headers are generated via
+     * sortableHeader().
      *
-     * @param array|\Traversable $data
-     * @param array $headers
-     * @param array $sorting
-     * @param array $renderCallbacks
-     * @param string[] $columnClasses Optional class attributes to apply to columns (keys are matched against $row)
-     * @param callable $rowClassCallback Optional callback to provide row class attributes
+     * @param array|\Traversable $data see dataRows()
+     * @param string[] $headers
+     * @param string[] $sorting
+     * @param callable[] $renderCallbacks see dataRows()
+     * @param string[] $columnClasses see row()
+     * @param callable $rowClassCallback see dataRows()
      * @return string HTML table
      */
     public function __invoke(
@@ -133,26 +101,68 @@ class Table extends \Zend\View\Helper\AbstractHelper
             return '';
         }
 
-        $table = "<table class='alternating'>\n";
-
         // Generate header row
         if (isset($sorting['order']) and isset($sorting['direction'])) {
-            $row = array();
-            foreach ($headers as $key => $label) {
-                $row[$key] = $this->sortableHeader($label, $key, $sorting['order'], $sorting['direction']);
+            foreach ($headers as $key => &$label) {
+                $label = $this->sortableHeader($label, $key, $sorting['order'], $sorting['direction']);
             }
-            $table .= $this->row($row, true, $columnClasses);
-        } else {
-            $table .= $this->row($headers, true, $columnClasses);
         }
+        $content = $this->row($headers, true, $columnClasses);
 
-        // Generate data rows
-        $keys = array_keys($headers);
+        $content .= $this->dataRows($data, array_keys($headers), $renderCallbacks, $columnClasses, $rowClassCallback);
+
+        return $this->tag($content);
+    }
+
+    /**
+     * Wrap given content in "table" tag
+     *
+     * @param string $content
+     * @return string
+     */
+    public function tag($content)
+    {
+        return $this->_htmlElement->__invoke('table', $content, ['class' => 'alternating']);
+    }
+
+    /**
+     * Generate table rows
+     *
+     * $data is an array or iterator of row objects. Row objects are typically
+     * associative arrays or objects implementing the \ArrayAccess interface. A
+     * default rendering method is available for these types. For any other
+     * type, all columns must be rendered by a callback.
+     *
+     * The default renderer escapes cell content automatically. \DateTime
+     * objects are rendered as short timestamps (yy-mm-dd hh:mm). The
+     * application's default locale controls the date/time format.
+     * Alternatively, a callback can be provided in the $renderCallbacks array.
+     * If a callback is defined for a column, the callback is responsible for
+     * escaping cell data. It gets called with the following arguments:
+     *
+     * 1. The view renderer
+     * 2. The row object
+     * 3. The key of the column to be rendered. This is useful for callbacks
+     *    that render more than 1 column.
+     *
+     * $rowClassCallback, if given, is called for each row. It receives the
+     * row object from $data. Its return value is passed to row().
+     *
+     * @param array|\Traversable $data
+     * @param string[] $keys Column keys
+     * @param callable[] $renderCallbacks
+     * @param string $columnClasses see row()
+     * @param callable $rowClassCallback
+     * @return string
+     */
+    public function dataRows($data, $keys, $renderCallbacks = [], $columnClasses = [], $rowClassCallback = null)
+    {
+        $rows = '';
         foreach ($data as $rowData) {
             $row = array();
             foreach ($keys as $key) {
                 if (isset($renderCallbacks[$key])) {
-                    $row[$key] = $renderCallbacks[$key]($this->view, $rowData, $key);
+                    $row[$key] = $renderCallbacks[$key]($this->getView(), $rowData, $key);
                 } elseif ($rowData[$key] instanceof \DateTime) {
                     $row[$key] = $this->_escapeHtml->__invoke(
                         $this->_dateFormat->__invoke(
@@ -165,20 +175,24 @@ class Table extends \Zend\View\Helper\AbstractHelper
                     $row[$key] = $this->_escapeHtml->__invoke($rowData[$key]);
                 }
             }
-            $table .= $this->row(
+            $rows .= $this->row(
                 $row,
                 false,
                 $columnClasses,
                 $rowClassCallback ? $rowClassCallback($rowData) : null
             );
         }
-
-        $table .= "</table>\n";
-        return $table;
+        return $rows;
     }
 
     /**
      * Generate a header hyperlink
+     *
+     * The link URL points to the current action with the "order" and
+     * "direction" query parameters set accordingly. The action should evaluate
+     * these parameters, sort the data and provide the sorting to the view
+     * renderer. The \Console\Mvc\Controller\Plugin\GetOrder controller plugin
+     * simplifies these tasks.
      *
      * @param string $label Header text. An arrow will be added to the currently sorted column.
      * @param string $key Sort key to be used in the URL
@@ -220,7 +234,7 @@ class Table extends \Zend\View\Helper\AbstractHelper
      *
      * @param array $columns Column data
      * @param bool $isHeader Use "th" tag instead of "td". Default: false
-     * @param string[] $columnClasses Optional class attributes to apply to cells (keys are matched against $row)
+     * @param string[] $columnClasses Optional class attributes to apply to cells (keys are matched against $columns)
      * @param string $rowClass Optional class attribute for the row
      * @return string HTML table row
      */

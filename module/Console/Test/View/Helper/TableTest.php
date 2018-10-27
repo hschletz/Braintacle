@@ -76,52 +76,6 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
         ),
     );
 
-    /**
-     * Expected result for $_headers/$_data
-     */
-    protected $_expected = "<table class='alternating'>\nHEADER1|HEADER2\nvalue1a|value2a\nvalue1b|value2b\n</table>\n";
-
-    /**
-     * Collection of data rendered by renderCallback()
-     * @var array
-     */
-    protected $_renderCallbackData;
-
-    /**
-     * Mock for row()
-     *
-     * This is a simplified row renderer. Columns are separated by "|". Rows are
-     * terminated by "\n". Headers are converted uppercase.
-     *
-     * @param string[] $columns
-     * @param bool $isHeader
-     * @return string
-     */
-    public function mockRow(array $columns, $isHeader)
-    {
-        if ($isHeader) {
-            $columns = array_map('strtoupper', $columns);
-        }
-        return implode('|', $columns) . "\n";
-    }
-
-    /**
-     * Sample callback for cell rendering
-     *
-     * Cell data is returned unchanged, but also appended to
-     * $_renderCallbackData which can be evaluated after the table is rendered.
-     *
-     * @param \Zend\View\Renderer\RendererInterface $view
-     * @param array $rowData
-     * @param string $key
-     * @return mixed
-     */
-    public function renderCallback(\Zend\View\Renderer\RendererInterface $view, array $rowData, $key)
-    {
-        $this->_renderCallbackData[] = $rowData[$key];
-        return $rowData[$key];
-    }
-
     public function setUp()
     {
         $this->_escapeHtml = $this->createMock('Zend\View\Helper\EscapeHtml');
@@ -142,198 +96,210 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
         $this->assertEquals('', $table(array(), $this->_headers));
     }
 
-    public function testInvokeBasic()
+    public function testInvokeWithoutSortableHeadersDefaultParams()
     {
-        $this->_escapeHtml->expects($this->exactly(4)) // once per non-header cell
-                          ->method('__invoke')
-                          ->will($this->returnArgument(0));
         $table = $this->getMockBuilder(static::_getHelperClass())
                       ->setConstructorArgs(
-                          array($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat)
+                          [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
                       )
-                      ->setMethods(array('sortableHeader', 'row'))
+                      ->setMethods(['sortableHeader', 'row', 'dataRows', 'tag'])
                       ->getMock();
-        $table->expects($this->never()) // No sortable headers in this test
-              ->method('sortableHeader');
-        $table->expects($this->exactly(3))
-              ->method('row')
-              ->will($this->returnCallback(array($this, 'mockRow')));
 
-        $this->assertEquals($this->_expected, $table($this->_data, $this->_headers));
+        $table->expects($this->never())->method('sortableHeader');
+        $table->method('row')->with($this->_headers, true, [])->willReturn('<header>');
+        $table->method('dataRows')->with($this->_data, ['column1', 'column2'], [], [], null)->willReturn('<rows>');
+        $table->method('tag')->with('<header><rows>')->willReturn('tableTag');
+
+        $this->assertEquals('tableTag', $table($this->_data, $this->_headers));
     }
 
-    public function testInvokeWithSortablHeaders()
+    public function testInvokeWithoutSortableHeadersExplicitParams()
     {
-        // The row() invocations are tested explicitly because the passed keys are significant.
-        $this->_escapeHtml->expects($this->exactly(4)) // once per non-header cell
-                          ->method('__invoke')
-                          ->will($this->returnArgument(0));
         $table = $this->getMockBuilder(static::_getHelperClass())
                       ->setConstructorArgs(
-                          array($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat)
+                          [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
                       )
-                      ->setMethods(array('sortableHeader', 'row'))
+                      ->setMethods(['sortableHeader', 'row', 'dataRows', 'tag'])
                       ->getMock();
-        $table->expects($this->exactly(2)) // once per column
-              ->method('sortableHeader')
-              ->will($this->returnArgument(0));
-        $table->expects($this->at(2))
-              ->method('row')
-              ->with($this->_headers, true)
-              ->will($this->returnCallback(array($this, 'mockRow')));
-        $table->expects($this->at(3))
-              ->method('row')
-              ->with(array('column1' => 'value1a', 'column2' => 'value2a'), false)
-              ->will($this->returnCallback(array($this, 'mockRow')));
-        $table->expects($this->at(4))
-              ->method('row')
-              ->with(array('column1' => 'value1b', 'column2' => 'value2b'), false)
-              ->will($this->returnCallback(array($this, 'mockRow')));
+
+        $table->expects($this->never())->method('sortableHeader');
+        $table->method('row')->with($this->_headers, true, ['columnClasses'])->willReturn('<header>');
+        $table->method('dataRows')->with(
+            $this->_data,
+            ['column1', 'column2'],
+            ['renderCallbacks'],
+            ['columnClasses'],
+            ['rowClassCallback']
+        )->willReturn('<rows>');
+        $table->method('tag')->with('<header><rows>')->willReturn('tableTag');
 
         $this->assertEquals(
-            $this->_expected,
-            $table(
-                $this->_data,
-                $this->_headers,
-                array('order' => 'column1', 'direction' => 'asc')
-            )
+            'tableTag',
+            $table($this->_data, $this->_headers, [], ['renderCallbacks'], ['columnClasses'], ['rowClassCallback'])
         );
     }
 
-    public function testInvokeWithRenderCallback()
+    public function testInvokeWithSortableHeaders()
     {
-        // Test with render callback on column2.
-        $this->_escapeHtml->expects($this->exactly(2)) // once per non-header cell that is not rendered via callback
-                          ->method('__invoke')
-                          ->will($this->returnArgument(0));
         $table = $this->getMockBuilder(static::_getHelperClass())
                       ->setConstructorArgs(
-                          array($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat)
+                          [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
                       )
-                      ->setMethods(array('sortableHeader', 'row'))
+                      ->setMethods(['sortableHeader', 'row', 'dataRows', 'tag'])
                       ->getMock();
-        $table->expects($this->never()) // No sortable headers in this test
-              ->method('sortableHeader');
-        $table->expects($this->exactly(3))
-              ->method('row')
-              ->with($this->anything(), $this->anything(), array())
-              ->will($this->returnCallback(array($this, 'mockRow')));
-        $table->setView($this->createMock('Zend\View\Renderer\PhpRenderer'));
 
-        $this->_renderCallbackData = array();
+        $table->method('sortableHeader')->withConsecutive(
+            ['header1', 'column1', 'column2', 'desc'],
+            ['header2', 'column2', 'column2', 'desc']
+        )->willReturnOnConsecutiveCalls('sort1', 'sort2');
+        $table->method('row')->with(['column1' => 'sort1', 'column2' => 'sort2'], true, [])->willReturn('<header>');
+        $table->method('dataRows')->with($this->_data, ['column1', 'column2'], [], [], null)->willReturn('<rows>');
+        $table->method('tag')->with('<header><rows>')->willReturn('tableTag');
+
         $this->assertEquals(
-            $this->_expected,
-            $table(
-                $this->_data,
-                $this->_headers,
-                array(),
-                array('column2' => array($this, 'renderCallback'))
-            )
+            'tableTag',
+            $table($this->_data, $this->_headers, ['order' => 'column2', 'direction' => 'desc'])
         );
-        $this->assertEquals(array('value2a', 'value2b'), $this->_renderCallbackData);
     }
 
-    public function testInvokeWithColumnClasses()
+    public function testTag()
     {
-        // Test with column class set on column 2. The row() invocations are
-        // tested explicitly because the passed keys are significant.
-        $columnClasses = array('column2' => 'test');
-        $this->_escapeHtml->expects($this->exactly(4)) // once per non-header cell
-                          ->method('__invoke')
-                          ->will($this->returnArgument(0));
+        $this->_htmlElement->method('__invoke')
+                           ->with('table', 'table_content', ['class' => 'alternating'])
+                           ->willReturn('table_tag');
+
+        $class = static::_getHelperClass();
+        $table = new $class($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat);
+
+        $this->assertEquals('table_tag', $table->tag('table_content'));
+    }
+
+    public function testDataRowsWithDefaultParams()
+    {
+        $this->_escapeHtml->method('__invoke')->willReturnOnConsecutiveCalls('1a', '2a', '1b', '2b');
+
         $table = $this->getMockBuilder(static::_getHelperClass())
                       ->setConstructorArgs(
                           array($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat)
                       )
-                      ->setMethods(array('sortableHeader', 'row'))
+                      ->setMethods(['row'])
                       ->getMock();
-        $table->expects($this->at(0))
-              ->method('row')
-              ->with($this->_headers, true, $columnClasses)
-              ->will($this->returnCallback(array($this, 'mockRow')));
-        $table->expects($this->at(1))
-              ->method('row')
-              ->with(array('column1' => 'value1a', 'column2' => 'value2a'), false, $columnClasses)
-              ->will($this->returnCallback(array($this, 'mockRow')));
-        $table->expects($this->at(2))
-              ->method('row')
-              ->with(array('column1' => 'value1b', 'column2' => 'value2b'), false, $columnClasses)
-              ->will($this->returnCallback(array($this, 'mockRow')));
 
-        $this->assertEquals($this->_expected, $table($this->_data, $this->_headers, array(), array(), $columnClasses));
+        $table->method('row')
+              ->withConsecutive(
+                  [['column1' => '1a', 'column2' => '2a'], false, [], null],
+                  [['column1' => '1b', 'column2' => '2b'], false, [], null]
+              )
+              ->willReturnOnConsecutiveCalls('<row1>', '<row2>');
+
+        $this->assertEquals('<row1><row2>', $table->dataRows($this->_data, ['column1', 'column2']));
     }
 
-    public function testInvokeWithRowClassCallback()
+    public function testDataRowsWithColumnClasses()
     {
-        $rowClassCallback = function ($columns) {
-            static $counter = 0;
-            if ($counter++) {
-                return "$columns[column1]+$columns[column2]";
-            } else {
-                return '';
-            }
+        $this->_escapeHtml->method('__invoke')->willReturnOnConsecutiveCalls('1a', '2a', '1b', '2b');
+
+        $table = $this->getMockBuilder(static::_getHelperClass())
+                      ->setConstructorArgs(
+                          array($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat)
+                      )
+                      ->setMethods(['row'])
+                      ->getMock();
+
+        $table->method('row')
+              ->withConsecutive(
+                  [['column1' => '1a', 'column2' => '2a'], false, ['column1' => 'class'], null],
+                  [['column1' => '1b', 'column2' => '2b'], false, ['column1' => 'class'], null]
+              )
+              ->willReturnOnConsecutiveCalls('<row1>', '<row2>');
+
+        $this->assertEquals(
+            '<row1><row2>',
+            $table->dataRows($this->_data, ['column1', 'column2'], [], ['column1' => 'class'])
+        );
+    }
+
+    public function testDataRowsWithRowClassCallback()
+    {
+        $this->_escapeHtml->method('__invoke')->willReturnOnConsecutiveCalls('1a', '2a', '1b', '2b');
+
+        $table = $this->getMockBuilder(static::_getHelperClass())
+                      ->setConstructorArgs(
+                          array($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat)
+                      )
+                      ->setMethods(['row'])
+                      ->getMock();
+
+        $table->method('row')
+              ->withConsecutive(
+                  [['column1' => '1a', 'column2' => '2a'], false, [], 'VALUE1A'],
+                  [['column1' => '1b', 'column2' => '2b'], false, [], 'VALUE1B']
+              )
+              ->willReturnOnConsecutiveCalls('<row1>', '<row2>');
+
+        $rowClassCallback = function ($rowData) {
+            $this->assertContains($rowData, $this->_data);
+            return strtoupper($rowData['column1']);
         };
-        $this->_escapeHtml->expects($this->exactly(4)) // once per non-header cell that is not rendered via callback
-                          ->method('__invoke')
-                          ->will($this->returnArgument(0));
+
+        $this->assertEquals('<row1><row2>', $table->dataRows($this->_data, ['column1', 'column2'], [], [], $rowClassCallback));
+    }
+
+    public function testDataRowsWithDateTime()
+    {
+        $date = $this->createMock('DateTime');
+
+        $this->_dateFormat->method('__invoke')
+                          ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
+                          ->willReturn('date_formatted');
+
+        $this->_escapeHtml->method('__invoke')->with('date_formatted')->willReturn('escaped_date');
+
         $table = $this->getMockBuilder(static::_getHelperClass())
                       ->setConstructorArgs(
                           array($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat)
                       )
-                      ->setMethods(array('sortableHeader', 'row'))
+                      ->setMethods(['row'])
                       ->getMock();
-        $table->expects($this->never()) // No sortable headers in this test
-              ->method('sortableHeader');
-        $table->expects($this->at(0))
-              ->method('row')
-              ->with($this->_headers, true, array(), null)
-              ->will($this->returnCallback(array($this, 'mockRow')));
-        $table->expects($this->at(1))
-              ->method('row')
-              ->with(array('column1' => 'value1a', 'column2' => 'value2a'), false, array(), '')
-              ->will($this->returnCallback(array($this, 'mockRow')));
-        $table->expects($this->at(2))
-              ->method('row')
-              ->with(array('column1' => 'value1b', 'column2' => 'value2b'), false, array(), 'value1b+value2b')
-              ->will($this->returnCallback(array($this, 'mockRow')));
 
-        $this->assertEquals(
-            $this->_expected,
-            $table(
-                $this->_data,
-                $this->_headers,
-                array(),
-                array(),
-                array(),
-                $rowClassCallback
-            )
-        );
+        $table->method('row')
+              ->with(['column1' => 'escaped_date'], false, [], null)
+              ->willReturn('<row>');
+
+        $this->assertEquals('<row>', $table->dataRows([['column1' => $date]], ['column1']));
     }
 
-    public function testDateTimeFormat()
+    public function testDataRowsWithRenderCallbackPrecedesDateTime()
     {
-        $date = new \DateTime;
-        $data = array(
-            array(1388567012, $date),
-            array($date, $date),
-            array($date, 1388567012),
-        );
-        $this->_dateFormat->expects($this->exactly(2)) // column 0 should be rendered by callback
-                          ->method('__invoke')
-                          ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT);
-        $callback = function () {
+        $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $date = $this->createMock('DateTime');
+
+        $this->_dateFormat->expects($this->never())->method('__invoke');
+        $this->_escapeHtml->expects($this->never())->method('__invoke');
+
+        $table = $this->getMockBuilder(static::_getHelperClass())
+                      ->setConstructorArgs(
+                          array($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat)
+                      )
+                      ->setMethods(['row', 'getView'])
+                      ->getMock();
+
+        $table->method('row')
+              ->with(['column1' => 'callback_return'], false, [], null)
+              ->willReturn('<row>');
+
+        $table->method('getView')->willReturn($view);
+
+        $renderCallback = function ($view2, $rowData, $key) use ($view, $date) {
+            $this->assertSame($view2, $view);
+            $this->assertEquals(['column1' => $date], $rowData);
+            $this->assertEquals('column1', $key);
+            return 'callback_return';
         };
-        $helper = new \Console\View\Helper\Table(
-            $this->_escapeHtml,
-            $this->_htmlElement,
-            $this->_consoleUrl,
-            $this->_dateFormat
-        );
-        $helper(
-            $data,
-            array('col1', 'col2'),
-            array(),
-            array(0 => $callback)
+
+        $this->assertEquals(
+            '<row>',
+            $table->dataRows([['column1' => $date]], ['column1'], ['column1' => $renderCallback])
         );
     }
 

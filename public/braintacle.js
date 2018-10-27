@@ -24,4 +24,9 @@ $(window).on('load', function() {
         });
 
     }).change();
+
+    // Check/uncheck all checkboxes within the same form
+    $('.form_software .checkAll').change(function() {
+        $('input[type=checkbox][name]', this.form).prop('checked', this.checked);
+    });
 });

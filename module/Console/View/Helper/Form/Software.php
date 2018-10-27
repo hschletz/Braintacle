@@ -84,53 +84,60 @@ class Software extends \Zend\View\Helper\AbstractHelper
     {
         $view = $this->getView();
 
+        $consoleUrl = $view->plugin('consoleUrl');
         $formRow = $view->plugin('formRow');
-        $translate = $view->plugin('translate');
+        $htmlElement = $view->plugin('htmlElement');
         $table = $view->plugin('table');
+        $translate = $view->plugin('translate');
 
         // Checkbox labels are software names and must not be translated
         $translatorEnabled = $formRow->isTranslatorEnabled();
         $formRow->setTranslatorEnabled(false);
 
-        $output = $table(
-            $software,
+        $output = $table->row(
             [
-                'name' => $translate('Name'),
-                'num_clients' => $translate('Count'),
+                'name' =>  '<input type="checkbox" class="checkAll">' . $table->sortableHeader(
+                    $translate('Name'),
+                    'name',
+                    $sorting['order'],
+                    $sorting['direction']
+                ),
+                'num_clients' => $table->sortableHeader(
+                    $translate('Count'),
+                    'num_clients',
+                    $sorting['order'],
+                    $sorting['direction']
+                ),
             ],
-            $sorting,
-            [
-                'name' => function ($view, $software) use ($fieldset, $formRow) {
-                    $element = $fieldset->get(base64_encode($software['name']));
-                    return $formRow($element, \Zend\Form\View\Helper\FormRow::LABEL_APPEND);
-                },
-                'num_clients' => function ($view, $software) {
-                    $htmlElement = $view->plugin('htmlElement');
-                    $consoleUrl = $view->plugin('consoleUrl');
-
-                    return $htmlElement(
-                        'a',
-                        $software['num_clients'],
-                        array(
-                            'href' => $consoleUrl(
-                                'client',
-                                'index',
-                                array(
-                                    'columns' => 'Name,UserName,LastContactDate,InventoryDate,Software.Version',
-                                    'jumpto' => 'software',
-                                    'filter' => 'Software',
-                                    'search' => $software['name'],
-                                )
-                            ),
-                        ),
-                        true
-                    );
-                }
-            ],
-            ['num_clients' => 'textright']
+            true
         );
+        foreach ($software as $row) {
+            $element = $fieldset->get(base64_encode($row['name']));
+            $output .= $table->row(
+                [
+                    'name' => $formRow($element, \Zend\Form\View\Helper\FormRow::LABEL_APPEND),
+                    'num_clients' => $htmlElement(
+                        'a',
+                        $row['num_clients'],
+                        ['href' => $consoleUrl(
+                            'client',
+                            'index',
+                            [
+                                'columns' => 'Name,UserName,LastContactDate,InventoryDate,Software.Version',
+                                'jumpto' => 'software',
+                                'filter' => 'Software',
+                                'search' => $row['name'],
+                            ]
+                        )],
+                        true
+                    ),
+                ],
+                false,
+                ['num_clients' => 'textright']
+            );
+        }
 
         $formRow->setTranslatorEnabled($translatorEnabled);
-        return $output;
+        return $table->tag($output);
     }
 }
