@@ -31,4 +31,4 @@ if ($messages) {
     );
 }
 
-print $this->form->render($this);
+print $this->consoleFormShowDuplicates($this->form);

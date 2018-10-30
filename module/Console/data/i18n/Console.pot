@@ -146,7 +146,7 @@ msgid "Store in existing group"
 msgstr ""
 
 #: Form/AddToGroup.php Form/ManageRegistryValues.php Form/Package/Build.php
-#: Form/Search.php Form/ShowDuplicates.php Form/Subnet.php
+#: Form/Search.php Form/Subnet.php View/Helper/Form/ShowDuplicates.php
 #: View/Helper/Form/Software.php views/console/client/display.php
 #: views/console/client/index.php views/console/client/misc.php
 #: views/console/client/network.php views/console/client/packages.php
@@ -719,8 +719,8 @@ msgstr ""
 msgid "Last inventory"
 msgstr ""
 
-#: Form/Search.php Form/ShowDuplicates.php views/console/client/general.php
-#: views/console/client/index.php
+#: Form/Search.php View/Helper/Form/ShowDuplicates.php
+#: views/console/client/general.php views/console/client/index.php
 msgid "Last contact"
 msgstr ""
 
@@ -756,15 +756,16 @@ msgstr ""
 msgid "Model"
 msgstr ""
 
-#: Form/Search.php Form/ShowDuplicates.php views/console/client/display.php
-#: views/console/client/general.php views/console/client/index.php
-#: views/console/client/storage.php views/console/client/system.php
-#: views/console/duplicates/index.php
+#: Form/Search.php View/Helper/Form/ShowDuplicates.php
+#: views/console/client/display.php views/console/client/general.php
+#: views/console/client/index.php views/console/client/storage.php
+#: views/console/client/system.php views/console/duplicates/index.php
 msgid "Serial number"
 msgstr ""
 
-#: Form/Search.php Form/ShowDuplicates.php views/console/client/general.php
-#: views/console/client/index.php views/console/duplicates/index.php
+#: Form/Search.php View/Helper/Form/ShowDuplicates.php
+#: views/console/client/general.php views/console/client/index.php
+#: views/console/duplicates/index.php
 msgid "Asset tag"
 msgstr ""
 
@@ -801,9 +802,9 @@ msgstr ""
 msgid "IP address"
 msgstr ""
 
-#: Form/Search.php Form/ShowDuplicates.php views/console/client/index.php
-#: views/console/client/network.php views/console/network/edit.php
-#: views/console/network/showidentified.php
+#: Form/Search.php View/Helper/Form/ShowDuplicates.php
+#: views/console/client/index.php views/console/client/network.php
+#: views/console/network/edit.php views/console/network/showidentified.php
 #: views/console/network/showunknown.php
 msgid "MAC address"
 msgstr ""

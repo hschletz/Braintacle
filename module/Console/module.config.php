@@ -130,6 +130,7 @@ return array(
             'consoleFormFieldset' => 'Console\View\Helper\Form\Fieldset',
             'consoleFormClientConfig' => 'Console\View\Helper\Form\ClientConfig',
             'consoleFormManageRegistryValues' => 'Console\View\Helper\Form\ManageRegistryValues',
+            'consoleFormShowDuplicates' => 'Console\View\Helper\Form\ShowDuplicates',
             'consoleFormSoftware' => 'Console\View\Helper\Form\Software',
         ),
         'factories' => array(
@@ -141,6 +142,7 @@ return array(
             'Console\View\Helper\Form\Fieldset' => 'Zend\ServiceManager\Factory\InvokableFactory',
             'Console\View\Helper\Form\ClientConfig' => 'Zend\ServiceManager\Factory\InvokableFactory',
             'Console\View\Helper\Form\ManageRegistryValues' => 'Zend\ServiceManager\Factory\InvokableFactory',
+            'Console\View\Helper\Form\ShowDuplicates' => 'Zend\ServiceManager\Factory\InvokableFactory',
             'Console\View\Helper\Form\Software' => 'Zend\ServiceManager\Factory\InvokableFactory',
         ),
     ),

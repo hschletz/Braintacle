@@ -165,7 +165,13 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
                               ->method('setOptions')
                               ->with(array('clients' => 'client_list', 'order' => 'Id', 'direction' => 'asc'));
         $this->_showDuplicates->expects($this->once())->method('getMessages')->willReturn(array());
-        $this->_showDuplicates->expects($this->once())->method('render')->willReturn('<form></form>');
+
+        $formHelper = $this->createMock('Console\View\Helper\Form\ShowDuplicates');
+        $formHelper->method('__invoke')->with($this->_showDuplicates)->willReturn('<form></form>');
+        $this->getApplicationServiceLocator()
+             ->get('ViewHelperManager')
+             ->setService('consoleFormShowDuplicates', $formHelper);
+
         $this->dispatch('/console/duplicates/manage/?criteria=Name');
         $this->assertResponseStatusCode(200);
     }
@@ -215,15 +221,19 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_showDuplicates->expects($this->once())
                               ->method('getMessages')
                               ->willReturn(array('clients' => array('invalid')));
-        $this->_showDuplicates->expects($this->once())
-                              ->method('render')
-                              ->willReturn('<form></form>');
         $this->_duplicates->expects($this->once())
                           ->method('find')
                           ->with('Name', 'Id', 'asc')
                           ->willReturn('client_list');
         $this->_duplicates->expects($this->never())
                           ->method('merge');
+
+        $formHelper = $this->createMock('Console\View\Helper\Form\ShowDuplicates');
+        $formHelper->method('__invoke')->with($this->_showDuplicates)->willReturn('<form></form>');
+        $this->getApplicationServiceLocator()
+             ->get('ViewHelperManager')
+             ->setService('consoleFormShowDuplicates', $formHelper);
+
         $this->dispatch('/console/duplicates/manage/?criteria=Name', 'POST');
         $this->assertResponseStatusCode(200);
         $this->assertXPathQueryCount('//ul', 1);

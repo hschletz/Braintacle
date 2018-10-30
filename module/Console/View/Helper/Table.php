@@ -75,15 +75,12 @@ class Table extends \Zend\View\Helper\AbstractHelper
      *
      * $headers is an associative array with header labels. Its keys are used to
      * match corresponding fields in the other arguments. For each header, a
-     * corresponding field must be set in the table data or in $renderCallbacks.
-     *
-     * If the optional $sorting array contains the "order" and "direction"
-     * elements (other elements are ignored), headers are generated via
-     * sortableHeader().
+     * corresponding field must be set in the table data or in $renderCallbacks
+     * (deprecated).
      *
      * @param array|\Traversable $data see dataRows()
      * @param string[] $headers
-     * @param string[] $sorting
+     * @param string[] $sorting see headerRow()
      * @param callable[] $renderCallbacks see dataRows()
      * @param string[] $columnClasses see row()
      * @param callable $rowClassCallback see dataRows()
@@ -101,14 +98,7 @@ class Table extends \Zend\View\Helper\AbstractHelper
             return '';
         }
 
-        // Generate header row
-        if (isset($sorting['order']) and isset($sorting['direction'])) {
-            foreach ($headers as $key => &$label) {
-                $label = $this->sortableHeader($label, $key, $sorting['order'], $sorting['direction']);
-            }
-        }
-        $content = $this->row($headers, true, $columnClasses);
-
+        $content = $this->headerRow($headers, $sorting, $columnClasses);
         $content .= $this->dataRows($data, array_keys($headers), $renderCallbacks, $columnClasses, $rowClassCallback);
 
         return $this->tag($content);
@@ -126,7 +116,30 @@ class Table extends \Zend\View\Helper\AbstractHelper
     }
 
     /**
-     * Generate table rows
+     * Generate header row
+     *
+     * If the optional $sorting array contains the "order" and "direction"
+     * elements (other elements are ignored), headers are generated via
+     * sortableHeader(). $headers must contain the column names as keys in that
+     * case.
+     *
+     * @param string[] $headers
+     * @param string[] $sorting
+     * @param string[] $columnClasses see row()
+     * @return string
+     */
+    public function headerRow($headers, $sorting = [], $columnClasses = [])
+    {
+        if (isset($sorting['order']) and isset($sorting['direction'])) {
+            foreach ($headers as $key => &$label) {
+                $label = $this->sortableHeader($label, $key, $sorting['order'], $sorting['direction']);
+            }
+        }
+        return $this->row($headers, true, $columnClasses);
+    }
+
+    /**
+     * Generate data rows
      *
      * $data is an array or iterator of row objects. Row objects are typically
      * associative arrays or objects implementing the \ArrayAccess interface. A
@@ -145,12 +158,15 @@ class Table extends \Zend\View\Helper\AbstractHelper
      * 3. The key of the column to be rendered. This is useful for callbacks
      *    that render more than 1 column.
      *
+     * The render callback method is deprecated. Custom rendering should be done
+     * by iterating over $data and calling row() with customized content.
+     *
      * $rowClassCallback, if given, is called for each row. It receives the
      * row object from $data. Its return value is passed to row().
      *
      * @param array|\Traversable $data
      * @param string[] $keys Column keys
-     * @param callable[] $renderCallbacks
+     * @param callable[] $renderCallbacks deprecated
      * @param string $columnClasses see row()
      * @param callable $rowClassCallback
      * @return string

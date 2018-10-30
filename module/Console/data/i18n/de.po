@@ -156,7 +156,7 @@ msgid "Group"
 msgstr "Gruppe"
 
 #: Form/AddToGroup.php Form/ManageRegistryValues.php Form/Package/Build.php
-#: Form/Search.php Form/ShowDuplicates.php Form/Subnet.php
+#: Form/Search.php Form/Subnet.php View/Helper/Form/ShowDuplicates.php
 #: View/Helper/Form/Software.php views/console/client/display.php
 #: views/console/client/index.php views/console/client/misc.php
 #: views/console/client/network.php views/console/client/packages.php
@@ -660,8 +660,9 @@ msgstr "XML-Daten validieren"
 msgid "Product key (if different)"
 msgstr "Lizenzschlüssel (falls verschieden)"
 
-#: Form/Search.php Form/ShowDuplicates.php views/console/client/general.php
-#: views/console/client/index.php views/console/duplicates/index.php
+#: Form/Search.php View/Helper/Form/ShowDuplicates.php
+#: views/console/client/general.php views/console/client/index.php
+#: views/console/duplicates/index.php
 msgid "Asset tag"
 msgstr "Asset tag"
 
@@ -731,8 +732,8 @@ msgstr "IP-Adresse"
 msgid "Invert results"
 msgstr "Ergebnisse invertieren"
 
-#: Form/Search.php Form/ShowDuplicates.php views/console/client/general.php
-#: views/console/client/index.php
+#: Form/Search.php View/Helper/Form/ShowDuplicates.php
+#: views/console/client/general.php views/console/client/index.php
 msgid "Last contact"
 msgstr "Letzter Kontakt"
 
@@ -741,9 +742,9 @@ msgstr "Letzter Kontakt"
 msgid "Last inventory"
 msgstr "Letzte Inventarisierung"
 
-#: Form/Search.php Form/ShowDuplicates.php views/console/client/index.php
-#: views/console/client/network.php views/console/network/edit.php
-#: views/console/network/showidentified.php
+#: Form/Search.php View/Helper/Form/ShowDuplicates.php
+#: views/console/client/index.php views/console/client/network.php
+#: views/console/network/edit.php views/console/network/showidentified.php
 #: views/console/network/showunknown.php
 msgid "MAC address"
 msgstr "MAC-Adresse"
@@ -847,10 +848,10 @@ msgstr "Suchen"
 msgid "Search for"
 msgstr "Suche nach"
 
-#: Form/Search.php Form/ShowDuplicates.php views/console/client/display.php
-#: views/console/client/general.php views/console/client/index.php
-#: views/console/client/storage.php views/console/client/system.php
-#: views/console/duplicates/index.php
+#: Form/Search.php View/Helper/Form/ShowDuplicates.php
+#: views/console/client/display.php views/console/client/general.php
+#: views/console/client/index.php views/console/client/storage.php
+#: views/console/client/system.php views/console/duplicates/index.php
 msgid "Serial number"
 msgstr "Seriennummer"
 
