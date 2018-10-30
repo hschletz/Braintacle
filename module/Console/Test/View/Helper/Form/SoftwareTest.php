@@ -183,6 +183,9 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
                     )->willReturnOnConsecutiveCalls('link1', 'link2');
 
         $table = $this->createMock('Console\View\Helper\Table');
+        $table->method('prepareHeaders')
+              ->with(['name' => 'NAME', 'num_clients' => 'COUNT'], $sorting)
+              ->willReturn(['name' => 'header_name', 'num_clients' => 'header_count']);
         $table->method('row')
               ->withConsecutive(
                   [
@@ -195,11 +198,6 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
                   [['name' => 'checkbox2', 'num_clients' => 'link2'], false, ['num_clients' => 'textright'], null]
               )
               ->willReturnOnConsecutiveCalls('<header>', '<row1>', '<row2>');
-        $table->method('sortableHeader')
-              ->withConsecutive(
-                  ['NAME', 'name', 'current_order', 'current_direction'],
-                  ['COUNT', 'num_clients', 'current_order', 'current_direction']
-              )->willReturnOnConsecutiveCalls('header_name', 'header_count');
         $table->method('tag')->with('<header><row1><row2>')->willReturn('softwareFieldset');
 
         $view->method('plugin')->willReturnMap([

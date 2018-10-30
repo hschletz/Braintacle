@@ -154,11 +154,11 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
     {
         $table = $this->getMockBuilder(static::_getHelperClass())
                       ->disableOriginalConstructor()
-                      ->setMethods(['sortableHeader', 'row'])
+                      ->setMethods(['prepareHeaders', 'row'])
                       ->getMock();
 
-        $table->expects($this->never())->method('sortableHeader');
-        $table->method('row')->with($this->_headers, true, [])->willReturn('header_row');
+        $table->method('prepareHeaders')->with($this->_headers, [])->willReturn(['headers']);
+        $table->method('row')->with(['headers'], true, [])->willReturn('header_row');
 
         $this->assertEquals('header_row', $table->headerRow($this->_headers));
     }
@@ -167,26 +167,13 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
     {
         $table = $this->getMockBuilder(static::_getHelperClass())
                       ->disableOriginalConstructor()
-                      ->setMethods(['sortableHeader', 'row'])
+                      ->setMethods(['prepareHeaders', 'row'])
                       ->getMock();
 
-        $table->method('sortableHeader')->withConsecutive(
-            ['header1', 'column1', 'column2', 'asc'],
-            ['header2', 'column2', 'column2', 'asc']
-        )->willReturnOnConsecutiveCalls('sort1', 'sort2');
+        $table->method('prepareHeaders')->with($this->_headers, ['sorting'])->willReturn(['headers']);
+        $table->method('row')->with(['headers'], true, ['classes'])->willReturn('header_row');
 
-        $table->method('row')
-              ->with(['column1' => 'sort1', 'column2' => 'sort2'], true, ['column1' => 'class'])
-              ->willReturn('header_row');
-
-        $this->assertEquals(
-            'header_row',
-            $table->headerRow(
-                $this->_headers,
-                ['order' => 'column2', 'direction' => 'asc'],
-                ['column1' => 'class']
-            )
-        );
+        $this->assertEquals('header_row', $table->headerRow($this->_headers, ['sorting'], ['classes']));
     }
 
     public function testDataRowsWithDefaultParams()
@@ -315,6 +302,36 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
         $this->assertEquals(
             '<row>',
             $table->dataRows([['column1' => $date]], ['column1'], ['column1' => $renderCallback])
+        );
+    }
+
+    public function testPrepareHeadersWithoutSorting()
+    {
+        $table = $this->getMockBuilder(static::_getHelperClass())
+                      ->disableOriginalConstructor()
+                      ->setMethods(['sortableHeader'])
+                      ->getMock();
+
+        $table->expects($this->never())->method('sortableHeader');
+
+        $this->assertEquals($this->_headers, $table->prepareHeaders($this->_headers, []));
+    }
+
+    public function testPrepareHeadersWithSorting()
+    {
+        $table = $this->getMockBuilder(static::_getHelperClass())
+                      ->disableOriginalConstructor()
+                      ->setMethods(['sortableHeader'])
+                      ->getMock();
+
+        $table->method('sortableHeader')->withConsecutive(
+            ['header1', 'column1', 'column2', 'asc'],
+            ['header2', 'column2', 'column2', 'asc']
+        )->willReturnOnConsecutiveCalls('sort1', 'sort2');
+
+        $this->assertEquals(
+            ['column1' => 'sort1', 'column2' => 'sort2'],
+            $table->prepareHeaders($this->_headers, ['order' => 'column2', 'direction' => 'asc'])
         );
     }
 

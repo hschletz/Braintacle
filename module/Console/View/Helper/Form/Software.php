@@ -94,23 +94,13 @@ class Software extends \Zend\View\Helper\AbstractHelper
         $translatorEnabled = $formRow->isTranslatorEnabled();
         $formRow->setTranslatorEnabled(false);
 
-        $output = $table->row(
-            [
-                'name' =>  '<input type="checkbox" class="checkAll">' . $table->sortableHeader(
-                    $translate('Name'),
-                    'name',
-                    $sorting['order'],
-                    $sorting['direction']
-                ),
-                'num_clients' => $table->sortableHeader(
-                    $translate('Count'),
-                    'num_clients',
-                    $sorting['order'],
-                    $sorting['direction']
-                ),
-            ],
-            true
+        $headers = $table->prepareHeaders(
+            ['name' => $translate('Name'), 'num_clients' => $translate('Count')],
+            $sorting
         );
+        $headers['name'] = '<input type="checkbox" class="checkAll">' . $headers['name'];
+        $output = $table->row($headers, true);
+
         foreach ($software as $row) {
             $element = $fieldset->get(base64_encode($row['name']));
             $output .= $table->row(

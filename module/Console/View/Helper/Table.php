@@ -80,7 +80,7 @@ class Table extends \Zend\View\Helper\AbstractHelper
      *
      * @param array|\Traversable $data see dataRows()
      * @param string[] $headers
-     * @param string[] $sorting see headerRow()
+     * @param string[] $sorting see prepareHeaders()
      * @param callable[] $renderCallbacks see dataRows()
      * @param string[] $columnClasses see row()
      * @param callable $rowClassCallback see dataRows()
@@ -118,24 +118,14 @@ class Table extends \Zend\View\Helper\AbstractHelper
     /**
      * Generate header row
      *
-     * If the optional $sorting array contains the "order" and "direction"
-     * elements (other elements are ignored), headers are generated via
-     * sortableHeader(). $headers must contain the column names as keys in that
-     * case.
-     *
      * @param string[] $headers
-     * @param string[] $sorting
+     * @param string[] $sorting see prepareHeaders()
      * @param string[] $columnClasses see row()
      * @return string
      */
     public function headerRow($headers, $sorting = [], $columnClasses = [])
     {
-        if (isset($sorting['order']) and isset($sorting['direction'])) {
-            foreach ($headers as $key => &$label) {
-                $label = $this->sortableHeader($label, $key, $sorting['order'], $sorting['direction']);
-            }
-        }
-        return $this->row($headers, true, $columnClasses);
+        return $this->row($this->prepareHeaders($headers, $sorting), true, $columnClasses);
     }
 
     /**
@@ -199,6 +189,27 @@ class Table extends \Zend\View\Helper\AbstractHelper
             );
         }
         return $rows;
+    }
+
+    /**
+     * Apply hyperlinks to headers
+     *
+     * If $sorting contains the "order" and "direction" elements (other elements
+     * are ignored), header values are replaced with sortableHeader() output.
+     * $headers must contain the column names as keys in that case.
+     *
+     * @param string[] $headers
+     * @param string[] $sorting
+     * @return string[]
+     */
+    public function prepareHeaders($headers, $sorting)
+    {
+        if (isset($sorting['order']) and isset($sorting['direction'])) {
+            foreach ($headers as $key => &$label) {
+                $label = $this->sortableHeader($label, $key, $sorting['order'], $sorting['direction']);
+            }
+        }
+        return $headers;
     }
 
     /**
