@@ -38,7 +38,7 @@ class ShowDuplicates extends AbstractHelper
         $table = $view->plugin('table');
         $translate = $view->plugin('translate');
 
-        $tableContent = $table->headerRow(
+        $headers = $table->prepareHeaders(
             [
                 'Id' => 'ID',
                 'Name' => $translate('Name'),
@@ -52,6 +52,8 @@ class ShowDuplicates extends AbstractHelper
                 'direction' => $form->getOption('direction'),
             ]
         );
+        $headers['Id'] = '<input type="checkbox" class="checkAll">' . $headers['Id'];
+        $tableContent = $table->row($headers, true);
 
         foreach ($form->getOption('clients') as $client) {
             $tableContent .= $table->row([

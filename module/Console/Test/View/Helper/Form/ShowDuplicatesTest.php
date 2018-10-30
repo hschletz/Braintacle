@@ -70,7 +70,7 @@ class ShowDuplicatesTest extends \Library\Test\View\Helper\AbstractTest
                     )->willReturnOnConsecutiveCalls('link1', 'link2');
 
         $table = $this->createMock('Console\View\Helper\Table');
-        $table->method('headerRow')
+        $table->method('prepareHeaders')
               ->with(
                   [
                     'Id' => 'ID',
@@ -84,9 +84,18 @@ class ShowDuplicatesTest extends \Library\Test\View\Helper\AbstractTest
                       'order' => '_order',
                       'direction' => '_direction',
                   ]
-              )->willReturn('<header>');
+              )->willReturn(['Id' => 'ID', 'others' => '']);
         $table->method('row')
               ->withConsecutive(
+                  [
+                    [
+                        'Id' => '<input type="checkbox" class="checkAll">ID',
+                        'others' => '',
+                    ],
+                    true,
+                    [],
+                    null,
+                  ],
                   [
                     [
                         '<input type="checkbox" name="clients[]" value="1">1',
@@ -114,7 +123,7 @@ class ShowDuplicatesTest extends \Library\Test\View\Helper\AbstractTest
                     null
                   ]
               )
-              ->willReturnOnConsecutiveCalls('<row1>', '<row2>');
+              ->willReturnOnConsecutiveCalls('<header>', '<row1>', '<row2>');
         $table->method('tag')->with('<header><row1><row2>')->willReturn('<duplicates_table>');
 
         $translate = $this->createMock('Zend\I18n\View\Helper\Translate');

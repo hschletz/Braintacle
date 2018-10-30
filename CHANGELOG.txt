@@ -9,6 +9,10 @@ without any warranty.
 CHANGES IN VERSION 1.4
 ======================
 
+New features:
+
+- Console: Added checkbox to check/uncheck all listed duplicates.
+
 
 CHANGES IN VERSION 1.3
 =======================
