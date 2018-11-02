@@ -64,6 +64,25 @@ class AbstractTableTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('the hydrator', $this->_table->getHydrator());
     }
 
+    public function testGetConnection()
+    {
+        $connection = $this->createMock('Zend\Db\Adapter\Driver\ConnectionInterface');
+
+        $driver = $this->createMock('Zend\Db\Adapter\Driver\DriverInterface');
+        $driver->method('getConnection')->willReturn($connection);
+
+        $adapter = $this->createMock('Zend\Db\Adapter\AdapterInterface');
+        $adapter->method('getDriver')->willReturn($driver);
+
+        $table = $this->getMockBuilder('Database\AbstractTable')
+                      ->disableOriginalConstructor()
+                      ->setMethods(['getAdapter'])
+                      ->getMock();
+        $table->method('getAdapter')->willReturn($adapter);
+
+        $this->assertSame($connection, $table->getConnection());
+    }
+
     public function testFetchColWithData()
     {
         $this->_select->expects($this->once())->method('columns')->with(array('col'), false);

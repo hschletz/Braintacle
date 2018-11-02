@@ -71,6 +71,16 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
     }
 
     /**
+     * Get database connection object
+     *
+     * @return \Zend\Db\Adapter\Driver\ConnectionInterface
+     */
+    public function getConnection()
+    {
+        return $this->getAdapter()->getDriver()->getConnection();
+    }
+
+    /**
      * Helper method to get class name without namespace
      *
      * @return string Class name

@@ -251,77 +251,47 @@ class DuplicatesManager
      * deleted. Some information from the older entries can be preserved on the
      * remaining client.
      *
-     * @param integer[] $clients IDs of clients to merge
+     * @param integer[] $clientIds IDs of clients to merge
      * @param bool $mergeCustomFields Preserve custom fields from oldest client
      * @param bool $mergeGroups Preserve manual group assignments from old clients
      * @param bool $mergePackages Preserve package assignments from old clients missing on new client
      * @throws \RuntimeException if an affected client cannot be locked
      */
-    public function merge(array $clients, $mergeCustomFields, $mergeGroups, $mergePackages)
+    public function merge(array $clientIds, $mergeCustomFields, $mergeGroups, $mergePackages)
     {
         // Remove duplicate IDs
-        $clients = array_unique($clients);
-        if (count($clients) < 2) {
+        $clientIds = array_unique($clientIds);
+        if (count($clientIds) < 2) {
             return; // Nothing to do
         }
 
-        $connection = $this->_clients->getAdapter()->getDriver()->getConnection();
+        $connection = $this->_clients->getConnection();
         $connection->beginTransaction();
         try {
             // Lock all given clients and create a list sorted by LastContactDate.
-            foreach ($clients as $id) {
+            foreach ($clientIds as $id) {
                 $client = $this->_clientManager->getClient($id);
                 if (!$client->lock()) {
                     throw new \RuntimeException("Cannot lock client $id");
                 }
                 $timestamp = $client['LastContactDate']->getTimestamp();
-                $list[$timestamp] = $client;
+                $clients[$timestamp] = $client;
             }
-            ksort($list);
+            ksort($clients);
             // Now that the list is sorted, renumber the indices
-            $clients = array_values($list);
+            $clients = array_values($clients);
 
             // Newest client will be the only one not to be deleted, remove it from the list
             $newest = array_pop($clients);
 
             if ($mergeCustomFields) {
-                // Overwrite custom fields with values from oldest client
-                $newest->setCustomFields($clients[0]['CustomFields']);
+                $this->mergeCustomFields($newest, $clients);
             }
-
             if ($mergeGroups) {
-                // Build list with all manual group assignments from old clients.
-                // If more than 1 old client is to be merged and the clients
-                // have different assignments for the same group, the result is
-                // undefined.
-                $groupList = array();
-                foreach ($clients as $client) {
-                    $groupList += $client->getGroupMemberships(\Model\Client\Client::MEMBERSHIP_MANUAL);
-                }
-                $newest->setGroupMemberships($groupList);
+                $this->mergeGroups($newest, $clients);
             }
-
             if ($mergePackages) {
-                // Update the client IDs directly. Assignments from all older
-                // clients are merged. Exclude packages that are already assigned.
-                $id = $newest['Id'];
-                $notIn = $this->_clientConfig->getSql()->select();
-                $notIn->columns(array('ivalue'))
-                      ->where(array('hardware_id' => $id, 'name' => 'DOWNLOAD'));
-                foreach ($clients as $client) {
-                    $where = array(
-                        'hardware_id' => $client['Id'],
-                        new \Zend\Db\Sql\Predicate\Operator('name', '!=', 'DOWNLOAD_SWITCH'),
-                        new \Zend\Db\Sql\Predicate\Like('name', 'DOWNLOAD%'),
-                    );
-                    // Construct list of package IDs because MySQL does not support subquery here
-                    $exclude = array_column($this->_clientConfig->selectWith($notIn)->toArray(), 'ivalue');
-                    // Avoid empty list
-                    if ($exclude) {
-                        $where[] = new \Zend\Db\Sql\Predicate\NotIn('ivalue', $exclude);
-                    }
-                    $this->_clientConfig->update(array('hardware_id' => $id), $where);
-                }
+                $this->mergePackages($newest, $clients);
             }
 
             // Delete all older clients
@@ -334,6 +304,66 @@ class DuplicatesManager
         } catch (\Exception $exception) {
             $connection->rollback();
             throw ($exception);
+        }
+    }
+
+    /**
+     * Overwrite custom fields on newest client with values from oldest client
+     *
+     * @param \Model\Client\Client $newestClient
+     * @param \Model\Client\Client[] $olderClients sorted by LastContactDate (ascending)
+     */
+    public function mergeCustomFields($newestClient, $olderClients)
+    {
+        $newestClient->setCustomFields($olderClients[0]['CustomFields']);
+    }
+
+    /**
+     * Merge manual group memberships from older clients into newest client
+     *
+     * If clients have different membership types for the same group, the
+     * resulting membership type is undefined.
+     *
+     * @param \Model\Client\Client $newestClient
+     * @param \Model\Client\Client[] $olderClients sorted by LastContactDate (ascending)
+     */
+    public function mergeGroups($newestClient, $olderClients)
+    {
+        $groupList = [];
+        foreach ($olderClients as $client) {
+            $groupList += $client->getGroupMemberships(\Model\Client\Client::MEMBERSHIP_MANUAL);
+        }
+        $newestClient->setGroupMemberships($groupList);
+    }
+
+    /**
+     * Add missing package assignments from older clients on the newest client
+     *
+     * @param \Model\Client\Client $newestClient
+     * @param \Model\Client\Client[] $olderClients sorted by LastContactDate (ascending)
+     */
+    public function mergePackages($newestClient, $olderClients)
+    {
+        $id = $newestClient['Id'];
+
+        // Exclude packages that are already assigned.
+        $notIn = $this->_clientConfig->getSql()->select();
+        $notIn->columns(['ivalue'])->where(['hardware_id' => $id, 'name' => 'DOWNLOAD']);
+
+        foreach ($olderClients as $client) {
+            $where = [
+                'hardware_id' => $client['Id'],
+                new \Zend\Db\Sql\Predicate\Operator('name', '!=', 'DOWNLOAD_SWITCH'),
+                new \Zend\Db\Sql\Predicate\Like('name', 'DOWNLOAD%'),
+            ];
+            // Construct list of package IDs because MySQL does not support subquery here
+            $exclude = array_column($this->_clientConfig->selectWith($notIn)->toArray(), 'ivalue');
+            // Avoid empty list
+            if ($exclude) {
+                $where[] = new \Zend\Db\Sql\Predicate\NotIn('ivalue', $exclude);
+            }
+            // Update the client IDs directly.
+            $this->_clientConfig->update(array('hardware_id' => $id), $where);
         }
     }
 

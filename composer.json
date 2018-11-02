@@ -62,6 +62,7 @@
         "hschletz/doxygen-phpdoc": "^1.0",
         "mikey179/vfsStream": "*",
         "phpunit/dbunit": "*",
+        "sebastian/peek-and-poke": "1.0.*-dev",
         "squizlabs/php_codesniffer": "2.*",
         "symfony/process": "^3.4",
         "zendframework/zend-dom": "^2.5",

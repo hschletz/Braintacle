@@ -193,271 +193,269 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $this->_getModel()->find('invalid');
     }
 
-    /**
-     * Test merge() with less than 2 clients (no action is taken)
-     */
-    public function testMergeNone()
+    public function mergeNoneWithLessThan2ClientsProvider()
     {
-        $mergeIds = array(2, 2); // Test deduplication of IDs
-
-        $clientManager = $this->createMock('Model\Client\ClientManager');
-        $clientManager->expects($this->never())->method('getClient');
-
-        $clientConfig = $this->createMock('Database\Table\ClientConfig');
-        $clientConfig->expects($this->never())->method('update');
-
-        $model = $this->_getModel(
-            array(
-                'Model\Client\ClientManager' => $clientManager,
-                'Database\Table\ClientConfig' => $clientConfig,
-            )
-        );
-        $model->merge($mergeIds, true, true, true);
+        return [
+            [[]],
+            [[1]],
+            [[1, 1]], // IDs get deduplicated
+        ];
     }
 
-    /**
-     * Test merge() with locking error (operation should abort)
-     */
+    /** @dataProvider mergeNoneWithLessThan2ClientsProvider */
+    public function testMergeWithLessThan2Clients($clientIds)
+    {
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->disableOriginalConstructor()
+                      ->setMethodsExcept(['merge'])
+                      ->getMock();
+
+        $model->expects($this->never())->method('mergeCustomFields');
+        $model->expects($this->never())->method('mergeGroups');
+        $model->expects($this->never())->method('mergePackages');
+
+        $model->merge($clientIds, true, true, true);
+    }
+
     public function testMergeLockingError()
     {
-        $mergeIds = array(2, 3);
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Cannot lock client 2');
+
+        $connection = $this->createMock('Zend\Db\Adapter\Driver\ConnectionInterface');
+        $connection->expects($this->at(0))->method('beginTransaction');
+        $connection->expects($this->at(1))->method('rollback');
+        $connection->expects($this->never())->method('commit');
+
+        $clients = $this->createMock('Database\Table\Clients');
+        $clients->method('getConnection')->willReturn($connection);
 
         $client = $this->createMock('Model\Client\Client');
         $client->method('lock')->willReturn(false);
-        $client->expects($this->never())->method('setCustomFields');
-        $client->expects($this->never())->method('setGroupMemberships');
 
         $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->method('getClient')->willReturn($client);
         $clientManager->expects($this->never())->method('deleteClient');
 
-        $clientConfig = $this->createMock('Database\Table\ClientConfig');
-        $clientConfig->expects($this->never())->method('update');
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->disableOriginalConstructor()
+                      ->setMethodsExcept(['merge'])
+                      ->getMock();
 
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('Cannot lock client 2');
-        $model = $this->_getModel(
-            array(
-                'Model\Client\ClientManager' => $clientManager,
-                'Database\Table\ClientConfig' => $clientConfig,
-            )
-        );
-        $model->merge($mergeIds, true, true, true);
+        $model->expects($this->never())->method('mergeCustomFields');
+        $model->expects($this->never())->method('mergeGroups');
+        $model->expects($this->never())->method('mergePackages');
+
+        $proxy = new \SebastianBergmann\PeekAndPoke\Proxy($model);
+        $proxy->_clients = $clients;
+        $proxy->_clientManager = $clientManager;
+        $proxy->merge([2, 3], true, true, true);
     }
 
-    /**
-     * Test merge() with no extra merging (just delete duplicate)
-     */
-    public function testMergeBasic()
+    public function mergeWithoutMergingAttributesProvider()
     {
-        $mergeIds = array(2, 2, 3, 3); // Test deduplication of IDs
-
-        $client2 = $this->createMock('Model\Client\Client');
-        $client2->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:02:33'));
-        $client2->method('lock')->willReturn(true);
-        $client2->expects($this->never())->method('setCustomFields');
-        $client2->expects($this->never())->method('setGroupMemberships');
-
-        $client3 = $this->createMock('Model\Client\Client');
-        $client3->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:03:33'));
-        $client3->method('lock')->willReturn(true);
-        $client3->expects($this->once())->method('unlock');
-        $client3->expects($this->never())->method('setCustomFields');
-        $client3->expects($this->never())->method('setGroupMemberships');
-
-        $clientManager = $this->createMock('Model\Client\ClientManager');
-        $clientManager->method('getClient')
-                      ->withConsecutive(array(2), array(3))
-                      ->will($this->onConsecutiveCalls($client2, $client3));
-        $clientManager->expects($this->once())->method('deleteClient')->with($this->identicalTo($client2), false);
-
-        $clientConfig = $this->createMock('Database\Table\ClientConfig');
-        $clientConfig->expects($this->never())->method('update');
-
-        $model = $this->_getModel(
-            array(
-                'Model\Client\ClientManager' => $clientManager,
-                'Database\Table\ClientConfig' => $clientConfig,
-            )
-        );
-        $model->merge($mergeIds, false, false, false); // Don't merge any extra information
+        return [
+            [[1, 2, 3]],
+            [[1, 1, 2, 2, 3, 3]], // Test deduplication
+            [[3, 2, 1]], // Test reversed order - should not make a difference
+        ];
     }
 
-    /**
-     * Test merge() with reverse specification of IDs (ensure independence from ID ordering)
-     */
-    public function testMergeReverse()
+    /** @dataProvider mergeWithoutMergingAttributesProvider */
+    public function testMergeWithoutMergingAttributes($clientIds)
     {
-        $mergeIds = array(3, 3, 2, 2); // Test deduplication of IDs
+        $dateTime1 = $this->createMock('DateTime');
+        $dateTime1->method('getTimestamp')->willReturn(111);
+        $dateTime2 = $this->createMock('DateTime');
+        $dateTime2->method('getTimestamp')->willReturn(222);
+        $dateTime3 = $this->createMock('DateTime');
+        $dateTime3->method('getTimestamp')->willReturn(333);
 
-        $client2 = $this->createMock('Model\Client\Client');
-        $client2->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:02:33'));
-        $client2->method('lock')->willReturn(true);
-        $client2->expects($this->never())->method('setCustomFields');
-        $client2->expects($this->never())->method('setGroupMemberships');
-
-        $client3 = $this->createMock('Model\Client\Client');
-        $client3->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:03:33'));
-        $client3->method('lock')->willReturn(true);
-        $client3->expects($this->once())->method('unlock');
-        $client3->expects($this->never())->method('setCustomFields');
-        $client3->expects($this->never())->method('setGroupMemberships');
-
-        $clientManager = $this->createMock('Model\Client\ClientManager');
-        $clientManager->method('getClient')
-                      ->withConsecutive(array(3), array(2))
-                      ->will($this->onConsecutiveCalls($client3, $client2));
-        $clientManager->expects($this->once())->method('deleteClient')->with($this->identicalTo($client2), false);
-
-        $clientConfig = $this->createMock('Database\Table\ClientConfig');
-        $clientConfig->expects($this->never())->method('update');
-
-        $model = $this->_getModel(
-            array(
-                'Model\Client\ClientManager' => $clientManager,
-                'Database\Table\ClientConfig' => $clientConfig,
-            )
-        );
-        $model->merge($mergeIds, false, false, false);
-    }
-
-    /**
-     * Test merge() with merging of custom fields
-     */
-    public function testMergeCustomFields()
-    {
-        $client2 = $this->createMock('Model\Client\Client');
-        $client2->method('offsetGet')
-                ->withConsecutive(array('LastContactDate'), array('CustomFields'))
-                ->will($this->onConsecutiveCalls(new \DateTime('2013-12-23 13:02:33'), 'custom_fields'));
-        $client2->method('lock')->willReturn(true);
-        $client2->expects($this->never())->method('setCustomFields');
-        $client2->expects($this->never())->method('setGroupMemberships');
-
-        $client3 = $this->createMock('Model\Client\Client');
-        $client3->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:03:33'));
-        $client3->method('lock')->willReturn(true);
-        $client3->expects($this->once())->method('unlock');
-        $client3->expects($this->once())->method('setCustomFields')->with('custom_fields');
-        $client3->expects($this->never())->method('setGroupMemberships');
-
-        $clientManager = $this->createMock('Model\Client\ClientManager');
-        $clientManager->method('getClient')
-                      ->withConsecutive(array(2), array(3))
-                      ->will($this->onConsecutiveCalls($client2, $client3));
-        $clientManager->expects($this->once())->method('deleteClient')->with($this->identicalTo($client2), false);
-
-        $clientConfig = $this->createMock('Database\Table\ClientConfig');
-        $clientConfig->expects($this->never())->method('update');
-
-        $model = $this->_getModel(
-            array(
-                'Model\Client\ClientManager' => $clientManager,
-                'Database\Table\ClientConfig' => $clientConfig,
-            )
-        );
-        $model->merge(array(2, 3), true, false, false);
-    }
-
-    /**
-     * Test merge() with merging of group memberships
-     */
-    public function testMergeGroups()
-    {
         $client1 = $this->createMock('Model\Client\Client');
-        $client1->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:01:33'));
-        $client1->method('lock')->willReturn(true);
-        $client1->method('getGroupMemberships')->with(\Model\Client\Client::MEMBERSHIP_MANUAL)->willReturn(
-            array(
-                1 => 'membership1',
-                2 => 'membership2',
-            )
-        );
-        $client1->expects($this->never())->method('setCustomFields');
-        $client1->expects($this->never())->method('setGroupMemberships');
+        $client1->expects($this->at(0))->method('lock')->willReturn(true);
+        $client1->expects($this->at(1))->method('offsetGet')->with('LastContactDate')->willReturn($dateTime1);
+        $client1->expects($this->never())->method('unlock');
 
         $client2 = $this->createMock('Model\Client\Client');
-        $client2->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:02:33'));
-        $client2->method('lock')->willReturn(true);
-        $client2->method('getGroupMemberships')->with(\Model\Client\Client::MEMBERSHIP_MANUAL)->willReturn(
-            array(
-                2 => 'membership2',
-                3 => 'membership3',
-            )
-        );
-        $client2->expects($this->never())->method('setCustomFields');
-        $client2->expects($this->never())->method('setGroupMemberships');
+        $client2->expects($this->at(0))->method('lock')->willReturn(true);
+        $client2->expects($this->at(1))->method('offsetGet')->with('LastContactDate')->willReturn($dateTime2);
+        $client2->expects($this->never())->method('unlock');
 
+        // The newest client that gets preserved
         $client3 = $this->createMock('Model\Client\Client');
-        $client3->method('offsetGet')->with('LastContactDate')->willReturn(new \DateTime('2013-12-23 13:03:33'));
-        $client3->method('lock')->willReturn(true);
-        $client3->expects($this->once())->method('unlock');
-        $client3->expects($this->never())->method('setCustomFields');
-        $client3->expects($this->once())->method('setGroupMemberships')->with(
-            array(
-                1 => 'membership1',
-                2 => 'membership2',
-                3 => 'membership3',
-            )
-        );
+        $client3->expects($this->at(0))->method('lock')->willReturn(true);
+        $client3->expects($this->at(1))->method('offsetGet')->with('LastContactDate')->willReturn($dateTime3);
+        $client3->expects($this->at(2))->method('unlock');
 
         $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->method('getClient')
-                      ->withConsecutive(array(1), array(2), array(3))
-                      ->will($this->onConsecutiveCalls($client1, $client2, $client3));
+                      ->willReturnMap([[1, $client1], [2, $client2], [3, $client3]]);
         $clientManager->expects($this->exactly(2))
                       ->method('deleteClient')
-                      ->withConsecutive(
-                          array($this->identicalTo($client1), false),
-                          array($this->identicalTo($client2), false)
-                      );
+                      ->withConsecutive([$this->identicalTo($client1)], [$this->identicalTo($client2)]);
 
-        $clientConfig = $this->createMock('Database\Table\ClientConfig');
-        $clientConfig->expects($this->never())->method('update');
+        $connection = $this->createMock('Zend\Db\Adapter\Driver\ConnectionInterface');
+        $connection->expects($this->at(0))->method('beginTransaction');
+        $connection->expects($this->at(1))->method('commit');
+        $connection->expects($this->never())->method('rollback');
 
-        $model = $this->_getModel(
-            array(
-                'Model\Client\ClientManager' => $clientManager,
-                'Database\Table\ClientConfig' => $clientConfig,
-            )
-        );
-        $model->merge(array(1, 2, 3), false, true, false);
+        $clients = $this->createMock('Database\Table\Clients');
+        $clients->method('getConnection')->willReturn($connection);
+
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->disableOriginalConstructor()
+                      ->setMethodsExcept(['merge'])
+                      ->getMock();
+
+        $model->expects($this->never())->method('mergeCustomFields');
+        $model->expects($this->never())->method('mergeGroups');
+        $model->expects($this->never())->method('mergePackages');
+
+        $proxy = new \SebastianBergmann\PeekAndPoke\Proxy($model);
+        $proxy->_clients = $clients;
+        $proxy->_clientManager = $clientManager;
+        $proxy->merge($clientIds, false, false, false);
     }
 
-    /**
-     * Test merge() with merging of package assignments
-     */
-    public function testMergePackages()
+    public function mergeWithMergingAttributesProvider()
     {
-        $client2 = $this->createMock('Model\Client\Client');
-        $client2->method('offsetGet')
-                ->withConsecutive(array('LastContactDate'), array('Id'))
-                ->will($this->onConsecutiveCalls(new \DateTime('2013-12-23 13:02:33'), 2));
-        $client2->method('lock')->willReturn(true);
-        $client2->expects($this->never())->method('setCustomFields');
-        $client2->expects($this->never())->method('setGroupMemberships');
+        return [
+            [true, false, false],
+            [false, true, false],
+            [false, false, true],
+            [true, true, true]
+        ];
+    }
 
+    /** @dataProvider mergeWithMergingAttributesProvider */
+    public function testMergeWithMergingAttributes($mergeCustomFields, $mergeGroups, $mergePackages)
+    {
+        $dateTime1 = $this->createMock('DateTime');
+        $dateTime1->method('getTimestamp')->willReturn(111);
+        $dateTime2 = $this->createMock('DateTime');
+        $dateTime2->method('getTimestamp')->willReturn(222);
+        $dateTime3 = $this->createMock('DateTime');
+        $dateTime3->method('getTimestamp')->willReturn(333);
+
+        $client1 = $this->createMock('Model\Client\Client');
+        $client1->method('lock')->willReturn(true);
+        $client1->method('offsetGet')->with('LastContactDate')->willReturn($dateTime1);
+
+        $client2 = $this->createMock('Model\Client\Client');
+        $client2->method('lock')->willReturn(true);
+        $client2->method('offsetGet')->with('LastContactDate')->willReturn($dateTime2);
+
+        // The newest client that gets preserved
         $client3 = $this->createMock('Model\Client\Client');
-        $client3->method('offsetGet')
-                ->withConsecutive(array('LastContactDate'), array('Id'))
-                ->will($this->onConsecutiveCalls(new \DateTime('2013-12-23 13:03:33'), 3));
         $client3->method('lock')->willReturn(true);
-        $client3->expects($this->once())->method('unlock');
-        $client3->expects($this->never())->method('setCustomFields');
-        $client3->expects($this->never())->method('setGroupMemberships');
+        $client3->method('offsetGet')->with('LastContactDate')->willReturn($dateTime3);
 
         $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->method('getClient')
-                      ->withConsecutive(array(2), array(3))
-                      ->will($this->onConsecutiveCalls($client2, $client3));
-        $clientManager->expects($this->once())->method('deleteClient')->with($this->identicalTo($client2), false);
+                      ->willReturnMap([[1, $client1], [2, $client2], [3, $client3]]);
 
-        $model = $this->_getModel(
-            array(
-                'Model\Client\ClientManager' => $clientManager,
-            )
-        );
-        $model->merge(array(2, 3), false, false, true);
+        $connection = $this->createMock('Zend\Db\Adapter\Driver\ConnectionInterface');
+
+        $clients = $this->createMock('Database\Table\Clients');
+        $clients->method('getConnection')->willReturn($connection);
+
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->disableOriginalConstructor()
+                      ->setMethodsExcept(['merge'])
+                      ->getMock();
+
+        foreach (['mergeCustomFields', 'mergeGroups', 'mergePackages'] as $method) {
+            if ($$method) {
+                $model->expects($this->once())
+                      ->method($method)
+                      ->with($this->identicalTo($client3), $this->identicalTo([$client1, $client2]));
+            } else {
+                $model->expects($this->never())->method($method);
+            }
+        }
+
+        $proxy = new \SebastianBergmann\PeekAndPoke\Proxy($model);
+        $proxy->_clients = $clients;
+        $proxy->_clientManager = $clientManager;
+        $proxy->merge([1, 2, 3], $mergeCustomFields, $mergeGroups, $mergePackages);
+    }
+
+    public function testMergeCustomFields()
+    {
+        $newestClient = $this->createMock('Model\Client\Client');
+        $newestClient->expects($this->once())->method('setCustomFields')->with(['field' => 'value']);
+
+        $olderClients = [
+            ['CustomFields' => ['field' => 'value']],
+            ['CustomFields' => ['field' => 'ignored']],
+        ];
+
+        $model = $this->_getModel();
+        $model->mergeCustomFields($newestClient, $olderClients);
+    }
+
+    public function testMergeGroups()
+    {
+        $memberships = [
+            1 => \Model\Client\Client::MEMBERSHIP_ALWAYS,
+            2 => \Model\Client\client::MEMBERSHIP_NEVER,
+            3 => \Model\Client\client::MEMBERSHIP_ALWAYS,
+        ];
+
+        $newestClient = $this->createMock('Model\Client\Client');
+        $newestClient->expects($this->once())->method('setGroupMemberships')->with($memberships);
+
+        $client1 = $this->createMock('Model\Client\Client');
+        $client1->method('getGroupMemberships')->with(\Model\Client\Client::MEMBERSHIP_MANUAL)->willReturn([
+            1 => \Model\Client\Client::MEMBERSHIP_ALWAYS,
+            2 => \Model\Client\client::MEMBERSHIP_NEVER,
+        ]);
+
+        $client2 = $this->createMock('Model\Client\Client');
+        $client2->method('getGroupMemberships')->with(\Model\Client\Client::MEMBERSHIP_MANUAL)->willReturn([
+            2 => \Model\Client\client::MEMBERSHIP_NEVER,
+            3 => \Model\Client\client::MEMBERSHIP_ALWAYS,
+        ]);
+
+        $olderClients = [$client1, $client2];
+
+        $model = $this->_getModel();
+        $model->mergeGroups($newestClient, $olderClients);
+    }
+
+    public function testMergeGroupsWithConflictingMemberships()
+    {
+        // The resulting membership type is undefinded. Just check for the
+        // correct group ID and size.
+        $newestClient = $this->createMock('Model\Client\Client');
+        $newestClient->expects($this->once())
+                     ->method('setGroupMemberships')
+                     ->with($this->logicalAnd($this->countOf(1), $this->arrayHasKey(1)));
+
+        $client1 = $this->createMock('Model\Client\Client');
+        $client1->method('getGroupMemberships')->with(\Model\Client\Client::MEMBERSHIP_MANUAL)->willReturn([
+            1 => \Model\Client\Client::MEMBERSHIP_ALWAYS,
+        ]);
+
+        $client2 = $this->createMock('Model\Client\Client');
+        $client2->method('getGroupMemberships')->with(\Model\Client\Client::MEMBERSHIP_MANUAL)->willReturn([
+            1 => \Model\Client\client::MEMBERSHIP_NEVER,
+        ]);
+
+        $olderClients = [$client1, $client2];
+
+        $model = $this->_getModel();
+        $model->mergeGroups($newestClient, $olderClients);
+    }
+
+    public function testMergePackages()
+    {
+        $newestClient = ['Id' => 3];
+        $olderClients = [['Id' => 2]];
+
+        $model = $this->_getModel();
+        $model->mergePackages($newestClient, $olderClients);
+
         $this->assertTablesEqual(
             $this->_loadDataSet('MergePackages')->getTable('devices'),
             $this->getConnection()->createQueryTable(
@@ -474,35 +472,11 @@ EOT
 
     public function testMergePackagesNoPackagesToMerge()
     {
-        $client1 = $this->createMock('Model\Client\Client');
-        $client1->method('offsetGet')
-                ->withConsecutive(array('LastContactDate'), array('Id'))
-                ->willReturnOnConsecutiveCalls(new \DateTime('2013-12-23 13:01:33'), 1);
-        $client1->method('lock')->willReturn(true);
-        $client1->expects($this->never())->method('setCustomFields');
-        $client1->expects($this->never())->method('setGroupMemberships');
+        $newestClient = ['Id' => 4];
+        $olderClients = [['Id' => 1]];
 
-        $client4 = $this->createMock('Model\Client\Client');
-        $client4->method('offsetGet')
-                ->withConsecutive(array('LastContactDate'), array('Id'))
-                ->willReturnOnConsecutiveCalls(new \DateTime('2013-12-23 13:02:33'), 4);
-        $client4->method('lock')->willReturn(true);
-        $client4->expects($this->once())->method('unlock');
-        $client4->expects($this->never())->method('setCustomFields');
-        $client4->expects($this->never())->method('setGroupMemberships');
-
-        $clientManager = $this->createMock('Model\Client\ClientManager');
-        $clientManager->method('getClient')
-                      ->withConsecutive(array(4), array(1))
-                      ->willReturnOnConsecutiveCalls($client1, $client4);
-        $clientManager->expects($this->once())->method('deleteClient')->with($this->identicalTo($client1), false);
-
-        $model = $this->_getModel(
-            array(
-                'Model\Client\ClientManager' => $clientManager,
-            )
-        );
-        $model->merge(array(4, 1), false, false, true);
+        $model = $this->_getModel();
+        $model->mergePackages($newestClient, $olderClients);
 
         // Table should be unchanged
         $this->assertTablesEqual(
