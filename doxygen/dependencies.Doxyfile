@@ -8,6 +8,7 @@ INPUT                  = vendor/hschletz/nada/src \
                          vendor/zendframework/zend-console/src \
                          vendor/zendframework/zend-db/src \
                          vendor/zendframework/zend-eventmanager/src \
+                         vendor/zendframework/zend-filter/src \
                          vendor/zendframework/zend-form/src \
                          vendor/zendframework/zend-http/src \
                          vendor/zendframework/zend-hydrator/src \
@@ -19,6 +20,7 @@ INPUT                  = vendor/hschletz/nada/src \
                          vendor/zendframework/zend-servicemanager/src \
                          vendor/zendframework/zend-stdlib/src \
                          vendor/zendframework/zend-uri/src \
+                         vendor/zendframework/zend-validator/src \
                          vendor/zendframework/zend-view/src \
                          vendor/zfcampus/zf-console/src
 HTML_OUTPUT            = api/dependencies
