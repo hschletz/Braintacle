@@ -26,6 +26,12 @@ namespace Model\Test\Client;
  */
 class DuplicatesManagerTest extends \Model\Test\AbstractTest
 {
+    protected $_allOptions = [
+        \Model\Client\DuplicatesManager::MERGE_CUSTOM_FIELDS,
+        \Model\Client\DuplicatesManager::MERGE_GROUPS,
+        \Model\Client\DuplicatesManager::MERGE_PACKAGES,
+    ];
+
     /** {@inheritdoc} */
     protected static $_tables = array(
         'ClientConfig',
@@ -214,7 +220,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $model->expects($this->never())->method('mergeGroups');
         $model->expects($this->never())->method('mergePackages');
 
-        $model->merge($clientIds, true, true, true);
+        $model->merge($clientIds, $this->_allOptions);
     }
 
     public function testMergeLockingError()
@@ -249,7 +255,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $proxy = new \SebastianBergmann\PeekAndPoke\Proxy($model);
         $proxy->_clients = $clients;
         $proxy->_clientManager = $clientManager;
-        $proxy->merge([2, 3], true, true, true);
+        $proxy->merge([2, 3], $this->_allOptions);
     }
 
     public function mergeWithoutMergingAttributesProvider()
@@ -314,21 +320,21 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $proxy = new \SebastianBergmann\PeekAndPoke\Proxy($model);
         $proxy->_clients = $clients;
         $proxy->_clientManager = $clientManager;
-        $proxy->merge($clientIds, false, false, false);
+        $proxy->merge($clientIds, []);
     }
 
     public function mergeWithMergingAttributesProvider()
     {
         return [
-            [true, false, false],
-            [false, true, false],
-            [false, false, true],
-            [true, true, true]
+            [[\Model\Client\DuplicatesManager::MERGE_CUSTOM_FIELDS]],
+            [[\Model\Client\DuplicatesManager::MERGE_GROUPS]],
+            [[\Model\Client\DuplicatesManager::MERGE_PACKAGES]],
+            [$this->_allOptions]
         ];
     }
 
     /** @dataProvider mergeWithMergingAttributesProvider */
-    public function testMergeWithMergingAttributes($mergeCustomFields, $mergeGroups, $mergePackages)
+    public function testMergeWithMergingAttributes($options)
     {
         $dateTime1 = $this->createMock('DateTime');
         $dateTime1->method('getTimestamp')->willReturn(111);
@@ -364,20 +370,20 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
                       ->setMethodsExcept(['merge'])
                       ->getMock();
 
-        foreach (['mergeCustomFields', 'mergeGroups', 'mergePackages'] as $method) {
-            if ($$method) {
+        foreach ($this->_allOptions as $option) {
+            if (in_array($option, $options)) {
                 $model->expects($this->once())
-                      ->method($method)
+                      ->method($option)
                       ->with($this->identicalTo($client3), $this->identicalTo([$client1, $client2]));
             } else {
-                $model->expects($this->never())->method($method);
+                $model->expects($this->never())->method($option);
             }
         }
 
         $proxy = new \SebastianBergmann\PeekAndPoke\Proxy($model);
         $proxy->_clients = $clients;
         $proxy->_clientManager = $clientManager;
-        $proxy->merge([1, 2, 3], $mergeCustomFields, $mergeGroups, $mergePackages);
+        $proxy->merge([1, 2, 3], $options);
     }
 
     public function testMergeCustomFields()

@@ -51,6 +51,21 @@ use Database\Table;
 class DuplicatesManager
 {
     /**
+     * Option for merge(): Preserve custom fields from oldest client
+     */
+    const MERGE_CUSTOM_FIELDS = 'mergeCustomFields';
+
+    /**
+     * Option for merge(): Preserve manual group assignments from old clients
+     */
+    const MERGE_GROUPS = 'mergeGroups';
+
+    /**
+     * Option for merge(): Preserve package assignments from old clients missing on new client
+     */
+    const MERGE_PACKAGES = 'mergePackages';
+
+    /**
      * Clients prototype
      * @var \Database\Table\Clients
      */
@@ -252,12 +267,10 @@ class DuplicatesManager
      * remaining client.
      *
      * @param integer[] $clientIds IDs of clients to merge
-     * @param bool $mergeCustomFields Preserve custom fields from oldest client
-     * @param bool $mergeGroups Preserve manual group assignments from old clients
-     * @param bool $mergePackages Preserve package assignments from old clients missing on new client
+     * @param array $options Attributes to merge, see MERGE_* constants
      * @throws \RuntimeException if an affected client cannot be locked
      */
-    public function merge(array $clientIds, $mergeCustomFields, $mergeGroups, $mergePackages)
+    public function merge(array $clientIds, array $options)
     {
         // Remove duplicate IDs
         $clientIds = array_unique($clientIds);
@@ -284,13 +297,13 @@ class DuplicatesManager
             // Newest client will be the only one not to be deleted, remove it from the list
             $newest = array_pop($clients);
 
-            if ($mergeCustomFields) {
+            if (in_array(self::MERGE_CUSTOM_FIELDS, $options)) {
                 $this->mergeCustomFields($newest, $clients);
             }
-            if ($mergeGroups) {
+            if (in_array(self::MERGE_GROUPS, $options)) {
                 $this->mergeGroups($newest, $clients);
             }
-            if ($mergePackages) {
+            if (in_array(self::MERGE_PACKAGES, $options)) {
                 $this->mergePackages($newest, $clients);
             }
 

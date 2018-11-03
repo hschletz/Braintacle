@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for ShowDuplicates
+ * Tests for ShowDuplicates form
  *
  * Copyright (C) 2011-2018 Holger Schletz <holger.schletz@web.de>
  *
@@ -21,148 +21,169 @@
 
 namespace Console\Test\Form;
 
-use Zend\Dom\Document\Query as Query;
-
-/**
- * Tests for ShowDuplicates
- */
 class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
 {
-    /**
-     * Config mock object
-     * @var \Model\Config
-     */
-    protected $_config;
-
-    /**
-     * Set up Config mock object
-     */
-    public function setUp()
-    {
-        $this->_config = $this->createMock('Model\Config');
-        $this->_config->expects($this->any())
-                      ->method('__get')
-                      ->will(
-                          $this->returnValueMap(
-                              array(
-                                array('defaultMergeCustomFields', 1),
-                                array('defaultMergeGroups', 1),
-                                array('defaultMergePackages', 0),
-                              )
-                          )
-                      );
-        parent::setUp();
-    }
-
     /** {@inheritdoc} */
     protected function _getForm()
     {
-        $form = new \Console\Form\ShowDuplicates(null, array('config' => $this->_config));
+        $form = new \Console\Form\ShowDuplicates(null, ['config' => $this->createMock('Model\Config')]);
         $form->init();
         return $form;
     }
 
-    /**
-     * Tests for init()
-     */
     public function testInit()
     {
-        $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $this->_form->get('mergeCustomFields'));
-        $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $this->_form->get('mergeGroups'));
-        $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $this->_form->get('mergePackages'));
+        $mergeOptions = $this->_form->get('mergeOptions');
+        $this->assertInstanceOf('\Zend\Form\Element\MultiCheckbox', $mergeOptions);
         $this->assertInstanceOf('\Library\Form\Element\Submit', $this->_form->get('submit'));
     }
 
-    /**
-     * Tests for input filter provided by init()
-     */
-    public function testInputFilter()
+    public function initMergeOptionsProvider()
+    {
+        return [
+            ['mergeCustomFields'],
+            ['mergeGroups'],
+            ['mergePackages'],
+        ];
+    }
+
+    /** @dataProvider initMergeOptionsProvider */
+    public function testInitMergeOptions($option)
+    {
+        $config = $this->createMock('Model\Config');
+        $config->method('__get')->willReturnMap([
+            ['defaultMergeCustomFields', (integer) ($option == 'mergeCustomFields')],
+            ['defaultMergeGroups', (integer) ($option == 'mergeGroups')],
+            ['defaultMergePackages', (integer) ($option == 'mergePackages')],
+        ]);
+
+        $expectedOptions = [
+            [
+                'value' => 'mergeCustomFields',
+                'label' => 'Merge user supplied information',
+                'selected' => (integer) ($option == 'mergeCustomFields'),
+            ],
+            [
+                'value' => 'mergeGroups',
+                'label' => 'Merge manual group assignments',
+                'selected' => (integer) ($option == 'mergeGroups'),
+            ],
+            [
+                'value' => 'mergePackages',
+                'label' => 'Merge missing package assignments',
+                'selected' => (integer) ($option == 'mergePackages'),
+            ],
+        ];
+
+        $form = $this->getMockBuilder($this->_getFormClass())
+                     ->setMethods(['getOption'])
+                     ->getMock();
+        $form->method('getOption')->with('config')->willReturn($config);
+        $form->init();
+
+        $this->assertEquals($expectedOptions, $form->get('mergeOptions')->getValueOptions());
+    }
+
+    public function testInputFilterClients()
     {
         // Test without "clients" array (happens when no client is selected)
-        $data = array(
-            'mergeCustomFields' => '1',
-            'mergeGroups' => '1',
-            'mergePackages' => '0',
+        $data = [
             'submit' => 'Merge selected clients',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
-        );
+        ];
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
 
         // Test with empty "clients" array
-        $data['clients'] = array();
+        $data['clients'] = [];
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
 
         // Test with 2 identical clients
-        $data['clients'] = array('1', '1');
+        $data['clients'] = ['1', '1'];
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
 
         // Test with invalid array content
-        $data['clients'] = array('1', 'a');
+        $data['clients'] = ['1', 'a'];
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
 
         // Test with 2 identical clients + 1 extra
-        $data['clients'] = array('1', '1', '2');
+        $data['clients'] = ['1', '1', '2'];
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
 
         // Test filtered and validated data
-        $this->assertEquals(array('1', '2'), array_values($this->_form->getData()['clients']));
-
-        // Test invalid input on other elements to ensure that builtin input
-        // filters are not overwritten
-        $data['mergeGroups'] = '2';
-        $this->_form->setData($data);
-        $this->assertFalse($this->_form->isValid());
-
-        // Test non-array input on "clients"
-        $this->expectException('InvalidArgumentException');
-        $data['clients'] = '';
-        $this->_form->setData($data);
-        $this->_form->isValid();
+        $this->assertEquals(['1', '2'], array_values($this->_form->getData()['clients']));
     }
 
-    public function testGetMessagesNoSelection()
+    public function testInputFilterClientsNonArray()
     {
-        // Test with invalid "clients" and "mergeGroups" fields
-        $data = array(
-            'mergeCustomFields' => '1',
-            'mergeGroups' => '2',
-            'mergePackages' => '0',
+        $this->expectException('InvalidArgumentException');
+        $data = [
             'submit' => 'Merge selected clients',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
-        );
+            'clients' => '',
+        ];
         $this->_form->setData($data);
         $this->_form->isValid();
-
-        $this->assertCount(2, $this->_form->getMessages());
-        $this->assertCount(1, $this->_form->getMessages('mergeGroups'));
-        $this->assertEquals(
-            array('TRANSLATE(At least 2 different clients have to be selected)'),
-            $this->_form->getMessages('clients')
-        );
     }
 
-    public function testGetMessagesInsufficientSelection()
+    public function testInputFilterMergeOptions()
     {
-        $data = array(
-            'clients' => array('1'),
-            'mergeCustomFields' => '1',
-            'mergeGroups' => '1',
-            'mergePackages' => '0',
-            'submit' => 'Merge selected client',
+        $data = [
+            'submit' => 'Merge selected clients',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
-        );
+            'clients' => [1, 2],
+        ];
+        $this->_form->setData($data);
+        $this->assertTrue($this->_form->isValid());
+        $this->assertSame([], $this->_form->getData()['mergeOptions']);
+
+        $data['mergeOptions'] = ['mergeCustomFields', 'mergePackages'];
+        $this->_form->setData($data);
+        $this->assertTrue($this->_form->isValid());
+        $this->assertEquals(['mergeCustomFields', 'mergePackages'], $this->_form->getData()['mergeOptions']);
+
+        $data['mergeOptions'][] = 'invalid';
+        $this->_form->setData($data);
+        $this->assertFalse($this->_form->isValid());
+    }
+
+    public function testGetMessagesError()
+    {
+        $data = [
+            'submit' => 'Merge selected clients',
+            '_csrf' => $this->_form->get('_csrf')->getValue(),
+            'mergeOptions' => 'invalid',
+        ];
         $this->_form->setData($data);
         $this->_form->isValid();
 
-        $this->assertCount(1, $this->_form->getMessages());
-        $this->assertEquals(
-            array('TRANSLATE(At least 2 different clients have to be selected)'),
-            $this->_form->getMessages('clients')
-        );
+        $messages = $this->_form->getMessages();
+        $this->assertCount(2, $messages);
+        $this->assertArrayHasKey('clients', $messages);
+        $this->assertArrayHasKey('mergeOptions', $messages);
+
+        $this->assertEquals(['TRANSLATE(At least 2 different clients have to be selected)'], $messages['clients']);
+
+        $this->assertEquals($messages['clients'], $this->_form->getMessages('clients'));
+        $this->assertEquals($messages['mergeOptions'], $this->_form->getMessages('mergeOptions'));
+    }
+
+    public function testGetMessagesSuccess()
+    {
+        $data = [
+            'submit' => 'Merge selected clients',
+            '_csrf' => $this->_form->get('_csrf')->getValue(),
+            'clients' => [1, 2],
+        ];
+        $this->_form->setData($data);
+        $this->_form->isValid();
+
+        $this->assertSame([], $this->_form->getMessages());
+        $this->assertSame([], $this->_form->getMessages('clients'));
+        $this->assertSame([], $this->_form->getMessages('mergeOptions'));
     }
 }

@@ -56,10 +56,12 @@ class Module implements
             ),
             'filters' => array(
                 'aliases' => array(
+                    'Library\EmptyArray' => 'Library\Filter\EmptyArray',
                     'Library\FixEncodingErrors' => 'Library\Filter\FixEncodingErrors',
                     'Library\LogLevel' => 'Library\Filter\LogLevel',
                 ),
                 'factories' => array(
+                    'Library\Filter\EmptyArray' => 'Zend\ServiceManager\Factory\InvokableFactory',
                     'Library\Filter\FixEncodingErrors' => 'Zend\ServiceManager\Factory\InvokableFactory',
                     'Library\Filter\LogLevel' => 'Zend\ServiceManager\Factory\InvokableFactory',
                 ),

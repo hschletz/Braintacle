@@ -178,27 +178,29 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testManageActionPostValid()
     {
-        $params = array(
-            'clients' => array(1, 2),
-            'mergeCustomFields' => '1',
-            'mergeGroups' => '1',
-            'mergePackages' => '0'
-        );
-        $this->_showDuplicates->expects($this->once())
-                              ->method('setData')
-                              ->with($params);
-        $this->_showDuplicates->expects($this->once())
-                              ->method('isValid')
-                              ->will($this->returnValue(true));
-        $this->_showDuplicates->expects($this->once())
-                              ->method('getData')
-                              ->will($this->returnValue($params));
+        $params = ['key' => 'value'];
+
+        $mergeOptions = ['mergeCustomFields', 'mergePackages'];
+        $formData = [
+            'clients' => [1, 2],
+            'mergeOptions' => $mergeOptions
+        ];
+
+        $this->_showDuplicates->expects($this->once())->method('setData')->with($params);
+        $this->_showDuplicates->expects($this->once())->method('isValid')->willReturn(true);
+        $this->_showDuplicates->method('getData')->willReturn($formData);
         $this->_showDuplicates->expects($this->never())->method('getMessages');
-        $this->_showDuplicates->expects($this->never())->method('render');
+
         $this->_duplicates->expects($this->never())->method('find');
-        $this->_duplicates->expects($this->once())
-                          ->method('merge')
-                          ->with(array(1, 2), true, true, '0');
+        $this->_duplicates->expects($this->once())->method('merge')->with([1, 2], $mergeOptions);
+
+        $formHelper = $this->createMock('Console\View\Helper\Form\ShowDuplicates');
+        $formHelper->expects($this->never())->method('__invoke');
+
+        $this->getApplicationServiceLocator()
+             ->get('ViewHelperManager')
+             ->setService('consoleFormShowDuplicates', $formHelper);
+
         $this->dispatch('/console/duplicates/manage/', 'POST', $params);
         $this->assertRedirectTo('/console/duplicates/index/');
         $this->assertContains(

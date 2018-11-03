@@ -43,20 +43,25 @@ class ShowDuplicates extends Form
         parent::init();
         $config = $this->getOption('config');
 
-        $mergeCustomFields = new Element\Checkbox('mergeCustomFields');
-        $mergeCustomFields->setLabel('Merge user supplied information');
-        $mergeCustomFields->setChecked($config->defaultMergeCustomFields);
-        $this->add($mergeCustomFields);
-
-        $mergeGroups = new Element\Checkbox('mergeGroups');
-        $mergeGroups->setLabel('Merge manual group assignments');
-        $mergeGroups->setChecked($config->defaultMergeGroups);
-        $this->add($mergeGroups);
-
-        $mergePackages = new Element\Checkbox('mergePackages');
-        $mergePackages->setLabel('Merge missing package assignments');
-        $mergePackages->setChecked($config->defaultMergePackages);
-        $this->add($mergePackages);
+        $mergeOptions = new Element\MultiCheckbox('mergeOptions');
+        $mergeOptions->setValueOptions([
+            [
+                'value' => \Model\Client\DuplicatesManager::MERGE_CUSTOM_FIELDS,
+                'label' => $this->_('Merge user supplied information'),
+                'selected' => $config->defaultMergeCustomFields,
+            ],
+            [
+                'value' => \Model\Client\DuplicatesManager::MERGE_GROUPS,
+                'label' => $this->_('Merge manual group assignments'),
+                'selected' => $config->defaultMergeGroups,
+            ],
+            [
+                'value' => \Model\Client\DuplicatesManager::MERGE_PACKAGES,
+                'label' => $this->_('Merge missing package assignments'),
+                'selected' => $config->defaultMergePackages,
+            ],
+        ]);
+        $this->add($mergeOptions);
 
         $submit = new \Library\Form\Element\Submit('submit');
         $submit->setLabel('Merge selected clients');
@@ -71,44 +76,40 @@ class ShowDuplicates extends Form
                        \Zend\Validator\Callback::INVALID_VALUE
                    );
         $inputFilter = new \Zend\InputFilter\InputFilter;
-        $inputFilter->add(
-            array(
-                'name' => 'clients',
-                'required' => true,
-                'continue_if_empty' => true, // Have empty/missing array processed by callback validator
-                'filters' => array(
-                    (array($this, 'clientsFilter')),
-                ),
-                'validators' => array(
-                    $arrayCount,
-                    new \Zend\Validator\Explode(array('validator' => new \Zend\Validator\Digits)),
-                ),
-                // Explicit message in case of missing field (no clients selected)
-                'error_message' => $arrayCount->getDefaultTranslator()->translate(
-                    $arrayCount->getMessageTemplates()[\Zend\Validator\Callback::INVALID_VALUE]
-                )
+        $inputFilter->add([
+            'name' => 'clients',
+            'required' => true,
+            'continue_if_empty' => true, // Have empty/missing array processed by callback validator
+            'filters' => [[$this, 'clientsFilter']],
+            'validators' => [
+                $arrayCount,
+                new \Zend\Validator\Explode(['validator' => new \Zend\Validator\Digits]),
+            ],
+            // Explicit message in case of missing field (no clients selected)
+            'error_message' => $arrayCount->getDefaultTranslator()->translate(
+                $arrayCount->getMessageTemplates()[\Zend\Validator\Callback::INVALID_VALUE]
             )
-        );
+        ]);
+        $inputFilter->add([
+            'name' => 'mergeOptions',
+            'required' => false, // Allow unchecking all options
+            'filters' => [['name' => 'Library\Filter\EmptyArray']],
+        ]);
         $this->setInputFilter($inputFilter);
     }
 
     /** {@inheritdoc} */
     public function getMessages($elementName = null)
     {
-        if ($elementName === null) {
-            $messages = parent::getMessages();
-            $filterMessages = $this->getInputFilter()->getMessages();
-            if (isset($filterMessages['clients'])) {
-                $messages['clients'] = $filterMessages['clients'];
+        if ($elementName == 'clients') {
+            // Parent implementation would check for a form element named
+            // 'clients' which does not exist. Bypass parent and return message
+            // directly.
+            if (isset($this->messages['clients'])) {
+                return $this->messages['clients'];
+            } else {
+                return [];
             }
-            return $messages;
-        } elseif ($elementName == 'clients') {
-            $messages = array();
-            $filterMessages = $this->getInputFilter()->getMessages();
-            if (isset($filterMessages['clients'])) {
-                $messages += $filterMessages['clients'];
-            }
-            return $messages;
         } else {
             return parent::getMessages($elementName);
         }

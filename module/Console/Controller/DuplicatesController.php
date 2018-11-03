@@ -80,12 +80,7 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
             $this->_showDuplicates->setData($this->params()->fromPost());
             if ($this->_showDuplicates->isValid()) {
                 $data = $this->_showDuplicates->getData();
-                $this->_duplicates->merge(
-                    $data['clients'],
-                    $data['mergeCustomFields'],
-                    $data['mergeGroups'],
-                    $data['mergePackages']
-                );
+                $this->_duplicates->merge($data['clients'], $data['mergeOptions']);
                 $this->flashMessenger()->addSuccessMessage('The selected clients have been merged.');
                 return $this->redirectToRoute('duplicates', 'index');
             }
