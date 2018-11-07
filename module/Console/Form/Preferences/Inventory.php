@@ -48,6 +48,10 @@ class Inventory extends AbstractForm
         $defaultMergePackages->setLabel('Merge missing package assignments by default');
         $preferences->add($defaultMergePackages);
 
+        $defaultMergeProductKey = new \Zend\Form\Element\Checkbox('defaultMergeProductKey');
+        $defaultMergeProductKey->setLabel('Keep manually entered Windows product key by default');
+        $preferences->add($defaultMergeProductKey);
+
         $defaultDeleteInterfaces = new \Zend\Form\Element\Checkbox('defaultDeleteInterfaces');
         $defaultDeleteInterfaces->setLabel('Delete interfaces from network listing by default');
         $preferences->add($defaultDeleteInterfaces);

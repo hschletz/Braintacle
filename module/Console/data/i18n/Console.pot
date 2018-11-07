@@ -514,6 +514,10 @@ msgid "Merge missing package assignments by default"
 msgstr ""
 
 #: Form/Preferences/Inventory.php
+msgid "Keep manually entered Windows product key by default"
+msgstr ""
+
+#: Form/Preferences/Inventory.php
 msgid "Delete interfaces from network listing by default"
 msgstr ""
 
@@ -912,6 +916,10 @@ msgstr ""
 
 #: Form/ShowDuplicates.php
 msgid "Merge missing package assignments"
+msgstr ""
+
+#: Form/ShowDuplicates.php
+msgid "Keep manually entered Windows product key"
 msgstr ""
 
 #: Form/ShowDuplicates.php

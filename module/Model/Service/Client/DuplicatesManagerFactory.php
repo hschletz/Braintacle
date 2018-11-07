@@ -39,7 +39,8 @@ class DuplicatesManagerFactory implements \Zend\ServiceManager\Factory\FactoryIn
             $container->get('Database\Table\DuplicateSerials'),
             $container->get('Database\Table\DuplicateMacAddresses'),
             $container->get('Database\Table\ClientConfig'),
-            $container->get('Model\Client\ClientManager')
+            $container->get('Model\Client\ClientManager'),
+            $container->get('Model\SoftwareManager')
         );
     }
 }

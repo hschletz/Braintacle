@@ -30,6 +30,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         \Model\Client\DuplicatesManager::MERGE_CUSTOM_FIELDS,
         \Model\Client\DuplicatesManager::MERGE_GROUPS,
         \Model\Client\DuplicatesManager::MERGE_PACKAGES,
+        \Model\Client\DuplicatesManager::MERGE_PRODUCT_KEY,
     ];
 
     /** {@inheritdoc} */
@@ -329,6 +330,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
             [[\Model\Client\DuplicatesManager::MERGE_CUSTOM_FIELDS]],
             [[\Model\Client\DuplicatesManager::MERGE_GROUPS]],
             [[\Model\Client\DuplicatesManager::MERGE_PACKAGES]],
+            [[\Model\Client\DuplicatesManager::MERGE_PRODUCT_KEY]],
             [$this->_allOptions]
         ];
     }
@@ -496,6 +498,67 @@ EOT
 EOT
             )
         );
+    }
+
+    public function mergeProductKeyProvider()
+    {
+        $clientNoWindows = ['Windows' => null];
+        $clientWindowsManualKey1 = ['Windows' => ['ManualProductKey' => 'key1']];
+        $clientWindowsManualKey2 = ['Windows' => ['ManualProductKey' => 'key2']];
+        $clientWindowsNoKey1 = ['Windows' => ['ManualProductKey' => null]];
+        $clientWindowsNoKey2 = ['Windows' => ['ManualProductKey' => null]];
+        // no merge because...
+        return [
+            [$clientNoWindows, [$clientWindowsManualKey1]], // ... newest client has no Windows property
+            [$clientWindowsManualKey1, [$clientWindowsManualKey2]], // ... newest client already has manual key
+            [$clientWindowsNoKey1, [$clientNoWindows]], // ... newest has no manual key and older has no Windows
+            [$clientWindowsNoKey1, [$clientWindowsNoKey2]], // ... both have Windows property but no manual key
+        ];
+    }
+
+    /** @dataProvider mergeProductKeyProvider */
+    public function testMergeProductKeyNoMerge($newestClient, $olderClients)
+    {
+        $softwareManager = $this->createMock('Model\SoftwareManager');
+        $softwareManager->expects($this->never())->method('setProductKey');
+
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->disableOriginalConstructor()
+                      ->setMethods(null)
+                      ->getMock();
+
+        $proxy = new \SebastianBergmann\PeekAndPoke\Proxy($model);
+        $proxy->_softwareManager = $softwareManager;
+
+        $proxy->mergeProductKey($newestClient, $olderClients);
+    }
+
+    public function testMergeProductKeyMerge()
+    {
+        $newestClient = $this->createMock('Model\Client\Client');
+        $newestClient->expects($this->atLeastOnce())
+                     ->method('offsetGet')
+                     ->with('Windows')
+                     ->willReturn(['ManualProductKey' => null]);
+
+        $olderClients = [
+            ['Windows' => ['ManualProductKey' => 'key1']], // never evaluated
+            ['Windows' => ['ManualProductKey' => 'key2']], // first client with key, picked
+            ['Windows' => ['ManualProductKey' => null]], // no key, skipped
+        ];
+
+        $softwareManager = $this->createMock('Model\SoftwareManager');
+        $softwareManager->expects($this->once())->method('setProductKey')->with($newestClient, 'key2');
+
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->disableOriginalConstructor()
+                      ->setMethods(null)
+                      ->getMock();
+
+        $proxy = new \SebastianBergmann\PeekAndPoke\Proxy($model);
+        $proxy->_softwareManager = $softwareManager;
+
+        $proxy->mergeProductKey($newestClient, $olderClients);
     }
 
     /**

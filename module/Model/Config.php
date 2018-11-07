@@ -48,8 +48,9 @@ namespace Model;
  * @property bool $defaultDeploySuccess  Default to deploy updated packages with state "success". Default: true
  * @property integer $defaultMaxFragmentSize  Default maximum fragment size (in kB) for new packages. Default: 0
  * @property bool $defaultMergeGroups  Default for merging manual group memberships along with clients. Default: true
- * @property bool $defaultMergePackages  Default for merging package assignments along with clients. Default: true
+ * @property bool $defaultMergePackages  Default for merging package assignments along with clients. Default: false
  * @property bool $defaultMergeCustomFields  Default for merging userdefined fields along with clients. Default: true
+ * @property bool $defaultMergeProductKey  Default for merging manual Windows product key. Default: true
  * @property integer $defaultPackagePriority  Default priority (0-10) for new packages. Default: 5
  * @property string $defaultPlatform  Default platform for new packages (one of windows, linux, mac). Default: windows
  * @property string $defaultPostInstMessage  Default post-installation message for new packages
@@ -110,8 +111,9 @@ class Config
         'defaultDeployPending' => 1,
         'defaultDeployRunning' => 1,
         'defaultDeploySuccess' => 1,
-        'defaultMergeGroups' => 1,
         'defaultMergeCustomFields' => 1,
+        'defaultMergeGroups' => 1,
+        'defaultMergeProductKey' => 1,
         'defaultPackagePriority' => 5,
         'defaultPlatform' => 'windows',
         'defaultWarn' => 0,

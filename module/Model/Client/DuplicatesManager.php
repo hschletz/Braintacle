@@ -66,6 +66,11 @@ class DuplicatesManager
     const MERGE_PACKAGES = 'mergePackages';
 
     /**
+     * Option for merge(): Preserve manually entered Windows product key
+     */
+    const MERGE_PRODUCT_KEY = 'mergeProductKey';
+
+    /**
      * Clients prototype
      * @var \Database\Table\Clients
      */
@@ -108,6 +113,12 @@ class DuplicatesManager
     protected $_clientManager;
 
     /**
+     * Software manager
+     * @var \Model\Client\ClientManager
+     */
+    protected $_softwareManager;
+
+    /**
      * Constructor
      *
      * @param \Database\Table\Clients $clients
@@ -117,6 +128,7 @@ class DuplicatesManager
      * @param \Database\Table\DuplicateMacAddresses $duplicateMacAddresses
      * @param \Database\Table\ClientConfig $clientConfig
      * @param \Model\Client\ClientManager $clientManager
+     * @param \Model\SoftwareManager $softwareManager
      */
     public function __construct(
         Table\Clients $clients,
@@ -125,7 +137,8 @@ class DuplicatesManager
         Table\DuplicateSerials $duplicateSerials,
         Table\DuplicateMacAddresses $duplicateMacAddresses,
         Table\ClientConfig $clientConfig,
-        \Model\Client\ClientManager $clientManager
+        \Model\Client\ClientManager $clientManager,
+        \Model\SoftwareManager $softwareManager
     ) {
         $this->_clients = $clients;
         $this->_networkInterfaces = $networkInterfaces;
@@ -134,6 +147,7 @@ class DuplicatesManager
         $this->_duplicateMacaddresses = $duplicateMacAddresses;
         $this->_clientConfig = $clientConfig;
         $this->_clientManager = $clientManager;
+        $this->_softwareManager = $softwareManager;
     }
 
     /**
@@ -306,6 +320,9 @@ class DuplicatesManager
             if (in_array(self::MERGE_PACKAGES, $options)) {
                 $this->mergePackages($newest, $clients);
             }
+            if (in_array(self::MERGE_PRODUCT_KEY, $options)) {
+                $this->mergeProductKey($newest, $clients);
+            }
 
             // Delete all older clients
             foreach ($clients as $client) {
@@ -377,6 +394,32 @@ class DuplicatesManager
             }
             // Update the client IDs directly.
             $this->_clientConfig->update(array('hardware_id' => $id), $where);
+        }
+    }
+
+    /**
+     * Set newest client's Windows manual product key to the newest key of all given clients
+     *
+     * @param \Model\Client\Client $newestClient
+     * @param \Model\Client\Client[] $olderClients sorted by LastContactDate (ascending)
+     */
+    public function mergeProductKey($newestClient, $olderClients)
+    {
+        if (!$newestClient['Windows']) {
+            return;
+        }
+        if ($newestClient['Windows']['ManualProductKey']) {
+            return;
+        }
+        // Iterate over all clients, newest first, and pick first key found.
+        foreach (array_reverse($olderClients) as $client) {
+            $windows = $client['Windows'];
+            if ($windows) {
+                if ($windows['ManualProductKey']) {
+                    $this->_softwareManager->setProductKey($newestClient, $windows['ManualProductKey']);
+                    return;
+                }
+            }
         }
     }
 

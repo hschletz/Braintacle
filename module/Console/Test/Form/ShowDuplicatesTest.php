@@ -44,6 +44,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
             ['mergeCustomFields'],
             ['mergeGroups'],
             ['mergePackages'],
+            ['mergeProductKey'],
         ];
     }
 
@@ -55,6 +56,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
             ['defaultMergeCustomFields', (integer) ($option == 'mergeCustomFields')],
             ['defaultMergeGroups', (integer) ($option == 'mergeGroups')],
             ['defaultMergePackages', (integer) ($option == 'mergePackages')],
+            ['defaultMergeProductKey', (integer) ($option == 'mergeProductKey')],
         ]);
 
         $expectedOptions = [
@@ -72,6 +74,11 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
                 'value' => 'mergePackages',
                 'label' => 'Merge missing package assignments',
                 'selected' => (integer) ($option == 'mergePackages'),
+            ],
+            [
+                'value' => 'mergeProductKey',
+                'label' => 'Keep manually entered Windows product key',
+                'selected' => (integer) ($option == 'mergeProductKey'),
             ],
         ];
 

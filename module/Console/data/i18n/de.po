@@ -521,6 +521,10 @@ msgid "Inspect registry"
 msgstr "Registry durchsuchen"
 
 #: Form/Preferences/Inventory.php
+msgid "Keep manually entered Windows product key by default"
+msgstr "'Manuell eingegebenen Windows-Lizenzschlüssel beibehalten' als Vorgabe"
+
+#: Form/Preferences/Inventory.php
 msgid "Manage inventoried registry values"
 msgstr "Inventarisierte Registry-Werte verwalten"
 
@@ -920,6 +924,10 @@ msgstr "Arbeitsgruppe"
 #: Form/ShowDuplicates.php
 msgid "At least 2 different clients have to be selected"
 msgstr "Es müssen mindestens 2 verschiedene Clients ausgewählt werden"
+
+#: Form/ShowDuplicates.php
+msgid "Keep manually entered Windows product key"
+msgstr "Manuell eingegebenen Windows-Lizenzschlüssel beibehalten"
 
 #: Form/ShowDuplicates.php
 msgid "Merge manual group assignments"

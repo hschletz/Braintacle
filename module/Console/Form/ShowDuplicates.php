@@ -60,6 +60,11 @@ class ShowDuplicates extends Form
                 'label' => $this->_('Merge missing package assignments'),
                 'selected' => $config->defaultMergePackages,
             ],
+            [
+                'value' => \Model\Client\DuplicatesManager::MERGE_PRODUCT_KEY,
+                'label' => $this->_('Keep manually entered Windows product key'),
+                'selected' => $config->defaultMergeProductKey,
+            ],
         ]);
         $this->add($mergeOptions);
 
