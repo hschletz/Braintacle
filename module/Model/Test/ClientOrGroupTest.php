@@ -589,11 +589,11 @@ class ClientOrGroupTest extends AbstractTest
 
     public function getAllConfigProvider()
     {
-        return array(
-            array(null, 0, 0, 1, 0, 0),
-            array(0, null, 0, 0, 1, 0),
-            array(0, 0, null, 0, 0, 1),
-        );
+        return [
+            [null, 0, 0, 1, 0, 0],
+            [0, null, 0, 0, 1, 0],
+            [0, 0, null, 0, 0, 1],
+        ];
     }
 
     /**
@@ -608,44 +608,120 @@ class ClientOrGroupTest extends AbstractTest
         $expectedScanSnmp
     ) {
         $model = $this->getMockBuilder($this->_getClass())
-                      ->setMethods(array('__destruct', 'getConfig'))
-                      ->getMockForAbstractClass();
-        $model->method('getConfig')->will(
-            $this->returnValueMap(
-                array(
-                    array('contactInterval', 2),
-                    array('inventoryInterval', 3),
-                    array('packageDeployment', $packageDeployment),
-                    array('downloadPeriodDelay', 4),
-                    array('downloadCycleDelay', 5),
-                    array('downloadFragmentDelay', 6),
-                    array('downloadMaxPriority', 7),
-                    array('downloadTimeout', 8),
-                    array('allowScan', $allowScan),
-                    array('scanSnmp', $scanSnmp),
-                )
-            )
-        );
+                      ->setMethodsExcept(['getAllConfig'])
+                      ->getMock();
+
+        $model->method('getConfig')->willReturnMap([
+            ['contactInterval', 1],
+            ['inventoryInterval', 2],
+            ['downloadPeriodDelay', 3],
+            ['downloadCycleDelay', 4],
+            ['downloadFragmentDelay', 5],
+            ['downloadMaxPriority', 6],
+            ['downloadTimeout', 7],
+            // The following options can only be 0 or NULL
+            ['packageDeployment', $packageDeployment],
+            ['allowScan', $allowScan],
+            ['scanSnmp', $scanSnmp],
+        ]);
+
         $this->assertSame(
-            array(
-                'Agent' => array(
-                    'contactInterval' => 2,
-                    'inventoryInterval' => 3,
-                ),
-                'Download' => array(
+            [
+                'Agent' => [
+                    'contactInterval' => 1,
+                    'inventoryInterval' => 2,
+                ],
+                'Download' => [
                     'packageDeployment' => $expectedPackageDeployment,
-                    'downloadPeriodDelay' => 4,
-                    'downloadCycleDelay' => 5,
-                    'downloadFragmentDelay' => 6,
-                    'downloadMaxPriority' => 7,
-                    'downloadTimeout' => 8,
-                ),
-                'Scan' => array(
+                    'downloadPeriodDelay' => 3,
+                    'downloadCycleDelay' => 4,
+                    'downloadFragmentDelay' => 5,
+                    'downloadMaxPriority' => 6,
+                    'downloadTimeout' => 7,
+                ],
+                'Scan' => [
                     'allowScan' => $expectedAllowScan,
                     'scanSnmp' => $expectedScanSnmp,
-                ),
-            ),
+                ],
+            ],
             $model->getAllConfig()
         );
+    }
+
+    public function testGetAllConfigNonCompactWithNullValues()
+    {
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethodsExcept(['getAllConfig'])
+                      ->getMock();
+        $model->method('getConfig')->willReturn(null);
+
+        $this->assertSame(
+            [
+                'Agent' => [
+                    'contactInterval' => null,
+                    'inventoryInterval' => null,
+                ],
+                'Download' => [
+                    'packageDeployment' => 1,
+                    'downloadPeriodDelay' => null,
+                    'downloadCycleDelay' => null,
+                    'downloadFragmentDelay' => null,
+                    'downloadMaxPriority' => null,
+                    'downloadTimeout' => null,
+                ],
+                'Scan' => [
+                    'allowScan' => 1,
+                    'scanSnmp' => 1,
+                ],
+            ],
+            $model->getAllConfig()
+        );
+    }
+
+    public function testGetExplicitConfigWithNonNullValues()
+    {
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethodsExcept(['getExplicitConfig'])
+                      ->getMock();
+
+        $model->method('getConfig')->willReturnMap([
+            ['contactInterval', 0],
+            ['inventoryInterval', 1],
+            ['downloadPeriodDelay', 2],
+            ['downloadCycleDelay', 3],
+            ['downloadFragmentDelay', 4],
+            ['downloadMaxPriority', 5],
+            ['downloadTimeout', 6],
+            // The following options can only be 0 or NULL
+            ['packageDeployment', 0],
+            ['allowScan', 0],
+            ['scanSnmp', 0],
+        ]);
+
+        $this->assertSame(
+            [
+                'contactInterval' => 0,
+                'inventoryInterval' => 1,
+                'packageDeployment' => 0,
+                'downloadPeriodDelay' => 2,
+                'downloadCycleDelay' => 3,
+                'downloadFragmentDelay' => 4,
+                'downloadMaxPriority' => 5,
+                'downloadTimeout' => 6,
+                'allowScan' => 0,
+                'scanSnmp' => 0,
+            ],
+            $model->getExplicitConfig()
+        );
+    }
+
+    public function testGetExplicitConfigWithNullValues()
+    {
+        $model = $this->getMockBuilder($this->_getClass())
+                      ->setMethodsExcept(['getExplicitConfig'])
+                      ->getMock();
+        $model->method('getConfig')->willReturn(null);
+
+        $this->assertSame([], $model->getExplicitConfig());
     }
 }

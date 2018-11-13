@@ -529,6 +529,10 @@ msgid "Manage inventoried registry values"
 msgstr "Inventarisierte Registry-Werte verwalten"
 
 #: Form/Preferences/Inventory.php
+msgid "Merge client configuration by default"
+msgstr "'Konfiguration übernehmen' als Vorgabe"
+
+#: Form/Preferences/Inventory.php
 msgid "Merge manual group assignments by default"
 msgstr "'Manuelle Gruppenzuweisungen übernehmen' als Vorgabe"
 
@@ -928,6 +932,10 @@ msgstr "Es müssen mindestens 2 verschiedene Clients ausgewählt werden"
 #: Form/ShowDuplicates.php
 msgid "Keep manually entered Windows product key"
 msgstr "Manuell eingegebenen Windows-Lizenzschlüssel beibehalten"
+
+#: Form/ShowDuplicates.php
+msgid "Merge configuration"
+msgstr "Konfiguration übernehmen"
 
 #: Form/ShowDuplicates.php
 msgid "Merge manual group assignments"

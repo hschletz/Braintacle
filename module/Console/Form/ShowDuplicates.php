@@ -51,6 +51,11 @@ class ShowDuplicates extends Form
                 'selected' => $config->defaultMergeCustomFields,
             ],
             [
+                'value' => \Model\Client\DuplicatesManager::MERGE_CONFIG,
+                'label' => $this->_('Merge configuration'),
+                'selected' => $config->defaultMergeConfig,
+            ],
+            [
                 'value' => \Model\Client\DuplicatesManager::MERGE_GROUPS,
                 'label' => $this->_('Merge manual group assignments'),
                 'selected' => $config->defaultMergeGroups,

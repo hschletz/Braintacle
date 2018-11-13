@@ -40,6 +40,10 @@ class Inventory extends AbstractForm
         $defaultMergeCustomFields->setLabel('Merge user supplied information by default');
         $preferences->add($defaultMergeCustomFields);
 
+        $defaultMergeConfig = new \Zend\Form\Element\Checkbox('defaultMergeConfig');
+        $defaultMergeConfig->setLabel('Merge client configuration by default');
+        $preferences->add($defaultMergeConfig);
+
         $defaultMergeGroups = new \Zend\Form\Element\Checkbox('defaultMergeGroups');
         $defaultMergeGroups->setLabel('Merge manual group assignments by default');
         $preferences->add($defaultMergeGroups);

@@ -27,6 +27,7 @@ class InventoryTest extends \Console\Test\AbstractFormTest
     {
         $preferences = $this->_form->get('Preferences');
         $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('inspectRegistry'));
+        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('defaultMergeConfig'));
         $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('defaultMergeCustomFields'));
         $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('defaultMergeGroups'));
         $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('defaultMergePackages'));

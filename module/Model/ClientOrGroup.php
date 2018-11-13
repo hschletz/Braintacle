@@ -72,6 +72,33 @@ abstract class ClientOrGroup extends \ArrayObject
     protected $_lockNestCount = 0;
 
     /**
+     * All config options
+     * @var string[]
+     */
+    private $_options = [
+        'contactInterval',
+        'inventoryInterval',
+        'packageDeployment',
+        'downloadPeriodDelay',
+        'downloadCycleDelay',
+        'downloadFragmentDelay',
+        'downloadMaxPriority',
+        'downloadTimeout',
+        'allowScan',
+        'scanSnmp',
+    ];
+
+    /**
+     * Options which can only be disabled
+     * @var string[]
+     */
+    private $_optionsDisableOnly = [
+        'packageDeployment',
+        'allowScan',
+        'scanSnmp',
+    ];
+
+    /**
      * Destructor
      */
     public function __destruct()
@@ -536,10 +563,7 @@ abstract class ClientOrGroup extends \ArrayObject
      */
     protected function _normalizeConfig($option, $value)
     {
-        if ($option == 'packageDeployment' or
-            $option == 'scanSnmp' or
-            $option == 'allowScan'
-        ) {
+        if (in_array($option, $this->_optionsDisableOnly)) {
             // These options are only evaluated if their default setting is
             // enabled, i.e. they only have an effect if they get disabled.
             // To keep things clearer in the database, the option is unset if
@@ -552,32 +576,69 @@ abstract class ClientOrGroup extends \ArrayObject
     }
 
     /**
-     * Get all stored object-specific configuration values
+     * Get all object-specific configuration values
      *
      * The returned array has 3 elements: 'Agent', 'Download' and 'Scan'. Each
-     * of these is an array with name/value pairs of configured values.
+     * of these is an array with name/value pairs of object-specific values. If
+     * an option is not configured for this object, its value is NULL unless it
+     * can only be disabled, not enabled. In that case, the returned value is 1
+     * if it is not configured.
+     *
+     * Like with getConfig(), the returned options may not necessarily be
+     * effective.
      *
      * @return array[]
      */
     public function getAllConfig()
     {
-        return array(
-            'Agent' => array(
-                'contactInterval' => $this->getConfig('contactInterval'),
-                'inventoryInterval' => $this->getConfig('inventoryInterval'),
-            ),
-            'Download' => array(
-                'packageDeployment' => (integer) ($this->getConfig('packageDeployment') === null),
-                'downloadPeriodDelay' => $this->getConfig('downloadPeriodDelay'),
-                'downloadCycleDelay' => $this->getConfig('downloadCycleDelay'),
-                'downloadFragmentDelay' => $this->getConfig('downloadFragmentDelay'),
-                'downloadMaxPriority' => $this->getConfig('downloadMaxPriority'),
-                'downloadTimeout' => $this->getConfig('downloadTimeout'),
-            ),
-            'Scan' => array(
-                'allowScan' => (integer) ($this->getConfig('allowScan') === null),
-                'scanSnmp' => (integer) ($this->getConfig('scanSnmp') === null),
-            ),
-        );
+        $options = [];
+        foreach ($this->_options as $option) {
+            $value = $this->getConfig($option);
+            if (in_array($option, $this->_optionsDisableOnly)) {
+                $value = (integer) ($value === null);
+            }
+            $options[$option] = $value;
+        }
+        return [
+            'Agent' => [
+                'contactInterval' => $options['contactInterval'],
+                'inventoryInterval' => $options['inventoryInterval'],
+            ],
+            'Download' => [
+                'packageDeployment' => $options['packageDeployment'],
+                'downloadPeriodDelay' => $options['downloadPeriodDelay'],
+                'downloadCycleDelay' => $options['downloadCycleDelay'],
+                'downloadFragmentDelay' => $options['downloadFragmentDelay'],
+                'downloadMaxPriority' => $options['downloadMaxPriority'],
+                'downloadTimeout' => $options['downloadTimeout'],
+            ],
+            'Scan' => [
+                'allowScan' => $options['allowScan'],
+                'scanSnmp' => $options['scanSnmp'],
+            ],
+        ];
+    }
+
+    /**
+     * Get all explicitly configured object-specific configuration values
+     *
+     * Returns a flat associative array with options which are explicitly
+     * configured for this object. Unconfigured options are not returned.
+     *
+     * Like with getConfig(), the returned options may not necessarily be
+     * effective.
+     *
+     * @return mixed[]
+     */
+    public function getExplicitConfig()
+    {
+        $options = [];
+        foreach ($this->_options as $option) {
+            $value = $this->getConfig($option);
+            if ($value !== null) {
+                $options[$option] = $value;
+            }
+        }
+        return $options;
     }
 }

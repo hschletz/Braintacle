@@ -506,6 +506,10 @@ msgid "Merge user supplied information by default"
 msgstr ""
 
 #: Form/Preferences/Inventory.php
+msgid "Merge client configuration by default"
+msgstr ""
+
+#: Form/Preferences/Inventory.php
 msgid "Merge manual group assignments by default"
 msgstr ""
 
@@ -908,6 +912,10 @@ msgstr ""
 
 #: Form/ShowDuplicates.php
 msgid "Merge user supplied information"
+msgstr ""
+
+#: Form/ShowDuplicates.php
+msgid "Merge configuration"
 msgstr ""
 
 #: Form/ShowDuplicates.php

@@ -27,6 +27,7 @@ namespace Model\Test\Client;
 class DuplicatesManagerTest extends \Model\Test\AbstractTest
 {
     protected $_allOptions = [
+        \Model\Client\DuplicatesManager::MERGE_CONFIG,
         \Model\Client\DuplicatesManager::MERGE_CUSTOM_FIELDS,
         \Model\Client\DuplicatesManager::MERGE_GROUPS,
         \Model\Client\DuplicatesManager::MERGE_PACKAGES,
@@ -217,9 +218,11 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
                       ->setMethodsExcept(['merge'])
                       ->getMock();
 
+        $model->expects($this->never())->method('mergeConfig');
         $model->expects($this->never())->method('mergeCustomFields');
         $model->expects($this->never())->method('mergeGroups');
         $model->expects($this->never())->method('mergePackages');
+        $model->expects($this->never())->method('mergeProductKey');
 
         $model->merge($clientIds, $this->_allOptions);
     }
@@ -249,9 +252,11 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
                       ->setMethodsExcept(['merge'])
                       ->getMock();
 
+        $model->expects($this->never())->method('mergeConfig');
         $model->expects($this->never())->method('mergeCustomFields');
         $model->expects($this->never())->method('mergeGroups');
         $model->expects($this->never())->method('mergePackages');
+        $model->expects($this->never())->method('mergeProductKey');
 
         $proxy = new \SebastianBergmann\PeekAndPoke\Proxy($model);
         $proxy->_clients = $clients;
@@ -314,9 +319,11 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
                       ->setMethodsExcept(['merge'])
                       ->getMock();
 
+        $model->expects($this->never())->method('mergeConfig');
         $model->expects($this->never())->method('mergeCustomFields');
         $model->expects($this->never())->method('mergeGroups');
         $model->expects($this->never())->method('mergePackages');
+        $model->expects($this->never())->method('mergeProductKey');
 
         $proxy = new \SebastianBergmann\PeekAndPoke\Proxy($model);
         $proxy->_clients = $clients;
@@ -327,6 +334,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
     public function mergeWithMergingAttributesProvider()
     {
         return [
+            [[\Model\Client\DuplicatesManager::MERGE_CONFIG]],
             [[\Model\Client\DuplicatesManager::MERGE_CUSTOM_FIELDS]],
             [[\Model\Client\DuplicatesManager::MERGE_GROUPS]],
             [[\Model\Client\DuplicatesManager::MERGE_PACKAGES]],
@@ -559,6 +567,54 @@ EOT
         $proxy->_softwareManager = $softwareManager;
 
         $proxy->mergeProductKey($newestClient, $olderClients);
+    }
+
+    public function testMergeConfig()
+    {
+        // Test method with 2 older clients. Newest value (if not NULL) is
+        // applied to setConfig(). This results in 8 possible combinations:
+        //
+        // option  | oldest | middle | newest | result
+        // option0 |  null  |  null  |  null  |  null
+        // option1 |  null  |  null  |   n1   |   n1
+        // option2 |  null  |   m2   |  null  |   m2
+        // option3 |  null  |   m3   |   n3   |   n3
+        // option4 |   o4   |  null  |  null  |   o4
+        // option5 |   o5   |  null  |   n5   |   n5
+        // option6 |   o6   |   m6   |  null  |   m6
+        // option7 |   o7   |   m7   |   n7   |   n7
+        //
+        // Because values from the newest client don't need to be reapplied,
+        // only m2, o4 and m6 get applied. The actual order in which they get
+        // applied is implementation-dependent but insignificant. For this
+        // reason, arguments are collected in $options which gets tested as a
+        // whole.
+
+        $options = [];
+
+        $newest = $this->createMock('Model\Client\Client');
+        $newest->method('getExplicitConfig')->willReturn(
+            ['option1' => 'n1', 'option3' => 'n3', 'option5' => 'n5', 'option7' => 'n7']
+        );
+        $newest->expects($this->exactly(3))->method('setConfig')->willReturnCallback(
+            function ($option, $value) use (&$options) {
+                $options[$option] = $value;
+            }
+        );
+
+        $middle = $this->createMock('Model\Client\Client');
+        $middle->method('getExplicitConfig')->willReturn(
+            ['option2' => 'm2', 'option3' => 'm3', 'option6' => 'm6', 'option7' => 'm7']
+        );
+
+        $oldest = $this->createMock('Model\Client\Client');
+        $oldest->method('getExplicitConfig')->willReturn(
+            ['option4' => 'o4', 'option5' => 'o5', 'option6' => 'o6', 'option7' => 'o7']
+        );
+
+        $this->_getModel()->mergeConfig($newest, [$oldest, $middle]);
+
+        $this->assertEquals(['option2' => 'm2', 'option4' => 'o4', 'option6' => 'm6'], $options);
     }
 
     /**

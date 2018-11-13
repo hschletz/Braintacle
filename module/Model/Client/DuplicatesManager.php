@@ -51,6 +51,11 @@ use Database\Table;
 class DuplicatesManager
 {
     /**
+     * Option for merge(): Merge client config
+     */
+    const MERGE_CONFIG = 'mergeConfig';
+
+    /**
      * Option for merge(): Preserve custom fields from oldest client
      */
     const MERGE_CUSTOM_FIELDS = 'mergeCustomFields';
@@ -311,6 +316,9 @@ class DuplicatesManager
             // Newest client will be the only one not to be deleted, remove it from the list
             $newest = array_pop($clients);
 
+            if (in_array(self::MERGE_CONFIG, $options)) {
+                $this->mergeConfig($newest, $clients);
+            }
             if (in_array(self::MERGE_CUSTOM_FIELDS, $options)) {
                 $this->mergeCustomFields($newest, $clients);
             }
@@ -420,6 +428,31 @@ class DuplicatesManager
                     return;
                 }
             }
+        }
+    }
+
+    /**
+     * Merge config on newest client with values from older clients
+     *
+     * If a config option is not set on the newest client, set it to a
+     * value configured on an older client (if any). If multiple older clients
+     * have a value configured, the value from the most recent client is used.
+     *
+     * @param \Model\Client\Client $newestClient
+     * @param \Model\Client\Client[] $olderClients sorted by LastContactDate (ascending)
+     */
+    public function mergeConfig($newestClient, $olderClients)
+    {
+        $options = [];
+        foreach (array_reverse($olderClients) as $client) {
+            // Add options that are not present yet
+            $options += $client->getExplicitConfig();
+        }
+        // Remove options that are present on the newest client
+        $options = array_diff_key($options, $newestClient->getExplicitConfig());
+
+        foreach ($options as $option => $value) {
+            $newestClient->setConfig($option, $value);
         }
     }
 

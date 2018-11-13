@@ -41,6 +41,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
     public function initMergeOptionsProvider()
     {
         return [
+            ['mergeConfig'],
             ['mergeCustomFields'],
             ['mergeGroups'],
             ['mergePackages'],
@@ -53,6 +54,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
     {
         $config = $this->createMock('Model\Config');
         $config->method('__get')->willReturnMap([
+            ['defaultMergeConfig', (integer) ($option == 'mergeConfig')],
             ['defaultMergeCustomFields', (integer) ($option == 'mergeCustomFields')],
             ['defaultMergeGroups', (integer) ($option == 'mergeGroups')],
             ['defaultMergePackages', (integer) ($option == 'mergePackages')],
@@ -64,6 +66,11 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
                 'value' => 'mergeCustomFields',
                 'label' => 'Merge user supplied information',
                 'selected' => (integer) ($option == 'mergeCustomFields'),
+            ],
+            [
+                'value' => 'mergeConfig',
+                'label' => 'Merge configuration',
+                'selected' => (integer) ($option == 'mergeConfig'),
             ],
             [
                 'value' => 'mergeGroups',

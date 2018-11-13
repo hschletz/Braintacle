@@ -257,6 +257,17 @@ class Client extends \Model\ClientOrGroup
         return $config;
     }
 
+    /** {@inheritdoc} */
+    public function getExplicitConfig()
+    {
+        $config = parent::getExplicitConfig();
+        $scanThisNetwork = $this->getConfig('scanThisNetwork');
+        if ($scanThisNetwork !== null) {
+            $config['scanThisNetwork'] = $scanThisNetwork;
+        }
+        return $config;
+    }
+
     /**
      * Get effective configuration value
      *
