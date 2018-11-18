@@ -21,6 +21,8 @@
 
 namespace Library;
 
+use TheSeer\fDOM\fDOMException;
+
 /**
  * DOM document
  */
@@ -59,15 +61,23 @@ class DomDocument extends \TheSeer\fDOM\fDOMDocument
      *
      * The document gets validated against the RELAX NG schema defined by
      * getSchemaFilename() which must be implemented by a subclass.
-     * A \RuntimeException is thrown on error. Details are available from the
-     * generated warnings.
+     * A \RuntimeException is thrown on error. Details are shown in the
+     * exception message.
+     *
+     * **Warning:** The libXML error buffer gets reset before validation. It
+     * will only contain errors relevant to the current validation afterwards.
      *
      * @throws \RuntimeException if document is not valid
      */
     public function forceValid()
     {
+        libxml_clear_errors();
         if (!$this->isValid()) {
-            throw new \RuntimeException('Validation of XML document failed');
+            $message = 'Validation of XML document failed.';
+            foreach (libxml_get_errors() as $error) {
+                $message .= sprintf(' line %d: %s', $error->line, $error->message);
+            }
+            throw new \RuntimeException($message);
         }
     }
 
