@@ -167,6 +167,15 @@ informational and not evaluated:
                 </optional>
                 <ref name="BVERSION" />
                 <optional>
+                    <ref name="MMANUFACTURER" />
+                </optional>
+                <optional>
+                    <ref name="MMODEL" />
+                </optional>
+                <optional>
+                    <ref name="MSN" />
+                </optional>
+                <optional>
                     <ref name="SMANUFACTURER" />
                 </optional>
                 <optional>
@@ -224,6 +233,9 @@ informational and not evaluated:
                 </optional>
                 <optional>
                     <ref name="DATA_WIDTH" />
+                </optional>
+                <optional>
+                    <ref name="HPT" />
                 </optional>
                 <optional>
                     <ref name="L2CACHESIZE" />
@@ -337,9 +349,15 @@ informational and not evaluated:
                 </optional>
                 <ref name="OSNAME" />
                 <ref name="OSVERSION" />
-                <ref name="PROCESSORN" />
-                <ref name="PROCESSORS" />
-                <ref name="PROCESSORT" />
+                <optional>
+                    <ref name="PROCESSORN" />
+                </optional>
+                <optional>
+                    <ref name="PROCESSORS" />
+                </optional>
+                <optional>
+                    <ref name="PROCESSORT" />
+                </optional>
                 <ref name="SWAP" />
                 <optional>
                     <ref name="TYPE" /><!-- Useless, always 0 or NULL. Omitted for possible confusion with bios.type. -->
@@ -390,7 +408,9 @@ informational and not evaluated:
                 <optional>
                     <ref name="POINTTYPE" />
                 </optional>
-                <ref name="TYPE" />
+                <optional>
+                    <ref name="TYPE" />
+                </optional>
             </interleave>
         </element>
     </define>
@@ -417,7 +437,12 @@ informational and not evaluated:
                 <optional>
                     <ref name="DESCRIPTION" />
                 </optional>
-                <ref name="NUMSLOTS" />
+                <optional>
+                    <ref name="MANUFACTURER" />
+                </optional>
+                <optional>
+                    <ref name="NUMSLOTS" />
+                </optional>
                 <optional>
                     <ref name="PURPOSE" />
                 </optional>
@@ -946,6 +971,11 @@ informational and not evaluated:
             <text />
         </element>
     </define>
+    <define name="HPT">
+        <element name="HPT">
+            <text />
+        </element>
+    </define>
     <define name="INSTALL">
         <element name="INSTALL">
             <text />
@@ -1091,8 +1121,23 @@ informational and not evaluated:
             <text />
         </element>
     </define>
+    <define name="MMANUFACTURER">
+        <element name="MMANUFACTURER">
+            <text />
+        </element>
+    </define>
+    <define name="MMODEL">
+        <element name="MMODEL">
+            <text />
+        </element>
+    </define>
     <define name="MODEL">
         <element name="MODEL">
+            <text />
+        </element>
+    </define>
+    <define name="MSN">
+        <element name="MSN">
             <text />
         </element>
     </define>
