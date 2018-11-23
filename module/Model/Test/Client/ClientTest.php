@@ -23,7 +23,8 @@ namespace Model\Test\Client;
 
 class ClientTest extends \Model\Test\AbstractTest
 {
-    protected static $_tables = array(
+    protected static $_tables = [
+        'AndroidInstallations',
         'ClientsAndGroups',
         'WindowsProductKeys',
         'WindowsInstallations',
@@ -33,7 +34,7 @@ class ClientTest extends \Model\Test\AbstractTest
         'Packages',
         'PackageHistory',
         'GroupMemberships',
-    );
+    ];
 
     public function testObjectProperties()
     {
@@ -46,6 +47,52 @@ class ClientTest extends \Model\Test\AbstractTest
     {
         $model = new \Model\Client\Client(array('key' => 'value'));
         $this->assertEquals('value', $model['key']);
+    }
+
+    public function testOffsetGetAndroidNotNull()
+    {
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->expects($this->once())->method('get')->willReturnCallback(
+            function ($name) {
+                // Proxy to real service manager. Mock only exists to assert
+                // that the service is used only once.
+                return static::$serviceManager->get($name);
+            }
+        );
+
+        $model = new \Model\Client\Client(array('Id' => 3));
+        $model->setServiceLocator($serviceManager);
+
+        $android = $model['Android'];
+        $this->assertInstanceOf('Model\Client\AndroidInstallation', $android);
+        $this->assertEquals(
+            [
+                'Country' => 'country',
+                'JavaVm' => 'java_vm',
+                'JavaInstallationDirectory' => 'java_installation_directory',
+                'JavaClassPath' => 'java_class_path',
+            ],
+            $android->getArrayCopy()
+        );
+        $this->assertSame($android, $model['Android']); // cached result
+    }
+
+    public function testOffsetGetAndroidNull()
+    {
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager->expects($this->once())->method('get')->willReturnCallback(
+            function ($name) {
+                // Proxy to real service manager. Mock only exists to assert
+                // that the service is used only once.
+                return static::$serviceManager->get($name);
+            }
+        );
+
+        $model = new \Model\Client\Client(array('Id' => 2));
+        $model->setServiceLocator($serviceManager);
+
+        $this->assertNull($model['Android']);
+        $this->assertNull($model['Android']); // cached result
     }
 
     public function testOffsetGetWindowsNotNull()

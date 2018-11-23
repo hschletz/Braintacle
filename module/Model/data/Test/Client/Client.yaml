@@ -133,3 +133,11 @@ groups_cache:
     hardware_id: 2
     group_id: 3
     static: 2
+
+javainfos:
+  -
+    hardware_id: 3
+    javacountry: "country"
+    javaname: "java_vm"
+    javahome: "java_installation_directory"
+    javaclasspath: "java_class_path"

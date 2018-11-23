@@ -54,6 +54,7 @@ class Module implements
                     'Zend\Authentication\AuthenticationService' => 'Model\Operator\AuthenticationService',
                 ),
                 'factories' => array(
+                    'Model\Client\AndroidInstallation' => 'Zend\ServiceManager\Factory\InvokableFactory',
                     'Model\Client\Client' => 'Model\Service\Client\ClientFactory',
                     'Model\Client\ClientManager' => 'Model\Service\Client\ClientManagerFactory',
                     'Model\Client\CustomFieldManager' => 'Model\Service\Client\CustomFieldManagerFactory',

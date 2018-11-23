@@ -34,111 +34,137 @@ class InventoryRequestTest extends \PHPUnit\Framework\TestCase
 
     public function loadClientProvider()
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'PROPERTY2' => '0',
                     'PROPERTY3' => 0,
                     'PROPERTY1' => '<value>',
                     'IGNORE1' => '',
                     'IGNORE2' => null,
-                ),
-                array(),
-                array(),
-                array(),
-                array(),
+                ],
+                [],
+                [],
+                [],
+                [],
+                null,
                 'Hardware.xml'
-            ),
-            array(
-                array(),
-                array(
+            ],
+            [
+                [],
+                [
                     'PROPERTY2' => '0',
                     'PROPERTY3' => 0,
                     'PROPERTY1' => '<value>',
                     'IGNORE1' => '',
                     'IGNORE2' => null,
-                ),
-                array(),
-                array(),
-                array(),
+                ],
+                [],
+                [],
+                [],
+                null,
                 'Bios.xml'
-            ),
-            array(
-                array(),
-                array(),
-                array(
+            ],
+            [
+                [],
+                [],
+                [],
+                [],
+                [],
+                [
+                    'PROPERTY1' => '<value>',
+                    'PROPERTY2' => '0',
+                    'PROPERTY3' => 0,
+                ],
+                'Android.xml'
+            ],
+            [
+                [],
+                [],
+                [
                     'text' => '<value>',
                     'empty' => '',
                     'null' => null,
                     'zero' => 0,
                     'date' => new \DateTime('2015-05-15'),
-                ),
-                array(),
-                array(),
+                ],
+                [],
+                [],
+                null,
                 'CustomFields.xml'
-            ),
-            array(
-                array(),
-                array(),
-                array(),
-                array('<package1>', 'package2'),
-                array(),
+            ],
+            [
+                [],
+                [],
+                [],
+                ['<package1>', 'package2'],
+                [],
+                null,
                 'Packages.xml'
-            ),
-            array(
-                array(),
-                array(),
-                array(),
-                array(),
-                array(
-                    'filesystem' => array(
-                        array(
+            ],
+            [
+                [],
+                [],
+                [],
+                [],
+                [
+                    'filesystem' => [
+                        [
                             'property1' => '0',
                             'property2' => '',
                             'property3' => 0,
                             'property4' => null,
-                        ),
-                        array('property1' => '<value>'),
-                    )
-                ),
+                        ],
+                        ['property1' => '<value>'],
+                    ]
+                ],
+                null,
                 'ItemSingleFull.xml'
-            ),
-            array(
-                array(),
-                array(),
-                array(),
-                array(),
-                array(
-                    'audiodevice' => array(array('property' => 'audiodevice')),
-                    'cpu' => array(array('property' => 'cpu')),
-                    'controller' => array(array('property' => 'controller')),
-                    'display' => array(array('property' => 'display')),
-                    'displaycontroller' => array(array('property' => 'displaycontroller')),
-                    'extensionslot' => array(array('property' => 'extensionslot')),
-                    'filesystem' => array(array('property' => 'filesystem')),
-                    'inputdevice' => array(array('property' => 'inputdevice')),
-                    'memoryslot' => array(array('property' => 'memoryslot')),
-                    'modem' => array(array('property' => 'modem')),
-                    'msofficeproduct' => array(array('property' => 'msofficeproduct')),
-                    'networkinterface' => array(array('property' => 'networkinterface')),
-                    'port' => array(array('property' => 'port')),
-                    'printer' => array(array('property' => 'printer')),
-                    'registrydata' => array(array('property' => 'registrydata')),
-                    'sim' => array(array('property' => 'sim')),
-                    'software' => array(array('property' => 'software')),
-                    'storagedevice' => array(array('property' => 'storagedevice')),
-                    'virtualmachine' => array(array('property' => 'virtualmachine')),
-                ),
+            ],
+            [
+                [],
+                [],
+                [],
+                [],
+                [
+                    'audiodevice' => [['property' => 'audiodevice']],
+                    'cpu' => [['property' => 'cpu']],
+                    'controller' => [['property' => 'controller']],
+                    'display' => [['property' => 'display']],
+                    'displaycontroller' => [['property' => 'displaycontroller']],
+                    'extensionslot' => [['property' => 'extensionslot']],
+                    'filesystem' => [['property' => 'filesystem']],
+                    'inputdevice' => [['property' => 'inputdevice']],
+                    'memoryslot' => [['property' => 'memoryslot']],
+                    'modem' => [['property' => 'modem']],
+                    'msofficeproduct' => [['property' => 'msofficeproduct']],
+                    'networkinterface' => [['property' => 'networkinterface']],
+                    'port' => [['property' => 'port']],
+                    'printer' => [['property' => 'printer']],
+                    'registrydata' => [['property' => 'registrydata']],
+                    'sim' => [['property' => 'sim']],
+                    'software' => [['property' => 'software']],
+                    'storagedevice' => [['property' => 'storagedevice']],
+                    'virtualmachine' => [['property' => 'virtualmachine']],
+                ],
+                null,
                 'ItemAllBasic.xml'
-            ),
-        );
+            ],
+        ];
     }
 
     /**
      * @dataProvider loadClientProvider
      */
-    public function testLoadClient($hardwareData, $biosData, $customFields, $packages, $items, $xmlFile)
-    {
+    public function testLoadClient(
+        $hardwareData,
+        $biosData,
+        $customFields,
+        $packages,
+        $items,
+        $androidData,
+        $xmlFile
+    ) {
         // Only getTableName() is called which returns static data and does not
         // need to be mocked.
         $itemManager = $this->getMockBuilder('Model\Client\ItemManager')
@@ -170,13 +196,14 @@ class InventoryRequestTest extends \PHPUnit\Framework\TestCase
             }
         }
 
+        $androidInstallation = $androidData ? $this->createMock('Model\Client\AndroidInstallation') : null;
+
         $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->willReturnMap(
-            array(
-                array('IdString', 'id_string'),
-                array('CustomFields', $customFields),
-            )
-        );
+        $client->method('offsetGet')->willReturnMap([
+            ['IdString', 'id_string'],
+            ['Android', $androidInstallation],
+            ['CustomFields', $customFields],
+        ]);
         $client->method('getDownloadedPackageIds')->willReturn($packages);
         $client->expects($this->exactly(count($itemTypes)))
                ->method('getItems')
@@ -194,9 +221,20 @@ class InventoryRequestTest extends \PHPUnit\Framework\TestCase
                      ->with($client)
                      ->willReturn($biosData);
 
-        $services[] = array('Model\Client\ItemManager', $itemManager);
-        $services[] = array('Protocol\Hydrator\ClientsHardware', $hardwareHydrator);
-        $services[] = array('Protocol\Hydrator\ClientsBios', $biosHydrator);
+        $androidInstallationHydrator = $this->createMock('Zend\Hydrator\HydratorInterface');
+        if ($androidData) {
+            $androidInstallationHydrator->expects($this->once())
+                                        ->method('extract')
+                                        ->with($androidInstallation)
+                                        ->willReturn($androidData);
+        } else {
+            $androidInstallationHydrator->expects($this->never())->method('extract');
+        }
+
+        $services[] = ['Model\Client\ItemManager', $itemManager];
+        $services[] = ['Protocol\Hydrator\ClientsHardware', $hardwareHydrator];
+        $services[] = ['Protocol\Hydrator\ClientsBios', $biosHydrator];
+        $services[] = ['Protocol\Hydrator\AndroidInstallations', $androidInstallationHydrator];
 
         $serviceLocator = $this->createMock('\Zend\ServiceManager\ServiceManager');
         $serviceLocator->method('get')->willReturnMap($services);

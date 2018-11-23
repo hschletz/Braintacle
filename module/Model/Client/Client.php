@@ -55,6 +55,7 @@ namespace Model\Client;
  * @property string $UserAgent user agent identification string
  * @property string $UserName user logged in at time of inventory
  * @property string $Uuid UUID (typically provided by BIOS)
+ * @property \Model\Client\AndroidInstallation $Android Android installation info, NULL for non-Android systems
  * @property \Model\Client\WindowsInstallation $Windows Windows installation info, NULL for non-Windows systems
  * @property \Model\Client\CustomFields $CustomFields custom fields
  * @property bool $IsSerialBlacklisted TRUE if the serial is ignored for detection of duplicates
@@ -137,6 +138,13 @@ class Client extends \Model\ClientOrGroup
         } else {
             // Virtual properties from database queries
             switch ($index) {
+                case 'Android':
+                    $androidInstallations = $this->_serviceLocator->get('Database\Table\AndroidInstallations');
+                    $select = $androidInstallations->getSql()->select();
+                    $select->columns(['javacountry', 'javaname', 'javaclasspath', 'javahome']);
+                    $select->where(array('hardware_id' => $this['Id']));
+                    $value = $androidInstallations->selectWith($select)->current() ?: null;
+                    break;
                 case 'Windows':
                     $windowsInstallations = $this->_serviceLocator->get('Database\Table\WindowsInstallations');
                     $select = $windowsInstallations->getSql()->select();

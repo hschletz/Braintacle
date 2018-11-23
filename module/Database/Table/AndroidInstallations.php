@@ -33,6 +33,24 @@ class AndroidInstallations extends \Database\AbstractTable
     public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'javainfos';
+
+        $this->_hydrator = new \Zend\Hydrator\ArraySerializable;
+        $this->_hydrator->setNamingStrategy(
+            new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
+                array(
+                    'javacountry' => 'Country',
+                    'javaname' => 'JavaVm',
+                    'javahome' => 'JavaInstallationDirectory',
+                    'javaclasspath' => 'JavaClassPath',
+                )
+            )
+        );
+
+        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
+            $this->_hydrator,
+            $serviceLocator->get('Model\Client\AndroidInstallation')
+        );
+
         parent::__construct($serviceLocator);
     }
 }

@@ -92,6 +92,14 @@ class InventoryRequest extends \Library\DomDocument
                 $content->appendChild($element);
             }
         }
+        $android = $client['Android'];
+        if ($android) {
+            $element = $content->appendElement('JAVAINFOS');
+            $data = $serviceLocator->get('Protocol\Hydrator\AndroidInstallations')->extract($android);
+            foreach ($data as $name => $value) {
+                $element->appendElement($name, $value, true);
+            }
+        }
         // ACCOUNTINFO section
         foreach ($client['CustomFields'] as $property => $value) {
             if ($value instanceof \DateTime) {
