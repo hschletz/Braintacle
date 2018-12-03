@@ -24,7 +24,7 @@ namespace Model\Client\Plugin;
 /**
  * StorageDevice item plugin
  */
-class StorageDevice extends AddIsWindows
+class StorageDevice extends AddOsColumns
 {
     /** {@inheritdoc} */
     public function columns()
@@ -40,6 +40,7 @@ class StorageDevice extends AddIsWindows
                 'disksize',
                 'serialnumber',
                 'firmware',
+                'is_android' => $this->_getIsAndroidExpression(),
             )
         );
     }

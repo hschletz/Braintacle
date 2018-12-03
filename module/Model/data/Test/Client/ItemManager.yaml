@@ -21,6 +21,15 @@ hardware:
     deviceid: "id4"
     name: "name4"
     winprodid: null
+  -
+    id: 5
+    deviceid: "id5"
+    name: "name5"
+    winprodid: null
+
+javainfos:
+  -
+    hardware_id: 5
 
 blacklist_macaddresses:
   -
@@ -289,7 +298,7 @@ sounds:
     manufacturer: "manufacturer4"
     name: "name1"
 
-# Different columns map to "Model" property depending on agent type
+# Different column mappings depending on agent type
 storages:
   -
     id: 2
@@ -301,6 +310,11 @@ storages:
     hardware_id: 1
     model: null
     name: "name1"
+  -
+    id: 3
+    hardware_id: 5
+    description: "android_type"
+    type: "useless"
 
 videos:
   -

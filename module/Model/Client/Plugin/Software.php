@@ -32,7 +32,7 @@ use Zend\Db\Sql\Predicate;
  * excludes entries where name is NULL (these are barely interesting, but cannot
  * be blacklisted explicitly).
  */
-class Software extends AddIsWindows
+class Software extends AddOsColumns
 {
     /** {@inheritdoc} */
     public function columns()

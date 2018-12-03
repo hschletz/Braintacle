@@ -24,7 +24,7 @@ namespace Model\Client\Plugin;
 /**
  * Controller item plugin
  */
-class Controller extends AddIsWindows
+class Controller extends AddOsColumns
 {
     /** {@inheritdoc} */
     public function columns()

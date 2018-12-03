@@ -24,7 +24,7 @@ namespace Model\Client\Plugin;
 /**
  * ExtensionSlot item plugin
  */
-class ExtensionSlot extends AddIsWindows
+class ExtensionSlot extends AddOsColumns
 {
     /** {@inheritdoc} */
     public function columns()

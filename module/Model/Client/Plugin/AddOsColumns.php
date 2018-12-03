@@ -1,6 +1,6 @@
 <?php
 /**
- * Item plugin to add "is_windows" boolean column
+ * Item plugin to add "is_windows" and "is_android" boolean columnn
  *
  * Copyright (C) 2011-2018 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,12 +22,12 @@
 namespace Model\Client\Plugin;
 
 /**
- * Item plugin to add "is_windows" boolean column
+ * Item plugin to add "is_windows" and "is_android" boolean columnn
  *
- * The extra column is required by some hydrators as a hint about the agent
+ * The extra columns are required by some hydrators as a hint about the agent
  * type.
  */
-class AddIsWindows extends DefaultPlugin
+class AddOsColumns extends DefaultPlugin
 {
     /** {@inheritdoc} */
     public function join()
@@ -35,7 +35,17 @@ class AddIsWindows extends DefaultPlugin
         $this->_select->join(
             'hardware',
             'hardware.id = hardware_id',
-            array('is_windows' => new \Zend\Db\Sql\Literal('(hardware.winprodid IS NOT NULL)'))
+            ['is_windows' => new \Zend\Db\Sql\Literal('(hardware.winprodid IS NOT NULL)')]
         );
+    }
+
+    /**
+     * Get SQL expression for the is_android column
+     *
+     * @return \Zend\Db\Sql\Literal
+     */
+    protected function _getIsAndroidExpression()
+    {
+        return new \Zend\Db\Sql\Literal('EXISTS(SELECT 1 FROM javainfos WHERE javainfos.hardware_id = hardware.id)');
     }
 }

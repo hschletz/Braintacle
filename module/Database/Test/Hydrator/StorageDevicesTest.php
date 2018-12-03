@@ -25,7 +25,7 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
 {
     public function hydrateProvider()
     {
-        $windowsAgentTypePrimary = array(
+        $windowsAgentTypePrimary = [
             'manufacturer' => 'ignored',
             'name' => '_productName',
             'model' => '_device',
@@ -35,8 +35,9 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
             'serialnumber' => '_serial',
             'firmware' => '_firmware',
             'is_windows' => '1',
-        );
-        $windowsAgentTypeEmpty = array(
+            'is_android' => '0',
+        ];
+        $windowsAgentTypeEmpty = [
             'manufacturer' => 'ignored',
             'name' => '_productName',
             'model' => '_device',
@@ -46,8 +47,9 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
             'serialnumber' => '_serial',
             'firmware' => '_firmware',
             'is_windows' => '1',
-        );
-        $windowsAgentTypeUnknown = array(
+            'is_android' => '0',
+        ];
+        $windowsAgentTypeUnknown = [
             'manufacturer' => 'ignored',
             'name' => '_productName',
             'model' => '_device',
@@ -57,8 +59,9 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
             'serialnumber' => '_serial',
             'firmware' => '_firmware',
             'is_windows' => '1',
-        );
-        $windowsAgentRemovableMedia = array(
+            'is_android' => '0',
+        ];
+        $windowsAgentRemovableMedia = [
             'manufacturer' => 'ignored',
             'name' => '_productName',
             'model' => '_productName',
@@ -68,8 +71,9 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
             'serialnumber' => '_serial',
             'firmware' => '_firmware',
             'is_windows' => '1',
-        );
-        $unixAgent = array(
+            'is_android' => '0',
+        ];
+        $unixAgent = [
             'manufacturer' => '_productFamily',
             'name' => '_device',
             'model' => '_productName',
@@ -79,59 +83,81 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
             'serialnumber' => '_serial',
             'firmware' => '_firmware',
             'is_windows' => '0',
-        );
-        $windowsStorageDevice = array(
+            'is_android' => '0',
+        ];
+        $androidAgent = [
+            'manufacturer' => 'ignored',
+            'name' => 'ignored',
+            'model' => 'ignored',
+            'type' => 'ignored',
+            'description' => '_type',
+            'disksize' => '42',
+            'serialnumber' => 'ignored',
+            'firmware' => 'ignored',
+            'is_windows' => '0',
+            'is_android' => '1',
+        ];
+        $windowsStorageDevice = [
             'Type' => '_type',
             'ProductName' => '_productName',
             'Device' => '_device',
             'Size' => '42',
             'Serial' => '_serial',
             'Firmware' => '_firmware',
-        );
-        $windowsStorageDeviceRemovableMedia = array(
+        ];
+        $windowsStorageDeviceRemovableMedia = [
             'Type' => '_type',
             'ProductName' => '_productName',
             'Device' => null,
             'Size' => null,
             'Serial' => '_serial',
             'Firmware' => '_firmware',
-        );
-        $unixStorageDevice = array(
+        ];
+        $unixStorageDevice = [
             'ProductFamily' => '_productFamily',
             'ProductName' => '_productName',
             'Device' => '_device',
             'Size' => '42',
             'Serial' => '_serial',
             'Firmware' => '_firmware',
-        );
-        return array(
-            array($windowsAgentTypePrimary, $windowsStorageDevice),
-            array($windowsAgentTypeEmpty, $windowsStorageDevice),
-            array($windowsAgentTypeUnknown, $windowsStorageDevice),
-            array($windowsAgentRemovableMedia, $windowsStorageDeviceRemovableMedia),
-            array($unixAgent, $unixStorageDevice),
-        );
+        ];
+        $androidStorageDevice = [
+            'Type' => '_type',
+            'Size' => '42',
+        ];
+        return [
+            [$windowsAgentTypePrimary, $windowsStorageDevice],
+            [$windowsAgentTypeEmpty, $windowsStorageDevice],
+            [$windowsAgentTypeUnknown, $windowsStorageDevice],
+            [$windowsAgentRemovableMedia, $windowsStorageDeviceRemovableMedia],
+            [$unixAgent, $unixStorageDevice],
+            [$androidAgent, $androidStorageDevice],
+        ];
     }
 
     public function extractProvider()
     {
-        $windowsStorageDevice = array(
+        $windowsStorageDevice = [
             'Type' => '_type',
             'ProductName' => '_productName',
             'Device' => '_device',
             'Size' => '42',
             'Serial' => '_serial',
             'Firmware' => '_firmware',
-        );
-        $unixStorageDevice = array(
+        ];
+        $unixStorageDevice = [
             'ProductFamily' => '_productFamily',
             'ProductName' => '_productName',
             'Device' => '_device',
             'Size' => '42',
             'Serial' => '_serial',
             'Firmware' => '_firmware',
-        );
-        $windowsAgent = array(
+        ];
+        $androidStorageDevice = [
+            'Type' => '_type',
+            'Size' => '42',
+        ];
+        $windowsAgent = [
             'manufacturer' => null,
             'name' => '_productName',
             'model' => '_device',
@@ -140,8 +166,8 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
             'disksize' => '42',
             'serialnumber' => '_serial',
             'firmware' => '_firmware',
-        );
-        $unixAgent = array(
+        ];
+        $unixAgent = [
             'manufacturer' => '_productFamily',
             'name' => '_device',
             'model' => '_productName',
@@ -150,10 +176,21 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
             'disksize' => '42',
             'serialnumber' => '_serial',
             'firmware' => '_firmware',
-        );
-        return array(
-            array($windowsStorageDevice, $windowsAgent),
-            array($unixStorageDevice, $unixAgent),
-        );
+        ];
+        $androidAgent = [
+            'manufacturer' => null,
+            'name' => null,
+            'model' => null,
+            'type' => null,
+            'description' => '_type',
+            'disksize' => '42',
+            'serialnumber' => null,
+            'firmware' => null,
+        ];
+        return [
+            [$windowsStorageDevice, $windowsAgent],
+            [$unixStorageDevice, $unixAgent],
+            [$androidStorageDevice, $androidAgent],
+        ];
     }
 }

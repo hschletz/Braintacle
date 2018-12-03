@@ -33,31 +33,37 @@ class StorageDevices implements \Zend\Hydrator\HydratorInterface
     /** {@inheritdoc} */
     public function hydrate(array $data, $object)
     {
-        $object->exchangeArray(array());
-        if ($data['is_windows']) {
-            // Type is usually stored in 'type'; use 'description' as fallback
-            if ($data['type'] == '' or $data['type'] == 'UNKNOWN') {
-                $object['Type'] = $data['description'];
-            } else {
-                $object['Type'] = $data['type'];
-            }
-            $object['ProductName'] = $data['name'];
-            // For removable media, 'model' is identical to 'name' and thus
-            // useless. For Hard disks and USB storage, 'model' contains the
-            // device path.
-            if ($data['model'] == $data['name']) {
-                $object['Device'] = null;
-            } else {
-                $object['Device'] = $data['model'];
-            }
+        $object->exchangeArray([]);
+        if ($data['is_android']) {
+            $object['Type'] = $data['description'];
         } else {
-            $object['ProductFamily'] = $data['manufacturer'];
-            $object['ProductName'] = $data['model'];
-            $object['Device'] = $data['name'];
+            if ($data['is_windows']) {
+                // Type is usually stored in 'type'; use 'description' as fallback
+                if ($data['type'] == '' or $data['type'] == 'UNKNOWN') {
+                    $object['Type'] = $data['description'];
+                } else {
+                    $object['Type'] = $data['type'];
+                }
+                $object['ProductName'] = $data['name'];
+                // For removable media, 'model' is identical to 'name' and thus
+                // useless. For Hard disks and USB storage, 'model' contains the
+                // device path.
+                if ($data['model'] == $data['name']) {
+                    $object['Device'] = null;
+                } else {
+                    $object['Device'] = $data['model'];
+                }
+            } else {
+                // UNIX
+                $object['ProductFamily'] = $data['manufacturer'];
+                $object['ProductName'] = $data['model'];
+                $object['Device'] = $data['name'];
+            }
+            // Windows and UNIX
+            $object['Firmware'] = $data['firmware'];
+            $object['Serial'] = $data['serialnumber'];
         }
         $object['Size'] = ($data['disksize'] == '0') ? null : $data['disksize'];
-        $object['Serial'] = $data['serialnumber'];
-        $object['Firmware'] = $data['firmware'];
 
         return $object;
     }
@@ -66,27 +72,42 @@ class StorageDevices implements \Zend\Hydrator\HydratorInterface
     public function extract($object)
     {
         if (array_key_exists('Type', $object)) {
-            // Windows
-            $data = array(
-                'manufacturer' => null,
-                'name' => $object['ProductName'],
-                'model' => $object['Device'],
-                'type' => $object['Type'],
-                'description' => null,
-            );
+            if (array_key_exists('Device', $object)) {
+                // Windows
+                $data = [
+                    'manufacturer' => null,
+                    'name' => $object['ProductName'],
+                    'model' => $object['Device'],
+                    'type' => $object['Type'],
+                    'description' => null,
+                    'serialnumber' => $object['Serial'],
+                    'firmware' => $object['Firmware'],
+                ];
+            } else {
+                // Android
+                $data = [
+                    'manufacturer' => null,
+                    'name' => null,
+                    'model' => null,
+                    'type' => null,
+                    'description' => $object['Type'],
+                    'serialnumber' => null,
+                    'firmware' => null,
+                ];
+            }
         } else {
             // UNIX
-            $data = array(
+            $data = [
                 'manufacturer' => $object['ProductFamily'],
                 'name' => $object['Device'],
                 'model' => $object['ProductName'],
                 'type' => null,
                 'description' => null,
-            );
+                'serialnumber' => $object['Serial'],
+                'firmware' => $object['Firmware'],
+            ];
         }
         $data['disksize'] = $object['Size'];
-        $data['serialnumber'] = $object['Serial'];
-        $data['firmware'] = $object['Firmware'];
         return $data;
     }
 }
