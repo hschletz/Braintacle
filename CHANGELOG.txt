@@ -13,6 +13,10 @@ Fixed bugs:
 
 - Fixed incomplete export of Android clients.
 
+Misc:
+
+- Fixed PHP 7.3 compatibility.
+
 
 CHANGES IN VERSION 1.4
 ======================
