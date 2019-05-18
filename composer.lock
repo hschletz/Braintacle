@@ -201,16 +201,16 @@
         },
         {
             "name": "hschletz/nada",
-            "version": "v1.1.1",
+            "version": "v1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hschletz/NADA.git",
-                "reference": "4ead798354089fd360f917ce64dd1432d5650df0"
+                "reference": "da756313656b0682ca930e59c2b97b0d744dabeb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hschletz/NADA/zipball/4ead798354089fd360f917ce64dd1432d5650df0",
-                "reference": "4ead798354089fd360f917ce64dd1432d5650df0",
+                "url": "https://api.github.com/repos/hschletz/NADA/zipball/da756313656b0682ca930e59c2b97b0d744dabeb",
+                "reference": "da756313656b0682ca930e59c2b97b0d744dabeb",
                 "shasum": ""
             },
             "type": "library",
@@ -231,7 +231,7 @@
             ],
             "description": "A high level SQL abstraction library for PHP, complementing and operating on top of a conventional database abstraction layer",
             "homepage": "https://github.com/hschletz/NADA",
-            "time": "2018-10-01T14:44:30+00:00"
+            "time": "2019-05-18T10:51:12+00:00"
         },
         {
             "name": "oomphinc/composer-installers-extender",

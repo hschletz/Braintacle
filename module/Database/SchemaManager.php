@@ -205,8 +205,18 @@ class SchemaManager
         $tableName = $schema['name'];
         if (in_array($tableName, $database->getTableNames())) {
             // Table exists
-            // Update table and column comments
             $table = $database->getTable($tableName);
+
+            // Update table engine
+            if ($database->isMysql() and $table->getEngine() != $schema['mysql']['engine']) {
+                $logger->info(
+                    "Setting engine for table $tableName to {$schema['mysql']['engine']}..."
+                );
+                $table->setEngine($schema['mysql']['engine']);
+                $logger->info('done.');
+            }
+
+            // Update table and column comments
             if ($schema['comment'] != $table->getComment()) {
                 $table->setComment($schema['comment']);
             }
