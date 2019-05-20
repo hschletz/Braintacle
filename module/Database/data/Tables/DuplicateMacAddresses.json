@@ -16,6 +16,6 @@
         "macaddress"
     ],
     "mysql": {
-        "engine": "MyISAM"
+        "engine": "InnoDB"
     }
 }

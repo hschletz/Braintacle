@@ -25,8 +25,8 @@ use strict;
 
 use Apache::Ocsinventory::Server::Modperl2;
 
-$Apache::Ocsinventory::VERSION = '2.5';
-$Apache::Ocsinventory::BUILD_VERSION = '740';
+$Apache::Ocsinventory::VERSION = '2.6';
+$Apache::Ocsinventory::BUILD_VERSION = '750';
 $XML::Simple::PREFERRED_PARSER = 'XML::Parser';
 
 # Ocs modules
@@ -263,6 +263,8 @@ sub handler{
         }
     }
     
+    $query = verif_xml($query);
+
     $CURRENT_CONTEXT{'XML_ENTRY'} = $query;
 
     # Get the request type
@@ -389,17 +391,41 @@ sub _init{
   $request->finish;  
   return;
 }
+
+# XML string verification
+sub verif_xml{
+
+  my ($query) = @_;
+  my $key;
+  my $exp;
+  my $exp2;
+
+  for(%{$query->{CONTENT}}){
+    if(ref($_) ne 'ARRAY'){
+      $key = $_;
+      if(ref($query->{CONTENT}->{$key}) eq 'ARRAY'){
+        for(@{$query->{CONTENT}->{$key}}){
+          for(%{$_}){
+            $exp = $_;
+            $exp2 = $exp =~ s/ //gr;
+            if($exp2 =~ m/=\(/ && $exp2 =~ m/\)/){
+              $_ = 1;
+            }
+          }
+        }
+      } if(ref($query->{CONTENT}->{$key}) eq 'HASH'){
+        for(%{$query->{CONTENT}->{$key}}){
+          $exp = $_;
+          $exp2 = $exp =~ s/ //gr;
+          if($exp2 =~ m/=\(/ && $exp2 =~ m/\)/){
+            $_ = 1;
+          }
+        }
+      }
+    }
+  }
+
+  return $query;
+}
+
 1;
-
-
-
-
-
-
-
-
-
-
-
-
-

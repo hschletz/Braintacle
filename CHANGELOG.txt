@@ -17,6 +17,8 @@ Misc:
 
 - Fixed PHP 7.3 compatibility.
 
+- Server: Backported changes from version 2.6.
+
 
 CHANGES IN VERSION 1.4
 ======================

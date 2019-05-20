@@ -16,6 +16,6 @@
         "serial"
     ],
     "mysql": {
-        "engine": "MyISAM"
+        "engine": "InnoDB"
     }
 }

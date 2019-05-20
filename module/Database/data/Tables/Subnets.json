@@ -35,6 +35,6 @@
         "mask"
     ],
     "mysql": {
-        "engine": "MyISAM"
+        "engine": "InnoDB"
     }
 }

@@ -62,6 +62,8 @@ sub _ipdiscover_prolog_resp{
   
   my ($ua, $os, $v);
  
+  return unless (ref $current_context->{'PARAMS'}{'IPDISCOVER'} eq ref {}); # Not a HASH reference
+
   my $lanToDiscover = $current_context->{'PARAMS'}{'IPDISCOVER'}->{'TVALUE'};
   my $behaviour     = $current_context->{'PARAMS'}{'IPDISCOVER'}->{'IVALUE'};
   my $groupsParams  = $current_context->{'PARAMS_G'};
@@ -350,7 +352,7 @@ sub _ipdiscover_evaluate{
             return 1;
           }
           $dbh->commit;
-          &_log(1001,'ipdiscover',($over?'over':'better')."($_->{IPSUBNET})") if $ENV{'OCS_OPT_LOGLEVEL'};
+           &_log(1001,'ipdiscover',($over?'over':'better')."($_->{IPSUBNET})"."(OLD=($worth[0],$worth[1]),NEW=($DeviceID,$quality))(THRESHOLD=$ENV{'OCS_OPT_IPDISCOVER_BETTER_THRESHOLD'})") if $ENV{'OCS_OPT_LOGLEVEL'};
           return 0;
         }
       }

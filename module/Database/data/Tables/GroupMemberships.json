@@ -35,6 +35,6 @@
         "group_id"
     ],
     "mysql": {
-        "engine": "MyISAM"
+        "engine": "InnoDB"
     }
 }
