@@ -9,6 +9,14 @@ without any warranty.
 CHANGES IN VERSION 1.5
 ======================
 
+Upgrading from previous versions:
+
+- Required: Run "composer install" from the Braintacle root directory to
+  update dependencies.
+
+- Recommended: Run "braintacle-tool.php database" to update the database.
+  Database changes in v1.5 are compatible with previous versions.
+
 Fixed bugs:
 
 - Fixed incomplete export of Android clients.
