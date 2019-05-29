@@ -26,7 +26,7 @@
         "hschletz/nada": "^1.1",
         "oomphinc/composer-installers-extender": "^1.1",
         "symfony/filesystem": "^3.4",
-        "theseer/fDOMDocument": "*",
+        "theseer/fdomdocument": "*",
         "zendframework/zend-authentication": "^2.5",
         "zendframework/zend-config": "^2.5 || ^3.0",
         "zendframework/zend-console": "^2.5",
@@ -60,7 +60,7 @@
     },
     "require-dev": {
         "hschletz/doxygen-phpdoc": "^1.0",
-        "mikey179/vfsStream": "*",
+        "mikey179/vfsstream": "*",
         "phpunit/dbunit": "*",
         "sebastian/peek-and-poke": "1.0.*-dev",
         "squizlabs/php_codesniffer": "2.*",
