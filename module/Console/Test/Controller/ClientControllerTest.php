@@ -1559,9 +1559,10 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'InstallLocation' => 'location2',
             'Architecture' => '',
         );
-        $map = array(
-            array('Windows', $this->createMock('Model\Client\WindowsInstallation')),
-        );
+        $map = [
+            ['Windows', $this->createMock('Model\Client\WindowsInstallation')],
+            ['Android', null],
+        ];
         $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $client->expects($this->once())
@@ -1585,13 +1586,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $software1 = array(
             'Name' => 'name1',
-            'Comment' => '',
             'Version' => 'version1',
             'Size' => 42,
         );
-        $map = array(
-            array('Windows', null),
-        );
+        $map = [
+            ['Windows', null],
+            ['Android', null],
+        ];
         $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
         $client->expects($this->once())
@@ -1608,6 +1609,35 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertNotXpathQuery("//th/a[text()='Architektur']");
         $this->assertXpathQuery("//th/a[text()='Größe']");
         $this->assertXpathQuery("//tr[2]/td[3][@class='textright'][text()='\n42\xC2\xA0kB\n']");
+    }
+
+    public function testSoftwareActionAndroid()
+    {
+        $software1 = [
+            'Name' => 'name1',
+            'Version' => 'version1',
+            'Publisher' => 'publisher1',
+            'InstallLocation' => 'location1',
+        ];
+        $map = [
+            ['Windows', null],
+            ['Android', $this->createMock('Model\Client\AndroidInstallation')],
+        ];
+        $client = $this->createMock('Model\Client\Client');
+        $client->method('offsetGet')->willReturnMap($map);
+        $client->expects($this->once())
+               ->method('getItems')
+               ->with('Software')
+               ->willReturn([$software1]);
+        $this->_clientManager->method('getClient')->willReturn($client);
+
+        $this->dispatch('/console/client/software/?id=1');
+        $this->assertResponseStatusCode(200);
+        $this->assertXpathQuery("//th/a[text()='Version']");
+        $this->assertXpathQuery("//th/a[text()='Herausgeber']");
+        $this->assertXpathQuery("//th/a[text()='Ort']");
+        $this->assertNotXpathQuery("//th/a[text()='Architektur']");
+        $this->assertNotXpathQuery("//th/a[text()='Größe']");
     }
 
     public function testSoftwareActionComments()

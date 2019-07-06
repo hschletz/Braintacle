@@ -96,6 +96,12 @@ class Software implements \Zend\Hydrator\HydratorInterface
             $object['Language'] = $data['language'];
             $object['InstallationDate'] = $this->hydrateValue('InstallationDate', $data['installdate']);
             $object['Architecture'] = $this->hydrateValue('Architecture', $data['bitswidth']);
+        } elseif ($data['is_android']) {
+            // No value transformations required
+            $object['Name'] = $data['name'];
+            $object['Version'] = $data['version'];
+            $object['Publisher'] = $data['publisher'];
+            $object['InstallLocation'] = $data['folder'];
         } else {
             $object['Name'] = $data['name']; // No sanitization required
             $object['Version'] = $data['version'];
@@ -108,7 +114,7 @@ class Software implements \Zend\Hydrator\HydratorInterface
     /** {@inheritdoc} */
     public function extract($object)
     {
-        if (array_key_exists('Publisher', $object)) {
+        if (array_key_exists('IsHotfix', $object)) {
             // Windows
             $data = array(
                 'name' => $object['Name'],
@@ -123,7 +129,7 @@ class Software implements \Zend\Hydrator\HydratorInterface
                 'bitswidth' => $object['Architecture'],
                 'filesize' => null,
             );
-        } else {
+        } elseif (array_key_exists('Size', $object)) {
             // UNIX
             $data = array(
                 'name' => $object['Name'],
@@ -137,6 +143,21 @@ class Software implements \Zend\Hydrator\HydratorInterface
                 'installdate' => null,
                 'bitswidth' => null,
                 'filesize' => $object['Size'],
+            );
+        } else {
+            //Android
+            $data = array(
+                'name' => $object['Name'],
+                'version' => $object['Version'],
+                'comments' => null,
+                'publisher' => $object['Publisher'],
+                'folder' => $object['InstallLocation'],
+                'source' => null,
+                'guid' => null,
+                'language' => null,
+                'installdate' => null,
+                'bitswidth' => null,
+                'filesize' => null,
             );
         }
         return $data;

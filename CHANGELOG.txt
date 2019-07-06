@@ -9,6 +9,9 @@ without any warranty.
 CHANGES IN VERSION 1.6
 ======================
 
+Misc:
+
+- Console: Improved displayed data for Android clients.
 
 
 CHANGES IN VERSION 1.5

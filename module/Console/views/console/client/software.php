@@ -27,12 +27,14 @@ $headers = array(
     'Name' => $this->translate('Name'),
     'Version' => $this->translate('Version'),
 );
-if ($client['Windows'] instanceof \Model\Client\WindowsInstallation) {
+if ($client['Windows'] or $client['Android']) {
     $headers['Publisher'] = $this->translate('Publisher');
     $headers['InstallLocation'] = $this->translate('Location');
-    $headers['Architecture'] = $this->translate('Architecture');
 } else {
     $headers['Size'] = $this->translate('Size');
+}
+if ($client['Windows']) {
+    $headers['Architecture'] = $this->translate('Architecture');
 }
 
 $columnClasses = array(
@@ -42,7 +44,7 @@ $columnClasses = array(
 $renderCallbacks = array(
     'Name' => function ($view, $software) {
         $content = $view->escapeHtml($software['Name']);
-        if ($software['Comment']) {
+        if (@$software['Comment']) {
             $content = $view->htmlElement(
                 'span',
                 $content,

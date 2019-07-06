@@ -38,21 +38,20 @@ class Software extends AddOsColumns
     public function columns()
     {
         // Hydrator does not provide the names
-        $this->_select->columns(
-            array(
-                'name',
-                'version',
-                'comments',
-                'publisher',
-                'folder',
-                'source',
-                'guid',
-                'language',
-                'installdate',
-                'bitswidth',
-                'filesize',
-            )
-        );
+        $this->_select->columns([
+            'name',
+            'version',
+            'comments',
+            'publisher',
+            'folder',
+            'source',
+            'guid',
+            'language',
+            'installdate',
+            'bitswidth',
+            'filesize',
+            'is_android' => $this->_getIsAndroidExpression(),
+        ]);
     }
 
     /** {@inheritdoc} */

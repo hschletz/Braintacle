@@ -39,6 +39,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
         );
         $agentData = array(
             'is_windows' => true,
+            'is_android' => false,
             'name' => '_name',
             'version' => '_version',
             'comments' => '_comment',
@@ -73,6 +74,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
         $hydrator->expects($this->never())->method('hydrateValue');
         $agentData = array(
             'is_windows' => false,
+            'is_android' => false,
             'name' => '_name',
             'version' => '_version',
             'comments' => '_comment',
@@ -90,6 +92,36 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             'Version' => '_version',
             'Comment' => '_comment',
             'Size' => '_filesize',
+        );
+        $object = new \ArrayObject;
+        $this->assertSame($object, $hydrator->hydrate($agentData, $object));
+        $this->assertEquals($software, $object->getArrayCopy());
+    }
+
+    public function testHydrateAndroid()
+    {
+        $hydrator = $this->getMockBuilder('Database\Hydrator\Software')->setMethods(['hydrateValue'])->getMock();
+        $hydrator->expects($this->never())->method('hydrateValue');
+        $agentData = array(
+            'is_windows' => false,
+            'is_android' => true,
+            'name' => '_name',
+            'version' => '_version',
+            'comments' => 'ignored',
+            'publisher' => '_publisher',
+            'folder' => '_folder',
+            'source' => 'ignored',
+            'guid' => 'ignored',
+            'language' => 'ignored',
+            'installdate' => 'ignored',
+            'bitswidth' => 'ignored',
+            'filesize' => 'ignored',
+        );
+        $software = array(
+            'Name' => '_name',
+            'Version' => '_version',
+            'Publisher' => '_publisher',
+            'InstallLocation' => '_folder',
         );
         $object = new \ArrayObject;
         $this->assertSame($object, $hydrator->hydrate($agentData, $object));
@@ -157,6 +189,32 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             'installdate' => null,
             'bitswidth' => null,
             'filesize' => '_Size',
+        );
+        $this->assertEquals($agentData, $hydrator->extract($software));
+    }
+
+    public function testExtractAndroid()
+    {
+        $hydrator = $this->getMockBuilder('Database\Hydrator\Software')->setMethods(array('extractValue'))->getMock();
+        $hydrator->expects($this->never())->method('extractValue');
+        $software = array(
+            'Name' => '_Name',
+            'Version' => '_Version',
+            'Publisher' => '_Publisher',
+            'InstallLocation' => '_InstallLocation',
+        );
+        $agentData = array(
+            'name' => '_Name',
+            'version' => '_Version',
+            'comments' => null,
+            'publisher' => '_Publisher',
+            'folder' => '_InstallLocation',
+            'source' => null,
+            'guid' => null,
+            'language' => null,
+            'installdate' => null,
+            'bitswidth' => null,
+            'filesize' => null,
         );
         $this->assertEquals($agentData, $hydrator->extract($software));
     }

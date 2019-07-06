@@ -26,15 +26,15 @@ namespace Model\Client\Item;
  *
  * @property string $Name Name
  * @property string $Version Version
- * @property string $Comment Comment
- * @property string $Publisher Publisher/Manufacturer (Windows only)
- * @property string $InstallLocation Installation directory (Windows only)
+ * @property string $Comment Comment (Windows/UNIX only)
+ * @property string $Publisher Publisher/Manufacturer (Windows/Android only)
+ * @property string $InstallLocation Installation directory (Windows/Android only)
  * @property bool $IsHotfix TRUE for Windows hotfixes (Windows only)
  * @property string $Guid GUID - may contain the MSI GIUD or arbitrary string (Windows only)
  * @property string $Language UI Language (Windows only)
  * @property \DateTime $InstallationDate Date of installation (Windows only)
  * @property integer $Architecture 32/64/NULL (Windows only)
- * @property integer $Size Package size (Unix only)
+ * @property integer $Size Package size (UNIX only)
  */
 class Software extends \ArrayObject
 {
