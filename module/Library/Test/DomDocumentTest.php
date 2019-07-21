@@ -70,11 +70,12 @@ class DomDocumentTest extends \PHPUnit\Framework\TestCase
     public function testForceValidNotValid()
     {
         $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('Validation of XML document failed');
-        $document = $this->getMockBuilder('Library\DomDocument')->setMethods(array('isValid'))->getMock();
-        $document->expects($this->once())
-                 ->method('isValid')
-                 ->willReturn(false);
+        $this->expectExceptionMessage('Validation of XML document failed. line 1: Expecting element TEST, got test');
+
+        $document = $this->getMockBuilder('Library\DomDocument')->setMethods(['getSchemaFilename'])->getMock();
+        $document->method('getSchemaFilename')->willReturn(__DIR__ . '/../data/Test/DomDocument/test.rng');
+
+        $document->loadXML('<?xml version="1.0" ?><test />');
         $document->forceValid();
     }
 
