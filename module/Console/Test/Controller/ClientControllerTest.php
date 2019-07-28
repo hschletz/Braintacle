@@ -1235,6 +1235,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client = array(
             'Name' => 'name',
             'Windows' => $this->createMock('Model\Client\WindowsInstallation'),
+            'Android' => null,
             'StorageDevice' => $devices,
             'Filesystem' => $filesystems,
         );
@@ -1298,6 +1299,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client = array(
             'Name' => 'name',
             'Windows' => null,
+            'Android' => null,
             'StorageDevice' => $devices,
             'Filesystem' => $filesystems,
         );
@@ -1311,6 +1313,39 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXpathQueryContentContains('//table[2]/tr[2]/td[4]', "\n31.05.2014\n");
         // Filesystem 2
         $this->assertXpathQueryContentContains('//table[2]/tr[3]/td[4]', '');
+    }
+
+    public function testStorageActionAndroid()
+    {
+        $devices = [
+            [
+                'Type' => '_type',
+                'Size' => 1024,
+            ],
+        ];
+        $filesystems = [
+            [
+                'Mountpoint' => 'mountpoint2',
+                'Device' => 'device2',
+                'Filesystem' => 'filesystem2',
+                'Size' => 10000,
+                'UsedSpace' => 6000,
+                'FreeSpace' => 4000,
+            ],
+        ];
+        $client = [
+            'Name' => 'name',
+            'Windows' => null,
+            'Android' => $this->createMock('Model\Client\AndroidInstallation'),
+            'StorageDevice' => $devices,
+            'Filesystem' => $filesystems,
+        ];
+        $this->_clientManager->method('getClient')->willReturn($client);
+
+        $this->dispatch('/console/client/storage/?id=1');
+        $this->assertResponseStatusCode(200);
+        $this->assertXpathQueryCount('//table[1]//th', 2); // Devices
+        $this->assertXpathQueryCount('//table[2]//th', 6); // Filesystems
     }
 
     public function testDisplayActionNoDisplays()

@@ -59,7 +59,7 @@ $renderSize = function ($view, $object, $property) {
 
 $renderCallbacks = array('Size' => $renderSize);
 
-if ($client['Windows'] instanceof \Model\Client\WindowsInstallation) {
+if ($client['Windows']) {
     unset($headers['ProductFamily']); // not available
     unset($headers['Device']); // available, but not very interesting
     $renderCallbacks['Type'] = function ($view, $client, $property) {
@@ -79,7 +79,14 @@ if ($client['Windows'] instanceof \Model\Client\WindowsInstallation) {
         }
         return $view->escapeHtml($type);
     };
+} elseif ($client['Android']) {
+    unset($headers['Device']);
+    unset($headers['Firmware']);
+    unset($headers['ProductFamily']);
+    unset($headers['ProductName']);
+    unset($headers['Serial']);
 } else {
+    // UNIX
     unset($headers['Type']); // not available
 }
 
@@ -117,6 +124,9 @@ if ($client['Windows']) {
         'UsedSpace' => $this->translate('Used space'),
         'FreeSpace' => $this->translate('Free space'),
     );
+    if ($client['Android']) {
+        unset($headers['CreationDate']);
+    }
 }
 
 $renderCallbacks = array(

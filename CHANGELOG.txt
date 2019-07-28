@@ -9,6 +9,10 @@ without any warranty.
 CHANGES IN VERSION 1.6
 ======================
 
+Fixed bugs:
+
+- Console: Removed warnings and useless columns on Android storage page.
+
 Misc:
 
 - Console: Improved displayed data for Android clients.
