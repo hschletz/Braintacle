@@ -29,6 +29,12 @@ use \Zend\Dom\Document\Query as Query;
 class SearchTest extends \Console\Test\AbstractFormTest
 {
     /**
+     * Translator mock object
+     * @var \Zend\I18n\Translator\TranslatorInterface
+     */
+    protected $_translator;
+
+    /**
      * RegistryManager mock object
      * @var \Model\Registry\RegistryManager
      */
@@ -40,14 +46,33 @@ class SearchTest extends \Console\Test\AbstractFormTest
      */
     protected $_customFieldManager;
 
+    const OPERATORS_TEXT = [
+        'like' => "TRANSLATE(Substring match, wildcards '?' and '*' allowed)",
+        'eq' => 'TRANSLATE(Exact match)',
+    ];
+
+    const OPERATORS_ORDINAL = [
+        'eq' => '=',
+        'ne' => '!=',
+        'lt' => '<',
+        'le' => '<=',
+        'ge' => '>=',
+        'gt' => '>',
+    ];
+
     public function setUp()
     {
         $resultSet = new \Zend\Db\ResultSet\ResultSet();
         $resultSet->initialize(array(array('Name' => 'RegValue')));
+
+        $this->_translator = $this->createMock('\Zend\I18n\Translator\TranslatorInterface');
+        $this->_translator->method('translate')->willReturnCallback([$this, 'translatorMock']);
+
         $this->_registryManager = $this->createMock('Model\Registry\RegistryManager');
         $this->_registryManager->expects($this->once())
                                ->method('getValueDefinitions')
                                ->willReturn($resultSet);
+
         $this->_customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $this->_customFieldManager->expects($this->once())
                             ->method('getFields')
@@ -71,7 +96,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
         $form = new \Console\Form\Search(
             null,
             array(
-                'translator' => new \Zend\Mvc\I18n\Translator(new \Zend\Mvc\I18n\DummyTranslator),
+                'translator' => $this->_translator,
                 'registryManager' => $this->_registryManager,
                 'customFieldManager' => $this->_customFieldManager,
             )
@@ -85,13 +110,40 @@ class SearchTest extends \Console\Test\AbstractFormTest
         $filter = $this->_form->get('filter');
         $this->assertInstanceOf('Zend\Form\Element\Select', $filter);
         $filters = $filter->getValueOptions();
-        $this->assertContains('Software: Name', $filters); // Hardcoded
+        $this->assertContains('TRANSLATE(Software: Name)', $filters); // Hardcoded
         $this->assertContains('Registry: RegValue', $filters); // dynamically added
-        $this->assertContains('User defined: Category', $filters); // dynamically added; renamed
-        $this->assertContains('User defined: Integer', $filters); // dynamically added
+        $this->assertContains('TRANSLATE(User defined: TRANSLATE(Category))', $filters); // dynamically added; renamed
+        $this->assertContains('TRANSLATE(User defined: Integer)', $filters); // dynamically added
+        $this->assertEquals('Name', $filter->getValue());
+        $this->assertEquals(
+            [
+                'CpuClock' => 'integer',
+                'CpuCores' => 'integer',
+                'InventoryDate' => 'date',
+                'LastContactDate' => 'date',
+                'PhysicalMemory' => 'integer',
+                'SwapMemory' => 'integer',
+                'Filesystem.Size' => 'integer',
+                'Filesystem.FreeSpace' => 'integer',
+                'CustomFields.Integer' => 'integer',
+                'CustomFields.Float' => 'float',
+                'CustomFields.Date' => 'date',
+            ],
+            json_decode($filter->getAttribute('data-types'), true)
+        );
 
         $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('search'));
-        $this->assertInstanceOf('Zend\Form\Element\Select', $this->_form->get('operator'));
+
+        $operator = $this->_form->get('operator');
+        $this->assertInstanceOf('Zend\Form\Element\Select', $operator);
+        $this->assertEquals('select_untranslated', $operator->getAttribute('type'));
+        $this->assertEquals(self::OPERATORS_TEXT, $operator->getValueOptions());
+        $this->assertEquals(json_encode(self::OPERATORS_TEXT), $operator->getAttribute('data-operators-text'));
+        $this->assertEquals(
+            json_encode(self::OPERATORS_ORDINAL),
+            $operator->getAttribute('data-operators-ordinal')
+        );
+
         $this->assertInstanceOf('Zend\Form\Element\Checkbox', $this->_form->get('invert'));
     }
 
@@ -123,6 +175,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
         );
         $this->_form->setData($data);
         $this->assertEquals('1000000', $this->_form->get('search')->getValue());
+        $this->assertEquals(self::OPERATORS_TEXT, $this->_form->get('operator')->getValueOptions());
     }
 
     public function testSetDataClob()
@@ -133,6 +186,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
         );
         $this->_form->setData($data);
         $this->assertEquals('1000000', $this->_form->get('search')->getValue());
+        $this->assertEquals(self::OPERATORS_TEXT, $this->_form->get('operator')->getValueOptions());
     }
 
     public function testSetDataInteger()
@@ -151,6 +205,8 @@ class SearchTest extends \Console\Test\AbstractFormTest
         $data['search'] = '1,234';
         $this->_form->setData($data);
         $this->assertEquals('1,234', $this->_form->get('search')->getValue());
+
+        $this->assertEquals(self::OPERATORS_ORDINAL, $this->_form->get('operator')->getValueOptions());
     }
 
     public function testSetDataFloat()
@@ -169,6 +225,8 @@ class SearchTest extends \Console\Test\AbstractFormTest
         $data['search'] = '1,234.5678';
         $this->_form->setData($data);
         $this->assertEquals('1,234.5678', $this->_form->get('search')->getValue());
+
+        $this->assertEquals(self::OPERATORS_ORDINAL, $this->_form->get('operator')->getValueOptions());
     }
 
     public function testSetDataDate()
@@ -187,6 +245,8 @@ class SearchTest extends \Console\Test\AbstractFormTest
         $data['search'] = '05/01/2014';
         $this->_form->setData($data);
         $this->assertEquals('05/01/2014', $this->_form->get('search')->getValue());
+
+        $this->assertEquals(self::OPERATORS_ORDINAL, $this->_form->get('operator')->getValueOptions());
     }
 
     public function testSetDataNoSearch()
@@ -351,71 +411,5 @@ class SearchTest extends \Console\Test\AbstractFormTest
         $this->expectException('LogicException');
         $this->expectExceptionMessage('No filter submitted');
         $this->_form->validateOperator('value', array('search' => 'value'));
-    }
-
-    public function testRender()
-    {
-        $view = $this->_createView();
-        $document = new \Zend\Dom\Document(
-            $this->_form->render($view)
-        );
-
-        $result = Query::execute(
-            '//select[@name="filter"][@onchange="filterChanged();"]',
-            $document
-        );
-        $this->assertCount(1, $result);
-
-        $result = Query::execute(
-            '//input[@name="search"][@type="text"]',
-            $document
-        );
-        $this->assertCount(1, $result);
-
-        $result = Query::execute(
-            '//select[@name="operator"]',
-            $document
-        );
-        $this->assertCount(1, $result);
-
-        $result = Query::execute(
-            '//input[@name="invert"][@type="checkbox"]',
-            $document
-        );
-        $this->assertCount(1, $result);
-
-        $result = Query::execute(
-            '//input[@name="customSearch"][@type="submit"]',
-            $document
-        );
-        $this->assertCount(1, $result);
-
-        $headScript = $view->headScript()->toString();
-        $this->assertContains('function filterChanged(', $headScript);
-        $this->assertContains(
-            'filterChanged()',
-            $view->placeholder('BodyOnLoad')->getValue()
-        );
-    }
-
-    public function testRenderNoPreset()
-    {
-        $view = $this->_createView();
-        $this->_form->render($view);
-        $this->assertNotContains(
-            'document.getElementById("form_search").elements["operator"].value = "eq"',
-            $view->placeholder('BodyOnLoad')->getValue()
-        );
-    }
-
-    public function testRenderWithPreset()
-    {
-        $this->_form->get('operator')->setValue('eq');
-        $view = $this->_createView();
-        $this->_form->render($view);
-        $this->assertContains(
-            'document.getElementById("form_search").elements["operator"].value = "eq"',
-            $view->placeholder('BodyOnLoad')->getValue()
-        );
     }
 }

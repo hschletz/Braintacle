@@ -169,11 +169,17 @@ class Search extends Form
             $this->_filters[$key] = sprintf($template, $label);
         }
 
+        $this->_operatorsText = [
+            'like' => $translator->translate("Substring match, wildcards '?' and '*' allowed"),
+            'eq' => $translator->translate('Exact match'),
+        ];
+
         $filter = new Element\Select('filter');
         $filter->setLabel('Search for')
+               ->setAttribute('data-types', json_encode($this->_types))
                ->setAttribute('type', 'select_untranslated')
-               ->setAttribute('onchange', 'filterChanged();') // Set operators for selected filter
-               ->setValueOptions($this->_filters);
+               ->setValueOptions($this->_filters)
+               ->setValue('Name'); // Default value
         $this->add($filter);
 
         $search = new Element\Text('search');
@@ -184,7 +190,10 @@ class Search extends Form
         // Since valid options are known only after submission, the internal
         // InArray validator must be disabled and replaced by a callback.
         $operator = new Element\Select('operator');
-        $operator->setDisableInArrayValidator(true)
+        $operator->setAttribute('type', 'select_untranslated')
+                 ->setAttribute('data-operators-ordinal', json_encode($this->_operatorsOrdinal))
+                 ->setAttribute('data-operators-text', json_encode($this->_operatorsText))
+                 ->setValueOptions($this->_operatorsText) // Operators for default value "Name"
                  ->setLabel('Operator');
         $this->add($operator);
 
@@ -233,11 +242,6 @@ class Search extends Form
             )
         );
         $this->setInputFilter($inputFilter);
-
-        $this->_operatorsText = array(
-            'like' => $translator->translate("Substring match, wildcards '?' and '*' allowed"),
-            'eq' => $translator->translate('Exact match'),
-        );
     }
 
     /**
@@ -297,7 +301,10 @@ class Search extends Form
     /** {@inheritdoc} */
     public function setData($data)
     {
-        $data['search'] = $this->localize(@$data['search'], $this->_getTypeFromFilter($data['filter']));
+        $type = $this->_getTypeFromFilter($data['filter']);
+        $data['search'] = $this->localize(@$data['search'], $type);
+        $this->get('operator')->setValueOptions(($type == 'text') ? $this->_operatorsText : $this->_operatorsOrdinal);
+
         return parent::setData($data);
     }
 
@@ -319,64 +326,5 @@ class Search extends Form
         } else {
             return 'text';
         }
-    }
-
-    /**
-     * Render form
-     *
-     * @param \Zend\View\Renderer\PhpRenderer $view
-     * @return string
-     */
-    public function render(\Zend\View\Renderer\PhpRenderer $view)
-    {
-        $view->headScript()->captureStart();
-        ?>
-
-        // Filter types
-        var types = <?php print json_encode($this->_types); ?>;
-
-        /**
-         * Event handler for Filter combobox
-         *
-         * Sets options for "operators" element according to selected filter.
-         */
-        function filterChanged()
-        {
-            var elements = document.getElementById('form_search').elements;
-            var operators;
-            switch (types[elements['filter'].value]) {
-                case 'integer':
-                case 'float':
-                case 'date':
-                    operators = <?php print json_encode($this->_operatorsOrdinal); ?>;
-                    break;
-                default:
-                    operators = <?php print json_encode($this->_operatorsText); ?>;
-            }
-            var options = elements['operator'].options;
-            options.length = 0;
-            for (var value in operators) {
-                options.add(new Option(operators[value], value));
-            }
-        }
-
-        <?php
-        $view->headScript()->captureEnd();
-
-        $onload = $view->placeholder('BodyOnLoad');
-        $onload->append('filterChanged()');
-
-        // Set operator value manually because the element creation code does
-        // not know it's valid and ignores it.
-        $initialOperator = $this->get('operator')->getValue();
-        if ($initialOperator) {
-            $onload->append(
-                sprintf(
-                    'document.getElementById("form_search").elements["operator"].value = %s',
-                    json_encode($initialOperator)
-                )
-            );
-        }
-        return parent::render($view);
     }
 }

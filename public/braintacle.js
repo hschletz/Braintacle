@@ -25,6 +25,24 @@ $(window).on('load', function() {
 
     }).change();
 
+    // Set options for "operators" element according to selected filter
+    $('.form_search [name=filter]').change(function() {
+
+        var types = $(this).data('types'); // map of filters to ordinal types (text filters are not present in map)
+        var operatorElement = this.form['operator'];
+        var operators = $(operatorElement).data(
+            types.hasOwnProperty(this.value) ? 'operatorsOrdinal' : 'operatorsText'
+        );
+
+        while (operatorElement.options.length) {
+            operatorElement.remove(0);
+        }
+        for (var value in operators) {
+            operatorElement.add(new Option(operators[value], value));
+        }
+
+    });
+
     // Check/uncheck all checkboxes within the same table
     $('.form_showduplicates .checkAll, .form_software .checkAll').change(function() {
         $('input[type=checkbox][name]', $(this).closest('table')).prop('checked', this.checked);
