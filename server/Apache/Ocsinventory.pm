@@ -328,18 +328,18 @@ sub _init{
   }
   
   if($CURRENT_CONTEXT{'DEVICEID'} and !$request->rows){
-    # Workaround for bug #530881 in the Windows agent:
-    # If DeviceID has been renamed and the hostname part is unchanged (i.e. only the timestamp part is different),
-    # silently alter the deviceID in the database.
-    if($CURRENT_CONTEXT{'XML_ENTRY'}->{CONTENT}->{OLD_DEVICEID}
-       and substr($CURRENT_CONTEXT{'XML_ENTRY'}->{CONTENT}->{OLD_DEVICEID},0,-20)
-        eq substr($CURRENT_CONTEXT{'DEVICEID'},0,-20)){
-      $CURRENT_CONTEXT{'DBI_HANDLE'}->do('UPDATE HARDWARE SET DEVICEID=? WHERE DEVICEID=?',
-					 {},
-					 $CURRENT_CONTEXT{'DEVICEID'},
-					 $CURRENT_CONTEXT{'XML_ENTRY'}->{CONTENT}->{OLD_DEVICEID}
-					 );
-      # Retrieve Device if exists
+    # Workaround for https://github.com/OCSInventory-NG/WindowsAgent/issues/13:
+    # If DEVICEID has been renamed, update the deviceid column in the database
+    # to avoid creation of a duplicate.
+    my $oldDeviceId = $CURRENT_CONTEXT{'XML_ENTRY'}->{CONTENT}->{DOWNLOAD}->{HISTORY}->{OLD_DEVICEID};
+    if ($oldDeviceId) {
+      $CURRENT_CONTEXT{'DBI_HANDLE'}->do(
+        'UPDATE HARDWARE SET DEVICEID = ? WHERE DEVICEID = ?',
+        {},
+        $CURRENT_CONTEXT{'DEVICEID'},
+        $oldDeviceId
+      );
+      # Repeat query with updated row
       $request = $CURRENT_CONTEXT{'DBI_HANDLE'}->prepare('
         SELECT DEVICEID,ID,' . compose_unix_timestamp('LASTCOME') . ' AS LCOME,' . compose_unix_timestamp('LASTDATE') . ' AS LDATE,QUALITY,FIDELITY 
         FROM hardware WHERE DEVICEID=?'
@@ -348,8 +348,8 @@ sub _init{
         return(APACHE_SERVER_ERROR);
       }
       if($request->rows){
-        # Forget that OLD_DEVICEID ever existed
-        delete $CURRENT_CONTEXT{'XML_ENTRY'}->{CONTENT}->{OLD_DEVICEID};
+        # Remove OLD_DEVICEID node to prevent triggering of legacy duplicate handling
+        delete $CURRENT_CONTEXT{'XML_ENTRY'}->{CONTENT}->{DOWNLOAD}->{HISTORY}->{OLD_DEVICEID};
       }
     }
   }

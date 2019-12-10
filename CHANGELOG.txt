@@ -11,6 +11,9 @@ CHANGES IN VERSION 1.6
 
 Fixed bugs:
 
+- Server: Adapted workaround for preventing duplicates on client ID changes
+  to newer agents.
+
 - Console: Removed warnings and useless columns on Android storage page.
 
 Misc:
