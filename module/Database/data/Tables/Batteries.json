@@ -103,8 +103,8 @@
         },
         {
             "name": "maxerror",
-            "type": "integer",
-            "length": 32,
+            "type": "varchar",
+            "length": 20,
             "notnull": false,
             "default": null,
             "autoincrement": false,
