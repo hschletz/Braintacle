@@ -2,7 +2,7 @@
 /**
  * Strategy for Size attribute
  *
- * Copyright (C) 2011-2019 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2020 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
