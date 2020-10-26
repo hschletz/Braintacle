@@ -32,6 +32,6 @@ namespace Model\Client\Item;
  * @property integer $NumCpus Number of guest CPUs (unreliable)
  * @property integer $GuestMemory Guest RAM in MB (unreliable)
  */
-class VirtualMachine extends \ArrayObject
+class VirtualMachine extends \Model\AbstractModel
 {
 }

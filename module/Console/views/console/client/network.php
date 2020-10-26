@@ -27,7 +27,7 @@ $client = $this->client;
 $dnsDomain = $client['DnsDomain'];
 $dnsServer = $client['DnsServer'];
 $defaultGateway = $client['DefaultGateway'];
-$workgroup = $client['Windows']['Workgroup'];
+$workgroup = $client['Windows'] ? $client['Windows']['Workgroup'] : null;
 if ($dnsDomain or $dnsServer or $defaultGateway or $workgroup) {
     print $this->htmlElement('h2', $this->translate('Global network configuration'));
     $table = $this->plugin('table');

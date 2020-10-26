@@ -27,6 +27,6 @@ namespace Model\Client\Item;
  * @property string $Value Name of the registry value definition
  * @property string $data Registry Data
  */
-class RegistryData extends \ArrayObject
+class RegistryData extends \Model\AbstractModel
 {
 }

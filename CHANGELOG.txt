@@ -9,10 +9,21 @@ without any warranty.
 CHANGES IN VERSION 1.6
 ======================
 
+Upgrading from previous versions:
+
+- Required: Braintacle 1.6 requires PHP 7.3 or later.
+
+- Required: Run "composer install" from the Braintacle root directory to
+  update dependencies.
+
+- Recommended: Run "braintacle-tool.php database" to update the database.
+
 Fixed bugs:
 
 - Server: Adapted workaround for preventing duplicates on client ID changes
   to newer agents.
+
+- Console: Fixed warnings on PHP 7.4.
 
 - Console: Removed warnings and useless columns on Android storage page.
 

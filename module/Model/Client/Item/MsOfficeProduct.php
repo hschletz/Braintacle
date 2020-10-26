@@ -33,7 +33,7 @@ namespace Model\Client\Item;
  * @property string $Guid Product GUID
  * @property integer $Type TYPE_INSTALLED_PRODUCT or TYPE_UNUSED_LICENSE
  */
-class MsOfficeProduct extends \ArrayObject
+class MsOfficeProduct extends \Model\AbstractModel
 {
     /**
      * "Type" property for an unused license (leftover from an uninstalled product)

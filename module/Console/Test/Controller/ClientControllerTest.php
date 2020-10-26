@@ -1000,6 +1000,17 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $formManager->setAllowOverride(true);
         $formManager->setService('Console\Form\ProductKey', $form);
 
+        $client = array(
+            'Name' => 'name',
+            'Windows' => [
+                'Company' => 'company',
+                'Owner' => 'owner',
+                'ProductId' => 'product_id',
+                'ProductKey' => 'product_key',
+            ],
+        );
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->_softwareManager->expects($this->never())->method('setProductKey');
         $this->dispatch('/console/client/windows/?id=1', 'POST', $postData);
         $this->assertResponseStatusCode(200);
@@ -2191,6 +2202,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             '_csrf' => 'csrf',
             'Fields' => array('field1' => 'value1', 'field2' => 'value2')
         );
+
+        $client = [
+            'Name' => 'name',
+            'Windows' => null
+        ];
+        $this->_clientManager->method('getClient')->willReturn($client);
+
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\CustomFields');
         $form->expects($this->once())
              ->method('isValid')

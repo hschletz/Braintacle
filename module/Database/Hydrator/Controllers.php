@@ -50,7 +50,7 @@ class Controllers implements \Zend\Hydrator\HydratorInterface
     public function extract($object)
     {
         $data = array();
-        if (array_key_exists('Manufacturer', $object)) {
+        if (property_exists($object, 'Manufacturer')) {
             // Windows
             $data['type'] = $object['Type'];
             $data['name'] = $object['Name'];

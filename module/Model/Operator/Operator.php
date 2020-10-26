@@ -33,6 +33,6 @@ namespace Model\Operator;
  * @property string $MailAddress E-Mail address (optional)
  * @property string $Comment Comment (optional)
  */
-class Operator extends \ArrayObject
+class Operator extends \Model\AbstractModel
 {
 }

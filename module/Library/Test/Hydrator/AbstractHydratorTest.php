@@ -46,7 +46,7 @@ abstract class AbstractHydratorTest extends \PHPUnit\Framework\TestCase
     public function testExtract(array $objectData, array $data)
     {
         $hydrator = $this->_getHydrator();
-        $object = new \ArrayObject($objectData);
+        $object = new \ArrayObject($objectData, \ArrayObject::ARRAY_AS_PROPS);
         $this->assertEquals($data, $hydrator->extract($object));
     }
 }

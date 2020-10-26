@@ -63,7 +63,7 @@ namespace Model\Package;
  * @property string $PostInstMessage Message to display after deployment,
  * provided by PackageManager::getPackage()
  */
-class Package extends \ArrayObject
+class Package extends \Model\AbstractModel
 {
     /** {@inheritdoc} */
     public function exchangeArray($input)

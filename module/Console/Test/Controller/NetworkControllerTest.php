@@ -320,7 +320,8 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
 
         $this->_subnetManager->expects($this->once())
                              ->method('getSubnet')
-                             ->with('192.0.2.0', '255.255.255.0');
+                             ->with('192.0.2.0', '255.255.255.0')
+                             ->willReturn(['CidrAddress' => '192.0.2.0/24']);
         $this->_subnetManager->expects($this->never())->method('saveSubnet');
 
         $this->_subnetForm->expects($this->once())

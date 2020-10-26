@@ -50,7 +50,7 @@ class ExtensionSlots implements \Zend\Hydrator\HydratorInterface
         $data = array();
         $data['name'] = $object['Name'];
         $data['description'] = $object['Description'];
-        if (array_key_exists('SlotId', $object)) {
+        if (property_exists($object, 'SlotId')) {
             $data['designation'] = $object['SlotId'];
             $data['purpose'] = null;
             $data['status'] = $object['Status'];

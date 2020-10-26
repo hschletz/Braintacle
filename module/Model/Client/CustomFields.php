@@ -24,6 +24,6 @@ namespace Model\Client;
 /**
  * A client's custom fields
  */
-class CustomFields extends \ArrayObject
+class CustomFields extends \Model\AbstractModel
 {
 }

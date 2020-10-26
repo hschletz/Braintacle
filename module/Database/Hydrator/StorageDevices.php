@@ -71,8 +71,8 @@ class StorageDevices implements \Zend\Hydrator\HydratorInterface
     /** {@inheritdoc} */
     public function extract($object)
     {
-        if (array_key_exists('Type', $object)) {
-            if (array_key_exists('Device', $object)) {
+        if (property_exists($object, 'Type')) {
+            if (property_exists($object, 'Device')) {
                 // Windows
                 $data = [
                     'manufacturer' => null,

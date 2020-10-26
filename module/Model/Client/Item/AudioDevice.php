@@ -28,6 +28,6 @@ namespace Model\Client\Item;
  * @property string $Name
  * @property string $Description
  */
-class AudioDevice extends \ArrayObject
+class AudioDevice extends \Model\AbstractModel
 {
 }

@@ -33,7 +33,7 @@ use Nada\Column\AbstractColumn as Column;
  * the implementation of this functionality, this class implements the common
  * functionality for both objects.
  */
-abstract class ClientOrGroup extends \ArrayObject
+abstract class ClientOrGroup extends AbstractModel
 {
     /**
      * @internal

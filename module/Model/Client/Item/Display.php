@@ -30,6 +30,6 @@ namespace Model\Client\Item;
  * @property string $Edid EDID
  * @property string $Type
  */
-class Display extends \ArrayObject
+class Display extends \Model\AbstractModel
 {
 }

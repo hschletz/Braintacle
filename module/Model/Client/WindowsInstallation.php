@@ -33,6 +33,6 @@ namespace Model\Client;
  * @property string $ManualProductKey Manually overridden product key (entered in Braintacle console)
  * @property string $CpuArchitecture CPU architecture (may be different from physical CPU's capabilities)
  */
-class WindowsInstallation extends \ArrayObject
+class WindowsInstallation extends \Model\AbstractModel
 {
 }

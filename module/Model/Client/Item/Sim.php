@@ -30,6 +30,6 @@ namespace Model\Client\Item;
  * @property string $SimSerial SIM serial
  * @property string $DeviceId Device ID (IMEI)
  */
-class Sim extends \ArrayObject
+class Sim extends \Model\AbstractModel
 {
 }

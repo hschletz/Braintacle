@@ -31,6 +31,6 @@ namespace Model\Network;
  * @property string $Description Description (only identified devices)
  * @property string $Type Type (only identified devices)
  */
-class Device extends \ArrayObject
+class Device extends \Model\AbstractModel
 {
 }

@@ -27,7 +27,7 @@ abstract class AbstractGroupTest extends \Model\Test\AbstractTest
 
     protected $_groupInfo;
 
-    public function setUp()
+    public function setUp(): void
     {
         // GroupInfo::initialize() table has a dependency on Model\Config which
         // can have side effects on other tests. For better test isolation, set
@@ -55,6 +55,6 @@ abstract class AbstractGroupTest extends \Model\Test\AbstractTest
             $this->_groupInfo->setSchema(true);
             $this->_groupInfo->initialize();
         }
-        return parent::setUp();
+        parent::setUp();
     }
 }

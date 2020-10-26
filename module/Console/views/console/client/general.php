@@ -43,9 +43,8 @@ foreach ($client['MemorySlot'] as $slot) {
 }
 
 $user = $client['UserName'];
-$domain = $client['Windows']['UserDomain'];
-if ($domain) {
-    $user .= ' @ ' . $domain;
+if ($client['Windows'] and $client['Windows']['UserDomain']) {
+    $user .= ' @ ' . $client['Windows']['UserDomain'];
 }
 
 print "<table class='topspacing textnormalsize'>\n";

@@ -29,6 +29,6 @@ namespace Model\Client\Item;
  * @property string $Port
  * @property string $Description
  */
-class Printer extends \ArrayObject
+class Printer extends \Model\AbstractModel
 {
 }

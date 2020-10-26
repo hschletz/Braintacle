@@ -30,6 +30,6 @@ namespace Model\Client\Item;
  * @property string $Comment deprecated
  * @property string $Version deprecated
  */
-class Controller extends \ArrayObject
+class Controller extends \Model\AbstractModel
 {
 }

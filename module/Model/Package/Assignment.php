@@ -28,7 +28,7 @@ namespace Model\Package;
  * @property string $Status Status
  * @property \DateTime $Timestamp Timestamp of last status change
  */
-class Assignment extends \ArrayObject
+class Assignment extends \Model\AbstractModel
 {
     /**
      * Database-internal date format

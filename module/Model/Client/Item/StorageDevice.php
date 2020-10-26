@@ -32,6 +32,6 @@ namespace Model\Client\Item;
  * @property string $Serial Serial number (Windows/UNIX)
  * @property string $Firmware Firmware version (Windows/UNIX)
  */
-class StorageDevice extends \ArrayObject
+class StorageDevice extends \Model\AbstractModel
 {
 }

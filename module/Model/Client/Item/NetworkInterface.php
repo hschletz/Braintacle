@@ -37,6 +37,6 @@ namespace Model\Client\Item;
  * @property string $Type needs further processing to be useful
  * @property string $TypeMib needs further processing to be useful
  */
-class NetworkInterface extends \ArrayObject
+class NetworkInterface extends \Model\AbstractModel
 {
 }

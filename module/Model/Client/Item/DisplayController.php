@@ -29,6 +29,6 @@ namespace Model\Client\Item;
  * @property integer $Memory Memory in MB
  * @property string $CurrentResolution Example: "1280 x 1024"
  */
-class DisplayController extends \ArrayObject
+class DisplayController extends \Model\AbstractModel
 {
 }

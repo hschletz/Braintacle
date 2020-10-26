@@ -36,6 +36,6 @@ namespace Model\Client\Item;
  * @property integer $Architecture 32/64/NULL (Windows only)
  * @property integer $Size Package size (UNIX only)
  */
-class Software extends \ArrayObject
+class Software extends \Model\AbstractModel
 {
 }

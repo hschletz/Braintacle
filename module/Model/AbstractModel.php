@@ -1,6 +1,6 @@
 <?php
 /**
- * Android installation
+ * Base class for all models.
  *
  * Copyright (C) 2011-2020 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,16 +19,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Model\Client;
+namespace Model;
 
 /**
- * Android installation
+ * Base class for all models.
  *
- * @property string $Country country/region code
- * @property string $JavaVm Java VM name and version
- * @property string $JavaInstallationDirectory Java installation directory
- * @property string $JavaClassPath Java class path
+ * Derived from ArrayObject, enforces ARRAY_AS_PROPS so that property_exists()
+ * can safely be used on model objects.
  */
-class AndroidInstallation extends \Model\AbstractModel
+abstract class AbstractModel extends \ArrayObject
 {
+    public function __construct($input = [])
+    {
+        parent::__construct($input, \ArrayObject::ARRAY_AS_PROPS);
+    }
 }

@@ -27,6 +27,6 @@ namespace Model\Client\Item;
  * @property string $Name
  * @property string $Type
  */
-class Modem extends \ArrayObject
+class Modem extends \Model\AbstractModel
 {
 }

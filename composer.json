@@ -62,6 +62,7 @@
         "hschletz/doxygen-phpdoc": "^1.0",
         "mikey179/vfsstream": "*",
         "phpunit/dbunit": "*",
+        "phpunit/phpunit": "^7",
         "sebastian/peek-and-poke": "1.0.*-dev",
         "squizlabs/php_codesniffer": "2.*",
         "symfony/process": "^3.4",
@@ -83,7 +84,7 @@
     },
     "config": {
         "platform": {
-            "php": "7.0.32"
+            "php": "7.3.23"
         }
     }
 }

@@ -32,6 +32,6 @@ namespace Model\Client\Item;
  * @property string $Description Descriptive string
  * @property string $Serial Module's serial number, if available.
  */
-class MemorySlot extends \ArrayObject
+class MemorySlot extends \Model\AbstractModel
 {
 }

@@ -35,7 +35,7 @@ namespace Model\Network;
  * @property integer $NumIdentified Number of uninventoried, but manually identified interfaces
  * @property integer $NumUnknown Number of uninventoried and unidentified interfaces
  */
-class Subnet extends \ArrayObject
+class Subnet extends \Model\AbstractModel
 {
     /** {@inheritdoc} */
     public function offsetGet($index)

@@ -30,6 +30,6 @@ namespace Model\Client\Item;
  * @property string $Comment
  * @property string $Interface
  */
-class InputDevice extends \ArrayObject
+class InputDevice extends \Model\AbstractModel
 {
 }

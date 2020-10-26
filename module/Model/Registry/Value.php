@@ -35,7 +35,7 @@ namespace Model\Registry;
  * @property string $Value Registry value to inventory (NULL for all values)
  * @property-read string $FullPath Textual representation of configured value
  */
-class Value extends \ArrayObject
+class Value extends \Model\AbstractModel
 {
     /**
      * Root key HKEY_CLASSES_ROOT

@@ -35,6 +35,6 @@ namespace Model\Client\Item;
  * @property integer $UsedSpace Used space in MB
  * @property \DateTime $CreationDate Date of filesystem creation (UNIX only)
  */
-class Filesystem extends \ArrayObject
+class Filesystem extends \Model\AbstractModel
 {
 }

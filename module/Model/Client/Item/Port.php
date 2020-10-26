@@ -29,6 +29,6 @@ namespace Model\Client\Item;
  * @property string $Connector More detailled connector description (not useful for Windows clients)
  * @property string $Description Additional description
  */
-class Port extends \ArrayObject
+class Port extends \Model\AbstractModel
 {
 }

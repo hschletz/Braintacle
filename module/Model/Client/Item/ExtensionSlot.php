@@ -29,6 +29,6 @@ namespace Model\Client\Item;
  * @property string $Status
  * @property string $SlotId Slot ID (UNIX only)
  */
-class ExtensionSlot extends \ArrayObject
+class ExtensionSlot extends \Model\AbstractModel
 {
 }

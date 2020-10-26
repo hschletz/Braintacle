@@ -36,6 +36,6 @@ namespace Model\Client\Item;
  * @property string $Voltage
  * @property string $Serial
  */
-class Cpu extends \ArrayObject
+class Cpu extends \Model\AbstractModel
 {
 }
