@@ -182,7 +182,7 @@ class Form extends \Zend\Form\Form
                 );
                 if ($value instanceof \DateTime) {
                     $value = $formatter->format($value);
-                } elseif (\Zend\Validator\StaticValidator::execute($value, 'Date')) {
+                } elseif (\Zend\Validator\StaticValidator::execute($value, 'Date', ['strict' => true])) {
                     $date = \DateTime::createFromFormat('Y-m-d', $value);
                     if ($date) {
                         $value = $formatter->format($date);
