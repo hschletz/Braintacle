@@ -29,10 +29,11 @@ require_once(__DIR__ . '/../vendor/autoload.php');
  *
  * @param string $module Module name
  * @param string $filter if not empty, pass to phpunit's --filter option
+ * @param bool $stop stop after first error
  * @param mixed $database Array with database config. If empty, default config is used.
  * @param bool $doCoverage generate code coverage report
  */
-function testModule($module, $filter, $database, $doCoverage)
+function testModule($module, $filter, $stop, $database, $doCoverage)
 {
     $cmd = [(new \Symfony\Component\Process\PhpExecutableFinder)->find()];
     if ($doCoverage) {
@@ -51,6 +52,9 @@ function testModule($module, $filter, $database, $doCoverage)
     if ($filter) {
         $cmd[] = '--filter';
         $cmd[] = $filter;
+    }
+    if ($stop) {
+        $cmd[] = '--stop-on-error';
     }
 
     $process = new \Symfony\Component\Process\Process($cmd);
@@ -74,6 +78,7 @@ try {
         array(
             'modules|m=s' => 'comma-separated list of modules to test (case insensitive), test all modules if not set',
             'filter|f=s' => 'run only tests whose names match given regex',
+            'stop|s' => 'stop after first error',
             'database|d-s' => 'comma-separated list of INI sections with database config (use all sections if empty)',
             'coverage|c' => 'generate code coverage report (slow, requires Xdebug extension)',
         )
@@ -163,6 +168,12 @@ foreach ($modules as $module) {
         }
         print "\n\n";
 
-        testModule($module, $opts->filter, $database, ($opts->coverage ?: false));
+        testModule(
+            $module,
+            $opts->filter,
+            ($opts->stop ?: false),
+            $database,
+            ($opts->coverage ?: false)
+        );
     }
 }
