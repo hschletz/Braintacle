@@ -26,5 +26,5 @@ DEVDIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 # Get the base directory of the whole tree (parent of $DEVDIR)
 BASEDIR=$(readlink -f "$DEVDIR/..")
 
-curl -o $BASEDIR/module/Library/data/MacAddress/manuf \
+curl -Lo $BASEDIR/module/Library/data/MacAddress/manuf \
      'https://code.wireshark.org/review/gitweb?p=wireshark.git;a=blob_plain;f=manuf'
