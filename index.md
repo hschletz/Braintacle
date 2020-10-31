@@ -1,12 +1,3 @@
-Braintacle is a set of applications for managing hard- and software on a
-network. Braintacle keeps a semi-automatic inventory of computers, other
-network-connected devices and installed software, and provides a generic
-infrastructure for downloading files and executing commands on selected clients,
-allowing centralized software updates, remote configuration and more. For
-developers, a PHP API is provided to access the inventory and control the
-applications.
-
-
 Requirements
 ------------
 
