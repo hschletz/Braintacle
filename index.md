@@ -1,37 +1,53 @@
-## Welcome to GitHub Pages
+Braintacle is a set of applications for managing hard- and software on a
+network. Braintacle keeps a semi-automatic inventory of computers, other
+network-connected devices and installed software, and provides a generic
+infrastructure for downloading files and executing commands on selected clients,
+allowing centralized software updates, remote configuration and more. For
+developers, a PHP API is provided to access the inventory and control the
+applications.
 
-You can use the [editor on GitHub](https://github.com/hschletz/Braintacle/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Requirements
+------------
 
-### Markdown
+- A [PostgreSQL](https://postgresql.org) or [MySQL](https://www.mysql.com) (or one of its derivates, like [MariaDB](https://mariadb.org)) database.
+  Support for other database backends may be added in the future.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+- [Apache httpd](http://httpd.apache.org) with [mod_perl](https://perl.apache.org) and a database-specific DBD module for the
+  main server component.
 
-```markdown
-Syntax highlighted code block
+- A web server with [PHP](https://php.net) 7.3 or later for the administration
+  console. PHP is also required for most of the command line tools. The following
+  PHP extensions are required:
 
-# Header 1
-## Header 2
-### Header 3
+  - A database-specific PHP extension,
+  <https://docs.zendframework.com/zend-db/adapter/>
 
-- Bulleted
-- List
+  - The "intl" extension
 
-1. Numbered
-2. List
+  - The "mbstring" extension
 
-**Bold** and _Italic_ and `Code` text
+  - The "zip" extension is optional. If present, the package builder can create ZIP
+    archives on the fly.
 
-[Link](url) and ![Image](src)
-```
+  - The "gmp" extension is required on 32 bit PHP installations only.
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+- [Composer](https://getcomposer.org/)
 
-### Jekyll Themes
+- On every client that should be managed through Braintacle, either the
+  [OCS Inventory NG agent](https://github.com/OCSInventory-NG/) for Windows/UNIX/Android or
+  [FusionInventory Agent](http://www.fusioninventory.org/documentation/agent/installation/)
+  must be installed.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/hschletz/Braintacle/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
 
-### Support or Contact
+Installation
+------------
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+Refer to the INSTALL.md in the downloaded archive.
+
+License
+-------
+
+Braintacle is released under the [GNU General Public License v2](http://www.gnu.org/licenses/old-licenses/gpl-2.0.html) or later.
+
+For third party code, see README.md in the downloaded archive.
