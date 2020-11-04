@@ -1,38 +1,64 @@
 - filename: clients_overview.png
   title: Overview of all clients
+  width: 1128
+  height: 225
 
 - filename: client_details.png
   title: Overview of single client
-
+  width: 1139
+  height: 548
+  
 - filename: client_storage.png
   title: A client's storage devices
-
+  width: 1140
+  height: 399
+  
 - filename: client_software.png
   title: A client's installed software
-
+  width: 1140
+  height: 379
+  
 - filename: client_packages.png
   title: A client's package assignments
-
+  width: 1139
+  height: 402
+  
 - filename: client_configuration.png
   title: A client's agent configuration
-
+  width: 1138
+  height: 664
+  
 - filename: software_overview.png
   title: Overview of all installed software
-
+  width: 1125
+  height: 337
+  
 - filename: network_overview.png
   title: Overview of detected network devices
-
+  width: 1140
+  height: 604
+  
 - filename: packages_overview.png
   title: Overview of available packages
-
+  width: 1139
+  height: 186
+  
 - filename: package_builder.png
   title: Package builder
-
+  width: 1140
+  height: 863
+  
 - filename: duplicates_overview.png
   title: Overview of duplicate entries
-
+  width: 1140
+  height: 141
+  
 - filename: duplicates_merge.png
   title: Duplicates merging options
-
+  width: 1140
+  height: 353
+  
 - filename: search.png
   title: Search form
+  width: 1139
+  height: 281

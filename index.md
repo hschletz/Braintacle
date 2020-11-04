@@ -2,6 +2,11 @@
 title: Braintacle - Keep track of all your hard- and software
 ---
 <link rel="stylesheet" href="assets/css/gallery.css">
+<link rel="stylesheet" href="assets/css/photoswipe.css">
+<link rel="stylesheet" href="assets/css/default-skin/default-skin.css">
+<script src="assets/js/photoswipe.min.js"></script>
+<script src="assets/js/photoswipe-ui-default.min.js"></script>
+<script src="assets/js/gallery.js" defer></script>
 
 Screenshots
 -----------
@@ -61,3 +66,5 @@ License
 Braintacle is released under the [GNU General Public License v2](http://www.gnu.org/licenses/old-licenses/gpl-2.0.html) or later.
 
 For third party code, see README.md in the downloaded archive.
+
+{% include photoswipe.html %}
