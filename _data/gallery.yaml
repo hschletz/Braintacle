@@ -1,0 +1,38 @@
+- filename: clients_overview.png
+  title: Overview of all clients
+
+- filename: client_details.png
+  title: Overview of single client
+
+- filename: client_storage.png
+  title: A client's storage devices
+
+- filename: client_software.png
+  title: A client's installed software
+
+- filename: client_packages.png
+  title: A client's package assignments
+
+- filename: client_configuration.png
+  title: A client's agent configuration
+
+- filename: software_overview.png
+  title: Overview of all installed software
+
+- filename: network_overview.png
+  title: Overview of detected network devices
+
+- filename: packages_overview.png
+  title: Overview of available packages
+
+- filename: package_builder.png
+  title: Package builder
+
+- filename: duplicates_overview.png
+  title: Overview of duplicate entries
+
+- filename: duplicates_merge.png
+  title: Duplicates merging options
+
+- filename: search.png
+  title: Search form

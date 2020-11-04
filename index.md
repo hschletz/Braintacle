@@ -1,6 +1,21 @@
 ---
 title: Braintacle - Keep track of all your hard- and software
 ---
+<link rel="stylesheet" href="/assets/css/gallery.css">
+
+Screenshots
+-----------
+
+<div class="gallery">
+{% for image in site.data.gallery %}
+<figure>
+  <a href="/assets/screenshots/{{ image.filename }}">
+    <img src="/assets/thumbnails/{{ image.filename }}" alt="{{ image.title }}">
+  </a>
+  <figcaption>{{ image.title }}</figcaption>
+</figure>
+{% endfor %}
+</div>
 
 Requirements
 ------------
