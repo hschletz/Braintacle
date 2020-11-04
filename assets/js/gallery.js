@@ -22,6 +22,7 @@ for (const link of document.querySelectorAll('.gallery a')) {
         let options = {
             index: Array.from(figure.parentNode.children).indexOf(figure),
             closeOnScroll: false,
+            shareEl: false,
         }
     
         let gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options)
