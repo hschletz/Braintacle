@@ -30,7 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 <h2>Project website</h2>
 
 <p>
-Braintacle is hosted at <a href="https://github.com/hschletz/Braintacle">https://github.com/hschletz/Braintacle</a>.
+Braintacle is hosted at <a href="https://hschletz.github.io/Braintacle">https://hschletz.github.io/Braintacle</a>.
 </p>
 
 
@@ -50,10 +50,10 @@ The application consists of several parts:
 </p>
 <ul>
 <li>
-A patched version of the <a href="http://ocsinventory-ng.org">OCS Inventory NG</a> server with several improvements,
+A patched version of the <a href="https://ocsinventory-ng.org">OCS Inventory NG</a> server with several improvements,
 most notably the support for different database backends (PostgreSQL is recommended, but MySQL is still supported).
-It is contained in the <em>ocsinventory</em> directory.
-See the <a href="../ocsinventory/README.html">README.html</a> file in the same directory for details.
+It is contained in the <em>server</em> directory.
+See the <a href="../server/README.html">README.html</a> file in the same directory for details.
 </li>
 <li>
 A web administration console.
@@ -65,53 +65,9 @@ Some command line helper applications.
 
 <h2>Differences to OCS Inventory NG</h2>
 
-<h3>Advantages</h3>
-
-<ul>
-<li>
-Better integration into your IT infrastructure.
-Use the DBMS of your choice &ndash; no need to maintain an extra MySQL installation if you already have a
-different DBMS set up.
-The installation is less intrusive to your server.
-No more code is copied to obscure locations.
-All code is run directly from 1 application directory, making maintenance much easier.
-</li>
-<li>
-The package builder is much easier to use and provides features that the original console does not have.
-Most notably, deploying a new version of an existing package is very easy:
-just click on its name, upload the file, give it a new name and that's it.
-See "<a href="#packagebuilder">Package builder</a>" for a full list of features.
-</li>
-<li>
-Duplicates are much better to manage.
-You can specify which type of information to merge, and you can blacklist asset tags too, not only serials and MAC addresses.
-</li>
-<li>
-Multiple packages can be deployed to a single client in one step.
-</li>
-<li>
-Software listings can be freed of clutter like these boring Windows updates and annoying Office 2007 subpackages.
-See "<a href="#softwarefilter">software filter</a>" for details.
-</li>
-<li>
-In addition to the automatically collected Windows license key, a key can be entered manually.
-This can be useful if the reported key is garbage (this can happen in certain situations)
-or if licenses have been reassigned within an organization.
-</li>
-<li>
-Consistent navigation &ndash; no popups, no more lost menus.
-</li>
-<li>
-Braintacle uses localization functions wherever possible.
-Translation is provided by the well-known <a href="http://www.gnu.org/software/gettext/">gettext</a> standard.
-English and german translations are included.
-Other translations can easily be added and maintained using your favorite gettext tools.
-</li>
-<li>
-An abstract API to all logical objects (clients, packages etc.) which can be used by third party code.
-</li>
-</ul>
-
+<p>
+The web administration console is a completely different application which replaces the "ocsreports" part.
+</p>
 
 <h3>Extra features and limitations</h3>
 
@@ -146,21 +102,6 @@ Braintacle creates the archive on the fly if the uploaded file is not a ZIP arch
 Since the PHP Zip extension's capabilities are limited and ressource usage can grow high for huge files, you can bypass this feature by creating the archive manually before upload.
 </p>
 
-<h5>Computation of fragment size</h5>
-
-<p>
-The original GUI allows specifying both the number of fragments and the fragment size.
-Changing one value automatically affects the other.
-Braintacle simplifies this process a bit, assuming that you don't want to have a package to have a particular number of fragments, but any number of fragments up to a certain size.
-You only specify the maximum fragment size (a default can be provided).
-The actual size may be lower because Braintacle splits the package into evenly-sized fragments up to the given limit.
-</p>
-<p>
-Since the maximum fragment size is not stored anywhere (except for the default which may not apply to existing packages), it has to be estimated upon editing.
-The result will almost certainly be different from the original value, but still about the same magnitude.
-In particular, it would deliver the same number of fragments if the size of the new file had not changed.
-</p>
-
 <h5>Only 1 download server supported</h5>
 
 <p>
@@ -182,7 +123,7 @@ The download locations must be specified at build time, where defaults can be pr
 
 <p>
 OCS Inventory provides a function called "software dictionaries" where pieces of installed software can be tagged to be ignored.
-This is intended for interaction with <a href="http://www.glpi-project.org/spip.php?lang=en">GLPI</a>.
+This is intended for interaction with <a href="https://www.glpi-project.org">GLPI</a>.
 The OCS Inventory console only provides an interface to define these lists, but does not make use of it.
 </p>
 <p>
@@ -195,25 +136,21 @@ Some software (like MS Office 2007) causes multiple identical entries in a clien
 These duplicate entries are hidden by default, but can be shown with a single mouseclick if you are really interested.
 </p>
 
-<h4>Network scanning (aka IP discovery)</h4>
-
-<p>
-Braintacle uses a different method to determine which network a client belongs to.
-In particular, it takes the netmask into account (for example, 192.168.0.0/16 is different from 192.168.0.0/24)
-and also ignores 127.0.0.0/8 completely as this is not a real network.
-Additionally, interfaces belonging to an inventoried client will never show up as unknown, even if the inventory is out of date.
-</p>
-
 <h4>Installing packages on a client</h4>
 
-<p>
-Multiple packages can be deployed to a client at once instead of picking them one by one.
-This is particularly convenient for fresh installs where a lot of packages have to be installed.
-</p>
 <p>
 The list of installable packages does not contain already installed packages, which would only end up with ERR_ALREADY_SETUP.
 If a package is not in the list, it would not be installable anyway.
 This also keeps the list as short as possible.
+</p>
+
+<h4>Managing Windows product keys</h4>
+
+<p>
+In addition to the automatically collected Windows license key, a key can be
+entered manually. This can be useful if the reported key is garbage (this can
+happen in certain situations) or if licenses have been reassigned within an
+organization.
 </p>
 
 <h4>Managing duplicates</h4>
@@ -229,12 +166,21 @@ The information to be merged can be specified in detail:
 Custom fields, if selected, will be preserved from the oldest entry.
 </li>
 <li>
+Configuration, if selected, will be combined from all older entries. If a value
+is configured on more than 1 merged client, the most recent one takes
+precedence.
+</li>
+<li>
 Manual group assignments, if selected, will be combined from all older entries.
 </li>
 <li>
 Package assignments, if selected, will be combined from all older entries.
 The package history is intentionally not preserved.
 The typical origin of duplicates is a reinstall, where this would just get in the way.
+</li>
+<li>
+The manually entered Windows product key, if selected, will be used from the
+most recent entry where one is set.
 </li>
 </ul>
 

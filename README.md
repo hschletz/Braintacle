@@ -20,19 +20,17 @@ applications.
 Requirements
 ------------
 
-- A [PostgreSQL](http://postgresql.org) or [MySQL](http://mysql.org) database.
+- A [PostgreSQL](https://postgresql.org) or [MySQL](https://www.mysql.com) (or one of its derivates, like [MariaDB](https://mariadb.org)) database.
   Support for other database backends may be added in the future.
 
-- [Apache httpd](http://httpd.apache.org) 2.2 or later with
-  [mod_perl](http://perl.apache.org) and a database-specific DBD module for the
+- [Apache httpd](http://httpd.apache.org) with [mod_perl](https://perl.apache.org) and a database-specific DBD module for the
   main server component.
 
-- A web server with [PHP](http://php.net) 7.3 or later for the administration
+- A web server with [PHP](https://php.net) 7.3 or later for the administration
   console. PHP is also required for most of the command line tools. The following
   PHP extensions are required:
 
-  - A database-specific PHP extension,
-  <https://docs.zendframework.com/zend-db/adapter/>
+  - A database-specific PHP extension, see [https://docs.zendframework.com/zend-db/adapter/](https://docs.zendframework.com/zend-db/adapter/)
 
   - The "intl" extension
 
@@ -41,16 +39,12 @@ Requirements
   - The "zip" extension is optional. If present, the package builder can create ZIP
     archives on the fly.
 
-  - The "gmp" extension is required on PHP installations with 32 bit integers
-    (see <http://php.net/manual/en/language.types.integer.php>). It is not used
-    where 64 bit integers are available.
-
-  - The "zlib" extension is required for "braintacle-tool.php decode".
+  - The "gmp" extension is required on 32 bit PHP installations only.
 
 - [Composer](https://getcomposer.org/)
 
 - On every client that should be managed through Braintacle, either the
-  [OCS Inventory NG agent](https://github.com/OCSInventory-NG/Releases) or
+  [OCS Inventory NG agent](https://github.com/OCSInventory-NG/) for Windows/UNIX/Android or
   [FusionInventory Agent](http://www.fusioninventory.org/documentation/agent/installation/)
   must be installed.
 
@@ -79,9 +73,9 @@ contains this file.
 This project contains some third party code:
 
 - A patched version of the [OCS inventory NG server
-  components](http://www.ocsinventory-ng.org/), licensed under the GNU General
+  components](https://www.ocsinventory-ng.org/), licensed under the GNU General
   Public License v2) is included in the server/ directory.
 
 - The file module/Library/data/MacAddress/manuf is taken from the
-  [Wireshark](http://wireshark.org) project. GPLv2 and copyright information are
+  [Wireshark](https://wireshark.org) project. GPLv2 and copyright information are
   contained at the top of this file.

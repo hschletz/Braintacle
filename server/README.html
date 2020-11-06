@@ -29,7 +29,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 <h2>About this version</h2>
 
 <p>
-This is a patched version of the <a href="http://ocsinventory-ng.org">OCS inventory NG</a>
+This is a patched version of the <a href="https://ocsinventory-ng.org">OCS inventory NG</a>
 server that works with PostgeSQL in addition to MySQL and handles some
 incompatible changes in Braintacle's database schema.
 </p>
@@ -61,8 +61,12 @@ Detailed installation instructions are given in <a href="../INSTALL.md">INSTALL.
 Log messages can optionally go to syslog instead of an extra log file.
 </li>
 <li>
-The <a href="http://wiki.ocsinventory-ng.org/index.php/Plugins:MSofficeKey">
-MSofficeKey plugin</a> is supported out of the box.
+The <a href="https://github.com/PluginsOCSInventory-NG/officepack">
+officepack</a> plugin is supported out of the box.
+</li>
+<li>
+Duplicates caused by network interface changes on Windows are deteted and
+gracefully handled.
 </li>
 <li>
 Workarounds for various agent bugs.
