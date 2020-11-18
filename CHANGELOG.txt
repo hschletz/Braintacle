@@ -6,6 +6,10 @@ without any warranty.
 ====================================================================
 
 
+CHANGES IN VERSION 1.7
+======================
+
+
 CHANGES IN VERSION 1.6
 ======================
 
@@ -30,6 +34,8 @@ Fixed bugs:
 Misc:
 
 - Console: Improved displayed data for Android clients.
+
+- Server: Backported changes from version 2.6.
 
 
 CHANGES IN VERSION 1.5
