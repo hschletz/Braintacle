@@ -163,7 +163,8 @@ class ClientConfig extends Form
         // Callback validators do not support message variables. For
         // translatable messages with a parameter, do translation and
         // substitution here and disable further translation.
-        $message = "The input is not greater or equal than '%min%'"; // Prevent extraction by xgettext
+        $dummyMinValueValidator = new \Zend\Validator\GreaterThan();
+        $message = $dummyMinValueValidator->getMessageTemplates()[\Zend\Validator\GreaterThan::NOT_GREATER_INCLUSIVE];
         $minValueValidator = new \Zend\Validator\Callback;
         $minValueValidator->setCallback(array($this, 'validateMinValue'))
                           ->setCallbackOptions($min)
