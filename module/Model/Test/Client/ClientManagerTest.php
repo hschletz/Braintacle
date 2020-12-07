@@ -40,6 +40,8 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         'Packages',
         'RegistryData',
         'Software',
+        'SoftwareDefinitions',
+        'SoftwareRaw',
         'WindowsProductKeys',
         'WindowsInstallations',
     );

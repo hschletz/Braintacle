@@ -31,8 +31,8 @@
         },
         {
             "name": "regvalue",
-            "type": "varchar",
-            "length": 255,
+            "type": "clob",
+            "length": null,
             "notnull": false,
             "default": null,
             "autoincrement": false,

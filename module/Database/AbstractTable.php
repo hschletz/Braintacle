@@ -61,6 +61,15 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
     }
 
     /**
+     * Get service locator.
+     * @codeCoverageIgnore
+     */
+    public function getServiceLocator(): \Zend\ServiceManager\ServiceLocatorInterface
+    {
+        return $this->_serviceLocator;
+    }
+
+    /**
      * Get hydrator suitable for bridging with model
      *
      * @return \Zend\Hydrator\AbstractHydrator|null
@@ -182,6 +191,21 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
         } else {
             return array();
         }
+    }
+
+    /**
+     * Rename table.
+     * @codeCoverageIgnore
+     */
+    protected function _rename(
+        \Zend\Log\LoggerInterface $logger,
+        \Nada\Database\AbstractDatabase $database,
+        string $oldName
+    ): void
+    {
+        $logger->info("Renaming table $oldName to $this->table...");
+        $database->renameTable($oldName, $this->table);
+        $logger->info('done.');
     }
 
     /**

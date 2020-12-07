@@ -29,16 +29,17 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
         $select->expects($this->once())->method('columns')->with([
             'name',
             'version',
-            'comments',
+            'comment',
             'publisher',
-            'folder',
-            'source',
+            'install_location',
+            'is_hotfix',
             'guid',
             'language',
-            'installdate',
-            'bitswidth',
-            'filesize',
+            'installation_date',
+            'architecture',
+            'size',
             'is_android' => 'isAndroid',
+            'display',
         ]);
 
         $model = $this->getMockBuilder('Model\Client\Plugin\Software')

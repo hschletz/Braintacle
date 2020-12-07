@@ -295,24 +295,32 @@ registry:
     name: "value 2"
     regvalue: "content2_2"
 
-softwares:
+software:
   -
     hardware_id: 1
-    name: "name2"
+    definition_id: 2
     version: "version2a"
   -
     hardware_id: 2
-    name: "name2"
+    definition_id: 2
     version: "version2b"
   -
     hardware_id: 2
-    name: "name2"
+    definition_id: 2
     version: "version2c"
   -
     hardware_id: 2
-    name: "name1"
+    definition_id: 1
     version: "version1a"
   -
     hardware_id: 3
-    name: "name1"
+    definition_id: 1
     version: "version1b"
+
+software_definitions:
+  -
+    id: 1
+    name: "name1"
+  -
+    id: 2
+    name: "name2"

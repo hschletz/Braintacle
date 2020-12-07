@@ -24,18 +24,53 @@ namespace Protocol\Hydrator;
 /**
  * Hydrator for Software item
  */
-class Software extends \Database\Hydrator\Software
+class Software extends DatabaseProxy
 {
-    use DatabaseExtensionTrait;
+    /**
+     * Map of protocol identifiers to database identifiers (if different)
+     * @var string[]
+     */
+    protected $map = [
+        'COMMENTS' => 'COMMENT',
+        'FOLDER' => 'INSTALL_LOCATION',
+        'SOURCE' => 'IS_HOTFIX',
+        'INSTALLDATE' => 'INSTALLATION_DATE',
+        'BITSWIDTH' => 'ARCHITECTURE',
+        'FILESIZE' => 'SIZE',
+    ];
+
+    /** @inheritdoc */
+    public function __construct(\Database\Hydrator\Software $hydrator)
+    {
+        // Just call parent constructor. Overridden only to enforce specific hydrator class.
+        parent::__construct($hydrator);
+    }
+
+    /**
+     * {@inheritdoc}
+     * @throws \LogicException because this is not implemented
+     */
+    public function hydrate(array $data, $object)
+    {
+        throw new \LogicException('not implemented');
+    }
 
     /** {@inheritdoc} */
-    public function extractValue($name, $value)
+    public function extract($object)
     {
-        if (strtoupper($name) == 'INSTALLDATE') {
-            $value = ($value ? $value->format('Y/m/d') : null);
-        } else {
-            $value = parent::extractValue(strtolower($name), $value);
+        $data = parent::extract($object);
+
+        // Replace names that differ
+        foreach ($this->map as $protocolName => $databaseName) {
+            $data[$protocolName] = $data[$databaseName];
+            unset($data[$databaseName]);
         }
-        return $value;
+
+        // Protocol uses nonstandard date format
+        if ($data['INSTALLDATE']) {
+            $data['INSTALLDATE'] = \DateTime::createFromFormat('Y-m-d', $data['INSTALLDATE'])->format('Y/m/d');
+        }
+
+        return $data;
     }
 }

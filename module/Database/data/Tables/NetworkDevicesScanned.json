@@ -55,6 +55,15 @@
             "default": null,
             "autoincrement": false,
             "comment": null
+        },
+        {
+            "name": "tag",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": ""
         }
     ],
     "primary_key": [

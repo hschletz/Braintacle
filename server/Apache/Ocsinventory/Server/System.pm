@@ -42,6 +42,7 @@ our @EXPORT = qw /
   _unlock
   _send_file
   compose_unix_timestamp
+  compose_upsert
 /;
 
 our %EXPORT_TAGS = (
@@ -61,6 +62,7 @@ our %EXPORT_TAGS = (
     _get_spec_params
     _get_spec_params_g
     compose_unix_timestamp
+    compose_upsert
     /
   ]
 );
@@ -76,6 +78,7 @@ our @EXPORT_OK = (
   _modules_get_prolog_writers
   _modules_get_duplicate_handlers
   compose_unix_timestamp
+  compose_upsert
   /
 );
 
@@ -161,6 +164,8 @@ sub _database_connect{
   my %params;
   my ($type, $host, $database, $port, $user, $password, $params);
   
+  my $env_mode_prefix = 'OCS_DB';
+
   if($mode eq 'write'){
     ($type, $host, $database, $port, $user, $password) = ( $ENV{'OCS_DB_TYPE'}, $ENV{'OCS_DB_HOST'}, $ENV{'OCS_DB_NAME'}, $ENV{'OCS_DB_PORT'}, 
       $ENV{'OCS_DB_USER'}, $Apache::Ocsinventory::CURRENT_CONTEXT{'APACHE_OBJECT'}->dir_config('OCS_DB_PWD') );
@@ -180,6 +185,7 @@ sub _database_connect{
       $port = $ENV{'OCS_DB_SL_PORT'}||'5432';
       $user = $ENV{'OCS_DB_SL_USER'};
       $password  = $Apache::Ocsinventory::CURRENT_CONTEXT{'APACHE_OBJECT'}->dir_config('OCS_DB_SL_PWD');
+      $env_mode_prefix .= '_SL';
     }
     else{
       $type = $ENV{'OCS_DB_TYPE'};
@@ -201,8 +207,37 @@ sub _database_connect{
   # Optionnaly a mysql socket different than the client's built in
   $params{'mysql_socket'} = $ENV{'OCS_OPT_DBI_MYSQL_SOCKET'} if $type eq 'mysql' and $ENV{'OCS_OPT_DBI_MYSQL_SOCKET'};
 
+  my $mysql_ssl_mode = '';
+  if ($type eq 'mysql') {
+    if( defined($ENV{$env_mode_prefix.'_SSL_ENABLED'}) and $ENV{$env_mode_prefix.'_SSL_ENABLED'} == 1 )
+    {
+      if( defined($ENV{$env_mode_prefix.'_SSL_MODE'}) and $ENV{$env_mode_prefix.'_SSL_MODE'} eq 'SSL_MODE_PREFERRED' )
+      {
+          $mysql_ssl_mode = ';mysql_ssl=1;mysql_ssl_optional=1';
+      }
+      elsif( defined($ENV{$env_mode_prefix.'_SSL_MODE'}) and $ENV{$env_mode_prefix.'_SSL_MODE'} eq 'SSL_MODE_REQUIRED' )
+      {
+          $mysql_ssl_mode = ';mysql_ssl=1;mysql_ssl_verify_server_cert=0';
+      }
+      elsif( defined($ENV{$env_mode_prefix.'_SSL_MODE'}) and $ENV{$env_mode_prefix.'_SSL_MODE'} eq 'SSL_MODE_STRICT' )
+      {
+          $mysql_ssl_mode = ';mysql_ssl=1;mysql_ssl_verify_server_cert=1';
+      }
+      else
+      {
+          # SSL Is enabled but mode hasn't been provided. Let's put PREFERRED mode by default
+          $mysql_ssl_mode = ';mysql_ssl=1;mysql_ssl_optional=1';
+      }
+
+      if( defined( $ENV{$env_mode_prefix.'_SSL_CLIENT_KEY'} ) and defined( $ENV{$env_mode_prefix.'_SSL_CLIENT_CERT'} ) and defined( $ENV{$env_mode_prefix.'_SSL_CA_CERT'} ) )
+      {
+          $mysql_ssl_mode .= ';mysql_ssl_client_key='.$ENV{$env_mode_prefix.'_SSL_CLIENT_KEY'}.';mysql_ssl_client_cert='.$ENV{$env_mode_prefix.'_SSL_CLIENT_CERT'}.';mysql_ssl_ca_file='.$ENV{$env_mode_prefix.'_SSL_CA_CERT'};
+      }
+    }
+  }
+
   # Connection...
-  my $dbh = DBI->connect("DBI:$type:database=$database;host=$host;port=$port", $user, $password, \%params);
+  my $dbh = DBI->connect("DBI:$type:database=$database;host=$host;port=$port".$mysql_ssl_mode, $user, $password, \%params);
   unless($dbh) {
     &_log(521, 'database_connect', DBI->errstr);
     return undef;
@@ -213,7 +248,7 @@ sub _database_connect{
   } elsif ($type eq 'mysql') {
       $dbh->do("SET NAMES 'utf8mb4'");
       $dbh->do("SET time_zone = '+00:00'");
-      $dbh->do("SET sql_mode='NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'");
+      $dbh->do("SET sql_mode='NO_ENGINE_SUBSTITUTION'");
   }
   return $dbh;
 }
@@ -534,4 +569,17 @@ sub compose_unix_timestamp {
     die ('FIXME: compose_unix_timestamp() not yet implemented for driver ' . $ENV{'OCS_DB_TYPE'} . "\n");
   }
 }
+
+sub compose_upsert
+{
+  my ($column, $updateList) = @_;
+  if ($ENV{'OCS_DB_TYPE'} eq 'Pg') {
+    return "ON CONFLICT($column) SET $updateList";
+  } elsif ($ENV{'OCS_DB_TYPE'} eq 'mysql') {
+    return "ON DUPLICATE KEY UPDATE $updateList";
+  } else {
+    die('FIXME: compose_upsert() not yet implemented for driver ' . $ENV{'OCS_DB_TYPE'} . "\n");
+  }
+}
+
 1;

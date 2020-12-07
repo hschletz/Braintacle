@@ -48,38 +48,38 @@ class Software implements \Zend\Hydrator\HydratorInterface
      *
      * @var string[]
      */
-    protected $_hydratorMap = array(
+    protected $_hydratorMap = [
         'name' => 'Name',
         'version' => 'Version',
-        'comments' => 'Comment',
+        'comment' => 'Comment',
         'publisher' => 'Publisher',
-        'folder' => 'InstallLocation',
-        'source' => 'IsHotfix',
+        'install_location' => 'InstallLocation',
+        'is_hotfix' => 'IsHotfix',
         'guid' => 'Guid',
         'language' => 'Language',
-        'installdate' => 'InstallationDate',
-        'bitswidth' => 'Architecture',
-        'filesize' => 'Size',
-    );
+        'installation_date' => 'InstallationDate',
+        'architecture' => 'Architecture',
+        'size' => 'Size',
+    ];
 
     /**
      * Map for extractName()
      *
      * @var string[]
      */
-    protected $_extractorMap = array(
+    protected $_extractorMap = [
         'Name' => 'name',
         'Version' => 'version',
-        'Comment' => 'comments',
+        'Comment' => 'comment',
         'Publisher' => 'publisher',
-        'InstallLocation' => 'folder',
-        'IsHotfix' => 'source',
+        'InstallLocation' => 'install_location',
+        'IsHotfix' => 'is_hotfix',
         'Guid' => 'guid',
         'Language' => 'language',
-        'InstallationDate' => 'installdate',
-        'Architecture' => 'bitswidth',
-        'Size' => 'filesize',
-    );
+        'InstallationDate' => 'installation_date',
+        'Architecture' => 'architecture',
+        'Size' => 'size',
+    ];
 
     /** {@inheritdoc} */
     public function hydrate(array $data, $object)
@@ -88,25 +88,25 @@ class Software implements \Zend\Hydrator\HydratorInterface
         if ($data['is_windows']) {
             $object['Name'] = $this->hydrateValue('Name', $data['name']);
             $object['Version'] = $data['version'];
-            $object['Comment'] = $data['comments'];
+            $object['Comment'] = $data['comment'];
             $object['Publisher'] = $data['publisher'];
-            $object['InstallLocation'] = $this->hydrateValue('InstallLocation', $data['folder']);
-            $object['IsHotfix'] = $this->hydrateValue('IsHotfix', $data['source']);
+            $object['InstallLocation'] = $this->hydrateValue('InstallLocation', $data['install_location']);
+            $object['IsHotfix'] = $this->hydrateValue('IsHotfix', $data['is_hotfix']);
             $object['Guid'] = $data['guid'];
             $object['Language'] = $data['language'];
-            $object['InstallationDate'] = $this->hydrateValue('InstallationDate', $data['installdate']);
-            $object['Architecture'] = $this->hydrateValue('Architecture', $data['bitswidth']);
+            $object['InstallationDate'] = $this->hydrateValue('InstallationDate', $data['installation_date']);
+            $object['Architecture'] = $this->hydrateValue('Architecture', $data['architecture']);
         } elseif ($data['is_android']) {
             // No value transformations required
             $object['Name'] = $data['name'];
             $object['Version'] = $data['version'];
             $object['Publisher'] = $data['publisher'];
-            $object['InstallLocation'] = $data['folder'];
+            $object['InstallLocation'] = $data['install_location'];
         } else {
             $object['Name'] = $data['name']; // No sanitization required
             $object['Version'] = $data['version'];
-            $object['Comment'] = $data['comments'];
-            $object['Size'] = $data['filesize'];
+            $object['Comment'] = $data['comment'];
+            $object['Size'] = $data['size'];
         }
         return $object;
     }
@@ -114,50 +114,50 @@ class Software implements \Zend\Hydrator\HydratorInterface
     /** {@inheritdoc} */
     public function extract($object)
     {
-        if (array_key_exists('IsHotfix', $object)) {
+        if (property_exists($object, 'IsHotfix')) {
             // Windows
             $data = array(
-                'name' => $object['Name'],
-                'version' => $object['Version'],
-                'comments' => $object['Comment'],
-                'publisher' => $object['Publisher'],
-                'folder' => $object['InstallLocation'],
-                'source' => $this->extractValue('source', $object['IsHotfix']),
-                'guid' => $object['Guid'],
-                'language' => $object['Language'],
-                'installdate' => $this->extractValue('installdate', $object['InstallationDate']),
-                'bitswidth' => $object['Architecture'],
-                'filesize' => null,
+                'name' => $object->Name,
+                'version' => $object->Version,
+                'comment' => $object->Comment,
+                'publisher' => $object->Publisher,
+                'install_location' => $object->InstallLocation,
+                'is_hotfix' => $this->extractValue('is_hotfix', $object->IsHotfix),
+                'guid' => $object->Guid,
+                'language' => $object->Language,
+                'installation_date' => $this->extractValue('installation_date', $object->InstallationDate),
+                'architecture' => $object->Architecture,
+                'size' => null,
             );
-        } elseif (array_key_exists('Size', $object)) {
+        } elseif (property_exists($object, 'Size')) {
             // UNIX
             $data = array(
-                'name' => $object['Name'],
-                'version' => $object['Version'],
-                'comments' => $object['Comment'],
+                'name' => $object->Name,
+                'version' => $object->Version,
+                'comment' => $object->Comment,
                 'publisher' => null,
-                'folder' => null,
-                'source' => null,
+                'install_location' => null,
+                'is_hotfix' => null,
                 'guid' => null,
                 'language' => null,
-                'installdate' => null,
-                'bitswidth' => null,
-                'filesize' => $object['Size'],
+                'installation_date' => null,
+                'architecture' => null,
+                'size' => $object->Size,
             );
         } else {
             //Android
             $data = array(
-                'name' => $object['Name'],
-                'version' => $object['Version'],
-                'comments' => null,
-                'publisher' => $object['Publisher'],
-                'folder' => $object['InstallLocation'],
-                'source' => null,
+                'name' => $object->Name,
+                'version' => $object->Version,
+                'comment' => null,
+                'publisher' => $object->Publisher,
+                'install_location' => $object->InstallLocation,
+                'is_hotfix' => null,
                 'guid' => null,
                 'language' => null,
-                'installdate' => null,
-                'bitswidth' => null,
-                'filesize' => null,
+                'installation_date' => null,
+                'architecture' => null,
+                'size' => null,
             );
         }
         return $data;
@@ -245,10 +245,10 @@ class Software implements \Zend\Hydrator\HydratorInterface
     public function extractValue($name, $value)
     {
         switch ($name) {
-            case 'source':
+            case 'is_hotfix':
                 $value = (integer) !$value;
                 break;
-            case 'installdate':
+            case 'installation_date':
                 $value = ($value ? $value->format('Y-m-d') : null);
                 break;
         }

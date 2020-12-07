@@ -63,7 +63,7 @@ class Module implements
                     'Protocol\Hydrator\ClientsBios' => 'Zend\ServiceManager\Factory\InvokableFactory',
                     'Protocol\Hydrator\ClientsHardware' => 'Protocol\Service\Hydrator\ClientsHardwareFactory',
                     'Protocol\Hydrator\Filesystems' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Protocol\Hydrator\Software' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Protocol\Hydrator\Software' => Service\Hydrator\SoftwareFactory::class,
                     'Protocol\Message\InventoryRequest' => 'Zend\ServiceManager\Factory\InvokableFactory',
                 ),
             ),

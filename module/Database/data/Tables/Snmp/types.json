@@ -1,47 +1,55 @@
 {
-    "name": "subnet",
-    "comment": "Subnet config",
+    "name": "snmp_types",
+    "comment": null,
     "columns": [
         {
-            "name": "netid",
-            "type": "varchar",
-            "length": 15,
+            "name": "id",
+            "type": "integer",
+            "length": 32,
             "notnull": true,
             "default": null,
-            "autoincrement": false,
-            "comment": "Network address"
+            "autoincrement": true,
+            "comment": null
         },
         {
-            "name": "mask",
+            "name": "type_name",
             "type": "varchar",
-            "length": 15,
+            "length": 255,
             "notnull": true,
             "default": null,
             "autoincrement": false,
             "comment": null
         },
         {
-            "name": "name",
+            "name": "condition_oid",
             "type": "varchar",
             "length": 255,
-            "notnull": false,
+            "notnull": true,
             "default": null,
             "autoincrement": false,
             "comment": null
         },
         {
-            "name": "tag",
+            "name": "condition_value",
             "type": "varchar",
             "length": 255,
-            "notnull": false,
+            "notnull": true,
+            "default": null,
+            "autoincrement": false,
+            "comment": null
+        },
+        {
+            "name": "table_type_name",
+            "type": "varchar",
+            "length": 255,
+            "notnull": true,
             "default": null,
             "autoincrement": false,
             "comment": null
         }
     ],
     "primary_key": [
-        "netid",
-        "mask"
+        "id"
     ],
     "mysql": {
         "engine": "InnoDB"

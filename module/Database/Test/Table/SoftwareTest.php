@@ -37,4 +37,21 @@ class SoftwareTest extends AbstractTest
         $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);
         $this->assertEquals($hydrator, $resultSet->getHydrator());
     }
+
+    public function testDelete()
+    {
+        $softwareRaw = $this->createMock(\Database\Table\SoftwareRaw::class);
+        $softwareRaw->method('delete')->with('_where')->willReturn(42);
+
+        $serviceLocator = $this->createMock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+        $serviceLocator->method('get')->with('Database\Table\SoftwareRaw')->willReturn($softwareRaw);
+
+        $table = $this->getMockBuilder(\Database\Table\Software::class)
+                      ->setMethods(['getServiceLocator'])
+                      ->disableOriginalConstructor()
+                      ->getMock();
+        $table->method('getServiceLocator')->willReturn($serviceLocator);
+
+        $this->assertEquals(42, $table->delete('_where'));
+    }
 }

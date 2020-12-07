@@ -62,11 +62,16 @@ sub snmp_prolog_resp{
   my $resp = shift;
   my $select_ip_req;
   my $select_communities_req;
+  my $select_snmp_type_req;
   my $select_deviceid_req;
   my $select_network_req;
+  my $select_mibs_req;
   my @devicesToScan;
   my @networksToScan;
   my @communities;
+  my @snmp_types;
+  my @mibs;
+  my @snmp_rework;
 
   #Verify if SNMP is enable for this computer or in config
   my $snmpSwitch = &_get_snmp_switch($current_context);
@@ -141,6 +146,28 @@ sub snmp_prolog_resp{
 	}
       }
 
+      #Getting snmp types
+      $select_snmp_type_req = $dbh->prepare('SELECT t.TYPE_NAME, t.CONDITION_OID, t.CONDITION_VALUE, t.TABLE_TYPE_NAME, l.LABEL_NAME, c.OID FROM snmp_types t LEFT JOIN snmp_configs c ON t.ID = c.TYPE_ID LEFT JOIN snmp_labels l ON l.ID = c.LABEL_ID');
+      $select_snmp_type_req->execute();
+
+      while(my $row = $select_snmp_type_req->fetchrow_hashref){
+        push @snmp_types,$row;
+      }
+
+      if (@snmp_types) {
+        foreach my $type (@snmp_types) {
+          push @snmp,{
+            'TYPE_NAME' => $type->{'TYPE_NAME'}?$type->{'TYPE_NAME'}:'',
+            'CONDITION_OID' => $type->{'CONDITION_OID'}?$type->{'CONDITION_OID'}:'',
+            'CONDITION_VALUE'=> $type->{'CONDITION_VALUE'}?$type->{'CONDITION_VALUE'}:'',
+            'TABLE_TYPE_NAME' => $type->{'TABLE_TYPE_NAME'}?$type->{'TABLE_TYPE_NAME'}:'',
+            'LABEL_NAME'=> $type->{'LABEL_NAME'}?$type->{'LABEL_NAME'}:'',
+            'OID' => $type->{'OID'}?$type->{'OID'}:'',
+            'TYPE' => 'SNMP_TYPE',
+          };
+        }
+      }
+
       if (@snmp) {
           #Getting snmp communities
           $select_communities_req = $dbh->prepare('SELECT VERSION,NAME,USERNAME,AUTHKEY,AUTHPASSWD FROM snmp_communities');
@@ -159,6 +186,27 @@ sub snmp_prolog_resp{
                 'AUTHKEY'  => $community->{'AUTHKEY'}?$community->{'AUTHKEY'}:'',
                 'AUTHPASSWD' => $community->{'AUTHPASSWD'}?$community->{'AUTHPASSWD'}:'',
                 'TYPE' => 'COMMUNITY',
+              };
+            }
+          }
+
+          #Getting custom mibs informations 
+          $select_mibs_req = $dbh->prepare('SELECT VENDOR,URL,CHECKSUM,VERSION,PARSER FROM snmp_mibs');
+          $select_mibs_req->execute();
+
+          while(my $row = $select_mibs_req->fetchrow_hashref){
+            push @mibs,$row;
+          }
+
+          if (@mibs) {
+            foreach my $mib (@mibs) {
+              push @snmp,{
+                'VENDOR' => $mib->{'VENDOR'}?$mib->{'VENDOR'}:'',
+                'URL'=> $mib->{'URL'}?$mib->{'URL'}:'',
+                'CHECKSUM' => $mib->{'CHECKSUM'}?$mib->{'CHECKSUM'}:'',
+                'VERSION' => $mib->{'VERSION'}?$mib->{'VERSION'}:'',
+                'PARSER' => $mib->{'PARSER'}?$mib->{'PARSER'}:'',
+                'TYPE' => 'MIB',
               };
             }
           }

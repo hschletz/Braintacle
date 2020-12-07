@@ -114,6 +114,7 @@ class SchemaManager
         $this->_serviceLocator->get('Database\Table\Clients')->setSchema();
         $this->_serviceLocator->get('Database\Table\PackageDownloadInfo')->setSchema();
         $this->_serviceLocator->get('Database\Table\WindowsInstallations')->setSchema();
+        $this->_serviceLocator->get('Database\Table\Software')->setSchema();
 
         $logger = $this->_serviceLocator->get('Library\Logger');
 
@@ -206,6 +207,9 @@ class SchemaManager
         if (in_array($tableName, $database->getTableNames())) {
             // Table exists
             $table = $database->getTable($tableName);
+
+            // Drop obsolete indexes which might prevent subsequent transformations.
+            static::_dropIndexes($logger, $table, $schema);
 
             // Update table engine
             if ($database->isMysql() and $table->getEngine() != $schema['mysql']['engine']) {
@@ -321,6 +325,38 @@ class SchemaManager
                 $logger->notice('done.');
             } else {
                 $logger->warn("Obsolete column $tableName.$column detected.");
+            }
+        }
+    }
+
+    /**
+     * Drop indexes which are not defined in the schema.
+     */
+    protected static function _dropIndexes(
+        \Zend\Log\LoggerInterface $logger,
+        \Nada\Table\AbstractTable $table,
+        array $schema
+    ) {
+        if (!isset($schema['indexes'])) {
+            return;
+        }
+    
+        $indexes = $schema['indexes'];
+        foreach ($indexes as &$index) {
+            // Remove index names for comparison
+            unset($index['name']);
+        }
+        unset($index);
+
+        foreach ($table->getIndexes() as $index) {
+            $index = $index->toArray();
+            // Remove index names for comparison, but preserve it for later reference
+            $name = $index['name'];
+            unset($index['name']);
+            if (!in_array($index, $indexes)) {
+                $logger->info("Dropping index $name...");
+                $table->dropIndex($name);
+                $logger->info('done.');
             }
         }
     }

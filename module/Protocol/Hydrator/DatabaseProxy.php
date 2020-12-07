@@ -52,10 +52,8 @@ class DatabaseProxy implements \Zend\Hydrator\HydratorInterface
 
     /**
      * Return attached hydrator
-     *
-     * @return \Zend\Hydrator\HydratorInterface
      */
-    public function getHydrator()
+    public function getHydrator(): \Zend\Hydrator\HydratorInterface
     {
         return $this->_hydrator;
     }

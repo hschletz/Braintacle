@@ -207,10 +207,10 @@ class ClientManager
                     $select
                         ->quantifier('DISTINCT')
                         ->join(
-                            'softwares',
-                            'softwares.hardware_id = clients.id',
+                            'software_installations',
+                            'software_installations.hardware_id = clients.id',
                             $addSearchColumns ? array('software_version' => 'version') : array()
-                        )->where(array('softwares.name' => $arg));
+                        )->where(['software_installations.name' => $arg]);
                     break;
                 case 'MemberOf':
                     if ($invertResult) {

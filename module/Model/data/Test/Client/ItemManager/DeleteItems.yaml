@@ -68,7 +68,11 @@ slots:
   -
     hardware_id: 2
 
-softwares:
+software:
+  -
+    hardware_id: 2
+
+software_installations:
   -
     hardware_id: 2
 

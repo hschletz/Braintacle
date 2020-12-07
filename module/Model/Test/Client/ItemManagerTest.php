@@ -45,6 +45,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
         'RegistryData',
         'Sim',
         'Software',
+        'SoftwareRaw',
         'StorageDevices',
         'VirtualMachines',
     );
@@ -171,7 +172,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
                 array('Software.NotIgnored' => null),
                 null,
                 null,
-                array('name2', 'name3', 'name4'),
+                ['name2', 'name3', 'name4', ''],
                 'Name'
             ),
             array(
@@ -179,7 +180,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
                 array('Client' => 1, 'Software.NotIgnored' => null),
                 null,
                 null,
-                array('name3', 'name4'),
+                ['name3', 'name4', ''],
                 'Name'
             ),
             array('StorageDevice', array('Client' => 1), null, null, array('name1'), 'ProductName'),

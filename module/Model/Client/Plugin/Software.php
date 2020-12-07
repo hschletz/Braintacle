@@ -26,11 +26,9 @@ use Zend\Db\Sql\Predicate;
 /**
  * Software item plugin
  *
- * Provides "is_windows" field for hydrator and "Software.NotIgnored" filter to
- * list only software which has not been explicitly marked as ignored. The
- * filter only has to be present; its argument is not evaluated. The filter also
- * excludes entries where name is NULL (these are barely interesting, but cannot
- * be blacklisted explicitly).
+ * Provides "Software.NotIgnored" filter to list only software which has not
+ * been explicitly marked as ignored. The filter only has to be present; its
+ * argument is not evaluated.
  */
 class Software extends AddOsColumns
 {
@@ -41,16 +39,17 @@ class Software extends AddOsColumns
         $this->_select->columns([
             'name',
             'version',
-            'comments',
+            'comment',
             'publisher',
-            'folder',
-            'source',
+            'install_location',
+            'is_hotfix',
             'guid',
             'language',
-            'installdate',
-            'bitswidth',
-            'filesize',
+            'installation_date',
+            'architecture',
+            'size',
             'is_android' => $this->_getIsAndroidExpression(),
+            'display',
         ]);
     }
 
@@ -60,13 +59,6 @@ class Software extends AddOsColumns
         parent::where($filters);
 
         if (is_array($filters) and array_key_exists('Software.NotIgnored', $filters)) {
-            $this->_select->join(
-                'software_definitions',
-                'software_definitions.name = softwares.name',
-                array(),
-                \Zend\Db\Sql\Select::JOIN_LEFT
-            );
-            $this->_select->where(new Predicate\IsNotNull('softwares.name'));
             $this->_select->where(
                 new Predicate\PredicateSet(
                     array(

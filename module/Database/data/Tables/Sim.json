@@ -64,6 +64,15 @@
             "default": null,
             "autoincrement": false,
             "comment": "Device ID (IMEI)"
+        },
+        {
+            "name": "phonenumber",
+            "type": "varchar",
+            "length": 255,
+            "notnull": false,
+            "default": null,
+            "autoincrement": false,
+            "comment": "Phone number"
         }
     ],
     "primary_key": [

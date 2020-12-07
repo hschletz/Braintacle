@@ -1,6 +1,6 @@
 {
-    "name": "softwares",
-    "comment": "Software on client",
+    "name": "software",
+    "comment": "Software on client. Raw data, prefer software_installations view for read access.",
     "columns": [
         {
             "name": "id",
@@ -21,10 +21,10 @@
             "comment": null
         },
         {
-            "name": "name",
-            "type": "varchar",
-            "length": 255,
-            "notnull": false,
+            "name": "definition_id",
+            "type": "integer",
+            "length": 32,
+            "notnull": true,
             "default": null,
             "autoincrement": false,
             "comment": null
@@ -68,7 +68,7 @@
         {
             "name": "source",
             "type": "integer",
-            "length": 16,
+            "length": 32,
             "notnull": false,
             "default": null,
             "autoincrement": false,
@@ -104,7 +104,7 @@
         {
             "name": "bitswidth",
             "type": "integer",
-            "length": 16,
+            "length": 32,
             "notnull": false,
             "default": null,
             "autoincrement": false,
@@ -134,21 +134,21 @@
     ],
     "indexes": [
         {
-            "name": "softwares_hardware_id_idx",
+            "name": "software_hardware_id_idx",
             "unique": false,
             "columns": [
                 "hardware_id"
             ]
         },
         {
-            "name": "softwares_name_idx",
+            "name": "software_definition_id_idx",
             "unique": false,
             "columns": [
-                "name"
+                "definition_id"
             ]
         },
         {
-            "name": "softwares_version_idx",
+            "name": "software_version_idx",
             "unique": false,
             "columns": [
                 "version"

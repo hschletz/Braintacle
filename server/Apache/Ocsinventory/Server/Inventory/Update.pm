@@ -24,6 +24,7 @@ package Apache::Ocsinventory::Server::Inventory::Update;
 use Apache::Ocsinventory::Server::Inventory::Cache;
 use Apache::Ocsinventory::Server::Inventory::Update::Hardware;
 use Apache::Ocsinventory::Server::Inventory::Update::AccountInfos;
+use Apache::Ocsinventory::Server::Inventory::Software;
 
 use strict;
 
@@ -42,6 +43,7 @@ sub _update_inventory{
 
   my $section;
  
+  &_insert_software();
   &_reset_inventory_cache( $sectionsMeta, $sectionsList ) if $ENV{OCS_OPT_INVENTORY_CACHE_ENABLED};
    
   # Call special sections update

@@ -105,9 +105,6 @@ class SoftwareManager
             )
         );
 
-        // Ignore software without name as this cannot even get blacklisted.
-        $select->where(new \Zend\Db\Sql\Predicate\IsNotNull('softwares.name'));
-
         if (is_array($filters)) {
             foreach ($filters as $filter => $search) {
                 switch ($filter) {
@@ -131,12 +128,6 @@ class SoftwareManager
                         break;
                     case 'Status':
                         if ($search != 'all') {
-                            $select->join(
-                                'software_definitions',
-                                'software_definitions.name = softwares.name',
-                                array(),
-                                \Zend\Db\Sql\Select::JOIN_LEFT
-                            );
                             switch ($search) {
                                 case 'accepted':
                                     $select->where(array('display' => 1));
@@ -158,14 +149,14 @@ class SoftwareManager
             }
         }
 
-        $select->group('softwares.name');
+        $select->group('software_installations.name');
 
         switch ($order) {
             case 'name':
-                $select->order(array('softwares.name' => $direction));
+                $select->order(['software_installations.name' => $direction]);
                 break;
             case 'num_clients':
-                $select->order(array('num_clients' => $direction, 'softwares.name' => 'asc'));
+                $select->order(['num_clients' => $direction, 'software_installations.name' => 'asc']);
                 break;
             default:
                 throw new \InvalidArgumentException('Invalid order column: ' . $order);

@@ -9,6 +9,19 @@ without any warranty.
 CHANGES IN VERSION 1.7
 ======================
 
+Upgrading from previous versions:
+
+- Required: The database schema for installed software has changed. If you have
+  any software searches stored as a search parameter for groups, these groups
+  will cause errors. Delete these groups before the upgrade and re-create them
+  later.
+
+- Required: Run "braintacle-tool.php database" to update the database.
+
+Misc:
+
+- Server: Backported changes from version 2.8.
+
 
 CHANGES IN VERSION 1.6
 ======================

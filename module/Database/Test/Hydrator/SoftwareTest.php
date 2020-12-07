@@ -30,10 +30,10 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             $this->returnValueMap(
                 array(
                     array('Name', '_name', '_Name'),
-                    array('InstallLocation', '_folder', '_InstallLocation'),
-                    array('IsHotfix', '_source', '_IsHotfix'),
-                    array('InstallationDate', '_installdate', '_InstallationDate'),
-                    array('Architecture', '_bitswidth', '_Architecture'),
+                    array('InstallLocation', '_install_location', '_InstallLocation'),
+                    array('IsHotfix', '_is_hotfix', '_IsHotfix'),
+                    array('InstallationDate', '_installation_date', '_InstallationDate'),
+                    array('Architecture', '_architecture', '_Architecture'),
                 )
             )
         );
@@ -42,14 +42,14 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             'is_android' => false,
             'name' => '_name',
             'version' => '_version',
-            'comments' => '_comment',
+            'comment' => '_comment',
             'publisher' => '_publisher',
-            'folder' => '_folder',
-            'source' => '_source',
+            'install_location' => '_install_location',
+            'is_hotfix' => '_is_hotfix',
             'guid' => '_guid',
             'language' => '_language',
-            'installdate' => '_installdate',
-            'bitswidth' => '_bitswidth',
+            'installation_date' => '_installation_date',
+            'architecture' => '_architecture',
         );
         $software = array(
             'Name' => '_Name',
@@ -77,21 +77,21 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             'is_android' => false,
             'name' => '_name',
             'version' => '_version',
-            'comments' => '_comment',
+            'comment' => '_comment',
             'publisher' => 'ignored',
-            'folder' => 'ignored',
-            'source' => 'ignored',
+            'install_location' => 'ignored',
+            'is_hotfix' => 'ignored',
             'guid' => 'ignored',
             'language' => 'ignored',
-            'installdate' => 'ignored',
-            'bitswidth' => 'ignored',
-            'filesize' => '_filesize',
+            'installation_date' => 'ignored',
+            'architecture' => 'ignored',
+            'size' => '_size',
         );
         $software = array(
             'Name' => '_name',
             'Version' => '_version',
             'Comment' => '_comment',
-            'Size' => '_filesize',
+            'Size' => '_size',
         );
         $object = new \ArrayObject;
         $this->assertSame($object, $hydrator->hydrate($agentData, $object));
@@ -107,21 +107,21 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             'is_android' => true,
             'name' => '_name',
             'version' => '_version',
-            'comments' => 'ignored',
+            'comment' => 'ignored',
             'publisher' => '_publisher',
-            'folder' => '_folder',
-            'source' => 'ignored',
+            'install_location' => '_install_location',
+            'is_hotfix' => 'ignored',
             'guid' => 'ignored',
             'language' => 'ignored',
-            'installdate' => 'ignored',
-            'bitswidth' => 'ignored',
-            'filesize' => 'ignored',
+            'installation_date' => 'ignored',
+            'architecture' => 'ignored',
+            'size' => 'ignored',
         );
         $software = array(
             'Name' => '_name',
             'Version' => '_version',
             'Publisher' => '_publisher',
-            'InstallLocation' => '_folder',
+            'InstallLocation' => '_install_location',
         );
         $object = new \ArrayObject;
         $this->assertSame($object, $hydrator->hydrate($agentData, $object));
@@ -134,12 +134,12 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
         $hydrator->method('extractValue')->will(
             $this->returnValueMap(
                 array(
-                    array('source', '_IsHotfix', '_source'),
-                    array('installdate', '_InstallationDate', '_installdate'),
+                    array('is_hotfix', '_IsHotfix', '_is_hotfix'),
+                    array('installation_date', '_InstallationDate', '_installation_date'),
                 )
             )
         );
-        $software = array(
+        $software = (object) [
             'Name' => '_Name',
             'Version' => '_Version',
             'Comment' => '_Comment',
@@ -150,20 +150,20 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             'Language' => '_Language',
             'InstallationDate' => '_InstallationDate',
             'Architecture' => '_Architecture',
-        );
-        $agentData = array(
+        ];
+        $agentData = [
             'name' => '_Name',
             'version' => '_Version',
-            'comments' => '_Comment',
+            'comment' => '_Comment',
             'publisher' => '_Publisher',
-            'folder' => '_InstallLocation',
-            'source' => '_source',
+            'install_location' => '_InstallLocation',
+            'is_hotfix' => '_is_hotfix',
             'guid' => '_Guid',
             'language' => '_Language',
-            'installdate' => '_installdate',
-            'bitswidth' => '_Architecture',
-            'filesize' => null,
-        );
+            'installation_date' => '_installation_date',
+            'architecture' => '_Architecture',
+            'size' => null,
+        ];
         $this->assertEquals($agentData, $hydrator->extract($software));
     }
 
@@ -171,25 +171,25 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
     {
         $hydrator = $this->getMockBuilder('Database\Hydrator\Software')->setMethods(array('extractValue'))->getMock();
         $hydrator->expects($this->never())->method('extractValue');
-        $software = array(
+        $software = (object) [
             'Name' => '_Name',
             'Version' => '_Version',
             'Comment' => '_Comment',
             'Size' => '_Size',
-        );
-        $agentData = array(
+        ];
+        $agentData = [
             'name' => '_Name',
             'version' => '_Version',
-            'comments' => '_Comment',
+            'comment' => '_Comment',
             'publisher' => null,
-            'folder' => null,
-            'source' => null,
+            'install_location' => null,
+            'is_hotfix' => null,
             'guid' => null,
             'language' => null,
-            'installdate' => null,
-            'bitswidth' => null,
-            'filesize' => '_Size',
-        );
+            'installation_date' => null,
+            'architecture' => null,
+            'size' => '_Size',
+        ];
         $this->assertEquals($agentData, $hydrator->extract($software));
     }
 
@@ -197,25 +197,25 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
     {
         $hydrator = $this->getMockBuilder('Database\Hydrator\Software')->setMethods(array('extractValue'))->getMock();
         $hydrator->expects($this->never())->method('extractValue');
-        $software = array(
+        $software = (object) [
             'Name' => '_Name',
             'Version' => '_Version',
             'Publisher' => '_Publisher',
             'InstallLocation' => '_InstallLocation',
-        );
-        $agentData = array(
+        ];
+        $agentData = [
             'name' => '_Name',
             'version' => '_Version',
-            'comments' => null,
+            'comment' => null,
             'publisher' => '_Publisher',
-            'folder' => '_InstallLocation',
-            'source' => null,
+            'install_location' => '_InstallLocation',
+            'is_hotfix' => null,
             'guid' => null,
             'language' => null,
-            'installdate' => null,
-            'bitswidth' => null,
-            'filesize' => null,
-        );
+            'installation_date' => null,
+            'architecture' => null,
+            'size' => null,
+        ];
         $this->assertEquals($agentData, $hydrator->extract($software));
     }
 
@@ -224,15 +224,15 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
         return array(
             array('name', 'Name'),
             array('version', 'Version'),
-            array('comments', 'Comment'),
+            array('comment', 'Comment'),
             array('publisher', 'Publisher'),
-            array('folder', 'InstallLocation'),
-            array('source', 'IsHotfix'),
+            array('install_location', 'InstallLocation'),
+            array('is_hotfix', 'IsHotfix'),
             array('guid', 'Guid'),
             array('language', 'Language'),
-            array('installdate', 'InstallationDate'),
-            array('bitswidth', 'Architecture'),
-            array('filesize', 'Size'),
+            array('installation_date', 'InstallationDate'),
+            array('architecture', 'Architecture'),
+            array('size', 'Size'),
         );
     }
 
@@ -258,15 +258,15 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
         return array(
             array('Name', 'name'),
             array('Version', 'version'),
-            array('Comment', 'comments'),
+            array('Comment', 'comment'),
             array('Publisher', 'publisher'),
-            array('InstallLocation', 'folder'),
-            array('IsHotfix', 'source'),
+            array('InstallLocation', 'install_location'),
+            array('IsHotfix', 'is_hotfix'),
             array('Guid', 'guid'),
             array('Language', 'language'),
-            array('InstallationDate', 'installdate'),
-            array('Architecture', 'bitswidth'),
-            array('Size', 'filesize'),
+            array('InstallationDate', 'installation_date'),
+            array('Architecture', 'architecture'),
+            array('Size', 'size'),
         );
     }
 
@@ -318,11 +318,11 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
     public function extractValueProvider()
     {
         return array(
-            array('source', true, '0'),
-            array('source', false, '1'),
-            array('installdate', new \DateTime('2014-12-31'), '2014-12-31'),
-            array('installdate', '', null),
-            array('installdate', null, null),
+            array('is_hotfix', true, '0'),
+            array('is_hotfix', false, '1'),
+            array('installation_date', new \DateTime('2014-12-31'), '2014-12-31'),
+            array('installation_date', '', null),
+            array('installation_date', null, null),
             array('other', 'value', 'value'),
         );
     }

@@ -22,50 +22,54 @@ hardware:
     deviceid: "client4"
     winprodid: "prodid"
 
-softwares:
+software:
   -
     hardware_id: 1
-    name: "new1"
+    definition_id: 1 # new1
   -
     hardware_id: 1
-    name: "new2"
+    definition_id: 2 #new2
   -
     hardware_id: 1
-    name: "accepted"
+    definition_id: 3 # accepted
   # duplicate entry should be counted only once.
   -
     hardware_id: 1
-    name: "accepted"
+    definition_id: 3 # accepted
   -
     hardware_id: 1
-    name: "ignored"
+    definition_id: 4 # ignored
   -
     hardware_id: 2
-    name: "new2"
+    definition_id: 2 # new2
   -
     hardware_id: 2
-    name: "accepted"
+    definition_id: 3 #accepted
   -
     hardware_id: 2
-    name: "ignored"
-  -
-    hardware_id: 2
-    name: null
+    definition_id: 4 # ignored
 
 software_definitions:
   -
-    name: "orphaned"
-    display: 1
+    id: 1
+    name: "new1"
+    display: null
   -
+    id: 2
+    name: "new2"
+    display: null
+  -
+    id: 3
     name: "accepted"
     display: 1
   -
+    id: 4
     name: "ignored"
     display: 0
   -
-    name: "new1"
-    display: null
-# "new2" intentionally left out
+    id: 5
+    name: "orphaned"
+    display: 1
 
 braintacle_windows:
   -

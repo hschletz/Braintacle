@@ -23,7 +23,7 @@
         "ext-intl": "*",
         "ext-zip": "*",
         "components/jquery": "^3.0",
-        "hschletz/nada": "^1.1",
+        "hschletz/nada": "^1.1.4",
         "oomphinc/composer-installers-extender": "^2.0",
         "symfony/filesystem": "^3.4",
         "theseer/fdomdocument": "*",

@@ -24,9 +24,14 @@ namespace Model\Test;
 class SoftwareManagerTest extends AbstractTest
 {
     /** {@inheritdoc} */
-    protected static $_tables = array(
-        'ClientsAndGroups', 'Software', 'SoftwareDefinitions', 'WindowsProductKeys', 'WindowsInstallations'
-    );
+    protected static $_tables = [
+        'ClientsAndGroups',
+        'Software',
+        'SoftwareDefinitions',
+        'SoftwareRaw',
+        'WindowsProductKeys',
+        'WindowsInstallations',
+    ];
 
     public function getSoftwareProvider()
     {

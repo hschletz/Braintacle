@@ -83,5 +83,21 @@ EOT;
             $this->adapter->query($query, \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE);
             $logger->info('done.');
         }
+        
+        $tables = $database->getTableNames();
+        if (in_array('softwares', $tables)) {
+            // Create rows for names which are not already defined.
+            // softwares.name may contain NULL which is not allowed here and
+            // will be mapped to an empty string instead.
+            $logger->info('Migrating uncategorized software definitions');
+            $query = <<<'EOT'
+                INSERT INTO software_definitions (name)
+                SELECT DISTINCT COALESCE(name, '')
+                FROM softwares
+                WHERE COALESCE(name, '') NOT IN(SELECT name FROM software_definitions)
+EOT;
+            $result = $this->adapter->query($query, \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE);
+            $logger->info(sprintf('done, %d definitions migrated.', $result->getAffectedRows()));
+        }
     }
 }

@@ -35,17 +35,6 @@ blacklist_macaddresses:
   -
     macaddress: "00:00:5E:00:53:01"
 
-software_definitions:
-  -
-    name: "name1"
-    display: 0
-  -
-    name: "name2"
-    display: 1
-  -
-    name: "name3"
-    display: null
-
 controllers:
   -
     id: 2
@@ -258,33 +247,54 @@ slots:
     name: null
     designation: "name1"
 
-softwares:
+software:
   -
     id: 2
     hardware_id: 2
-    name: "name2"
+    definition_id: 2
     version: "version3"
   -
     id: 1
     hardware_id: 1
-    name: "name1"
+    definition_id: 1
     version: "version4"
   -
     id: 3
     hardware_id: 1
-    name: "name3"
+    definition_id: 3
     version: "version5"
   -
     id: 4
     hardware_id: 1
-    name: "name4"
+    definition_id: 4
     version: "version6"
   -
-    # Always ignored (name NULL)
     id: 5
     hardware_id: 1
-    name: null
-    version: "version0"
+    definition_id: 5
+    version: ""
+
+software_definitions:
+  -
+    id: 1
+    name: "name1"
+    display: 0
+  -
+    id: 2
+    name: "name2"
+    display: 1
+  -
+    id: 3
+    name: "name3"
+    display: null
+  -
+    id: 4
+    name: "name4"
+    display: null
+  -
+    id: 5
+    name: ""
+    display: null
 
 sounds:
   -
