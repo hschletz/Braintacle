@@ -201,8 +201,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
         \Zend\Log\LoggerInterface $logger,
         \Nada\Database\AbstractDatabase $database,
         string $oldName
-    ): void
-    {
+    ): void {
         $logger->info("Renaming table $oldName to $this->table...");
         $database->renameTable($oldName, $this->table);
         $logger->info('done.');
