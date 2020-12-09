@@ -121,8 +121,8 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
         $fieldset = $this->createMock('Zend\Form\FieldsetInterface');
         $fieldset->method('get')
                  ->withConsecutive(
-                     ['c29mdHdhcmVfbmFtZTE='], // 'software_name1'
-                     ['c29mdHdhcmVfbmFtZTI='] // 'software_name2'
+                     ['_c29mdHdhcmVfbmFtZTE='], // 'software_name1'
+                     ['_c29mdHdhcmVfbmFtZTI='] // 'software_name2'
                  )->willReturnOnConsecutiveCalls($checkbox1, $checkbox2);
 
         $software = [

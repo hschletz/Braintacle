@@ -25,11 +25,13 @@ namespace Console\Form;
  * Form for accepting/ignoring software
  *
  * Available software is set via setSoftware() or setData(). Each software has a
- * checkbox in the "Software" fieldset. The checkbox name is Base64 encoded
- * because incorrectly encoded characters (those to be fixed by the
- * FixEncodingErrors filter) would get misinterpreted by browsers, but the
- * original (bad) characters need to be preserved for further processing. The
- * checkbox labels have their encoding fixed.
+ * checkbox in the "Software" fieldset. The checkbox name is Base64 encoded and
+ * prefixed with an underscore because incorrectly encoded characters (those to
+ * be fixed by the FixEncodingErrors filter) would get misinterpreted by
+ * browsers, but the original (bad) characters need to be preserved for further
+ * processing. The checkbox labels have their encoding fixed. The prefix is
+ * necessary because the software name may be empty and an empty checkbox name
+ * is not allowed.
  *
  * Unlike standard ZF checkboxes, no hidden input elements are generated. This
  * allows posting only selected entries instead of the full list (which can grow
@@ -111,9 +113,9 @@ class Software extends \Console\Form\Form
         foreach ($names as $name) {
             if ($namesEncoded) {
                 $elementName = $name;
-                $label = base64_decode($name);
+                $label = base64_decode(ltrim($name, '_'));
             } else {
-                $elementName = base64_encode($name);
+                $elementName = '_' . base64_encode($name);
                 $label = $name;
             }
             $element = new \Zend\Form\Element\Checkbox($elementName);

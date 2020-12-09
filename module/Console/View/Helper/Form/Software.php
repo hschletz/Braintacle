@@ -102,7 +102,7 @@ class Software extends \Zend\View\Helper\AbstractHelper
         $output = $table->row($headers, true);
 
         foreach ($software as $row) {
-            $element = $fieldset->get(base64_encode($row['name']));
+            $element = $fieldset->get('_' . base64_encode($row['name']));
             $output .= $table->row(
                 [
                     'name' => $formRow($element, \Zend\Form\View\Helper\FormRow::LABEL_APPEND),

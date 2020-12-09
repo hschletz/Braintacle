@@ -28,10 +28,10 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
         'name2',
     );
 
-    protected $_namesBase64 = array(
-        'bmFtZTE=', // name1
-        'bmFtZTI=', // name2
-    );
+    protected $_namesEncoded = [
+        '_bmFtZTE=', // name1
+        '_bmFtZTI=', // name2
+    ];
 
     public function testInit()
     {
@@ -76,10 +76,10 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
 
     public function createSoftwareFieldsetProvider()
     {
-        return array(
-            array($this->_namesBase64, true),
-            array($this->_names, false),
-        );
+        return [
+            [$this->_namesEncoded, true],
+            [$this->_names, false],
+        ];
     }
 
     /**
@@ -103,7 +103,7 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
         $this->assertCount(2, $fieldset);
         foreach (array_values($fieldset->getElements()) as $index => $element) {
             $this->assertInstanceOf('Zend\Form\Element\Checkbox', $element);
-            $this->assertEquals($this->_namesBase64[$index], $element->getName());
+            $this->assertEquals($this->_namesEncoded[$index], $element->getName());
             $this->assertFalse($element->useHiddenElement());
             $this->assertEquals(array('label1', 'label2')[$index], $element->getLabel());
         }
@@ -126,7 +126,7 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
         $fieldset = $form->get('Software');
         $this->assertInstanceOf('Zend\Form\Fieldset', $fieldset);
         $this->assertCount(2, $fieldset);
-        $this->assertEquals($this->_namesBase64, array_keys($fieldset->getElements()));
+        $this->assertEquals($this->_namesEncoded, array_keys($fieldset->getElements()));
     }
 
     public function testcreateSoftwareFieldsetFilterNotSet()
