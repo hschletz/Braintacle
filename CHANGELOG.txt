@@ -18,6 +18,10 @@ Upgrading from previous versions:
 
 - Required: Run "braintacle-tool.php database" to update the database.
 
+Fixed bugs:
+
+- Console: Fixed handling of IPv6 networks.
+
 Misc:
 
 - Server: Backported changes from version 2.8.

@@ -41,47 +41,40 @@ class Subnet extends \Model\AbstractModel
     public function offsetGet($index)
     {
         if ($index == 'CidrAddress') {
+            $address = $this['Address'];
             $mask = $this['Mask'];
-            $validator = new \Zend\Validator\Ip(
-                array(
-                    'allowipv4' => true,
-                    'allowipv6' => true,
-                    'allowipvfuture' => false,
-                    'allowliteral' => false,
-                )
-            );
-            if (!$validator->isValid($mask)) {
-                throw new \DomainException('Not an IP address mask: ' . $mask);
-            }
-            $validator->setOptions(array('allowipv6' => false));
-            if ($validator->isValid($mask)) {
+            $validator = new \Zend\Validator\Ip([
+                'allowipv4' => true,
+                'allowipv6' => false,
+                'allowipvfuture' => false,
+                'allowliteral' => false,
+            ]);
+            if ($validator->isValid($address)) {
                 // IPv4 address
-                $mask = ip2long($this['Mask']);
-                if ($mask != 0) { // Next line would not work on 32 bit systems
-                    $mask = 32 - log(($mask ^ 0xFFFFFFFF) + 1, 2);
+                if (!$validator->isValid($mask)) {
+                    throw new \DomainException('Not an IPv4 address mask: ' . $mask);
                 }
-                $mask = (string) $mask;
-                if (!ctype_digit($mask)) {
-                    throw new \DomainException('Not a CIDR mask: ' . $this['Mask']);
+                // Convert mask to CIDR suffix.
+                $suffix = ip2long($mask);
+                if ($suffix != 0) { // Next line would not work on 32 bit systems
+                    $suffix = 32 - log(($suffix ^ 0xFFFFFFFF) + 1, 2);
                 }
-                return $this['Address'] . '/' . $mask;
+                $suffix = (string) $suffix;
+                if (!ctype_digit($suffix)) {
+                    throw new \DomainException('Not a CIDR mask: ' . $mask);
+                }
             } else {
-                // IPv6 address. Since 128 bit integers are difficult to handle,
-                // parse mask as hex strings. Assume unabbreviated notation (32
-                // hex digits, strip ':' first). Mask should start with zero or
-                // more F digits, followed by E, C or 8 if the boundary is not
-                // between full hex digits, followed by zero or more 0 digits.
-                $mask = str_replace(':', '', $mask);
-                if (strlen($mask) != 32 or !preg_match('/^(F*)([8CE]?)0*$/i', $mask, $matches)) {
-                     throw new \DomainException('Not a CIDR mask: ' . $this['Mask']);
+                $validator->setOptions(['allowipv4' => false, 'allowipv6' => true]);
+                if (!$validator->isValid($address)) {
+                    throw new \DomainException('Not an IP address: ' . $address);
                 }
-                $length = strlen($matches[1]) * 4; // 4 bits per F digit
-                if ($matches[2]) {
-                    // Not on a 4 bit boundary. Calculate additional bits.
-                    $length += 4 - log((hexdec($matches[2]) ^ 0xF) + 1, 2);
+                // IPv6 address. Mask should already be a valid suffix.
+                if (!ctype_digit((string) $mask) or $mask < 0 or $mask > 128) {
+                     throw new \DomainException('Not a CIDR mask: ' . $mask);
                 }
-                return $this['Address'] . '/' . $length;
+                $suffix = $mask;
             }
+            return "$address/$suffix";
         } else {
             return parent::offsetGet($index);
         }
