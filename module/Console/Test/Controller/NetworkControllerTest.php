@@ -126,9 +126,20 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->assertNotQueryContentContains('td a[class="blur"]', 'subnet1');
         $this->assertQueryContentContains('td', "\n192.0.2.0/24\n"); // CidrAddress column
-        $this->assertQueryContentContains(
-            'td a[href*="/console/client/index/"][href*="search1=192.0.2.0"][href*="search2=255.255.255.0"]',
-            '1'
+        $this->assertXpathQuery(
+            '//td/a[@href="/console/client/index/?' . implode(
+                '&',
+                [
+                    'filter1=NetworkInterface.Subnet',
+                    'exact1=1',
+                    'search1=192.0.2.0',
+                    'filter2=NetworkInterface.Netmask',
+                    'exact2=1',
+                    'search2=255.255.255.0',
+                    'columns=Name,UserName,Type,InventoryDate',
+                    'jumpto=network',
+                ]
+            ) . '"]'
         );
         $this->assertNotQuery('td a[href="/console/network/showidentified/?subnet=192.0.2.0&mask=255.255.255.0"]');
         $this->assertNotQuery('td a[href="/console/network/showunknown/?subnet=192.0.2.0&mask=255.255.255.0"]');
