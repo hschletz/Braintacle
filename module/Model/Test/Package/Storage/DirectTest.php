@@ -266,19 +266,20 @@ class DirectTest extends \Model\Test\AbstractTest
 
     public function writeContentProvider()
     {
-        return array(
-            array(0, 10, 1, true), // Empty file, ignore maxFragmentSize
-            array(0, 10, 1, false),
-            array(1025, 0, 1, true), // Split disabled
-            array(1025, 0, 1, false),
-            array(1024, 1, 1, true), // Filesize <= maxFragmentSize (kB)
-            array(1024, 1, 1, false),
-            array(1025, 1, 2, false), // Split
-            array(1025, 1, 2, false),
-            array(2047, 1, 2, false),
-            array(2048, 1, 2, false),
-            array(2049, 1, 3, true),
-        );
+        return [
+            [0, 10, 1, true], // Empty file, ignore maxFragmentSize
+            [0, 10, 1, false],
+            [1025, 0, 1, true], // Split disabled
+            [1025, 0, 1, false],
+            [1025, null, 1, false], // NULL and 0 should be equivalent
+            [1024, 1, 1, true], // Filesize <= maxFragmentSize (kB]
+            [1024, 1, 1, false],
+            [1025, 1, 2, false], // Split
+            [1025, 1, 2, false],
+            [2047, 1, 2, false],
+            [2048, 1, 2, false],
+            [2049, 1, 3, true],
+        ];
     }
 
    /**

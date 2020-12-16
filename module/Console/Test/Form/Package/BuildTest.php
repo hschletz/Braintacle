@@ -93,6 +93,8 @@ class BuildTest extends \Console\Test\AbstractFormTest
         );
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
+        $data = $this->_form->getData();
+        $this->assertNull($data['MaxFragmentSize']);
     }
 
     public function testInputFilterStringTrim()
@@ -149,7 +151,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
         $this->assertTrue($this->_form->isValid());
         $data = $this->_form->getData();
         $this->assertSame('', $data['Comment']);
-        $this->assertSame('', $data['MaxFragmentSize']);
+        $this->assertNull($data['MaxFragmentSize']);
         $this->assertSame('', $data['WarnMessage']);
         $this->assertSame('', $data['WarnCountdown']);
         $this->assertSame('', $data['PostInstMessage']);

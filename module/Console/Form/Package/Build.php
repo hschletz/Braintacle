@@ -154,8 +154,14 @@ class Build extends \Console\Form\Form
             array(
                 'name' => 'MaxFragmentSize',
                 'required' => false,
-                'filters' => array($integerFilter),
-                'validators' => array($integerValidator),
+                'filters' => [
+                    $integerFilter,
+                    [
+                        'name' => 'ToNull',
+                        'options' => [\Zend\Filter\ToNull::TYPE_STRING],
+                    ]
+                ],
+                'validators' => [$integerValidator],
             )
         );
 

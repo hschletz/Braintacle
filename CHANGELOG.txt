@@ -25,6 +25,8 @@ Fixed bugs:
 - Console: Fixed counting of inventoried clients in network listing when clients
   have more than 1 interface in the same network.
 
+- Console: Fixed warning in package builder with empty fragment size on PHP 7.1+.
+
 Misc:
 
 - Server: Backported changes from version 2.8.
