@@ -47,6 +47,13 @@ networks:
     description: ""
     hardware_id: 1
   -
+    # Duplicate of above. Should be counted only once because interfaces belong to the same client.
+    macaddr: "00:00:5E:00:53:02"
+    ipsubnet: "192.0.2.0"
+    ipmask: "255.255.255.128"
+    description: ""
+    hardware_id: 1
+  -
     # ignored because it's not on a network
     macaddr: "00:00:5E:00:53:07"
     ipsubnet: "0.0.0.0"

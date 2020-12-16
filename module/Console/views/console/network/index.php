@@ -150,6 +150,7 @@ $renderCallbacks = array(
                         'search2' => $subnet['Mask'],
                         'columns' => 'Name,UserName,Type,InventoryDate',
                         'jumpto' => 'network',
+                        'distinct' => null,
                     )
                 ),
             ),

@@ -73,7 +73,7 @@ class SubnetManager
             SELECT
                 networks.ipsubnet AS netid,
                 networks.ipmask AS mask,
-                COUNT(networks.ipmask) AS num_inventoried,
+                COUNT(DISTINCT networks.hardware_id) AS num_inventoried,
                 (SELECT COUNT(mac) FROM netmap WHERE
                     netid = networks.ipsubnet AND
                     mask = networks.ipmask AND
@@ -100,7 +100,7 @@ class SubnetManager
             SELECT
                 netmap.netid,
                 netmap.mask,
-                (SELECT COUNT(*) FROM networks WHERE
+                (SELECT COUNT(DISTINCT hardware_id) FROM networks WHERE
                     networks.ipsubnet = netmap.netid AND
                     networks.ipmask = netmap.mask AND
                     networks.description NOT LIKE '%PPP%'

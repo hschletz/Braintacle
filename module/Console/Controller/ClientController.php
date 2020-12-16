@@ -195,7 +195,9 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
             $filter,
             $search,
             $operator,
-            $invert
+            $invert,
+            true,
+            $params->fromQuery('distinct') !== null
         );
 
         $jumpto = $params->fromQuery('jumpto');

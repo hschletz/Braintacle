@@ -138,6 +138,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                     'search2=255.255.255.0',
                     'columns=Name,UserName,Type,InventoryDate',
                     'jumpto=network',
+                    'distinct=',
                 ]
             ) . '"]'
         );

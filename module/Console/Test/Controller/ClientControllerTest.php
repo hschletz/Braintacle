@@ -191,7 +191,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                                  null,
                                  null,
                                  null,
-                                 null
+                                 null,
+                                 true,
+                                 false
                              )
                              ->willReturn($this->_sampleClients);
         $this->dispatch('/console/client/index/');
@@ -219,7 +221,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                                  null,
                                  null,
                                  null,
-                                 null
+                                 null,
+                                 true,
+                                 false
                              )
                              ->willReturn($this->_sampleClients);
         $this->dispatch('/console/client/index/?columns=Name,InventoryDate');
@@ -242,7 +246,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                                  null,
                                  null,
                                  null,
-                                 null
+                                 null,
+                                 true,
+                                 false
                              )
                              ->willReturn($sampleClients);
         $this->dispatch('/console/client/index/?columns=OsName');
@@ -296,7 +302,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                                  'PackageError',
                                  'packageName',
                                  null,
-                                 null
+                                 null,
+                                 true,
+                                 false
                              )
                              ->willReturn($this->_sampleClients);
         $this->dispatch('/console/client/index/?filter=PackageError&search=packageName');
@@ -318,10 +326,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                                  $this->_defaultColumns,
                                  'InventoryDate',
                                  'desc',
-                                 array('NetworkInterface.Subnet', 'NetworkInterface.Netmask'),
-                                 array('192.0.2.0', '255.255.255.0'),
-                                 array(null, null),
-                                 array(null, null)
+                                 ['NetworkInterface.Subnet', 'NetworkInterface.Netmask'],
+                                 ['192.0.2.0', '255.255.255.0'],
+                                 [null, null],
+                                 [null, null],
+                                 true,
+                                 false
                              )
                              ->willReturn($this->_sampleClients);
         $this->dispatch(
@@ -350,7 +360,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                                  'Software',
                                  "\xc2\x99", // Incorrect representation of TM symbol
                                  null,
-                                 null
+                                 null,
+                                 true,
+                                 false
                              )
                              ->willReturn($this->_sampleClients);
         $this->dispatch('/console/client/index/?filter=Software&search=%C2%99');
@@ -359,6 +371,29 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             '//p[@class="textcenter"]',
             "\n2 Clients, auf denen die Software '\xe2\x84\xa2' installiert ist\n"
         ); // Corrected representation of TM symbol
+    }
+
+    public function testIndexActionWithBuiltinDistinctFilter()
+    {
+        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
+        $form->expects($this->never())
+             ->method('setData');
+        $this->_clientManager->expects($this->once())
+                             ->method('getClients')
+                             ->with(
+                                 $this->_defaultColumns,
+                                 'InventoryDate',
+                                 'desc',
+                                 'Software',
+                                 'name',
+                                 null,
+                                 null,
+                                 true,
+                                 true
+                             )
+                             ->willReturn($this->_sampleClients);
+        $this->dispatch('/console/client/index/?filter=Software&search=name&distinct=');
+        $this->assertResponseStatusCode(200);
     }
 
     public function testIndexActionWithCustomEqualitySearchOnDefaultColumn()
@@ -389,7 +424,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                                  'Name',
                                  'test',
                                  'eq',
-                                 '1'
+                                 '1',
+                                 true,
+                                 false
                              )
                              ->willReturn($this->_sampleClients);
         $query = 'filter=Name&search=test&operator=eq&invert=1';
@@ -446,7 +483,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                                  'InventoryDate',
                                  $date,
                                  'eq',
-                                 '1'
+                                 '1',
+                                 true,
+                                 false
                              )
                              ->willReturn($this->_sampleClients);
         $query = 'filter=InventoryDate&search=2014-05-12&operator=eq&invert=1';
@@ -486,7 +525,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                                  'CpuType',
                                  'value',
                                  'eq',
-                                 '0'
+                                 '0',
+                                 true,
+                                 false
                              )
                              ->willReturn(array());
         $query = 'filter=CpuType&search=value&operator=eq&invert=0';
@@ -523,7 +564,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                                  'CpuType',
                                  'value',
                                  'ne',
-                                 '0'
+                                 '0',
+                                 true,
+                                 false
                              )
                              ->willReturn(array());
         $query = 'filter=CpuType&search=value&operator=ne&invert=0';
@@ -560,7 +603,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                                  'CpuType',
                                  'value',
                                  'eq',
-                                 '1'
+                                 '1',
+                                 true,
+                                 false
                              )
                              ->willReturn(array());
         $query = 'filter=CpuType&search=value&operator=eq&invert=1';
@@ -596,7 +641,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                                  'Registry.value',
                                  'test',
                                  'like',
-                                 '0'
+                                 '0',
+                                 true,
+                                 false
                              )
                              ->willReturn($this->_sampleClients);
         $query = 'filter=Registry.value&search=test&operator=like&invert=0';
@@ -633,7 +680,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                                  'CustomFields.customField',
                                  'test',
                                  'like',
-                                 '0'
+                                 '0',
+                                 true,
+                                 false
                              )
                              ->willReturn($this->_sampleClients);
         $query = 'filter=CustomFields.customField&search=test&operator=like&invert=0';
@@ -676,7 +725,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                                  'CustomFields.customField',
                                  'test',
                                  'like',
-                                 '0'
+                                 '0',
+                                 true,
+                                 false
                              )
                              ->willReturn($sampleClients);
         $query = 'filter=CustomFields.customField&search=test&operator=like&invert=0';
@@ -715,7 +766,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                                  'CustomFields.TAG',
                                  'test',
                                  'like',
-                                 '0'
+                                 '0',
+                                 true,
+                                 false
                              )
                              ->willReturn($this->_sampleClients);
         $query = 'filter=CustomFields.TAG&search=test&operator=like&invert=0';
