@@ -332,7 +332,9 @@ informational and not evaluated:
                 <optional>
                     <ref name="ETIME" /><!-- obsolete -->
                 </optional>
-                <ref name="IPADDR" />
+                <optional>
+                    <ref name="IPADDR" />
+                </optional>
                 <optional>
                     <ref name="LASTCOME" braintacle:format="yyyy-MM-dd HH:mm:ss" /><!-- UTC -->
                 </optional>
@@ -348,7 +350,9 @@ informational and not evaluated:
                     <ref name="OSCOMMENTS" />
                 </optional>
                 <ref name="OSNAME" />
-                <ref name="OSVERSION" />
+                <optional>
+                    <ref name="OSVERSION" />
+                </optional>
                 <optional>
                     <ref name="PROCESSORN" />
                 </optional>
@@ -504,14 +508,18 @@ informational and not evaluated:
                 <optional>
                     <ref name="DRIVER" /><!-- not available in database -->
                 </optional>
-                <ref name="IPADDRESS" />
+                <optional>
+                    <ref name="IPADDRESS" />
+                </optional>
                 <optional>
                     <ref name="IPDHCP" />
                 </optional>
                 <optional>
                     <ref name="IPGATEWAY" />
                 </optional>
-                <ref name="IPMASK" />
+                <optional>
+                    <ref name="IPMASK" />
+                </optional>
                 <optional>
                     <ref name="IPSUBNET" />
                 </optional>
