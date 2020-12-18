@@ -62,10 +62,6 @@ class Export
         if ($validate) {
             ini_set('display_errors', true); // Print reason for validation failure
             ini_set('log_errors', false); // Prevent duplicate message in case of validation failure
-            if (extension_loaded('xdebug')) {
-                // Prevent printing backtraces on validation errors
-                xdebug_disable();
-            }
         }
 
         $clients = $this->_clientManager->getClients(null, 'IdString');
