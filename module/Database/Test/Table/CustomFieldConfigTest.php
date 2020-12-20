@@ -35,32 +35,45 @@ class CustomFieldConfigTest extends AbstractTest
     {
         parent::setUpBeforeClass();
         static::$_nada = static::$serviceManager->get('Database\Nada');
-
-        // Add columns to CustomFields table, matching config from fixture
-        static::$serviceManager->get('Database\Table\CustomFields')->setSchema(true);
-        $fields = static::$_nada->getTable('accountinfo');
-        $fields->addColumn('fields_3', Column::TYPE_VARCHAR, 255);
-        $fields->addColumn('fields_4', Column::TYPE_INTEGER, 32);
-        $fields->addColumn('fields_5', Column::TYPE_FLOAT);
-        $fields->addColumn('fields_6', Column::TYPE_CLOB);
-        $fields->addColumn('fields_7', Column::TYPE_DATE);
-        $fields->addColumn('fields_8', Column::TYPE_VARCHAR, 255);
-        $fields->addColumn('fields_9', Column::TYPE_VARCHAR, 255);
     }
 
-    public static function tearDownAfterClass()
+    public function setUp(): void
     {
-        // Drop columns created for this test
-        $fields = static::$_nada->getTable('accountinfo');
-        $fields->dropColumn('fields_3');
-        $fields->dropColumn('fields_4');
-        $fields->dropColumn('fields_5');
-        $fields->dropColumn('fields_6');
-        $fields->dropColumn('fields_7');
-        $fields->dropColumn('fields_8');
-        $fields->dropColumn('fields_9');
+        // Reset columns from CustomFields table. This requires the
+        // CustomFieldConfig table to be truncated first because
+        // CustomFields::setSchema() would not drop any columns with a matching
+        // record in CustomFieldConfig.
+        static::$_table->delete(true);
+        $customFields = static::$serviceManager->get('Database\Table\CustomFields');
+        $customFields->setSchema(true);
 
-        parent::tearDownAfterClass();
+        // Create the columns matching the CustomFieldConfig fixture.
+        $table = static::$_nada->getTable($customFields->getTable());
+        $table->addColumn('fields_3', Column::TYPE_VARCHAR, 255);
+        $table->addColumn('fields_4', Column::TYPE_INTEGER, 32);
+        $table->addColumn('fields_5', Column::TYPE_FLOAT);
+        $table->addColumn('fields_6', Column::TYPE_CLOB);
+        $table->addColumn('fields_7', Column::TYPE_DATE);
+        $table->addColumn('fields_8', Column::TYPE_VARCHAR, 255);
+        $table->addColumn('fields_9', Column::TYPE_VARCHAR, 255);
+
+        // This will populate CustomFieldConfig with the fixture.
+        parent::setUp();
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        // Drop columns created for this test
+        $customFields = static::$_nada->getTable('accountinfo');
+        $customFields->dropColumn('fields_3');
+        $customFields->dropColumn('fields_4');
+        $customFields->dropColumn('fields_5');
+        $customFields->dropColumn('fields_6');
+        $customFields->dropColumn('fields_7');
+        $customFields->dropColumn('fields_8');
+        $customFields->dropColumn('fields_9');
     }
 
     public function testGetFields()

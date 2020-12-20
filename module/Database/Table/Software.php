@@ -61,11 +61,16 @@ class Software extends \Database\AbstractTable
     public function setSchema($prune = false)
     {
         // Reimplementation to provide a view
+
+        // Create/update softwareRaw table first because this view depends on it.
+        $softwareRaw = $this->_serviceLocator->get('Database\Table\SoftwareRaw');
+        $softwareRaw->setSchema($prune);
+
         $logger = $this->_serviceLocator->get('Library\Logger');
         $database = $this->_serviceLocator->get('Database\Nada');
         if (!in_array('software_installations', $database->getViewNames())) {
             $logger->info("Creating view 'software_installations'");
-            $sql = $this->_serviceLocator->get('Database\Table\SoftwareRaw')->getSql();
+            $sql = $softwareRaw->getSql();
             $select = $sql->select();
             $select->columns(
                 [
