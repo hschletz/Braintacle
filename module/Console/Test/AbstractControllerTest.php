@@ -31,7 +31,7 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
     /**
      * Set up application config
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

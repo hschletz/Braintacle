@@ -29,7 +29,7 @@ class ImportTest extends AbstractControllerTest
      */
     protected $_clientManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->_clientManager = $this->createMock('Model\Client\ClientManager');

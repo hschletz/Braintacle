@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for Library\Random
+ * Tests for the Library\HttpClient service
  *
  * Copyright (C) 2011-2020 Holger Schletz <holger.schletz@web.de>
  *
@@ -21,27 +21,19 @@
 
 namespace Library\Test;
 
-class RandomTest extends \PHPUnit\Framework\TestCase
+class HttpClientServiceTest extends \PHPUnit\Framework\TestCase
 {
-    public function getIntegerProvider()
+    public function testService()
     {
-        return array(
-            array(true),
-            array(false),
-        );
-    }
+        $application = \Library\Application::init('Library');
+        $serviceManager = $application->getServiceManager();
 
-    /**
-     * @dataProvider getIntegerProvider
-     */
-    public function testGetInteger($strong)
-    {
-        $random = new \Library\Random;
-        for ($i = 0; $i < 20; $i++) {
-            $value = $random->getInteger(0, 5, $strong);
-            $this->assertGreaterThanOrEqual(0, $value);
-            $this->assertLessThanOrEqual(5, $value);
-        }
-        $this->assertIsInt($value);
+        // Service must not be shared so that a different result is returned
+        // each time.
+        $httpClient1 = $serviceManager->get('Library\HttpClient');
+        $httpClient2 = $serviceManager->get('Library\HttpClient');
+        $this->assertInstanceOf(\Zend\Http\Client::class, $httpClient1);
+        $this->assertInstanceOf(\Zend\Http\Client::class, $httpClient2);
+        $this->assertNotSame($httpClient1, $httpClient2);
     }
 }

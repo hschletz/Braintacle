@@ -23,7 +23,7 @@ namespace Database\Test\Table;
 
 class GroupInfoTest extends AbstractTest
 {
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         // GroupInfo initialization depends on Config table
         static::$serviceManager->get('Database\Table\Config')->setSchema(true);

@@ -52,7 +52,7 @@ abstract class AbstractFormTest extends \PHPUnit\Framework\TestCase
      */
     protected $_form;
 
-    public function setUp()
+    public function setUp(): void
     {
         $translator = $this->createMock('\Zend\Validator\Translator\TranslatorInterface');
         $translator->method('translate')->willReturnCallback(array($this, 'translatorMock'));
@@ -62,7 +62,7 @@ abstract class AbstractFormTest extends \PHPUnit\Framework\TestCase
         $this->_form = $this->_getForm();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         \Zend\Validator\AbstractValidator::setDefaultTranslator($this->_defaultTranslatorBackup);
     }

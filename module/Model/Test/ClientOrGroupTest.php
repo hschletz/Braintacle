@@ -153,18 +153,6 @@ class ClientOrGroupTest extends AbstractTest
         $model['Id'] = $id;
 
         $this->assertSame($success, $model->lock());
-
-        // Reuse $_currentTimestamp before it gets overwritten by _loadDataSet()
-        $expire = \PHPUnit\Framework\Assert::readAttribute($model, '_lockTimeout');
-        if ($success) {
-            $this->assertThat(
-                $expire->getTimestamp(),
-                $this->equalTo($this->_currentTimestamp->getTimestamp() + $timeout, 1) // fuzzy match
-            );
-        } else {
-            $this->assertNull($expire);
-        }
-
         $this->assertLocksTableEquals($dataSetName);
     }
 
@@ -450,7 +438,6 @@ class ClientOrGroupTest extends AbstractTest
         $model['Id'] = $id;
 
         $this->assertSame($value, $model->getConfig($option));
-        $this->assertSame($value, \PHPUnit\Framework\Assert::readAttribute($model, '_configCache')[$option]);
     }
 
     public function testGetConfigCached()
@@ -520,8 +507,6 @@ class ClientOrGroupTest extends AbstractTest
                 'WHERE hardware_id >= 10 ORDER BY hardware_id, name, ivalue'
             )
         );
-
-        $this->assertSame($normalizedValue, \PHPUnit\Framework\Assert::readAttribute($model, '_configCache')[$option]);
     }
 
     public function testSetConfigUnchanged()
@@ -551,8 +536,6 @@ class ClientOrGroupTest extends AbstractTest
         $model['Id'] = 10;
 
         $model->setConfig('inventoryInterval', '23');
-
-        $this->assertSame(23, \PHPUnit\Framework\Assert::readAttribute($model, '_configCache')['inventoryInterval']);
     }
 
     public function testSetConfigRollbackOnException()

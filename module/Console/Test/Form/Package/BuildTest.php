@@ -511,18 +511,18 @@ class BuildTest extends \Console\Test\AbstractFormTest
     {
         $view = $this->_createView();
         $output = $this->_form->render($view);
-        $this->assertContains('</form>', $output);
+        $this->assertStringContainsString('</form>', $output);
 
         $headScript = $view->headScript()->toString();
-        $this->assertContains(
+        $this->assertStringContainsString(
             'var actionParamLabels = {"launch":"Befehlszeile","execute":"Befehlszeile","store":"Zielpfad"};',
             $headScript
         );
-        $this->assertContains('function changeParam()', $headScript);
-        $this->assertContains('function toggleWarn()', $headScript);
+        $this->assertStringContainsString('function changeParam()', $headScript);
+        $this->assertStringContainsString('function toggleWarn()', $headScript);
 
         $bodyOnLoad = $view->placeholder('BodyOnLoad');
-        $this->assertContains('toggleWarn()', $bodyOnLoad);
-        $this->assertContains('changeParam()', $bodyOnLoad);
+        $this->assertStringContainsString('toggleWarn()', $bodyOnLoad);
+        $this->assertStringContainsString('changeParam()', $bodyOnLoad);
     }
 }

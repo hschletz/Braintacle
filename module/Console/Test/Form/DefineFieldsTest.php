@@ -34,7 +34,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
      */
     protected $_customFieldManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $fields = array(
             'TAG' => 'text', // should be ignored

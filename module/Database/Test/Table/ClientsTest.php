@@ -23,7 +23,7 @@ namespace Database\Test\Table;
 
 class ClientsTest extends AbstractTest
 {
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         // These tables must exist before the view can be created
         static::$serviceManager->get('Database\Table\ClientsAndGroups')->setSchema(true);

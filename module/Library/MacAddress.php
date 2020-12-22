@@ -101,6 +101,16 @@ class MacAddress
     }
 
     /**
+     * Get the global vendor database.
+     *
+     * @return array
+     */
+    public static function getVendorDatabase(): array
+    {
+        return static::$_vendorList;
+    }
+
+    /**
      * Load vendor database from a file
      *
      * @param string $fileName

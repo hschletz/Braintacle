@@ -34,7 +34,7 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
      */
     protected $_groupManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_groupManager = $this->createMock('Model\Group\GroupManager');
         parent::setUp();

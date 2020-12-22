@@ -60,7 +60,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
         'gt' => '>',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $resultSet = new \Zend\Db\ResultSet\ResultSet();
         $resultSet->initialize(array(array('Name' => 'RegValue')));

@@ -17,3 +17,6 @@ doxygen/dependencies.tag
 # generated and managed by composer
 vendor/
 public/components/
+
+# generated and managed by PHPUnit
+.phpunit.result.cache

@@ -47,7 +47,7 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
      */
     public static $serviceManager;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         foreach (static::$_tables as $table) {
             static::$serviceManager->get("Database\Table\\$table")->setSchema(true);
@@ -192,6 +192,6 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
      */
     public function testInterface()
     {
-        $this->assertInternalType('object', $this->_getModel());
+        $this->assertIsObject($this->_getModel());
     }
 }

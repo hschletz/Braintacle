@@ -32,7 +32,7 @@ class LicensesControllerTest extends \Console\Test\AbstractControllerTest
      */
     protected $_softwareManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

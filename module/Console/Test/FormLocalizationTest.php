@@ -32,7 +32,7 @@ class FormLocalizationTest extends \PHPUnit\Framework\TestCase
      */
     protected $_form;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_form = new \Console\Form\Form;
     }

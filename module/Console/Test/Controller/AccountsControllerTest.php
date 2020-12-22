@@ -45,7 +45,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
     protected $_formAccountEdit;
 
     /** {@inheritdoc} */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -253,7 +253,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         $this->_operatorManager->expects($this->never())->method('deleteOperator');
         $this->dispatch('/console/accounts/delete/?id=testId');
         $this->assertResponseStatusCode(200);
-        $this->assertContains(
+        $this->assertStringContainsString(
             "Account 'testId' wird dauerhaft gelöscht. Fortfahren?",
             $this->getResponse()->getContent()
         );

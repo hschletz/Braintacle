@@ -60,9 +60,9 @@
     },
     "require-dev": {
         "hschletz/doxygen-phpdoc": "^1.0",
+        "kornrunner/dbunit": "^6.0",
         "mikey179/vfsstream": "*",
-        "phpunit/dbunit": "*",
-        "phpunit/phpunit": "^7",
+        "phpunit/phpunit": "^8",
         "sebastian/peek-and-poke": "1.0.*-dev",
         "squizlabs/php_codesniffer": "^3.5",
         "symfony/process": "^5.2",

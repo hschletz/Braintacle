@@ -34,7 +34,7 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
      */
     protected $_customFieldManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $this->_customFieldManager->expects($this->once())
@@ -153,7 +153,7 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
         $this->_form->setData(array('Fields' => array('Integer' => ' 1.000 ')));
         $this->assertTrue($this->_form->isValid());
         $value = $this->_form->getData()['Fields']['Integer'];
-        $this->assertInternalType('integer', $value);
+        $this->assertIsInt($value);
         $this->assertEquals(1000, $value);
     }
 
@@ -163,7 +163,7 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
         $this->_form->setData(array('Fields' => array('Integer' => ' 0 ')));
         $this->assertTrue($this->_form->isValid());
         $value = $this->_form->getData()['Fields']['Integer'];
-        $this->assertInternalType('integer', $value);
+        $this->assertIsInt($value);
         $this->assertEquals(0, $value);
     }
 

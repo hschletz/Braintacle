@@ -38,7 +38,7 @@ class AbstractTableTest extends \PHPUnit\Framework\TestCase
      */
     protected $_select;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Set up mock objects for getCol()
 
@@ -53,7 +53,7 @@ class AbstractTableTest extends \PHPUnit\Framework\TestCase
                              ->getMockForAbstractClass();
         $this->_table->method('getSql')->willReturn($sql);
 
-        return parent::setUp();
+        parent::setUp();
     }
 
     public function testGetHydrator()

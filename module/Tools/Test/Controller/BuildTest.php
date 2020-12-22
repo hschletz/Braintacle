@@ -37,7 +37,7 @@ class BuildTest extends AbstractControllerTest
      */
     protected $_packageManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

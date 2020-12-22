@@ -34,7 +34,7 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
      */
     protected $_deviceManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_deviceManager = $this->createMock('Model\Network\DeviceManager');
         $this->_deviceManager->expects($this->once())

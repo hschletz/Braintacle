@@ -28,13 +28,13 @@ class TranslatorTest extends \PHPUnit\Framework\TestCase
 {
     protected static $_defaultLocale;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         // Preserve global state
         static::$_defaultLocale = \Locale::getDefault();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         // Reset after every test to avoid interference
         \Locale::setDefault(static::$_defaultLocale);

@@ -37,7 +37,13 @@ class DatabaseTest extends AbstractControllerTest
      */
     protected $_logger;
 
-    public function setUp()
+    /**
+     * Log writer mock
+     * @var \Zend\Log\Writer\AbstractWriter
+     */
+    protected $_writer;
+
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -46,43 +52,35 @@ class DatabaseTest extends AbstractControllerTest
 
         $this->_logger = $this->createMock('Zend\Log\Logger');
         static::$serviceManager->setService('Library\Logger', $this->_logger);
+
+        $this->_writer = $this->createMock(\Zend\Log\Writer\AbstractWriter::class);
+        static::$serviceManager->setService('Library\Log\Writer\StdErr', $this->_writer);
     }
 
-    public function testLogger()
+    public function testDefaultOptions()
     {
-        $this->_logger->expects($this->once())->method('addWriter')->with(
-            $this->callback(
-                function ($writer) {
-                    if (!$writer instanceof \Zend\Log\Writer\Stream) {
-                        return false;
-                    };
-                    $stream = \PHPUnit\Framework\Assert::readAttribute($writer, 'stream');
-                    if (!is_resource($stream) or get_resource_type($stream) != 'stream') {
-                        return false;
-                    }
-                    if (stream_get_meta_data($stream)['uri'] != 'php://stderr') {
-                        return false;
-                    }
-
-                    $filter = \PHPUnit\Framework\Assert::readAttribute($writer, 'filters')[0];
-                    if (!$filter instanceof \Zend\Log\Filter\Priority) {
-                        return false;
-                    }
-                    $priority = \PHPUnit\Framework\Assert::readAttribute($filter, 'priority');
-                    if ($priority !== \Zend\Log\Logger::DEBUG) {
-                        return false;
-                    }
-                    $operator = \PHPUnit\Framework\Assert::readAttribute($filter, 'operator');
-                    if ($operator != '<=') {
-                        return false;
-                    }
-
-                    return true;
-                }
-            )
-        );
+        $this->_route->method('getMatchedParam')
+                     ->withConsecutive(
+                         ['loglevel', \Zend\Log\Logger::INFO],
+                         ['prune', null],
+                         ['p', null]
+                     )->willReturnOnConsecutiveCalls(\Zend\Log\Logger::INFO, false, false);
 
         $this->_schemaManager->expects($this->once())->method('updateAll')->with(false);
+
+        $this->assertEquals(0, $this->_dispatch());
+    }
+
+    public function testLoggerSetup()
+    {
+        $this->_writer->expects($this->once())
+                      ->method('addFilter')
+                      ->with('priority', ['priority' => \Zend\Log\Logger::DEBUG]);
+        $this->_writer->expects($this->once())
+                      ->method('setFormatter')
+                      ->with('simple', ['format' => '%priorityName%: %message%']);
+
+        $this->_logger->expects($this->once())->method('addWriter')->with($this->_writer);
 
         $this->_route->expects($this->exactly(3))
                      ->method('getMatchedParam')

@@ -27,7 +27,7 @@ class FormTest extends \Library\Test\View\Helper\AbstractTest
     protected $_filesBackup;
     protected $_serverBackup;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->_postBackup = $_POST;
@@ -35,7 +35,7 @@ class FormTest extends \Library\Test\View\Helper\AbstractTest
         $this->_serverBackup = $_SERVER;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $_POST = $this->_postBackup;
         $_FILES = $this->_filesBackup;

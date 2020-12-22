@@ -874,21 +874,18 @@ class ClientManager
      * Import client
      *
      * @param string $data Inventory data (compressed or uncompressed XML)
-     * @param string|\Zend\Http\Client\Adapter\AdapterInterface $adapter HTTP adapter
      * @throws \RuntimeException if server responds with error
      */
-    public function importClient($data, $adapter = 'Zend\Http\Client\Adapter\Socket')
+    public function importClient($data)
     {
         $uri = $this->_serviceLocator->get('Model\Config')->communicationServerUri;
-        $httpClient = new \Zend\Http\Client(
-            $uri,
-            array(
-                'adapter' => $adapter,
-                'strictredirects' => true, // required for POST requests
-                'useragent' => 'Braintacle_local_upload', // Substring 'local' required for correct server operation
-            )
-        );
+        $httpClient = $this->_serviceLocator->get('Library\HttpClient');
+        $httpClient->setOptions([
+            'strictredirects' => true, // required for POST requests
+            'useragent' => 'Braintacle_local_upload', // Substring 'local' required for correct server operation
+        ]);
         $httpClient->setMethod('POST')
+                   ->setUri($uri)
                    ->setHeaders(array('Content-Type' => 'application/x-compress'))
                    ->setRawBody($data);
         $response = $httpClient->send();

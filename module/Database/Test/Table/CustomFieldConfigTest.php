@@ -31,7 +31,7 @@ class CustomFieldConfigTest extends AbstractTest
 {
     protected static $_nada;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         static::$_nada = static::$serviceManager->get('Database\Nada');

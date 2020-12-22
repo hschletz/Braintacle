@@ -76,7 +76,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
         ),
     );
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_escapeHtml = $this->createMock('Zend\View\Helper\EscapeHtml');
         $this->_htmlElement = $this->createMock('Library\View\Helper\HtmlElement');

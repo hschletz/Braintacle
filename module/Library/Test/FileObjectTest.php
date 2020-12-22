@@ -35,7 +35,7 @@ class FileObjectTest extends \PHPUnit\Framework\TestCase
      */
     protected $_root;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_root = vfsStream::setup('root');
     }
@@ -47,7 +47,7 @@ class FileObjectTest extends \PHPUnit\Framework\TestCase
         $this->assertFileExists($url);
         $this->assertEquals($url, $fileObject->getPathname()); // Test parent constructor invocation
 
-        $file = \PHPUnit\Framework\Assert::readAttribute($fileObject, '_file');
+        $file = $fileObject->getStreamResource();
         $metadata = stream_get_meta_data($file);
         $this->assertEquals($url, $metadata['uri']);
         $this->assertEquals('w', $metadata['mode']);

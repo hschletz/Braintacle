@@ -32,7 +32,7 @@ class FileReadableTest extends \PHPUnit\Framework\TestCase
      */
     protected $_root;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_root = vfsStream::setup('root');
     }

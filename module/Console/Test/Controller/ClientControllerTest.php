@@ -103,7 +103,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         'InventoryDate'
     );
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

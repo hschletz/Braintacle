@@ -31,7 +31,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
     protected $_view;
     protected $_authService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_authService = $this->createMock('Model\Operator\AuthenticationService');
 

@@ -32,7 +32,7 @@ class DecodeTest extends AbstractControllerTest
      */
     protected $_inventoryDecode;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->_inventoryDecode = $this->createMock('Protocol\Filter\InventoryDecode');

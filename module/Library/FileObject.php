@@ -92,6 +92,16 @@ class FileObject extends \SplFileInfo implements \Iterator
     }
 
     /**
+     * Return underlying stream resource.
+     *
+     * @return resource
+     */
+    public function getStreamResource()
+    {
+        return $this->_file;
+    }
+
+    /**
      * Set flags
      *
      * @param integer $flags Any of the \SplFileObject constants

@@ -41,7 +41,7 @@ abstract class AbstractControllerTest extends \PHPUnit\Framework\TestCase
      */
     protected $_console;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

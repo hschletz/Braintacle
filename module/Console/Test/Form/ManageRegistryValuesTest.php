@@ -57,7 +57,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
     protected $_name1 = 'VGVzdDE=';
     protected $_name2 = 'VGVzdDI=';
 
-    public function setUp()
+    public function setUp(): void
     {
         $resultSet = new \Zend\Db\ResultSet\ResultSet;
         $resultSet->initialize($this->_values);

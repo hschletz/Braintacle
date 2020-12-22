@@ -59,7 +59,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     /**
      * Set up mock objects
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -489,7 +489,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_customFieldManager->expects($this->never())->method('deleteField');
         $this->dispatch('/console/preferences/deletefield/?name=Name');
         $this->assertResponseStatusCode(200);
-        $this->assertContains("'Name'", $this->getResponse()->getContent());
+        $this->assertStringContainsString("'Name'", $this->getResponse()->getContent());
     }
 
     public function testDeletefieldActionPostNo()
@@ -579,7 +579,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_deviceManager->expects($this->never())->method('deleteType');
         $this->dispatch('/console/preferences/deletedevicetype/?name=test');
         $this->assertResponseStatusCode(200);
-        $this->assertContains("'test'", $this->getResponse()->getContent());
+        $this->assertStringContainsString("'test'", $this->getResponse()->getContent());
     }
 
     public function testDeletedevicetypeActionPostNo()

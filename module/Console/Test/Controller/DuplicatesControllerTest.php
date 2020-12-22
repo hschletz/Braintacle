@@ -38,7 +38,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
      */
     protected $_showDuplicates;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

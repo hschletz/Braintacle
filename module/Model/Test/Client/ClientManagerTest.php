@@ -80,7 +80,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         'Uuid' => 'uuid',
     );
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -93,7 +93,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         static::$_customFields->addColumn('col_date', Column::TYPE_DATE);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         // Drop columns created for this test
         static::$_customFields->dropColumn('col_text');
@@ -1248,33 +1248,31 @@ class ClientManagerTest extends \Model\Test\AbstractTest
 
     public function testImportClientSuccess()
     {
+        $uri = 'http://example.net/server';
         $content = "testUploadFile\nline1\nline2\n";
-        $adapter = $this->getMockBuilder('Zend\Http\Client\Adapter\Test')->setMethods(array('write'))->getMock();
-        $adapter->expects($this->once())
-                ->method('write')
-                ->with(
-                    'POST',
-                    'http://example.net/server',
-                    '1.1',
-                    $this->callback(
-                        function ($headers) {
-                            return (
-                                $headers['User-Agent'] == 'Braintacle_local_upload' and
-                                $headers['Content-Type'] == 'application/x-compress'
-                            );
-                        }
-                    ),
-                    $content
-                );
-        $adapter->setResponse("HTTP/1.1 200 OK\r\n");
+
+        $response = $this->createStub(\Zend\Http\Response::class);
+        $response->method('isSuccess')->willReturn(true);
+
+        $httpClient = $this->createMock(\Zend\Http\Client::class);
+        $httpClient->expects($this->once())->method('setOptions')->with([
+            'strictredirects' => true, // required for POST requests
+            'useragent' => 'Braintacle_local_upload', // Substring 'local' required for correct server operation
+        ])->willReturnSelf();
+        $httpClient->expects($this->once())->method('setMethod')->with('POST')->willReturnSelf();
+        $httpClient->expects($this->once())->method('setUri')->with($uri)->willReturnSelf();
+        $httpClient->expects($this->once())
+                   ->method('setHeaders')
+                   ->with(['Content-Type' => 'application/x-compress'])
+                   ->willReturnSelf();
+        $httpClient->expects($this->once())->method('setRawBody')->with($content)->willReturnSelf();
+        $httpClient->expects($this->once())->method('send')->willReturn($response);
 
         $config = $this->createMock('Model\Config');
-        $config->method('__get')->with('communicationServerUri')->willReturn('http://example.net/server');
+        $config->method('__get')->with('communicationServerUri')->willReturn($uri);
 
-        $model = $this->_getModel(array('Model\Config' => $config));
-        $model->importClient($content, $adapter);
-
-        $this->assertTrue(\PHPUnit\Framework\Assert::readAttribute($adapter, 'config')['strictredirects']);
+        $model = $this->_getModel(['Model\Config' => $config, 'Library\HttpClient' => $httpClient]);
+        $model->importClient($content);
     }
 
     public function testImportClientHttpError()
@@ -1283,14 +1281,24 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $this->expectExceptionMessage(
             "Upload error. Server http://example.net/server responded with error 418: I'm a teapot"
         );
+        
+        $response = $this->createStub(\Zend\Http\Response::class);
+        $response->method('isSuccess')->willReturn(false);
+        $response->method('getStatusCode')->willReturn(418);
+        $response->method('getReasonPhrase')->willReturn("I'm a teapot");
 
-        $adapter = new \Zend\Http\Client\Adapter\Test;
-        $adapter->setResponse("HTTP/1.1 418 I'm a teapot\r\n");
+        $httpClient = $this->createStub(\Zend\Http\Client::class);
+        $httpClient->method('setOptions')->willReturnSelf();
+        $httpClient->method('setMethod')->willReturnSelf();
+        $httpClient->method('setUri')->willReturnSelf();
+        $httpClient->method('setHeaders')->willReturnSelf();
+        $httpClient->method('setRawBody')->willReturnSelf();
+        $httpClient->method('send')->willReturn($response);
 
         $config = $this->createMock('Model\Config');
         $config->method('__get')->with('communicationServerUri')->willReturn('http://example.net/server');
 
-        $model = $this->_getModel(array('Model\Config' => $config));
-        $model->importClient('content', $adapter);
+        $model = $this->_getModel(['Model\Config' => $config, 'Library\HttpClient' => $httpClient]);
+        $model->importClient('content');
     }
 }

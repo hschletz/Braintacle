@@ -34,10 +34,10 @@ class DeleteClientTest extends \Console\Test\AbstractFormTest
      */
     protected $_config;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_config = $this->createMock('Model\Config');
-        return parent::setUp();
+        parent::setUp();
     }
 
     /** {@inheritdoc} */

@@ -53,7 +53,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
     /**
      * Set up mock objects
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -455,7 +455,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_packageManager->expects($this->never())->method('deletePackage');
         $this->dispatch('/console/package/delete/?name=Name');
         $this->assertResponseStatusCode(200);
-        $this->assertContains("'Name'", $this->getResponse()->getContent());
+        $this->assertStringContainsString("'Name'", $this->getResponse()->getContent());
     }
 
     public function testDeleteActionPostNo()

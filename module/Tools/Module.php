@@ -62,7 +62,8 @@ class Module implements
                     'Tools\Controller\Database' => function ($container) {
                         return new Controller\Database(
                             $container->get('Database\SchemaManager'),
-                            $container->get('Library\Logger')
+                            $container->get('Library\Logger'),
+                            $container->get('Library\Log\Writer\StdErr')
                         );
                     },
                     'Tools\Controller\Decode' => function ($container) {

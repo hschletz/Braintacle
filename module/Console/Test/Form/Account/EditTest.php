@@ -28,7 +28,7 @@ class EditTest extends \Console\Test\AbstractFormTest
 {
     protected $_operatorManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_operatorManager = $this->createMock('Model\Operator\OperatorManager');
         $this->_operatorManager->method('getAllIds')->willReturn(array('User1', 'User2'));

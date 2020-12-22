@@ -25,7 +25,7 @@ class ServicesTest extends \PHPUnit\Framework\TestCase
 {
     protected static $_serviceManager;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $application = \Library\Application::init('Protocol');
         static::$_serviceManager = $application->getServiceManager();

@@ -39,7 +39,7 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
     protected $_form;
 
     /** {@inheritdoc} */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

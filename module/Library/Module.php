@@ -81,18 +81,25 @@ class Module implements
                 'delegators' => array(
                     'Zend\Mvc\I18n\Translator' => array('Library\I18n\Translator\DelegatorFactory'),
                 ),
-                'factories' => array(
+                'factories' => [
                     'Library\ArchiveManager' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\HttpClient' => function () {
+                        return new \Zend\Http\Client();
+                    },
                     'Library\I18n\Translator\DelegatorFactory' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\Log\Writer\StdErr' => function () {
+                        return new \Zend\Log\Writer\Stream('php://stderr');
+                    },
                     'Library\Now' => function () {
                         return new \DateTime;
                     },
                     'Library\Random' => 'Zend\ServiceManager\Factory\InvokableFactory',
                     'Library\UserConfig' => 'Library\Service\UserConfigFactory',
-                ),
-                'shared' => array(
+                ],
+                'shared' => [
+                    'Library\HttpClient' => false,
                     'Library\Now' => false,
-                ),
+                ],
             ),
             'translator' => array(
                 'translation_file_patterns' => array(

@@ -42,7 +42,7 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
      */
     protected $_controller;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $module = strtok(get_called_class(), '\\');
         $application = \Library\Application::init($module);

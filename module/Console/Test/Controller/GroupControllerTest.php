@@ -59,7 +59,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     /**
      * Set up mock objects
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

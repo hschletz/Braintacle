@@ -59,7 +59,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
      */
     protected $_session;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

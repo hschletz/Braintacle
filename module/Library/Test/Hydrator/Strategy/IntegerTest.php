@@ -60,7 +60,7 @@ class IntegerTest extends \PHPUnit\Framework\TestCase
     public function testHydrateInvalidDatatype($value)
     {
         $this->expectException('InvalidArgumentException');
-        $this->expectExceptionMessageRegExp('/^Expected integer or string input, got /');
+        $this->expectExceptionMessageMatches('/^Expected integer or string input, got /');
         $strategy = new \Library\Hydrator\Strategy\Integer;
         $strategy->hydrate($value);
     }

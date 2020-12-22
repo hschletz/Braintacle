@@ -40,7 +40,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
      */
     protected $_group;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_client = $this->createMock('Model\Client\Client');
         $this->_group = $this->createMock('Model\Group\Group');
@@ -107,7 +107,6 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
     {
         $this->_form->setClientObject($this->_group);
 
-        $this->assertEquals($this->_group, \PHPUnit\Framework\Assert::readAttribute($this->_form, '_object'));
         $scan = $this->_form->get('Scan');
         $scanThisNetwork = $scan->get('scanThisNetwork');
         $this->assertTrue($scanThisNetwork->getAttribute('disabled'));
@@ -123,7 +122,6 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
 
         $this->_form->setClientObject($this->_client);
 
-        $this->assertEquals($this->_client, \PHPUnit\Framework\Assert::readAttribute($this->_form, '_object'));
         $scan = $this->_form->get('Scan');
         $scanThisNetwork = $scan->get('scanThisNetwork');
         $this->assertTrue($scanThisNetwork->getAttribute('disabled'));
@@ -142,7 +140,6 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
 
         $this->_form->setClientObject($this->_client);
 
-        $this->assertEquals($this->_client, \PHPUnit\Framework\Assert::readAttribute($this->_form, '_object'));
         $scan = $this->_form->get('Scan');
         $scanThisNetwork = $scan->get('scanThisNetwork');
         $this->assertTrue($scanThisNetwork->getAttribute('disabled'));
@@ -164,7 +161,6 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
 
         $this->_form->setClientObject($this->_client);
 
-        $this->assertEquals($this->_client, \PHPUnit\Framework\Assert::readAttribute($this->_form, '_object'));
         $scan = $this->_form->get('Scan');
         $scanThisNetwork = $scan->get('scanThisNetwork');
         $this->assertFalse($scanThisNetwork->getAttribute('disabled'));

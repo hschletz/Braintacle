@@ -29,7 +29,7 @@ class MainMenuTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerT
     /**
      * Set up application config
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->setTraceError(true);
         $this->setApplicationConfig(\Library\Application::getApplicationConfig('Console', false));

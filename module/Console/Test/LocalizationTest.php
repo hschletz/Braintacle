@@ -27,7 +27,7 @@ class LocalizationTest extends \PHPUnit\Framework\TestCase
     protected $localeBackup;
     protected $defaultTranslatorBackup;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Preserve global state
         $this->serverBackup = $_SERVER;
@@ -35,7 +35,7 @@ class LocalizationTest extends \PHPUnit\Framework\TestCase
         $this->defaultTranslatorBackup = \Zend\Validator\AbstractValidator::getDefaultTranslator();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         // Restore global state
         $_SERVER = $this->serverBackup;

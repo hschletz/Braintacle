@@ -69,7 +69,7 @@ EOT;
         ),
     );
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_envBackup = getenv('BRAINTACLE_CONFIG');
 
@@ -77,7 +77,7 @@ EOT;
         $this->_container = $this->createMock('Zend\ServiceManager\ServiceManager');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if ($this->_envBackup === false) {
             putenv('BRAINTACLE_CONFIG');

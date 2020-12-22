@@ -101,7 +101,7 @@ class MacAddressTest extends \PHPUnit\Framework\TestCase
         MacAddress::loadVendorDatabase($input);
 
         // Builtin assertions don't work with GMP objects. Iterate and compare manually.
-        $vendorList = \PHPUnit\Framework\Assert::readAttribute('Library\MacAddress', '_vendorList');
+        $vendorList = MacAddress::getVendorDatabase();
         $this->assertCount(count($expected), $vendorList);
         foreach ($vendorList as $key => $entry) {
             $expectedEntry = $expected[$key];
@@ -120,10 +120,10 @@ class MacAddressTest extends \PHPUnit\Framework\TestCase
     public function testLoadVendorDatabaseFromFile()
     {
         // Clear database first to ensure that data actually gets loaded
-        MacAddress::loadVendorDatabase(array());
+        MacAddress::loadVendorDatabase([]);
         // Pass default database. It should load without errors.
         MacAddress::loadVendorDatabaseFromFile(\Library\Module::getPath('data/MacAddress/manuf'));
-        $this->assertAttributeNotEmpty('_vendorList', 'Library\MacAddress');
+        $this->assertNotEmpty(MacAddress::getVendorDatabase());
     }
 
     public function testToSting()

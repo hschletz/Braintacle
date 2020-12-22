@@ -29,7 +29,7 @@ abstract class AbstractStrategyTest extends \PHPUnit\Framework\TestCase
      */
     protected $_strategy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $class = get_class($this);
         $class = substr($class, strlen('Database\Test\Hydrator\Strategy'), -4);

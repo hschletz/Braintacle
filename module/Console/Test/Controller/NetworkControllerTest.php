@@ -53,7 +53,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     /**
      * Set up mock objects
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -545,8 +545,8 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->_deviceManager->expects($this->never())->method('deleteDevice');
         $this->dispatch('/console/network/delete/?macaddress=00:00:5E:00:53:00');
         $this->assertResponseStatusCode(200);
-        $this->assertContains('host.example.net', $this->getResponse()->getContent());
-        $this->assertContains('00:00:5E:00:53:00', $this->getResponse()->getContent());
+        $this->assertStringContainsString('host.example.net', $this->getResponse()->getContent());
+        $this->assertStringContainsString('00:00:5E:00:53:00', $this->getResponse()->getContent());
     }
 
     public function testDeleteActionPostNo()

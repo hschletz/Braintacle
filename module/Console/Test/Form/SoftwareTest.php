@@ -71,7 +71,6 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
         $form = $this->getMockBuilder($this->_getFormClass())->setMethods(array('createSoftwareFieldset'))->getMock();
         $form->expects($this->once())->method('createSoftwareFieldset')->with($this->_names, false);
         $form->setSoftware($software);
-        $this->assertAttributeEquals($software, '_software', $form);
     }
 
     public function createSoftwareFieldsetProvider()

@@ -44,7 +44,7 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
      */
     protected static $_helperManager;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 

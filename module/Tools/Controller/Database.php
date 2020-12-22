@@ -34,20 +34,31 @@ class Database
 
     /**
      * Logger
-     * @var \Zend\Log\LoggerInterface
+     * @var \Zend\Log\Logger
      */
     protected $_logger;
+
+    /**
+     * Log writer
+     * @var \Zend\Log\Writer\AbstractWriter
+     */
+    protected $_writer;
 
     /**
      * Constructor
      *
      * @param \Database\SchemaManager $schemaManager
-     * @param \Zend\Log\LoggerInterface $logger
+     * @param \Zend\Log\Logger $logger
+     * @param \Zend\Log\Writer\AbstractWriter $writer
      */
-    public function __construct(\Database\SchemaManager $schemaManager, \Zend\Log\LoggerInterface $logger)
-    {
+    public function __construct(
+        \Database\SchemaManager $schemaManager,
+        \Zend\Log\LoggerInterface $logger,
+        \Zend\Log\Writer\AbstractWriter $writer
+    ) {
         $this->_schemaManager = $schemaManager;
         $this->_logger = $logger;
+        $this->_writer = $writer;
     }
 
     /**
@@ -62,10 +73,9 @@ class Database
         $loglevel = $route->getMatchedParam('loglevel', \Zend\Log\Logger::INFO);
         $prune = $route->getMatchedParam('prune') || $route->getMatchedParam('p');
 
-        $writer = new \Zend\Log\Writer\Stream('php://stderr');
-        $writer->addFilter('priority', array('priority' => $loglevel));
-        $writer->setFormatter('simple', array('format' => '%priorityName%: %message%'));
-        $this->_logger->addWriter($writer);
+        $this->_writer->addFilter('priority', ['priority' => $loglevel]);
+        $this->_writer->setFormatter('simple', ['format' => '%priorityName%: %message%']);
+        $this->_logger->addWriter($this->_writer);
 
         $this->_schemaManager->updateAll($prune);
         return 0;

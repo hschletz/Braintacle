@@ -29,7 +29,7 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
      */
     protected $_windowsInstallation;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_windowsInstallation = $this->createMock('Model\Client\WindowsInstallation');
     }
