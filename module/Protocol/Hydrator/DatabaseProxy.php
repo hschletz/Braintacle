@@ -65,7 +65,7 @@ class DatabaseProxy implements \Zend\Hydrator\HydratorInterface
     }
 
     /** {@inheritdoc} */
-    public function extract($object)
+    public function extract(object $object): array
     {
         return array_change_key_case($this->_hydrator->extract($object), CASE_UPPER);
     }

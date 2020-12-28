@@ -40,7 +40,7 @@ class IntegerTest extends \PHPUnit\Framework\TestCase
     public function testHydrate($value, $expected)
     {
         $strategy = new \Library\Hydrator\Strategy\Integer;
-        $this->assertSame($expected, $strategy->hydrate($value));
+        $this->assertSame($expected, $strategy->hydrate($value, null));
     }
 
     public function hydrateInvalidDatatypeProvider()
@@ -62,7 +62,7 @@ class IntegerTest extends \PHPUnit\Framework\TestCase
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessageMatches('/^Expected integer or string input, got /');
         $strategy = new \Library\Hydrator\Strategy\Integer;
-        $strategy->hydrate($value);
+        $strategy->hydrate($value, null);
     }
 
     public function hydrateInvalidContentProvider()
@@ -83,7 +83,7 @@ class IntegerTest extends \PHPUnit\Framework\TestCase
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Non-integer input value: ' . $value);
         $strategy = new \Library\Hydrator\Strategy\Integer;
-        $strategy->hydrate($value);
+        $strategy->hydrate($value, null);
     }
 
     public function testExtract()

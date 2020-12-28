@@ -37,26 +37,27 @@ class GroupInfoTest extends AbstractTest
 
     public function testHydrator()
     {
+        $nada = $this->createStub(\Nada\Database\AbstractDatabase::class);
+        $nada->method('timestampFormatPhp')->willReturn(DATE_ATOM);
+
         $config = $this->createMock('Model\Config');
         $config->expects($this->once())->method('__get')->with('groupCacheExpirationInterval')->willReturn(42);
 
         $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(
-            $this->returnValueMap(
-                array(
-                    array('Database\Nada', $this->createMock('Nada\Database\AbstractDatabase')),
-                    array('Db', $this->createMock('Zend\Db\Adapter\Adapter')),
-                    array('Model\Config', $config),
-                    array('Model\Group\Group', new \Model\Group\Group),
-                )
-            )
+            $this->returnValueMap([
+                ['Database\Nada', $nada],
+                ['Db', $this->createMock('Zend\Db\Adapter\Adapter')],
+                ['Model\Config', $config],
+                ['Model\Group\Group', new \Model\Group\Group],
+            ])
         );
 
         $table = new \Database\Table\GroupInfo($serviceManager);
         $table->initialize();
 
         $hydrator = $table->getHydrator();
-        $this->assertInstanceOf('Zend\Hydrator\ArraySerializable', $hydrator);
+        $this->assertInstanceOf(\Zend\Hydrator\ArraySerializableHydrator::class, $hydrator);
 
         $map = $hydrator->getNamingStrategy();
         $this->assertInstanceOf('Database\Hydrator\NamingStrategy\MapNamingStrategy', $map);

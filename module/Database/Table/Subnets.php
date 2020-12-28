@@ -34,7 +34,7 @@ class Subnets extends \Database\AbstractTable
     {
         $this->table = 'subnet';
 
-        $this->_hydrator = new \Zend\Hydrator\ArraySerializable;
+        $this->_hydrator = new \Zend\Hydrator\ArraySerializableHydrator;
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(

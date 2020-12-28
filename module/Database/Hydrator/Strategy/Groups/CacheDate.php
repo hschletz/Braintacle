@@ -46,7 +46,7 @@ class CacheDate implements \Zend\Hydrator\Strategy\StrategyInterface
     }
 
     /** {@inheritdoc} */
-    public function hydrate($value)
+    public function hydrate($value, ?array $data)
     {
         if ($value == 0) {
             $value = null;
@@ -57,7 +57,7 @@ class CacheDate implements \Zend\Hydrator\Strategy\StrategyInterface
     }
 
     /** {@inheritdoc} */
-    public function extract($value)
+    public function extract($value, ?object $object = null)
     {
         if ($value instanceof \DateTime) {
             $value = $value->getTimestamp() - $this->offset;

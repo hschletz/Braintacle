@@ -27,13 +27,13 @@ namespace Library\Hydrator\Strategy;
 class MacAddress implements \Zend\Hydrator\Strategy\StrategyInterface
 {
     /** {@inheritdoc} */
-    public function hydrate($value)
+    public function hydrate($value, ?array $data)
     {
         return new \Library\MacAddress($value);
     }
 
     /** {@inheritdoc} */
-    public function extract($value)
+    public function extract($value, ?object $object = null)
     {
         return (string) $value;
     }

@@ -50,7 +50,7 @@ abstract class AbstractStrategyTest extends \PHPUnit\Framework\TestCase
      */
     public function testHydrate($value, $expected)
     {
-        $this->assertSame($expected, $this->_strategy->hydrate($value));
+        $this->assertSame($expected, $this->_strategy->hydrate($value, null));
     }
 
     /**

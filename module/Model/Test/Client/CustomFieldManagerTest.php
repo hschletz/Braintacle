@@ -267,7 +267,7 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
         $model->method('getColumnMap')->willReturn(array('TAG' => 'tag', 'Date' => 'fields_2'));
 
         $hydrator = $model->getHydrator();
-        $this->assertInstanceOf('Zend\Hydrator\ArraySerializable', $hydrator);
+        $this->assertInstanceOf(\Zend\Hydrator\ArraySerializableHydrator::class, $hydrator);
 
         $namingStrategy = $hydrator->getNamingStrategy();
         $this->assertInstanceOf('Database\Hydrator\NamingStrategy\MapNamingStrategy', $namingStrategy);

@@ -27,7 +27,7 @@ class MacAddressTest extends \PHPUnit\Framework\TestCase
     {
         $strategy = new \Library\Hydrator\Strategy\MacAddress;
         $address = '00:00:5E:00:53:00';
-        $macAddress = $strategy->hydrate($address);
+        $macAddress = $strategy->hydrate($address, null);
         $this->assertInstanceOf('Library\MacAddress', $macAddress);
         $this->assertEquals($address, $macAddress);
     }

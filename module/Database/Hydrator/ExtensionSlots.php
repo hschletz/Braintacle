@@ -45,7 +45,7 @@ class ExtensionSlots implements \Zend\Hydrator\HydratorInterface
     }
 
     /** {@inheritdoc} */
-    public function extract($object)
+    public function extract(object $object): array
     {
         $data = array();
         $data['name'] = $object['Name'];

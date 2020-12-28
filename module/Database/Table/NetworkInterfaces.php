@@ -34,30 +34,30 @@ class NetworkInterfaces extends \Database\AbstractTable
     {
         $this->table = 'networks';
 
-        $hydratorMap = array(
-                    'description' => 'Description',
-                    'speed' => 'Rate',
-                    'macaddr' => 'MacAddress',
-                    'ipaddress' => 'IpAddress',
-                    'ipmask' => 'Netmask',
-                    'ipgateway' => 'Gateway',
-                    'ipsubnet' => 'Subnet',
-                    'ipdhcp' => 'DhcpServer',
-                    'status' => 'Status',
-                    'type' => 'Type',
-                    'typemib' => 'TypeMib',
-                    'is_blacklisted' => 'IsBlacklisted',
-        );
+        $hydrationMap = [
+            'description' => 'Description',
+            'speed' => 'Rate',
+            'macaddr' => 'MacAddress',
+            'ipaddress' => 'IpAddress',
+            'ipmask' => 'Netmask',
+            'ipgateway' => 'Gateway',
+            'ipsubnet' => 'Subnet',
+            'ipdhcp' => 'DhcpServer',
+            'status' => 'Status',
+            'type' => 'Type',
+            'typemib' => 'TypeMib',
+            'is_blacklisted' => 'IsBlacklisted',
+        ];
         // Don't extract the virtual IsBlacklisted property
-        $extractorMap = array_flip($hydratorMap);
-        unset($extractorMap['IsBlacklisted']);
+        $extractionMap = array_flip($hydrationMap);
+        unset($extractionMap['IsBlacklisted']);
 
-        $this->_hydrator = new \Zend\Hydrator\ArraySerializable;
+        $this->_hydrator = new \Zend\Hydrator\ArraySerializableHydrator();
 
         $this->_hydrator->setNamingStrategy(
-            new \Database\Hydrator\NamingStrategy\MapNamingStrategy($hydratorMap, $extractorMap)
+            new \Database\Hydrator\NamingStrategy\MapNamingStrategy($hydrationMap, $extractionMap)
         );
-        $this->_hydrator->addFilter('whitelist', new \Library\Hydrator\Filter\Whitelist(array_keys($extractorMap)));
+        $this->_hydrator->addFilter('whitelist', new \Library\Hydrator\Filter\Whitelist(array_keys($extractionMap)));
 
         $this->_hydrator->addStrategy('MacAddress', new \Library\Hydrator\Strategy\MacAddress);
         $this->_hydrator->addStrategy('macaddr', new \Library\Hydrator\Strategy\MacAddress);

@@ -78,7 +78,7 @@ class Cpu extends DefaultPlugin
     /** {@inheritdoc} */
     public function columns()
     {
-        $columns = array_values($this->_table->getHydrator()->getNamingStrategy()->getExtractorMap());
+        $columns = array_values($this->_table->getHydrator()->getNamingStrategy()->getExtractionMap());
         $columns[] = 'hardware_id';
         $this->_select->columns($columns);
     }

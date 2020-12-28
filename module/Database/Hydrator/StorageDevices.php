@@ -69,7 +69,7 @@ class StorageDevices implements \Zend\Hydrator\HydratorInterface
     }
 
     /** {@inheritdoc} */
-    public function extract($object)
+    public function extract(object $object): array
     {
         if (property_exists($object, 'Type')) {
             if (property_exists($object, 'Device')) {

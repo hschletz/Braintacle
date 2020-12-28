@@ -30,7 +30,7 @@ namespace Database\Hydrator\Strategy\DisplayControllers;
 class CurrentResolution implements \Zend\Hydrator\Strategy\StrategyInterface
 {
     /** {@inheritdoc} */
-    public function hydrate($value)
+    public function hydrate($value, ?array $data)
     {
         if ($value === '0 x 0') {
             $value = null;
@@ -39,7 +39,7 @@ class CurrentResolution implements \Zend\Hydrator\Strategy\StrategyInterface
     }
 
     /** {@inheritdoc} */
-    public function extract($value)
+    public function extract($value, ?object $object = null)
     {
         return $value;
     }

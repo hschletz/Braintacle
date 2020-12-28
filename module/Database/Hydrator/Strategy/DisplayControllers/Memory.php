@@ -30,7 +30,7 @@ namespace Database\Hydrator\Strategy\DisplayControllers;
 class Memory implements \Zend\Hydrator\Strategy\StrategyInterface
 {
     /** {@inheritdoc} */
-    public function hydrate($value)
+    public function hydrate($value, ?array $data)
     {
         if ((string) $value === '0') {
             $value = null;
@@ -39,7 +39,7 @@ class Memory implements \Zend\Hydrator\Strategy\StrategyInterface
     }
 
     /** {@inheritdoc} */
-    public function extract($value)
+    public function extract($value, ?object $object = null)
     {
         return $value;
     }

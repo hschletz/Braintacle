@@ -30,7 +30,7 @@ class Integer implements \Zend\Hydrator\Strategy\StrategyInterface
      * {@inheritdoc}
      * @throws \InvalidArgumentException if $value has invalid datatype or content
      */
-    public function hydrate($value)
+    public function hydrate($value, ?array $data)
     {
         if (is_integer($value) or $value === null) {
             return $value;
@@ -45,7 +45,7 @@ class Integer implements \Zend\Hydrator\Strategy\StrategyInterface
     }
 
     /** {@inheritdoc} */
-    public function extract($value)
+    public function extract($value, ?object $object = null)
     {
         return $value;
     }

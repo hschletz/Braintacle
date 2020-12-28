@@ -49,7 +49,7 @@ class Operators extends \Database\AbstractTable
             'email' => 'MailAddress',
             'comments' => 'Comment',
         );
-        $this->_hydrator = new \Zend\Hydrator\ArraySerializable;
+        $this->_hydrator = new \Zend\Hydrator\ArraySerializableHydrator;
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy($map)
         );

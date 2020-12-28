@@ -27,13 +27,13 @@ namespace Database\Hydrator\Strategy\RegistryValueDefinitions;
 class Value implements \Zend\Hydrator\Strategy\StrategyInterface
 {
     /** {@inheritdoc} */
-    public function hydrate($value)
+    public function hydrate($value, ?array $data)
     {
         return ($value == '*') ? null : $value;
     }
 
     /** {@inheritdoc} */
-    public function extract($value)
+    public function extract($value, ?object $object = null)
     {
         return ($value == '') ? '*' : $value;
     }

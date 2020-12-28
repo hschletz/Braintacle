@@ -28,7 +28,7 @@ class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         $nada = $this->createMock('Nada\Database\AbstractDatabase');
         $nada->method('timestampFormatPhp')->willReturn('Y-m-d H:i:s');
 
-        $hydrator = $this->createMock('Zend\Hydrator\ArraySerializable');
+        $hydrator = $this->createMock(\Zend\Hydrator\AbstractHydrator::class);
         $hydrator->method('hydrateName')->willReturnMap(
             array(
                 array('fields_3', null, 'Custom field'),

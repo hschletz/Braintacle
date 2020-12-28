@@ -30,7 +30,7 @@ namespace Database\Hydrator\Strategy\MemorySlots;
 class Size implements \Zend\Hydrator\Strategy\StrategyInterface
 {
     /** {@inheritdoc} */
-    public function hydrate($value)
+    public function hydrate($value, ?array $data)
     {
         if (ctype_digit((string) $value) and $value != 0) {
             $value = (integer) $value;
@@ -41,7 +41,7 @@ class Size implements \Zend\Hydrator\Strategy\StrategyInterface
     }
 
     /** {@inheritdoc} */
-    public function extract($value)
+    public function extract($value, ?object $object = null)
     {
         return $value;
     }

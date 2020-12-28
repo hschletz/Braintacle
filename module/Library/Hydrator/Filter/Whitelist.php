@@ -43,7 +43,7 @@ class Whitelist implements \Zend\Hydrator\Filter\FilterInterface
     }
 
     /** {@inheritdoc} */
-    public function filter($property)
+    public function filter(string $property): bool
     {
         return in_array($property, $this->_whitelist);
     }

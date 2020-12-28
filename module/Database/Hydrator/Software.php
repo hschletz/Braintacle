@@ -112,7 +112,7 @@ class Software implements \Zend\Hydrator\HydratorInterface
     }
 
     /** {@inheritdoc} */
-    public function extract($object)
+    public function extract(object $object): array
     {
         if (property_exists($object, 'IsHotfix')) {
             // Windows

@@ -175,7 +175,7 @@ class ClientsHardware implements \Zend\Hydrator\HydratorInterface
     }
 
     /** {@inheritdoc} */
-    public function extract($object)
+    public function extract(object $object): array
     {
         $data = array();
         foreach ($object as $name => $value) {

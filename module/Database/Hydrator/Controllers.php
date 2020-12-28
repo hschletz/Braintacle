@@ -47,7 +47,7 @@ class Controllers implements \Zend\Hydrator\HydratorInterface
     }
 
     /** {@inheritdoc} */
-    public function extract($object)
+    public function extract(object $object): array
     {
         $data = array();
         if (property_exists($object, 'Manufacturer')) {

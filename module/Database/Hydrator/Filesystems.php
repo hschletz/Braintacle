@@ -83,7 +83,7 @@ class Filesystems implements \Zend\Hydrator\HydratorInterface
     }
 
     /** {@inheritdoc} */
-    public function extract($object)
+    public function extract(object $object): array
     {
         $data = array();
         if (isset($object['Letter'])) {

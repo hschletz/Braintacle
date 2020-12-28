@@ -34,7 +34,7 @@ class RegistryValueDefinitions extends \Database\AbstractTable
     {
         $this->table = 'regconfig';
 
-        $this->_hydrator = new \Zend\Hydrator\ArraySerializable;
+        $this->_hydrator = new \Zend\Hydrator\ArraySerializableHydrator;
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(

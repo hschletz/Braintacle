@@ -44,14 +44,14 @@ class PlatformTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
     public function testInvalidValues()
     {
         // Suppress notices which are tested separately.
-        $this->assertNull(@$this->_strategy->hydrate('invalid'));
+        $this->assertNull(@$this->_strategy->hydrate('invalid', null));
         $this->assertNull(@$this->_strategy->extract('invalid'));
     }
 
     public function testNoticeOnHydrateInvalidValue()
     {
         $this->expectException('PHPUnit\Framework\Error\Notice');
-        $this->_strategy->hydrate('invalid');
+        $this->_strategy->hydrate('invalid', null);
     }
 
     public function testNoticeOnExtractInvalidValue()

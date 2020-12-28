@@ -370,7 +370,7 @@ class Client extends \Model\ClientOrGroup
      */
     public function getPackageAssignments($order = 'PackageName', $direction = 'asc')
     {
-        $hydrator = new \Zend\Hydrator\ArraySerializable;
+        $hydrator = new \Zend\Hydrator\ArraySerializableHydrator;
         $hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(

@@ -34,7 +34,7 @@ class TestHydrator implements \Zend\Hydrator\HydratorInterface
         // unused, only required to implement HydratorInterface
     }
 
-    public function extract($object)
+    public function extract(object $object): array
     {
         // unused, only required to implement HydratorInterface
     }

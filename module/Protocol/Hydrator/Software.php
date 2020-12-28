@@ -56,7 +56,7 @@ class Software extends DatabaseProxy
     }
 
     /** {@inheritdoc} */
-    public function extract($object)
+    public function extract(object $object): array
     {
         $data = parent::extract($object);
 

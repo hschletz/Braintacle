@@ -88,7 +88,7 @@ class DefaultPlugin
      */
     public function columns()
     {
-        $columns = array_values($this->_table->getHydrator()->getNamingStrategy()->getExtractorMap());
+        $columns = array_values($this->_table->getHydrator()->getNamingStrategy()->getExtractionMap());
         $this->_select->columns($columns);
     }
 

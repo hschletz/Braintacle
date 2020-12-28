@@ -31,7 +31,7 @@ namespace Database\Hydrator\Strategy\MemorySlots;
 class Clock implements \Zend\Hydrator\Strategy\StrategyInterface
 {
     /** {@inheritdoc} */
-    public function hydrate($value)
+    public function hydrate($value, ?array $data)
     {
         $value = (integer) $value;
         if ($value == 0) {
@@ -41,7 +41,7 @@ class Clock implements \Zend\Hydrator\Strategy\StrategyInterface
     }
 
     /** {@inheritdoc} */
-    public function extract($value)
+    public function extract($value, ?object $object = null)
     {
         return $value;
     }
