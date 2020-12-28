@@ -59,13 +59,18 @@ class Module implements
                 'abstract_factories' => array(
                     'Protocol\Service\AbstractHydratorFactory',
                 ),
-                'factories' => array(
+                'factories' => [
                     'Protocol\Hydrator\ClientsBios' => 'Zend\ServiceManager\Factory\InvokableFactory',
                     'Protocol\Hydrator\ClientsHardware' => 'Protocol\Service\Hydrator\ClientsHardwareFactory',
                     'Protocol\Hydrator\Filesystems' => 'Zend\ServiceManager\Factory\InvokableFactory',
                     'Protocol\Hydrator\Software' => Service\Hydrator\SoftwareFactory::class,
-                    'Protocol\Message\InventoryRequest' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                ),
+                    'Protocol\Message\InventoryRequest' => Service\Message\InventoryRequestFactory::class,
+                    'Protocol\Message\InventoryRequest\Content' => Service\Message\InventoryRequest\ContentFactory::class,
+                ],
+                'shared' => [
+                    'Protocol\Message\InventoryRequest' => false,
+                    'Protocol\Message\InventoryRequest\Content' => false,
+                ],
             ),
         );
     }

@@ -165,7 +165,9 @@ informational and not evaluated:
                 <optional>
                     <ref name="BMANUFACTURER" />
                 </optional>
-                <ref name="BVERSION" />
+                <optional>
+                    <ref name="BVERSION" />
+                </optional>
                 <optional>
                     <ref name="MMANUFACTURER" />
                 </optional>

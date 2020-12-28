@@ -1241,21 +1241,16 @@ class ClientTest extends \Model\Test\AbstractTest
 
         // DomDocument constructor must be preserved. Otherwise setting the
         // formatOutput property would have no effect for whatever reason.
-        $inventoryRequest = $this->getMockBuilder('Protocol\Message\InventoryRequest')->getMock();
-        $inventoryRequest->expects($this->exactly(2))->method('loadClient')->with(
-            $model,
-            $serviceManager
-        );
+        $inventoryRequest = $this->getMockBuilder(\Protocol\Message\InventoryRequest::class)
+                                 ->setConstructorArgs(
+                                     [$this->createStub(\Protocol\Message\InventoryRequest\Content::class)]
+                                 )->getMock();
+        $inventoryRequest->expects($this->once())->method('loadClient')->with($model);
 
         $serviceManager->method('get')->with('Protocol\Message\InventoryRequest')->willReturn($inventoryRequest);
 
-        $document1 = $model->toDomDocument();
-        $this->assertInstanceOf('Protocol\Message\InventoryRequest', $document1);
-        $this->assertTrue($document1->formatOutput);
-
-        $document2 = $model->toDomDocument();
-        $this->assertInstanceOf('Protocol\Message\InventoryRequest', $document2);
-
-        $this->assertNotSame($document1, $document2); // Test prototype cloning
+        $document = $model->toDomDocument();
+        $this->assertInstanceOf('Protocol\Message\InventoryRequest', $document);
+        $this->assertTrue($document->formatOutput);
     }
 }
