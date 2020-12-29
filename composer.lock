@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f048a8f1310c461374b7663da557794e",
+    "content-hash": "a4c171e90fde090fee65998e2346367a",
     "packages": [
         {
             "name": "components/jquery",
@@ -2977,46 +2977,6 @@
                 }
             ],
             "time": "2020-11-10T18:47:58+00:00"
-        },
-        {
-            "name": "hschletz/doxygen-phpdoc",
-            "version": "v1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hschletz/doxygen-phpdoc.git",
-                "reference": "9fa9488cd62828b06246ea607139c624d3c44c94"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hschletz/doxygen-phpdoc/zipball/9fa9488cd62828b06246ea607139c624d3c44c94",
-                "reference": "9fa9488cd62828b06246ea607139c624d3c44c94",
-                "shasum": ""
-            },
-            "require": {
-                "zendframework/zend-dom": "^2.7"
-            },
-            "bin": [
-                "doxygen-phpdoc-filter.php",
-                "doxygen-phpdoc-fixhtml.php"
-            ],
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Holger Schletz",
-                    "email": "holger.schletz@web.de"
-                }
-            ],
-            "description": "PHPDoc support for Doxygen",
-            "homepage": "https://github.com/hschletz/doxygen-phpdoc",
-            "support": {
-                "issues": "https://github.com/hschletz/doxygen-phpdoc/issues",
-                "source": "https://github.com/hschletz/doxygen-phpdoc/tree/master"
-            },
-            "time": "2018-10-19T15:19:20+00:00"
         },
         {
             "name": "kornrunner/dbunit",

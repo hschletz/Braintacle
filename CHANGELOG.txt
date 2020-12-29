@@ -9,6 +9,14 @@ without any warranty.
 CHANGES IN VERSION 1.8
 ======================
 
+Misc:
+
+- API documentation is now generated via phpDocumentor 3. A suitable config file
+  is included. Simply invoke phpDocumentor. It can be installed via PHIVE
+  (https://phar.io) for which a config file is included too.
+  "braintacle-tool.php apidoc" still works, it expects the tools/phpDocumentor
+  executable. PHIVE will install it to this location.
+
 
 CHANGES IN VERSION 1.7
 ======================
