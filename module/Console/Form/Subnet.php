@@ -33,7 +33,7 @@ class Subnet extends Form
     {
         parent::init();
 
-        $name = new \Zend\Form\Element\Text('Name');
+        $name = new \Laminas\Form\Element\Text('Name');
         $name->setLabel('Name');
         $this->add($name);
 
@@ -41,7 +41,7 @@ class Subnet extends Form
         $submit->setLabel('OK');
         $this->add($submit);
 
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
         $inputFilter->add(
             array(
                 'name' => 'Name',

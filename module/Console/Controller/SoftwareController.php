@@ -24,7 +24,7 @@ namespace Console\Controller;
 /**
  * Controller for all software-related actions.
  */
-class SoftwareController extends \Zend\Mvc\Controller\AbstractActionController
+class SoftwareController extends \Laminas\Mvc\Controller\AbstractActionController
 {
     /**
      * Software manager
@@ -34,7 +34,7 @@ class SoftwareController extends \Zend\Mvc\Controller\AbstractActionController
 
     /**
      * Form manager
-     * @var \Zend\Form\FormElementManager
+     * @var \Laminas\Form\FormElementManager
      */
     protected $_formManager;
 
@@ -48,12 +48,12 @@ class SoftwareController extends \Zend\Mvc\Controller\AbstractActionController
      * Constructor
      *
      * @param \Model\SoftwareManager $softwareManager
-     * @param \Zend\Form\FormElementManager $formManager
+     * @param \Laminas\Form\FormElementManager $formManager
      * @param \Library\Filter\FixEncodingErrors $fixEncodingErrors
      */
     public function __construct(
         \Model\SoftwareManager $softwareManager,
-        \Zend\Form\FormElementManager $formManager,
+        \Laminas\Form\FormElementManager $formManager,
         \Library\Filter\FixEncodingErrors $fixEncodingErrors
     ) {
         $this->_softwareManager = $softwareManager;
@@ -86,7 +86,7 @@ class SoftwareController extends \Zend\Mvc\Controller\AbstractActionController
         $softwareForm = $this->_formManager->get('Console\Form\Software');
         $softwareForm->setSoftware($software);
 
-        $session = new \Zend\Session\Container('ManageSoftware');
+        $session = new \Laminas\Session\Container('ManageSoftware');
         $session->filter = $filter;
 
         return array(
@@ -101,14 +101,14 @@ class SoftwareController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Confirm software definition actions
      *
-     * @return array|\Zend\Http\Response array(software, display)
+     * @return array|\Laminas\Http\Response array(software, display)
      */
     public function confirmAction()
     {
         $post = $this->params()->fromPost();
 
         if (isset($post['Accept']) or isset($post['Ignore'])) {
-            $session = new \Zend\Session\Container('ManageSoftware');
+            $session = new \Laminas\Session\Container('ManageSoftware');
             $form = $this->_formManager->get('Console\Form\Software');
             $form->setData($post);
             if ($form->isValid()) {
@@ -139,12 +139,12 @@ class SoftwareController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Accept/Ignore software definitions
      *
-     * @return \Zend\Http\Response
+     * @return \Laminas\Http\Response
      */
     public function manageAction()
     {
         $post = $this->params()->fromPost();
-        $session = new \Zend\Session\Container('ManageSoftware');
+        $session = new \Laminas\Session\Container('ManageSoftware');
 
         if (isset($post['no'])) {
             return $this->redirectToRoute('software', 'index', array('filter' => $session['filter']));

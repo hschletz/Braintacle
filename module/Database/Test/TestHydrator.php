@@ -27,7 +27,7 @@ namespace Database\Test;
  * This is used for testing behavior with hydrators that don't inherit
  * AbstractHydrator.
  */
-class TestHydrator implements \Zend\Hydrator\HydratorInterface
+class TestHydrator implements \Laminas\Hydrator\HydratorInterface
 {
     public function hydrate(array $data, $object)
     {

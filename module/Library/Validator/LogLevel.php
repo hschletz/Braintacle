@@ -24,7 +24,7 @@ namespace Library\Validator;
 /**
  * Validate string as a standard log level identifier
  */
-class LogLevel extends \Zend\Validator\AbstractValidator
+class LogLevel extends \Laminas\Validator\AbstractValidator
 {
     /**
      * Key for message template

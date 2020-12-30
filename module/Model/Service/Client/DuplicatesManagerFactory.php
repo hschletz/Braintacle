@@ -24,7 +24,7 @@ namespace Model\Service\Client;
 /**
  * Factory for Model\Client\DuplicatesManager
  */
-class DuplicatesManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class DuplicatesManagerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

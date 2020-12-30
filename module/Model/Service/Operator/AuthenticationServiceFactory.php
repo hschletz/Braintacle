@@ -24,7 +24,7 @@ namespace Model\Service\Operator;
 /**
  * Factory for Model\Operator\AuthenticationService
  */
-class AuthenticationServiceFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class AuthenticationServiceFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /**
      * {@inheritdoc}

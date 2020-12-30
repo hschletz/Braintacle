@@ -21,7 +21,7 @@
 
 namespace Console\Form;
 
-use Zend\Form\Element;
+use Laminas\Form\Element;
 
 /**
  * Form for defining and deleting inventoried registry values
@@ -45,15 +45,15 @@ class ManageRegistryValues extends Form
     public function init()
     {
         parent::init();
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
 
         // Create list of values as array because nested iteration does not work with ResultSet objects.
         $this->_definedValues = iterator_to_array($this->getOption('registryManager')->getValueDefinitions());
 
         // Subform for existing values
-        $fieldsetExisting = new \Zend\Form\Fieldset('existing');
+        $fieldsetExisting = new \Laminas\Form\Fieldset('existing');
         $fieldsetExisting->setLabel('Values');
-        $inputFilterExisting = new \Zend\InputFilter\InputFilter;
+        $inputFilterExisting = new \Laminas\InputFilter\InputFilter;
         // Create text elements for existing values to rename them
         foreach ($this->_definedValues as $value) {
             $name = $value['Name'];
@@ -83,7 +83,7 @@ class ManageRegistryValues extends Form
         $inputFilter->add($inputFilterExisting, 'existing');
 
         // Subform for new value
-        $fieldsetNew = new \Zend\Form\Fieldset('new_value');
+        $fieldsetNew = new \Laminas\Form\Fieldset('new_value');
         $fieldsetNew->setLabel('Add');
 
         $newName = new Element\Text('name');
@@ -112,7 +112,7 @@ class ManageRegistryValues extends Form
         $submit->setLabel('Change');
         $this->add($submit);
 
-        $inputFilterNew = new \Zend\InputFilter\InputFilter;
+        $inputFilterNew = new \Laminas\InputFilter\InputFilter;
         $inputFilterNew->add(
             array(
                 'name' => 'name',
@@ -180,7 +180,7 @@ class ManageRegistryValues extends Form
      */
     public function validateEmptySubkeys($value, $context)
     {
-        $name = \Zend\Filter\StaticFilter::execute($context['name'], 'StringTrim');
+        $name = \Laminas\Filter\StaticFilter::execute($context['name'], 'StringTrim');
         if ($name != '' and $value == '') {
             return false;
         } else {

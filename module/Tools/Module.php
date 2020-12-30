@@ -21,7 +21,7 @@
 
 namespace Tools;
 
-use Zend\ModuleManager\Feature;
+use Laminas\ModuleManager\Feature;
 
 /**
  * Braintacle command line tools collection
@@ -35,7 +35,7 @@ class Module implements
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function init(\Zend\ModuleManager\ModuleManagerInterface $manager)
+    public function init(\Laminas\ModuleManager\ModuleManagerInterface $manager)
     {
         $manager->loadModule('Database');
         $manager->loadModule('Library');
@@ -52,7 +52,7 @@ class Module implements
         $config = array(
             'service_manager' => array(
                 'factories' => array(
-                    'Tools\Controller\Apidoc' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Tools\Controller\Apidoc' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Tools\Controller\Build' => function ($container) {
                         return new Controller\Build(
                             $container->get('Model\Config'),
@@ -162,7 +162,7 @@ class Module implements
     public function getAutoloaderConfig()
     {
         return array(
-            'Zend\Loader\StandardAutoloader' => array(
+            'Laminas\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__,
                 ),

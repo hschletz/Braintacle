@@ -21,7 +21,7 @@
 
 namespace Library\Test\View\Helper;
 
-use \Zend\Dom\Document\Query as Query;
+use \Laminas\Dom\Document\Query as Query;
 
 /**
  * Tests for the FormYesNo helper
@@ -43,7 +43,7 @@ class FormYesNoTest extends AbstractTest
      */
     public function testInvoke($attributesOrig, $attributesUpdated)
     {
-        $translate = $this->createMock('Zend\I18n\View\Helper\Translate');
+        $translate = $this->createMock('Laminas\I18n\View\Helper\Translate');
         $translate->method('__invoke')->willReturnCallback(
             function ($message) {
                 return "_($message)";
@@ -67,7 +67,7 @@ class FormYesNoTest extends AbstractTest
         $helper = new \Library\View\Helper\FormYesNo($translate, $htmlElement);
 
         $result = $helper('TestCaption', array('hiddenName' => 'hiddenValue'), $attributesOrig);
-        $document = new \Zend\Dom\Document($result);
+        $document = new \Laminas\Dom\Document($result);
 
         $this->assertCount(1, Query::execute('//p[text()="TestCaption"]', $document));
         $this->assertCount(1, Query::execute('//form[@method="_method"]', $document));

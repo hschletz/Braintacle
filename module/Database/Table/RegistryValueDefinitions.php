@@ -30,11 +30,11 @@ class RegistryValueDefinitions extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'regconfig';
 
-        $this->_hydrator = new \Zend\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(
@@ -51,7 +51,7 @@ class RegistryValueDefinitions extends \Database\AbstractTable
         $this->_hydrator->addStrategy('Value', $value);
         $this->_hydrator->addStrategy('regvalue', $value);
 
-        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
+        $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
             $serviceLocator->get('Model\Registry\Value')
         );

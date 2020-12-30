@@ -24,7 +24,7 @@ namespace Model\Service\Group;
 /**
  * Factory for Model\Group\Group
  */
-class GroupFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class GroupFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

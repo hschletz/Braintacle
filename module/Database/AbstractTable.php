@@ -28,27 +28,27 @@ namespace Database;
  * Database\Table\ClassName services which will create and set up object
  * instances.
  */
-abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
+abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGateway
 {
     /**
      * Service manager
-     * @var \Zend\ServiceManager\ServiceLocatorInterface
+     * @var \Laminas\ServiceManager\ServiceLocatorInterface
      */
     protected $_serviceLocator;
 
     /**
      * Hydrator
-     * @var \Zend\Hydrator\AbstractHydrator
+     * @var \Laminas\Hydrator\AbstractHydrator
      */
     protected $_hydrator;
 
     /**
      * Constructor
      *
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator Service manager instance
+     * @param \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator Service manager instance
      * @codeCoverageIgnore
      */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->_serviceLocator = $serviceLocator;
         if (!$this->table) {
@@ -64,7 +64,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
      * Get service locator.
      * @codeCoverageIgnore
      */
-    public function getServiceLocator(): \Zend\ServiceManager\ServiceLocatorInterface
+    public function getServiceLocator(): \Laminas\ServiceManager\ServiceLocatorInterface
     {
         return $this->_serviceLocator;
     }
@@ -72,7 +72,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
     /**
      * Get hydrator suitable for bridging with model
      *
-     * @return \Zend\Hydrator\AbstractHydrator|null
+     * @return \Laminas\Hydrator\AbstractHydrator|null
      */
     public function getHydrator()
     {
@@ -82,7 +82,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
     /**
      * Get database connection object
      *
-     * @return \Zend\Db\Adapter\Driver\ConnectionInterface
+     * @return \Laminas\Db\Adapter\Driver\ConnectionInterface
      */
     public function getConnection()
     {
@@ -113,7 +113,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
     public function setSchema($prune = false)
     {
         $logger = $this->_serviceLocator->get('Library\Logger');
-        $schema = \Zend\Config\Factory::fromFile(
+        $schema = \Laminas\Config\Factory::fromFile(
             Module::getPath('data/Tables/' . $this->_getClassName() . '.json')
         );
         $database = $this->_serviceLocator->get('Database\Nada');
@@ -126,7 +126,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
     /**
      * Hook to be called before creating/altering table schema
      *
-     * @param \Zend\Log\Logger $logger Logger instance
+     * @param \Laminas\Log\Logger $logger Logger instance
      * @param array $schema Parsed table schema
      * @param \Nada\Database\AbstractDatabase $database Database object
      * @param bool $prune Drop obsolete columns
@@ -141,7 +141,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
      *
      * The default implementation calls \Database\SchemaManager::setSchema().
      *
-     * @param \Zend\Log\Logger $logger Logger instance
+     * @param \Laminas\Log\Logger $logger Logger instance
      * @param array $schema Parsed table schema
      * @param \Nada\Database\AbstractDatabase $database Database object
      * @param bool $prune Drop obsolete columns
@@ -161,7 +161,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
     /**
      * Hook to be called after creating/altering table schema
      *
-     * @param \Zend\Log\Logger $logger Logger instance
+     * @param \Laminas\Log\Logger $logger Logger instance
      * @param array $schema Parsed table schema
      * @param \Nada\Database\AbstractDatabase $database Database object
      * @param bool $prune Drop obsolete columns
@@ -175,7 +175,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
      * Get names of columns that are present in the current database but not in
      * the given schema
      *
-     * @param \Zend\Log\Logger $logger Logger instance
+     * @param \Laminas\Log\Logger $logger Logger instance
      * @param array $schema Parsed table schema
      * @param \Nada\Database\AbstractDatabase $database Database object
      * @return string[]
@@ -198,7 +198,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
      * @codeCoverageIgnore
      */
     protected function _rename(
-        \Zend\Log\LoggerInterface $logger,
+        \Laminas\Log\LoggerInterface $logger,
         \Nada\Database\AbstractDatabase $database,
         string $oldName
     ): void {
@@ -210,7 +210,7 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
     /**
      * Drop a column if it exists
      *
-     * @param \Zend\Log\Logger $logger Logger instance
+     * @param \Laminas\Log\Logger $logger Logger instance
      * @param \Nada\Database\AbstractDatabase $database Database object
      * @param string $column column name
      * @codeCoverageIgnore
@@ -242,9 +242,9 @@ abstract class AbstractTable extends \Zend\Db\TableGateway\AbstractTableGateway
         $resultSet = $this->selectWith($select);
 
         // Map column name to corresponding result key
-        if ($resultSet instanceof \Zend\Db\ResultSet\HydratingResultSet) {
+        if ($resultSet instanceof \Laminas\Db\ResultSet\HydratingResultSet) {
             $hydrator = $resultSet->getHydrator();
-            if ($hydrator instanceof \Zend\Hydrator\AbstractHydrator) {
+            if ($hydrator instanceof \Laminas\Hydrator\AbstractHydrator) {
                 $name = $hydrator->hydrateName($name);
             }
         }

@@ -24,7 +24,7 @@ namespace Console\Controller;
 /**
  * Controller for all login-related actions.
  */
-class LoginController extends \Zend\Mvc\Controller\AbstractActionController
+class LoginController extends \Laminas\Mvc\Controller\AbstractActionController
 {
     /**
      * Authentication service
@@ -55,7 +55,7 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Redirect to login action
      *
-     * @return \Zend\Http\Response Redirect response
+     * @return \Laminas\Http\Response Redirect response
      */
     public function indexAction()
     {
@@ -65,7 +65,7 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Handle login form
      *
-     * @return array|\Zend\Http\Response array (form => \Console\Form\Login) or redirect response
+     * @return array|\Laminas\Http\Response array (form => \Console\Form\Login) or redirect response
      */
     public function loginAction()
     {
@@ -84,7 +84,7 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
                     $data['Password']
                 )) {
                     // Authentication successful. Redirect to appropriate page.
-                    $session = new \Zend\Session\Container('login');
+                    $session = new \Laminas\Session\Container('login');
                     if (isset($session->originalUri)) {
                         // We got redirected here from another page. Redirect to original page.
                         $response = $this->redirect()->toUrl($session->originalUri);
@@ -104,7 +104,7 @@ class LoginController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Log out and get back to login form
      *
-     * @return \Zend\Http\Response Redirect response
+     * @return \Laminas\Http\Response Redirect response
      */
     public function logoutAction()
     {

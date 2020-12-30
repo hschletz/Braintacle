@@ -25,7 +25,7 @@ namespace Console\Form\Service;
  * Factory for CustomFields form
  * @codeCoverageIgnore
  */
-class CustomFieldsFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class CustomFieldsFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

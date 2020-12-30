@@ -7,8 +7,6 @@
 # without any warranty.
 
 
-# Rewrite rules required for the default ZF URL scheme
-
 RewriteEngine On
 
 # If the requested path resolves to an existing file (-f) within this directory,
@@ -24,5 +22,5 @@ RewriteCond %{REQUEST_URI}::$1 ^(/.+)(.+)::\2$
 RewriteRule ^(.*) - [E=BASE:%1]
 
 # Force all requests not matched by the first rule (i.e. nonexisting paths) to
-# invoke index.php where a ZF route will evaluate the path.
+# invoke index.php
 RewriteRule ^(.*)$ %{ENV:BASE}index.php [L]

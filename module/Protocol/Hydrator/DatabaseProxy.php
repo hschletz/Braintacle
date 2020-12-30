@@ -32,20 +32,20 @@ namespace Protocol\Hydrator;
  * conversion. It covers almost every use case except date/timestamp columns
  * where the XML document uses various non-ISO formats.
  */
-class DatabaseProxy implements \Zend\Hydrator\HydratorInterface
+class DatabaseProxy implements \Laminas\Hydrator\HydratorInterface
 {
     /**
      * Proxied hydrator
-     * @var \Zend\Hydrator\HydratorInterface
+     * @var \Laminas\Hydrator\HydratorInterface
      */
     protected $_hydrator;
 
     /**
      * Constructor
      *
-     * @param \Zend\Hydrator\HydratorInterface $hydrator
+     * @param \Laminas\Hydrator\HydratorInterface $hydrator
      */
-    public function __construct(\Zend\Hydrator\HydratorInterface $hydrator)
+    public function __construct(\Laminas\Hydrator\HydratorInterface $hydrator)
     {
         $this->_hydrator = $hydrator;
     }
@@ -53,7 +53,7 @@ class DatabaseProxy implements \Zend\Hydrator\HydratorInterface
     /**
      * Return attached hydrator
      */
-    public function getHydrator(): \Zend\Hydrator\HydratorInterface
+    public function getHydrator(): \Laminas\Hydrator\HydratorInterface
     {
         return $this->_hydrator;
     }

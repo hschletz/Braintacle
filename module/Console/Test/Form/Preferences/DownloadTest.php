@@ -28,17 +28,17 @@ class DownloadTest extends \Console\Test\AbstractFormTest
     public function testInit()
     {
         $preferences = $this->_form->get('Preferences');
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('packageDeployment'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('packagePath'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('packageBaseUriHttp'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('packageBaseUriHttps'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('downloadPeriodDelay'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('downloadCycleDelay'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('downloadFragmentDelay'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $preferences->get('packageDeployment'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('packagePath'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('packageBaseUriHttp'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('packageBaseUriHttps'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('downloadPeriodDelay'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('downloadCycleDelay'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('downloadFragmentDelay'));
         $downloadMaxPriority = $preferences->get('downloadMaxPriority');
         $this->assertInstanceOf('Library\Form\Element\SelectSimple', $downloadMaxPriority);
         $this->assertEquals(array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10), $downloadMaxPriority->getValueOptions());
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('downloadTimeout'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('downloadTimeout'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
 

@@ -28,16 +28,16 @@ class GroupManager
 {
     /**
      * Service manager
-     * @var \Zend\ServiceManager\ServiceManager
+     * @var \Laminas\ServiceManager\ServiceManager
      */
     protected $_serviceManager;
 
     /**
      * Constructor
      *
-     * @param \Zend\ServiceManager\ServiceManager $serviceManager
+     * @param \Laminas\ServiceManager\ServiceManager $serviceManager
      */
-    public function __construct(\Zend\ServiceManager\ServiceManager $serviceManager)
+    public function __construct(\Laminas\ServiceManager\ServiceManager $serviceManager)
     {
         $this->_serviceManager = $serviceManager;
     }
@@ -49,7 +49,7 @@ class GroupManager
      * @param mixed $filterArg Argument for Id, Name and Member filters, ignored otherwise
      * @param string $order Property to sort by. Default: none
      * @param string $direction one of [asc|desc]. Default: asc
-     * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Group\Group
+     * @return \Laminas\Db\ResultSet\AbstractResultSet Result set producing \Model\Group\Group
      */
     public function getGroups($filter = null, $filterArg = null, $order = null, $direction = 'asc')
     {
@@ -60,7 +60,7 @@ class GroupManager
                    'hardware',
                    'hardware.id = groups.hardware_id',
                    array('id', 'name', 'lastdate', 'description'),
-                   \Zend\Db\Sql\Select::JOIN_INNER
+                   \Laminas\Db\Sql\Select::JOIN_INNER
                );
 
         switch ($filter) {
@@ -75,7 +75,7 @@ class GroupManager
             case 'Expired':
                 $now = $this->_serviceManager->get('Library\Now')->getTimestamp();
                 $select->where(
-                    new \Zend\Db\Sql\Predicate\Operator(
+                    new \Laminas\Db\Sql\Predicate\Operator(
                         'revalidate_from',
                         '<=',
                         $now - $this->_serviceManager->get('Model\Config')->groupCacheExpirationInterval
@@ -88,7 +88,7 @@ class GroupManager
                 $select->where(
                     array(
                         'groups_cache.hardware_id' => $filterArg,
-                        new \Zend\Db\Sql\Predicate\Operator('static', '!=', \Model\Client\Client::MEMBERSHIP_NEVER),
+                        new \Laminas\Db\Sql\Predicate\Operator('static', '!=', \Model\Client\Client::MEMBERSHIP_NEVER),
                     )
                 );
                 break;

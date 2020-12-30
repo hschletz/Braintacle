@@ -24,11 +24,11 @@ namespace Model\Operator;
 /**
  * Authentication service
  *
- * Provided by the service manager as Zend\Authentication\AuthenticationService,
- * this is the service that should be used for authentication against the
- * application's database.
+ * Provided by the service manager as
+ * Laminas\Authentication\AuthenticationService, this is the service that should
+ * be used for authentication against the application's database.
  */
-class AuthenticationService extends \Zend\Authentication\AuthenticationService
+class AuthenticationService extends \Laminas\Authentication\AuthenticationService
 {
     /**
      * Attempt login with given credentials

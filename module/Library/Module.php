@@ -21,7 +21,7 @@
 
 namespace Library;
 
-use Zend\ModuleManager\Feature;
+use Laminas\ModuleManager\Feature;
 
 /**
  * The Library module
@@ -49,9 +49,9 @@ class Module implements
                     'urlFromRoute' => 'Library\Mvc\Controller\Plugin\UrlFromRoute',
                 ),
                 'factories' => array(
-                    'Library\Mvc\Controller\Plugin\TranslationHelper' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Library\Mvc\Controller\Plugin\RedirectToRoute' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Library\Mvc\Controller\Plugin\UrlFromRoute' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\Mvc\Controller\Plugin\TranslationHelper' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Library\Mvc\Controller\Plugin\RedirectToRoute' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Library\Mvc\Controller\Plugin\UrlFromRoute' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                 )
             ),
             'filters' => array(
@@ -61,9 +61,9 @@ class Module implements
                     'Library\LogLevel' => 'Library\Filter\LogLevel',
                 ),
                 'factories' => array(
-                    'Library\Filter\EmptyArray' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Library\Filter\FixEncodingErrors' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Library\Filter\LogLevel' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\Filter\EmptyArray' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Library\Filter\FixEncodingErrors' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Library\Filter\LogLevel' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                 ),
             ),
             'log' => array(
@@ -79,21 +79,21 @@ class Module implements
             ),
             'service_manager' => array(
                 'delegators' => array(
-                    'Zend\Mvc\I18n\Translator' => array('Library\I18n\Translator\DelegatorFactory'),
+                    'Laminas\Mvc\I18n\Translator' => array('Library\I18n\Translator\DelegatorFactory'),
                 ),
                 'factories' => [
-                    'Library\ArchiveManager' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\ArchiveManager' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Library\HttpClient' => function () {
-                        return new \Zend\Http\Client();
+                        return new \Laminas\Http\Client();
                     },
-                    'Library\I18n\Translator\DelegatorFactory' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\I18n\Translator\DelegatorFactory' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Library\Log\Writer\StdErr' => function () {
-                        return new \Zend\Log\Writer\Stream('php://stderr');
+                        return new \Laminas\Log\Writer\Stream('php://stderr');
                     },
                     'Library\Now' => function () {
                         return new \DateTime;
                     },
-                    'Library\Random' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\Random' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Library\UserConfig' => 'Library\Service\UserConfigFactory',
                 ],
                 'shared' => [
@@ -115,7 +115,7 @@ class Module implements
                     'Po' => 'Library\I18n\Translator\Loader\Po',
                 ),
                 'factories' => array(
-                    'Library\I18n\Translator\Loader\Po' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\I18n\Translator\Loader\Po' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                 ),
             ),
             'validators' => array(
@@ -127,11 +127,11 @@ class Module implements
                     'Library\ProductKey' => 'Library\Validator\ProductKey',
                 ),
                 'factories' => array(
-                    'Library\Validator\DirectoryWritable' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Library\Validator\FileReadable' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Library\Validator\LogLevel' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Library\Validator\NotInArray' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Library\Validator\ProductKey' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\Validator\DirectoryWritable' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Library\Validator\FileReadable' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Library\Validator\LogLevel' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Library\Validator\NotInArray' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Library\Validator\ProductKey' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                 ),
             ),
             'view_helpers' => array(
@@ -142,10 +142,10 @@ class Module implements
                     'htmlElement' => 'Library\View\Helper\HtmlElement',
                 ),
                 'factories' => array(
-                    'Library\View\Helper\FormSelectSimple' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Library\View\Helper\FormSelectUntranslated' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\View\Helper\FormSelectSimple' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Library\View\Helper\FormSelectUntranslated' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Library\View\Helper\FormYesNo' => 'Library\View\Helper\Service\FormYesNoFactory',
-                    'Library\View\Helper\HtmlElement' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Library\View\Helper\HtmlElement' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                 ),
             ),
         );
@@ -155,7 +155,7 @@ class Module implements
     public function getAutoloaderConfig()
     {
         return array(
-            'Zend\Loader\StandardAutoloader' => array(
+            'Laminas\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__,
                 ),
@@ -164,7 +164,7 @@ class Module implements
     }
 
     /** {@inheritdoc} */
-    public function onBootstrap(\Zend\EventManager\EventInterface $e)
+    public function onBootstrap(\Laminas\EventManager\EventInterface $e)
     {
         $serviceManager = $e->getApplication()->getServiceManager();
 
@@ -173,8 +173,8 @@ class Module implements
         $formElementHelper->addClass('Library\Form\Element\SelectSimple', 'formSelectSimple');
         $formElementHelper->addType('select_untranslated', 'formSelectUntranslated');
 
-        \Zend\Filter\StaticFilter::setPluginManager($serviceManager->get('FilterManager'));
-        \Zend\Validator\StaticValidator::setPluginManager($serviceManager->get('ValidatorManager'));
+        \Laminas\Filter\StaticFilter::setPluginManager($serviceManager->get('FilterManager'));
+        \Laminas\Validator\StaticValidator::setPluginManager($serviceManager->get('ValidatorManager'));
     }
 
     /**

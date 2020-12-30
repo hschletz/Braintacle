@@ -24,7 +24,7 @@ namespace Model\Service\Client;
 /**
  * Factory for Model\Client\ClientManager
  */
-class ClientManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class ClientManagerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

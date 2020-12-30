@@ -29,6 +29,6 @@ class StdErrWriterServiceTest extends \PHPUnit\Framework\TestCase
         $serviceManager = $application->getServiceManager();
 
         $writer = $serviceManager->get('Library\Log\Writer\StdErr');
-        $this->assertInstanceOf(\Zend\Log\Writer\Stream::class, $writer);
+        $this->assertInstanceOf(\Laminas\Log\Writer\Stream::class, $writer);
     }
 }

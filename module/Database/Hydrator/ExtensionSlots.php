@@ -26,7 +26,7 @@ namespace Database\Hydrator;
  *
  * Sanitizes incompatible structures produced by different agents.
  */
-class ExtensionSlots implements \Zend\Hydrator\HydratorInterface
+class ExtensionSlots implements \Laminas\Hydrator\HydratorInterface
 {
     /** {@inheritdoc} */
     public function hydrate(array $data, $object)

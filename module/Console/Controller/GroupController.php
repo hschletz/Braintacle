@@ -24,7 +24,7 @@ namespace Console\Controller;
 /**
  * Controller for managing groups
  */
-class GroupController extends \Zend\Mvc\Controller\AbstractActionController
+class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
 {
     /**
      * Group manager
@@ -87,8 +87,8 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
 
     /** {@inheritdoc} */
     public function dispatch(
-        \Zend\Stdlib\RequestInterface $request,
-        \Zend\Stdlib\ResponseInterface $response = null
+        \Laminas\Stdlib\RequestInterface $request,
+        \Laminas\Stdlib\ResponseInterface $response = null
     ) {
         // Fetch group with given name for actions referring to a particular group
         $action = $this->getEvent()->getRouteMatch()->getParam('action');
@@ -212,7 +212,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Remove a package
      *
-     * @return array|\Zend\Http\Response array(package, name) or redirect response
+     * @return array|\Laminas\Http\Response array(package, name) or redirect response
      */
     public function removepackageAction()
     {
@@ -235,7 +235,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
      *
      * POST only
      *
-     * @return \Zend\Http\Response redirect response
+     * @return \Laminas\Http\Response redirect response
      */
     public function assignpackageAction()
     {
@@ -260,7 +260,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Use Form to set query or include/exclude clients
      *
-     * @return array|\Zend\Http\Response array(form) or redirect response
+     * @return array|\Laminas\Http\Response array(form) or redirect response
      */
     public function addAction()
     {
@@ -286,7 +286,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Group configuration form
      *
-     * @return array|\Zend\Http\Response array(form, group) or redirect response
+     * @return array|\Laminas\Http\Response array(form, group) or redirect response
      */
     public function configurationAction()
     {
@@ -314,7 +314,7 @@ class GroupController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Group deletion form
      *
-     * @return array|\Zend\Http\Response array(name) or redirect response
+     * @return array|\Laminas\Http\Response array(name) or redirect response
      */
     public function deleteAction()
     {

@@ -27,7 +27,7 @@ namespace Console\View\Helper\Form;
 class ShowDuplicates extends AbstractHelper
 {
     /** {@inheritdoc} */
-    public function renderElements(\Zend\Form\FormInterface $form)
+    public function renderElements(\Laminas\Form\FormInterface $form)
     {
         $view = $this->getView();
         $consoleUrl = $view->plugin('consoleUrl');
@@ -92,7 +92,7 @@ class ShowDuplicates extends AbstractHelper
         $formContent = $table->tag($tableContent);
 
         foreach ($form as $element) {
-            $formContent .= $formRow($element, \Zend\Form\View\Helper\FormRow::LABEL_APPEND);
+            $formContent .= $formRow($element, \Laminas\Form\View\Helper\FormRow::LABEL_APPEND);
         }
 
         return $formContent;

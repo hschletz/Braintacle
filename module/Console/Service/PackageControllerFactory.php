@@ -24,7 +24,7 @@ namespace Console\Service;
 /**
  * Factory for PackageController
  */
-class PackageControllerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class PackageControllerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

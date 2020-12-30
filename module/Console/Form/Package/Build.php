@@ -21,7 +21,7 @@
 
 namespace Console\Form\Package;
 
-use Zend\Form\Element;
+use Laminas\Form\Element;
 
 /**
  * Form for creating a package
@@ -37,7 +37,7 @@ class Build extends \Console\Form\Form
     {
         parent::init();
 
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
         $integerFilter = array(
             'name' => 'Callback',
             'options' => array(
@@ -158,7 +158,7 @@ class Build extends \Console\Form\Form
                     $integerFilter,
                     [
                         'name' => 'ToNull',
-                        'options' => [\Zend\Filter\ToNull::TYPE_STRING],
+                        'options' => [\Laminas\Filter\ToNull::TYPE_STRING],
                     ]
                 ],
                 'validators' => [$integerValidator],
@@ -291,7 +291,7 @@ class Build extends \Console\Form\Form
     }
 
     /** {@inheritdoc} */
-    public function render(\Zend\View\Renderer\PhpRenderer $view)
+    public function render(\Laminas\View\Renderer\PhpRenderer $view)
     {
         $commandLine = $view->translate('Command line');
         $labels = array(

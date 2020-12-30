@@ -30,7 +30,7 @@ class ClientConfig extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'devices';
         parent::__construct($serviceLocator);

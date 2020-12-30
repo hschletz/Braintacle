@@ -30,7 +30,7 @@ class NetworkDevicesIdentified extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'network_devices';
         parent::__construct($serviceLocator);

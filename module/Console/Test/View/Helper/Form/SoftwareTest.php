@@ -31,8 +31,8 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testInvoke()
     {
-        $csrf = $this->createMock('Zend\Form\Element\Csrf');
-        $softwareFieldset = $this->createMock('Zend\Form\Fieldset');
+        $csrf = $this->createMock('Laminas\Form\Element\Csrf');
+        $softwareFieldset = $this->createMock('Laminas\Form\Fieldset');
 
         $form = $this->createMock('Console\Form\Software');
         $form->expects($this->at(0))->method('prepare');
@@ -44,10 +44,10 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
         $consoleForm->method('openTag')->with($form)->willReturn('<form>');
         $consoleForm->method('closeTag')->willReturn('</form>');
 
-        $formRow = $this->createMock('Zend\Form\View\Helper\FormRow');
+        $formRow = $this->createMock('Laminas\Form\View\Helper\FormRow');
         $formRow->method('__invoke')->with($csrf)->willReturn('<csrf>');
 
-        $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('plugin')->willReturnMap([
             ['consoleForm', null, $consoleForm],
             ['formRow', null, $formRow],
@@ -81,8 +81,8 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
     /** @dataProvider renderButtonsProvider */
     public function testRenderButtons($filter, $buttons)
     {
-        $accept = $this->createMock('Zend\Form\ElementInterface');
-        $ignore = $this->createMock('Zend\Form\ElementInterface');
+        $accept = $this->createMock('Laminas\Form\ElementInterface');
+        $ignore = $this->createMock('Laminas\Form\ElementInterface');
 
         $fieldset = $this->createMock('Console\Form\Software');
         $fieldset->method('get')->willReturnMap([
@@ -90,13 +90,13 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
             ['Ignore', $ignore],
         ]);
 
-        $formRow = $this->createMock('Zend\Form\View\Helper\FormRow');
+        $formRow = $this->createMock('Laminas\Form\View\Helper\FormRow');
         $formRow->method('__invoke')->willReturnMap([
             [$accept, null, null, null, 'ACCEPT'],
             [$ignore, null, null, null, 'IGNORE'],
         ]);
 
-        $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('plugin')->with('formRow')->willReturn($formRow);
 
         $helper = $this->getMockBuilder($this->_getHelperClass())
@@ -113,12 +113,12 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRenderSoftwareFieldset()
     {
-        $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
 
-        $checkbox1 = $this->createMock('\Zend\Form\ElementInterface');
-        $checkbox2 = $this->createMock('\Zend\Form\ElementInterface');
+        $checkbox1 = $this->createMock('\Laminas\Form\ElementInterface');
+        $checkbox2 = $this->createMock('\Laminas\Form\ElementInterface');
 
-        $fieldset = $this->createMock('Zend\Form\FieldsetInterface');
+        $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
         $fieldset->method('get')
                  ->withConsecutive(
                      ['_c29mdHdhcmVfbmFtZTE='], // 'software_name1'
@@ -132,18 +132,18 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
 
         $sorting = ['order' => 'current_order', 'direction' => 'current_direction'];
 
-        $formRow = $this->createMock('Zend\Form\View\Helper\FormRow');
+        $formRow = $this->createMock('Laminas\Form\View\Helper\FormRow');
         $formRow->expects($this->at(0))->method('isTranslatorEnabled')->willReturn('translatorEnabled');
         $formRow->expects($this->at(1))->method('setTranslatorEnabled')->with(false);
         $formRow->expects($this->at(2))->method('__invoke')
-                                       ->with($checkbox1, \Zend\Form\View\Helper\FormRow::LABEL_APPEND)
+                                       ->with($checkbox1, \Laminas\Form\View\Helper\FormRow::LABEL_APPEND)
                                        ->willReturn('checkbox1');
         $formRow->expects($this->at(3))->method('__invoke')
-                                       ->with($checkbox2, \Zend\Form\View\Helper\FormRow::LABEL_APPEND)
+                                       ->with($checkbox2, \Laminas\Form\View\Helper\FormRow::LABEL_APPEND)
                                        ->willReturn('checkbox2');
         $formRow->expects($this->at(4))->method('setTranslatorEnabled')->with('translatorEnabled');
 
-        $translate = $this->createMock('Zend\I18n\View\Helper\Translate');
+        $translate = $this->createMock('Laminas\I18n\View\Helper\Translate');
         $translate->method('__invoke')
                   ->withConsecutive(
                       ['Name', null, null],

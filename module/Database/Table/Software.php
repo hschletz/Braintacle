@@ -33,13 +33,13 @@ class Software extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'software_installations';
 
         $this->_hydrator = new \Database\Hydrator\Software;
 
-        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
+        $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
             $serviceLocator->get('Model\Client\Item\Software')
         );
@@ -92,7 +92,7 @@ class Software extends \Database\AbstractTable
                 'software_definitions',
                 'software.definition_id = software_definitions.id',
                 ['name', 'display'],
-                \Zend\Db\Sql\Select::JOIN_INNER
+                \Laminas\Db\Sql\Select::JOIN_INNER
             );
 
             $database->createView('software_installations', $sql->buildSqlString($select));

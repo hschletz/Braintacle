@@ -34,13 +34,13 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Service manager
-     * @var \Zend\ServiceManager\ServiceManager
+     * @var \Laminas\ServiceManager\ServiceManager
      */
     public static $serviceManager;
 
     /**
      * View helper manager
-     * @var \Zend\View\HelperPluginManager
+     * @var \Laminas\View\HelperPluginManager
      */
     protected static $_helperManager;
 
@@ -77,7 +77,7 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
      * Get view helper
      *
      * @param string $name Helper name (default: derive from test class name)
-     * @return \Zend\View\Helper\HelperInterface Helper instance
+     * @return \Laminas\View\Helper\HelperInterface Helper instance
      */
     protected function _getHelper($name = null)
     {

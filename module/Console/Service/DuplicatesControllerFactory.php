@@ -24,7 +24,7 @@ namespace Console\Service;
 /**
  * Factory for DuplicatesController
  */
-class DuplicatesControllerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class DuplicatesControllerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

@@ -30,7 +30,7 @@ class GroupInfo extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'groups';
         // Hydrator and ResultSet initialization is postponed to initialize()
@@ -43,7 +43,7 @@ class GroupInfo extends \Database\AbstractTable
     /** {@inheritdoc} */
     public function initialize()
     {
-        $this->_hydrator = new \Zend\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(
@@ -58,7 +58,7 @@ class GroupInfo extends \Database\AbstractTable
             )
         );
 
-        $dateTimeFormatter = new \Zend\Hydrator\Strategy\DateTimeFormatterStrategy(
+        $dateTimeFormatter = new \Laminas\Hydrator\Strategy\DateTimeFormatterStrategy(
             $this->_serviceLocator->get('Database\Nada')->timestampFormatPhp()
         );
         $this->_hydrator->addStrategy('CreationDate', $dateTimeFormatter);
@@ -74,7 +74,7 @@ class GroupInfo extends \Database\AbstractTable
         $this->_hydrator->addStrategy('CacheExpirationDate', $cacheExpirationDateStrategy);
         $this->_hydrator->addStrategy('revalidate_from', $cacheExpirationDateStrategy);
 
-        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
+        $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
             $this->_serviceLocator->get('Model\Group\Group')
         );

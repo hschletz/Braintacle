@@ -21,13 +21,13 @@
 
 namespace Library\Test\Filter;
 
-use Zend\Log\Logger;
+use Laminas\Log\Logger;
 
 class LogLevelTest extends \PHPUnit\Framework\TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf('Zend\Filter\AbstractFilter', new \Library\Filter\LogLevel);
+        $this->assertInstanceOf('Laminas\Filter\AbstractFilter', new \Library\Filter\LogLevel);
     }
 
     public function filterProvider()
@@ -51,7 +51,7 @@ class LogLevelTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertSame(
             $expectedResult,
-            \Zend\Filter\StaticFilter::execute($value, 'Library\LogLevel')
+            \Laminas\Filter\StaticFilter::execute($value, 'Library\LogLevel')
         );
     }
 
@@ -59,6 +59,6 @@ class LogLevelTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException('PHPUnit\Framework\Error\Notice');
         $this->expectExceptionMessage('Undefined index: error');
-        \Zend\Filter\StaticFilter::execute('error', 'Library\LogLevel');
+        \Laminas\Filter\StaticFilter::execute('error', 'Library\LogLevel');
     }
 }

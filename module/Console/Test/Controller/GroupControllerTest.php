@@ -94,7 +94,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionNoData()
     {
-        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
         $resultSet->initialize(new \EmptyIterator);
         $this->_groupManager->expects($this->once())
                             ->method('getGroups')
@@ -109,7 +109,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     public function testIndexActionWithData()
     {
         $creationDate = new \DateTime('2014-04-06 11:55:33');
-        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
         $resultSet->initialize(
             array(
                 array(
@@ -124,7 +124,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                             ->with(null, null, 'Name', 'asc')
                             ->willReturn($resultSet);
 
-        $dateFormat = $this->createMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock('Laminas\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->once())
                    ->method('__invoke')
                    ->with($creationDate, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
@@ -150,11 +150,11 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionMessages()
     {
-        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
         $resultSet->initialize(new \EmptyIterator);
         $this->_groupManager->expects($this->once())->method('getGroups')->willReturn($resultSet);
 
-        $flashMessenger = $this->createMock('Zend\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock('Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->withConsecutive(
@@ -185,7 +185,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                             ->with('test')
                             ->willReturn($group);
 
-        $dateFormat = $this->createMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock('Laminas\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->once())
                    ->method('__invoke')
                    ->with($creationDate, \IntlDateFormatter::FULL, \IntlDateFormatter::MEDIUM)
@@ -242,7 +242,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                              )
                              ->willReturn($clients);
 
-        $dateFormat = $this->createMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock('Laminas\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->exactly(3))
                    ->method('__invoke')
                    ->withConsecutive(

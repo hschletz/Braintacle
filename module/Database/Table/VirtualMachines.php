@@ -30,11 +30,11 @@ class VirtualMachines extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'virtualmachines';
 
-        $this->_hydrator = new \Zend\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(
@@ -49,7 +49,7 @@ class VirtualMachines extends \Database\AbstractTable
             )
         );
 
-        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
+        $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
             $serviceLocator->get('Model\Client\Item\VirtualMachine')
         );

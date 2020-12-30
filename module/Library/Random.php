@@ -24,7 +24,7 @@ namespace Library;
 /**
  * Service for generating random values
  *
- * This is a wrapper for \Zend\Math\Rand. It has the advantage of being
+ * This is a wrapper for \Laminas\Math\Rand. It has the advantage of being
  * available as the Library\Random service which can be replaced by a mock
  * object that generates predictable values for testing.
  *
@@ -41,6 +41,6 @@ class Random
      */
     public function getInteger($min, $max)
     {
-        return \Zend\Math\Rand::getInteger($min, $max);
+        return \Laminas\Math\Rand::getInteger($min, $max);
     }
 }

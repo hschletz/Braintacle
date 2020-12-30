@@ -25,7 +25,7 @@ namespace Console\Form\Service;
  * Abstract factory for Package forms
  * @codeCoverageIgnore
  */
-class PackageFactory implements \Zend\ServiceManager\Factory\AbstractFactoryInterface
+class PackageFactory implements \Laminas\ServiceManager\Factory\AbstractFactoryInterface
 {
     /** {@inheritdoc} */
     public function canCreate(\Interop\Container\ContainerInterface $container, $requestedName)

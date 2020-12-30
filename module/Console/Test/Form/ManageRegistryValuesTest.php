@@ -21,7 +21,7 @@
 
 namespace Console\Test\Form;
 
-use Zend\Dom\Document\Query as Query;
+use Laminas\Dom\Document\Query as Query;
 
 /**
  * Tests for ManageRegistryValues
@@ -59,7 +59,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
 
     public function setUp(): void
     {
-        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
         $resultSet->initialize($this->_values);
         $this->_registryManager = $this->createMock('Model\Registry\RegistryManager');
         $this->_registryManager->expects($this->once())
@@ -85,25 +85,25 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
     public function testInit()
     {
         $fieldset = $this->_form->get('existing');
-        $this->assertInstanceOf('Zend\Form\Fieldset', $fieldset);
+        $this->assertInstanceOf('Laminas\Form\Fieldset', $fieldset);
         $this->assertEquals('Values', $fieldset->getLabel());
         $value1 = $fieldset->get($this->_name1);
-        $this->assertInstanceOf('Zend\Form\Element\Text', $value1);
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $value1);
         $this->assertEquals('Test1', $value1->getValue());
         $this->assertEquals('a\b\c', $value1->getLabel());
         $value2 = $fieldset->get($this->_name2);
-        $this->assertInstanceOf('Zend\Form\Element\Text', $value2);
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $value2);
         $this->assertEquals('Test2', $value2->getValue());
         $this->assertEquals('d\e\f', $value2->getLabel());
 
         $fieldset = $this->_form->get('new_value');
         $this->assertEquals('Add', $fieldset->getLabel());
-        $this->assertInstanceOf('Zend\Form\Fieldset', $fieldset);
-        $this->assertInstanceOf('Zend\Form\Element\Text', $fieldset->get('name'));
-        $this->assertInstanceOf('Zend\Form\Element\Select', $fieldset->get('root_key'));
+        $this->assertInstanceOf('Laminas\Form\Fieldset', $fieldset);
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $fieldset->get('name'));
+        $this->assertInstanceOf('Laminas\Form\Element\Select', $fieldset->get('root_key'));
         $this->assertEquals(\Model\Registry\Value::rootKeys(), $fieldset->get('root_key')->getValueOptions());
-        $this->assertInstanceOf('Zend\Form\Element\Text', $fieldset->get('subkeys'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $fieldset->get('value'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $fieldset->get('subkeys'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $fieldset->get('value'));
 
         $this->assertInstanceOf('\Library\Form\Element\Submit', $this->_form->get('submit'));
     }
@@ -202,7 +202,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
             ),
         );
 
-        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
         $resultSet->initialize(new \EmptyIterator);
         $registryManager = $this->createMock('Model\Registry\RegistryManager');
         $registryManager->expects($this->once())
@@ -247,7 +247,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         $value1 = array('Id' => 1, 'Name' => 'Test1', 'FullPath' => 'path1');
         $value2 = array('Id' => 2, 'Name' => 'Test2', 'FullPath' => 'path2');
 
-        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
         $resultSet->initialize(array($value1, $value2));
         $registryManager = $this->createMock('Model\Registry\RegistryManager');
         $registryManager->expects($this->once())

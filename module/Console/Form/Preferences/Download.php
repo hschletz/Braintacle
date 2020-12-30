@@ -31,13 +31,13 @@ class Download extends AbstractForm
     {
         parent::init();
         $preferences = $this->get('Preferences');
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
 
-        $packageDeployment = new \Zend\Form\Element\Checkbox('packageDeployment');
+        $packageDeployment = new \Laminas\Form\Element\Checkbox('packageDeployment');
         $packageDeployment->setLabel('Enable package download');
         $preferences->add($packageDeployment);
 
-        $packagePath = new \Zend\Form\Element\Text('packagePath');
+        $packagePath = new \Laminas\Form\Element\Text('packagePath');
         $packagePath->setLabel('Package storage directory');
         $preferences->add($packagePath);
         $inputFilter->add(
@@ -49,7 +49,7 @@ class Download extends AbstractForm
             )
         );
 
-        $packageBaseUriHttp = new \Zend\Form\Element\Text('packageBaseUriHttp');
+        $packageBaseUriHttp = new \Laminas\Form\Element\Text('packageBaseUriHttp');
         $packageBaseUriHttp->setLabel('HTTP package base URL');
         $preferences->add($packageBaseUriHttp);
         $inputFilter->add(
@@ -76,7 +76,7 @@ class Download extends AbstractForm
             )
         );
 
-        $packageBaseUriHttps = new \Zend\Form\Element\Text('packageBaseUriHttps');
+        $packageBaseUriHttps = new \Laminas\Form\Element\Text('packageBaseUriHttps');
         $packageBaseUriHttps->setLabel('HTTPS package base URL');
         $preferences->add($packageBaseUriHttps);
         $inputFilter->add(
@@ -103,19 +103,19 @@ class Download extends AbstractForm
             )
         );
 
-        $downloadPeriodDelay = new \Zend\Form\Element\Text('downloadPeriodDelay');
+        $downloadPeriodDelay = new \Laminas\Form\Element\Text('downloadPeriodDelay');
         $downloadPeriodDelay->setLabel('Delay (in seconds) between periods')
                             ->setAttribute('size', 5);
         $preferences->add($downloadPeriodDelay);
         $inputFilter->add($this->_getIntegerFilter('downloadPeriodDelay'));
 
-        $downloadCycleDelay = new \Zend\Form\Element\Text('downloadCycleDelay');
+        $downloadCycleDelay = new \Laminas\Form\Element\Text('downloadCycleDelay');
         $downloadCycleDelay->setLabel('Delay (in seconds) between cycles')
                            ->setAttribute('size', 5);
         $preferences->add($downloadCycleDelay);
         $inputFilter->add($this->_getIntegerFilter('downloadCycleDelay'));
 
-        $downloadFragmentDelay = new \Zend\Form\Element\Text('downloadFragmentDelay');
+        $downloadFragmentDelay = new \Laminas\Form\Element\Text('downloadFragmentDelay');
         $downloadFragmentDelay->setLabel('Delay (in seconds) between fragments')
                               ->setAttribute('size', 5);
         $preferences->add($downloadFragmentDelay);
@@ -126,13 +126,13 @@ class Download extends AbstractForm
                             ->setValueOptions(range(0, 10));
         $preferences->add($downloadMaxPriority);
 
-        $downloadTimeout = new \Zend\Form\Element\Text('downloadTimeout');
+        $downloadTimeout = new \Laminas\Form\Element\Text('downloadTimeout');
         $downloadTimeout->setLabel('Timeout (in days)')
                         ->setAttribute('size', 5);
         $preferences->add($downloadTimeout);
         $inputFilter->add($this->_getIntegerFilter('downloadTimeout'));
 
-        $parentFilter = new \Zend\InputFilter\InputFilter;
+        $parentFilter = new \Laminas\InputFilter\InputFilter;
         $parentFilter->add($inputFilter, 'Preferences');
         $this->setInputFilter($parentFilter);
     }
@@ -145,7 +145,7 @@ class Download extends AbstractForm
      */
     protected function _getIntegerFilter($name)
     {
-        $validatorChain = new \Zend\Validator\ValidatorChain;
+        $validatorChain = new \Laminas\Validator\ValidatorChain;
         $validatorChain->attachByName(
             'Callback',
             array(
@@ -182,7 +182,7 @@ class Download extends AbstractForm
         // $value has no scheme part. Apply http:// scheme (also valid for HTTPS
         // URI) and try to construct a valid URI.
         try {
-            $uri = new \Zend\Uri\Http;
+            $uri = new \Laminas\Uri\Http;
             return $uri->parse("http://$value")->isValid();
         } catch (\Exception $e) {
             return false;

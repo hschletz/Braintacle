@@ -29,9 +29,9 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
         $route->method('getMatchedParam')->with('config')->willReturn(null);
         $route->method('getName')->willReturn('routeName');
 
-        $console = $this->createMock('Zend\Console\Adapter\AdapterInterface');
+        $console = $this->createMock('Laminas\Console\Adapter\AdapterInterface');
 
-        $container = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $container = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $container->expects($this->never())->method('setAllowOverride');
         $container->expects($this->never())->method('setService');
 
@@ -51,9 +51,9 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
         $route->method('getMatchedParam')->with('config')->willReturn('configFile');
         $route->method('getName')->willReturn('routeName');
 
-        $console = $this->createMock('Zend\Console\Adapter\AdapterInterface');
+        $console = $this->createMock('Laminas\Console\Adapter\AdapterInterface');
 
-        $container = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $container = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $container->expects($this->at(0))->method('get')->willReturn(array('key' => 'value'));
         $container->expects($this->at(1))->method('getAllowOverride')->willReturn('initialAllowOverride');
         $container->expects($this->at(2))->method('setAllowOverride')->with(true);
@@ -84,9 +84,9 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
         $route = $this->createMock('ZF\Console\Route');
         $route->method('getMatchedParam')->with('config')->willReturn('configFile');
 
-        $console = $this->createMock('Zend\Console\Adapter\AdapterInterface');
+        $console = $this->createMock('Laminas\Console\Adapter\AdapterInterface');
 
-        $container = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $container = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $container->method('get')->with('ApplicationConfig')->willReturn(
             array(
                 'key' => 'value',

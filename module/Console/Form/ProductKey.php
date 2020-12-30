@@ -33,7 +33,7 @@ class ProductKey extends Form
     {
         parent::init();
 
-        $key = new \Zend\Form\Element\Text('Key');
+        $key = new \Laminas\Form\Element\Text('Key');
         $key->setLabel('Product key (if different)');
         $this->add($key);
 
@@ -41,7 +41,7 @@ class ProductKey extends Form
         $submit->setLabel('OK');
         $this->add($submit);
 
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
         $inputFilter->add(
             array(
                 'name' => 'Key',

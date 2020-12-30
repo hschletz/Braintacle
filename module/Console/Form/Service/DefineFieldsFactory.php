@@ -25,7 +25,7 @@ namespace Console\Form\Service;
  * Factory for DefineFields form
  * @codeCoverageIgnore
  */
-class DefineFieldsFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class DefineFieldsFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

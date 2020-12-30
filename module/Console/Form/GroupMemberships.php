@@ -57,7 +57,7 @@ class GroupMemberships extends Form
     }
 
     /** {@inheritdoc} */
-    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset)
+    public function renderFieldset(\Laminas\View\Renderer\PhpRenderer $view, \Laminas\Form\Fieldset $fieldset)
     {
         $output = '';
         if ($fieldset->has('Groups')) {
@@ -65,7 +65,7 @@ class GroupMemberships extends Form
             if ($groups->count()) {
                 $output = "<div>\n";
                 foreach ($groups as $element) {
-                    if ($element instanceof \Zend\Form\Element\Radio) {
+                    if ($element instanceof \Laminas\Form\Element\Radio) {
                         $label = $view->htmlElement(
                             'a',
                             $view->escapeHtml($element->getLabel()),
@@ -102,7 +102,7 @@ class GroupMemberships extends Form
         if ($this->has('Groups')) {
             $this->remove('Groups');
         }
-        $fieldset= new \Zend\Form\Fieldset('Groups');
+        $fieldset= new \Laminas\Form\Fieldset('Groups');
         $this->add($fieldset);
 
         $buttons = array(
@@ -111,7 +111,7 @@ class GroupMemberships extends Form
             \Model\Client\Client::MEMBERSHIP_NEVER => $this->_('never'),
         );
         foreach ($groups as $group) {
-            $element = new \Zend\Form\Element\Radio($group);
+            $element = new \Laminas\Form\Element\Radio($group);
             $element->setLabel($group);
             $element->setValueOptions($buttons);
             $element->setValue(\Model\Client\Client::MEMBERSHIP_AUTOMATIC);

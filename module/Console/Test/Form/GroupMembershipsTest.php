@@ -21,7 +21,7 @@
 
 namespace Console\Test\Form;
 
-use Zend\Dom\Document\Query;
+use Laminas\Dom\Document\Query;
 
 /**
  * Tests for GroupMemberships form
@@ -60,7 +60,7 @@ class GroupMembershipsTest extends \Console\Test\AbstractFormTest
         $groups = $this->_form->get('Groups');
         $this->assertCount(2, $groups);
         $group2 = $groups->get('group2');
-        $this->assertInstanceOf('Zend\Form\Element\Radio', $group2);
+        $this->assertInstanceOf('Laminas\Form\Element\Radio', $group2);
         $this->assertEquals('group2', $group2->getName());
         $this->assertEquals('group2', $group2->getLabel());
 
@@ -92,7 +92,7 @@ class GroupMembershipsTest extends \Console\Test\AbstractFormTest
         $this->_form->prepare();
         $view = $this->_createView();
         $html = $this->_form->renderFieldset($view, $this->_form);
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
         $this->assertCount(1, Query::execute('//div', $document));
         $this->assertCount(
             1,

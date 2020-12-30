@@ -38,26 +38,26 @@ class Update extends Build
     /** {@inheritdoc} */
     public function init()
     {
-        $fieldset = new \Zend\Form\Fieldset('Deploy');
+        $fieldset = new \Laminas\Form\Fieldset('Deploy');
         $fieldset->setLabel('Deploy to clients which have existing package assigned');
 
-        $deployPending = new \Zend\Form\Element\Checkbox('Pending');
+        $deployPending = new \Laminas\Form\Element\Checkbox('Pending');
         $deployPending->setLabel('Pending');
         $fieldset->add($deployPending);
 
-        $deployRunning = new \Zend\Form\Element\Checkbox('Running');
+        $deployRunning = new \Laminas\Form\Element\Checkbox('Running');
         $deployRunning->setLabel('Running');
         $fieldset->add($deployRunning);
 
-        $deploySuccess = new \Zend\Form\Element\Checkbox('Success');
+        $deploySuccess = new \Laminas\Form\Element\Checkbox('Success');
         $deploySuccess->setLabel('Success');
         $fieldset->add($deploySuccess);
 
-        $deployError = new \Zend\Form\Element\Checkbox('Error');
+        $deployError = new \Laminas\Form\Element\Checkbox('Error');
         $deployError->setLabel('Error');
         $fieldset->add($deployError);
 
-        $deployGroups = new \Zend\Form\Element\Checkbox('Groups');
+        $deployGroups = new \Laminas\Form\Element\Checkbox('Groups');
         $deployGroups->setLabel('Groups');
         $fieldset->add($deployGroups);
 
@@ -66,7 +66,7 @@ class Update extends Build
     }
 
     /** {@inheritdoc} */
-    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset)
+    public function renderFieldset(\Laminas\View\Renderer\PhpRenderer $view, \Laminas\Form\Fieldset $fieldset)
     {
         $output = '';
         if ($fieldset->getName() == 'Deploy') {

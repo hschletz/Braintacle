@@ -101,7 +101,7 @@ class ClientOrGroupTest extends AbstractTest
         $config = $this->createMock('Model\Config');
         $config->method('__get')->with('lockValidity')->willReturn(42);
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Database\Nada', static::$serviceManager->get('Database\Nada')),
@@ -138,7 +138,7 @@ class ClientOrGroupTest extends AbstractTest
         $config = $this->createMock('Model\Config');
         $config->expects($this->once())->method('__get')->with('lockValidity')->willreturn($timeout);
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Database\Nada', static::$serviceManager->get('Database\Nada')),
@@ -158,8 +158,8 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testLockRaceCondition()
     {
-        $sql = $this->createMock('\Zend\Db\Sql\Sql');
-        $sql->method('select')->willReturn(new \Zend\Db\Sql\Select);
+        $sql = $this->createMock('\Laminas\Db\Sql\Sql');
+        $sql->method('select')->willReturn(new \Laminas\Db\Sql\Select);
 
         $locks = $this->createMock('Database\Table\Locks');
         $locks->method('getSql')->willReturn($sql);
@@ -168,7 +168,7 @@ class ClientOrGroupTest extends AbstractTest
 
         $config = $this->createMock('Model\Config');
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Database\Nada', static::$serviceManager->get('Database\Nada')),
@@ -196,7 +196,7 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testUnlockWithReleasedLock()
     {
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Database\Nada', static::$serviceManager->get('Database\Nada')),
@@ -226,7 +226,7 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testUnlockWithExpiredLock()
     {
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Database\Nada', static::$serviceManager->get('Database\Nada')),
@@ -279,7 +279,7 @@ class ClientOrGroupTest extends AbstractTest
         $config = $this->createMock('Model\Config');
         $config->method('__get')->with('lockValidity')->willReturn(42);
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Database\Nada', static::$serviceManager->get('Database\Nada')),
@@ -330,7 +330,7 @@ class ClientOrGroupTest extends AbstractTest
         $now = $this->createMock('DateTime');
         $now->method('format')->with('D M d H:i:s Y')->willReturn('current timestamp');
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array(
@@ -372,7 +372,7 @@ class ClientOrGroupTest extends AbstractTest
                        ->with('package5')
                        ->willReturn(array('Id' => 5));
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array(
@@ -422,7 +422,7 @@ class ClientOrGroupTest extends AbstractTest
         $config = $this->createMock('Model\Config');
         $config->method('getDbIdentifier')->with('inventoryInterval')->willReturn('FREQUENCY');
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array(
@@ -477,7 +477,7 @@ class ClientOrGroupTest extends AbstractTest
         $config = $this->createMock('Model\Config');
         $config->method('getDbIdentifier')->with($option)->willReturn($identifier);
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Database\Table\ClientConfig',
@@ -520,7 +520,7 @@ class ClientOrGroupTest extends AbstractTest
         $clientConfig->expects($this->never())->method('update');
         $clientConfig->expects($this->never())->method('delete');
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Database\Table\ClientConfig', $clientConfig),
@@ -540,22 +540,22 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testSetConfigRollbackOnException()
     {
-        $connection = $this->createMock('Zend\Db\Adapter\Driver\AbstractConnection');
+        $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
         $connection->expects($this->at(0))->method('beginTransaction');
         $connection->expects($this->at(1))->method('rollback');
         $connection->expects($this->never())->method('commit');
 
-        $driver = $this->createMock('Zend\Db\Adapter\Driver\DriverInterface');
+        $driver = $this->createMock('Laminas\Db\Adapter\Driver\DriverInterface');
         $driver->method('getConnection')->willReturn($connection);
 
-        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
+        $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
 
         $clientConfig = $this->createMock('Database\Table\ClientConfig');
         $clientConfig->method('getAdapter')->willReturn($adapter);
         $clientConfig->method('delete')->willThrowException(new \RuntimeException('test message'));
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->with('Database\Table\ClientConfig')->willReturn($clientConfig);
 
         $this->expectException('RuntimeException');

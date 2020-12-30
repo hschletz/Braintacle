@@ -25,7 +25,7 @@ namespace Console\Form\Service;
  * Factory for ShowDuplicates
  * @codeCoverageIgnore
  */
-class ShowDuplicatesFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class ShowDuplicatesFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

@@ -28,7 +28,7 @@ namespace Database\Hydrator\Strategy\MemorySlots;
  * raw values are suffixed (like "800 MHz") in which case data gets truncated to
  * the integer part. This conversion is not reverted on extraction.
  */
-class Clock implements \Zend\Hydrator\Strategy\StrategyInterface
+class Clock implements \Laminas\Hydrator\Strategy\StrategyInterface
 {
     /** {@inheritdoc} */
     public function hydrate($value, ?array $data)

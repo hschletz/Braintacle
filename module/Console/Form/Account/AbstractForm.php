@@ -21,7 +21,7 @@
 
 namespace Console\Form\Account;
 
-use Zend\Form\Element;
+use Laminas\Form\Element;
 
 /**
  * Base class for account forms
@@ -32,7 +32,7 @@ abstract class AbstractForm extends \Console\Form\Form
     public function init()
     {
         parent::init();
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
 
         $id = new Element\Text('Id');
         $id->setLabel('Login name');
@@ -63,16 +63,16 @@ abstract class AbstractForm extends \Console\Form\Form
         // The minimum length is checked with a different, encoding-aware
         // validator. So the length constraint is at least 8 characters, but not
         // more than 72 bytes.
-        $passwordMax = new \Zend\Validator\StringLength(
+        $passwordMax = new \Laminas\Validator\StringLength(
             array(
                 'max' => \Model\Operator\AuthenticationAdapter::PASSWORD_MAX_BYTES,
                 'encoding' => '8BIT',
             )
         );
-        $passwordMax->setStringWrapper(new \Zend\Stdlib\StringWrapper\Native);
+        $passwordMax->setStringWrapper(new \Laminas\Stdlib\StringWrapper\Native);
         $passwordMax->setMessage(
             'The password is longer than %max% bytes',
-            \Zend\Validator\StringLength::TOO_LONG
+            \Laminas\Validator\StringLength::TOO_LONG
         );
         $inputFilter->add(
             array(
@@ -166,7 +166,7 @@ abstract class AbstractForm extends \Console\Form\Form
                     ),
                     array(
                         'name' => 'EmailAddress',
-                        'options' => array('allow' => \Zend\Validator\Hostname::ALLOW_ALL)
+                        'options' => array('allow' => \Laminas\Validator\Hostname::ALLOW_ALL)
                     ),
                 )
             )
@@ -205,7 +205,7 @@ abstract class AbstractForm extends \Console\Form\Form
             // Remove incorrect message.
             $mailAddress = $this->get('MailAddress');
             $messages = $mailAddress->getMessages();
-            unset($messages[\Zend\Validator\EmailAddress::INVALID]);
+            unset($messages[\Laminas\Validator\EmailAddress::INVALID]);
             $mailAddress->setMessages($messages);
             // Evaluate remaining messages.
             $isValid = !$this->getMessages();

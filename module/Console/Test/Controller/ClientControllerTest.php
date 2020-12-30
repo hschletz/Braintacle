@@ -797,7 +797,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionMessages()
     {
-        $flashMessenger = $this->createMock('Zend\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock('Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->withConsecutive(
@@ -821,7 +821,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $inventoryDate = new \DateTime('2014-05-29 11:16:15');
         $lastContactDate = new \DateTime('2014-05-29 11:17:34');
 
-        $dateFormat = $this->createMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock('Laminas\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->exactly(2))
                    ->method('__invoke')
                    ->withConsecutive(
@@ -2199,7 +2199,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->_clientManager->method('getClient')->willReturn($client);
 
-        $flashMessenger = $this->createMock('Zend\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock('Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->expects($this->once())
                        ->method('render')
@@ -2323,7 +2323,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->method('setPackages');
         $form->expects($this->never())
              ->method('render');
-        $assignments = new \Zend\Db\ResultSet\ResultSet;
+        $assignments = new \Laminas\Db\ResultSet\ResultSet;
         $assignments->initialize(new \EmptyIterator);
 
         $client = $this->createMock('Model\Client\Client');
@@ -2349,7 +2349,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->method('setPackages');
         $form->expects($this->never())
              ->method('render');
-        $assignments = new \Zend\Db\ResultSet\ResultSet;
+        $assignments = new \Laminas\Db\ResultSet\ResultSet;
         $assignments->initialize(
             array(
                 array(
@@ -2435,7 +2435,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $assignments = new \Zend\Db\ResultSet\ResultSet;
+        $assignments = new \Laminas\Db\ResultSet\ResultSet;
         $assignments->initialize(new \EmptyIterator);
 
         $client = $this->createMock('Model\Client\Client');
@@ -2458,7 +2458,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testGroupsActionNoGroups()
     {
-        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
         $resultSet->initialize(new \EmptyIterator);
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
         $form->expects($this->never())
@@ -2483,7 +2483,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             array('Id' => 1, 'Name' => 'group1'),
             array('Id' => 2, 'Name' => 'group2'),
         );
-        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
         $resultSet->initialize($groups);
         $formGroups = array(
             'group1' => \Model\Client\Client::MEMBERSHIP_NEVER,
@@ -2525,7 +2525,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             array('Id' => 1, 'Name' => 'group1'),
             array('Id' => 2, 'Name' => 'group2'),
         );
-        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
         $resultSet->initialize($groups);
         $memberships = array(
             1 => \Model\Client\Client::MEMBERSHIP_AUTOMATIC,

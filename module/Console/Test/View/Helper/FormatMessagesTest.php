@@ -31,7 +31,7 @@ class FormatMessagesTest extends \Library\Test\View\Helper\AbstractTest
      */
     public function testInvoke()
     {
-        $escapeHtml = $this->createMock('Zend\View\Helper\EscapeHtml');
+        $escapeHtml = $this->createMock('Laminas\View\Helper\EscapeHtml');
         $escapeHtml->expects($this->any())
                    ->method('__invoke')
                    ->willReturnCallback(function ($value) {
@@ -44,14 +44,14 @@ class FormatMessagesTest extends \Library\Test\View\Helper\AbstractTest
                     ->with('a', 'escape(http://example.net)', array('href' => 'http://example.net'), true)
                     ->will($this->returnValue('Uri'));
 
-        $translate = $this->createMock('Zend\I18n\View\Helper\Translate');
+        $translate = $this->createMock('Laminas\I18n\View\Helper\Translate');
         $translate->expects($this->any())
                   ->method('__invoke')
                   ->willReturnCallback(function ($value) {
                       return "translate($value)";
                   });
 
-        $uri = $this->createMock('Zend\Uri\Http');
+        $uri = $this->createMock('Laminas\Uri\Http');
         $uri->expects($this->any())
             ->method('__toString')
             ->will($this->returnValue('http://example.net'));

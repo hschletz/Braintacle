@@ -40,7 +40,7 @@ class Attachments extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'temp_files';
         parent::__construct($serviceLocator);
@@ -55,8 +55,8 @@ class Attachments extends \Database\AbstractTable
         if (in_array($this->table, $database->getTableNames())) {
             $count = $this->delete(
                 array(
-                    new \Zend\Db\Sql\Predicate\Operator('table_name', '!=', self::OBJECT_TYPE_CLIENT),
-                    new \Zend\Db\Sql\Predicate\Operator('table_name', '!=', self::OBJECT_TYPE_SNMP),
+                    new \Laminas\Db\Sql\Predicate\Operator('table_name', '!=', self::OBJECT_TYPE_CLIENT),
+                    new \Laminas\Db\Sql\Predicate\Operator('table_name', '!=', self::OBJECT_TYPE_SNMP),
                 )
             );
             if ($count) {

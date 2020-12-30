@@ -25,7 +25,7 @@ namespace Console\Form\Service;
  * Factory for AddToGroup form
  * @codeCoverageIgnore
  */
-class AddToGroupFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class AddToGroupFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

@@ -92,7 +92,7 @@ class SoftwareManager
      * @param array $filters Associative array of filters. Default: none.
      * @param string $order One of "name" or "num_clients", default: "name"
      * @param string $direction Onde of "asc" or "desc", default: "asc"
-     * @return \Zend\Db\ResultSet\ResultSet Result set producing arrays with "name" and "num_clients" keys
+     * @return \Laminas\Db\ResultSet\ResultSet Result set producing arrays with "name" and "num_clients" keys
      */
     public function getSoftware($filters = null, $order = 'name', $direction = 'asc')
     {
@@ -101,7 +101,7 @@ class SoftwareManager
         $select->columns(
             array(
                 'name',
-                'num_clients' => new \Zend\Db\Sql\Literal('COUNT(DISTINCT hardware_id)'),
+                'num_clients' => new \Laminas\Db\Sql\Literal('COUNT(DISTINCT hardware_id)'),
             )
         );
 
@@ -113,11 +113,11 @@ class SoftwareManager
                             'hardware',
                             'hardware.id = hardware_id',
                             array(),
-                            \Zend\Db\Sql\Select::JOIN_INNER
+                            \Laminas\Db\Sql\Select::JOIN_INNER
                         );
                         switch ($search) {
                             case 'windows':
-                                $select->where(new \Zend\Db\Sql\Predicate\IsNotNull('winprodid'));
+                                $select->where(new \Laminas\Db\Sql\Predicate\IsNotNull('winprodid'));
                                 break;
                             case 'other':
                                 $select->where(array('winprodid' => null));
@@ -164,7 +164,7 @@ class SoftwareManager
         }
 
         // Wrap into a ResultSet to support buffering
-        $resultSet = new \Zend\Db\ResultSet\ResultSet(\Zend\Db\ResultSet\ResultSet::TYPE_ARRAY);
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet(\Laminas\Db\ResultSet\ResultSet::TYPE_ARRAY);
         $resultSet->initialize($sql->prepareStatementForSqlObject($select)->execute());
         return $resultSet;
     }
@@ -191,11 +191,11 @@ class SoftwareManager
     {
         $sql = $this->_windowsInstallations->getSql();
         $select = $sql->select();
-        $select->columns(array('num' => new \Zend\Db\Sql\Literal('COUNT(manual_product_key)')))
-               ->where(new \Zend\Db\Sql\Predicate\IsNotNull('manual_product_key'));
+        $select->columns(array('num' => new \Laminas\Db\Sql\Literal('COUNT(manual_product_key)')))
+               ->where(new \Laminas\Db\Sql\Predicate\IsNotNull('manual_product_key'));
         return $sql->getAdapter()->query(
             $sql->buildSqlString($select),
-            \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
+            \Laminas\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
         )->current()['num'];
     }
 

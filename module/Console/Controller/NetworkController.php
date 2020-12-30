@@ -24,7 +24,7 @@ namespace Console\Controller;
 /**
  * Controller for subnets and IP discovery
  */
-class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
+class NetworkController extends \Laminas\Mvc\Controller\AbstractActionController
 {
     /**
      * DeviceManager prototype
@@ -72,8 +72,8 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
 
     /** {@inheritdoc} */
     public function dispatch(
-        \Zend\Stdlib\RequestInterface $request,
-        \Zend\Stdlib\ResponseInterface $response = null
+        \Laminas\Stdlib\RequestInterface $request,
+        \Laminas\Stdlib\ResponseInterface $response = null
     ) {
         $this->setActiveMenu('Inventory', 'Network');
         return parent::dispatch($request, $response);
@@ -164,7 +164,7 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
      *
      * Query params: subnet, mask
      *
-     * @return array|\Zend\Http\Response array(subnet, form) or redirect response
+     * @return array|\Laminas\Http\Response array(subnet, form) or redirect response
      */
     public function propertiesAction()
     {
@@ -195,7 +195,7 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
      *
      * Query params: macaddress
      *
-     * @return array|\Zend\Http\Response array(device, form) or redirect response
+     * @return array|\Laminas\Http\Response array(device, form) or redirect response
      */
     public function editAction()
     {
@@ -235,7 +235,7 @@ class NetworkController extends \Zend\Mvc\Controller\AbstractActionController
      *
      * Query params: macaddress
      *
-     * @return array|\Zend\Http\Response array(device) or redirect response
+     * @return array|\Laminas\Http\Response array(device) or redirect response
      */
     public function deleteAction()
     {

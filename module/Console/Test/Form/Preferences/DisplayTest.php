@@ -26,7 +26,7 @@ class DisplayTest extends \Console\Test\AbstractFormTest
     public function testInit()
     {
         $preferences = $this->_form->get('Preferences');
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('displayBlacklistedSoftware'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $preferences->get('displayBlacklistedSoftware'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
 }

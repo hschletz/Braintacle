@@ -21,7 +21,7 @@
 
 namespace Console\Test\Form;
 
-use Zend\Dom\Document\Query as Query;
+use Laminas\Dom\Document\Query as Query;
 
 /**
  * Tests for DeleteClient
@@ -51,7 +51,7 @@ class DeleteClientTest extends \Console\Test\AbstractFormTest
     public function testInit()
     {
         $deleteInterfaces = $this->_form->get('DeleteInterfaces');
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $deleteInterfaces);
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $deleteInterfaces);
         $yes = $this->_form->get('yes');
         $this->assertInstanceOf('Library\Form\Element\Submit', $yes);
         $no = $this->_form->get('no');
@@ -79,7 +79,7 @@ class DeleteClientTest extends \Console\Test\AbstractFormTest
     public function testRender()
     {
         $output = $this->_form->render($this->_createView());
-        $document = new \Zend\Dom\Document($output);
+        $document = new \Laminas\Dom\Document($output);
         $this->assertCount(
             1,
             Query::Execute('//input[@type="checkbox"][@name="DeleteInterfaces"]', $document)

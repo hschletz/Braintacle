@@ -36,7 +36,7 @@ class RedirectToRouteTest extends AbstractTest
     {
         $plugin = $this->_getPlugin();
         $response = $plugin('testedcontroller', 'testedaction');
-        $this->assertInstanceOf('Zend\Http\Response', $response);
+        $this->assertInstanceOf('Laminas\Http\Response', $response);
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals(
             '/module/testedcontroller/testedaction/',

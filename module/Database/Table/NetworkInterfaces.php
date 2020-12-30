@@ -30,7 +30,7 @@ class NetworkInterfaces extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'networks';
 
@@ -52,7 +52,7 @@ class NetworkInterfaces extends \Database\AbstractTable
         $extractionMap = array_flip($hydrationMap);
         unset($extractionMap['IsBlacklisted']);
 
-        $this->_hydrator = new \Zend\Hydrator\ArraySerializableHydrator();
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
 
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy($hydrationMap, $extractionMap)
@@ -62,7 +62,7 @@ class NetworkInterfaces extends \Database\AbstractTable
         $this->_hydrator->addStrategy('MacAddress', new \Library\Hydrator\Strategy\MacAddress);
         $this->_hydrator->addStrategy('macaddr', new \Library\Hydrator\Strategy\MacAddress);
 
-        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
+        $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
             $serviceLocator->get('Model\Client\Item\NetworkInterface')
         );

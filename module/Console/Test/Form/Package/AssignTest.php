@@ -21,7 +21,7 @@
 
 namespace Console\Test\Form\Package;
 
-use Zend\Dom\Document\Query;
+use Laminas\Dom\Document\Query;
 
 /**
  * Tests for Assign form
@@ -60,7 +60,7 @@ class AssignTest extends \Console\Test\AbstractFormTest
         $packages = $this->_form->get('Packages');
         $this->assertCount(2, $packages);
         $package2 = $packages->get('package2');
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $package2);
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $package2);
         $this->assertEquals('package2', $package2->getLabel());
 
         // Overwrite previously set packages
@@ -90,7 +90,7 @@ class AssignTest extends \Console\Test\AbstractFormTest
         $this->_form->setPackages(array('package1', 'package2'));
         $view = $this->_createView();
         $html = $this->_form->renderFieldset($view, $this->_form);
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
         $this->assertCount(1, Query::execute('//div[@class="table"]', $document));
         $this->assertCount(1, Query::execute('//*[text()="package1"]', $document));
         $this->assertCount(1, Query::execute('//input[@type="checkbox"][@name="package1"]', $document));

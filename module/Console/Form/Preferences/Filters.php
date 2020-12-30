@@ -31,21 +31,21 @@ class Filters extends AbstractForm
     {
         parent::init();
         $preferences = $this->get('Preferences');
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
 
-        $trustedNetworksOnly = new \Zend\Form\Element\Checkbox('trustedNetworksOnly');
+        $trustedNetworksOnly = new \Laminas\Form\Element\Checkbox('trustedNetworksOnly');
         $trustedNetworksOnly->setLabel('Limit agent connections to trusted networks');
         $preferences->add($trustedNetworksOnly);
 
-        $inventoryFilter = new \Zend\Form\Element\Checkbox('inventoryFilter');
+        $inventoryFilter = new \Laminas\Form\Element\Checkbox('inventoryFilter');
         $inventoryFilter->setLabel('Limit inventory frequency');
         $preferences->add($inventoryFilter);
 
-        $limitInventoryInterval = new \Zend\Form\Element\Text('limitInventoryInterval');
+        $limitInventoryInterval = new \Laminas\Form\Element\Text('limitInventoryInterval');
         $limitInventoryInterval->setLabel('Seconds between inventory processing')
                                ->setAttribute('size', 5);
         $preferences->add($limitInventoryInterval);
-        $validatorChain = new \Zend\Validator\ValidatorChain;
+        $validatorChain = new \Laminas\Validator\ValidatorChain;
         $validatorChain->attachByName(
             'Callback',
             array(
@@ -75,7 +75,7 @@ class Filters extends AbstractForm
             )
         );
 
-        $parentFilter = new \Zend\InputFilter\InputFilter;
+        $parentFilter = new \Laminas\InputFilter\InputFilter;
         $parentFilter->add($inputFilter, 'Preferences');
         $this->setInputFilter($parentFilter);
     }

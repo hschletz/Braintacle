@@ -33,11 +33,11 @@ namespace Database\Hydrator;
  * - **registry_content**: result from a registry filter, converted to "Registry.Content" property.
  * - ***model*.*column***: result from an item filter, converted to "*Model*.*Property*" property.
  */
-class Clients implements \Zend\Hydrator\HydratorInterface
+class Clients implements \Laminas\Hydrator\HydratorInterface
 {
     /**
      * Service locator
-     * @var \Zend\ServiceManager\ServiceLocatorInterface
+     * @var \Laminas\ServiceManager\ServiceLocatorInterface
      */
     protected $_serviceLocator;
 
@@ -134,9 +134,9 @@ class Clients implements \Zend\Hydrator\HydratorInterface
     /**
      * Constructor
      *
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * @param \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator
      */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->_serviceLocator = $serviceLocator;
         $this->_encodingFilter = new \Library\Filter\FixEncodingErrors;

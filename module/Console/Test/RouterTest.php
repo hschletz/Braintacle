@@ -33,7 +33,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
     {
         $application = \Library\Application::init('Console');
         $router = $application->getServiceManager()->get('HttpRouter');
-        $request = new \Zend\Http\Request;
+        $request = new \Laminas\Http\Request;
 
         $matchDefaultDefault = array(
             'controller' => 'client',

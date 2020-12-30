@@ -28,7 +28,7 @@ class SubnetTest extends \Console\Test\AbstractFormTest
 {
     public function testInit()
     {
-        $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('Name'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('Name'));
         $this->assertInstanceOf('\Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
 
@@ -62,6 +62,6 @@ class SubnetTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages();
         $this->assertCount(1, $messages);
-        $this->assertEquals(\Zend\Validator\StringLength::TOO_LONG, key($messages['Name']));
+        $this->assertEquals(\Laminas\Validator\StringLength::TOO_LONG, key($messages['Name']));
     }
 }

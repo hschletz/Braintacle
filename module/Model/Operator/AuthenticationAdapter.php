@@ -21,7 +21,7 @@
 
 namespace Model\Operator;
 
-use \Zend\Authentication\Result;
+use \Laminas\Authentication\Result;
 
 /**
  * Authentication adapter
@@ -30,7 +30,7 @@ use \Zend\Authentication\Result;
  * database. Hashes are automatically converted to a more secure hash after
  * successful authentication if necessary.
  */
-class AuthenticationAdapter extends \Zend\Authentication\Adapter\AbstractAdapter
+class AuthenticationAdapter extends \Laminas\Authentication\Adapter\AbstractAdapter
 {
     /**
      * The bcrypt hashing method truncates passwords to 72 bytes.
@@ -106,7 +106,7 @@ class AuthenticationAdapter extends \Zend\Authentication\Adapter\AbstractAdapter
                 $result = new Result(Result::FAILURE_IDENTITY_NOT_FOUND, null);
             }
         } catch (\Exception $e) {
-            throw new \Zend\Authentication\Adapter\Exception\RuntimeException(
+            throw new \Laminas\Authentication\Adapter\Exception\RuntimeException(
                 'Internal authentication error, see web server log for details',
                 0,
                 $e

@@ -38,7 +38,7 @@ class PrintFormTest extends \Library\Test\Mvc\Controller\Plugin\AbstractTest
 
         // Evaluate plugin return value
         $viewModel = $plugin($form);
-        $this->assertInstanceOf('Zend\View\Model\ViewModel', $viewModel);
+        $this->assertInstanceOf('Laminas\View\Model\ViewModel', $viewModel);
         $this->assertEquals('plugin/PrintForm.php', $viewModel->getTemplate());
         $this->assertEquals($form, $viewModel->form);
 

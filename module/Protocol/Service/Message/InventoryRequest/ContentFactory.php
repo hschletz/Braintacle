@@ -28,7 +28,7 @@ use Protocol\Message\InventoryRequest\Content;
  *
  * @codeCoverageIgnore
  */
-class ContentFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class ContentFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

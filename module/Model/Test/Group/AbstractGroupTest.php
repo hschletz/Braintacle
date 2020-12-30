@@ -40,7 +40,7 @@ abstract class AbstractGroupTest extends \Model\Test\AbstractTest
             $this->_config = $this->createMock('Model\Config');
             $this->_config->method('__get')->willReturnMap(array(array('groupCacheExpirationInterval', 30)));
 
-            $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+            $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
             $serviceManager->method('get')->willReturnMap(
                 array(
                     array('Db', static::$serviceManager->get('Db')),

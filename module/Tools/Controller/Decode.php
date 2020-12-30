@@ -46,10 +46,10 @@ class Decode
      * Decode a compressed inventory file
      *
      * @param \ZF\Console\Route $route
-     * @param \Zend\Console\Adapter\AdapterInterface $console
+     * @param \Laminas\Console\Adapter\AdapterInterface $console
      * @return integer Exit code
      */
-    public function __invoke(\ZF\Console\Route $route, \Zend\Console\Adapter\AdapterInterface $console)
+    public function __invoke(\ZF\Console\Route $route, \Laminas\Console\Adapter\AdapterInterface $console)
     {
         $input = $route->getMatchedParam('input_file');
         $output = $route->getMatchedParam('output_file');

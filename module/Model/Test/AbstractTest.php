@@ -43,7 +43,7 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
 
     /**
      * Service manager
-     * @var \Zend\ServiceManager\ServiceManager
+     * @var \Laminas\ServiceManager\ServiceManager
      */
     public static $serviceManager;
 
@@ -167,7 +167,7 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
         } else {
             // Create temporary service manager with identical configuration.
             $config = static::$serviceManager->get('config');
-            $serviceManager = new \Zend\ServiceManager\ServiceManager($config['service_manager']);
+            $serviceManager = new \Laminas\ServiceManager\ServiceManager($config['service_manager']);
             // Clone 'config' service
             $serviceManager->setService('config', $config);
             // If not explicitly overridden, copy database services to avoid

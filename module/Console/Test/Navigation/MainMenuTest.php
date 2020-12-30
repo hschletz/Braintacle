@@ -24,7 +24,7 @@ namespace Console\Test\Navigation;
 /**
  * Tests for the main menu
  */
-class MainMenuTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
+class MainMenuTest extends \Laminas\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
 {
     /**
      * Set up application config
@@ -43,7 +43,7 @@ class MainMenuTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerT
     public function testMainMenuFactory()
     {
         $this->assertInstanceOf(
-            'Zend\Navigation\Navigation',
+            'Laminas\Navigation\Navigation',
             $this->getApplicationServiceLocator()->get('Console\Navigation\MainMenu')
         );
     }
@@ -65,7 +65,7 @@ class MainMenuTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerT
               ->will($this->returnValue(0));
 
         $serviceManager = $this->getApplicationServiceLocator();
-        $serviceManager->setService('Zend\Authentication\AuthenticationService', $auth);
+        $serviceManager->setService('Laminas\Authentication\AuthenticationService', $auth);
         $serviceManager->setService('Model\SoftwareManager', $model);
         $serviceManager->setService('Library\UserConfig', array());
 

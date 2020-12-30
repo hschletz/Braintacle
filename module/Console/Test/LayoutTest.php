@@ -21,7 +21,7 @@
 
 namespace Console\Test;
 
-use \Zend\Dom\Document\Query;
+use \Laminas\Dom\Document\Query;
 
 /**
  * Tests for the main layout template
@@ -39,14 +39,14 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
         $serviceManager = $application->getServiceManager();
         $serviceManager->setService('Library\UserConfig', array());
         $serviceManager->setService(
-            'Zend\Authentication\AuthenticationService',
+            'Laminas\Authentication\AuthenticationService',
             $this->_authService
         );
 
-        $this->_view = new \Zend\View\Renderer\PhpRenderer;
+        $this->_view = new \Laminas\View\Renderer\PhpRenderer;
         $this->_view->setHelperPluginManager($serviceManager->get('ViewHelperManager'));
         $this->_view->setResolver(
-            new \Zend\View\Resolver\TemplateMapResolver(
+            new \Laminas\View\Resolver\TemplateMapResolver(
                 array('layout' => \Console\Module::getPath('views/layout/layout.php'))
             )
         );
@@ -55,7 +55,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
     public function testMinimalLayout()
     {
         $html = $this->_view->render('layout');
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
         $dom = $document->getDomDocument();
 
         $doctype = $dom->doctype;
@@ -107,7 +107,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
     {
         $this->_view->headTitle()->setTranslatorEnabled(false)->append('title');
         $html = $this->_view->render('layout');
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
         $this->assertCount(1, Query::execute('/html/head/title[text()="title"]', $document));
     }
 
@@ -115,14 +115,14 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
     {
         $this->_view->headScript()->appendScript('script');
         $html = $this->_view->render('layout');
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
         $this->assertCount(1, Query::execute('/html/head/script[contains(text(), "script")]', $document));
     }
 
     public function testBodyOnloadEmpty()
     {
         $html = $this->_view->render('layout');
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
         $this->assertCount(1, Query::execute('/html/body[not(@onload)]', $document));
     }
 
@@ -130,7 +130,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
     {
         $this->_view->placeholder('BodyOnLoad')->append('onload1');
         $html = $this->_view->render('layout');
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
         $this->assertCount(1, Query::execute('/html/body[@onload="onload1"]', $document));
     }
 
@@ -139,14 +139,14 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
         $this->_view->placeholder('BodyOnLoad')->append('onload1');
         $this->_view->placeholder('BodyOnLoad')->append('onload2');
         $html = $this->_view->render('layout');
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
         $this->assertCount(1, Query::execute('/html/body[@onload="onload1; onload2"]', $document));
     }
 
     public function testContent()
     {
         $html = $this->_view->render('layout', array('content' => 'content'));
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
         $this->assertCount(1, Query::execute("/html/body/div[@id='content'][text()='\ncontent\n']", $document));
     }
 
@@ -156,7 +156,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
         $this->_authService->method('hasIdentity')->willReturn(false);
 
         $html = $this->_view->render('layout');
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
         $this->assertCount(0, Query::execute('//div[@id="menu"]', $document));
     }
 
@@ -166,7 +166,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
         $this->_authService->method('getIdentity')->willReturn('identity');
 
         $html = $this->_view->render('layout', array('noRoute' => true));
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
         $this->assertCount(0, Query::execute('//div[@id="menu"]', $document));
     }
 
@@ -177,7 +177,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
 
         $this->_view->plugin('navigation')->menu()->setTranslator(null);
 
-        $menu = \Zend\Navigation\Page\AbstractPage::factory(
+        $menu = \Laminas\Navigation\Page\AbstractPage::factory(
             array(
                 'type' => 'uri',
                 'pages' => array(
@@ -197,7 +197,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
             )
         );
         $html = $this->_view->render('layout', array('menu' => $menu));
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
         $this->assertCount(
             1,
             Query::execute(

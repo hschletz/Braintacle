@@ -48,7 +48,7 @@ class TranslatorTest extends \PHPUnit\Framework\TestCase
             array('en_UK', "File '%value%' is not readable", "File '%value%' is not readable"),
             array('de', "File '%value%' is not readable", "Datei '%value%' ist nicht lesbar"),
             array('de_DE', "File '%value%' is not readable", "Datei '%value%' ist nicht lesbar"),
-            // Messages from ZF resources
+            // Messages from Laminas resources
             array('en', "Value is required and can't be empty", "Value is required and can't be empty"),
             array('en_UK', "Value is required and can't be empty", "Value is required and can't be empty"),
             array('de', "Value is required and can't be empty", 'Es wird eine Eingabe benötigt'),

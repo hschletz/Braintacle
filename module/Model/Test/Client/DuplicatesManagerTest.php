@@ -138,7 +138,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
             'NetworkInterface.MacAddress' => 'networkinterface_macaddr',
         );
 
-        $sql = new \Zend\Db\Sql\Sql(static::$serviceManager->get('Db'), 'clients');
+        $sql = new \Laminas\Db\Sql\Sql(static::$serviceManager->get('Db'), 'clients');
 
         $select = $sql->select()
                       ->columns(array('id', 'name', 'lastcome', 'ssn', 'assettag'))
@@ -176,7 +176,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
                 ->willReturnCallback(
                     function ($select) use ($sql) {
                         // Build simple result set to bypass hydrator
-                        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+                        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
                         $resultSet->initialize($sql->prepareStatementForSqlObject($select)->execute());
                         return $resultSet;
                     }
@@ -190,7 +190,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         );
 
         $resultSet = $duplicates->find($criteria, $order, $direction);
-        $this->assertInstanceOf('Zend\Db\ResultSet\AbstractResultSet', $resultSet);
+        $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $resultSet);
         $this->assertEquals($expectedResult, $resultSet->toArray());
     }
 
@@ -232,7 +232,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('Cannot lock client 2');
 
-        $connection = $this->createMock('Zend\Db\Adapter\Driver\ConnectionInterface');
+        $connection = $this->createMock('Laminas\Db\Adapter\Driver\ConnectionInterface');
         $connection->expects($this->at(0))->method('beginTransaction');
         $connection->expects($this->at(1))->method('rollback');
         $connection->expects($this->never())->method('commit');
@@ -306,7 +306,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
                       ->method('deleteClient')
                       ->withConsecutive([$this->identicalTo($client1)], [$this->identicalTo($client2)]);
 
-        $connection = $this->createMock('Zend\Db\Adapter\Driver\ConnectionInterface');
+        $connection = $this->createMock('Laminas\Db\Adapter\Driver\ConnectionInterface');
         $connection->expects($this->at(0))->method('beginTransaction');
         $connection->expects($this->at(1))->method('commit');
         $connection->expects($this->never())->method('rollback');
@@ -370,7 +370,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $clientManager->method('getClient')
                       ->willReturnMap([[1, $client1], [2, $client2], [3, $client3]]);
 
-        $connection = $this->createMock('Zend\Db\Adapter\Driver\ConnectionInterface');
+        $connection = $this->createMock('Laminas\Db\Adapter\Driver\ConnectionInterface');
 
         $clients = $this->createMock('Database\Table\Clients');
         $clients->method('getConnection')->willReturn($connection);

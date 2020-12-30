@@ -34,7 +34,7 @@ abstract class AbstractForm extends \Console\Form\Form
     {
         parent::init();
 
-        $preferences = new \Zend\Form\Fieldset('Preferences');
+        $preferences = new \Laminas\Form\Fieldset('Preferences');
         $this->add($preferences);
 
         $submit = new \Library\Form\Element\Submit('Submit');
@@ -43,7 +43,7 @@ abstract class AbstractForm extends \Console\Form\Form
     }
 
     /** {@inheritdoc} */
-    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset)
+    public function renderFieldset(\Laminas\View\Renderer\PhpRenderer $view, \Laminas\Form\Fieldset $fieldset)
     {
         if ($fieldset->getName()) {
             return parent::renderFieldset($view, $fieldset);
@@ -52,7 +52,7 @@ abstract class AbstractForm extends \Console\Form\Form
         // Reimplement form renderer to align submit button with elements from Preferences fieldset.
         $output = "<div class='table'>\n";
         foreach ($this->get('Preferences') as $element) {
-            if ($element instanceof \Zend\Form\Fieldset) {
+            if ($element instanceof \Laminas\Form\Fieldset) {
                 $output .= $view->htmlElement(
                     'span',
                     $view->translate($element->getLabel()),

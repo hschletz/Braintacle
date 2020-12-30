@@ -24,7 +24,7 @@ namespace Library\View\Helper;
 /**
  * Render a single HTML element with provided name, content and attributes
  */
-class HtmlElement extends \Zend\View\Helper\AbstractHtmlElement
+class HtmlElement extends \Laminas\View\Helper\AbstractHtmlElement
 {
     /**
      * List of elements without closing tag for HTML 4

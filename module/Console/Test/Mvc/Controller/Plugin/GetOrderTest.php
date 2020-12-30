@@ -33,7 +33,7 @@ class GetOrderTest extends \Library\Test\Mvc\Controller\Plugin\AbstractTest
     {
         $plugin = $this->_getPlugin(true);
         $request = $this->_controller->getRequest();
-        $parameters = new \Zend\Stdlib\Parameters;
+        $parameters = new \Laminas\Stdlib\Parameters;
 
         // Defaults only
         $parameters->fromArray(array());

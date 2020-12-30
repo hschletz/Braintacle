@@ -24,7 +24,7 @@ namespace Console\Mvc\Controller\Plugin;
 /**
  * Extract and validate "order" and "direction" URL parameters
  */
-class GetOrder extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
+class GetOrder extends \Laminas\Mvc\Controller\Plugin\AbstractPlugin
 {
     /**
      * Extract and validate "order" and "direction" URL parameters

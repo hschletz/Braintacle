@@ -73,16 +73,16 @@ class ItemManager
 
     /**
      * Service manager
-     * @var \Zend\ServiceManager\ServiceManager
+     * @var \Laminas\ServiceManager\ServiceManager
      */
     protected $_serviceManager;
 
     /**
      * Constructor
      *
-     * @param \Zend\ServiceManager\ServiceManager $serviceManager
+     * @param \Laminas\ServiceManager\ServiceManager $serviceManager
      */
-    public function __construct(\Zend\ServiceManager\ServiceManager $serviceManager)
+    public function __construct(\Laminas\ServiceManager\ServiceManager $serviceManager)
     {
         $this->_serviceManager = $serviceManager;
     }
@@ -131,7 +131,7 @@ class ItemManager
      * @param array $filters Filters, handled by plugin. Default: no filters
      * @param string $order Property to sort by, handled by plugin.
      * @param string $direction One of asc|desc. Default: asc
-     * @return \Zend\Db\ResultSet\AbstractResultSet
+     * @return \Laminas\Db\ResultSet\AbstractResultSet
      */
     public function getItems($type, $filters = null, $order = null, $direction = 'asc')
     {

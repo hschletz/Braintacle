@@ -22,7 +22,7 @@
 namespace Database\Table;
 
 use Nada\Column\AbstractColumn as Column;
-use Zend\Db\Sql\Literal;
+use Laminas\Db\Sql\Literal;
 
 /**
  * "download_enable" view
@@ -34,7 +34,7 @@ class PackageDownloadInfo extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'download_enable';
         parent::__construct($serviceLocator);
@@ -54,10 +54,10 @@ class PackageDownloadInfo extends \Database\AbstractTable
         if (in_array('download_enable', $database->getTableNames())) {
             // Use value of "fileid" column instead of obsolete "id" for package assignments
             $logger->info('Transforming package assignment IDs...');
-            $where = new \Zend\Db\Sql\Where;
+            $where = new \Laminas\Db\Sql\Where;
             $this->_serviceLocator->get('Database\Table\ClientConfig')->update(
                 array(
-                    'ivalue' => new \Zend\Db\Sql\Expression(
+                    'ivalue' => new \Laminas\Db\Sql\Expression(
                         sprintf(
                             '(SELECT CAST(fileid AS %s) FROM download_enable WHERE id = ivalue)',
                             $database->getNativeDatatype(Column::TYPE_INTEGER, 32, true)

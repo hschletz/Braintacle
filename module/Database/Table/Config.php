@@ -179,7 +179,7 @@ class Config extends \Database\AbstractTable
             );
         }
         if (!isset($server['LOCAL_URI_SERVER']) and isset($server['LOCAL_SERVER'])) {
-            $uri = \Zend\Uri\UriFactory::factory('http:');
+            $uri = \Laminas\Uri\UriFactory::factory('http:');
             $uri->setHost($server['LOCAL_SERVER']['tvalue']);
             if (isset($server['LOCAL_PORT'])) {
                 $uri->setPort($server['LOCAL_PORT']['ivalue']);

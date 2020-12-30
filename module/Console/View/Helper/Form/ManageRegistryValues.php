@@ -27,13 +27,13 @@ namespace Console\View\Helper\Form;
 class ManageRegistryValues extends AbstractHelper
 {
     /** {@inheritdoc} */
-    public function renderElements(\Zend\Form\FormInterface $form)
+    public function renderElements(\Laminas\Form\FormInterface $form)
     {
         $view = $this->getView();
         $fieldsetHelper = $view->plugin('consoleFormFieldset');
         $output = '';
         foreach ($form as $element) {
-            if ($element instanceof \Zend\Form\Fieldset) {
+            if ($element instanceof \Laminas\Form\Fieldset) {
                 $name = $element->getName();
                 if ($name == 'existing' and count($element)) {
                     $fieldset = '';

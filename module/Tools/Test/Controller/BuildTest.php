@@ -21,7 +21,7 @@
 
 namespace Tools\Test\Controller;
 
-use Zend\Log\Logger;
+use Laminas\Log\Logger;
 
 class BuildTest extends AbstractControllerTest
 {

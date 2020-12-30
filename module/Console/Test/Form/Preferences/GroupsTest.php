@@ -26,9 +26,9 @@ class GroupsTest extends \Console\Test\AbstractFormTest
     public function testInit()
     {
         $preferences = $this->_form->get('Preferences');
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('groupCacheExpirationInterval'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('groupCacheExpirationFuzz'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('setGroupPackageStatus'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('groupCacheExpirationInterval'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('groupCacheExpirationFuzz'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $preferences->get('setGroupPackageStatus'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
 

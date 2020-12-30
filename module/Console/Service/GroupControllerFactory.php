@@ -24,7 +24,7 @@ namespace Console\Service;
 /**
  * Factory for GroupController
  */
-class GroupControllerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class GroupControllerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

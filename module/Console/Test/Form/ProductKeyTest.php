@@ -28,7 +28,7 @@ class ProductKeyTest extends \Console\Test\AbstractFormTest
 {
     public function testInit()
     {
-        $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('Key'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('Key'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
 

@@ -31,7 +31,7 @@ class Edit extends AbstractForm
     {
         // Required to keep track of original ID if this gets changed.
         // This must be added before getInputFilter() is called.
-        $originalId = new \Zend\Form\Element\Hidden('OriginalId');
+        $originalId = new \Laminas\Form\Element\Hidden('OriginalId');
         $this->add($originalId);
 
         parent::init();

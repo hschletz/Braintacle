@@ -1,6 +1,6 @@
 <?php
 /**
- * Convert log level descriptor strings (case insensitive) to Zend\Log\Logger constants
+ * Convert log level descriptor strings (case insensitive) to Laminas\Log\Logger constants
  *
  * Copyright (C) 2011-2020 Holger Schletz <holger.schletz@web.de>
  *
@@ -21,12 +21,13 @@
 
 namespace Library\Filter;
 
-use Zend\Log\Logger;
+use Laminas\Log\Logger;
 
 /**
- * Convert log level descriptor strings (case insensitive) to Zend\Log\Logger constants
+ * Convert log level descriptor strings (case insensitive) to Laminas\Log\Logger
+ * constants
  */
-class LogLevel extends \Zend\Filter\AbstractFilter
+class LogLevel extends \Laminas\Filter\AbstractFilter
 {
     /**
      * Priority map

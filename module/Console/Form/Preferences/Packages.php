@@ -32,7 +32,7 @@ class Packages extends AbstractForm
         parent::init();
 
         $preferences = $this->get('Preferences');
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
         $integerFilter = array(
             'name' => 'Callback',
             'options' => array(
@@ -48,32 +48,32 @@ class Packages extends AbstractForm
             )
         );
 
-        $deploy = new \Zend\Form\Fieldset('Deploy');
+        $deploy = new \Laminas\Form\Fieldset('Deploy');
         $deploy->setLabel('Defaults for deploying updated packages');
 
-        $deployPending = new \Zend\Form\Element\Checkbox('defaultDeployPending');
+        $deployPending = new \Laminas\Form\Element\Checkbox('defaultDeployPending');
         $deployPending->setLabel('Pending');
         $deploy->add($deployPending);
 
-        $deployRunning = new \Zend\Form\Element\Checkbox('defaultDeployRunning');
+        $deployRunning = new \Laminas\Form\Element\Checkbox('defaultDeployRunning');
         $deployRunning->setLabel('Running');
         $deploy->add($deployRunning);
 
-        $deploySuccess = new \Zend\Form\Element\Checkbox('defaultDeploySuccess');
+        $deploySuccess = new \Laminas\Form\Element\Checkbox('defaultDeploySuccess');
         $deploySuccess->setLabel('Success');
         $deploy->add($deploySuccess);
 
-        $deployError = new \Zend\Form\Element\Checkbox('defaultDeployError');
+        $deployError = new \Laminas\Form\Element\Checkbox('defaultDeployError');
         $deployError->setLabel('Error');
         $deploy->add($deployError);
 
-        $deployGroups = new \Zend\Form\Element\Checkbox('defaultDeployGroups');
+        $deployGroups = new \Laminas\Form\Element\Checkbox('defaultDeployGroups');
         $deployGroups->setLabel('Groups');
         $deploy->add($deployGroups);
 
         $preferences->add($deploy);
 
-        $defaultPlatform = new \Zend\Form\Element\Select('defaultPlatform');
+        $defaultPlatform = new \Laminas\Form\Element\Select('defaultPlatform');
         $defaultPlatform->setLabel('Default platform')
                         ->setAttribute('type', 'select_untranslated')
                         ->setValueOptions(
@@ -85,7 +85,7 @@ class Packages extends AbstractForm
                         );
         $preferences->add($defaultPlatform);
 
-        $defaultAction = new \Zend\Form\Element\Select('defaultAction');
+        $defaultAction = new \Laminas\Form\Element\Select('defaultAction');
         $defaultAction->setLabel('Default action')
                       ->setValueOptions(
                           array(
@@ -96,7 +96,7 @@ class Packages extends AbstractForm
                       );
         $preferences->add($defaultAction);
 
-        $defaultActionParam = new \Zend\Form\Element\Text('defaultActionParam');
+        $defaultActionParam = new \Laminas\Form\Element\Text('defaultActionParam');
         $defaultActionParam->setLabel('Default action parameter');
         $preferences->add($defaultActionParam);
 
@@ -105,7 +105,7 @@ class Packages extends AbstractForm
                                ->setLabel('Default priority (0: exclusive, 10: lowest)');
         $preferences->add($defaultPackagePriority);
 
-        $defaultMaxFragmentSize = new \Zend\Form\Element\Text('defaultMaxFragmentSize');
+        $defaultMaxFragmentSize = new \Laminas\Form\Element\Text('defaultMaxFragmentSize');
         $defaultMaxFragmentSize->setAttribute('size', '8')
                                ->setLabel('Default maximum fragment size (kB)');
         $preferences->add($defaultMaxFragmentSize);
@@ -118,15 +118,15 @@ class Packages extends AbstractForm
             )
         );
 
-        $defaultWarn = new \Zend\Form\Element\Checkbox('defaultWarn');
+        $defaultWarn = new \Laminas\Form\Element\Checkbox('defaultWarn');
         $defaultWarn->setLabel('Warn user by default');
         $preferences->add($defaultWarn);
 
-        $defaultWarnMessage = new \Zend\Form\Element\Textarea('defaultWarnMessage');
+        $defaultWarnMessage = new \Laminas\Form\Element\Textarea('defaultWarnMessage');
         $defaultWarnMessage->setLabel('Default warn message');
         $preferences->add($defaultWarnMessage);
 
-        $defaultWarnCountdown = new \Zend\Form\Element\Text('defaultWarnCountdown');
+        $defaultWarnCountdown = new \Laminas\Form\Element\Text('defaultWarnCountdown');
         $defaultWarnCountdown->setAttribute('size', '5')
                              ->setLabel('Default warn countdown (seconds)');
         $preferences->add($defaultWarnCountdown);
@@ -139,19 +139,19 @@ class Packages extends AbstractForm
             )
         );
 
-        $defaultWarnAllowAbort = new \Zend\Form\Element\Checkbox('defaultWarnAllowAbort');
+        $defaultWarnAllowAbort = new \Laminas\Form\Element\Checkbox('defaultWarnAllowAbort');
         $defaultWarnAllowAbort->setLabel('Allow user abort by default');
         $preferences->add($defaultWarnAllowAbort);
 
-        $defaultWarnAllowDelay = new \Zend\Form\Element\Checkbox('defaultWarnAllowDelay');
+        $defaultWarnAllowDelay = new \Laminas\Form\Element\Checkbox('defaultWarnAllowDelay');
         $defaultWarnAllowDelay->setLabel('Allow user delay by default');
         $preferences->add($defaultWarnAllowDelay);
 
-        $defaultPostInstMessage = new \Zend\Form\Element\Textarea('defaultPostInstMessage');
+        $defaultPostInstMessage = new \Laminas\Form\Element\Textarea('defaultPostInstMessage');
         $defaultPostInstMessage->setLabel('Default post-installation message');
         $preferences->add($defaultPostInstMessage);
 
-        $parentFilter = new \Zend\InputFilter\InputFilter;
+        $parentFilter = new \Laminas\InputFilter\InputFilter;
         $parentFilter->add($inputFilter, 'Preferences');
         $this->setInputFilter($parentFilter);
     }
@@ -171,7 +171,7 @@ class Packages extends AbstractForm
     }
 
     /** {@inheritdoc} */
-    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset)
+    public function renderFieldset(\Laminas\View\Renderer\PhpRenderer $view, \Laminas\Form\Fieldset $fieldset)
     {
         $output = '';
         if ($fieldset->getName() == 'Preferences[Deploy]') {

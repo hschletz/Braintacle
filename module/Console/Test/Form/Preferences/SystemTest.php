@@ -26,16 +26,16 @@ class SystemTest extends \Console\Test\AbstractFormTest
     public function testInit()
     {
         $preferences = $this->_form->get('Preferences');
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('communicationServerUri'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('lockValidity'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('sessionValidity'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('sessionCleanupInterval'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('sessionRequired'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('communicationServerUri'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('lockValidity'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('sessionValidity'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('sessionCleanupInterval'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $preferences->get('sessionRequired'));
         $logLevel = $preferences->get('logLevel');
         $this->assertInstanceOf('Library\Form\Element\SelectSimple', $logLevel);
         $this->assertEquals(array(0, 1, 2), $logLevel->getValueOptions());
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('validateXml'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('autoMergeDuplicates'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $preferences->get('validateXml'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $preferences->get('autoMergeDuplicates'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
 

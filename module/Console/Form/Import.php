@@ -33,7 +33,7 @@ class Import extends Form
     {
         parent::init();
 
-        $file = new \Zend\Form\Element\File('File');
+        $file = new \Laminas\Form\Element\File('File');
         $file->setLabel('File (*.ocs, *.xml)');
         $this->add($file);
 
@@ -41,7 +41,7 @@ class Import extends Form
         $submit->setLabel('Import');
         $this->add($submit);
 
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
         $inputFilter->add(array('name' => 'File')); // Sufficient to force uploaded file
         $this->setInputFilter($inputFilter);
     }

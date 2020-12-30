@@ -24,7 +24,7 @@ namespace Model\Service\Network;
 /**
  * Factory for Model\Network\SubnetManager
  */
-class SubnetManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class SubnetManagerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /**
      * {@inheritdoc}

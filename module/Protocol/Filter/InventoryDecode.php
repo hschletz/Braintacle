@@ -27,7 +27,7 @@ namespace Protocol\Filter;
  * This filter decodes zlib compressed inventory data which some agents generate
  * instead of uncompressed XML.
  */
-class InventoryDecode extends \Zend\Filter\AbstractFilter
+class InventoryDecode extends \Laminas\Filter\AbstractFilter
 {
     /**
      * {@inheritdoc}

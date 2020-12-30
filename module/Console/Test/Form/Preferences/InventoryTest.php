@@ -26,13 +26,13 @@ class InventoryTest extends \Console\Test\AbstractFormTest
     public function testInit()
     {
         $preferences = $this->_form->get('Preferences');
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('inspectRegistry'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('defaultMergeConfig'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('defaultMergeCustomFields'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('defaultMergeGroups'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('defaultMergePackages'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('defaultMergeProductKey'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('defaultDeleteInterfaces'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $preferences->get('inspectRegistry'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $preferences->get('defaultMergeConfig'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $preferences->get('defaultMergeCustomFields'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $preferences->get('defaultMergeGroups'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $preferences->get('defaultMergePackages'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $preferences->get('defaultMergeProductKey'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $preferences->get('defaultDeleteInterfaces'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
 
@@ -40,10 +40,10 @@ class InventoryTest extends \Console\Test\AbstractFormTest
     {
         $view = $this->_createView();
         $html = $this->_form->render($view);
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
         $this->assertCount(
             1,
-            \Zend\Dom\Document\Query::execute(
+            \Laminas\Dom\Document\Query::execute(
                 "//a[@href='/console/preferences/registryvalues/']" .
                 "[text()='\n[Inventarisierte Registry-Werte verwalten]\n']",
                 $document

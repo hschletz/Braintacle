@@ -25,7 +25,7 @@ class InventoryDecodeTest extends \PHPUnit\Framework\TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf('Zend\Filter\AbstractFilter', new \Protocol\Filter\InventoryDecode);
+        $this->assertInstanceOf('Laminas\Filter\AbstractFilter', new \Protocol\Filter\InventoryDecode);
     }
 
     public function filterProvider()
@@ -41,7 +41,7 @@ class InventoryDecodeTest extends \PHPUnit\Framework\TestCase
      */
     public function testFilter($suffix)
     {
-        $output = \Zend\Filter\StaticFilter::execute(
+        $output = \Laminas\Filter\StaticFilter::execute(
             file_get_contents(
                 \Protocol\Module::getPath("data/Test/Filter/InventoryDecode/encoded-$suffix")
             ),
@@ -60,6 +60,6 @@ class InventoryDecodeTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Input does not appear to be a zlib stream');
-        \Zend\Filter\StaticFilter::execute('not a zlib stream', 'Protocol\InventoryDecode');
+        \Laminas\Filter\StaticFilter::execute('not a zlib stream', 'Protocol\InventoryDecode');
     }
 }

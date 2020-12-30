@@ -21,7 +21,7 @@
 
 namespace Protocol;
 
-use Zend\ModuleManager\Feature;
+use Laminas\ModuleManager\Feature;
 
 /**
  * The Protocol module
@@ -36,7 +36,7 @@ class Module implements
     Feature\InitProviderInterface
 {
     /** {@inheritdoc} */
-    public function init(\Zend\ModuleManager\ModuleManagerInterface $manager)
+    public function init(\Laminas\ModuleManager\ModuleManagerInterface $manager)
     {
         $manager->loadModule('Database');
         $manager->loadModule('Library');
@@ -52,7 +52,7 @@ class Module implements
                     'Protocol\InventoryDecode' => 'Protocol\Filter\InventoryDecode',
                 ),
                 'factories' => array(
-                    'Protocol\Filter\InventoryDecode' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Protocol\Filter\InventoryDecode' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                 ),
             ),
             'service_manager' => array(
@@ -60,9 +60,9 @@ class Module implements
                     'Protocol\Service\AbstractHydratorFactory',
                 ),
                 'factories' => [
-                    'Protocol\Hydrator\ClientsBios' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Protocol\Hydrator\ClientsBios' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Protocol\Hydrator\ClientsHardware' => 'Protocol\Service\Hydrator\ClientsHardwareFactory',
-                    'Protocol\Hydrator\Filesystems' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Protocol\Hydrator\Filesystems' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Protocol\Hydrator\Software' => Service\Hydrator\SoftwareFactory::class,
                     'Protocol\Message\InventoryRequest' => Service\Message\InventoryRequestFactory::class,
                     'Protocol\Message\InventoryRequest\Content' => Service\Message\InventoryRequest\ContentFactory::class,
@@ -79,7 +79,7 @@ class Module implements
     public function getAutoloaderConfig()
     {
         return array(
-            'Zend\Loader\StandardAutoloader' => array(
+            'Laminas\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__,
                 ),

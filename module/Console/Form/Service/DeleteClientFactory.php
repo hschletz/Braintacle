@@ -25,7 +25,7 @@ namespace Console\Form\Service;
  * Factory for DeleteClient form
  * @codeCoverageIgnore
  */
-class DeleteClientFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class DeleteClientFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

@@ -24,14 +24,14 @@ namespace Library\Validator;
 /**
  * Validate string to not match any value in a given array
  *
- * This validator does the opposite of the ZF's InArray validator, but not all
+ * This validator does the opposite of Laminas' InArray validator, but not all
  * functionality of InArray is supported. The validator has 2 options:
  *
  * - Haystack (required): an array to validate a string against
  * - CaseSensitivity: One of the CASE_* constants defined by this validator,
  *   default is CASE_SENSITIVE.
  */
-class NotInArray extends \Zend\Validator\AbstractValidator
+class NotInArray extends \Laminas\Validator\AbstractValidator
 {
     /**
      * Case sensitive comparision

@@ -24,7 +24,7 @@ namespace Library\Hydrator\Strategy;
 /**
  * Convert MAC adress strings to \Library\MacAddress objects
  */
-class MacAddress implements \Zend\Hydrator\Strategy\StrategyInterface
+class MacAddress implements \Laminas\Hydrator\Strategy\StrategyInterface
 {
     /** {@inheritdoc} */
     public function hydrate($value, ?array $data)

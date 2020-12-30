@@ -31,7 +31,7 @@ class DisplaysTest extends AbstractTest
     public function testHydrator()
     {
         $hydrator = static::$_table->getHydrator();
-        $this->assertInstanceOf(\Zend\Hydrator\ArraySerializableHydrator::class, $hydrator);
+        $this->assertInstanceOf(\Laminas\Hydrator\ArraySerializableHydrator::class, $hydrator);
 
         $map = $hydrator->getNamingStrategy();
         $this->assertInstanceOf('Database\Hydrator\NamingStrategy\MapNamingStrategy', $map);
@@ -49,7 +49,7 @@ class DisplaysTest extends AbstractTest
         $this->assertEquals('type', $map->extract('Type'));
 
         $resultSet = static::$_table->getResultSetPrototype();
-        $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);
+        $this->assertInstanceOf('Laminas\Db\ResultSet\HydratingResultSet', $resultSet);
         $this->assertEquals($hydrator, $resultSet->getHydrator());
     }
 }

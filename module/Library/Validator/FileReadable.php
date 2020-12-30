@@ -24,7 +24,7 @@ namespace Library\Validator;
 /**
  * Validate string to be a path to a readable file
  */
-class FileReadable extends \Zend\Validator\AbstractValidator
+class FileReadable extends \Laminas\Validator\AbstractValidator
 {
     /**
      * Key for message template: not a file or inaccessible

@@ -74,7 +74,7 @@ function testModule($module, $filter, $stop, $database, $doCoverage)
 }
 
 try {
-    $opts = new \Zend\Console\Getopt(
+    $opts = new \Laminas\Console\Getopt(
         array(
             'modules|m=s' => 'comma-separated list of modules to test (case insensitive), test all modules if not set',
             'filter|f=s' => 'run only tests whose names match given regex',
@@ -85,12 +85,12 @@ try {
     );
     $opts->parse();
     if ($opts->getRemainingArgs()) {
-        throw new \Zend\Console\Exception\RuntimeException(
+        throw new \Laminas\Console\Exception\RuntimeException(
             'Non-option arguments not allowed',
             $opts->getUsageMessage()
         );
     }
-} catch (\Zend\Console\Exception\RuntimeException $e) {
+} catch (\Laminas\Console\Exception\RuntimeException $e) {
     print $e->getUsageMessage();
     exit(1);
 }
@@ -132,7 +132,7 @@ if ($opts->modules) {
 $databases = array();
 if ($opts->database) {
     // Get available sections
-    $reader = new \Zend\Config\Reader\Ini;
+    $reader = new \Laminas\Config\Reader\Ini;
     $config = $reader->fromFile(\Library\Application::getPath('config/braintacle.ini'));
 
     // Remove reserved sections

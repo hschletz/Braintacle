@@ -49,7 +49,7 @@ class CustomFieldManager
 
     /**
      * Hydrator for CustomField objects
-     * @var \Zend\Hydrator\ArraySerializableHydrator
+     * @var \Laminas\Hydrator\ArraySerializableHydrator
      */
     protected $_hydrator;
 
@@ -211,19 +211,19 @@ class CustomFieldManager
      * table class due to tricky dependencies. Use this method to get a suitable
      * hydrator.
      *
-     * @return \Zend\Hydrator\ArraySerializableHydrator
+     * @return \Laminas\Hydrator\ArraySerializableHydrator
      */
     public function getHydrator()
     {
         if (!$this->_hydrator) {
             $columns = $this->getColumnMap();
-            $this->_hydrator = new \Zend\Hydrator\ArraySerializableHydrator;
+            $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
             $this->_hydrator->setNamingStrategy(
                 new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                     array_flip($columns)
                 )
             );
-            $dateStrategy = new \Zend\Hydrator\Strategy\DateTimeFormatterStrategy('Y-m-d');
+            $dateStrategy = new \Laminas\Hydrator\Strategy\DateTimeFormatterStrategy('Y-m-d');
             foreach ($this->getFields() as $name => $type) {
                 if ($type == 'date') {
                     $this->_hydrator->addStrategy($name, $dateStrategy);

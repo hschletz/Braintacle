@@ -25,7 +25,7 @@ namespace Console\Form\Service;
  * Factory for Software form
  * @codeCoverageIgnore
  */
-class SoftwareFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class SoftwareFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

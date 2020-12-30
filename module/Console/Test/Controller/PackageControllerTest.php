@@ -102,7 +102,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
         $viewHelperManager = $this->getApplicationServiceLocator()->get('ViewHelperManager');
 
-        $flashMessenger = $this->createMock('Zend\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock('Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->willReturnMap(
@@ -115,7 +115,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $flashMessenger->expects($this->once())->method('render')->with('error')->willReturn('');
         $viewHelperManager->setService('flashMessenger', $flashMessenger);
 
-        $dateFormat = $this->createMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock('Laminas\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->exactly(2))
                    ->method('__invoke')
                    ->withConsecutive(
@@ -197,7 +197,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionPackageFlashMessages()
     {
-        $flashMessenger = $this->createMock('Zend\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock('Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->willReturnMap(
@@ -258,7 +258,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->_packageManager->expects($this->once())->method('getPackages')->willReturn($packages);
 
-        $flashMessenger = $this->createMock('Zend\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock('Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->willReturnMap(

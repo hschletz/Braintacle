@@ -21,7 +21,7 @@
 
 namespace Console\Test\Form;
 
-use \Zend\Dom\Document\Query as Query;
+use \Laminas\Dom\Document\Query as Query;
 
 /**
  * Tests for ClientConfig form
@@ -50,48 +50,48 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
     public function testInit()
     {
         $agent = $this->_form->get('Agent');
-        $this->assertInstanceOf('Zend\Form\Fieldset', $agent);
+        $this->assertInstanceOf('Laminas\Form\Fieldset', $agent);
         $this->assertEquals('Agent', $agent->getLabel());
 
-        $this->assertInstanceOf('Zend\Form\Element\Text', $agent->get('contactInterval'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $agent->get('contactInterval'));
         $this->assertEquals(5, $agent->get('contactInterval')->getAttribute('size'));
 
-        $this->assertInstanceOf('Zend\Form\Element\Text', $agent->get('inventoryInterval'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $agent->get('inventoryInterval'));
         $this->assertEquals(5, $agent->get('inventoryInterval')->getAttribute('size'));
 
         $download = $this->_form->get('Download');
-        $this->assertInstanceOf('Zend\Form\Fieldset', $download);
+        $this->assertInstanceOf('Laminas\Form\Fieldset', $download);
         $this->assertEquals('Download', $download->getLabel());
 
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $download->get('packageDeployment'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $download->get('packageDeployment'));
         $this->assertEquals('toggle', $download->get('packageDeployment')->getAttribute('class'));
 
-        $this->assertInstanceOf('Zend\Form\Element\Text', $download->get('downloadPeriodDelay'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $download->get('downloadPeriodDelay'));
         $this->assertEquals(5, $download->get('downloadPeriodDelay')->getAttribute('size'));
 
-        $this->assertInstanceOf('Zend\Form\Element\Text', $download->get('downloadCycleDelay'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $download->get('downloadCycleDelay'));
         $this->assertEquals(5, $download->get('downloadCycleDelay')->getAttribute('size'));
 
-        $this->assertInstanceOf('Zend\Form\Element\Text', $download->get('downloadFragmentDelay'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $download->get('downloadFragmentDelay'));
         $this->assertEquals(5, $download->get('downloadFragmentDelay')->getAttribute('size'));
 
-        $this->assertInstanceOf('Zend\Form\Element\Text', $download->get('downloadMaxPriority'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $download->get('downloadMaxPriority'));
         $this->assertEquals(5, $download->get('downloadMaxPriority')->getAttribute('size'));
 
-        $this->assertInstanceOf('Zend\Form\Element\Text', $download->get('downloadTimeout'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $download->get('downloadTimeout'));
         $this->assertEquals(5, $download->get('downloadTimeout')->getAttribute('size'));
 
         $scan = $this->_form->get('Scan');
-        $this->assertInstanceOf('Zend\Form\Fieldset', $scan);
+        $this->assertInstanceOf('Laminas\Form\Fieldset', $scan);
         $this->assertEquals('Network scanning', $scan->getLabel());
 
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $scan->get('allowScan'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $scan->get('allowScan'));
         $this->assertEquals('toggle', $scan->get('allowScan')->getAttribute('class'));
 
         $this->assertInstanceOf('Library\Form\Element\SelectSimple', $scan->get('scanThisNetwork'));
         $this->assertSame('', $scan->get('scanThisNetwork')->getEmptyOption());
 
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $scan->get('scanSnmp'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $scan->get('scanSnmp'));
 
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
     }

@@ -24,7 +24,7 @@ namespace Model\Service\Package;
 /**
  * Factory for Model\Package\PackageManager
  */
-class PackageManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class PackageManagerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /**
      * {@inheritdoc}

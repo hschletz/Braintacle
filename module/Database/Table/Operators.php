@@ -40,7 +40,7 @@ class Operators extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $map = array(
             'id' => 'Id',
@@ -49,13 +49,13 @@ class Operators extends \Database\AbstractTable
             'email' => 'MailAddress',
             'comments' => 'Comment',
         );
-        $this->_hydrator = new \Zend\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy($map)
         );
         $this->_hydrator->addFilter('whitelist', new \Library\Hydrator\Filter\Whitelist($map));
 
-        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
+        $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
             $serviceLocator->get('Model\Operator\Operator')
         );
@@ -74,10 +74,10 @@ class Operators extends \Database\AbstractTable
             $dropped = 0;
             $columns = $database->getTable($this->table)->getColumns();
             if (isset($columns['accesslvl'])) {
-                $dropped += $this->delete(new \Zend\Db\Sql\Predicate\Operator('accesslvl', '!=', 1));
+                $dropped += $this->delete(new \Laminas\Db\Sql\Predicate\Operator('accesslvl', '!=', 1));
             }
             if (isset($columns['new_accesslvl'])) {
-                $dropped += $this->delete(new \Zend\Db\Sql\Predicate\Operator('new_accesslvl', '!=', 'sadmin'));
+                $dropped += $this->delete(new \Laminas\Db\Sql\Predicate\Operator('new_accesslvl', '!=', 'sadmin'));
             }
             if ($dropped) {
                 $logger->warn("$dropped non-admin accounts dropped.");

@@ -24,7 +24,7 @@ namespace Console\View\Helper;
 /**
  * Generate URL to given controller and action
  */
-class ConsoleUrl extends \Zend\View\Helper\AbstractHelper
+class ConsoleUrl extends \Laminas\View\Helper\AbstractHelper
 {
     /**
      * Request
@@ -34,17 +34,17 @@ class ConsoleUrl extends \Zend\View\Helper\AbstractHelper
 
     /**
      * Url helper
-     * @var \Zend\View\Helper\Url
+     * @var \Laminas\View\Helper\Url
      */
     protected $_url;
 
     /**
      * Constructor
      *
-     * @param mixed $request If \Zend\Http\Request, its query parameters are evaluated (see $inheritParams)
-     * @param \Zend\View\Helper\Url $url
+     * @param mixed $request If \Laminas\Http\Request, its query parameters are evaluated (see $inheritParams)
+     * @param \Laminas\View\Helper\Url $url
      */
-    public function __construct($request, \Zend\View\Helper\Url $url)
+    public function __construct($request, \Laminas\View\Helper\Url $url)
     {
         $this->_request = $request;
         $this->_url = $url;
@@ -69,7 +69,7 @@ class ConsoleUrl extends \Zend\View\Helper\AbstractHelper
             $route['action'] = $action;
         }
 
-        if ($inheritParams and $this->_request instanceof \Zend\Http\Request) {
+        if ($inheritParams and $this->_request instanceof \Laminas\Http\Request) {
             // Merge current request parameters (parameters from $params take precedence)
             $params = array_merge(
                 $this->_request->getQuery()->toArray(),

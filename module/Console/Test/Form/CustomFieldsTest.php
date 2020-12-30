@@ -21,7 +21,7 @@
 
 namespace Console\Test\Form;
 
-use \Zend\Dom\Document\Query as Query;
+use \Laminas\Dom\Document\Query as Query;
 
 /**
  * Tests for CustomFields form
@@ -69,23 +69,23 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
         $fields = $this->_form->get('Fields');
 
         $element = $fields->get('TAG');
-        $this->assertInstanceOf('Zend\Form\Element\Text', $element);
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $element);
         $this->assertEquals('Category', $element->getLabel());
 
         $element = $fields->get('Clob');
-        $this->assertInstanceOf('Zend\Form\Element\Textarea', $element);
+        $this->assertInstanceOf('Laminas\Form\Element\Textarea', $element);
         $this->assertEquals('Clob', $element->getLabel());
 
         $element = $fields->get('Integer');
-        $this->assertInstanceOf('Zend\Form\Element\Text', $element);
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $element);
         $this->assertEquals('Integer', $element->getLabel());
 
         $element = $fields->get('Float');
-        $this->assertInstanceOf('Zend\Form\Element\Text', $element);
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $element);
         $this->assertEquals('Float', $element->getLabel());
 
         $element = $fields->get('Date');
-        $this->assertInstanceOf('Zend\Form\Element\Text', $element);
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $element);
         $this->assertEquals('Date', $element->getLabel());
     }
 
@@ -178,7 +178,7 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
     public function testRenderFieldset()
     {
         $html = $this->_form->renderFieldset($this->_createView(), $this->_form);
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
         $this->assertCount(4, Query::execute('//input[@type="text"]', $document));
         $this->assertCount(1, Query::execute('//textarea', $document));
         $this->assertCount(1, Query::execute('//input[@type="submit"]', $document));

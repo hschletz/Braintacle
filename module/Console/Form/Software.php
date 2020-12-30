@@ -33,13 +33,14 @@ namespace Console\Form;
  * necessary because the software name may be empty and an empty checkbox name
  * is not allowed.
  *
- * Unlike standard ZF checkboxes, no hidden input elements are generated. This
- * allows posting only selected entries instead of the full list (which can grow
- * large). Form handlers can simply iterate over the keys of the 'Software'
+ * Unlike standard Laminas checkboxes, no hidden input elements are generated.
+ * This allows posting only selected entries instead of the full list (which can
+ * grow large). Form handlers can simply iterate over the keys of the 'Software'
  * array, ignoring the values. The keys need to be Base64 decoded.
  *
  * The following options are supported:
- * - fixEncodingErrors (required, set by factory): an instance of \Library\Filter\FixEncodingErrors
+ * - fixEncodingErrors (required, set by factory): an instance of
+ *   \Library\Filter\FixEncodingErrors
  */
 class Software extends \Console\Form\Form
 {
@@ -107,7 +108,7 @@ class Software extends \Console\Form\Form
         if ($this->has('Software')) {
             $this->remove('Software');
         }
-        $fieldset= new \Zend\Form\Fieldset('Software');
+        $fieldset= new \Laminas\Form\Fieldset('Software');
         $this->add($fieldset);
 
         foreach ($names as $name) {
@@ -118,7 +119,7 @@ class Software extends \Console\Form\Form
                 $elementName = '_' . base64_encode($name);
                 $label = $name;
             }
-            $element = new \Zend\Form\Element\Checkbox($elementName);
+            $element = new \Laminas\Form\Element\Checkbox($elementName);
             $element->setUseHiddenElement(false);
             $element->setLabel($filter($label));
             $fieldset->add($element);

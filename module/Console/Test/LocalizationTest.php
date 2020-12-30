@@ -32,7 +32,7 @@ class LocalizationTest extends \PHPUnit\Framework\TestCase
         // Preserve global state
         $this->serverBackup = $_SERVER;
         $this->localeBackup = \Locale::getDefault();
-        $this->defaultTranslatorBackup = \Zend\Validator\AbstractValidator::getDefaultTranslator();
+        $this->defaultTranslatorBackup = \Laminas\Validator\AbstractValidator::getDefaultTranslator();
     }
 
     public function tearDown(): void
@@ -40,7 +40,7 @@ class LocalizationTest extends \PHPUnit\Framework\TestCase
         // Restore global state
         $_SERVER = $this->serverBackup;
         \Locale::setDefault($this->localeBackup);
-        \Zend\Validator\AbstractValidator::setDefaultTranslator($this->defaultTranslatorBackup);
+        \Laminas\Validator\AbstractValidator::setDefaultTranslator($this->defaultTranslatorBackup);
     }
 
     public function testDefaultLocaleUnchanged()
@@ -61,12 +61,12 @@ class LocalizationTest extends \PHPUnit\Framework\TestCase
 
     public function testDefaultTranslator()
     {
-        $translator = $this->createMock('Zend\Mvc\I18n\Translator');
+        $translator = $this->createMock('Laminas\Mvc\I18n\Translator');
         $application = \Library\Application::init('Console');
 
         // Run test initializion after application initialization because it
         // would be overwritten otherwise
-        \Zend\Validator\AbstractValidator::setDefaultTranslator(null);
+        \Laminas\Validator\AbstractValidator::setDefaultTranslator(null);
         $serviceManager = $application->getServiceManager();
         $serviceManager->setAllowOverride(true);
         $serviceManager->setService('MvcTranslator', $translator);
@@ -76,11 +76,11 @@ class LocalizationTest extends \PHPUnit\Framework\TestCase
         // initialization. Detach other listeners first which are irrelevant for
         // this test and which would require additional dependencies.
         $event = $application->getMvcEvent();
-        $event->setName(\Zend\Mvc\MvcEvent::EVENT_ROUTE);
+        $event->setName(\Laminas\Mvc\MvcEvent::EVENT_ROUTE);
         $eventManager = $application->getEventManager();
         $eventManager->detach(array($serviceManager->get('ModuleManager')->getModule('Console'), 'forceLogin'));
         $eventManager->triggerEvent($event);
 
-        $this->assertSame($translator, \Zend\Validator\AbstractValidator::getDefaultTranslator());
+        $this->assertSame($translator, \Laminas\Validator\AbstractValidator::getDefaultTranslator());
     }
 }

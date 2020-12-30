@@ -29,7 +29,7 @@ use Protocol\Message\InventoryRequest\Content;
  *
  * @codeCoverageIgnore
  */
-class InventoryRequestFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class InventoryRequestFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

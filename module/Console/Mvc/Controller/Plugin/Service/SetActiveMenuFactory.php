@@ -24,7 +24,7 @@ namespace Console\Mvc\Controller\Plugin\Service;
 /**
  * Factory for SetActiveMenu
  */
-class SetActiveMenuFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class SetActiveMenuFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

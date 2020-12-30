@@ -48,13 +48,13 @@ class CustomFields extends Form
 
         $this->_types = $this->getOption('customFieldManager')->getFields();
 
-        $fields = new \Zend\Form\Fieldset('Fields');
-        $inputFilterField = new \Zend\InputFilter\InputFilter;
+        $fields = new \Laminas\Form\Fieldset('Fields');
+        $inputFilterField = new \Laminas\InputFilter\InputFilter;
         foreach ($this->_types as $name => $type) {
             if ($type == 'clob') {
-                $element = new \Zend\Form\Element\Textarea($name);
+                $element = new \Laminas\Form\Element\Textarea($name);
             } else {
-                $element = new \Zend\Form\Element\Text($name);
+                $element = new \Laminas\Form\Element\Text($name);
             }
             if ($name == 'TAG') {
                 $element->setLabel('Category');
@@ -93,7 +93,7 @@ class CustomFields extends Form
         $submit->setLabel('Change');
         $this->add($submit);
 
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
         $inputFilter->add($inputFilterField, 'Fields');
         $this->setInputFilter($inputFilter);
     }
@@ -139,7 +139,7 @@ class CustomFields extends Form
     {
         switch ($type) {
             case 'text':
-                $result = (\Zend\Stdlib\StringUtils::getWrapper('UTF-8')->strlen($value) <= 255);
+                $result = (\Laminas\Stdlib\StringUtils::getWrapper('UTF-8')->strlen($value) <= 255);
                 break;
             case 'integer':
             case 'float':
@@ -153,7 +153,7 @@ class CustomFields extends Form
     }
 
     /** {@inheritdoc} */
-    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset)
+    public function renderFieldset(\Laminas\View\Renderer\PhpRenderer $view, \Laminas\Form\Fieldset $fieldset)
     {
         if ($fieldset->getName() == 'Fields') {
             // Labels (except "Category") are user defined and must not be translated.

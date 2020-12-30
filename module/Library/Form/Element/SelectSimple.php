@@ -29,7 +29,7 @@ namespace Library\Form\Element;
  * without the "value" attribute. The helper is registered with the
  * FormElement helper to render the element correctly.
  */
-class SelectSimple extends \Zend\Form\Element\Select
+class SelectSimple extends \Laminas\Form\Element\Select
 {
     /** {@inheritdoc} */
     protected function getValueOptionsValues()

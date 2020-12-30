@@ -26,11 +26,11 @@ class NetworkScanningTest extends \Console\Test\AbstractFormTest
     public function testInit()
     {
         $preferences = $this->_form->get('Preferences');
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('scannersPerSubnet'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('scanSnmp'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('scannerMinDays'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('scannerMaxDays'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('scanArpDelay'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('scannersPerSubnet'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $preferences->get('scanSnmp'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('scannerMinDays'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('scannerMaxDays'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('scanArpDelay'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
 

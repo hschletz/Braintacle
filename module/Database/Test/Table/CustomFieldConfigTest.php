@@ -155,18 +155,18 @@ class CustomFieldConfigTest extends AbstractTest
 
     public function testAddFieldRollbackOnException()
     {
-        $connection = $this->createMock('Zend\Db\Adapter\Driver\AbstractConnection');
+        $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
         $connection->expects($this->at(0))->method('beginTransaction');
         $connection->expects($this->at(1))->method('rollback');
         $connection->expects($this->never())->method('commit');
 
-        $driver = $this->createMock('Zend\Db\Adapter\Driver\DriverInterface');
+        $driver = $this->createMock('Laminas\Db\Adapter\Driver\DriverInterface');
         $driver->method('getConnection')->willReturn($connection);
 
-        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
+        $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
 
         $table = $this->getMockBuilder('Database\Table\CustomFieldConfig')
                       ->disableOriginalConstructor()
@@ -222,15 +222,15 @@ class CustomFieldConfigTest extends AbstractTest
 
     public function testDeleteFieldRollbackOnException()
     {
-        $connection = $this->createMock('Zend\Db\Adapter\Driver\AbstractConnection');
+        $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
         $connection->expects($this->at(0))->method('beginTransaction');
         $connection->expects($this->at(1))->method('rollback');
         $connection->expects($this->never())->method('commit');
 
-        $driver = $this->createMock('Zend\Db\Adapter\Driver\DriverInterface');
+        $driver = $this->createMock('Laminas\Db\Adapter\Driver\DriverInterface');
         $driver->method('getConnection')->willReturn($connection);
 
-        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
+        $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
 
         $table = $this->getMockBuilder('Database\Table\CustomFieldConfig')

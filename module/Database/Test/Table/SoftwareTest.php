@@ -34,7 +34,7 @@ class SoftwareTest extends AbstractTest
         $this->assertInstanceOf('Database\Hydrator\Software', $hydrator);
 
         $resultSet = static::$_table->getResultSetPrototype();
-        $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);
+        $this->assertInstanceOf('Laminas\Db\ResultSet\HydratingResultSet', $resultSet);
         $this->assertEquals($hydrator, $resultSet->getHydrator());
     }
 
@@ -43,7 +43,7 @@ class SoftwareTest extends AbstractTest
         $softwareRaw = $this->createMock(\Database\Table\SoftwareRaw::class);
         $softwareRaw->method('delete')->with('_where')->willReturn(42);
 
-        $serviceLocator = $this->createMock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+        $serviceLocator = $this->createMock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
         $serviceLocator->method('get')->with('Database\Table\SoftwareRaw')->willReturn($softwareRaw);
 
         $table = $this->getMockBuilder(\Database\Table\Software::class)

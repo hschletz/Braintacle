@@ -34,7 +34,7 @@ class DefaultPlugin
 
     /**
      * Select object for query
-     * @var \Zend\Db\Sql\Select
+     * @var \Laminas\Db\Sql\Select
      */
     protected $_select;
 
@@ -74,7 +74,7 @@ class DefaultPlugin
     /**
      * Retrieve items from database
      *
-     * @return \Zend\Db\ResultSet\AbstractResultSet
+     * @return \Laminas\Db\ResultSet\AbstractResultSet
      */
     public function select()
     {

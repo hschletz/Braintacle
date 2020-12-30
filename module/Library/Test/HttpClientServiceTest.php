@@ -32,8 +32,8 @@ class HttpClientServiceTest extends \PHPUnit\Framework\TestCase
         // each time.
         $httpClient1 = $serviceManager->get('Library\HttpClient');
         $httpClient2 = $serviceManager->get('Library\HttpClient');
-        $this->assertInstanceOf(\Zend\Http\Client::class, $httpClient1);
-        $this->assertInstanceOf(\Zend\Http\Client::class, $httpClient2);
+        $this->assertInstanceOf(\Laminas\Http\Client::class, $httpClient1);
+        $this->assertInstanceOf(\Laminas\Http\Client::class, $httpClient2);
         $this->assertNotSame($httpClient1, $httpClient2);
     }
 }

@@ -21,7 +21,7 @@
 
 namespace Console\Form;
 
-use Zend\Form\Element;
+use Laminas\Form\Element;
 
 /**
  * Search form
@@ -205,7 +205,7 @@ class Search extends Form
         $submit->setLabel('Search');
         $this->add($submit);
 
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
         $inputFilter->add(
             array(
                 'name' => 'search',

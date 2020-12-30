@@ -366,11 +366,11 @@ class Client extends \Model\ClientOrGroup
      *
      * @param string $order Package assignment property to sort by, default: PackageName
      * @param string $direction asc|desc, default: asc
-     * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Package\Assignment
+     * @return \Laminas\Db\ResultSet\AbstractResultSet Result set producing \Model\Package\Assignment
      */
     public function getPackageAssignments($order = 'PackageName', $direction = 'asc')
     {
-        $hydrator = new \Zend\Hydrator\ArraySerializableHydrator;
+        $hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
         $hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(
@@ -382,7 +382,7 @@ class Client extends \Model\ClientOrGroup
         );
         $hydrator->addStrategy(
             'Timestamp',
-            new \Zend\Hydrator\Strategy\DateTimeFormatterStrategy(
+            new \Laminas\Hydrator\Strategy\DateTimeFormatterStrategy(
                 \Model\Package\Assignment::DATEFORMAT
             )
         );
@@ -394,12 +394,12 @@ class Client extends \Model\ClientOrGroup
                    'download_available',
                    'download_available.fileid = devices.ivalue',
                    array('name'),
-                   \Zend\Db\Sql\Select::JOIN_INNER
+                   \Laminas\Db\Sql\Select::JOIN_INNER
                )
                ->where(array('hardware_id' => $this['Id'], 'devices.name' => 'DOWNLOAD'))
                ->order(array($hydrator->extractName($order) => $direction));
 
-        $resultSet = new \Zend\Db\ResultSet\HydratingResultSet(
+        $resultSet = new \Laminas\Db\ResultSet\HydratingResultSet(
             $hydrator,
             clone $this->_serviceLocator->get('Model\Package\Assignment')
         );
@@ -440,7 +440,7 @@ class Client extends \Model\ClientOrGroup
         );
 
         $select = $clientConfig->getSql()->select();
-        $select->columns(array('num' => new \Zend\Db\Sql\Literal('COUNT(*)')));
+        $select->columns(array('num' => new \Laminas\Db\Sql\Literal('COUNT(*)')));
         $select->where($where);
         $select->where(array('name' => 'DOWNLOAD'));
         if ($clientConfig->selectWith($select)->current()['num'] != 1) {
@@ -455,7 +455,7 @@ class Client extends \Model\ClientOrGroup
             // Create DOWNLOAD_FORCE row if it does not already exist. This row
             // is required for overriding the client's package history.
             $select = $clientConfig->getSql()->select();
-            $select->columns(array('num' => new \Zend\Db\Sql\Literal('COUNT(*)')));
+            $select->columns(array('num' => new \Laminas\Db\Sql\Literal('COUNT(*)')));
             $select->where($where);
             $select->where(array('name' => 'DOWNLOAD_FORCE'));
             if ($clientConfig->selectWith($select)->current()['num'] != 1) {
@@ -494,7 +494,7 @@ class Client extends \Model\ClientOrGroup
      * @param string $order Property to sort by. Default: item-specific
      * @param string $direction Sorting direction (asc|desc)
      * @param array $filters Extra filters for ItemManager::getItems()
-     * @return \Zend\Db\ResultSet\AbstractResultSet
+     * @return \Laminas\Db\ResultSet\AbstractResultSet
      */
     public function getItems($type, $order = null, $direction = null, $filters = array())
     {
@@ -615,7 +615,7 @@ class Client extends \Model\ClientOrGroup
                 break;
             case self::MEMBERSHIP_MANUAL:
                 $select->where(
-                    new \Zend\Db\Sql\Predicate\Operator('static', '!=', self::MEMBERSHIP_AUTOMATIC)
+                    new \Laminas\Db\Sql\Predicate\Operator('static', '!=', self::MEMBERSHIP_AUTOMATIC)
                 );
                 break;
             case self::MEMBERSHIP_AUTOMATIC:

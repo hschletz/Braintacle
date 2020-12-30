@@ -30,11 +30,11 @@ class NetworkDevicesScanned extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'netmap';
 
-        $this->_hydrator = new \Zend\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(
@@ -48,7 +48,7 @@ class NetworkDevicesScanned extends \Database\AbstractTable
             )
         );
 
-        $dateTimeFormatter = new \Zend\Hydrator\Strategy\DateTimeFormatterStrategy(
+        $dateTimeFormatter = new \Laminas\Hydrator\Strategy\DateTimeFormatterStrategy(
             $serviceLocator->get('Database\Nada')->timestampFormatPhp(),
             new \DateTimeZone('UTC')
         );
@@ -59,7 +59,7 @@ class NetworkDevicesScanned extends \Database\AbstractTable
         $this->_hydrator->addStrategy('MacAddress', $macAddress);
         $this->_hydrator->addStrategy('mac', $macAddress);
 
-        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
+        $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
             $serviceLocator->get('Model\Network\Device')
         );

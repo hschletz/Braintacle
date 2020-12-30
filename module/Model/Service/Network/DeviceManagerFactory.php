@@ -24,7 +24,7 @@ namespace Model\Service\Network;
 /**
  * Factory for Model\Network\DeviceManager
  */
-class DeviceManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class DeviceManagerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /**
      * {@inheritdoc}

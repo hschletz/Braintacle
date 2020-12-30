@@ -24,7 +24,7 @@ namespace Console\View\Helper\Service;
 /**
  * Factory for FilterDescription
  */
-class FilterDescriptionFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class FilterDescriptionFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

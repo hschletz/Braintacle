@@ -24,7 +24,7 @@ namespace Console\Service;
 /**
  * Factory for LicensesController
  */
-class LicensesControllerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class LicensesControllerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

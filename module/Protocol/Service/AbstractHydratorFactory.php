@@ -30,7 +30,7 @@ namespace Protocol\Service;
  *
  * @codeCoverageIgnore
  */
-class AbstractHydratorFactory implements \Zend\ServiceManager\Factory\AbstractFactoryInterface
+class AbstractHydratorFactory implements \Laminas\ServiceManager\Factory\AbstractFactoryInterface
 {
     /** {@inheritdoc} */
     public function canCreate(\Interop\Container\ContainerInterface $container, $requestedName)

@@ -21,7 +21,7 @@
 
 namespace Model;
 
-use Zend\ModuleManager\Feature;
+use Laminas\ModuleManager\Feature;
 
 /**
  * The Model module
@@ -38,7 +38,7 @@ class Module implements
     Feature\InitProviderInterface
 {
     /** {@inheritdoc} */
-    public function init(\Zend\ModuleManager\ModuleManagerInterface $manager)
+    public function init(\Laminas\ModuleManager\ModuleManagerInterface $manager)
     {
         $manager->loadModule('Database');
         $manager->loadModule('Library');
@@ -51,53 +51,53 @@ class Module implements
         return array(
             'service_manager' => array(
                 'aliases' => array(
-                    'Zend\Authentication\AuthenticationService' => 'Model\Operator\AuthenticationService',
+                    'Laminas\Authentication\AuthenticationService' => 'Model\Operator\AuthenticationService',
                 ),
                 'factories' => array(
-                    'Model\Client\AndroidInstallation' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\AndroidInstallation' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Model\Client\Client' => 'Model\Service\Client\ClientFactory',
                     'Model\Client\ClientManager' => 'Model\Service\Client\ClientManagerFactory',
                     'Model\Client\CustomFieldManager' => 'Model\Service\Client\CustomFieldManagerFactory',
-                    'Model\Client\CustomFields' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\CustomFields' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Model\Client\DuplicatesManager' => 'Model\Service\Client\DuplicatesManagerFactory',
                     'Model\Client\ItemManager' => 'Model\Service\Client\ItemManagerFactory',
-                    'Model\Client\Item\AudioDevice' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Client\Item\Controller' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Client\Item\Cpu' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Client\Item\Display' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Client\Item\DisplayController' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Client\Item\ExtensionSlot' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Client\Item\Filesystem' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Client\Item\InputDevice' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Client\Item\MemorySlot' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Client\Item\Modem' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Client\Item\MsOfficeProduct' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Client\Item\NetworkInterface' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Client\Item\Port' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Client\Item\Printer' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Client\Item\RegistryData' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Client\Item\Sim' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Client\Item\Software' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Client\Item\StorageDevice' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Client\Item\VirtualMachine' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Client\WindowsInstallation' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\Item\AudioDevice' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\Item\Controller' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\Item\Cpu' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\Item\Display' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\Item\DisplayController' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\Item\ExtensionSlot' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\Item\Filesystem' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\Item\InputDevice' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\Item\MemorySlot' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\Item\Modem' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\Item\MsOfficeProduct' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\Item\NetworkInterface' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\Item\Port' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\Item\Printer' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\Item\RegistryData' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\Item\Sim' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\Item\Software' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\Item\StorageDevice' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\Item\VirtualMachine' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Client\WindowsInstallation' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Model\Config' => 'Model\Service\ConfigFactory',
                     'Model\Group\Group' => 'Model\Service\Group\GroupFactory',
                     'Model\Group\GroupManager' => 'Model\Service\Group\GroupManagerFactory',
-                    'Model\Network\Device' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Model\Network\Device' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Model\Network\DeviceManager' => 'Model\Service\Network\DeviceManagerFactory',
-                    'Model\Network\Subnet' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Model\Network\Subnet' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Model\Network\SubnetManager' => 'Model\Service\Network\SubnetManagerFactory',
                     'Model\Operator\AuthenticationService' => 'Model\Service\Operator\AuthenticationServiceFactory',
-                    'Model\Operator\Operator' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Model\Operator\Operator' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Model\Operator\OperatorManager' => 'Model\Service\Operator\OperatorManagerFactory',
-                    'Model\Package\Assignment' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Package\Metadata' => 'Zend\ServiceManager\Factory\InvokableFactory',
-                    'Model\Package\Package' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Model\Package\Assignment' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Package\Metadata' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    'Model\Package\Package' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Model\Package\PackageManager' => 'Model\Service\Package\PackageManagerFactory',
                     'Model\Package\Storage\Direct' => 'Model\Service\Package\Storage\DirectFactory',
                     'Model\Registry\RegistryManager' => 'Model\Service\Registry\RegistryManagerFactory',
-                    'Model\Registry\Value' => 'Zend\ServiceManager\Factory\InvokableFactory',
+                    'Model\Registry\Value' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Model\SoftwareManager' => 'Model\Service\SoftwareManagerFactory',
                 ),
                 'shared' => array(
@@ -112,7 +112,7 @@ class Module implements
     public function getAutoloaderConfig()
     {
         return array(
-            'Zend\Loader\StandardAutoloader' => array(
+            'Laminas\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__,
                 ),

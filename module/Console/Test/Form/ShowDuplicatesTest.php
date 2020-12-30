@@ -34,7 +34,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
     public function testInit()
     {
         $mergeOptions = $this->_form->get('mergeOptions');
-        $this->assertInstanceOf('\Zend\Form\Element\MultiCheckbox', $mergeOptions);
+        $this->assertInstanceOf('\Laminas\Form\Element\MultiCheckbox', $mergeOptions);
         $this->assertInstanceOf('\Library\Form\Element\Submit', $this->_form->get('submit'));
     }
 

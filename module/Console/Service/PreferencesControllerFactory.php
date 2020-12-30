@@ -24,7 +24,7 @@ namespace Console\Service;
 /**
  * Factory for PreferencesController
  */
-class PreferencesControllerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class PreferencesControllerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

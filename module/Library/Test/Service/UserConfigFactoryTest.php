@@ -33,7 +33,7 @@ class UserConfigFactoryTest extends \PHPUnit\Framework\TestCase
 
     /**
      * Per-Test container instance
-     * @var \Zend\ServiceManager\ServiceManager
+     * @var \Laminas\ServiceManager\ServiceManager
      */
     protected $_container;
 
@@ -74,7 +74,7 @@ EOT;
         $this->_envBackup = getenv('BRAINTACLE_CONFIG');
 
         $this->_factory = new \Library\Service\UserConfigFactory;
-        $this->_container = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $this->_container = $this->createMock('Laminas\ServiceManager\ServiceManager');
     }
 
     public function tearDown(): void
@@ -135,7 +135,7 @@ EOT;
                          ->with('ApplicationConfig')
                          ->willReturn(array());
 
-        $reader = new \Zend\Config\Reader\Ini;
+        $reader = new \Laminas\Config\Reader\Ini;
         $iniContentParsed = $reader->fromFile(\Library\Application::getPath('config/braintacle.ini'));
 
         $this->assertEquals($iniContentParsed, $this->_factory->__invoke($this->_container, 'foo'));
@@ -150,7 +150,7 @@ EOT;
                          ->with('ApplicationConfig')
                          ->willReturn(array());
 
-        $reader = new \Zend\Config\Reader\Ini;
+        $reader = new \Laminas\Config\Reader\Ini;
         $iniContentParsed = $reader->fromFile(\Library\Application::getPath('config/braintacle.ini'));
 
         $this->assertEquals($iniContentParsed, $this->_factory->__invoke($this->_container, 'foo'));

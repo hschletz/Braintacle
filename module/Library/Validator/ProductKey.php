@@ -27,7 +27,7 @@ namespace Library\Validator;
  * A valid product key has 5 groups of 5 upper case characters or digits,
  * separated by dashes, i.e. AAAAA-AAAAA-AAAAA-AAAAA-AAAAA.
  */
-class ProductKey extends \Zend\Validator\AbstractValidator
+class ProductKey extends \Laminas\Validator\AbstractValidator
 {
     /**
      * Key for message template

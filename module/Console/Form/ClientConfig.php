@@ -21,7 +21,7 @@
 
 namespace Console\Form;
 
-use Zend\Form\Element;
+use Laminas\Form\Element;
 
 /**
  * Client/group configuration
@@ -41,12 +41,12 @@ class ClientConfig extends Form
     public function init()
     {
         parent::init();
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
 
         // Agent options
-        $agent = new \Zend\Form\Fieldset('Agent');
+        $agent = new \Laminas\Form\Fieldset('Agent');
         $agent->setLabel('Agent');
-        $inputFilterAgent = new \Zend\InputFilter\InputFilter;
+        $inputFilterAgent = new \Laminas\InputFilter\InputFilter;
 
         $contactInterval = new Element\Text('contactInterval');
         $contactInterval->setLabel('Agent contact interval (in hours)')
@@ -64,9 +64,9 @@ class ClientConfig extends Form
         $inputFilter->add($inputFilterAgent, 'Agent');
 
         // Download options
-        $download = new \Zend\Form\Fieldset('Download');
+        $download = new \Laminas\Form\Fieldset('Download');
         $download->setLabel('Download');
-        $inputFilterDownload = new \Zend\InputFilter\InputFilter;
+        $inputFilterDownload = new \Laminas\InputFilter\InputFilter;
 
         $packageDeployment = new Element\Checkbox('packageDeployment');
         $packageDeployment->setLabel('Enable package download');
@@ -107,9 +107,9 @@ class ClientConfig extends Form
         $inputFilter->add($inputFilterDownload, 'Download');
 
         // Network scanning options
-        $scan = new \Zend\Form\Fieldset('Scan');
+        $scan = new \Laminas\Form\Fieldset('Scan');
         $scan->setLabel('Network scanning');
-        $inputFilterScan = new \Zend\InputFilter\InputFilter;
+        $inputFilterScan = new \Laminas\InputFilter\InputFilter;
 
         $allowScan = new Element\Checkbox('allowScan');
         $allowScan->setLabel('Allow network scanning');
@@ -154,7 +154,7 @@ class ClientConfig extends Form
      */
     protected function _getIntegerFilter($name, $min)
     {
-        $validatorChain = new \Zend\Validator\ValidatorChain;
+        $validatorChain = new \Laminas\Validator\ValidatorChain;
         $validatorChain->attachByName(
             'Callback',
             array('callback' => array($this, 'validateInteger')),
@@ -163,9 +163,9 @@ class ClientConfig extends Form
         // Callback validators do not support message variables. For
         // translatable messages with a parameter, do translation and
         // substitution here and disable further translation.
-        $dummyMinValueValidator = new \Zend\Validator\GreaterThan();
-        $message = $dummyMinValueValidator->getMessageTemplates()[\Zend\Validator\GreaterThan::NOT_GREATER_INCLUSIVE];
-        $minValueValidator = new \Zend\Validator\Callback;
+        $dummyMinValueValidator = new \Laminas\Validator\GreaterThan();
+        $message = $dummyMinValueValidator->getMessageTemplates()[\Laminas\Validator\GreaterThan::NOT_GREATER_INCLUSIVE];
+        $minValueValidator = new \Laminas\Validator\Callback;
         $minValueValidator->setCallback(array($this, 'validateMinValue'))
                           ->setCallbackOptions($min)
                           ->setMessage(

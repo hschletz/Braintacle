@@ -28,17 +28,17 @@ namespace Console\Mvc\Controller\Plugin;
  * identical scripts with a single rendering method call, this plugin provides a
  * generic template which simply renders the provided form.
  */
-class PrintForm extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
+class PrintForm extends \Laminas\Mvc\Controller\Plugin\AbstractPlugin
 {
     /**
      * Return view model set up to output given form
      *
      * @param mixed $form Form to render
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function __invoke($form)
     {
-        $view = new \Zend\View\Model\ViewModel;
+        $view = new \Laminas\View\Model\ViewModel;
         $view->setTemplate('plugin/PrintForm.php');
         $view->form = $form;
         return $view;

@@ -31,7 +31,7 @@ class Display extends AbstractForm
     {
         parent::init();
 
-        $displayBlacklistedSoftware = new \Zend\Form\Element\Checkbox('displayBlacklistedSoftware');
+        $displayBlacklistedSoftware = new \Laminas\Form\Element\Checkbox('displayBlacklistedSoftware');
         $displayBlacklistedSoftware->setLabel('Display ignored software');
         $this->get('Preferences')->add($displayBlacklistedSoftware);
     }

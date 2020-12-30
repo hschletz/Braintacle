@@ -31,7 +31,7 @@ namespace Library\View\Helper;
  * To render an element via the FormElement helper, set the element's "type"
  * attribute to "select_untranslated" to make it use this helper.
  */
-class FormSelectUntranslated extends \Zend\Form\View\Helper\FormSelect
+class FormSelectUntranslated extends \Laminas\Form\View\Helper\FormSelect
 {
     /** {@inheritdoc} */
     public function renderOptions(array $options, array $selectedOptions = array())

@@ -34,7 +34,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
         $subnet->expects($this->at(2))->method('offsetGet')->with('CidrAddress')->willReturn('<cidrAddress1>');
 
         $helper = new \Console\View\Helper\FilterDescription($subnet);
-        $helper->setView(static::$serviceManager->get('Zend\View\Renderer\PhpRenderer'));
+        $helper->setView(static::$serviceManager->get('Laminas\View\Renderer\PhpRenderer'));
 
         // Escaped characters should not occur, but are theoretically possible.
         $this->assertEquals(

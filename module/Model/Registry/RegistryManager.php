@@ -55,7 +55,7 @@ class RegistryManager
     /**
      * Get all registry value definitions
      *
-     * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Registry\Value, sorted by name
+     * @return \Laminas\Db\ResultSet\AbstractResultSet Result set producing \Model\Registry\Value, sorted by name
      */
     public function getValueDefinitions()
     {

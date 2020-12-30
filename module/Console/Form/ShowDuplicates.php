@@ -22,7 +22,7 @@
 
 namespace Console\Form;
 
-use Zend\Form\Element;
+use Laminas\Form\Element;
 
 /**
  * Form for displaying duplicate clients by given criteria and selection of
@@ -78,14 +78,14 @@ class ShowDuplicates extends Form
         $this->add($submit);
 
         // Checkboxes for "clients[]" are generated manually, without
-        // \Zend\Form\Element. Define an input filter to have them processed.
-        $arrayCount = new \Zend\Validator\Callback;
+        // \Laminas\Form\Element. Define an input filter to have them processed.
+        $arrayCount = new \Laminas\Validator\Callback;
         $arrayCount->setCallback(array($this, 'validateArrayCount'))
                    ->setMessage(
                        'At least 2 different clients have to be selected',
-                       \Zend\Validator\Callback::INVALID_VALUE
+                       \Laminas\Validator\Callback::INVALID_VALUE
                    );
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
         $inputFilter->add([
             'name' => 'clients',
             'required' => true,
@@ -93,11 +93,11 @@ class ShowDuplicates extends Form
             'filters' => [[$this, 'clientsFilter']],
             'validators' => [
                 $arrayCount,
-                new \Zend\Validator\Explode(['validator' => new \Zend\Validator\Digits]),
+                new \Laminas\Validator\Explode(['validator' => new \Laminas\Validator\Digits]),
             ],
             // Explicit message in case of missing field (no clients selected)
             'error_message' => $arrayCount->getDefaultTranslator()->translate(
-                $arrayCount->getMessageTemplates()[\Zend\Validator\Callback::INVALID_VALUE]
+                $arrayCount->getMessageTemplates()[\Laminas\Validator\Callback::INVALID_VALUE]
             )
         ]);
         $inputFilter->add([

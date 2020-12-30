@@ -24,7 +24,7 @@ namespace Console\View\Helper\Service;
 /**
  * Factory for Table
  */
-class TableFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class TableFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

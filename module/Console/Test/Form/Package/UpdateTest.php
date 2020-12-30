@@ -21,7 +21,7 @@
 
 namespace Console\Test\Form\Package;
 
-use Zend\Dom\Document\Query;
+use Laminas\Dom\Document\Query;
 
 /**
  * Tests for Update form
@@ -40,21 +40,21 @@ class UpdateTest extends \Console\Test\AbstractFormTest
     public function testInit()
     {
         $fieldset = $this->_form->get('Deploy');
-        $this->assertInstanceOf('Zend\Form\Fieldset', $fieldset);
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $fieldset->get('Pending'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $fieldset->get('Running'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $fieldset->get('Success'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $fieldset->get('Error'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $fieldset->get('Groups'));
+        $this->assertInstanceOf('Laminas\Form\Fieldset', $fieldset);
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $fieldset->get('Pending'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $fieldset->get('Running'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $fieldset->get('Success'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $fieldset->get('Error'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $fieldset->get('Groups'));
 
-        $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('Name')); // from parent class
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('Name')); // from parent class
     }
 
     public function testRenderFieldset()
     {
         $view = $this->_createView();
         $html = $this->_form->renderFieldset($view, $this->_form);
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
 
         // Custom rendering of Deploy fieldset - labels are appended instead of prepended
         $this->assertCount(5, Query::execute('//fieldset//input[@type="checkbox"]/following-sibling::span', $document));

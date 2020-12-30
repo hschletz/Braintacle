@@ -24,7 +24,7 @@ namespace Console\Controller;
 /**
  * Controller for managing duplicate clients and the criteria for determining duplicates.
  */
-class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
+class DuplicatesController extends \Laminas\Mvc\Controller\AbstractActionController
 {
     /**
      * Duplicates prototype
@@ -72,7 +72,7 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Form for displaying and merging duplicate clients
      *
-     * @return array|\Zend\Http\Response array(form) or Redirect response
+     * @return array|\Laminas\Http\Response array(form) or Redirect response
      */
     public function manageAction()
     {
@@ -105,7 +105,7 @@ class DuplicatesController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Allow given criteria and value as duplicate
      *
-     * @return array|\Zend\Http\Response criteria/value for GET, redirect response for POST
+     * @return array|\Laminas\Http\Response criteria/value for GET, redirect response for POST
      */
     public function allowAction()
     {

@@ -24,15 +24,15 @@ namespace Library\Navigation;
 /**
  * Abstract navigation factory
  *
- * This abstract class extends \Zend\Navigation\Service\DefaultNavigationFactory
- * with a more flexible configuration source. Instead of pulling configuration
- * from the "navigation" section of the application config, the configuration is
- * provided by the _getConfig() method which must be implemented by derived
- * classes.
+ * This abstract class extends
+ * \Laminas\Navigation\Service\DefaultNavigationFactory with a more flexible
+ * configuration source. Instead of pulling configuration from the "navigation"
+ * section of the application config, the configuration is provided by the
+ * _getConfig() method which must be implemented by derived classes.
  *
  * @codeCoverageIgnore
  */
-abstract class AbstractNavigationFactory extends \Zend\Navigation\Service\DefaultNavigationFactory
+abstract class AbstractNavigationFactory extends \Laminas\Navigation\Service\DefaultNavigationFactory
 {
     /** {@inheritdoc} */
     protected function getPages(\Interop\Container\ContainerInterface $container)
@@ -47,7 +47,7 @@ abstract class AbstractNavigationFactory extends \Zend\Navigation\Service\Defaul
     /**
      * Construct navigation config
      *
-     * @return string|\Zend\Config\Config|array Configuration file/object/array
+     * @return string|\Laminas\Config\Config|array Configuration file/object/array
      */
     abstract protected function _getConfig();
 

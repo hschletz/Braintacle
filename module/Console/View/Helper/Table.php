@@ -24,11 +24,11 @@ namespace Console\View\Helper;
 /**
  * Generate HTML table
  */
-class Table extends \Zend\View\Helper\AbstractHelper
+class Table extends \Laminas\View\Helper\AbstractHelper
 {
     /**
      * EscapeHtml view helper
-     * @var \Zend\View\Helper\EscapeHtml
+     * @var \Laminas\View\Helper\EscapeHtml
      */
     protected $_escapeHtml;
 
@@ -46,23 +46,23 @@ class Table extends \Zend\View\Helper\AbstractHelper
 
     /**
      * DateFormat view helper
-     * @var \Zend\I18n\View\Helper\DateFormat
+     * @var \Laminas\I18n\View\Helper\DateFormat
      */
     protected $_dateFormat;
 
     /**
      * Constructor
      *
-     * @param \Zend\View\Helper\EscapeHtml $escapeHtml
+     * @param \Laminas\View\Helper\EscapeHtml $escapeHtml
      * @param \Library\View\Helper\HtmlElement $htmlElement
      * @param \Console\View\Helper\ConsoleUrl $consoleUrl
-     * @param \Zend\I18n\View\Helper\DateFormat $dateFormat
+     * @param \Laminas\I18n\View\Helper\DateFormat $dateFormat
      */
     public function __construct(
-        \Zend\View\Helper\EscapeHtml $escapeHtml,
+        \Laminas\View\Helper\EscapeHtml $escapeHtml,
         \Library\View\Helper\HtmlElement $htmlElement,
         \Console\View\Helper\ConsoleUrl $consoleUrl,
-        \Zend\I18n\View\Helper\DateFormat $dateFormat
+        \Laminas\I18n\View\Helper\DateFormat $dateFormat
     ) {
         $this->_escapeHtml = $escapeHtml;
         $this->_htmlElement = $htmlElement;

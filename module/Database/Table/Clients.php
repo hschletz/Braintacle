@@ -37,7 +37,7 @@ class Clients extends \Database\AbstractTable
     public function initialize()
     {
         $this->_hydrator = new \Database\Hydrator\Clients($this->_serviceLocator);
-        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
+        $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
             $this->_serviceLocator->get('Model\Client\Client')
         );
@@ -80,7 +80,7 @@ class Clients extends \Database\AbstractTable
                     'useragent',
                     'checksum',
                     'ipaddr', // deprecated
-                    'dns_domain' => new \Zend\Db\Sql\Literal(
+                    'dns_domain' => new \Laminas\Db\Sql\Literal(
                         'CASE WHEN winprodid IS NULL THEN workgroup ELSE NULL END'
                     )
                 ),
@@ -89,8 +89,8 @@ class Clients extends \Database\AbstractTable
                 'bios',
                 'hardware_id = id',
                 array('smanufacturer', 'smodel', 'ssn', 'assettag', 'type', 'bversion', 'bdate', 'bmanufacturer'),
-                \Zend\Db\Sql\Select::JOIN_LEFT
-            )->where(new \Zend\Db\Sql\Predicate\Operator('deviceid', '!=', '_SYSTEMGROUP_'));
+                \Laminas\Db\Sql\Select::JOIN_LEFT
+            )->where(new \Laminas\Db\Sql\Predicate\Operator('deviceid', '!=', '_SYSTEMGROUP_'));
 
             $database->createView('clients', $sql->buildSqlString($select));
             $logger->info('done.');

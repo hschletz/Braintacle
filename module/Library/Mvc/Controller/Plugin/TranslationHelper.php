@@ -32,7 +32,7 @@ namespace Library\Mvc\Controller\Plugin;
  *
  *     $this->_('translatable string')
  */
-class TranslationHelper extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
+class TranslationHelper extends \Laminas\Mvc\Controller\Plugin\AbstractPlugin
 {
     /**
      * Translation helper

@@ -12,9 +12,9 @@
 
 [database]
 
-; Zend\Db driver.
-; See http://zendframework.github.io/zend-db/adapter/ for a list of available
-; drivers. Only PDO drivers have been tested.
+; Laminas\Db driver. See
+; https://docs.laminas.dev/laminas-db/adapter/#creating-an-adapter-using-configuration
+; for a list of available drivers. Only PDO drivers have been tested.
 driver = Pdo_Pgsql
 ; For MySQL:
 ; driver = Pdo_Mysql

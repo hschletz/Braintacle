@@ -30,12 +30,12 @@ class Application
      * Initialize MVC application
      *
      * @param string $module Module that provides the application
-     * @return \Zend\Mvc\Application
+     * @return \Laminas\Mvc\Application
      * @codeCoverageIgnore
      */
     public static function init($module)
     {
-        return \Zend\Mvc\Application::init(static::getApplicationConfig($module));
+        return \Laminas\Mvc\Application::init(static::getApplicationConfig($module));
     }
 
     /**
@@ -48,15 +48,15 @@ class Application
     {
         return array(
             'modules' => array(
-                'Zend\Filter',
-                'Zend\Form',
-                'Zend\I18n',
-                'Zend\Log',
-                'Zend\Mvc\I18n',
-                'Zend\Mvc\Plugin\FlashMessenger',
-                'Zend\Navigation',
-                'Zend\Router',
-                'Zend\Validator',
+                'Laminas\Filter',
+                'Laminas\Form',
+                'Laminas\I18n',
+                'Laminas\Log',
+                'Laminas\Mvc\I18n',
+                'Laminas\Mvc\Plugin\FlashMessenger',
+                'Laminas\Navigation',
+                'Laminas\Router',
+                'Laminas\Validator',
                 $module,
             ),
             'module_listener_options' => array(

@@ -24,7 +24,7 @@ namespace Console\Controller;
 /**
  * Controller for managing software licenses
  */
-class LicensesController extends \Zend\Mvc\Controller\AbstractActionController
+class LicensesController extends \Laminas\Mvc\Controller\AbstractActionController
 {
     /**
      * Software manager

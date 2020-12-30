@@ -42,7 +42,7 @@ class SoftwareDefinitions extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'software_definitions';
         parent::__construct($serviceLocator);
@@ -70,7 +70,7 @@ class SoftwareDefinitions extends \Database\AbstractTable
             $logger->info('Migrating accepted software definitions');
             $this->adapter->query(
                 'INSERT INTO software_definitions (name, display) SELECT extracted, TRUE FROM dico_soft',
-                \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
+                \Laminas\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
             );
             $logger->info('done.');
         }
@@ -80,7 +80,7 @@ class SoftwareDefinitions extends \Database\AbstractTable
                 INSERT INTO software_definitions (name, display)
                 SELECT extracted, FALSE FROM dico_ignored WHERE extracted NOT IN(SELECT name FROM software_definitions)
 EOT;
-            $this->adapter->query($query, \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE);
+            $this->adapter->query($query, \Laminas\Db\Adapter\Adapter::QUERY_MODE_EXECUTE);
             $logger->info('done.');
         }
         
@@ -96,7 +96,7 @@ EOT;
                 FROM softwares
                 WHERE COALESCE(name, '') NOT IN(SELECT name FROM software_definitions)
 EOT;
-            $result = $this->adapter->query($query, \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE);
+            $result = $this->adapter->query($query, \Laminas\Db\Adapter\Adapter::QUERY_MODE_EXECUTE);
             $logger->info(sprintf('done, %d definitions migrated.', $result->getAffectedRows()));
         }
     }

@@ -47,7 +47,7 @@ class SubnetManager
      *
      * @param string $order Property to sort by, default: null
      * @param string $direction One of [asc|desc].
-     * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Network\Subnet
+     * @return \Laminas\Db\ResultSet\AbstractResultSet Result set producing \Model\Network\Subnet
      */
 
     public function getSubnets($order = null, $direction = 'asc')
@@ -126,7 +126,7 @@ EOT;
 
         return $this->_subnets->getAdapter()->query(
             $query,
-            \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE,
+            \Laminas\Db\Adapter\Adapter::QUERY_MODE_EXECUTE,
             $this->_subnets->getResultSetPrototype()
         );
     }
@@ -208,7 +208,7 @@ EOT;
      */
     protected function _validate($address, $mask)
     {
-        $validator = new \Zend\Validator\Ip(array('allowipv6' => false));
+        $validator = new \Laminas\Validator\Ip(array('allowipv6' => false));
         if (!$validator->isValid($address)) {
             $messages = $validator->getMessages();
             throw new \UnexpectedValueException(

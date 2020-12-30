@@ -24,7 +24,7 @@ namespace Protocol\Service\Hydrator;
 /**
  * Factory for Protocol\Hydrator\ClientsHardware
  */
-class ClientsHardwareFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class ClientsHardwareFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

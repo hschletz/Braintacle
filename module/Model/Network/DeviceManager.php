@@ -77,7 +77,7 @@ class DeviceManager
      * @param array $filters Filters to apply
      * @param string $order Property to sort by. Default: null
      * @param string $direction One of [asc|desc].
-     * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Network\Device
+     * @return \Laminas\Db\ResultSet\AbstractResultSet Result set producing \Model\Network\Device
      */
     public function getDevices($filters, $order = null, $direction = 'asc')
     {
@@ -148,7 +148,7 @@ class DeviceManager
                    'network_devices',
                    'macaddr = mac',
                    array('description', 'type'),
-                   \Zend\Db\Sql\Select::JOIN_LEFT
+                   \Laminas\Db\Sql\Select::JOIN_LEFT
                )
                ->where(array('mac' => $macAddress));
         $device = $this->_networkDevicesScanned->selectWith($select)->current();
@@ -221,13 +221,13 @@ class DeviceManager
         $select->columns(
             array(
                 'name',
-                'num_devices' => new \Zend\Db\Sql\Literal('COUNT(type)')
+                'num_devices' => new \Laminas\Db\Sql\Literal('COUNT(type)')
             )
         )->join(
             'network_devices',
-            new \Zend\Db\Sql\Literal('type = name AND macaddr NOT IN(SELECT macaddr FROM networks)'),
+            new \Laminas\Db\Sql\Literal('type = name AND macaddr NOT IN(SELECT macaddr FROM networks)'),
             array(),
-            \Zend\Db\Sql\Select::JOIN_LEFT
+            \Laminas\Db\Sql\Select::JOIN_LEFT
         )
         ->group('name')
         ->order('name');

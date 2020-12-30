@@ -27,7 +27,7 @@ namespace Library\I18n\Translator\Loader;
  * This loader allows using gettext without a need for compiling .mo files.
  * Fuzzy translations will be treated as untranslated.
  */
-class Po implements \Zend\I18n\Translator\Loader\FileLoaderInterface
+class Po implements \Laminas\I18n\Translator\Loader\FileLoaderInterface
 {
     /** {@inheritdoc} */
     public function load($locale, $filename)
@@ -35,7 +35,7 @@ class Po implements \Zend\I18n\Translator\Loader\FileLoaderInterface
         $file = new \Library\FileObject($filename);
         $file->setFlags(\SplFileObject::DROP_NEW_LINE | \SplFileObject::READ_AHEAD | \SplFileObject::SKIP_EMPTY);
 
-        $textDomain = new \Zend\I18n\Translator\TextDomain;
+        $textDomain = new \Laminas\I18n\Translator\TextDomain;
         $state = 0; // Parser state; 0 := everything else; 1 := msgid; 2 := msgstr
         $msgid = ''; // current msgid
         $msgstr = ''; // current msgstr

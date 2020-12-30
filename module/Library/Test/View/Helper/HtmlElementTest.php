@@ -88,11 +88,11 @@ class HtmlElementTest extends AbstractTest
      */
     public function testInvokeEmptyElements($isXhtml, $isHtml5, $element, $output)
     {
-        $doctype = $this->createMock('Zend\View\Helper\Doctype');
+        $doctype = $this->createMock('Laminas\View\Helper\Doctype');
         $doctype->method('isXhtml')->willReturn($isXhtml);
         $doctype->method('isHtml5')->willReturn($isHtml5);
 
-        $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('plugin')->willReturnMap(
             array(
                 array('doctype', null, $doctype),

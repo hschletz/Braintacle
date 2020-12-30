@@ -24,10 +24,10 @@ namespace Library\Mvc\Controller\Plugin;
 /**
  * Redirect to standard route (controller/action)
  *
- * This is a convenient alternative to ZF's Redirect plugin which composes the
- * redirect URL via the UrlFromRoute plugin.
+ * This is a convenient alternative to Laminas' Redirect plugin which composes
+ * the redirect URL via the UrlFromRoute plugin.
  */
-class RedirectToRoute extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
+class RedirectToRoute extends \Laminas\Mvc\Controller\Plugin\AbstractPlugin
 {
     /**
      * Redirect to given route
@@ -38,7 +38,7 @@ class RedirectToRoute extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
      * @param string $controllerName Controller name. If empty, the default controller is used.
      * @param string $action Action name. If empty, the default action is used.
      * @param array $params Associative array of URL parameters
-     * @return \Zend\Http\Response Redirect response
+     * @return \Laminas\Http\Response Redirect response
      */
     public function __invoke($controllerName = null, $action = null, array $params = array())
     {

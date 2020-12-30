@@ -28,7 +28,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 {
     /**
      * EscapeHtml mock
-     * @var \Zend\View\Helper\EscapeHtml
+     * @var \Laminas\View\Helper\EscapeHtml
      */
     protected $_escapeHtml;
 
@@ -46,7 +46,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
     /**
      * DateFormat mock
-     * @var \Zend\I18n\View\Helper\DateFormat
+     * @var \Laminas\I18n\View\Helper\DateFormat
      */
     protected $_dateFormat;
 
@@ -78,10 +78,10 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
     public function setUp(): void
     {
-        $this->_escapeHtml = $this->createMock('Zend\View\Helper\EscapeHtml');
+        $this->_escapeHtml = $this->createMock('Laminas\View\Helper\EscapeHtml');
         $this->_htmlElement = $this->createMock('Library\View\Helper\HtmlElement');
         $this->_consoleUrl = $this->createMock('Console\View\Helper\ConsoleUrl');
-        $this->_dateFormat = $this->createMock('Zend\I18n\View\Helper\DateFormat');
+        $this->_dateFormat = $this->createMock('Laminas\I18n\View\Helper\DateFormat');
         parent::setUp();
     }
 
@@ -273,7 +273,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testDataRowsWithRenderCallbackPrecedesDateTime()
     {
-        $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $date = $this->createMock('DateTime');
 
         $this->_dateFormat->expects($this->never())->method('__invoke');

@@ -21,16 +21,16 @@
 
 namespace Database\Hydrator\NamingStrategy;
 
-use Zend\Hydrator\NamingStrategy\MapNamingStrategy as WrappedMapNamingStrategy;
+use Laminas\Hydrator\NamingStrategy\MapNamingStrategy as WrappedMapNamingStrategy;
 
 /**
  * Naming strategy using a map
  *
- * Wrapper for \Zend\Hydrator\NamingStrategy\MapNamingStrategy throwing an
+ * Wrapper for \Laminas\Hydrator\NamingStrategy\MapNamingStrategy throwing an
  * exception on undefined values. hydrate() accepts both extracted and hydrated
  * names.
  */
-class MapNamingStrategy implements \Zend\Hydrator\NamingStrategy\NamingStrategyInterface
+class MapNamingStrategy implements \Laminas\Hydrator\NamingStrategy\NamingStrategyInterface
 {
     /**
      * Wrapped MapNamingStrategy

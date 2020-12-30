@@ -55,7 +55,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
 
     /**
      * Session container
-     * @var \Zend\Session\Container;
+     * @var \Laminas\Session\Container;
      */
     protected $_session;
 
@@ -63,7 +63,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
     {
         parent::setUp();
 
-        $this->_session = new \Zend\Session\Container('ManageSoftware');
+        $this->_session = new \Laminas\Session\Container('ManageSoftware');
 
         $this->_softwareManager = $this->createMock('Model\SoftwareManager');
         $this->_filterForm = $this->createMock('Console\Form\SoftwareFilter');
@@ -81,7 +81,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
     {
         $serviceManager = $this->getApplicationServiceLocator();
 
-        $params = $this->createMock('Zend\Mvc\Controller\Plugin\Params');
+        $params = $this->createMock('Laminas\Mvc\Controller\Plugin\Params');
         $params->method('__invoke')->willReturnSelf();
         $params->method('fromQuery')->willReturnMap(
             array(
@@ -102,7 +102,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
             'Status' => 'filterName',
         );
 
-        $result = $this->createMock('Zend\Db\ResultSet\ResultSet');
+        $result = $this->createMock('Laminas\Db\ResultSet\ResultSet');
         $result->method('toArray')->willReturn($this->_result);
 
         $this->_softwareManager->method('getSoftware')->with($filters, '_order', '_direction')->willReturn($result);
@@ -227,9 +227,9 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
 
         $viewHelperManager = $serviceManager->get('ViewHelperManager');
 
-        $translate = $this->createMock('Zend\I18n\View\Helper\Translate');
+        $translate = $this->createMock('Laminas\I18n\View\Helper\Translate');
         $translate->method('__invoke')->with($message)->willReturn('MESSAGE');
-        $viewHelperManager->setService('Zend\I18n\View\Helper\Translate', $translate);
+        $viewHelperManager->setService('Laminas\I18n\View\Helper\Translate', $translate);
 
         $consoleUrl = $this->createMock('Console\View\Helper\ConsoleUrl');
         $consoleUrl->method('__invoke')->with('software', 'manage')->willReturn('URL');
@@ -239,9 +239,9 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $formYesNo->method('__invoke')->with('MESSAGE', array(), array('action' => 'URL'))->willReturn('<form>FORM</form>');
         $viewHelperManager->setService('Library\View\Helper\FormYesNo', $formYesNo);
 
-        $htmlList = $this->createMock('Zend\View\Helper\HtmlList');
+        $htmlList = $this->createMock('Laminas\View\Helper\HtmlList');
         $htmlList->method('__invoke')->with(array('filtered1', 'filtered2'))->willReturn('LIST');
-        $viewHelperManager->setService('Zend\View\Helper\HtmlList', $htmlList);
+        $viewHelperManager->setService('Laminas\View\Helper\HtmlList', $htmlList);
 
         $this->dispatch('/console/software/confirm/', 'POST', $postData);
 

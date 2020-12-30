@@ -38,14 +38,14 @@ class SchemaManager
 
     /**
      * Service locator
-     * @var \Zend\ServiceManager\ServiceLocatorInterface
+     * @var \Laminas\ServiceManager\ServiceLocatorInterface
      */
     protected $_serviceLocator;
 
     /**
      * Constructor
      *
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * @param \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator
      */
     public function __construct($serviceLocator)
     {
@@ -121,7 +121,7 @@ class SchemaManager
         // Server tables have no table class
         $glob = new \GlobIterator(Module::getPath('data/Tables/Server') . '/*.json');
         foreach ($glob as $fileinfo) {
-            $schema = \Zend\Config\Factory::fromFile($fileinfo->getPathname());
+            $schema = \Laminas\Config\Factory::fromFile($fileinfo->getPathname());
             self::setSchema(
                 $logger,
                 $schema,
@@ -135,7 +135,7 @@ class SchemaManager
         // SNMP tables have no table class
         $glob = new \GlobIterator(Module::getPath('data/Tables/Snmp') . '/*.json');
         foreach ($glob as $fileinfo) {
-            $schema = \Zend\Config\Factory::fromFile($fileinfo->getPathname());
+            $schema = \Laminas\Config\Factory::fromFile($fileinfo->getPathname());
             $obsoleteColumns = \Database\AbstractTable::getObsoleteColumns(
                 $logger,
                 $schema,
@@ -190,7 +190,7 @@ class SchemaManager
     /**
      * Create or update table according to schema
      *
-     * @param \Zend\Log\Logger $logger Logger instance
+     * @param \Laminas\Log\Logger $logger Logger instance
      * @param array $schema Parsed table schema
      * @param \Nada\Database\AbstractDatabase $database Database object
      * @param string[] $obsoleteColumns List of obsolete columns to prune or warn about
@@ -333,7 +333,7 @@ class SchemaManager
      * Drop indexes which are not defined in the schema.
      */
     protected static function _dropIndexes(
-        \Zend\Log\LoggerInterface $logger,
+        \Laminas\Log\LoggerInterface $logger,
         \Nada\Table\AbstractTable $table,
         array $schema
     ) {

@@ -21,7 +21,7 @@
 
 namespace Database;
 
-use Zend\ModuleManager\Feature;
+use Laminas\ModuleManager\Feature;
 
 /**
  * The Database module
@@ -37,7 +37,7 @@ class Module implements
     Feature\InitProviderInterface
 {
     /** {@inheritdoc} */
-    public function init(\Zend\ModuleManager\ModuleManagerInterface $manager)
+    public function init(\Laminas\ModuleManager\ModuleManagerInterface $manager)
     {
         $manager->loadModule('Library');
         $manager->loadModule('Model');
@@ -63,7 +63,7 @@ class Module implements
     public function getAutoloaderConfig()
     {
         return array(
-            'Zend\Loader\StandardAutoloader' => array(
+            'Laminas\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__,
                 ),

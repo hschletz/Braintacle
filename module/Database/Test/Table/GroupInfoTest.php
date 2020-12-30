@@ -43,11 +43,11 @@ class GroupInfoTest extends AbstractTest
         $config = $this->createMock('Model\Config');
         $config->expects($this->once())->method('__get')->with('groupCacheExpirationInterval')->willReturn(42);
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(
             $this->returnValueMap([
                 ['Database\Nada', $nada],
-                ['Db', $this->createMock('Zend\Db\Adapter\Adapter')],
+                ['Db', $this->createMock('Laminas\Db\Adapter\Adapter')],
                 ['Model\Config', $config],
                 ['Model\Group\Group', new \Model\Group\Group],
             ])
@@ -57,7 +57,7 @@ class GroupInfoTest extends AbstractTest
         $table->initialize();
 
         $hydrator = $table->getHydrator();
-        $this->assertInstanceOf(\Zend\Hydrator\ArraySerializableHydrator::class, $hydrator);
+        $this->assertInstanceOf(\Laminas\Hydrator\ArraySerializableHydrator::class, $hydrator);
 
         $map = $hydrator->getNamingStrategy();
         $this->assertInstanceOf('Database\Hydrator\NamingStrategy\MapNamingStrategy', $map);
@@ -80,7 +80,7 @@ class GroupInfoTest extends AbstractTest
 
         $dateTimeFormatterStrategy = $hydrator->getStrategy('CreationDate');
         $this->assertInstanceOf(
-            'Zend\Hydrator\Strategy\DateTimeFormatterStrategy',
+            'Laminas\Hydrator\Strategy\DateTimeFormatterStrategy',
             $dateTimeFormatterStrategy
         );
         $this->assertSame($dateTimeFormatterStrategy, $hydrator->getStrategy('lastdate'));
@@ -96,7 +96,7 @@ class GroupInfoTest extends AbstractTest
         $this->assertEquals(42, $cacheExpirationDateStrategy->offset);
 
         $resultSet = $table->getResultSetPrototype();
-        $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);
+        $this->assertInstanceOf('Laminas\Db\ResultSet\HydratingResultSet', $resultSet);
         $this->assertSame($hydrator, $resultSet->getHydrator());
         $this->assertInstanceOf('Model\Group\Group', $resultSet->getObjectPrototype());
     }

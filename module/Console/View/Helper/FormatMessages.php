@@ -24,11 +24,11 @@ namespace Console\View\Helper;
 /**
  * Translate and format messages with sprintf()-style placeholders
  */
-class FormatMessages extends \Zend\View\Helper\AbstractHelper
+class FormatMessages extends \Laminas\View\Helper\AbstractHelper
 {
     /**
      * EscapeHtml view helper
-     * @var \Zend\View\Helper\EscapeHtml
+     * @var \Laminas\View\Helper\EscapeHtml
      */
     protected $_escapeHtml;
 
@@ -40,21 +40,21 @@ class FormatMessages extends \Zend\View\Helper\AbstractHelper
 
     /**
      * DateFormat view helper
-     * @var \Zend\I18n\View\Helper\Translate
+     * @var \Laminas\I18n\View\Helper\Translate
      */
     protected $_translate;
 
     /**
      * Constructor
      *
-     * @param \Zend\View\Helper\EscapeHtml $escapeHtml
+     * @param \Laminas\View\Helper\EscapeHtml $escapeHtml
      * @param \Library\View\Helper\HtmlElement $htmlElement
-     * @param \Zend\I18n\View\Helper\Translate $translate
+     * @param \Laminas\I18n\View\Helper\Translate $translate
      */
     public function __construct(
-        \Zend\View\Helper\EscapeHtml $escapeHtml,
+        \Laminas\View\Helper\EscapeHtml $escapeHtml,
         \Library\View\Helper\HtmlElement $htmlElement,
-        \Zend\I18n\View\Helper\Translate $translate
+        \Laminas\I18n\View\Helper\Translate $translate
     ) {
         $this->_escapeHtml = $escapeHtml;
         $this->_htmlElement = $htmlElement;
@@ -85,7 +85,7 @@ class FormatMessages extends \Zend\View\Helper\AbstractHelper
      *         'translated3 arg1 arg2'
      *     );
      *
-     * All strings and arguments get escaped. \Zend\Uri\Http arguments are
+     * All strings and arguments get escaped. \Laminas\Uri\Http arguments are
      * converted to hyperlinks.
      *
      * @param mixed[] $messages
@@ -101,7 +101,7 @@ class FormatMessages extends \Zend\View\Helper\AbstractHelper
                     $args = array($args);
                 }
                 foreach ($args as &$arg) {
-                    if ($arg instanceof \Zend\Uri\Http) {
+                    if ($arg instanceof \Laminas\Uri\Http) {
                         $arg = $this->_htmlElement->__invoke(
                             'a',
                             $this->_escapeHtml->__invoke($arg),

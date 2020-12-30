@@ -27,7 +27,7 @@ namespace Database\Hydrator\Strategy\MemorySlots;
  * Some agents report 0 or non-integer values which are converted to NULL. This
  * conversion is not reverted on extraction.
  */
-class Size implements \Zend\Hydrator\Strategy\StrategyInterface
+class Size implements \Laminas\Hydrator\Strategy\StrategyInterface
 {
     /** {@inheritdoc} */
     public function hydrate($value, ?array $data)

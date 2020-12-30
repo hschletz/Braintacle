@@ -24,7 +24,7 @@ namespace Library\Hydrator\Strategy;
 /**
  * Convert values to integer on hydration, preserving NULL
  */
-class Integer implements \Zend\Hydrator\Strategy\StrategyInterface
+class Integer implements \Laminas\Hydrator\Strategy\StrategyInterface
 {
     /**
      * {@inheritdoc}

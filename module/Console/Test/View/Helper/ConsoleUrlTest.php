@@ -31,7 +31,7 @@ class ConsoleUrlTest extends \Library\Test\View\Helper\AbstractTest
     public function setUp(): void
     {
         // Inject mock RouteMatch into Url helper which is used by ConsoleUrl
-        $routeMatch = new \Zend\Router\RouteMatch(
+        $routeMatch = new \Laminas\Router\RouteMatch(
             array(
                 'controller' => 'currentcontroller',
                 'action' => 'currentaction',
@@ -97,8 +97,8 @@ class ConsoleUrlTest extends \Library\Test\View\Helper\AbstractTest
     public function testInheritRequestParams()
     {
         $requestParams = array('param1' => 'requestValue1');
-        $request = new \Zend\Http\PhpEnvironment\Request;
-        $request->setQuery(new \Zend\Stdlib\Parameters($requestParams));
+        $request = new \Laminas\Http\PhpEnvironment\Request;
+        $request->setQuery(new \Laminas\Stdlib\Parameters($requestParams));
         $helper = new \Console\View\Helper\ConsoleUrl($request, $this->_getHelper('Url'));
 
         $params = array();

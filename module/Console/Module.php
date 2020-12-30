@@ -21,8 +21,8 @@
 
 namespace Console;
 
-use Zend\ModuleManager\Feature;
-use Zend\Mvc\MvcEvent;
+use Laminas\ModuleManager\Feature;
+use Laminas\Mvc\MvcEvent;
 
 /**
  * This is the module for the web administration console.
@@ -35,7 +35,7 @@ class Module implements
     Feature\BootstrapListenerInterface
 {
     /** {@inheritdoc} */
-    public function init(\Zend\ModuleManager\ModuleManagerInterface $manager)
+    public function init(\Laminas\ModuleManager\ModuleManagerInterface $manager)
     {
         $manager->loadModule('Library');
         $manager->loadModule('Model');
@@ -52,7 +52,7 @@ class Module implements
     public function getAutoloaderConfig()
     {
         return array(
-            'Zend\Loader\StandardAutoloader' => array(
+            'Laminas\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__,
                 ),
@@ -61,7 +61,7 @@ class Module implements
     }
 
     /** {@inheritdoc} */
-    public function onBootstrap(\Zend\EventManager\EventInterface $e)
+    public function onBootstrap(\Laminas\EventManager\EventInterface $e)
     {
         $eventManager = $e->getParam('application')->getEventManager();
         $eventManager->attach(MvcEvent::EVENT_ROUTE, array($this, 'setValidatorTranslator'));
@@ -89,32 +89,32 @@ class Module implements
      * This is invoked by the "route" event to avoid invocation of factories
      * within the bootstrap event which would cause problems for testing.
      *
-     * @param \Zend\Mvc\MvcEvent $e MVC event
+     * @param \Laminas\Mvc\MvcEvent $e MVC event
      */
-    public function setValidatorTranslator(\Zend\Mvc\MvcEvent $e)
+    public function setValidatorTranslator(\Laminas\Mvc\MvcEvent $e)
     {
         $serviceManager = $e->getApplication()->getServiceManager();
-        \Zend\Validator\AbstractValidator::setDefaultTranslator($serviceManager->get('MvcTranslator'));
+        \Laminas\Validator\AbstractValidator::setDefaultTranslator($serviceManager->get('MvcTranslator'));
         $serviceManager->get('ViewHelperManager')->get('FormElementErrors')->setTranslateMessages(false);
     }
 
     /**
      * Hook to redirect unauthenticated requests to the login page
      *
-     * @param \Zend\Mvc\MvcEvent $e MVC event
-     * @return mixed Redirect response (\Zend\Stdlib\ResponseInterface) or NULL to continue
+     * @param \Laminas\Mvc\MvcEvent $e MVC event
+     * @return mixed Redirect response (\Laminas\Stdlib\ResponseInterface) or NULL to continue
      */
-    public function forceLogin(\Zend\Mvc\MvcEvent $e)
+    public function forceLogin(\Laminas\Mvc\MvcEvent $e)
     {
         // If user is not yet authenticated, redirect to the login page except
         // for the login controller, in which case redirection would result in
         // an infinite loop.
         $serviceManager = $e->getApplication()->getServiceManager();
-        if (!$serviceManager->get('Zend\Authentication\AuthenticationService')->hasIdentity() and
+        if (!$serviceManager->get('Laminas\Authentication\AuthenticationService')->hasIdentity() and
             $e->getRouteMatch()->getParam('controller') != 'login'
         ) {
             // Preserve URI of current request for redirect after successful login
-            $session = new \Zend\Session\Container('login');
+            $session = new \Laminas\Session\Container('login');
             $session->originalUri = $e->getRequest()->getUriString();
 
             $location = $e->getRouter()->assemble(
@@ -133,9 +133,9 @@ class Module implements
      *
      * This is invoked by the "render" event.
      *
-     * @param \Zend\Mvc\MvcEvent $e MVC event
+     * @param \Laminas\Mvc\MvcEvent $e MVC event
      */
-    public function setStrictVars(\Zend\EventManager\EventInterface $e)
+    public function setStrictVars(\Laminas\EventManager\EventInterface $e)
     {
         $this->_setStrictVars($e->getViewModel());
     }
@@ -143,13 +143,13 @@ class Module implements
     /**
      * Set strict vars on a view model recursively
      *
-     * @param \Zend\View\Model\ViewModel $model
+     * @param \Laminas\View\Model\ViewModel $model
      */
-    protected function _setStrictVars(\Zend\View\Model\ViewModel $model)
+    protected function _setStrictVars(\Laminas\View\Model\ViewModel $model)
     {
         $vars = $model->getVariables();
-        if (!$vars instanceof \Zend\View\Variables) {
-            $vars = new \Zend\View\Variables($vars);
+        if (!$vars instanceof \Laminas\View\Variables) {
+            $vars = new \Laminas\View\Variables($vars);
         }
         $vars->setStrictVars(true);
         $model->setVariables($vars, true);
@@ -163,9 +163,9 @@ class Module implements
      *
      * This is invoked by the "render" event.
      *
-     * @param \Zend\Mvc\MvcEvent $e MVC event
+     * @param \Laminas\Mvc\MvcEvent $e MVC event
      */
-    public function setMenu(\Zend\EventManager\EventInterface $e)
+    public function setMenu(\Laminas\EventManager\EventInterface $e)
     {
         $e->getViewModel()->menu = 'Console\Navigation\MainMenu';
     }
@@ -175,9 +175,9 @@ class Module implements
      *
      * This is invoked by the "render" event.
      *
-     * @param \Zend\Mvc\MvcEvent $e MVC event
+     * @param \Laminas\Mvc\MvcEvent $e MVC event
      */
-    public function setLayoutTitle(\Zend\Mvc\MvcEvent $e)
+    public function setLayoutTitle(\Laminas\Mvc\MvcEvent $e)
     {
         $headTitleHelper = $e->getApplication()->getServiceManager()->get('ViewHelperManager')->get('headTitle');
         $headTitleHelper->setTranslatorEnabled(false);
@@ -189,9 +189,9 @@ class Module implements
      *
      * This is triggered by EVENT_DISPATCH_ERROR and EVENT_RENDER_ERROR.
      *
-     * @param \Zend\Mvc\MvcEvent $e MVC event
+     * @param \Laminas\Mvc\MvcEvent $e MVC event
      */
-    public function onError(\Zend\Mvc\MvcEvent $e)
+    public function onError(\Laminas\Mvc\MvcEvent $e)
     {
         $result = $e->getResult();
         $result->serviceManager = $e->getApplication()->getServiceManager();

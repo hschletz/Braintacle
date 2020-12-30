@@ -28,8 +28,8 @@ class LoginTest extends \Console\Test\AbstractFormTest
 {
     public function testInit()
     {
-        $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('User'));
-        $this->assertInstanceOf('Zend\Form\Element\Password', $this->_form->get('Password'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('User'));
+        $this->assertInstanceOf('Laminas\Form\Element\Password', $this->_form->get('Password'));
         $this->assertInstanceOf('\Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
 
@@ -37,8 +37,8 @@ class LoginTest extends \Console\Test\AbstractFormTest
     {
         $view = $this->_createView();
         $html = $this->_form->render($view);
-        $document = new \Zend\Dom\Document($html);
-        $this->assertCount(1, \Zend\Dom\Document\Query::execute('//form', $document));
+        $document = new \Laminas\Dom\Document($html);
+        $this->assertCount(1, \Laminas\Dom\Document\Query::execute('//form', $document));
         $this->assertContains(
             'document.forms["form_login"]["User"].focus()',
             $view->placeholder('BodyOnLoad')

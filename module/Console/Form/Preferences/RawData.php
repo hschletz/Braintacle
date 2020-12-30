@@ -31,17 +31,17 @@ class RawData extends AbstractForm
     {
         parent::init();
         $preferences = $this->get('Preferences');
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
 
-        $saveRawData = new \Zend\Form\Element\Checkbox('saveRawData');
+        $saveRawData = new \Laminas\Form\Element\Checkbox('saveRawData');
         $saveRawData->setLabel('Save incoming raw inventory data');
         $preferences->add($saveRawData);
 
-        $saveDir = new \Zend\Form\Element\Text('saveDir');
+        $saveDir = new \Laminas\Form\Element\Text('saveDir');
         $saveDir->setLabel('Target directory');
         $preferences->add($saveDir);
 
-        $saveFormat = new \Zend\Form\Element\Select('saveFormat');
+        $saveFormat = new \Laminas\Form\Element\Select('saveFormat');
         $saveFormat->setLabel('File format')
                    ->setValueOptions(
                        array(
@@ -59,11 +59,11 @@ class RawData extends AbstractForm
             )
         );
 
-        $saveOverwrite = new \Zend\Form\Element\Checkbox('saveOverwrite');
+        $saveOverwrite = new \Laminas\Form\Element\Checkbox('saveOverwrite');
         $saveOverwrite->setLabel('Overwrite existing files');
         $preferences->add($saveOverwrite);
 
-        $parentFilter = new \Zend\InputFilter\InputFilter;
+        $parentFilter = new \Laminas\InputFilter\InputFilter;
         $parentFilter->add($inputFilter, 'Preferences');
         $this->setInputFilter($parentFilter);
     }

@@ -31,7 +31,7 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
 {
     /**
      * Service manager
-     * @var \Zend\ServiceManager\ServiceManager
+     * @var \Laminas\ServiceManager\ServiceManager
      */
     public static $serviceManager;
 

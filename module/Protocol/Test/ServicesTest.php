@@ -66,9 +66,9 @@ class ServicesTest extends \PHPUnit\Framework\TestCase
     {
         // Create temporary service manager with identical configuration.
         $config = static::$_serviceManager->get('config');
-        $serviceManager = new \Zend\ServiceManager\ServiceManager($config['service_manager']);
+        $serviceManager = new \Laminas\ServiceManager\ServiceManager($config['service_manager']);
         $serviceManager->setService('config', $config);
-        $serviceManager->setService('Db', $this->createMock('Zend\Db\Adapter\Adapter'));
+        $serviceManager->setService('Db', $this->createMock('Laminas\Db\Adapter\Adapter'));
         $this->assertEquals($class, get_class($serviceManager->get($service)));
     }
 }

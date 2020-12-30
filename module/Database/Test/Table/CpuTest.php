@@ -31,7 +31,7 @@ class CpuTest extends AbstractTest
     public function testHydrator()
     {
         $hydrator = static::$_table->getHydrator();
-        $this->assertInstanceOf(\Zend\Hydrator\ArraySerializableHydrator::class, $hydrator);
+        $this->assertInstanceOf(\Laminas\Hydrator\ArraySerializableHydrator::class, $hydrator);
 
         $map = $hydrator->getNamingStrategy();
         $this->assertInstanceOf('Database\Hydrator\NamingStrategy\MapNamingStrategy', $map);
@@ -61,7 +61,7 @@ class CpuTest extends AbstractTest
         $this->assertEquals('serialnumber', $map->extract('Serial'));
 
         $resultSet = static::$_table->getResultSetPrototype();
-        $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);
+        $this->assertInstanceOf('Laminas\Db\ResultSet\HydratingResultSet', $resultSet);
         $this->assertInstanceOf('Model\Client\Item\Cpu', $resultSet->getObjectPrototype());
         $this->assertEquals($hydrator, $resultSet->getHydrator());
     }

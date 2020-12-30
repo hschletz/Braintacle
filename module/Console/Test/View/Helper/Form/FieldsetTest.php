@@ -31,7 +31,7 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testInvoke()
     {
-        $fieldset = $this->createMock('Zend\Form\FieldsetInterface');
+        $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
 
         $helper = $this->getMockBuilder($this->_getHelperClass())
                        ->disableOriginalConstructor()
@@ -44,7 +44,7 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRenderWithForm()
     {
-        $fieldset = $this->createMock('Zend\Form\FormInterface');
+        $fieldset = $this->createMock('Laminas\Form\FormInterface');
 
         $helper = $this->getMockBuilder($this->_getHelperClass())
                        ->disableOriginalConstructor()
@@ -58,7 +58,7 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRenderWithFieldset()
     {
-        $fieldset = $this->createMock('Zend\Form\FieldsetInterface');
+        $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
 
         $helper = $this->getMockBuilder($this->_getHelperClass())
                        ->disableOriginalConstructor()
@@ -72,10 +72,10 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRenderFieldsetElementWithContent()
     {
-        $fieldset = $this->createMock('Zend\Form\FieldsetInterface');
+        $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
         $fieldset->method('getAttributes')->willReturn('ATTRIBUTES');
 
-        $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('__call')
              ->with('htmlElement', array('fieldset', 'LABEL<div>CONTENT</div>', 'ATTRIBUTES'))
              ->willReturn('FIELDSET');
@@ -93,10 +93,10 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRenderFieldsetElementWithoutContent()
     {
-        $fieldset = $this->createMock('Zend\Form\FieldsetInterface');
+        $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
         $fieldset->method('getAttributes')->willReturn('ATTRIBUTES');
 
-        $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('__call')
              ->with('htmlElement', array('fieldset', 'LABEL<div>CONTENT</div>', 'ATTRIBUTES'))
              ->willReturn('FIELDSET');
@@ -114,7 +114,7 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRenderLabelWithoutLabel()
     {
-        $fieldset = $this->createMock('Zend\Form\FieldsetInterface');
+        $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
         $fieldset->method('getLabel')->willReturn('');
 
         $helper = $this->getMockBuilder($this->_getHelperClass())
@@ -128,10 +128,10 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRenderLabelWithLabel()
     {
-        $fieldset = $this->createMock('Zend\Form\FieldsetInterface');
+        $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
         $fieldset->method('getLabel')->willReturn('LABEL');
 
-        $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('__call')
              ->withConsecutive(
                  array('translate', array('LABEL')),
@@ -150,15 +150,15 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRenderElements()
     {
-        $subFieldset = $this->createMock('Zend\Form\FieldsetInterface');
-        $subElement = $this->createMock('Zend\Form\ElementInterface');
+        $subFieldset = $this->createMock('Laminas\Form\FieldsetInterface');
+        $subElement = $this->createMock('Laminas\Form\ElementInterface');
 
         $iterator = new \ArrayIterator(array($subFieldset, $subElement));
 
-        $fieldset = $this->createMock('Zend\Form\FieldsetInterface');
+        $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
         $fieldset->method('getIterator')->willReturn($iterator);
 
-        $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('__call')->with('formRow', array($subElement))->willReturn('<FORMROW>');
 
         $helper = $this->getMockBuilder($this->_getHelperClass())

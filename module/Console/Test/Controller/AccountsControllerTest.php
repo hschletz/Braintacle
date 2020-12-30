@@ -71,7 +71,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->_operatorManager->expects($this->once())->method('getOperators')->willReturn(array($account));
 
-        $identity = $this->createMock('Zend\View\Helper\Identity');
+        $identity = $this->createMock('Laminas\View\Helper\Identity');
         $identity->expects($this->atLeastOnce())->method('__invoke')->willReturn('testId');
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('identity', $identity);
 
@@ -93,7 +93,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->_operatorManager->expects($this->once())->method('getOperators')->willReturn(array($account));
 
-        $identity = $this->createMock('Zend\View\Helper\Identity');
+        $identity = $this->createMock('Laminas\View\Helper\Identity');
         $identity->expects($this->atLeastOnce())->method('__invoke')->willReturn('otherId');
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('identity', $identity);
 

@@ -34,7 +34,7 @@ class LoggerServiceFactoryTest extends \PHPUnit\Framework\TestCase
         $application = \Library\Application::init('Library');
         $logger = $application->getServiceManager()->get('Library\Logger');
 
-        $this->assertInstanceOf('\Zend\Log\Logger', $logger);
+        $this->assertInstanceOf('\Laminas\Log\Logger', $logger);
 
         // Log a message. The NULL writer should be attached so that no
         // exception should be thrown.

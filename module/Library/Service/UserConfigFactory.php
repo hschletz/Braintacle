@@ -35,7 +35,7 @@ namespace Library\Service;
  * 3. Fall back to config/braintacle.ini relative to the Braintacle root
  *    directory.
  */
-class UserConfigFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class UserConfigFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(
@@ -57,7 +57,7 @@ class UserConfigFactory implements \Zend\ServiceManager\Factory\FactoryInterface
         if (!$userConfig) {
             $userConfig = \Library\Application::getPath('config/braintacle.ini');
         }
-        $reader = new \Zend\Config\Reader\Ini;
+        $reader = new \Laminas\Config\Reader\Ini;
         return $reader->fromFile($userConfig);
     }
 }

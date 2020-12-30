@@ -25,7 +25,7 @@ namespace Console\Form\Service;
  * Factory for NetworkDevice
  * @codeCoverageIgnore
  */
-class NetworkDeviceFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class NetworkDeviceFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

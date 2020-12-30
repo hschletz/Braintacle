@@ -716,7 +716,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
             )
         );
 
-        $resultSetPrototype = $this->createMock('Zend\Db\ResultSet\HydratingResultSet');
+        $resultSetPrototype = $this->createMock('Laminas\Db\ResultSet\HydratingResultSet');
         $resultSetPrototype->expects($this->once())
                            ->method('initialize')
                            ->with(
@@ -806,7 +806,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $group->method('offsetGet')->with('Id')->willReturn($groupId);
         $group->expects($this->once())->method('update');
 
-        $resultSetPrototype = $this->createMock('Zend\Db\ResultSet\HydratingResultSet');
+        $resultSetPrototype = $this->createMock('Laminas\Db\ResultSet\HydratingResultSet');
         $resultSetPrototype->expects($this->once())
                            ->method('initialize')
                            ->with(
@@ -854,7 +854,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
      */
     public function testGetClientsDistinct($distinct, $expected)
     {
-        $resultSetPrototype = $this->createMock('Zend\Db\ResultSet\HydratingResultSet');
+        $resultSetPrototype = $this->createMock('Laminas\Db\ResultSet\HydratingResultSet');
         $resultSetPrototype->expects($this->once())
                            ->method('initialize')
                            ->with(
@@ -972,12 +972,12 @@ class ClientManagerTest extends \Model\Test\AbstractTest
     {
         $model = $this->_getModel();
         $result = $model->getClients(null, null, 'asc', null, null, null, null, true, false, false);
-        $this->assertInstanceOf('Zend\Db\Sql\Select', $result);
+        $this->assertInstanceOf('Laminas\Db\Sql\Select', $result);
     }
 
     public function testGetClient()
     {
-        $resultSet = $this->createMock('Zend\Db\ResultSet\HydratingResultSet');
+        $resultSet = $this->createMock('Laminas\Db\ResultSet\HydratingResultSet');
         $resultSet->method('current')->willReturn('client');
         $resultSet->method('count')->willReturn(1);
 
@@ -994,7 +994,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('Invalid client ID: 42');
 
-        $resultSet = $this->createMock('Zend\Db\ResultSet\HydratingResultSet');
+        $resultSet = $this->createMock('Laminas\Db\ResultSet\HydratingResultSet');
         $resultSet->method('count')->willReturn(0);
 
         $model = $this->getMockBuilder($this->_getClass())
@@ -1007,12 +1007,12 @@ class ClientManagerTest extends \Model\Test\AbstractTest
 
     public function deleteClientNoDeleteInterfacesProvider()
     {
-        $connection1 = $this->createMock('Zend\Db\Adapter\Driver\Pdo\Connection');
+        $connection1 = $this->createMock('Laminas\Db\Adapter\Driver\Pdo\Connection');
         $connection1->expects($this->once())->method('beginTransaction');
         $connection1->expects($this->once())->method('commit');
         $connection1->expects($this->never())->method('rollback');
 
-        $connection2 = $this->createMock('Zend\Db\Adapter\Driver\Pdo\Connection');
+        $connection2 = $this->createMock('Laminas\Db\Adapter\Driver\Pdo\Connection');
         $connection2->expects($this->once())->method('beginTransaction')->willThrowException(new \RuntimeException);
         $connection2->expects($this->never())->method('commit');
         $connection2->expects($this->never())->method('rollback');
@@ -1033,10 +1033,10 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $client->expects($this->once())->method('offsetGet')->with('Id')->willReturn(42);
         $client->expects($this->once())->method('unlock');
 
-        $driver = $this->createMock('Zend\Db\Adapter\Driver\Pdo\Pdo');
+        $driver = $this->createMock('Laminas\Db\Adapter\Driver\Pdo\Pdo');
         $driver->method('getConnection')->willReturn($connection);
 
-        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
+        $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
 
         $androidInstallations = $this->createMock('Database\Table\AndroidInstallations');
@@ -1173,7 +1173,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $client->expects($this->once())->method('lock')->willReturn(false);
         $client->expects($this->never())->method('unlock');
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->expects($this->never())->method('get');
 
         $clientManager = $this->_getModel(array('ServiceManager' => $serviceManager));
@@ -1183,12 +1183,12 @@ class ClientManagerTest extends \Model\Test\AbstractTest
 
     public function deleteClientExceptionProvider()
     {
-        $connection1 = $this->createMock('Zend\Db\Adapter\Driver\Pdo\Connection');
+        $connection1 = $this->createMock('Laminas\Db\Adapter\Driver\Pdo\Connection');
         $connection1->expects($this->once())->method('beginTransaction');
         $connection1->expects($this->never())->method('commit');
         $connection1->expects($this->once())->method('rollback');
 
-        $connection2 = $this->createMock('Zend\Db\Adapter\Driver\Pdo\Connection');
+        $connection2 = $this->createMock('Laminas\Db\Adapter\Driver\Pdo\Connection');
         $connection2->expects($this->once())->method('beginTransaction')->willThrowException(new \RuntimeException);
         $connection2->expects($this->never())->method('commit');
         $connection2->expects($this->never())->method('rollback');
@@ -1212,10 +1212,10 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $client->expects($this->once())->method('offsetGet')->with('Id')->willReturn(42);
         $client->expects($this->once())->method('unlock');
 
-        $driver = $this->createMock('Zend\Db\Adapter\Driver\Pdo\Pdo');
+        $driver = $this->createMock('Laminas\Db\Adapter\Driver\Pdo\Pdo');
         $driver->method('getConnection')->willReturn($connection);
 
-        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
+        $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
 
         $androidInstallations = $this->createMock('Database\Table\AndroidInstallations');
@@ -1251,10 +1251,10 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $uri = 'http://example.net/server';
         $content = "testUploadFile\nline1\nline2\n";
 
-        $response = $this->createStub(\Zend\Http\Response::class);
+        $response = $this->createStub(\Laminas\Http\Response::class);
         $response->method('isSuccess')->willReturn(true);
 
-        $httpClient = $this->createMock(\Zend\Http\Client::class);
+        $httpClient = $this->createMock(\Laminas\Http\Client::class);
         $httpClient->expects($this->once())->method('setOptions')->with([
             'strictredirects' => true, // required for POST requests
             'useragent' => 'Braintacle_local_upload', // Substring 'local' required for correct server operation
@@ -1282,12 +1282,12 @@ class ClientManagerTest extends \Model\Test\AbstractTest
             "Upload error. Server http://example.net/server responded with error 418: I'm a teapot"
         );
         
-        $response = $this->createStub(\Zend\Http\Response::class);
+        $response = $this->createStub(\Laminas\Http\Response::class);
         $response->method('isSuccess')->willReturn(false);
         $response->method('getStatusCode')->willReturn(418);
         $response->method('getReasonPhrase')->willReturn("I'm a teapot");
 
-        $httpClient = $this->createStub(\Zend\Http\Client::class);
+        $httpClient = $this->createStub(\Laminas\Http\Client::class);
         $httpClient->method('setOptions')->willReturnSelf();
         $httpClient->method('setMethod')->willReturnSelf();
         $httpClient->method('setUri')->willReturnSelf();

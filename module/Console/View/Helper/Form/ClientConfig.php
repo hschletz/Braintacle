@@ -27,11 +27,11 @@ namespace Console\View\Helper\Form;
 class ClientConfig extends AbstractHelper
 {
     /** {@inheritdoc} */
-    public function renderElements(\Zend\Form\FormInterface $form)
+    public function renderElements(\Laminas\Form\FormInterface $form)
     {
         $output = '';
         foreach ($form as $element) {
-            if ($element instanceof \Zend\Form\Fieldset) {
+            if ($element instanceof \Laminas\Form\Fieldset) {
                 $output .= $this->renderFieldset($element, $form->getClientObject());
             } else {
                 $output .= $this->getView()->formRow($element);
@@ -43,10 +43,10 @@ class ClientConfig extends AbstractHelper
     /**
      * Render a single fieldset
      *
-     * @param \Zend\Form\Fieldset $fieldset
+     * @param \Laminas\Form\Fieldset $fieldset
      * @param \Model\ClientOrGroup $object
      */
-    public function renderFieldset(\Zend\Form\Fieldset $fieldset, \Model\ClientOrGroup $object)
+    public function renderFieldset(\Laminas\Form\Fieldset $fieldset, \Model\ClientOrGroup $object)
     {
         $view = $this->getView();
         $default = $view->translate('Default');
@@ -69,13 +69,13 @@ class ClientConfig extends AbstractHelper
             $option = $matches[1];
             if ($option != 'scanThisNetwork') {
                 $defaultValue = $object->getDefaultConfig($option);
-                if ($element instanceof \Zend\Form\Element\Checkbox) {
+                if ($element instanceof \Laminas\Form\Element\Checkbox) {
                     $defaultValue = $defaultValue ? $yes : $no;
                 }
                 $info = sprintf('%s: %s', $default, $defaultValue);
                 if ($object instanceof \Model\Client\Client) {
                     $effectiveValue = $object->getEffectiveConfig($option);
-                    if ($element instanceof \Zend\Form\Element\Checkbox) {
+                    if ($element instanceof \Laminas\Form\Element\Checkbox) {
                         $effectiveValue = $effectiveValue ? $yes : $no;
                     }
                     $info .= sprintf(', %s: %s', $effective, $effectiveValue);

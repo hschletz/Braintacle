@@ -21,7 +21,7 @@
 
 namespace Console\Test\Form;
 
-use \Zend\Dom\Document\Query as Query;
+use \Laminas\Dom\Document\Query as Query;
 
 /**
  * Tests for NetworkDeviceTypes form
@@ -56,18 +56,18 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
 
     public function testInit()
     {
-        $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('Add'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('Add'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
 
         $types = $this->_form->get('Types');
         $this->assertCount(2, $types);
 
         $element = $types->get('name0');
-        $this->assertInstanceOf('Zend\Form\Element\Text', $element);
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $element);
         $this->assertEquals('name0', $element->getValue());
 
         $element = $types->get('name1');
-        $this->assertInstanceOf('Zend\Form\Element\Text', $element);
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $element);
         $this->assertEquals('name1', $element->getValue());
     }
 
@@ -313,7 +313,7 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
     public function testRenderFieldsetNoMessages()
     {
         $html = $this->_form->renderFieldset($this->_createView(), $this->_form);
-        $document = new \Zend\Dom\Document(static::HTML_HEADER . $html);
+        $document = new \Laminas\Dom\Document(static::HTML_HEADER . $html);
         $this->assertCount(1, Query::execute('//div[@class="table"]', $document));
         $this->assertCount(
             1,
@@ -336,16 +336,16 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         $this->_form->get('Types')->get('name0')->setMessages(array('message_name0'));
         $this->_form->get('Add')->setMessages(array('message_add'));
 
-        $formElementErrors = $this->createMock('Zend\Form\View\Helper\FormElementErrors');
+        $formElementErrors = $this->createMock('Laminas\Form\View\Helper\FormElementErrors');
         $formElementErrors->method('__invoke')
-                          ->with($this->isInstanceOf('Zend\Form\ElementInterface'), array('class' => 'error'))
+                          ->with($this->isInstanceOf('Laminas\Form\ElementInterface'), array('class' => 'error'))
                           ->willReturnCallback(array($this, 'formElementErrorsMock'));
 
         $view = $this->_createView();
         $view->getHelperPluginManager()->setService('formElementErrors', $formElementErrors);
 
         $html = $this->_form->renderFieldset($view, $this->_form);
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
         $this->assertCount(
             1,
             Query::execute(

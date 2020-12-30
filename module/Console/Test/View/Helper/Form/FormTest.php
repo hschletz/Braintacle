@@ -84,7 +84,7 @@ class FormTest extends \Library\Test\View\Helper\AbstractTest
         $_FILES = array();
         $_SERVER = array('REQUEST_METHOD' => 'POST');
 
-        $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->expects($this->at(0))
              ->method('__call')
              ->with('translate', array('The post_max_size value of %s has been exceeded.'))
@@ -111,10 +111,10 @@ class FormTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRender()
     {
-        $form = $this->createMock('Zend\Form\Form');
+        $form = $this->createMock('Laminas\Form\Form');
         $form->expects($this->once())->method('prepare');
 
-        $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('__call')->with('consoleFormFieldset', array($form))->willReturn('content');
 
         $helper = $this->getMockBuilder($this->_getHelperClass())

@@ -24,7 +24,7 @@ namespace Console\Controller;
 /**
  * Controller for managing Braintacle user accounts
  */
-class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
+class AccountsController extends \Laminas\Mvc\Controller\AbstractActionController
 {
     /**
      * Operator manager
@@ -79,7 +79,7 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Create account
      *
-     * @return array|\Zend\Http\Response Array (form) or redirect response
+     * @return array|\Laminas\Http\Response Array (form) or redirect response
      */
     public function addAction()
     {
@@ -101,7 +101,7 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Edit account
      *
-     * @return array|\Zend\Http\Response Array (form) or redirect response
+     * @return array|\Laminas\Http\Response Array (form) or redirect response
      */
     public function editAction()
     {
@@ -128,7 +128,7 @@ class AccountsController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Delete account
      *
-     * @return array|\Zend\Http\Response Array (id) or redirect response
+     * @return array|\Laminas\Http\Response Array (id) or redirect response
      */
     public function deleteAction()
     {

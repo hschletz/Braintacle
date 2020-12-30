@@ -33,7 +33,7 @@ class SoftwareRaw extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'software';
 
@@ -79,7 +79,7 @@ class SoftwareRaw extends \Database\AbstractTable
                         WHERE software_definitions.name = COALESCE({$this->table}.name, '')
                     )
 EOT;
-                $result = $this->adapter->query($query, \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE);
+                $result = $this->adapter->query($query, \Laminas\Db\Adapter\Adapter::QUERY_MODE_EXECUTE);
                 $logger->info(sprintf('done, %d names transitioned.', $result->getAffectedRows()));
             }
         }

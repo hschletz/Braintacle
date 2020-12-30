@@ -26,7 +26,7 @@ namespace Database\Service;
  *
  * @codeCoverageIgnore
  */
-class SchemaManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class SchemaManagerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

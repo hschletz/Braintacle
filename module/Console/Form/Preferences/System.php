@@ -31,9 +31,9 @@ class System extends AbstractForm
     {
         parent::init();
         $preferences = $this->get('Preferences');
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
 
-        $communicationServerUri = new \Zend\Form\Element\Text('communicationServerUri');
+        $communicationServerUri = new \Laminas\Form\Element\Text('communicationServerUri');
         $communicationServerUri->setLabel('Communication server URI');
         $preferences->add($communicationServerUri);
         $inputFilter->add(
@@ -43,7 +43,7 @@ class System extends AbstractForm
                     array(
                         'name' => 'Uri',
                         'options' => array(
-                            'uriHandler' => 'Zend\Uri\Http',
+                            'uriHandler' => 'Laminas\Uri\Http',
                             'allowRelative' => false,
                         ),
                     )
@@ -51,25 +51,25 @@ class System extends AbstractForm
             )
         );
 
-        $lockValidity = new \Zend\Form\Element\Text('lockValidity');
+        $lockValidity = new \Laminas\Form\Element\Text('lockValidity');
         $lockValidity->setLabel('Maximum seconds to lock a client')
                      ->setAttribute('size', 5);
         $preferences->add($lockValidity);
         $inputFilter->add($this->_getIntegerFilter('lockValidity'));
 
-        $sessionValidity = new \Zend\Form\Element\Text('sessionValidity');
+        $sessionValidity = new \Laminas\Form\Element\Text('sessionValidity');
         $sessionValidity->setLabel('Maximum duration of an agent session in seconds')
                         ->setAttribute('size', 5);
         $preferences->add($sessionValidity);
         $inputFilter->add($this->_getIntegerFilter('sessionValidity'));
 
-        $sessionCleanupInterval = new \Zend\Form\Element\Text('sessionCleanupInterval');
+        $sessionCleanupInterval = new \Laminas\Form\Element\Text('sessionCleanupInterval');
         $sessionCleanupInterval->setLabel('Interval in seconds to cleanup sessions')
                                ->setAttribute('size', 5);
         $preferences->add($sessionCleanupInterval);
         $inputFilter->add($this->_getIntegerFilter('sessionCleanupInterval'));
 
-        $sessionRequired = new \Zend\Form\Element\Checkbox('sessionRequired');
+        $sessionRequired = new \Laminas\Form\Element\Checkbox('sessionRequired');
         $sessionRequired->setLabel('Session required for inventory');
         $preferences->add($sessionRequired);
 
@@ -78,15 +78,15 @@ class System extends AbstractForm
                  ->setValueOptions(array(0, 1, 2));
         $preferences->add($logLevel);
 
-        $validateXml = new \Zend\Form\Element\Checkbox('validateXml');
+        $validateXml = new \Laminas\Form\Element\Checkbox('validateXml');
         $validateXml->setLabel('Validate XML data');
         $preferences->add($validateXml);
 
-        $autoMergeDuplicates = new \Zend\Form\Element\Checkbox('autoMergeDuplicates');
+        $autoMergeDuplicates = new \Laminas\Form\Element\Checkbox('autoMergeDuplicates');
         $autoMergeDuplicates->setLabel('Merge duplicates automatically (not recommended)');
         $preferences->add($autoMergeDuplicates);
 
-        $parentFilter = new \Zend\InputFilter\InputFilter;
+        $parentFilter = new \Laminas\InputFilter\InputFilter;
         $parentFilter->add($inputFilter, 'Preferences');
         $this->setInputFilter($parentFilter);
     }
@@ -99,7 +99,7 @@ class System extends AbstractForm
      */
     protected function _getIntegerFilter($name)
     {
-        $validatorChain = new \Zend\Validator\ValidatorChain;
+        $validatorChain = new \Laminas\Validator\ValidatorChain;
         $validatorChain->attachByName(
             'Callback',
             array(

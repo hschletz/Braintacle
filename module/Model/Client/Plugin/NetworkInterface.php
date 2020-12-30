@@ -35,8 +35,8 @@ class NetworkInterface extends DefaultPlugin
         $this->_select->join(
             'blacklist_macaddresses',
             'macaddress = macaddr',
-            array('is_blacklisted' => new \Zend\Db\Sql\Literal('(blacklist_macaddresses.macaddress IS NOT NULL)')),
-            \Zend\Db\Sql\Select::JOIN_LEFT
+            array('is_blacklisted' => new \Laminas\Db\Sql\Literal('(blacklist_macaddresses.macaddress IS NOT NULL)')),
+            \Laminas\Db\Sql\Select::JOIN_LEFT
         );
     }
 }

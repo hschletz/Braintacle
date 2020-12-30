@@ -89,14 +89,14 @@ class Group extends \Model\ClientOrGroup
         );
 
         if ($type == \Model\Client\Client::MEMBERSHIP_AUTOMATIC) {
-            $numCols = count($members->getRawState(\Zend\Db\Sql\Select::COLUMNS));
-            foreach ($members->getRawState(\Zend\Db\Sql\Select::JOINS) as $join) {
+            $numCols = count($members->getRawState(\Laminas\Db\Sql\Select::COLUMNS));
+            foreach ($members->getRawState(\Laminas\Db\Sql\Select::JOINS) as $join) {
                 $numCols += count($join['columns']);
             }
             if ($numCols != 1) {
                 throw new \LogicException('Expected 1 column, got ' . $numCols);
             }
-            $sql = new \Zend\Db\Sql\Sql($this->_serviceLocator->get('Db'));
+            $sql = new \Laminas\Db\Sql\Sql($this->_serviceLocator->get('Db'));
             $query = $sql->buildSqlString($members);
             $this->_serviceLocator->get('Database\Table\GroupInfo')->update(
                 array('request' => $query),
@@ -195,13 +195,13 @@ class Group extends \Model\ClientOrGroup
         $select->columns(
             array(
                 'hardware_id' => 'id',
-                'group_id' => new \Zend\Db\Sql\Expression('?', $this['Id']),
-                'static' => new \Zend\Db\Sql\Literal(\Model\Client\Client::MEMBERSHIP_AUTOMATIC),
+                'group_id' => new \Laminas\Db\Sql\Expression('?', $this['Id']),
+                'static' => new \Laminas\Db\Sql\Literal(\Model\Client\Client::MEMBERSHIP_AUTOMATIC),
             )
         )->where(
             array(
                 "id IN ($this[DynamicMembersSql])",
-                new \Zend\Db\Sql\Predicate\NotIn('id', $subquery),
+                new \Laminas\Db\Sql\Predicate\NotIn('id', $subquery),
             )
         );
         $groupMemberships->insert($select);

@@ -98,10 +98,10 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
         $form->createSoftwareFieldset($names, $namesEncoded);
 
         $fieldset = $form->get('Software');
-        $this->assertInstanceOf('Zend\Form\Fieldset', $fieldset);
+        $this->assertInstanceOf('Laminas\Form\Fieldset', $fieldset);
         $this->assertCount(2, $fieldset);
         foreach (array_values($fieldset->getElements()) as $index => $element) {
-            $this->assertInstanceOf('Zend\Form\Element\Checkbox', $element);
+            $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $element);
             $this->assertEquals($this->_namesEncoded[$index], $element->getName());
             $this->assertFalse($element->useHiddenElement());
             $this->assertEquals(array('label1', 'label2')[$index], $element->getLabel());
@@ -116,14 +116,14 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
         $filter->method('__invoke')->willReturn('label');
         $form->method('getOption')->with('fixEncodingErrors')->willReturn($filter);
 
-        $oldFieldset = new \Zend\Form\Fieldset('Software');
-        $oldFieldset->add(new \Zend\Form\Element\Checkbox('name3'));
+        $oldFieldset = new \Laminas\Form\Fieldset('Software');
+        $oldFieldset->add(new \Laminas\Form\Element\Checkbox('name3'));
         $form->add($oldFieldset);
 
         $form->createSoftwareFieldset($this->_names, false);
 
         $fieldset = $form->get('Software');
-        $this->assertInstanceOf('Zend\Form\Fieldset', $fieldset);
+        $this->assertInstanceOf('Laminas\Form\Fieldset', $fieldset);
         $this->assertCount(2, $fieldset);
         $this->assertEquals($this->_namesEncoded, array_keys($fieldset->getElements()));
     }

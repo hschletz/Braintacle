@@ -32,11 +32,11 @@ class Apidoc
      * Generate API documentation
      *
      * @param \ZF\Console\Route $route
-     * @param \Zend\Console\Adapter\AdapterInterface $console
+     * @param \Laminas\Console\Adapter\AdapterInterface $console
      * @return integer Exit code
      * @codeCoverageIgnore
      */
-    public function __invoke(\ZF\Console\Route $route, \Zend\Console\Adapter\AdapterInterface $console)
+    public function __invoke(\ZF\Console\Route $route, \Laminas\Console\Adapter\AdapterInterface $console)
     {
         $process = new Process(['tools/phpDocumentor'], \Library\Application::getPath());
         $process->run(function ($type, $buffer) use ($console) {

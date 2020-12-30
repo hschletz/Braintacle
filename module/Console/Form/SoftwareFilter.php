@@ -36,7 +36,7 @@ class SoftwareFilter extends Form
         parent::init();
         $this->setAttribute('method', 'GET');
 
-        $filter = new \Zend\Form\Element\Select('filter');
+        $filter = new \Laminas\Form\Element\Select('filter');
         $filter->setLabel('Filter')
                ->setValueOptions(
                    array(

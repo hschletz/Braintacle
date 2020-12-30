@@ -24,7 +24,7 @@ namespace Console\Service;
 /**
  * Factory for NetworkController
  */
-class NetworkControllerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class NetworkControllerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

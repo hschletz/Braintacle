@@ -57,7 +57,7 @@ class OperatorManager
      *
      * @param string $order Property to sort by
      * @param string $direction Sorting order (asc|desc)
-     * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Operator\Operator
+     * @return \Laminas\Db\ResultSet\AbstractResultSet Result set producing \Model\Operator\Operator
      */
     public function getOperators($order = 'Id', $direction = 'asc')
     {

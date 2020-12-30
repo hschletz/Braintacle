@@ -42,7 +42,7 @@ class ClientsTest extends AbstractTest
         $this->assertInstanceOf('Database\Hydrator\Clients', $hydrator);
 
         $resultSet = static::$_table->getResultSetPrototype();
-        $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);
+        $this->assertInstanceOf('Laminas\Db\ResultSet\HydratingResultSet', $resultSet);
         $this->assertSame($hydrator, $resultSet->getHydrator());
         $this->assertInstanceOf('Model\Client\Client', $resultSet->getObjectPrototype());
     }

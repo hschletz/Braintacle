@@ -29,13 +29,13 @@ class AbstractFormTest extends \PHPUnit\Framework\TestCase
     /**
      * Create a new view renderer
      *
-     * @return \Zend\View\Renderer\PhpRenderer
+     * @return \Laminas\View\Renderer\PhpRenderer
      */
     protected function _createView()
     {
         $serviceManager = \Library\Application::init('Console')->getServiceManager();
         $serviceManager->setService('Library\UserConfig', array());
-        $view = new \Zend\View\Renderer\PhpRenderer;
+        $view = new \Laminas\View\Renderer\PhpRenderer;
         $view->setHelperPluginManager($serviceManager->get('ViewHelperManager'));
         return $view;
     }
@@ -44,7 +44,7 @@ class AbstractFormTest extends \PHPUnit\Framework\TestCase
     {
         $form = $this->getMockForAbstractClass('Console\Form\Preferences\AbstractForm');
         $form->init();
-        $this->assertInstanceOf('Zend\Form\Fieldset', $form->get('Preferences'));
+        $this->assertInstanceOf('Laminas\Form\Fieldset', $form->get('Preferences'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $form->get('Submit'));
     }
 
@@ -54,11 +54,11 @@ class AbstractFormTest extends \PHPUnit\Framework\TestCase
         $form->init();
         $preferences = $form->get('Preferences');
 
-        $text1 = new \Zend\Form\Element\Text('text1');
+        $text1 = new \Laminas\Form\Element\Text('text1');
         $text1->setLabel('Text1');
         $preferences->add($text1);
 
-        $text2 = new \Zend\Form\Element\Text('text2');
+        $text2 = new \Laminas\Form\Element\Text('text2');
         $text2->setLabel('Text2');
         $text2->setMessages(array('message'));
         $preferences->add($text2);
@@ -89,19 +89,19 @@ EOT;
         $form->init();
         $preferences = $form->get('Preferences');
 
-        $text1 = new \Zend\Form\Element\Text('text1');
+        $text1 = new \Laminas\Form\Element\Text('text1');
         $text1->setLabel('Text1');
         $preferences->add($text1);
 
-        $fieldset = new \Zend\Form\Fieldset('fieldset');
+        $fieldset = new \Laminas\Form\Fieldset('fieldset');
         $fieldset->setLabel('Fieldset');
         $preferences->add($fieldset);
 
-        $text3 = new \Zend\Form\Element\Text('text3');
+        $text3 = new \Laminas\Form\Element\Text('text3');
         $text3->setLabel('Text3');
         $fieldset->add($text3);
 
-        $text2 = new \Zend\Form\Element\Text('text2');
+        $text2 = new \Laminas\Form\Element\Text('text2');
         $text2->setLabel('Text2');
         $preferences->add($text2);
 
@@ -124,7 +124,7 @@ EOT;
 </div>
 
 EOT;
-        $translator = $this->createMock('Zend\I18n\Translator\Translator');
+        $translator = $this->createMock('Laminas\I18n\Translator\Translator');
         $translator->method('translate')
                    ->willReturnCallback(function ($string) {
                        return "$string-translated";

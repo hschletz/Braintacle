@@ -263,7 +263,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
         $packages = static::$serviceManager->get('Database\Table\Packages');
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Database\Table\Packages', $packages),
@@ -315,7 +315,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     {
         $data = array('Name' => 'test', 'FileLocation' => null, 'Platform' => 'invalid');
 
-        $hydrator = $this->createMock(\Zend\Hydrator\ExtractionInterface::class);
+        $hydrator = $this->createMock(\Laminas\Hydrator\ExtractionInterface::class);
         $hydrator->expects($this->once())->method('extract')->willReturn(array('osname' => null));
 
         $packages = $this->createMock('Database\Table\Packages');
@@ -323,7 +323,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
         $storage = $this->createMock('Model\Package\Storage\Direct');
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Database\Table\Packages', $packages),
@@ -358,7 +358,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $packages = $this->createMock('Database\Table\Packages');
         $packages->expects($this->never())->method('insert');
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->will(
             $this->returnValueMap(
                 array(
@@ -418,7 +418,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $packages = $this->createMock('Database\Table\Packages');
         $packages->expects($this->never())->method('insert');
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Database\Table\Packages', $packages),
@@ -445,7 +445,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $storage = $this->createMock('Model\Package\Storage\Direct');
         $storage->expects($this->once())->method('prepare')->willThrowException(new \Exception('relevant error'));
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Library\Now', new \DateTime),

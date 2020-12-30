@@ -35,11 +35,11 @@ class Login extends Form
     {
         parent::init();
 
-        $user = new \Zend\Form\Element\Text('User');
+        $user = new \Laminas\Form\Element\Text('User');
         $user->setLabel('Username');
         $this->add($user);
 
-        $password = new \Zend\Form\Element\Password('Password');
+        $password = new \Laminas\Form\Element\Password('Password');
         $password->setLabel('Password');
         $this->add($password);
 
@@ -53,7 +53,7 @@ class Login extends Form
     }
 
     /** {@inheritdoc} */
-    public function render(\Zend\View\Renderer\PhpRenderer $view)
+    public function render(\Laminas\View\Renderer\PhpRenderer $view)
     {
         $view->placeholder('BodyOnLoad')->append('document.forms["form_login"]["User"].focus()');
         return parent::render($view);

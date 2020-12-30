@@ -34,13 +34,13 @@ class Database
 
     /**
      * Logger
-     * @var \Zend\Log\Logger
+     * @var \Laminas\Log\Logger
      */
     protected $_logger;
 
     /**
      * Log writer
-     * @var \Zend\Log\Writer\AbstractWriter
+     * @var \Laminas\Log\Writer\AbstractWriter
      */
     protected $_writer;
 
@@ -48,13 +48,13 @@ class Database
      * Constructor
      *
      * @param \Database\SchemaManager $schemaManager
-     * @param \Zend\Log\Logger $logger
-     * @param \Zend\Log\Writer\AbstractWriter $writer
+     * @param \Laminas\Log\Logger $logger
+     * @param \Laminas\Log\Writer\AbstractWriter $writer
      */
     public function __construct(
         \Database\SchemaManager $schemaManager,
-        \Zend\Log\LoggerInterface $logger,
-        \Zend\Log\Writer\AbstractWriter $writer
+        \Laminas\Log\LoggerInterface $logger,
+        \Laminas\Log\Writer\AbstractWriter $writer
     ) {
         $this->_schemaManager = $schemaManager;
         $this->_logger = $logger;
@@ -65,12 +65,12 @@ class Database
      * Manage database schema
      *
      * @param \ZF\Console\Route $route
-     * @param \Zend\Console\Adapter\AdapterInterface $console
+     * @param \Laminas\Console\Adapter\AdapterInterface $console
      * @return integer Exit code
      */
-    public function __invoke(\ZF\Console\Route $route, \Zend\Console\Adapter\AdapterInterface $console)
+    public function __invoke(\ZF\Console\Route $route, \Laminas\Console\Adapter\AdapterInterface $console)
     {
-        $loglevel = $route->getMatchedParam('loglevel', \Zend\Log\Logger::INFO);
+        $loglevel = $route->getMatchedParam('loglevel', \Laminas\Log\Logger::INFO);
         $prune = $route->getMatchedParam('prune') || $route->getMatchedParam('p');
 
         $this->_writer->addFilter('priority', ['priority' => $loglevel]);

@@ -36,14 +36,14 @@ class AuthenticationServiceTest extends \Model\Test\AbstractTest
 
     public function testService()
     {
-        $service = static::$serviceManager->build('Zend\Authentication\AuthenticationService');
+        $service = static::$serviceManager->build('Laminas\Authentication\AuthenticationService');
         $this->assertInstanceOf('Model\Operator\AuthenticationService', $service);
         $this->assertInstanceOf('Model\Operator\AuthenticationAdapter', $service->getAdapter());
     }
 
     public function testLogin()
     {
-        $result = $this->createMock('Zend\Authentication\Result');
+        $result = $this->createMock('Laminas\Authentication\Result');
         $result->method('isValid')->willReturn('is_valid');
 
         $adapter = $this->createMock('Model\Operator\AuthenticationAdapter');
@@ -79,7 +79,7 @@ class AuthenticationServiceTest extends \Model\Test\AbstractTest
 
     public function testChangeIdentityValid()
     {
-        $storage = $this->createMock('Zend\Authentication\Storage\StorageInterface');
+        $storage = $this->createMock('Laminas\Authentication\Storage\StorageInterface');
         $storage->expects($this->once())->method('write')->with('user');
 
         $service = $this->getMockBuilder($this->_getClass())

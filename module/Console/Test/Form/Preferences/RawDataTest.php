@@ -22,17 +22,17 @@
 namespace Console\Test\Form\Preferences;
 
 use \org\bovigo\vfs\vfsStream;
-use Zend\Dom\Document\Query;
+use Laminas\Dom\Document\Query;
 
 class RawDataTest extends \Console\Test\AbstractFormTest
 {
     public function testInit()
     {
         $preferences = $this->_form->get('Preferences');
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('saveRawData'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('saveDir'));
-        $this->assertInstanceOf('Zend\Form\Element\Select', $preferences->get('saveFormat'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('saveOverwrite'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $preferences->get('saveRawData'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('saveDir'));
+        $this->assertInstanceOf('Laminas\Form\Element\Select', $preferences->get('saveFormat'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $preferences->get('saveOverwrite'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
 
@@ -101,7 +101,7 @@ class RawDataTest extends \Console\Test\AbstractFormTest
         $view = $this->_createView();
         $preferences = $this->_form->get('Preferences');
         $html = $this->_form->renderFieldset($view, $preferences);
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
         $this->assertCount(2, Query::execute('//select[@name="saveFormat"]/option', $document));
         $this->assertCount(
             1,

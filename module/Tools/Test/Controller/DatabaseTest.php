@@ -21,7 +21,7 @@
 
 namespace Tools\Test\Controller;
 
-use Zend\Log\Logger;
+use Laminas\Log\Logger;
 
 class DatabaseTest extends AbstractControllerTest
 {
@@ -33,13 +33,13 @@ class DatabaseTest extends AbstractControllerTest
 
     /**
      * Logger mock
-     * @var \Zend\Log\Logger
+     * @var \Laminas\Log\Logger
      */
     protected $_logger;
 
     /**
      * Log writer mock
-     * @var \Zend\Log\Writer\AbstractWriter
+     * @var \Laminas\Log\Writer\AbstractWriter
      */
     protected $_writer;
 
@@ -50,10 +50,10 @@ class DatabaseTest extends AbstractControllerTest
         $this->_schemaManager = $this->createMock('Database\SchemaManager');
         static::$serviceManager->setService('Database\SchemaManager', $this->_schemaManager);
 
-        $this->_logger = $this->createMock('Zend\Log\Logger');
+        $this->_logger = $this->createMock('Laminas\Log\Logger');
         static::$serviceManager->setService('Library\Logger', $this->_logger);
 
-        $this->_writer = $this->createMock(\Zend\Log\Writer\AbstractWriter::class);
+        $this->_writer = $this->createMock(\Laminas\Log\Writer\AbstractWriter::class);
         static::$serviceManager->setService('Library\Log\Writer\StdErr', $this->_writer);
     }
 
@@ -61,10 +61,10 @@ class DatabaseTest extends AbstractControllerTest
     {
         $this->_route->method('getMatchedParam')
                      ->withConsecutive(
-                         ['loglevel', \Zend\Log\Logger::INFO],
+                         ['loglevel', \Laminas\Log\Logger::INFO],
                          ['prune', null],
                          ['p', null]
-                     )->willReturnOnConsecutiveCalls(\Zend\Log\Logger::INFO, false, false);
+                     )->willReturnOnConsecutiveCalls(\Laminas\Log\Logger::INFO, false, false);
 
         $this->_schemaManager->expects($this->once())->method('updateAll')->with(false);
 
@@ -75,7 +75,7 @@ class DatabaseTest extends AbstractControllerTest
     {
         $this->_writer->expects($this->once())
                       ->method('addFilter')
-                      ->with('priority', ['priority' => \Zend\Log\Logger::DEBUG]);
+                      ->with('priority', ['priority' => \Laminas\Log\Logger::DEBUG]);
         $this->_writer->expects($this->once())
                       ->method('setFormatter')
                       ->with('simple', ['format' => '%priorityName%: %message%']);
@@ -85,10 +85,10 @@ class DatabaseTest extends AbstractControllerTest
         $this->_route->expects($this->exactly(3))
                      ->method('getMatchedParam')
                      ->withConsecutive(
-                         array('loglevel', \Zend\Log\Logger::INFO),
+                         array('loglevel', \Laminas\Log\Logger::INFO),
                          array('prune', null),
                          array('p', null)
-                     )->willReturnOnConsecutiveCalls(\Zend\Log\Logger::DEBUG, false, false);
+                     )->willReturnOnConsecutiveCalls(\Laminas\Log\Logger::DEBUG, false, false);
 
         $this->assertEquals(0, $this->_dispatch());
     }
@@ -108,10 +108,10 @@ class DatabaseTest extends AbstractControllerTest
     {
         $this->_route->method('getMatchedParam')
                      ->withConsecutive(
-                         array('loglevel', \Zend\Log\Logger::INFO),
+                         array('loglevel', \Laminas\Log\Logger::INFO),
                          array('prune', null),
                          array('p', null)
-                     )->willReturnOnConsecutiveCalls(\Zend\Log\Logger::INFO, $longFlag, $shortFlag);
+                     )->willReturnOnConsecutiveCalls(\Laminas\Log\Logger::INFO, $longFlag, $shortFlag);
 
         $this->_schemaManager->expects($this->once())->method('updateAll')->with(true);
 

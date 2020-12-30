@@ -31,7 +31,7 @@ namespace Database\Service;
  * Since circular dependencies are not supported, this abstract factory creates
  * both services and performs all necessary initializations.
  */
-class AbstractDatabaseFactory implements \Zend\ServiceManager\Factory\AbstractFactoryInterface
+class AbstractDatabaseFactory implements \Laminas\ServiceManager\Factory\AbstractFactoryInterface
 {
     /**
      * {@inheritdoc}
@@ -61,7 +61,7 @@ class AbstractDatabaseFactory implements \Zend\ServiceManager\Factory\AbstractFa
             $config['charset'] = 'utf8mb4';
         }
 
-        $adapter = new \Zend\Db\Adapter\Adapter($config);
+        $adapter = new \Laminas\Db\Adapter\Adapter($config);
         $database = \Nada\Factory::getDatabase($adapter);
 
         if ($database->isSqlite()) {

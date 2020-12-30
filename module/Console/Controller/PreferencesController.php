@@ -24,11 +24,11 @@ namespace Console\Controller;
 /**
  * Controller for managing preferences
  */
-class PreferencesController extends \Zend\Mvc\Controller\AbstractActionController
+class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionController
 {
     /**
      * Form manager
-     * @var \Zend\Form\FormElementManager
+     * @var \Laminas\Form\FormElementManager
      */
     protected $_formManager;
 
@@ -59,14 +59,14 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Constructor
      *
-     * @param \Zend\Form\FormElementManager $formManager
+     * @param \Laminas\Form\FormElementManager $formManager
      * @param \Model\Client\CustomFieldManager $customFieldManager
      * @param \Model\Network\DeviceManager $deviceManager
      * @param \Model\Registry\RegistryManager $registryManager
      * @param \Model\Config $config
      */
     public function __construct(
-        \Zend\Form\FormElementManager $formManager,
+        \Laminas\Form\FormElementManager $formManager,
         \Model\Client\CustomFieldManager $customFieldManager,
         \Model\Network\DeviceManager $deviceManager,
         \Model\Registry\RegistryManager $registryManager,
@@ -82,7 +82,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Redirect to first page
      *
-     * @return \Zend\Http\Response redirect response
+     * @return \Laminas\Http\Response redirect response
      */
     public function indexAction()
     {
@@ -92,7 +92,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "Display" page
      *
-     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
+     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function displayAction()
     {
@@ -102,7 +102,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "Inventory" page
      *
-     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
+     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function inventoryAction()
     {
@@ -112,7 +112,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "Agent" page
      *
-     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
+     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function agentAction()
     {
@@ -122,7 +122,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "Packages" page
      *
-     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
+     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function packagesAction()
     {
@@ -132,7 +132,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "Download" page
      *
-     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
+     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function downloadAction()
     {
@@ -142,7 +142,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "Network scanning" page
      *
-     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
+     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function networkscanningAction()
     {
@@ -152,7 +152,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "Groups" page
      *
-     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
+     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function groupsAction()
     {
@@ -162,7 +162,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "Raw data" page
      *
-     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
+     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function rawdataAction()
     {
@@ -172,7 +172,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "Filters" page
      *
-     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
+     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function filtersAction()
     {
@@ -182,7 +182,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Show "System" page
      *
-     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
+     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function systemAction()
     {
@@ -211,7 +211,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      * Delete a custom field definition
      *
      * URL parameter: 'name'
-     * @return array|\Zend\Http\Response array(field) or redirect response
+     * @return array|\Laminas\Http\Response array(field) or redirect response
      */
     public function deletefieldAction()
     {
@@ -229,7 +229,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Provide form to manage network device types
      *
-     * @return array|\Zend\Http\Response Array(form) or redirect response
+     * @return array|\Laminas\Http\Response Array(form) or redirect response
      */
     public function networkdevicesAction()
     {
@@ -248,7 +248,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      * Delete a network device type definition
      *
      * URL parameter: 'name'
-     * @return array|\Zend\Http\Response Array(description) or redirect response
+     * @return array|\Laminas\Http\Response Array(description) or redirect response
      */
     public function deletedevicetypeAction()
     {
@@ -265,7 +265,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
     /**
      * Provide form to manage inventoried registry values
      *
-     * @return array|\Zend\Http\Response Array(form) or redirect response
+     * @return array|\Laminas\Http\Response Array(form) or redirect response
      */
     public function registryvaluesAction()
     {
@@ -285,7 +285,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      *
      * URL parameter: name
      *
-     * @return array|\Zend\Http\Response Array(name) or redirect response
+     * @return array|\Laminas\Http\Response Array(name) or redirect response
      */
     public function deleteregistryvalueAction()
     {
@@ -303,7 +303,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
      * Standard preferences handling via preferences form subclass
      *
      * @param string $name Name of the form service
-     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response View model for "form.php" template or redirect response
+     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     protected function _useForm($name)
     {
@@ -327,7 +327,7 @@ class PreferencesController extends \Zend\Mvc\Controller\AbstractActionControlle
             $preferences = array();
             foreach ($form->get('Preferences') as $element) {
                 $name = $element->getName();
-                if ($element instanceof \Zend\Form\Fieldset) {
+                if ($element instanceof \Laminas\Form\Fieldset) {
                     foreach ($element as $subElement) {
                         $subElementName = $subElement->getName();
                         $preferences[$name][$subElementName] = $this->_config->$subElementName;

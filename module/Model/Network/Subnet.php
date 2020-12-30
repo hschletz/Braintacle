@@ -43,7 +43,7 @@ class Subnet extends \Model\AbstractModel
         if ($index == 'CidrAddress') {
             $address = $this['Address'];
             $mask = $this['Mask'];
-            $validator = new \Zend\Validator\Ip([
+            $validator = new \Laminas\Validator\Ip([
                 'allowipv4' => true,
                 'allowipv6' => false,
                 'allowipvfuture' => false,

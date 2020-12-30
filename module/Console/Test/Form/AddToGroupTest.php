@@ -21,7 +21,7 @@
 
 namespace Console\Test\Form;
 
-use \Zend\Dom\Document\Query as Query;
+use \Laminas\Dom\Document\Query as Query;
 
 /**
  * Tests for AddToGroup form
@@ -47,7 +47,7 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
             array('Name' => 'group1'),
             array('Name' => 'group2'),
         );
-        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
         $resultSet->initialize($groups);
         $this->_groupManager->expects($this->once())
                             ->method('getGroups')
@@ -64,19 +64,19 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
     public function testInit()
     {
         $what = $this->_form->get('What');
-        $this->assertInstanceOf('Zend\Form\Element\Radio', $what);
+        $this->assertInstanceOf('Laminas\Form\Element\Radio', $what);
         $this->assertCount(3, $what->getValueOptions());
         $this->assertEquals(\Model\Client\Client::MEMBERSHIP_AUTOMATIC, $what->getValue());
         $this->assertEquals(array('class' => 'what'), $what->getLabelAttributes());
 
         $where = $this->_form->get('Where');
-        $this->assertInstanceOf('Zend\Form\Element\Radio', $where);
+        $this->assertInstanceOf('Laminas\Form\Element\Radio', $where);
         $this->assertCount(2, $where->getValueOptions());
         $this->assertEquals('new', $where->getValue());
         $this->assertEquals(array('class' => 'where'), $where->getLabelAttributes());
 
-        $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('NewGroup'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('Description'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('NewGroup'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('Description'));
 
         $existingGroup = $this->_form->get('ExistingGroup');
         $this->assertInstanceOf('Library\Form\Element\SelectSimple', $existingGroup);

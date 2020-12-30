@@ -32,13 +32,13 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Service manager
-     * @var \Zend\ServiceManager\ServiceManager
+     * @var \Laminas\ServiceManager\ServiceManager
      */
     protected static $_serviceManager;
 
     /**
      * Controller used for tests, if set by _getPlugin()
-     * @var \Zend\Stdlib\DispatchableInterface
+     * @var \Laminas\Stdlib\DispatchableInterface
      */
     protected $_controller;
 
@@ -72,7 +72,7 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
     /**
      * Get the application's configured controller plugin manager
      *
-     * @return \Zend\Mvc\Controller\PluginManager
+     * @return \Laminas\Mvc\Controller\PluginManager
      */
     protected function _getPluginManager()
     {
@@ -83,22 +83,22 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
      * Get an initialized instance of the controller plugin
      *
      * If controller setup is requested, the controller will be a
-     * \Zend\Mvc\Controller\AbstractActionController mock. Its MvcEvent will be
+     * \Laminas\Mvc\Controller\AbstractActionController mock. Its MvcEvent will be
      * initialized with a standard route 'test' (/module/controller/action/)
      * with defaults of "defaultcontroller" and "defaultaction".
      * The RouteMatch is initialized with "currentcontroller" and
      * "currentaction". An empty response is created.
      *
      * @param bool $setController Initialize the helper with a working controller (default: TRUE)
-     * @return \Zend\Mvc\Controller\Plugin\PluginInterface Plugin instance
+     * @return \Laminas\Mvc\Controller\Plugin\PluginInterface Plugin instance
      */
     protected function _getPlugin($setController = true)
     {
         if ($setController) {
-            $router = new \Zend\Router\Http\TreeRouteStack;
+            $router = new \Laminas\Router\Http\TreeRouteStack;
             $router->addRoute(
                 'test',
-                \Zend\Router\Http\Segment::factory(
+                \Laminas\Router\Http\Segment::factory(
                     array(
                         // Match "module" prefix, followed by controller and action
                         // names. All three components are optional except the
@@ -113,7 +113,7 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
                 )
             );
 
-            $routeMatch = new \Zend\Router\RouteMatch(
+            $routeMatch = new \Laminas\Router\RouteMatch(
                 array(
                     'controller' => 'currentcontroller',
                     'action' => 'currentaction',
@@ -121,12 +121,12 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
             );
             $routeMatch->setMatchedRouteName('test');
 
-            $event = new \Zend\Mvc\MvcEvent;
+            $event = new \Laminas\Mvc\MvcEvent;
             $event->setRouter($router);
             $event->setRouteMatch($routeMatch);
-            $event->setResponse(new \Zend\Http\Response);
+            $event->setResponse(new \Laminas\Http\Response);
 
-            $this->_controller = $this->getMockBuilder('Zend\Mvc\Controller\AbstractActionController')
+            $this->_controller = $this->getMockBuilder('Laminas\Mvc\Controller\AbstractActionController')
                                       ->setMethods(null)
                                       ->getMockForAbstractClass();
             $this->_controller->setPluginManager($this->_getPluginManager());

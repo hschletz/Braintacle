@@ -27,7 +27,7 @@ namespace Database\Hydrator\Strategy\DisplayControllers;
  * A value of '0 x 0' is converted to NULL. This conversion is not reverted on
  * extraction.
  */
-class CurrentResolution implements \Zend\Hydrator\Strategy\StrategyInterface
+class CurrentResolution implements \Laminas\Hydrator\Strategy\StrategyInterface
 {
     /** {@inheritdoc} */
     public function hydrate($value, ?array $data)

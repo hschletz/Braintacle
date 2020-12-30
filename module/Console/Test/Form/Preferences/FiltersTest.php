@@ -26,9 +26,9 @@ class FiltersTest extends \Console\Test\AbstractFormTest
     public function testInit()
     {
         $preferences = $this->_form->get('Preferences');
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('trustedNetworksOnly'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('inventoryFilter'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('limitInventoryInterval'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $preferences->get('trustedNetworksOnly'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $preferences->get('inventoryFilter'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('limitInventoryInterval'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
 

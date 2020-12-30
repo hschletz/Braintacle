@@ -51,7 +51,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testOffsetGetAndroidNotNull()
     {
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
@@ -79,7 +79,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testOffsetGetAndroidNull()
     {
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
@@ -97,7 +97,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testOffsetGetWindowsNotNull()
     {
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
@@ -129,7 +129,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testOffsetGetWindowsNull()
     {
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
@@ -177,7 +177,7 @@ class ClientTest extends \Model\Test\AbstractTest
      */
     public function testOffsetGetBlacklisted($index, $initialIndex, $initialValue, $result)
     {
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
@@ -253,7 +253,7 @@ class ClientTest extends \Model\Test\AbstractTest
             $groups[] = $group;
         }
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->with('Model\Config')->willReturn($config);
 
         $model = $this->getMockBuilder($this->_getClass())
@@ -274,7 +274,7 @@ class ClientTest extends \Model\Test\AbstractTest
                ->withConsecutive(array('option1'), array('option2'))
                ->willReturnOnConsecutiveCalls('value1', 'value2');
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->expects($this->exactly(2))->method('get')->with('Model\Config')->willReturn($config);
 
         $model = $this->getMockBuilder($this->_getClass())
@@ -499,7 +499,7 @@ class ClientTest extends \Model\Test\AbstractTest
             $groups[] = $group;
         }
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->with('Model\Config')->willReturn($config);
 
         $model = $this->getMockBuilder($this->_getClass())
@@ -558,7 +558,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $model['Id'] = 1;
 
         $assignments = $model->getPackageAssignments($order, $direction);
-        $this->assertInstanceOf('Zend\Db\ResultSet\AbstractResultSet', $assignments);
+        $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $assignments);
         $assignments = iterator_to_array($assignments);
         $this->assertCount(2, $assignments);
         $this->assertContainsOnlyInstancesOf('Model\Package\Assignment', $assignments);
@@ -572,7 +572,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $model['Id'] = 1;
 
         $assignments = $model->getPackageAssignments();
-        $this->assertInstanceOf('Zend\Db\ResultSet\AbstractResultSet', $assignments);
+        $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $assignments);
         $assignments = iterator_to_array($assignments);
         $this->assertCount(2, $assignments);
         $this->assertContainsOnlyInstancesOf('Model\Package\Assignment', $assignments);
@@ -671,22 +671,22 @@ class ClientTest extends \Model\Test\AbstractTest
         $packageManager = $this->createMock('Model\Package\PackageManager');
         $packageManager->method('getPackage')->with('packageName')->willReturn($package);
 
-        $connection = $this->createMock('Zend\Db\Adapter\Driver\AbstractConnection');
+        $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
         $connection->expects($this->at(0))->method('beginTransaction');
         $connection->expects($this->at(1))->method('commit');
 
-        $driver = $this->createMock('Zend\Db\Adapter\Driver\DriverInterface');
+        $driver = $this->createMock('Laminas\Db\Adapter\Driver\DriverInterface');
         $driver->method('getConnection')->willReturn($connection);
 
-        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
+        $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
 
-        $resultSet = $this->createMock('Zend\Db\ResultSet\AbstractResultSet');
+        $resultSet = $this->createMock('Laminas\Db\ResultSet\AbstractResultSet');
         $resultSet->method('current')->willReturn(array('num' => 1));
 
-        $select = $this->createMock('Zend\Db\Sql\Select');
+        $select = $this->createMock('Laminas\Db\Sql\Select');
 
-        $sql = $this->createMock('Zend\Db\Sql\Sql');
+        $sql = $this->createMock('Laminas\Db\Sql\Sql');
         $sql->method('select')->willReturn($select);
 
         $clientConfig = $this->createMock('Database\Table\ClientConfig');
@@ -712,23 +712,23 @@ class ClientTest extends \Model\Test\AbstractTest
         $packageManager = $this->createMock('Model\Package\PackageManager');
         $packageManager->method('getPackage')->with('packageName')->willReturn($package);
 
-        $connection = $this->createMock('Zend\Db\Adapter\Driver\AbstractConnection');
+        $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
         $connection->expects($this->at(0))->method('beginTransaction');
         $connection->expects($this->at(1))->method('rollback');
         $connection->expects($this->never())->method('commit');
 
-        $driver = $this->createMock('Zend\Db\Adapter\Driver\DriverInterface');
+        $driver = $this->createMock('Laminas\Db\Adapter\Driver\DriverInterface');
         $driver->method('getConnection')->willReturn($connection);
 
-        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
+        $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
 
-        $resultSet = $this->createMock('Zend\Db\ResultSet\AbstractResultSet');
+        $resultSet = $this->createMock('Laminas\Db\ResultSet\AbstractResultSet');
         $resultSet->method('current')->willReturn(array('num' => 1));
 
-        $select = $this->createMock('Zend\Db\Sql\Select');
+        $select = $this->createMock('Laminas\Db\Sql\Select');
 
-        $sql = $this->createMock('Zend\Db\Sql\Sql');
+        $sql = $this->createMock('Laminas\Db\Sql\Sql');
         $sql->method('select')->willReturn($select);
 
         $clientConfig = $this->createMock('Database\Table\ClientConfig');
@@ -762,7 +762,7 @@ class ClientTest extends \Model\Test\AbstractTest
                     ->with('type', array('Client' => 42), null, null)
                     ->willReturn('result');
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->with('Model\Client\ItemManager')->willReturn($itemManager);
 
         $model = $this->getMockBuilder('Model\Client\Client')->setMethods(array('offsetGet'))->getMock();
@@ -780,7 +780,7 @@ class ClientTest extends \Model\Test\AbstractTest
                     ->with('type', array('filter' => 'arg', 'Client' => 42), 'order', 'direction')
                     ->willReturn('result');
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->with('Model\Client\ItemManager')->willReturn($itemManager);
 
         $model = $this->getMockBuilder('Model\Client\Client')->setMethods(array('offsetGet'))->getMock();
@@ -842,7 +842,7 @@ class ClientTest extends \Model\Test\AbstractTest
             )
         );
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -912,7 +912,7 @@ class ClientTest extends \Model\Test\AbstractTest
             )
         );
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -982,7 +982,7 @@ class ClientTest extends \Model\Test\AbstractTest
             )
         );
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -1044,7 +1044,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $groupManager = $this->createMock('Model\Group\GroupManager');
         $groupManager->method('getGroups')->with()->willReturn(array($group1, $group2));
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -1099,7 +1099,7 @@ class ClientTest extends \Model\Test\AbstractTest
             )
         );
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -1131,7 +1131,7 @@ class ClientTest extends \Model\Test\AbstractTest
             array(array('Id' => 1, 'Name' => 'group1'))
         );
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(array('Model\Group\GroupManager', $groupManager))
@@ -1234,7 +1234,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testToDomDocument()
     {
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
 
         $model = $this->_getModel();
         $model->setServiceLocator($serviceManager);

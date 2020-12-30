@@ -21,7 +21,7 @@
 
 namespace Model\Test\Operator;
 
-use \Zend\Authentication\Result;
+use \Laminas\Authentication\Result;
 
 /**
  * Tests for AuthenticationAdapter
@@ -37,12 +37,12 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
      * @param integer $code Expected code
      * @param mixed $identity Expected identity
      * @param array $messages Expected messages
-     * @param \Zend\Authentication\Adapter\AdapterInterface $adapter Adapter to test
+     * @param \Laminas\Authentication\Adapter\AdapterInterface $adapter Adapter to test
      */
     public function assertAuthenticationResult($code, $identity, $messages, $adapter)
     {
         $result = $adapter->authenticate();
-        $this->assertInstanceOf('Zend\Authentication\Result', $result);
+        $this->assertInstanceOf('Laminas\Authentication\Result', $result);
         $this->assertSame($code, $result->getCode());
         $this->assertSame($identity, $result->getIdentity());
         $this->assertSame($messages, $result->getMessages());
@@ -217,7 +217,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
         try {
             $adapter->authenticate();
             $this->fail('Expected exception was not thrown');
-        } catch (\Zend\Authentication\Adapter\Exception\RuntimeException $e) {
+        } catch (\Laminas\Authentication\Adapter\Exception\RuntimeException $e) {
             $this->assertSame('Internal authentication error, see web server log for details', $e->getMessage());
             $this->assertSame(0, $e->getCode());
             $this->assertSame($exception, $e->getPrevious());

@@ -27,7 +27,7 @@ namespace Library\View\Helper;
  * The option values are not translated, just like the "value" attributes of
  * Select elements.
  */
-class FormSelectSimple extends \Zend\Form\View\Helper\FormSelect
+class FormSelectSimple extends \Laminas\Form\View\Helper\FormSelect
 {
     /** {@inheritdoc} */
     public function renderOptions(array $options, array $selectedOptions = array())
@@ -36,7 +36,7 @@ class FormSelectSimple extends \Zend\Form\View\Helper\FormSelect
         $optionStrings = array();
         foreach ($options as $option) {
             $this->validTagAttributes = $this->validOptionAttributes;
-            if (\Zend\Stdlib\ArrayUtils::inArray($option, $selectedOptions)) {
+            if (\Laminas\Stdlib\ArrayUtils::inArray($option, $selectedOptions)) {
                 $attributes = ' selected="selected"';
             } else {
                 $attributes = '';

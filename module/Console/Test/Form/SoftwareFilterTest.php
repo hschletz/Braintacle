@@ -38,7 +38,7 @@ class SoftwareFilterTest extends \Console\Test\AbstractFormTest
     {
         $this->assertEquals('GET', $this->_form->getAttribute('method'));
         $filter = $this->_form->get('filter');
-        $this->assertInstanceOf('Zend\Form\Element\Select', $filter);
+        $this->assertInstanceOf('Laminas\Form\Element\Select', $filter);
         $this->assertEquals('this.form.submit();', $filter->getAttribute('onchange'));
         $options = $filter->getValueOptions();
         $this->assertArrayHasKey('accepted', $options);

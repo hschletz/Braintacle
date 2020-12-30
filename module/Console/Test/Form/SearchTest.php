@@ -21,7 +21,7 @@
 
 namespace Console\Test\Form;
 
-use \Zend\Dom\Document\Query as Query;
+use \Laminas\Dom\Document\Query as Query;
 
 /**
  * Tests for Search form
@@ -30,7 +30,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
 {
     /**
      * Translator mock object
-     * @var \Zend\I18n\Translator\TranslatorInterface
+     * @var \Laminas\I18n\Translator\TranslatorInterface
      */
     protected $_translator;
 
@@ -62,10 +62,10 @@ class SearchTest extends \Console\Test\AbstractFormTest
 
     public function setUp(): void
     {
-        $resultSet = new \Zend\Db\ResultSet\ResultSet();
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
         $resultSet->initialize(array(array('Name' => 'RegValue')));
 
-        $this->_translator = $this->createMock('\Zend\I18n\Translator\TranslatorInterface');
+        $this->_translator = $this->createMock('\Laminas\I18n\Translator\TranslatorInterface');
         $this->_translator->method('translate')->willReturnCallback([$this, 'translatorMock']);
 
         $this->_registryManager = $this->createMock('Model\Registry\RegistryManager');
@@ -108,7 +108,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     public function testInit()
     {
         $filter = $this->_form->get('filter');
-        $this->assertInstanceOf('Zend\Form\Element\Select', $filter);
+        $this->assertInstanceOf('Laminas\Form\Element\Select', $filter);
         $filters = $filter->getValueOptions();
         $this->assertContains('TRANSLATE(Software: Name)', $filters); // Hardcoded
         $this->assertContains('Registry: RegValue', $filters); // dynamically added
@@ -132,10 +132,10 @@ class SearchTest extends \Console\Test\AbstractFormTest
             json_decode($filter->getAttribute('data-types'), true)
         );
 
-        $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('search'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('search'));
 
         $operator = $this->_form->get('operator');
-        $this->assertInstanceOf('Zend\Form\Element\Select', $operator);
+        $this->assertInstanceOf('Laminas\Form\Element\Select', $operator);
         $this->assertEquals('select_untranslated', $operator->getAttribute('type'));
         $this->assertEquals(self::OPERATORS_TEXT, $operator->getValueOptions());
         $this->assertEquals(json_encode(self::OPERATORS_TEXT), $operator->getAttribute('data-operators-text'));
@@ -144,12 +144,12 @@ class SearchTest extends \Console\Test\AbstractFormTest
             $operator->getAttribute('data-operators-ordinal')
         );
 
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $this->_form->get('invert'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $this->_form->get('invert'));
     }
 
     public function testInitInvalidDatatype()
     {
-        $resultSet = new \Zend\Db\ResultSet\ResultSet;
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
         $resultSet->initialize(new \EmptyIterator);
         $registryManager = $this->createMock('Model\Registry\RegistryManager');
         $registryManager->method('getValueDefinitions')->willReturn($resultSet);
@@ -158,7 +158,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
         $form = new \Console\Form\Search(
             null,
             array(
-                'translator' => new \Zend\Mvc\I18n\Translator(new \Zend\Mvc\I18n\DummyTranslator),
+                'translator' => new \Laminas\Mvc\I18n\Translator(new \Laminas\Mvc\I18n\DummyTranslator),
                 'registryManager' => $registryManager,
                 'customFieldManager' => $customFieldManager,
             )

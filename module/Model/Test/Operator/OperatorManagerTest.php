@@ -33,7 +33,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
     {
         $model = $this->_getModel();
         $resultSet = $model->getOperators();
-        $this->assertInstanceOf('Zend\Db\ResultSet\AbstractResultSet', $resultSet);
+        $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $resultSet);
         $operators = iterator_to_array($resultSet);
         $this->assertContainsOnlyInstancesOf('Model\Operator\Operator', $operators);
         $this->assertCount(2, $operators);
@@ -45,7 +45,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
     {
         $model = $this->_getModel();
         $resultSet = $model->getOperators('Id', 'desc');
-        $this->assertInstanceOf('Zend\Db\ResultSet\AbstractResultSet', $resultSet);
+        $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $resultSet);
         $operators = iterator_to_array($resultSet);
         $this->assertContainsOnlyInstancesOf('Model\Operator\Operator', $operators);
         $this->assertCount(2, $operators);
@@ -110,7 +110,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         $authenticationService = $this->createMock('Model\Operator\AuthenticationService');
         $authenticationService->method('getAdapter')->willReturn($adapter);
 
-        $model = $this->_getModel(array('Zend\Authentication\AuthenticationService' => $authenticationService));
+        $model = $this->_getModel(array('Laminas\Authentication\AuthenticationService' => $authenticationService));
         $model->createOperator(array('Id' => 'new_id'), 'new_passwd');
         $this->assertTablesEqual(
             $this->_loadDataset('CreateMinimal')->getTable('operators'),
@@ -129,7 +129,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         $authenticationService = $this->createMock('Model\Operator\AuthenticationService');
         $authenticationService->method('getAdapter')->willReturn($adapter);
 
-        $model = $this->_getModel(array('Zend\Authentication\AuthenticationService' => $authenticationService));
+        $model = $this->_getModel(array('Laminas\Authentication\AuthenticationService' => $authenticationService));
         $model->createOperator(
             array(
                 'Id' => 'new_id',
@@ -219,7 +219,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         $authService->method('getAdapter')->willReturn($adapter);
         $authService->expects($this->never())->method('changeIdentity');
 
-        $model = $this->_getModel(array('Zend\Authentication\AuthenticationService' => $authService));
+        $model = $this->_getModel(array('Laminas\Authentication\AuthenticationService' => $authService));
         $model->updateOperator('user1', $data, $password);
         $this->assertTablesEqual(
             $this->_loadDataSet($dataSet)->getTable('operators'),
@@ -236,7 +236,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         $authService->method('getIdentity')->willReturn('user1');
         $authService->expects($this->once())->method('changeIdentity')->with('new_id');
 
-        $model = $this->_getModel(array('Zend\Authentication\AuthenticationService' => $authService));
+        $model = $this->_getModel(array('Laminas\Authentication\AuthenticationService' => $authService));
         $model->updateOperator('user1', array('Id' => 'new_id'), '');
         $this->assertTablesEqual(
             $this->_loadDataSet('UpdateIdentity')->getTable('operators'),
@@ -297,7 +297,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
     {
         $authService = $this->createMock('Model\Operator\AuthenticationService');
         $authService->expects($this->once())->method('getIdentity')->willReturn('user2');
-        $model = $this->_getModel(array('Zend\Authentication\AuthenticationService' => $authService));
+        $model = $this->_getModel(array('Laminas\Authentication\AuthenticationService' => $authService));
         try {
             $model->deleteOperator('user2');
             $this->fail('Expected Exception was not thrown');

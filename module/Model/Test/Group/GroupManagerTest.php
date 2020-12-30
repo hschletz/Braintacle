@@ -61,7 +61,7 @@ class GroupManagerTest extends AbstractGroupTest
      */
     public function testGetGroups($filter, $filterArg, $order, $direction, $expected, $updateCache)
     {
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Database\Table\GroupInfo', $this->_groupInfo),
@@ -77,7 +77,7 @@ class GroupManagerTest extends AbstractGroupTest
         $model->expects($this->$updateCache())->method('updateCache');
 
         $resultSet = $model->getGroups($filter, $filterArg, $order, $direction);
-        $this->assertInstanceOf('Zend\Db\ResultSet\AbstractResultSet', $resultSet);
+        $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $resultSet);
         $groups = iterator_to_array($resultSet);
         $this->assertContainsOnlyInstancesOf('Model\Group\Group', $groups);
         $this->assertCount(count($expected), $groups);
@@ -217,18 +217,18 @@ class GroupManagerTest extends AbstractGroupTest
 
     public function testCreateGroupRollbackOnException()
     {
-        $connection = $this->createMock('Zend\Db\Adapter\Driver\AbstractConnection');
+        $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
         $connection->expects($this->at(0))->method('beginTransaction');
         $connection->expects($this->at(1))->method('rollback');
         $connection->expects($this->never())->method('commit');
 
-        $driver = $this->createMock('Zend\Db\Adapter\Driver\DriverInterface');
+        $driver = $this->createMock('Laminas\Db\Adapter\Driver\DriverInterface');
         $driver->method('getConnection')->willReturn($connection);
 
-        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
+        $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
 
-        $resultSet = $this->createMock('Zend\Db\ResultSet\AbstractResultSet');
+        $resultSet = $this->createMock('Laminas\Db\ResultSet\AbstractResultSet');
         $resultSet->method('count')->willReturn(0);
 
         $clientsAndGroups = $this->createMock('Database\Table\ClientsAndGroups');

@@ -32,13 +32,13 @@ class FormRendererTest extends \PHPUnit\Framework\TestCase
     /**
      * Create a new view renderer
      *
-     * @return \Zend\View\Renderer\PhpRenderer
+     * @return \Laminas\View\Renderer\PhpRenderer
      */
     protected function _createView()
     {
         $serviceManager = \Library\Application::init('Console')->getServiceManager();
         $serviceManager->setService('Library\UserConfig', array());
-        $view = new \Zend\View\Renderer\PhpRenderer;
+        $view = new \Laminas\View\Renderer\PhpRenderer;
         $view->setHelperPluginManager($serviceManager->get('ViewHelperManager'));
         return $view;
     }
@@ -48,12 +48,12 @@ class FormRendererTest extends \PHPUnit\Framework\TestCase
         $view = $this->_createView();
         $view->plugin('FormRow')->setTranslatorEnabled(false);
 
-        $text1 = new \Zend\Form\Element\Text('text1');
+        $text1 = new \Laminas\Form\Element\Text('text1');
         $text1->setLabel('Text1');
-        $text2 = new \Zend\Form\Element\Text('text2');
+        $text2 = new \Laminas\Form\Element\Text('text2');
         $text2->setLabel('Text2');
         $text2->setMessages(array('message'));
-        $submit = new \Zend\Form\Element\Submit('submit');
+        $submit = new \Laminas\Form\Element\Submit('submit');
 
         $form = new \Console\Form\Form;
         $form->init();
@@ -81,12 +81,12 @@ EOT;
         $view->plugin('FormRow')->setTranslatorEnabled(false);
         $view->plugin('FormLabel')->setTranslatorEnabled(false);
 
-        $text1 = new \Zend\Form\Element\Text('text1');
+        $text1 = new \Laminas\Form\Element\Text('text1');
         $text1->setLabel('Text1')->setAttribute('id', 'text1');
-        $text2 = new \Zend\Form\Element\Text('text2');
+        $text2 = new \Laminas\Form\Element\Text('text2');
         $text2->setLabel('Text2')->setAttribute('id', 'text2');
         $text2->setMessages(array('message'));
-        $submit = new \Zend\Form\Element\Submit('submit');
+        $submit = new \Laminas\Form\Element\Submit('submit');
 
         $form = new \Console\Form\Form;
         $form->init();
@@ -116,10 +116,10 @@ EOT;
     {
         $view = $this->_createView();
 
-        $text1 = new \Zend\Form\Element\Text('text1');
-        $text2 = new \Zend\Form\Element\Text('text2');
+        $text1 = new \Laminas\Form\Element\Text('text1');
+        $text2 = new \Laminas\Form\Element\Text('text2');
         $text2->setMessages(array('message'));
-        $submit = new \Zend\Form\Element\Submit('submit');
+        $submit = new \Laminas\Form\Element\Submit('submit');
 
         $form = new \Console\Form\Form;
         $form->init();
@@ -149,7 +149,7 @@ EOT;
 
     public function testRenderFieldsetRenderFieldsetAsElement()
     {
-        $translator = $this->createMock('Zend\I18n\Translator\Translator');
+        $translator = $this->createMock('Laminas\I18n\Translator\Translator');
         $translator->method('translate')
                    ->willReturnCallback(function ($string) {
                        return "$string-translated";
@@ -158,13 +158,13 @@ EOT;
         $view->plugin('translate')->setTranslator($translator);
         $view->plugin('FormRow')->setTranslatorEnabled(false);
 
-        $text1 = new \Zend\Form\Element\Text('text1');
+        $text1 = new \Laminas\Form\Element\Text('text1');
         $text1->setLabel('Text1');
-        $text2 = new \Zend\Form\Element\Text('text2');
+        $text2 = new \Laminas\Form\Element\Text('text2');
         $text2->setLabel('Text2');
-        $fieldset = new \Zend\Form\Fieldset('fieldset');
+        $fieldset = new \Laminas\Form\Fieldset('fieldset');
         $fieldset->setLabel('Fieldset');
-        $text3 = new \Zend\Form\Element\Text('text3');
+        $text3 = new \Laminas\Form\Element\Text('text3');
         $text3->setLabel('Text3');
         $fieldset->add($text3);
 

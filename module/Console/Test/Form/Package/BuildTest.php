@@ -38,29 +38,29 @@ class BuildTest extends \Console\Test\AbstractFormTest
 
     public function testInit()
     {
-        $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('Name'));
-        $this->assertInstanceOf('Zend\Form\Element\Textarea', $this->_form->get('Comment'));
-        $this->assertInstanceOf('Zend\Form\Element\Select', $this->_form->get('Platform'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('Name'));
+        $this->assertInstanceOf('Laminas\Form\Element\Textarea', $this->_form->get('Comment'));
+        $this->assertInstanceOf('Laminas\Form\Element\Select', $this->_form->get('Platform'));
 
         $action = $this->_form->get('DeployAction');
-        $this->assertInstanceOf('Zend\Form\Element\Select', $action);
+        $this->assertInstanceOf('Laminas\Form\Element\Select', $action);
         $this->assertEquals('changeParam()', $action->getAttribute('onchange'));
 
-        $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('ActionParam'));
-        $this->assertInstanceOf('Zend\Form\Element\File', $this->_form->get('File'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('ActionParam'));
+        $this->assertInstanceOf('Laminas\Form\Element\File', $this->_form->get('File'));
         $this->assertInstanceOf('Library\Form\Element\SelectSimple', $this->_form->get('Priority'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('MaxFragmentSize'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('MaxFragmentSize'));
 
         $warn = $this->_form->get('Warn');
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $warn);
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $warn);
         $this->assertEquals('form_package_build_warn', $warn->getAttribute('id'));
         $this->assertEquals('toggleWarn()', $warn->getAttribute('onchange'));
 
-        $this->assertInstanceOf('\Zend\Form\Element\Textarea', $this->_form->get('WarnMessage'));
-        $this->assertInstanceOf('\Zend\Form\Element\Text', $this->_form->get('WarnCountdown'));
-        $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $this->_form->get('WarnAllowAbort'));
-        $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $this->_form->get('WarnAllowDelay'));
-        $this->assertInstanceOf('\Zend\Form\Element\Textarea', $this->_form->get('PostInstMessage'));
+        $this->assertInstanceOf('\Laminas\Form\Element\Textarea', $this->_form->get('WarnMessage'));
+        $this->assertInstanceOf('\Laminas\Form\Element\Text', $this->_form->get('WarnCountdown'));
+        $this->assertInstanceOf('\Laminas\Form\Element\Checkbox', $this->_form->get('WarnAllowAbort'));
+        $this->assertInstanceOf('\Laminas\Form\Element\Checkbox', $this->_form->get('WarnAllowDelay'));
+        $this->assertInstanceOf('\Laminas\Form\Element\Textarea', $this->_form->get('PostInstMessage'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
 
@@ -347,7 +347,7 @@ class BuildTest extends \Console\Test\AbstractFormTest
         $messages = $this->_form->getMessages();
         $this->assertCount(1, $messages);
         $this->assertCount(1, $messages['File']);
-        $this->assertArrayHasKey(\Zend\Validator\File\UploadFile::ATTACK, $messages['File']);
+        $this->assertArrayHasKey(\Laminas\Validator\File\UploadFile::ATTACK, $messages['File']);
     }
 
     public function testInputFilterValidInteger()

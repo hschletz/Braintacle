@@ -24,7 +24,7 @@ namespace Library\Filter;
 /**
  * Convert empty input to empty array
  */
-class EmptyArray extends \Zend\Filter\AbstractFilter
+class EmptyArray extends \Laminas\Filter\AbstractFilter
 {
     /** {@inheritdoc} */
     public function filter($value)

@@ -28,7 +28,7 @@ namespace Database\Service;
  * instantiate an object of the same name, injecting the service locator into
  * its constructor.
  */
-class AbstractTableFactory implements \Zend\ServiceManager\Factory\AbstractFactoryInterface
+class AbstractTableFactory implements \Laminas\ServiceManager\Factory\AbstractFactoryInterface
 {
     /**
      * {@inheritdoc}

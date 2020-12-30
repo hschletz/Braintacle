@@ -24,7 +24,7 @@ namespace Model\Service\Operator;
 /**
  * Factory for Model\Operator\OperatorManager
  */
-class OperatorManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class OperatorManagerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /**
      * {@inheritdoc}
@@ -36,7 +36,7 @@ class OperatorManagerFactory implements \Zend\ServiceManager\Factory\FactoryInte
         array $options = null
     ) {
         return new \Model\Operator\OperatorManager(
-            $container->get('Zend\Authentication\AuthenticationService'),
+            $container->get('Laminas\Authentication\AuthenticationService'),
             $container->get('Database\Table\Operators')
         );
     }

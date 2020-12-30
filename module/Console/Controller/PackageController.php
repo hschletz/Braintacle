@@ -24,7 +24,7 @@ namespace Console\Controller;
 /**
  * Controller for all package related actions
  */
-class PackageController extends \Zend\Mvc\Controller\AbstractActionController
+class PackageController extends \Laminas\Mvc\Controller\AbstractActionController
 {
     /**
      * Package manager
@@ -90,7 +90,7 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Build a new package.
      *
-     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response form template or redirect response
+     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response form template or redirect response
      */
     public function buildAction()
     {
@@ -138,7 +138,7 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
      *
      * Query params: name
      *
-     * @return array|\Zend\Http\Response array(name) or redirect response
+     * @return array|\Laminas\Http\Response array(name) or redirect response
      */
     public function deleteAction()
     {
@@ -167,7 +167,7 @@ class PackageController extends \Zend\Mvc\Controller\AbstractActionController
      *
      * Query params: name
      *
-     * @return \Zend\View\Model\ViewModel|\Zend\Http\Response form template or redirect response
+     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response form template or redirect response
      */
     public function updateAction()
     {

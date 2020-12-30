@@ -24,7 +24,7 @@ namespace Console\View\Helper\Service;
 /**
  * Factory for FormatMessages
  */
-class FormatMessagesFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class FormatMessagesFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

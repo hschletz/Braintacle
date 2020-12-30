@@ -24,10 +24,10 @@ namespace Console\View\Helper\Form;
 /**
  * Base class for form view helpers
  *
- * Extends ZF default form helper with a prefixed message if post_max_size has
- * been exceeded.
+ * Extends default Laminas form helper with a prefixed message if post_max_size
+ * has been exceeded.
  */
-class Form extends \Zend\Form\View\Helper\Form
+class Form extends \Laminas\Form\View\Helper\Form
 {
     /**
      * Return message if post_max_size has been exceeded.
@@ -51,7 +51,7 @@ class Form extends \Zend\Form\View\Helper\Form
     }
 
     /** {@inheritdoc} */
-    public function render(\Zend\Form\FormInterface $form)
+    public function render(\Laminas\Form\FormInterface $form)
     {
         if (method_exists($form, 'prepare')) {
             $form->prepare();

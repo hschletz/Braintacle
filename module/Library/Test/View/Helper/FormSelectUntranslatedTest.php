@@ -28,14 +28,14 @@ class FormSelectUntranslatedTest extends AbstractTest
 {
     public function testFormElementHelperIntegration()
     {
-        $element = new \Zend\Form\Element\Select('test');
+        $element = new \Laminas\Form\Element\Select('test');
         $element->setAttribute('type', 'select_untranslated')
                 ->setValueOptions(array('Yes<b>', 'No'));
         $expected = <<<EOT
 <select name="test"><option value="0">Yes&lt;b&gt;</option>
 <option value="1">No</option></select>
 EOT;
-        $view = new \Zend\View\Renderer\PhpRenderer;
+        $view = new \Laminas\View\Renderer\PhpRenderer;
         $view->setHelperPluginManager(static::$_helperManager);
         $helper = static::$_helperManager->get('formElement');
         $helper->setView($view);

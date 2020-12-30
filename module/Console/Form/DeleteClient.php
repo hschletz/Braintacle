@@ -37,7 +37,7 @@ class DeleteClient extends Form
     {
         parent::init();
 
-        $deleteInterfaces = new \Zend\Form\Element\Checkbox('DeleteInterfaces');
+        $deleteInterfaces = new \Laminas\Form\Element\Checkbox('DeleteInterfaces');
         $deleteInterfaces->setLabel('Delete interfaces from network listing')
                          ->setChecked($this->getOption('config')->defaultDeleteInterfaces);
         $this->add($deleteInterfaces);
@@ -52,7 +52,7 @@ class DeleteClient extends Form
     }
 
     /** {@inheritdoc} */
-    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset)
+    public function renderFieldset(\Laminas\View\Renderer\PhpRenderer $view, \Laminas\Form\Fieldset $fieldset)
     {
         $output = $view->htmlElement(
             'div',

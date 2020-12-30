@@ -24,7 +24,8 @@ namespace Console\Form;
 /**
  * Base class for forms
  *
- * This base class extends \Zend\Form\Form with some convenience functionality:
+ * This base class extends \Laminas\Form\Form with some convenience
+ * functionality:
  *
  * - init() sets the "class" attribute to "form" and a second value derived from
  *   the class name: Console\Form\Foo\Bar becomes form_foo_bar and so on. This
@@ -42,7 +43,7 @@ namespace Console\Form;
  *
  * - Helper methods for dealing with localized integer, float and date formats.
  */
-class Form extends \Zend\Form\Form
+class Form extends \Laminas\Form\Form
 {
     /** {@inheritdoc} */
     public function init()
@@ -54,7 +55,7 @@ class Form extends \Zend\Form\Form
         $this->setAttribute('class', 'form ' . $class);
         $this->setAttribute('id', $class);
 
-        $csrf = new \Zend\Form\Element\Csrf('_csrf');
+        $csrf = new \Laminas\Form\Element\Csrf('_csrf');
         $csrf->setCsrfValidatorOptions(array('timeout' => null)); // Rely on session cleanup
         $this->add($csrf);
     }
@@ -73,11 +74,11 @@ class Form extends \Zend\Form\Form
     /**
      * Render the form
      *
-     * @param \Zend\View\Renderer\PhpRenderer $view
+     * @param \Laminas\View\Renderer\PhpRenderer $view
      * @return string HTML form code
      * @deprecated write and invoke a view helper instead
      */
-    public function render(\Zend\View\Renderer\PhpRenderer $view)
+    public function render(\Laminas\View\Renderer\PhpRenderer $view)
     {
         $helper = $view->plugin('Console\View\Helper\Form\LegacyHelper');
         return $helper($this);
@@ -90,20 +91,20 @@ class Form extends \Zend\Form\Form
      * renders them in a way appropriate for each element type. Subclasses with
      * more specialized rendering may extend or replace this method.
      *
-     * @param \Zend\View\Renderer\PhpRenderer $view
-     * @param \Zend\Form\Fieldset $fieldset
+     * @param \Laminas\View\Renderer\PhpRenderer $view
+     * @param \Laminas\Form\Fieldset $fieldset
      * @return string HTML code
      * @deprecated to be implemented/replaced by view helper
      */
-    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset)
+    public function renderFieldset(\Laminas\View\Renderer\PhpRenderer $view, \Laminas\Form\Fieldset $fieldset)
     {
         $output = '<div class="table">';
         foreach ($fieldset as $element) {
             $row = '';
-            if ($element instanceof \Zend\Form\Element\Submit) {
+            if ($element instanceof \Laminas\Form\Element\Submit) {
                 $row .= "<span class='cell'></span>\n";
                 $row .= $view->formSubmit($element);
-            } elseif ($element instanceof \Zend\Form\Fieldset) {
+            } elseif ($element instanceof \Laminas\Form\Fieldset) {
                 $row .= $view->htmlElement(
                     'span',
                     $view->translate($element->getLabel()),
@@ -114,7 +115,7 @@ class Form extends \Zend\Form\Form
                     'fieldset',
                     "<legend></legend>\n" . $this->renderFieldset($view, $element)
                 );
-            } elseif (!$element instanceof \Zend\Form\Element\Csrf) {
+            } elseif (!$element instanceof \Laminas\Form\Element\Csrf) {
                 $row .= $view->formRow($element, 'prepend', false);
                 if ((string) $element->getLabel() == '') {
                     $row = "<div class='row'>\n<span class='label'></span>\n$row\n</div>";
@@ -160,7 +161,7 @@ class Form extends \Zend\Form\Form
         switch ($type) {
             case 'integer':
                 if (ctype_digit((string) $value)) {
-                    $value = \Zend\Filter\StaticFilter::execute(
+                    $value = \Laminas\Filter\StaticFilter::execute(
                         (integer) $value,
                         'NumberFormat',
                         array('type' => \NumberFormatter::TYPE_INT32)
@@ -169,7 +170,7 @@ class Form extends \Zend\Form\Form
                 break;
             case 'float':
                 if ($value !== null and $value !== '' and preg_match('/^([0-9]+)?(\.[0-9]+)?$/', $value)) {
-                    $numberFormat = new \Zend\I18n\Filter\NumberFormat;
+                    $numberFormat = new \Laminas\I18n\Filter\NumberFormat;
                     $numberFormat->getFormatter()->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, 100);
                     $value = $numberFormat->filter((float) $value);
                 }
@@ -182,7 +183,7 @@ class Form extends \Zend\Form\Form
                 );
                 if ($value instanceof \DateTime) {
                     $value = $formatter->format($value);
-                } elseif (\Zend\Validator\StaticValidator::execute($value, 'Date', ['strict' => true])) {
+                } elseif (\Laminas\Validator\StaticValidator::execute($value, 'Date', ['strict' => true])) {
                     $date = \DateTime::createFromFormat('Y-m-d', $value);
                     if ($date) {
                         $value = $formatter->format($date);
@@ -216,27 +217,27 @@ class Form extends \Zend\Form\Form
         switch ($type) {
             case 'integer':
                 $value = trim($value);
-                if (\Zend\Validator\StaticValidator::execute($value, 'Zend\I18n\Validator\IsInt')) {
-                    $value = \Zend\Filter\StaticFilter::execute(
+                if (\Laminas\Validator\StaticValidator::execute($value, 'Laminas\I18n\Validator\IsInt')) {
+                    $value = \Laminas\Filter\StaticFilter::execute(
                         $value,
-                        'Zend\I18n\Filter\NumberParse',
+                        'Laminas\I18n\Filter\NumberParse',
                         array('type' => \NumberFormatter::TYPE_INT32)
                     );
                 }
                 break;
             case 'float':
                 $value = trim($value);
-                if (\Zend\Validator\StaticValidator::execute($value, 'Zend\I18n\Validator\IsFloat')) {
-                    $value = \Zend\Filter\StaticFilter::execute(
+                if (\Laminas\Validator\StaticValidator::execute($value, 'Laminas\I18n\Validator\IsFloat')) {
+                    $value = \Laminas\Filter\StaticFilter::execute(
                         $value,
-                        'Zend\I18n\Filter\NumberParse',
+                        'Laminas\I18n\Filter\NumberParse',
                         array('type' => \NumberFormatter::TYPE_DOUBLE)
                     );
                 }
                 break;
             case 'date':
                 $value = trim($value);
-                $validator = new \Zend\I18n\Validator\DateTime;
+                $validator = new \Laminas\I18n\Validator\DateTime;
                 $validator->setDateType(\IntlDateFormatter::SHORT);
                 if ($validator->isValid($value)) {
                     // Some systems accept invalid date separators, like '/'

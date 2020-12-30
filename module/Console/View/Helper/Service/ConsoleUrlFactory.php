@@ -24,7 +24,7 @@ namespace Console\View\Helper\Service;
 /**
  * Factory for ConsoleUrl
  */
-class ConsoleUrlFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class ConsoleUrlFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

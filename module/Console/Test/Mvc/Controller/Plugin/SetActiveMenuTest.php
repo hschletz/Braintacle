@@ -62,23 +62,23 @@ class SetActiveMenuTest extends \Library\Test\Mvc\Controller\Plugin\AbstractTest
         );
 
         // Test first top menu
-        $navigation = new \Zend\Navigation\Navigation($data);
+        $navigation = new \Laminas\Navigation\Navigation($data);
         $plugin = new \Console\Mvc\Controller\Plugin\SetActiveMenu($navigation);
         $plugin('test');
         $this->assertTrue($navigation->findOneByUri('top0')->isActive());
 
         // Test last top menu
-        $navigation = new \Zend\Navigation\Navigation($data);
+        $navigation = new \Laminas\Navigation\Navigation($data);
         $plugin = new \Console\Mvc\Controller\Plugin\SetActiveMenu($navigation);
         $plugin('top2');
         $this->assertTrue($navigation->findOneByUri('top2')->isActive());
 
         // Test both submenus (ensure that the correct one is picked)
-        $navigation = new \Zend\Navigation\Navigation($data);
+        $navigation = new \Laminas\Navigation\Navigation($data);
         $plugin = new \Console\Mvc\Controller\Plugin\SetActiveMenu($navigation);
         $plugin('top1', 'test');
         $this->assertTrue($navigation->findOneByUri('sub1')->isActive());
-        $navigation = new \Zend\Navigation\Navigation($data);
+        $navigation = new \Laminas\Navigation\Navigation($data);
         $plugin = new \Console\Mvc\Controller\Plugin\SetActiveMenu($navigation);
         $plugin('top2', 'test');
         $this->assertTrue($navigation->findOneByUri('sub2')->isActive());

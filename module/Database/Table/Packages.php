@@ -32,7 +32,7 @@ class Packages extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->table = 'download_available';
 
@@ -49,7 +49,7 @@ class Packages extends \Database\AbstractTable
             'num_success' => 'NumSuccess',
             'num_error' => 'NumError',
         );
-        $this->_hydrator = new \Zend\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy($map)
         );
@@ -59,7 +59,7 @@ class Packages extends \Database\AbstractTable
         $this->_hydrator->addStrategy('Platform', $platform);
         $this->_hydrator->addStrategy('osname', $platform);
 
-        $this->resultSetPrototype = new \Zend\Db\ResultSet\HydratingResultSet(
+        $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
             $serviceLocator->get('Model\Package\Package')
         );

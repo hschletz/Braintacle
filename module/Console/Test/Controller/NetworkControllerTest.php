@@ -179,7 +179,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                              ->with($filters, 'DiscoveryDate', 'desc')
                              ->willReturn($result);
 
-        $dateFormat = $this->createMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock('Laminas\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->once())
                    ->method('__invoke')
                    ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
@@ -247,7 +247,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                              ->with($filters, 'DiscoveryDate', 'desc')
                              ->willReturn($result);
 
-        $dateFormat = $this->createMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock('Laminas\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->once())
                    ->method('__invoke')
                    ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
@@ -405,7 +405,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
             'Type' => 'type1',
             'Description' => 'description1',
         );
-        $dateFormat = $this->createMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock('Laminas\I18n\View\Helper\DateFormat');
         $dateFormat->expects($this->once())
                    ->method('__invoke')
                    ->with($date, \IntlDateFormatter::MEDIUM, \IntlDateFormatter::MEDIUM)

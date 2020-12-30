@@ -28,9 +28,9 @@ class AgentTest extends \Console\Test\AbstractFormTest
     public function testInit()
     {
         $preferences = $this->_form->get('Preferences');
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('contactInterval'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('inventoryInterval'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('agentWhitelistFile'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('contactInterval'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('inventoryInterval'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('agentWhitelistFile'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
 

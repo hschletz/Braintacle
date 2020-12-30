@@ -24,7 +24,7 @@ namespace Library\Validator;
 /**
  * Validate string to be a path to a writable directory
  */
-class DirectoryWritable extends \Zend\Validator\AbstractValidator
+class DirectoryWritable extends \Laminas\Validator\AbstractValidator
 {
     /**
      * Key for message template: not a directory or inaccessible

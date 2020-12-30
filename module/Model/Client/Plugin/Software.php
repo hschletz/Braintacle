@@ -21,7 +21,7 @@
 
 namespace Model\Client\Plugin;
 
-use Zend\Db\Sql\Predicate;
+use Laminas\Db\Sql\Predicate;
 
 /**
  * Software item plugin

@@ -24,7 +24,7 @@ namespace Console\View\Helper;
 /**
  * Get description for builtin client filter specification
  */
-class FilterDescription extends \Zend\View\Helper\AbstractHelper
+class FilterDescription extends \Laminas\View\Helper\AbstractHelper
 {
     /**
      * Subnet instance for address calculations

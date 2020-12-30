@@ -44,7 +44,7 @@ class NetworkDevice extends Form
              ->setValueOptions($this->getOption('DeviceManager')->getTypes());
         $this->add($type);
 
-        $description = new \Zend\Form\Element\Text('Description');
+        $description = new \Laminas\Form\Element\Text('Description');
         $description->setLabel('Description');
         $this->add($description);
 
@@ -52,7 +52,7 @@ class NetworkDevice extends Form
         $submit->setLabel('OK');
         $this->add($submit);
 
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
         $inputFilter->add(
             array(
                 'name' => 'Description',

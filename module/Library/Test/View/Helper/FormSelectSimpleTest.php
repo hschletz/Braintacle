@@ -37,7 +37,7 @@ class FormSelectSimpleTest extends AbstractTest
 <option>option2</option>
 </select>
 EOT;
-        $view = new \Zend\View\Renderer\PhpRenderer;
+        $view = new \Laminas\View\Renderer\PhpRenderer;
         $view->setHelperPluginManager(static::$_helperManager);
         $helper = static::$_helperManager->get('formElement');
         $helper->setView($view);

@@ -24,7 +24,7 @@ namespace Console\Service;
 /**
  * Factory for AccountsController
  */
-class AccountsControllerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class AccountsControllerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

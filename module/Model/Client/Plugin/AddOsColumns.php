@@ -35,17 +35,17 @@ class AddOsColumns extends DefaultPlugin
         $this->_select->join(
             'hardware',
             'hardware.id = hardware_id',
-            ['is_windows' => new \Zend\Db\Sql\Literal('(hardware.winprodid IS NOT NULL)')]
+            ['is_windows' => new \Laminas\Db\Sql\Literal('(hardware.winprodid IS NOT NULL)')]
         );
     }
 
     /**
      * Get SQL expression for the is_android column
      *
-     * @return \Zend\Db\Sql\Literal
+     * @return \Laminas\Db\Sql\Literal
      */
     protected function _getIsAndroidExpression()
     {
-        return new \Zend\Db\Sql\Literal('EXISTS(SELECT 1 FROM javainfos WHERE javainfos.hardware_id = hardware.id)');
+        return new \Laminas\Db\Sql\Literal('EXISTS(SELECT 1 FROM javainfos WHERE javainfos.hardware_id = hardware.id)');
     }
 }

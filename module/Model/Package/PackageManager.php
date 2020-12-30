@@ -21,7 +21,7 @@
 
 namespace Model\Package;
 
-use Zend\Db\Sql\Predicate;
+use Laminas\Db\Sql\Predicate;
 
 /**
  * Package manager
@@ -30,16 +30,16 @@ class PackageManager
 {
     /**
      * Service manager
-     * @var \Zend\ServiceManager\ServiceManager
+     * @var \Laminas\ServiceManager\ServiceManager
      */
     protected $_serviceManager;
 
     /**
      * Constructor
      *
-     * @param \Zend\ServiceManager\ServiceManager $serviceManager
+     * @param \Laminas\ServiceManager\ServiceManager $serviceManager
      */
-    public function __construct(\Zend\ServiceManager\ServiceManager $serviceManager)
+    public function __construct(\Laminas\ServiceManager\ServiceManager $serviceManager)
     {
         $this->_serviceManager = $serviceManager;
     }
@@ -92,7 +92,7 @@ class PackageManager
      *
      * @param string $order Property to sort by
      * @param string $direction One of [asc|desc]
-     * @return \Zend\Db\ResultSet\AbstractResultSet Result set producing \Model\Package\Package
+     * @return \Laminas\Db\ResultSet\AbstractResultSet Result set producing \Model\Package\Package
      */
     public function getPackages($order = null, $direction = 'asc')
     {
@@ -104,7 +104,7 @@ class PackageManager
         $subquery = $clientConfig->getSql()->select();
         $subquery->columns(array(new Predicate\Literal('COUNT(hardware_id)')))
                  ->where(
-                     array('name' => 'DOWNLOAD', 'ivalue' => new \Zend\Db\Sql\Literal('fileid'))
+                     array('name' => 'DOWNLOAD', 'ivalue' => new \Laminas\Db\Sql\Literal('fileid'))
                  );
 
         $groups = $groupInfo->getSql()->select()->columns(array('hardware_id'));
@@ -402,14 +402,14 @@ class PackageManager
         $clientConfig = $this->_serviceManager->get('Database\Table\ClientConfig');
         $groupInfo = $this->_serviceManager->get('Database\Table\GroupInfo');
 
-        $where = new \Zend\Db\Sql\Where;
+        $where = new \Laminas\Db\Sql\Where;
         $where->equalTo('ivalue', $oldPackageId);
         $where->equalTo('name', 'DOWNLOAD');
 
         // Additional filters are only necessary if not all conditions are set
         if (!($deployPending and $deployRunning and $deploySuccess and $deployError and $deployGroups)) {
             $groups = $groupInfo->getSql()->select()->columns(array('hardware_id'));
-            $filters = new \Zend\Db\Sql\Where(null, \Zend\Db\Sql\Where::COMBINED_BY_OR);
+            $filters = new \Laminas\Db\Sql\Where(null, \Laminas\Db\Sql\Where::COMBINED_BY_OR);
             if ($deployPending) {
                 $filters->isNull('tvalue')->and->notIn('hardware_id', $groups);
             }
@@ -444,7 +444,7 @@ class PackageManager
             // @codeCoverageIgnoreEnd
             if ($subquery) {
                 // $subquery is either an SQL statement or a non-empty array.
-                $delete = new \Zend\Db\Sql\Where;
+                $delete = new \Laminas\Db\Sql\Where;
                 $delete->equalTo('ivalue', $oldPackageId)
                        ->notEqualTo('name', 'DOWNLOAD_SWITCH')
                        ->in('hardware_id', $subquery)

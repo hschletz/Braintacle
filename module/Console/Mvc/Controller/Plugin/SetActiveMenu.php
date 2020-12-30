@@ -29,20 +29,20 @@ namespace Console\Mvc\Controller\Plugin;
  * submenu to be rendered. Actions that can be reached directly via a menu
  * button do not need this.
  */
-class SetActiveMenu extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
+class SetActiveMenu extends \Laminas\Mvc\Controller\Plugin\AbstractPlugin
 {
     /**
      * Navigation structure to operate on
-     * @var \Zend\Navigation\Navigation
+     * @var \Laminas\Navigation\Navigation
      */
     protected $_navigation;
 
     /**
      * Constructor
      *
-     * @param \Zend\Navigation\Navigation $navigation
+     * @param \Laminas\Navigation\Navigation $navigation
      */
-    public function __construct(\Zend\Navigation\Navigation $navigation)
+    public function __construct(\Laminas\Navigation\Navigation $navigation)
     {
         $this->_navigation = $navigation;
     }

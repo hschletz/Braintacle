@@ -49,7 +49,7 @@ abstract class ClientOrGroup extends AbstractModel
 
     /**
      * Service Locator
-     * @var \Zend\ServiceManager\ServiceLocatorInterface
+     * @var \Laminas\ServiceManager\ServiceLocatorInterface
      */
     protected $_serviceLocator;
 
@@ -114,9 +114,9 @@ abstract class ClientOrGroup extends AbstractModel
      *
      * This should usually be called by a factory.
      *
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * @param \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator
      */
-    public function setServiceLocator(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function setServiceLocator(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->_serviceLocator = $serviceLocator;
     }
@@ -150,7 +150,7 @@ abstract class ClientOrGroup extends AbstractModel
         // reference across all operations (including Braintacle server).
         // The cast is necessary on some DBMS to get consistent timezone and
         // precision.
-        $currentTimestamp = new \Zend\Db\Sql\Literal(
+        $currentTimestamp = new \Laminas\Db\Sql\Literal(
             sprintf(
                 'CAST(CURRENT_TIMESTAMP AS %s)',
                 $this->_serviceLocator->get('Database\Nada')->getNativeDatatype(Column::TYPE_TIMESTAMP, null, true)
@@ -159,7 +159,7 @@ abstract class ClientOrGroup extends AbstractModel
         $current = new \DateTime(
             $this->_serviceLocator->get('Db')->query(
                 sprintf('SELECT %s AS current', $currentTimestamp->getLiteral()),
-                \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
+                \Laminas\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
             )->current()['current'],
             $utc
         );
@@ -248,7 +248,7 @@ abstract class ClientOrGroup extends AbstractModel
                         true
                     )
                 ),
-                \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
+                \Laminas\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
             )->current()['current'],
             new \DateTimeZone('UTC')
         );
@@ -295,35 +295,35 @@ abstract class ClientOrGroup extends AbstractModel
                ->join(
                    // assigned packages
                    'devices',
-                   new \Zend\Db\Sql\Predicate\PredicateSet(
+                   new \Laminas\Db\Sql\Predicate\PredicateSet(
                        array(
-                           new \Zend\Db\Sql\Predicate\Operator('ivalue', '=', new \Zend\Db\Sql\Literal('fileid')),
-                           new \Zend\Db\Sql\Predicate\Operator('devices.hardware_id', '=', $this['Id']),
+                           new \Laminas\Db\Sql\Predicate\Operator('ivalue', '=', new \Laminas\Db\Sql\Literal('fileid')),
+                           new \Laminas\Db\Sql\Predicate\Operator('devices.hardware_id', '=', $this['Id']),
                            // "DOWNLOAD" is always present, eventual "DOWNLOAD_*" rows exist in addition to that.
                            // The equality check is suficient here.
-                           new \Zend\Db\Sql\Predicate\Operator('devices.name', '=', 'DOWNLOAD'),
+                           new \Laminas\Db\Sql\Predicate\Operator('devices.name', '=', 'DOWNLOAD'),
                        )
                    ),
                    array(),
-                   \Zend\Db\Sql\Select::JOIN_LEFT
+                   \Laminas\Db\Sql\Select::JOIN_LEFT
                )
                ->join(
                    // packages from history
                    'download_history',
-                   new \Zend\Db\Sql\Predicate\PredicateSet(
+                   new \Laminas\Db\Sql\Predicate\PredicateSet(
                        array(
-                           new \Zend\Db\Sql\Predicate\Operator('pkg_id', '=', new \Zend\Db\Sql\Literal('fileid')),
-                           new \Zend\Db\Sql\Predicate\Operator('download_history.hardware_id', '=', $this['Id']),
+                           new \Laminas\Db\Sql\Predicate\Operator('pkg_id', '=', new \Laminas\Db\Sql\Literal('fileid')),
+                           new \Laminas\Db\Sql\Predicate\Operator('download_history.hardware_id', '=', $this['Id']),
                        )
                    ),
                    array(),
-                   \Zend\Db\Sql\Select::JOIN_LEFT
+                   \Laminas\Db\Sql\Select::JOIN_LEFT
                )
                ->where(
                    // exclude rows containing data from joined tables
                    array(
-                        new \Zend\Db\Sql\Predicate\IsNull('devices.ivalue'),
-                        new \Zend\Db\Sql\Predicate\IsNull('download_history.pkg_id'),
+                        new \Laminas\Db\Sql\Predicate\IsNull('devices.ivalue'),
+                        new \Laminas\Db\Sql\Predicate\IsNull('download_history.pkg_id'),
                    )
                )->order('download_available.name');
 
@@ -371,7 +371,7 @@ abstract class ClientOrGroup extends AbstractModel
             array(
                 'hardware_id' => $this['Id'],
                 'ivalue' => $package['Id'],
-                new \Zend\Db\Sql\Predicate\Like('name', 'DOWNLOAD%')
+                new \Laminas\Db\Sql\Predicate\Like('name', 'DOWNLOAD%')
             )
         );
     }

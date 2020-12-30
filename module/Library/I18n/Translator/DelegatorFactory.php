@@ -24,7 +24,7 @@ namespace Library\I18n\Translator;
 /**
  * Delegator for Translator initialization
  */
-class DelegatorFactory implements \Zend\ServiceManager\Factory\DelegatorFactoryInterface
+class DelegatorFactory implements \Laminas\ServiceManager\Factory\DelegatorFactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(
@@ -49,11 +49,11 @@ class DelegatorFactory implements \Zend\ServiceManager\Factory\DelegatorFactoryI
             $translator->setFallbackLocale($primaryLanguage);
         }
 
-        // Load translations for ZF validator messages
+        // Load translations for Laminas validator messages
         $translator->addTranslationFilePattern(
             'phparray',
-            \Zend\I18n\Translator\Resources::getBasePath(),
-            \Zend\I18n\Translator\Resources::getPatternForValidator()
+            \Laminas\I18n\Translator\Resources::getBasePath(),
+            \Laminas\I18n\Translator\Resources::getPatternForValidator()
         );
 
         // Set up event listener for missing translations
@@ -62,7 +62,7 @@ class DelegatorFactory implements \Zend\ServiceManager\Factory\DelegatorFactoryI
             if (@$config['debug']['report missing translations']) {
                 $translator->enableEventManager();
                 $translator->getEventManager()->attach(
-                    \Zend\I18n\Translator\Translator::EVENT_MISSING_TRANSLATION,
+                    \Laminas\I18n\Translator\Translator::EVENT_MISSING_TRANSLATION,
                     array($this, 'onMissingTranslation')
                 );
             }
@@ -74,9 +74,9 @@ class DelegatorFactory implements \Zend\ServiceManager\Factory\DelegatorFactoryI
     /**
      * Event handler for missing translations
      *
-     * @param \Zend\EventManager\EventInterface $e
+     * @param \Laminas\EventManager\EventInterface $e
      */
-    public function onMissingTranslation(\Zend\EventManager\EventInterface $e)
+    public function onMissingTranslation(\Laminas\EventManager\EventInterface $e)
     {
         // Issue warning about missing translation for the 'default' text
         // domain. This warning will indicate either a message string missing in

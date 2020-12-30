@@ -24,7 +24,7 @@ namespace Console\Service;
 /**
  * Factory for LoginController
  */
-class LoginControllerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class LoginControllerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(
@@ -33,7 +33,7 @@ class LoginControllerFactory implements \Zend\ServiceManager\Factory\FactoryInte
         array $options = null
     ) {
         return new \Console\Controller\LoginController(
-            $container->get('Zend\Authentication\AuthenticationService'),
+            $container->get('Laminas\Authentication\AuthenticationService'),
             $container->get('FormElementManager')->get('Console\Form\Login')
         );
     }

@@ -30,7 +30,7 @@ class PoTest extends \PHPUnit\Framework\TestCase
     {
         $loader = new \Library\I18n\Translator\Loader\Po;
         $textDomain = $loader->load('de', \Library\Module::getPath('data/Test/I18n/Translator/Loader/PoTest.po'));
-        $this->assertInstanceOf('Zend\I18n\Translator\TextDomain', $textDomain);
+        $this->assertInstanceOf('Laminas\I18n\Translator\TextDomain', $textDomain);
         $translations = array(
             'single2single' => 'single to single',
             'single2multi' => 'single to multi',

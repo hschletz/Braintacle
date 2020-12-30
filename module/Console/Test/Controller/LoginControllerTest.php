@@ -164,7 +164,7 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
     {
         $this->_mockAuthenticationService(false);
         $postData = array('userid' => 'gooduser', 'password' => 'goodpassword');
-        $session = new \Zend\Session\Container('login');
+        $session = new \Laminas\Session\Container('login');
         $session->originalUri = 'redirectTest';
         $this->_form->expects($this->once())
                     ->method('isValid')

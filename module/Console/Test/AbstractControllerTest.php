@@ -26,7 +26,7 @@ namespace Console\Test;
  *
  * This base class performs common setup for all coltroller tests.
  */
-abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
+abstract class AbstractControllerTest extends \Laminas\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
 {
     /**
      * Set up application config
@@ -72,7 +72,7 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
         $this->dispatch($uri);
         $this->assertRedirectTo('/console/login/login/');
 
-        $session = new \Zend\Session\Container('login');
+        $session = new \Laminas\Session\Container('login');
         $this->assertEquals($uri, $session->originalUri);
     }
 
@@ -80,7 +80,7 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
      * Get instance of a controller plugin
      *
      * @param string $name Plugin name
-     * @return \Zend\Mvc\Controller\Plugin\PluginInterface Plugin instance
+     * @return \Laminas\Mvc\Controller\Plugin\PluginInterface Plugin instance
      */
     protected function _getControllerPlugin($name)
     {
@@ -96,7 +96,7 @@ abstract class AbstractControllerTest extends \Zend\Test\PHPUnit\Controller\Abst
         $serviceManager->setAllowOverride(true);
         $serviceManager->setService(
             'MvcTranslator',
-            new \Zend\Mvc\I18n\Translator(new \Zend\I18n\Translator\Translator)
+            new \Laminas\Mvc\I18n\Translator(new \Laminas\I18n\Translator\Translator)
         );
     }
 }

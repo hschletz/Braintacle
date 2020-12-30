@@ -28,7 +28,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
      * Form manager mock
-     * @var \Zend\Form\FormElementManager
+     * @var \Laminas\Form\FormElementManager
      */
     protected $_formManager;
 
@@ -63,7 +63,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     {
         parent::setUp();
 
-        $this->_formManager = $this->createMock('Zend\Form\FormElementManager');
+        $this->_formManager = $this->createMock('Laminas\Form\FormElementManager');
         $this->_customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $this->_deviceManager = $this->createMock('Model\Network\DeviceManager');
         $this->_registryManager = $this->createMock('Model\Registry\RegistryManager');
@@ -134,11 +134,11 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testPackagesActionGet()
     {
-        $deploy = new \Zend\Form\Fieldset('Deploy');
-        $deploy->add(new \Zend\Form\Element\Text('pref1'));
-        $preferences = new \Zend\Form\Fieldset('Preferences');
+        $deploy = new \Laminas\Form\Fieldset('Deploy');
+        $deploy->add(new \Laminas\Form\Element\Text('pref1'));
+        $preferences = new \Laminas\Form\Fieldset('Preferences');
         $preferences->add($deploy);
-        $preferences->add(new \Zend\Form\Element\Text('pref2'));
+        $preferences->add(new \Laminas\Form\Element\Text('pref2'));
         $formData = array(
             'Preferences' => array(
                 'Deploy' => array('pref1' => 'value1'),
@@ -311,9 +311,9 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
      */
     protected function _testUseFormGet($action, $formClass)
     {
-        $preferences = new \Zend\Form\Fieldset('Preferences');
-        $preferences->add(new \Zend\Form\Element\Text('pref1'));
-        $preferences->add(new \Zend\Form\Element\Text('pref2'));
+        $preferences = new \Laminas\Form\Fieldset('Preferences');
+        $preferences->add(new \Laminas\Form\Element\Text('pref1'));
+        $preferences->add(new \Laminas\Form\Element\Text('pref2'));
         $formData = array(
             'Preferences' => array('pref1' => 'value1', 'pref2' => 'value2')
         );

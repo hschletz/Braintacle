@@ -25,7 +25,7 @@ class AbstractHelperTest extends \PHPUnit\Framework\TestCase
 {
     public function testRenderWithoutPrepare()
     {
-        $form = $this->createMock('\Zend\Form\FormInterface');
+        $form = $this->createMock('\Laminas\Form\FormInterface');
 
         $helper = $this->getMockBuilder('\Console\View\Helper\Form\AbstractHelper')
                        ->disableOriginalConstructor()
@@ -41,7 +41,7 @@ class AbstractHelperTest extends \PHPUnit\Framework\TestCase
 
     public function testRenderWithPrepare()
     {
-        $form = $this->createMock('\Zend\Form\Form');
+        $form = $this->createMock('\Laminas\Form\Form');
         $form->expects($this->once())->method('prepare');
 
         $helper = $this->getMockBuilder('\Console\View\Helper\Form\AbstractHelper')

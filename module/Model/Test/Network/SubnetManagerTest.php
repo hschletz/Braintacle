@@ -55,7 +55,7 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
     {
         $model = $this->_getModel();
         $subnets = $model->getSubnets('CidrAddress', 'desc');
-        $this->assertInstanceOf('Zend\Db\ResultSet\AbstractResultSet', $subnets);
+        $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $subnets);
         $subnets = iterator_to_array($subnets);
         $this->assertCount(4, $subnets);
         $this->assertContainsOnlyInstancesOf('Model\Network\Subnet', $subnets);
@@ -145,7 +145,7 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
     {
         $model = $this->_getModel();
         $subnets = $model->getSubnets($order, $direction);
-        $this->assertInstanceOf('Zend\Db\ResultSet\AbstractResultSet', $subnets);
+        $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $subnets);
         $subnets = iterator_to_array($subnets);
         $this->assertContainsOnlyInstancesOf('Model\Network\Subnet', $subnets);
         // To keep the data set simple, not all values are unique. Since the
@@ -171,7 +171,7 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
     {
         $model = $this->_getModel();
         $subnets = $model->getSubnets();
-        $this->assertInstanceOf('Zend\Db\ResultSet\AbstractResultSet', $subnets);
+        $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $subnets);
         $subnets = iterator_to_array($subnets);
         $this->assertCount(4, $subnets);
         $this->assertContainsOnlyInstancesOf('Model\Network\Subnet', $subnets);

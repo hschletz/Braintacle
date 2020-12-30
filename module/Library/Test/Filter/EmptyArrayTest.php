@@ -25,7 +25,7 @@ class EmptyArrayTest extends \PHPUnit\Framework\TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf('Zend\Filter\AbstractFilter', new \Library\Filter\EmptyArray);
+        $this->assertInstanceOf('Laminas\Filter\AbstractFilter', new \Library\Filter\EmptyArray);
     }
 
     public function testFilter()

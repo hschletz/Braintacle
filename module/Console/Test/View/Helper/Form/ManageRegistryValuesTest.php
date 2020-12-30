@@ -31,16 +31,16 @@ class ManageRegistryValuesTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRenderElementsWithoutExisting()
     {
-        $fieldsetExisting = $this->createMock('Zend\Form\Fieldset');
+        $fieldsetExisting = $this->createMock('Laminas\Form\Fieldset');
         $fieldsetExisting->method('getName')->willReturn('existing');
         $fieldsetExisting->expects($this->once())->method('count')->willReturn(0);
 
-        $fieldsetNewValue = $this->createMock('Zend\Form\Fieldset');
+        $fieldsetNewValue = $this->createMock('Laminas\Form\Fieldset');
         $fieldsetNewValue->method('getName')->willReturn('new_value');
 
-        $submit = $this->createMock('Zend\Form\Element\Submit');
+        $submit = $this->createMock('Laminas\Form\Element\Submit');
 
-        $form = $this->createMock('Zend\Form\FormInterface');
+        $form = $this->createMock('Laminas\Form\FormInterface');
         $form->method('getIterator')->willReturn(
             new \ArrayIterator(array($fieldsetExisting, $fieldsetNewValue, $submit))
         );
@@ -49,7 +49,7 @@ class ManageRegistryValuesTest extends \Library\Test\View\Helper\AbstractTest
         $fieldsetHelper->expects($this->never())->method('renderFieldsetElement');
         $fieldsetHelper->method('render')->with($fieldsetNewValue)->willReturn('<fieldset_new>');
 
-        $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('plugin')->with('consoleFormFieldset')->willReturn($fieldsetHelper);
         $view->method('__call')->with('formRow', array($submit))->willReturn('<submit>');
 
@@ -67,25 +67,25 @@ class ManageRegistryValuesTest extends \Library\Test\View\Helper\AbstractTest
         $name1 = sprintf('existing[%s]', base64_encode('name1'));
         $name2 = sprintf('existing[%s]', base64_encode('name2'));
 
-        $input1 = $this->createMock('Zend\Form\Element\Text');
+        $input1 = $this->createMock('Laminas\Form\Element\Text');
         $input1->method('getName')->willReturn($name1);
         $input1->method('getLabel')->willReturn('label1');
 
-        $input2 = $this->createMock('Zend\Form\Element\Text');
+        $input2 = $this->createMock('Laminas\Form\Element\Text');
         $input2->method('getName')->willReturn($name2);
         $input2->method('getLabel')->willReturn('label2');
 
-        $fieldsetExisting = $this->createMock('Zend\Form\Fieldset');
+        $fieldsetExisting = $this->createMock('Laminas\Form\Fieldset');
         $fieldsetExisting->method('getName')->willReturn('existing');
         $fieldsetExisting->method('count')->willReturn(2);
         $fieldsetExisting->method('getIterator')->willReturn(new \ArrayIterator(array($input1, $input2)));
 
-        $fieldsetNewValue = $this->createMock('Zend\Form\Fieldset');
+        $fieldsetNewValue = $this->createMock('Laminas\Form\Fieldset');
         $fieldsetNewValue->method('getName')->willReturn('new_value');
 
-        $submit = $this->createMock('Zend\Form\Element\Submit');
+        $submit = $this->createMock('Laminas\Form\Element\Submit');
 
-        $form = $this->createMock('Zend\Form\FormInterface');
+        $form = $this->createMock('Laminas\Form\FormInterface');
         $form->method('getIterator')->willReturn(
             new \ArrayIterator(array($fieldsetExisting, $fieldsetNewValue, $submit))
         );
@@ -96,7 +96,7 @@ class ManageRegistryValuesTest extends \Library\Test\View\Helper\AbstractTest
                        ->willReturn('<fieldset_existing>');
         $fieldsetHelper->method('render')->with($fieldsetNewValue)->willReturn('<fieldset_new>');
 
-        $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('plugin')->with('consoleFormFieldset')->willReturn($fieldsetHelper);
         $view->method('__call')->willReturnMap(
             array(

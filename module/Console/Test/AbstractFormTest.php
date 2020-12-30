@@ -36,13 +36,13 @@ abstract class AbstractFormTest extends \PHPUnit\Framework\TestCase
      * problem when XPath queries test on non-ASCII-characters. The only way to
      * specify another encoding is a meta tag within the HTML code itself.
      * For HTML fragments, this header can be prepended to trick \DomDocument
-     * (and \Zend\Dom\Document) to parse the fragment as UTF-8.
+     * (and \Laminas\Dom\Document) to parse the fragment as UTF-8.
      */
     const HTML_HEADER = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">';
 
     /**
      * Backup of default translator
-     * @var \Zend\Validator\Translator\TranslatorInterface
+     * @var \Laminas\Validator\Translator\TranslatorInterface
      */
     protected $_defaultTranslatorBackup;
 
@@ -54,17 +54,17 @@ abstract class AbstractFormTest extends \PHPUnit\Framework\TestCase
 
     public function setUp(): void
     {
-        $translator = $this->createMock('\Zend\Validator\Translator\TranslatorInterface');
+        $translator = $this->createMock('\Laminas\Validator\Translator\TranslatorInterface');
         $translator->method('translate')->willReturnCallback(array($this, 'translatorMock'));
-        $this->_defaultTranslatorBackup = \Zend\Validator\AbstractValidator::getDefaultTranslator();
-        \Zend\Validator\AbstractValidator::setDefaultTranslator($translator);
+        $this->_defaultTranslatorBackup = \Laminas\Validator\AbstractValidator::getDefaultTranslator();
+        \Laminas\Validator\AbstractValidator::setDefaultTranslator($translator);
 
         $this->_form = $this->_getForm();
     }
 
     public function tearDown(): void
     {
-        \Zend\Validator\AbstractValidator::setDefaultTranslator($this->_defaultTranslatorBackup);
+        \Laminas\Validator\AbstractValidator::setDefaultTranslator($this->_defaultTranslatorBackup);
     }
 
     /**
@@ -109,7 +109,7 @@ abstract class AbstractFormTest extends \PHPUnit\Framework\TestCase
      * the renderer or a helper needs to be preserved, call this only once and
      * store it in a variable.
      *
-     * @return \Zend\View\Renderer\PhpRenderer
+     * @return \Laminas\View\Renderer\PhpRenderer
      */
     protected function _createView()
     {
@@ -122,7 +122,7 @@ abstract class AbstractFormTest extends \PHPUnit\Framework\TestCase
                 ),
             )
         );
-        $view = new \Zend\View\Renderer\PhpRenderer;
+        $view = new \Laminas\View\Renderer\PhpRenderer;
         $view->setHelperPluginManager(clone $serviceManager->get('ViewHelperManager'));
         return $view;
     }
@@ -140,7 +140,7 @@ abstract class AbstractFormTest extends \PHPUnit\Framework\TestCase
      * $attributes is ignored here. The parameter should be checked by the mock
      * object.
      *
-     * @param \Zend\Form\ElementInterface $element
+     * @param \Laminas\Form\ElementInterface $element
      * @param array $attributes
      * @return string
      */
@@ -164,6 +164,6 @@ abstract class AbstractFormTest extends \PHPUnit\Framework\TestCase
             'form ' . substr(strtr(strtolower($this->_getFormClass()), '\\', '_'), 8),
             $this->_form->getAttribute('class')
         );
-        $this->assertInstanceOf('\Zend\Form\Element\Csrf', $this->_form->get('_csrf'));
+        $this->assertInstanceOf('\Laminas\Form\Element\Csrf', $this->_form->get('_csrf'));
     }
 }

@@ -24,7 +24,7 @@ namespace Model\Service;
 /**
  * Factory for Model\Config
  */
-class ConfigFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class ConfigFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

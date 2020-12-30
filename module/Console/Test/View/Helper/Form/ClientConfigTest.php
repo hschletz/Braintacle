@@ -31,13 +31,13 @@ class ClientConfigTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRenderElements()
     {
-        $fieldset = $this->createMock('Zend\Form\Fieldset');
+        $fieldset = $this->createMock('Laminas\Form\Fieldset');
 
-        $element = $this->createMock('Zend\Form\Element');
+        $element = $this->createMock('Laminas\Form\Element');
 
         $object = $this->createMock('Model\ClientOrGroup');
 
-        $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('__call')->with('formRow', array($element))->willReturn('Element');
 
         $form = $this->getMockBuilder('Console\Form\ClientConfig')
@@ -102,27 +102,27 @@ class ClientConfigTest extends \Library\Test\View\Helper\AbstractTest
             )
         );
 
-        $elementDisabled = $this->createMock('Zend\Form\Element');
+        $elementDisabled = $this->createMock('Laminas\Form\Element');
         $elementDisabled->method('getAttribute')->with('disabled')->willReturn(true);
         $elementDisabled->expects($this->never())->method('getName');
 
-        $elementCheckboxDefaultTrue = $this->createMock('Zend\Form\Element\Checkbox');
+        $elementCheckboxDefaultTrue = $this->createMock('Laminas\Form\Element\Checkbox');
         $elementCheckboxDefaultTrue->method('getAttribute')->with('disabled')->willReturn(false);
         $elementCheckboxDefaultTrue->method('getName')->willReturn('Scan[default_true]');
 
-        $elementCheckboxDefaultFalse = $this->createMock('Zend\Form\Element\Checkbox');
+        $elementCheckboxDefaultFalse = $this->createMock('Laminas\Form\Element\Checkbox');
         $elementCheckboxDefaultFalse->method('getAttribute')->with('disabled')->willReturn(false);
         $elementCheckboxDefaultFalse->method('getName')->willReturn('Scan[default_false]');
 
-        $elementText = $this->createMock('Zend\Form\Element\Text');
+        $elementText = $this->createMock('Laminas\Form\Element\Text');
         $elementText->method('getAttribute')->with('disabled')->willReturn(false);
         $elementText->method('getName')->willReturn('Scan[text]');
 
-        $elementWithoutInfo = $this->createMock('Zend\Form\Element\Select');
+        $elementWithoutInfo = $this->createMock('Laminas\Form\Element\Select');
         $elementWithoutInfo->method('getAttribute')->with('disabled')->willReturn(false);
         $elementWithoutInfo->method('getName')->willReturn('Scan[scanThisNetwork]');
 
-        $fieldset = $this->createMock('Zend\Form\Fieldset');
+        $fieldset = $this->createMock('Laminas\Form\Fieldset');
         $fieldset->method('getIterator')->willReturn(
             new \ArrayIterator(
                 array(
@@ -138,7 +138,7 @@ class ClientConfigTest extends \Library\Test\View\Helper\AbstractTest
         $fieldsetHelper = $this->createMock('Console\View\Helper\Form\Fieldset');
         $fieldsetHelper->method('renderFieldsetElement')->with($fieldset, $elements)->willReturn('FIELDSET');
 
-        $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('__call')->willReturnMap(
             array(
                 array('translate', array('Default'), 'DEFAULT'),

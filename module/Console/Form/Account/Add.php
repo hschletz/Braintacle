@@ -21,7 +21,7 @@
 
 namespace Console\Form\Account;
 
-use \Zend\Validator\NotEmpty;
+use \Laminas\Validator\NotEmpty;
 
 /**
  * Add Braintacle user account

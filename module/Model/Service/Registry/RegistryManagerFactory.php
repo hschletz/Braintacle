@@ -24,7 +24,7 @@ namespace Model\Service\Registry;
 /**
  * Factory for Model\RegistryManager
  */
-class RegistryManagerFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class RegistryManagerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

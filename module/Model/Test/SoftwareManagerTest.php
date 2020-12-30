@@ -61,7 +61,7 @@ class SoftwareManagerTest extends AbstractTest
     {
         $model = $this->_getModel();
         $software = $model->getSoftware($filters, $order, $direction);
-        $this->assertInstanceOf('Zend\Db\ResultSet\ResultSet', $software);
+        $this->assertInstanceOf('Laminas\Db\ResultSet\ResultSet', $software);
         $this->assertEquals($expected, iterator_to_array($software));
     }
 

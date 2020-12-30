@@ -24,10 +24,10 @@ namespace Library\Mvc\Controller\Plugin;
 /**
  * Build URL from standard route (controller/action)
  *
- * This is a convenience wrapper around ZF's URL plugin. It is designed to
+ * This is a convenience wrapper around Laminas' URL plugin. It is designed to
  * operate on standard routes (/module/controller/action).
  */
-class UrlFromRoute extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
+class UrlFromRoute extends \Laminas\Mvc\Controller\Plugin\AbstractPlugin
 {
     /**
      * Build URL

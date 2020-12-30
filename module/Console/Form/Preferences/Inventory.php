@@ -32,37 +32,37 @@ class Inventory extends AbstractForm
         parent::init();
         $preferences = $this->get('Preferences');
 
-        $inspectRegistry = new \Zend\Form\Element\Checkbox('inspectRegistry');
+        $inspectRegistry = new \Laminas\Form\Element\Checkbox('inspectRegistry');
         $inspectRegistry->setLabel('Inspect registry');
         $preferences->add($inspectRegistry);
 
-        $defaultMergeCustomFields = new \Zend\Form\Element\Checkbox('defaultMergeCustomFields');
+        $defaultMergeCustomFields = new \Laminas\Form\Element\Checkbox('defaultMergeCustomFields');
         $defaultMergeCustomFields->setLabel('Merge user supplied information by default');
         $preferences->add($defaultMergeCustomFields);
 
-        $defaultMergeConfig = new \Zend\Form\Element\Checkbox('defaultMergeConfig');
+        $defaultMergeConfig = new \Laminas\Form\Element\Checkbox('defaultMergeConfig');
         $defaultMergeConfig->setLabel('Merge client configuration by default');
         $preferences->add($defaultMergeConfig);
 
-        $defaultMergeGroups = new \Zend\Form\Element\Checkbox('defaultMergeGroups');
+        $defaultMergeGroups = new \Laminas\Form\Element\Checkbox('defaultMergeGroups');
         $defaultMergeGroups->setLabel('Merge manual group assignments by default');
         $preferences->add($defaultMergeGroups);
 
-        $defaultMergePackages = new \Zend\Form\Element\Checkbox('defaultMergePackages');
+        $defaultMergePackages = new \Laminas\Form\Element\Checkbox('defaultMergePackages');
         $defaultMergePackages->setLabel('Merge missing package assignments by default');
         $preferences->add($defaultMergePackages);
 
-        $defaultMergeProductKey = new \Zend\Form\Element\Checkbox('defaultMergeProductKey');
+        $defaultMergeProductKey = new \Laminas\Form\Element\Checkbox('defaultMergeProductKey');
         $defaultMergeProductKey->setLabel('Keep manually entered Windows product key by default');
         $preferences->add($defaultMergeProductKey);
 
-        $defaultDeleteInterfaces = new \Zend\Form\Element\Checkbox('defaultDeleteInterfaces');
+        $defaultDeleteInterfaces = new \Laminas\Form\Element\Checkbox('defaultDeleteInterfaces');
         $defaultDeleteInterfaces->setLabel('Delete interfaces from network listing by default');
         $preferences->add($defaultDeleteInterfaces);
     }
 
     /** {@inheritdoc} */
-    public function render(\Zend\View\Renderer\PhpRenderer $view)
+    public function render(\Laminas\View\Renderer\PhpRenderer $view)
     {
         $output = parent::render($view);
         $output .= $view->htmlElement(

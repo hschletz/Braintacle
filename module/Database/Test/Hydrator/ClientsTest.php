@@ -28,7 +28,7 @@ class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         $nada = $this->createMock('Nada\Database\AbstractDatabase');
         $nada->method('timestampFormatPhp')->willReturn('Y-m-d H:i:s');
 
-        $hydrator = $this->createMock(\Zend\Hydrator\AbstractHydrator::class);
+        $hydrator = $this->createMock(\Laminas\Hydrator\AbstractHydrator::class);
         $hydrator->method('hydrateName')->willReturnMap(
             array(
                 array('fields_3', null, 'Custom field'),
@@ -50,7 +50,7 @@ class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         $windowsInstallations = $this->createMock('Database\Table\WindowsInstallations');
         $windowsInstallations->method('getHydrator')->willReturn($hydrator);
 
-        $resultSet = $this->getMockBuilder('Zend\Db\ResultSet\AbstractResultSet')
+        $resultSet = $this->getMockBuilder('Laminas\Db\ResultSet\AbstractResultSet')
                           ->setMethods(array('getObjectPrototype'))
                           ->getMockForAbstractClass();
         $resultSet->method('getObjectPrototype')->willReturn($this);
@@ -70,7 +70,7 @@ class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
             )
         );
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Database\Nada', $nada),

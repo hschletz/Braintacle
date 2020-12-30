@@ -24,7 +24,7 @@ namespace Console\Controller;
 /**
  * Controller for all client-related actions.
  */
-class ClientController extends \Zend\Mvc\Controller\AbstractActionController
+class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
 {
     /**
      * Client manager
@@ -52,7 +52,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
 
     /**
      * Form manager
-     * @var \Zend\Form\FormElementManager
+     * @var \Laminas\Form\FormElementManager
      */
     protected $_formManager;
 
@@ -75,7 +75,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
      * @param \Model\Group\GroupManager $groupManager
      * @param \Model\Registry\RegistryManager $registryManager
      * @param \Model\SoftwareManager $softwareManager
-     * @param \Zend\Form\FormElementManager $formManager
+     * @param \Laminas\Form\FormElementManager $formManager
      * @param \Model\Config $config
      */
     public function __construct(
@@ -83,7 +83,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
         \Model\Group\GroupManager $groupManager,
         \Model\Registry\RegistryManager $registryManager,
         \Model\SoftwareManager $softwareManager,
-        \Zend\Form\FormElementManager $formManager,
+        \Laminas\Form\FormElementManager $formManager,
         \Model\Config $config
     ) {
         $this->_clientManager = $clientManager;
@@ -96,8 +96,8 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
 
     /** {@inheritdoc} */
     public function dispatch(
-        \Zend\Stdlib\RequestInterface $request,
-        \Zend\Stdlib\ResponseInterface $response = null
+        \Laminas\Stdlib\RequestInterface $request,
+        \Laminas\Stdlib\ResponseInterface $response = null
     ) {
         // Fetch client with given ID for actions referring to a particular client
         $action = $this->getEvent()->getRouteMatch()->getParam('action');
@@ -123,15 +123,16 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
      * - search or search1, search2...: (string|array) Filter criteria
      * - operator or operator1, operator2...: (string|array) Operator for filter
      * - invert or invert1, invert2...: (bool|array) Invert filter results
-     * - columns: Comma-separated list of columns to display (a default set is available)
+     * - columns: Comma-separated list of columns to display (a default set is
+     *   available)
      * - jumpto: Subpage (action) for the client link (default: general)
      *
      * This action also acts as a handler for the search form (via GET method),
      * denoted by the presence of the customSearch parameter.
      *
-     * @return array|\Zend\Http\Response array(filter, search, operator, invert,
-     * columns[], jumpto, isCustomSearch, order, direction) or redirect response
-     * in case of invalid search form data
+     * @return array|\Laminas\Http\Response array(filter, search, operator,
+     * invert, columns[], jumpto, isCustomSearch, order, direction) or redirect
+     * response in case of invalid search form data
      */
     public function indexAction()
     {
@@ -378,7 +379,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Display/edit custom fields
      *
-     * @return array|\Zend\Http\Response [client, form (Console\Form\CustomFields) or redirect response]
+     * @return array|\Laminas\Http\Response [client, form (Console\Form\CustomFields) or redirect response]
      */
     public function customfieldsAction()
     {
@@ -480,7 +481,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Display/edit client configuration
      *
-     * @return array|\Zend\Http\Response [client, form (Console\Form\ClientConfig)] or redirect response
+     * @return array|\Laminas\Http\Response [client, form (Console\Form\ClientConfig)] or redirect response
      */
     public function configurationAction()
     {
@@ -508,7 +509,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Delete client, display confirmation form
      *
-     * @return array|\Zend\Http\Response [client, form (Console\Form\DeleteClient)] or redirect response
+     * @return array|\Laminas\Http\Response [client, form (Console\Form\DeleteClient)] or redirect response
      */
     public function deleteAction()
     {
@@ -548,7 +549,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Remove package assignment, display confirmation form
      *
-     * @return array|\Zend\Http\Response array(packageName) or redirect response
+     * @return array|\Laminas\Http\Response array(packageName) or redirect response
      */
     public function removepackageAction()
     {
@@ -570,7 +571,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Assign packages from Console\Form\Package\Assign (POST only)
      *
-     * @return \Zend\Http\Response redirect response
+     * @return \Laminas\Http\Response redirect response
      */
     public function assignpackageAction()
     {
@@ -596,7 +597,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Reset package status to 'pending', display confirmation form
      *
-     * @return array|\Zend\Http\Response array(packageName) or redirect response
+     * @return array|\Laminas\Http\Response array(packageName) or redirect response
      */
     public function resetpackageAction()
     {
@@ -618,7 +619,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Set group memberships from Console\Form\GroupMemberships (POST only)
      *
-     * @return \Zend\Http\Response redirect response
+     * @return \Laminas\Http\Response redirect response
      */
     public function managegroupsAction()
     {
@@ -642,7 +643,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
      *
      * Params (optional): filter, search, operator, invert
      *
-     * @return \Zend\View\Model\ViewModel Form template
+     * @return \Laminas\View\Model\ViewModel Form template
      */
     public function searchAction()
     {
@@ -661,7 +662,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Import client via file upload
      *
-     * @return array|\Zend\Http\Response array(form [, uri, response]) or redirect response
+     * @return array|\Laminas\Http\Response array(form [, uri, response]) or redirect response
      */
     public function importAction()
     {
@@ -685,7 +686,7 @@ class ClientController extends \Zend\Mvc\Controller\AbstractActionController
     /**
      * Download client as XML file
      *
-     * @return \Zend\Http\Response Response with downloadable XML content
+     * @return \Laminas\Http\Response Response with downloadable XML content
      */
     public function exportAction()
     {

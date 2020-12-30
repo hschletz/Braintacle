@@ -27,7 +27,7 @@ namespace Tools;
 class Dispatcher extends \ZF\Console\Dispatcher
 {
     /** {@inheritDoc} */
-    public function dispatch(\ZF\Console\Route $route, \Zend\Console\Adapter\AdapterInterface $console)
+    public function dispatch(\ZF\Console\Route $route, \Laminas\Console\Adapter\AdapterInterface $console)
     {
         $config = $route->getMatchedParam('config');
         if ($config) {

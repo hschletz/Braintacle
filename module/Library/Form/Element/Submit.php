@@ -31,22 +31,22 @@ namespace Library\Form\Element;
  * causes several problems:
  *
  * 1. The element and its "value" attribute's content is part of the submitted
- * form data and treated like any other form element. This may overwrite
- * existing button labels, and the view helper will try to translate an already
- * translated string.
+ *    form data and treated like any other form element. This may overwrite
+ *    existing button labels, and the view helper will try to translate an
+ *    already translated string.
  *
- * 2. \Zend\Form\Element strictly separates the "value" property (mapping to the
- * "value" attribute) from the "label" property (referring to the external
- * label) regardless of element type. This is a problem when extracting
- * translatable strings via xgettext: setLabel() is typically undesirable for
- * submit buttons, while setValue() is not suitable for automatic string
- * extraction because its argument is typically not translatable for other
- * element types.
+ * 2. \Laminas\Form\Element strictly separates the "value" property (mapping to
+ *    the "value" attribute) from the "label" property (referring to the
+ *    external label) regardless of element type. This is a problem when
+ *    extracting translatable strings via xgettext: setLabel() is typically
+ *    undesirable for submit buttons, while setValue() is not suitable for
+ *    automatic string extraction because its argument is typically not
+ *    translatable for other element types.
  *
  * This class reimplements setValue() with a no-op, ignoring submitted form
  * data. The button label must be set via the reimplemented setLabel().
  */
-class Submit extends \Zend\Form\Element\Submit
+class Submit extends \Laminas\Form\Element\Submit
 {
     /** {@inheritdoc} */
     public function setValue($value)

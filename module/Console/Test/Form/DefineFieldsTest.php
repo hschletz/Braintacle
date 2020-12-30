@@ -21,7 +21,7 @@
 
 namespace Console\Test\Form;
 
-use \Zend\Dom\Document\Query as Query;
+use \Laminas\Dom\Document\Query as Query;
 
 /**
  * Tests for DefineFields form
@@ -59,19 +59,19 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
 
     public function testInit()
     {
-        $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('NewName'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('NewName'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
-        $this->assertInstanceOf('Zend\Form\Element\Select', $this->_form->get('NewType'));
+        $this->assertInstanceOf('Laminas\Form\Element\Select', $this->_form->get('NewType'));
 
         $fields = $this->_form->get('Fields');
         $this->assertCount(2, $fields);
 
         $element = $fields->get('name0');
-        $this->assertInstanceOf('Zend\Form\Element\Text', $element);
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $element);
         $this->assertEquals('name0', $element->getValue());
 
         $element = $fields->get('name1');
-        $this->assertInstanceOf('Zend\Form\Element\Text', $element);
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $element);
         $this->assertEquals('name1', $element->getValue());
     }
 
@@ -332,7 +332,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
     {
         $view = $this->_createView();
         $html = $this->_form->renderFieldset($view, $this->_form);
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
         $this->assertCount(5, Query::execute('//select[@name="NewType"]/option', $document));
         $this->assertCount(
             1,
@@ -359,7 +359,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
     public function testRenderFieldsetNoMessages()
     {
         $html = $this->_form->renderFieldset($this->_createView(), $this->_form);
-        $document = new \Zend\Dom\Document(static::HTML_HEADER . $html);
+        $document = new \Laminas\Dom\Document(static::HTML_HEADER . $html);
         $this->assertCount(1, Query::execute('//div[@class="table"]', $document));
         $this->assertCount(
             1,
@@ -397,16 +397,16 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         $this->_form->get('Fields')->get('name0')->setMessages(array('message_name0'));
         $this->_form->get('NewName')->setMessages(array('message_add'));
 
-        $formElementErrors = $this->createMock('Zend\Form\View\Helper\FormElementErrors');
+        $formElementErrors = $this->createMock('Laminas\Form\View\Helper\FormElementErrors');
         $formElementErrors->method('__invoke')
-                          ->with($this->isInstanceOf('Zend\Form\ElementInterface'), array('class' => 'error'))
+                          ->with($this->isInstanceOf('Laminas\Form\ElementInterface'), array('class' => 'error'))
                           ->willReturnCallback(array($this, 'formElementErrorsMock'));
 
         $view = $this->_createView();
         $view->getHelperPluginManager()->setService('formElementErrors', $formElementErrors);
 
         $html = $this->_form->renderFieldset($view, $this->_form);
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
         $this->assertCount(
             1,
             Query::execute(

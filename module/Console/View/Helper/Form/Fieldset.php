@@ -24,26 +24,27 @@ namespace Console\View\Helper\Form;
 /**
  * Render all elements of a fieldset/form
  *
- * Similar to \Zend\Form\View\Helper\FormCollection, with workarounds for some
- * ZF/browser bugs:
+ * Similar to \Laminas\Form\View\Helper\FormCollection, with workarounds for
+ * some Laminas/browser bugs:
  *
  * - A fieldset's "name" attribute can be used:
- *   https://github.com/zendframework/zend-form/issues/86
+ *   https://github.com/laminas/laminas-form/issues/42
  * - Fieldset content is wrapped in a div to allow styling as grid in
- *   chromium-based browsers: https://bugs.chromium.org/p/chromium/issues/detail?id=375693
+ *   chromium-based browsers:
+ *   https://bugs.chromium.org/p/chromium/issues/detail?id=375693
  *
  * Regular fieldsets (i.e. not forms) are wrapped in a fieldset element.
  */
 
-class Fieldset extends \Zend\Form\View\Helper\AbstractHelper
+class Fieldset extends \Laminas\Form\View\Helper\AbstractHelper
 {
     /**
      * Render fieldsets and form elements
      *
-     * @param \Zend\Form\FieldsetInterface $fieldset
+     * @param \Laminas\Form\FieldsetInterface $fieldset
      * @return string
      */
-    public function __invoke(\Zend\Form\FieldsetInterface $fieldset)
+    public function __invoke(\Laminas\Form\FieldsetInterface $fieldset)
     {
         return $this->render($fieldset);
     }
@@ -51,13 +52,13 @@ class Fieldset extends \Zend\Form\View\Helper\AbstractHelper
     /**
      * Render fieldset content and containing markup
      *
-     * @param \Zend\Form\FieldsetInterface $fieldset
+     * @param \Laminas\Form\FieldsetInterface $fieldset
      * @return string
      */
-    public function render(\Zend\Form\FieldsetInterface $fieldset)
+    public function render(\Laminas\Form\FieldsetInterface $fieldset)
     {
         $markup = $this->renderElements($fieldset);
-        if (!$fieldset instanceof \Zend\Form\FormInterface) {
+        if (!$fieldset instanceof \Laminas\Form\FormInterface) {
             $markup = $this->renderFieldsetElement($fieldset, $markup);
         }
         return $markup;
@@ -66,7 +67,7 @@ class Fieldset extends \Zend\Form\View\Helper\AbstractHelper
     /**
      * Render fieldset element with label and form elements
      *
-     * @param \Zend\Form\FieldsetInterface $fieldset
+     * @param \Laminas\Form\FieldsetInterface $fieldset
      * @param string $content Fieldset content without label. If omitted, content gets generated from fieldset elements.
      * @return string
      */
@@ -82,10 +83,10 @@ class Fieldset extends \Zend\Form\View\Helper\AbstractHelper
     /**
      * Render label (legend element). Label gets translated and escaped.
      *
-     * @param \Zend\Form\FieldsetInterface $fieldset
+     * @param \Laminas\Form\FieldsetInterface $fieldset
      * @return string
      */
-    public function renderLabel(\Zend\Form\FieldsetInterface $fieldset)
+    public function renderLabel(\Laminas\Form\FieldsetInterface $fieldset)
     {
         $label = $fieldset->getLabel();
         if ($label) {
@@ -99,14 +100,14 @@ class Fieldset extends \Zend\Form\View\Helper\AbstractHelper
     /**
      * Render elements
      *
-     * @param \Zend\Form\FieldsetInterface $fieldset
+     * @param \Laminas\Form\FieldsetInterface $fieldset
      * @return string
      */
-    public function renderElements(\Zend\Form\FieldsetInterface $fieldset)
+    public function renderElements(\Laminas\Form\FieldsetInterface $fieldset)
     {
         $markup = '';
         foreach ($fieldset as $element) {
-            if ($element instanceof \Zend\Form\FieldsetInterface) {
+            if ($element instanceof \Laminas\Form\FieldsetInterface) {
                 $markup .= $this->render($element);
             } else {
                 $markup .= $this->getView()->formRow($element);

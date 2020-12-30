@@ -30,7 +30,8 @@ Requirements
   console. PHP is also required for most of the command line tools. The following
   PHP extensions are required:
 
-  - A database-specific PHP extension, see [https://docs.zendframework.com/zend-db/adapter/](https://docs.zendframework.com/zend-db/adapter/)
+  - A database-specific PHP extension, see
+    https://docs.laminas.dev/laminas-db/adapter/#creating-an-adapter-using-configuration
 
   - The "intl" extension
 

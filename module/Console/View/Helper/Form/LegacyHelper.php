@@ -36,7 +36,7 @@ namespace Console\View\Helper\Form;
 class LegacyHelper extends AbstractHelper
 {
     /** {@inheritdoc} */
-    public function renderElements(\Zend\Form\FormInterface $form)
+    public function renderElements(\Laminas\Form\FormInterface $form)
     {
         $formContent = '';
         if ($form->has('_csrf')) {

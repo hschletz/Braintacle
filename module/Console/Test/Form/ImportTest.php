@@ -28,9 +28,9 @@ class ImportTest extends \Console\Test\AbstractFormTest
 {
     public function testInit()
     {
-        $this->assertInstanceOf('Zend\Form\Element\File', $this->_form->get('File'));
+        $this->assertInstanceOf('Laminas\Form\Element\File', $this->_form->get('File'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
-        $this->assertInstanceOf('Zend\InputFilter\FileInput', $this->_form->getInputFilter()->get('File'));
+        $this->assertInstanceOf('Laminas\InputFilter\FileInput', $this->_form->getInputFilter()->get('File'));
     }
 
     public function testInputFilterFileMissing()
@@ -46,7 +46,7 @@ class ImportTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['File'];
-        $this->assertArrayHasKey(\Zend\Validator\File\UploadFile::NO_FILE, $messages);
+        $this->assertArrayHasKey(\Laminas\Validator\File\UploadFile::NO_FILE, $messages);
     }
 
     public function testInputFilterFileValid()
@@ -69,16 +69,16 @@ class ImportTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages();
         $this->assertCount(1, $messages['File']);
-        $this->assertArrayHasKey(\Zend\Validator\File\UploadFile::ATTACK, $messages['File']);
+        $this->assertArrayHasKey(\Laminas\Validator\File\UploadFile::ATTACK, $messages['File']);
     }
 
     public function testEnctypeAttribute()
     {
         $html = $this->_form->render($this->_createView());
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
         $this->assertCount(
             1,
-            \Zend\Dom\Document\Query::execute('//form[@enctype="multipart/form-data"]', $document)
+            \Laminas\Dom\Document\Query::execute('//form[@enctype="multipart/form-data"]', $document)
         );
     }
 }

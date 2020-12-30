@@ -26,7 +26,7 @@ namespace Database\Hydrator\Strategy\Packages;
  *
  * Invalid values yield NULL, generating an E_NOTICE.
  */
-class Platform implements \Zend\Hydrator\Strategy\StrategyInterface
+class Platform implements \Laminas\Hydrator\Strategy\StrategyInterface
 {
     /**
      * Map used by hydrate()

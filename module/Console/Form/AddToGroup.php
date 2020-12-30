@@ -34,7 +34,7 @@ class AddToGroup extends Form
     {
         parent::init();
 
-        $what = new \Zend\Form\Element\Radio('What');
+        $what = new \Laminas\Form\Element\Radio('What');
         $what->setValueOptions(
             array(
                 \Model\Client\Client::MEMBERSHIP_AUTOMATIC => $this->_(
@@ -52,7 +52,7 @@ class AddToGroup extends Form
         $what->setLabelAttributes(array('class' => 'what'));
         $this->add($what);
 
-        $where = new \Zend\Form\Element\Radio('Where');
+        $where = new \Laminas\Form\Element\Radio('Where');
         $where->setValueOptions(
             array(
                 'new' => $this->_('Store in new group'),
@@ -63,11 +63,11 @@ class AddToGroup extends Form
         $where->setLabelAttributes(array('class' => 'where'));
         $this->add($where);
 
-        $newGroup = new \Zend\Form\Element\Text('NewGroup');
+        $newGroup = new \Laminas\Form\Element\Text('NewGroup');
         $newGroup->setLabel('Name');
         $this->add($newGroup);
 
-        $description = new \Zend\Form\Element\Text('Description');
+        $description = new \Laminas\Form\Element\Text('Description');
         $description->setLabel('Description');
         $this->add($description);
 
@@ -84,7 +84,7 @@ class AddToGroup extends Form
         $submit->setLabel('OK');
         $this->add($submit);
 
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
         $inputFilter->add(
             array(
                 'name' => 'NewGroup',
@@ -157,7 +157,7 @@ class AddToGroup extends Form
     public function validateLength($value, $context, $min, $max)
     {
         if ($context['Where'] == 'new') {
-            $length = \Zend\Stdlib\StringUtils::getWrapper('UTF-8')->strlen($value);
+            $length = \Laminas\Stdlib\StringUtils::getWrapper('UTF-8')->strlen($value);
             $result = ($length >= $min and $length <= $max);
         } else {
             $result = true; // Field is ignored for existing groups

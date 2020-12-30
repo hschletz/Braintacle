@@ -31,7 +31,7 @@ class Agent extends AbstractForm
     {
         parent::init();
         $preferences = $this->get('Preferences');
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
         $integerFilter = array(
             'name' => 'Callback',
             'options' => array(
@@ -39,18 +39,18 @@ class Agent extends AbstractForm
                 'callback_params' => 'integer',
             )
         );
-        $integerValidator = new \Zend\Validator\Callback(
+        $integerValidator = new \Laminas\Validator\Callback(
             array(
                 'callback' => array($this, 'validateType'),
                 'callbackOptions' => 'integer',
             )
         );
 
-        $contactInterval = new \Zend\Form\Element\Text('contactInterval');
+        $contactInterval = new \Laminas\Form\Element\Text('contactInterval');
         $contactInterval->setLabel('Agent contact interval (in hours)')
                         ->setAttribute('size', 5);
         $preferences->add($contactInterval);
-        $validatorChain = new \Zend\Validator\ValidatorChain;
+        $validatorChain = new \Laminas\Validator\ValidatorChain;
         $validatorChain->attach($integerValidator, true)
                        ->attachByName('GreaterThan', array('min' => 0));
         $inputFilter->add(
@@ -61,11 +61,11 @@ class Agent extends AbstractForm
             )
         );
 
-        $inventoryInterval = new \Zend\Form\Element\Text('inventoryInterval');
+        $inventoryInterval = new \Laminas\Form\Element\Text('inventoryInterval');
         $inventoryInterval->setLabel('Inventory interval (in days, 0 = always, -1 = never)')
                           ->setAttribute('size', 5);
         $preferences->add($inventoryInterval);
-        $validatorChain = new \Zend\Validator\ValidatorChain;
+        $validatorChain = new \Laminas\Validator\ValidatorChain;
         $validatorChain->attach($integerValidator, true)
                        ->attachByName('GreaterThan', array('min' => -2));
         $inputFilter->add(
@@ -76,7 +76,7 @@ class Agent extends AbstractForm
             )
         );
 
-        $agentWhitelistFile = new \Zend\Form\Element\Text('agentWhitelistFile');
+        $agentWhitelistFile = new \Laminas\Form\Element\Text('agentWhitelistFile');
         $agentWhitelistFile->setLabel('File with allowed non-OCS agents (FusionInventory etc.)');
         $preferences->add($agentWhitelistFile);
         $inputFilter->add(
@@ -89,7 +89,7 @@ class Agent extends AbstractForm
             )
         );
 
-        $parentFilter = new \Zend\InputFilter\InputFilter;
+        $parentFilter = new \Laminas\InputFilter\InputFilter;
         $parentFilter->add($inputFilter, 'Preferences');
         $this->setInputFilter($parentFilter);
     }

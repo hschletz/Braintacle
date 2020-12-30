@@ -30,7 +30,7 @@ namespace Console\View\Helper\Form;
 abstract class AbstractHelper extends Form
 {
     /** {@inheritdoc} */
-    public function render(\Zend\Form\FormInterface $form)
+    public function render(\Laminas\Form\FormInterface $form)
     {
         if (method_exists($form, 'prepare')) {
             $form->prepare();
@@ -49,7 +49,7 @@ abstract class AbstractHelper extends Form
     /**
      * Render form elements
      *
-     * @param \Zend\Form\FormInterface $form
+     * @param \Laminas\Form\FormInterface $form
      */
-    abstract public function renderElements(\Zend\Form\FormInterface $form);
+    abstract public function renderElements(\Laminas\Form\FormInterface $form);
 }

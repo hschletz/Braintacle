@@ -30,7 +30,7 @@ class SelectSimpleTest extends \PHPUnit\Framework\TestCase
     {
         $element = new \Library\Form\Element\SelectSimple;
         $element->setValueOptions(array('option1', 'option2'));
-        $factory = new \Zend\InputFilter\Factory;
+        $factory = new \Laminas\InputFilter\Factory;
         $input = $factory->createInput($element->getInputSpecification());
         $input->setValue('option1');
         $this->assertTrue($input->isValid());

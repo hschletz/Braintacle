@@ -159,7 +159,7 @@ class DuplicatesManager
      * Get query for duplicate values of given griteria
      *
      * @param string $criteria One of Name|MacAddress|Serial|AssetTag
-     * @return \Zend\Db\Sql\Select
+     * @return \Laminas\Db\Sql\Select
      * @throws \InvalidArgumentException if $criteria is invalid
      */
     protected function _getDuplicateValues($criteria)
@@ -223,10 +223,10 @@ class DuplicatesManager
         $select = $sql->select();
         $select->columns(
             array(
-                'num_clients' => new \Zend\Db\Sql\Literal("COUNT($count)")
+                'num_clients' => new \Laminas\Db\Sql\Literal("COUNT($count)")
             )
         );
-        $select->where(array(new \Zend\Db\Sql\Predicate\In($column, $subQuery)));
+        $select->where(array(new \Laminas\Db\Sql\Predicate\In($column, $subQuery)));
         $row = $sql->prepareStatementForSqlObject($select)->execute()->current();
         return $row['num_clients'];
     }
@@ -237,7 +237,7 @@ class DuplicatesManager
      * @param string $criteria One of Name|MacAddress|Serial|AssetTag
      * @param string $order Sorting order (default: 'Id')
      * @param string $direction One of asc|desc (default: 'asc')
-     * @return \Zend\Db\ResultSet\AbstractResultSet \Model\Client\Client iterator
+     * @return \Laminas\Db\ResultSet\AbstractResultSet \Model\Client\Client iterator
      */
     public function find($criteria, $order = 'Id', $direction = 'asc')
     {
@@ -256,14 +256,14 @@ class DuplicatesManager
             false,
             false
         );
-        $select->quantifier(\Zend\Db\Sql\Select::QUANTIFIER_DISTINCT);
+        $select->quantifier(\Laminas\Db\Sql\Select::QUANTIFIER_DISTINCT);
         $select->join(
             'networks',
             'networks.hardware_id = clients.id',
             array('networkinterface_macaddr' => 'macaddr'),
             $select::JOIN_LEFT
         )
-        ->where(array(new \Zend\Db\Sql\Predicate\In($column, $subQuery)));
+        ->where(array(new \Laminas\Db\Sql\Predicate\In($column, $subQuery)));
         if ($order != 'Name') {
             // Secondary ordering by name
             $select->order('name');
@@ -391,14 +391,14 @@ class DuplicatesManager
         foreach ($olderClients as $client) {
             $where = [
                 'hardware_id' => $client['Id'],
-                new \Zend\Db\Sql\Predicate\Operator('name', '!=', 'DOWNLOAD_SWITCH'),
-                new \Zend\Db\Sql\Predicate\Like('name', 'DOWNLOAD%'),
+                new \Laminas\Db\Sql\Predicate\Operator('name', '!=', 'DOWNLOAD_SWITCH'),
+                new \Laminas\Db\Sql\Predicate\Like('name', 'DOWNLOAD%'),
             ];
             // Construct list of package IDs because MySQL does not support subquery here
             $exclude = array_column($this->_clientConfig->selectWith($notIn)->toArray(), 'ivalue');
             // Avoid empty list
             if ($exclude) {
-                $where[] = new \Zend\Db\Sql\Predicate\NotIn('ivalue', $exclude);
+                $where[] = new \Laminas\Db\Sql\Predicate\NotIn('ivalue', $exclude);
             }
             // Update the client IDs directly.
             $this->_clientConfig->update(array('hardware_id' => $id), $where);

@@ -63,18 +63,18 @@ class Assign extends \Console\Form\Form
         if ($this->has('Packages')) {
             $this->remove('Packages');
         }
-        $fieldset= new \Zend\Form\Fieldset('Packages');
+        $fieldset= new \Laminas\Form\Fieldset('Packages');
         $this->add($fieldset);
 
         foreach ($packages as $package) {
-            $element = new \Zend\Form\Element\Checkbox($package);
+            $element = new \Laminas\Form\Element\Checkbox($package);
             $element->setLabel($package);
             $fieldset->add($element);
         }
     }
 
     /** {@inheritdoc} */
-    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset)
+    public function renderFieldset(\Laminas\View\Renderer\PhpRenderer $view, \Laminas\Form\Fieldset $fieldset)
     {
         $output = '';
         if ($fieldset->has('Packages')) {

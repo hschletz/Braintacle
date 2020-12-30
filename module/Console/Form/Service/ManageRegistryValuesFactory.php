@@ -25,7 +25,7 @@ namespace Console\Form\Service;
  * Factory for ManageRegistryValues
  * @codeCoverageIgnore
  */
-class ManageRegistryValuesFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class ManageRegistryValuesFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

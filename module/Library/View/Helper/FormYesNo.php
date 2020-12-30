@@ -29,11 +29,11 @@ namespace Library\View\Helper;
  * buttons are named 'yes' and 'no'. The caption is rendered as a paragraph
  * above the form. Optional parameters are included as hidden elements.
  */
-class FormYesNo extends \Zend\View\Helper\AbstractHelper
+class FormYesNo extends \Laminas\View\Helper\AbstractHelper
 {
     /**
      * Translate view helper
-     * @var \Zend\I18n\View\Helper\Translate
+     * @var \Laminas\I18n\View\Helper\Translate
      */
     protected $_translate;
 
@@ -46,11 +46,11 @@ class FormYesNo extends \Zend\View\Helper\AbstractHelper
     /**
      * Constructor
      *
-     * @param \Zend\I18n\View\Helper\Translate $translate
+     * @param \Laminas\I18n\View\Helper\Translate $translate
      * @param \Library\View\Helper\HtmlElement $htmlElement
      */
     public function __construct(
-        \Zend\I18n\View\Helper\Translate $translate,
+        \Laminas\I18n\View\Helper\Translate $translate,
         \Library\View\Helper\HtmlElement $htmlElement
     ) {
         $this->_translate = $translate;

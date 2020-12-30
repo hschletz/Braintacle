@@ -46,10 +46,10 @@ class Import
      * Import client from given file
      *
      * @param \ZF\Console\Route $route
-     * @param \Zend\Console\Adapter\AdapterInterface $console
+     * @param \Laminas\Console\Adapter\AdapterInterface $console
      * @return integer Exit code
      */
-    public function __invoke(\ZF\Console\Route $route, \Zend\Console\Adapter\AdapterInterface $console)
+    public function __invoke(\ZF\Console\Route $route, \Laminas\Console\Adapter\AdapterInterface $console)
     {
         $this->_clientManager->importFile($route->getMatchedParam('filename'));
         return 0;

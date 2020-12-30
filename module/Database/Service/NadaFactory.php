@@ -28,7 +28,7 @@ namespace Database\Service;
  *
  * @codeCoverageIgnore
  */
-class NadaFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class NadaFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

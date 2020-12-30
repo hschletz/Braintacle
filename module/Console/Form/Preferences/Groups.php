@@ -31,7 +31,7 @@ class Groups extends AbstractForm
     {
         parent::init();
         $preferences = $this->get('Preferences');
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
         $integerFilter = array(
             'name' => 'Callback',
             'options' => array(
@@ -39,7 +39,7 @@ class Groups extends AbstractForm
                 'callback_params' => 'integer',
             )
         );
-        $validatorChain = new \Zend\Validator\ValidatorChain;
+        $validatorChain = new \Laminas\Validator\ValidatorChain;
         $validatorChain->attachByName(
             'Callback',
             array(
@@ -53,7 +53,7 @@ class Groups extends AbstractForm
             array('min' => 0)
         );
 
-        $groupCacheExpirationInterval = new \Zend\Form\Element\Text('groupCacheExpirationInterval');
+        $groupCacheExpirationInterval = new \Laminas\Form\Element\Text('groupCacheExpirationInterval');
         $groupCacheExpirationInterval->setLabel('Minimum seconds between group cache rebuilds')
                                      ->setAttribute('size', 5);
         $preferences->add($groupCacheExpirationInterval);
@@ -65,7 +65,7 @@ class Groups extends AbstractForm
             )
         );
 
-        $groupCacheExpirationFuzz = new \Zend\Form\Element\Text('groupCacheExpirationFuzz');
+        $groupCacheExpirationFuzz = new \Laminas\Form\Element\Text('groupCacheExpirationFuzz');
         $groupCacheExpirationFuzz->setLabel('Maximum seconds added to above value')
                                  ->setAttribute('size', 5);
         $preferences->add($groupCacheExpirationFuzz);
@@ -77,11 +77,11 @@ class Groups extends AbstractForm
             )
         );
 
-        $setGroupPackageStatus = new \Zend\Form\Element\Checkbox('setGroupPackageStatus');
+        $setGroupPackageStatus = new \Laminas\Form\Element\Checkbox('setGroupPackageStatus');
         $setGroupPackageStatus->setLabel('Set package status on clients for group-assigned packages');
         $preferences->add($setGroupPackageStatus);
 
-        $parentFilter = new \Zend\InputFilter\InputFilter;
+        $parentFilter = new \Laminas\InputFilter\InputFilter;
         $parentFilter->add($inputFilter, 'Preferences');
         $this->setInputFilter($parentFilter);
     }

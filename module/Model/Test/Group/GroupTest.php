@@ -81,7 +81,7 @@ class GroupTest extends AbstractGroupTest
                           true
                       )->willReturn(array(array('Id' => 1), array('Id' => 2), array('Id' => 3), array('Id' => 5)));
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -120,19 +120,19 @@ class GroupTest extends AbstractGroupTest
         $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->method('getClients')->willReturn(array(array('Id' => 1)));
 
-        $connection = $this->createMock('Zend\Db\Adapter\Driver\AbstractConnection');
+        $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
         $connection->expects($this->once())->method('beginTransaction');
         $connection->expects($this->once())->method('rollback');
         $connection->expects($this->never())->method('commit');
 
-        $driver = $this->createMock('Zend\Db\Adapter\Driver\Pdo\Pdo');
+        $driver = $this->createMock('Laminas\Db\Adapter\Driver\Pdo\Pdo');
         $driver->method('getConnection')->willReturn($connection);
-        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
+        $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
 
-        $select = $this->createMock('Zend\Db\Sql\Select');
+        $select = $this->createMock('Laminas\Db\Sql\Select');
         $select->method('columns')->will($this->returnSelf());
-        $sql = $this->createMock('Zend\Db\Sql\Sql');
+        $sql = $this->createMock('Laminas\Db\Sql\Sql');
         $sql->method('select')->willReturn($select);
 
         $groupMemberships = $this->createMock('Database\Table\GroupMemberships');
@@ -141,7 +141,7 @@ class GroupTest extends AbstractGroupTest
         $groupMemberships->method('selectWith')->willReturn(array());
         $groupMemberships->method('insert')->will($this->throwException(new \RuntimeException('test')));
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -174,18 +174,18 @@ class GroupTest extends AbstractGroupTest
      */
     public function testSetMembersFromQueryDynamic($joins)
     {
-        $platform = $this->getMockForAbstractClass('Zend\Db\Adapter\Platform\AbstractPlatform');
+        $platform = $this->getMockForAbstractClass('Laminas\Db\Adapter\Platform\AbstractPlatform');
 
-        $adapter = $this->createMock('Zend\Db\Adapter\Adapter');
+        $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
         $adapter->method('getPlatform')->willReturn($platform);
 
-        $select = $this->createMock('Zend\Db\Sql\Select');
+        $select = $this->createMock('Laminas\Db\Sql\Select');
         $select->expects($this->exactly(2))
                ->method('getRawState')
                ->willReturnMap(
                    array(
-                        array(\Zend\Db\Sql\Select::COLUMNS, array('id')),
-                        array(\Zend\Db\Sql\Select::JOINS, $joins),
+                        array(\Laminas\Db\Sql\Select::COLUMNS, array('id')),
+                        array(\Laminas\Db\Sql\Select::JOINS, $joins),
                    )
                );
         $select->method('getSqlString')->with($platform)->willReturn('query_new');
@@ -206,7 +206,7 @@ class GroupTest extends AbstractGroupTest
                           false
                       )->willReturn($select);
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -250,14 +250,14 @@ class GroupTest extends AbstractGroupTest
             array('columns' => array()),
             array('columns' => array('name')),
         );
-        $select = $this->createMock('Zend\Db\Sql\Select');
+        $select = $this->createMock('Laminas\Db\Sql\Select');
         $select->expects($this->exactly(2))
                ->method('getRawState')
                ->will(
                    $this->returnValueMap(
                        array(
-                           array(\Zend\Db\Sql\Select::COLUMNS, array('id')),
-                           array(\Zend\Db\Sql\Select::JOINS, $joins),
+                           array(\Laminas\Db\Sql\Select::COLUMNS, array('id')),
+                           array(\Laminas\Db\Sql\Select::JOINS, $joins),
                        )
                    )
                );
@@ -311,7 +311,7 @@ class GroupTest extends AbstractGroupTest
             )
         );
 
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(

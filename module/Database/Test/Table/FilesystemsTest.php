@@ -34,7 +34,7 @@ class FilesystemsTest extends AbstractTest
         $this->assertInstanceOf('Database\Hydrator\Filesystems', $hydrator);
 
         $resultSet = static::$_table->getResultSetPrototype();
-        $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);
+        $this->assertInstanceOf('Laminas\Db\ResultSet\HydratingResultSet', $resultSet);
         $this->assertEquals($hydrator, $resultSet->getHydrator());
     }
 }

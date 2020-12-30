@@ -51,7 +51,7 @@ class NetworkDeviceTest extends \Console\Test\AbstractFormTest
         $type = $form->get('Type');
         $this->assertInstanceOf('Library\Form\Element\SelectSimple', $type);
         $this->assertEquals(array('cat1', 'cat2'), $type->getValueOptions());
-        $this->assertInstanceOf('Zend\Form\Element\Text', $form->get('Description'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $form->get('Description'));
         $this->assertInstanceOf('\Library\Form\Element\Submit', $form->get('Submit'));
     }
 
@@ -84,6 +84,6 @@ class NetworkDeviceTest extends \Console\Test\AbstractFormTest
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages();
         $this->assertCount(1, $messages);
-        $this->assertEquals(\Zend\Validator\StringLength::TOO_LONG, key($messages['Description']));
+        $this->assertEquals(\Laminas\Validator\StringLength::TOO_LONG, key($messages['Description']));
     }
 }

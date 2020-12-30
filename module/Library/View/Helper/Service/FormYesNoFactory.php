@@ -24,7 +24,7 @@ namespace Library\View\Helper\Service;
 /**
  * Factory for FormYesNo
  */
-class FormYesNoFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class FormYesNoFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

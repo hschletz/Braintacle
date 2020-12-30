@@ -21,8 +21,8 @@
 
 namespace Model\Client;
 
-use Zend\Db\Sql\Select;
-use Zend\Db\Sql\Predicate;
+use Laminas\Db\Sql\Select;
+use Laminas\Db\Sql\Predicate;
 
 /**
  * Client manager
@@ -31,16 +31,16 @@ class ClientManager
 {
     /**
      * Service Locator
-     * @var \Zend\ServiceManager\ServiceLocatorInterface
+     * @var \Laminas\ServiceManager\ServiceLocatorInterface
      */
     protected $_serviceLocator;
 
     /**
      * Constructor
      *
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * @param \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator
      */
-    public function __construct(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->_serviceLocator = $serviceLocator;
     }
@@ -57,8 +57,8 @@ class ClientManager
      * @param bool|array $invert Invert query results (return clients not matching criteria)
      * @param bool $addSearchColumns Add columns with search criteria (default), otherwise only columns from $properties
      * @param bool $distinct Force distinct results.
-     * @param bool $query Perform query and return result set (default), return \Zend\Db\Sql\Select object otherwise.
-     * @return \Zend\Db\ResultSet\AbstractResultSet|\Zend\Db\Sql\Select Query result or Query object
+     * @param bool $query Perform query and return result set (default), return \Laminas\Db\Sql\Select object otherwise.
+     * @return \Laminas\Db\ResultSet\AbstractResultSet|\Laminas\Db\Sql\Select Query result or Query object
      * @throws \InvalidArgumentException if a filter or order column is invalid
      * @throws \LogicException if $invertResult is not supported by a filter or type of custom field is not supported
      */
@@ -99,7 +99,7 @@ class ClientManager
 
         // Set up Select object manually instead of pulling it from a table
         // gateway because the base table might be changed later.
-        $sql = new \Zend\Db\Sql\Sql($this->_serviceLocator->get('Db'));
+        $sql = new \Laminas\Db\Sql\Sql($this->_serviceLocator->get('Db'));
         $select = $sql->select();
         $select->from('clients');
         $select->columns($fromClients);
@@ -430,14 +430,14 @@ class ClientManager
     /**
      * Apply a filter for a string value
      *
-     * @param \Zend\Db\Sql\Select $select Object to apply the filter to
+     * @param \Laminas\Db\Sql\Select $select Object to apply the filter to
      * @param string $model Model class (without namespace) containing property
      * @param string $property Property to search in
      * @param string $arg String to search for
      * @param bool $matchExact Disable wildcards ('*', '?', '%', '_') and substring search
      * @param bool $invertResult Return clients not matching criteria
      * @param bool $addSearchColumns Add columns with search criteria to Select object
-     * @return Zend\Db\Sql\Select Object with filter applied
+     * @return Laminas\Db\Sql\Select Object with filter applied
      */
     protected function _filterByString(
         $select,
@@ -475,14 +475,14 @@ class ClientManager
     /**
      * Apply a filter for an ordinal value (integer, float, ISO 8601 date string)
      *
-     * @param \Zend\Db\Sql\Select $select Object to apply the filter to
+     * @param \Laminas\Db\Sql\Select $select Object to apply the filter to
      * @param string $model Model class (without namespace) containing property
      * @param string $property Property to search in
      * @param string $arg Numeric operand (not validated!)
      * @param string $operator Comparison operator (eq|ne|lt|le|gt|ge)
      * @param bool $invertResult Return clients not matching criteria
      * @param bool $addSearchColumns Add columns with search criteria to Select object
-     * @return Zend\Db\Sql\Select Object with filter applied
+     * @return Laminas\Db\Sql\Select Object with filter applied
      * @throws \DomainException if $operator is invalid
      */
     protected function _filterByOrdinal($select, $model, $property, $arg, $operator, $invertResult, $addSearchColumns)
@@ -526,14 +526,14 @@ class ClientManager
     /**
      * Apply a filter for a date value
      *
-     * @param \Zend\Db\Sql\Select $select Object to apply the filter to
+     * @param \Laminas\Db\Sql\Select $select Object to apply the filter to
      * @param string $model Model class (without namespace) containing property
      * @param string $property Property to search in
      * @param mixed $arg Date operand (\DateTime object or 'yyyy-MM-dd' string). Time of day is ignored.
      * @param string $operator Comparison operator (eq|ne|lt|le|gt|ge)
      * @param bool $invertResult Return clients not matching criteria
      * @param bool $addSearchColumns Add columns with search criteria to Select object
-     * @return Zend\Db\Sql\Select Object with filter applied
+     * @return Laminas\Db\Sql\Select Object with filter applied
      * @throws \DomainException if $operator is invalid
      */
     protected function _filterByDate($select, $model, $property, $arg, $operator, $invertResult, $addSearchColumns)
@@ -626,11 +626,11 @@ class ClientManager
     /**
      * Apply a package filter
      *
-     * @param \Zend\Db\Sql\Select $select Object to apply the filter to
+     * @param \Laminas\Db\Sql\Select $select Object to apply the filter to
      * @param string $filter PackagePending|PackageRunning|PackageSuccess|PackageError
      * @param string $package Package name
      * @param bool $addSearchColumns Add columns with search criteria (Package.Status)
-     * @return Zend\Db\Sql\Select Object with filter applied
+     * @return Laminas\Db\Sql\Select Object with filter applied
      */
     protected function _filterByPackage($select, $filter, $package, $addSearchColumns)
     {
@@ -671,7 +671,7 @@ class ClientManager
      * This method determines the table and column to search and adds them to
      * $select if necessary.
      *
-     * @param \Zend\Db\Sql\Select $select Object to apply the filter to
+     * @param \Laminas\Db\Sql\Select $select Object to apply the filter to
      * @param string $model Model class (without namespace) containing property
      * @param string $property Property to search in
      * @param bool $addSearchColumns Add columns with search criteria
@@ -813,10 +813,10 @@ class ClientManager
                 $macAddresses->columns(array('macaddr'));
                 $macAddresses->where(array('hardware_id' => $id));
                 $this->_serviceLocator->get('Database\Table\NetworkDevicesIdentified')->delete(
-                    new \Zend\Db\Sql\Predicate\In('macaddr', $macAddresses)
+                    new \Laminas\Db\Sql\Predicate\In('macaddr', $macAddresses)
                 );
                 $this->_serviceLocator->get('Database\Table\NetworkDevicesScanned')->delete(
-                    new \Zend\Db\Sql\Predicate\In('mac', $macAddresses)
+                    new \Laminas\Db\Sql\Predicate\In('mac', $macAddresses)
                 );
             }
 

@@ -25,7 +25,7 @@ abstract class AbstractControllerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Configured service manager set by bootstrap
-     * @var \Zend\ServiceManager\ServiceManager
+     * @var \Laminas\ServiceManager\ServiceManager
      */
     public static $serviceManager;
 
@@ -37,7 +37,7 @@ abstract class AbstractControllerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * Console mock passed to dispatched method
-     * @var \Zend\Console\Adapter\AdapterInterface
+     * @var \Laminas\Console\Adapter\AdapterInterface
      */
     protected $_console;
 
@@ -46,7 +46,7 @@ abstract class AbstractControllerTest extends \PHPUnit\Framework\TestCase
         parent::setUp();
 
         $this->_route = $this->createMock('ZF\Console\Route');
-        $this->_console = $this->createMock('Zend\Console\Adapter\AdapterInterface');
+        $this->_console = $this->createMock('Laminas\Console\Adapter\AdapterInterface');
     }
 
     /**

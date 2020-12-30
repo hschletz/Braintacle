@@ -25,7 +25,7 @@ namespace Console\Form\Service;
  * Factory for Search form
  * @codeCoverageIgnore
  */
-class SearchFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class SearchFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(

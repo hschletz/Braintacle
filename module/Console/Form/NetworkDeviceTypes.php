@@ -40,13 +40,13 @@ class NetworkDeviceTypes extends Form
     {
         parent::init();
 
-        $types = new \Zend\Form\Fieldset('Types');
+        $types = new \Laminas\Form\Fieldset('Types');
         $this->add($types);
-        $inputFilterTypes = new \Zend\InputFilter\InputFilter;
+        $inputFilterTypes = new \Laminas\InputFilter\InputFilter;
 
         $this->_definedTypes = $this->getOption('DeviceManager')->getTypeCounts();
         foreach ($this->_definedTypes as $name => $count) {
-            $element = new \Zend\Form\Element\Text($name);
+            $element = new \Laminas\Form\Element\Text($name);
             $element->setValue($name);
             $types->add($element);
 
@@ -74,7 +74,7 @@ class NetworkDeviceTypes extends Form
             $inputFilterTypes->add($filter);
         }
 
-        $add = new \Zend\Form\Element\Text('Add');
+        $add = new \Laminas\Form\Element\Text('Add');
         $add->setLabel('Add');
         $this->add($add);
 
@@ -82,7 +82,7 @@ class NetworkDeviceTypes extends Form
         $submit->setLabel('Change');
         $this->add($submit);
 
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
         $inputFilter->add($inputFilterTypes, 'Types');
         $inputFilter->add(
             array(
@@ -145,7 +145,7 @@ class NetworkDeviceTypes extends Form
     }
 
     /** {@inheritdoc} */
-    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset = null)
+    public function renderFieldset(\Laminas\View\Renderer\PhpRenderer $view, \Laminas\Form\Fieldset $fieldset = null)
     {
         $output = "<div class='table'>\n";
         $types = $this->get('Types');

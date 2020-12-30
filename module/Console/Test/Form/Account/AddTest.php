@@ -48,13 +48,13 @@ class AddTest extends \Console\Test\AbstractFormTest
 
     public function testInit()
     {
-        $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('Id'));
-        $this->assertInstanceOf('Zend\Form\Element\Password', $this->_form->get('Password'));
-        $this->assertInstanceOf('Zend\Form\Element\Password', $this->_form->get('PasswordRepeat'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('FirstName'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('LastName'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $this->_form->get('MailAddress'));
-        $this->assertInstanceOf('Zend\Form\Element\TextArea', $this->_form->get('Comment'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('Id'));
+        $this->assertInstanceOf('Laminas\Form\Element\Password', $this->_form->get('Password'));
+        $this->assertInstanceOf('Laminas\Form\Element\Password', $this->_form->get('PasswordRepeat'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('FirstName'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('LastName'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('MailAddress'));
+        $this->assertInstanceOf('Laminas\Form\Element\TextArea', $this->_form->get('Comment'));
 
         $submit = $this->_form->get('Submit');
         $this->assertInstanceOf('\Library\Form\Element\Submit', $submit);

@@ -30,7 +30,7 @@ class RegistryData extends DefaultPlugin
     public function order($order, $direction)
     {
         parent::order($order, $direction);
-        if (key($this->_select->getRawState(\Zend\Db\Sql\Select::ORDER)) == 'registry.name') {
+        if (key($this->_select->getRawState(\Laminas\Db\Sql\Select::ORDER)) == 'registry.name') {
             // Since there can be multiple instances of Value, provide secondary
             // ordering by data
             $this->_select->order(array('registry.regvalue' => $direction));

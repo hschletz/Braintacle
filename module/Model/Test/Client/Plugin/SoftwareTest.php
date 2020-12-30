@@ -25,7 +25,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
 {
     public function testColumns()
     {
-        $select = $this->createMock('Zend\Db\Sql\Select');
+        $select = $this->createMock('Laminas\Db\Sql\Select');
         $select->expects($this->once())->method('columns')->with([
             'name',
             'version',

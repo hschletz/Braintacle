@@ -34,8 +34,8 @@ class ShowDuplicatesTest extends \Library\Test\View\Helper\AbstractTest
         $date1 = $this->createMock('DateTime');
         $date2 = $this->createMock('DateTime');
 
-        $checkbox1 = $this->createMock('\Zend\Form\ElementInterface');
-        $checkbox2 = $this->createMock('\Zend\Form\ElementInterface');
+        $checkbox1 = $this->createMock('\Laminas\Form\ElementInterface');
+        $checkbox2 = $this->createMock('\Laminas\Form\ElementInterface');
 
         $consoleUrl = $this->createMock('Library\View\Helper\HtmlElement');
         $consoleUrl->method('__invoke')
@@ -44,22 +44,22 @@ class ShowDuplicatesTest extends \Library\Test\View\Helper\AbstractTest
                        ['client', 'customfields', ['id' => 2]]
                    )->willReturnOnConsecutiveCalls('url1', 'url2');
 
-        $dateFormat = $this->createMock('Zend\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock('Laminas\I18n\View\Helper\DateFormat');
         $dateFormat->method('__invoke')
                    ->withConsecutive([$this->identicalTo($date1)], [$this->identicalTo($date2)])
                    ->willReturnOnConsecutiveCalls('date1_formatted', 'date2_formatted');
 
-        $escapeHtml = $this->createMock('Zend\View\Helper\EscapeHtml');
+        $escapeHtml = $this->createMock('Laminas\View\Helper\EscapeHtml');
         $escapeHtml->method('__invoke')
                    ->willReturnCallback(function ($value) {
                        return $value . '_escaped';
                    });
 
-        $formRow = $this->createMock('Zend\Form\View\Helper\FormRow');
+        $formRow = $this->createMock('Laminas\Form\View\Helper\FormRow');
         $formRow->method('__invoke')
                 ->withConsecutive(
-                    [$this->identicalTo($checkbox1), \Zend\Form\View\Helper\FormRow::LABEL_APPEND],
-                    [$this->identicalTo($checkbox2), \Zend\Form\View\Helper\FormRow::LABEL_APPEND]
+                    [$this->identicalTo($checkbox1), \Laminas\Form\View\Helper\FormRow::LABEL_APPEND],
+                    [$this->identicalTo($checkbox2), \Laminas\Form\View\Helper\FormRow::LABEL_APPEND]
                 )->willReturnOnConsecutiveCalls('<checkbox1>', '<checkbox2>');
 
         $htmlElement = $this->createMock('Library\View\Helper\HtmlElement');
@@ -126,12 +126,12 @@ class ShowDuplicatesTest extends \Library\Test\View\Helper\AbstractTest
               ->willReturnOnConsecutiveCalls('<header>', '<row1>', '<row2>');
         $table->method('tag')->with('<header><row1><row2>')->willReturn('<duplicates_table>');
 
-        $translate = $this->createMock('Zend\I18n\View\Helper\Translate');
+        $translate = $this->createMock('Laminas\I18n\View\Helper\Translate');
         $translate->method('__invoke')->willReturnCallback(function ($message) {
             return $message . '_translated';
         });
 
-        $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
 
         $view->method('plugin')->willReturnMap([
             ['consoleUrl', null, $consoleUrl],
@@ -205,13 +205,13 @@ class ShowDuplicatesTest extends \Library\Test\View\Helper\AbstractTest
                    ->with('duplicates', 'allow', ['criteria' => 'Property', 'value' => 'property_value'])
                    ->willReturn('url');
 
-        $escapeHtml = $this->createMock('Zend\View\Helper\EscapeHtml');
+        $escapeHtml = $this->createMock('Laminas\View\Helper\EscapeHtml');
         $escapeHtml->method('__invoke')->with('property_value')->willReturn('value_escaped');
 
         $htmlElement = $this->createMock('Library\View\Helper\HtmlElement');
         $htmlElement->method('__invoke')->with('a', 'value_escaped', ['href' => 'url'], true)->willReturn('link');
 
-        $view = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('plugin')->willReturnMap([
             ['consoleUrl', null, $consoleUrl],
             ['escapeHtml', null, $escapeHtml],

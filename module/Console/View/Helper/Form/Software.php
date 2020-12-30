@@ -24,7 +24,7 @@ namespace Console\View\Helper\Form;
 /**
  * Render software fieldset
  */
-class Software extends \Zend\View\Helper\AbstractHelper
+class Software extends \Laminas\View\Helper\AbstractHelper
 {
     /**
      * Render all
@@ -76,7 +76,7 @@ class Software extends \Zend\View\Helper\AbstractHelper
     /**
      * Render software fieldset as table with checkboxes and counts as links to affected clients
      *
-     * @param \Zend\Form\Fieldset $fieldset Software fieldset
+     * @param \Laminas\Form\Fieldset $fieldset Software fieldset
      * @param array[] $software Software list
      * @param array $sorting Sorting for table helper
      */
@@ -105,7 +105,7 @@ class Software extends \Zend\View\Helper\AbstractHelper
             $element = $fieldset->get('_' . base64_encode($row['name']));
             $output .= $table->row(
                 [
-                    'name' => $formRow($element, \Zend\Form\View\Helper\FormRow::LABEL_APPEND),
+                    'name' => $formRow($element, \Laminas\Form\View\Helper\FormRow::LABEL_APPEND),
                     'num_clients' => $htmlElement(
                         'a',
                         $row['num_clients'],

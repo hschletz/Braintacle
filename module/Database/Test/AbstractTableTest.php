@@ -34,7 +34,7 @@ class AbstractTableTest extends \PHPUnit\Framework\TestCase
 
     /**
      * Select Mock
-     * @var \Zend\Db\Sql\Select
+     * @var \Laminas\Db\Sql\Select
      */
     protected $_select;
 
@@ -42,9 +42,9 @@ class AbstractTableTest extends \PHPUnit\Framework\TestCase
     {
         // Set up mock objects for getCol()
 
-        $this->_select = $this->createMock('Zend\Db\Sql\Select');
+        $this->_select = $this->createMock('Laminas\Db\Sql\Select');
 
-        $sql = $this->createMock('Zend\Db\Sql\Sql');
+        $sql = $this->createMock('Laminas\Db\Sql\Sql');
         $sql->method('select')->willReturn($this->_select);
 
         $this->_table = $this->getMockBuilder('Database\AbstractTable')
@@ -66,12 +66,12 @@ class AbstractTableTest extends \PHPUnit\Framework\TestCase
 
     public function testGetConnection()
     {
-        $connection = $this->createMock('Zend\Db\Adapter\Driver\ConnectionInterface');
+        $connection = $this->createMock('Laminas\Db\Adapter\Driver\ConnectionInterface');
 
-        $driver = $this->createMock('Zend\Db\Adapter\Driver\DriverInterface');
+        $driver = $this->createMock('Laminas\Db\Adapter\Driver\DriverInterface');
         $driver->method('getConnection')->willReturn($connection);
 
-        $adapter = $this->createMock('Zend\Db\Adapter\AdapterInterface');
+        $adapter = $this->createMock('Laminas\Db\Adapter\AdapterInterface');
         $adapter->method('getDriver')->willReturn($driver);
 
         $table = $this->getMockBuilder('Database\AbstractTable')
@@ -98,12 +98,12 @@ class AbstractTableTest extends \PHPUnit\Framework\TestCase
 
     public function testFetchColWithAbstractHydrator()
     {
-        $hydrator = $this->getMockBuilder('Zend\Hydrator\AbstractHydrator')
+        $hydrator = $this->getMockBuilder('Laminas\Hydrator\AbstractHydrator')
                          ->setMethods(array('hydrateName'))
                          ->getMockForAbstractClass();
         $hydrator->method('hydrateName')->with('col')->willReturn('hydrated');
 
-        $resultSet = $this->createMock('Zend\Db\ResultSet\HydratingResultSet');
+        $resultSet = $this->createMock('Laminas\Db\ResultSet\HydratingResultSet');
         $resultSet->method('getHydrator')->willReturn($hydrator);
         $resultSet->method('valid')->willReturnOnConsecutiveCalls(true, true, false);
         $resultSet->method('key')->willReturnOnConsecutiveCalls(0, 1);
@@ -122,7 +122,7 @@ class AbstractTableTest extends \PHPUnit\Framework\TestCase
     {
         $hydrator = new \Database\Test\TestHydrator;
 
-        $resultSet = $this->createMock('Zend\Db\ResultSet\HydratingResultSet');
+        $resultSet = $this->createMock('Laminas\Db\ResultSet\HydratingResultSet');
         $resultSet->method('getHydrator')->willReturn($hydrator);
         $resultSet->method('valid')->willReturnOnConsecutiveCalls(true, true, false);
         $resultSet->method('key')->willReturnOnConsecutiveCalls(0, 1);

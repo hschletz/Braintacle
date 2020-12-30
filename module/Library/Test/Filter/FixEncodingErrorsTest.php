@@ -28,7 +28,7 @@ class FixEncodingErrorsTest extends \PHPUnit\Framework\TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf('Zend\Filter\AbstractFilter', new \Library\Filter\FixEncodingErrors);
+        $this->assertInstanceOf('Laminas\Filter\AbstractFilter', new \Library\Filter\FixEncodingErrors);
     }
 
     public function testFilter()
@@ -44,7 +44,7 @@ class FixEncodingErrorsTest extends \PHPUnit\Framework\TestCase
         $expected = $enDashGood . $tmGood . $enDashGood;
         $this->assertEquals(
             $expected,
-            \Zend\Filter\StaticFilter::execute($input, 'Library\FixEncodingErrors')
+            \Laminas\Filter\StaticFilter::execute($input, 'Library\FixEncodingErrors')
         );
     }
 }

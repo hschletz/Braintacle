@@ -28,7 +28,7 @@ use Model\Client\ItemManager;
 use Protocol\Hydrator;
 use Protocol\Message\InventoryRequest\Content;
 use TheSeer\fDOM\fDOMElement;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class ContentTest extends \PHPUnit\Framework\TestCase
 {

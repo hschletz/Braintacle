@@ -24,7 +24,7 @@ namespace Model\Service\Package\Storage;
 /**
  * Factory for Model\Package\Storage\Direct
  */
-class DirectFactory implements \Zend\ServiceManager\Factory\FactoryInterface
+class DirectFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /**
      * {@inheritdoc}

@@ -28,7 +28,7 @@ namespace Database\Hydrator;
  * values with meaningless content are not preserved and replaced with NULL on
  * extraction.
  */
-class StorageDevices implements \Zend\Hydrator\HydratorInterface
+class StorageDevices implements \Laminas\Hydrator\HydratorInterface
 {
     /** {@inheritdoc} */
     public function hydrate(array $data, $object)

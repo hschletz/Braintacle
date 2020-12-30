@@ -48,16 +48,16 @@ class DefineFields extends Form
             'date' => $this->_('Date'),
         );
 
-        $fields = new \Zend\Form\Fieldset('Fields');
+        $fields = new \Laminas\Form\Fieldset('Fields');
         $this->add($fields);
-        $inputFilterFields = new \Zend\InputFilter\InputFilter;
+        $inputFilterFields = new \Laminas\InputFilter\InputFilter;
 
         foreach ($this->getOption('CustomFieldManager')->getFields() as $name => $type) {
             if ($name == 'TAG') { // Static field, can not be edited
                 continue;
             }
             $this->_definedFields[$name] = $translatedTypes[$type];
-            $element = new \Zend\Form\Element\Text($name);
+            $element = new \Laminas\Form\Element\Text($name);
             $element->setValue($name);
             $fields->add($element);
 
@@ -86,12 +86,12 @@ class DefineFields extends Form
         }
 
         // Empty text field to create new field.
-        $newName = new \Zend\Form\Element\Text('NewName');
+        $newName = new \Laminas\Form\Element\Text('NewName');
         $newName->setLabel('Add');
         $this->add($newName);
 
         // Datatype of new field
-        $newType = new \Zend\Form\Element\Select('NewType');
+        $newType = new \Laminas\Form\Element\Select('NewType');
         $newType->setValueOptions($translatedTypes);
         $this->add($newType);
 
@@ -99,7 +99,7 @@ class DefineFields extends Form
         $submit->setLabel('Change');
         $this->add($submit);
 
-        $inputFilter = new \Zend\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter;
         $inputFilter->add($inputFilterFields, 'Fields');
         $inputFilter->add(
             array(
@@ -162,7 +162,7 @@ class DefineFields extends Form
     }
 
     /** {@inheritdoc} */
-    public function renderFieldset(\Zend\View\Renderer\PhpRenderer $view, \Zend\Form\Fieldset $fieldset = null)
+    public function renderFieldset(\Laminas\View\Renderer\PhpRenderer $view, \Laminas\Form\Fieldset $fieldset = null)
     {
         $output = "<div class='table'>\n";
         $fields = $this->get('Fields');

@@ -31,7 +31,7 @@ class NetworkDevicesScannedTest extends AbstractTest
     public function testHydrator()
     {
         $hydrator = static::$_table->getHydrator();
-        $this->assertInstanceOf(\Zend\Hydrator\ArraySerializableHydrator::class, $hydrator);
+        $this->assertInstanceOf(\Laminas\Hydrator\ArraySerializableHydrator::class, $hydrator);
 
         $map = $hydrator->getNamingStrategy();
         $this->assertInstanceOf('Database\Hydrator\NamingStrategy\MapNamingStrategy', $map);
@@ -51,7 +51,7 @@ class NetworkDevicesScannedTest extends AbstractTest
         $this->assertEquals('type', $map->extract('Type'));
 
         $dateTimeFormatter = $hydrator->getStrategy('DiscoveryDate');
-        $this->assertInstanceOf('Zend\Hydrator\Strategy\DateTimeFormatterStrategy', $dateTimeFormatter);
+        $this->assertInstanceOf('Laminas\Hydrator\Strategy\DateTimeFormatterStrategy', $dateTimeFormatter);
         $this->assertEquals(
             new \DateTime('2015-11-21 19:00:00+00'),
             $dateTimeFormatter->hydrate('2015-11-21 19:00:00')
@@ -61,12 +61,12 @@ class NetworkDevicesScannedTest extends AbstractTest
             new \DateTime('2015-11-21 19:00:00+00'),
             $dateTimeFormatter->hydrate('2015-11-21 19:00:00')
         );
-        $this->assertInstanceOf('Zend\Hydrator\Strategy\DateTimeFormatterStrategy', $dateTimeFormatter);
+        $this->assertInstanceOf('Laminas\Hydrator\Strategy\DateTimeFormatterStrategy', $dateTimeFormatter);
         $this->assertInstanceOf('Library\Hydrator\Strategy\MacAddress', $hydrator->getStrategy('MacAddress'));
         $this->assertInstanceOf('Library\Hydrator\Strategy\MacAddress', $hydrator->getStrategy('mac'));
 
         $resultSet = static::$_table->getResultSetPrototype();
-        $this->assertInstanceOf('Zend\Db\ResultSet\HydratingResultSet', $resultSet);
+        $this->assertInstanceOf('Laminas\Db\ResultSet\HydratingResultSet', $resultSet);
         $this->assertEquals($hydrator, $resultSet->getHydrator());
     }
 }

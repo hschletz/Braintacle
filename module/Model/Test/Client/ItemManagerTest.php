@@ -200,7 +200,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
     {
         $model = $this->_getModel();
         $items = $model->getItems($type, $filters, $order, $direction);
-        $this->assertInstanceOf('Zend\Db\Resultset\AbstractResultset', $items);
+        $this->assertInstanceOf('Laminas\Db\Resultset\AbstractResultset', $items);
         $items = iterator_to_array($items);
         $this->assertContainsOnlyInstancesOf("Model\\Client\\Item\\$type", $items);
 

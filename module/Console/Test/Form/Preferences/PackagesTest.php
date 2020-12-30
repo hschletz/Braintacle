@@ -21,7 +21,7 @@
 
 namespace Console\Test\Form\Preferences;
 
-use Zend\Dom\Document\Query;
+use Laminas\Dom\Document\Query;
 
 /**
  * Tests for Packages form
@@ -45,24 +45,24 @@ class PackagesTest extends \Console\Test\AbstractFormTest
         $preferences = $this->_form->get('Preferences');
 
         $deploy = $preferences->get('Deploy');
-        $this->assertInstanceOf('Zend\Form\Fieldset', $deploy);
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $deploy->get('defaultDeployPending'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $deploy->get('defaultDeployRunning'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $deploy->get('defaultDeploySuccess'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $deploy->get('defaultDeployError'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $deploy->get('defaultDeployGroups'));
+        $this->assertInstanceOf('Laminas\Form\Fieldset', $deploy);
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $deploy->get('defaultDeployPending'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $deploy->get('defaultDeployRunning'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $deploy->get('defaultDeploySuccess'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $deploy->get('defaultDeployError'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $deploy->get('defaultDeployGroups'));
 
-        $this->assertInstanceOf('Zend\Form\Element\Select', $preferences->get('defaultPlatform'));
-        $this->assertInstanceOf('Zend\Form\Element\Select', $preferences->get('defaultAction'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('defaultActionParam'));
+        $this->assertInstanceOf('Laminas\Form\Element\Select', $preferences->get('defaultPlatform'));
+        $this->assertInstanceOf('Laminas\Form\Element\Select', $preferences->get('defaultAction'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('defaultActionParam'));
         $this->assertInstanceOf('Library\Form\Element\SelectSimple', $preferences->get('defaultPackagePriority'));
-        $this->assertInstanceOf('Zend\Form\Element\Text', $preferences->get('defaultMaxFragmentSize'));
-        $this->assertInstanceOf('Zend\Form\Element\Checkbox', $preferences->get('defaultWarn'));
-        $this->assertInstanceOf('\Zend\Form\Element\Textarea', $preferences->get('defaultWarnMessage'));
-        $this->assertInstanceOf('\Zend\Form\Element\Text', $preferences->get('defaultWarnCountdown'));
-        $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $preferences->get('defaultWarnAllowAbort'));
-        $this->assertInstanceOf('\Zend\Form\Element\Checkbox', $preferences->get('defaultWarnAllowDelay'));
-        $this->assertInstanceOf('\Zend\Form\Element\Textarea', $preferences->get('defaultPostInstMessage'));
+        $this->assertInstanceOf('Laminas\Form\Element\Text', $preferences->get('defaultMaxFragmentSize'));
+        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $preferences->get('defaultWarn'));
+        $this->assertInstanceOf('\Laminas\Form\Element\Textarea', $preferences->get('defaultWarnMessage'));
+        $this->assertInstanceOf('\Laminas\Form\Element\Text', $preferences->get('defaultWarnCountdown'));
+        $this->assertInstanceOf('\Laminas\Form\Element\Checkbox', $preferences->get('defaultWarnAllowAbort'));
+        $this->assertInstanceOf('\Laminas\Form\Element\Checkbox', $preferences->get('defaultWarnAllowDelay'));
+        $this->assertInstanceOf('\Laminas\Form\Element\Textarea', $preferences->get('defaultPostInstMessage'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
     }
 
@@ -169,7 +169,7 @@ class PackagesTest extends \Console\Test\AbstractFormTest
     {
         $view = $this->_createView();
         $html = $this->_form->render($view);
-        $document = new \Zend\Dom\Document($html);
+        $document = new \Laminas\Dom\Document($html);
 
         // Custom rendering of Deploy fieldset - labels are appended instead of prepended
         $this->assertCount(5, Query::execute('//fieldset//input[@type="checkbox"]/following-sibling::span', $document));
