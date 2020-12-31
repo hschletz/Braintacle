@@ -42,25 +42,7 @@ if (isset($this->exception)) {
     }
     if (@$config['debug']['display backtrace']) {
         print "<h3>Exception Message trace:</h3>\n";
-        $exception = $this->exception;
-        while ($exception) {
-            print $this->htmlElement(
-                'p',
-                '<strong>Message:</strong> ' . $this->escapeHtml($exception->getMessage())
-            );
-            print $this->htmlElement(
-                'p',
-                sprintf(
-                    '<strong>Source:</strong> %s, line %d',
-                    $this->escapeHtml($exception->getFile()),
-                    $this->escapeHtml($exception->getLine())
-                )
-            );
-            print "<h4>Backtrace:</h4>\n";
-            print $this->htmlElement('pre', $this->escapeHtml($exception->getTraceAsString()));
-
-            $exception = $exception->getPrevious();
-        }
+        dump($this->exception);
 
         // The additional debug information below might contain sensitive data.
         if ($this->controller == 'login') {
@@ -75,19 +57,19 @@ if (isset($this->exception)) {
         print $this->htmlElement('p', $this->escapeHtml($request->getMethod()));
 
         print "<h4>URL parameters</h4>\n";
-        \Zend\Debug\Debug::dump($request->getQuery());
+        dump($request->getQuery()->toArray());
 
         print "<h4>POST parameters</h4>\n";
-        \Zend\Debug\Debug::dump($request->getPost());
+        dump($request->getPost()->toArray());
 
         print "<h4>Files</h4>\n";
-        \Zend\Debug\Debug::dump($request->getFiles());
+        dump($request->getFiles()->toArray());
 
         print "<h4>HTTP headers</h4>\n";
-        \Zend\Debug\Debug::dump($request->getHeaders()->toArray());
+        dump($request->getHeaders()->toArray());
 
         print "<h4>Environment variables</h4>\n";
-        \Zend\Debug\Debug::dump($request->getEnv());
+        dump($request->getEnv()->toArray());
     } else {
         error_log($this->exception->getMessage());
         print "<p class='textcenter'>See web server error log for details.</p>\n";

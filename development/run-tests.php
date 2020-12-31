@@ -57,12 +57,14 @@ function testModule($module, $filter, $stop, $database, $doCoverage)
         $cmd[] = '--stop-on-error';
     }
 
+    $env = ['VAR_DUMPER_FORMAT' => 'html']; // Prevent VarDumper from writing to STDOUT in CLI.
+    if ($database) {
+        $env['BRAINTACLE_TEST_DATABASE'] = json_encode($database);
+    }
+
     $process = new \Symfony\Component\Process\Process($cmd);
     $process->setTimeout(null);
-    $process->start(
-        null,
-        $database ? ['BRAINTACLE_TEST_DATABASE' => json_encode($database)] : []
-    );
+    $process->start(null, $env);
     foreach ($process as $type => $data) {
         print $data;
     }
