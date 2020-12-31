@@ -21,6 +21,11 @@
 
 namespace Model\Test\Client\Plugin;
 
+use Database\AbstractTable;
+use Laminas\Db\Sql\Sql;
+use Model\Client\Plugin\Software;
+use PHPUnit\Framework\MockObject\MockObject;
+
 class SoftwareTest extends \PHPUnit\Framework\TestCase
 {
     public function testColumns()
@@ -42,14 +47,18 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             'display',
         ]);
 
-        $model = $this->getMockBuilder('Model\Client\Plugin\Software')
-                      ->disableOriginalConstructor()
-                      ->setMethods(['_getIsAndroidExpression'])
+        $sql = $this->createStub(Sql::class);
+        $sql->method('select')->willReturn($select);
+
+        $table = $this->createStub(AbstractTable::class);
+        $table->method('getSql')->willReturn($sql);
+
+        /** @var MockObject$Software */
+        $model = $this->getMockBuilder(Software::class)
+                      ->setConstructorArgs([$table])
+                      ->onlyMethods(['_getIsAndroidExpression'])
                       ->getMock();
         $model->method('_getIsAndroidExpression')->willReturn('isAndroid');
-
-        $proxy = new \SebastianBergmann\PeekAndPoke\Proxy($model);
-        $proxy->_select = $select;
 
         $model->columns();
     }

@@ -21,6 +21,12 @@
 
 namespace Model\Test\Client;
 
+use Database\Table;
+use Model\Client\ClientManager;
+use Model\Client\DuplicatesManager;
+use Model\SoftwareManager;
+use PHPUnit\Framework\MockObject\MockObject;
+
 /**
  * Tests for Model\Client\DuplicatesManager
  */
@@ -247,21 +253,26 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $clientManager->method('getClient')->willReturn($client);
         $clientManager->expects($this->never())->method('deleteClient');
 
-        $model = $this->getMockBuilder($this->_getClass())
-                      ->disableOriginalConstructor()
-                      ->setMethodsExcept(['merge'])
-                      ->getMock();
-
+        $model = $this->createTestProxy(
+            DuplicatesManager::class,
+            [
+                $clients,
+                $this->createStub(Table\NetworkInterfaces::class),
+                $this->createStub(Table\DuplicateAssetTags::class),
+                $this->createStub(Table\DuplicateSerials::class),
+                $this->createStub(Table\DuplicateMacAddresses::class),
+                $this->createStub(Table\ClientConfig::class),
+                $clientManager,
+                $this->createStub(SoftwareManager::class),
+            ]
+        );
         $model->expects($this->never())->method('mergeConfig');
         $model->expects($this->never())->method('mergeCustomFields');
         $model->expects($this->never())->method('mergeGroups');
         $model->expects($this->never())->method('mergePackages');
         $model->expects($this->never())->method('mergeProductKey');
 
-        $proxy = new \SebastianBergmann\PeekAndPoke\Proxy($model);
-        $proxy->_clients = $clients;
-        $proxy->_clientManager = $clientManager;
-        $proxy->merge([2, 3], $this->_allOptions);
+        $model->merge([2, 3], $this->_allOptions);
     }
 
     public function mergeWithoutMergingAttributesProvider()
@@ -314,21 +325,26 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $clients = $this->createMock('Database\Table\Clients');
         $clients->method('getConnection')->willReturn($connection);
 
-        $model = $this->getMockBuilder($this->_getClass())
-                      ->disableOriginalConstructor()
-                      ->setMethodsExcept(['merge'])
-                      ->getMock();
-
+        $model = $this->createTestProxy(
+            DuplicatesManager::class,
+            [
+                $clients,
+                $this->createStub(Table\NetworkInterfaces::class),
+                $this->createStub(Table\DuplicateAssetTags::class),
+                $this->createStub(Table\DuplicateSerials::class),
+                $this->createStub(Table\DuplicateMacAddresses::class),
+                $this->createStub(Table\ClientConfig::class),
+                $clientManager,
+                $this->createStub(SoftwareManager::class),
+            ]
+        );
         $model->expects($this->never())->method('mergeConfig');
         $model->expects($this->never())->method('mergeCustomFields');
         $model->expects($this->never())->method('mergeGroups');
         $model->expects($this->never())->method('mergePackages');
         $model->expects($this->never())->method('mergeProductKey');
 
-        $proxy = new \SebastianBergmann\PeekAndPoke\Proxy($model);
-        $proxy->_clients = $clients;
-        $proxy->_clientManager = $clientManager;
-        $proxy->merge($clientIds, []);
+        $model->merge($clientIds, []);
     }
 
     public function mergeWithMergingAttributesProvider()
@@ -375,8 +391,18 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $clients = $this->createMock('Database\Table\Clients');
         $clients->method('getConnection')->willReturn($connection);
 
-        $model = $this->getMockBuilder($this->_getClass())
-                      ->disableOriginalConstructor()
+        /** @var MockObject&DuplicatesManager */
+        $model = $this->getMockBuilder(DuplicatesManager::class)
+                      ->setConstructorArgs([
+                            $clients,
+                            $this->createStub(Table\NetworkInterfaces::class),
+                            $this->createStub(Table\DuplicateAssetTags::class),
+                            $this->createStub(Table\DuplicateSerials::class),
+                            $this->createStub(Table\DuplicateMacAddresses::class),
+                            $this->createStub(Table\ClientConfig::class),
+                            $clientManager,
+                            $this->createStub(SoftwareManager::class),
+                        ])
                       ->setMethodsExcept(['merge'])
                       ->getMock();
 
@@ -390,10 +416,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
             }
         }
 
-        $proxy = new \SebastianBergmann\PeekAndPoke\Proxy($model);
-        $proxy->_clients = $clients;
-        $proxy->_clientManager = $clientManager;
-        $proxy->merge([1, 2, 3], $options);
+        $model->merge([1, 2, 3], $options);
     }
 
     public function testMergeCustomFields()
@@ -530,15 +553,18 @@ EOT
         $softwareManager = $this->createMock('Model\SoftwareManager');
         $softwareManager->expects($this->never())->method('setProductKey');
 
-        $model = $this->getMockBuilder($this->_getClass())
-                      ->disableOriginalConstructor()
-                      ->setMethods(null)
-                      ->getMock();
+        $model = new DuplicatesManager(
+            $this->createStub(Table\Clients::class),
+            $this->createStub(Table\NetworkInterfaces::class),
+            $this->createStub(Table\DuplicateAssetTags::class),
+            $this->createStub(Table\DuplicateSerials::class),
+            $this->createStub(Table\DuplicateMacAddresses::class),
+            $this->createStub(Table\ClientConfig::class),
+            $this->createStub(ClientManager::class),
+            $softwareManager
+        );
 
-        $proxy = new \SebastianBergmann\PeekAndPoke\Proxy($model);
-        $proxy->_softwareManager = $softwareManager;
-
-        $proxy->mergeProductKey($newestClient, $olderClients);
+        $model->mergeProductKey($newestClient, $olderClients);
     }
 
     public function testMergeProductKeyMerge()
@@ -558,15 +584,18 @@ EOT
         $softwareManager = $this->createMock('Model\SoftwareManager');
         $softwareManager->expects($this->once())->method('setProductKey')->with($newestClient, 'key2');
 
-        $model = $this->getMockBuilder($this->_getClass())
-                      ->disableOriginalConstructor()
-                      ->setMethods(null)
-                      ->getMock();
+        $model = new DuplicatesManager(
+            $this->createStub(Table\Clients::class),
+            $this->createStub(Table\NetworkInterfaces::class),
+            $this->createStub(Table\DuplicateAssetTags::class),
+            $this->createStub(Table\DuplicateSerials::class),
+            $this->createStub(Table\DuplicateMacAddresses::class),
+            $this->createStub(Table\ClientConfig::class),
+            $this->createStub(ClientManager::class),
+            $softwareManager
+        );
 
-        $proxy = new \SebastianBergmann\PeekAndPoke\Proxy($model);
-        $proxy->_softwareManager = $softwareManager;
-
-        $proxy->mergeProductKey($newestClient, $olderClients);
+        $model->mergeProductKey($newestClient, $olderClients);
     }
 
     public function testMergeConfig()
