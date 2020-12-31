@@ -47,16 +47,16 @@ class AuthenticationServiceTest extends \Model\Test\AbstractTest
         $result->method('isValid')->willReturn('is_valid');
 
         $adapter = $this->createMock('Model\Operator\AuthenticationAdapter');
-        $adapter->expects($this->at(0))->method('setIdentity')->with('user')->willReturnSelf();
-        $adapter->expects($this->at(1))->method('setCredential')->with('password')->willReturnSelf();
-        $adapter->expects($this->at(2))->method('authenticate')->willReturn($result);
+        $adapter->method('setIdentity')->with('user')->willReturnSelf();
+        $adapter->method('setCredential')->with('password')->willReturnSelf();
+        $adapter->method('authenticate')->willReturn($result);
 
         $service = $this->getMockBuilder($this->_getClass())
                         ->disableOriginalConstructor()
                         ->setMethods(array('getAdapter', 'authenticate'))
                         ->getMock();
-        $service->expects($this->at(0))->method('getAdapter')->willReturn($adapter);
-        $service->expects($this->at(1))->method('authenticate')->with(null)->willReturnCallback(
+        $service->method('getAdapter')->willReturn($adapter);
+        $service->method('authenticate')->with(null)->willReturnCallback(
             function () use ($adapter) {
                 return $adapter->authenticate();
             }

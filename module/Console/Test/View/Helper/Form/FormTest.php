@@ -85,20 +85,11 @@ class FormTest extends \Library\Test\View\Helper\AbstractTest
         $_SERVER = array('REQUEST_METHOD' => 'POST');
 
         $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
-        $view->expects($this->at(0))
-             ->method('__call')
-             ->with('translate', array('The post_max_size value of %s has been exceeded.'))
-             ->willReturn('exceeded %s');
-        $view->expects($this->at(1))
-             ->method('__call')
-             ->with(
-                 'htmlElement',
-                 array(
-                     'p',
-                     'exceeded ' . ini_get('post_max_size'),
-                     array('class' => 'error')
-                 )
-             )->willReturn('exceeded');
+        $view->method('__call')
+             ->willreturnMap([
+                 ['translate', ['The post_max_size value of %s has been exceeded.'], 'exceeded %s'],
+                 ['htmlElement', ['p', 'exceeded ' . ini_get('post_max_size'), ['class' => 'error']], 'exceeded']
+             ]);
 
         $helper = $this->getMockBuilder($this->_getHelperClass())
                        ->disableOriginalConstructor()

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 PHPUnit configuration file
 
@@ -18,24 +18,25 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
-<phpunit bootstrap="Test/bootstrap.php">
-    <testsuites>
-        <testsuite name="Model">
-            <directory>Test</directory>
-        </testsuite>
-    </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">.</directory>
-            <exclude>
-                <directory>Test</directory>
-            </exclude>
-        </whitelist>
-    </filter>
-    <logging>
-        <log type="coverage-text" target="php://stdout" showOnlySummary="true" />
-    </logging>
-    <php>
-        <env name="BRAINTACLE_TEST_DATABASE" value='{"driver" : "Pdo_Sqlite"}' />
-    </php>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="Test/bootstrap.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage processUncoveredFiles="true">
+    <include>
+      <directory suffix=".php">.</directory>
+    </include>
+    <exclude>
+      <directory>Test</directory>
+    </exclude>
+    <report>
+      <text outputFile="php://stdout" showOnlySummary="true"/>
+    </report>
+  </coverage>
+  <testsuites>
+    <testsuite name="Model">
+      <directory>Test</directory>
+    </testsuite>
+  </testsuites>
+  <logging/>
+  <php>
+    <env name="BRAINTACLE_TEST_DATABASE" value="{&quot;driver&quot; : &quot;Pdo_Sqlite&quot;}"/>
+  </php>
 </phpunit>

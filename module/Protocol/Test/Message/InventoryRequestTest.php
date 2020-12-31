@@ -42,8 +42,8 @@ class InventoryRequestTest extends \PHPUnit\Framework\TestCase
         $client->method('offsetGet')->with('IdString')->willReturn('id_string');
 
         $content = $this->createMock(Content::class);
-        $content->expects($this->at(0))->method('setClient')->with($client);
-        $content->expects($this->at(1))->method('appendSections');
+        $content->expects($this->once())->method('setClient')->with($client);
+        $content->expects($this->once())->method('appendSections');
 
         $request = $this->createMock(fDOMElement::class);
         $request->expects($this->exactly(2))->method('appendElement')->withConsecutive(

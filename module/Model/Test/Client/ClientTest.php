@@ -672,8 +672,8 @@ class ClientTest extends \Model\Test\AbstractTest
         $packageManager->method('getPackage')->with('packageName')->willReturn($package);
 
         $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
-        $connection->expects($this->at(0))->method('beginTransaction');
-        $connection->expects($this->at(1))->method('commit');
+        $connection->expects($this->once())->method('beginTransaction');
+        $connection->expects($this->once())->method('commit');
 
         $driver = $this->createMock('Laminas\Db\Adapter\Driver\DriverInterface');
         $driver->method('getConnection')->willReturn($connection);
@@ -713,8 +713,8 @@ class ClientTest extends \Model\Test\AbstractTest
         $packageManager->method('getPackage')->with('packageName')->willReturn($package);
 
         $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
-        $connection->expects($this->at(0))->method('beginTransaction');
-        $connection->expects($this->at(1))->method('rollback');
+        $connection->expects($this->once())->method('beginTransaction');
+        $connection->expects($this->once())->method('rollback');
         $connection->expects($this->never())->method('commit');
 
         $driver = $this->createMock('Laminas\Db\Adapter\Driver\DriverInterface');
@@ -723,32 +723,17 @@ class ClientTest extends \Model\Test\AbstractTest
         $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
 
-        $resultSet = $this->createMock('Laminas\Db\ResultSet\AbstractResultSet');
-        $resultSet->method('current')->willReturn(array('num' => 1));
-
-        $select = $this->createMock('Laminas\Db\Sql\Select');
-
-        $sql = $this->createMock('Laminas\Db\Sql\Sql');
-        $sql->method('select')->willReturn($select);
-
         $clientConfig = $this->createMock('Database\Table\ClientConfig');
-        $clientConfig->expects($this->at(0))->method('getSql')->willReturn($sql);
-        $clientConfig->expects($this->at(1))->method('selectWith')->willReturn($resultSet);
-        $clientConfig->expects($this->at(2))->method('getAdapter')->willReturn($adapter);
-        $clientConfig->expects($this->at(3))->method('getSql')->willReturn($sql);
-        $clientConfig->expects($this->at(4))->method('selectWith')->willThrowException(
-            new \RuntimeException('test message')
-        );
+        $clientConfig->method('getAdapter')->willReturn($adapter);
+        $clientConfig->method('getSql')->willThrowException(new \RuntimeException('test message'));
 
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('test message');
 
-        $model = $this->_getModel(
-            array(
+        $model = $this->_getModel([
                 'Database\Table\ClientConfig' => $clientConfig,
                 'Model\Package\PackageManager' => $packageManager,
-            )
-        );
+        ]);
         $model['Id'] = 1;
 
         $model->resetPackage('packageName');

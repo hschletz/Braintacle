@@ -218,8 +218,8 @@ class GroupManagerTest extends AbstractGroupTest
     public function testCreateGroupRollbackOnException()
     {
         $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
-        $connection->expects($this->at(0))->method('beginTransaction');
-        $connection->expects($this->at(1))->method('rollback');
+        $connection->expects($this->once())->method('beginTransaction');
+        $connection->expects($this->once())->method('rollback');
         $connection->expects($this->never())->method('commit');
 
         $driver = $this->createMock('Laminas\Db\Adapter\Driver\DriverInterface');
@@ -250,9 +250,9 @@ class GroupManagerTest extends AbstractGroupTest
     public function testDeleteGroup()
     {
         $group = $this->createMock('Model\Group\Group');
-        $group->expects($this->at(0))->method('lock')->willReturn(true);
-        $group->expects($this->at(1))->method('offsetGet')->with('Id')->willReturn(1);
-        $group->expects($this->at(2))->method('unlock');
+        $group->method('lock')->willReturn(true);
+        $group->method('offsetGet')->with('Id')->willReturn(1);
+        $group->expects($this->once())->method('unlock');
 
         $model = $this->_getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
         $model->deleteGroup($group);
@@ -292,7 +292,7 @@ class GroupManagerTest extends AbstractGroupTest
     public function testDeleteGroupLocked()
     {
         $group = $this->createMock('Model\Group\Group');
-        $group->expects($this->at(0))->method('lock')->willReturn(false);
+        $group->method('lock')->willReturn(false);
 
         $model = $this->_getModel();
         try {
@@ -336,7 +336,7 @@ class GroupManagerTest extends AbstractGroupTest
     public function testDeleteGroupDatabaseError()
     {
         $group = $this->createMock('Model\Group\Group');
-        $group->expects($this->at(0))->method('lock')->willReturn(true);
+        $group->method('lock')->willReturn(true);
 
         $clientsAndGroups = $this->createMock('Database\Table\ClientsAndGroups');
         $clientsAndGroups->method('delete')->will($this->throwException(new \RuntimeException('database error')));

@@ -48,8 +48,8 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
             )
         );
         $form = $this->getMockBuilder($this->_getFormClass())->setMethods(array('createSoftwareFieldset', 'populateValues'))->getMock();
-        $form->expects($this->at(0))->method('createSoftwareFieldset')->with($this->_names, true);
-        $form->expects($this->at(1))->method('populateValues')->with($data);
+        $form->expects($this->once())->method('createSoftwareFieldset')->with($this->_names, true);
+        $form->expects($this->once())->method('populateValues')->with($data);
         $form->setData($data);
     }
 
@@ -57,8 +57,8 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
     {
         $data = array();
         $form = $this->getMockBuilder($this->_getFormClass())->setMethods(array('createSoftwareFieldset', 'populateValues'))->getMock();
-        $form->expects($this->at(0))->method('createSoftwareFieldset')->with(array(), true);
-        $form->expects($this->at(1))->method('populateValues')->with($data);
+        $form->expects($this->once())->method('createSoftwareFieldset')->with(array(), true);
+        $form->expects($this->once())->method('populateValues')->with($data);
         $form->setData($data);
     }
 

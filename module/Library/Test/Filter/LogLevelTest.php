@@ -57,8 +57,8 @@ class LogLevelTest extends \PHPUnit\Framework\TestCase
 
     public function testInvalidArgument()
     {
-        $this->expectException('PHPUnit\Framework\Error\Notice');
-        $this->expectExceptionMessage('Undefined index: error');
+        $this->expectNotice();
+        $this->expectNoticeMessage('Undefined index: error');
         \Laminas\Filter\StaticFilter::execute('error', 'Library\LogLevel');
     }
 }

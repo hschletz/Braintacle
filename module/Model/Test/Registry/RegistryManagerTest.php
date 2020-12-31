@@ -243,8 +243,8 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
     public function testRenameValueDefinitionRollbackOnException()
     {
         $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
-        $connection->expects($this->at(0))->method('beginTransaction');
-        $connection->expects($this->at(1))->method('rollback');
+        $connection->expects($this->once())->method('beginTransaction');
+        $connection->expects($this->once())->method('rollback');
         $connection->expects($this->never())->method('commit');
 
         $driver = $this->createMock('Laminas\Db\Adapter\Driver\DriverInterface');
@@ -313,8 +313,8 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
     public function testDeleteValueDefinitionRollbackOnException()
     {
         $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
-        $connection->expects($this->at(0))->method('beginTransaction');
-        $connection->expects($this->at(1))->method('rollback');
+        $connection->expects($this->once())->method('beginTransaction');
+        $connection->expects($this->once())->method('rollback');
         $connection->expects($this->never())->method('commit');
 
         $driver = $this->createMock('Laminas\Db\Adapter\Driver\DriverInterface');

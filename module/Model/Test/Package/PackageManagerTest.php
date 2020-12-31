@@ -520,7 +520,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                        ->with('archive', false);
         $model = $this->_getModel(array('Library\ArchiveManager' => $archiveManager));
         $this->assertEquals('path/archive', $model->autoArchive($data, 'path', true));
-        $this->assertFileNotExists($source);
+        $this->assertFileDoesNotExist($source);
     }
 
     public function testAutoArchiveWindowsErrorOnArchiveCreation()
@@ -578,12 +578,9 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                        });
         $archiveManager->expects($this->once())
                        ->method('addFile')
-                       ->with($archive, $source, 'FileName');
-        $archiveManager->expects($this->at(4))
-                       ->method('closeArchive')
-                       ->with($archive, false)
+                       ->with($archive, $source, 'FileName')
                        ->will($this->throwException(new \Model\Package\RuntimeException('closeArchive')));
-        $archiveManager->expects($this->at(5))
+        $archiveManager->expects($this->once())
                        ->method('closeArchive')
                        ->with($archive, true);
         $model = $this->_getModel(array('Library\ArchiveManager' => $archiveManager));
@@ -593,7 +590,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         } catch (\Model\Package\RuntimeException $e) {
             $this->assertEquals('closeArchive', $e->getMessage());
             $this->assertFileExists($source);
-            $this->assertFileNotExists($archive);
+            $this->assertFileDoesNotExist($archive);
         }
     }
 
@@ -727,21 +724,19 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $newPackageData = array('Name' => 'new_name');
 
         $newPackage = $this->createMock('Model\Package\Package');
+        $newPackage->method('offsetGet')->with('Id')->willReturn('new_id');
 
         $package = $this->createMock('Model\Package\Package');
-        $package->expects($this->at(0))->method('offsetGet')->with('Id')->willReturn('old_id');
-        $package->expects($this->at(1))->method('offsetGet')->with('Name')->willReturn('old_name');
-        $package->expects($this->at(2))->method('exchangeArray')->with($this->identicalTo($newPackage));
-        $package->expects($this->at(3))->method('offsetGet')->with('Id')->willReturn('new_id');
+        $package->method('offsetGet')->willReturnMap([['Id', 'old_id'], ['Name', 'old_name']]);
 
-        $model = $this->getMockBuilder('Model\Package\PackageManager')
-                      ->disableOriginalConstructor()
-                      ->setMethods(array('buildPackage', 'getPackage', 'updateAssignments', 'deletePackage'))
-                      ->getMock();
-        $model->expects($this->at(0))->method('buildPackage')->with($newPackageData, 'delete');
-        $model->expects($this->at(1))->method('getPackage')->with('new_name')->willReturn($newPackage);
-        $model->expects($this->at(2))->method('updateAssignments')->with('old_id', 'new_id', 'p', 'r', 's', 'e', 'g');
-        $model->expects($this->at(3))->method('deletePackage')->with('old_name');
+        $model = $this->createPartialMock(
+            PackageManager::class,
+            ['buildPackage', 'getPackage', 'updateAssignments', 'deletePackage']
+        );
+        $model->expects($this->once())->method('buildPackage')->with($newPackageData, 'delete');
+        $model->method('getPackage')->with('new_name')->willReturn($newPackage);
+        $model->expects($this->once())->method('updateAssignments')->with('old_id', 'new_id', 'p', 'r', 's', 'e', 'g');
+        $model->expects($this->once())->method('deletePackage')->with('old_name');
 
         $model->updatePackage($package, $newPackageData, 'delete', 'p', 'r', 's', 'e', 'g');
     }

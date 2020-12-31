@@ -434,24 +434,24 @@ class Client extends \Model\ClientOrGroup
         $clientConfig = $this->_serviceLocator->get('Database\Table\ClientConfig');
 
         // Common filter for all operations
-        $where = array(
+        $where = [
             'hardware_id' => $this['Id'],
             'ivalue' => $package['Id'],
-        );
-
-        $select = $clientConfig->getSql()->select();
-        $select->columns(array('num' => new \Laminas\Db\Sql\Literal('COUNT(*)')));
-        $select->where($where);
-        $select->where(array('name' => 'DOWNLOAD'));
-        if ($clientConfig->selectWith($select)->current()['num'] != 1) {
-            throw new \RuntimeException(
-                sprintf('Package "%s" is not assigned to client %d', $name, $this['Id'])
-            );
-        }
+        ];
 
         $connection = $clientConfig->getAdapter()->getDriver()->getConnection();
         $connection->beginTransaction();
         try {
+            $select = $clientConfig->getSql()->select();
+            $select->columns(['num' => new \Laminas\Db\Sql\Literal('COUNT(*)')]);
+            $select->where($where);
+            $select->where(['name' => 'DOWNLOAD']);
+            if ($clientConfig->selectWith($select)->current()['num'] != 1) {
+                throw new \RuntimeException(
+                    sprintf('Package "%s" is not assigned to client %d', $name, $this['Id'])
+                );
+            }
+
             // Create DOWNLOAD_FORCE row if it does not already exist. This row
             // is required for overriding the client's package history.
             $select = $clientConfig->getSql()->select();

@@ -29,9 +29,10 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     public function testInterfaceInSubnet()
     {
         $subnet = $this->createMock('Model\Network\Subnet');
-        $subnet->expects($this->at(0))->method('offsetSet')->with('Address', 'address1');
-        $subnet->expects($this->at(1))->method('offsetSet')->with('Mask', 'mask1');
-        $subnet->expects($this->at(2))->method('offsetGet')->with('CidrAddress')->willReturn('<cidrAddress1>');
+        $subnet->expects($this->exactly(2))
+               ->method('offsetSet')
+               ->withConsecutive(['Address', 'address1'], ['Mask', 'mask1']);
+        $subnet->method('offsetGet')->with('CidrAddress')->willReturn('<cidrAddress1>');
 
         $helper = new \Console\View\Helper\FilterDescription($subnet);
         $helper->setView(static::$serviceManager->get('Laminas\View\Renderer\PhpRenderer'));

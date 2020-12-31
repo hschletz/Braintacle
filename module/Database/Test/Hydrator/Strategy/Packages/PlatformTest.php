@@ -50,13 +50,13 @@ class PlatformTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
 
     public function testNoticeOnHydrateInvalidValue()
     {
-        $this->expectException('PHPUnit\Framework\Error\Notice');
+        $this->expectNotice();
         $this->_strategy->hydrate('invalid', null);
     }
 
     public function testNoticeOnExtractInvalidValue()
     {
-        $this->expectException('PHPUnit\Framework\Error\Notice');
+        $this->expectNotice();
         $this->_strategy->extract('invalid');
     }
 }

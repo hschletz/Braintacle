@@ -144,7 +144,7 @@ class DirectTest extends \Model\Test\AbstractTest
                       ->getMock();
         $model->method('getPath')->with('id')->willReturn($path);
         $model->cleanup('id');
-        $this->assertFileNotExists($path);
+        $this->assertFileDoesNotExist($path);
     }
 
     public function testCreateDirectorySuccess()
@@ -317,7 +317,7 @@ class DirectTest extends \Model\Test\AbstractTest
         $this->assertSame($expectedFragments, $numFragments);
 
         if ($deleteSource) {
-            $this->assertFileNotExists($sourceFile);
+            $this->assertFileDoesNotExist($sourceFile);
         } else {
             $this->assertFileExists($sourceFile);
         }
@@ -331,7 +331,7 @@ class DirectTest extends \Model\Test\AbstractTest
             }
             $targetContent .= file_get_contents($targetFile);
         }
-        $this->assertFileNotExists("$packageDir/id-" . ($numFragments + 1));
+        $this->assertFileDoesNotExist("$packageDir/id-" . ($numFragments + 1));
         $this->assertEquals($content, $targetContent);
     }
 }

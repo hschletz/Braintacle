@@ -81,10 +81,8 @@ class TranslatorTest extends \PHPUnit\Framework\TestCase
      */
     public function testMissingTranslationTriggersNoticeWhenEnabled($locale)
     {
-        $this->expectException(
-            'PHPUnit\Framework\Error\Notice',
-            'Missing translation: this_string_is_not_translated'
-        );
+        $this->expectNotice();
+        $this->expectNoticeMessage('Missing translation: this_string_is_not_translated');
         \Locale::setDefault($locale);
         $serviceManager = \Library\Application::init('Library')->getServiceManager();
         $serviceManager->setService(

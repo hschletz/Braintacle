@@ -233,8 +233,8 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $this->expectExceptionMessage('Cannot lock client 2');
 
         $connection = $this->createMock('Laminas\Db\Adapter\Driver\ConnectionInterface');
-        $connection->expects($this->at(0))->method('beginTransaction');
-        $connection->expects($this->at(1))->method('rollback');
+        $connection->expects($this->once())->method('beginTransaction');
+        $connection->expects($this->once())->method('rollback');
         $connection->expects($this->never())->method('commit');
 
         $clients = $this->createMock('Database\Table\Clients');
@@ -284,20 +284,20 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $dateTime3->method('getTimestamp')->willReturn(333);
 
         $client1 = $this->createMock('Model\Client\Client');
-        $client1->expects($this->at(0))->method('lock')->willReturn(true);
-        $client1->expects($this->at(1))->method('offsetGet')->with('LastContactDate')->willReturn($dateTime1);
+        $client1->method('lock')->willReturn(true);
+        $client1->method('offsetGet')->with('LastContactDate')->willReturn($dateTime1);
         $client1->expects($this->never())->method('unlock');
 
         $client2 = $this->createMock('Model\Client\Client');
-        $client2->expects($this->at(0))->method('lock')->willReturn(true);
-        $client2->expects($this->at(1))->method('offsetGet')->with('LastContactDate')->willReturn($dateTime2);
+        $client2->method('lock')->willReturn(true);
+        $client2->method('offsetGet')->with('LastContactDate')->willReturn($dateTime2);
         $client2->expects($this->never())->method('unlock');
 
         // The newest client that gets preserved
         $client3 = $this->createMock('Model\Client\Client');
-        $client3->expects($this->at(0))->method('lock')->willReturn(true);
-        $client3->expects($this->at(1))->method('offsetGet')->with('LastContactDate')->willReturn($dateTime3);
-        $client3->expects($this->at(2))->method('unlock');
+        $client3->method('lock')->willReturn(true);
+        $client3->method('offsetGet')->with('LastContactDate')->willReturn($dateTime3);
+        $client3->expects($this->once())->method('unlock');
 
         $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->method('getClient')
@@ -307,8 +307,8 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
                       ->withConsecutive([$this->identicalTo($client1)], [$this->identicalTo($client2)]);
 
         $connection = $this->createMock('Laminas\Db\Adapter\Driver\ConnectionInterface');
-        $connection->expects($this->at(0))->method('beginTransaction');
-        $connection->expects($this->at(1))->method('commit');
+        $connection->expects($this->once())->method('beginTransaction');
+        $connection->expects($this->once())->method('commit');
         $connection->expects($this->never())->method('rollback');
 
         $clients = $this->createMock('Database\Table\Clients');

@@ -21,6 +21,8 @@
 
 namespace Console\Test\View\Helper\Form;
 
+use Laminas\Form\View\Helper\FormRow;
+
 class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
 {
     /** {@inheritdoc} */
@@ -35,9 +37,11 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
         $softwareFieldset = $this->createMock('Laminas\Form\Fieldset');
 
         $form = $this->createMock('Console\Form\Software');
-        $form->expects($this->at(0))->method('prepare');
-        $form->expects($this->at(1))->method('get')->with('_csrf')->willReturn($csrf);
-        $form->expects($this->at(2))->method('get')->with('Software')->willReturn($softwareFieldset);
+        $form->expects($this->once())->method('prepare');
+        $form->method('get')->willReturnMap([
+            ['_csrf', $csrf],
+            ['Software', $softwareFieldset]
+        ]);
 
         $consoleForm = $this->createMock('Console\View\Helper\Form\Form');
         $consoleForm->method('postMaxSizeExceeded')->willReturn('EXCEEDED');
@@ -133,15 +137,17 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
         $sorting = ['order' => 'current_order', 'direction' => 'current_direction'];
 
         $formRow = $this->createMock('Laminas\Form\View\Helper\FormRow');
-        $formRow->expects($this->at(0))->method('isTranslatorEnabled')->willReturn('translatorEnabled');
-        $formRow->expects($this->at(1))->method('setTranslatorEnabled')->with(false);
-        $formRow->expects($this->at(2))->method('__invoke')
-                                       ->with($checkbox1, \Laminas\Form\View\Helper\FormRow::LABEL_APPEND)
-                                       ->willReturn('checkbox1');
-        $formRow->expects($this->at(3))->method('__invoke')
-                                       ->with($checkbox2, \Laminas\Form\View\Helper\FormRow::LABEL_APPEND)
-                                       ->willReturn('checkbox2');
-        $formRow->expects($this->at(4))->method('setTranslatorEnabled')->with('translatorEnabled');
+        $formRow->method('isTranslatorEnabled')->willReturn('translatorEnabled');
+        $formRow->expects($this->exactly(2))
+                ->method('setTranslatorEnabled')
+                ->withConsecutive([false], ['translatorEnabled']);
+        $formRow->expects($this->exactly(2))
+                ->method('__invoke')
+                ->withConsecutive(
+                    [$checkbox1, FormRow::LABEL_APPEND],
+                    [$checkbox2, FormRow::LABEL_APPEND]
+                )
+                ->willReturnOnConsecutiveCalls('checkbox1', 'checkbox2');
 
         $translate = $this->createMock('Laminas\I18n\View\Helper\Translate');
         $translate->method('__invoke')

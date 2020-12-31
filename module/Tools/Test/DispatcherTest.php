@@ -54,17 +54,19 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
         $console = $this->createMock('Laminas\Console\Adapter\AdapterInterface');
 
         $container = $this->createMock('Laminas\ServiceManager\ServiceManager');
-        $container->expects($this->at(0))->method('get')->willReturn(array('key' => 'value'));
-        $container->expects($this->at(1))->method('getAllowOverride')->willReturn('initialAllowOverride');
-        $container->expects($this->at(2))->method('setAllowOverride')->with(true);
-        $container->expects($this->at(3))->method('setService')->with(
+        $container->method('get')->willReturn(['key' => 'value']);
+        $container->method('getAllowOverride')->willReturn('initialAllowOverride');
+        $container->expects($this->exactly(2))->method('setAllowOverride')->withConsecutive(
+            [true],
+            ['initialAllowOverride']
+        );
+        $container->expects($this->once())->method('setService')->with(
             'ApplicationConfig',
-            array(
+            [
                 'key' => 'value',
                 'Library\UserConfig' => 'configFile',
-            )
+            ]
         );
-        $container->expects($this->at(4))->method('setAllowOverride')->with('initialAllowOverride');
 
         $dispatcher = new \Tools\Dispatcher($container);
         $dispatcher->map(

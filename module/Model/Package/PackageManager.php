@@ -349,18 +349,14 @@ class PackageManager
         $deployError,
         $deployGroups
     ) {
-        // Preserve attributes because they get overwritten
         $oldId = $package['Id'];
         $oldName = $package['Name'];
 
         $this->buildPackage($newPackageData, $deleteSource);
-
-        // Update package object
-        $package->exchangeArray($this->getPackage($newPackageData['Name']));
-
+        $newPackage = $this->getPackage($newPackageData['Name']);
         $this->updateAssignments(
             $oldId,
-            $package['Id'],
+            $newPackage['Id'],
             $deployPending,
             $deployRunning,
             $deploySuccess,
