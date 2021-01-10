@@ -24,6 +24,8 @@ Misc:
   "braintacle-tool.php apidoc" still works, it expects the tools/phpDocumentor
   executable. PHIVE will install it to this location.
 
+- Abandoned dependencies have been removed.
+
 
 CHANGES IN VERSION 1.7
 ======================
