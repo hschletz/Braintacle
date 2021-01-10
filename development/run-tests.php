@@ -20,162 +20,207 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+namespace TestRunner;
+
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\SingleCommandApplication;
+use Symfony\Component\Process\Process;
+
 error_reporting(-1);
 
 require_once(__DIR__ . '/../vendor/autoload.php');
 
-/**
- * Run tests for specified module
- *
- * @param string $module Module name
- * @param string $filter if not empty, pass to phpunit's --filter option
- * @param bool $stop stop after first error
- * @param mixed $database Array with database config. If empty, default config is used.
- * @param bool $doCoverage generate code coverage report
- */
-function testModule($module, $filter, $stop, $database, $doCoverage)
-{
-    $cmd = [(new \Symfony\Component\Process\PhpExecutableFinder)->find()];
-    if ($doCoverage) {
-        $cmd[] = '-d zend_extension=xdebug.' . PHP_SHLIB_SUFFIX;
-    }
-    // Avoid vendor/bin/phpunit for Windows compatibility
-    $cmd[] = \Library\Application::getPath('vendor/phpunit/phpunit/phpunit');
-    $cmd[] = '-c';
-    $cmd[] = \Library\Application::getPath("module/$module/phpunit.xml");
-    $cmd[] = '--colors=always';
-    $cmd[] = '--disallow-test-output';
-    if ($doCoverage) {
-        $cmd[] = '--coverage-html=';
-        $cmd[] = \Library\Application::getPath("doc/CodeCoverage/$module");
-    }
-    if ($filter) {
-        $cmd[] = '--filter';
-        $cmd[] = $filter;
-    }
-    if ($stop) {
-        $cmd[] = '--stop-on-error';
-    }
-
-    $env = ['VAR_DUMPER_FORMAT' => 'html']; // Prevent VarDumper from writing to STDOUT in CLI.
-    if ($database) {
-        $env['BRAINTACLE_TEST_DATABASE'] = json_encode($database);
-    }
-
-    $process = new \Symfony\Component\Process\Process($cmd);
-    $process->setTimeout(null);
-    $process->start(null, $env);
-    foreach ($process as $type => $data) {
-        print $data;
-    }
-
-    if (!$process->isSuccessful()) {
-        printf("\n\nUnit tests for module '%s' failed with status %d. Aborting.\n", $module, $process->getExitCode());
-        exit(1);
-    }
-}
-
-try {
-    $opts = new \Laminas\Console\Getopt(
-        array(
-            'modules|m=s' => 'comma-separated list of modules to test (case insensitive), test all modules if not set',
-            'filter|f=s' => 'run only tests whose names match given regex',
-            'stop|s' => 'stop after first error',
-            'database|d-s' => 'comma-separated list of INI sections with database config (use all sections if empty)',
-            'coverage|c' => 'generate code coverage report (slow, requires Xdebug extension)',
-        )
-    );
-    $opts->parse();
-    if ($opts->getRemainingArgs()) {
-        throw new \Laminas\Console\Exception\RuntimeException(
-            'Non-option arguments not allowed',
-            $opts->getUsageMessage()
-        );
-    }
-} catch (\Laminas\Console\Exception\RuntimeException $e) {
-    print $e->getUsageMessage();
-    exit(1);
-}
-
-// Generate list of available modules.
-// The following basic modules are tested first. Other modules are added
-// dynamically.
-$modulesAvailable = array(
-    'Library',
-    'Database',
-    'Model',
+$application = new SingleCommandApplication();
+$application->setDescription('Braintacle test runner');
+$application->addOption(
+    'modules',
+    'm',
+    InputOption::VALUE_REQUIRED,
+    'Comma-separated list of modules to test (case insensitive), test all modules if not set'
 );
-foreach (new \FilesystemIterator(__DIR__ . '/../module') as $entry) {
-    if ($entry->isDir() and !in_array($entry->getFilename(), $modulesAvailable)) {
-        $modulesAvailable[] = $entry->getFilename();
-    }
-}
+$application->addOption(
+    'filter',
+    'f',
+    InputOption::VALUE_REQUIRED,
+    'Run only tests whose names match given regex'
+);
+$application->addOption(
+    'stop',
+    's',
+    InputOption::VALUE_NONE,
+    'Stop after first error'
+);
+$application->addOption(
+    'databases',
+    'd',
+    InputOption::VALUE_OPTIONAL,
+    'Comma-separated list of INI sections with database config (use all sections if empty)',
+    ''
+);
+$application->addOption(
+    'coverage',
+    'c',
+    InputOption::VALUE_NONE,
+    'Generate code coverage report (slow, requires Xdebug extension)'
+);
+$application->setCode(new Run());
+$application->run();
 
-// Compose list of modules to test
-$modules = array();
-if ($opts->modules) {
-    foreach (explode(',', $opts->modules) as $module) {
-        // Case insensitive test for valid module name
-        $moduleFiltered = preg_grep('/^' . preg_quote($module, '/') . '$/i', $modulesAvailable);
-        if ($moduleFiltered) {
-            $modules[] = array_shift($moduleFiltered);
-        } else {
-            print "Invalid module name: $module\n";
-            exit(1);
-        }
-    }
-    $modules = array_unique($modules);
-} else {
-    // No module requested, test all modules
-    $modules = $modulesAvailable;
-}
-
-// Compose list of database configurations to test
-$databases = array();
-if ($opts->database) {
-    // Get available sections
-    $reader = new \Laminas\Config\Reader\Ini;
-    $config = $reader->fromFile(\Library\Application::getPath('config/braintacle.ini'));
-
-    // Remove reserved sections
-    unset($config['database']); // Production database cannot be used
-    unset($config['debug']);
-
-    if (is_string($opts->database)) {
-        // Comma-separated list: validate and add each requested section
-        foreach (explode(',', $opts->database) as $section) {
-            if (!isset($config[$section])) {
-                print "Invalid config section: $section\n";
-                exit(1);
-            }
-            $databases[$section] = $config[$section];
-        }
-    } else {
-        // database option set without values: use all sections
-        $databases = $config;
-    }
-} else {
-    // Database option not set: use builtin default config
-    $databases[] = null;
-}
-
-// Run tests for all requested modules
-foreach ($modules as $module) {
-    foreach ($databases as $name => $database) {
-        print "\nRunning tests on $module module with ";
-        if ($database) {
-            print "config '$name'";
-        } else {
-            print 'default config';
-        }
-        print "\n\n";
-
-        testModule(
-            $module,
-            $opts->filter,
-            ($opts->stop ?: false),
-            $database,
-            ($opts->coverage ?: false)
+class Run
+{
+    public function __invoke(InputInterface $input, OutputInterface $output)
+    {
+        $modules = $this->getModules($input->getOption('modules'));
+        $databases = $this->getDatabases($input->getOption('databases'));
+        $this->runTests(
+            $output,
+            $modules,
+            $databases,
+            $input->getOption('filter'),
+            $input->getOption('stop'),
+            $input->getOption('coverage')
         );
+    }
+
+    protected function getModules(?string $modulesOption): array
+    {
+        $modulesAvailable = [
+            'Library',
+            'Database',
+            'Model',
+            'Console',
+            'Protocol',
+            'Tools',
+        ];
+
+        $modules = [];
+        if ($modulesOption) {
+            foreach (explode(',', $modulesOption) as $module) {
+                // Case insensitive test for valid module name
+                $moduleFiltered = preg_grep('/^' . preg_quote($module, '/') . '$/i', $modulesAvailable);
+                if ($moduleFiltered) {
+                    $modules[] = array_shift($moduleFiltered);
+                } else {
+                    throw new \InvalidArgumentException("Invalid module name: $module");
+                }
+            }
+            $modules = array_unique($modules);
+        } else {
+            // No module requested, test all modules in default order
+            $modules = $modulesAvailable;
+        }
+
+        return $modules;
+    }
+
+    protected function getDatabases(?string $databaseOption): array
+    {
+        $databases = [];
+        if ($databaseOption === '') {
+            // Database option not set: use builtin default config
+            $databases[] = null;
+        } else {
+            // Get available sections
+            $reader = new \Laminas\Config\Reader\Ini;
+            $config = $reader->fromFile(__DIR__ . '/../config/braintacle.ini');
+
+            // Remove reserved sections
+            unset($config['database']); // Production database cannot be used
+            unset($config['debug']);
+
+            if ($databaseOption === null) {
+                // database option set without values: use all sections
+                $databases = $config;
+            } else {
+                // Comma-separated list: validate and add each requested section
+                foreach (explode(',', $databaseOption) as $section) {
+                    if (!isset($config[$section])) {
+                        throw new \InvalidArgumentException("Invalid config section: $section");
+                    }
+                    $databases[$section] = $config[$section];
+                }
+            }
+        }
+
+        return $databases;
+    }
+
+    protected function runTests(
+        OutputInterface $output,
+        array $modules,
+        array $databases,
+        ?string $filter,
+        bool $stop,
+        bool $coverage
+    ) {
+        foreach ($modules as $module) {
+            foreach ($databases as $name => $database) {
+                $message = "\nRunning tests on $module module with ";
+                if ($database) {
+                    $message .= "config '$name'";
+                } else {
+                    $message .= 'default config';
+                }
+                $message .= "\n\n";
+                $output->write($message);
+
+                $this->runTest($output, $module, $database, $filter, $stop, $coverage);
+            }
+        }
+    }
+
+    protected function runTest(
+        OutputInterface $output,
+        string $module,
+        ?array $database,
+        ?string $filter,
+        bool $stop,
+        bool $coverage
+    ) {
+        $cmd = [(new \Symfony\Component\Process\PhpExecutableFinder())->find()];
+        if ($coverage) {
+            $cmd[] = '-d zend_extension=xdebug.' . PHP_SHLIB_SUFFIX;
+        }
+        // Avoid vendor/bin/phpunit for Windows compatibility
+        $cmd[] = __DIR__ . '/../vendor/phpunit/phpunit/phpunit';
+        $cmd[] = '-c';
+        $cmd[] = __DIR__ . "/../module/$module/phpunit.xml";
+        $cmd[] = '--colors=always';
+        $cmd[] = '--disallow-test-output';
+        if ($coverage) {
+            $cmd[] = '--coverage-html=';
+            $cmd[] = __DIR__ . "/../doc/CodeCoverage/$module";
+        }
+        if ($filter) {
+            $cmd[] = '--filter';
+            $cmd[] = $filter;
+        }
+        if ($stop) {
+            $cmd[] = '--stop-on-error';
+        }
+
+        $env = ['VAR_DUMPER_FORMAT' => 'html']; // Prevent VarDumper from writing to STDOUT in CLI.
+        if ($database) {
+            $env['BRAINTACLE_TEST_DATABASE'] = json_encode($database);
+        }
+
+        $process = new Process($cmd);
+        $process->setTimeout(null);
+        $process->start(null, $env);
+        foreach ($process as $data) {
+            $output->write($data);
+        }
+
+        if (!$process->isSuccessful()) {
+            throw new \RuntimeException(
+                sprintf(
+                    "Unit tests for module '%s' failed with status %d. Aborting.",
+                    $module,
+                    $process->getExitCode()
+                )
+            );
+        }
     }
 }

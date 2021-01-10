@@ -24,9 +24,6 @@ ini_set('memory_limit', '400M');
 date_default_timezone_set('Europe/Berlin');
 \Locale::setDefault('de');
 
-// Pretend to be not on a console to force choice of HTTP route over console route.
-\Laminas\Console\Console::overrideIsConsole(false);
-
 $serviceManager = \Library\Application::init('Console')->getServiceManager();
 $serviceManager->setService(
     'Library\UserConfig',

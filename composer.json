@@ -26,7 +26,6 @@
         "hschletz/nada": "^1.1.4",
         "laminas/laminas-authentication": "^2.5",
         "laminas/laminas-config": "^3.0",
-        "laminas/laminas-console": "^2.5",
         "laminas/laminas-db": "^2.9",
         "laminas/laminas-eventmanager": "^3.0",
         "laminas/laminas-filter": "^2.7",
