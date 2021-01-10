@@ -1,6 +1,6 @@
 <?php
 /**
- * Bootstrap for unit tests
+ * Export all clients
  *
  * Copyright (C) 2011-2021 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,9 +19,25 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-\DG\BypassFinals::enable();
+namespace Tools\Command;
 
-error_reporting(-1);
-date_default_timezone_set('Europe/Berlin');
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
-\Library\Application::init('Tools');
+/**
+ * Export all clients
+ *
+ * @codeCoverageIgnore
+ */
+class Export extends Command
+{
+    protected static $defaultName = 'export';
+
+    protected function configure()
+    {
+        $this->setDescription('Exports all clients as XML');
+        $this->addArgument('directory', InputArgument::REQUIRED, 'output directory');
+        $this->addOption('validate', null, InputOption::VALUE_NONE, 'validate output documents, abort on error');
+    }
+}

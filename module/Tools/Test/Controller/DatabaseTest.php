@@ -21,100 +21,87 @@
 
 namespace Tools\Test\Controller;
 
+use Database\SchemaManager;
 use Laminas\Log\Logger;
+use Laminas\Log\Writer\WriterInterface;
+use Library\Filter\LogLevel as LogLevelFilter;
+use Library\Validator\LogLevel as LogLevelValidator;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
-class DatabaseTest extends AbstractControllerTest
+class DatabaseTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * Schema manager mock
-     * @var \Database\SchemaManager
-     */
-    protected $_schemaManager;
-
-    /**
-     * Logger mock
-     * @var \Laminas\Log\Logger
-     */
-    protected $_logger;
-
-    /**
-     * Log writer mock
-     * @var \Laminas\Log\Writer\AbstractWriter
-     */
-    protected $_writer;
-
-    public function setUp(): void
+    public function testInvokeSuccess()
     {
-        parent::setUp();
+        $input = $this->createStub(InputInterface::class);
+        $input->method('getOption')->willReturnMap([
+            ['loglevel', 'log_level_input'],
+            ['prune', 'do_prune'],
+        ]);
 
-        $this->_schemaManager = $this->createMock('Database\SchemaManager');
-        static::$serviceManager->setService('Database\SchemaManager', $this->_schemaManager);
+        $output = $this->createStub(OutputInterface::class);
 
-        $this->_logger = $this->createMock('Laminas\Log\Logger');
-        static::$serviceManager->setService('Library\Logger', $this->_logger);
+        /** @var LogLevelValidator|MockObject */
+        $validator = $this->createMock(LogLevelValidator::class);
+        $validator->method('isValid')->with('log_level_input')->willReturn(true);
 
-        $this->_writer = $this->createMock(\Laminas\Log\Writer\AbstractWriter::class);
-        static::$serviceManager->setService('Library\Log\Writer\StdErr', $this->_writer);
+        /** @var LogLevelFilter|MockObject */
+        $filter = $this->createMock(LogLevelFilter::class);
+        $filter->method('filter')->with('log_level_input')->willReturn('log_level_filtered');
+
+        /** @var WriterInterface|MockObject */
+        $writer = $this->createMock(WriterInterface::class);
+        $writer->expects($this->once())
+               ->method('addFilter')
+               ->with('priority', ['priority' => 'log_level_filtered']);
+        $writer->expects($this->once())
+               ->method('setFormatter')
+               ->with('simple', ['format' => '%priorityName%: %message%']);
+
+        /** @var Logger|MockObject */
+        $logger = $this->createMock(Logger::class);
+        $logger->expects($this->once())->method('addWriter')->with($writer);
+
+        /** @var SchemaManager|MockObject */
+        $schemaManager = $this->createMock(SchemaManager::class);
+        $schemaManager->expects($this->once())->method('updateAll')->with('do_prune');
+
+        $controller = new \Tools\Controller\Database($schemaManager, $logger, $writer, $filter, $validator);
+        $this->assertSame(Command::SUCCESS, $controller($input, $output));
     }
 
-    public function testDefaultOptions()
+    public function testInvokeInvalidLogLevel()
     {
-        $this->_route->method('getMatchedParam')
-                     ->withConsecutive(
-                         ['loglevel', \Laminas\Log\Logger::INFO],
-                         ['prune', null],
-                         ['p', null]
-                     )->willReturnOnConsecutiveCalls(\Laminas\Log\Logger::INFO, false, false);
+        $input = $this->createStub(InputInterface::class);
+        $input->method('getOption')->willReturnMap([
+            ['loglevel', 'log_level_input'],
+            ['prune', 'do_prune'],
+        ]);
 
-        $this->_schemaManager->expects($this->once())->method('updateAll')->with(false);
+        $output = $this->createMock(OutputInterface::class);
+        $output->expects($this->once())->method('writeln')->with('error message');
 
-        $this->assertEquals(0, $this->_dispatch());
-    }
+        /** @var LogLevelValidator|MockObject */
+        $validator = $this->createMock(LogLevelValidator::class);
+        $validator->method('isValid')->with('log_level_input')->willReturn(false);
+        $validator->method('getMessages')->willReturn([LogLevelValidator::LOG_LEVEL => 'error message']);
 
-    public function testLoggerSetup()
-    {
-        $this->_writer->expects($this->once())
-                      ->method('addFilter')
-                      ->with('priority', ['priority' => \Laminas\Log\Logger::DEBUG]);
-        $this->_writer->expects($this->once())
-                      ->method('setFormatter')
-                      ->with('simple', ['format' => '%priorityName%: %message%']);
+        /** @var LogLevelFilter|MockObject */
+        $filter = $this->createMock(LogLevelFilter::class);
+        $filter->expects($this->never())->method('filter');
 
-        $this->_logger->expects($this->once())->method('addWriter')->with($this->_writer);
+        /** @var WriterInterface|Stub */
+        $writer = $this->createStub(WriterInterface::class);
 
-        $this->_route->expects($this->exactly(3))
-                     ->method('getMatchedParam')
-                     ->withConsecutive(
-                         array('loglevel', \Laminas\Log\Logger::INFO),
-                         array('prune', null),
-                         array('p', null)
-                     )->willReturnOnConsecutiveCalls(\Laminas\Log\Logger::DEBUG, false, false);
+        /** @var Logger|Stub */
+        $logger = $this->createStub(Logger::class);
 
-        $this->assertEquals(0, $this->_dispatch());
-    }
+        /** @var SchemaManager|MockObject */
+        $schemaManager = $this->createMock(SchemaManager::class);
+        $schemaManager->expects($this->never())->method('updateAll');
 
-    public function pruneProvider()
-    {
-        return array(
-            array(true, false),
-            array(false, true)
-        );
-    }
-
-    /**
-     * @dataProvider pruneProvider
-     */
-    public function testPrune($longFlag, $shortFlag)
-    {
-        $this->_route->method('getMatchedParam')
-                     ->withConsecutive(
-                         array('loglevel', \Laminas\Log\Logger::INFO),
-                         array('prune', null),
-                         array('p', null)
-                     )->willReturnOnConsecutiveCalls(\Laminas\Log\Logger::INFO, $longFlag, $shortFlag);
-
-        $this->_schemaManager->expects($this->once())->method('updateAll')->with(true);
-
-        $this->assertEquals(0, $this->_dispatch());
+        $controller = new \Tools\Controller\Database($schemaManager, $logger, $writer, $filter, $validator);
+        $this->assertSame(Command::FAILURE, $controller($input, $output));
     }
 }

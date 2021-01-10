@@ -1,6 +1,6 @@
 <?php
 /**
- * Bootstrap for unit tests
+ * Decode a compressed inventory file
  *
  * Copyright (C) 2011-2021 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,9 +19,24 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-\DG\BypassFinals::enable();
+namespace Tools\Command;
 
-error_reporting(-1);
-date_default_timezone_set('Europe/Berlin');
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 
-\Library\Application::init('Tools');
+/**
+ * Decode a compressed inventory file
+ *
+ * @codeCoverageIgnore
+ */
+class Decode extends Command
+{
+    protected static $defaultName = 'decode';
+
+    protected function configure()
+    {
+        $this->setDescription('Decodes a compressed inventory file as created by agents');
+        $this->addArgument('input file', InputArgument::REQUIRED, 'compressed input file');
+        $this->addArgument('output file', InputArgument::OPTIONAL, 'XML output file (default: print to STDOUT)');
+    }
+}

@@ -1,6 +1,6 @@
 <?php
 /**
- * Decode controller
+ * Decode a compressed inventory file
  *
  * Copyright (C) 2011-2021 Holger Schletz <holger.schletz@web.de>
  *
@@ -21,56 +21,50 @@
 
 namespace Tools\Controller;
 
-/**
- * Decode controller
- */
-class Decode
-{
-    /**
-     * Filter instance
-     * @var \Protocol\Filter\InventoryDecode
-     */
-    protected $_inventoryDecode;
+use Library\FileObject;
+use Protocol\Filter\InventoryDecode;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
-    /**
-     * Constructor
-     *
-     * @param \Protocol\Filter\InventoryDecode $inventoryDecode
-     */
-    public function __construct(\Protocol\Filter\InventoryDecode $inventoryDecode)
+/**
+ * Decode a compressed inventory file
+ */
+class Decode implements ControllerInterface
+{
+    protected $inventoryDecodeFilter;
+
+    public function __construct(InventoryDecode $inventoryDecodeFilter)
     {
-        $this->_inventoryDecode = $inventoryDecode;
+        $this->inventoryDecodeFilter = $inventoryDecodeFilter;
     }
 
-    /**
-     * Decode a compressed inventory file
-     *
-     * @param \ZF\Console\Route $route
-     * @param \Laminas\Console\Adapter\AdapterInterface $console
-     * @return integer Exit code
-     */
-    public function __invoke(\ZF\Console\Route $route, \Laminas\Console\Adapter\AdapterInterface $console)
+    public function __invoke(InputInterface $input, OutputInterface $output)
     {
-        $input = $route->getMatchedParam('input_file');
-        $output = $route->getMatchedParam('output_file');
+        $inputFile = $input->getArgument('input file');
+        $outputFile = $input->getArgument('output file');
 
-        if (!is_file($input) or !is_readable($input)) {
-            $console->writeLine('Input file does not exist or is not readable.');
+        if (!is_file($inputFile) or !is_readable($inputFile)) {
+            $output->writeln('Input file does not exist or is not readable.');
+
             return 10;
         }
 
         try {
-            $content = $this->_inventoryDecode->filter(\Library\FileObject::fileGetContents($input));
-            if ($output) {
-                $fileSystem = new \Symfony\Component\Filesystem\Filesystem;
-                $fileSystem->dumpFile($output, $content);
+            $content = $this->inventoryDecodeFilter->filter(FileObject::fileGetContents($inputFile));
+            if ($outputFile) {
+                $filesystem = new Filesystem;
+                $filesystem->dumpFile($outputFile, $content);
             } else {
-                $console->write($content);
+                $output->write($content);
             }
-            return 0;
         } catch (\InvalidArgumentException $e) {
-            $console->writeLine($e->getMessage());
+            $output->writeln($e->getMessage());
+
             return 11;
         }
+
+        return Command::SUCCESS;
     }
 }

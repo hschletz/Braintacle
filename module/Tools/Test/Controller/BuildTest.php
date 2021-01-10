@@ -21,39 +21,24 @@
 
 namespace Tools\Test\Controller;
 
-use Laminas\Log\Logger;
+use Model\Config;
+use Model\Package\PackageManager;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
-class BuildTest extends AbstractControllerTest
+class BuildTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * Config mock
-     * @var \Model\Config
-     */
-    protected $_config;
-
-    /**
-     * Package manager mock
-     * @var \Model\Package\PackageManager
-     */
-    protected $_packageManager;
-
-    public function setUp(): void
+    public function testInvoke()
     {
-        parent::setUp();
+        /** @var Config|Stub */
+        $config = $this->createStub(Config::class);
+        $config->method('__get')->willReturnArgument(0);
 
-        $this->_config = $this->createMock('Model\Config');
-        static::$serviceManager->setService('Model\Config', $this->_config);
-
-        $this->_packageManager = $this->createMock('Model\Package\PackageManager');
-        static::$serviceManager->setService('Model\Package\PackageManager', $this->_packageManager);
-    }
-
-    public function testSuccess()
-    {
-        $this->_config->method('__get')->willReturnArgument(0);
-
-        $this->_packageManager->expects($this->once())->method('buildPackage')->with(
-            array(
+        /** @var PackageManager|MockObject */
+        $packageManager = $this->createMock(PackageManager::class);
+        $packageManager->expects($this->once())->method('buildPackage')->with(
+            [
                 'Name' => 'packageName',
                 'Comment' => null,
                 'FileName' => 'fileName',
@@ -69,18 +54,20 @@ class BuildTest extends AbstractControllerTest
                 'WarnAllowDelay' => 'defaultWarnAllowDelay',
                 'PostInstMessage' => 'defaultPostInstMessage',
                 'MaxFragmentSize' => 'defaultMaxFragmentSize',
-            ),
+            ],
             false
         );
 
-        $this->_route->method('getMatchedParam')->willReturnMap(
-            array(
-                array('name', null, 'packageName'),
-                array('file', null, 'path/fileName'),
-            )
-        );
-        $this->_console->expects($this->once())->method('writeLine')->with('Package successfully built.');
+        $input = $this->createStub(InputInterface::class);
+        $input->method('getArgument')->willReturnMap([
+            ['name', 'packageName'],
+            ['file', 'path/fileName'],
+        ]);
 
-        $this->assertEquals(0, $this->_dispatch());
+        $output = $this->createMock(OutputInterface::class);
+        $output->expects($this->once())->method('writeln')->with('Package successfully built.');
+
+        $controller = new \Tools\Controller\Build($config, $packageManager);
+        $this->assertSame(Command::SUCCESS, $controller($input, $output));
     }
 }

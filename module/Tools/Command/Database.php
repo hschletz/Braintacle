@@ -1,6 +1,6 @@
 <?php
 /**
- * Apidoc controller
+ * Manage database schema
  *
  * Copyright (C) 2011-2021 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,28 +19,35 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Tools\Controller;
+namespace Tools\Command;
 
-use \Symfony\Component\Process\Process;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Apidoc controller
+ * Manage database schema
+ *
+ * @codeCoverageIgnore
  */
-class Apidoc
+class Database extends Command
 {
-    /**
-     * Generate API documentation
-     *
-     * @param \ZF\Console\Route $route
-     * @param \Laminas\Console\Adapter\AdapterInterface $console
-     * @return integer Exit code
-     * @codeCoverageIgnore
-     */
-    public function __invoke(\ZF\Console\Route $route, \Laminas\Console\Adapter\AdapterInterface $console)
+    protected static $defaultName = 'database';
+
+    protected function configure()
     {
-        $process = new Process(['tools/phpDocumentor'], \Library\Application::getPath());
-        $process->run(function ($type, $buffer) use ($console) {
-            $console->write($buffer);
-        });
+        $this->setDescription('Updates the database');
+        $this->addOption(
+            'loglevel',
+            'l',
+            InputOption::VALUE_REQUIRED,
+            'maximum log level (emerg|alert|crit|err|warn|notice|info|debug)',
+            'info'
+        );
+        $this->addOption(
+            'prune',
+            'p',
+            InputOption::VALUE_NONE,
+            'Drop obsolete tables and columns (default: just warn)'
+        );
     }
 }

@@ -24,13 +24,8 @@ error_reporting(E_ALL);
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$mvcApplication = \Library\Application::init('Tools');
-$consoleApplication = new ZF\Console\Application(
-    'Braintacle command line tool',
-    \Library\FileObject::fileGetContents(__DIR__ . '/VERSION'),
-    $mvcApplication->getConfig()['tool_routes'],
-    null,
-    new Tools\Dispatcher($mvcApplication->getServiceManager())
-);
+$application = \Library\Application::init('Tools');
+$serviceManager = $application->getServiceManager();
 
-exit($consoleApplication->run());
+$toolsApplication = new Tools\Application($serviceManager);
+$toolsApplication->run();

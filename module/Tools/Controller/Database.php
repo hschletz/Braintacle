@@ -1,6 +1,6 @@
 <?php
 /**
- * Database controller
+ * Manage database schema
  *
  * Copyright (C) 2011-2021 Holger Schletz <holger.schletz@web.de>
  *
@@ -21,63 +21,58 @@
 
 namespace Tools\Controller;
 
+use Database\SchemaManager;
+use Laminas\Log\Logger;
+use Laminas\Log\Writer\WriterInterface;
+use Library\Filter\LogLevel as LogLevelFilter;
+use Library\Validator\LogLevel as LogLevelValidator;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
 /**
- * Database controller
+ * Manage database schema
  */
-class Database
+class Database implements ControllerInterface
 {
-    /**
-     * Schema manager
-     * @var \Database\SchemaManager
-     */
-    protected $_schemaManager;
+    protected $logger;
+    protected $loglevelFilter;
+    protected $loglevelValidator;
+    protected $schemaManager;
+    protected $writer;
 
-    /**
-     * Logger
-     * @var \Laminas\Log\Logger
-     */
-    protected $_logger;
-
-    /**
-     * Log writer
-     * @var \Laminas\Log\Writer\AbstractWriter
-     */
-    protected $_writer;
-
-    /**
-     * Constructor
-     *
-     * @param \Database\SchemaManager $schemaManager
-     * @param \Laminas\Log\Logger $logger
-     * @param \Laminas\Log\Writer\AbstractWriter $writer
-     */
     public function __construct(
-        \Database\SchemaManager $schemaManager,
-        \Laminas\Log\LoggerInterface $logger,
-        \Laminas\Log\Writer\AbstractWriter $writer
+        SchemaManager $schemaManager,
+        Logger $logger,
+        WriterInterface $writer,
+        LogLevelFilter $loglevelFilter,
+        LogLevelValidator $loglevelValidator
     ) {
-        $this->_schemaManager = $schemaManager;
-        $this->_logger = $logger;
-        $this->_writer = $writer;
+        $this->schemaManager = $schemaManager;
+        $this->logger = $logger;
+        $this->writer = $writer;
+        $this->loglevelFilter = $loglevelFilter;
+        $this->loglevelValidator = $loglevelValidator;
     }
 
-    /**
-     * Manage database schema
-     *
-     * @param \ZF\Console\Route $route
-     * @param \Laminas\Console\Adapter\AdapterInterface $console
-     * @return integer Exit code
-     */
-    public function __invoke(\ZF\Console\Route $route, \Laminas\Console\Adapter\AdapterInterface $console)
+    public function __invoke(InputInterface $input, OutputInterface $output)
     {
-        $loglevel = $route->getMatchedParam('loglevel', \Laminas\Log\Logger::INFO);
-        $prune = $route->getMatchedParam('prune') || $route->getMatchedParam('p');
+        $loglevel = $input->getOption('loglevel');
+        $prune = $input->getOption('prune');
 
-        $this->_writer->addFilter('priority', ['priority' => $loglevel]);
-        $this->_writer->setFormatter('simple', ['format' => '%priorityName%: %message%']);
-        $this->_logger->addWriter($this->_writer);
+        if (!$this->loglevelValidator->isValid($loglevel)) {
+            $output->writeln($this->loglevelValidator->getMessages()[LogLevelValidator::LOG_LEVEL]);
 
-        $this->_schemaManager->updateAll($prune);
-        return 0;
+            return Command::FAILURE;
+        }
+
+        $this->writer->addFilter('priority', ['priority' => $this->loglevelFilter->filter($loglevel)]);
+        $this->writer->setFormatter('simple', ['format' => '%priorityName%: %message%']);
+
+        $this->logger->addWriter($this->writer);
+
+        $this->schemaManager->updateAll($prune);
+
+        return Command::SUCCESS;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Build controller
+ * Build a package
  *
  * Copyright (C) 2011-2021 Holger Schletz <holger.schletz@web.de>
  *
@@ -21,68 +21,53 @@
 
 namespace Tools\Controller;
 
+use Model\Config;
+use Model\Package\PackageManager;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
 /**
- * Build controller
+ * Build a package
  */
-class Build
+class Build implements ControllerInterface
 {
-    /**
-     * Config
-     * @var \Model\Config
-     */
-    protected $_config;
+    protected $config;
+    protected $packageManager;
 
-    /**
-     * Package manager
-     * @var \Model\Package\PackageManager
-     */
-    protected $_packageManager;
-
-    /**
-     * Constructor
-     *
-     * @param \Model\Config $config
-     * @param \Model\Package\PackageManager $packageManager
-     */
-    public function __construct(\Model\Config $config, \Model\Package\PackageManager $packageManager)
+    public function __construct(Config $config, PackageManager $packageManager)
     {
-        $this->_config = $config;
-        $this->_packageManager = $packageManager;
+        $this->config = $config;
+        $this->packageManager = $packageManager;
     }
 
-    /**
-     * Build a package
-     *
-     * @param \ZF\Console\Route $route
-     * @param \Laminas\Console\Adapter\AdapterInterface $console
-     * @return integer Exit code
-     */
-    public function __invoke(\ZF\Console\Route $route, \Laminas\Console\Adapter\AdapterInterface $console)
+    public function __invoke(InputInterface $input, OutputInterface $output)
     {
-        $name = $route->getMatchedParam('name');
-        $file = $route->getMatchedParam('file');
+        $name = $input->getArgument('name');
+        $file = $input->getArgument('file');
 
-        $this->_packageManager->buildPackage(
-            array(
+        $this->packageManager->buildPackage(
+            [
                 'Name' => $name,
                 'Comment' => null,
                 'FileName' => basename($file),
                 'FileLocation' => $file,
-                'Priority' => $this->_config->defaultPackagePriority,
-                'Platform' => $this->_config->defaultPlatform,
-                'DeployAction' => $this->_config->defaultAction,
-                'ActionParam' => $this->_config->defaultActionParam,
-                'Warn' => $this->_config->defaultWarn,
-                'WarnMessage' => $this->_config->defaultWarnMessage,
-                'WarnCountdown' => $this->_config->defaultWarnCountdown,
-                'WarnAllowAbort' => $this->_config->defaultWarnAllowAbort,
-                'WarnAllowDelay' => $this->_config->defaultWarnAllowDelay,
-                'PostInstMessage' => $this->_config->defaultPostInstMessage,
-                'MaxFragmentSize' => $this->_config->defaultMaxFragmentSize,
-            ),
+                'Priority' => $this->config->defaultPackagePriority,
+                'Platform' => $this->config->defaultPlatform,
+                'DeployAction' => $this->config->defaultAction,
+                'ActionParam' => $this->config->defaultActionParam,
+                'Warn' => $this->config->defaultWarn,
+                'WarnMessage' => $this->config->defaultWarnMessage,
+                'WarnCountdown' => $this->config->defaultWarnCountdown,
+                'WarnAllowAbort' => $this->config->defaultWarnAllowAbort,
+                'WarnAllowDelay' => $this->config->defaultWarnAllowDelay,
+                'PostInstMessage' => $this->config->defaultPostInstMessage,
+                'MaxFragmentSize' => $this->config->defaultMaxFragmentSize,
+            ],
             false
         );
-        $console->writeLine('Package successfully built.');
-        return 0;
+        $output->writeln('Package successfully built.');
+
+        return Command::SUCCESS;
     }
 }

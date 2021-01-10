@@ -1,6 +1,6 @@
 <?php
 /**
- * Export controller
+ * Export all clients
  *
  * Copyright (C) 2011-2021 Holger Schletz <holger.schletz@web.de>
  *
@@ -21,41 +21,31 @@
 
 namespace Tools\Controller;
 
-/**
- * Export controller
- */
-class Export
-{
-    /**
-     * Client manager
-     * @var \Model\Client\ClientManager
-     */
-    protected $_clientManager;
+use Model\Client\ClientManager;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
-    /**
-     * Constructor
-     *
-     * @param \Model\Client\ClientManager $clientManager
-     */
-    public function __construct(\Model\Client\ClientManager $clientManager)
+/**
+ * Export all clients
+ */
+class Export implements ControllerInterface
+{
+    protected $clientManager;
+
+    public function __construct(ClientManager $clientManager)
     {
-        $this->_clientManager = $clientManager;
+        $this->clientManager = $clientManager;
     }
 
-    /**
-     * Export all clients
-     *
-     * @param \ZF\Console\Route $route
-     * @param \Laminas\Console\Adapter\AdapterInterface $console
-     * @return integer Exit code
-     */
-    public function __invoke(\ZF\Console\Route $route, \Laminas\Console\Adapter\AdapterInterface $console)
+    public function __invoke(InputInterface $input, OutputInterface $output)
     {
-        $directory = $route->getMatchedParam('directory');
-        $validate = $route->getMatchedParam('validate') || $route->getMatchedParam('v');
+        $directory = $input->getArgument('directory');
+        $validate = $input->getOption('validate');
 
         if (!is_dir($directory) or !is_writable($directory)) {
-            $console->writeLine("Directory '$directory' does not exist or is not writable.");
+            $output->writeln("Directory '$directory' does not exist or is not writable.");
+
             return 10;
         }
 
@@ -64,17 +54,20 @@ class Export
             ini_set('log_errors', false); // Prevent duplicate message in case of validation failure
         }
 
-        $clients = $this->_clientManager->getClients(null, 'IdString');
+        /** @var \Model\Client\Client[] */
+        $clients = $this->clientManager->getClients(null, 'IdString');
         foreach ($clients as $client) {
             $id = $client['IdString'];
-            $console->writeLine("Exporting $id");
+            $output->writeln("Exporting $id");
             $document = $client->toDomDocument();
             $document->save($directory . '/' . $document->getFilename());
             if ($validate and !$document->isValid()) {
-                $console->writeLine("Validation failed for $id.");
+                $output->writeln("Validation failed for $id.");
+
                 return 11;
             }
         }
-        return 0;
+
+        return Command::SUCCESS;
     }
 }

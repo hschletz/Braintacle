@@ -1,6 +1,6 @@
 <?php
 /**
- * Bootstrap for unit tests
+ * Build a package
  *
  * Copyright (C) 2011-2021 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,9 +19,24 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-\DG\BypassFinals::enable();
+namespace Tools\Command;
 
-error_reporting(-1);
-date_default_timezone_set('Europe/Berlin');
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 
-\Library\Application::init('Tools');
+/**
+ * Build a package
+ *
+ * @codeCoverageIgnore
+*/
+class Build extends Command
+{
+    protected static $defaultName = 'build';
+
+    protected function configure()
+    {
+        $this->setDescription('Builds a package');
+        $this->addArgument('name', InputArgument::REQUIRED, 'package name');
+        $this->addArgument('file', InputArgument::REQUIRED, 'file with package content');
+    }
+}

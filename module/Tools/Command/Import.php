@@ -1,6 +1,6 @@
 <?php
 /**
- * Bootstrap for unit tests
+ * Import client from XML file
  *
  * Copyright (C) 2011-2021 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,9 +19,23 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-\DG\BypassFinals::enable();
+namespace Tools\Command;
 
-error_reporting(-1);
-date_default_timezone_set('Europe/Berlin');
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 
-\Library\Application::init('Tools');
+/**
+ * Import client from XML file
+ *
+ * @codeCoverageIgnore
+ */
+class Import extends Command
+{
+    protected static $defaultName = 'import';
+
+    protected function configure()
+    {
+        $this->setDescription('Imports clients from compressed or uncompressed XML files');
+        $this->addArgument('filename', InputArgument::REQUIRED, 'File to import');
+    }
+}

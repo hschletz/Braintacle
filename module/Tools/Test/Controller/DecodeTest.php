@@ -21,151 +21,144 @@
 
 namespace Tools\Test\Controller;
 
-use \org\bovigo\vfs\vfsStream;
-use \org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
+use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
+use Protocol\Filter\InventoryDecode;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Tools\Controller\Decode;
 
-class DecodeTest extends AbstractControllerTest
+class DecodeTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * InventoryDecode filter mock
-     * @var \Protocol\Filter\InventoryDecode
-     */
-    protected $_inventoryDecode;
-
-    public function setUp(): void
+    public function testInvokeToStdOut()
     {
-        parent::setUp();
-        $this->_inventoryDecode = $this->createMock('Protocol\Filter\InventoryDecode');
-        $filterManager = static::$serviceManager->get('FilterManager');
-        $filterManager->setAllowOverride(true);
-        $filterManager->setService('Protocol\InventoryDecode', $this->_inventoryDecode);
-    }
-
-    public function testSuccess()
-    {
-        $this->_inventoryDecode->method('filter')->with('input data')->willReturn('output data');
-        $inputFile = vfsStream::newFile('test')->withContent('input data')
-                                               ->at(vfsStream::setup('root'))
-                                               ->url();
-        $this->_route->method('getMatchedParam')
-                     ->willReturnMap(
-                         array(
-                            array('input_file', null, $inputFile),
-                            array('output_file', null, null)
-                         )
-                     );
-        $this->_console->expects($this->once())->method('write')->with('output data');
-
-        $this->assertEquals(0, $this->_dispatch());
-        $this->assertEquals(
-            array(
-                'root' => array(
-                    'test' => 'input data',
-                ),
-            ),
-            vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure()
-        );
-    }
-
-    public function testSuccessWithOutputFile()
-    {
-        $this->_inventoryDecode->method('filter')->with('input data')->willReturn('output data');
+        /** @var InventoryDecode|MockObject */
+        $inventoryDecode = $this->createMock(InventoryDecode::class);
+        $inventoryDecode->method('filter')->with('input data')->willReturn('output data');
 
         $dir = vfsStream::setup('root');
         $inputFile = vfsStream::newFile('test')->withContent('input data')->at($dir)->url();
+
+        $input = $this->createStub(InputInterface::class);
+        $input->method('getArgument')->willReturnMap([
+            ['input file', $inputFile],
+            ['output file', null],
+        ]);
+
+        $output = $this->createMock(OutputInterface::class);
+        $output->expects($this->once())->method('write')->with('output data');
+
+        $controller = new Decode($inventoryDecode);
+        $this->assertSame(Command::SUCCESS, $controller($input, $output));
+
+        $this->assertEquals(
+            [
+                'root' => [
+                    'test' => 'input data',
+                ],
+            ],
+            vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure()
+        );
+    }
+
+    public function testInvokeToFile()
+    {
+        /** @var InventoryDecode|MockObject */
+        $inventoryDecode = $this->createMock(InventoryDecode::class);
+        $inventoryDecode->method('filter')->with('input data')->willReturn('output data');
+
+        $dir = vfsStream::setup('root');
+        $inputFile = vfsStream::newFile('test')->withContent('input data')->at($dir)->url();
+
         $outputFile = $dir->url() . '/output_file';
 
-        $this->_route->method('getMatchedParam')
-                     ->willReturnMap(
-                         array(
-                            array('input_file', null, $inputFile),
-                            array('output_file', null, $outputFile)
-                         )
-                     );
-        $this->_console->expects($this->never())->method('write');
+        $input = $this->createStub(InputInterface::class);
+        $input->method('getArgument')->willReturnMap([
+            ['input file', $inputFile],
+            ['output file', $outputFile],
+        ]);
 
-        $this->assertEquals(0, $this->_dispatch());
+        $output = $this->createMock(OutputInterface::class);
+        $output->expects($this->never())->method('write');
+
+        $controller = new Decode($inventoryDecode);
+        $this->assertSame(Command::SUCCESS, $controller($input, $output));
+
         $this->assertEquals(
-            array(
-                'root' => array(
+            [
+                'root' => [
                     'test' => 'input data',
                     'output_file' => 'output data',
-                ),
-            ),
-            vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure()
+                ],
+            ],
+            vfsStream::inspect(new vfsStreamStructureVisitor())->getStructure()
         );
     }
 
-    public function testInputNotFile()
+    public function invalidInputFileProvider()
     {
-        $inputFile = vfsStream::newDirectory('test')->at(vfsStream::setup('root'))->url();
-        $this->_route->method('getMatchedParam')
-                     ->willReturnMap(
-                         array(
-                            array('input_file', null, $inputFile),
-                            array('output_file', null, null)
-                         )
-                     );
-        $this->_console->expects($this->once())->method('writeLine')->with(
-            'Input file does not exist or is not readable.'
-        );
-
-        $this->assertEquals(10, $this->_dispatch());
-        $this->assertEquals(
-            array(
-                'root' => array(
-                    'test' => array(),
-                ),
-            ),
-            vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure()
-        );
+        return [
+            [vfsStream::newDirectory('test'), []], // not a file
+            [vfsStream::newFile('test', 0000), null], // not readable
+        ];
     }
 
-    public function testInputFileNotReadable()
+    /** @dataProvider invalidInputFileProvider */
+    public function testInvokeInputNotFileOrNotReadable($inputFile, $filesystemObject)
     {
-        $inputFile = vfsStream::newFile('test', 0000)->at(vfsStream::setup('root'))->url();
-        $this->_route->method('getMatchedParam')
-                     ->willReturnMap(
-                         array(
-                            array('input_file', null, $inputFile),
-                            array('output_file', null, null)
-                         )
-                     );
-        $this->_console->expects($this->once())->method('writeLine')->with(
-            'Input file does not exist or is not readable.'
-        );
+        /** @var InventoryDecode|MockObject */
+        $inventoryDecode = $this->createMock(InventoryDecode::class);
+        $inventoryDecode->expects($this->never())->method('filter');
 
-        $this->assertEquals(10, $this->_dispatch());
+        $input = $this->createStub(InputInterface::class);
+        $input->method('getArgument')->willReturnMap([
+            ['input file', $inputFile->at(vfsStream::setup('root'))->url()],
+            ['output file', null],
+        ]);
+
+        $output = $this->createMock(OutputInterface::class);
+        $output->expects($this->once())->method('writeln')->with('Input file does not exist or is not readable.');
+
+        $controller = new Decode($inventoryDecode);
+        $this->assertEquals(10, $controller($input, $output));
+
         $this->assertEquals(
-            array(
-                'root' => array(
-                    'test' => null,
-                ),
-            ),
+            [
+                'root' => [
+                    'test' => $filesystemObject,
+                ],
+            ],
             vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure()
         );
     }
 
     public function testInvalidInputData()
     {
-        $this->_inventoryDecode->method('filter')->willThrowException(new \InvalidArgumentException('message'));
-        $inputFile = vfsStream::newFile('test')->at(vfsStream::setup('root'))->url();
-        $this->_route->method('getMatchedParam')
-                     ->willReturnMap(
-                         array(
-                            array('input_file', null, $inputFile),
-                            array('output_file', null, null)
-                         )
-                     );
-        $this->_console->expects($this->once())->method('writeLine')->with('message');
+        /** @var InventoryDecode|MockObject */
+        $inventoryDecode = $this->createMock(InventoryDecode::class);
+        $inventoryDecode->method('filter')->willThrowException(new \InvalidArgumentException('message'));
 
-        $this->assertEquals(11, $this->_dispatch());
+        $inputFile = vfsStream::newFile('test')->at(vfsStream::setup('root'))->url();
+
+        $input = $this->createStub(InputInterface::class);
+        $input->method('getArgument')->willReturnMap([
+            ['input file', $inputFile],
+            ['output file', null],
+        ]);
+
+        $output = $this->createMock(OutputInterface::class);
+        $output->expects($this->once())->method('writeln')->with('message');
+
+        $controller = new Decode($inventoryDecode);
+        $this->assertEquals(11, $controller($input, $output));
+
         $this->assertEquals(
-            array(
-                'root' => array(
+            [
+                'root' => [
                     'test' => null,
-                ),
-            ),
+                ],
+            ],
             vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure()
         );
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Bootstrap for unit tests
+ * Controller interface
  *
  * Copyright (C) 2011-2021 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,9 +19,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-\DG\BypassFinals::enable();
+namespace Tools\Controller;
 
-error_reporting(-1);
-date_default_timezone_set('Europe/Berlin');
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
-\Library\Application::init('Tools');
+/**
+ * Controller interface
+ */
+interface ControllerInterface
+{
+    /**
+     * Signature for invokable class.
+     */
+    public function __invoke(InputInterface $input, OutputInterface $output);
+}

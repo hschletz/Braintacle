@@ -9,6 +9,13 @@ without any warranty.
 CHANGES IN VERSION 1.8
 ======================
 
+Upgrading from previous versions:
+
+- The command line tool (braintacle-tool.php) has been rewritten and now accepts
+  a verbosity flag (-v, -vv, -vvv) for all commands. The "export" command
+  previously used -v as a shortcut for --validate. This shortcut has been
+  removed.
+
 Misc:
 
 - API documentation is now generated via phpDocumentor 3. A suitable config file

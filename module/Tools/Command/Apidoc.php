@@ -1,6 +1,6 @@
 <?php
 /**
- * Import client from XML file
+ * phpDocumentor wrapper
  *
  * Copyright (C) 2011-2021 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,29 +19,33 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Tools\Controller;
+namespace Tools\Command;
 
-use Model\Client\ClientManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
 
 /**
- * Import client from XML file
+ * phpDocumentor wrapper
+ *
+ * @codeCoverageIgnore
  */
-class Import implements ControllerInterface
+class Apidoc extends Command
 {
-    protected $clientManager;
+    protected static $defaultName = 'apidoc';
 
-    public function __construct(ClientManager $clientManager)
+    protected function configure()
     {
-        $this->clientManager = $clientManager;
+        $this->setDescription('Generates API documentation in the build/api directory');
     }
 
-    public function __invoke(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $filename = $input->getArgument('filename');
-        $this->clientManager->importFile($filename);
+        $process = new Process(['tools/phpDocumentor'], \Library\Application::getPath());
+        $process->run(function ($type, $buffer) use ($output) {
+            $output->write($buffer, false, OutputInterface::OUTPUT_RAW);
+        });
 
         return Command::SUCCESS;
     }

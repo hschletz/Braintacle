@@ -21,25 +21,25 @@
 
 namespace Tools\Test\Controller;
 
-class ImportTest extends AbstractControllerTest
+use Model\Client\ClientManager;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+class ImportTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * Client manager mock
-     * @var \Model\Client\ClientManager
-     */
-    protected $_clientManager;
-
-    public function setUp(): void
+    public function testInvoke()
     {
-        parent::setUp();
-        $this->_clientManager = $this->createMock('Model\Client\ClientManager');
-        static::$serviceManager->setService('Model\Client\ClientManager', $this->_clientManager);
-    }
+        /** @var ClientManager|MockObject */
+        $clientManager = $this->createMock(ClientManager::class);
+        $clientManager->expects($this->once())->method('importFile')->with('input file');
 
-    public function testSuccess()
-    {
-        $this->_clientManager->expects($this->once())->method('importFile')->with('input file');
-        $this->_route->method('getMatchedParam')->with('filename')->willReturn('input file');
-        $this->assertEquals(0, $this->_dispatch());
+        $input = $this->createMock(InputInterface::class);
+        $input->method('getArgument')->with('filename')->willReturn('input file');
+
+        $output = $this->createStub(OutputInterface::class);
+
+        $controller = new \Tools\Controller\Import($clientManager);
+        $this->assertSame(Command::SUCCESS, $controller($input, $output));
     }
 }

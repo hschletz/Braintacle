@@ -21,185 +21,157 @@
 
 namespace Tools\Test\Controller;
 
-use \org\bovigo\vfs\vfsStream;
+use Model\Client\Client;
+use Model\Client\ClientManager;
+use org\bovigo\vfs\vfsStream;
+use Protocol\Message\InventoryRequest;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Tools\Controller\Export;
 
-class ExportTest extends AbstractControllerTest
+class ExportTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * Client manager mock
-     * @var \Model\Client\ClientManager
-     */
-    protected $_clientManager;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->_clientManager = $this->createMock('Model\Client\ClientManager');
-        static::$serviceManager->setService('Model\Client\ClientManager', $this->_clientManager);
-    }
-
-    public function testSuccess()
+    public function testInvokeSuccessWithoutValidation()
     {
         $directory = vfsStream::newDirectory('test')->at(vfsStream::setup('root'))->url();
 
-        $document1 = $this->createMock('Protocol\Message\InventoryRequest');
+        $document1 = $this->createMock(InventoryRequest::class);
         $document1->method('getFilename')->willReturn('filename1');
         $document1->expects($this->once())->method('save')->with("$directory/filename1");
         $document1->expects($this->never())->method('isValid');
 
-        $document2 = $this->createMock('Protocol\Message\InventoryRequest');
+        $document2 = $this->createMock(InventoryRequest::class);
         $document2->method('getFilename')->willReturn('filename2');
         $document2->expects($this->once())->method('save')->with("$directory/filename2");
         $document2->expects($this->never())->method('isValid');
 
-        $client1 = $this->createMock('Model\Client\Client');
+        $client1 = $this->createMock(Client::class);
         $client1->method('offsetGet')->with('IdString')->willReturn('client1');
         $client1->method('toDomDocument')->willReturn($document1);
 
-        $client2 = $this->createMock('Model\Client\Client');
+        $client2 = $this->createMock(Client::class);
         $client2->method('offsetGet')->with('IdString')->willReturn('client2');
         $client2->method('toDomDocument')->willReturn($document2);
 
-        $this->_clientManager->method('getClients')->with(null, 'IdString')->willReturn(array($client1, $client2));
+        /** @var ClientManager|MockObject */
+        $clientManager = $this->createMock(ClientManager::class);
+        $clientManager->method('getClients')->with(null, 'IdString')->willReturn([$client1, $client2]);
 
-        $this->_route->method('getMatchedParam')
-                     ->withConsecutive(
-                         array('directory', null),
-                         array('validate', null),
-                         array('v', null)
-                     )
-                     ->willReturnOnConsecutiveCalls($directory, false, false);
+        $input = $this->createMock(InputInterface::class);
+        $input->method('getArgument')->with('directory')->willReturn($directory);
+        $input->method('getOption')->with('validate')->willReturn(false);
 
-        $this->_console->expects($this->exactly(2))->method('writeLine')->withConsecutive(
-            array('Exporting client1'),
-            array('Exporting client2')
+        $output = $this->createMock(OutputInterface::class);
+        $output->expects($this->exactly(2))->method('writeln')->withConsecutive(
+            ['Exporting client1'],
+            ['Exporting client2']
         );
 
-        $this->assertEquals(0, $this->_dispatch());
+        $controller = new Export($clientManager);
+        $this->assertSame(Command::SUCCESS, $controller($input, $output));
     }
 
-    public function testDirectoryDoesNotExist()
-    {
-        $directory = vfsStream::setup('root')->url() . '/invalid';
-
-        $this->_clientManager->expects($this->never())->method('getClients');
-
-        $this->_route->method('getMatchedParam')
-                     ->withConsecutive(
-                         array('directory', null),
-                         array('validate', null),
-                         array('v', null)
-                     )
-                     ->willReturnOnConsecutiveCalls($directory, false, false);
-
-        $this->_console->expects($this->once())->method('writeLine')->with(
-            "Directory '$directory' does not exist or is not writable."
-        );
-
-        $this->assertEquals(10, $this->_dispatch());
-    }
-
-    public function testDirectoryNotWritable()
-    {
-        $directory = vfsStream::newDirectory('test', 0000)->at(vfsStream::setup('root'))->url();
-
-        $this->_clientManager->expects($this->never())->method('getClients');
-
-        $this->_route->method('getMatchedParam')
-                     ->withConsecutive(
-                         array('directory', null),
-                         array('validate', null),
-                         array('v', null)
-                     )
-                     ->willReturnOnConsecutiveCalls($directory, false, false);
-
-        $this->_console->expects($this->once())->method('writeLine')->with(
-            "Directory '$directory' does not exist or is not writable."
-        );
-
-        $this->assertEquals(10, $this->_dispatch());
-    }
-
-    public function testDirectoryIsFile()
-    {
-        $directory = vfsStream::newFile('test')->at(vfsStream::setup('root'))->url();
-
-        $this->_clientManager->expects($this->never())->method('getClients');
-
-        $this->_route->method('getMatchedParam')
-                     ->withConsecutive(
-                         array('directory', null),
-                         array('validate', null),
-                         array('v', null)
-                     )
-                     ->willReturnOnConsecutiveCalls($directory, false, false);
-
-        $this->_console->expects($this->once())->method('writeLine')->with(
-            "Directory '$directory' does not exist or is not writable."
-        );
-
-        $this->assertEquals(10, $this->_dispatch());
-    }
-
-    public function validateProvider()
-    {
-        return array(
-            array(true, false),
-            array(false, true)
-        );
-    }
-    /**
-     * @dataProvider validateProvider
-     */
-    public function testValidate($longFlag, $shortFlag)
+    public function testInvokeWithValidation()
     {
         $directory = vfsStream::newDirectory('test')->at(vfsStream::setup('root'))->url();
 
-        $document1 = $this->createMock('Protocol\Message\InventoryRequest');
+        $document1 = $this->createMock(InventoryRequest::class);
         $document1->method('getFilename')->willReturn('filename1');
         $document1->expects($this->once())->method('save')->with("$directory/filename1");
         $document1->expects($this->once())->method('isValid')->willReturn(true);
 
-        $document2 = $this->createMock('Protocol\Message\InventoryRequest');
+        $document2 = $this->createMock(InventoryRequest::class);
         $document2->method('getFilename')->willReturn('filename2');
         $document2->expects($this->once())->method('save')->with("$directory/filename2");
         $document2->expects($this->once())->method('isValid')->willReturn(false);
 
-        $document3 = $this->createMock('Protocol\Message\InventoryRequest');
+        $document3 = $this->createMock(InventoryRequest::class);
         $document3->expects($this->never())->method('getFilename');
         $document3->expects($this->never())->method('save');
         $document3->expects($this->never())->method('isValid');
 
-        $client1 = $this->createMock('Model\Client\Client');
+        $client1 = $this->createMock(Client::class);
         $client1->method('offsetGet')->with('IdString')->willReturn('client1');
         $client1->method('toDomDocument')->willReturn($document1);
 
-        $client2 = $this->createMock('Model\Client\Client');
+        $client2 = $this->createMock(Client::class);
         $client2->method('offsetGet')->with('IdString')->willReturn('client2');
         $client2->method('toDomDocument')->willReturn($document2);
 
-        $client3 = $this->createMock('Model\Client\Client');
+        $client3 = $this->createMock(Client::class);
         $client3->expects($this->never())->method('offsetGet');
         $client3->expects($this->never())->method('toDomDocument');
 
-        $this->_clientManager->method('getClients')
-                             ->with(null, 'IdString')
-                             ->willReturn(array($client1, $client2, $client3));
+         /** @var ClientManager|MockObject */
+         $clientManager = $this->createMock(ClientManager::class);
+         $clientManager->method('getClients')
+                       ->with(null, 'IdString')
+                       ->willReturn([$client1, $client2, $client3]);
 
-        $this->_route->method('getMatchedParam')
-                     ->withConsecutive(
-                         array('directory', null),
-                         array('validate', null),
-                         array('v', null)
-                     )
-                     ->willReturnOnConsecutiveCalls($directory, $longFlag, $shortFlag);
+        $input = $this->createMock(InputInterface::class);
+        $input->method('getArgument')->with('directory')->willReturn($directory);
+        $input->method('getOption')->with('validate')->willReturn(true);
 
-        $this->_console->expects($this->exactly(3))->method('writeLine')->withConsecutive(
-            array('Exporting client1'),
-            array('Exporting client2'),
-            array('Validation failed for client2.')
+        $output = $this->createMock(OutputInterface::class);
+        $output->expects($this->exactly(3))->method('writeln')->withConsecutive(
+            ['Exporting client1'],
+            ['Exporting client2'],
+            ['Validation failed for client2.']
         );
 
-        $this->assertEquals(11, $this->_dispatch());
+        $controller = new Export($clientManager);
+        $this->assertEquals(11, $controller($input, $output));
+    }
+
+    public function invalidDirectoryProvider()
+    {
+        return [
+            [vfsStream::newDirectory('test', 0000)], // not writable
+            [vfsStream::newFile('test')], // file
+        ];
+    }
+
+    /** @dataProvider invalidDirectoryProvider */
+    public function testInvokeInvalidDirectory($directory)
+    {
+        $directory = $directory->at(vfsStream::setup('root'))->url();
+
+        /** @var ClientManager|MockObject */
+        $clientManager = $this->createMock(ClientManager::class);
+        $clientManager->expects($this->never())->method('getClients');
+
+        $input = $this->createMock(InputInterface::class);
+        $input->method('getArgument')->with('directory')->willReturn($directory);
+        $input->method('getOption')->with('validate')->willReturn(false);
+
+        $output = $this->createMock(OutputInterface::class);
+        $output->expects($this->once())->method('writeln')->with(
+            "Directory '$directory' does not exist or is not writable."
+        );
+
+        $controller = new Export($clientManager);
+        $this->assertEquals(10, $controller($input, $output));
+    }
+
+    public function testInvokeDirectoryDoesNotExist()
+    {
+        $directory = vfsStream::setup('root')->url() . '/invalid';
+
+        /** @var ClientManager|MockObject */
+        $clientManager = $this->createMock(ClientManager::class);
+        $clientManager->expects($this->never())->method('getClients');
+
+        $input = $this->createMock(InputInterface::class);
+        $input->method('getArgument')->with('directory')->willReturn($directory);
+        $input->method('getOption')->with('validate')->willReturn(false);
+
+        $output = $this->createMock(OutputInterface::class);
+        $output->expects($this->once())->method('writeln')->with(
+            "Directory '$directory' does not exist or is not writable."
+        );
+
+        $controller = new Export($clientManager);
+        $this->assertEquals(10, $controller($input, $output));
     }
 }
