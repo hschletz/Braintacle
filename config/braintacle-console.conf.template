@@ -56,5 +56,5 @@ Alias /braintacle /usr/local/share/braintacle/public
 
     # Enable static, site-independent configuration via .htaccess file.
     # Don't touch this!
-    AllowOverride FileInfo Options=php_flag
+    AllowOverride FileInfo
 </Directory>
