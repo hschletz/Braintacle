@@ -21,6 +21,11 @@
 
 namespace Model\Test\Network;
 
+use InvalidArgumentException;
+use Laminas\Validator\ValidatorPluginManager;
+use Library\Validator\IpNetworkAddress;
+use PHPUnit\Framework\MockObject\MockObject;
+
 /**
  * Tests for Model\Network\SubnetManager
  */
@@ -34,22 +39,6 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
         'NetworkInterfaces',
         'Subnets',
     );
-
-    public function invalidArgumentsProvider()
-    {
-        return array(
-            array('192.0.2.0', '2001:db8::', 'Not an IPv4 mask'),
-            array('2001:db8::', '255.255.255.128', 'Not an IPv4 address'),
-            array('192.0.2.0', null, 'Not an IPv4 mask'),
-            array('192.0.2.0', '', 'Not an IPv4 mask'),
-            array(null, '255.255.255.128', 'Not an IPv4 address'),
-            array('', '255.255.255.128', 'Not an IPv4 address'),
-            array('abc', '255.255.255.0', 'Not an IPv4 address'),
-            array('192.0.2.0', '0.0.0.0.0', 'Not an IPv4 mask'),
-            array('192.0.2.0', '255.0.255.0', 'Not an IPv4 mask'),
-            array('192.0.2.0', '0.255.255.0', 'Not an IPv4 mask'),
-        );
-    }
 
     public function testGetSubnetsFullByCidrAddress()
     {
@@ -193,7 +182,14 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
      */
     public function testGetSubnet($address, $mask, $name)
     {
-        $model = $this->_getModel();
+        /** @var MockObject */
+        $validator = $this->createMock(IpNetworkAddress::class);
+        $validator->expects($this->once())->method('isValid')->with("$address/$mask")->willReturn(true);
+
+        $validatorPluginManager = $this->createMock(ValidatorPluginManager::class);
+        $validatorPluginManager->method('get')->with(IpNetworkAddress::class)->willReturn($validator);
+
+        $model = $this->_getModel([ValidatorPluginManager::class => $validatorPluginManager]);
         $subnet = $model->getSubnet($address, $mask);
         $this->assertInstanceOf('Model\Network\Subnet', $subnet);
         $this->assertEquals(
@@ -206,17 +202,21 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
         );
     }
 
-    /**
-     * @dataProvider invalidArgumentsProvider
-     */
-    public function testGetSubnetInvalidArguments($address, $mask, $message)
+    public function testGetSubnetInvalidArguments()
     {
-        $model = $this->_getModel();
-        try {
-            $model->getSubnet($address, $mask);
-        } catch (\InvalidArgumentException $e) {
-            $this->assertStringStartsWith($message, $e->getMessage());
-        }
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('message');
+
+        /** @var MockObject */
+        $validator = $this->createMock(IpNetworkAddress::class);
+        $validator->expects($this->once())->method('isValid')->with('address/mask')->willReturn(false);
+        $validator->method('getMessages')->willReturn(['message']);
+
+        $validatorPluginManager = $this->createMock(ValidatorPluginManager::class);
+        $validatorPluginManager->method('get')->with(IpNetworkAddress::class)->willReturn($validator);
+
+        $model = $this->_getModel([ValidatorPluginManager::class => $validatorPluginManager]);
+        $model->getSubnet('address', 'mask');
     }
 
     public function saveSubnetProvider()
@@ -236,7 +236,14 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
      */
     public function testSaveSubnet($address, $mask, $name, $dataSet)
     {
-        $model = $this->_getModel();
+        /** @var MockObject */
+        $validator = $this->createMock(IpNetworkAddress::class);
+        $validator->expects($this->once())->method('isValid')->with("$address/$mask")->willReturn(true);
+
+        $validatorPluginManager = $this->createMock(ValidatorPluginManager::class);
+        $validatorPluginManager->method('get')->with(IpNetworkAddress::class)->willReturn($validator);
+
+        $model = $this->_getModel([ValidatorPluginManager::class => $validatorPluginManager]);
         $model->saveSubnet($address, $mask, $name, $dataSet);
         $this->assertTablesEqual(
             $this->_loadDataset($dataSet)->getTable('subnet'),
@@ -247,16 +254,20 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
         );
     }
 
-    /**
-     * @dataProvider invalidArgumentsProvider
-     */
-    public function testSaveSubnetInvalidArguments($address, $mask, $message)
+    public function testSaveSubnetInvalidArguments()
     {
-        $model = $this->_getModel();
-        try {
-            $model->saveSubnet($address, $mask, null);
-        } catch (\InvalidArgumentException $e) {
-            $this->assertStringStartsWith($message, $e->getMessage());
-        }
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('message');
+
+        /** @var MockObject */
+        $validator = $this->createMock(IpNetworkAddress::class);
+        $validator->expects($this->once())->method('isValid')->with('address/mask')->willReturn(false);
+        $validator->method('getMessages')->willReturn(['message']);
+
+        $validatorPluginManager = $this->createMock(ValidatorPluginManager::class);
+        $validatorPluginManager->method('get')->with(IpNetworkAddress::class)->willReturn($validator);
+
+        $model = $this->_getModel([ValidatorPluginManager::class => $validatorPluginManager]);
+        $model->saveSubnet('address', 'mask', null);
     }
 }

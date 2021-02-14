@@ -22,6 +22,7 @@
 namespace Library;
 
 use Laminas\ModuleManager\Feature;
+use Laminas\ServiceManager\Factory\InvokableFactory;
 
 /**
  * The Library module
@@ -122,6 +123,7 @@ class Module implements
                 'aliases' => array(
                     'Library\DirectoryWritable' => 'Library\Validator\DirectoryWritable',
                     'Library\FileReadable' => 'Library\Validator\FileReadable',
+                    'Library\IpNetworkAddress' => Validator\IpNetworkAddress::class,
                     'Library\LogLevel' => 'Library\Validator\LogLevel',
                     'Library\NotInArray' => 'Library\Validator\NotInArray',
                     'Library\ProductKey' => 'Library\Validator\ProductKey',
@@ -129,6 +131,7 @@ class Module implements
                 'factories' => array(
                     'Library\Validator\DirectoryWritable' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Library\Validator\FileReadable' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    Validator\IpNetworkAddress::class => InvokableFactory::class,
                     'Library\Validator\LogLevel' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Library\Validator\NotInArray' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Library\Validator\ProductKey' => 'Laminas\ServiceManager\Factory\InvokableFactory',

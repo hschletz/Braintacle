@@ -5,7 +5,7 @@
         {
             "name": "netid",
             "type": "varchar",
-            "length": 15,
+            "length": 45,
             "notnull": true,
             "default": null,
             "autoincrement": false,

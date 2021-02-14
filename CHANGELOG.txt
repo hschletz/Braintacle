@@ -11,10 +11,16 @@ CHANGES IN VERSION 1.8
 
 Upgrading from previous versions:
 
+- Required: Run "braintacle-tool.php database" to update the database.
+
 - The command line tool (braintacle-tool.php) has been rewritten and now accepts
   a verbosity flag (-v, -vv, -vvv) for all commands. The "export" command
   previously used -v as a shortcut for --validate. This shortcut has been
   removed.
+
+Fixed bugs:
+
+- Console: Fixed exception when editing an IPv6 subnet.
 
 Misc:
 

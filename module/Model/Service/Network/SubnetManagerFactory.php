@@ -21,6 +21,11 @@
 
 namespace Model\Service\Network;
 
+use Database\Table\Subnets;
+use Laminas\Validator\ValidatorPluginManager;
+use Library\Validator\IpNetworkAddress;
+use Model\Network\SubnetManager;
+
 /**
  * Factory for Model\Network\SubnetManager
  */
@@ -35,8 +40,9 @@ class SubnetManagerFactory implements \Laminas\ServiceManager\Factory\FactoryInt
         $requestedName,
         array $options = null
     ) {
-        return new \Model\Network\SubnetManager(
-            $container->get('Database\Table\Subnets')
+        return new SubnetManager(
+            $container->get(Subnets::class),
+            $container->get(ValidatorPluginManager::class)->get(IpNetworkAddress::class)
         );
     }
 }

@@ -21,6 +21,10 @@
 
 namespace Model\Network;
 
+use Database\Table\Subnets;
+use InvalidArgumentException;
+use Library\Validator\IpNetworkAddress;
+
 /**
  * Subnet manager
  */
@@ -32,14 +36,17 @@ class SubnetManager
      */
     protected $_subnets;
 
+    protected $ipNetworkAddressValidator;
+
     /**
      * Constructor
      *
      * @param \Database\Table\Subnets $subnets
      */
-    public function __construct(\Database\Table\Subnets $subnets)
+    public function __construct(Subnets $subnets, IpNetworkAddress $ipNetworkAddressValidator)
     {
         $this->_subnets = $subnets;
+        $this->ipNetworkAddressValidator = $ipNetworkAddressValidator;
     }
 
     /**
@@ -144,11 +151,8 @@ EOT;
      **/
     public function getSubnet($address, $mask)
     {
-        try {
-            $this->_validate($address, $mask);
-        } catch (\UnexpectedValueException $e) {
-            throw new \InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
-        }
+        $this->_validate($address, $mask);
+
         $select = $this->_subnets->getSql()->select();
         $select->columns(array('netid', 'mask', 'name'))
                ->where(array('netid' => $address, 'mask' => $mask));
@@ -173,11 +177,8 @@ EOT;
      */
     public function saveSubnet($address, $mask, $name)
     {
-        try {
-            $this->_validate($address, $mask);
-        } catch (\UnexpectedValueException $e) {
-            throw new \InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
-        }
+        $this->_validate($address, $mask);
+
         // Convert empty string to NULL for correct sorting order
         if ($name == '') {
             $name = null;
@@ -204,24 +205,13 @@ EOT;
      *
      * @param string $address
      * @param string $mask
-     * @throws \UnexpectedValueException if $address or $mask are invalid
+     * @throws InvalidArgumentException if $address or $mask are invalid
      */
     protected function _validate($address, $mask)
     {
-        $validator = new \Laminas\Validator\Ip(array('allowipv6' => false));
-        if (!$validator->isValid($address)) {
-            $messages = $validator->getMessages();
-            throw new \UnexpectedValueException(
-                sprintf('Not an IPv4 address: "%s" (%s)', $address, array_shift($messages))
-            );
-        }
-        // Check $mask for valid syntax and consecutive leading 1 bits.
-        // The explicit 0 check is required on 32 bit systems.
-        $bits = ip2long($mask);
-        if ($bits === false or !($bits === 0 or ctype_digit((string) log(($bits ^ 0xffffffff) + 1, 2)))) {
-            throw new \UnexpectedValueException(
-                sprintf('Not an IPv4 mask: "%s"', $address)
-            );
+        if (!$this->ipNetworkAddressValidator->isValid("$address/$mask")) {
+            $messages = $this->ipNetworkAddressValidator->getMessages();
+            throw new InvalidArgumentException(array_shift($messages));
         }
     }
 }

@@ -35,6 +35,18 @@ msgstr "'%value%' ist keine Datei oder nicht zugänglich"
 msgid "File '%value%' is not readable"
 msgstr "Datei '%value%' ist nicht lesbar"
 
+#: Validator/IpNetworkAddress.php
+msgid "'%value%' does not contain a valid IP address"
+msgstr "'%value%' enthält keine gültige IP-Adresse"
+
+#: Validator/IpNetworkAddress.php
+msgid "'%value%' does not contain a valid mask"
+msgstr "'%value%' enthält keine gültige Netzmaske"
+
+#: Validator/IpNetworkAddress.php
+msgid "'%value%' is not a valid network address"
+msgstr "'%value%' ist keine gültige Netzwerkadresse"
+
 #: Validator/LogLevel.php
 msgid "'%value%' is not a valid log level"
 msgstr "'%value%' ist kein gültiger Loglevel"
