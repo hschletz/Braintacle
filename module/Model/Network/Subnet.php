@@ -21,6 +21,9 @@
 
 namespace Model\Network;
 
+use DomainException;
+use Library\Validator\IpNetworkAddress;
+
 /**
  * Subnet definition and properties
  *
@@ -43,37 +46,25 @@ class Subnet extends \Model\AbstractModel
         if ($index == 'CidrAddress') {
             $address = $this['Address'];
             $mask = $this['Mask'];
-            $validator = new \Laminas\Validator\Ip([
-                'allowipv4' => true,
-                'allowipv6' => false,
-                'allowipvfuture' => false,
-                'allowliteral' => false,
-            ]);
-            if ($validator->isValid($address)) {
-                // IPv4 address
-                if (!$validator->isValid($mask)) {
-                    throw new \DomainException('Not an IPv4 address mask: ' . $mask);
-                }
-                // Convert mask to CIDR suffix.
+
+            // Validate Address and Mask so that the subsequent code can make
+            // assumptions about them.
+            $validator = new IpNetworkAddress();
+            if (!$validator->isValid("$address/$mask")) {
+                $messages = $validator->getMessages();
+                throw new DomainException(array_shift($messages));
+            }
+
+            if (ctype_digit((string) $mask)) {
+                $suffix = $mask;
+            } else {
+                // Convert IPv4 mask to CIDR suffix.
                 $suffix = ip2long($mask);
                 if ($suffix != 0) { // Next line would not work on 32 bit systems
                     $suffix = 32 - log(($suffix ^ 0xFFFFFFFF) + 1, 2);
                 }
-                $suffix = (string) $suffix;
-                if (!ctype_digit($suffix)) {
-                    throw new \DomainException('Not a CIDR mask: ' . $mask);
-                }
-            } else {
-                $validator->setOptions(['allowipv4' => false, 'allowipv6' => true]);
-                if (!$validator->isValid($address)) {
-                    throw new \DomainException('Not an IP address: ' . $address);
-                }
-                // IPv6 address. Mask should already be a valid suffix.
-                if (!ctype_digit((string) $mask) or $mask < 0 or $mask > 128) {
-                     throw new \DomainException('Not a CIDR mask: ' . $mask);
-                }
-                $suffix = $mask;
             }
+
             return "$address/$suffix";
         } else {
             return parent::offsetGet($index);
