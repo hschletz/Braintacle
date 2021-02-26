@@ -59,9 +59,10 @@ class Cpu extends DefaultPlugin
                 }
             }
             // flatten array, resulting in per-CPU list
-            $result = call_user_func_array(
-                'array_merge',
-                call_user_func_array('array_merge', $cpu)
+            $result = array_merge(
+                ...array_values(
+                    array_merge(...$cpu)
+                )
             );
         }
 

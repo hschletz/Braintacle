@@ -54,7 +54,7 @@ class FileObjectTest extends \PHPUnit\Framework\TestCase
 
         // Close file by destroying the object. File pointer should become invalid.
         unset($fileObject);
-        $this->assertFalse(@stream_get_meta_data($file));
+        $this->assertFalse(is_resource($file));
     }
 
     public function testOpenError()

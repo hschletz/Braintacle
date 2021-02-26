@@ -21,6 +21,8 @@
 
 namespace Library;
 
+use Throwable;
+
 /**
  * Frontend for different archive file types
  *
@@ -116,9 +118,15 @@ class ArchiveManager
         switch ($type) {
             case self::ZIP:
                 $archive = new \ZipArchive;
-                $result = $archive->open($filename, \ZipArchive::CREATE | \ZipArchive::EXCL);
-                if ($result !== true) {
-                    throw new \RuntimeException("Error creating ZIP archive '$filename', code $result");
+                // open() may throw an error on PHP 8 while earlier versions
+                // return FALSE. Handle both cases uniformly.
+                try {
+                    $result = $archive->open($filename, \ZipArchive::CREATE | \ZipArchive::EXCL);
+                    if ($result !== true) {
+                        throw new \RuntimeException("Error creating ZIP archive '$filename', code $result");
+                    }
+                } catch (Throwable $t) {
+                    throw new \RuntimeException("Error creating ZIP archive '$filename', code $result", 0, $t);
                 }
                 break;
             default:
@@ -139,9 +147,15 @@ class ArchiveManager
     public function closeArchive($archive, $ignoreErrors = false)
     {
         if ($archive instanceof \ZipArchive) {
-            if (!@$archive->close()) {
-                if (!$ignoreErrors) {
+            // close() may throw an error on PHP 8 while earlier versions return
+            // FALSE. Handle both cases uniformly.
+            try {
+                if (!@$archive->close()) {
                     throw new \RuntimeException('Error closing ZIP archive');
+                }
+            } catch (Throwable $t) {
+                if (!$ignoreErrors) {
+                    throw new \RuntimeException('Error closing ZIP archive', 0, $t);
                 }
             }
         } else {

@@ -21,6 +21,8 @@
 
 namespace Database\Test\Hydrator\Strategy\Packages;
 
+use DomainException;
+
 class PlatformTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
 {
     public function hydrateProvider()
@@ -41,22 +43,17 @@ class PlatformTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
         );
     }
 
-    public function testInvalidValues()
+    public function testHydrateInvalidValue()
     {
-        // Suppress notices which are tested separately.
-        $this->assertNull(@$this->_strategy->hydrate('invalid', null));
-        $this->assertNull(@$this->_strategy->extract('invalid'));
-    }
-
-    public function testNoticeOnHydrateInvalidValue()
-    {
-        $this->expectNotice();
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('Invalid platform: invalid');
         $this->_strategy->hydrate('invalid', null);
     }
 
-    public function testNoticeOnExtractInvalidValue()
+    public function testExtractInvalidValue()
     {
-        $this->expectNotice();
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('Invalid platform: invalid');
         $this->_strategy->extract('invalid');
     }
 }

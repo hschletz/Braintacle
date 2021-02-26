@@ -48,7 +48,7 @@ class CacheDate implements \Laminas\Hydrator\Strategy\StrategyInterface
     /** {@inheritdoc} */
     public function hydrate($value, ?array $data)
     {
-        if ($value == 0) {
+        if ($value == 0 or $value == '') {
             $value = null;
         } else {
             $value = \DateTime::createFromFormat('U', $value + $this->offset);

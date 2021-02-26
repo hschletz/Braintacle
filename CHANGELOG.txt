@@ -24,6 +24,8 @@ Fixed bugs:
 
 Misc:
 
+- Fixed PHP 8 compatibility.
+
 - API documentation is now generated via phpDocumentor 3. A suitable config file
   is included. Simply invoke phpDocumentor. It can be installed via PHIVE
   (https://phar.io) for which a config file is included too.

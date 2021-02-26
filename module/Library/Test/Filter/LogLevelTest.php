@@ -21,6 +21,7 @@
 
 namespace Library\Test\Filter;
 
+use DomainException;
 use Laminas\Log\Logger;
 
 class LogLevelTest extends \PHPUnit\Framework\TestCase
@@ -57,8 +58,8 @@ class LogLevelTest extends \PHPUnit\Framework\TestCase
 
     public function testInvalidArgument()
     {
-        $this->expectNotice();
-        $this->expectNoticeMessage('Undefined index: error');
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('Invalid log level: error');
         \Laminas\Filter\StaticFilter::execute('error', 'Library\LogLevel');
     }
 }

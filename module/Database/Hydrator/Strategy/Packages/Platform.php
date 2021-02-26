@@ -21,6 +21,8 @@
 
 namespace Database\Hydrator\Strategy\Packages;
 
+use DomainException;
+
 /**
  * Strategy for Platform attribute
  *
@@ -51,12 +53,20 @@ class Platform implements \Laminas\Hydrator\Strategy\StrategyInterface
     /** {@inheritdoc} */
     public function hydrate($value, ?array $data)
     {
+        if (!isset($this->_hydratorMap[$value])) {
+            throw new DomainException('Invalid platform: ' . $value);
+        }
+
         return $this->_hydratorMap[$value];
     }
 
     /** {@inheritdoc} */
     public function extract($value, ?object $object = null)
     {
+        if (!isset($this->_extractorMap[$value])) {
+            throw new DomainException('Invalid platform: ' . $value);
+        }
+
         return $this->_extractorMap[$value];
     }
 }

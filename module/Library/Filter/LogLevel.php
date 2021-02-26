@@ -21,6 +21,7 @@
 
 namespace Library\Filter;
 
+use DomainException;
 use Laminas\Log\Logger;
 
 /**
@@ -47,6 +48,11 @@ class LogLevel extends \Laminas\Filter\AbstractFilter
     /** {@inheritdoc} */
     public function filter($value)
     {
-        return $this->_priorities[strtolower($value)];
+        $value = strtolower($value);
+        if (!isset($this->_priorities[$value])) {
+            throw new DomainException('Invalid log level: ' . $value);
+        }
+
+        return $this->_priorities[$value];
     }
 }
