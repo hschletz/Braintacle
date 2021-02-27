@@ -223,7 +223,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $fixEncodingErrors->method('filter')
                           ->withConsecutive(array('raw1'), array('raw2'))
                           ->willReturnOnConsecutiveCalls('filtered1', 'filtered2');
-        $serviceManager->get('FilterManager')->setService('Library\Filter\FixEncodingErrors', $fixEncodingErrors);
+        $serviceManager->get('FilterManager')->setService('Library\FixEncodingErrors', $fixEncodingErrors);
 
         $viewHelperManager = $serviceManager->get('ViewHelperManager');
 
