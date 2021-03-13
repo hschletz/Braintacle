@@ -21,6 +21,11 @@
 
 namespace Console\Test\View\Helper\Form;
 
+use Console\View\Helper\Form\Form as FormHelper;
+use Laminas\Form\Form;
+use Laminas\Form\FormInterface;
+use Laminas\View\Renderer\PhpRenderer;
+
 class FormTest extends \Library\Test\View\Helper\AbstractTest
 {
     protected $_postBackup;
@@ -102,21 +107,62 @@ class FormTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRender()
     {
-        $form = $this->createMock('Laminas\Form\Form');
-        $form->expects($this->once())->method('prepare');
+        $form = $this->createStub(FormInterface::class);
 
-        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
-        $view->method('__call')->with('consoleFormFieldset', array($form))->willReturn('content');
+        $helper = $this->createPartialMock(FormHelper::class, ['renderForm']);
+        $helper->expects($this->once())->method('renderForm')->with($form)->willReturn('rendered form');
 
-        $helper = $this->getMockBuilder($this->_getHelperClass())
-                       ->disableOriginalConstructor()
-                       ->setMethodsExcept(array('render'))
-                       ->getMock();
+        $this->assertEquals('rendered form', $helper->render($form));
+    }
+
+    public function testRenderForm()
+    {
+        $form = $this->createStub(FormInterface::class);
+
+        $helper = $this->createPartialMock(
+            FormHelper::class,
+            ['prepareForm', 'postMaxSizeExceeded', 'openTag', 'renderContent', 'closeTag']
+        );
+        $helper->expects($this->once())->method('prepareForm')->with($form);
         $helper->method('postMaxSizeExceeded')->willReturn('exceeded');
-        $helper->method('openTag')->willReturn('<form>');
-        $helper->method('getView')->willReturn($view);
+        $helper->method('openTag')->with($form)->willReturn('<form>');
+        $helper->method('renderContent')->willReturn('content');
         $helper->method('closeTag')->willReturn('</form>');
 
-        $this->assertEquals('exceeded<form>content</form>', $helper->render($form));
+        $this->assertEquals('exceeded<form>content</form>', $helper->renderForm($form));
+    }
+
+    public function testRenderContent()
+    {
+        $form = $this->createMock(FormInterface::class);
+
+        $view = $this->createMock(PhpRenderer::class);
+        $view->method('__call')->with('consoleFormFieldset', [$form])->willReturn('content');
+
+        $helper = $this->createPartialMock(FormHelper::class, ['getView']);
+        $helper->method('getView')->willReturn($view);
+
+        $this->assertEquals('content', $helper->renderContent($form));
+    }
+
+    public function testPrepareFormWithoutPrepare()
+    {
+        $form = $this->createMock(FormInterface::class);
+        // Cannot mock prepare because method does not exist in FormInterface.
+        // Just assert that prepareForm() does not throw an error.
+
+        $helper = new FormHelper();
+        $helper->prepareForm($form);
+
+        $this->assertTrue(true); // Dummy assertion to mark test as complete
+    }
+
+    public function testPrepareFormWithPrepare()
+    {
+        $form = $this->createMock(Form::class);
+        $form->expects($this->once())->method('prepare');
+
+        $helper = new FormHelper();
+        $helper->prepareForm($form);
     }
 }

@@ -21,19 +21,21 @@
 
 namespace Console\View\Helper\Form;
 
+use Laminas\Form\Fieldset;
+use Laminas\Form\FormInterface;
+
 /**
  * ManageRegistryValues form renderer
  */
-class ManageRegistryValues extends AbstractHelper
+class ManageRegistryValues extends Form
 {
-    /** {@inheritdoc} */
-    public function renderElements(\Laminas\Form\FormInterface $form)
+    public function renderContent(FormInterface $form): string
     {
         $view = $this->getView();
         $fieldsetHelper = $view->plugin('consoleFormFieldset');
         $output = '';
         foreach ($form as $element) {
-            if ($element instanceof \Laminas\Form\Fieldset) {
+            if ($element instanceof Fieldset) {
                 $name = $element->getName();
                 if ($name == 'existing' and count($element)) {
                     $fieldset = '';

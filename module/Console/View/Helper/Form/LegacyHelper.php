@@ -21,6 +21,8 @@
 
 namespace Console\View\Helper\Form;
 
+use Laminas\Form\FormInterface;
+
 /**
  * Form helper for legacy forms which implement form rendering themselves
  *
@@ -33,10 +35,9 @@ namespace Console\View\Helper\Form;
  *
  * @deprecated
  */
-class LegacyHelper extends AbstractHelper
+class LegacyHelper extends Form
 {
-    /** {@inheritdoc} */
-    public function renderElements(\Laminas\Form\FormInterface $form)
+    public function renderContent(FormInterface $form): string
     {
         $formContent = '';
         if ($form->has('_csrf')) {

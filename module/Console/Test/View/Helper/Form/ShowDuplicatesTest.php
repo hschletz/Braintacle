@@ -21,6 +21,20 @@
 
 namespace Console\Test\View\Helper\Form;
 
+use ArrayIterator;
+use Console\Form\ShowDuplicates as ShowDuplicatesForm;
+use Console\View\Helper\ConsoleUrl;
+use Console\View\Helper\Form\ShowDuplicates as ShowDuplicatesHelper;
+use Console\View\Helper\Table;
+use DateTime;
+use Laminas\Form\ElementInterface;
+use Laminas\Form\View\Helper\FormRow;
+use Laminas\I18n\View\Helper\DateFormat;
+use Laminas\I18n\View\Helper\Translate;
+use Laminas\View\Helper\EscapeHtml;
+use Laminas\View\Renderer\PhpRenderer;
+use Library\View\Helper\HtmlElement;
+
 class ShowDuplicatesTest extends \Library\Test\View\Helper\AbstractTest
 {
     /** {@inheritdoc} */
@@ -29,47 +43,47 @@ class ShowDuplicatesTest extends \Library\Test\View\Helper\AbstractTest
         return 'consoleFormShowDuplicates';
     }
 
-    public function testRenderElements()
+    public function testRenderContent()
     {
-        $date1 = $this->createMock('DateTime');
-        $date2 = $this->createMock('DateTime');
+        $date1 = $this->createStub(DateTime::class);
+        $date2 = $this->createStub(DateTime::class);
 
-        $checkbox1 = $this->createMock('\Laminas\Form\ElementInterface');
-        $checkbox2 = $this->createMock('\Laminas\Form\ElementInterface');
+        $checkbox1 = $this->createStub(ElementInterface::class);
+        $checkbox2 = $this->createStub(ElementInterface::class);
 
-        $consoleUrl = $this->createMock('Library\View\Helper\HtmlElement');
+        $consoleUrl = $this->createMock(ConsoleUrl::class);
         $consoleUrl->method('__invoke')
                    ->withConsecutive(
                        ['client', 'customfields', ['id' => 1]],
                        ['client', 'customfields', ['id' => 2]]
                    )->willReturnOnConsecutiveCalls('url1', 'url2');
 
-        $dateFormat = $this->createMock('Laminas\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock(DateFormat::class);
         $dateFormat->method('__invoke')
                    ->withConsecutive([$this->identicalTo($date1)], [$this->identicalTo($date2)])
                    ->willReturnOnConsecutiveCalls('date1_formatted', 'date2_formatted');
 
-        $escapeHtml = $this->createMock('Laminas\View\Helper\EscapeHtml');
+        $escapeHtml = $this->createMock(EscapeHtml::class);
         $escapeHtml->method('__invoke')
                    ->willReturnCallback(function ($value) {
                        return $value . '_escaped';
                    });
 
-        $formRow = $this->createMock('Laminas\Form\View\Helper\FormRow');
+        $formRow = $this->createMock(FormRow::class);
         $formRow->method('__invoke')
                 ->withConsecutive(
-                    [$this->identicalTo($checkbox1), \Laminas\Form\View\Helper\FormRow::LABEL_APPEND],
-                    [$this->identicalTo($checkbox2), \Laminas\Form\View\Helper\FormRow::LABEL_APPEND]
+                    [$this->identicalTo($checkbox1), FormRow::LABEL_APPEND],
+                    [$this->identicalTo($checkbox2), FormRow::LABEL_APPEND]
                 )->willReturnOnConsecutiveCalls('<checkbox1>', '<checkbox2>');
 
-        $htmlElement = $this->createMock('Library\View\Helper\HtmlElement');
+        $htmlElement = $this->createMock(HtmlElement::class);
         $htmlElement->method('__invoke')
                     ->withConsecutive(
                         ['a', 'name1_escaped', ['href' => 'url1'], true],
                         ['a', 'name2_escaped', ['href' => 'url2'], true]
                     )->willReturnOnConsecutiveCalls('link1', 'link2');
 
-        $table = $this->createMock('Console\View\Helper\Table');
+        $table = $this->createMock(Table::class);
         $table->method('prepareHeaders')
               ->with(
                   [
@@ -126,12 +140,12 @@ class ShowDuplicatesTest extends \Library\Test\View\Helper\AbstractTest
               ->willReturnOnConsecutiveCalls('<header>', '<row1>', '<row2>');
         $table->method('tag')->with('<header><row1><row2>')->willReturn('<duplicates_table>');
 
-        $translate = $this->createMock('Laminas\I18n\View\Helper\Translate');
+        $translate = $this->createStub(Translate::class);
         $translate->method('__invoke')->willReturnCallback(function ($message) {
             return $message . '_translated';
         });
 
-        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
+        $view = $this->createStub(PhpRenderer::class);
 
         $view->method('plugin')->willReturnMap([
             ['consoleUrl', null, $consoleUrl],
@@ -160,18 +174,15 @@ class ShowDuplicatesTest extends \Library\Test\View\Helper\AbstractTest
             'LastContactDate' => $date2,
         ];
 
-        $form = $this->createMock('Console\Form\ShowDuplicates');
+        $form = $this->createStub(ShowDuplicatesForm::class);
         $form->method('getOption')->willReturnMap([
             ['order', '_order'],
             ['direction', '_direction'],
             ['clients', [$client1, $client2]]
         ]);
-        $form->method('getIterator')->willReturn(new \ArrayIterator([$checkbox1, $checkbox2]));
+        $form->method('getIterator')->willReturn(new ArrayIterator([$checkbox1, $checkbox2]));
 
-        $helper = $this->getMockBuilder($this->_getHelperClass())
-                       ->disableOriginalConstructor()
-                       ->setMethods(['getBlacklistLink', 'getView'])
-                       ->getMock();
+        $helper = $this->createPartialMock(ShowDuplicatesHelper::class, ['getBlacklistLink', 'getView']);
         $helper->method('getView')->willReturn($view);
         $helper->method('getBlacklistLink')->willReturnMap([
             ['MacAddress', 'macaddress1', 'blacklist_macaddress1'],
@@ -184,7 +195,7 @@ class ShowDuplicatesTest extends \Library\Test\View\Helper\AbstractTest
 
         $this->assertEquals(
             '<duplicates_table><checkbox1><checkbox2>',
-            $helper->renderElements($form)
+            $helper->renderContent($form)
         );
     }
 

@@ -21,6 +21,14 @@
 
 namespace Console\Test\View\Helper\Form;
 
+use ArrayIterator;
+use Console\Form\ClientConfig as ClientConfigForm;
+use Console\View\Helper\Form\ClientConfig as ClientConfigHelper;
+use Laminas\Form\Element;
+use Laminas\Form\Fieldset;
+use Laminas\View\Renderer\PhpRenderer;
+use Model\ClientOrGroup;
+
 class ClientConfigTest extends \Library\Test\View\Helper\AbstractTest
 {
     /** {@inheritdoc} */
@@ -29,32 +37,24 @@ class ClientConfigTest extends \Library\Test\View\Helper\AbstractTest
         return 'consoleFormClientConfig';
     }
 
-    public function testRenderElements()
+    public function testRenderContent()
     {
-        $fieldset = $this->createMock('Laminas\Form\Fieldset');
+        $fieldset = $this->createStub(Fieldset::class);
+        $element = $this->createStub(Element::class);
+        $object = $this->createStub(ClientOrGroup::class);
 
-        $element = $this->createMock('Laminas\Form\Element');
+        $view = $this->createMock(PhpRenderer::class);
+        $view->method('__call')->with('formRow', [$element])->willReturn('Element');
 
-        $object = $this->createMock('Model\ClientOrGroup');
-
-        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
-        $view->method('__call')->with('formRow', array($element))->willReturn('Element');
-
-        $form = $this->getMockBuilder('Console\Form\ClientConfig')
-                     ->disableOriginalConstructor()
-                     ->setMethods(array('getClientObject', 'getIterator'))
-                     ->getMock();
+        $form = $this->createStub(ClientConfigForm::class);
         $form->method('getClientObject')->willReturn($object);
-        $form->method('getIterator')->willReturn(new \ArrayIterator(array($element, $fieldset)));
+        $form->method('getIterator')->willReturn(new ArrayIterator([$element, $fieldset]));
 
-        $helper = $this->getMockBuilder($this->_getHelperClass())
-                       ->disableOriginalConstructor()
-                       ->setMethods(array('getView', 'renderFieldset'))
-                       ->getMock();
+        $helper = $this->createPartialMock(ClientConfigHelper::class, ['getView', 'renderFieldset']);
         $helper->method('getView')->willReturn($view);
         $helper->method('renderFieldset')->with($fieldset, $object)->willReturn('Fieldset');
 
-        $this->assertEquals('ElementFieldset', $helper->renderElements($form));
+        $this->assertEquals('ElementFieldset', $helper->renderContent($form));
     }
 
     public function renderFieldsetProvider()

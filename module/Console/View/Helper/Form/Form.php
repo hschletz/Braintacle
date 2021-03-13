@@ -21,20 +21,22 @@
 
 namespace Console\View\Helper\Form;
 
+use Laminas\Form\FormInterface;
+
 /**
  * Base class for form view helpers
  *
  * Extends default Laminas form helper with a prefixed message if post_max_size
  * has been exceeded.
+ *
+ * The render() method proxies to renderForm().
  */
 class Form extends \Laminas\Form\View\Helper\Form
 {
     /**
      * Return message if post_max_size has been exceeded.
-     *
-     * @return string
      */
-    public function postMaxSizeExceeded()
+    public function postMaxSizeExceeded(): string
     {
         if (empty($_POST) and empty($_FILES) and strtoupper(@$_SERVER['REQUEST_METHOD']) == 'POST') {
             return $this->getView()->htmlElement(
@@ -50,18 +52,44 @@ class Form extends \Laminas\Form\View\Helper\Form
         }
     }
 
-    /** {@inheritdoc} */
-    public function render(\Laminas\Form\FormInterface $form)
+    public function render(FormInterface $form): string
+    {
+        return $this->renderForm($form);
+    }
+
+    /**
+     * Render "form" element and its content.
+     */
+    public function renderForm(FormInterface $form): string
+    {
+        $this->prepareForm($form);
+
+        $formContent = $this->postMaxSizeExceeded();
+        $formContent .= $this->openTag($form);
+        $formContent .= $this->renderContent($form);
+        $formContent .= $this->closeTag();
+
+        return $formContent;
+    }
+
+    /**
+     * Render form content.
+     *
+     * Default implementation proxies to Fieldset helper. Subclasses may
+     * override this method for custom markup.
+     */
+    public function renderContent(FormInterface $form): string
+    {
+        return $this->getView()->consoleFormFieldset($form);
+    }
+
+    /**
+     * Prepare form if prepare() method exists.
+     */
+    public function prepareForm(FormInterface $form): void
     {
         if (method_exists($form, 'prepare')) {
             $form->prepare();
         }
-
-        $formContent = $this->postMaxSizeExceeded();
-        $formContent .= $this->openTag($form);
-        $formContent .= $this->getView()->consoleFormFieldset($form);
-        $formContent .= $this->closeTag();
-
-        return $formContent;
     }
 }

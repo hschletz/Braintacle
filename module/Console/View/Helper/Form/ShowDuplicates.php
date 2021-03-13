@@ -21,13 +21,16 @@
 
 namespace Console\View\Helper\Form;
 
+use IntlDateFormatter;
+use Laminas\Form\FormInterface;
+use Laminas\Form\View\Helper\FormRow;
+
 /**
  * Duplicates form renderer
  */
-class ShowDuplicates extends AbstractHelper
+class ShowDuplicates extends Form
 {
-    /** {@inheritdoc} */
-    public function renderElements(\Laminas\Form\FormInterface $form)
+    public function renderContent(FormInterface $form): string
     {
         $view = $this->getView();
         $consoleUrl = $view->plugin('consoleUrl');
@@ -84,7 +87,7 @@ class ShowDuplicates extends AbstractHelper
                 $this->getBlacklistLink('AssetTag', $client['AssetTag']),
 
                 $escapeHtml(
-                    $dateFormat($client['LastContactDate'], \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
+                    $dateFormat($client['LastContactDate'], IntlDateFormatter::SHORT, IntlDateFormatter::SHORT)
                 ),
             ]);
         }
@@ -92,7 +95,7 @@ class ShowDuplicates extends AbstractHelper
         $formContent = $table->tag($tableContent);
 
         foreach ($form as $element) {
-            $formContent .= $formRow($element, \Laminas\Form\View\Helper\FormRow::LABEL_APPEND);
+            $formContent .= $formRow($element, FormRow::LABEL_APPEND);
         }
 
         return $formContent;
