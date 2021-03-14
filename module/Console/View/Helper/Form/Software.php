@@ -21,33 +21,50 @@
 
 namespace Console\View\Helper\Form;
 
+use Laminas\Form\FormInterface;
+
 /**
  * Render software fieldset
  */
-class Software extends \Laminas\View\Helper\AbstractHelper
+class Software extends Form
 {
     /**
      * Render all
      *
-     * @param \Console\Form\Software $form Software form
+     * @param FormInterface $form Software form
      * @param array[] $software Software list
      * @param array $sorting Sorting for table helper
      * @param string $filter Current filter (accepted, ignored, new, all)
      */
-    public function __invoke(\Console\Form\Software $form, $software, $sorting, $filter)
-    {
-        $form->prepare();
+    public function __invoke(
+        FormInterface $form = null,
+        array $software = [],
+        array $sorting = [],
+        string $filter = null
+    ): string {
+        $this->getView()->consoleScript('form_software.js');
 
-        $view = $this->getView();
-        $formHelper = $view->plugin('consoleForm');
-        $formRowHelper = $view->plugin('formRow');
+        return $this->renderForm($form, $software, $sorting, $filter);
+    }
 
-        $formContent = $formHelper->postMaxSizeExceeded();
-        $formContent .= $formHelper->openTag($form);
-        $formContent .= $formRowHelper($form->get('_csrf'));
+    /**
+     * Render content
+     *
+     * @param FormInterface $form Software form
+     * @param array[] $software Software list
+     * @param array $sorting Sorting for table helper
+     * @param string $filter Current filter (accepted, ignored, new, all)
+     */
+    public function renderContent(
+        FormInterface $form,
+        array $software = [],
+        array $sorting = [],
+        string $filter = null
+    ): string {
+        $formContent = $this->getView()->formRow($form->get('_csrf'));
         $formContent .= $this->renderButtons($form, $filter);
         $formContent .= $this->renderSoftwareFieldset($form->get('Software'), $software, $sorting);
-        $formContent .= $formHelper->closeTag();
+
         return $formContent;
     }
 

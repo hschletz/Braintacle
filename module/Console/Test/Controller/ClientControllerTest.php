@@ -21,6 +21,9 @@
 
 namespace Console\Test\Controller;
 
+use Console\Form\Search as SearchForm;
+use Console\View\Helper\Form\Search as SearchHelper;
+
 /**
  * Tests for ClientController
  */
@@ -2976,7 +2979,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testSearchActionNoPreset()
     {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
+        $serviceManager = $this->getApplicationServiceLocator();
+
+        $form = $serviceManager->get('FormElementManager')->get(SearchForm::class);
         $form->expects($this->never())
              ->method('setData');
         $form->expects($this->never())
@@ -2990,18 +2995,25 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                  $this->matchesRegularExpression('#^(method|action)$#'),
                  $this->matchesRegularExpression('#^(GET|/console/client/index/)$#')
              );
-        $form->expects($this->once())
-             ->method('render');
+
+        $formHelper = $this->createMock(SearchHelper::class);
+        $formHelper->expects($this->once())->method('__invoke')->with($form)->willReturn('<searchform/>');
+
+        $serviceManager->get('ViewHelperManager')->setService('consoleFormSearch', $formHelper);
+
         $this->dispatch('/console/client/search/');
         $this->assertResponseStatusCode(200);
+        $this->assertXpathQuery('//searchform');
     }
 
     public function testSearchActionPreset()
     {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
+        $serviceManager = $this->getApplicationServiceLocator();
+
+        $form = $serviceManager->get('FormElementManager')->get(SearchForm::class);
         $form->expects($this->once())
              ->method('setData')
-             ->with(array('filter' => 'Name', 'search' => 'value'));
+             ->with(['filter' => 'Name', 'search' => 'value']);
         $form->expects($this->once())
              ->method('isValid');
         $form->expects($this->once())
@@ -3013,10 +3025,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                  $this->matchesRegularExpression('#^(method|action)$#'),
                  $this->matchesRegularExpression('#^(GET|/console/client/index/)$#')
              );
-        $form->expects($this->once())
-             ->method('render');
+
+        $formHelper = $this->createMock(SearchHelper::class);
+        $formHelper->expects($this->once())->method('__invoke')->with($form)->willReturn('<searchform/>');
+
+        $serviceManager->get('ViewHelperManager')->setService('consoleFormSearch', $formHelper);
+
         $this->dispatch('/console/client/search/?filter=Name&search=value');
         $this->assertResponseStatusCode(200);
+        $this->assertXpathQuery('//searchform');
     }
 
     public function testImportActionGet()

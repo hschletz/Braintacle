@@ -60,13 +60,13 @@ class Form extends \Laminas\Form\View\Helper\Form
     /**
      * Render "form" element and its content.
      */
-    public function renderForm(FormInterface $form): string
+    public function renderForm(FormInterface $form, ...$renderContentArgs): string
     {
         $this->prepareForm($form);
 
         $formContent = $this->postMaxSizeExceeded();
         $formContent .= $this->openTag($form);
-        $formContent .= $this->renderContent($form);
+        $formContent .= $this->renderContent($form, ...$renderContentArgs);
         $formContent .= $this->closeTag();
 
         return $formContent;
@@ -76,7 +76,8 @@ class Form extends \Laminas\Form\View\Helper\Form
      * Render form content.
      *
      * Default implementation proxies to Fieldset helper. Subclasses may
-     * override this method for custom markup.
+     * override this method for custom markup. Extra arguments will be passed
+     * from renderForm().
      */
     public function renderContent(FormInterface $form): string
     {

@@ -9,6 +9,14 @@ without any warranty.
 CHANGES IN VERSION 1.9
 ======================
 
+Upgrading from previous versions:
+
+- Required: Run "composer install" from the Braintacle root directory to
+  update dependencies.
+
+- Recommended: The above step may leave the directory public/components behind.
+  It is no longer used and should be deleted manually.
+
 
 CHANGES IN VERSION 1.8
 ======================

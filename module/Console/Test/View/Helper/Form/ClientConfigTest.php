@@ -37,6 +37,20 @@ class ClientConfigTest extends \Library\Test\View\Helper\AbstractTest
         return 'consoleFormClientConfig';
     }
 
+    public function testRender()
+    {
+        $view = $this->createMock(PhpRenderer::class);
+        $view->expects($this->once())->method('__call')->with('consoleScript', ['form_clientconfig.js']);
+
+        $form = $this->createStub(ClientConfigForm::class);
+
+        $helper = $this->createPartialMock(ClientConfigHelper::class, ['getView', 'renderForm']);
+        $helper->method('getView')->willReturn($view);
+        $helper->method('renderForm')->with($form)->willReturn('rendered form');
+
+        $this->assertEquals('rendered form', $helper->render($form));
+    }
+
     public function testRenderContent()
     {
         $fieldset = $this->createStub(Fieldset::class);

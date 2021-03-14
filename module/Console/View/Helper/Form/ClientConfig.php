@@ -32,6 +32,13 @@ use Model\ClientOrGroup;
  */
 class ClientConfig extends Form
 {
+    public function render(\Laminas\Form\FormInterface $form): string
+    {
+        $this->getView()->consoleScript('form_clientconfig.js');
+
+        return $this->renderForm($form);
+    }
+
     public function renderContent(FormInterface $form): string
     {
         $output = '';

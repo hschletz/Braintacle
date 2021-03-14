@@ -364,6 +364,28 @@ input[size="8"]
     margin-top: 3ex;
 }
 
+/* Rules for forms rendered by the default form view helper */
+form.form_search {
+    margin: 2ex;
+    display: grid;
+    grid-template-columns: [label-start] 40% [label-end element-start] 60% [element-end];
+    grid-gap: 2ex;
+}
+.form_search label {
+    display: contents;
+}
+.form_search label span{
+    grid-column: label;
+    text-align: right;
+}
+.form_search input,
+.form_search select,
+.form_search .errors
+{
+    grid-column: element;
+    justify-self: start;
+}
+
 /* Rules for individual forms */
 
 form.form_addtogroup {
@@ -377,9 +399,6 @@ form.form_addtogroup > * {
 }
 .form_addtogroup .what + .where {
     margin-top: 4ex;
-}
-.form_addtogroup ul {
-    color: red;
 }
 .form_addtogroup input, .form_addtogroup select {
     margin-left: 0;
@@ -396,10 +415,6 @@ form.form_addtogroup > * {
     display: grid;
     grid-template-columns: [label-start] 50% [label-end element-start] 50% [element-end];
     grid-gap: 1em;
-}
-.form_clientconfig label {
-    grid-column: label;
-    text-align: right;
 }
 .form_clientconfig fieldset > div > span {
     grid-column: element;

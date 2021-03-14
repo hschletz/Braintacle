@@ -30,9 +30,17 @@ use Laminas\Form\View\Helper\FormRow;
  */
 class ShowDuplicates extends Form
 {
+    public function render(FormInterface $form): string
+    {
+        $this->getView()->consoleScript('form_showduplicates.js');
+
+        return parent::render($form);
+    }
+
     public function renderContent(FormInterface $form): string
     {
         $view = $this->getView();
+
         $consoleUrl = $view->plugin('consoleUrl');
         $dateFormat = $view->plugin('dateFormat');
         $escapeHtml = $view->plugin('escapeHtml');

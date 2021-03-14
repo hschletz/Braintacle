@@ -21,7 +21,12 @@
 
 namespace Console\Test\View\Helper\Form;
 
+use Console\Form\Software as SoftwareForm;
+use Console\View\Helper\Form\Software as SoftwareHelper;
+use Laminas\Form\Element\Csrf;
+use Laminas\Form\Fieldset;
 use Laminas\Form\View\Helper\FormRow;
+use Laminas\View\Renderer\PhpRenderer;
 
 class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
 {
@@ -33,43 +38,54 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testInvoke()
     {
-        $csrf = $this->createMock('Laminas\Form\Element\Csrf');
-        $softwareFieldset = $this->createMock('Laminas\Form\Fieldset');
+        $software = ['software'];
+        $sorting = ['sorting'];
+        $filter = 'all';
 
-        $form = $this->createMock('Console\Form\Software');
-        $form->expects($this->once())->method('prepare');
+        $view = $this->createMock(PhpRenderer::class);
+        $view->expects($this->once())->method('__call')->with('consoleScript', ['form_software.js']);
+
+        $form = $this->createStub(SoftwareForm::class);
+
+        $helper = $this->createPartialMock(SoftwareHelper::class, ['getView', 'renderForm']);
+        $helper->method('getView')->willReturn($view);
+        $helper->method('renderForm')->with($form, $software, $sorting, $filter)->willReturn('rendered form');
+
+        $this->assertEquals('rendered form', $helper($form, $software, $sorting, $filter));
+    }
+
+    public function testRenderContent()
+    {
+        $software = ['software'];
+        $sorting = ['sorting'];
+        $filter = 'all';
+
+        $csrf = $this->createStub(Csrf::class);
+
+        $softwareFieldset = $this->createStub(Fieldset::class);
+
+        $view = $this->createMock(PhpRenderer::class);
+        $view->expects($this->once())->method('__call')->with('formRow', [$csrf])->willReturn('<csrf>');
+
+        $form = $this->createMock(SoftwareForm::class);
         $form->method('get')->willReturnMap([
             ['_csrf', $csrf],
             ['Software', $softwareFieldset]
         ]);
 
-        $consoleForm = $this->createMock('Console\View\Helper\Form\Form');
-        $consoleForm->method('postMaxSizeExceeded')->willReturn('EXCEEDED');
-        $consoleForm->method('openTag')->with($form)->willReturn('<form>');
-        $consoleForm->method('closeTag')->willReturn('</form>');
-
-        $formRow = $this->createMock('Laminas\Form\View\Helper\FormRow');
-        $formRow->method('__invoke')->with($csrf)->willReturn('<csrf>');
-
-        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
-        $view->method('plugin')->willReturnMap([
-            ['consoleForm', null, $consoleForm],
-            ['formRow', null, $formRow],
-        ]);
-
-        $helper = $this->getMockBuilder($this->_getHelperClass())
-                       ->disableOriginalConstructor()
-                       ->setMethodsExcept(['__invoke'])
-                       ->getMock();
+        $helper = $this->createPartialMock(
+            SoftwareHelper::class,
+            ['getView', 'renderButtons', 'renderSoftwareFieldset']
+        );
         $helper->method('getView')->willReturn($view);
-        $helper->method('renderButtons')->with($form, 'filter')->willReturn('<buttons>');
+        $helper->method('renderButtons')->with($form, $filter)->willReturn('<buttons>');
         $helper->method('renderSoftwareFieldset')
-               ->with($softwareFieldset, 'software', 'sorting')
-               ->willReturn('<software>');
+               ->with($softwareFieldset, $software, $sorting)
+               ->willReturn('<fieldset>');
 
         $this->assertEquals(
-            'EXCEEDED<form><csrf><buttons><software></form>',
-            $helper($form, 'software', 'sorting', 'filter')
+            '<csrf><buttons><fieldset>',
+            $helper->renderContent($form, $software, $sorting, $filter)
         );
     }
 

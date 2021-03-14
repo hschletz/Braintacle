@@ -126,7 +126,24 @@ class FormTest extends \Library\Test\View\Helper\AbstractTest
         $helper->expects($this->once())->method('prepareForm')->with($form);
         $helper->method('postMaxSizeExceeded')->willReturn('exceeded');
         $helper->method('openTag')->with($form)->willReturn('<form>');
-        $helper->method('renderContent')->willReturn('content');
+        $helper->method('renderContent')->with($form, 'extra')->willReturn('content');
+        $helper->method('closeTag')->willReturn('</form>');
+
+        $this->assertEquals('exceeded<form>content</form>', $helper->renderForm($form, 'extra'));
+    }
+
+    public function testRenderFormWithExtraArgs()
+    {
+        $form = $this->createStub(FormInterface::class);
+
+        $helper = $this->createPartialMock(
+            FormHelper::class,
+            ['prepareForm', 'postMaxSizeExceeded', 'openTag', 'renderContent', 'closeTag']
+        );
+        $helper->expects($this->once())->method('prepareForm')->with($form);
+        $helper->method('postMaxSizeExceeded')->willReturn('exceeded');
+        $helper->method('openTag')->with($form)->willReturn('<form>');
+        $helper->method('renderContent')->with($form)->willReturn('content');
         $helper->method('closeTag')->willReturn('</form>');
 
         $this->assertEquals('exceeded<form>content</form>', $helper->renderForm($form));

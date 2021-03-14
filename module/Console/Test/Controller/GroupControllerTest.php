@@ -21,6 +21,9 @@
 
 namespace Console\Test\Controller;
 
+use Console\View\Helper\Form\AddToGroup;
+use PHPUnit\Framework\MockObject\MockObject;
+
 /**
  * Tests for GroupController
  */
@@ -46,7 +49,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     /**
      * Add to group form mock
-     * @var \Console\Form\AddToGroup
+     * @var \Console\Form\AddToGroup|MockObject
      */
     protected $_addToGroupForm;
 
@@ -485,9 +488,12 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_addToGroupForm->expects($this->never())
                               ->method('process');
 
-        $formHelper = $this->createMock('Console\View\Helper\Form\Form');
+        $formHelper = $this->createMock(AddToGroup::class);
         $formHelper->method('__invoke')->with($this->_addToGroupForm)->willReturn('<form></form>');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('consoleForm', $formHelper);
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService(
+            'consoleFormAddToGroup',
+            $formHelper
+        );
 
         $this->dispatch(
             '/console/group/add?filter=filter&search=search&invert=invert&operator=operator'
@@ -498,7 +504,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testAddActionPostInvalid()
     {
-        $postData = array('key' => 'value');
+        $postData = ['key' => 'value'];
         $this->_addToGroupForm->expects($this->once())
                               ->method('setData')
                               ->with($postData);
@@ -508,9 +514,12 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_addToGroupForm->expects($this->never())
                               ->method('process');
 
-        $formHelper = $this->createMock('Console\View\Helper\Form\Form');
+        $formHelper = $this->createMock(AddToGroup::class);
         $formHelper->method('__invoke')->with($this->_addToGroupForm)->willReturn('<form></form>');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('consoleForm', $formHelper);
+        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService(
+            'consoleFormAddToGroup',
+            $formHelper
+        );
 
         $this->dispatch(
             '/console/group/add?filter=filter&search=search&invert=invert&operator=operator',

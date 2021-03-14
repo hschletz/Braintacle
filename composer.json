@@ -22,7 +22,6 @@
         "ext-dom": "*",
         "ext-intl": "*",
         "ext-zip": "*",
-        "components/jquery": "^3.0",
         "hschletz/nada": "^1.1.4",
         "laminas/laminas-authentication": "^2.5",
         "laminas/laminas-config": "^3.0",
@@ -51,7 +50,6 @@
         "laminas/laminas-uri": "^2.5",
         "laminas/laminas-validator": "^2.8",
         "laminas/laminas-view": "^2.5",
-        "oomphinc/composer-installers-extender": "^2.0",
         "symfony/console": "^5.2",
         "symfony/event-dispatcher": "^5.2",
         "symfony/filesystem": "^5.2",
@@ -75,12 +73,6 @@
     "bin": [
         "braintacle-tool.php"
     ],
-    "extra": {
-        "installer-types": ["component"],
-        "installer-paths": {
-            "public/components/{$name}": ["type:component"]
-        }
-    },
     "config": {
         "sort-packages": true,
         "platform": {

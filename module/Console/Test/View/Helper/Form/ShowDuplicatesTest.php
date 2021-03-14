@@ -43,6 +43,20 @@ class ShowDuplicatesTest extends \Library\Test\View\Helper\AbstractTest
         return 'consoleFormShowDuplicates';
     }
 
+    public function testRender()
+    {
+        $view = $this->createMock(PhpRenderer::class);
+        $view->expects($this->once())->method('__call')->with('consoleScript', ['form_showduplicates.js']);
+
+        $form = $this->createStub(ShowDuplicatesForm::class);
+
+        $helper = $this->createPartialMock(ShowDuplicatesHelper::class, ['getView', 'renderForm']);
+        $helper->method('getView')->willReturn($view);
+        $helper->method('renderForm')->with($form)->willReturn('rendered form');
+
+        $this->assertEquals('rendered form', $helper->render($form));
+    }
+
     public function testRenderContent()
     {
         $date1 = $this->createStub(DateTime::class);

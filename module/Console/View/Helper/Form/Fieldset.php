@@ -105,6 +105,7 @@ class Fieldset extends \Laminas\Form\View\Helper\AbstractHelper
      */
     public function renderElements(\Laminas\Form\FieldsetInterface $fieldset)
     {
+        $this->getView()->formElementErrors()->setAttributes(['class' => 'errors']);
         $markup = '';
         foreach ($fieldset as $element) {
             if ($element instanceof \Laminas\Form\FieldsetInterface) {

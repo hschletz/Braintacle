@@ -1,6 +1,6 @@
 <?php
 /**
- * Display form for adding search results to a group
+ * Display confirmation form for re-assigning a package to a client
  *
  * Copyright (C) 2011-2021 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,8 +19,4 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-print $this->htmlElement(
-    'h1',
-    $this->translate('Save to group')
-);
-print $this->consoleFormAddToGroup($this->form);
+print $this->consoleFormSearch($this->form);

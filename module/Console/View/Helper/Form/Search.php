@@ -1,6 +1,6 @@
 <?php
 /**
- * Display form for adding search results to a group
+ * Search form renderer
  *
  * Copyright (C) 2011-2021 Holger Schletz <holger.schletz@web.de>
  *
@@ -19,8 +19,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-print $this->htmlElement(
-    'h1',
-    $this->translate('Save to group')
-);
-print $this->consoleFormAddToGroup($this->form);
+namespace Console\View\Helper\Form;
+
+use Console\Form\Search as FormSearch;
+use Laminas\View\Helper\AbstractHelper;
+
+/**
+ * Search form renderer
+ */
+class Search extends AbstractHelper
+{
+    public function __invoke(FormSearch $form): string
+    {
+        $view = $this->getView();
+        $view->consoleScript('form_search.js');
+
+        return $view->consoleForm($form);
+    }
+}

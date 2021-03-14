@@ -656,7 +656,8 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
         }
         $form->setAttribute('method', 'GET');
         $form->setAttribute('action', $this->urlFromRoute('client', 'index'));
-        return $this->printForm($form);
+
+        return ['form' => $form];
     }
 
     /**

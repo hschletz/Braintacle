@@ -19,6 +19,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Console\View\Helper\ConsoleScript;
+use Console\View\Helper\Form\AddToGroup;
+use Console\View\Helper\Form\Search;
+use Laminas\ServiceManager\Factory\InvokableFactory;
+
 return array(
     'controller_plugins' => array(
         'aliases' => array(
@@ -122,26 +127,32 @@ return array(
     ),
     'view_helpers' => array(
         'aliases' => array(
+            'consoleScript' => ConsoleScript::class,
             'consoleUrl' => 'Console\View\Helper\ConsoleUrl',
             'filterDescription' => 'Console\View\Helper\FilterDescription',
             'formatMessages' => 'Console\View\Helper\FormatMessages',
             'table' => 'Console\View\Helper\Table',
             'consoleForm' => 'Console\View\Helper\Form\Form',
+            'consoleFormAddToGroup' => AddToGroup::class,
             'consoleFormFieldset' => 'Console\View\Helper\Form\Fieldset',
             'consoleFormClientConfig' => 'Console\View\Helper\Form\ClientConfig',
             'consoleFormManageRegistryValues' => 'Console\View\Helper\Form\ManageRegistryValues',
+            'consoleFormSearch' => Search::class,
             'consoleFormShowDuplicates' => 'Console\View\Helper\Form\ShowDuplicates',
             'consoleFormSoftware' => 'Console\View\Helper\Form\Software',
         ),
         'factories' => array(
+            ConsoleScript::class => InvokableFactory::class,
             'Console\View\Helper\ConsoleUrl' => 'Console\View\Helper\Service\ConsoleUrlFactory',
             'Console\View\Helper\FilterDescription' => 'Console\View\Helper\Service\FilterDescriptionFactory',
             'Console\View\Helper\FormatMessages' => 'Console\View\Helper\Service\FormatMessagesFactory',
             'Console\View\Helper\Table' => 'Console\View\Helper\Service\TableFactory',
+            AddToGroup::class => InvokableFactory::class,
             'Console\View\Helper\Form\Form' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\View\Helper\Form\Fieldset' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\View\Helper\Form\ClientConfig' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\View\Helper\Form\ManageRegistryValues' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+            Search::class => InvokableFactory::class,
             'Console\View\Helper\Form\ShowDuplicates' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\View\Helper\Form\Software' => 'Laminas\ServiceManager\Factory\InvokableFactory',
         ),

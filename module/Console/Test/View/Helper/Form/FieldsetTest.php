@@ -21,6 +21,13 @@
 
 namespace Console\Test\View\Helper\Form;
 
+use ArrayIterator;
+use Console\View\Helper\Form\Fieldset;
+use Laminas\Form\ElementInterface;
+use Laminas\Form\FieldsetInterface;
+use Laminas\Form\View\Helper\FormElementErrors;
+use Laminas\View\Renderer\PhpRenderer;
+
 class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 {
     /** {@inheritdoc} */
@@ -150,21 +157,24 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRenderElements()
     {
-        $subFieldset = $this->createMock('Laminas\Form\FieldsetInterface');
-        $subElement = $this->createMock('Laminas\Form\ElementInterface');
+        $subFieldset = $this->createStub(FieldsetInterface::class);
+        $subElement = $this->createStub(ElementInterface::class);
 
-        $iterator = new \ArrayIterator(array($subFieldset, $subElement));
+        $iterator = new ArrayIterator([$subFieldset, $subElement]);
 
-        $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
+        $fieldset = $this->createStub(FieldsetInterface::class);
         $fieldset->method('getIterator')->willReturn($iterator);
 
-        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
-        $view->method('__call')->with('formRow', array($subElement))->willReturn('<FORMROW>');
+        $formElementErrors = $this->createMock(FormElementErrors::class);
+        $formElementErrors->expects($this->once())->method('setAttributes')->with(['class' => 'errors']);
 
-        $helper = $this->getMockBuilder($this->_getHelperClass())
-                       ->disableOriginalConstructor()
-                       ->setMethods(array('render', 'getView'))
-                       ->getMock();
+        $view = $this->createMock(PhpRenderer::class);
+        $view->method('__call')->withConsecutive(
+            ['formElementErrors', []],
+            ['formRow', [$subElement]],
+        )->willReturnOnConsecutiveCalls($formElementErrors, '<FORMROW>');
+
+        $helper = $this->createPartialMock(Fieldset::class, ['render', 'getView']);
         $helper->method('render')->willReturn('<FIELDSET>');
         $helper->method('getView')->willReturn($view);
 
