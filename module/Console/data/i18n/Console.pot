@@ -883,6 +883,14 @@ msgid "User defined: %s"
 msgstr ""
 
 #: Form/Search.php
+msgid "Substring match, wildcards '?' and '*' allowed"
+msgstr ""
+
+#: Form/Search.php
+msgid "Exact match"
+msgstr ""
+
+#: Form/Search.php
 msgid "Search for"
 msgstr ""
 
@@ -900,14 +908,6 @@ msgstr ""
 
 #: Form/Search.php Navigation/MainMenuFactory.php
 msgid "Search"
-msgstr ""
-
-#: Form/Search.php
-msgid "Substring match, wildcards '?' and '*' allowed"
-msgstr ""
-
-#: Form/Search.php
-msgid "Exact match"
 msgstr ""
 
 #: Form/ShowDuplicates.php
