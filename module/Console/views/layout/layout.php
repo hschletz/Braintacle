@@ -34,7 +34,6 @@ print $this->HeadLink()->appendStylesheet(
 print "\n";
 
 print $this->consoleScript();
-print $this->headScript();
 print "\n";
 
 print "</head>\n";

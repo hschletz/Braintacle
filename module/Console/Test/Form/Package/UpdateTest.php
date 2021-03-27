@@ -49,17 +49,4 @@ class UpdateTest extends \Console\Test\AbstractFormTest
 
         $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('Name')); // from parent class
     }
-
-    public function testRenderFieldset()
-    {
-        $view = $this->_createView();
-        $html = $this->_form->renderFieldset($view, $this->_form);
-        $document = new \Laminas\Dom\Document($html);
-
-        // Custom rendering of Deploy fieldset - labels are appended instead of prepended
-        $this->assertCount(5, Query::execute('//fieldset//input[@type="checkbox"]/following-sibling::span', $document));
-
-        // Assert that other elements are rendered
-        $this->assertCount(1, Query::execute('//input[@name="Name"]', $document));
-    }
 }

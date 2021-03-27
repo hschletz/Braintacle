@@ -21,6 +21,8 @@
 
 namespace Console\Test;
 
+use Laminas\Mvc\MvcEvent;
+
 /**
  * Abstract controller test case
  *
@@ -97,6 +99,34 @@ abstract class AbstractControllerTest extends \Laminas\Test\PHPUnit\Controller\A
         $serviceManager->setService(
             'MvcTranslator',
             new \Laminas\Mvc\I18n\Translator(new \Laminas\I18n\Translator\Translator)
+        );
+    }
+
+    /**
+     * Bypass all MvcEvent::EVENT_RENDER listeners.
+     *
+     * This is useful to test the action result directly via assertMvcResult().
+     */
+    protected function interceptRenderEvent(): void
+    {
+        $this->application->getEventManager()->attach(
+            MvcEvent::EVENT_RENDER,
+            function ($event) {
+                $event->stopPropagation(true);
+            },
+            100
+        );
+    }
+
+    /**
+     * Test result of MVC action.
+     */
+    public function assertMvcResult($result)
+    {
+        $this->assertSame(
+            $result,
+            $this->getApplication()->getMvcEvent()->getResult(),
+            'Failed asserting the MVC result.'
         );
     }
 }

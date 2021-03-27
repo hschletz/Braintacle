@@ -160,10 +160,11 @@ abstract class AbstractFormTest extends \PHPUnit\Framework\TestCase
     public function testForm()
     {
         $this->assertInstanceOf('Console\Form\Form', $this->_form);
-        $this->assertEquals(
-            'form ' . substr(strtr(strtolower($this->_getFormClass()), '\\', '_'), 8),
-            $this->_form->getAttribute('class')
-        );
+
+        $classes = 'form ' . substr(strtr(strtolower($this->_getFormClass()), '\\', '_'), 8);
+        $pattern = '/(.+ )?' . preg_quote($classes, '/') . '( .+)?/';
+        $this->assertMatchesRegularExpression($pattern, $this->_form->getAttribute('class'));
+
         $this->assertInstanceOf('\Laminas\Form\Element\Csrf', $this->_form->get('_csrf'));
     }
 }

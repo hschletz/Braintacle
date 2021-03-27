@@ -21,6 +21,8 @@
 
 use Console\View\Helper\ConsoleScript;
 use Console\View\Helper\Form\AddToGroup;
+use Console\View\Helper\Form\Package\Build;
+use Console\View\Helper\Form\Package\Update;
 use Console\View\Helper\Form\Search;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 
@@ -137,6 +139,8 @@ return array(
             'consoleFormFieldset' => 'Console\View\Helper\Form\Fieldset',
             'consoleFormClientConfig' => 'Console\View\Helper\Form\ClientConfig',
             'consoleFormManageRegistryValues' => 'Console\View\Helper\Form\ManageRegistryValues',
+            'consoleFormPackageBuild' => Build::class,
+            'consoleFormPackageUpdate' => Update::class,
             'consoleFormSearch' => Search::class,
             'consoleFormShowDuplicates' => 'Console\View\Helper\Form\ShowDuplicates',
             'consoleFormSoftware' => 'Console\View\Helper\Form\Software',
@@ -152,6 +156,8 @@ return array(
             'Console\View\Helper\Form\Fieldset' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\View\Helper\Form\ClientConfig' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\View\Helper\Form\ManageRegistryValues' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+            Build::class => InvokableFactory::class,
+            Update::class => InvokableFactory::class,
             Search::class => InvokableFactory::class,
             'Console\View\Helper\Form\ShowDuplicates' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\View\Helper\Form\Software' => 'Laminas\ServiceManager\Factory\InvokableFactory',

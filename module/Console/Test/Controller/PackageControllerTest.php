@@ -21,6 +21,11 @@
 
 namespace Console\Test\Controller;
 
+use Console\Mvc\Controller\Plugin\PrintForm;
+use Console\View\Helper\Form\Package\Build;
+use Console\View\Helper\Form\Package\Update;
+use Laminas\View\Model\ViewModel;
+
 /**
  * Tests for PackageController
  */
@@ -308,13 +313,20 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                          ->method('getData');
         $this->_buildForm->expects($this->never())
                          ->method('isValid');
-        $this->_buildForm->expects($this->once())
-                         ->method('render')
-                         ->willReturn('<form></form>');
+
         $this->_packageManager->expects($this->never())->method('buildPackage');
+
+        $viewModel = new ViewModel();
+
+        $printForm = $this->createMock(PrintForm::class);
+        $printForm->method('__invoke')->with($this->_buildForm, Build::class)->willReturn($viewModel);
+
+        $this->getApplicationServiceLocator()->get('ControllerPluginManager')->setService('printForm', $printForm);
+
+        $this->interceptRenderEvent();
         $this->dispatch('/console/package/build');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery('//form');
+        $this->assertMvcResult($viewModel);
     }
 
     public function testBuildActionPostInvalid()
@@ -328,13 +340,20 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_buildForm->expects($this->once())
                          ->method('isValid')
                          ->willReturn(false);
-        $this->_buildForm->expects($this->once())
-                         ->method('render')
-                         ->willReturn('<form></form>');
+
         $this->_packageManager->expects($this->never())->method('buildPackage');
+
+        $viewModel = new ViewModel();
+
+        $printForm = $this->createMock(PrintForm::class);
+        $printForm->method('__invoke')->with($this->_buildForm, Build::class)->willReturn($viewModel);
+
+        $this->getApplicationServiceLocator()->get('ControllerPluginManager')->setService('printForm', $printForm);
+
+        $this->interceptRenderEvent();
         $this->dispatch('/console/package/build', 'POST', $postData);
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery('//form');
+        $this->assertMvcResult($viewModel);
     }
 
     public function testBuildActionPostValidSuccess()
@@ -368,8 +387,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_buildForm->expects($this->once())
                          ->method('isValid')
                          ->willReturn(true);
-        $this->_buildForm->expects($this->never())
-                         ->method('render');
 
         $this->_packageManager->expects($this->once())->method('buildPackage')->with($packageData, true);
 
@@ -424,8 +441,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_buildForm->expects($this->once())
                          ->method('isValid')
                          ->willReturn(true);
-        $this->_buildForm->expects($this->never())
-                         ->method('render');
 
         $this->_packageManager->expects($this->once())
                               ->method('buildPackage')
@@ -542,17 +557,25 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                           ->method('getData');
         $this->_updateForm->expects($this->never())
                           ->method('isValid');
-        $this->_updateForm->expects($this->once())
-                          ->method('render')
-                          ->willReturn('<form></form>');
+
         $this->_packageManager->expects($this->once())
                               ->method('getPackage')
                               ->with('oldName')
                               ->willReturn($packageData);
         $this->_packageManager->expects($this->never())->method('updatePackage');
+
+        $viewModel = new ViewModel();
+
+        $printForm = $this->createMock(PrintForm::class);
+        $printForm->method('__invoke')->with($this->_updateForm, Update::class)->willReturn($viewModel);
+
+        $this->getApplicationServiceLocator()->get('ControllerPluginManager')->setService('printForm', $printForm);
+
+        $this->interceptRenderEvent();
         $this->dispatch('/console/package/update/?name=oldName');
+
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery('//form');
+        $this->assertMvcResult($viewModel);
     }
 
     public function testUpdateActionPostInvalid()
@@ -566,14 +589,21 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->_updateForm->expects($this->once())
                           ->method('isValid')
                           ->willReturn(false);
-        $this->_updateForm->expects($this->once())
-                          ->method('render')
-                          ->willReturn('<form></form>');
+
         $this->_packageManager->expects($this->never())->method('updatePackage');
 
+        $viewModel = new ViewModel();
+
+        $printForm = $this->createMock(PrintForm::class);
+        $printForm->method('__invoke')->with($this->_updateForm, Update::class)->willReturn($viewModel);
+
+        $this->getApplicationServiceLocator()->get('ControllerPluginManager')->setService('printForm', $printForm);
+
+        $this->interceptRenderEvent();
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
+
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery('//form');
+        $this->assertMvcResult($viewModel);
     }
 
     public function testUpdateActionPostValidBuildSuccess()

@@ -37,6 +37,9 @@ class Build extends \Console\Form\Form
     {
         parent::init();
 
+        // Add generic class for both Build/Update form.
+        $this->setAttribute('class', $this->getAttribute('class') . ' form_package');
+
         $inputFilter = new \Laminas\InputFilter\InputFilter;
         $integerFilter = array(
             'name' => 'Callback',
@@ -56,6 +59,7 @@ class Build extends \Console\Form\Form
         // Package name
         $name = new Element\Text('Name');
         $name->setLabel('Name');
+        $name->setAttribute('autofocus', true);
         $this->add($name);
         $inputFilter->add(
             array(
@@ -97,8 +101,6 @@ class Build extends \Console\Form\Form
         $platform = new Element\Select('Platform');
         $platform->setLabel('Platform')
                  ->setAttribute('type', 'select_untranslated')
-                 ->setAttribute('id', 'form_package_build_platform')
-                 ->setAttribute('onchange', 'changePlatform()')
                  ->setValueOptions(
                      array(
                         'windows' => 'Windows',
@@ -112,7 +114,6 @@ class Build extends \Console\Form\Form
         // Translate labels manually to let xgettext recognize them
         $action = new Element\Select('DeployAction');
         $action->setLabel('Action')
-               ->setAttribute('onchange', 'changeParam()')
                ->setValueOptions(
                    array(
                         'launch' => $this->_('Download package, execute command, retrieve result'),
@@ -123,7 +124,7 @@ class Build extends \Console\Form\Form
         $this->add($action);
 
         // Command line or target path for action
-        // Label is set by JavaScript code.
+        // Label is initialized by view helper and updated by JavaScript code.
         $actionParam = new Element\Text('ActionParam');
         $this->add($actionParam);
         $inputFilter->add(
@@ -167,9 +168,7 @@ class Build extends \Console\Form\Form
 
         // Warn user before installation
         $warn = new Element\Checkbox('Warn');
-        $warn->setLabel('Warn user')
-             ->setAttribute('id', 'form_package_build_warn')
-             ->setAttribute('onchange', 'toggleWarn()');
+        $warn->setLabel('Warn user');
         $this->add($warn);
 
         // Message to display to user before installation
@@ -288,84 +287,5 @@ class Build extends \Console\Form\Form
     {
         $this->getInputFilter()->get('File')->setRequired(@$this->data['DeployAction'] != 'execute');
         return parent::isValid();
-    }
-
-    /** {@inheritdoc} */
-    public function render(\Laminas\View\Renderer\PhpRenderer $view)
-    {
-        $commandLine = $view->translate('Command line');
-        $labels = array(
-            'launch' => $commandLine,
-            'execute' => $commandLine,
-            'store' => $view->translate('Target Path'),
-        );
-        $labels = '    var actionParamLabels = ' . json_encode($labels) . ";\n";
-
-        $view->headScript()->captureStart();
-        print $labels;
-        ?>
-
-        /**
-         * Hide or display a block element.
-         */
-        function display(name, display)
-        {
-            document.getElementsByName(name)[0].parentNode.style.display = display ? 'table-row' : 'none';
-        }
-
-        /*
-         * Event handler for Platform combobox. Also called for form
-         * initialization. Hides/displays notification elements which have no
-         * effect on non-Windows platforms.
-         */
-        function changePlatform()
-        {
-            if (document.getElementById('form_package_build_platform').value == 'windows') {
-                display('Warn', true);
-                display('PostInstMessage', true);
-                toggleWarn();
-            } else {
-                display('Warn', false);
-                display('WarnMessage', false);
-                display('WarnCountdown', false);
-                display('WarnAllowAbort', false);
-                display('WarnAllowDelay', false);
-                display('PostInstMessage', false);
-            }
-        }
-
-        /*
-         * Event handler for Action combobox. Also called for form initialization.
-         * Changes label of parameter input field according to selected action.
-         */
-        function changeParam()
-        {
-            var label = actionParamLabels[document.getElementsByName('DeployAction')[0].value];
-            document.getElementsByName('ActionParam')[0].parentNode.getElementsByTagName('span')[0].innerHTML = label;
-        }
-
-        /*
-         * Event handler for Warn checkbox. Also called for form initialization.
-         * Hides or displays Warn* fields according to checked state.
-         */
-        function toggleWarn()
-        {
-            var checked = document.getElementById('form_package_build_warn').checked &&
-                          document.getElementById('form_package_build_platform').value == 'windows';
-            display('WarnMessage', checked);
-            display('WarnCountdown', checked);
-            display('WarnAllowAbort', checked);
-            display('WarnAllowDelay', checked);
-        }
-
-        <?php
-        $view->headScript()->captureEnd();
-
-        $view->placeholder('BodyOnLoad')->append('changePlatform()');
-        $view->placeholder('BodyOnLoad')->append('changeParam()');
-        $view->placeholder('BodyOnLoad')->append('toggleWarn()');
-        $view->placeholder('BodyOnLoad')->append('document.getElementsByName("Name")[0].focus()');
-
-        return parent::render($view);
     }
 }

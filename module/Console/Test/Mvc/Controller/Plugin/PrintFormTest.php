@@ -21,31 +21,122 @@
 
 namespace Console\Test\Mvc\Controller\Plugin;
 
+use Console\Form\Form;
+use Console\Module;
+use Console\Mvc\Controller\Plugin\PrintForm;
+use Console\View\Helper\Form\FormHelperInterface;
+use Laminas\Form\Form as BaseForm;
+use Laminas\View\Helper\HelperInterface;
+use Laminas\View\HelperPluginManager;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Renderer\PhpRenderer;
+use Laminas\View\Resolver\TemplateMapResolver;
+use LogicException;
+
 /**
  * Tests for PrintForm controller plugin
  */
 class PrintFormTest extends \Library\Test\Mvc\Controller\Plugin\AbstractTest
 {
-    public function testInvokeWithConsoleForm()
+    public function testViewModelWithoutHelper()
     {
-        $plugin = $this->_getPlugin(false);
+        $form = $this->createStub(Form::class);
 
-        // Set up \Console\Form\Form using default renderer
-        $form = $this->createMock('Console\Form\Form');
-        $form->expects($this->once())
-             ->method('render')
-             ->will($this->returnValue('\Console\Form\Form default renderer'));
+        $plugin = new PrintForm();
 
-        // Evaluate plugin return value
         $viewModel = $plugin($form);
-        $this->assertInstanceOf('Laminas\View\Model\ViewModel', $viewModel);
+        $this->assertInstanceOf(ViewModel::class, $viewModel);
         $this->assertEquals('plugin/PrintForm.php', $viewModel->getTemplate());
-        $this->assertEquals($form, $viewModel->form);
+        $this->assertSame($form, $viewModel->form);
+        $this->assertNull($viewModel->helperName);
+    }
 
-        // Invoke template and test output
-        $application = \Library\Application::init('Console');
-        $renderer = $application->getServiceManager()->get('ViewRenderer');
-        $output = $renderer->render($viewModel);
-        $this->assertEquals('\Console\Form\Form default renderer', $output);
+    public function testViewModelWithHelper()
+    {
+        $form = $this->createStub(Form::class);
+
+        $plugin = new PrintForm();
+
+        $viewModel = $plugin($form, 'helper_name');
+        $this->assertInstanceOf(ViewModel::class, $viewModel);
+        $this->assertEquals('plugin/PrintForm.php', $viewModel->getTemplate());
+        $this->assertSame($form, $viewModel->form);
+        $this->assertEquals('helper_name', $viewModel->helperName);
+    }
+
+    public function testTemplateWithUnsuitableForm()
+    {
+        $resolver = new TemplateMapResolver(['test' => Module::getPath('views/plugin/PrintForm.php')]);
+
+        $renderer = new PhpRenderer();
+        $renderer->setResolver($resolver);
+
+        $form = $this->createStub(BaseForm::class);
+
+        $this->assertEquals(
+            '',
+            $renderer->render('test', ['form' => $form, 'helperName' => null])
+        );
+    }
+
+    public function testTemplateWithLegacyRenderer()
+    {
+        $resolver = new TemplateMapResolver(['test' => Module::getPath('views/plugin/PrintForm.php')]);
+
+        $renderer = new PhpRenderer();
+        $renderer->setResolver($resolver);
+
+        $form = $this->createStub(Form::class);
+        $form->method('render')->with($renderer)->willReturn('rendered form');
+
+        $this->assertEquals(
+            'rendered form',
+            $renderer->render('test', ['form' => $form, 'helperName' => null])
+        );
+    }
+
+    public function testTemplateWithViewHelper()
+    {
+        $resolver = new TemplateMapResolver(['test' => Module::getPath('views/plugin/PrintForm.php')]);
+
+        $form = $this->createStub(Form::class);
+
+        $helper = $this->createStub(FormHelperInterface::class);
+        $helper->method('__invoke')->with($form)->willReturn('rendered form');
+
+        $pluginManager = $this->createStub(HelperPluginManager::class);
+        $pluginManager->method('get')->with('helper_name')->willReturn($helper);
+
+        $renderer = new PhpRenderer();
+        $renderer->setResolver($resolver);
+        $renderer->setHelperPluginManager($pluginManager);
+
+        $this->assertEquals(
+            'rendered form',
+            $renderer->render('test', ['form' => $form, 'helperName' => 'helper_name'])
+        );
+    }
+
+    public function testTemplateWithUnsuitableViewHelper()
+    {
+        $resolver = new TemplateMapResolver(['test' => Module::getPath('views/plugin/PrintForm.php')]);
+
+        $form = $this->createStub(Form::class);
+
+        $helper = $this->createStub(HelperInterface::class);
+
+        $pluginManager = $this->createStub(HelperPluginManager::class);
+        $pluginManager->method('get')->with('helper_name')->willReturn($helper);
+
+        $renderer = new PhpRenderer();
+        $renderer->setResolver($resolver);
+        $renderer->setHelperPluginManager($pluginManager);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            'View helper passed to Printform plugin must implement ' . FormHelperInterface::class
+        );
+
+        $renderer->render('test', ['form' => $form, 'helperName' => 'helper_name']);
     }
 }

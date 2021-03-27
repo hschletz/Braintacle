@@ -365,19 +365,26 @@ input[size="8"]
 }
 
 /* Rules for forms rendered by the default form view helper */
-form.form_search {
+form.form_package, form.form_search {
     margin: 2ex;
     display: grid;
-    grid-template-columns: [label-start] 40% [label-end element-start] 60% [element-end];
+    grid-template-columns: [label-start] 40% [label-end element-start] max-content [element-end];
     grid-gap: 2ex;
 }
-.form_search label {
+.form_package label, .form_search label {
     display: contents;
 }
-.form_search label span{
+.label,
+.form_package label span,
+.form_search label span {
     grid-column: label;
     text-align: right;
+    align-self: center;
 }
+.form_package input,
+.form_package select,
+.form_package .errors,
+.form_package_update fieldset,
 .form_search input,
 .form_search select,
 .form_search .errors
@@ -506,6 +513,27 @@ form.form_addtogroup > * {
     margin: auto;
 }
 
+.form_package_update .label {
+    grid-column: label;
+    text-align: right;
+}
+.form_package_update legend {
+    display: none;
+}
+.form_package_update fieldset {
+    grid-column: element;
+    width: 100%;
+    box-sizing: border-box;
+}
+.form_package_update fieldset label {
+    display: block;
+    margin: 1ex 0 1ex 0;
+    width: max-content;
+}
+.form_package_update fieldset input {
+    margin-right: .5em;
+}
+
 /* The following rules are for forms still using the deprecated render() method. */
 
 .form_yesno {
@@ -589,24 +617,18 @@ form.form_addtogroup > * {
     padding: 0;
 }
 
-.form_package_update span.label {
-    max-width: 20em;
-}
-
-.form_package_update fieldset label span, .form_preferences_packages fieldset label span {
-    text-align: left;
-}
-
-.form_package_update fieldset, .form_preferences_packages fieldset {
-    margin: 1.4ex .9em 1.4ex .9em;
-}
-
-.form_package_update legend, .form_preferences_packages legend {
-    display: none;
-}
-
 .form_customfields, .form_productkey {
     margin-top: 4ex;
+}
+
+.form_preferences_packages fieldset label span {
+    text-align: left;
+}
+.form_preferences_packages fieldset {
+    margin: 1.4ex .9em 1.4ex .9em;
+}
+.form_preferences_packages legend {
+    display: none;
 }
 
 .form_productkey .error, .form_networkdevice .error {

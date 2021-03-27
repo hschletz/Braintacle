@@ -21,6 +21,10 @@
 
 namespace Console\View\Helper\Form;
 
+use Laminas\Form\FieldsetInterface;
+use Laminas\Form\FormInterface;
+use Laminas\Form\View\Helper\FormRow;
+
 /**
  * Render all elements of a fieldset/form
  *
@@ -44,9 +48,9 @@ class Fieldset extends \Laminas\Form\View\Helper\AbstractHelper
      * @param \Laminas\Form\FieldsetInterface $fieldset
      * @return string
      */
-    public function __invoke(\Laminas\Form\FieldsetInterface $fieldset)
+    public function __invoke(FieldsetInterface $fieldset, $labelPosition = FormRow::LABEL_PREPEND)
     {
-        return $this->render($fieldset);
+        return $this->render($fieldset, $labelPosition);
     }
 
     /**
@@ -55,10 +59,10 @@ class Fieldset extends \Laminas\Form\View\Helper\AbstractHelper
      * @param \Laminas\Form\FieldsetInterface $fieldset
      * @return string
      */
-    public function render(\Laminas\Form\FieldsetInterface $fieldset)
+    public function render(FieldsetInterface $fieldset, $labelPosition = FormRow::LABEL_PREPEND)
     {
-        $markup = $this->renderElements($fieldset);
-        if (!$fieldset instanceof \Laminas\Form\FormInterface) {
+        $markup = $this->renderElements($fieldset, $labelPosition);
+        if (!$fieldset instanceof FormInterface) {
             $markup = $this->renderFieldsetElement($fieldset, $markup);
         }
         return $markup;
@@ -103,15 +107,17 @@ class Fieldset extends \Laminas\Form\View\Helper\AbstractHelper
      * @param \Laminas\Form\FieldsetInterface $fieldset
      * @return string
      */
-    public function renderElements(\Laminas\Form\FieldsetInterface $fieldset)
+    public function renderElements(FieldsetInterface $fieldset, $labelPosition = FormRow::LABEL_PREPEND)
     {
-        $this->getView()->formElementErrors()->setAttributes(['class' => 'errors']);
+        $view = $this->getView();
+        $view->plugin('formElementErrors')->setAttributes(['class' => 'errors']);
+
         $markup = '';
         foreach ($fieldset as $element) {
-            if ($element instanceof \Laminas\Form\FieldsetInterface) {
+            if ($element instanceof FieldsetInterface) {
                 $markup .= $this->render($element);
             } else {
-                $markup .= $this->getView()->formRow($element);
+                $markup .= $view->plugin('formRow')($element, $labelPosition);
             }
         }
         return $markup;

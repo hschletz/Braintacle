@@ -64,19 +64,4 @@ class Update extends Build
         $this->add($fieldset);
         parent::init();
     }
-
-    /** {@inheritdoc} */
-    public function renderFieldset(\Laminas\View\Renderer\PhpRenderer $view, \Laminas\Form\Fieldset $fieldset)
-    {
-        $output = '';
-        if ($fieldset->getName() == 'Deploy') {
-            foreach ($fieldset as $element) {
-                // Default renderer would prepend
-                $output .= $view->formRow($element, 'append') . "\n";
-            }
-        } else {
-            $output .= parent::renderFieldset($view, $fieldset);
-        }
-        return $output;
-    }
 }

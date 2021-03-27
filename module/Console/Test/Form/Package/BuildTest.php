@@ -21,6 +21,10 @@
 
 namespace Console\Test\Form\Package;
 
+use Laminas\Form\Element\Checkbox;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Element\Text;
+
 /**
  * Tests for Build form
  */
@@ -38,23 +42,25 @@ class BuildTest extends \Console\Test\AbstractFormTest
 
     public function testInit()
     {
-        $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('Name'));
+        $classes = explode(' ', $this->_form->getAttribute('class'));
+        $this->assertContains('form_package', $classes);
+        $this->assertContains('form_package_build', $classes);
+
+        $name = $this->_form->get('Name');
+        $this->assertInstanceOf(Text::class, $name);
+        $this->assertTrue($name->getAttribute('autofocus'));
+
         $this->assertInstanceOf('Laminas\Form\Element\Textarea', $this->_form->get('Comment'));
         $this->assertInstanceOf('Laminas\Form\Element\Select', $this->_form->get('Platform'));
 
-        $action = $this->_form->get('DeployAction');
-        $this->assertInstanceOf('Laminas\Form\Element\Select', $action);
-        $this->assertEquals('changeParam()', $action->getAttribute('onchange'));
+        $this->assertInstanceOf(Select::class, $this->_form->get('DeployAction'));
 
         $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('ActionParam'));
         $this->assertInstanceOf('Laminas\Form\Element\File', $this->_form->get('File'));
         $this->assertInstanceOf('Library\Form\Element\SelectSimple', $this->_form->get('Priority'));
         $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('MaxFragmentSize'));
 
-        $warn = $this->_form->get('Warn');
-        $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $warn);
-        $this->assertEquals('form_package_build_warn', $warn->getAttribute('id'));
-        $this->assertEquals('toggleWarn()', $warn->getAttribute('onchange'));
+        $this->assertInstanceOf(Checkbox::class, $this->_form->get('Warn'));
 
         $this->assertInstanceOf('\Laminas\Form\Element\Textarea', $this->_form->get('WarnMessage'));
         $this->assertInstanceOf('\Laminas\Form\Element\Text', $this->_form->get('WarnCountdown'));
@@ -505,24 +511,5 @@ class BuildTest extends \Console\Test\AbstractFormTest
         $this->_form->setData($data);
         $this->assertSame('1.234', $this->_form->get('MaxFragmentSize')->getValue());
         $this->assertSame('5.678', $this->_form->get('WarnCountdown')->getValue());
-    }
-
-    public function testRender()
-    {
-        $view = $this->_createView();
-        $output = $this->_form->render($view);
-        $this->assertStringContainsString('</form>', $output);
-
-        $headScript = $view->headScript()->toString();
-        $this->assertStringContainsString(
-            'var actionParamLabels = {"launch":"Befehlszeile","execute":"Befehlszeile","store":"Zielpfad"};',
-            $headScript
-        );
-        $this->assertStringContainsString('function changeParam()', $headScript);
-        $this->assertStringContainsString('function toggleWarn()', $headScript);
-
-        $bodyOnLoad = $view->placeholder('BodyOnLoad');
-        $this->assertStringContainsString('toggleWarn()', $bodyOnLoad);
-        $this->assertStringContainsString('changeParam()', $bodyOnLoad);
     }
 }

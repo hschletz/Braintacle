@@ -104,14 +104,6 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(1, Query::execute('/html/head/consolescript', $document));
     }
 
-    public function testHeadScript()
-    {
-        $this->_view->headScript()->appendScript('script');
-        $html = $this->_view->render('layout');
-        $document = new \Laminas\Dom\Document($html);
-        $this->assertCount(1, Query::execute('/html/head/script[contains(text(), "script")]', $document));
-    }
-
     public function testBodyOnloadEmpty()
     {
         $html = $this->_view->render('layout');

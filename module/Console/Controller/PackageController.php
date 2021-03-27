@@ -21,6 +21,9 @@
 
 namespace Console\Controller;
 
+use Console\View\Helper\Form\Package\Build;
+use Console\View\Helper\Form\Package\Update;
+
 /**
  * Controller for all package related actions
  */
@@ -130,7 +133,7 @@ class PackageController extends \Laminas\Mvc\Controller\AbstractActionController
                 )
             );
         }
-        return $this->printForm($this->_buildForm);
+        return $this->printForm($this->_buildForm, Build::class);
     }
 
     /**
@@ -238,6 +241,6 @@ class PackageController extends \Laminas\Mvc\Controller\AbstractActionController
                 )
             );
         }
-        return $this->printForm($form);
+        return $this->printForm($form, Update::class);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Generic view script to display a form
+ * Interface for form view helpers
  *
  * Copyright (C) 2011-2021 Holger Schletz <holger.schletz@web.de>
  *
@@ -17,17 +17,16 @@
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-use Console\View\Helper\Form\FormHelperInterface;
+namespace Console\View\Helper\Form;
 
-if ($this->helperName) {
-    $helper = $this->plugin($this->helperName);
-    if (!$helper instanceof FormHelperInterface) {
-        throw new LogicException('View helper passed to Printform plugin must implement ' . FormHelperInterface::class);
-    }
-    print $helper($this->form);
-} elseif ($this->form instanceof \Console\Form\Form) {
-    print $this->form->render($this);
+use Laminas\Form\FormInterface;
+
+/**
+ * Interface for form view helpers
+ */
+interface FormHelperInterface
+{
+    public function __invoke(FormInterface $form = null);
 }

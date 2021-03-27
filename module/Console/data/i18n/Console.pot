@@ -407,14 +407,6 @@ msgstr ""
 msgid "Build"
 msgstr ""
 
-#: Form/Package/Build.php
-msgid "Command line"
-msgstr ""
-
-#: Form/Package/Build.php
-msgid "Target Path"
-msgstr ""
-
 #: Form/Package/Update.php
 msgid "Deploy to clients which have existing package assigned"
 msgstr ""
@@ -1125,6 +1117,14 @@ msgstr ""
 #: View/Helper/Form/Form.php
 #, php-format
 msgid "The post_max_size value of %s has been exceeded."
+msgstr ""
+
+#: View/Helper/Form/Package/Build.php
+msgid "Command line"
+msgstr ""
+
+#: View/Helper/Form/Package/Build.php
+msgid "Target path"
 msgstr ""
 
 #: View/Helper/Form/Software.php views/console/network/index.php

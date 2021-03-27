@@ -21,26 +21,29 @@
 
 namespace Console\Mvc\Controller\Plugin;
 
+use Console\Form\Form;
+use Laminas\View\Model\ViewModel;
+
 /**
  * Return ViewModel which outputs a given form
  *
  * Many actions simply render a form object. Instead of writing a bunch of
  * identical scripts with a single rendering method call, this plugin provides a
- * generic template which simply renders the provided form.
+ * generic template which renders the provided form by using the provided helper
+ * or falling back to the form's render() method (deprecated).
  */
 class PrintForm extends \Laminas\Mvc\Controller\Plugin\AbstractPlugin
 {
     /**
      * Return view model set up to output given form
-     *
-     * @param mixed $form Form to render
-     * @return \Laminas\View\Model\ViewModel
      */
-    public function __invoke($form)
+    public function __invoke(Form $form, string $helperName = null): ViewModel
     {
-        $view = new \Laminas\View\Model\ViewModel;
+        $view = new ViewModel();
         $view->setTemplate('plugin/PrintForm.php');
         $view->form = $form;
+        $view->helperName = $helperName;
+
         return $view;
     }
 }

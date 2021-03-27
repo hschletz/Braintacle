@@ -25,7 +25,9 @@ use ArrayIterator;
 use Console\View\Helper\Form\Fieldset;
 use Laminas\Form\ElementInterface;
 use Laminas\Form\FieldsetInterface;
+use Laminas\Form\FormInterface;
 use Laminas\Form\View\Helper\FormElementErrors;
+use Laminas\Form\View\Helper\FormRow;
 use Laminas\View\Renderer\PhpRenderer;
 
 class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
@@ -36,28 +38,32 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
         return 'consoleFormFieldset';
     }
 
-    public function testInvoke()
+    public function testInvokeWithDefaultLabelPosition()
     {
-        $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
+        $fieldset = $this->createMock(FieldsetInterface::class);
 
-        $helper = $this->getMockBuilder($this->_getHelperClass())
-                       ->disableOriginalConstructor()
-                       ->setMethods(array('render'))
-                       ->getMock();
-        $helper->method('render')->with($fieldset)->willReturn('FIELDSET');
+        $helper = $this->createPartialMock(Fieldset::class, ['render']);
+        $helper->method('render')->with($fieldset, FormRow::LABEL_PREPEND)->willReturn('FIELDSET');
 
         $this->assertEquals('FIELDSET', $helper($fieldset));
     }
 
+    public function testInvokeWithExplicitLabelPosition()
+    {
+        $fieldset = $this->createMock(FieldsetInterface::class);
+
+        $helper = $this->createPartialMock(Fieldset::class, ['render']);
+        $helper->method('render')->with($fieldset, FormRow::LABEL_APPEND)->willReturn('FIELDSET');
+
+        $this->assertEquals('FIELDSET', $helper($fieldset, FormRow::LABEL_APPEND));
+    }
+
     public function testRenderWithForm()
     {
-        $fieldset = $this->createMock('Laminas\Form\FormInterface');
+        $fieldset = $this->createMock(FormInterface::class);
 
-        $helper = $this->getMockBuilder($this->_getHelperClass())
-                       ->disableOriginalConstructor()
-                       ->setMethods(array('renderElements', 'renderFieldsetElement'))
-                       ->getMock();
-        $helper->method('renderElements')->with($fieldset)->willReturn('ELEMENTS');
+        $helper = $this->createPartialMock(Fieldset::class, ['renderElements', 'renderFieldsetElement']);
+        $helper->method('renderElements')->with($fieldset, FormRow::LABEL_PREPEND)->willReturn('ELEMENTS');
         $helper->expects($this->never())->method('renderFieldsetElement');
 
         $this->assertEquals('ELEMENTS', $helper->render($fieldset));
@@ -65,16 +71,23 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRenderWithFieldset()
     {
-        $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
+        $fieldset = $this->createMock(FieldsetInterface::class);
 
-        $helper = $this->getMockBuilder($this->_getHelperClass())
-                       ->disableOriginalConstructor()
-                       ->setMethods(array('renderElements', 'renderFieldsetElement'))
-                       ->getMock();
-        $helper->method('renderElements')->with($fieldset)->willReturn('ELEMENTS');
+        $helper = $this->createPartialMock(Fieldset::class, ['renderElements', 'renderFieldsetElement']);
+        $helper->method('renderElements')->with($fieldset, FormRow::LABEL_PREPEND)->willReturn('ELEMENTS');
         $helper->method('renderFieldsetElement')->with($fieldset, 'ELEMENTS')->willReturn('FIELDSET');
 
         $this->assertEquals('FIELDSET', $helper->render($fieldset));
+    }
+
+    public function testRenderWithExplicitLabelPosition()
+    {
+        $fieldset = $this->createMock(FormInterface::class);
+
+        $helper = $this->createPartialMock(Fieldset::class, ['renderElements', 'renderFieldsetElement']);
+        $helper->expects($this->once())->method('renderElements')->with($fieldset, FormRow::LABEL_APPEND);
+
+        $helper->render($fieldset, FormRow::LABEL_APPEND);
     }
 
     public function testRenderFieldsetElementWithContent()
@@ -155,7 +168,7 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
         $this->assertEquals('<legend>ESCAPED</legend>', $helper->renderLabel($fieldset));
     }
 
-    public function testRenderElements()
+    public function testRenderElementsWithDefaultLabelPosition()
     {
         $subFieldset = $this->createStub(FieldsetInterface::class);
         $subElement = $this->createStub(ElementInterface::class);
@@ -168,16 +181,45 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
         $formElementErrors = $this->createMock(FormElementErrors::class);
         $formElementErrors->expects($this->once())->method('setAttributes')->with(['class' => 'errors']);
 
-        $view = $this->createMock(PhpRenderer::class);
-        $view->method('__call')->withConsecutive(
-            ['formElementErrors', []],
-            ['formRow', [$subElement]],
-        )->willReturnOnConsecutiveCalls($formElementErrors, '<FORMROW>');
+        $formRow = $this->createMock(FormRow::class);
+        $formRow->method('__invoke')->with($subElement, FormRow::LABEL_PREPEND)->willReturn('<FORMROW>');
+
+        $view = $this->createStub(PhpRenderer::class);
+        $view->method('plugin')->willReturnMap([
+            ['formElementErrors', null, $formElementErrors],
+            ['formRow', null, $formRow]
+        ]);
 
         $helper = $this->createPartialMock(Fieldset::class, ['render', 'getView']);
         $helper->method('render')->willReturn('<FIELDSET>');
         $helper->method('getView')->willReturn($view);
 
         $this->assertEquals('<FIELDSET><FORMROW>', $helper->renderElements($fieldset));
+    }
+
+    public function testRenderElementsWithExplicitLabelPosition()
+    {
+        $subElement = $this->createStub(ElementInterface::class);
+
+        $iterator = new ArrayIterator([$subElement]);
+
+        $fieldset = $this->createStub(FieldsetInterface::class);
+        $fieldset->method('getIterator')->willReturn($iterator);
+
+        $formElementErrors = $this->createStub(FormElementErrors::class);
+
+        $formRow = $this->createMock(FormRow::class);
+        $formRow->expects($this->once())->method('__invoke')->with($subElement, FormRow::LABEL_APPEND);
+
+        $view = $this->createStub(PhpRenderer::class);
+        $view->method('plugin')->willReturnMap([
+            ['formElementErrors', null, $formElementErrors],
+            ['formRow', null, $formRow]
+        ]);
+
+        $helper = $this->createPartialMock(Fieldset::class, ['getView']);
+        $helper->method('getView')->willReturn($view);
+
+        $helper->renderElements($fieldset, FormRow::LABEL_APPEND);
     }
 }

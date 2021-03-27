@@ -373,10 +373,6 @@ msgid "Build"
 msgstr "Erstellen"
 
 #: Form/Package/Build.php
-msgid "Command line"
-msgstr "Befehlszeile"
-
-#: Form/Package/Build.php
 msgid "Countdown (seconds)"
 msgstr "Countdown (Sekunden)"
 
@@ -419,10 +415,6 @@ msgstr "Nachricht nach Installation"
 #: Form/Package/Build.php
 msgid "Priority (0: exclusive, 10: lowest)"
 msgstr "Priorität (0: exklusiv, 10: niedrigste)"
-
-#: Form/Package/Build.php
-msgid "Target Path"
-msgstr "Zielpfad"
 
 #: Form/Package/Build.php
 msgid "Warn user"
@@ -1142,6 +1134,14 @@ msgstr "Effektiv"
 #, php-format
 msgid "The post_max_size value of %s has been exceeded."
 msgstr "Der Wert für post_max_size (%s) wurde überschritten."
+
+#: View/Helper/Form/Package/Build.php
+msgid "Command line"
+msgstr "Befehlszeile"
+
+#: View/Helper/Form/Package/Build.php
+msgid "Target path"
+msgstr "Zielpfad"
 
 #: View/Helper/Form/Software.php views/console/network/index.php
 msgid "Count"
