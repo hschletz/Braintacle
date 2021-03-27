@@ -202,6 +202,9 @@ class Run
         }
 
         $env = ['VAR_DUMPER_FORMAT' => 'html']; // Prevent VarDumper from writing to STDOUT in CLI.
+        if ($coverage) {
+            $env['XDEBUG_MODE'] = 'coverage';
+        }
         if ($database) {
             $env['BRAINTACLE_TEST_DATABASE'] = json_encode($database);
         }
