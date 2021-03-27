@@ -65,6 +65,12 @@ $application->addOption(
     InputOption::VALUE_NONE,
     'Generate code coverage report (slow, requires Xdebug extension)'
 );
+$application->addOption(
+    'xdebug',
+    'x',
+    InputOption::VALUE_NONE,
+    'Activate Xdebug step debugging'
+);
 $application->setCode(new Run());
 $application->run();
 
@@ -80,7 +86,8 @@ class Run
             $databases,
             $input->getOption('filter'),
             $input->getOption('stop'),
-            $input->getOption('coverage')
+            $input->getOption('coverage'),
+            $input->getOption('xdebug')
         );
     }
 
@@ -153,7 +160,8 @@ class Run
         array $databases,
         ?string $filter,
         bool $stop,
-        bool $coverage
+        bool $coverage,
+        bool $xdebug
     ) {
         foreach ($modules as $module) {
             foreach ($databases as $name => $database) {
@@ -166,7 +174,7 @@ class Run
                 $message .= "\n\n";
                 $output->write($message);
 
-                $this->runTest($output, $module, $database, $filter, $stop, $coverage);
+                $this->runTest($output, $module, $database, $filter, $stop, $coverage, $xdebug);
             }
         }
     }
@@ -177,10 +185,19 @@ class Run
         ?array $database,
         ?string $filter,
         bool $stop,
-        bool $coverage
+        bool $coverage,
+        bool $xdebug
     ) {
-        $cmd = [(new \Symfony\Component\Process\PhpExecutableFinder())->find()];
+        $xdebugMode = [];
         if ($coverage) {
+            $xdebugMode[] = 'coverage';
+        }
+        if ($xdebug) {
+            $xdebugMode[] = 'debug';
+        }
+
+        $cmd = [(new \Symfony\Component\Process\PhpExecutableFinder())->find()];
+        if ($xdebugMode) {
             $cmd[] = '-d zend_extension=xdebug.' . PHP_SHLIB_SUFFIX;
         }
         // Avoid vendor/bin/phpunit for Windows compatibility
@@ -202,8 +219,8 @@ class Run
         }
 
         $env = ['VAR_DUMPER_FORMAT' => 'html']; // Prevent VarDumper from writing to STDOUT in CLI.
-        if ($coverage) {
-            $env['XDEBUG_MODE'] = 'coverage';
+        if ($xdebugMode) {
+            $env['XDEBUG_MODE'] = implode(',', $xdebugMode);
         }
         if ($database) {
             $env['BRAINTACLE_TEST_DATABASE'] = json_encode($database);
