@@ -21,6 +21,14 @@
 
 namespace Library\Test\Mvc\Controller\Plugin;
 
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\Plugin\PluginInterface;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Router\Http\Segment;
+use Laminas\Router\Http\TreeRouteStack;
+use Laminas\Router\RouteMatch;
+
 /**
  * Base class for controller plugin tests
  *
@@ -82,60 +90,42 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
     /**
      * Get an initialized instance of the controller plugin
      *
-     * If controller setup is requested, the controller will be a
-     * \Laminas\Mvc\Controller\AbstractActionController mock. Its MvcEvent will be
-     * initialized with a standard route 'test' (/module/controller/action/)
-     * with defaults of "defaultcontroller" and "defaultaction".
-     * The RouteMatch is initialized with "currentcontroller" and
-     * "currentaction". An empty response is created.
-     *
-     * @param bool $setController Initialize the helper with a working controller (default: TRUE)
-     * @return \Laminas\Mvc\Controller\Plugin\PluginInterface Plugin instance
+     * The controller will be a \Laminas\Mvc\Controller\AbstractActionController
+     * mock. Its MvcEvent will be initialized with a standard route 'test'
+     * (/module/controller/action/) with defaults of "defaultcontroller" and
+     * "defaultaction". An empty response is created.
      */
-    protected function _getPlugin($setController = true)
+    protected function _getPlugin(): PluginInterface
     {
-        if ($setController) {
-            $router = new \Laminas\Router\Http\TreeRouteStack;
-            $router->addRoute(
-                'test',
-                \Laminas\Router\Http\Segment::factory(
-                    array(
-                        // Match "module" prefix, followed by controller and action
-                        // names. All three components are optional except the
-                        // controller, which is required if an action is given.
-                        // Matches with or without trailing slash.
-                        'route' => '/[module[/]][:controller[/][:action[/]]]',
-                        'defaults' => array(
-                            'controller' => 'defaultcontroller',
-                            'action' => 'defaultaction',
-                        ),
-                    )
-                )
-            );
+        $router = new TreeRouteStack();
+        $router->addRoute(
+            'test',
+            Segment::factory([
+                // Match "module" prefix, followed by controller and action
+                // names. All three components are optional except the
+                // controller, which is required if an action is given. Matches
+                // with or without trailing slash.
+                'route' => '/[module[/]][:controller[/][:action[/]]]',
+                'defaults' => [
+                    'controller' => 'defaultcontroller',
+                    'action' => 'defaultaction',
+                ],
+            ])
+        );
 
-            $routeMatch = new \Laminas\Router\RouteMatch(
-                array(
-                    'controller' => 'currentcontroller',
-                    'action' => 'currentaction',
-                )
-            );
-            $routeMatch->setMatchedRouteName('test');
+        $routeMatch = new RouteMatch([]);
+        $routeMatch->setMatchedRouteName('test');
 
-            $event = new \Laminas\Mvc\MvcEvent;
-            $event->setRouter($router);
-            $event->setRouteMatch($routeMatch);
-            $event->setResponse(new \Laminas\Http\Response);
+        $event = new MvcEvent();
+        $event->setRouter($router);
+        $event->setRouteMatch($routeMatch);
+        $event->setResponse(new Response());
 
-            $this->_controller = $this->getMockBuilder('Laminas\Mvc\Controller\AbstractActionController')
-                                      ->setMethods(null)
-                                      ->getMockForAbstractClass();
-            $this->_controller->setPluginManager($this->_getPluginManager());
-            $this->_controller->setEvent($event);
+        $this->_controller = $this->getMockForAbstractClass(AbstractActionController::class);
+        $this->_controller->setPluginManager($this->_getPluginManager());
+        $this->_controller->setEvent($event);
 
-            return $this->_controller->plugin($this->_getPluginName());
-        } else {
-            return $this->_getPluginManager()->get($this->_getPluginName());
-        }
+        return $this->_controller->plugin($this->_getPluginName());
     }
 
     /**
