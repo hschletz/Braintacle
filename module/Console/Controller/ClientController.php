@@ -21,6 +21,8 @@
 
 namespace Console\Controller;
 
+use Console\View\Helper\Form\Search;
+
 /**
  * Controller for all client-related actions.
  */
@@ -657,7 +659,7 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
         $form->setAttribute('method', 'GET');
         $form->setAttribute('action', $this->urlFromRoute('client', 'index'));
 
-        return ['form' => $form];
+        return $this->printForm($form, Search::class);
     }
 
     /**

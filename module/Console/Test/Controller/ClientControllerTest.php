@@ -22,7 +22,9 @@
 namespace Console\Test\Controller;
 
 use Console\Form\Search as SearchForm;
+use Console\Mvc\Controller\Plugin\PrintForm;
 use Console\View\Helper\Form\Search as SearchHelper;
+use Laminas\View\Model\ViewModel;
 
 /**
  * Tests for ClientController
@@ -2996,14 +2998,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                  $this->matchesRegularExpression('#^(GET|/console/client/index/)$#')
              );
 
-        $formHelper = $this->createMock(SearchHelper::class);
-        $formHelper->expects($this->once())->method('__invoke')->with($form)->willReturn('<searchform/>');
 
-        $serviceManager->get('ViewHelperManager')->setService('consoleFormSearch', $formHelper);
+        $viewModel = new ViewModel();
 
+        $printForm = $this->createMock(PrintForm::class);
+        $printForm->method('__invoke')->with($form, SearchHelper::class)->willReturn($viewModel);
+
+        $serviceManager->get('ControllerPluginManager')->setService('printForm', $printForm);
+
+        $this->interceptRenderEvent();
         $this->dispatch('/console/client/search/');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery('//searchform');
+        $this->assertMvcResult($viewModel);
     }
 
     public function testSearchActionPreset()
@@ -3026,14 +3032,17 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                  $this->matchesRegularExpression('#^(GET|/console/client/index/)$#')
              );
 
-        $formHelper = $this->createMock(SearchHelper::class);
-        $formHelper->expects($this->once())->method('__invoke')->with($form)->willReturn('<searchform/>');
+        $viewModel = new ViewModel();
 
-        $serviceManager->get('ViewHelperManager')->setService('consoleFormSearch', $formHelper);
+        $printForm = $this->createMock(PrintForm::class);
+        $printForm->method('__invoke')->with($form, SearchHelper::class)->willReturn($viewModel);
 
+        $serviceManager->get('ControllerPluginManager')->setService('printForm', $printForm);
+
+        $this->interceptRenderEvent();
         $this->dispatch('/console/client/search/?filter=Name&search=value');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery('//searchform');
+        $this->assertMvcResult($viewModel);
     }
 
     public function testImportActionGet()
