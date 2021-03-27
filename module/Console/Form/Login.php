@@ -37,6 +37,7 @@ class Login extends Form
 
         $user = new \Laminas\Form\Element\Text('User');
         $user->setLabel('Username');
+        $user->setAttribute('autofocus', true);
         $this->add($user);
 
         $password = new \Laminas\Form\Element\Password('Password');
@@ -50,12 +51,5 @@ class Login extends Form
         $inputFilter = $this->getInputFilter();
         $inputFilter->get('User')->setAllowEmpty(true);
         $inputFilter->get('Password')->setAllowEmpty(true);
-    }
-
-    /** {@inheritdoc} */
-    public function render(\Laminas\View\Renderer\PhpRenderer $view)
-    {
-        $view->placeholder('BodyOnLoad')->append('document.forms["form_login"]["User"].focus()');
-        return parent::render($view);
     }
 }

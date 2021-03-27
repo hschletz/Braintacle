@@ -21,6 +21,8 @@
 
 namespace Console\Test\Form;
 
+use Laminas\Form\Element\Text;
+
 /**
  * Tests for Login form
  */
@@ -28,21 +30,12 @@ class LoginTest extends \Console\Test\AbstractFormTest
 {
     public function testInit()
     {
-        $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('User'));
+        $user = $this->_form->get('User');
+        $this->assertInstanceOf(Text::class, $user);
+        $this->assertTrue($user->getAttribute('autofocus'));
+
         $this->assertInstanceOf('Laminas\Form\Element\Password', $this->_form->get('Password'));
         $this->assertInstanceOf('\Library\Form\Element\Submit', $this->_form->get('Submit'));
-    }
-
-    public function testRender()
-    {
-        $view = $this->_createView();
-        $html = $this->_form->render($view);
-        $document = new \Laminas\Dom\Document($html);
-        $this->assertCount(1, \Laminas\Dom\Document\Query::execute('//form', $document));
-        $this->assertContains(
-            'document.forms["form_login"]["User"].focus()',
-            $view->placeholder('BodyOnLoad')
-        );
     }
 
     public function testInputFilter()

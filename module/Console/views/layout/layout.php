@@ -37,13 +37,8 @@ print $this->consoleScript();
 print "\n";
 
 print "</head>\n";
-print "<body";
-$onLoad = $this->placeholder('BodyOnLoad');
-if ($onLoad->count()) {
-    $onLoad->setSeparator('; ');
-    printf(' onload="%s"', $this->escapeHtmlAttr($onLoad));
-}
-print ">\n<div id='content'>\n";
+print "<body>\n";
+print "<div id='content'>\n";
 print $this->content;
 print "\n</div> <!-- #content -->\n";
 

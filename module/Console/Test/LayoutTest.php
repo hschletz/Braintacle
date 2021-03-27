@@ -104,30 +104,6 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(1, Query::execute('/html/head/consolescript', $document));
     }
 
-    public function testBodyOnloadEmpty()
-    {
-        $html = $this->_view->render('layout');
-        $document = new \Laminas\Dom\Document($html);
-        $this->assertCount(1, Query::execute('/html/body[not(@onload)]', $document));
-    }
-
-    public function testBodyOnload1Handler()
-    {
-        $this->_view->placeholder('BodyOnLoad')->append('onload1');
-        $html = $this->_view->render('layout');
-        $document = new \Laminas\Dom\Document($html);
-        $this->assertCount(1, Query::execute('/html/body[@onload="onload1"]', $document));
-    }
-
-    public function testBodyOnload2Handlers()
-    {
-        $this->_view->placeholder('BodyOnLoad')->append('onload1');
-        $this->_view->placeholder('BodyOnLoad')->append('onload2');
-        $html = $this->_view->render('layout');
-        $document = new \Laminas\Dom\Document($html);
-        $this->assertCount(1, Query::execute('/html/body[@onload="onload1; onload2"]', $document));
-    }
-
     public function testContent()
     {
         $html = $this->_view->render('layout', array('content' => 'content'));
