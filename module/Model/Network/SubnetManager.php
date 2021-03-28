@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Subnet manager
  *
@@ -151,7 +152,7 @@ EOT;
      **/
     public function getSubnet($address, $mask)
     {
-        $this->_validate($address, $mask);
+        $this->validate($address, $mask);
 
         $select = $this->_subnets->getSql()->select();
         $select->columns(array('netid', 'mask', 'name'))
@@ -159,7 +160,7 @@ EOT;
         $subnet = $this->_subnets->selectWith($select)->current();
         if (!$subnet) {
             // Construct new Subnet object
-            $subnet = new \Model\Network\Subnet;
+            $subnet = new \Model\Network\Subnet();
             $subnet['Address'] = $address;
             $subnet['Mask'] = $mask;
             $subnet['Name'] = null;
@@ -177,19 +178,21 @@ EOT;
      */
     public function saveSubnet($address, $mask, $name)
     {
-        $this->_validate($address, $mask);
+        $this->validate($address, $mask);
 
         // Convert empty string to NULL for correct sorting order
         if ($name == '') {
             $name = null;
         }
-        if (!$this->_subnets->update(
-            array('name' => $name),
-            array(
-                'netid' => $address,
-                'mask' => $mask,
+        if (
+            !$this->_subnets->update(
+                array('name' => $name),
+                array(
+                    'netid' => $address,
+                    'mask' => $mask,
+                )
             )
-        )) {
+        ) {
             $this->_subnets->insert(
                 array(
                     'netid' => $address,
@@ -207,7 +210,7 @@ EOT;
      * @param string $mask
      * @throws InvalidArgumentException if $address or $mask are invalid
      */
-    protected function _validate($address, $mask)
+    protected function validate($address, $mask)
     {
         if (!$this->ipNetworkAddressValidator->isValid("$address/$mask")) {
             $messages = $this->ipNetworkAddressValidator->getMessages();

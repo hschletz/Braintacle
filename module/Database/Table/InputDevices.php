@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "inputs" table
  *
@@ -34,7 +35,7 @@ class InputDevices extends \Database\AbstractTable
     {
         $this->table = 'inputs';
 
-        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display Windows-specific information
  *

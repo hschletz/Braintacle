@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Strategy for Size attribute
  *
@@ -33,7 +34,7 @@ class Size implements \Laminas\Hydrator\Strategy\StrategyInterface
     public function hydrate($value, ?array $data)
     {
         if (ctype_digit((string) $value) and $value != 0) {
-            $value = (integer) $value;
+            $value = (int) $value;
         } else {
             $value = null;
         }

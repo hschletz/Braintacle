@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Base class for model tests
  *
@@ -50,7 +51,7 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
     public static function setUpBeforeClass(): void
     {
         foreach (static::$_tables as $table) {
-            static::$serviceManager->get("Database\Table\\$table")->setSchema(true);
+            static::$serviceManager->get("Database\Table\\$table")->updateSchema(true);
         }
         parent::setUpBeforeClass();
     }
@@ -68,7 +69,7 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
         }
         return $this->_db;
     }
- 
+
     /**
      * Set up fixture from data/Test/Classname.yaml
      *
@@ -76,7 +77,7 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
      */
     public function getDataSet()
     {
-        return $this->_loadDataSet();
+        return $this->loadDataSet();
     }
 
     /**
@@ -85,9 +86,9 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
      * @param string $testName Test name. If NULL, the fixture dataset for the test class is loaded.
      * @return \PHPUnit\DbUnit\DataSet\IDataSet
      */
-    protected function _loadDataSet($testName = null)
+    protected function loadDataSet($testName = null)
     {
-        $class = $this->_getClass();
+        $class = $this->getClass();
         $class = substr($class, strpos($class, '\\')); // Remove 'Model' prefix
         $file = str_replace('\\', '/', "data/Test$class");
         if ($testName) {
@@ -114,7 +115,7 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
      * @param mixed $trueValue TRUE value used in $dataset
      * @return \PHPUnit\DbUnit\DataSet\ReplacementDataSet
      */
-    protected function _getBooleanDataSetWrapper(
+    protected function getBooleanDataSetWrapper(
         \PHPUnit\DbUnit\DataSet\IDataSet $dataSet,
         $falseValue,
         $trueValue
@@ -143,7 +144,7 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
      *
      * @return string
      */
-    protected function _getClass()
+    protected function getClass()
     {
         // Derive model class from test class name (minus \Test namespace and 'Test' suffix)
         return substr(str_replace('\Test', '', get_class($this)), 0, -4);
@@ -160,7 +161,7 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
      * @param array $overrideServices Optional associative array (name => instance) with services to override
      * @return object Model instance
      */
-    protected function _getModel(array $overrideServices = array())
+    protected function getModel(array $overrideServices = array())
     {
         if (empty($overrideServices)) {
             $serviceManager = static::$serviceManager;
@@ -184,7 +185,7 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
             }
         }
         // Always build a new instance.
-        return $serviceManager->build($this->_getClass());
+        return $serviceManager->build($this->getClass());
     }
 
     /**
@@ -192,6 +193,6 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
      */
     public function testInterface()
     {
-        $this->assertIsObject($this->_getModel());
+        $this->assertIsObject($this->getModel());
     }
 }

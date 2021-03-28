@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Client
  *
@@ -370,7 +371,7 @@ class Client extends \Model\ClientOrGroup
      */
     public function getPackageAssignments($order = 'PackageName', $direction = 'asc')
     {
-        $hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
+        $hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(
@@ -547,7 +548,8 @@ class Client extends \Model\ClientOrGroup
             }
             switch ($newMembership) {
                 case self::MEMBERSHIP_AUTOMATIC:
-                    if ($oldMembership === self::MEMBERSHIP_ALWAYS or
+                    if (
+                        $oldMembership === self::MEMBERSHIP_ALWAYS or
                         $oldMembership === self::MEMBERSHIP_NEVER
                     ) {
                         // Delete manual membership and update group cache
@@ -632,7 +634,7 @@ class Client extends \Model\ClientOrGroup
 
         $result = array();
         foreach ($groupMemberships->selectWith($select) as $row) {
-            $result[(integer) $row['group_id']] = (integer) $row['static'];
+            $result[(int) $row['group_id']] = (int) $row['static'];
         }
         return $result;
     }

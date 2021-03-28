@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for DuplicatesController
  *
@@ -205,7 +206,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/duplicates/index/');
         $this->assertContains(
             'The selected clients have been merged.',
-            $this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
+            $this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
         );
     }
 
@@ -270,7 +271,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/duplicates/index/');
         $this->assertContains(
             array("'%s' is no longer considered duplicate." => '12345678'),
-            $this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
+            $this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
         );
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Define/delete custom fields
  *
@@ -50,7 +51,7 @@ class DefineFields extends Form
 
         $fields = new \Laminas\Form\Fieldset('Fields');
         $this->add($fields);
-        $inputFilterFields = new \Laminas\InputFilter\InputFilter;
+        $inputFilterFields = new \Laminas\InputFilter\InputFilter();
 
         foreach ($this->getOption('CustomFieldManager')->getFields() as $name => $type) {
             if ($name == 'TAG') { // Static field, can not be edited
@@ -99,7 +100,7 @@ class DefineFields extends Form
         $submit->setLabel('Change');
         $this->add($submit);
 
-        $inputFilter = new \Laminas\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter();
         $inputFilter->add($inputFilterFields, 'Fields');
         $inputFilter->add(
             array(

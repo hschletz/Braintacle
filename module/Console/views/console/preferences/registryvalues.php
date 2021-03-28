@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display form for managing inventoried registry values
  *

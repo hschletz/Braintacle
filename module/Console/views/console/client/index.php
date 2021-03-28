@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display list of clients
  *

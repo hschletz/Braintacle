@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Configuration for Console module
  *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the AddToGroup Helper
  *
@@ -27,7 +28,7 @@ use Laminas\View\Renderer\PhpRenderer;
 
 class AddToGroupTest extends \Library\Test\View\Helper\AbstractTest
 {
-    protected function _getHelperName()
+    protected function getHelperName()
     {
         return 'consoleFormAddToGroup';
     }

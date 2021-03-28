@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for SoftwareFilter
  *
@@ -27,9 +28,9 @@ namespace Console\Test\Form;
 class SoftwareFilterTest extends \Console\Test\AbstractFormTest
 {
     /** {@inheritdoc} */
-    protected function _getForm()
+    protected function getForm()
     {
-        $form = new \Console\Form\SoftwareFilter;
+        $form = new \Console\Form\SoftwareFilter();
         $form->init();
         return $form;
     }

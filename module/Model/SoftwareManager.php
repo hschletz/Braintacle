@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Manager for installed software (licenses, blacklists)
  *
@@ -211,16 +212,18 @@ class SoftwareManager
         if (empty($productKey) or $productKey == $client['Windows']['ProductKey']) {
             $productKey = null;
         } else {
-            $validator = new \Library\Validator\ProductKey;
+            $validator = new \Library\Validator\ProductKey();
             if (!$validator->isValid($productKey)) {
                 throw new \InvalidArgumentException(current($validator->getMessages()));
             }
         }
 
-        if (!$this->_windowsProductKeys->update(
-            array('manual_product_key' => $productKey),
-            array('hardware_id' => $client['Id'])
-        )) {
+        if (
+            !$this->_windowsProductKeys->update(
+                array('manual_product_key' => $productKey),
+                array('hardware_id' => $client['Id'])
+            )
+        ) {
             $this->_windowsProductKeys->insert(
                 array(
                     'hardware_id' => $client['Id'],

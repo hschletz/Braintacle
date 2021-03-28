@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the MacAddress strategy
  *
@@ -25,7 +26,7 @@ class MacAddressTest extends \PHPUnit\Framework\TestCase
 {
     public function testHydrate()
     {
-        $strategy = new \Library\Hydrator\Strategy\MacAddress;
+        $strategy = new \Library\Hydrator\Strategy\MacAddress();
         $address = '00:00:5E:00:53:00';
         $macAddress = $strategy->hydrate($address, null);
         $this->assertInstanceOf('Library\MacAddress', $macAddress);
@@ -34,7 +35,7 @@ class MacAddressTest extends \PHPUnit\Framework\TestCase
 
     public function testExtract()
     {
-        $strategy = new \Library\Hydrator\Strategy\MacAddress;
+        $strategy = new \Library\Hydrator\Strategy\MacAddress();
         $address = '00:00:5E:00:53:00';
         $macAddress = new \Library\MacAddress($address);
         $this->assertSame($address, $strategy->extract($macAddress));

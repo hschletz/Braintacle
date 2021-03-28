@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Abstract factory for Package forms
  *
@@ -39,7 +40,7 @@ class PackageFactory implements \Laminas\ServiceManager\Factory\AbstractFactoryI
         $requestedName,
         array $options = null
     ) {
-        $form = new $requestedName;
+        $form = new $requestedName();
         if ($form instanceof \Console\Form\Package\Build) {
             $form->setOption('packageManager', $container->get('Model\Package\PackageManager'));
         }

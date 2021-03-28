@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display virtual machines hosted on a client
  *

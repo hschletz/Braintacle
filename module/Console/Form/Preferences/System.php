@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form for display/setting of 'system' preferences
  *
@@ -31,7 +32,7 @@ class System extends AbstractForm
     {
         parent::init();
         $preferences = $this->get('Preferences');
-        $inputFilter = new \Laminas\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter();
 
         $communicationServerUri = new \Laminas\Form\Element\Text('communicationServerUri');
         $communicationServerUri->setLabel('Communication server URI');
@@ -55,19 +56,19 @@ class System extends AbstractForm
         $lockValidity->setLabel('Maximum seconds to lock a client')
                      ->setAttribute('size', 5);
         $preferences->add($lockValidity);
-        $inputFilter->add($this->_getIntegerFilter('lockValidity'));
+        $inputFilter->add($this->getIntegerFilter('lockValidity'));
 
         $sessionValidity = new \Laminas\Form\Element\Text('sessionValidity');
         $sessionValidity->setLabel('Maximum duration of an agent session in seconds')
                         ->setAttribute('size', 5);
         $preferences->add($sessionValidity);
-        $inputFilter->add($this->_getIntegerFilter('sessionValidity'));
+        $inputFilter->add($this->getIntegerFilter('sessionValidity'));
 
         $sessionCleanupInterval = new \Laminas\Form\Element\Text('sessionCleanupInterval');
         $sessionCleanupInterval->setLabel('Interval in seconds to cleanup sessions')
                                ->setAttribute('size', 5);
         $preferences->add($sessionCleanupInterval);
-        $inputFilter->add($this->_getIntegerFilter('sessionCleanupInterval'));
+        $inputFilter->add($this->getIntegerFilter('sessionCleanupInterval'));
 
         $sessionRequired = new \Laminas\Form\Element\Checkbox('sessionRequired');
         $sessionRequired->setLabel('Session required for inventory');
@@ -86,7 +87,7 @@ class System extends AbstractForm
         $autoMergeDuplicates->setLabel('Merge duplicates automatically (not recommended)');
         $preferences->add($autoMergeDuplicates);
 
-        $parentFilter = new \Laminas\InputFilter\InputFilter;
+        $parentFilter = new \Laminas\InputFilter\InputFilter();
         $parentFilter->add($inputFilter, 'Preferences');
         $this->setInputFilter($parentFilter);
     }
@@ -97,9 +98,9 @@ class System extends AbstractForm
      * @param string $name Element name
      * @return array
      */
-    protected function _getIntegerFilter($name)
+    protected function getIntegerFilter($name)
     {
-        $validatorChain = new \Laminas\Validator\ValidatorChain;
+        $validatorChain = new \Laminas\Validator\ValidatorChain();
         $validatorChain->attachByName(
             'Callback',
             array(

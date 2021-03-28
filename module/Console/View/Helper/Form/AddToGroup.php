@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AddToGroup form renderer
  *

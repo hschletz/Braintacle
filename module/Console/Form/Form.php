@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Base class for forms
  *
@@ -162,7 +163,7 @@ class Form extends \Laminas\Form\Form
             case 'integer':
                 if (ctype_digit((string) $value)) {
                     $value = \Laminas\Filter\StaticFilter::execute(
-                        (integer) $value,
+                        (int) $value,
                         'NumberFormat',
                         array('type' => \NumberFormatter::TYPE_INT32)
                     );
@@ -170,7 +171,7 @@ class Form extends \Laminas\Form\Form
                 break;
             case 'float':
                 if ($value !== null and $value !== '' and preg_match('/^([0-9]+)?(\.[0-9]+)?$/', $value)) {
-                    $numberFormat = new \Laminas\I18n\Filter\NumberFormat;
+                    $numberFormat = new \Laminas\I18n\Filter\NumberFormat();
                     $numberFormat->getFormatter()->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, 100);
                     $value = $numberFormat->filter((float) $value);
                 }
@@ -237,7 +238,7 @@ class Form extends \Laminas\Form\Form
                 break;
             case 'date':
                 $value = trim($value);
-                $validator = new \Laminas\I18n\Validator\DateTime;
+                $validator = new \Laminas\I18n\Validator\DateTime();
                 $validator->setDateType(\IntlDateFormatter::SHORT);
                 if ($validator->isValid($value)) {
                     // Some systems accept invalid date separators, like '/'

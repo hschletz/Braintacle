@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Package\Storage\Direct
  *
@@ -33,7 +34,7 @@ class DirectTest extends \Model\Test\AbstractTest
     /** {@inheritdoc} */
     public function getDataSet()
     {
-        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet;
+        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet();
     }
 
     public function testPrepare()
@@ -198,7 +199,7 @@ class DirectTest extends \Model\Test\AbstractTest
     {
         $config = $this->createMock('Model\Config');
         $config->method('__get')->with('packagePath')->willReturn('packagePath');
-        $model = new Direct($config, new Metadata);
+        $model = new Direct($config, new Metadata());
         $this->assertEquals('packagePath/id', $model->getPath('id'));
     }
 
@@ -230,7 +231,7 @@ class DirectTest extends \Model\Test\AbstractTest
         $config = $this->createMock('Model\Config');
         $config->expects($this->once())->method('__get')->with('validateXml')->willReturn('validate');
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setConstructorArgs(array($config, $metadata))
                       ->setMethods(array('getPath'))
                       ->getMock();
@@ -260,7 +261,7 @@ class DirectTest extends \Model\Test\AbstractTest
             'FileLocation' => '',
         );
         $config = $this->createMock('Model\Config');
-        $model = $this->_getModel(array('Model\Config' => $config));
+        $model = $this->getModel(array('Model\Config' => $config));
         $this->assertSame(0, $model->writeContent($data, null, null));
     }
 

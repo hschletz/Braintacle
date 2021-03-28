@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Hydrator for software
  *
@@ -40,7 +41,7 @@ class Software implements \Laminas\Hydrator\HydratorInterface
      */
     public function __construct()
     {
-        $this->_nameFilter = new \Library\Filter\FixEncodingErrors;
+        $this->_nameFilter = new \Library\Filter\FixEncodingErrors();
     }
 
     /**
@@ -246,7 +247,7 @@ class Software implements \Laminas\Hydrator\HydratorInterface
     {
         switch ($name) {
             case 'is_hotfix':
-                $value = (integer) !$value;
+                $value = (int) !$value;
                 break;
             case 'installation_date':
                 $value = ($value ? $value->format('Y-m-d') : null);

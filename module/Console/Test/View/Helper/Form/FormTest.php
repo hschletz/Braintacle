@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the Form helper
  *
@@ -49,7 +50,7 @@ class FormTest extends \Library\Test\View\Helper\AbstractTest
     }
 
     /** {@inheritdoc} */
-    protected function _getHelperName()
+    protected function getHelperName()
     {
         return 'consoleForm';
     }
@@ -74,7 +75,7 @@ class FormTest extends \Library\Test\View\Helper\AbstractTest
         $_FILES = $files;
         $_SERVER = $server;
 
-        $helper = $this->getMockBuilder($this->_getHelperClass())
+        $helper = $this->getMockBuilder($this->getHelperClass())
                        ->disableOriginalConstructor()
                        ->setMethods(array('getView'))
                        ->getMock();
@@ -96,7 +97,7 @@ class FormTest extends \Library\Test\View\Helper\AbstractTest
                  ['htmlElement', ['p', 'exceeded ' . ini_get('post_max_size'), ['class' => 'error']], 'exceeded']
              ]);
 
-        $helper = $this->getMockBuilder($this->_getHelperClass())
+        $helper = $this->getMockBuilder($this->getHelperClass())
                        ->disableOriginalConstructor()
                        ->setMethods(array('getView'))
                        ->getMock();

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Filesystems hydrator
  *
@@ -127,7 +128,7 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
      */
     public function testHydrateName($extracted, $hydrated)
     {
-        $hydrator = $this->_getHydrator();
+        $hydrator = $this->getHydrator();
         $this->assertEquals($hydrated, $hydrator->hydrateName($extracted));
     }
 
@@ -135,7 +136,7 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
     {
         $this->expectException('DomainException');
         $this->expectExceptionMessage('Cannot hydrate name: invalid');
-        $hydrator = $this->_getHydrator();
+        $hydrator = $this->getHydrator();
         $hydrator->hydrateName('invalid');
     }
 
@@ -159,7 +160,7 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
      */
     public function testExtractName($hydrated, $extracted)
     {
-        $hydrator = $this->_getHydrator();
+        $hydrator = $this->getHydrator();
         $this->assertEquals($extracted, $hydrator->extractName($hydrated));
     }
 
@@ -167,7 +168,7 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
     {
         $this->expectException('DomainException');
         $this->expectExceptionMessage('Cannot extract name: Invalid');
-        $hydrator = $this->_getHydrator();
+        $hydrator = $this->getHydrator();
         $hydrator->extractName('Invalid');
     }
 
@@ -188,7 +189,7 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
      */
     public function testHydrateValue($name, $extracted, $hydrated)
     {
-        $hydrator = $this->_getHydrator();
+        $hydrator = $this->getHydrator();
         $this->assertEquals($hydrated, $hydrator->hydrateValue($name, $extracted));
     }
 
@@ -208,7 +209,7 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
      */
     public function testExtractValue($name, $hydrated, $extracted)
     {
-        $hydrator = $this->_getHydrator();
+        $hydrator = $this->getHydrator();
         $this->assertEquals($extracted, $hydrator->extractValue($name, $hydrated));
     }
 }

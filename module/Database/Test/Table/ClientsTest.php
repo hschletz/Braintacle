@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the Clients table
  *
@@ -26,14 +27,14 @@ class ClientsTest extends AbstractTest
     public static function setUpBeforeClass(): void
     {
         // These tables must exist before the view can be created
-        static::$serviceManager->get('Database\Table\ClientsAndGroups')->setSchema(true);
-        static::$serviceManager->get('Database\Table\ClientSystemInfo')->setSchema(true);
+        static::$serviceManager->get('Database\Table\ClientsAndGroups')->updateSchema(true);
+        static::$serviceManager->get('Database\Table\ClientSystemInfo')->updateSchema(true);
         parent::setUpBeforeClass();
     }
 
     public function getDataSet()
     {
-        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet;
+        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet();
     }
 
     public function testHydrator()

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the InputDevices table
  *
@@ -25,7 +26,7 @@ class InputDevicesTest extends AbstractTest
 {
     public function getDataSet()
     {
-        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet;
+        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet();
     }
 
     public function testHydrator()

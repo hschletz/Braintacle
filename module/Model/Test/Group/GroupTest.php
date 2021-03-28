@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Group\Group
  *
@@ -48,7 +49,7 @@ class GroupTest extends AbstractGroupTest
     {
         $config = $this->createMock('Model\Config');
         $config->expects($this->once())->method('__get')->with($globalOptionName)->willReturn($globalOptionValue);
-        $model = $this->_getModel(array('Model\Config' => $config));
+        $model = $this->getModel(array('Model\Config' => $config));
         $this->assertSame($expectedValue, $model->getDefaultConfig($option));
     }
 
@@ -93,7 +94,7 @@ class GroupTest extends AbstractGroupTest
                            )
                        );
 
-        $model = $this->getMockBuilder($this->_getClass())->setMethods(array('lock', 'unlock'))->getMock();
+        $model = $this->getMockBuilder($this->getClass())->setMethods(array('lock', 'unlock'))->getMock();
         if ($simulateLockFailure) {
             $model->expects($this->exactly(2))
                   ->method('lock')
@@ -107,7 +108,7 @@ class GroupTest extends AbstractGroupTest
 
         $model->setMembersFromQuery($type, 'filter', 'search', 'operator', 'invert');
         $this->assertTablesEqual(
-            $this->_loadDataSet($dataSet)->getTable('groups_cache'),
+            $this->loadDataSet($dataSet)->getTable('groups_cache'),
             $this->getConnection()->createQueryTable(
                 'groups_cache',
                 'SELECT hardware_id, group_id, static FROM groups_cache ORDER BY group_id, hardware_id'
@@ -150,7 +151,7 @@ class GroupTest extends AbstractGroupTest
                            )
                        );
 
-        $model = $this->getMockBuilder($this->_getClass())->setMethods(array('lock', 'unlock'))->getMock();
+        $model = $this->getMockBuilder($this->getClass())->setMethods(array('lock', 'unlock'))->getMock();
         $model->expects($this->once())->method('lock')->willReturn(true);
         $model->expects($this->once())->method('unlock');
         $model['Id'] = 10;
@@ -217,7 +218,7 @@ class GroupTest extends AbstractGroupTest
                             )
                        );
 
-        $model = $this->getMockBuilder($this->_getClass())->setMethods(array('update'))->getMock();
+        $model = $this->getMockBuilder($this->getClass())->setMethods(array('update'))->getMock();
         $model->expects($this->once())
               ->method('update')
               ->with(true)
@@ -236,7 +237,7 @@ class GroupTest extends AbstractGroupTest
             'invert'
         );
         $this->assertTablesEqual(
-            $this->_loadDataSet('SetMembersFromQueryDynamic')->getTable('groups'),
+            $this->loadDataSet('SetMembersFromQueryDynamic')->getTable('groups'),
             $this->getConnection()->createQueryTable(
                 'groups',
                 'SELECT hardware_id, request FROM groups ORDER BY hardware_id'
@@ -266,7 +267,7 @@ class GroupTest extends AbstractGroupTest
         $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->method('getClients')->willReturn($select);
 
-        $model = $this->_getModel(array('Model\Client\ClientManager' => $clientManager));
+        $model = $this->getModel(array('Model\Client\ClientManager' => $clientManager));
         $model['Id'] = 10;
 
         $this->expectException('LogicException');
@@ -330,7 +331,7 @@ class GroupTest extends AbstractGroupTest
                            )
                        );
 
-        $model = $this->getMockBuilder($this->_getClass())->setMethods(array('lock', 'unlock'))->getMock();
+        $model = $this->getMockBuilder($this->getClass())->setMethods(array('lock', 'unlock'))->getMock();
         $model->method('lock')->willReturn($lockSuccess);
         if ($dataSet !== null) {
             $model->expects($this->once())->method('unlock');
@@ -353,7 +354,7 @@ class GroupTest extends AbstractGroupTest
             $model['CacheExpirationDate']
         );
         $this->assertTablesEqual(
-            $this->_loadDataSet($dataSet)->getTable('groups'),
+            $this->loadDataSet($dataSet)->getTable('groups'),
             $this->getConnection()->createQueryTable(
                 'groups',
                 'SELECT hardware_id, request, create_time, revalidate_from FROM groups ORDER BY hardware_id'
@@ -363,14 +364,14 @@ class GroupTest extends AbstractGroupTest
 
     public function testGetPackagesDefaultOrder()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model['Id'] = 10;
         $this->assertEquals(array('package1', 'package2'), $model->getPackages());
     }
 
     public function testGetPackagesReverseOrder()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model['Id'] = 10;
         $this->assertEquals(array('package2', 'package1'), $model->getPackages('desc'));
     }

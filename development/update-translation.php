@@ -1,5 +1,6 @@
 #!/usr/bin/php
 <?php
+
 /**
  * Update translation files (.pot, .po) if sources have changed
  *
@@ -94,12 +95,14 @@ foreach ($modules as $module => $config) {
             $cmd[] = "--keyword=$keyword";
         }
         foreach ($config['subdirs'] as $subdir) {
-            foreach (new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(
-                    "$modulePath/$subdir",
-                    \RecursiveDirectoryIterator::CURRENT_AS_SELF
-                )
-            ) as $file) {
+            foreach (
+                new \RecursiveIteratorIterator(
+                    new \RecursiveDirectoryIterator(
+                        "$modulePath/$subdir",
+                        \RecursiveDirectoryIterator::CURRENT_AS_SELF
+                    )
+                ) as $file
+            ) {
                 $file = $file->getSubPathName();
                 if (substr($file, -4) == '.php') {
                     $cmd[] = $subdir . DIRECTORY_SEPARATOR . $file;
@@ -132,7 +135,7 @@ foreach ($modules as $module => $config) {
             $update = ($newPot != $oldPot);
         }
         if ($update) {
-            $fileSystem = new Symfony\Component\Filesystem\Filesystem;
+            $fileSystem = new Symfony\Component\Filesystem\Filesystem();
             $fileSystem->dumpFile(
                 $potFileName,
                 sprintf($template, $module, implode("\n", $newPot))

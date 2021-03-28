@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display general information about a client
  *

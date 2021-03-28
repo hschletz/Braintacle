@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the Po class
  *
@@ -28,7 +29,7 @@ class PoTest extends \PHPUnit\Framework\TestCase
 {
     public function testLoad()
     {
-        $loader = new \Library\I18n\Translator\Loader\Po;
+        $loader = new \Library\I18n\Translator\Loader\Po();
         $textDomain = $loader->load('de', \Library\Module::getPath('data/Test/I18n/Translator/Loader/PoTest.po'));
         $this->assertInstanceOf('Laminas\I18n\Translator\TextDomain', $textDomain);
         $translations = array(

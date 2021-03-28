@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Operator\OperatorManager
  *
@@ -31,7 +32,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
 
     public function testGetOperatorsDefaultOrder()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $resultSet = $model->getOperators();
         $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $resultSet);
         $operators = iterator_to_array($resultSet);
@@ -43,7 +44,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
 
     public function testGetOperatorsCustomOrder()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $resultSet = $model->getOperators('Id', 'desc');
         $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $resultSet);
         $operators = iterator_to_array($resultSet);
@@ -55,7 +56,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
 
     public function testGetAllIds()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $ids = $model->getAllIds();
         sort($ids); // Result order is undefined, sort for comparison
         $this->assertEquals(array('user1', 'user2'), $ids);
@@ -63,7 +64,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
 
     public function testGetOperator()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $operator = $model->getOperator('user1');
         $this->assertInstanceOf('Model\Operator\Operator', $operator);
         $this->assertEquals(
@@ -82,7 +83,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('No login name supplied');
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->getOperator(null);
     }
 
@@ -90,7 +91,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('No login name supplied');
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->getOperator(array('user2'));
     }
 
@@ -98,7 +99,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
     {
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('Invalid login name supplied');
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->getOperator('invalid');
     }
 
@@ -110,10 +111,10 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         $authenticationService = $this->createMock('Model\Operator\AuthenticationService');
         $authenticationService->method('getAdapter')->willReturn($adapter);
 
-        $model = $this->_getModel(array('Laminas\Authentication\AuthenticationService' => $authenticationService));
+        $model = $this->getModel(array('Laminas\Authentication\AuthenticationService' => $authenticationService));
         $model->createOperator(array('Id' => 'new_id'), 'new_passwd');
         $this->assertTablesEqual(
-            $this->_loadDataset('CreateMinimal')->getTable('operators'),
+            $this->loadDataSet('CreateMinimal')->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
                 'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'
@@ -129,7 +130,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         $authenticationService = $this->createMock('Model\Operator\AuthenticationService');
         $authenticationService->method('getAdapter')->willReturn($adapter);
 
-        $model = $this->_getModel(array('Laminas\Authentication\AuthenticationService' => $authenticationService));
+        $model = $this->getModel(array('Laminas\Authentication\AuthenticationService' => $authenticationService));
         $model->createOperator(
             array(
                 'Id' => 'new_id',
@@ -142,7 +143,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
             'new_passwd'
         );
         $this->assertTablesEqual(
-            $this->_loadDataset('CreateFull')->getTable('operators'),
+            $this->loadDataSet('CreateFull')->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
                 'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'
@@ -152,7 +153,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
 
     public function testCreateOperatorWithoutId()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         try {
             $model->createOperator(array(), 'new_passwd');
             $this->fail('Expected Exception was not thrown');
@@ -160,7 +161,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
             $this->assertEquals('No login name supplied', $e->getMessage());
         }
         $this->assertTablesEqual(
-            $this->_loadDataset()->getTable('operators'),
+            $this->loadDataSet()->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
                 'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'
@@ -170,7 +171,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
 
     public function testCreateOperatorWithoutPassword()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         try {
             $model->createOperator(array('Id' => 'id'), '');
             $this->fail('Expected Exception was not thrown');
@@ -178,7 +179,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
             $this->assertEquals('No password supplied', $e->getMessage());
         }
         $this->assertTablesEqual(
-            $this->_loadDataset()->getTable('operators'),
+            $this->loadDataSet()->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
                 'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'
@@ -219,10 +220,10 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         $authService->method('getAdapter')->willReturn($adapter);
         $authService->expects($this->never())->method('changeIdentity');
 
-        $model = $this->_getModel(array('Laminas\Authentication\AuthenticationService' => $authService));
+        $model = $this->getModel(array('Laminas\Authentication\AuthenticationService' => $authService));
         $model->updateOperator('user1', $data, $password);
         $this->assertTablesEqual(
-            $this->_loadDataSet($dataSet)->getTable('operators'),
+            $this->loadDataSet($dataSet)->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
                 'SELECT id, firstname, lastname, passwd, password_version, comments, email FROM operators ORDER BY id'
@@ -236,10 +237,10 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         $authService->method('getIdentity')->willReturn('user1');
         $authService->expects($this->once())->method('changeIdentity')->with('new_id');
 
-        $model = $this->_getModel(array('Laminas\Authentication\AuthenticationService' => $authService));
+        $model = $this->getModel(array('Laminas\Authentication\AuthenticationService' => $authService));
         $model->updateOperator('user1', array('Id' => 'new_id'), '');
         $this->assertTablesEqual(
-            $this->_loadDataSet('UpdateIdentity')->getTable('operators'),
+            $this->loadDataSet('UpdateIdentity')->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
                 'SELECT id, firstname, lastname, passwd, password_version, comments, email FROM operators ORDER BY id'
@@ -249,7 +250,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
 
     public function testUpdateOperatorInvalidUser()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         try {
             $model->updateOperator('invalid', array('Id' => 'new_id'), '');
             $this->fail('Expected exception was not thrown');
@@ -257,7 +258,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
             $this->assertEquals('Invalid user name: invalid', $e->getMessage());
 
             $this->assertTablesEqual(
-                $this->_loadDataSet()->getTable('operators'),
+                $this->loadDataSet()->getTable('operators'),
                 $this->getConnection()->createQueryTable(
                     'operators',
                     'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators ' .
@@ -269,10 +270,10 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteOperator()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->deleteOperator('user2');
         $this->assertTablesEqual(
-            $this->_loadDataset('Delete')->getTable('operators'),
+            $this->loadDataSet('Delete')->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
                 'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'
@@ -282,10 +283,10 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteOperatorNonexistent()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->deleteOperator('user3');
         $this->assertTablesEqual(
-            $this->_loadDataset()->getTable('operators'),
+            $this->loadDataSet()->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
                 'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'
@@ -297,7 +298,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
     {
         $authService = $this->createMock('Model\Operator\AuthenticationService');
         $authService->expects($this->once())->method('getIdentity')->willReturn('user2');
-        $model = $this->_getModel(array('Laminas\Authentication\AuthenticationService' => $authService));
+        $model = $this->getModel(array('Laminas\Authentication\AuthenticationService' => $authService));
         try {
             $model->deleteOperator('user2');
             $this->fail('Expected Exception was not thrown');
@@ -305,7 +306,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
             $this->assertEquals('Cannot delete account of current user', $e->getMessage());
         }
         $this->assertTablesEqual(
-            $this->_loadDataset()->getTable('operators'),
+            $this->loadDataSet()->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
                 'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'

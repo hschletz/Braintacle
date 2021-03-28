@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for AuthenticationAdapter
  *
@@ -21,7 +22,7 @@
 
 namespace Model\Test\Operator;
 
-use \Laminas\Authentication\Result;
+use Laminas\Authentication\Result;
 
 /**
  * Tests for AuthenticationAdapter
@@ -56,7 +57,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
 
     public function testAuthenticateInvalidIdentity()
     {
-        $adapter = $this->getMockBuilder($this->_getClass())
+        $adapter = $this->getMockBuilder($this->getClass())
                         ->setConstructorArgs(array(static::$serviceManager->get('Database\Table\Operators')))
                         ->setMethods(array('getIdentity', 'getCredential', 'generateHash'))
                         ->getMock();
@@ -66,7 +67,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
 
         $this->assertAuthenticationResult(Result::FAILURE_IDENTITY_NOT_FOUND, null, array(), $adapter);
         $this->assertTablesEqual(
-            $this->_loadDataset()->getTable('operators'),
+            $this->loadDataSet()->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
                 'SELECT id, passwd, password_version FROM operators ORDER BY id'
@@ -76,7 +77,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
 
     public function testAuthenticateLegacyFail()
     {
-        $adapter = $this->getMockBuilder($this->_getClass())
+        $adapter = $this->getMockBuilder($this->getClass())
                         ->setConstructorArgs(array(static::$serviceManager->get('Database\Table\Operators')))
                         ->setMethods(array('getIdentity', 'getCredential', 'generateHash'))
                         ->getMock();
@@ -86,7 +87,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
 
         $this->assertAuthenticationResult(Result::FAILURE_CREDENTIAL_INVALID, null, array(), $adapter);
         $this->assertTablesEqual(
-            $this->_loadDataset()->getTable('operators'),
+            $this->loadDataSet()->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
                 'SELECT id, passwd, password_version FROM operators ORDER BY id'
@@ -96,7 +97,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
 
     public function testAuthenticateLegacySuccess()
     {
-        $adapter = $this->getMockBuilder($this->_getClass())
+        $adapter = $this->getMockBuilder($this->getClass())
                         ->setConstructorArgs(array(static::$serviceManager->get('Database\Table\Operators')))
                         ->setMethods(array('getIdentity', 'getCredential', 'generateHash'))
                         ->getMock();
@@ -106,7 +107,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
 
         $this->assertAuthenticationResult(Result::SUCCESS, 'user1', array(), $adapter);
         $this->assertTablesEqual(
-            $this->_loadDataset('AuthenticateLegacySuccess')->getTable('operators'),
+            $this->loadDataSet('AuthenticateLegacySuccess')->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
                 'SELECT id, passwd, password_version FROM operators ORDER BY id'
@@ -116,7 +117,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
 
     public function testAuthenticateDefaultFail()
     {
-        $adapter = $this->getMockBuilder($this->_getClass())
+        $adapter = $this->getMockBuilder($this->getClass())
                         ->setConstructorArgs(array(static::$serviceManager->get('Database\Table\Operators')))
                         ->setMethods(array('getIdentity', 'getCredential', 'generateHash'))
                         ->getMock();
@@ -126,7 +127,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
 
         $this->assertAuthenticationResult(Result::FAILURE_CREDENTIAL_INVALID, null, array(), $adapter);
         $this->assertTablesEqual(
-            $this->_loadDataset()->getTable('operators'),
+            $this->loadDataSet()->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
                 'SELECT id, passwd, password_version FROM operators ORDER BY id'
@@ -136,7 +137,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
 
     public function testAuthenticateDefaultSuccessNoUpdate()
     {
-        $adapter = $this->getMockBuilder($this->_getClass())
+        $adapter = $this->getMockBuilder($this->getClass())
                         ->setConstructorArgs(array(static::$serviceManager->get('Database\Table\Operators')))
                         ->setMethods(array('getIdentity', 'getCredential', 'generateHash'))
                         ->getMock();
@@ -146,7 +147,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
 
         $this->assertAuthenticationResult(Result::SUCCESS, 'user2', array(), $adapter);
         $this->assertTablesEqual(
-            $this->_loadDataset()->getTable('operators'),
+            $this->loadDataSet()->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
                 'SELECT id, passwd, password_version FROM operators ORDER BY id'
@@ -156,7 +157,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
 
     public function testAuthenticateDefaultSuccessUpdate()
     {
-        $adapter = $this->getMockBuilder($this->_getClass())
+        $adapter = $this->getMockBuilder($this->getClass())
                         ->setConstructorArgs(array(static::$serviceManager->get('Database\Table\Operators')))
                         ->setMethods(array('getIdentity', 'getCredential', 'generateHash'))
                         ->getMock();
@@ -166,7 +167,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
 
         $this->assertAuthenticationResult(Result::SUCCESS, 'user3', array(), $adapter);
         $this->assertTablesEqual(
-            $this->_loadDataset('AuthenticateDefaultSuccessUpdate')->getTable('operators'),
+            $this->loadDataSet('AuthenticateDefaultSuccessUpdate')->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
                 'SELECT id, passwd, password_version FROM operators ORDER BY id'
@@ -176,7 +177,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
 
     public function testAuthenticateUnknownHashType()
     {
-        $adapter = $this->getMockBuilder($this->_getClass())
+        $adapter = $this->getMockBuilder($this->getClass())
                         ->setConstructorArgs(array(static::$serviceManager->get('Database\Table\Operators')))
                         ->setMethods(array('getIdentity', 'getCredential', 'generateHash'))
                         ->getMock();
@@ -191,7 +192,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
             $adapter
         );
         $this->assertTablesEqual(
-            $this->_loadDataset()->getTable('operators'),
+            $this->loadDataSet()->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
                 'SELECT id, passwd, password_version FROM operators ORDER BY id'
@@ -206,7 +207,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
         $operators = $this->createMock('Database\Table\Operators');
         $operators->method('getSql')->willThrowException($exception);
 
-        $adapter = $this->getMockBuilder($this->_getClass())
+        $adapter = $this->getMockBuilder($this->getClass())
                         ->setConstructorArgs(array($operators))
                         ->setMethods(array('getIdentity', 'getCredential', 'generateHash'))
                         ->getMock();
@@ -223,7 +224,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
             $this->assertSame($exception, $e->getPrevious());
         }
         $this->assertTablesEqual(
-            $this->_loadDataset()->getTable('operators'),
+            $this->loadDataSet()->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
                 'SELECT id, passwd, password_version FROM operators ORDER BY id'
@@ -250,7 +251,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
      */
     public function testGenerateHash($password, $testPassword, $match)
     {
-        $adapter = $this->getMockBuilder($this->_getClass())
+        $adapter = $this->getMockBuilder($this->getClass())
                         ->disableOriginalConstructor()
                         ->setMethods(null)
                         ->getMock();
@@ -263,7 +264,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Password length exceeds 72 bytes');
 
-        $adapter = $this->getMockBuilder($this->_getClass())
+        $adapter = $this->getMockBuilder($this->getClass())
                         ->disableOriginalConstructor()
                         ->setMethods(null)
                         ->getMock();

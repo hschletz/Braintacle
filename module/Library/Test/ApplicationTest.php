@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the Application class
  *
@@ -21,7 +22,7 @@
 
 namespace Library\Test;
 
-use \Library\Application;
+use Library\Application;
 
 /**
  * Tests for the Application class

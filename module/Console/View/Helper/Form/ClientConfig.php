@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Client config form renderer
  *

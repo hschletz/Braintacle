@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Duplicates form renderer
  *

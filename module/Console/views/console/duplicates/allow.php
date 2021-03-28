@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display confirmation form to allow duplicates for given criteria
  *

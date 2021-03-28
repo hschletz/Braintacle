@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "network_devices" table
  *
@@ -40,10 +41,10 @@ class NetworkDevicesIdentified extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _preSetSchema($logger, $schema, $database, $prune)
+    protected function preSetSchema($logger, $schema, $database, $prune)
     {
         // Drop obsolete autoincrement column to avoid MySQL error when setting new PK
-        $this->_dropColumnIfExists($logger, $database, 'id');
+        $this->dropColumnIfExists($logger, $database, 'id');
 
         // There used to be a column named "user". On PostgreSQL, dropping that
         // column would fail without quoting. Since the default pruning code
@@ -53,7 +54,7 @@ class NetworkDevicesIdentified extends \Database\AbstractTable
             $keywords = $database->quoteKeywords;
             $database->quoteKeywords[] = 'user';
             try {
-                $this->_dropColumnIfExists($logger, $database, 'user');
+                $this->dropColumnIfExists($logger, $database, 'user');
             } finally {
                 // Always reset quoteKeywords.
                 $database->quoteKeywords = $keywords;

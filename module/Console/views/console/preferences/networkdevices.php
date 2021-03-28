@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display form for managing network device types
  *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Validate string as a standard log level identifier
  *

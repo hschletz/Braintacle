@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Schema management class
  *
@@ -93,8 +94,8 @@ class SchemaManager
      * Create/update all tables
      *
      * This method iterates over all JSON schema files in ./data, instantiates
-     * table objects of the same name for each file and calls their setSchema()
-     * method.
+     * table objects of the same name for each file and calls their
+     * updateSchema() method.
      *
      * @param bool $prune Drop obsolete tables/columns
      */
@@ -107,14 +108,14 @@ class SchemaManager
         foreach ($glob as $fileinfo) {
             $tableClass = $fileinfo->getBaseName('.json');
             $table = $this->_serviceLocator->get('Database\Table\\' . $tableClass);
-            $table->setSchema($prune);
+            $table->updateSchema($prune);
             $handledTables[] = $table->table;
         }
         // Views need manual invocation.
-        $this->_serviceLocator->get('Database\Table\Clients')->setSchema();
-        $this->_serviceLocator->get('Database\Table\PackageDownloadInfo')->setSchema();
-        $this->_serviceLocator->get('Database\Table\WindowsInstallations')->setSchema();
-        $this->_serviceLocator->get('Database\Table\Software')->setSchema();
+        $this->_serviceLocator->get('Database\Table\Clients')->updateSchema();
+        $this->_serviceLocator->get('Database\Table\PackageDownloadInfo')->updateSchema();
+        $this->_serviceLocator->get('Database\Table\WindowsInstallations')->updateSchema();
+        $this->_serviceLocator->get('Database\Table\Software')->updateSchema();
 
         $logger = $this->_serviceLocator->get('Library\Logger');
 
@@ -209,7 +210,7 @@ class SchemaManager
             $table = $database->getTable($tableName);
 
             // Drop obsolete indexes which might prevent subsequent transformations.
-            static::_dropIndexes($logger, $table, $schema);
+            static::dropIndexes($logger, $table, $schema);
 
             // Update table engine
             if ($database->isMysql() and $table->getEngine() != $schema['mysql']['engine']) {
@@ -251,7 +252,8 @@ class SchemaManager
                     // Since SQL types cannot be completely mapped to PHP
                     // types, a loose comparision is required, but changes
                     // to/from NULL must be taken into account.
-                    if ($columnObj->getDefault() === null and $column['default'] !== null or
+                    if (
+                        $columnObj->getDefault() === null and $column['default'] !== null or
                         $columnObj->getDefault() !== null and $column['default'] === null or
                         $columnObj->getDefault() != $column['default']
                     ) {
@@ -332,7 +334,7 @@ class SchemaManager
     /**
      * Drop indexes which are not defined in the schema.
      */
-    protected static function _dropIndexes(
+    protected static function dropIndexes(
         \Laminas\Log\LoggerInterface $logger,
         \Nada\Table\AbstractTable $table,
         array $schema
@@ -340,7 +342,7 @@ class SchemaManager
         if (!isset($schema['indexes'])) {
             return;
         }
-    
+
         $indexes = $schema['indexes'];
         foreach ($indexes as &$index) {
             // Remove index names for comparison

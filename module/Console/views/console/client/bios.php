@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display BIOS/UEFI information
  *

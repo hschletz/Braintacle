@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the ConsoleUrl helper
  *
@@ -37,7 +38,7 @@ class ConsoleUrlTest extends \Library\Test\View\Helper\AbstractTest
                 'action' => 'currentaction',
             )
         );
-        $urlHelper = $this->_getHelper('Url');
+        $urlHelper = $this->getHelper('Url');
         $urlHelper->setRouteMatch($routeMatch);
         $this->_helper = new \Console\View\Helper\ConsoleUrl(null, $urlHelper);
     }
@@ -97,9 +98,9 @@ class ConsoleUrlTest extends \Library\Test\View\Helper\AbstractTest
     public function testInheritRequestParams()
     {
         $requestParams = array('param1' => 'requestValue1');
-        $request = new \Laminas\Http\PhpEnvironment\Request;
+        $request = new \Laminas\Http\PhpEnvironment\Request();
         $request->setQuery(new \Laminas\Stdlib\Parameters($requestParams));
-        $helper = new \Console\View\Helper\ConsoleUrl($request, $this->_getHelper('Url'));
+        $helper = new \Console\View\Helper\ConsoleUrl($request, $this->getHelper('Url'));
 
         $params = array();
         $this->assertEquals(

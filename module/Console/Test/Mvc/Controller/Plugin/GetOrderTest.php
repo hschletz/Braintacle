@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for GetOrder controller plugin
  *
@@ -31,9 +32,9 @@ class GetOrderTest extends \Library\Test\Mvc\Controller\Plugin\AbstractTest
      */
     public function testInvoke()
     {
-        $plugin = $this->_getPlugin();
+        $plugin = $this->getPlugin();
         $request = $this->_controller->getRequest();
-        $parameters = new \Laminas\Stdlib\Parameters;
+        $parameters = new \Laminas\Stdlib\Parameters();
 
         // Defaults only
         $parameters->fromArray(array());

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for CacheDate strategy
  *
@@ -44,7 +45,7 @@ class CacheDateTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTes
     public function testHydrateWithoutOffset()
     {
         // testHydrate() cannot compare objects
-        $hydrator = new \Database\Hydrator\Strategy\Groups\CacheDate;
+        $hydrator = new \Database\Hydrator\Strategy\Groups\CacheDate();
         $this->assertEquals(new \DateTime('2015-07-14 20:33:02'), $hydrator->hydrate('1436898782', null));
     }
 

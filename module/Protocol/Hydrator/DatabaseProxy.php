@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Hydrator that proxies to a database hydrator
  *

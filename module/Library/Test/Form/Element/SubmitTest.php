@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for \Library\Form\Element\Submit
  *
@@ -28,7 +29,7 @@ class SubmitTest extends \PHPUnit\Framework\TestCase
 {
     public function testSetValue()
     {
-        $submit = new \Library\Form\Element\Submit;
+        $submit = new \Library\Form\Element\Submit();
         $submit->setLabel('test');
         $submit->setValue('ignored');
         $this->assertEquals('test', $submit->getValue());
@@ -36,7 +37,7 @@ class SubmitTest extends \PHPUnit\Framework\TestCase
 
     public function testSetLabel()
     {
-        $submit = new \Library\Form\Element\Submit;
+        $submit = new \Library\Form\Element\Submit();
         $this->assertEquals('test', $submit->setLabel('test')->getValue());
     }
 }

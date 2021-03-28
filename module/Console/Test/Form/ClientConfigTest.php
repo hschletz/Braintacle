@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for ClientConfig form
  *
@@ -20,8 +21,6 @@
  */
 
 namespace Console\Test\Form;
-
-use \Laminas\Dom\Document\Query as Query;
 
 /**
  * Tests for ClientConfig form

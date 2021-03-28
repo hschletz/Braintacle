@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form helper for legacy forms which implement form rendering themselves
  *

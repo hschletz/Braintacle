@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the GroupInfo table
  *
@@ -26,13 +27,13 @@ class GroupInfoTest extends AbstractTest
     public static function setUpBeforeClass(): void
     {
         // GroupInfo initialization depends on Config table
-        static::$serviceManager->get('Database\Table\Config')->setSchema(true);
+        static::$serviceManager->get('Database\Table\Config')->updateSchema(true);
         parent::setUpBeforeClass();
     }
 
     public function getDataSet()
     {
-        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet;
+        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet();
     }
 
     public function testHydrator()
@@ -49,7 +50,7 @@ class GroupInfoTest extends AbstractTest
                 ['Database\Nada', $nada],
                 ['Db', $this->createMock('Laminas\Db\Adapter\Adapter')],
                 ['Model\Config', $config],
-                ['Model\Group\Group', new \Model\Group\Group],
+                ['Model\Group\Group', new \Model\Group\Group()],
             ])
         );
 

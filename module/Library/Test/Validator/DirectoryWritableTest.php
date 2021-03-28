@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for DirectoryWritable validator
  *
@@ -22,7 +23,7 @@
 namespace Library\Test\Validator;
 
 use Library\Validator\DirectoryWritable;
-use \org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStream;
 
 class DirectoryWritableTest extends \PHPUnit\Framework\TestCase
 {
@@ -40,14 +41,14 @@ class DirectoryWritableTest extends \PHPUnit\Framework\TestCase
     public function testDirectoryWritable()
     {
         $url = vfsStream::newDirectory('test', 0777)->at($this->_root)->url();
-        $validator = new DirectoryWritable;
+        $validator = new DirectoryWritable();
         $this->assertTrue($validator->isValid($url));
     }
 
     public function testDirectoryReadOnly()
     {
         $url = vfsStream::newDirectory('test', 0000)->at($this->_root)->url();
-        $validator = new DirectoryWritable;
+        $validator = new DirectoryWritable();
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(
             array(DirectoryWritable::WRITABLE => "Directory '$url' is not writable"),
@@ -58,7 +59,7 @@ class DirectoryWritableTest extends \PHPUnit\Framework\TestCase
     public function testFileWritable()
     {
         $url = vfsStream::newFile('test', 0777)->at($this->_root)->url();
-        $validator = new DirectoryWritable;
+        $validator = new DirectoryWritable();
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(DirectoryWritable::DIRECTORY, key($validator->getMessages()));
     }
@@ -66,7 +67,7 @@ class DirectoryWritableTest extends \PHPUnit\Framework\TestCase
     public function testFileReadOnly()
     {
         $url = vfsStream::newFile('test', 0000)->at($this->_root)->url();
-        $validator = new DirectoryWritable;
+        $validator = new DirectoryWritable();
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(DirectoryWritable::DIRECTORY, key($validator->getMessages()));
     }
@@ -74,7 +75,7 @@ class DirectoryWritableTest extends \PHPUnit\Framework\TestCase
     public function testNonExistent()
     {
         $url = $this->_root->url() . '/test';
-        $validator = new DirectoryWritable;
+        $validator = new DirectoryWritable();
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(DirectoryWritable::DIRECTORY, key($validator->getMessages()));
     }
@@ -82,7 +83,7 @@ class DirectoryWritableTest extends \PHPUnit\Framework\TestCase
     public function testEmpty()
     {
         $url = '';
-        $validator = new DirectoryWritable;
+        $validator = new DirectoryWritable();
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(DirectoryWritable::DIRECTORY, key($validator->getMessages()));
     }
@@ -90,7 +91,7 @@ class DirectoryWritableTest extends \PHPUnit\Framework\TestCase
     public function testDirectoryMessage()
     {
         $url = $this->_root->url() . '/test';
-        $validator = new DirectoryWritable;
+        $validator = new DirectoryWritable();
         $validator->isValid($url);
         $this->assertEquals(
             array(DirectoryWritable::DIRECTORY => "'$url' is not a directory or inaccessible"),

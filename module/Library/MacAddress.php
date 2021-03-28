@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MAC address datatype
  *
@@ -139,7 +140,8 @@ class MacAddress
             // [1] MAC address or prefix, with optional mask suffix ("/36")
             // [2] short vendor name (used if [4] is empty)
             // [4] long vendor name or empty string
-            if ($line == '' or
+            if (
+                $line == '' or
                 $line[0] == '#' or
                 !preg_match("/^(\H+)\t(\H+)\h*(# )?(.*)/", $line, $matches)
             ) {

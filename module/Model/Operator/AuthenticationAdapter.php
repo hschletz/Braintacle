@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Authentication adapter
  *
@@ -21,7 +22,7 @@
 
 namespace Model\Operator;
 
-use \Laminas\Authentication\Result;
+use Laminas\Authentication\Result;
 
 /**
  * Authentication adapter

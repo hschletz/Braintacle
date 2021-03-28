@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Virtual machine hosted on a client
  *

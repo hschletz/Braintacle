@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "slots" table
  *
@@ -34,7 +35,7 @@ class ExtensionSlots extends \Database\AbstractTable
     {
         $this->table = 'slots';
 
-        $this->_hydrator = new \Database\Hydrator\ExtensionSlots;
+        $this->_hydrator = new \Database\Hydrator\ExtensionSlots();
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form for merging duplicate clients
  *
@@ -79,13 +80,13 @@ class ShowDuplicates extends Form
 
         // Checkboxes for "clients[]" are generated manually, without
         // \Laminas\Form\Element. Define an input filter to have them processed.
-        $arrayCount = new \Laminas\Validator\Callback;
+        $arrayCount = new \Laminas\Validator\Callback();
         $arrayCount->setCallback(array($this, 'validateArrayCount'))
                    ->setMessage(
                        'At least 2 different clients have to be selected',
                        \Laminas\Validator\Callback::INVALID_VALUE
                    );
-        $inputFilter = new \Laminas\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter();
         $inputFilter->add([
             'name' => 'clients',
             'required' => true,
@@ -93,7 +94,7 @@ class ShowDuplicates extends Form
             'filters' => [[$this, 'clientsFilter']],
             'validators' => [
                 $arrayCount,
-                new \Laminas\Validator\Explode(['validator' => new \Laminas\Validator\Digits]),
+                new \Laminas\Validator\Explode(['validator' => new \Laminas\Validator\Digits()]),
             ],
             // Explicit message in case of missing field (no clients selected)
             'error_message' => $arrayCount->getDefaultTranslator()->translate(

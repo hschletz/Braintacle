@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display confirmation form for deletion.
  *

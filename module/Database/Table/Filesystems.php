@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "drives" table
  *
@@ -34,7 +35,7 @@ class Filesystems extends \Database\AbstractTable
     {
         $this->table = 'drives';
 
-        $this->_hydrator = new \Database\Hydrator\Filesystems;
+        $this->_hydrator = new \Database\Hydrator\Filesystems();
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,

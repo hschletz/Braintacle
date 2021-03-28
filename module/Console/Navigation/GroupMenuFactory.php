@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Factory for group navigation menu
  *
@@ -38,7 +39,7 @@ class GroupMenuFactory extends \Library\Navigation\AbstractNavigationFactory
     }
 
     /** {@inheritdoc} */
-    protected function _getConfig()
+    protected function getConfig()
     {
         return array(
             array(
@@ -48,27 +49,27 @@ class GroupMenuFactory extends \Library\Navigation\AbstractNavigationFactory
             ),
             array(
                 'label' => $this->_('Members'),
-                'controller' =>'group',
+                'controller' => 'group',
                 'action' => 'members',
             ),
             array(
                 'label' => $this->_('Excluded'),
-                'controller' =>'group',
+                'controller' => 'group',
                 'action' => 'excluded',
             ),
             array(
                 'label' => $this->_('Packages'),
-                'controller' =>'group',
+                'controller' => 'group',
                 'action' => 'packages',
             ),
             array(
                 'label' => $this->_('Configuration'),
-                'controller' =>'group',
+                'controller' => 'group',
                 'action' => 'configuration',
             ),
             array(
                 'label' => $this->_('Delete'),
-                'controller' =>'group',
+                'controller' => 'group',
                 'action' => 'delete',
             )
         );

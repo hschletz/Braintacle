@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form for creating a package
  *
@@ -40,7 +41,7 @@ class Build extends \Console\Form\Form
         // Add generic class for both Build/Update form.
         $this->setAttribute('class', $this->getAttribute('class') . ' form_package');
 
-        $inputFilter = new \Laminas\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter();
         $integerFilter = array(
             'name' => 'Callback',
             'options' => array(

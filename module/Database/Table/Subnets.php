@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "subnet" table
  *
@@ -34,7 +35,7 @@ class Subnets extends \Database\AbstractTable
     {
         $this->table = 'subnet';
 
-        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(
@@ -48,7 +49,7 @@ class Subnets extends \Database\AbstractTable
             )
         );
         // Strategies are only required on hydration.
-        $integerStrategy = new \Library\Hydrator\Strategy\Integer;
+        $integerStrategy = new \Library\Hydrator\Strategy\Integer();
         $this->_hydrator->addStrategy('NumInventoried', $integerStrategy);
         $this->_hydrator->addStrategy('NumIdentified', $integerStrategy);
         $this->_hydrator->addStrategy('NumUnknown', $integerStrategy);

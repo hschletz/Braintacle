@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for LoginController
  *
@@ -66,7 +67,7 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
      *
      * @param bool $hasIdentity Return value for the hasIdentity() stub
      */
-    protected function _mockAuthenticationService($hasIdentity)
+    protected function mockAuthenticationService($hasIdentity)
     {
         $this->_authenticationService->expects($this->any())
                                      ->method('login')
@@ -85,14 +86,14 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testLoginActionWithIdentity()
     {
-        $this->_mockAuthenticationService(true);
+        $this->mockAuthenticationService(true);
         $this->dispatch('/console/login/login');
         $this->assertRedirectTo('/console/client/index/');
     }
 
     public function testLoginActionWithoutIdentityPostValidCorrectCredentials()
     {
-        $this->_mockAuthenticationService(false);
+        $this->mockAuthenticationService(false);
         $postData = array('userid' => 'gooduser', 'password' => 'goodpassword');
         $this->_form->expects($this->once())
                     ->method('setData')
@@ -109,7 +110,7 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testLoginActionWithoutIdentityPostValidIncorrectCredentials()
     {
-        $this->_mockAuthenticationService(false);
+        $this->mockAuthenticationService(false);
         $postData = array('userid' => 'baduser', 'password' => 'badpassword');
         $this->_form->expects($this->once())
                     ->method('setData')
@@ -129,7 +130,7 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testLoginActionWithoutIdentityPostInvalid()
     {
-        $this->_mockAuthenticationService(false);
+        $this->mockAuthenticationService(false);
         $postData = array('userid' => '', 'password' => '');
         $this->_form->expects($this->once())
                     ->method('setData')
@@ -146,7 +147,7 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testLoginActionWithoutIdentityGet()
     {
-        $this->_mockAuthenticationService(false);
+        $this->mockAuthenticationService(false);
         $this->_form->expects($this->never())
                     ->method('setData');
         $this->_form->expects($this->never())
@@ -162,7 +163,7 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testLoginActionRedidectsToPreviousPageAfterSuccessfulLogin()
     {
-        $this->_mockAuthenticationService(false);
+        $this->mockAuthenticationService(false);
         $postData = array('userid' => 'gooduser', 'password' => 'goodpassword');
         $session = new \Laminas\Session\Container('login');
         $session->originalUri = 'redirectTest';
@@ -185,7 +186,7 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testLogoutAction()
     {
-        $this->_mockAuthenticationService(true);
+        $this->mockAuthenticationService(true);
         $this->_authenticationService->expects($this->once())->method('clearIdentity');
         $this->dispatch('/console/login/logout');
         $this->assertRedirectTo('/console/login/login/');

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "download_history" table
  *

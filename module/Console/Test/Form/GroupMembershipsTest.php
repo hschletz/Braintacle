@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for GroupMemberships form
  *
@@ -73,7 +74,7 @@ class GroupMembershipsTest extends \Console\Test\AbstractFormTest
 
     public function testRenderFieldsetNoGroups()
     {
-        $view = $this->_createView();
+        $view = $this->createView();
         $html = $this->_form->renderFieldset($view, $this->_form);
         $this->assertEquals('', $html);
     }
@@ -81,7 +82,7 @@ class GroupMembershipsTest extends \Console\Test\AbstractFormTest
     public function testRenderFieldsetEmptyGroups()
     {
         $this->_form->setGroups(array());
-        $view = $this->_createView();
+        $view = $this->createView();
         $html = $this->_form->renderFieldset($view, $this->_form);
         $this->assertEquals('', $html);
     }
@@ -90,7 +91,7 @@ class GroupMembershipsTest extends \Console\Test\AbstractFormTest
     {
         $this->_form->setGroups(array('group1', 'group2'));
         $this->_form->prepare();
-        $view = $this->_createView();
+        $view = $this->createView();
         $html = $this->_form->renderFieldset($view, $this->_form);
         $document = new \Laminas\Dom\Document($html);
         $this->assertCount(1, Query::execute('//div', $document));

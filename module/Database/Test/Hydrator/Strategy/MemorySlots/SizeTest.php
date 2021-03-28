@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Size strategy
  *

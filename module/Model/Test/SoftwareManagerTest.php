@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\SoftwareManager
  *
@@ -59,7 +60,7 @@ class SoftwareManagerTest extends AbstractTest
      */
     public function testGetSoftware($filters, $order, $direction, $expected)
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $software = $model->getSoftware($filters, $order, $direction);
         $this->assertInstanceOf('Laminas\Db\ResultSet\ResultSet', $software);
         $this->assertEquals($expected, iterator_to_array($software));
@@ -82,19 +83,19 @@ class SoftwareManagerTest extends AbstractTest
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage($message);
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $software = $model->getSoftware($filters, $order);
     }
 
     public function testSetDisplay()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->setDisplay('new1', true); // updated
         $model->setDisplay('new2', true);
         $model->setDisplay('new3', false);
         $model->setDisplay('new4', false);
 
-        $dataSet = $this->_getBooleanDataSetWrapper($this->_loadDataset('SetDisplay'), 0, 1);
+        $dataSet = $this->getBooleanDataSetWrapper($this->loadDataSet('SetDisplay'), 0, 1);
         $this->assertTablesEqual(
             $dataSet->getTable('software_definitions'),
             $this->getConnection()->createQueryTable(
@@ -106,7 +107,7 @@ class SoftwareManagerTest extends AbstractTest
 
     public function testGetNumManualProductKeys()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $this->assertEquals(2, $model->getNumManualProductKeys());
     }
 
@@ -135,10 +136,10 @@ class SoftwareManagerTest extends AbstractTest
                 )
             )
         );
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->setProductKey($client, $productKey);
         $this->assertTablesEqual(
-            $this->_loadDataSet($dataSet)->getTable('braintacle_windows'),
+            $this->loadDataSet($dataSet)->getTable('braintacle_windows'),
             $this->getConnection()->createQueryTable(
                 'braintacle_windows',
                 'SELECT hardware_id, manual_product_key FROM braintacle_windows ORDER BY hardware_id'
@@ -151,7 +152,7 @@ class SoftwareManagerTest extends AbstractTest
         $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->willReturn(array('ProductKey' => 'ABCDE-FGHIJ-KLMNO-PQRST-UVWXY'));
 
-        $model = $this->_getModel();
+        $model = $this->getModel();
         try {
             $model->setProductKey($client, 'invalid');
             $this->fail('Expected exception was not thrown');
@@ -159,7 +160,7 @@ class SoftwareManagerTest extends AbstractTest
             $this->assertEquals("'invalid' is not a valid product key", $e->getMessage());
         }
         $this->assertTablesEqual(
-            $this->_loadDataSet()->getTable('braintacle_windows'),
+            $this->loadDataSet()->getTable('braintacle_windows'),
             $this->getConnection()->createQueryTable(
                 'braintacle_windows',
                 'SELECT hardware_id, manual_product_key FROM braintacle_windows'

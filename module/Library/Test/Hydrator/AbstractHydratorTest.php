@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Abstract test class for hydrators
  *
@@ -23,10 +24,10 @@ namespace Library\Test\Hydrator;
 
 abstract class AbstractHydratorTest extends \PHPUnit\Framework\TestCase
 {
-    protected function _getHydrator()
+    protected function getHydrator()
     {
         $class = preg_replace('/Test\\\\?/', '', get_class($this));
-        return new $class;
+        return new $class();
     }
 
     /**
@@ -34,8 +35,8 @@ abstract class AbstractHydratorTest extends \PHPUnit\Framework\TestCase
      */
     public function testHydrate(array $data, array $objectData)
     {
-        $hydrator = $this->_getHydrator();
-        $object = new \ArrayObject;
+        $hydrator = $this->getHydrator();
+        $object = new \ArrayObject();
         $this->assertSame($object, $hydrator->hydrate($data, $object));
         $this->assertEquals($objectData, $object->getArrayCopy());
     }
@@ -45,7 +46,7 @@ abstract class AbstractHydratorTest extends \PHPUnit\Framework\TestCase
      */
     public function testExtract(array $objectData, array $data)
     {
-        $hydrator = $this->_getHydrator();
+        $hydrator = $this->getHydrator();
         $object = new \ArrayObject($objectData, \ArrayObject::ARRAY_AS_PROPS);
         $this->assertEquals($data, $hydrator->extract($object));
     }

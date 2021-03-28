@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Generate URL to given controller and action
  *

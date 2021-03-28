@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the Fieldset Helper
  *
@@ -33,7 +34,7 @@ use Laminas\View\Renderer\PhpRenderer;
 class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 {
     /** {@inheritdoc} */
-    protected function _getHelperName()
+    protected function getHelperName()
     {
         return 'consoleFormFieldset';
     }
@@ -100,7 +101,7 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
              ->with('htmlElement', array('fieldset', 'LABEL<div>CONTENT</div>', 'ATTRIBUTES'))
              ->willReturn('FIELDSET');
 
-        $helper = $this->getMockBuilder($this->_getHelperClass())
+        $helper = $this->getMockBuilder($this->getHelperClass())
                        ->disableOriginalConstructor()
                        ->setMethods(array('renderElements', 'renderLabel', 'getView'))
                        ->getMock();
@@ -121,7 +122,7 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
              ->with('htmlElement', array('fieldset', 'LABEL<div>CONTENT</div>', 'ATTRIBUTES'))
              ->willReturn('FIELDSET');
 
-        $helper = $this->getMockBuilder($this->_getHelperClass())
+        $helper = $this->getMockBuilder($this->getHelperClass())
                        ->disableOriginalConstructor()
                        ->setMethods(array('renderElements', 'renderLabel', 'getView'))
                        ->getMock();
@@ -137,7 +138,7 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
         $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
         $fieldset->method('getLabel')->willReturn('');
 
-        $helper = $this->getMockBuilder($this->_getHelperClass())
+        $helper = $this->getMockBuilder($this->getHelperClass())
                        ->disableOriginalConstructor()
                        ->setMethods(array('getView'))
                        ->getMock();
@@ -159,7 +160,7 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
              )
              ->willReturnOnConsecutiveCalls('TRANSLATED', 'ESCAPED');
 
-        $helper = $this->getMockBuilder($this->_getHelperClass())
+        $helper = $this->getMockBuilder($this->getHelperClass())
                        ->disableOriginalConstructor()
                        ->setMethods(array('getView'))
                        ->getMock();

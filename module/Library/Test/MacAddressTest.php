@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the MacAddress class
  *
@@ -21,7 +22,7 @@
 
 namespace Library\Test;
 
-use \Library\MacAddress;
+use Library\MacAddress;
 
 /**
  * Tests for the MacAddress class

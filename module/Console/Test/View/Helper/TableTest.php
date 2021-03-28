@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the Table helper
  *
@@ -87,7 +88,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testInvokeNoData()
     {
-        $table = $this->getMockBuilder(static::_getHelperClass())
+        $table = $this->getMockBuilder(static::getHelperClass())
                       ->disableOriginalConstructor()
                       ->setMethods()
                       ->getMock();
@@ -97,7 +98,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testInvokeWithDefaultParams()
     {
-        $table = $this->getMockBuilder(static::_getHelperClass())
+        $table = $this->getMockBuilder(static::getHelperClass())
                       ->disableOriginalConstructor()
                       ->setMethods(['headerRow', 'dataRows', 'tag'])
                       ->getMock();
@@ -110,7 +111,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testInvokeWithExplicitParams()
     {
-        $table = $this->getMockBuilder(static::_getHelperClass())
+        $table = $this->getMockBuilder(static::getHelperClass())
                       ->disableOriginalConstructor()
                       ->setMethods(['headerRow', 'dataRows', 'tag'])
                       ->getMock();
@@ -144,7 +145,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
                            ->with('table', 'table_content', ['class' => 'alternating'])
                            ->willReturn('table_tag');
 
-        $class = static::_getHelperClass();
+        $class = static::getHelperClass();
         $table = new $class($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat);
 
         $this->assertEquals('table_tag', $table->tag('table_content'));
@@ -152,7 +153,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testHeaderRowWithDefaultParams()
     {
-        $table = $this->getMockBuilder(static::_getHelperClass())
+        $table = $this->getMockBuilder(static::getHelperClass())
                       ->disableOriginalConstructor()
                       ->setMethods(['prepareHeaders', 'row'])
                       ->getMock();
@@ -165,7 +166,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testHeaderRowWithExplicitParams()
     {
-        $table = $this->getMockBuilder(static::_getHelperClass())
+        $table = $this->getMockBuilder(static::getHelperClass())
                       ->disableOriginalConstructor()
                       ->setMethods(['prepareHeaders', 'row'])
                       ->getMock();
@@ -180,7 +181,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
     {
         $this->_escapeHtml->method('__invoke')->willReturnOnConsecutiveCalls('1a', '2a', '1b', '2b');
 
-        $table = $this->getMockBuilder(static::_getHelperClass())
+        $table = $this->getMockBuilder(static::getHelperClass())
                       ->setConstructorArgs(
                           array($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat)
                       )
@@ -201,7 +202,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
     {
         $this->_escapeHtml->method('__invoke')->willReturnOnConsecutiveCalls('1a', '2a', '1b', '2b');
 
-        $table = $this->getMockBuilder(static::_getHelperClass())
+        $table = $this->getMockBuilder(static::getHelperClass())
                       ->setConstructorArgs(
                           array($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat)
                       )
@@ -225,7 +226,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
     {
         $this->_escapeHtml->method('__invoke')->willReturnOnConsecutiveCalls('1a', '2a', '1b', '2b');
 
-        $table = $this->getMockBuilder(static::_getHelperClass())
+        $table = $this->getMockBuilder(static::getHelperClass())
                       ->setConstructorArgs(
                           array($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat)
                       )
@@ -257,7 +258,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
         $this->_escapeHtml->method('__invoke')->with('date_formatted')->willReturn('escaped_date');
 
-        $table = $this->getMockBuilder(static::_getHelperClass())
+        $table = $this->getMockBuilder(static::getHelperClass())
                       ->setConstructorArgs(
                           array($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat)
                       )
@@ -279,7 +280,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
         $this->_dateFormat->expects($this->never())->method('__invoke');
         $this->_escapeHtml->expects($this->never())->method('__invoke');
 
-        $table = $this->getMockBuilder(static::_getHelperClass())
+        $table = $this->getMockBuilder(static::getHelperClass())
                       ->setConstructorArgs(
                           array($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat)
                       )
@@ -307,7 +308,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testPrepareHeadersWithoutSorting()
     {
-        $table = $this->getMockBuilder(static::_getHelperClass())
+        $table = $this->getMockBuilder(static::getHelperClass())
                       ->disableOriginalConstructor()
                       ->setMethods(['sortableHeader'])
                       ->getMock();
@@ -319,7 +320,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testPrepareHeadersWithSorting()
     {
-        $table = $this->getMockBuilder(static::_getHelperClass())
+        $table = $this->getMockBuilder(static::getHelperClass())
                       ->disableOriginalConstructor()
                       ->setMethods(['sortableHeader'])
                       ->getMock();
@@ -400,7 +401,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
      */
     public function testRow()
     {
-        $helper = $this->_getHelper();
+        $helper = $this->getHelper();
         $this->assertEquals(
             "<tr>\n<td>\nheader1\n</td>\n<td>\nheader2\n</td>\n\n</tr>\n",
             $helper->row($this->_headers, false)

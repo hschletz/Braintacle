@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form validation test case
  *
@@ -47,7 +48,7 @@ class FormValidationTest extends \PHPUnit\Framework\TestCase
     {
         $_SERVER = array();
 
-        $form = new \Console\Form\Form;
+        $form = new \Console\Form\Form();
         $form->setData(array());
 
         $this->assertTrue($form->isValid());
@@ -59,7 +60,7 @@ class FormValidationTest extends \PHPUnit\Framework\TestCase
         $_FILES = array();
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
-        $form = new \Console\Form\Form;
+        $form = new \Console\Form\Form();
         $form->setData(array());
 
         $this->assertFalse($form->isValid());

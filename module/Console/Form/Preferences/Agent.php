@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form for display/setting of 'agent' preferences
  *
@@ -31,7 +32,7 @@ class Agent extends AbstractForm
     {
         parent::init();
         $preferences = $this->get('Preferences');
-        $inputFilter = new \Laminas\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter();
         $integerFilter = array(
             'name' => 'Callback',
             'options' => array(
@@ -50,7 +51,7 @@ class Agent extends AbstractForm
         $contactInterval->setLabel('Agent contact interval (in hours)')
                         ->setAttribute('size', 5);
         $preferences->add($contactInterval);
-        $validatorChain = new \Laminas\Validator\ValidatorChain;
+        $validatorChain = new \Laminas\Validator\ValidatorChain();
         $validatorChain->attach($integerValidator, true)
                        ->attachByName('GreaterThan', array('min' => 0));
         $inputFilter->add(
@@ -65,7 +66,7 @@ class Agent extends AbstractForm
         $inventoryInterval->setLabel('Inventory interval (in days, 0 = always, -1 = never)')
                           ->setAttribute('size', 5);
         $preferences->add($inventoryInterval);
-        $validatorChain = new \Laminas\Validator\ValidatorChain;
+        $validatorChain = new \Laminas\Validator\ValidatorChain();
         $validatorChain->attach($integerValidator, true)
                        ->attachByName('GreaterThan', array('min' => -2));
         $inputFilter->add(
@@ -89,7 +90,7 @@ class Agent extends AbstractForm
             )
         );
 
-        $parentFilter = new \Laminas\InputFilter\InputFilter;
+        $parentFilter = new \Laminas\InputFilter\InputFilter();
         $parentFilter->add($inputFilter, 'Preferences');
         $this->setInputFilter($parentFilter);
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Redirect to standard route (controller/action)
  *

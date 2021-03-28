@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Included by client templates to render headline and client navigation
  *

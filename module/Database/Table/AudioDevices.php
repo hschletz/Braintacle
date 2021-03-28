@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "sounds" table
  *
@@ -34,7 +35,7 @@ class AudioDevices extends \Database\AbstractTable
     {
         $this->table = 'sounds';
 
-        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(

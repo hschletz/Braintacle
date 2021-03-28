@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Registry\Value
  *
@@ -25,19 +26,19 @@ class ValueTest extends \Model\Test\AbstractTest
 {
     public function getDataSet()
     {
-        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet;
+        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet();
     }
 
     public function testObjectProperties()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $this->assertInstanceOf('ArrayAccess', $model);
         $this->assertTrue(method_exists($model, 'exchangeArray'));
     }
 
     public function testFullPathPropertyPropertyExplicitValue()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model['RootKey'] = \Model\Registry\Value::HKEY_LOCAL_MACHINE;
         $model['SubKeys'] = 'a\b';
         $model['Value'] = 'configured';
@@ -46,7 +47,7 @@ class ValueTest extends \Model\Test\AbstractTest
 
     public function testFullPathPropertyPropertyAllValues()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model['RootKey'] = \Model\Registry\Value::HKEY_LOCAL_MACHINE;
         $model['SubKeys'] = 'a\b';
         $model['Value'] = null;
@@ -63,7 +64,7 @@ class ValueTest extends \Model\Test\AbstractTest
             \Model\Registry\Value::HKEY_CURRENT_CONFIG => 'HKEY_CURRENT_CONFIG',
             \Model\Registry\Value::HKEY_DYN_DATA => 'HKEY_DYN_DATA',
         );
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $this->assertEquals($rootKeys, $model->rootKeys());
     }
 }

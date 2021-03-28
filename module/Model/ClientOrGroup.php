@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Base class for clients and groups
  *
@@ -444,9 +445,9 @@ abstract class ClientOrGroup extends AbstractModel
         if ($row) {
             $value = $row[$column];
             if ($column == 'ivalue') {
-                $value = (integer) $value;
+                $value = (int) $value;
             }
-            $value = $this->_normalizeConfig($option, $value);
+            $value = $this->normalizeConfig($option, $value);
         } else {
             $value = null;
         }
@@ -477,9 +478,9 @@ abstract class ClientOrGroup extends AbstractModel
         }
 
         if ($value !== null and $option != 'scanThisNetwork') {
-            $value = (integer) $value; // Strict type required for cache
+            $value = (int) $value; // Strict type required for cache
         }
-        $value = $this->_normalizeConfig($option, $value);
+        $value = $this->normalizeConfig($option, $value);
 
         // Set affected columns
         if ($option == 'scanThisNetwork') {
@@ -561,7 +562,7 @@ abstract class ClientOrGroup extends AbstractModel
      * @param mixed $value Raw value
      * @return mixed Normalized value
      */
-    protected function _normalizeConfig($option, $value)
+    protected function normalizeConfig($option, $value)
     {
         if (in_array($option, $this->_optionsDisableOnly)) {
             // These options are only evaluated if their default setting is
@@ -595,7 +596,7 @@ abstract class ClientOrGroup extends AbstractModel
         foreach ($this->_options as $option) {
             $value = $this->getConfig($option);
             if (in_array($option, $this->_optionsDisableOnly)) {
-                $value = (integer) ($value === null);
+                $value = (int) ($value === null);
             }
             $options[$option] = $value;
         }

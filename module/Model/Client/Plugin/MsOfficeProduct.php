@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MsOfficeProduct item plugin
  *

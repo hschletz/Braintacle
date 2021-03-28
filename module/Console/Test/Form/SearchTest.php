@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Search form
  *
@@ -20,8 +21,6 @@
  */
 
 namespace Console\Test\Form;
-
-use \Laminas\Dom\Document\Query as Query;
 
 /**
  * Tests for Search form
@@ -91,7 +90,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     }
 
     /** {@inheritdoc} */
-    protected function _getForm()
+    protected function getForm()
     {
         $form = new \Console\Form\Search(
             null,
@@ -149,8 +148,8 @@ class SearchTest extends \Console\Test\AbstractFormTest
 
     public function testInitInvalidDatatype()
     {
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
-        $resultSet->initialize(new \EmptyIterator);
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
+        $resultSet->initialize(new \EmptyIterator());
         $registryManager = $this->createMock('Model\Registry\RegistryManager');
         $registryManager->method('getValueDefinitions')->willReturn($resultSet);
         $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
@@ -158,7 +157,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
         $form = new \Console\Form\Search(
             null,
             array(
-                'translator' => new \Laminas\Mvc\I18n\Translator(new \Laminas\Mvc\I18n\DummyTranslator),
+                'translator' => new \Laminas\Mvc\I18n\Translator(new \Laminas\Mvc\I18n\DummyTranslator()),
                 'registryManager' => $registryManager,
                 'customFieldManager' => $customFieldManager,
             )

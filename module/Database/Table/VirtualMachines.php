@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "virtualmachines" table
  *
@@ -34,7 +35,7 @@ class VirtualMachines extends \Database\AbstractTable
     {
         $this->table = 'virtualmachines';
 
-        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(

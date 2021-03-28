@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for RedirectToRoute controller plugin
  *
@@ -34,7 +35,7 @@ class RedirectToRouteTest extends AbstractTest
      */
     public function testInvoke()
     {
-        $plugin = $this->_getPlugin();
+        $plugin = $this->getPlugin();
         $response = $plugin('testedcontroller', 'testedaction');
         $this->assertInstanceOf('Laminas\Http\Response', $response);
         $this->assertEquals(302, $response->getStatusCode());

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for EmptyArray filter
  *
@@ -25,12 +26,12 @@ class EmptyArrayTest extends \PHPUnit\Framework\TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf('Laminas\Filter\AbstractFilter', new \Library\Filter\EmptyArray);
+        $this->assertInstanceOf('Laminas\Filter\AbstractFilter', new \Library\Filter\EmptyArray());
     }
 
     public function testFilter()
     {
-        $filter = new \Library\Filter\EmptyArray;
+        $filter = new \Library\Filter\EmptyArray();
         $this->assertEquals([], $filter->filter(null));
         $this->assertEquals([], $filter->filter(''));
         $this->assertEquals([], $filter->filter([]));

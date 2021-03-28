@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "software_definitions" table
  *
@@ -52,7 +53,7 @@ class SoftwareDefinitions extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _preSetSchema($logger, $schema, $database, $prune)
+    protected function preSetSchema($logger, $schema, $database, $prune)
     {
         $tables = $database->getTableNames();
         $tableExists = in_array('software_definitions', $tables);
@@ -64,7 +65,7 @@ class SoftwareDefinitions extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _postSetSchema($logger, $schema, $database, $prune)
+    protected function postSetSchema($logger, $schema, $database, $prune)
     {
         if ($this->_migrateAccepted) {
             $logger->info('Migrating accepted software definitions');
@@ -83,7 +84,7 @@ EOT;
             $this->adapter->query($query, \Laminas\Db\Adapter\Adapter::QUERY_MODE_EXECUTE);
             $logger->info('done.');
         }
-        
+
         $tables = $database->getTableNames();
         if (in_array('softwares', $tables)) {
             // Create rows for names which are not already defined.

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Extract and validate "order" and "direction" URL parameters
  *

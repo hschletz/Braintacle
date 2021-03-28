@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for NetworkDevice form
  *
@@ -28,12 +29,12 @@ class NetworkDeviceTest extends \Console\Test\AbstractFormTest
 {
     protected $_deviceManager;
 
-    protected function _getForm()
+    protected function getForm()
     {
         $this->_deviceManager = $this->createMock('Model\Network\DeviceManager');
         $this->_deviceManager->method('getTypes')
                              ->will($this->returnValue(array()));
-        $form = new \Console\Form\NetworkDevice;
+        $form = new \Console\Form\NetworkDevice();
         $form->setOption('DeviceManager', $this->_deviceManager);
         $form->init();
         return $form;
@@ -44,7 +45,7 @@ class NetworkDeviceTest extends \Console\Test\AbstractFormTest
         $deviceManager = $this->createMock('Model\Network\DeviceManager');
         $deviceManager->method('getTypes')
                       ->will($this->returnValue(array('cat1', 'cat2')));
-        $form = new \Console\Form\NetworkDevice;
+        $form = new \Console\Form\NetworkDevice();
         $form->setOption('DeviceManager', $deviceManager);
         $form->init();
 

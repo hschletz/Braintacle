@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Exception thrown by PackageManager on runtime errors
  *

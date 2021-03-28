@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RegistryData item plugin
  *

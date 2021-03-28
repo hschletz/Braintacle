@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\RegistryManager
  *
@@ -31,7 +32,7 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
 
     public function testGetValueDefinitions()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $values = $model->getValueDefinitions();
         $this->assertInstanceOf('Laminas\Db\ResultSet\ResultSetInterface', $values);
         $values = iterator_to_array($values);
@@ -43,7 +44,7 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
 
     public function testGetValueDefinition()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $value = $model->getValueDefinition('name1');
         $this->assertInstanceOf('Model\Registry\Value', $value);
         $this->assertEquals(
@@ -62,16 +63,16 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
     {
         $this->expectException('Model\Registry\RuntimeException');
         $this->expectExceptionMessage('Invalid registry value name: invalid');
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->getValueDefinition('invalid');
     }
 
     public function testAddValueDefinitionWithValue()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->addValueDefinition('name3', \Model\Registry\Value::HKEY_USERS, 'sub\key3', 'value3');
         $this->assertTablesEqual(
-            $this->_loadDataSet('AddValueDefinitionWithValue')->getTable('regconfig'),
+            $this->loadDataSet('AddValueDefinitionWithValue')->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
                 'regconfig',
                 'SELECT name, regtree, regkey, regvalue FROM regconfig ORDER BY name'
@@ -81,10 +82,10 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
 
     public function testAddValueDefinitionWithoutValue()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->addValueDefinition('name3', \Model\Registry\Value::HKEY_USERS, 'sub\key3');
         $this->assertTablesEqual(
-            $this->_loadDataSet('AddValueDefinitionWithoutValue')->getTable('regconfig'),
+            $this->loadDataSet('AddValueDefinitionWithoutValue')->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
                 'regconfig',
                 'SELECT name, regtree, regkey, regvalue FROM regconfig ORDER BY name'
@@ -94,7 +95,7 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
 
     public function testAddValueDefinitionNameExists()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         try {
             $model->addValueDefinition('name1', \Model\Registry\Value::HKEY_USERS, 'sub\key3');
             $this->fail('Expected exception was not thrown');
@@ -102,7 +103,7 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
             $this->assertEquals('Value already exists: name1', $e->getMessage());
         }
         $this->assertTablesEqual(
-            $this->_loadDataSet()->getTable('regconfig'),
+            $this->loadDataSet()->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
                 'regconfig',
                 'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
@@ -112,7 +113,7 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
 
     public function testAddValueDefinitionInvalidRootKey()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         try {
             $model->addValueDefinition('name3', 42, 'sub\key3');
             $this->fail('Expected exception was not thrown');
@@ -120,7 +121,7 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
             $this->assertEquals('Invalid root key: 42', $e->getMessage());
         }
         $this->assertTablesEqual(
-            $this->_loadDataSet()->getTable('regconfig'),
+            $this->loadDataSet()->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
                 'regconfig',
                 'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
@@ -130,7 +131,7 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
 
     public function testAddValueDefinitionInvalidSubkey()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         try {
             $model->addValueDefinition('name3', \Model\Registry\Value::HKEY_USERS, '');
             $this->fail('Expected exception was not thrown');
@@ -138,7 +139,7 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
             $this->assertEquals('Subkeys must not be empty', $e->getMessage());
         }
         $this->assertTablesEqual(
-            $this->_loadDataSet()->getTable('regconfig'),
+            $this->loadDataSet()->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
                 'regconfig',
                 'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
@@ -148,9 +149,9 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
 
     public function testRenameValueDefinition()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->renameValueDefinition('name1', 'new_name');
-        $dataSet = $this->_loadDataSet('RenameValueDefinition');
+        $dataSet = $this->loadDataSet('RenameValueDefinition');
         $this->assertTablesEqual(
             $dataSet->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
@@ -169,9 +170,9 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
 
     public function testRenameValueDefinitionUnchanged()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->renameValueDefinition('name1', 'name1');
-        $dataSet = $this->_loadDataSet();
+        $dataSet = $this->loadDataSet();
         $this->assertTablesEqual(
             $dataSet->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
@@ -190,14 +191,14 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
 
     public function testRenameValueDefinitionEmpty()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         try {
             $model->renameValueDefinition('name1', '');
             $this->fail('Expected exception was not thrown');
         } catch (\InvalidArgumentException $e) {
             $this->assertEquals('Name must not be empty', $e->getMessage());
         }
-        $dataSet = $this->_loadDataSet();
+        $dataSet = $this->loadDataSet();
         $this->assertTablesEqual(
             $dataSet->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
@@ -216,14 +217,14 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
 
     public function testRenameValueDefinitionExists()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         try {
             $model->renameValueDefinition('name1', 'name2');
             $this->fail('Expected exception was not thrown');
         } catch (\RuntimeException $e) {
             $this->assertEquals('Value already exists: name2', $e->getMessage());
         }
-        $dataSet = $this->_loadDataSet();
+        $dataSet = $this->loadDataSet();
         $this->assertTablesEqual(
             $dataSet->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
@@ -264,15 +265,15 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('test message');
 
-        $model = $this->_getModel(array('Database\Table\RegistryValueDefinitions' => $registryValueDefinitions));
+        $model = $this->getModel(array('Database\Table\RegistryValueDefinitions' => $registryValueDefinitions));
         $model->renameValueDefinition('name1', 'name2');
     }
 
     public function testDeleteValueDefinition()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->deleteValueDefinition('name2');
-        $dataSet = $this->_loadDataSet('DeleteValueDefinition');
+        $dataSet = $this->loadDataSet('DeleteValueDefinition');
         $this->assertTablesEqual(
             $dataSet->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
@@ -291,9 +292,9 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteValueDefinitionNonexistentId()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->deleteValueDefinition('invalid');
-        $dataSet = $this->_loadDataSet();
+        $dataSet = $this->loadDataSet();
         $this->assertTablesEqual(
             $dataSet->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
@@ -332,7 +333,7 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('test message');
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setConstructorArgs(array($registryValueDefinitions, $registryData))
                       ->setMethods(array('getValueDefinition'))
                       ->getMock();

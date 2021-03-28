@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display/set values of custom fields for a client
  *
@@ -49,7 +50,7 @@ class CustomFields extends Form
         $this->_types = $this->getOption('customFieldManager')->getFields();
 
         $fields = new \Laminas\Form\Fieldset('Fields');
-        $inputFilterField = new \Laminas\InputFilter\InputFilter;
+        $inputFilterField = new \Laminas\InputFilter\InputFilter();
         foreach ($this->_types as $name => $type) {
             if ($type == 'clob') {
                 $element = new \Laminas\Form\Element\Textarea($name);
@@ -93,7 +94,7 @@ class CustomFields extends Form
         $submit->setLabel('Change');
         $this->add($submit);
 
-        $inputFilter = new \Laminas\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter();
         $inputFilter->add($inputFilterField, 'Fields');
         $this->setInputFilter($inputFilter);
     }

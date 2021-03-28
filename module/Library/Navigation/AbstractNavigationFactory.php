@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Abstract navigation factory
  *
@@ -38,7 +39,7 @@ abstract class AbstractNavigationFactory extends \Laminas\Navigation\Service\Def
     protected function getPages(\Interop\Container\ContainerInterface $container)
     {
         if (!$this->pages) {
-            $pages = $this->getPagesFromConfig($this->_getConfig());
+            $pages = $this->getPagesFromConfig($this->getConfig());
             $this->pages = $this->preparePages($container, $pages);
         }
         return $this->pages;
@@ -49,7 +50,7 @@ abstract class AbstractNavigationFactory extends \Laminas\Navigation\Service\Def
      *
      * @return string|\Laminas\Config\Config|array Configuration file/object/array
      */
-    abstract protected function _getConfig();
+    abstract protected function getConfig();
 
     /**
      * Translation helper

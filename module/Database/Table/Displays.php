@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "monitors" table
  *
@@ -34,7 +35,7 @@ class Displays extends \Database\AbstractTable
     {
         $this->table = 'monitors';
 
-        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(

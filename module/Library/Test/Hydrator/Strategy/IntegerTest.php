@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the Integer strategy
  *
@@ -39,7 +40,7 @@ class IntegerTest extends \PHPUnit\Framework\TestCase
      */
     public function testHydrate($value, $expected)
     {
-        $strategy = new \Library\Hydrator\Strategy\Integer;
+        $strategy = new \Library\Hydrator\Strategy\Integer();
         $this->assertSame($expected, $strategy->hydrate($value, null));
     }
 
@@ -49,7 +50,7 @@ class IntegerTest extends \PHPUnit\Framework\TestCase
             array(true),
             array(false),
             array(array()),
-            array(new \StdClass),
+            array(new \StdClass()),
             array(1.234),
         );
     }
@@ -61,7 +62,7 @@ class IntegerTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessageMatches('/^Expected integer or string input, got /');
-        $strategy = new \Library\Hydrator\Strategy\Integer;
+        $strategy = new \Library\Hydrator\Strategy\Integer();
         $strategy->hydrate($value, null);
     }
 
@@ -82,13 +83,13 @@ class IntegerTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Non-integer input value: ' . $value);
-        $strategy = new \Library\Hydrator\Strategy\Integer;
+        $strategy = new \Library\Hydrator\Strategy\Integer();
         $strategy->hydrate($value, null);
     }
 
     public function testExtract()
     {
-        $strategy = new \Library\Hydrator\Strategy\Integer;
+        $strategy = new \Library\Hydrator\Strategy\Integer();
         $this->assertSame(1, $strategy->extract(1));
         $this->assertSame('1', $strategy->extract('1'));
     }

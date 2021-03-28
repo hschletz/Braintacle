@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Base class for view helper tests
  *
@@ -56,7 +57,7 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
      *
      * @return string Helper name
      */
-    protected function _getHelperName()
+    protected function getHelperName()
     {
         // Derive helper name from test class name (minus namespace and 'Test' suffix)
         return lcfirst(substr(strrchr(get_class($this), '\\'), 1, -4));
@@ -67,7 +68,7 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
      *
      * @return string Helper class name
      */
-    protected static function _getHelperClass()
+    protected static function getHelperClass()
     {
         // Derive helper class from test class name (minus \Test namespace and 'Test' suffix)
         return substr(str_replace('\Test', '', get_called_class()), 0, -4);
@@ -79,10 +80,10 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
      * @param string $name Helper name (default: derive from test class name)
      * @return \Laminas\View\Helper\HelperInterface Helper instance
      */
-    protected function _getHelper($name = null)
+    protected function getHelper($name = null)
     {
         if (!$name) {
-            $name = $this->_getHelperName();
+            $name = $this->getHelperName();
         }
         return static::$_helperManager->build($name);
     }
@@ -94,13 +95,13 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
     {
         // Uppercase
         $this->assertInstanceOf(
-            static::_getHelperClass(),
-            $this->_getHelper($this->_getHelperName())
+            static::getHelperClass(),
+            $this->getHelper($this->getHelperName())
         );
         // Lowercase
         $this->assertInstanceOf(
-            static::_getHelperClass(),
-            $this->_getHelper(lcfirst($this->_getHelperName()))
+            static::getHelperClass(),
+            $this->getHelper(lcfirst($this->getHelperName()))
         );
     }
 }

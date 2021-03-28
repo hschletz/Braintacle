@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Validate string to not match any value in a given array
  *

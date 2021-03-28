@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Base class for account forms
  *
@@ -32,7 +33,7 @@ abstract class AbstractForm extends \Console\Form\Form
     public function init()
     {
         parent::init();
-        $inputFilter = new \Laminas\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter();
 
         $id = new Element\Text('Id');
         $id->setLabel('Login name');
@@ -69,7 +70,7 @@ abstract class AbstractForm extends \Console\Form\Form
                 'encoding' => '8BIT',
             )
         );
-        $passwordMax->setStringWrapper(new \Laminas\Stdlib\StringWrapper\Native);
+        $passwordMax->setStringWrapper(new \Laminas\Stdlib\StringWrapper\Native());
         $passwordMax->setMessage(
             'The password is longer than %max% bytes',
             \Laminas\Validator\StringLength::TOO_LONG

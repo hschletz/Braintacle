@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Render a single HTML element
  *

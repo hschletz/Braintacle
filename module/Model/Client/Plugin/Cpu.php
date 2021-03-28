@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cpu item plugin
  *

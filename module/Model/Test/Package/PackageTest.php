@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Package\Package
  *
@@ -25,19 +26,19 @@ class PackageTest extends \Model\Test\AbstractTest
 {
     public function getDataSet()
     {
-        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet;
+        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet();
     }
 
     public function testExchangeArrayWithId()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->exchangeArray(array('Id' => '1425211367'));
         $this->assertEquals(new \DateTime('2015-03-01 13:02:47'), $model['Timestamp']);
     }
 
     public function testExchangeArrayWithoutId()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->exchangeArray(array('Name' => 'name'));
         $this->assertEquals('name', $model['Name']);
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "groups" table
  *
@@ -43,7 +44,7 @@ class GroupInfo extends \Database\AbstractTable
     /** {@inheritdoc} */
     public function initialize()
     {
-        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(
@@ -64,7 +65,7 @@ class GroupInfo extends \Database\AbstractTable
         $this->_hydrator->addStrategy('CreationDate', $dateTimeFormatter);
         $this->_hydrator->addStrategy('lastdate', $dateTimeFormatter);
 
-        $cacheCreationDateStrategy = new \Database\Hydrator\Strategy\Groups\CacheDate;
+        $cacheCreationDateStrategy = new \Database\Hydrator\Strategy\Groups\CacheDate();
         $this->_hydrator->addStrategy('CacheCreationDate', $cacheCreationDateStrategy);
         $this->_hydrator->addStrategy('create_time', $cacheCreationDateStrategy);
 

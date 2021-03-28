@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the Config class
  *
@@ -64,7 +65,7 @@ class ConfigTest extends AbstractTest
         $this->assertSame(true, static::$_table->set('sessionRequired', true)); // ivalue true, new
         $this->assertSame(true, static::$_table->set('trustedNetworksOnly', false)); // ivalue false, new
         $this->assertTablesEqual(
-            $this->_loadDataSet('Set')->getTable('config'),
+            $this->loadDataSet('Set')->getTable('config'),
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
         );
     }
@@ -73,7 +74,7 @@ class ConfigTest extends AbstractTest
     {
         static::$_table->set('scannersPerSubnet', '');
         $this->assertTablesEqual(
-            $this->_loadDataSet('SetIntegerEmptyStringToNull')->getTable('config'),
+            $this->loadDataSet('SetIntegerEmptyStringToNull')->getTable('config'),
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
         );
     }

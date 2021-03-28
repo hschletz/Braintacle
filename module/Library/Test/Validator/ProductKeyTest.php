@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for ProductKey validator
  *
@@ -30,37 +31,37 @@ class ProductKeyTest extends \PHPUnit\Framework\TestCase
 {
     public function testValidKey()
     {
-        $validator = new ProductKey;
+        $validator = new ProductKey();
         $this->assertTrue($validator->isValid('A1B2D-3E4F5-G6H7I-8J9K0-LMNOP'));
     }
 
     public function testInvalidLowercase()
     {
-        $validator = new ProductKey;
+        $validator = new ProductKey();
         $this->assertFalse($validator->isValid('a1b2d-3e4f5-g6h7i-8j9k0-lmnop'));
     }
 
     public function testInvalidExtraBlock()
     {
-        $validator = new ProductKey;
+        $validator = new ProductKey();
         $this->assertFalse($validator->isValid('A1B2D-3E4F5-G6H7I-8J9K0-LMNOP-QRSTU'));
     }
 
     public function testInvalidBadCharacters()
     {
-        $validator = new ProductKey;
+        $validator = new ProductKey();
         $this->assertFalse($validator->isValid('A1B2D-3E4F5-G6H7I-8J9K0-LMNO%'));
     }
 
     public function testInvalidEmpty()
     {
-        $validator = new ProductKey;
+        $validator = new ProductKey();
         $this->assertFalse($validator->isValid(''));
     }
 
     public function testMessage()
     {
-        $validator = new ProductKey;
+        $validator = new ProductKey();
         $validator->isValid('invalid');
         $this->assertEquals(
             array(ProductKey::PRODUCT_KEY => "'invalid' is not a valid product key"),

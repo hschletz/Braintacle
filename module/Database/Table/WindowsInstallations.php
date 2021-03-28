@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "windows_installations" view
  *
@@ -32,7 +33,7 @@ class WindowsInstallations extends \Database\AbstractTable
      */
     public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(
@@ -60,7 +61,7 @@ class WindowsInstallations extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function setSchema($prune = false)
+    public function updateSchema($prune = false)
     {
         // Reimplementation to provide a view
         $logger = $this->_serviceLocator->get('Library\Logger');

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Client\ClientManager
  *
@@ -22,7 +23,7 @@
 namespace Model\Test\Client;
 
 use Nada\Column\AbstractColumn as Column;
-use \org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStream;
 
 class ClientManagerTest extends \Model\Test\AbstractTest
 {
@@ -739,7 +740,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $clients->method('getTable')->willReturn('clients');
         $clients->method('getHydrator')->willReturn($hydrator);
 
-        $model = $this->_getModel(
+        $model = $this->getModel(
             array(
                 'Database\Table\Clients' => $clients,
                 'Model\Client\CustomFieldManager' => $customFieldManager,
@@ -823,7 +824,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $clients->method('getResultSetPrototype')->willReturn($resultSetPrototype);
         $clients->method('getHydrator')->willReturn($hydrator);
 
-        $model = $this->_getModel(array('Database\Table\Clients' => $clients));
+        $model = $this->getModel(array('Database\Table\Clients' => $clients));
         $model->getClients(array('Id'), $order, $direction, $filter, $group, null, null, $addColumn);
         $this->assertEquals($expected, $result);
     }
@@ -871,7 +872,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $clients->method('getResultSetPrototype')->willReturn($resultSetPrototype);
         $clients->method('getHydrator')->willReturn($hydrator);
 
-        $model = $this->_getModel(array('Database\Table\Clients' => $clients));
+        $model = $this->getModel(array('Database\Table\Clients' => $clients));
         $model->getClients(array('Id'), 'Id', 'asc', 'Software.Name', 'name2', null, null, true, $distinct);
         $this->assertEquals($expected, $result);
     }
@@ -964,13 +965,13 @@ class ClientManagerTest extends \Model\Test\AbstractTest
             )
         );
 
-        $model = $this->_getModel(array('Model\Client\CustomFieldManager' => $customFieldManager));
+        $model = $this->getModel(array('Model\Client\CustomFieldManager' => $customFieldManager));
         $model->getClients(array('Id'), $order, 'asc', $filter, '2015-08-17', $operator, true);
     }
 
     public function testGetClientSelect()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $result = $model->getClients(null, null, 'asc', null, null, null, null, true, false, false);
         $this->assertInstanceOf('Laminas\Db\Sql\Select', $result);
     }
@@ -981,7 +982,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $resultSet->method('current')->willReturn('client');
         $resultSet->method('count')->willReturn(1);
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->disableOriginalConstructor()
                       ->setMethods(array('getClients'))
                       ->getMock();
@@ -997,7 +998,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $resultSet = $this->createMock('Laminas\Db\ResultSet\HydratingResultSet');
         $resultSet->method('count')->willReturn(0);
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->disableOriginalConstructor()
                       ->setMethods(array('getClients'))
                       ->getMock();
@@ -1013,7 +1014,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $connection1->expects($this->never())->method('rollback');
 
         $connection2 = $this->createMock('Laminas\Db\Adapter\Driver\Pdo\Connection');
-        $connection2->expects($this->once())->method('beginTransaction')->willThrowException(new \RuntimeException);
+        $connection2->expects($this->once())->method('beginTransaction')->willThrowException(new \RuntimeException());
         $connection2->expects($this->never())->method('commit');
         $connection2->expects($this->never())->method('rollback');
 
@@ -1074,7 +1075,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $clientsAndGroups = $this->createMock('Database\Table\ClientsAndGroups');
         $clientsAndGroups->expects($this->once())->method('delete')->with(array('id' => 42));
 
-        $clientManager = $this->_getModel(
+        $clientManager = $this->getModel(
             array(
                 'Db' => $adapter,
                 'Database\Table\AndroidInstallations' => $androidInstallations,
@@ -1135,7 +1136,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $clientsAndGroups = $this->createMock('Database\Table\ClientsAndGroups');
         $clientsAndGroups->expects($this->once())->method('delete')->with(array('id' => 4));
 
-        $clientManager = $this->_getModel(
+        $clientManager = $this->getModel(
             array(
                 'Database\Table\AndroidInstallations' => $androidInstallations,
                 'Database\Table\Attachments' => $attachments,
@@ -1152,7 +1153,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         );
         $clientManager->deleteClient($client, true);
 
-        $dataSet = $this->_loadDataSet('DeleteClientDeleteInterfaces');
+        $dataSet = $this->loadDataSet('DeleteClientDeleteInterfaces');
         $connection = $this->getConnection();
         $this->assertTablesEqual(
             $dataSet->getTable('netmap'),
@@ -1176,7 +1177,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->expects($this->never())->method('get');
 
-        $clientManager = $this->_getModel(array('ServiceManager' => $serviceManager));
+        $clientManager = $this->getModel(array('ServiceManager' => $serviceManager));
         $clientManager->deleteClient($client, false);
     }
 
@@ -1189,7 +1190,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $connection1->expects($this->once())->method('rollback');
 
         $connection2 = $this->createMock('Laminas\Db\Adapter\Driver\Pdo\Connection');
-        $connection2->expects($this->once())->method('beginTransaction')->willThrowException(new \RuntimeException);
+        $connection2->expects($this->once())->method('beginTransaction')->willThrowException(new \RuntimeException());
         $connection2->expects($this->never())->method('commit');
         $connection2->expects($this->never())->method('rollback');
 
@@ -1221,7 +1222,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $androidInstallations = $this->createMock('Database\Table\AndroidInstallations');
         $androidInstallations->method('delete')->willThrowException(new \RuntimeException('message'));
 
-        $clientManager = $this->_getModel(
+        $clientManager = $this->getModel(
             array(
                 'Db' => $adapter,
                 'Database\Table\AndroidInstallations' => $androidInstallations,
@@ -1235,7 +1236,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $content = "testUploadFile\nline1\nline2\n";
         $root = vfsstream::setup('root');
         $url = vfsStream::newFile('test.txt')->withContent($content)->at($root)->url();
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->disableOriginalConstructor()
                       ->setMethods(array('importClient'))
                       ->getMock();
@@ -1271,7 +1272,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $config = $this->createMock('Model\Config');
         $config->method('__get')->with('communicationServerUri')->willReturn($uri);
 
-        $model = $this->_getModel(['Model\Config' => $config, 'Library\HttpClient' => $httpClient]);
+        $model = $this->getModel(['Model\Config' => $config, 'Library\HttpClient' => $httpClient]);
         $model->importClient($content);
     }
 
@@ -1281,7 +1282,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $this->expectExceptionMessage(
             "Upload error. Server http://example.net/server responded with error 418: I'm a teapot"
         );
-        
+
         $response = $this->createStub(\Laminas\Http\Response::class);
         $response->method('isSuccess')->willReturn(false);
         $response->method('getStatusCode')->willReturn(418);
@@ -1298,7 +1299,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $config = $this->createMock('Model\Config');
         $config->method('__get')->with('communicationServerUri')->willReturn('http://example.net/server');
 
-        $model = $this->_getModel(['Model\Config' => $config, 'Library\HttpClient' => $httpClient]);
+        $model = $this->getModel(['Model\Config' => $config, 'Library\HttpClient' => $httpClient]);
         $model->importClient('content');
     }
 }

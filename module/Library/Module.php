@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The Library module
  *
@@ -92,7 +93,7 @@ class Module implements
                         return new \Laminas\Log\Writer\Stream('php://stderr');
                     },
                     'Library\Now' => function () {
-                        return new \DateTime;
+                        return new \DateTime();
                     },
                     'Library\Random' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Library\UserConfig' => 'Library\Service\UserConfigFactory',

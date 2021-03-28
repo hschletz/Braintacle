@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Group\GroupManager
  *
@@ -90,13 +91,13 @@ class GroupManagerTest extends AbstractGroupTest
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Invalid group filter: invalid');
-        $model = $this->_getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
+        $model = $this->getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
         $resultSet = $model->getGroups('invalid');
     }
 
     public function testGetGroup()
     {
-        $model = $this->_getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
+        $model = $this->getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
         $group = $model->getGroup('name2');
         $this->assertInstanceOf('Model\Group\Group', $group);
         $this->assertEquals('name2', $group['Name']);
@@ -106,7 +107,7 @@ class GroupManagerTest extends AbstractGroupTest
     {
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('Unknown group name: invalid');
-        $model = $this->_getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
+        $model = $this->getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
         $group = $model->getGroup('invalid');
     }
 
@@ -114,7 +115,7 @@ class GroupManagerTest extends AbstractGroupTest
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('No group name given');
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $group = $model->getGroup('');
     }
 
@@ -131,7 +132,7 @@ class GroupManagerTest extends AbstractGroupTest
      */
     public function testCreateGroup($description, $expectedDescription)
     {
-        $model = $this->_getModel(
+        $model = $this->getModel(
             array(
                 'Database\Table\GroupInfo' => $this->_groupInfo,
                 'Library\Now' => new \DateTime('2015-02-12 22:07:00'),
@@ -141,7 +142,7 @@ class GroupManagerTest extends AbstractGroupTest
 
         $table = static::$serviceManager->get('Database\Table\ClientsAndGroups');
         $id = $table->select(array('name' => 'name3', 'deviceid' => '_SYSTEMGROUP_'))->current()['id'];
-        $dataSet = new \PHPUnit\DbUnit\DataSet\ReplacementDataSet($this->_loadDataSet('CreateGroup'));
+        $dataSet = new \PHPUnit\DbUnit\DataSet\ReplacementDataSet($this->loadDataSet('CreateGroup'));
         $dataSet->addFullReplacement('#ID#', $id);
         $dataSet->addFullReplacement('#DESCRIPTION#', $expectedDescription);
         $connection = $this->getConnection();
@@ -163,13 +164,13 @@ class GroupManagerTest extends AbstractGroupTest
 
     public function testCreateGroupEmptyName()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         try {
             $model->createGroup('');
             $this->fail('Expected exception was not thrown');
         } catch (\InvalidArgumentException $e) {
             $this->assertEquals('Group name is empty', $e->getMessage());
-            $dataSet = $this->_loadDataSet();
+            $dataSet = $this->loadDataSet();
             $connection = $this->getConnection();
             $this->assertTablesEqual(
                 $dataSet->getTable('hardware'),
@@ -190,13 +191,13 @@ class GroupManagerTest extends AbstractGroupTest
 
     public function testCreateGroupExists()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         try {
             $model->createGroup('name2');
             $this->fail('Expected exception was not thrown');
         } catch (\RuntimeException $e) {
             $this->assertEquals('Group already exists: name2', $e->getMessage());
-            $dataSet = $this->_loadDataSet();
+            $dataSet = $this->loadDataSet();
             $connection = $this->getConnection();
             $this->assertTablesEqual(
                 $dataSet->getTable('hardware'),
@@ -238,7 +239,7 @@ class GroupManagerTest extends AbstractGroupTest
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('test message');
 
-        $model = $this->_getModel(
+        $model = $this->getModel(
             array(
                 'Db' => $adapter,
                 'Database\Table\ClientsAndGroups' => $clientsAndGroups,
@@ -254,10 +255,10 @@ class GroupManagerTest extends AbstractGroupTest
         $group->method('offsetGet')->with('Id')->willReturn(1);
         $group->expects($this->once())->method('unlock');
 
-        $model = $this->_getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
+        $model = $this->getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
         $model->deleteGroup($group);
 
-        $dataSet = $this->_loadDataSet('DeleteGroup');
+        $dataSet = $this->loadDataSet('DeleteGroup');
         $connection = $this->getConnection();
         $this->assertTablesEqual(
             $dataSet->getTable('hardware'),
@@ -294,13 +295,13 @@ class GroupManagerTest extends AbstractGroupTest
         $group = $this->createMock('Model\Group\Group');
         $group->method('lock')->willReturn(false);
 
-        $model = $this->_getModel();
+        $model = $this->getModel();
         try {
             $model->deleteGroup($group);
             $this->fail('Expected exception was not thrown');
         } catch (\Model\Group\RuntimeException $e) {
             $this->assertEquals('Cannot delete group because it is locked', $e->getMessage());
-            $dataSet = $this->_loadDataSet();
+            $dataSet = $this->loadDataSet();
             $connection = $this->getConnection();
             $this->assertTablesEqual(
                 $dataSet->getTable('hardware'),
@@ -341,7 +342,7 @@ class GroupManagerTest extends AbstractGroupTest
         $clientsAndGroups = $this->createMock('Database\Table\ClientsAndGroups');
         $clientsAndGroups->method('delete')->will($this->throwException(new \RuntimeException('database error')));
 
-        $model = $this->_getModel(
+        $model = $this->getModel(
             array(
                 'Database\Table\ClientsAndGroups' => $clientsAndGroups,
                 'Database\Table\GroupInfo' => $this->_groupInfo,
@@ -352,7 +353,7 @@ class GroupManagerTest extends AbstractGroupTest
             $this->fail('Expected exception was not thrown');
         } catch (\RuntimeException $e) {
             $this->assertEquals('database error', $e->getMessage());
-            $dataSet = $this->_loadDataSet();
+            $dataSet = $this->loadDataSet();
             $connection = $this->getConnection();
             $this->assertTablesEqual(
                 $dataSet->getTable('hardware'),
@@ -390,7 +391,7 @@ class GroupManagerTest extends AbstractGroupTest
         $group = $this->createMock('Model\Group\Group');
         $group->expects($this->once())->method('update')->with(true);
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->disableOriginalConstructor()
                       ->setMethods(array('getGroups'))
                       ->getMock();

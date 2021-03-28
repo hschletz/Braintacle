@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for LogLevel validator
  *
@@ -30,7 +31,7 @@ class LogLevelTest extends \PHPUnit\Framework\TestCase
 {
     public function testValidation()
     {
-        $validator = new LogLevel;
+        $validator = new LogLevel();
         $this->assertTrue($validator->isValid('Emerg'));
         $this->assertTrue($validator->isValid('Alert'));
         $this->assertTrue($validator->isValid('Crit'));
@@ -45,7 +46,7 @@ class LogLevelTest extends \PHPUnit\Framework\TestCase
 
     public function testMessage()
     {
-        $validator = new LogLevel;
+        $validator = new LogLevel();
         $validator->isValid('Error');
         $this->assertEquals(
             array(LogLevel::LOG_LEVEL => "'Error' is not a valid log level"),

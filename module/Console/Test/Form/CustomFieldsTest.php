@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for CustomFields form
  *
@@ -21,7 +22,7 @@
 
 namespace Console\Test\Form;
 
-use \Laminas\Dom\Document\Query as Query;
+use Laminas\Dom\Document\Query as Query;
 
 /**
  * Tests for CustomFields form
@@ -52,7 +53,7 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
     }
 
     /** {@inheritdoc} */
-    protected function _getForm()
+    protected function getForm()
     {
         $form = new \Console\Form\CustomFields(
             null,
@@ -177,7 +178,7 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
 
     public function testRenderFieldset()
     {
-        $html = $this->_form->renderFieldset($this->_createView(), $this->_form);
+        $html = $this->_form->renderFieldset($this->createView(), $this->_form);
         $document = new \Laminas\Dom\Document($html);
         $this->assertCount(4, Query::execute('//input[@type="text"]', $document));
         $this->assertCount(1, Query::execute('//textarea', $document));

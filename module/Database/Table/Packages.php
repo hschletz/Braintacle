@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "download_available" table
  *
@@ -49,13 +50,13 @@ class Packages extends \Database\AbstractTable
             'num_success' => 'NumSuccess',
             'num_error' => 'NumError',
         );
-        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy($map)
         );
         $this->_hydrator->addFilter('whitelist', new \Library\Hydrator\Filter\Whitelist($map));
 
-        $platform = new \Database\Hydrator\Strategy\Packages\Platform;
+        $platform = new \Database\Hydrator\Strategy\Packages\Platform();
         $this->_hydrator->addStrategy('Platform', $platform);
         $this->_hydrator->addStrategy('osname', $platform);
 

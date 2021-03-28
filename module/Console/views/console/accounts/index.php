@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display and manage users
  *

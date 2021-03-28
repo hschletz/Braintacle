@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "hardware" table
  *
@@ -43,7 +44,7 @@ class ClientsAndGroups extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _postSetSchema($logger, $schema, $database, $prune)
+    protected function postSetSchema($logger, $schema, $database, $prune)
     {
         // obsolete feature which was never supported.
         if ($this->delete(array('deviceid' => '_DOWNLOADGROUP_'))) {

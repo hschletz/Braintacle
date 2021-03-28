@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Decode controller
  *
@@ -58,7 +59,7 @@ class DecodeTest extends \PHPUnit\Framework\TestCase
                     'test' => 'input data',
                 ],
             ],
-            vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure()
+            vfsStream::inspect(new vfsStreamStructureVisitor())->getStructure()
         );
     }
 
@@ -129,7 +130,7 @@ class DecodeTest extends \PHPUnit\Framework\TestCase
                     'test' => $filesystemObject,
                 ],
             ],
-            vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure()
+            vfsStream::inspect(new vfsStreamStructureVisitor())->getStructure()
         );
     }
 
@@ -159,7 +160,7 @@ class DecodeTest extends \PHPUnit\Framework\TestCase
                     'test' => null,
                 ],
             ],
-            vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure()
+            vfsStream::inspect(new vfsStreamStructureVisitor())->getStructure()
         );
     }
 }

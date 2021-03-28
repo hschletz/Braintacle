@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Client\DuplicatesManager
  *
@@ -57,7 +58,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
      */
     public function testCount()
     {
-        $duplicates = $this->_getModel();
+        $duplicates = $this->getModel();
 
         // These criteria are initially allowed duplicate.
         $this->assertEquals(0, $duplicates->count('MacAddress'));
@@ -182,13 +183,13 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
                 ->willReturnCallback(
                     function ($select) use ($sql) {
                         // Build simple result set to bypass hydrator
-                        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
+                        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
                         $resultSet->initialize($sql->prepareStatementForSqlObject($select)->execute());
                         return $resultSet;
                     }
                 );
 
-        $duplicates = $this->_getModel(
+        $duplicates = $this->getModel(
             array(
                 'Database\Table\Clients' => $clients,
                 'Model\Client\ClientManager' => $clientManager,
@@ -204,7 +205,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
     {
         // Test invalid criteria
         $this->expectException('InvalidArgumentException');
-        $this->_getModel()->find('invalid');
+        $this->getModel()->find('invalid');
     }
 
     public function mergeNoneWithLessThan2ClientsProvider()
@@ -219,7 +220,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
     /** @dataProvider mergeNoneWithLessThan2ClientsProvider */
     public function testMergeWithLessThan2Clients($clientIds)
     {
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->disableOriginalConstructor()
                       ->setMethodsExcept(['merge'])
                       ->getMock();
@@ -429,7 +430,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
             ['CustomFields' => ['field' => 'ignored']],
         ];
 
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->mergeCustomFields($newestClient, $olderClients);
     }
 
@@ -458,7 +459,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
 
         $olderClients = [$client1, $client2];
 
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->mergeGroups($newestClient, $olderClients);
     }
 
@@ -483,7 +484,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
 
         $olderClients = [$client1, $client2];
 
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->mergeGroups($newestClient, $olderClients);
     }
 
@@ -492,11 +493,11 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $newestClient = ['Id' => 3];
         $olderClients = [['Id' => 2]];
 
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->mergePackages($newestClient, $olderClients);
 
         $this->assertTablesEqual(
-            $this->_loadDataSet('MergePackages')->getTable('devices'),
+            $this->loadDataSet('MergePackages')->getTable('devices'),
             $this->getConnection()->createQueryTable(
                 'devices',
                 <<<EOT
@@ -514,12 +515,12 @@ EOT
         $newestClient = ['Id' => 4];
         $olderClients = [['Id' => 1]];
 
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->mergePackages($newestClient, $olderClients);
 
         // Table should be unchanged
         $this->assertTablesEqual(
-            $this->_loadDataSet()->getTable('devices'),
+            $this->loadDataSet()->getTable('devices'),
             $this->getConnection()->createQueryTable(
                 'devices',
                 <<<EOT
@@ -641,7 +642,7 @@ EOT
             ['option4' => 'o4', 'option5' => 'o5', 'option6' => 'o6', 'option7' => 'o7']
         );
 
-        $this->_getModel()->mergeConfig($newest, [$oldest, $middle]);
+        $this->getModel()->mergeConfig($newest, [$oldest, $middle]);
 
         $this->assertEquals(['option2' => 'm2', 'option4' => 'o4', 'option6' => 'm6'], $options);
     }
@@ -651,9 +652,9 @@ EOT
      */
     public function testAllow()
     {
-        $dataSet = $this->_loadDataSet('Allow');
+        $dataSet = $this->loadDataSet('Allow');
         $connection = $this->getConnection();
-        $duplicates = $this->_getModel();
+        $duplicates = $this->getModel();
 
         // New entry
         $duplicates->allow('MacAddress', '00:00:5E:00:53:00');

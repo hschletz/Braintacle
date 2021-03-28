@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form for display/setting of 'download' preferences
  *
@@ -31,7 +32,7 @@ class Download extends AbstractForm
     {
         parent::init();
         $preferences = $this->get('Preferences');
-        $inputFilter = new \Laminas\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter();
 
         $packageDeployment = new \Laminas\Form\Element\Checkbox('packageDeployment');
         $packageDeployment->setLabel('Enable package download');
@@ -107,19 +108,19 @@ class Download extends AbstractForm
         $downloadPeriodDelay->setLabel('Delay (in seconds) between periods')
                             ->setAttribute('size', 5);
         $preferences->add($downloadPeriodDelay);
-        $inputFilter->add($this->_getIntegerFilter('downloadPeriodDelay'));
+        $inputFilter->add($this->getIntegerFilter('downloadPeriodDelay'));
 
         $downloadCycleDelay = new \Laminas\Form\Element\Text('downloadCycleDelay');
         $downloadCycleDelay->setLabel('Delay (in seconds) between cycles')
                            ->setAttribute('size', 5);
         $preferences->add($downloadCycleDelay);
-        $inputFilter->add($this->_getIntegerFilter('downloadCycleDelay'));
+        $inputFilter->add($this->getIntegerFilter('downloadCycleDelay'));
 
         $downloadFragmentDelay = new \Laminas\Form\Element\Text('downloadFragmentDelay');
         $downloadFragmentDelay->setLabel('Delay (in seconds) between fragments')
                               ->setAttribute('size', 5);
         $preferences->add($downloadFragmentDelay);
-        $inputFilter->add($this->_getIntegerFilter('downloadFragmentDelay'));
+        $inputFilter->add($this->getIntegerFilter('downloadFragmentDelay'));
 
         $downloadMaxPriority = new \Library\Form\Element\SelectSimple('downloadMaxPriority');
         $downloadMaxPriority->setLabel('Maximum package priority (packages with higher value will not be downloaded)')
@@ -130,9 +131,9 @@ class Download extends AbstractForm
         $downloadTimeout->setLabel('Timeout (in days)')
                         ->setAttribute('size', 5);
         $preferences->add($downloadTimeout);
-        $inputFilter->add($this->_getIntegerFilter('downloadTimeout'));
+        $inputFilter->add($this->getIntegerFilter('downloadTimeout'));
 
-        $parentFilter = new \Laminas\InputFilter\InputFilter;
+        $parentFilter = new \Laminas\InputFilter\InputFilter();
         $parentFilter->add($inputFilter, 'Preferences');
         $this->setInputFilter($parentFilter);
     }
@@ -143,9 +144,9 @@ class Download extends AbstractForm
      * @param string $name Element name
      * @return array
      */
-    protected function _getIntegerFilter($name)
+    protected function getIntegerFilter($name)
     {
-        $validatorChain = new \Laminas\Validator\ValidatorChain;
+        $validatorChain = new \Laminas\Validator\ValidatorChain();
         $validatorChain->attachByName(
             'Callback',
             array(
@@ -182,7 +183,7 @@ class Download extends AbstractForm
         // $value has no scheme part. Apply http:// scheme (also valid for HTTPS
         // URI) and try to construct a valid URI.
         try {
-            $uri = new \Laminas\Uri\Http;
+            $uri = new \Laminas\Uri\Http();
             return $uri->parse("http://$value")->isValid();
         } catch (\Exception $e) {
             return false;

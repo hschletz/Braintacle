@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Bootstrap class for all applications that use the Braintacle API.
  *

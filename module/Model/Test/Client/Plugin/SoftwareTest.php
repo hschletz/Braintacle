@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Client\Plugin\Software
  *
@@ -56,9 +57,9 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
         /** @var MockObject$Software */
         $model = $this->getMockBuilder(Software::class)
                       ->setConstructorArgs([$table])
-                      ->onlyMethods(['_getIsAndroidExpression'])
+                      ->onlyMethods(['getIsAndroidExpression'])
                       ->getMock();
-        $model->method('_getIsAndroidExpression')->willReturn('isAndroid');
+        $model->method('getIsAndroidExpression')->willReturn('isAndroid');
 
         $model->columns();
     }

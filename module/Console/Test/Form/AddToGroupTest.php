@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for AddToGroup form
  *
@@ -21,8 +22,6 @@
 
 namespace Console\Test\Form;
 
-use \Laminas\Dom\Document\Query as Query;
-
 /**
  * Tests for AddToGroup form
  */
@@ -41,13 +40,13 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
     }
 
     /** {@inheritdoc} */
-    protected function _getForm()
+    protected function getForm()
     {
         $groups = array(
             array('Name' => 'group1'),
             array('Name' => 'group2'),
         );
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
         $resultSet->initialize($groups);
         $this->_groupManager->expects($this->once())
                             ->method('getGroups')

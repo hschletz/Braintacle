@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Confirmation for deleting clients
  *

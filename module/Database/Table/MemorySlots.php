@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "memories" table
  *
@@ -34,7 +35,7 @@ class MemorySlots extends \Database\AbstractTable
     {
         $this->table = 'memories';
 
-        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(
@@ -48,10 +49,10 @@ class MemorySlots extends \Database\AbstractTable
                 )
             )
         );
-        $this->_hydrator->addStrategy('Size', new \Database\Hydrator\Strategy\MemorySlots\Size);
-        $this->_hydrator->addStrategy('capacity', new \Database\Hydrator\Strategy\MemorySlots\Size);
-        $this->_hydrator->addStrategy('Clock', new \Database\Hydrator\Strategy\MemorySlots\Clock);
-        $this->_hydrator->addStrategy('speed', new \Database\Hydrator\Strategy\MemorySlots\Clock);
+        $this->_hydrator->addStrategy('Size', new \Database\Hydrator\Strategy\MemorySlots\Size());
+        $this->_hydrator->addStrategy('capacity', new \Database\Hydrator\Strategy\MemorySlots\Size());
+        $this->_hydrator->addStrategy('Clock', new \Database\Hydrator\Strategy\MemorySlots\Clock());
+        $this->_hydrator->addStrategy('speed', new \Database\Hydrator\Strategy\MemorySlots\Clock());
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,

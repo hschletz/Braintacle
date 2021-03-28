@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Convert empty input to empty array
  *

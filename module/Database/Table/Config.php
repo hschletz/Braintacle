@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "config" table
  *
@@ -159,7 +160,7 @@ class Config extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _postSetSchema($logger, $schema, $database, $prune)
+    protected function postSetSchema($logger, $schema, $database, $prune)
     {
         // If packagePath has not been converted yet, append /download directory
         // with had previously been appended automatically.
@@ -246,18 +247,19 @@ class Config extends \Database\AbstractTable
     public function get($option)
     {
         // limitInventoryInterval is only meaningful if enabled.
-        if ($option == 'limitInventoryInterval' and
+        if (
+            $option == 'limitInventoryInterval' and
             !$this->select(array('name' => 'INVENTORY_FILTER_FLOOD_IP'))->current()['ivalue']
         ) {
             return null;
         }
         $name = $this->getDbIdentifier($option);
-        $column = $this->_getColumnName($option);
+        $column = $this->getColumnName($option);
         $row = $this->select(array('name' => $name))->current();
         if ($row) {
             $value = $row[$column];
             if (in_array($option, $this->_iValues) or in_array($option, $this->_integerOptions)) {
-                $value = (integer) $value;
+                $value = (int) $value;
             }
         } else {
             $value = null;
@@ -276,10 +278,10 @@ class Config extends \Database\AbstractTable
     public function set($option, $value)
     {
         $name = $this->getDbIdentifier($option);
-        $column = $this->_getColumnName($option);
+        $column = $this->getColumnName($option);
         if (is_bool($value)) {
             // Prevent improper bool-to-string conversion in PHP and/or database
-            $value = (integer) $value;
+            $value = (int) $value;
         } elseif ($column == 'ivalue') {
             if ($value === '') {
                 $value = null;
@@ -289,9 +291,9 @@ class Config extends \Database\AbstractTable
                 );
             }
         }
-        $valueChanged = $this->_set($name, $column, $value);
+        $valueChanged = $this->write($name, $column, $value);
         if ($valueChanged and $option == 'limitInventoryInterval') {
-            $this->_set('INVENTORY_FILTER_FLOOD_IP', 'ivalue', (integer) (bool) $value);
+            $this->write('INVENTORY_FILTER_FLOOD_IP', 'ivalue', (int) (bool) $value);
         }
         return $valueChanged;
     }
@@ -304,7 +306,7 @@ class Config extends \Database\AbstractTable
      * @param mixed $value Option value
      * @return bool TRUE if value changed
      */
-    protected function _set($name, $column, $value)
+    protected function write($name, $column, $value)
     {
         $valueChanged = true;
         $row = $this->select(array('name' => $name))->current();
@@ -351,7 +353,7 @@ class Config extends \Database\AbstractTable
      * @param string $option Option name
      * @return string "ivalue" or "tvalue"
      */
-    protected function _getColumnName($option)
+    protected function getColumnName($option)
     {
         return in_array($option, $this->_iValues) ? 'ivalue' : 'tvalue';
     }

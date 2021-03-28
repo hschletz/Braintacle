@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Strategy for Clock attribute
  *
@@ -33,7 +34,7 @@ class Clock implements \Laminas\Hydrator\Strategy\StrategyInterface
     /** {@inheritdoc} */
     public function hydrate($value, ?array $data)
     {
-        $value = (integer) $value;
+        $value = (int) $value;
         if ($value == 0) {
             $value = null;
         }

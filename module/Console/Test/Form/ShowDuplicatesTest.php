@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for ShowDuplicates form
  *
@@ -24,7 +25,7 @@ namespace Console\Test\Form;
 class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
 {
     /** {@inheritdoc} */
-    protected function _getForm()
+    protected function getForm()
     {
         $form = new \Console\Form\ShowDuplicates(null, ['config' => $this->createMock('Model\Config')]);
         $form->init();
@@ -54,42 +55,42 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
     {
         $config = $this->createMock('Model\Config');
         $config->method('__get')->willReturnMap([
-            ['defaultMergeConfig', (integer) ($option == 'mergeConfig')],
-            ['defaultMergeCustomFields', (integer) ($option == 'mergeCustomFields')],
-            ['defaultMergeGroups', (integer) ($option == 'mergeGroups')],
-            ['defaultMergePackages', (integer) ($option == 'mergePackages')],
-            ['defaultMergeProductKey', (integer) ($option == 'mergeProductKey')],
+            ['defaultMergeConfig', (int) ($option == 'mergeConfig')],
+            ['defaultMergeCustomFields', (int) ($option == 'mergeCustomFields')],
+            ['defaultMergeGroups', (int) ($option == 'mergeGroups')],
+            ['defaultMergePackages', (int) ($option == 'mergePackages')],
+            ['defaultMergeProductKey', (int) ($option == 'mergeProductKey')],
         ]);
 
         $expectedOptions = [
             [
                 'value' => 'mergeCustomFields',
                 'label' => 'Merge user supplied information',
-                'selected' => (integer) ($option == 'mergeCustomFields'),
+                'selected' => (int) ($option == 'mergeCustomFields'),
             ],
             [
                 'value' => 'mergeConfig',
                 'label' => 'Merge configuration',
-                'selected' => (integer) ($option == 'mergeConfig'),
+                'selected' => (int) ($option == 'mergeConfig'),
             ],
             [
                 'value' => 'mergeGroups',
                 'label' => 'Merge manual group assignments',
-                'selected' => (integer) ($option == 'mergeGroups'),
+                'selected' => (int) ($option == 'mergeGroups'),
             ],
             [
                 'value' => 'mergePackages',
                 'label' => 'Merge missing package assignments',
-                'selected' => (integer) ($option == 'mergePackages'),
+                'selected' => (int) ($option == 'mergePackages'),
             ],
             [
                 'value' => 'mergeProductKey',
                 'label' => 'Keep manually entered Windows product key',
-                'selected' => (integer) ($option == 'mergeProductKey'),
+                'selected' => (int) ($option == 'mergeProductKey'),
             ],
         ];
 
-        $form = $this->getMockBuilder($this->_getFormClass())
+        $form = $this->getMockBuilder($this->getFormClass())
                      ->setMethods(['getOption'])
                      ->getMock();
         $form->method('getOption')->with('config')->willReturn($config);

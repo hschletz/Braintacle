@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for InventoryDecode filter
  *
@@ -25,7 +26,7 @@ class InventoryDecodeTest extends \PHPUnit\Framework\TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf('Laminas\Filter\AbstractFilter', new \Protocol\Filter\InventoryDecode);
+        $this->assertInstanceOf('Laminas\Filter\AbstractFilter', new \Protocol\Filter\InventoryDecode());
     }
 
     public function filterProvider()

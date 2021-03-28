@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Abstract strategy test case
  *
@@ -34,7 +35,7 @@ abstract class AbstractStrategyTest extends \PHPUnit\Framework\TestCase
         $class = get_class($this);
         $class = substr($class, strlen('Database\Test\Hydrator\Strategy'), -4);
         $class = '\Database\Hydrator\Strategy' . $class;
-        $this->_strategy = new $class;
+        $this->_strategy = new $class();
     }
 
     public function testInterface()

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form for display/setting of 'raw data' preferences
  *
@@ -31,7 +32,7 @@ class RawData extends AbstractForm
     {
         parent::init();
         $preferences = $this->get('Preferences');
-        $inputFilter = new \Laminas\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter();
 
         $saveRawData = new \Laminas\Form\Element\Checkbox('saveRawData');
         $saveRawData->setLabel('Save incoming raw inventory data');
@@ -63,7 +64,7 @@ class RawData extends AbstractForm
         $saveOverwrite->setLabel('Overwrite existing files');
         $preferences->add($saveOverwrite);
 
-        $parentFilter = new \Laminas\InputFilter\InputFilter;
+        $parentFilter = new \Laminas\InputFilter\InputFilter();
         $parentFilter->add($inputFilter, 'Preferences');
         $this->setInputFilter($parentFilter);
     }

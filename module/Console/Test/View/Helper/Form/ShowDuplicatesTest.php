@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the ShowDuplicates Helper
  *
@@ -38,7 +39,7 @@ use Library\View\Helper\HtmlElement;
 class ShowDuplicatesTest extends \Library\Test\View\Helper\AbstractTest
 {
     /** {@inheritdoc} */
-    protected function _getHelperName()
+    protected function getHelperName()
     {
         return 'consoleFormShowDuplicates';
     }
@@ -215,7 +216,7 @@ class ShowDuplicatesTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testGetBlacklistLinkNullValue()
     {
-        $helper = $this->getMockBuilder($this->_getHelperClass())
+        $helper = $this->getMockBuilder($this->getHelperClass())
                        ->disableOriginalConstructor()
                        ->setMethodsExcept(['getBlacklistLink'])
                        ->getMock();
@@ -243,7 +244,7 @@ class ShowDuplicatesTest extends \Library\Test\View\Helper\AbstractTest
             ['htmlElement', null, $htmlElement],
         ]);
 
-        $helper = $this->getMockBuilder($this->_getHelperClass())
+        $helper = $this->getMockBuilder($this->getHelperClass())
                        ->disableOriginalConstructor()
                        ->setMethods(['getView'])
                        ->getMock();

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Translation loader that parses gettext .po files
  *
@@ -35,7 +36,7 @@ class Po implements \Laminas\I18n\Translator\Loader\FileLoaderInterface
         $file = new \Library\FileObject($filename);
         $file->setFlags(\SplFileObject::DROP_NEW_LINE | \SplFileObject::READ_AHEAD | \SplFileObject::SKIP_EMPTY);
 
-        $textDomain = new \Laminas\I18n\Translator\TextDomain;
+        $textDomain = new \Laminas\I18n\Translator\TextDomain();
         $state = 0; // Parser state; 0 := everything else; 1 := msgid; 2 := msgstr
         $msgid = ''; // current msgid
         $msgstr = ''; // current msgstr

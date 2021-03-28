@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Clients hydrator
  *
@@ -23,7 +24,7 @@ namespace Database\Test\Hydrator;
 
 class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
 {
-    protected function _getHydrator()
+    protected function getHydrator()
     {
         $nada = $this->createMock('Nada\Database\AbstractDatabase');
         $nada->method('timestampFormatPhp')->willReturn('Y-m-d H:i:s');
@@ -267,20 +268,20 @@ class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
             'UserName' => 'userid',
             'Uuid' => 'uuid',
         );
-        $this->assertEquals($expected, $this->_getHydrator()->getExtractorMap());
+        $this->assertEquals($expected, $this->getHydrator()->getExtractorMap());
     }
 
     public function testHydrateNameInvalid()
     {
         $this->expectException('DomainException');
         $this->expectExceptionMessage('Cannot hydrate name: invalid_');
-        $this->_getHydrator()->hydrateName('invalid_');
+        $this->getHydrator()->hydrateName('invalid_');
     }
 
     public function testExtractNameInvalid()
     {
         $this->expectException('DomainException');
         $this->expectExceptionMessage('Cannot extract name: invalid');
-        $this->_getHydrator()->extractName('invalid');
+        $this->getHydrator()->extractName('invalid');
     }
 }

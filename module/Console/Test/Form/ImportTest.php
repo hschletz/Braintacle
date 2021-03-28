@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Import form
  *
@@ -74,7 +75,7 @@ class ImportTest extends \Console\Test\AbstractFormTest
 
     public function testEnctypeAttribute()
     {
-        $html = $this->_form->render($this->_createView());
+        $html = $this->_form->render($this->createView());
         $document = new \Laminas\Dom\Document($html);
         $this->assertCount(
             1,

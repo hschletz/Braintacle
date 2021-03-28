@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the FormYesNo helper
  *
@@ -21,7 +22,7 @@
 
 namespace Library\Test\View\Helper;
 
-use \Laminas\Dom\Document\Query as Query;
+use Laminas\Dom\Document\Query as Query;
 
 /**
  * Tests for the FormYesNo helper

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Package\PackageManager
  *
@@ -34,8 +35,8 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
     public function testPackageExists()
     {
-        $this->assertTrue($this->_getModel()->packageExists('package1'));
-        $this->assertFalse($this->_getModel()->packageExists('new_package'));
+        $this->assertTrue($this->getModel()->packageExists('package1'));
+        $this->assertFalse($this->getModel()->packageExists('new_package'));
     }
 
     public function testGetPackage()
@@ -61,7 +62,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         );
         $storage = $this->createMock('Model\Package\Storage\Direct');
         $storage->expects($this->once())->method('readMetadata')->with('1415958320')->willReturn($metadata);
-        $model = $this->_getModel(array('Model\Package\Storage\Direct' => $storage));
+        $model = $this->getModel(array('Model\Package\Storage\Direct' => $storage));
         $package = $model->getPackage('package2');
         $this->assertInstanceOf('Model\Package\Package', $package);
         $this->assertEquals(
@@ -74,7 +75,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     {
         $this->expectException('Model\Package\RuntimeException');
         $this->expectExceptionMessage("There is no package with name 'invalid'");
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->getPackage('invalid');
     }
 
@@ -84,7 +85,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $this->expectExceptionMessage('metadata error');
         $storage = $this->createMock('Model\Package\Storage\Direct');
         $storage->method('readMetadata')->will($this->throwException(new \RuntimeException('metadata error')));
-        $model = $this->_getModel(array('Model\Package\Storage\Direct' => $storage));
+        $model = $this->getModel(array('Model\Package\Storage\Direct' => $storage));
         $model->getPackage('package1');
     }
 
@@ -140,7 +141,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
      */
     public function testGetPackages($order, $direction, $package1, $package2)
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $packages = iterator_to_array($model->getPackages($order, $direction));
         $this->assertContainsOnlyInstancesOf('Model\Package\Package', $packages);
         $this->assertEquals($package1, $packages[0]->getArrayCopy());
@@ -149,13 +150,13 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
     public function testGetAllNames()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $this->assertEquals(array('package1', 'package2'), $model->getAllNames());
     }
 
     public function testGetAllNamesEmpty()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         static::$serviceManager->get('Database\Table\Packages')->delete(true);
         $this->assertEquals(array(), $model->getAllNames());
     }
@@ -273,7 +274,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         );
 
         // Model mock
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('packageExists', 'autoArchive', 'deletePackage'))
                       ->setConstructorArgs(array($serviceManager))
                       ->getMock();
@@ -294,7 +295,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         // Test database results
         $connection = $this->getConnection();
         $dataset = new \PHPUnit\DbUnit\DataSet\ReplacementDataSet(
-            $this->_loadDataSet('Build')
+            $this->loadDataSet('Build')
         );
         $dataset->addFullReplacement('#PLATFORM#', $platformValue);
         $dataset->addFullReplacement('#SIZE#', $size);
@@ -327,12 +328,12 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Database\Table\Packages', $packages),
-                array('Library\Now', new \DateTime),
+                array('Library\Now', new \DateTime()),
                 array('Model\Package\Storage\Direct', $storage),
             )
         );
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('packageExists', 'autoArchive', 'deletePackage'))
                       ->setConstructorArgs(array($serviceManager))
                       ->getMock();
@@ -363,13 +364,13 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             $this->returnValueMap(
                 array(
                     array('Database\Table\Packages', true, $packages),
-                    array('Library\Now', true, new \DateTime),
+                    array('Library\Now', true, new \DateTime()),
                     array('Model\Package\Storage\Direct', true, $storage),
                 )
             )
         );
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('packageExists'))
                       ->setConstructorArgs(array($serviceManager))
                       ->getMock();
@@ -422,12 +423,12 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Database\Table\Packages', $packages),
-                array('Library\Now', new \DateTime),
+                array('Library\Now', new \DateTime()),
                 array('Model\Package\Storage\Direct', $storage),
             )
         );
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('packageExists', 'autoArchive', 'deletePackage'))
                       ->setConstructorArgs(array($serviceManager))
                       ->getMock();
@@ -448,12 +449,12 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
-                array('Library\Now', new \DateTime),
+                array('Library\Now', new \DateTime()),
                 array('Model\Package\Storage\Direct', $storage),
             )
         );
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('packageExists', 'deletePackage'))
                       ->setConstructorArgs(array($serviceManager))
                       ->getMock();
@@ -489,7 +490,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $archiveManager->expects($this->once())
                        ->method('closeArchive')
                        ->with('archive', false);
-        $model = $this->_getModel(array('Library\ArchiveManager' => $archiveManager));
+        $model = $this->getModel(array('Library\ArchiveManager' => $archiveManager));
         $this->assertEquals('path/archive', $model->autoArchive($data, 'path', false));
         $this->assertFileExists($source);
     }
@@ -518,7 +519,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $archiveManager->expects($this->once())
                        ->method('closeArchive')
                        ->with('archive', false);
-        $model = $this->_getModel(array('Library\ArchiveManager' => $archiveManager));
+        $model = $this->getModel(array('Library\ArchiveManager' => $archiveManager));
         $this->assertEquals('path/archive', $model->autoArchive($data, 'path', true));
         $this->assertFileDoesNotExist($source);
     }
@@ -545,7 +546,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                        ->method('addFile');
         $archiveManager->expects($this->never())
                        ->method('closeArchive');
-        $model = $this->_getModel(array('Library\ArchiveManager' => $archiveManager));
+        $model = $this->getModel(array('Library\ArchiveManager' => $archiveManager));
         try {
             $model->autoArchive($data, 'path', true);
             $this->fail('Expected exception was not thrown');
@@ -583,7 +584,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $archiveManager->expects($this->once())
                        ->method('closeArchive')
                        ->with($archive, true);
-        $model = $this->_getModel(array('Library\ArchiveManager' => $archiveManager));
+        $model = $this->getModel(array('Library\ArchiveManager' => $archiveManager));
         try {
             $model->autoArchive($data, $root->url(), true);
             $this->fail('Expected exception was not thrown');
@@ -614,7 +615,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                        ->method('addFile');
         $archiveManager->expects($this->never())
                        ->method('closeArchive');
-        $model = $this->_getModel(array('Library\ArchiveManager' => $archiveManager));
+        $model = $this->getModel(array('Library\ArchiveManager' => $archiveManager));
         $this->assertEquals($source, $model->autoArchive($data, 'path', true));
         $this->assertFileExists($source);
     }
@@ -637,7 +638,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                        ->method('addFile');
         $archiveManager->expects($this->never())
                        ->method('closeArchive');
-        $model = $this->_getModel(array('Library\ArchiveManager' => $archiveManager));
+        $model = $this->getModel(array('Library\ArchiveManager' => $archiveManager));
         $this->assertEquals($source, @$model->autoArchive($data, 'path', true));
         $this->assertFileExists($source);
     }
@@ -658,7 +659,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                        ->method('addFile');
         $archiveManager->expects($this->never())
                        ->method('closeArchive');
-        $model = $this->_getModel(array('Library\ArchiveManager' => $archiveManager));
+        $model = $this->getModel(array('Library\ArchiveManager' => $archiveManager));
         $this->assertEquals($source, @$model->autoArchive($data, 'path', true));
         $this->assertFileExists($source);
     }
@@ -678,7 +679,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
                        ->method('addFile');
         $archiveManager->expects($this->never())
                        ->method('closeArchive');
-        $model = $this->_getModel(array('Library\ArchiveManager' => $archiveManager));
+        $model = $this->getModel(array('Library\ArchiveManager' => $archiveManager));
         $this->assertSame($source, @$model->autoArchive($data, 'path', true));
     }
 
@@ -686,11 +687,11 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     {
         $storage = $this->createMock('Model\Package\Storage\Direct');
         $storage->expects($this->once())->method('cleanup')->with('1415958319');
-        $model = $this->_getModel(array('Model\Package\Storage\Direct' => $storage));
+        $model = $this->getModel(array('Model\Package\Storage\Direct' => $storage));
         $model->deletePackage('package1');
 
         $connection = $this->getConnection();
-        $dataset = $this->_loadDataSet('Delete');
+        $dataset = $this->loadDataSet('Delete');
         $this->assertTablesEqual(
             $dataset->getTable('download_available'),
             $connection->createQueryTable('download_available', 'SELECT * FROM download_available ORDER BY fileid')
@@ -715,7 +716,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     {
         $this->expectException('Model\Package\RuntimeException');
         $this->expectExceptionMessage("Package 'invalid' does not exist");
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->deletePackage('invalid');
     }
 
@@ -743,10 +744,10 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
     public function testUpdateAssignmentsNoActionRequired()
     {
-        $this->_getModel()->updateAssignments(1415958319, 3, false, false, false, false, false);
+        $this->getModel()->updateAssignments(1415958319, 3, false, false, false, false, false);
 
         $this->assertTablesEqual(
-            $this->_loadDataSet()->getTable('devices'),
+            $this->loadDataSet()->getTable('devices'),
             $this->getConnection()->createQueryTable(
                 'devices',
                 'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ORDER BY hardware_id, name, ivalue'
@@ -756,10 +757,10 @@ class PackageManagerTest extends \Model\Test\AbstractTest
 
     public function testUpdateAssignmentsNoMatch()
     {
-        $this->_getModel()->updateAssignments(1415958320, 3, false, true, false, false, false);
+        $this->getModel()->updateAssignments(1415958320, 3, false, true, false, false, false);
 
         $this->assertTablesEqual(
-            $this->_loadDataSet()->getTable('devices'),
+            $this->loadDataSet()->getTable('devices'),
             $this->getConnection()->createQueryTable(
                 'devices',
                 'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ORDER BY hardware_id, name, ivalue'
@@ -792,7 +793,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $deployError,
         $deployGroups
     ) {
-        $model = $this->_getModel(array('Library\Now' => new \DateTime('2015-02-08 14:17:29')));
+        $model = $this->getModel(array('Library\Now' => new \DateTime('2015-02-08 14:17:29')));
         $model->updateAssignments(
             1415958319,
             3,
@@ -803,7 +804,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
             $deployGroups
         );
 
-        $dataset = $this->_loadDataSet($datasetName);
+        $dataset = $this->loadDataSet($datasetName);
         $this->assertTablesEqual(
             $dataset->getTable('devices'),
             $this->getConnection()->createQueryTable(
@@ -820,7 +821,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $data = array('Timestamp' => new \DateTime('@1415958319'));
         $clientConfig = $this->createMock('Database\Table\ClientConfig');
         $clientConfig->method('getSql')->will($this->throwException(new \RuntimeException('database error')));
-        $model = $this->_getModel(array('Database\Table\ClientConfig' => $clientConfig));
+        $model = $this->getModel(array('Database\Table\ClientConfig' => $clientConfig));
         $model->updateAssignments(1, 2, true, true, true, true, true);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Update form
  *
@@ -28,10 +29,10 @@ use Laminas\Dom\Document\Query;
  */
 class UpdateTest extends \Console\Test\AbstractFormTest
 {
-    protected function _getForm()
+    protected function getForm()
     {
         $packageManager = $this->createMock('Model\Package\PackageManager');
-        $form = new \Console\Form\Package\Update;
+        $form = new \Console\Form\Package\Update();
         $form->setOption('packageManager', $packageManager);
         $form->init();
         return $form;

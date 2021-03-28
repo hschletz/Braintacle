@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for FixEncodingErrors filter
  *
@@ -28,7 +29,7 @@ class FixEncodingErrorsTest extends \PHPUnit\Framework\TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf('Laminas\Filter\AbstractFilter', new \Library\Filter\FixEncodingErrors);
+        $this->assertInstanceOf('Laminas\Filter\AbstractFilter', new \Library\Filter\FixEncodingErrors());
     }
 
     public function testFilter()

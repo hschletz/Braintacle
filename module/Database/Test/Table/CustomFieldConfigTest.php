@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the CustomFieldConfig class
  *
@@ -41,11 +42,11 @@ class CustomFieldConfigTest extends AbstractTest
     {
         // Reset columns from CustomFields table. This requires the
         // CustomFieldConfig table to be truncated first because
-        // CustomFields::setSchema() would not drop any columns with a matching
-        // record in CustomFieldConfig.
+        // CustomFields::updateSchema() would not drop any columns with a
+        // matching record in CustomFieldConfig.
         static::$_table->delete(true);
         $customFields = static::$serviceManager->get('Database\Table\CustomFields');
-        $customFields->setSchema(true);
+        $customFields->updateSchema(true);
 
         // Create the columns matching the CustomFieldConfig fixture.
         $table = static::$_nada->getTable($customFields->getTable());
@@ -120,7 +121,7 @@ class CustomFieldConfigTest extends AbstractTest
         $this->assertThat($column->getLength(), $length);
 
         $dataSet = new \PHPUnit\DbUnit\DataSet\ReplacementDataSet(
-            $this->_loadDataSet('AddField')
+            $this->loadDataSet('AddField')
         );
         $dataSet->addFullReplacement("##ID##", $id);
         $dataSet->addFullReplacement("##TYPE##", $internalType);
@@ -143,7 +144,7 @@ class CustomFieldConfigTest extends AbstractTest
         } catch (\InvalidArgumentException $e) {
             $this->assertEquals('Invalid datatype: invalid', $e->getMessage());
             $this->assertTablesEqual(
-                $this->_loadDataSet()->getTable('accountinfo_config'),
+                $this->loadDataSet()->getTable('accountinfo_config'),
                 $this->getConnection()->createQueryTable(
                     'accountinfo_config',
                     'SELECT id, name, type, account_type, show_order FROM accountinfo_config'
@@ -192,7 +193,7 @@ class CustomFieldConfigTest extends AbstractTest
     {
         static::$_table->renameField('Text', 'Renamed field');
         $this->assertTablesEqual(
-            $this->_loadDataSet('RenameField')->getTable('accountinfo_config'),
+            $this->loadDataSet('RenameField')->getTable('accountinfo_config'),
             $this->getConnection()->createQueryTable(
                 'accountinfo_config',
                 'SELECT id, name, type, account_type, show_order FROM accountinfo_config ORDER BY id'
@@ -212,7 +213,7 @@ class CustomFieldConfigTest extends AbstractTest
 
         $this->assertArrayNotHasKey('fields_3', $columns);
         $this->assertTablesEqual(
-            $this->_loadDataSet('DeleteField')->getTable('accountinfo_config'),
+            $this->loadDataSet('DeleteField')->getTable('accountinfo_config'),
             $this->getConnection()->createQueryTable(
                 'accountinfo_config',
                 'SELECT id, name, type, account_type, show_order FROM accountinfo_config'

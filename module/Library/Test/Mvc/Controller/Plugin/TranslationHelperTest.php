@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for TranslationHelper controller plugin
  *
@@ -27,7 +28,7 @@ namespace Library\Test\Mvc\Controller\Plugin;
 class TranslationHelperTest extends AbstractTest
 {
     /** {@inheritdoc} */
-    protected function _getPluginName()
+    protected function getPluginName()
     {
         // The TranslationHelper plugin is notregistered under its own name.
         return '_';
@@ -35,7 +36,7 @@ class TranslationHelperTest extends AbstractTest
 
     public function testInvoke()
     {
-        $plugin = $this->_getPlugin();
+        $plugin = $this->getPlugin();
         $this->assertEquals('message', $plugin('message'));
     }
 }

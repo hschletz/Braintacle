@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Controller for all package related actions
  *

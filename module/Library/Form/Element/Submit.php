@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Submit button with improved button text handling
  *

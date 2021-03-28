@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "blacklist_serials" table
  *
@@ -40,9 +41,9 @@ class DuplicateSerials extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _preSetSchema($logger, $schema, $database, $prune)
+    protected function preSetSchema($logger, $schema, $database, $prune)
     {
         // Drop obsolete autoincrement column to avoid MySQL error when setting new PK
-        $this->_dropColumnIfExists($logger, $database, 'id');
+        $this->dropColumnIfExists($logger, $database, 'id');
     }
 }

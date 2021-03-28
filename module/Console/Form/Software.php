@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form for accepting/ignoring software
  *
@@ -108,7 +109,7 @@ class Software extends \Console\Form\Form
         if ($this->has('Software')) {
             $this->remove('Software');
         }
-        $fieldset= new \Laminas\Form\Fieldset('Software');
+        $fieldset = new \Laminas\Form\Fieldset('Software');
         $this->add($fieldset);
 
         foreach ($names as $name) {

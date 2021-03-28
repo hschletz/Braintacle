@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Software hydrator
  *
@@ -30,7 +31,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
 
         $databaseHydrator = $this->createMock(\Database\Hydrator\Software::class);
         $hydrator = new \Protocol\Hydrator\Software($databaseHydrator);
-        $hydrator->hydrate([], new \stdClass);
+        $hydrator->hydrate([], new \stdClass());
     }
 
     public function extractProvider()

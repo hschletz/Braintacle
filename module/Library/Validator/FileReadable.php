@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Validate string to be a path to a readable file
  *

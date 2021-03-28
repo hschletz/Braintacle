@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Edit form
  *
@@ -36,7 +37,7 @@ class EditTest extends \Console\Test\AbstractFormTest
     }
 
     /** {@inheritdoc} */
-    protected function _getForm()
+    protected function getForm()
     {
         $form = new \Console\Form\Account\Edit(
             null,

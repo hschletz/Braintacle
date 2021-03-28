@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ExtensionSlot item plugin
  *

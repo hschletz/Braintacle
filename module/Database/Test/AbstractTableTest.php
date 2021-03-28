@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for AbstractTable helper methods
  *
@@ -120,7 +121,7 @@ class AbstractTableTest extends \PHPUnit\Framework\TestCase
 
     public function testFetchColWithOtherHydrator()
     {
-        $hydrator = new \Database\Test\TestHydrator;
+        $hydrator = new \Database\Test\TestHydrator();
 
         $resultSet = $this->createMock('Laminas\Db\ResultSet\HydratingResultSet');
         $resultSet->method('getHydrator')->willReturn($hydrator);

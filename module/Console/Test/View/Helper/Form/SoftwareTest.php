@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the ManageRegistryValues Helper
  *
@@ -31,7 +32,7 @@ use Laminas\View\Renderer\PhpRenderer;
 class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
 {
     /** {@inheritdoc} */
-    protected function _getHelperName()
+    protected function getHelperName()
     {
         return 'consoleFormSoftware';
     }
@@ -119,7 +120,7 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
         $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('plugin')->with('formRow')->willReturn($formRow);
 
-        $helper = $this->getMockBuilder($this->_getHelperClass())
+        $helper = $this->getMockBuilder($this->getHelperClass())
                        ->disableOriginalConstructor()
                        ->setMethodsExcept(['renderButtons'])
                        ->getMock();
@@ -230,7 +231,7 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
             ['consoleUrl', null, $consoleUrl],
         ]);
 
-        $helper = $this->getMockBuilder($this->_getHelperClass())
+        $helper = $this->getMockBuilder($this->getHelperClass())
                        ->disableOriginalConstructor()
                        ->setMethodsExcept(['renderSoftwareFieldset'])
                        ->getMock();

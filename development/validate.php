@@ -1,5 +1,6 @@
 #!/usr/bin/php
 <?php
+
 /**
  * Validate code formatting
  *
@@ -25,10 +26,11 @@ error_reporting(-1);
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $cmd = [
-    (new \Symfony\Component\Process\PhpExecutableFinder)->find(),
+    (new \Symfony\Component\Process\PhpExecutableFinder())->find(),
     \Library\Application::getPath('vendor/bin/phpcs'),
     '-n', // suppress warnings
-    '--standard=PSR2',
+    '--report-width=120',
+    '--standard=PSR12',
     '--extensions=php',
     \Library\Application::getPath('development'),
     \Library\Application::getPath('module'),

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class for managing custom fields
  *
@@ -82,7 +83,7 @@ class CustomFieldManager
     /**
      * Populate field caches
      */
-    private function _getFieldInfo()
+    private function getFieldInfo()
     {
         $this->_fields = array();
         $this->_columnMap = array();
@@ -100,7 +101,7 @@ class CustomFieldManager
     public function getFields()
     {
         if (!($this->_fields)) {
-            $this->_getFieldInfo();
+            $this->getFieldInfo();
         }
         return $this->_fields;
     }
@@ -113,7 +114,7 @@ class CustomFieldManager
     public function getColumnMap()
     {
         if (!$this->_columnMap) {
-            $this->_getFieldInfo();
+            $this->getFieldInfo();
         }
         return $this->_columnMap;
     }
@@ -217,7 +218,7 @@ class CustomFieldManager
     {
         if (!$this->_hydrator) {
             $columns = $this->getColumnMap();
-            $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
+            $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
             $this->_hydrator->setNamingStrategy(
                 new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                     array_flip($columns)
@@ -243,7 +244,7 @@ class CustomFieldManager
      */
     public function read($clientId)
     {
-        $fields = new \Model\Client\CustomFields;
+        $fields = new \Model\Client\CustomFields();
         $select = $this->_customFields->getSql()->select();
         $select->columns(array_values($this->getColumnMap()))
                ->where(array('hardware_id' => $clientId));

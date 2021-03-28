@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the Search Helper
  *
@@ -27,7 +28,7 @@ use Laminas\View\Renderer\PhpRenderer;
 
 class SearchTest extends \Library\Test\View\Helper\AbstractTest
 {
-    protected function _getHelperName()
+    protected function getHelperName()
     {
         return 'consoleFormSearch';
     }

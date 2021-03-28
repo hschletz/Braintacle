@@ -1,4 +1,5 @@
 <?php
+
 /**
  * A form for entering an MS product key
  *
@@ -41,7 +42,7 @@ class ProductKey extends Form
         $submit->setLabel('OK');
         $this->add($submit);
 
-        $inputFilter = new \Laminas\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter();
         $inputFilter->add(
             array(
                 'name' => 'Key',

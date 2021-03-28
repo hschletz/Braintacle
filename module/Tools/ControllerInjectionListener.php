@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Listener for injection of the controller service
  *

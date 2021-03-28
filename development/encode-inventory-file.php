@@ -1,5 +1,6 @@
 #!/usr/bin/php
 <?php
+
 /**
  * Encode a file as compressed inventory data
  *

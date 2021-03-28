@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "operators" table
  *
@@ -49,7 +50,7 @@ class Operators extends \Database\AbstractTable
             'email' => 'MailAddress',
             'comments' => 'Comment',
         );
-        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy($map)
         );
@@ -66,7 +67,7 @@ class Operators extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _preSetSchema($logger, $schema, $database, $prune)
+    protected function preSetSchema($logger, $schema, $database, $prune)
     {
         // Drop non-admin accounts
         $logger->debug('Checking for non-admin accounts.');
@@ -89,20 +90,21 @@ class Operators extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _setSchema($logger, $schema, $database, $prune)
+    protected function setSchema($logger, $schema, $database, $prune)
     {
         $index = array_search('password_version', array_column($schema['columns'], 'name'));
-        if (in_array($this->table, $database->getTableNames()) and
+        if (
+            in_array($this->table, $database->getTableNames()) and
             !array_key_exists('password_version', $database->getTable($this->table)->getColumns())
         ) {
             $schema['columns'][$index]['notnull'] = false;
         }
-        parent::_setSchema($logger, $schema, $database, $prune);
+        parent::setSchema($logger, $schema, $database, $prune);
         if ($schema['columns'][$index]['notnull'] == false) {
             $logger->info('Setting legacy hash type on existing accounts');
             $this->update(array('password_version' => self::HASH_LEGACY));
             $schema['columns'][$index]['notnull'] = true;
-            parent::_setSchema($logger, $schema, $database, $prune);
+            parent::setSchema($logger, $schema, $database, $prune);
         }
     }
 
@@ -110,7 +112,7 @@ class Operators extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _postSetSchema($logger, $schema, $database, $prune)
+    protected function postSetSchema($logger, $schema, $database, $prune)
     {
         $logger->debug('Checking for existing account.');
         if ($this->select()->count() == 0) {
@@ -139,7 +141,8 @@ class Operators extends \Database\AbstractTable
                     )
                 );
             }
-            if (($operator['password_version'] == self::HASH_LEGACY and $operator['passwd'] == $md5Default) or
+            if (
+                ($operator['password_version'] == self::HASH_LEGACY and $operator['passwd'] == $md5Default) or
                 ($operator['password_version'] == self::HASH_DEFAULT and password_verify('admin', $operator['passwd']))
             ) {
                 $logger->warn(

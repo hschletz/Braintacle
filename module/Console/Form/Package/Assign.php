@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form for assigning packages to a client or group
  *
@@ -63,7 +64,7 @@ class Assign extends \Console\Form\Form
         if ($this->has('Packages')) {
             $this->remove('Packages');
         }
-        $fieldset= new \Laminas\Form\Fieldset('Packages');
+        $fieldset = new \Laminas\Form\Fieldset('Packages');
         $this->add($fieldset);
 
         foreach ($packages as $package) {

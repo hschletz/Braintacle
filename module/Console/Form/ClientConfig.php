@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Client/group configuration
  *
@@ -41,24 +42,24 @@ class ClientConfig extends Form
     public function init()
     {
         parent::init();
-        $inputFilter = new \Laminas\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter();
 
         // Agent options
         $agent = new \Laminas\Form\Fieldset('Agent');
         $agent->setLabel('Agent');
-        $inputFilterAgent = new \Laminas\InputFilter\InputFilter;
+        $inputFilterAgent = new \Laminas\InputFilter\InputFilter();
 
         $contactInterval = new Element\Text('contactInterval');
         $contactInterval->setLabel('Agent contact interval (in hours)')
                         ->setAttribute('size', '5');
         $agent->add($contactInterval);
-        $inputFilterAgent->add($this->_getIntegerFilter('contactInterval', 1));
+        $inputFilterAgent->add($this->getIntegerFilter('contactInterval', 1));
 
         $inventoryInterval = new Element\Text('inventoryInterval');
         $inventoryInterval->setLabel('Inventory interval (in days, 0 = always, -1 = never)')
                           ->setAttribute('size', '5');
         $agent->add($inventoryInterval);
-        $inputFilterAgent->add($this->_getIntegerFilter('inventoryInterval', -1));
+        $inputFilterAgent->add($this->getIntegerFilter('inventoryInterval', -1));
 
         $this->add($agent);
         $inputFilter->add($inputFilterAgent, 'Agent');
@@ -66,7 +67,7 @@ class ClientConfig extends Form
         // Download options
         $download = new \Laminas\Form\Fieldset('Download');
         $download->setLabel('Download');
-        $inputFilterDownload = new \Laminas\InputFilter\InputFilter;
+        $inputFilterDownload = new \Laminas\InputFilter\InputFilter();
 
         $packageDeployment = new Element\Checkbox('packageDeployment');
         $packageDeployment->setLabel('Enable package download');
@@ -77,31 +78,31 @@ class ClientConfig extends Form
         $downloadPeriodDelay->setLabel('Delay (in seconds) between periods')
                             ->setAttribute('size', '5');
         $download->add($downloadPeriodDelay);
-        $inputFilterDownload->add($this->_getIntegerFilter('downloadPeriodDelay', 1));
+        $inputFilterDownload->add($this->getIntegerFilter('downloadPeriodDelay', 1));
 
         $downloadCycleDelay = new Element\Text('downloadCycleDelay');
         $downloadCycleDelay->setLabel('Delay (in seconds) between cycles')
                             ->setAttribute('size', '5');
         $download->add($downloadCycleDelay);
-        $inputFilterDownload->add($this->_getIntegerFilter('downloadCycleDelay', 1));
+        $inputFilterDownload->add($this->getIntegerFilter('downloadCycleDelay', 1));
 
         $downloadFragmentDelay = new Element\Text('downloadFragmentDelay');
         $downloadFragmentDelay->setLabel('Delay (in seconds) between fragments')
                                 ->setAttribute('size', '5');
         $download->add($downloadFragmentDelay);
-        $inputFilterDownload->add($this->_getIntegerFilter('downloadFragmentDelay', 1));
+        $inputFilterDownload->add($this->getIntegerFilter('downloadFragmentDelay', 1));
 
         $downloadMaxPriority = new Element\Text('downloadMaxPriority');
         $downloadMaxPriority->setLabel('Maximum package priority')
                             ->setAttribute('size', '5');
         $download->add($downloadMaxPriority);
-        $inputFilterDownload->add($this->_getIntegerFilter('downloadMaxPriority', 1));
+        $inputFilterDownload->add($this->getIntegerFilter('downloadMaxPriority', 1));
 
         $downloadTimeout = new Element\Text('downloadTimeout');
         $downloadTimeout->setLabel('Timeout (in days)')
                         ->setAttribute('size', '5');
         $download->add($downloadTimeout);
-        $inputFilterDownload->add($this->_getIntegerFilter('downloadTimeout', 1));
+        $inputFilterDownload->add($this->getIntegerFilter('downloadTimeout', 1));
 
         $this->add($download);
         $inputFilter->add($inputFilterDownload, 'Download');
@@ -109,7 +110,7 @@ class ClientConfig extends Form
         // Network scanning options
         $scan = new \Laminas\Form\Fieldset('Scan');
         $scan->setLabel('Network scanning');
-        $inputFilterScan = new \Laminas\InputFilter\InputFilter;
+        $inputFilterScan = new \Laminas\InputFilter\InputFilter();
 
         $allowScan = new Element\Checkbox('allowScan');
         $allowScan->setLabel('Allow network scanning');
@@ -152,9 +153,9 @@ class ClientConfig extends Form
      * @param integer $min Allowed minimum value
      * @return array
      */
-    protected function _getIntegerFilter($name, $min)
+    protected function getIntegerFilter($name, $min)
     {
-        $validatorChain = new \Laminas\Validator\ValidatorChain;
+        $validatorChain = new \Laminas\Validator\ValidatorChain();
         $validatorChain->attachByName(
             'Callback',
             array('callback' => array($this, 'validateInteger')),
@@ -165,7 +166,7 @@ class ClientConfig extends Form
         // substitution here and disable further translation.
         $dummyMinValueValidator = new \Laminas\Validator\GreaterThan();
         $message = $dummyMinValueValidator->getMessageTemplates()[\Laminas\Validator\GreaterThan::NOT_GREATER_INCLUSIVE];
-        $minValueValidator = new \Laminas\Validator\Callback;
+        $minValueValidator = new \Laminas\Validator\Callback();
         $minValueValidator->setCallback(array($this, 'validateMinValue'))
                           ->setCallbackOptions($min)
                           ->setMessage(
@@ -267,9 +268,9 @@ class ClientConfig extends Form
     public function process()
     {
         $data = $this->getData();
-        $this->_processFieldset($data['Agent']);
-        $this->_processFieldset($data['Download'], 'packageDeployment');
-        $this->_processFieldset($data['Scan'], 'allowScan');
+        $this->processFieldset($data['Agent']);
+        $this->processFieldset($data['Download'], 'packageDeployment');
+        $this->processFieldset($data['Scan'], 'allowScan');
     }
 
     /**
@@ -278,7 +279,7 @@ class ClientConfig extends Form
      * @param array $data Fieldset data
      * @param string $masterElement Optional name of a checkbox that voids all other elements if unchecked.
      */
-    protected function _processFieldset($data, $masterElement = null)
+    protected function processFieldset($data, $masterElement = null)
     {
         if ($masterElement) {
             $clearValues = !$data[$masterElement];

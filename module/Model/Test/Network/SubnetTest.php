@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Network\Subnet
  *
@@ -25,12 +26,12 @@ class SubnetTest extends \Model\Test\AbstractTest
 {
     public function getDataSet()
     {
-        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet;
+        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet();
     }
 
     public function testObjectProperties()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $this->assertInstanceOf('ArrayAccess', $model);
         $this->assertTrue(method_exists($model, 'exchangeArray'));
     }
@@ -51,7 +52,7 @@ class SubnetTest extends \Model\Test\AbstractTest
      */
     public function testGetCidrAddress($address, $mask, $suffix)
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model['Address'] = $address;
         $model['Mask'] = $mask;
         $this->assertEquals("$address/$suffix", $model['CidrAddress']);
@@ -60,7 +61,7 @@ class SubnetTest extends \Model\Test\AbstractTest
     public function testGetCidrAddressInvalidAddress()
     {
         $this->expectException('DomainException');
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model['Address'] = '';
         $model['Mask'] = '';
         $model['CidrAddress'];

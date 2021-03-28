@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ManageRegistryValues form renderer
  *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Build form
  *
@@ -30,11 +31,11 @@ use Laminas\Form\Element\Text;
  */
 class BuildTest extends \Console\Test\AbstractFormTest
 {
-    protected function _getForm()
+    protected function getForm()
     {
         $packageManager = $this->createMock('Model\Package\PackageManager');
         $packageManager->method('getAllNames')->willReturn(array('name1'));
-        $form = new \Console\Form\Package\Build;
+        $form = new \Console\Form\Package\Build();
         $form->setOption('packageManager', $packageManager);
         $form->init();
         return $form;

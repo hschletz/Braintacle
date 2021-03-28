@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Helper for setting and retrieving script elements for HTML head section
  *

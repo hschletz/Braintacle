@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Base class for controller plugin tests
  *
@@ -71,7 +72,7 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
      *
      * @return string Plugin name
      */
-    protected function _getPluginName()
+    protected function getPluginName()
     {
         // Derive plugin name from test class name (minus namespace and 'Test' suffix)
         return substr(strrchr(get_class($this), '\\'), 1, -4);
@@ -82,7 +83,7 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
      *
      * @return \Laminas\Mvc\Controller\PluginManager
      */
-    protected function _getPluginManager()
+    protected function getPluginManager()
     {
         return static::$_serviceManager->get('ControllerPluginManager');
     }
@@ -95,7 +96,7 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
      * (/module/controller/action/) with defaults of "defaultcontroller" and
      * "defaultaction". An empty response is created.
      */
-    protected function _getPlugin(): PluginInterface
+    protected function getPlugin(): PluginInterface
     {
         $router = new TreeRouteStack();
         $router->addRoute(
@@ -122,10 +123,10 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
         $event->setResponse(new Response());
 
         $this->_controller = $this->getMockForAbstractClass(AbstractActionController::class);
-        $this->_controller->setPluginManager($this->_getPluginManager());
+        $this->_controller->setPluginManager($this->getPluginManager());
         $this->_controller->setEvent($event);
 
-        return $this->_controller->plugin($this->_getPluginName());
+        return $this->_controller->plugin($this->getPluginName());
     }
 
     /**
@@ -135,8 +136,8 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
     {
         $class = substr(str_replace('\Test', '', get_called_class()), 0, -4);
         // Uppercase
-        $this->assertInstanceOf($class, $this->_getPluginManager()->get($this->_getPluginName()));
+        $this->assertInstanceOf($class, $this->getPluginManager()->get($this->getPluginName()));
         // Lowercase
-        $this->assertInstanceOf($class, $this->_getPluginManager()->get(lcfirst($this->_getPluginName())));
+        $this->assertInstanceOf($class, $this->getPluginManager()->get(lcfirst($this->getPluginName())));
     }
 }

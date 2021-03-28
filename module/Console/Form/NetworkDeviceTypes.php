@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Define/delete network device types
  *
@@ -42,7 +43,7 @@ class NetworkDeviceTypes extends Form
 
         $types = new \Laminas\Form\Fieldset('Types');
         $this->add($types);
-        $inputFilterTypes = new \Laminas\InputFilter\InputFilter;
+        $inputFilterTypes = new \Laminas\InputFilter\InputFilter();
 
         $this->_definedTypes = $this->getOption('DeviceManager')->getTypeCounts();
         foreach ($this->_definedTypes as $name => $count) {
@@ -82,7 +83,7 @@ class NetworkDeviceTypes extends Form
         $submit->setLabel('Change');
         $this->add($submit);
 
-        $inputFilter = new \Laminas\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter();
         $inputFilter->add($inputFilterTypes, 'Types');
         $inputFilter->add(
             array(

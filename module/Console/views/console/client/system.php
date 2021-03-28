@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Show RAM, controllers and slots
  *

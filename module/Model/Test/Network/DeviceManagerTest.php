@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Network\DeviceManager
  *
@@ -36,11 +37,11 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
 
     public function testGetDevicesNoFilterOrderByVendorDesc()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $devices = iterator_to_array($model->getDevices(array(), 'Vendor', 'desc'));
         $this->assertCount(6, $devices);
         $this->assertContainsOnlyInstancesOf('Model\Network\Device', $devices);
-        $allDevices = $this->_loadDataSet()->getTable('netmap');
+        $allDevices = $this->loadDataSet()->getTable('netmap');
         // Ordered by MAC address (best approximation for vendor)
         $this->assertEquals($allDevices->getRow(8)['mac'], $devices[0]['MacAddress']);
         $this->assertEquals($allDevices->getRow(6)['mac'], $devices[1]['MacAddress']);
@@ -52,7 +53,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
 
     public function testGetDevicesFilterByNetwork()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $devices = iterator_to_array(
             $model->getDevices(
                 array('Subnet' => '198.51.100.0', 'Mask' => '255.255.255.0'),
@@ -61,20 +62,20 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
         );
         $this->assertCount(2, $devices);
         $this->assertContainsOnlyInstancesOf('Model\Network\Device', $devices);
-        $allDevices = $this->_loadDataSet()->getTable('netmap');
+        $allDevices = $this->loadDataSet()->getTable('netmap');
         $this->assertEquals($allDevices->getRow(4)['mac'], $devices[0]['MacAddress']);
         $this->assertEquals($allDevices->getRow(6)['mac'], $devices[1]['MacAddress']);
     }
 
     public function testGetDevicesFilterByType()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $devices = iterator_to_array(
             $model->getDevices(array('Type' => 'present, inventoried interfaces'), 'Hostname')
         );
         $this->assertCount(2, $devices);
         $this->assertContainsOnlyInstancesOf('Model\Network\Device', $devices);
-        $allDevices = $this->_loadDataSet()->getTable('netmap');
+        $allDevices = $this->loadDataSet()->getTable('netmap');
         $this->assertEquals($allDevices->getRow(0)['mac'], $devices[0]['MacAddress']);
         $this->assertEquals($allDevices->getRow(2)['mac'], $devices[1]['MacAddress']);
         $this->assertEquals('device1', $devices[0]['Description']);
@@ -83,11 +84,11 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
 
     public function testGetDevicesFilterByIdentifiedTrue()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $devices = iterator_to_array($model->getDevices(array('Identified' => true), 'Hostname'));
         $this->assertCount(5, $devices);
         $this->assertContainsOnlyInstancesOf('Model\Network\Device', $devices);
-        $allDevices = $this->_loadDataSet()->getTable('netmap');
+        $allDevices = $this->loadDataSet()->getTable('netmap');
         $this->assertEquals($allDevices->getRow(0)['mac'], $devices[0]['MacAddress']);
         $this->assertEquals($allDevices->getRow(2)['mac'], $devices[1]['MacAddress']);
         $this->assertEquals($allDevices->getRow(4)['mac'], $devices[2]['MacAddress']);
@@ -100,17 +101,17 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
 
     public function testGetDevicesFilterByIdentifiedFalse()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $devices = iterator_to_array($model->getDevices(array('Identified' => false), 'Hostname'));
         $this->assertCount(1, $devices);
         $this->assertContainsOnlyInstancesOf('Model\Network\Device', $devices);
-        $allDevices = $this->_loadDataSet()->getTable('netmap');
+        $allDevices = $this->loadDataSet()->getTable('netmap');
         $this->assertEquals($allDevices->getRow(8)['mac'], $devices[0]['MacAddress']);
     }
 
     public function testGetDeviceByMacAddressIdentified()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $device = $model->getDevice(new \Library\MacAddress('00:00:5E:00:53:03'));
         $this->assertInstanceOf('Model\Network\Device', $device);
         $this->assertEquals(
@@ -128,7 +129,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
 
     public function testGetDeviceByStringNotIdentified()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $device = $model->getDevice('00:00:5E:00:53:09');
         $this->assertInstanceOf('Model\Network\Device', $device);
         $this->assertEquals(
@@ -148,7 +149,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
     {
         $this->expectException('Model\Network\RuntimeException');
         $this->expectExceptionMessage('Unknown MAC address: 00:00:5E:00:53:00');
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $device = $model->getDevice('00:00:5E:00:53:00');
     }
 
@@ -165,10 +166,10 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
      */
     public function testSaveDevice($macAddress, $dataSet)
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->saveDevice(new \Library\MacAddress($macAddress), 'new type', 'new description');
         $this->assertTablesEqual(
-            $this->_loadDataSet($dataSet)->getTable('network_devices'),
+            $this->loadDataSet($dataSet)->getTable('network_devices'),
             $this->getConnection()->createQueryTable(
                 'network_devices',
                 'SELECT macaddr, description, type FROM network_devices ORDER BY macaddr'
@@ -178,9 +179,9 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteDeviceByMacAddress()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->deleteDevice(new \Library\MacAddress('00:00:5E:00:53:01'));
-        $dataSet = $this->_loadDataSet('DeleteDevice');
+        $dataSet = $this->loadDataSet('DeleteDevice');
         $connection = $this->getConnection();
         $this->assertTablesEqual(
             $dataSet->getTable('network_devices'),
@@ -194,9 +195,9 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteDeviceByString()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->deleteDevice('00:00:5E:00:53:01');
-        $dataSet = $this->_loadDataSet('DeleteDevice');
+        $dataSet = $this->loadDataSet('DeleteDevice');
         $connection = $this->getConnection();
         $this->assertTablesEqual(
             $dataSet->getTable('network_devices'),
@@ -210,7 +211,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
 
     public function testGetTypes()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $this->assertEquals(
             array(
                 'not present, inventoried interfaces',
@@ -224,7 +225,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
 
     public function testGetTypeCounts()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $this->assertEquals(
             array(
                 'not present, inventoried interfaces' => '0',
@@ -238,10 +239,10 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
 
     public function testAddType()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->addType('new type');
         $this->assertTablesEqual(
-            $this->_loadDataSet('AddType')->getTable('devicetype'),
+            $this->loadDataSet('AddType')->getTable('devicetype'),
             $this->getConnection()->createQueryTable(
                 'devicetype',
                 'SELECT name FROM devicetype ORDER BY name'
@@ -251,7 +252,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
 
     public function testAddTypeExists()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         try {
             $model->addType('present, inventoried interfaces');
             $this->fail('Expected exception was not thrown');
@@ -261,7 +262,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
                 $e->getMessage()
             );
             $this->assertTablesEqual(
-                $this->_loadDataSet()->getTable('devicetype'),
+                $this->loadDataSet()->getTable('devicetype'),
                 $this->getConnection()->createQueryTable('devicetype', 'SELECT name FROM devicetype')
             );
         }
@@ -269,9 +270,9 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
 
     public function testRenameType()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->renameType('present, inventoried interfaces', 'new type');
-        $dataSet = $this->_loadDataSet('RenameType');
+        $dataSet = $this->loadDataSet('RenameType');
         $this->assertTablesEqual(
             $dataSet->getTable('devicetype'),
             $this->getConnection()->createQueryTable(
@@ -290,7 +291,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
 
     public function testRenameTypeNewTypeExists()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         try {
             $model->renameType('present, inventoried interfaces', 'present, inventoried interfaces');
             $this->fail('Expected exception was not thrown');
@@ -299,7 +300,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
                 'Network device type already exists: present, inventoried interfaces',
                 $e->getMessage()
             );
-            $dataSet = $this->_loadDataSet();
+            $dataSet = $this->loadDataSet();
             $this->assertTablesEqual(
                 $dataSet->getTable('devicetype'),
                 $this->getConnection()->createQueryTable('devicetype', 'SELECT name FROM devicetype')
@@ -316,7 +317,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
 
     public function testRenameTypeOldTypeDoesNotExist()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         try {
             $model->renameType('invalid', 'new type');
             $this->fail('Expected exception was not thrown');
@@ -325,7 +326,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
                 'Network device type does not exist: invalid',
                 $e->getMessage()
             );
-            $dataSet = $this->_loadDataSet();
+            $dataSet = $this->loadDataSet();
             $this->assertTablesEqual(
                 $dataSet->getTable('devicetype'),
                 $this->getConnection()->createQueryTable('devicetype', 'SELECT name FROM devicetype')
@@ -342,9 +343,9 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteType()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->deleteType('not present, inventoried interfaces');
-        $dataSet = $this->_loadDataSet('DeleteType');
+        $dataSet = $this->loadDataSet('DeleteType');
         $this->assertTablesEqual(
             $dataSet->getTable('devicetype'),
             $this->getConnection()->createQueryTable(
@@ -360,7 +361,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteTypeInUse()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         try {
             $model->deleteType('present, inventoried interfaces');
             $this->fail('Expected exception was not thrown');
@@ -369,9 +370,9 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
                 'Network device type still in use: present, inventoried interfaces',
                 $e->getMessage()
             );
-            $dataSet = $this->_loadDataSet();
+            $dataSet = $this->loadDataSet();
             $this->assertTablesEqual(
-                $this->_loadDataSet()->getTable('devicetype'),
+                $this->loadDataSet()->getTable('devicetype'),
                 $this->getConnection()->createQueryTable('devicetype', 'SELECT name FROM devicetype')
             );
             $this->assertTablesEqual(
@@ -386,7 +387,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteTypeNotExists()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         try {
             $model->deleteType('invalid');
             $this->fail('Expected exception was not thrown');
@@ -395,9 +396,9 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
                 'Network device type does not exist: invalid',
                 $e->getMessage()
             );
-            $dataSet = $this->_loadDataSet();
+            $dataSet = $this->loadDataSet();
             $this->assertTablesEqual(
-                $this->_loadDataSet()->getTable('devicetype'),
+                $this->loadDataSet()->getTable('devicetype'),
                 $this->getConnection()->createQueryTable(
                     'devicetype',
                     'SELECT name FROM devicetype ORDER BY name'

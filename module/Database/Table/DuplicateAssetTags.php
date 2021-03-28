@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "braintacle_blacklist_assettags" table
  *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form for display/setting of 'filters' preferences
  *
@@ -31,7 +32,7 @@ class Filters extends AbstractForm
     {
         parent::init();
         $preferences = $this->get('Preferences');
-        $inputFilter = new \Laminas\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter();
 
         $trustedNetworksOnly = new \Laminas\Form\Element\Checkbox('trustedNetworksOnly');
         $trustedNetworksOnly->setLabel('Limit agent connections to trusted networks');
@@ -45,7 +46,7 @@ class Filters extends AbstractForm
         $limitInventoryInterval->setLabel('Seconds between inventory processing')
                                ->setAttribute('size', 5);
         $preferences->add($limitInventoryInterval);
-        $validatorChain = new \Laminas\Validator\ValidatorChain;
+        $validatorChain = new \Laminas\Validator\ValidatorChain();
         $validatorChain->attachByName(
             'Callback',
             array(
@@ -75,7 +76,7 @@ class Filters extends AbstractForm
             )
         );
 
-        $parentFilter = new \Laminas\InputFilter\InputFilter;
+        $parentFilter = new \Laminas\InputFilter\InputFilter();
         $parentFilter->add($inputFilter, 'Preferences');
         $this->setInputFilter($parentFilter);
     }

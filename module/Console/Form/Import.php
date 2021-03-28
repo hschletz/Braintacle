@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form for inventory data upload
  *
@@ -41,7 +42,7 @@ class Import extends Form
         $submit->setLabel('Import');
         $this->add($submit);
 
-        $inputFilter = new \Laminas\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter();
         $inputFilter->add(array('name' => 'File')); // Sufficient to force uploaded file
         $this->setInputFilter($inputFilter);
     }

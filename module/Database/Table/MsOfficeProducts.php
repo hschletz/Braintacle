@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "officepack" table
  *
@@ -34,7 +35,7 @@ class MsOfficeProducts extends \Database\AbstractTable
     {
         $this->table = 'officepack';
 
-        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display all excluded clients
  *

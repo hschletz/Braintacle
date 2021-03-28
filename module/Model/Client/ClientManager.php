@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Client manager
  *
@@ -155,7 +156,7 @@ class ClientManager
                 case 'Serial':
                 case 'UserAgent':
                 case 'UserName':
-                    $select = $this->_filterByString(
+                    $select = $this->filterByString(
                         $select,
                         'Client',
                         $type,
@@ -169,7 +170,7 @@ class ClientManager
                 case 'CpuCores':
                 case 'PhysicalMemory':
                 case 'SwapMemory':
-                    $select = $this->_filterByOrdinal(
+                    $select = $this->filterByOrdinal(
                         $select,
                         'Client',
                         $type,
@@ -181,7 +182,7 @@ class ClientManager
                     break;
                 case 'InventoryDate':
                 case 'LastContactDate':
-                    $select = $this->_filterByDate(
+                    $select = $this->filterByDate(
                         $select,
                         'Client',
                         $type,
@@ -198,7 +199,7 @@ class ClientManager
                     if ($invertResult) {
                         throw new \LogicException("invertResult cannot be used on $type filter");
                     }
-                    $select = $this->_filterByPackage($select, $type, $arg, $addSearchColumns);
+                    $select = $this->filterByPackage($select, $type, $arg, $addSearchColumns);
                     break;
                 case 'Software':
                     if ($invertResult) {
@@ -255,7 +256,7 @@ class ClientManager
                 case 'Filesystem.FreeSpace':
                     // Generic integer filter
                     list($model, $property) = explode('.', $type);
-                    $select = $this->_filterByOrdinal(
+                    $select = $this->filterByOrdinal(
                         $select,
                         $model,
                         $property,
@@ -273,7 +274,7 @@ class ClientManager
                         switch ($fieldType) {
                             case 'text':
                             case 'clob':
-                                $select = $this->_filterByString(
+                                $select = $this->filterByString(
                                     $select,
                                     'CustomFields',
                                     $property,
@@ -285,7 +286,7 @@ class ClientManager
                                 break;
                             case 'integer':
                             case 'float':
-                                $select = $this->_filterByOrdinal(
+                                $select = $this->filterByOrdinal(
                                     $select,
                                     'CustomFields',
                                     $property,
@@ -296,7 +297,7 @@ class ClientManager
                                 );
                                 break;
                             case 'date':
-                                $select = $this->_filterByDate(
+                                $select = $this->filterByDate(
                                     $select,
                                     'CustomFields',
                                     $property,
@@ -311,7 +312,7 @@ class ClientManager
                         }
                     } elseif (preg_match('/^Registry\\.(.+)/', $type, $matches)) {
                         $property = $matches[1];
-                        $select = $this->_filterByString(
+                        $select = $this->filterByString(
                             $select,
                             'Registry',
                             $property,
@@ -322,7 +323,7 @@ class ClientManager
                         );
                     } elseif (preg_match('/^([a-zA-Z]+)\.([a-zA-Z]+)$/', $type, $matches)) {
                         // apply a generic string filter.
-                        $select = $this->_filterByString(
+                        $select = $this->filterByString(
                             $select,
                             $matches[1],
                             $matches[2],
@@ -439,7 +440,7 @@ class ClientManager
      * @param bool $addSearchColumns Add columns with search criteria to Select object
      * @return Laminas\Db\Sql\Select Object with filter applied
      */
-    protected function _filterByString(
+    protected function filterByString(
         $select,
         $model,
         $property,
@@ -449,7 +450,7 @@ class ClientManager
         $addSearchColumns
     ) {
         $arg = (string) $arg; // Treat NULL as empty string
-        list($tableGateway, $column) = $this->_filter($select, $model, $property, $addSearchColumns);
+        list($tableGateway, $column) = $this->filter($select, $model, $property, $addSearchColumns);
         $table = $tableGateway->getTable();
 
         // Determine comparison operator and prepare search argument
@@ -485,7 +486,7 @@ class ClientManager
      * @return Laminas\Db\Sql\Select Object with filter applied
      * @throws \DomainException if $operator is invalid
      */
-    protected function _filterByOrdinal($select, $model, $property, $arg, $operator, $invertResult, $addSearchColumns)
+    protected function filterByOrdinal($select, $model, $property, $arg, $operator, $invertResult, $addSearchColumns)
     {
         // Convert abstract operator into SQL operator
         switch ($operator) {
@@ -511,7 +512,7 @@ class ClientManager
                 throw new \DomainException('Invalid comparison operator: ' . $operator);
         }
 
-        list($tableGateway, $column) = $this->_filter($select, $model, $property, $addSearchColumns);
+        list($tableGateway, $column) = $this->filter($select, $model, $property, $addSearchColumns);
 
         $where = $tableGateway->getTable() . ".$column $operator ?";
         if ($invertResult) {
@@ -536,7 +537,7 @@ class ClientManager
      * @return Laminas\Db\Sql\Select Object with filter applied
      * @throws \DomainException if $operator is invalid
      */
-    protected function _filterByDate($select, $model, $property, $arg, $operator, $invertResult, $addSearchColumns)
+    protected function filterByDate($select, $model, $property, $arg, $operator, $invertResult, $addSearchColumns)
     {
         if ($arg instanceof \DateTime) {
             $dayStart = $arg;
@@ -546,7 +547,7 @@ class ClientManager
 
         if ($model == 'CustomFields') {
             // For plain date columns a simple ordinal comparison is sufficient.
-            return $this->_filterByOrdinal(
+            return $this->filterByOrdinal(
                 $select,
                 $model,
                 $property,
@@ -579,7 +580,7 @@ class ClientManager
         $dayStart = $dayStart->format($nada->timestampFormatPhp());
         $dayNext = $dayNext->format($nada->timestampFormatPhp());
 
-        list($tableGateway, $column) = $this->_filter($select, $model, $property, $addSearchColumns);
+        list($tableGateway, $column) = $this->filter($select, $model, $property, $addSearchColumns);
         $table = $tableGateway->getTable();
         $operand = "$table.$column";
 
@@ -632,7 +633,7 @@ class ClientManager
      * @param bool $addSearchColumns Add columns with search criteria (Package.Status)
      * @return Laminas\Db\Sql\Select Object with filter applied
      */
-    protected function _filterByPackage($select, $filter, $package, $addSearchColumns)
+    protected function filterByPackage($select, $filter, $package, $addSearchColumns)
     {
         switch ($filter) {
             case 'PackagePending':
@@ -677,7 +678,7 @@ class ClientManager
      * @param bool $addSearchColumns Add columns with search criteria
      * @return array Table gateway and column of search criteria
      */
-    protected function _filter($select, $model, $property, $addSearchColumns)
+    protected function filter($select, $model, $property, $addSearchColumns)
     {
         // Determine table name and column alias
         switch ($model) {
@@ -744,7 +745,7 @@ class ClientManager
                 $joinedTable = array(
                     'name' => $table,
                     'on' => "$table.$fk = clients.id",
-                    'columns'=> array(),
+                    'columns' => array(),
                     'type' => Select::JOIN_INNER
                 );
             }

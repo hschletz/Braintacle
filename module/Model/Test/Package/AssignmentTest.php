@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Package\Assignment
  *
@@ -31,12 +32,12 @@ class AssignmentTest extends \Model\Test\AbstractTest
     /** {@inheritdoc} */
     public function getDataSet()
     {
-        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet;
+        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet();
     }
 
     public function testObjectProperties()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $this->assertInstanceOf('ArrayAccess', $model);
         $this->assertTrue(method_exists($model, 'exchangeArray'));
     }

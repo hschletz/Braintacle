@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Information about a client's windows installation
  *

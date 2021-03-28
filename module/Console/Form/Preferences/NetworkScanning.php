@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form for display/setting of 'network scanning' preferences
  *
@@ -31,13 +32,13 @@ class NetworkScanning extends AbstractForm
     {
         parent::init();
         $preferences = $this->get('Preferences');
-        $inputFilter = new \Laminas\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter();
 
         $scannersPerSubnet = new \Laminas\Form\Element\Text('scannersPerSubnet');
         $scannersPerSubnet->setLabel('Number of scanning clients per subnet')
                           ->setAttribute('size', 5);
         $preferences->add($scannersPerSubnet);
-        $inputFilter->add($this->_getIntegerFilter('scannersPerSubnet', -1));
+        $inputFilter->add($this->getIntegerFilter('scannersPerSubnet', -1));
 
         $scanSnmp = new \Laminas\Form\Element\Checkbox('scanSnmp');
         $scanSnmp->setLabel('Use SNMP');
@@ -47,21 +48,21 @@ class NetworkScanning extends AbstractForm
         $scannerMinDays->setLabel('Minimum days before a scanning client is replaced')
                        ->setAttribute('size', 5);
         $preferences->add($scannerMinDays);
-        $inputFilter->add($this->_getIntegerFilter('scannerMinDays', 0));
+        $inputFilter->add($this->getIntegerFilter('scannerMinDays', 0));
 
         $scannerMaxDays = new \Laminas\Form\Element\Text('scannerMaxDays');
         $scannerMaxDays->setLabel('Maximum days before a scanning client is replaced')
                        ->setAttribute('size', 5);
         $preferences->add($scannerMaxDays);
-        $inputFilter->add($this->_getIntegerFilter('scannerMaxDays', 0));
+        $inputFilter->add($this->getIntegerFilter('scannerMaxDays', 0));
 
         $scanArpDelay = new \Laminas\Form\Element\Text('scanArpDelay');
         $scanArpDelay->setLabel('Delay (in milliseconds) between ARP requests')
                      ->setAttribute('size', 5);
         $preferences->add($scanArpDelay);
-        $inputFilter->add($this->_getIntegerFilter('scanArpDelay', 9));
+        $inputFilter->add($this->getIntegerFilter('scanArpDelay', 9));
 
-        $parentFilter = new \Laminas\InputFilter\InputFilter;
+        $parentFilter = new \Laminas\InputFilter\InputFilter();
         $parentFilter->add($inputFilter, 'Preferences');
         $this->setInputFilter($parentFilter);
     }
@@ -73,9 +74,9 @@ class NetworkScanning extends AbstractForm
      * @param integer $min 'min' option to passt to GreaterThan validator
      * @return array
      */
-    protected function _getIntegerFilter($name, $min)
+    protected function getIntegerFilter($name, $min)
     {
-        $validatorChain = new \Laminas\Validator\ValidatorChain;
+        $validatorChain = new \Laminas\Validator\ValidatorChain();
         $validatorChain->attachByName(
             'Callback',
             array(

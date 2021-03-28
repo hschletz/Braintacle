@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Library\Random
  *
@@ -36,7 +37,7 @@ class RandomTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetInteger($strong)
     {
-        $random = new \Library\Random;
+        $random = new \Library\Random();
         for ($i = 0; $i < 20; $i++) {
             $value = $random->getInteger(0, 5, $strong);
             $this->assertGreaterThanOrEqual(0, $value);

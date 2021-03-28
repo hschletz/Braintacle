@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "cpus" table
  *
@@ -34,7 +35,7 @@ class Cpu extends \Database\AbstractTable
     {
         $this->table = 'cpus';
 
-        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(

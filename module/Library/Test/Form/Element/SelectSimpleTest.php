@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for \Library\Form\Element\SelectSimple
  *
@@ -28,9 +29,9 @@ class SelectSimpleTest extends \PHPUnit\Framework\TestCase
 {
     public function testInArrayValidator()
     {
-        $element = new \Library\Form\Element\SelectSimple;
+        $element = new \Library\Form\Element\SelectSimple();
         $element->setValueOptions(array('option1', 'option2'));
-        $factory = new \Laminas\InputFilter\Factory;
+        $factory = new \Laminas\InputFilter\Factory();
         $input = $factory->createInput($element->getInputSpecification());
         $input->setValue('option1');
         $this->assertTrue($input->isValid());
@@ -48,6 +49,6 @@ class SelectSimpleTest extends \PHPUnit\Framework\TestCase
         );
         $method = new \ReflectionMethod('Library\Form\Element\SelectSimple', 'getOptionValue');
         $method->setAccessible(true);
-        $method->invoke(new \Library\Form\Element\SelectSimple, '', array());
+        $method->invoke(new \Library\Form\Element\SelectSimple(), '', array());
     }
 }

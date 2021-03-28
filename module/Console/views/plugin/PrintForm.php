@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Generic view script to display a form
  *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Abstract controller test case
  *
@@ -84,7 +85,7 @@ abstract class AbstractControllerTest extends \Laminas\Test\PHPUnit\Controller\A
      * @param string $name Plugin name
      * @return \Laminas\Mvc\Controller\Plugin\PluginInterface Plugin instance
      */
-    protected function _getControllerPlugin($name)
+    protected function getControllerPlugin($name)
     {
         return $this->getApplicationServiceLocator()->get('ControllerPluginManager')->get($name);
     }
@@ -92,13 +93,13 @@ abstract class AbstractControllerTest extends \Laminas\Test\PHPUnit\Controller\A
     /**
      * Replace MvcTranslator service with a dummy translator to allow injecting test messages without warning
      */
-    protected function _disableTranslator()
+    protected function disableTranslator()
     {
         $serviceManager = $this->getApplicationServiceLocator();
         $serviceManager->setAllowOverride(true);
         $serviceManager->setService(
             'MvcTranslator',
-            new \Laminas\Mvc\I18n\Translator(new \Laminas\I18n\Translator\Translator)
+            new \Laminas\Mvc\I18n\Translator(new \Laminas\I18n\Translator\Translator())
         );
     }
 

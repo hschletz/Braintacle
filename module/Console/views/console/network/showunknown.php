@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display unknown devices on a subnet.
  *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "printers" table
  *
@@ -32,7 +33,7 @@ class Printers extends \Database\AbstractTable
      */
     public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(

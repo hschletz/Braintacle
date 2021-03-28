@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the FileObject class
  *
@@ -21,8 +22,8 @@
 
 namespace Library\Test;
 
-use \Library\FileObject;
-use \org\bovigo\vfs\vfsStream;
+use Library\FileObject;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * Tests for the FileObject class

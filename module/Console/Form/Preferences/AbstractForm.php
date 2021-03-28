@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Base class for display/setting of preferences
  *

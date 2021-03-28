@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Abstract form test case
  *
@@ -59,7 +60,7 @@ abstract class AbstractFormTest extends \PHPUnit\Framework\TestCase
         $this->_defaultTranslatorBackup = \Laminas\Validator\AbstractValidator::getDefaultTranslator();
         \Laminas\Validator\AbstractValidator::setDefaultTranslator($translator);
 
-        $this->_form = $this->_getForm();
+        $this->_form = $this->getForm();
     }
 
     public function tearDown(): void
@@ -83,10 +84,10 @@ abstract class AbstractFormTest extends \PHPUnit\Framework\TestCase
      * construct the form instance manually. The overridden method is
      * responsible for calling init() on the form.
      */
-    protected function _getForm()
+    protected function getForm()
     {
-        $class = $this->_getFormClass();
-        $form = new $class;
+        $class = $this->getFormClass();
+        $form = new $class();
         $form->init();
         return $form;
     }
@@ -96,7 +97,7 @@ abstract class AbstractFormTest extends \PHPUnit\Framework\TestCase
      *
      * @return string Form class name
      */
-    protected function _getFormClass()
+    protected function getFormClass()
     {
         // Derive form class from test class name (minus \Test namespace and 'Test' suffix)
         return substr(str_replace('\Test', '', get_class($this)), 0, -4);
@@ -111,7 +112,7 @@ abstract class AbstractFormTest extends \PHPUnit\Framework\TestCase
      *
      * @return \Laminas\View\Renderer\PhpRenderer
      */
-    protected function _createView()
+    protected function createView()
     {
         $serviceManager = \Library\Application::init('Console')->getServiceManager();
         $serviceManager->setService(
@@ -122,7 +123,7 @@ abstract class AbstractFormTest extends \PHPUnit\Framework\TestCase
                 ),
             )
         );
-        $view = new \Laminas\View\Renderer\PhpRenderer;
+        $view = new \Laminas\View\Renderer\PhpRenderer();
         $view->setHelperPluginManager(clone $serviceManager->get('ViewHelperManager'));
         return $view;
     }
@@ -161,7 +162,7 @@ abstract class AbstractFormTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertInstanceOf('Console\Form\Form', $this->_form);
 
-        $classes = 'form ' . substr(strtr(strtolower($this->_getFormClass()), '\\', '_'), 8);
+        $classes = 'form ' . substr(strtr(strtolower($this->getFormClass()), '\\', '_'), 8);
         $pattern = '/(.+ )?' . preg_quote($classes, '/') . '( .+)?/';
         $this->assertMatchesRegularExpression($pattern, $this->_form->getAttribute('class'));
 

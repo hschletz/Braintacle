@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for DeleteClient
  *
@@ -41,7 +42,7 @@ class DeleteClientTest extends \Console\Test\AbstractFormTest
     }
 
     /** {@inheritdoc} */
-    protected function _getForm()
+    protected function getForm()
     {
         $form = new \Console\Form\DeleteClient(null, array('config' => $this->_config));
         $form->init();
@@ -64,7 +65,7 @@ class DeleteClientTest extends \Console\Test\AbstractFormTest
                       ->method('__get')
                       ->with('defaultDeleteInterfaces')
                       ->willReturn(1);
-        $this->assertTrue($this->_getForm()->get('DeleteInterfaces')->isChecked());
+        $this->assertTrue($this->getForm()->get('DeleteInterfaces')->isChecked());
     }
 
     public function testDeleteInterfacesDefaultUnchecked()
@@ -73,12 +74,12 @@ class DeleteClientTest extends \Console\Test\AbstractFormTest
                       ->method('__get')
                       ->with('defaultDeleteInterfaces')
                       ->willReturn(0);
-        $this->assertFalse($this->_getForm()->get('DeleteInterfaces')->isChecked());
+        $this->assertFalse($this->getForm()->get('DeleteInterfaces')->isChecked());
     }
 
     public function testRender()
     {
-        $output = $this->_form->render($this->_createView());
+        $output = $this->_form->render($this->createView());
         $document = new \Laminas\Dom\Document($output);
         $this->assertCount(
             1,

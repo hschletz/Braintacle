@@ -1,4 +1,5 @@
 <?php
+
 /**
  * A network device (router, printer, uninventoried workstation etc.)
  *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "netmap" table
  *
@@ -34,7 +35,7 @@ class NetworkDevicesScanned extends \Database\AbstractTable
     {
         $this->table = 'netmap';
 
-        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(
@@ -55,7 +56,7 @@ class NetworkDevicesScanned extends \Database\AbstractTable
         $this->_hydrator->addStrategy('DiscoveryDate', $dateTimeFormatter);
         $this->_hydrator->addStrategy('date', $dateTimeFormatter);
 
-        $macAddress = new \Library\Hydrator\Strategy\MacAddress;
+        $macAddress = new \Library\Hydrator\Strategy\MacAddress();
         $this->_hydrator->addStrategy('MacAddress', $macAddress);
         $this->_hydrator->addStrategy('mac', $macAddress);
 

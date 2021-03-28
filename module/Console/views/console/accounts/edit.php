@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display user account form for editing
  *

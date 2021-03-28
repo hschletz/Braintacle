@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for ClientsBios hydrator
  *
@@ -56,8 +57,8 @@ class ClientsBiosTest extends \Library\Test\Hydrator\AbstractHydratorTest
      */
     public function testHydrate(array $data, array $objectData)
     {
-        $hydrator = $this->_getHydrator();
-        $object = new \ArrayObject;
+        $hydrator = $this->getHydrator();
+        $object = new \ArrayObject();
         $object['IdString'] = 'ignored';
         $this->assertSame($object, $hydrator->hydrate($data, $object));
         $this->assertEquals($objectData, $object->getArrayCopy());

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display inventoried registry keys
  *

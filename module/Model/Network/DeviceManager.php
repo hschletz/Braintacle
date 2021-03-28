@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Network device manager
  *

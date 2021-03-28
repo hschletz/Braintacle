@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for DatabaseProxy hydrator
  *
@@ -25,7 +26,7 @@ class DatabaseProxyTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetHydrator()
     {
-        $hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
+        $hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $proxy = new \Protocol\Hydrator\DatabaseProxy($hydrator);
         $this->assertSame($hydrator, $proxy->getHydrator());
     }
@@ -33,7 +34,7 @@ class DatabaseProxyTest extends \PHPUnit\Framework\TestCase
     public function testHydrate()
     {
         $data = array('KEY1' => 'value1', 'KEY2' => 'value2');
-        $object = new \ArrayObject;
+        $object = new \ArrayObject();
         $hydrator = $this->createMock(\Laminas\Hydrator\HydratorInterface::class);
         $hydrator->expects($this->once())
                  ->method('hydrate')
@@ -45,7 +46,7 @@ class DatabaseProxyTest extends \PHPUnit\Framework\TestCase
 
     public function testExtract()
     {
-        $object = new \ArrayObject;
+        $object = new \ArrayObject();
         $hydrator = $this->createMock(\Laminas\Hydrator\HydratorInterface::class);
         $hydrator->expects($this->once())
                  ->method('extract')

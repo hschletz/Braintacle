@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for UserConfigFactory
  *
@@ -73,7 +74,7 @@ EOT;
     {
         $this->_envBackup = getenv('BRAINTACLE_CONFIG');
 
-        $this->_factory = new \Library\Service\UserConfigFactory;
+        $this->_factory = new \Library\Service\UserConfigFactory();
         $this->_container = $this->createMock('Laminas\ServiceManager\ServiceManager');
     }
 
@@ -135,7 +136,7 @@ EOT;
                          ->with('ApplicationConfig')
                          ->willReturn(array());
 
-        $reader = new \Laminas\Config\Reader\Ini;
+        $reader = new \Laminas\Config\Reader\Ini();
         $iniContentParsed = $reader->fromFile(\Library\Application::getPath('config/braintacle.ini'));
 
         $this->assertEquals($iniContentParsed, $this->_factory->__invoke($this->_container, 'foo'));
@@ -150,7 +151,7 @@ EOT;
                          ->with('ApplicationConfig')
                          ->willReturn(array());
 
-        $reader = new \Laminas\Config\Reader\Ini;
+        $reader = new \Laminas\Config\Reader\Ini();
         $iniContentParsed = $reader->fromFile(\Library\Application::getPath('config/braintacle.ini'));
 
         $this->assertEquals($iniContentParsed, $this->_factory->__invoke($this->_container, 'foo'));

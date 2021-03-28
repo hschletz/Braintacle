@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Extension slot (PCI, PCIe, AGP, ISA, PCMCIA and similar)
  *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * StorageDevice item plugin
  *
@@ -40,7 +41,7 @@ class StorageDevice extends AddOsColumns
                 'disksize',
                 'serialnumber',
                 'firmware',
-                'is_android' => $this->_getIsAndroidExpression(),
+                'is_android' => $this->getIsAndroidExpression(),
             )
         );
     }

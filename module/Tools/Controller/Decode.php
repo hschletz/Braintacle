@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Decode a compressed inventory file
  *
@@ -54,7 +55,7 @@ class Decode implements ControllerInterface
         try {
             $content = $this->inventoryDecodeFilter->filter(FileObject::fileGetContents($inputFile));
             if ($outputFile) {
-                $filesystem = new Filesystem;
+                $filesystem = new Filesystem();
                 $filesystem->dumpFile($outputFile, $content);
             } else {
                 $output->write($content);

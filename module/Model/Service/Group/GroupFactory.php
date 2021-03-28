@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Factory for Model\Group\Group
  *
@@ -32,7 +33,7 @@ class GroupFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
         $requestedName,
         array $options = null
     ) {
-        $group = new \Model\Group\Group;
+        $group = new \Model\Group\Group();
         $group->setServiceLocator($container);
         return $group;
     }

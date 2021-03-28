@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form for managing a client's group memberships
  *
@@ -102,7 +103,7 @@ class GroupMemberships extends Form
         if ($this->has('Groups')) {
             $this->remove('Groups');
         }
-        $fieldset= new \Laminas\Form\Fieldset('Groups');
+        $fieldset = new \Laminas\Form\Fieldset('Groups');
         $this->add($fieldset);
 
         $buttons = array(

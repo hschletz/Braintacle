@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Software item plugin
  *
@@ -48,7 +49,7 @@ class Software extends AddOsColumns
             'installation_date',
             'architecture',
             'size',
-            'is_android' => $this->_getIsAndroidExpression(),
+            'is_android' => $this->getIsAndroidExpression(),
             'display',
         ]);
     }

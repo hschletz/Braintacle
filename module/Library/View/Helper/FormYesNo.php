@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Render a Yes/No form with caption
  *

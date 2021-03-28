@@ -1,5 +1,6 @@
 #!/usr/bin/php
 <?php
+
 /**
  * Run all unit tests in appropriate order (lower level stuff first)
  *
@@ -130,7 +131,7 @@ class Run
             $databases[] = null;
         } else {
             // Get available sections
-            $reader = new \Laminas\Config\Reader\Ini;
+            $reader = new \Laminas\Config\Reader\Ini();
             $config = $reader->fromFile(__DIR__ . '/../config/braintacle.ini');
 
             // Remove reserved sections

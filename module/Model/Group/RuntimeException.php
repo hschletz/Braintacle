@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Exception thrown by GroupManager on runtime errors
  *

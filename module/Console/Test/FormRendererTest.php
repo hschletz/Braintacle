@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form renderer test case
  *
@@ -34,18 +35,18 @@ class FormRendererTest extends \PHPUnit\Framework\TestCase
      *
      * @return \Laminas\View\Renderer\PhpRenderer
      */
-    protected function _createView()
+    protected function createView()
     {
         $serviceManager = \Library\Application::init('Console')->getServiceManager();
         $serviceManager->setService('Library\UserConfig', array());
-        $view = new \Laminas\View\Renderer\PhpRenderer;
+        $view = new \Laminas\View\Renderer\PhpRenderer();
         $view->setHelperPluginManager($serviceManager->get('ViewHelperManager'));
         return $view;
     }
 
     public function testRenderFieldsetWithoutId()
     {
-        $view = $this->_createView();
+        $view = $this->createView();
         $view->plugin('FormRow')->setTranslatorEnabled(false);
 
         $text1 = new \Laminas\Form\Element\Text('text1');
@@ -55,7 +56,7 @@ class FormRendererTest extends \PHPUnit\Framework\TestCase
         $text2->setMessages(array('message'));
         $submit = new \Laminas\Form\Element\Submit('submit');
 
-        $form = new \Console\Form\Form;
+        $form = new \Console\Form\Form();
         $form->init();
         $form->add($text1);
         $form->add($text2);
@@ -77,7 +78,7 @@ EOT;
 
     public function testRenderFieldsetWithId()
     {
-        $view = $this->_createView();
+        $view = $this->createView();
         $view->plugin('FormRow')->setTranslatorEnabled(false);
         $view->plugin('FormLabel')->setTranslatorEnabled(false);
 
@@ -88,7 +89,7 @@ EOT;
         $text2->setMessages(array('message'));
         $submit = new \Laminas\Form\Element\Submit('submit');
 
-        $form = new \Console\Form\Form;
+        $form = new \Console\Form\Form();
         $form->init();
         $form->add($text1);
         $form->add($text2);
@@ -114,14 +115,14 @@ EOT;
 
     public function testRenderFieldsetWithoutLabel()
     {
-        $view = $this->_createView();
+        $view = $this->createView();
 
         $text1 = new \Laminas\Form\Element\Text('text1');
         $text2 = new \Laminas\Form\Element\Text('text2');
         $text2->setMessages(array('message'));
         $submit = new \Laminas\Form\Element\Submit('submit');
 
-        $form = new \Console\Form\Form;
+        $form = new \Console\Form\Form();
         $form->init();
         $form->add($text1);
         $form->add($text2);
@@ -154,7 +155,7 @@ EOT;
                    ->willReturnCallback(function ($string) {
                        return "$string-translated";
                    });
-        $view = $this->_createView();
+        $view = $this->createView();
         $view->plugin('translate')->setTranslator($translator);
         $view->plugin('FormRow')->setTranslatorEnabled(false);
 
@@ -168,7 +169,7 @@ EOT;
         $text3->setLabel('Text3');
         $fieldset->add($text3);
 
-        $form = new \Console\Form\Form;
+        $form = new \Console\Form\Form();
         $form->init();
         $form->add($text1);
         $form->add($fieldset);

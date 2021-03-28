@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\ClientOrGroup
  *
@@ -29,7 +30,7 @@ class ClientOrGroupTest extends AbstractTest
     protected $_currentTimestamp;
 
     /** {@inheritdoc} */
-    protected function _loadDataSet($testName = null)
+    protected function loadDataSet($testName = null)
     {
         // Get current time from database as reference point for all operations.
         $this->_currentTimestamp = new \DateTime(
@@ -40,7 +41,7 @@ class ClientOrGroupTest extends AbstractTest
             new \DateTimeZone('UTC')
         );
 
-        $dataSet = parent::_loadDataSet($testName);
+        $dataSet = parent::loadDataSet($testName);
         $locks = $dataSet->getTable('locks');
         if ($locks) {
             // Replace offsets with timestamps (current - offset)
@@ -66,7 +67,7 @@ class ClientOrGroupTest extends AbstractTest
      */
     public function assertLocksTableEquals($dataSetName)
     {
-        $dataSetTable = $this->_loadDataSet($dataSetName)->getTable('locks');
+        $dataSetTable = $this->loadDataSet($dataSetName)->getTable('locks');
         $queryTable = $this->getConnection()->createQueryTable(
             'locks',
             'SELECT hardware_id, since FROM locks ORDER BY hardware_id'
@@ -91,7 +92,7 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testDestructor()
     {
-        $model = $this->getMockBuilder($this->_getClass())->setMethods(array('unlock'))->getMockForAbstractClass();
+        $model = $this->getMockBuilder($this->getClass())->setMethods(array('unlock'))->getMockForAbstractClass();
         $model->expects($this->once())->method('unlock');
         $model->__destruct();
     }
@@ -111,7 +112,7 @@ class ClientOrGroupTest extends AbstractTest
             )
         );
 
-        $model = $this->getMockBuilder($this->_getClass())->getMockForAbstractClass();
+        $model = $this->getMockBuilder($this->getClass())->getMockForAbstractClass();
         $model->setServiceLocator($serviceManager);
         $model['Id'] = 23;
 
@@ -148,7 +149,7 @@ class ClientOrGroupTest extends AbstractTest
             )
         );
 
-        $model = $this->getMockBuilder($this->_getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
+        $model = $this->getMockBuilder($this->getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
         $model->setServiceLocator($serviceManager);
         $model['Id'] = $id;
 
@@ -159,11 +160,11 @@ class ClientOrGroupTest extends AbstractTest
     public function testLockRaceCondition()
     {
         $sql = $this->createMock('\Laminas\Db\Sql\Sql');
-        $sql->method('select')->willReturn(new \Laminas\Db\Sql\Select);
+        $sql->method('select')->willReturn(new \Laminas\Db\Sql\Select());
 
         $locks = $this->createMock('Database\Table\Locks');
         $locks->method('getSql')->willReturn($sql);
-        $locks->method('selectWith')->willReturn(new \ArrayIterator);
+        $locks->method('selectWith')->willReturn(new \ArrayIterator());
         $locks->method('insert')->will($this->throwException(new \RuntimeException('race condition')));
 
         $config = $this->createMock('Model\Config');
@@ -178,7 +179,7 @@ class ClientOrGroupTest extends AbstractTest
             )
         );
 
-        $model = $this->getMockBuilder($this->_getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
+        $model = $this->getMockBuilder($this->getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
         $model->setServiceLocator($serviceManager);
         $model['Id'] = 42;
 
@@ -187,7 +188,7 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testUnlockWithoutLock()
     {
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('__destruct', 'isLocked'))
                       ->getMockForAbstractClass();
         $model->expects($this->once())->method('isLocked')->willReturn(false);
@@ -205,7 +206,7 @@ class ClientOrGroupTest extends AbstractTest
             )
         );
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('__destruct', 'isLocked'))
                       ->getMockForAbstractClass();
         $model->expects($this->once())->method('isLocked')->willReturn(true);
@@ -234,7 +235,7 @@ class ClientOrGroupTest extends AbstractTest
             )
         );
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('__destruct', 'isLocked'))
                       ->getMockForAbstractClass();
         $model->expects($this->once())->method('isLocked')->willReturn(true);
@@ -259,13 +260,13 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testIsLockedFalse()
     {
-        $model = $this->getMockBuilder($this->_getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
+        $model = $this->getMockBuilder($this->getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
         $this->assertFalse($model->isLocked());
     }
 
     public function testIsLockedTrue()
     {
-        $model = $this->getMockBuilder($this->_getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
+        $model = $this->getMockBuilder($this->getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
 
         $expire = new \ReflectionProperty($model, '_lockNestCount');
         $expire->setAccessible(true);
@@ -289,7 +290,7 @@ class ClientOrGroupTest extends AbstractTest
             )
         );
 
-        $model = $this->getMockBuilder($this->_getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
+        $model = $this->getMockBuilder($this->getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
         $model->setServiceLocator($serviceManager);
         $model['Id'] = 23;
 
@@ -303,7 +304,7 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testGetAssignablePackages()
     {
-        $model = $this->getMockBuilder($this->_getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
+        $model = $this->getMockBuilder($this->getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
         $model->setServiceLocator(static::$serviceManager);
         $model['Id'] = 1;
         $this->assertEquals(array('package1', 'package3'), $model->getAssignablePackages());
@@ -342,7 +343,7 @@ class ClientOrGroupTest extends AbstractTest
             )
         );
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('__destruct', 'getAssignablePackages'))
                       ->getMockForAbstractClass();
         $model->method('getAssignablePackages')->willReturn(array('package1', 'package3'));
@@ -356,7 +357,7 @@ class ClientOrGroupTest extends AbstractTest
             $where = '';
         }
         $this->assertTablesEqual(
-            $this->_loadDataSet($dataSet)->getTable('devices'),
+            $this->loadDataSet($dataSet)->getTable('devices'),
             $this->getConnection()->createQueryTable(
                 'devices',
                 'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ' . $where .
@@ -383,13 +384,13 @@ class ClientOrGroupTest extends AbstractTest
             )
         );
 
-        $model = $this->getMockBuilder($this->_getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
+        $model = $this->getMockBuilder($this->getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
         $model->setServiceLocator($serviceManager);
         $model['Id'] = 1;
         $model->removePackage('package5');
 
         $this->assertTablesEqual(
-            $this->_loadDataSet('RemovePackage')->getTable('devices'),
+            $this->loadDataSet('RemovePackage')->getTable('devices'),
             $this->getConnection()->createQueryTable(
                 'devices',
                 'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ' .
@@ -433,7 +434,7 @@ class ClientOrGroupTest extends AbstractTest
             )
         );
 
-        $model = $this->getMockBuilder($this->_getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
+        $model = $this->getMockBuilder($this->getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
         $model->setServiceLocator($serviceManager);
         $model['Id'] = $id;
 
@@ -442,7 +443,7 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testGetConfigCached()
     {
-        $model = $this->getMockBuilder($this->_getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
+        $model = $this->getMockBuilder($this->getClass())->setMethods(array('__destruct'))->getMockForAbstractClass();
         $model['Id'] = 42;
 
         $cache = new \ReflectionProperty($model, '_configCache');
@@ -487,7 +488,7 @@ class ClientOrGroupTest extends AbstractTest
             )
         );
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('__destruct', 'getConfig'))
                       ->getMockForAbstractClass();
         if ($normalizedValue === null) {
@@ -500,7 +501,7 @@ class ClientOrGroupTest extends AbstractTest
 
         $model->setConfig($option, $value);
         $this->assertTablesEqual(
-            $this->_loadDataSet($dataSet)->getTable('devices'),
+            $this->loadDataSet($dataSet)->getTable('devices'),
             $this->getConnection()->createQueryTable(
                 'devices',
                 'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ' .
@@ -528,7 +529,7 @@ class ClientOrGroupTest extends AbstractTest
             )
         );
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('__destruct', 'getConfig'))
                       ->getMockForAbstractClass();
         $model->expects($this->once())->method('getConfig')->with('inventoryInterval')->willReturn(23);
@@ -590,7 +591,7 @@ class ClientOrGroupTest extends AbstractTest
         $expectedAllowScan,
         $expectedScanSnmp
     ) {
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethodsExcept(['getAllConfig'])
                       ->getMock();
 
@@ -633,7 +634,7 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testGetAllConfigNonCompactWithNullValues()
     {
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethodsExcept(['getAllConfig'])
                       ->getMock();
         $model->method('getConfig')->willReturn(null);
@@ -663,7 +664,7 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testGetExplicitConfigWithNonNullValues()
     {
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethodsExcept(['getExplicitConfig'])
                       ->getMock();
 
@@ -700,7 +701,7 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testGetExplicitConfigWithNullValues()
     {
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethodsExcept(['getExplicitConfig'])
                       ->getMock();
         $model->method('getConfig')->willReturn(null);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Test setup for Tests on GroupInfo table
  *
@@ -52,7 +53,7 @@ abstract class AbstractGroupTest extends \Model\Test\AbstractTest
             );
 
             $this->_groupInfo = new \Database\Table\GroupInfo($serviceManager);
-            $this->_groupInfo->setSchema(true);
+            $this->_groupInfo->updateSchema(true);
             $this->_groupInfo->initialize();
         }
         parent::setUp();

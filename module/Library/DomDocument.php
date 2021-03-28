@@ -1,4 +1,5 @@
 <?php
+
 /**
  * DOM document
  *
@@ -97,7 +98,7 @@ class DomDocument extends \TheSeer\fDOM\fDOMDocument
         // Don't use parent::save(). It won't report a disk full condition, and
         // a truncated file would remain on disk.
         $xml = $this->saveXml(null, $options);
-        $fileSystem = new \Symfony\Component\Filesystem\Filesystem;
+        $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
         $fileSystem->dumpFile($filename, $xml);
         return strlen($xml);
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display assigned and installable packages
  *

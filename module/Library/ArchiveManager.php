@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Frontend for different archive file types
  *
@@ -81,7 +82,7 @@ class ArchiveManager
         $isArchive = false;
         switch ($type) {
             case self::ZIP:
-                $zip = new \ZipArchive;
+                $zip = new \ZipArchive();
                 if ($zip->open($filename) === true) {
                     $zip->close();
                     $isArchive = true;
@@ -117,7 +118,7 @@ class ArchiveManager
         }
         switch ($type) {
             case self::ZIP:
-                $archive = new \ZipArchive;
+                $archive = new \ZipArchive();
                 // open() may throw an error on PHP 8 while earlier versions
                 // return FALSE. Handle both cases uniformly.
                 try {

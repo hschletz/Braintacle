@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for NotInArray validator
  *
@@ -38,7 +39,7 @@ class NotInArrayTest extends \PHPUnit\Framework\TestCase
     public function testGetHaystackSetViaSetHaystack()
     {
         $haystack = array('one', 'two');
-        $validator = new NotInArray;
+        $validator = new NotInArray();
         $validator->setHaystack($haystack);
         $this->assertEquals($haystack, $validator->getHaystack());
     }
@@ -47,13 +48,13 @@ class NotInArrayTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('Haystack is not an array');
-        $validator = new NotInArray;
+        $validator = new NotInArray();
         $validator->isValid('test');
     }
 
     public function testCaseSensitivityFlagDefaultCaseSensitive()
     {
-        $validator = new NotInArray;
+        $validator = new NotInArray();
         $this->assertEquals(NotInArray::CASE_SENSITIVE, $validator->getCaseSensitivity());
     }
 

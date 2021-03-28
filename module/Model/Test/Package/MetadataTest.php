@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Package\Metadata
  *
@@ -31,7 +32,7 @@ class MetadataTest extends \Model\Test\AbstractTest
     /** {@inheritdoc} */
     public function getDataSet()
     {
-        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet;
+        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet();
     }
 
     public function testSetPackageData()
@@ -51,7 +52,7 @@ class MetadataTest extends \Model\Test\AbstractTest
             'WarnAllowDelay' => '0',
             'PostInstMessage' => '',
         );
-        $model = new Metadata;
+        $model = new Metadata();
         $model->setPackageData($data);
 
         $this->assertEquals(1, $model->childNodes->length);
@@ -106,7 +107,7 @@ class MetadataTest extends \Model\Test\AbstractTest
             'WarnAllowDelay' => '0',
             'PostInstMessage' => '',
         );
-        $model = new Metadata;
+        $model = new Metadata();
         $model->setPackageData($data);
         $node = $model->firstChild;
 
@@ -153,7 +154,7 @@ class MetadataTest extends \Model\Test\AbstractTest
             'WarnAllowDelay' => $input,
             'PostInstMessage' => '',
         );
-        $model = new Metadata;
+        $model = new Metadata();
         $model->setPackageData($data);
         $node = $model->firstChild;
         $this->assertSame($expected, $node->getAttribute('NOTIFY_USER'));
@@ -196,7 +197,7 @@ class MetadataTest extends \Model\Test\AbstractTest
             'WarnAllowDelay' => '0',
             'PostInstMessage' => $inputMessage,
         );
-        $model = new Metadata;
+        $model = new Metadata();
         $model->setPackageData($data);
         $node = $model->firstChild;
         $this->assertSame($documentFlag, $node->getAttribute('NEED_DONE_ACTION'));
@@ -220,7 +221,7 @@ class MetadataTest extends \Model\Test\AbstractTest
             'WarnAllowDelay' => '0',
             'PostInstMessage' => '',
         );
-        $model = new Metadata;
+        $model = new Metadata();
         $model->setPackageData($data);
         $data['Priority'] = 7;
         $model->setPackageData($data);
@@ -245,7 +246,7 @@ class MetadataTest extends \Model\Test\AbstractTest
             'PostInstMessage' => '',
         );
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('_escapeMessage', 'forceValid'))
                       ->getMock();
         $model->expects($this->never())->method('forceValid');
@@ -270,7 +271,7 @@ class MetadataTest extends \Model\Test\AbstractTest
             'PostInstMessage' => '',
         );
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('_escapeMessage', 'forceValid'))
                       ->getMock();
         $model->expects($this->once())->method('forceValid');
@@ -290,7 +291,7 @@ class MetadataTest extends \Model\Test\AbstractTest
     {
         $messageEscaped = '&quot;<br><br/><br /><BR>';
         $messageUnescaped = "\"\n\n\n\n";
-        $model = new Metadata;
+        $model = new Metadata();
         $node = $model->createElement('DOWNLOAD');
         $node->setAttribute('ID', '1');
         $node->setAttribute('PRI', '5');
@@ -346,7 +347,7 @@ class MetadataTest extends \Model\Test\AbstractTest
      */
     public function testGetPackageDataPostinstMessage($documentFlag, $documentMessage, $resultMessage)
     {
-        $model = new Metadata;
+        $model = new Metadata();
         $node = $model->createElement('DOWNLOAD');
         $node->setAttribute('ID', '1');
         $node->setAttribute('PRI', '5');
@@ -376,7 +377,7 @@ class MetadataTest extends \Model\Test\AbstractTest
     {
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('Validation of XML document failed');
-        $model = new Metadata;
+        $model = new Metadata();
         @$model->getPackageData();
     }
 }

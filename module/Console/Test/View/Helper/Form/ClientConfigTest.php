@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the ClientConfig Helper
  *
@@ -32,7 +33,7 @@ use Model\ClientOrGroup;
 class ClientConfigTest extends \Library\Test\View\Helper\AbstractTest
 {
     /** {@inheritdoc} */
-    protected function _getHelperName()
+    protected function getHelperName()
     {
         return 'consoleFormClientConfig';
     }
@@ -178,7 +179,7 @@ class ClientConfigTest extends \Library\Test\View\Helper\AbstractTest
         );
         $view->method('plugin')->with('consoleFormFieldset')->willReturn($fieldsetHelper);
 
-        $helper = $this->getMockBuilder($this->_getHelperClass())
+        $helper = $this->getMockBuilder($this->getHelperClass())
                        ->disableOriginalConstructor()
                        ->setMethods(array('getView'))
                        ->getMock();

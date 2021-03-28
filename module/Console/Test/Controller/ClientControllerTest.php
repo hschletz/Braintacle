@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for ClientController
  *
@@ -141,12 +142,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_clientManager->expects($this->once())
                              ->method('getClient')
                              ->with(42)
-                             ->will($this->throwException(new \RuntimeException));
+                             ->will($this->throwException(new \RuntimeException()));
         $this->dispatch('/console/client/general/?id=42');
         $this->assertRedirectTo('/console/client/index/');
         $this->assertContains(
             'The requested client does not exist.',
-            $this->_getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
+            $this->getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
         );
     }
 
@@ -815,7 +816,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
         $this->_clientManager->expects($this->once())->method('getClients')->willReturn(array());
-        $this->_disableTranslator();
+        $this->disableTranslator();
         $this->dispatch('/console/client/index/');
         $this->assertXpathQuery('//ul[@class="error"]/li[text()="error"]');
         $this->assertXpathQuery('//ul[@class="success"]/li[text()="success 42"]');
@@ -2212,7 +2213,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                        ->willReturn('<ul class="success"><li>successMessage</li></ul>');
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
-        $this->_disableTranslator();
+        $this->disableTranslator();
         $this->dispatch('/console/client/customfields/?id=1');
         $this->assertXpathQueryContentContains(
             '//ul[@class="success"]/li',
@@ -2246,7 +2247,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->will($this->returnValue('<form></form>'));
         $this->dispatch('/console/client/customfields/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertEmpty($this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages());
+        $this->assertEmpty($this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages());
         $this->assertXpathQueryContentContains(
             '//p/a[@href="/console/preferences/customfields/"]',
             'Felder definieren'
@@ -2280,7 +2281,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->method('render');
         $this->dispatch('/console/client/customfields/?id=1', 'POST', $postData);
         $this->assertResponseStatusCode(200);
-        $this->assertEmpty($this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages());
+        $this->assertEmpty($this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages());
         $this->assertXpathQueryContentContains(
             '//p/a[@href="/console/preferences/customfields/"]',
             'Felder definieren'
@@ -2317,7 +2318,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/client/customfields/?id=1');
         $this->assertContains(
             'The information was successfully updated.',
-            $this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
+            $this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
         );
     }
 
@@ -2328,8 +2329,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->method('setPackages');
         $form->expects($this->never())
              ->method('render');
-        $assignments = new \Laminas\Db\ResultSet\ResultSet;
-        $assignments->initialize(new \EmptyIterator);
+        $assignments = new \Laminas\Db\ResultSet\ResultSet();
+        $assignments->initialize(new \EmptyIterator());
 
         $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())
@@ -2354,7 +2355,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->method('setPackages');
         $form->expects($this->never())
              ->method('render');
-        $assignments = new \Laminas\Db\ResultSet\ResultSet;
+        $assignments = new \Laminas\Db\ResultSet\ResultSet();
         $assignments->initialize(
             array(
                 array(
@@ -2440,8 +2441,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $map = array(
             array('Id', 1),
         );
-        $assignments = new \Laminas\Db\ResultSet\ResultSet;
-        $assignments->initialize(new \EmptyIterator);
+        $assignments = new \Laminas\Db\ResultSet\ResultSet();
+        $assignments->initialize(new \EmptyIterator());
 
         $client = $this->createMock('Model\Client\Client');
         $client->method('offsetGet')->will($this->returnValueMap($map));
@@ -2463,8 +2464,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testGroupsActionNoGroups()
     {
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
-        $resultSet->initialize(new \EmptyIterator);
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
+        $resultSet->initialize(new \EmptyIterator());
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
         $form->expects($this->never())
              ->method('render');
@@ -2488,7 +2489,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             array('Id' => 1, 'Name' => 'group1'),
             array('Id' => 2, 'Name' => 'group2'),
         );
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
         $resultSet->initialize($groups);
         $formGroups = array(
             'group1' => \Model\Client\Client::MEMBERSHIP_NEVER,
@@ -2530,7 +2531,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             array('Id' => 1, 'Name' => 'group1'),
             array('Id' => 2, 'Name' => 'group2'),
         );
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
         $resultSet->initialize($groups);
         $memberships = array(
             1 => \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
@@ -2721,7 +2722,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $postData = array('yes' => 'Yes', 'DeleteInterfaces' => '1');
         $this->dispatch('/console/client/delete/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/index/');
-        $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
+        $flashMessenger = $this->getControllerPlugin('FlashMessenger');
         $this->assertContains(
             array("Client '%s' was successfully deleted." => 'name'),
             $flashMessenger->getCurrentSuccessMessages()
@@ -2744,12 +2745,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_clientManager->expects($this->once())
                              ->method('deleteClient')
                              ->with($client, false)
-                             ->willThrowException(new \RuntimeException);
+                             ->willThrowException(new \RuntimeException());
 
         $postData = array('yes' => 'Yes', 'DeleteInterfaces' => '0');
         $this->dispatch('/console/client/delete/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/index/');
-        $flashMessenger = $this->_getControllerPlugin('FlashMessenger');
+        $flashMessenger = $this->getControllerPlugin('FlashMessenger');
         $this->assertEmpty($flashMessenger->getCurrentSuccessMessages());
         $this->assertContains(
             array("Client '%s' could not be deleted." => 'name'),

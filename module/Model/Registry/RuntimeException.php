@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Exception thrown by RegistryManager on runtime errors
  *

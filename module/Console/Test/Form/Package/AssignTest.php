@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Assign form
  *
@@ -72,7 +73,7 @@ class AssignTest extends \Console\Test\AbstractFormTest
 
     public function testRenderFieldsetNoPackages()
     {
-        $view = $this->_createView();
+        $view = $this->createView();
         $html = $this->_form->renderFieldset($view, $this->_form);
         $this->assertEquals('', $html);
     }
@@ -80,7 +81,7 @@ class AssignTest extends \Console\Test\AbstractFormTest
     public function testRenderFieldsetEmptyPackages()
     {
         $this->_form->setPackages(array());
-        $view = $this->_createView();
+        $view = $this->createView();
         $html = $this->_form->renderFieldset($view, $this->_form);
         $this->assertEquals('', $html);
     }
@@ -88,7 +89,7 @@ class AssignTest extends \Console\Test\AbstractFormTest
     public function testRenderFieldsetWithPackages()
     {
         $this->_form->setPackages(array('package1', 'package2'));
-        $view = $this->_createView();
+        $view = $this->createView();
         $html = $this->_form->renderFieldset($view, $this->_form);
         $document = new \Laminas\Dom\Document($html);
         $this->assertCount(1, Query::execute('//div[@class="table"]', $document));

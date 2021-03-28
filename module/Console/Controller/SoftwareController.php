@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Controller for all software-related actions.
  *

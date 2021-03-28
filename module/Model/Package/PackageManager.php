@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Package manager
  *
@@ -83,7 +84,7 @@ class PackageManager
             $package->exchangeArray($storage->readMetadata($package['Id']) + $package->getArrayCopy());
             return $package;
         } catch (\Exception $e) {
-            throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
+            throw new RuntimeException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -225,7 +226,7 @@ class PackageManager
                 // Ignore error (package does probably not exist at this point)
                 // and return original exception instead
             }
-            throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
+            throw new RuntimeException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -277,16 +278,16 @@ class PackageManager
             $archiveManager->addFile($archive, $source, $data['FileName']);
             $archiveManager->closeArchive($archive);
             if ($deleteSource) {
-                $fileSystem = new \Symfony\Component\Filesystem\Filesystem;
+                $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
                 $fileSystem->remove($source);
             }
         } catch (\Exception $e) {
             if (isset($archive)) {
                 $archiveManager->closeArchive($archive, true);
-                $fileSystem = new \Symfony\Component\Filesystem\Filesystem;
+                $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
                 $fileSystem->remove($filename);
             }
-            throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
+            throw new RuntimeException($e->getMessage(), (int) $e->getCode(), $e);
         }
         return $filename;
     }
@@ -319,7 +320,7 @@ class PackageManager
             $packages->delete(array('fileid' => $id));
             $storage->cleanup($id);
         } catch (\Exception $e) {
-            throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
+            throw new RuntimeException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -398,7 +399,7 @@ class PackageManager
         $clientConfig = $this->_serviceManager->get('Database\Table\ClientConfig');
         $groupInfo = $this->_serviceManager->get('Database\Table\GroupInfo');
 
-        $where = new \Laminas\Db\Sql\Where;
+        $where = new \Laminas\Db\Sql\Where();
         $where->equalTo('ivalue', $oldPackageId);
         $where->equalTo('name', 'DOWNLOAD');
 
@@ -440,7 +441,7 @@ class PackageManager
             // @codeCoverageIgnoreEnd
             if ($subquery) {
                 // $subquery is either an SQL statement or a non-empty array.
-                $delete = new \Laminas\Db\Sql\Where;
+                $delete = new \Laminas\Db\Sql\Where();
                 $delete->equalTo('ivalue', $oldPackageId)
                        ->notEqualTo('name', 'DOWNLOAD_SWITCH')
                        ->in('hardware_id', $subquery)
@@ -458,7 +459,7 @@ class PackageManager
                 $where
             );
         } catch (\Exception $e) {
-            throw new RuntimeException($e->getMessage(), (integer) $e->getCode(), $e);
+            throw new RuntimeException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 }

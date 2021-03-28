@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display identified devices on a subnet.
  *

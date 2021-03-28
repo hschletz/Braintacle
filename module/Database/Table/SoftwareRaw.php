@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "software" table
  *
@@ -44,16 +45,16 @@ class SoftwareRaw extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function _preSetSchema($logger, $schema, $database, $prune)
+    public function preSetSchema($logger, $schema, $database, $prune)
     {
         // Create/update softwareDefinitions table first because this table depends on it.
         $softwareDefinitions = $this->_serviceLocator->get('Database\Table\SoftwareDefinitions');
-        $softwareDefinitions->setSchema($prune);
+        $softwareDefinitions->updateSchema($prune);
 
         // Extra transitions on already existing table. Not necessary on table creation.
         $tables = $database->getTableNames();
         if (in_array('softwares', $tables)) {
-            $this->_rename($logger, $database, 'softwares');
+            $this->rename($logger, $database, 'softwares');
 
             $table = $database->getTable($this->table);
             $columns = $table->getColumns();

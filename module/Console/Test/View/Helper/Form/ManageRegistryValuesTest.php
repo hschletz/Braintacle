@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the ManageRegistryValues Helper
  *
@@ -33,7 +34,7 @@ use Laminas\View\Renderer\PhpRenderer;
 class ManageRegistryValuesTest extends \Library\Test\View\Helper\AbstractTest
 {
     /** {@inheritdoc} */
-    protected function _getHelperName()
+    protected function getHelperName()
     {
         return 'consoleFormManageRegistryValues';
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Package metadata XML
  *
@@ -60,12 +61,12 @@ class Metadata extends \Library\DomDocument
         $node->setAttribute('NAME', ($data['DeployAction'] == 'launch' ? $data['ActionParam'] : ''));
         $node->setAttribute('COMMAND', ($data['DeployAction'] == 'execute' ? $data['ActionParam'] : ''));
         $node->setAttribute('NOTIFY_USER', $data['Warn'] ? '1' : '0');
-        $node->setAttribute('NOTIFY_TEXT', $this->_escapeMessage($data['WarnMessage']));
+        $node->setAttribute('NOTIFY_TEXT', $this->escapeMessage($data['WarnMessage']));
         $node->setAttribute('NOTIFY_COUNTDOWN', $data['WarnCountdown']);
         $node->setAttribute('NOTIFY_CAN_ABORT', $data['WarnAllowAbort'] ? '1' : '0');
         $node->setAttribute('NOTIFY_CAN_DELAY', $data['WarnAllowDelay'] ? '1' : '0');
         $node->setAttribute('NEED_DONE_ACTION', $data['PostInstMessage'] ? '1' : '0');
-        $node->setAttribute('NEED_DONE_ACTION_TEXT', $this->_escapeMessage($data['PostInstMessage']));
+        $node->setAttribute('NEED_DONE_ACTION_TEXT', $this->escapeMessage($data['PostInstMessage']));
         $node->setAttribute('GARDEFOU', 'rien');
 
         if ($this->hasChildNodes()) {
@@ -100,12 +101,12 @@ class Metadata extends \Library\DomDocument
             'DeployAction' => $action,
             'ActionParam' => $node->getAttribute($map[$action]),
             'Warn' => $node->getAttribute('NOTIFY_USER'),
-            'WarnMessage' => $this->_unescapeMessage($node->getAttribute('NOTIFY_TEXT')),
+            'WarnMessage' => $this->unescapeMessage($node->getAttribute('NOTIFY_TEXT')),
             'WarnCountdown' => $node->getAttribute('NOTIFY_COUNTDOWN'),
             'WarnAllowAbort' => $node->getAttribute('NOTIFY_CAN_ABORT'),
             'WarnAllowDelay' => $node->getAttribute('NOTIFY_CAN_DELAY'),
             'PostInstMessage' => $node->getAttribute('NEED_DONE_ACTION') ?
-                $this->_unescapeMessage($node->getAttribute('NEED_DONE_ACTION_TEXT')) :
+                $this->unescapeMessage($node->getAttribute('NEED_DONE_ACTION_TEXT')) :
                 ''
         );
     }
@@ -126,7 +127,7 @@ class Metadata extends \Library\DomDocument
      * @param string $message User notification message
      * @return string Escaped string
      */
-    protected function _escapeMessage($message)
+    protected function escapeMessage($message)
     {
         $message = str_replace('"', '&quot;', $message);
         $message = str_replace(array("\r\n", "\n\r", "\n", "\r"), '<br>', $message);
@@ -143,7 +144,7 @@ class Metadata extends \Library\DomDocument
      * @param string $message Escaped user notification message
      * @return string Unescaped string
      */
-    protected function _unescapeMessage($message)
+    protected function unescapeMessage($message)
     {
         $message = preg_replace('#<br\s*/?>#i', "\n", $message);
         $message = str_replace('&quot;', '"', $message);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "networks" table
  *
@@ -59,8 +60,8 @@ class NetworkInterfaces extends \Database\AbstractTable
         );
         $this->_hydrator->addFilter('whitelist', new \Library\Hydrator\Filter\Whitelist(array_keys($extractionMap)));
 
-        $this->_hydrator->addStrategy('MacAddress', new \Library\Hydrator\Strategy\MacAddress);
-        $this->_hydrator->addStrategy('macaddr', new \Library\Hydrator\Strategy\MacAddress);
+        $this->_hydrator->addStrategy('MacAddress', new \Library\Hydrator\Strategy\MacAddress());
+        $this->_hydrator->addStrategy('macaddr', new \Library\Hydrator\Strategy\MacAddress());
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,

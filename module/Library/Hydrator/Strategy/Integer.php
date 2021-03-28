@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Convert values to integer on hydration, preserving NULL
  *
@@ -41,7 +42,7 @@ class Integer implements \Laminas\Hydrator\Strategy\StrategyInterface
         if (!ctype_digit($value)) {
             throw new \InvalidArgumentException('Non-integer input value: ' . $value);
         }
-        return (integer) $value;
+        return (int) $value;
     }
 
     /** {@inheritdoc} */

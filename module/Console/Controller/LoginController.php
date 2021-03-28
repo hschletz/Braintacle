@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Controller for all login-related actions.
  *
@@ -79,10 +80,12 @@ class LoginController extends \Laminas\Mvc\Controller\AbstractActionController
             if ($this->_form->isValid()) {
                 // Check credentials
                 $data = $this->_form->getData();
-                if ($this->_authenticationService->login(
-                    $data['User'],
-                    $data['Password']
-                )) {
+                if (
+                    $this->_authenticationService->login(
+                        $data['User'],
+                        $data['Password']
+                    )
+                ) {
                     // Authentication successful. Redirect to appropriate page.
                     $session = new \Laminas\Session\Container('login');
                     if (isset($session->originalUri)) {

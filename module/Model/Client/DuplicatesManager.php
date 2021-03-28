@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class for managing duplicate clients
  *
@@ -162,7 +163,7 @@ class DuplicatesManager
      * @return \Laminas\Db\Sql\Select
      * @throws \InvalidArgumentException if $criteria is invalid
      */
-    protected function _getDuplicateValues($criteria)
+    protected function getDuplicateValues($criteria)
     {
         switch ($criteria) {
             case 'Name':
@@ -209,7 +210,7 @@ class DuplicatesManager
      */
     public function count($criteria)
     {
-        $subQuery = $this->_getDuplicateValues($criteria);
+        $subQuery = $this->getDuplicateValues($criteria);
         $column = $subQuery->getRawState($subQuery::COLUMNS)[0];
         if ($criteria == 'MacAddress') {
             $table = $this->_networkInterfaces;
@@ -241,7 +242,7 @@ class DuplicatesManager
      */
     public function find($criteria, $order = 'Id', $direction = 'asc')
     {
-        $subQuery = $this->_getDuplicateValues($criteria);
+        $subQuery = $this->getDuplicateValues($criteria);
         $column = $subQuery->getRawState($subQuery::COLUMNS)[0];
 
         $select = $this->_clientManager->getClients(

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Controller for managing Braintacle user accounts
  *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display device (monitor, panel)
  *

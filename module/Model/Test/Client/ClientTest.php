@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Client\Client
  *
@@ -38,7 +39,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testObjectProperties()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $this->assertInstanceOf('ArrayAccess', $model);
         $this->assertTrue(method_exists($model, 'exchangeArray'));
     }
@@ -150,7 +151,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $customFieldManager->expects($this->once())->method('read')->with(2)->willReturn('custom_fields');
 
-        $model = $this->_getModel(array('Model\Client\CustomFieldManager' => $customFieldManager));
+        $model = $this->getModel(array('Model\Client\CustomFieldManager' => $customFieldManager));
         $model['Id'] = 2;
         $this->assertEquals('custom_fields', $model['CustomFields']);
         $this->assertEquals('custom_fields', $model['CustomFields']); // cached result
@@ -256,7 +257,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->with('Model\Config')->willReturn($config);
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('offsetGet', 'getGroups', '__destruct'))
                       ->getMock();
         $model->method('offsetGet')->willReturn(42);
@@ -277,7 +278,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->expects($this->exactly(2))->method('get')->with('Model\Config')->willReturn($config);
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('offsetGet', 'getGroups', '__destruct'))
                       ->getMock();
         $model->expects($this->exactly(3))->method('offsetGet')->willReturn(42);
@@ -291,7 +292,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testGetAllConfigWithNonNullValues()
     {
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethodsExcept(['getAllConfig'])
                       ->getMock();
 
@@ -336,7 +337,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testGetAllConfigWithNullValues()
     {
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethodsExcept(['getAllConfig'])
                       ->getMock();
         $model->method('getConfig')->willReturn(null);
@@ -367,7 +368,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testGetExplicitConfigWithNonNullValues()
     {
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethodsExcept(['getExplicitConfig'])
                       ->getMock();
 
@@ -406,7 +407,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testGetExplicitConfigWithNullValues()
     {
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethodsExcept(['getExplicitConfig'])
                       ->getMock();
         $model->method('getConfig')->willReturn(null);
@@ -455,7 +456,7 @@ class ClientTest extends \Model\Test\AbstractTest
      */
     public function testGetEffectiveConfig($option, $defaultValue, $clientValue, $expectedValue)
     {
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('offsetGet', 'getDefaultConfig', 'getConfig'))
                       ->getMock();
         $model->method('offsetGet')->with('Id')->willReturn(42);
@@ -502,7 +503,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->with('Model\Config')->willReturn($config);
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('offsetGet', 'getConfig', 'getGroups'))
                       ->getMock();
         $model->setServiceLocator($serviceManager);
@@ -515,7 +516,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testGetEffectiveConfigCache()
     {
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('offsetGet', 'getConfig'))
                       ->getMock();
         $model->method('offsetGet')->with('Id')->willReturn(42);
@@ -554,7 +555,7 @@ class ClientTest extends \Model\Test\AbstractTest
      */
     public function testGetPackageAssignments($order, $direction, $package0, $package1)
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model['Id'] = 1;
 
         $assignments = $model->getPackageAssignments($order, $direction);
@@ -568,7 +569,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testGetPackageAssignmentsDefaultOrder()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model['Id'] = 1;
 
         $assignments = $model->getPackageAssignments();
@@ -596,7 +597,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testGetDownloadedPackageIds()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model['Id'] = 1;
         $this->assertEquals(array(1, 2), $model->getDownloadedPackageIds());
     }
@@ -619,7 +620,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $packageManager = $this->createMock('Model\Package\PackageManager');
         $packageManager->method('getPackage')->with('packageName')->willReturn($package);
 
-        $model = $this->_getModel(
+        $model = $this->getModel(
             array(
                 'Library\Now' => new \DateTime('2017-05-27T19:39:25'),
                 'Model\Package\PackageManager' => $packageManager,
@@ -630,7 +631,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $model->resetPackage('packageName');
 
         $this->assertTablesEqual(
-            $this->_loadDataSet($dataset)->getTable('devices'),
+            $this->loadDataSet($dataset)->getTable('devices'),
             $this->getConnection()->createQueryTable(
                 'devices',
                 'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ORDER BY hardware_id, name, ivalue'
@@ -645,7 +646,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $packageManager = $this->createMock('Model\Package\PackageManager');
         $packageManager->method('getPackage')->with('packageName')->willReturn($package);
 
-        $model = $this->_getModel(array('Model\Package\PackageManager' => $packageManager));
+        $model = $this->getModel(array('Model\Package\PackageManager' => $packageManager));
         $model['Id'] = 1;
 
         try {
@@ -656,7 +657,7 @@ class ClientTest extends \Model\Test\AbstractTest
         }
 
         $this->assertTablesEqual(
-            $this->_loadDataSet()->getTable('devices'),
+            $this->loadDataSet()->getTable('devices'),
             $this->getConnection()->createQueryTable(
                 'devices',
                 'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ORDER BY hardware_id, name, ivalue'
@@ -694,7 +695,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $clientConfig->method('selectWith')->willReturn($resultSet);
         $clientConfig->method('getAdapter')->willReturn($adapter);
 
-        $model = $this->_getModel(
+        $model = $this->getModel(
             array(
                 'Database\Table\ClientConfig' => $clientConfig,
                 'Model\Package\PackageManager' => $packageManager,
@@ -730,7 +731,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('test message');
 
-        $model = $this->_getModel([
+        $model = $this->getModel([
                 'Database\Table\ClientConfig' => $clientConfig,
                 'Model\Package\PackageManager' => $packageManager,
         ]);
@@ -836,7 +837,7 @@ class ClientTest extends \Model\Test\AbstractTest
                            )
                        );
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('getGroupMemberships', '__destruct'))
                       ->setConstructorArgs(array(array('Id' => 42)))
                       ->getMock();
@@ -906,7 +907,7 @@ class ClientTest extends \Model\Test\AbstractTest
                            )
                        );
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('getGroupMemberships', '__destruct'))
                       ->setConstructorArgs(array(array('Id' => 42)))
                       ->getMock();
@@ -976,7 +977,7 @@ class ClientTest extends \Model\Test\AbstractTest
                            )
                        );
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('getGroupMemberships', '__destruct'))
                       ->setConstructorArgs(array(array('Id' => 42)))
                       ->getMock();
@@ -1038,7 +1039,7 @@ class ClientTest extends \Model\Test\AbstractTest
                            )
                        );
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('getGroupMemberships', '__destruct'))
                       ->setConstructorArgs(array(array('Id' => 42)))
                       ->getMock();
@@ -1093,7 +1094,7 @@ class ClientTest extends \Model\Test\AbstractTest
                            )
                        );
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('getGroupMemberships', '__destruct'))
                       ->setConstructorArgs(array(array('Id' => 42)))
                       ->getMock();
@@ -1122,7 +1123,7 @@ class ClientTest extends \Model\Test\AbstractTest
                            array(array('Model\Group\GroupManager', $groupManager))
                        );
 
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setMethods(array('getGroupMemberships', '__destruct'))
                       ->setConstructorArgs(array(array('Id' => 42)))
                       ->getMock();
@@ -1175,7 +1176,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $groupManager = $this->createMock('Model\Group\GroupManager');
         $groupManager->expects($this->once())->method('updateCache');
 
-        $model = $this->_getModel(array('Model\Group\GroupManager' => $groupManager));
+        $model = $this->getModel(array('Model\Group\GroupManager' => $groupManager));
         $model['Id'] = 1;
 
         $this->assertSame($expected, $model->getGroupMemberships($type));
@@ -1186,7 +1187,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Bad value for membership: 42');
 
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->getGroupMemberships(42);
     }
 
@@ -1199,7 +1200,7 @@ class ClientTest extends \Model\Test\AbstractTest
             new \ArrayIterator($groups)
         );
 
-        $model = $this->_getModel(array('Model\Group\GroupManager' => $groupManager));
+        $model = $this->getModel(array('Model\Group\GroupManager' => $groupManager));
         $model['Id'] = 42;
 
         $this->assertEquals($groups, $model->getGroups());
@@ -1211,7 +1212,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $customFieldManager->expects($this->once())->method('write')->with(42, 'data');
 
-        $model = $this->_getModel(array('Model\Client\CustomFieldManager' => $customFieldManager));
+        $model = $this->getModel(array('Model\Client\CustomFieldManager' => $customFieldManager));
         $model['Id'] = 42;
 
         $model->setCustomFields('data');
@@ -1221,7 +1222,7 @@ class ClientTest extends \Model\Test\AbstractTest
     {
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
 
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->setServiceLocator($serviceManager);
 
         // DomDocument constructor must be preserved. Otherwise setting the

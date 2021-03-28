@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Included by group templates to render headline and group navigation
  *

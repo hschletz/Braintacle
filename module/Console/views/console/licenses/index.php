@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display overview of software licenses
  *

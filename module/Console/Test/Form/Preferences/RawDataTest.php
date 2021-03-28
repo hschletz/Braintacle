@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for DawData form
  *
@@ -21,7 +22,7 @@
 
 namespace Console\Test\Form\Preferences;
 
-use \org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStream;
 use Laminas\Dom\Document\Query;
 
 class RawDataTest extends \Console\Test\AbstractFormTest
@@ -98,7 +99,7 @@ class RawDataTest extends \Console\Test\AbstractFormTest
 
     public function testSelectOptionsTranslated()
     {
-        $view = $this->_createView();
+        $view = $this->createView();
         $preferences = $this->_form->get('Preferences');
         $html = $this->_form->renderFieldset($view, $preferences);
         $document = new \Laminas\Dom\Document($html);

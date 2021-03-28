@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for LogLevel filter
  *
@@ -28,7 +29,7 @@ class LogLevelTest extends \PHPUnit\Framework\TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf('Laminas\Filter\AbstractFilter', new \Library\Filter\LogLevel);
+        $this->assertInstanceOf('Laminas\Filter\AbstractFilter', new \Library\Filter\LogLevel());
     }
 
     public function filterProvider()

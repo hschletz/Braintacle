@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Service for generating random values
  *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Convert log level descriptor strings (case insensitive) to Laminas\Log\Logger constants
  *

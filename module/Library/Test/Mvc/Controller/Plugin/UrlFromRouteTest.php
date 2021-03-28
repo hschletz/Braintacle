@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for UrlFromRoute controller plugin
  *
@@ -32,7 +33,7 @@ class UrlFromRouteTest extends AbstractTest
      */
     public function testInvoke()
     {
-        $plugin = $this->_getPlugin();
+        $plugin = $this->getPlugin();
 
         $this->assertEquals(
             '/module/defaultcontroller/defaultaction/',

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the FilterDescription helper
  *
@@ -52,7 +53,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     {
         $this->assertEquals(
             "42 Clients, die auf Installation von Paket &#039;&gt;Name&#039; warten",
-            $this->_getHelper()->__invoke('PackagePending', '>Name', 42)
+            $this->getHelper()->__invoke('PackagePending', '>Name', 42)
         );
     }
 
@@ -60,7 +61,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     {
         $this->assertEquals(
             "42 Clients mit laufender Installation von Paket &#039;&gt;Name&#039;",
-            $this->_getHelper()->__invoke('PackageRunning', '>Name', 42)
+            $this->getHelper()->__invoke('PackageRunning', '>Name', 42)
         );
     }
 
@@ -68,7 +69,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     {
         $this->assertEquals(
             "42 Clients mit erfolgreich installiertem Paket &#039;&gt;Name&#039;",
-            $this->_getHelper()->__invoke('PackageSuccess', '>Name', 42)
+            $this->getHelper()->__invoke('PackageSuccess', '>Name', 42)
         );
     }
 
@@ -76,7 +77,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     {
         $this->assertEquals(
             "42 Clients, bei denen die Installation von Paket &#039;&gt;Name&#039; fehlgeschlagen ist",
-            $this->_getHelper()->__invoke('PackageError', '>Name', 42)
+            $this->getHelper()->__invoke('PackageError', '>Name', 42)
         );
     }
 
@@ -84,7 +85,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     {
         $this->assertEquals(
             "42 Clients, auf denen die Software &#039;&gt;Name&#039; installiert ist",
-            $this->_getHelper()->__invoke('Software', '>Name', 42)
+            $this->getHelper()->__invoke('Software', '>Name', 42)
         );
     }
 
@@ -92,7 +93,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     {
         $this->assertEquals(
             '42 Clients mit manuell eingegebenem Windows-Lizenzschlüssel',
-            $this->_getHelper()->__invoke('Windows.ManualProductKey', 'dummy', 42)
+            $this->getHelper()->__invoke('Windows.ManualProductKey', 'dummy', 42)
         );
     }
 
@@ -102,7 +103,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
             'InvalidArgumentException',
             'No description available for this set of multiple filters'
         );
-        $this->_getHelper()->__invoke(array('NetworkInterface.Subnet'), null, 42);
+        $this->getHelper()->__invoke(array('NetworkInterface.Subnet'), null, 42);
     }
 
     public function testInvalidStringFilter()
@@ -111,6 +112,6 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
             'InvalidArgumentException',
             'No description available for filter invalid'
         );
-        $this->_getHelper()->__invoke('invalid', null, 42);
+        $this->getHelper()->__invoke('invalid', null, 42);
     }
 }

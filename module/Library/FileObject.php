@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Replacement for \SplFileObject
  *

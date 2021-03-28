@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Abstract factory for Account forms
  *
@@ -39,7 +40,7 @@ class AccountFactory implements \Laminas\ServiceManager\Factory\AbstractFactoryI
         $requestedName,
         array $options = null
     ) {
-        $form = new $requestedName;
+        $form = new $requestedName();
         $form->setOption(
             'operatorManager',
             $container->get('Model\Operator\OperatorManager')

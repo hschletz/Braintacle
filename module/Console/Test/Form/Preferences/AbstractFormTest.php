@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for AbstractForm
  *
@@ -31,11 +32,11 @@ class AbstractFormTest extends \PHPUnit\Framework\TestCase
      *
      * @return \Laminas\View\Renderer\PhpRenderer
      */
-    protected function _createView()
+    protected function createView()
     {
         $serviceManager = \Library\Application::init('Console')->getServiceManager();
         $serviceManager->setService('Library\UserConfig', array());
-        $view = new \Laminas\View\Renderer\PhpRenderer;
+        $view = new \Laminas\View\Renderer\PhpRenderer();
         $view->setHelperPluginManager($serviceManager->get('ViewHelperManager'));
         return $view;
     }
@@ -78,7 +79,7 @@ class AbstractFormTest extends \PHPUnit\Framework\TestCase
 </div>
 
 EOT;
-        $view = $this->_createView();
+        $view = $this->createView();
         $view->plugin('FormRow')->setTranslatorEnabled(false);
         $this->assertEquals($expected, $form->renderFieldset($view, $form));
     }
@@ -129,7 +130,7 @@ EOT;
                    ->willReturnCallback(function ($string) {
                        return "$string-translated";
                    });
-        $view = $this->_createView();
+        $view = $this->createView();
         $view->plugin('translate')->setTranslator($translator);
         $view->plugin('FormRow')->setTranslatorEnabled(false);
         $this->assertEquals($expected, $form->renderFieldset($view, $form));

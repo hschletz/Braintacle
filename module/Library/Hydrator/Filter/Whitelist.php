@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Filter to keep only whitelisted properties
  *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Item plugin to add "is_windows" and "is_android" boolean columnn
  *
@@ -44,7 +45,7 @@ class AddOsColumns extends DefaultPlugin
      *
      * @return \Laminas\Db\Sql\Literal
      */
-    protected function _getIsAndroidExpression()
+    protected function getIsAndroidExpression()
     {
         return new \Laminas\Db\Sql\Literal('EXISTS(SELECT 1 FROM javainfos WHERE javainfos.hardware_id = hardware.id)');
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Interface for form view helpers
  *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Base class for table interface tests
  *
@@ -52,8 +53,8 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
      */
     public static function setUpBeforeClass(): void
     {
-        static::$_table = static::$serviceManager->get(static::_getClass());
-        static::$_table->setSchema(true);
+        static::$_table = static::$serviceManager->get(static::getClass());
+        static::$_table->updateSchema(true);
         parent::setUpBeforeClass();
     }
 
@@ -70,7 +71,7 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
         }
         return $this->_db;
     }
- 
+
     /**
      * Set up fixture from data/Test/Classname.yaml
      *
@@ -78,7 +79,7 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
      */
     public function getDataSet()
     {
-        return $this->_loadDataSet();
+        return $this->loadDataSet();
     }
 
     /**
@@ -87,9 +88,9 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
      * @param string $testName Test name. If NULL, the fixture dataset for the test class is loaded.
      * @return \PHPUnit\DbUnit\DataSet\IDataSet
      */
-    protected function _loadDataSet($testName = null)
+    protected function loadDataSet($testName = null)
     {
-        $class = $this->_getClass();
+        $class = $this->getClass();
         $class = substr($class, strrpos($class, '\\') + 1); // Remove namespace
         $file = "data/Test/$class";
         if ($testName) {
@@ -105,7 +106,7 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
      *
      * @return string
      */
-    protected static function _getClass()
+    protected static function getClass()
     {
         // Derive table class from test class name (minus \Test namespace and 'Test' suffix)
         return substr(str_replace('\Test', '', get_called_class()), 0, -4);

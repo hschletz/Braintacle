@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form for defining and deleting inventoried registry values
  *
@@ -45,7 +46,7 @@ class ManageRegistryValues extends Form
     public function init()
     {
         parent::init();
-        $inputFilter = new \Laminas\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter();
 
         // Create list of values as array because nested iteration does not work with ResultSet objects.
         $this->_definedValues = iterator_to_array($this->getOption('registryManager')->getValueDefinitions());
@@ -53,7 +54,7 @@ class ManageRegistryValues extends Form
         // Subform for existing values
         $fieldsetExisting = new \Laminas\Form\Fieldset('existing');
         $fieldsetExisting->setLabel('Values');
-        $inputFilterExisting = new \Laminas\InputFilter\InputFilter;
+        $inputFilterExisting = new \Laminas\InputFilter\InputFilter();
         // Create text elements for existing values to rename them
         foreach ($this->_definedValues as $value) {
             $name = $value['Name'];
@@ -73,7 +74,7 @@ class ManageRegistryValues extends Form
                             'name' => 'StringLength',
                             'options' => array('max' => 255)
                         ),
-                        $this->_createBlacklistValidator($name),
+                        $this->createBlacklistValidator($name),
                     ),
                 )
             );
@@ -112,7 +113,7 @@ class ManageRegistryValues extends Form
         $submit->setLabel('Change');
         $this->add($submit);
 
-        $inputFilterNew = new \Laminas\InputFilter\InputFilter;
+        $inputFilterNew = new \Laminas\InputFilter\InputFilter();
         $inputFilterNew->add(
             array(
                 'name' => 'name',
@@ -125,7 +126,7 @@ class ManageRegistryValues extends Form
                         'name' => 'StringLength',
                         'options' => array('max' => 255)
                     ),
-                    $this->_createBlacklistValidator(),
+                    $this->createBlacklistValidator(),
                 ),
             )
         );
@@ -194,7 +195,7 @@ class ManageRegistryValues extends Form
      * @param string $name Existing name to allow (default: none)
      * @return \Library\Validator\NotInArray Validator object
      **/
-    protected function _createBlacklistValidator($name = null)
+    protected function createBlacklistValidator($name = null)
     {
         $blacklist = array();
         foreach ($this->_definedValues as $value) {

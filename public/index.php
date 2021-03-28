@@ -1,4 +1,5 @@
 <?php
+
 /**
  * All interaction with the user agent starts with this script.
  *

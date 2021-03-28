@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for form localization
  *
@@ -34,7 +35,7 @@ class FormLocalizationTest extends \PHPUnit\Framework\TestCase
 
     public function setUp(): void
     {
-        $this->_form = new \Console\Form\Form;
+        $this->_form = new \Console\Form\Form();
     }
 
     public function testLocalizeText()
@@ -177,7 +178,7 @@ class FormLocalizationTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->_form->validateType(null, null, 'float'));
 
         $this->assertFalse($this->_form->validateType('', null, 'date'));
-        $this->assertTrue($this->_form->validateType(new \DateTime, null, 'date'));
+        $this->assertTrue($this->_form->validateType(new \DateTime(), null, 'date'));
         $this->assertFalse($this->_form->validateType(null, null, 'date'));
     }
 }

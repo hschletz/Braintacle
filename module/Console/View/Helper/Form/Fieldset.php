@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Render all elements of a fieldset/form
  *

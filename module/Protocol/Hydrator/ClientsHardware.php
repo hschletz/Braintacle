@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Hydrator for clients (HARDWARE section)
  *
@@ -139,7 +140,7 @@ class ClientsHardware implements \Laminas\Hydrator\HydratorInterface
     public function __construct(\Model\Client\WindowsInstallation $windowsInstallationPrototype)
     {
         $this->_windowsInstallationPrototype = $windowsInstallationPrototype;
-        $this->_encodingFilter = new \Library\Filter\FixEncodingErrors;
+        $this->_encodingFilter = new \Library\Filter\FixEncodingErrors();
         $this->_utcTimeZone = new \DateTimeZone('UTC');
     }
 

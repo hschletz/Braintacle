@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Hydrator for storage devices
  *

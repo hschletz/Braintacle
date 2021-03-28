@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Config
  *
@@ -34,7 +35,7 @@ class ConfigTest extends AbstractTest
      */
     public function testGetDbIdentifier()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $this->assertEquals('FREQUENCY', $model->getDbIdentifier('inventoryInterval'));
         $this->expectException('InvalidArgumentException');
         $model->getDbIdentifier('invalid');
@@ -45,7 +46,7 @@ class ConfigTest extends AbstractTest
      */
     public function testMagicGet()
     {
-        $config = $this->_getModel();
+        $config = $this->getModel();
 
         // Test populated ivalue and tvalue options
         $this->assertEquals(42, $config->inventoryInterval);
@@ -59,7 +60,7 @@ class ConfigTest extends AbstractTest
 
     public function testMagicSet()
     {
-        $config = $this->_getModel();
+        $config = $this->getModel();
 
         $config->inventoryInterval = 42; // unchanged
         $config->contactInterval = 10; // new
@@ -69,7 +70,7 @@ class ConfigTest extends AbstractTest
         $config->sessionRequired = true; // ivalue true, new
         $config->trustedNetworksOnly = false; // ivalue false, new
 
-        $dataSet = $this->_loadDataSet('MagicSet');
+        $dataSet = $this->loadDataSet('MagicSet');
         $this->assertTablesEqual(
             $dataSet->getTable('config'),
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
@@ -80,7 +81,7 @@ class ConfigTest extends AbstractTest
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Invalid option: invalid');
-        $this->_getModel()->invalid = 0;
+        $this->getModel()->invalid = 0;
     }
 
     public function testMagicSetInvalidValue()
@@ -89,7 +90,7 @@ class ConfigTest extends AbstractTest
             'InvalidArgumentException',
             'Tried to set non-integer value "invalid" to integer option "inventoryInterval"'
         );
-        $this->_getModel()->inventoryInterval = 'invalid';
+        $this->getModel()->inventoryInterval = 'invalid';
     }
 
     public function testSetOptionsBooleanFalse()
@@ -100,9 +101,9 @@ class ConfigTest extends AbstractTest
             'packageDeployment' => false, // Integer storage, default 0
             'scanSnmp' => false, // Integer storage, default 1
         );
-        $this->_getModel()->setOptions($options);
+        $this->getModel()->setOptions($options);
         $this->assertTablesEqual(
-            $this->_loadDataSet('SetOptionsFalse')->getTable('config'),
+            $this->loadDataSet('SetOptionsFalse')->getTable('config'),
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
         );
     }
@@ -115,9 +116,9 @@ class ConfigTest extends AbstractTest
             'packageDeployment' => true, // Integer storage, default 0
             'scanSnmp' => true, // Integer storage, default 1
         );
-        $this->_getModel()->setOptions($options);
+        $this->getModel()->setOptions($options);
         $this->assertTablesEqual(
-            $this->_loadDataSet('SetOptionsTrue')->getTable('config'),
+            $this->loadDataSet('SetOptionsTrue')->getTable('config'),
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
         );
     }
@@ -130,9 +131,9 @@ class ConfigTest extends AbstractTest
             'packageDeployment' => 0, // Integer storage, default 0
             'scanSnmp' => 0, // Integer storage, default 1
         );
-        $this->_getModel()->setOptions($options);
+        $this->getModel()->setOptions($options);
         $this->assertTablesEqual(
-            $this->_loadDataSet('SetOptionsFalse')->getTable('config'),
+            $this->loadDataSet('SetOptionsFalse')->getTable('config'),
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
         );
     }
@@ -145,9 +146,9 @@ class ConfigTest extends AbstractTest
             'packageDeployment' => 1, // Integer storage, default 0
             'scanSnmp' => 1, // Integer storage, default 1
         );
-        $this->_getModel()->setOptions($options);
+        $this->getModel()->setOptions($options);
         $this->assertTablesEqual(
-            $this->_loadDataSet('SetOptionsTrue')->getTable('config'),
+            $this->loadDataSet('SetOptionsTrue')->getTable('config'),
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
         );
     }
@@ -160,9 +161,9 @@ class ConfigTest extends AbstractTest
             'packageDeployment' => '0', // Integer storage, default 0
             'scanSnmp' => '0', // Integer storage, default 1
         );
-        $this->_getModel()->setOptions($options);
+        $this->getModel()->setOptions($options);
         $this->assertTablesEqual(
-            $this->_loadDataSet('SetOptionsFalse')->getTable('config'),
+            $this->loadDataSet('SetOptionsFalse')->getTable('config'),
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
         );
     }
@@ -175,9 +176,9 @@ class ConfigTest extends AbstractTest
             'packageDeployment' => '1', // Integer storage, default 0
             'scanSnmp' => '1', // Integer storage, default 1
         );
-        $this->_getModel()->setOptions($options);
+        $this->getModel()->setOptions($options);
         $this->assertTablesEqual(
-            $this->_loadDataSet('SetOptionsTrue')->getTable('config'),
+            $this->loadDataSet('SetOptionsTrue')->getTable('config'),
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
         );
     }
@@ -190,32 +191,32 @@ class ConfigTest extends AbstractTest
             'packageDeployment' => '1',
             'scanSnmp' => '1',
         );
-        $this->_getModel()->setOptions(new \IteratorIterator(new \ArrayIterator($options)));
+        $this->getModel()->setOptions(new \IteratorIterator(new \ArrayIterator($options)));
         $this->assertTablesEqual(
-            $this->_loadDataSet('SetOptionsTrue')->getTable('config'),
+            $this->loadDataSet('SetOptionsTrue')->getTable('config'),
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
         );
     }
 
     public function testAutoMergeDuplicatesTrue()
     {
-        $this->_getModel()->autoMergeDuplicates = '1';
+        $this->getModel()->autoMergeDuplicates = '1';
         $this->assertTablesEqual(
-            $this->_loadDataSet('AutoMergeDuplicatesTrue')->getTable('config'),
+            $this->loadDataSet('AutoMergeDuplicatesTrue')->getTable('config'),
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
         );
         // Read value from new clone to test conversion from database content
-        $this->assertSame(1, $this->_getModel()->autoMergeDuplicates);
+        $this->assertSame(1, $this->getModel()->autoMergeDuplicates);
     }
 
     public function testAutoMergeDuplicatesFalse()
     {
-        $this->_getModel()->autoMergeDuplicates = '0';
+        $this->getModel()->autoMergeDuplicates = '0';
         $this->assertTablesEqual(
-            $this->_loadDataSet('AutoMergeDuplicatesFalse')->getTable('config'),
+            $this->loadDataSet('AutoMergeDuplicatesFalse')->getTable('config'),
             $this->getConnection()->createQueryTable('config', 'SELECT * FROM config ORDER BY name')
         );
         // Read value from new clone to test conversion from database content
-        $this->assertSame(0, $this->_getModel()->autoMergeDuplicates);
+        $this->assertSame(0, $this->getModel()->autoMergeDuplicates);
     }
 }

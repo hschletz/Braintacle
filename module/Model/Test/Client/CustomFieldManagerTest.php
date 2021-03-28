@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Client\CustomFieldManager
  *
@@ -34,7 +35,7 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
         $fieldInfo = array('field' => array('column' => 'column_name', 'type' => 'text'));
         $customFieldConfig = $this->createMock('Database\Table\CustomFieldConfig');
         $customFieldConfig->expects($this->once())->method('getFields')->willReturn($fieldInfo);
-        $model = $this->_getModel(array('Database\Table\CustomFieldConfig' => $customFieldConfig));
+        $model = $this->getModel(array('Database\Table\CustomFieldConfig' => $customFieldConfig));
 
         // The second invocation should return a cached result.
         $fields = array('field' => 'text');
@@ -47,7 +48,7 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
         $fieldInfo = array('field' => array('column' => 'column_name', 'type' => 'text'));
         $customFieldConfig = $this->createMock('Database\Table\CustomFieldConfig');
         $customFieldConfig->expects($this->once())->method('getFields')->willReturn($fieldInfo);
-        $model = $this->_getModel(array('Database\Table\CustomFieldConfig' => $customFieldConfig));
+        $model = $this->getModel(array('Database\Table\CustomFieldConfig' => $customFieldConfig));
 
         // The second invocation should return a cached result.
         $fields = array('field' => 'column_name');
@@ -61,7 +62,7 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
             'ä' => 'text', // Test case-insensitive non-ASCII characters
             'a/+b' => 'text', // Test escaping in regex
         );
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->disableOriginalConstructor()
                       ->setMethods(array('getFields'))
                       ->getMock();
@@ -259,7 +260,7 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
 
     public function testGetHydrator()
     {
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->disableOriginalConstructor()
                       ->setMethods(array('getFields', 'getColumnMap'))
                       ->getMock();
@@ -291,7 +292,7 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
 
     public function testRead()
     {
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setConstructorArgs(
                           array(
                               static::$serviceManager->get('Database\Table\CustomFieldConfig'),
@@ -304,7 +305,7 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
         $model->method('getColumnMap')->willReturn(array('TAG' => 'tag'));
 
         // Add a simple strategy to test hydration of values
-        $model->getHydrator()->addStrategy('TAG', new \Laminas\Hydrator\Strategy\ExplodeStrategy);
+        $model->getHydrator()->addStrategy('TAG', new \Laminas\Hydrator\Strategy\ExplodeStrategy());
 
         $fields = $model->read(2);
         $this->assertInstanceOf('Model\Client\CustomFields', $fields);
@@ -316,7 +317,7 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
 
     public function testReadInvalidId()
     {
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setConstructorArgs(
                           array(
                               static::$serviceManager->get('Database\Table\CustomFieldConfig'),
@@ -335,7 +336,7 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
 
     public function testWrite()
     {
-        $model = $this->getMockBuilder($this->_getClass())
+        $model = $this->getMockBuilder($this->getClass())
                       ->setConstructorArgs(
                           array(
                               static::$serviceManager->get('Database\Table\CustomFieldConfig'),
@@ -352,7 +353,7 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
 
         $model->write(2, array('TAG' => true));
         $this->assertTablesEqual(
-            $this->_loadDataset('Write')->getTable('accountinfo'),
+            $this->loadDataSet('Write')->getTable('accountinfo'),
             $this->getConnection()->createQueryTable('accountinfo', 'SELECT hardware_id, tag FROM accountinfo')
         );
     }

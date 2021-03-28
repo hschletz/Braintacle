@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for PreferencesController
  *
@@ -89,47 +90,47 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDisplayActionGet()
     {
-        $this->_testUseFormGet('display', 'Display');
+        $this->testUseFormGet('display', 'Display');
     }
 
     public function testDisplayActionPostInvalid()
     {
-        $this->_testUseFormPostInvalid('display', 'Display');
+        $this->testUseFormPostInvalid('display', 'Display');
     }
 
     public function testDisplayActionPostValid()
     {
-        $this->_testUseFormPostValid('display', 'Display');
+        $this->testUseFormPostValid('display', 'Display');
     }
 
     public function testInventoryActionGet()
     {
-        $this->_testUseFormGet('inventory', 'Inventory');
+        $this->testUseFormGet('inventory', 'Inventory');
     }
 
     public function testInventoryActionPostInvalid()
     {
-        $this->_testUseFormPostInvalid('inventory', 'Inventory');
+        $this->testUseFormPostInvalid('inventory', 'Inventory');
     }
 
     public function testInventoryActionPostValid()
     {
-        $this->_testUseFormPostValid('inventory', 'Inventory');
+        $this->testUseFormPostValid('inventory', 'Inventory');
     }
 
     public function testAgentActionGet()
     {
-        $this->_testUseFormGet('agent', 'Agent');
+        $this->testUseFormGet('agent', 'Agent');
     }
 
     public function testAgentActionPostInvalid()
     {
-        $this->_testUseFormPostInvalid('agent', 'Agent');
+        $this->testUseFormPostInvalid('agent', 'Agent');
     }
 
     public function testAgentActionPostValid()
     {
-        $this->_testUseFormPostValid('agent', 'Agent');
+        $this->testUseFormPostValid('agent', 'Agent');
     }
 
     public function testPackagesActionGet()
@@ -174,7 +175,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     public function testPackagesActionPostInvalid()
     {
         // No special test because form data is not evaluated in this test
-        $this->_testUseFormPostInvalid('packages', 'Packages');
+        $this->testUseFormPostInvalid('packages', 'Packages');
     }
 
     public function testPackagesActionPostValid()
@@ -215,92 +216,92 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testDownloadActionGet()
     {
-        $this->_testUseFormGet('download', 'Download');
+        $this->testUseFormGet('download', 'Download');
     }
 
     public function testDownloadActionPostInvalid()
     {
-        $this->_testUseFormPostInvalid('download', 'Download');
+        $this->testUseFormPostInvalid('download', 'Download');
     }
 
     public function testDownloadActionPostValid()
     {
-        $this->_testUseFormPostValid('download', 'Download');
+        $this->testUseFormPostValid('download', 'Download');
     }
 
     public function testNetworkscanningActionGet()
     {
-        $this->_testUseFormGet('networkscanning', 'NetworkScanning');
+        $this->testUseFormGet('networkscanning', 'NetworkScanning');
     }
 
     public function testNetworkscanningActionPostInvalid()
     {
-        $this->_testUseFormPostInvalid('networkscanning', 'NetworkScanning');
+        $this->testUseFormPostInvalid('networkscanning', 'NetworkScanning');
     }
 
     public function testNetworkscanningActionPostValid()
     {
-        $this->_testUseFormPostValid('networkscanning', 'NetworkScanning');
+        $this->testUseFormPostValid('networkscanning', 'NetworkScanning');
     }
 
     public function testGroupsActionGet()
     {
-        $this->_testUseFormGet('groups', 'Groups');
+        $this->testUseFormGet('groups', 'Groups');
     }
 
     public function testGroupsActionPostInvalid()
     {
-        $this->_testUseFormPostInvalid('groups', 'Groups');
+        $this->testUseFormPostInvalid('groups', 'Groups');
     }
 
     public function testGroupsActionPostValid()
     {
-        $this->_testUseFormPostValid('groups', 'Groups');
+        $this->testUseFormPostValid('groups', 'Groups');
     }
 
     public function testRawdataActionGet()
     {
-        $this->_testUseFormGet('rawdata', 'RawData');
+        $this->testUseFormGet('rawdata', 'RawData');
     }
 
     public function testRawdataActionPostInvalid()
     {
-        $this->_testUseFormPostInvalid('rawdata', 'RawData');
+        $this->testUseFormPostInvalid('rawdata', 'RawData');
     }
 
     public function testRawdataActionPostValid()
     {
-        $this->_testUseFormPostValid('rawdata', 'RawData');
+        $this->testUseFormPostValid('rawdata', 'RawData');
     }
 
     public function testFiltersActionGet()
     {
-        $this->_testUseFormGet('filters', 'Filters');
+        $this->testUseFormGet('filters', 'Filters');
     }
 
     public function testFiltersActionPostInvalid()
     {
-        $this->_testUseFormPostInvalid('filters', 'Filters');
+        $this->testUseFormPostInvalid('filters', 'Filters');
     }
 
     public function testFiltersActionPostValid()
     {
-        $this->_testUseFormPostValid('filters', 'Filters');
+        $this->testUseFormPostValid('filters', 'Filters');
     }
 
     public function testSystemActionGet()
     {
-        $this->_testUseFormGet('system', 'System');
+        $this->testUseFormGet('system', 'System');
     }
 
     public function testSystemActionPostInvalid()
     {
-        $this->_testUseFormPostInvalid('system', 'System');
+        $this->testUseFormPostInvalid('system', 'System');
     }
 
     public function testSystemActionPostValid()
     {
-        $this->_testUseFormPostValid('system', 'System');
+        $this->testUseFormPostValid('system', 'System');
     }
 
     /**
@@ -309,7 +310,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
      * @param string $action "action" part of URI
      * @param string $formClass Form name without namespace
      */
-    protected function _testUseFormGet($action, $formClass)
+    protected function testUseFormGet($action, $formClass)
     {
         $preferences = new \Laminas\Form\Fieldset('Preferences');
         $preferences->add(new \Laminas\Form\Element\Text('pref1'));
@@ -349,7 +350,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
      * @param string $action "action" part of URI
      * @param string $formClass Form name without namespace
      */
-    protected function _testUseFormPostInvalid($action, $formClass)
+    protected function testUseFormPostInvalid($action, $formClass)
     {
         $postData = array(
             'Preferences' => array('pref1' => 'value1', 'pref2' => 'value2')
@@ -383,7 +384,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
      * @param string $action "action" part of URI
      * @param string $formClass Form name without namespace
      */
-    protected function _testUseFormPostValid($action, $formClass)
+    protected function testUseFormPostValid($action, $formClass)
     {
         $postData = array(
             'Preferences' => array('pref1' => 'value1', 'pref2' => 'value2')

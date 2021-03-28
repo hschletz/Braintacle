@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Search form
  *
@@ -205,7 +206,7 @@ class Search extends Form
         $submit->setLabel('Search');
         $this->add($submit);
 
-        $inputFilter = new \Laminas\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter();
         $inputFilter->add(
             array(
                 'name' => 'search',
@@ -255,7 +256,7 @@ class Search extends Form
     {
         return $this->normalize(
             $value,
-            $this->_getTypeFromFilter($this->get('filter')->getValue())
+            $this->getTypeFromFilter($this->get('filter')->getValue())
         );
     }
 
@@ -273,7 +274,7 @@ class Search extends Form
         if (!isset($context['filter'])) {
             throw new \LogicException('No filter submitted');
         }
-        return $this->validateType($value, $context, $this->_getTypeFromFilter($context['filter']));
+        return $this->validateType($value, $context, $this->getTypeFromFilter($context['filter']));
     }
 
     /**
@@ -290,7 +291,7 @@ class Search extends Form
         if (!isset($context['filter'])) {
             throw new \LogicException('No filter submitted');
         }
-        if ($this->_getTypeFromFilter($context['filter']) == 'text') {
+        if ($this->getTypeFromFilter($context['filter']) == 'text') {
             $operators = $this->_operatorsText;
         } else {
             $operators = $this->_operatorsOrdinal;
@@ -301,7 +302,7 @@ class Search extends Form
     /** {@inheritdoc} */
     public function setData($data)
     {
-        $type = $this->_getTypeFromFilter($data['filter']);
+        $type = $this->getTypeFromFilter($data['filter']);
         $data['search'] = $this->localize(@$data['search'], $type);
         $this->get('operator')->setValueOptions(($type == 'text') ? $this->_operatorsText : $this->_operatorsOrdinal);
 
@@ -315,7 +316,7 @@ class Search extends Form
      * @return string datatype
      * @throws \InvalidArgumentException if the filter name is invalid
      **/
-    protected function _getTypeFromFilter($filter)
+    protected function getTypeFromFilter($filter)
     {
         if (!isset($this->_filters[$filter])) {
             throw new \InvalidArgumentException('Invalid filter: ' . $filter);

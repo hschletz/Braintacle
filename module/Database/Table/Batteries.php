@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "batteries" table
  *

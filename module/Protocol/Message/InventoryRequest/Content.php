@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CONTENT element of an InventoryRequest document
  *

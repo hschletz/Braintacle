@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Packages form
  *
@@ -167,7 +168,7 @@ class PackagesTest extends \Console\Test\AbstractFormTest
 
     public function testRenderFieldset()
     {
-        $view = $this->_createView();
+        $view = $this->createView();
         $html = $this->_form->render($view);
         $document = new \Laminas\Dom\Document($html);
 

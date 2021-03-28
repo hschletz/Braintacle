@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Get description for builtin client filter specification
  *

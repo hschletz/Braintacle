@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form for display/setting of 'packages' preferences
  *
@@ -32,7 +33,7 @@ class Packages extends AbstractForm
         parent::init();
 
         $preferences = $this->get('Preferences');
-        $inputFilter = new \Laminas\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter();
         $integerFilter = array(
             'name' => 'Callback',
             'options' => array(
@@ -151,7 +152,7 @@ class Packages extends AbstractForm
         $defaultPostInstMessage->setLabel('Default post-installation message');
         $preferences->add($defaultPostInstMessage);
 
-        $parentFilter = new \Laminas\InputFilter\InputFilter;
+        $parentFilter = new \Laminas\InputFilter\InputFilter();
         $parentFilter->add($inputFilter, 'Preferences');
         $this->setInputFilter($parentFilter);
     }

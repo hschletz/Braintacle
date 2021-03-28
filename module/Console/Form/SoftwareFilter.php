@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Select filter for software overview
  *

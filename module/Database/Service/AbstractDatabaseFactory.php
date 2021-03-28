@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Abstract factory for database adapter and NADA interface
  *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for DomDocument
  *
@@ -33,7 +34,7 @@ class DomDocumentTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage('Library\DomDocument has no schema defined');
-        $document = new DomDocument;
+        $document = new DomDocument();
         $document->getSchemaFilename();
     }
 
@@ -41,7 +42,7 @@ class DomDocumentTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage('Library\DomDocument has no schema defined');
-        $document = new DomDocument;
+        $document = new DomDocument();
         $document->isValid();
     }
 
@@ -83,7 +84,7 @@ class DomDocumentTest extends \PHPUnit\Framework\TestCase
     {
         $root = vfsStream::setup('root');
         $filename = $root->url() . '/test.xml';
-        $document = new DomDocument;
+        $document = new DomDocument();
         $node = $document->createElement('test');
         $document->appendChild($node);
         $length = $document->save($filename);
@@ -99,7 +100,7 @@ class DomDocumentTest extends \PHPUnit\Framework\TestCase
     {
         $root = vfsStream::setup('root');
         $filename = $root->url() . '/test.xml';
-        $document = new DomDocument;
+        $document = new DomDocument();
         $node = $document->createElement('test');
         $document->appendChild($node);
         $length = $document->save($filename, LIBXML_NOEMPTYTAG);

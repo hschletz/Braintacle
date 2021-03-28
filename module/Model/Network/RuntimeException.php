@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Exception thrown by DeviceManager on runtime errors
  *

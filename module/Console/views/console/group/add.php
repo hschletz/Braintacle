@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display form for adding search results to a group
  *

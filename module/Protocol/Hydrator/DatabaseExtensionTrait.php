@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Extension of database hydrator methods
  *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Delegator for Translator initialization
  *
@@ -85,7 +86,8 @@ class DelegatorFactory implements \Laminas\ServiceManager\Factory\DelegatorFacto
         // If a fallback locale is involved, suppress the warning for the
         // standard locale.
         $fallbackLocale = $e->getTarget()->getFallbackLocale();
-        if ((!$fallbackLocale or $e->getParam('locale') == $fallbackLocale) and
+        if (
+            (!$fallbackLocale or $e->getParam('locale') == $fallbackLocale) and
             $e->getParam('text_domain') == 'default'
         ) {
             trigger_error('Missing translation: ' . $e->getParam('message'), E_USER_NOTICE);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Software hydrator
  *
@@ -63,7 +64,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             'InstallationDate' => '_InstallationDate',
             'Architecture' => '_Architecture',
         );
-        $object = new \ArrayObject;
+        $object = new \ArrayObject();
         $this->assertSame($object, $hydrator->hydrate($agentData, $object));
         $this->assertEquals($software, $object->getArrayCopy());
     }
@@ -93,7 +94,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             'Comment' => '_comment',
             'Size' => '_size',
         );
-        $object = new \ArrayObject;
+        $object = new \ArrayObject();
         $this->assertSame($object, $hydrator->hydrate($agentData, $object));
         $this->assertEquals($software, $object->getArrayCopy());
     }
@@ -123,7 +124,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             'Publisher' => '_publisher',
             'InstallLocation' => '_install_location',
         );
-        $object = new \ArrayObject;
+        $object = new \ArrayObject();
         $this->assertSame($object, $hydrator->hydrate($agentData, $object));
         $this->assertEquals($software, $object->getArrayCopy());
     }
@@ -241,7 +242,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
      */
     public function testHydrateName($extracted, $hydrated)
     {
-        $hydrator = new \Database\Hydrator\Software;
+        $hydrator = new \Database\Hydrator\Software();
         $this->assertEquals($hydrated, $hydrator->hydrateName($extracted));
     }
 
@@ -249,7 +250,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException('DomainException');
         $this->expectExceptionMessage('Cannot hydrate name: invalid');
-        $hydrator = new \Database\Hydrator\Software;
+        $hydrator = new \Database\Hydrator\Software();
         $hydrator->hydrateName('invalid');
     }
 
@@ -275,7 +276,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
      */
     public function testExtractName($hydrated, $extracted)
     {
-        $hydrator = new \Database\Hydrator\Software;
+        $hydrator = new \Database\Hydrator\Software();
         $this->assertEquals($extracted, $hydrator->extractName($hydrated));
     }
 
@@ -283,7 +284,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException('DomainException');
         $this->expectExceptionMessage('Cannot extract name: Invalid');
-        $hydrator = new \Database\Hydrator\Software;
+        $hydrator = new \Database\Hydrator\Software();
         $hydrator->extractName('Invalid');
     }
 
@@ -311,7 +312,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
      */
     public function testHydrateValue($name, $extracted, $hydrated)
     {
-        $hydrator = new \Database\Hydrator\Software;
+        $hydrator = new \Database\Hydrator\Software();
         $this->assertEquals($hydrated, $hydrator->hydrateValue($name, $extracted));
     }
 
@@ -332,7 +333,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
      */
     public function testExtractValue($name, $hydrated, $extracted)
     {
-        $hydrator = new \Database\Hydrator\Software;
+        $hydrator = new \Database\Hydrator\Software();
         $this->assertEquals($extracted, $hydrator->extractValue($name, $hydrated));
     }
 }

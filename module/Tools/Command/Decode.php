@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Decode a compressed inventory file
  *

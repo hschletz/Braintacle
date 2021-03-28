@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the Update Helper
  *
@@ -35,7 +36,7 @@ use Laminas\View\Renderer\PhpRenderer;
 
 class UpdateTest extends \Library\Test\View\Helper\AbstractTest
 {
-    protected function _getHelperName()
+    protected function getHelperName()
     {
         return 'consoleFormPackageUpdate';
     }

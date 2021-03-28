@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the Build Helper
  *
@@ -29,7 +30,7 @@ use Laminas\View\Renderer\PhpRenderer;
 
 class BuildTest extends \Library\Test\View\Helper\AbstractTest
 {
-    protected function _getHelperName()
+    protected function getHelperName()
     {
         return 'consoleFormPackageBuild';
     }

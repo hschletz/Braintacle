@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for AuthenticationService
  *
@@ -31,7 +32,7 @@ class AuthenticationServiceTest extends \Model\Test\AbstractTest
 
     public function getDataSet()
     {
-        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet;
+        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet();
     }
 
     public function testService()
@@ -51,7 +52,7 @@ class AuthenticationServiceTest extends \Model\Test\AbstractTest
         $adapter->method('setCredential')->with('password')->willReturnSelf();
         $adapter->method('authenticate')->willReturn($result);
 
-        $service = $this->getMockBuilder($this->_getClass())
+        $service = $this->getMockBuilder($this->getClass())
                         ->disableOriginalConstructor()
                         ->setMethods(array('getAdapter', 'authenticate'))
                         ->getMock();
@@ -67,7 +68,7 @@ class AuthenticationServiceTest extends \Model\Test\AbstractTest
 
     public function testLoginEmptyUser()
     {
-        $service = $this->getMockBuilder($this->_getClass())
+        $service = $this->getMockBuilder($this->getClass())
                         ->disableOriginalConstructor()
                         ->setMethods(array('getAdapter', 'authenticate'))
                         ->getMock();
@@ -82,7 +83,7 @@ class AuthenticationServiceTest extends \Model\Test\AbstractTest
         $storage = $this->createMock('Laminas\Authentication\Storage\StorageInterface');
         $storage->expects($this->once())->method('write')->with('user');
 
-        $service = $this->getMockBuilder($this->_getClass())
+        $service = $this->getMockBuilder($this->getClass())
                         ->disableOriginalConstructor()
                         ->setMethods(array('getStorage', 'hasIdentity'))
                         ->getMock();
@@ -97,7 +98,7 @@ class AuthenticationServiceTest extends \Model\Test\AbstractTest
         $this->expectException('LogicException');
         $this->expectExceptionMessage('Cannot change identity: not authenticated yet');
 
-        $service = $this->getMockBuilder($this->_getClass())
+        $service = $this->getMockBuilder($this->getClass())
                         ->disableOriginalConstructor()
                         ->setMethods(array('getStorage', 'hasIdentity'))
                         ->getMock();
@@ -112,7 +113,7 @@ class AuthenticationServiceTest extends \Model\Test\AbstractTest
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('No identity provided');
 
-        $service = $this->getMockBuilder($this->_getClass())
+        $service = $this->getMockBuilder($this->getClass())
                         ->disableOriginalConstructor()
                         ->setMethods(array('getStorage', 'hasIdentity'))
                         ->getMock();

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Client\AndroidInstallation
  *
@@ -25,12 +26,12 @@ class AndroidInstallationTest extends \Model\Test\AbstractTest
 {
     public function getDataSet()
     {
-        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet;
+        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet();
     }
 
     public function testObjectProperties()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $this->assertInstanceOf('ArrayAccess', $model);
         $this->assertTrue(method_exists($model, 'exchangeArray'));
     }

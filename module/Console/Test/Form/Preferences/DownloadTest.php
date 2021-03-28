@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Download form
  *
@@ -21,7 +22,7 @@
 
 namespace Console\Test\Form\Preferences;
 
-use \org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStream;
 
 class DownloadTest extends \Console\Test\AbstractFormTest
 {

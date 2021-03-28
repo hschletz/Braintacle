@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Send inventory data
  *

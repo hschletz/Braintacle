@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Controller for managing preferences
  *
@@ -96,7 +97,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function displayAction()
     {
-        return $this->_useForm('Console\Form\Preferences\Display');
+        return $this->useForm('Console\Form\Preferences\Display');
     }
 
     /**
@@ -106,7 +107,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function inventoryAction()
     {
-        return $this->_useForm('Console\Form\Preferences\Inventory');
+        return $this->useForm('Console\Form\Preferences\Inventory');
     }
 
     /**
@@ -116,7 +117,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function agentAction()
     {
-        return $this->_useForm('Console\Form\Preferences\Agent');
+        return $this->useForm('Console\Form\Preferences\Agent');
     }
 
     /**
@@ -126,7 +127,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function packagesAction()
     {
-        return $this->_useForm('Console\Form\Preferences\Packages');
+        return $this->useForm('Console\Form\Preferences\Packages');
     }
 
     /**
@@ -136,7 +137,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function downloadAction()
     {
-        return $this->_useForm('Console\Form\Preferences\Download');
+        return $this->useForm('Console\Form\Preferences\Download');
     }
 
     /**
@@ -146,7 +147,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function networkscanningAction()
     {
-        return $this->_useForm('Console\Form\Preferences\NetworkScanning');
+        return $this->useForm('Console\Form\Preferences\NetworkScanning');
     }
 
     /**
@@ -156,7 +157,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function groupsAction()
     {
-        return $this->_useForm('Console\Form\Preferences\Groups');
+        return $this->useForm('Console\Form\Preferences\Groups');
     }
 
     /**
@@ -166,7 +167,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function rawdataAction()
     {
-        return $this->_useForm('Console\Form\Preferences\RawData');
+        return $this->useForm('Console\Form\Preferences\RawData');
     }
 
     /**
@@ -176,7 +177,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function filtersAction()
     {
-        return $this->_useForm('Console\Form\Preferences\Filters');
+        return $this->useForm('Console\Form\Preferences\Filters');
     }
 
     /**
@@ -186,7 +187,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function systemAction()
     {
-        return $this->_useForm('Console\Form\Preferences\System');
+        return $this->useForm('Console\Form\Preferences\System');
     }
 
     /**
@@ -305,7 +306,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      * @param string $name Name of the form service
      * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
-    protected function _useForm($name)
+    protected function useForm($name)
     {
         $form = $this->_formManager->get($name);
         if ($this->getRequest()->isPost()) {

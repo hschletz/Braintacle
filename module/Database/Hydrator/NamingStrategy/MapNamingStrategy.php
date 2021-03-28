@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Naming strategy using a map
  *
@@ -73,7 +74,8 @@ class MapNamingStrategy implements \Laminas\Hydrator\NamingStrategy\NamingStrate
     public function hydrate(string $name, ?array $data = null): string
     {
         $hydratedName = $this->mapNamingStrategy->hydrate($name, $data);
-        if ($hydratedName == $name and
+        if (
+            $hydratedName == $name and
             !isset($this->extractionMap[$name]) and
             !in_array($name, $this->hydrationMap)
         ) {

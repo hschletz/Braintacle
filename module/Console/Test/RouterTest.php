@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the module's router
  *
@@ -33,7 +34,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
     {
         $application = \Library\Application::init('Console');
         $router = $application->getServiceManager()->get('HttpRouter');
-        $request = new \Laminas\Http\Request;
+        $request = new \Laminas\Http\Request();
 
         $matchDefaultDefault = array(
             'controller' => 'client',

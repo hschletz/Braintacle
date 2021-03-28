@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Strategy for group cache dates
  *

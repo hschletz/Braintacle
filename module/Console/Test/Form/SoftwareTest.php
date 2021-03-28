@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Software form
  *
@@ -47,7 +48,7 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
                 'name2' => '1',
             )
         );
-        $form = $this->getMockBuilder($this->_getFormClass())->setMethods(array('createSoftwareFieldset', 'populateValues'))->getMock();
+        $form = $this->getMockBuilder($this->getFormClass())->setMethods(array('createSoftwareFieldset', 'populateValues'))->getMock();
         $form->expects($this->once())->method('createSoftwareFieldset')->with($this->_names, true);
         $form->expects($this->once())->method('populateValues')->with($data);
         $form->setData($data);
@@ -56,7 +57,7 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
     public function testSetDataNoSoftware()
     {
         $data = array();
-        $form = $this->getMockBuilder($this->_getFormClass())->setMethods(array('createSoftwareFieldset', 'populateValues'))->getMock();
+        $form = $this->getMockBuilder($this->getFormClass())->setMethods(array('createSoftwareFieldset', 'populateValues'))->getMock();
         $form->expects($this->once())->method('createSoftwareFieldset')->with(array(), true);
         $form->expects($this->once())->method('populateValues')->with($data);
         $form->setData($data);
@@ -68,7 +69,7 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
             array('name' => 'name1'),
             array('name' => 'name2'),
         );
-        $form = $this->getMockBuilder($this->_getFormClass())->setMethods(array('createSoftwareFieldset'))->getMock();
+        $form = $this->getMockBuilder($this->getFormClass())->setMethods(array('createSoftwareFieldset'))->getMock();
         $form->expects($this->once())->method('createSoftwareFieldset')->with($this->_names, false);
         $form->setSoftware($software);
     }
@@ -86,7 +87,7 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
      */
     public function testcreateSoftwareFieldset($names, $namesEncoded)
     {
-        $form = $this->getMockBuilder($this->_getFormClass())->setMethods(array('getOption'))->getMock();
+        $form = $this->getMockBuilder($this->getFormClass())->setMethods(array('getOption'))->getMock();
 
         $filter = $this->createMock('Library\Filter\FixEncodingErrors');
         $filter->expects($this->exactly(2))
@@ -110,7 +111,7 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
 
     public function testcreateSoftwareFieldsetRecreateFieldset()
     {
-        $form = $this->getMockBuilder($this->_getFormClass())->setMethods(array('getOption'))->getMock();
+        $form = $this->getMockBuilder($this->getFormClass())->setMethods(array('getOption'))->getMock();
 
         $filter = $this->createMock('Library\Filter\FixEncodingErrors');
         $filter->method('__invoke')->willReturn('label');
@@ -132,7 +133,7 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage('FixEncodingErrors filter not set');
-        $form = $this->_getForm();
+        $form = $this->getForm();
         $form->createSoftwareFieldset($this->_names, false);
     }
 }

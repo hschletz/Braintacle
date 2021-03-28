@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for FileReadable validator
  *
@@ -22,7 +23,7 @@
 namespace Library\Test\Validator;
 
 use Library\Validator\FileReadable;
-use \org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStream;
 
 class FileReadableTest extends \PHPUnit\Framework\TestCase
 {
@@ -40,14 +41,14 @@ class FileReadableTest extends \PHPUnit\Framework\TestCase
     public function testFileReadable()
     {
         $url = vfsStream::newFile('test', 0444)->at($this->_root)->url();
-        $validator = new FileReadable;
+        $validator = new FileReadable();
         $this->assertTrue($validator->isValid($url));
     }
 
     public function testFileNotReadable()
     {
         $url = vfsStream::newFile('test', 0000)->at($this->_root)->url();
-        $validator = new FileReadable;
+        $validator = new FileReadable();
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(
             array(FileReadable::READABLE => "File '$url' is not readable"),
@@ -58,7 +59,7 @@ class FileReadableTest extends \PHPUnit\Framework\TestCase
     public function testDirectoryReadable()
     {
         $url = vfsStream::newDirectory('test', 0444)->at($this->_root)->url();
-        $validator = new FileReadable;
+        $validator = new FileReadable();
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(FileReadable::FILE, key($validator->getMessages()));
     }
@@ -66,7 +67,7 @@ class FileReadableTest extends \PHPUnit\Framework\TestCase
     public function testDirectoryNonReadable()
     {
         $url = vfsStream::newDirectory('test', 0000)->at($this->_root)->url();
-        $validator = new FileReadable;
+        $validator = new FileReadable();
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(FileReadable::FILE, key($validator->getMessages()));
     }
@@ -74,7 +75,7 @@ class FileReadableTest extends \PHPUnit\Framework\TestCase
     public function testNonExistent()
     {
         $url = $this->_root->url() . '/test';
-        $validator = new FileReadable;
+        $validator = new FileReadable();
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(FileReadable::FILE, key($validator->getMessages()));
     }
@@ -82,7 +83,7 @@ class FileReadableTest extends \PHPUnit\Framework\TestCase
     public function testEmpty()
     {
         $url = '';
-        $validator = new FileReadable;
+        $validator = new FileReadable();
         $this->assertFalse($validator->isValid($url));
         $this->assertEquals(FileReadable::FILE, key($validator->getMessages()));
     }
@@ -90,7 +91,7 @@ class FileReadableTest extends \PHPUnit\Framework\TestCase
     public function testFileMessage()
     {
         $url = $this->_root->url() . '/test';
-        $validator = new FileReadable;
+        $validator = new FileReadable();
         $validator->isValid($url);
         $this->assertEquals(
             array(FileReadable::FILE => "'$url' is not a file or inaccessible"),

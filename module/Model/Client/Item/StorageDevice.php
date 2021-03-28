@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Storage device (hard disk, optical drive, USB storage...)
  *

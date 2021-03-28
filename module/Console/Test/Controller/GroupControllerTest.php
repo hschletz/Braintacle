@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for GroupController
  *
@@ -86,19 +87,19 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_groupManager->expects($this->once())
                             ->method('getGroup')
                             ->with('test')
-                            ->will($this->throwException(new \RuntimeException));
+                            ->will($this->throwException(new \RuntimeException()));
         $this->dispatch('/console/group/general/?name=test');
         $this->assertRedirectTo('/console/group/index/');
         $this->assertContains(
             'The requested group does not exist.',
-            $this->_getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
+            $this->getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
         );
     }
 
     public function testIndexActionNoData()
     {
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
-        $resultSet->initialize(new \EmptyIterator);
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
+        $resultSet->initialize(new \EmptyIterator());
         $this->_groupManager->expects($this->once())
                             ->method('getGroups')
                             ->with(null, null, 'Name', 'asc')
@@ -112,7 +113,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     public function testIndexActionWithData()
     {
         $creationDate = new \DateTime('2014-04-06 11:55:33');
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
         $resultSet->initialize(
             array(
                 array(
@@ -153,8 +154,8 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionMessages()
     {
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
-        $resultSet->initialize(new \EmptyIterator);
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
+        $resultSet->initialize(new \EmptyIterator());
         $this->_groupManager->expects($this->once())->method('getGroups')->willReturn($resultSet);
 
         $flashMessenger = $this->createMock('Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
@@ -166,7 +167,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                        )->willReturnOnConsecutiveCalls(array('error'), array('success'));
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
-        $this->_disableTranslator();
+        $this->disableTranslator();
         $this->dispatch('/console/group/index/');
         $this->assertXpathQuery('//ul[@class="error"]/li[text()="error"]');
         $this->assertXpathQuery('//ul[@class="success"]/li[text()="success"]');
@@ -175,7 +176,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     public function testGeneralAction()
     {
         $url = '/console/group/general/?name=test';
-        $creationDate = new \DateTime;
+        $creationDate = new \DateTime();
         $group = array(
             'Name' => 'groupName',
             'Id' => 'groupID',
@@ -213,7 +214,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     public function testMembersAction()
     {
         $url = '/console/group/members/?name=test';
-        $cacheCreationDate =new \DateTime('2014-04-08 20:12:21');
+        $cacheCreationDate = new \DateTime('2014-04-08 20:12:21');
         $cacheExpirationDate = new \DateTime('2014-04-09 18:53:21');
         $inventoryDate = new \DateTime('2014-04-09 18:56:12');
         $group = array(
@@ -679,11 +680,11 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/group/index/');
         $this->assertEquals(
             array(array('Group \'%s\' was successfully deleted.' => 'test')),
-            $this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
+            $this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
         );
         $this->assertEquals(
             array(),
-            $this->_getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
+            $this->getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
         );
     }
 
@@ -698,16 +699,16 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_groupManager->expects($this->once())
                             ->method('deleteGroup')
                             ->with($group)
-                            ->will($this->throwException(new \Model\Group\RuntimeException));
+                            ->will($this->throwException(new \Model\Group\RuntimeException()));
         $this->dispatch('/console/group/delete/?name=test', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/group/index/');
         $this->assertEquals(
             array(),
-            $this->_getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
+            $this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
         );
         $this->assertEquals(
             array(array('Group \'%s\' could not be deleted. Try again later.' => 'test')),
-            $this->_getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
+            $this->getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
         );
     }
 }

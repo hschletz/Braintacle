@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Build URL from standard route (controller/action)
  *

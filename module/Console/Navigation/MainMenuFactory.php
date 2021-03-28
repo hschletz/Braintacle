@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Factory for main navigation menu
  *
@@ -27,7 +28,7 @@ namespace Console\Navigation;
 class MainMenuFactory extends \Library\Navigation\AbstractNavigationFactory
 {
     /** {@inheritdoc} */
-    protected function _getConfig()
+    protected function getConfig()
     {
         return array(
             array(

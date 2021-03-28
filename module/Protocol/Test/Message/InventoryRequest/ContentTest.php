@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Content element
  *
@@ -74,7 +75,7 @@ class ContentTest extends \PHPUnit\Framework\TestCase
         ];
 
         $client = $this->createStub(Client::class);
-    
+
         $hydrator = $this->createMock(HydratorInterface::class);
         $hydrator->method('extract')->with($client)->willReturn($data);
 
@@ -112,13 +113,13 @@ class ContentTest extends \PHPUnit\Framework\TestCase
             'name1' => 'value1',
             'name2' => 'value2',
         ];
-    
+
         $client = $this->createMock(Client::class);
         $client->method('offsetGet')->with('Android')->willReturn($android);
 
         $hydrator = $this->createMock(HydratorInterface::class);
         $hydrator->method('extract')->with($android)->willReturn($data);
-    
+
         $container = $this->createMock(ContainerInterface::class);
         $container->method('get')->with(Hydrator\AndroidInstallations::class)->willReturn($hydrator);
 
@@ -163,7 +164,7 @@ class ContentTest extends \PHPUnit\Framework\TestCase
             'name3' => null,
             'name4' => new \DateTime('2020-12-27'),
         ];
-    
+
         $client = $this->createMock(Client::class);
         $client->method('offsetGet')->with('CustomFields')->willReturn($data);
 
@@ -193,7 +194,7 @@ class ContentTest extends \PHPUnit\Framework\TestCase
     public function testAppendDownloadSection()
     {
         $data = [23, 42];
-    
+
         $client = $this->createStub(Client::class);
         $client->method('getDownloadedPackageIds')->willReturn($data);
 
@@ -222,7 +223,7 @@ class ContentTest extends \PHPUnit\Framework\TestCase
     public function testAppendDownloadSectionNoData()
     {
         $data = [];
-    
+
         $client = $this->createStub(Client::class);
         $client->method('getDownloadedPackageIds')->willReturn($data);
 
@@ -283,7 +284,7 @@ class ContentTest extends \PHPUnit\Framework\TestCase
 
         // Array of hydrated items
         $items = [(object) $item0, (object) $item1];
-    
+
         $client = $this->createMock(Client::class);
         $client->method('getItems')->with('item_type', 'id', 'asc')->willReturn($items);
 

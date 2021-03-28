@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Convert MAC adress strings to \Library\MacAddress objects
  *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Storage class for direct webserver access
  *
@@ -77,7 +78,7 @@ class Direct implements StorageInterface
     {
         $dir = $this->getPath($id);
         if (is_dir($dir)) {
-            $fileSystem = new \Symfony\Component\Filesystem\Filesystem;
+            $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
             $fileSystem->remove($dir);
         }
     }
@@ -149,7 +150,7 @@ class Direct implements StorageInterface
         $baseName = $this->getPath($id) . "/$id-";
         $fileSize = @$data['Size'];
         $maxFragmentSize = @$data['MaxFragmentSize'] * 1024; // Kilobytes => Bytes
-        $fileSystem = new \Symfony\Component\Filesystem\Filesystem;
+        $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
         if (!$data['FileLocation']) {
             // No file
             $numFragments = 0;

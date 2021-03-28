@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "storages" table
  *
@@ -34,7 +35,7 @@ class StorageDevices extends \Database\AbstractTable
     {
         $this->table = 'storages';
 
-        $this->_hydrator = new \Database\Hydrator\StorageDevices;
+        $this->_hydrator = new \Database\Hydrator\StorageDevices();
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,

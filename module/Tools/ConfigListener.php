@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Listener for evaluating config option
  *

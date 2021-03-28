@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Input device (keyboard, mouse, touchpad...)
  *

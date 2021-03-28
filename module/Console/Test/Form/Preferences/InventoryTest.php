@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Inventory form
  *
@@ -38,7 +39,7 @@ class InventoryTest extends \Console\Test\AbstractFormTest
 
     public function testRender()
     {
-        $view = $this->_createView();
+        $view = $this->createView();
         $html = $this->_form->render($view);
         $document = new \Laminas\Dom\Document($html);
         $this->assertCount(

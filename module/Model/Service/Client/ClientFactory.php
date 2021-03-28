@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Factory for Model\Client\Client
  *
@@ -32,7 +33,7 @@ class ClientFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
         $requestedName,
         array $options = null
     ) {
-        $client = new \Model\Client\Client;
+        $client = new \Model\Client\Client();
         $client->setServiceLocator($container);
         return $client;
     }

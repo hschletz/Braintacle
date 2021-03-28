@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Add Braintacle user account
  *
@@ -21,7 +22,7 @@
 
 namespace Console\Form\Account;
 
-use \Laminas\Validator\NotEmpty;
+use Laminas\Validator\NotEmpty;
 
 /**
  * Add Braintacle user account

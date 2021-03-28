@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "videos" table
  *
@@ -34,7 +35,7 @@ class DisplayControllers extends \Database\AbstractTable
     {
         $this->table = 'videos';
 
-        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(
@@ -49,11 +50,11 @@ class DisplayControllers extends \Database\AbstractTable
         // original values can be discarded.
         $this->_hydrator->addStrategy(
             'Memory',
-            new \Database\Hydrator\Strategy\DisplayControllers\Memory
+            new \Database\Hydrator\Strategy\DisplayControllers\Memory()
         );
         $this->_hydrator->addStrategy(
             'CurrentResolution',
-            new \Database\Hydrator\Strategy\DisplayControllers\CurrentResolution
+            new \Database\Hydrator\Strategy\DisplayControllers\CurrentResolution()
         );
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(

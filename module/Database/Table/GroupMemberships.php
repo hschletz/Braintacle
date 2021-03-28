@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "groups_cache" table
  *

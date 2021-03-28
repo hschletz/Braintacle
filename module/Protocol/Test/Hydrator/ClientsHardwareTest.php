@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for ClientsHardware hydrator
  *
@@ -34,7 +35,7 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
         $this->_windowsInstallation = $this->createMock('Model\Client\WindowsInstallation');
     }
 
-    protected function _getHydrator()
+    protected function getHydrator()
     {
         return new \Protocol\Hydrator\ClientsHardware($this->_windowsInstallation);
     }
@@ -123,8 +124,8 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
             $objectData['Windows'] = $this->_windowsInstallation;
         }
 
-        $hydrator = $this->_getHydrator();
-        $object = new \ArrayObject;
+        $hydrator = $this->getHydrator();
+        $object = new \ArrayObject();
         $object['IdString'] = 'ignored';
         $this->assertSame($object, $hydrator->hydrate($data, $object));
         $this->assertEquals($objectData, $object->getArrayCopy());

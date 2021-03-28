@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for ManageRegistryValues
  *
@@ -59,7 +60,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
 
     public function setUp(): void
     {
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
         $resultSet->initialize($this->_values);
         $this->_registryManager = $this->createMock('Model\Registry\RegistryManager');
         $this->_registryManager->expects($this->once())
@@ -69,7 +70,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
     }
 
     /** {@inheritdoc} */
-    protected function _getForm()
+    protected function getForm()
     {
         $form = new \Console\Form\ManageRegistryValues(
             null,
@@ -202,8 +203,8 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
             ),
         );
 
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
-        $resultSet->initialize(new \EmptyIterator);
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
+        $resultSet->initialize(new \EmptyIterator());
         $registryManager = $this->createMock('Model\Registry\RegistryManager');
         $registryManager->expects($this->once())
                         ->method('getValueDefinitions')
@@ -247,7 +248,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         $value1 = array('Id' => 1, 'Name' => 'Test1', 'FullPath' => 'path1');
         $value2 = array('Id' => 2, 'Name' => 'Test2', 'FullPath' => 'path2');
 
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet;
+        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
         $resultSet->initialize(array($value1, $value2));
         $registryManager = $this->createMock('Model\Registry\RegistryManager');
         $registryManager->expects($this->once())

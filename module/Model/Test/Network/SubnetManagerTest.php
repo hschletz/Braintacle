@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Network\SubnetManager
  *
@@ -42,7 +43,7 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
 
     public function testGetSubnetsFullByCidrAddress()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $subnets = $model->getSubnets('CidrAddress', 'desc');
         $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $subnets);
         $subnets = iterator_to_array($subnets);
@@ -132,7 +133,7 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
      */
     public function testGetSubnetsOrdering($order, $direction, $values)
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $subnets = $model->getSubnets($order, $direction);
         $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $subnets);
         $subnets = iterator_to_array($subnets);
@@ -158,7 +159,7 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
 
     public function testGetSubnetsNoOrdering()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $subnets = $model->getSubnets();
         $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $subnets);
         $subnets = iterator_to_array($subnets);
@@ -189,7 +190,7 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
         $validatorPluginManager = $this->createMock(ValidatorPluginManager::class);
         $validatorPluginManager->method('get')->with(IpNetworkAddress::class)->willReturn($validator);
 
-        $model = $this->_getModel([ValidatorPluginManager::class => $validatorPluginManager]);
+        $model = $this->getModel([ValidatorPluginManager::class => $validatorPluginManager]);
         $subnet = $model->getSubnet($address, $mask);
         $this->assertInstanceOf('Model\Network\Subnet', $subnet);
         $this->assertEquals(
@@ -215,7 +216,7 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
         $validatorPluginManager = $this->createMock(ValidatorPluginManager::class);
         $validatorPluginManager->method('get')->with(IpNetworkAddress::class)->willReturn($validator);
 
-        $model = $this->_getModel([ValidatorPluginManager::class => $validatorPluginManager]);
+        $model = $this->getModel([ValidatorPluginManager::class => $validatorPluginManager]);
         $model->getSubnet('address', 'mask');
     }
 
@@ -243,10 +244,10 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
         $validatorPluginManager = $this->createMock(ValidatorPluginManager::class);
         $validatorPluginManager->method('get')->with(IpNetworkAddress::class)->willReturn($validator);
 
-        $model = $this->_getModel([ValidatorPluginManager::class => $validatorPluginManager]);
+        $model = $this->getModel([ValidatorPluginManager::class => $validatorPluginManager]);
         $model->saveSubnet($address, $mask, $name, $dataSet);
         $this->assertTablesEqual(
-            $this->_loadDataset($dataSet)->getTable('subnet'),
+            $this->loadDataSet($dataSet)->getTable('subnet'),
             $this->getConnection()->createQueryTable(
                 'subnet',
                 'SELECT netid, mask, name FROM subnet ORDER BY netid, mask'
@@ -267,7 +268,7 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
         $validatorPluginManager = $this->createMock(ValidatorPluginManager::class);
         $validatorPluginManager->method('get')->with(IpNetworkAddress::class)->willReturn($validator);
 
-        $model = $this->_getModel([ValidatorPluginManager::class => $validatorPluginManager]);
+        $model = $this->getModel([ValidatorPluginManager::class => $validatorPluginManager]);
         $model->saveSubnet('address', 'mask', null);
     }
 }

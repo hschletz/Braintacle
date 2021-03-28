@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the HtmlElement helper
  *
@@ -28,21 +29,21 @@ class HtmlElementTest extends AbstractTest
 {
     public function testInvokeNewline()
     {
-        $helper = $this->_getHelper();
+        $helper = $this->getHelper();
 
         $this->assertEquals("<a>\ncontent\n</a>\n", $helper('a', 'content'));
     }
 
     public function testInvokeInline()
     {
-        $helper = $this->_getHelper();
+        $helper = $this->getHelper();
 
         $this->assertEquals('<a>content</a>', $helper('a', 'content', null, true));
     }
 
     public function testInvokeStringCast()
     {
-        $helper = $this->_getHelper();
+        $helper = $this->getHelper();
 
         $this->assertEquals('<a>0</a>', $helper('a', 0, null, true));
     }
@@ -51,7 +52,7 @@ class HtmlElementTest extends AbstractTest
     {
         $attribs = array('attrib' => 'value');
 
-        $helper = $this->getMockBuilder($this->_getHelperClass())->setMethods(array('htmlAttribs'))->getMock();
+        $helper = $this->getMockBuilder($this->getHelperClass())->setMethods(array('htmlAttribs'))->getMock();
         $helper->method('htmlAttribs')->with($attribs)->willReturn(' attribs');
 
         $this->assertEquals(
@@ -99,7 +100,7 @@ class HtmlElementTest extends AbstractTest
             )
         );
 
-        $helper = $this->_getHelper();
+        $helper = $this->getHelper();
         $helper->setView($view);
 
         $this->assertEquals($output, $helper($element, null, null, true));
@@ -107,7 +108,7 @@ class HtmlElementTest extends AbstractTest
 
     public function testHtmlAttribs()
     {
-        $helper = $this->_getHelper();
+        $helper = $this->getHelper();
         $this->assertEquals(' foo="bar"', $helper->htmlAttribs(array('foo' => 'bar')));
     }
 }

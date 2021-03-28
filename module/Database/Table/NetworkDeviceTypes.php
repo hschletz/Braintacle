@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "devicetype" table
  *
@@ -40,7 +41,7 @@ class NetworkDeviceTypes extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function _postSetSchema($logger, $schema, $database, $prune)
+    protected function postSetSchema($logger, $schema, $database, $prune)
     {
         // Create entries for orphaned types in NetworkDevicesIdentified table
         if (isset($database->getTables()['network_devices'])) {

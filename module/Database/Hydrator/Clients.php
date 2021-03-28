@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Hydrator for clients
  *
@@ -139,7 +140,7 @@ class Clients implements \Laminas\Hydrator\HydratorInterface
     public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->_serviceLocator = $serviceLocator;
-        $this->_encodingFilter = new \Library\Filter\FixEncodingErrors;
+        $this->_encodingFilter = new \Library\Filter\FixEncodingErrors();
         $this->_databaseTimeZone = new \DateTimeZone('UTC');
     }
 

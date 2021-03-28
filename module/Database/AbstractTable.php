@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Base class for table objects
  *
@@ -55,7 +56,7 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
             // If not set explicitly, derive table name from class name.
             // Uppercase letters cause an underscore to be inserted, except at
             // the beginning of the string.
-            $this->table = strtolower(preg_replace('/(.)([A-Z])/', '$1_$2', $this->_getClassName()));
+            $this->table = strtolower(preg_replace('/(.)([A-Z])/', '$1_$2', $this->getClassName()));
         }
         $this->adapter = $serviceLocator->get('Db');
     }
@@ -96,7 +97,7 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      * @internal
      * @codeCoverageIgnore
      */
-    protected function _getClassName()
+    protected function getClassName()
     {
         return substr(get_class($this), strrpos(get_class($this), '\\') + 1);
     }
@@ -110,17 +111,17 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      * @param bool $prune Drop obsolete columns
      * @codeCoverageIgnore
      */
-    public function setSchema($prune = false)
+    public function updateSchema($prune = false)
     {
         $logger = $this->_serviceLocator->get('Library\Logger');
         $schema = \Laminas\Config\Factory::fromFile(
-            Module::getPath('data/Tables/' . $this->_getClassName() . '.json')
+            Module::getPath('data/Tables/' . $this->getClassName() . '.json')
         );
         $database = $this->_serviceLocator->get('Database\Nada');
 
-        $this->_preSetSchema($logger, $schema, $database, $prune);
-        $this->_setSchema($logger, $schema, $database, $prune);
-        $this->_postSetSchema($logger, $schema, $database, $prune);
+        $this->preSetSchema($logger, $schema, $database, $prune);
+        $this->setSchema($logger, $schema, $database, $prune);
+        $this->postSetSchema($logger, $schema, $database, $prune);
     }
 
     /**
@@ -132,7 +133,7 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      * @param bool $prune Drop obsolete columns
      * @codeCoverageIgnore
      */
-    protected function _preSetSchema($logger, $schema, $database, $prune)
+    protected function preSetSchema($logger, $schema, $database, $prune)
     {
     }
 
@@ -147,7 +148,7 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      * @param bool $prune Drop obsolete columns
      * @codeCoverageIgnore
      */
-    protected function _setSchema($logger, $schema, $database, $prune)
+    protected function setSchema($logger, $schema, $database, $prune)
     {
         \Database\SchemaManager::setSchema(
             $logger,
@@ -167,7 +168,7 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      * @param bool $prune Drop obsolete columns
      * @codeCoverageIgnore
      */
-    protected function _postSetSchema($logger, $schema, $database, $prune)
+    protected function postSetSchema($logger, $schema, $database, $prune)
     {
     }
 
@@ -197,7 +198,7 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      * Rename table.
      * @codeCoverageIgnore
      */
-    protected function _rename(
+    protected function rename(
         \Laminas\Log\LoggerInterface $logger,
         \Nada\Database\AbstractDatabase $database,
         string $oldName
@@ -215,7 +216,7 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      * @param string $column column name
      * @codeCoverageIgnore
      */
-    protected function _dropColumnIfExists($logger, $database, $column)
+    protected function dropColumnIfExists($logger, $database, $column)
     {
         $tables = $database->getTables();
         if (isset($tables[$this->table])) {

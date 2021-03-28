@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Factory for client navigation menu
  *
@@ -40,7 +41,7 @@ class ClientMenuFactory extends \Library\Navigation\AbstractNavigationFactory
     }
 
     /** {@inheritdoc} */
-    protected function _getConfig()
+    protected function getConfig()
     {
         return array(
             array(
@@ -50,95 +51,95 @@ class ClientMenuFactory extends \Library\Navigation\AbstractNavigationFactory
             ),
             array(
                 'label' => $this->_('Windows'),
-                'controller' =>'client',
+                'controller' => 'client',
                 'action' => 'windows',
                 'windowsOnly' => true,
             ),
             array(
                 'label' => $this->_('Network'),
-                'controller' =>'client',
+                'controller' => 'client',
                 'action' => 'network',
             ),
             array(
                 'label' => $this->_('Storage'),
-                'controller' =>'client',
+                'controller' => 'client',
                 'action' => 'storage',
             ),
             array(
                 'label' => $this->_('Display'),
-                'controller' =>'client',
+                'controller' => 'client',
                 'action' => 'display',
             ),
             array(
                 'label' => $this->_('BIOS'),
-                'controller' =>'client',
+                'controller' => 'client',
                 'action' => 'bios',
             ),
             array(
                 'label' => $this->_('System'),
-                'controller' =>'client',
+                'controller' => 'client',
                 'action' => 'system',
             ),
             array(
                 'label' => $this->_('Printers'),
-                'controller' =>'client',
+                'controller' => 'client',
                 'action' => 'printers',
             ),
             array(
                 'label' => $this->_('Software'),
-                'controller' =>'client',
+                'controller' => 'client',
                 'action' => 'software',
             ),
             array(
                 'label' => $this->_('MS Office'),
-                'controller' =>'client',
+                'controller' => 'client',
                 'action' => 'msoffice',
                 'windowsOnly' => true,
             ),
             array(
                 'label' => $this->_('Registry'),
-                'controller' =>'client',
+                'controller' => 'client',
                 'action' => 'registry',
                 'windowsOnly' => true,
             ),
             array(
                 'label' => $this->_('Virtual machines'),
-                'controller' =>'client',
+                'controller' => 'client',
                 'action' => 'virtualmachines',
             ),
             array(
                 'label' => $this->_('Misc'),
-                'controller' =>'client',
+                'controller' => 'client',
                 'action' => 'misc',
             ),
             array(
                 'label' => $this->_('User defined'),
-                'controller' =>'client',
+                'controller' => 'client',
                 'action' => 'customfields',
             ),
             array(
                 'label' => $this->_('Packages'),
-                'controller' =>'client',
+                'controller' => 'client',
                 'action' => 'packages',
             ),
             array(
                 'label' => $this->_('Groups'),
-                'controller' =>'client',
+                'controller' => 'client',
                 'action' => 'groups',
             ),
             array(
                 'label' => $this->_('Configuration'),
-                'controller' =>'client',
+                'controller' => 'client',
                 'action' => 'configuration',
             ),
             array(
                 'label' => $this->_('Export'),
-                'controller' =>'client',
+                'controller' => 'client',
                 'action' => 'export',
             ),
             array(
                 'label' => $this->_('Delete'),
-                'controller' =>'client',
+                'controller' => 'client',
                 'action' => 'delete',
             )
         );

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The Console module
  *
@@ -66,7 +67,7 @@ class Module implements
         $eventManager = $e->getParam('application')->getEventManager();
         $eventManager->attach(MvcEvent::EVENT_ROUTE, array($this, 'setValidatorTranslator'));
         $eventManager->attach(MvcEvent::EVENT_ROUTE, array($this, 'forceLogin'));
-        $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'setStrictVars'));
+        $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'forceStrictVars'));
         $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'setMenu'));
         $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'setLayoutTitle'));
         $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onError'));
@@ -110,7 +111,8 @@ class Module implements
         // for the login controller, in which case redirection would result in
         // an infinite loop.
         $serviceManager = $e->getApplication()->getServiceManager();
-        if (!$serviceManager->get('Laminas\Authentication\AuthenticationService')->hasIdentity() and
+        if (
+            !$serviceManager->get('Laminas\Authentication\AuthenticationService')->hasIdentity() and
             $e->getRouteMatch()->getParam('controller') != 'login'
         ) {
             // Preserve URI of current request for redirect after successful login
@@ -135,9 +137,9 @@ class Module implements
      *
      * @param \Laminas\Mvc\MvcEvent $e MVC event
      */
-    public function setStrictVars(\Laminas\EventManager\EventInterface $e)
+    public function forceStrictVars(\Laminas\EventManager\EventInterface $e)
     {
-        $this->_setStrictVars($e->getViewModel());
+        $this->setStrictVars($e->getViewModel());
     }
 
     /**
@@ -145,7 +147,7 @@ class Module implements
      *
      * @param \Laminas\View\Model\ViewModel $model
      */
-    protected function _setStrictVars(\Laminas\View\Model\ViewModel $model)
+    protected function setStrictVars(\Laminas\View\Model\ViewModel $model)
     {
         $vars = $model->getVariables();
         if (!$vars instanceof \Laminas\View\Variables) {
@@ -154,7 +156,7 @@ class Module implements
         $vars->setStrictVars(true);
         $model->setVariables($vars, true);
         foreach ($model->getChildren() as $child) {
-            $this->_setStrictVars($child);
+            $this->setStrictVars($child);
         }
     }
 

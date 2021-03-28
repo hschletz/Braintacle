@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Edit existing Braintacle user accounts
  *

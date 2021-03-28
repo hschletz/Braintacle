@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for Model\Client\ItemManager
  *
@@ -74,21 +75,21 @@ class ItemManagerTest extends \Model\Test\AbstractTest
                 'storagedevice',
                 'virtualmachine',
             ),
-            $this->_getModel()->getItemTypes()
+            $this->getModel()->getItemTypes()
         );
     }
     public function testGetTableNameInvalidType()
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Invalid item type: invalid');
-        $this->_getModel()->getTableName('invalid');
+        $this->getModel()->getTableName('invalid');
     }
 
     public function testGetTableInvalidType()
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Invalid item type: invalid');
-        $this->_getModel()->getTable('invalid');
+        $this->getModel()->getTable('invalid');
     }
 
     public function getItemsProvider()
@@ -198,7 +199,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
      */
     public function testGetItems($type, $filters, $order, $direction, $expectedResult, $keyColumn)
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $items = $model->getItems($type, $filters, $order, $direction);
         $this->assertInstanceOf('Laminas\Db\Resultset\AbstractResultset', $items);
         $items = iterator_to_array($items);
@@ -221,7 +222,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteItems()
     {
-        $model = $this->_getModel();
+        $model = $this->getModel();
         $model->deleteItems(1);
         $dataSet = new \PHPUnit\DbUnit\DataSet\QueryDataSet($this->getConnection());
         foreach (static::$_tables as $table) {
@@ -231,6 +232,6 @@ class ItemManagerTest extends \Model\Test\AbstractTest
             $table = static::$serviceManager->get("Database\\Table\\$table")->table;
             $dataSet->addTable($table, "SELECT hardware_id FROM $table");
         }
-        $this->assertDataSetsEqual($this->_loadDataSet('DeleteItems'), $dataSet);
+        $this->assertDataSetsEqual($this->loadDataSet('DeleteItems'), $dataSet);
     }
 }

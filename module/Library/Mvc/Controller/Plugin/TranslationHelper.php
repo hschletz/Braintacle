@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Mark string as translatable
  *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Factory for Config from INI file
  *
@@ -57,7 +58,7 @@ class UserConfigFactory implements \Laminas\ServiceManager\Factory\FactoryInterf
         if (!$userConfig) {
             $userConfig = \Library\Application::getPath('config/braintacle.ini');
         }
-        $reader = new \Laminas\Config\Reader\Ini;
+        $reader = new \Laminas\Config\Reader\Ini();
         return $reader->fromFile($userConfig);
     }
 }

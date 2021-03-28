@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RAM slot with details about RAM module if present
  *

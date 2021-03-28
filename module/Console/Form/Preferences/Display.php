@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form for display/setting of 'display' preferences
  *

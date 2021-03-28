@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "controllers" table
  *
@@ -32,7 +33,7 @@ class Controllers extends \Database\AbstractTable
      */
     public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $this->_hydrator = new \Database\Hydrator\Controllers;
+        $this->_hydrator = new \Database\Hydrator\Controllers();
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,

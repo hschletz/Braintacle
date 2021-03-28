@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "download_enable" view
  *
@@ -44,7 +45,7 @@ class PackageDownloadInfo extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function setSchema($prune = false)
+    public function updateSchema($prune = false)
     {
         // Reimplementation to provide a view instead of previous table
 
@@ -54,7 +55,7 @@ class PackageDownloadInfo extends \Database\AbstractTable
         if (in_array('download_enable', $database->getTableNames())) {
             // Use value of "fileid" column instead of obsolete "id" for package assignments
             $logger->info('Transforming package assignment IDs...');
-            $where = new \Laminas\Db\Sql\Where;
+            $where = new \Laminas\Db\Sql\Where();
             $this->_serviceLocator->get('Database\Table\ClientConfig')->update(
                 array(
                     'ivalue' => new \Laminas\Db\Sql\Expression(
@@ -75,7 +76,7 @@ class PackageDownloadInfo extends \Database\AbstractTable
 
         if (!in_array('download_enable', $database->getViewNames())) {
             $logger->info("Creating view 'download_enable'");
-            $typeText =$database->getNativeDatatype(Column::TYPE_VARCHAR, 255, true);
+            $typeText = $database->getNativeDatatype(Column::TYPE_VARCHAR, 255, true);
             $typeInt = $database->getNativeDatatype(Column::TYPE_INTEGER, 32, true);
             $null = 'CAST(NULL AS %s)';
             $sql = $this->_serviceLocator->get('Database\Table\Packages')->getSql();

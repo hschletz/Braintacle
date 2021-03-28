@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the main layout template
  *
@@ -22,7 +23,7 @@
 namespace Console\Test;
 
 use Console\View\Helper\ConsoleScript;
-use \Laminas\Dom\Document\Query;
+use Laminas\Dom\Document\Query;
 
 /**
  * Tests for the main layout template
@@ -44,7 +45,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
             $this->_authService
         );
 
-        $this->_view = new \Laminas\View\Renderer\PhpRenderer;
+        $this->_view = new \Laminas\View\Renderer\PhpRenderer();
         $this->_view->setHelperPluginManager($serviceManager->get('ViewHelperManager'));
         $this->_view->setResolver(
             new \Laminas\View\Resolver\TemplateMapResolver(

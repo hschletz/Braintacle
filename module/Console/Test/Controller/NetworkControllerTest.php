@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for NetworkController
  *
@@ -164,7 +165,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     public function testShowidentifiedActionWithoutParameters()
     {
         $filters = array('Identified' => true);
-        $date = new \DateTime;
+        $date = new \DateTime();
         $result = array(
             array(
                 'MacAddress' => '00:00:5E:00:53:00',
@@ -233,7 +234,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $macAddress = $this->createMock('Library\MacAddress');
         $macAddress->method('__toString')->willReturn('00:00:5E:00:53:00');
         $macAddress->method('getVendor')->willReturn('<vendor>');
-        $date = new \DateTime;
+        $date = new \DateTime();
         $result = array(
             array(
                 'MacAddress' => $macAddress,
@@ -381,7 +382,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->_subnetManager->expects($this->once())
                              ->method('getSubnet')
                              ->with(null, null)
-                             ->will($this->throwException(new \InvalidArgumentException));
+                             ->will($this->throwException(new \InvalidArgumentException()));
 
         $this->dispatch('/console/network/properties');
         $this->assertApplicationException('InvalidArgumentException');
@@ -396,7 +397,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $macAddress->expects($this->any())
                    ->method('getVendor')
                    ->will($this->returnValue('vendor'));
-        $date = new \DateTime;
+        $date = new \DateTime();
         $device = array(
             'MacAddress' => $macAddress,
             'IpAddress' => '192.0.2.1',
@@ -435,7 +436,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $formManager = $this->getApplicationServiceLocator()->get('FormElementManager');
         $formManager->setAllowOverride(true);
         $formManager->setService('Console\Form\NetworkDevice', $deviceForm);
- 
+
         $this->dispatch('/console/network/edit/?macaddress=00:00:5E:00:53:00');
         $this->assertResponseStatusCode(200);
         $this->assertXPathQuery('//form[not(@action)][@method="POST"]');
@@ -490,7 +491,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $formManager = $this->getApplicationServiceLocator()->get('FormElementManager');
         $formManager->setAllowOverride(true);
         $formManager->setService('Console\Form\NetworkDevice', $deviceForm);
- 
+
         $this->dispatch('/console/network/edit/?macaddress=00:00:5E:00:53:00', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//*[@class="error"]//*[text()="message"]');
@@ -522,7 +523,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->_deviceManager->expects($this->once())
                              ->method('getDevice')
                              ->with(null)
-                             ->will($this->throwException(new \Model\Network\RuntimeException));
+                             ->will($this->throwException(new \Model\Network\RuntimeException()));
         $this->dispatch('/console/network/edit/');
         $this->assertRedirectTo('/console/network/index/');
     }
@@ -570,7 +571,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->_deviceManager->expects($this->once())
                              ->method('getDevice')
                              ->with(null)
-                             ->will($this->throwException(new \Model\Network\RuntimeException));
+                             ->will($this->throwException(new \Model\Network\RuntimeException()));
         $this->_deviceManager->expects($this->never())->method('deleteDevice');
         $this->dispatch('/console/network/delete/');
         $this->assertRedirectTo('/console/network/index/');

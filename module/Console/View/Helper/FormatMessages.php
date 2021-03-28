@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Translate and format messages with sprintf()-style placeholders
  *

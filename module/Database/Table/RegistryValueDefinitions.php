@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "regconfig" table
  *
@@ -34,7 +35,7 @@ class RegistryValueDefinitions extends \Database\AbstractTable
     {
         $this->table = 'regconfig';
 
-        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator;
+        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(
@@ -47,7 +48,7 @@ class RegistryValueDefinitions extends \Database\AbstractTable
             )
         );
 
-        $value = new \Database\Hydrator\Strategy\RegistryValueDefinitions\Value;
+        $value = new \Database\Hydrator\Strategy\RegistryValueDefinitions\Value();
         $this->_hydrator->addStrategy('Value', $value);
         $this->_hydrator->addStrategy('regvalue', $value);
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display audio devices, input devices and ports
  *

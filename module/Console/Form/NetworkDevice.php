@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form for identifying a network device
  *
@@ -52,7 +53,7 @@ class NetworkDevice extends Form
         $submit->setLabel('OK');
         $this->add($submit);
 
-        $inputFilter = new \Laminas\InputFilter\InputFilter;
+        $inputFilter = new \Laminas\InputFilter\InputFilter();
         $inputFilter->add(
             array(
                 'name' => 'Description',

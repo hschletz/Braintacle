@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for DefineFields form
  *
@@ -21,7 +22,7 @@
 
 namespace Console\Test\Form;
 
-use \Laminas\Dom\Document\Query as Query;
+use Laminas\Dom\Document\Query as Query;
 
 /**
  * Tests for DefineFields form
@@ -47,7 +48,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
     }
 
     /** {@inheritdoc} */
-    protected function _getForm()
+    protected function getForm()
     {
         $form = new \Console\Form\DefineFields(
             null,
@@ -330,7 +331,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
 
     public function testSelectOptionsTranslated()
     {
-        $view = $this->_createView();
+        $view = $this->createView();
         $html = $this->_form->renderFieldset($view, $this->_form);
         $document = new \Laminas\Dom\Document($html);
         $this->assertCount(5, Query::execute('//select[@name="NewType"]/option', $document));
@@ -358,7 +359,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
 
     public function testRenderFieldsetNoMessages()
     {
-        $html = $this->_form->renderFieldset($this->_createView(), $this->_form);
+        $html = $this->_form->renderFieldset($this->createView(), $this->_form);
         $document = new \Laminas\Dom\Document(static::HTML_HEADER . $html);
         $this->assertCount(1, Query::execute('//div[@class="table"]', $document));
         $this->assertCount(
@@ -402,7 +403,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
                           ->with($this->isInstanceOf('Laminas\Form\ElementInterface'), array('class' => 'error'))
                           ->willReturnCallback(array($this, 'formElementErrorsMock'));
 
-        $view = $this->_createView();
+        $view = $this->createView();
         $view->getHelperPluginManager()->setService('formElementErrors', $formElementErrors);
 
         $html = $this->_form->renderFieldset($view, $this->_form);

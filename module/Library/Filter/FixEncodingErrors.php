@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Fix effects of incorrect charset conversion by old agents
  *

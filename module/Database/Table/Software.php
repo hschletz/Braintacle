@@ -1,4 +1,5 @@
 <?php
+
 /**
  * "software_installations" view.
  *
@@ -37,7 +38,7 @@ class Software extends \Database\AbstractTable
     {
         $this->table = 'software_installations';
 
-        $this->_hydrator = new \Database\Hydrator\Software;
+        $this->_hydrator = new \Database\Hydrator\Software();
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
@@ -58,13 +59,13 @@ class Software extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function setSchema($prune = false)
+    public function updateSchema($prune = false)
     {
         // Reimplementation to provide a view
 
         // Create/update softwareRaw table first because this view depends on it.
         $softwareRaw = $this->_serviceLocator->get('Database\Table\SoftwareRaw');
-        $softwareRaw->setSchema($prune);
+        $softwareRaw->updateSchema($prune);
 
         $logger = $this->_serviceLocator->get('Library\Logger');
         $database = $this->_serviceLocator->get('Database\Nada');
