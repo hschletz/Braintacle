@@ -44,7 +44,7 @@ class Whitelist implements \Laminas\Hydrator\Filter\FilterInterface
     }
 
     /** {@inheritdoc} */
-    public function filter(string $property): bool
+    public function filter(string $property, ?object $instance = null): bool
     {
         return in_array($property, $this->_whitelist);
     }
