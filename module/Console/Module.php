@@ -32,7 +32,6 @@ use Laminas\Mvc\MvcEvent;
 class Module implements
     Feature\InitProviderInterface,
     Feature\ConfigProviderInterface,
-    Feature\AutoloaderProviderInterface,
     Feature\BootstrapListenerInterface
 {
     /** {@inheritdoc} */
@@ -47,18 +46,6 @@ class Module implements
     public function getConfig()
     {
         return require(__DIR__ . '/module.config.php');
-    }
-
-    /** {@inheritdoc} */
-    public function getAutoloaderConfig()
-    {
-        return array(
-            'Laminas\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__,
-                ),
-            ),
-        );
     }
 
     /** {@inheritdoc} */

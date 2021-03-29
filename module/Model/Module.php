@@ -34,7 +34,6 @@ use Laminas\ModuleManager\Feature;
  * @codeCoverageIgnore
  */
 class Module implements
-    Feature\AutoloaderProviderInterface,
     Feature\ConfigProviderInterface,
     Feature\InitProviderInterface
 {
@@ -104,18 +103,6 @@ class Module implements
                 'shared' => array(
                     'Model\Package\Metadata' => false,
                     'Model\Package\Storage\Direct' => false,
-                ),
-            ),
-        );
-    }
-
-    /** {@inheritdoc} */
-    public function getAutoloaderConfig()
-    {
-        return array(
-            'Laminas\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__,
                 ),
             ),
         );

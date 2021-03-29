@@ -34,9 +34,7 @@ use Laminas\ServiceManager\Factory\InvokableFactory;
  *
  * @codeCoverageIgnore
  */
-class Module implements
-    Feature\AutoloaderProviderInterface,
-    Feature\ConfigProviderInterface
+class Module implements Feature\ConfigProviderInterface
 {
     /** {@inheritdoc} */
     public function getConfig()
@@ -150,18 +148,6 @@ class Module implements
                     'Library\View\Helper\FormSelectUntranslated' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Library\View\Helper\FormYesNo' => 'Library\View\Helper\Service\FormYesNoFactory',
                     'Library\View\Helper\HtmlElement' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-                ),
-            ),
-        );
-    }
-
-    /** {@inheritdoc} */
-    public function getAutoloaderConfig()
-    {
-        return array(
-            'Laminas\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__,
                 ),
             ),
         );

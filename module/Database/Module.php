@@ -33,7 +33,6 @@ use Laminas\ModuleManager\Feature;
  * @codeCoverageIgnore
  */
 class Module implements
-    Feature\AutoloaderProviderInterface,
     Feature\ConfigProviderInterface,
     Feature\InitProviderInterface
 {
@@ -55,18 +54,6 @@ class Module implements
                 ),
                 'factories' => array(
                     'Database\SchemaManager' => 'Database\Service\SchemaManagerFactory',
-                ),
-            ),
-        );
-    }
-
-    /** {@inheritdoc} */
-    public function getAutoloaderConfig()
-    {
-        return array(
-            'Laminas\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__,
                 ),
             ),
         );

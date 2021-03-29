@@ -32,8 +32,7 @@ use Model\Package\PackageManager;
  */
 class Module implements
     Feature\InitProviderInterface,
-    Feature\ConfigProviderInterface,
-    Feature\AutoloaderProviderInterface
+    Feature\ConfigProviderInterface
 {
     /**
      * {@inheritdoc}
@@ -85,20 +84,5 @@ class Module implements
                 ],
             ],
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    public function getAutoloaderConfig()
-    {
-        return array(
-            'Laminas\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__,
-                ),
-            ),
-        );
     }
 }

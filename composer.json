@@ -13,9 +13,9 @@
         "issues": "https://github.com/hschletz/Braintacle/issues"
     },
     "autoload": {
-        "files": [
-            "module/Library/Application.php"
-        ]
+        "psr-4": {
+            "": "module"
+        }
     },
     "require": {
         "php": "^7.3 || ~8.0.0",
@@ -34,7 +34,6 @@
         "laminas/laminas-i18n": "^2.7",
         "laminas/laminas-i18n-resources": "^2.5",
         "laminas/laminas-inputfilter": "^2.8",
-        "laminas/laminas-loader": "^2.5",
         "laminas/laminas-log": "^2.9",
         "laminas/laminas-math": "^3.0",
         "laminas/laminas-modulemanager": "^2.5",
