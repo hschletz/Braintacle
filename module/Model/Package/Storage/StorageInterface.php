@@ -30,7 +30,7 @@ interface StorageInterface
     /**
      * Prepare environment for building a package
      *
-     * This is invoked by the package manager as the first step of building a
+     * This is invoked by the package builder as the first step of building a
      * package. Package data is set up except for any content-related fields.
      *
      * The returned path must exist. It can be the system temp dir, but for
@@ -48,7 +48,7 @@ interface StorageInterface
     /**
      * Write all package data
      *
-     * This is invoked by the package manager when the content is ready. Package
+     * This is invoked by the package builder when the content is ready. Package
      * data is complete.
      *
      * Implementations must write Metadata and content and are responsible for
@@ -65,7 +65,7 @@ interface StorageInterface
     /**
      * Clean up any resources created by prepare() and write()
      *
-     * This is invoked by the package manager when a package is deleted or an
+     * This is invoked by the package builder when a package is deleted or an
      * error occurs in the build process.
      *
      * @param integer $id Package ID

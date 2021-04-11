@@ -23,6 +23,8 @@
 namespace Model;
 
 use Laminas\ModuleManager\Feature;
+use Model\Package\PackageBuilder;
+use Model\Service\Package\PackageBuilderFactory;
 
 /**
  * The Model module
@@ -94,6 +96,7 @@ class Module implements
                     'Model\Package\Assignment' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Model\Package\Metadata' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Model\Package\Package' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    PackageBuilder::class => PackageBuilderFactory::class,
                     'Model\Package\PackageManager' => 'Model\Service\Package\PackageManagerFactory',
                     'Model\Package\Storage\Direct' => 'Model\Service\Package\Storage\DirectFactory',
                     'Model\Registry\RegistryManager' => 'Model\Service\Registry\RegistryManagerFactory',

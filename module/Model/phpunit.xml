@@ -39,4 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
   <php>
     <env name="BRAINTACLE_TEST_DATABASE" value="{&quot;driver&quot; : &quot;Pdo_Sqlite&quot;}"/>
   </php>
+  <listeners>
+    <listener class="\Mockery\Adapter\Phpunit\TestListener"></listener>
+  </listeners>
 </phpunit>
