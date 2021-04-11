@@ -1,10 +1,8 @@
-# Fixture for AuthenticationAdapterTest
-
 operators:
   -
     id: "user1"
-    passwd: "hash1"
-    password_version: 0
+    passwd: "new_hash"
+    password_version: 1
   -
     id: "user2"
     passwd: "hash2"
