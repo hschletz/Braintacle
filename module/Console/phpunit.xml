@@ -36,4 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
     </testsuite>
   </testsuites>
   <logging/>
+  <listeners>
+    <listener class="\Mockery\Adapter\Phpunit\TestListener"></listener>
+  </listeners>
 </phpunit>
