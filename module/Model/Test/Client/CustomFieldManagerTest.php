@@ -22,6 +22,11 @@
 
 namespace Model\Test\Client;
 
+use InvalidArgumentException;
+use Laminas\Hydrator\HydratorInterface;
+use Model\Client\CustomFieldManager;
+use Model\Client\CustomFields;
+
 /**
  * Tests for Model\Client\CustomFieldManager
  */
@@ -62,10 +67,7 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
             'ä' => 'text', // Test case-insensitive non-ASCII characters
             'a/+b' => 'text', // Test escaping in regex
         );
-        $model = $this->getMockBuilder($this->getClass())
-                      ->disableOriginalConstructor()
-                      ->setMethods(array('getFields'))
-                      ->getMock();
+        $model = $this->createPartialMock(CustomFieldManager::class, ['getFields']);
         $model->method('getFields')->willReturn($fields);
         $this->assertTrue($model->fieldExists('Ä'));
         $this->assertTrue($model->fieldExists('a/+b'));
@@ -260,10 +262,7 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
 
     public function testGetHydrator()
     {
-        $model = $this->getMockBuilder($this->getClass())
-                      ->disableOriginalConstructor()
-                      ->setMethods(array('getFields', 'getColumnMap'))
-                      ->getMock();
+        $model = $this->createPartialMock(CustomFieldManager::class, ['getFields', 'getColumnMap']);
         $model->method('getFields')->willReturn(array('TAG' => 'text', 'Date' => 'date'));
         $model->method('getColumnMap')->willReturn(array('TAG' => 'tag', 'Date' => 'fields_2'));
 
@@ -292,68 +291,78 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
 
     public function testRead()
     {
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setConstructorArgs(
-                          array(
-                              static::$serviceManager->get('Database\Table\CustomFieldConfig'),
-                              static::$serviceManager->get('Database\Table\CustomFields'),
-                          )
-                      )
-                      ->setMethods(array('getFields', 'getColumnMap'))
-                      ->getMock();
-        $model->method('getFields')->willReturn(array('TAG' => 'text'));
-        $model->method('getColumnMap')->willReturn(array('TAG' => 'tag'));
+        $columnMap = ['hydrated_name' => 'raw_name'];
 
-        // Add a simple strategy to test hydration of values
-        $model->getHydrator()->addStrategy('TAG', new \Laminas\Hydrator\Strategy\ExplodeStrategy());
+        $customFields = $this->createStub(CustomFields::class);
 
-        $fields = $model->read(2);
-        $this->assertInstanceOf('Model\Client\CustomFields', $fields);
-        $this->assertEquals(array('TAG' => array('Custom2')), $fields->getArrayCopy());
-        $fields = $model->read(1);
-        $this->assertInstanceOf('Model\Client\CustomFields', $fields);
-        $this->assertEquals(array('TAG' => array('Custom1')), $fields->getArrayCopy());
+        $hydrator = $this->createMock(HydratorInterface::class);
+        $hydrator->method('hydrate')
+                 ->with(['raw_name' => 'raw_value'], $this->isInstanceOf(CustomFields::class))
+                 ->willReturn($customFields);
+
+        $model = $this->createPartialMock(CustomFieldManager::class, ['getColumnMap', 'readRaw', 'getHydrator']);
+        $model->method('getColumnMap')->willReturn($columnMap);
+        $model->method('readRaw')->with(42, ['raw_name'])->willReturn(['raw_name' => 'raw_value']);
+        $model->method('getHydrator')->willReturn($hydrator);
+
+        $this->assertSame($customFields, $model->read('42'));
     }
 
-    public function testReadInvalidId()
+    public function testReadRaw()
     {
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setConstructorArgs(
-                          array(
-                              static::$serviceManager->get('Database\Table\CustomFieldConfig'),
-                              static::$serviceManager->get('Database\Table\CustomFields'),
-                          )
-                      )
-                      ->setMethods(array('getFields', 'getColumnMap'))
-                      ->getMock();
-        $model->method('getFields')->willReturn(array('TAG' => 'text'));
-        $model->method('getColumnMap')->willReturn(array('TAG' => 'tag'));
+        $model = new CustomFieldManager(
+            static::$serviceManager->get('Database\Table\CustomFieldConfig'),
+            static::$serviceManager->get('Database\Table\CustomFields'),
+        );
 
-        $this->expectException('RuntimeException');
+        $this->assertEquals(['tag' => 'Custom1'], $model->readRaw('1', ['tag']));
+    }
+
+    public function testReadRawInvalidId()
+    {
+        $model = new CustomFieldManager(
+            static::$serviceManager->get('Database\Table\CustomFieldConfig'),
+            static::$serviceManager->get('Database\Table\CustomFields'),
+        );
+
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid client ID: 42');
-        $model->read(42);
+        $model->readRaw(42, ['tag']);
     }
 
-    public function testWrite()
+    public function writeProvider()
     {
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setConstructorArgs(
-                          array(
-                              static::$serviceManager->get('Database\Table\CustomFieldConfig'),
-                              static::$serviceManager->get('Database\Table\CustomFields'),
-                          )
-                      )
-                      ->setMethods(array('getFields', 'getColumnMap'))
-                      ->getMock();
-        $model->method('getFields')->willReturn(array('TAG' => 'text'));
-        $model->method('getColumnMap')->willReturn(array('TAG' => 'tag'));
+        return [
+            [new CustomFields(['hydrated_name' => 'hydrated_value'])],
+            [['hydrated_name' => 'hydrated_value']],
+        ];
+    }
 
-        // Add a simple strategy to test extraction of values
-        $model->getHydrator()->addStrategy('tag', new \Laminas\Hydrator\Strategy\BooleanStrategy('new_value', ''));
+    /** @dataProvider writeProvider */
+    public function testWrite($data)
+    {
+        $hydrator = $this->createMock(HydratorInterface::class);
+        $hydrator->method('extract')->with($this->callback(function ($data) {
+            return $data instanceof CustomFields and $data->getArrayCopy() == ['hydrated_name' => 'hydrated_value'];
+        }))->willReturn(['raw_name' => 'raw_value']);
 
-        $model->write(2, array('TAG' => true));
+        $model = $this->createPartialMock(CustomFieldManager::class, ['getHydrator', 'writeRaw']);
+        $model->method('getHydrator')->willReturn($hydrator);
+        $model->expects($this->once())->method('writeRaw')->with(42, ['raw_name' => 'raw_value']);
+
+        $model->write('42', $data);
+    }
+
+    public function testWriteRaw()
+    {
+        $model = new CustomFieldManager(
+            static::$serviceManager->get('Database\Table\CustomFieldConfig'),
+            static::$serviceManager->get('Database\Table\CustomFields'),
+        );
+
+        $model->writeRaw('2', ['tag' => 'new_value']);
         $this->assertTablesEqual(
-            $this->loadDataSet('Write')->getTable('accountinfo'),
+            $this->loadDataSet('WriteRaw')->getTable('accountinfo'),
             $this->getConnection()->createQueryTable('accountinfo', 'SELECT hardware_id, tag FROM accountinfo')
         );
     }

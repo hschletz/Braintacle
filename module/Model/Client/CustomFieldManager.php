@@ -22,6 +22,8 @@
 
 namespace Model\Client;
 
+use InvalidArgumentException;
+
 /**
  * Class for managing custom fields
  *
@@ -236,44 +238,49 @@ class CustomFieldManager
     }
 
     /**
-     * Get field content for given client
-     *
-     * @param integer $clientId Client ID
-     * @return \Model\Client\CustomFields
-     * @throws \InvalidArgumentException if client ID does not exist
+     * Get field content for given client.
      */
-    public function read($clientId)
+    public function read(int $clientId): CustomFields
     {
-        $fields = new \Model\Client\CustomFields();
-        $select = $this->_customFields->getSql()->select();
-        $select->columns(array_values($this->getColumnMap()))
-               ->where(array('hardware_id' => $clientId));
-        $data = $this->_customFields->selectWith($select)->current();
-        if (!$data) {
-            throw new \RuntimeException('Invalid client ID: ' . $clientId);
-        }
-        $this->getHydrator()->hydrate(
-            $data->getArrayCopy(),
-            $fields
-        );
-        return $fields;
+        $data = $this->readRaw($clientId, array_values($this->getColumnMap()));
+        $fields = new CustomFields();
+
+        return $this->getHydrator()->hydrate($data, $fields);
     }
 
     /**
-     * Set field content for given client
-     *
-     * @param integer $clientId Client ID
-     * @param array|\Model\Client\CustomFields $data Values
+     * Get raw field content for given client.
      */
-    public function write($clientId, $data)
+    public function readRaw(int $clientId, array $columns): array
     {
-        if (!$data instanceof \Model\Client\CustomFields) {
-            $data = new \Model\Client\CustomFields($data);
+        $select = $this->_customFields->getSql()->select();
+        $select->columns($columns)->where(['hardware_id' => $clientId]);
+
+        $result = $this->_customFields->selectWith($select)->current();
+        if (!$result) {
+            throw new InvalidArgumentException('Invalid client ID: ' . $clientId);
         }
+
+        return $result->getArrayCopy();
+    }
+
+    /**
+     * Set field content for given client.
+     */
+    public function write(int $clientId, $data): void
+    {
+        if (!$data instanceof CustomFields) {
+            $data = new CustomFields($data);
+        }
+        $this->writeRaw($clientId, $this->getHydrator()->extract($data));
+    }
+
+    /**
+     * Set raw field content for given client.
+     */
+    public function writeRaw(int $clientId, array $data): void
+    {
         // Row is always present (created by server)
-        $this->_customFields->update(
-            $this->getHydrator()->extract($data),
-            array('hardware_id' => $clientId)
-        );
+        $this->_customFields->update($data, ['hardware_id' => $clientId]);
     }
 }

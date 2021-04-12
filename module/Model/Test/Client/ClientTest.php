@@ -22,6 +22,8 @@
 
 namespace Model\Test\Client;
 
+use Model\Client\CustomFields;
+
 class ClientTest extends \Model\Test\AbstractTest
 {
     protected static $_tables = [
@@ -148,13 +150,15 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testOffsetGetCustomFields()
     {
+        $customFields = $this->createStub(CustomFields::class);
+
         $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
-        $customFieldManager->expects($this->once())->method('read')->with(2)->willReturn('custom_fields');
+        $customFieldManager->expects($this->once())->method('read')->with(2)->willReturn($customFields);
 
         $model = $this->getModel(array('Model\Client\CustomFieldManager' => $customFieldManager));
         $model['Id'] = 2;
-        $this->assertEquals('custom_fields', $model['CustomFields']);
-        $this->assertEquals('custom_fields', $model['CustomFields']); // cached result
+        $this->assertEquals($customFields, $model['CustomFields']);
+        $this->assertEquals($customFields, $model['CustomFields']); // cached result
     }
 
     public function testOffsetGetRegistry()
