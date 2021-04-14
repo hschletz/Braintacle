@@ -22,6 +22,8 @@
 
 namespace Protocol\Test\Hydrator;
 
+use Model\Client\WindowsInstallation;
+
 class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
 {
     /**
@@ -115,9 +117,7 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
     {
         if (isset($objectData['Windows'])) {
             // Set up prototype with new mock object to validate hydrated data.
-            $this->_windowsInstallation = $this->getMockBuilder('Model\Client\WindowsInstallation')
-                                               ->setMethods(array('exchangeArray'))
-                                               ->getMock();
+            $this->_windowsInstallation = $this->createMock(WindowsInstallation::class);
             $this->_windowsInstallation->expects($this->once())->method('exchangeArray')->with($objectData['Windows']);
 
             // Replace array with mock object (which hydrate() will clone)

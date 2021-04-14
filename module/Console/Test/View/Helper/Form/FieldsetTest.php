@@ -101,10 +101,7 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
              ->with('htmlElement', array('fieldset', 'LABEL<div>CONTENT</div>', 'ATTRIBUTES'))
              ->willReturn('FIELDSET');
 
-        $helper = $this->getMockBuilder($this->getHelperClass())
-                       ->disableOriginalConstructor()
-                       ->setMethods(array('renderElements', 'renderLabel', 'getView'))
-                       ->getMock();
+        $helper = $this->createPartialMock(Fieldset::class, ['renderElements', 'renderLabel', 'getView']);
         $helper->expects($this->never())->method('renderElements');
         $helper->method('renderLabel')->with($fieldset)->willReturn('LABEL');
         $helper->method('getView')->willReturn($view);
@@ -122,10 +119,7 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
              ->with('htmlElement', array('fieldset', 'LABEL<div>CONTENT</div>', 'ATTRIBUTES'))
              ->willReturn('FIELDSET');
 
-        $helper = $this->getMockBuilder($this->getHelperClass())
-                       ->disableOriginalConstructor()
-                       ->setMethods(array('renderElements', 'renderLabel', 'getView'))
-                       ->getMock();
+        $helper = $this->createPartialMock(Fieldset::class, ['renderElements', 'renderLabel', 'getView']);
         $helper->method('renderElements')->with($fieldset)->willReturn('CONTENT');
         $helper->method('renderLabel')->with($fieldset)->willReturn('LABEL');
         $helper->method('getView')->willReturn($view);
@@ -138,10 +132,7 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
         $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
         $fieldset->method('getLabel')->willReturn('');
 
-        $helper = $this->getMockBuilder($this->getHelperClass())
-                       ->disableOriginalConstructor()
-                       ->setMethods(array('getView'))
-                       ->getMock();
+        $helper = $this->createPartialMock(Fieldset::class, ['getView']);
         $helper->expects($this->never())->method('getView');
 
         $this->assertEquals('', $helper->renderLabel($fieldset));
@@ -160,10 +151,7 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
              )
              ->willReturnOnConsecutiveCalls('TRANSLATED', 'ESCAPED');
 
-        $helper = $this->getMockBuilder($this->getHelperClass())
-                       ->disableOriginalConstructor()
-                       ->setMethods(array('getView'))
-                       ->getMock();
+        $helper = $this->createPartialMock(Fieldset::class, ['getView']);
         $helper->method('getView')->willReturn($view);
 
         $this->assertEquals('<legend>ESCAPED</legend>', $helper->renderLabel($fieldset));

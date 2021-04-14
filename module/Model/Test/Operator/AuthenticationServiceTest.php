@@ -22,6 +22,8 @@
 
 namespace Model\Test\Operator;
 
+use Model\Operator\AuthenticationService;
+
 /**
  * Tests for AuthenticationService
  */
@@ -52,10 +54,7 @@ class AuthenticationServiceTest extends \Model\Test\AbstractTest
         $adapter->method('setCredential')->with('password')->willReturnSelf();
         $adapter->method('authenticate')->willReturn($result);
 
-        $service = $this->getMockBuilder($this->getClass())
-                        ->disableOriginalConstructor()
-                        ->setMethods(array('getAdapter', 'authenticate'))
-                        ->getMock();
+        $service = $this->createPartialMock(AuthenticationService::class, ['getAdapter', 'authenticate']);
         $service->method('getAdapter')->willReturn($adapter);
         $service->method('authenticate')->with(null)->willReturnCallback(
             function () use ($adapter) {
@@ -68,10 +67,7 @@ class AuthenticationServiceTest extends \Model\Test\AbstractTest
 
     public function testLoginEmptyUser()
     {
-        $service = $this->getMockBuilder($this->getClass())
-                        ->disableOriginalConstructor()
-                        ->setMethods(array('getAdapter', 'authenticate'))
-                        ->getMock();
+        $service = $this->createPartialMock(AuthenticationService::class, ['getAdapter', 'authenticate']);
         $service->expects($this->never())->method('getAdapter');
         $service->expects($this->never())->method('authenticate');
 
@@ -83,10 +79,7 @@ class AuthenticationServiceTest extends \Model\Test\AbstractTest
         $storage = $this->createMock('Laminas\Authentication\Storage\StorageInterface');
         $storage->expects($this->once())->method('write')->with('user');
 
-        $service = $this->getMockBuilder($this->getClass())
-                        ->disableOriginalConstructor()
-                        ->setMethods(array('getStorage', 'hasIdentity'))
-                        ->getMock();
+        $service = $this->createPartialMock(AuthenticationService::class, ['getStorage', 'hasIdentity']);
         $service->method('getStorage')->willReturn($storage);
         $service->expects($this->once())->method('hasIdentity')->willReturn(true);
 
@@ -98,10 +91,7 @@ class AuthenticationServiceTest extends \Model\Test\AbstractTest
         $this->expectException('LogicException');
         $this->expectExceptionMessage('Cannot change identity: not authenticated yet');
 
-        $service = $this->getMockBuilder($this->getClass())
-                        ->disableOriginalConstructor()
-                        ->setMethods(array('getStorage', 'hasIdentity'))
-                        ->getMock();
+        $service = $this->createPartialMock(AuthenticationService::class, ['getStorage', 'hasIdentity']);
         $service->expects($this->never())->method('getStorage');
         $service->expects($this->once())->method('hasIdentity')->willReturn(false);
 
@@ -113,10 +103,7 @@ class AuthenticationServiceTest extends \Model\Test\AbstractTest
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('No identity provided');
 
-        $service = $this->getMockBuilder($this->getClass())
-                        ->disableOriginalConstructor()
-                        ->setMethods(array('getStorage', 'hasIdentity'))
-                        ->getMock();
+        $service = $this->createPartialMock(AuthenticationService::class, ['getStorage', 'hasIdentity']);
         $service->expects($this->never())->method('getStorage');
         $service->method('hasIdentity')->willReturn(true);
 

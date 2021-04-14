@@ -42,6 +42,11 @@ class ManageRegistryValues extends Form
      **/
     protected $_definedValues = array();
 
+    protected function getDefinedValues(): array
+    {
+        return $this->_definedValues;
+    }
+
     /** {@inheritdoc} */
     public function init()
     {
@@ -229,7 +234,7 @@ class ManageRegistryValues extends Form
                 $data['new_value']['value']
             );
         }
-        foreach ($this->_definedValues as $value) {
+        foreach ($this->getDefinedValues() as $value) {
             $registryManager->renameValueDefinition(
                 $value['Name'],
                 $data['existing'][base64_encode($value['Name'])]

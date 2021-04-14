@@ -31,7 +31,7 @@ use Library\Application;
  * functions. Additionally, the testHelperInterface() test is executed for all
  * derived tests.
  */
-abstract class AbstractTest extends \PHPUnit\Framework\TestCase
+abstract class AbstractTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
 {
     /**
      * Service manager

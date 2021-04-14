@@ -22,6 +22,7 @@
 
 namespace Model\Test\Client;
 
+use Model\Client\Client;
 use Model\Client\CustomFields;
 
 class ClientTest extends \Model\Test\AbstractTest
@@ -198,7 +199,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testOffsetGetItems()
     {
-        $model = $this->getMockBuilder('Model\Client\Client')->setMethods(array('getItems'))->getMock();
+        $model = $this->createPartialMock(Client::class, ['getItems']);
         $model->expects($this->once())->method('getItems')->with('type')->willReturn('items');
         $this->assertEquals('items', $model['type']);
         $this->assertEquals('items', $model['type']); // cached result
@@ -261,9 +262,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->with('Model\Config')->willReturn($config);
 
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setMethods(array('offsetGet', 'getGroups', '__destruct'))
-                      ->getMock();
+        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroups', '__destruct']);
         $model->method('offsetGet')->willReturn(42);
         $model->method('getGroups')->willReturn($groups);
         $model->setServiceLocator($serviceManager);
@@ -282,9 +281,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->expects($this->exactly(2))->method('get')->with('Model\Config')->willReturn($config);
 
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setMethods(array('offsetGet', 'getGroups', '__destruct'))
-                      ->getMock();
+        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroups', '__destruct']);
         $model->expects($this->exactly(3))->method('offsetGet')->willReturn(42);
         $model->expects($this->exactly(2))->method('getGroups')->willReturn(array());
         $model->setServiceLocator($serviceManager);
@@ -460,9 +457,7 @@ class ClientTest extends \Model\Test\AbstractTest
      */
     public function testGetEffectiveConfig($option, $defaultValue, $clientValue, $expectedValue)
     {
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setMethods(array('offsetGet', 'getDefaultConfig', 'getConfig'))
-                      ->getMock();
+        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getDefaultConfig', 'getConfig']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getDefaultConfig')->with($option)->willReturn($defaultValue);
         $model->method('getConfig')->with($option)->willReturn($clientValue);
@@ -507,9 +502,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->with('Model\Config')->willReturn($config);
 
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setMethods(array('offsetGet', 'getConfig', 'getGroups'))
-                      ->getMock();
+        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getConfig', 'getGroups']);
         $model->setServiceLocator($serviceManager);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getConfig')->with('inventoryInterval')->willReturn($clientValue);
@@ -520,9 +513,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testGetEffectiveConfigCache()
     {
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setMethods(array('offsetGet', 'getConfig'))
-                      ->getMock();
+        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getConfig']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->expects($this->exactly(2))
               ->method('getConfig')
@@ -755,7 +746,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->with('Model\Client\ItemManager')->willReturn($itemManager);
 
-        $model = $this->getMockBuilder('Model\Client\Client')->setMethods(array('offsetGet'))->getMock();
+        $model = $this->createPartialMock(Client::class, ['offsetGet']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->setServiceLocator($serviceManager);
 
@@ -773,7 +764,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->with('Model\Client\ItemManager')->willReturn($itemManager);
 
-        $model = $this->getMockBuilder('Model\Client\Client')->setMethods(array('offsetGet'))->getMock();
+        $model = $this->createPartialMock(Client::class, ['offsetGet']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->setServiceLocator($serviceManager);
 
@@ -841,10 +832,8 @@ class ClientTest extends \Model\Test\AbstractTest
                            )
                        );
 
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setMethods(array('getGroupMemberships', '__destruct'))
-                      ->setConstructorArgs(array(array('Id' => 42)))
-                      ->getMock();
+        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
+        $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getGroupMemberships')->willReturn($oldMemberships);
         $model->setServiceLocator($serviceManager);
 
@@ -911,10 +900,8 @@ class ClientTest extends \Model\Test\AbstractTest
                            )
                        );
 
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setMethods(array('getGroupMemberships', '__destruct'))
-                      ->setConstructorArgs(array(array('Id' => 42)))
-                      ->getMock();
+        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
+        $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getGroupMemberships')->willReturn($oldMemberships);
         $model->setServiceLocator($serviceManager);
 
@@ -981,10 +968,8 @@ class ClientTest extends \Model\Test\AbstractTest
                            )
                        );
 
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setMethods(array('getGroupMemberships', '__destruct'))
-                      ->setConstructorArgs(array(array('Id' => 42)))
-                      ->getMock();
+        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
+        $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getGroupMemberships')->willReturn(array(1 => $oldMembership));
         $model->setServiceLocator($serviceManager);
 
@@ -1043,11 +1028,9 @@ class ClientTest extends \Model\Test\AbstractTest
                            )
                        );
 
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setMethods(array('getGroupMemberships', '__destruct'))
-                      ->setConstructorArgs(array(array('Id' => 42)))
-                      ->getMock();
-        $model->method('getGroupMemberships')->willReturn(array(1 => $oldMembership));
+        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
+        $model->method('offsetGet')->with('Id')->willReturn(42);
+        $model->method('getGroupMemberships')->willReturn([1 => $oldMembership]);
         $model->setServiceLocator($serviceManager);
 
         $cache = new \ReflectionProperty($model, '_groups');
@@ -1098,10 +1081,8 @@ class ClientTest extends \Model\Test\AbstractTest
                            )
                        );
 
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setMethods(array('getGroupMemberships', '__destruct'))
-                      ->setConstructorArgs(array(array('Id' => 42)))
-                      ->getMock();
+        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
+        $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getGroupMemberships')->willReturn(array(2 => \Model\Client\Client::MEMBERSHIP_ALWAYS));
         $model->setServiceLocator($serviceManager);
 
@@ -1127,10 +1108,8 @@ class ClientTest extends \Model\Test\AbstractTest
                            array(array('Model\Group\GroupManager', $groupManager))
                        );
 
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setMethods(array('getGroupMemberships', '__destruct'))
-                      ->setConstructorArgs(array(array('Id' => 42)))
-                      ->getMock();
+        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
+        $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getGroupMemberships')->willReturn(array());
         $model->setServiceLocator($serviceManager);
 

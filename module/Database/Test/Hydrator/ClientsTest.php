@@ -22,6 +22,9 @@
 
 namespace Database\Test\Hydrator;
 
+use Database\AbstractTable;
+use Laminas\Db\ResultSet\HydratingResultSet;
+
 class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
 {
     protected function getHydrator()
@@ -51,15 +54,10 @@ class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         $windowsInstallations = $this->createMock('Database\Table\WindowsInstallations');
         $windowsInstallations->method('getHydrator')->willReturn($hydrator);
 
-        $resultSet = $this->getMockBuilder('Laminas\Db\ResultSet\AbstractResultSet')
-                          ->setMethods(array('getObjectPrototype'))
-                          ->getMockForAbstractClass();
+        $resultSet = $this->createStub(HydratingResultSet::class);
         $resultSet->method('getObjectPrototype')->willReturn($this);
 
-        $itemTable = $this->getMockBuilder('Database\AbstractTable')
-                          ->disableOriginalConstructor()
-                          ->setMethods(array('getResultSetPrototype', 'getHydrator'))
-                          ->getMockForAbstractClass();
+        $itemTable = $this->createStub(AbstractTable::class);
         $itemTable->method('getResultSetPrototype')->willReturn($resultSet);
         $itemTable->method('getHydrator')->willReturn($hydrator);
 

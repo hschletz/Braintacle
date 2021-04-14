@@ -244,10 +244,7 @@ class ShowDuplicatesTest extends \Library\Test\View\Helper\AbstractTest
             ['htmlElement', null, $htmlElement],
         ]);
 
-        $helper = $this->getMockBuilder($this->getHelperClass())
-                       ->disableOriginalConstructor()
-                       ->setMethods(['getView'])
-                       ->getMock();
+        $helper = $this->createPartialMock(ShowDuplicatesHelper::class, ['getView']);
         $helper->method('getView')->willReturn($view);
 
         $this->assertEquals('link', $helper->getBlacklistLink('Property', 'property_value'));

@@ -22,11 +22,13 @@
 
 namespace Database\Test\Hydrator;
 
+use Database\Hydrator\Software;
+
 class SoftwareTest extends \PHPUnit\Framework\TestCase
 {
     public function testHydrateWindows()
     {
-        $hydrator = $this->getMockBuilder('Database\Hydrator\Software')->setMethods(array('hydrateValue'))->getMock();
+        $hydrator = $this->createPartialMock(Software::class, ['hydrateValue']);
         $hydrator->method('hydrateValue')->will(
             $this->returnValueMap(
                 array(
@@ -71,7 +73,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
 
     public function testHydrateUnix()
     {
-        $hydrator = $this->getMockBuilder('Database\Hydrator\Software')->setMethods(array('hydrateValue'))->getMock();
+        $hydrator = $this->createPartialMock(Software::class, ['hydrateValue']);
         $hydrator->expects($this->never())->method('hydrateValue');
         $agentData = array(
             'is_windows' => false,
@@ -101,7 +103,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
 
     public function testHydrateAndroid()
     {
-        $hydrator = $this->getMockBuilder('Database\Hydrator\Software')->setMethods(['hydrateValue'])->getMock();
+        $hydrator = $this->createPartialMock(Software::class, ['hydrateValue']);
         $hydrator->expects($this->never())->method('hydrateValue');
         $agentData = array(
             'is_windows' => false,
@@ -131,7 +133,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
 
     public function testExtractWindows()
     {
-        $hydrator = $this->getMockBuilder('Database\Hydrator\Software')->setMethods(array('extractValue'))->getMock();
+        $hydrator = $this->createPartialMock(Software::class, ['extractValue']);
         $hydrator->method('extractValue')->will(
             $this->returnValueMap(
                 array(
@@ -170,7 +172,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
 
     public function testExtractUnix()
     {
-        $hydrator = $this->getMockBuilder('Database\Hydrator\Software')->setMethods(array('extractValue'))->getMock();
+        $hydrator = $this->createPartialMock(Software::class, ['extractValue']);
         $hydrator->expects($this->never())->method('extractValue');
         $software = (object) [
             'Name' => '_Name',
@@ -196,7 +198,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
 
     public function testExtractAndroid()
     {
-        $hydrator = $this->getMockBuilder('Database\Hydrator\Software')->setMethods(array('extractValue'))->getMock();
+        $hydrator = $this->createPartialMock(Software::class, ['extractValue']);
         $hydrator->expects($this->never())->method('extractValue');
         $software = (object) [
             'Name' => '_Name',

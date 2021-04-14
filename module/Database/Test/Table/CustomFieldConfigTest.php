@@ -169,10 +169,7 @@ class CustomFieldConfigTest extends AbstractTest
 
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
 
-        $table = $this->getMockBuilder('Database\Table\CustomFieldConfig')
-                      ->disableOriginalConstructor()
-                      ->setMethods(array('getSql'))
-                      ->getMock();
+        $table = $this->createPartialMock(CustomFieldConfig::class, ['getSql']);
         $table->method('getSql')->willThrowException(new \RuntimeException('test message'));
 
         $adapterProperty = new \ReflectionProperty(get_class($table), 'adapter');
@@ -234,10 +231,7 @@ class CustomFieldConfigTest extends AbstractTest
         $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
 
-        $table = $this->getMockBuilder('Database\Table\CustomFieldConfig')
-                      ->disableOriginalConstructor()
-                      ->setMethods(array('getSql'))
-                      ->getMock();
+        $table = $this->createPartialMock(CustomFieldConfig::class, ['getSql']);
         $table->method('getSql')->willThrowException(new \RuntimeException('test message'));
 
         $adapterProperty = new \ReflectionProperty(get_class($table), 'adapter');

@@ -22,6 +22,8 @@
 
 namespace Library\Test\View\Helper;
 
+use Library\View\Helper\HtmlElement;
+
 /**
  * Tests for the HtmlElement helper
  */
@@ -52,7 +54,7 @@ class HtmlElementTest extends AbstractTest
     {
         $attribs = array('attrib' => 'value');
 
-        $helper = $this->getMockBuilder($this->getHelperClass())->setMethods(array('htmlAttribs'))->getMock();
+        $helper = $this->createPartialMock(HtmlElement::class, ['htmlAttribs']);
         $helper->method('htmlAttribs')->with($attribs)->willReturn(' attribs');
 
         $this->assertEquals(

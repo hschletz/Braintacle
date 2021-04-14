@@ -48,9 +48,7 @@ class DomDocumentTest extends \PHPUnit\Framework\TestCase
 
     public function testIsValidWithDefinedSchema()
     {
-        $document = $this->getMockBuilder('Library\DomDocument')
-                         ->setMethods(array('getSchemaFilename', 'relaxNGValidate'))
-                         ->getMock();
+        $document = $this->createPartialMock(DomDocument::class, ['getSchemaFilename', 'relaxNGValidate']);
         $document->method('getSchemaFilename')
                  ->willReturn('schema_file');
         $document->method('relaxNGValidate')
@@ -61,7 +59,7 @@ class DomDocumentTest extends \PHPUnit\Framework\TestCase
 
     public function testForceValidValid()
     {
-        $document = $this->getMockBuilder('Library\DomDocument')->setMethods(array('isValid'))->getMock();
+        $document = $this->createPartialMock(DomDocument::class, ['isValid']);
         $document->expects($this->once())
                  ->method('isValid')
                  ->willReturn(true);
@@ -73,7 +71,7 @@ class DomDocumentTest extends \PHPUnit\Framework\TestCase
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('Validation of XML document failed. line 1: Expecting element TEST, got test');
 
-        $document = $this->getMockBuilder('Library\DomDocument')->setMethods(['getSchemaFilename'])->getMock();
+        $document = $this->createPartialMock(DomDocument::class, ['getSchemaFilename']);
         $document->method('getSchemaFilename')->willReturn(__DIR__ . '/../data/Test/DomDocument/test.rng');
 
         $document->loadXML('<?xml version="1.0" ?><test />');

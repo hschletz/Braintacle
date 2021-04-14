@@ -22,6 +22,7 @@
 
 namespace Console\Test\Form;
 
+use Console\Form\DefineFields;
 use Laminas\Dom\Document\Query as Query;
 
 /**
@@ -429,7 +430,6 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
     public function testProcessRenameNoAdd()
     {
         $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
-        $customFieldManager->expects($this->once())->method('getFields')->willReturn(array());
         $customFieldManager->expects($this->never())->method('addField');
         $customFieldManager->expects($this->once())->method('renameField')->with('old_name', 'new_name');
         $data = array(
@@ -438,19 +438,17 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
                 'old_name' => 'new_name',
             ),
         );
-        $form = $this->getMockBuilder('Console\Form\DefineFields')->setMethods(array('getData'))->getMock();
+        $form = $this->createPartialMock(DefineFields::class, ['getData']);
         $form->expects($this->once())
              ->method('getData')
              ->will($this->returnValue($data));
         $form->setOption('CustomFieldManager', $customFieldManager);
-        $form->init();
         $form->process();
     }
 
     public function testProcessAdd()
     {
         $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
-        $customFieldManager->expects($this->once())->method('getFields')->willReturn(array());
         $customFieldManager->expects($this->once())->method('addField')->with('new_name', 'text');
         $customFieldManager->expects($this->never())->method('renameField');
         $data = array(
@@ -458,12 +456,11 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
             'NewType' => 'text',
             'Fields' => array(),
         );
-        $form = $this->getMockBuilder('Console\Form\DefineFields')->setMethods(array('getData'))->getMock();
+        $form = $this->createPartialMock(DefineFields::class, ['getData']);
         $form->expects($this->once())
              ->method('getData')
              ->will($this->returnValue($data));
         $form->setOption('CustomFieldManager', $customFieldManager);
-        $form->init();
         $form->process();
     }
 }

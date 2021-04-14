@@ -41,11 +41,8 @@ class Metadata extends \Library\DomDocument
      *
      * Attributes are populated with values from the given package and
      * hardcoded defaults.
-     *
-     * @param array $data Package data
-     * @param bool $validate validate document (default: FALSE)
      */
-    public function setPackageData($data, $validate = false)
+    public function setPackageData(array $data)
     {
         $node = $this->createElement('DOWNLOAD');
 
@@ -73,9 +70,6 @@ class Metadata extends \Library\DomDocument
             $this->replaceChild($node, $this->firstChild);
         } else {
             $this->appendChild($node);
-        }
-        if ($validate) {
-            $this->forceValid();
         }
     }
 
@@ -135,10 +129,10 @@ class Metadata extends \Library\DomDocument
     }
 
     /**
-     * Unescape string encoded by _escapeMessage()
+     * Unescape string encoded by escapeMessage()
      *
      * The returned string may not be identical to the original string because
-     * _escapeMessage() is not fully reversible, but should sufficiently match
+     * escapeMessage() is not fully reversible, but should sufficiently match
      * the original content. Line breaks are returned as \\n.
      *
      * @param string $message Escaped user notification message

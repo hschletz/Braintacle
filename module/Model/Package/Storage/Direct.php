@@ -120,7 +120,10 @@ class Direct implements StorageInterface
      */
     public function writeMetadata($data)
     {
-        $this->_metadata->setPackageData($data, $this->_config->validateXml);
+        $this->_metadata->setPackageData($data);
+        if ($this->_config->validateXml) {
+            $this->_metadata->forceValid();
+        }
         $this->_metadata->save($this->getPath($data['Id']) . '/info');
     }
 

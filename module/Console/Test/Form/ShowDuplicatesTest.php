@@ -22,6 +22,8 @@
 
 namespace Console\Test\Form;
 
+use Console\Form\ShowDuplicates;
+
 class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
 {
     /** {@inheritdoc} */
@@ -90,10 +92,8 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
             ],
         ];
 
-        $form = $this->getMockBuilder($this->getFormClass())
-                     ->setMethods(['getOption'])
-                     ->getMock();
-        $form->method('getOption')->with('config')->willReturn($config);
+        $form = new ShowDuplicates();
+        $form->setOption('config', $config);
         $form->init();
 
         $this->assertEquals($expectedOptions, $form->get('mergeOptions')->getValueOptions());

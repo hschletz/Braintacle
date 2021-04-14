@@ -22,10 +22,14 @@
 
 namespace Console\Test\Controller;
 
+use Console\Form\ProductKey;
 use Console\Form\Search as SearchForm;
 use Console\Mvc\Controller\Plugin\PrintForm;
 use Console\View\Helper\Form\Search as SearchHelper;
+use Laminas\Form\Element\Csrf;
+use Laminas\Form\Element\Text;
 use Laminas\View\Model\ViewModel;
+use Library\Form\Element\Submit;
 
 /**
  * Tests for ClientController
@@ -988,12 +992,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testWindowsActionGet()
     {
-        // Since form elements are rendered manually, mocking the entire form
-        // would be very complicated. Just stub the pivotal methods and leave
-        // elements as is.
-        $form = $this->getMockBuilder('Console\Form\ProductKey')
-                     ->setMethods(array('isValid', 'prepare', 'setData'))
-                     ->getMock();
+        $key = new Text('Key');
+        $key->setLabel('Product key (if different)');
+
+        $csrf = new Csrf('_csrf');
+        $submit = new Submit('Submit');
+
+        $form = $this->createPartialMock(ProductKey::class, ['setData', 'isValid', 'prepare', 'get']);
         $form->expects($this->once())
              ->method('setData')
              ->with(array('Key' => 'manual_product_key'));
@@ -1001,7 +1006,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->method('isValid');
         $form->expects($this->once())
              ->method('prepare');
-        $form->init();
+        $form->method('get')->willReturnMap([
+            ['Key', $key],
+            ['_csrf', $csrf],
+            ['Submit', $submit],
+        ]);
 
         $formManager = $this->getApplicationServiceLocator()->get('FormElementManager');
         $formManager->setAllowOverride(true);
@@ -1039,11 +1048,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testWindowsActionPostInvalid()
     {
-        $postData = array('key' => 'entered_key');
-        // Again, just stub the pivotal methods
-        $form = $this->getMockBuilder('Console\Form\ProductKey')
-                     ->setMethods(array('isValid', 'prepare', 'setData'))
-                     ->getMock();
+        $postData = ['key' => 'entered_key'];
+
+        $key = new Text('Key');
+        $key->setMessages(['message']);
+
+        $csrf = new Csrf('_csrf');
+        $submit = new Submit('Submit');
+
+        $form = $this->createPartialMock(ProductKey::class, ['setData', 'isValid', 'prepare', 'get']);
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -1052,8 +1065,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
              ->will($this->returnValue(false));
         $form->expects($this->once())
              ->method('prepare');
-        $form->init();
-        $form->get('Key')->setMessages(array('message'));
+        $form->method('get')->willReturnMap([
+            ['Key', $key],
+            ['_csrf', $csrf],
+            ['Submit', $submit],
+        ]);
 
         $formManager = $this->getApplicationServiceLocator()->get('FormElementManager');
         $formManager->setAllowOverride(true);

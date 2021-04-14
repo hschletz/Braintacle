@@ -22,8 +22,13 @@
 
 namespace Model\Test\Group;
 
+use Mockery;
+use Model\Group\GroupManager;
+
 class GroupManagerTest extends AbstractGroupTest
 {
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /** {@inheritdoc} */
     protected static $_tables = array('ClientConfig', 'ClientsAndGroups', 'GroupMemberships');
 
@@ -71,11 +76,8 @@ class GroupManagerTest extends AbstractGroupTest
             )
         );
 
-        $model = $this->getMockBuilder('Model\Group\GroupManager')
-                      ->setMethods(array('updateCache'))
-                      ->setConstructorArgs(array($serviceManager))
-                      ->getMock();
-        $model->expects($this->$updateCache())->method('updateCache');
+        $model = Mockery::mock(GroupManager::class, [$serviceManager])->makePartial();
+        $model->shouldReceive('updateCache')->$updateCache();
 
         $resultSet = $model->getGroups($filter, $filterArg, $order, $direction);
         $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $resultSet);
@@ -391,11 +393,8 @@ class GroupManagerTest extends AbstractGroupTest
         $group = $this->createMock('Model\Group\Group');
         $group->expects($this->once())->method('update')->with(true);
 
-        $model = $this->getMockBuilder($this->getClass())
-                      ->disableOriginalConstructor()
-                      ->setMethods(array('getGroups'))
-                      ->getMock();
-        $model->expects($this->once())->method('getGroups')->with('Expired')->willReturn(array($group));
+        $model = $this->createPartialMock(GroupManager::class, ['getGroups']);
+        $model->method('getGroups')->with('Expired')->willReturn([$group]);
         $model->updateCache();
     }
 }

@@ -22,6 +22,8 @@
 
 namespace Console\Test\Form;
 
+use Console\Form\AddToGroup;
+
 /**
  * Tests for AddToGroup form
  */
@@ -260,7 +262,7 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
             'NewGroup' => 'name',
             'Description' => 'description',
         );
-        $form = $this->getMockBuilder('Console\Form\AddToGroup')->setMethods(array('getData'))->getMock();
+        $form = $this->createPartialMock(AddToGroup::class, ['getData']);
         $form->expects($this->once())
              ->method('getData')
              ->will($this->returnValue($data));
@@ -284,7 +286,7 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
             'Where' => 'existing',
             'ExistingGroup' => 'name',
         );
-        $form = $this->getMockBuilder('Console\Form\AddToGroup')->setMethods(array('getData'))->getMock();
+        $form = $this->createPartialMock(AddToGroup::class, ['getData']);
         $form->expects($this->once())
              ->method('getData')
              ->will($this->returnValue($data));

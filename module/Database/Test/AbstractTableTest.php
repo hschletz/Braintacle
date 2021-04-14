@@ -22,6 +22,9 @@
 
 namespace Database\Test\Table;
 
+use Database\AbstractTable;
+use Laminas\Hydrator\AbstractHydrator;
+
 /**
  * Tests for AbstractTable helper methods
  */
@@ -48,10 +51,7 @@ class AbstractTableTest extends \PHPUnit\Framework\TestCase
         $sql = $this->createMock('Laminas\Db\Sql\Sql');
         $sql->method('select')->willReturn($this->_select);
 
-        $this->_table = $this->getMockBuilder('Database\AbstractTable')
-                             ->disableOriginalConstructor()
-                             ->setMethods(array('getSql', 'selectWith'))
-                             ->getMockForAbstractClass();
+        $this->_table = $this->createPartialMock(AbstractTable::class, ['getSql', 'selectWith']);
         $this->_table->method('getSql')->willReturn($sql);
 
         parent::setUp();
@@ -75,10 +75,7 @@ class AbstractTableTest extends \PHPUnit\Framework\TestCase
         $adapter = $this->createMock('Laminas\Db\Adapter\AdapterInterface');
         $adapter->method('getDriver')->willReturn($driver);
 
-        $table = $this->getMockBuilder('Database\AbstractTable')
-                      ->disableOriginalConstructor()
-                      ->setMethods(['getAdapter'])
-                      ->getMock();
+        $table = $this->createPartialMock(AbstractTable::class, ['getAdapter']);
         $table->method('getAdapter')->willReturn($adapter);
 
         $this->assertSame($connection, $table->getConnection());
@@ -99,9 +96,7 @@ class AbstractTableTest extends \PHPUnit\Framework\TestCase
 
     public function testFetchColWithAbstractHydrator()
     {
-        $hydrator = $this->getMockBuilder('Laminas\Hydrator\AbstractHydrator')
-                         ->setMethods(array('hydrateName'))
-                         ->getMockForAbstractClass();
+        $hydrator = $this->createMock(AbstractHydrator::class);
         $hydrator->method('hydrateName')->with('col')->willReturn('hydrated');
 
         $resultSet = $this->createMock('Laminas\Db\ResultSet\HydratingResultSet');

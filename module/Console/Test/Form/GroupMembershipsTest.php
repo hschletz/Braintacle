@@ -22,6 +22,7 @@
 
 namespace Console\Test\Form;
 
+use Console\Form\GroupMemberships;
 use Laminas\Dom\Document\Query;
 
 /**
@@ -36,20 +37,21 @@ class GroupMembershipsTest extends \Console\Test\AbstractFormTest
 
     public function testSetDataNoGroups()
     {
-        $form = $this->getMockBuilder('Console\Form\GroupMemberships')->setMethods(array('setGroups'))->getMock();
-        $form->expects($this->once())
-             ->method('setGroups')
-             ->with(array());
-        $form->setData(array());
+        $form = $this->createPartialMock(GroupMemberships::class, ['setGroups', 'populateValues']);
+        $form->expects($this->once())->method('setGroups')->with([]);
+        $form->expects($this->once())->method('populateValues')->with([]);
+
+        $form->setData([]);
     }
 
     public function testSetDataWithGroups()
     {
-        $form = $this->getMockBuilder('Console\Form\GroupMemberships')->setMethods(array('setGroups'))->getMock();
-        $form->expects($this->once())
-             ->method('setGroups')
-             ->with(array('group1', 'group2'));
-        $form->setData(array('Groups' => array('group1' => '0', 'group2' => '1')));
+        $data = ['Groups' => ['group1' => '0', 'group2' => '1']];
+        $form = $this->createPartialMock(GroupMemberships::class, ['setGroups', 'populateValues']);
+        $form->expects($this->once())->method('setGroups')->with(['group1', 'group2']);
+        $form->expects($this->once())->method('populateValues')->with($data);
+
+        $form->setData($data);
     }
 
     public function testSetGroups()

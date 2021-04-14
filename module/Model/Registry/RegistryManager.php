@@ -166,16 +166,11 @@ class RegistryManager
      **/
     public function deleteValueDefinition($name)
     {
-        try {
-            $value = $this->getValueDefinition($name);
-        } catch (RuntimeException $e) {
-            return;
-        }
         $connection = $this->_registryValueDefinitions->getAdapter()->getDriver()->getConnection();
         $connection->beginTransaction();
         try {
-            $this->_registryData->delete(array('name' => $value['Name']));
-            $this->_registryValueDefinitions->delete(array('id' => $value['Id']));
+            $this->_registryData->delete(['name' => $name]);
+            $this->_registryValueDefinitions->delete(['name' => $name]);
             $connection->commit();
         } catch (\Exception $e) {
             $connection->rollback();

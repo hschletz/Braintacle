@@ -22,6 +22,8 @@
 
 namespace Model\Test\Registry;
 
+use Model\Registry\RegistryManager;
+
 /**
  * Tests for Model\RegistryManager
  */
@@ -333,11 +335,7 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('test message');
 
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setConstructorArgs(array($registryValueDefinitions, $registryData))
-                      ->setMethods(array('getValueDefinition'))
-                      ->getMock();
-        $model->method('getValueDefinition')->willReturn(array('Name' => 'name'));
+        $model = new RegistryManager($registryValueDefinitions, $registryData);
         $model->deleteValueDefinition('name');
     }
 }

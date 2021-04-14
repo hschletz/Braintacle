@@ -23,6 +23,7 @@
 namespace Model\Test\Client;
 
 use Database\Table;
+use Database\Table\Clients;
 use Model\Client\ClientManager;
 use Model\Client\DuplicatesManager;
 use Model\SoftwareManager;
@@ -167,10 +168,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
                       )
                       ->willReturn($select);
 
-        $clients = $this->getMockBuilder('Database\Table\Clients')
-                        ->disableOriginalConstructor()
-                        ->setMethods(array('getSql', 'selectWith'))
-                        ->getMock();
+        $clients = $this->createMock(Clients::class);
         $clients->method('getSql')->willReturn($sql);
         $clients->method('selectWith')
                 ->with(

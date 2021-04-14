@@ -22,6 +22,8 @@
 
 namespace Model\Test\Group;
 
+use Model\Group\Group;
+
 class GroupTest extends AbstractGroupTest
 {
     /** {@inheritdoc} */
@@ -94,7 +96,7 @@ class GroupTest extends AbstractGroupTest
                            )
                        );
 
-        $model = $this->getMockBuilder($this->getClass())->setMethods(array('lock', 'unlock'))->getMock();
+        $model = $this->createPartialMock(Group::class, ['lock', 'unlock']);
         if ($simulateLockFailure) {
             $model->expects($this->exactly(2))
                   ->method('lock')
@@ -151,7 +153,7 @@ class GroupTest extends AbstractGroupTest
                            )
                        );
 
-        $model = $this->getMockBuilder($this->getClass())->setMethods(array('lock', 'unlock'))->getMock();
+        $model = $this->createPartialMock(Group::class, ['lock', 'unlock']);
         $model->expects($this->once())->method('lock')->willReturn(true);
         $model->expects($this->once())->method('unlock');
         $model['Id'] = 10;
@@ -218,7 +220,7 @@ class GroupTest extends AbstractGroupTest
                             )
                        );
 
-        $model = $this->getMockBuilder($this->getClass())->setMethods(array('update'))->getMock();
+        $model = $this->createPartialMock(Group::class, ['update']);
         $model->expects($this->once())
               ->method('update')
               ->with(true)
@@ -331,7 +333,7 @@ class GroupTest extends AbstractGroupTest
                            )
                        );
 
-        $model = $this->getMockBuilder($this->getClass())->setMethods(array('lock', 'unlock'))->getMock();
+        $model = $this->createPartialMock(Group::class, ['lock', 'unlock']);
         $model->method('lock')->willReturn($lockSuccess);
         if ($dataSet !== null) {
             $model->expects($this->once())->method('unlock');

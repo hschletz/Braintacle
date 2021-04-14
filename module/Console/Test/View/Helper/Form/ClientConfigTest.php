@@ -179,10 +179,7 @@ class ClientConfigTest extends \Library\Test\View\Helper\AbstractTest
         );
         $view->method('plugin')->with('consoleFormFieldset')->willReturn($fieldsetHelper);
 
-        $helper = $this->getMockBuilder($this->getHelperClass())
-                       ->disableOriginalConstructor()
-                       ->setMethods(array('getView'))
-                       ->getMock();
+        $helper = $this->createPartialMock(ClientConfigHelper::class, ['getView']);
         $helper->method('getView')->willReturn($view);
 
         $this->assertEquals('FIELDSET', $helper->renderFieldset($fieldset, $object));

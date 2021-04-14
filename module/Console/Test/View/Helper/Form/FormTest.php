@@ -75,10 +75,7 @@ class FormTest extends \Library\Test\View\Helper\AbstractTest
         $_FILES = $files;
         $_SERVER = $server;
 
-        $helper = $this->getMockBuilder($this->getHelperClass())
-                       ->disableOriginalConstructor()
-                       ->setMethods(array('getView'))
-                       ->getMock();
+        $helper = $this->createPartialMock(FormHelper::class, ['getView']);
         $helper->expects($this->never())->method('getView');
 
         $this->assertEquals('', $helper->postMaxSizeExceeded());
@@ -97,10 +94,7 @@ class FormTest extends \Library\Test\View\Helper\AbstractTest
                  ['htmlElement', ['p', 'exceeded ' . ini_get('post_max_size'), ['class' => 'error']], 'exceeded']
              ]);
 
-        $helper = $this->getMockBuilder($this->getHelperClass())
-                       ->disableOriginalConstructor()
-                       ->setMethods(array('getView'))
-                       ->getMock();
+        $helper = $this->createPartialMock(FormHelper::class, ['getView']);
         $helper->method('getView')->willReturn($view);
 
         $this->assertEquals('exceeded', $helper->postMaxSizeExceeded());

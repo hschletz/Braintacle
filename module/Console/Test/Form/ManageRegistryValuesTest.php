@@ -22,7 +22,7 @@
 
 namespace Console\Test\Form;
 
-use Laminas\Dom\Document\Query as Query;
+use Console\Form\ManageRegistryValues;
 
 /**
  * Tests for ManageRegistryValues
@@ -203,27 +203,16 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
             ),
         );
 
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
-        $resultSet->initialize(new \EmptyIterator());
         $registryManager = $this->createMock('Model\Registry\RegistryManager');
-        $registryManager->expects($this->once())
-                        ->method('getValueDefinitions')
-                        ->willReturn($resultSet);
         $registryManager->expects($this->once())
                         ->method('addValueDefinition')
                         ->with('name', 'root_key', 'subkeys', 'value');
         $registryManager->expects($this->never())->method('renameValueDefinition');
 
-        $form = $this->getMockBuilder('Console\Form\ManageRegistryValues')
-                     ->setMethods(array('getData'))
-                     ->setConstructorArgs(
-                         array(
-                            null,
-                            array('registryManager' => $registryManager),
-                         )
-                     )->getMock();
+        $form = $this->createPartialMock(ManageRegistryValues::class, ['getData', 'getOption']);
         $form->expects($this->once())->method('getData')->willReturn($data);
-        $form->init();
+        $form->method('getOption')->with('registryManager')->willReturn($registryManager);
+
         $form->process();
     }
 
@@ -245,15 +234,10 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
             ),
         );
 
-        $value1 = array('Id' => 1, 'Name' => 'Test1', 'FullPath' => 'path1');
-        $value2 = array('Id' => 2, 'Name' => 'Test2', 'FullPath' => 'path2');
+        $value1 = ['Name' => 'Test1'];
+        $value2 = ['Name' => 'Test2'];
 
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
-        $resultSet->initialize(array($value1, $value2));
         $registryManager = $this->createMock('Model\Registry\RegistryManager');
-        $registryManager->expects($this->once())
-                        ->method('getValueDefinitions')
-                        ->willReturn($resultSet);
         $registryManager->expects($this->never())->method('addValueDefinition');
         $registryManager->expects($this->exactly(2))
                         ->method('renameValueDefinition')
@@ -262,16 +246,11 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
                             array('Test2', 'Test2')
                         );
 
-        $form = $this->getMockBuilder('Console\Form\ManageRegistryValues')
-                     ->setMethods(array('getData'))
-                     ->setConstructorArgs(
-                         array(
-                            null,
-                            array('registryManager' => $registryManager),
-                         )
-                     )->getMock();
+        $form = $this->createPartialMock(ManageRegistryValues::class, ['getData', 'getOption', 'getDefinedValues']);
         $form->expects($this->once())->method('getData')->willReturn($data);
-        $form->init();
+        $form->method('getOption')->with('registryManager')->willReturn($registryManager);
+        $form->method('getDefinedValues')->willReturn([$value1, $value2]);
+
         $form->process();
     }
 }

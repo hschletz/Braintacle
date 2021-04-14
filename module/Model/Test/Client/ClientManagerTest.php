@@ -22,6 +22,7 @@
 
 namespace Model\Test\Client;
 
+use Model\Client\ClientManager;
 use Nada\Column\AbstractColumn as Column;
 use org\bovigo\vfs\vfsStream;
 
@@ -982,10 +983,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $resultSet->method('current')->willReturn('client');
         $resultSet->method('count')->willReturn(1);
 
-        $model = $this->getMockBuilder($this->getClass())
-                      ->disableOriginalConstructor()
-                      ->setMethods(array('getClients'))
-                      ->getMock();
+        $model = $this->createPartialMock(ClientManager::class, ['getClients']);
         $model->method('getClients')->with(null, null, null, 'Id', 42)->willReturn($resultSet);
         $this->assertEquals('client', $model->getClient(42));
     }
@@ -998,10 +996,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $resultSet = $this->createMock('Laminas\Db\ResultSet\HydratingResultSet');
         $resultSet->method('count')->willReturn(0);
 
-        $model = $this->getMockBuilder($this->getClass())
-                      ->disableOriginalConstructor()
-                      ->setMethods(array('getClients'))
-                      ->getMock();
+        $model = $this->createPartialMock(ClientManager::class, ['getClients']);
         $model->method('getClients')->with(null, null, null, 'Id', 42)->willReturn($resultSet);
         $model->getClient(42);
     }
@@ -1236,10 +1231,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $content = "testUploadFile\nline1\nline2\n";
         $root = vfsstream::setup('root');
         $url = vfsStream::newFile('test.txt')->withContent($content)->at($root)->url();
-        $model = $this->getMockBuilder($this->getClass())
-                      ->disableOriginalConstructor()
-                      ->setMethods(array('importClient'))
-                      ->getMock();
+        $model = $this->createPartialMock(ClientManager::class, ['importClient']);
         $model->expects($this->once())
               ->method('importClient')
               ->with($content)

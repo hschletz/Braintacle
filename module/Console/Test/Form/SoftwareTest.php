@@ -22,6 +22,8 @@
 
 namespace Console\Test\Form;
 
+use Console\Form\Software;
+
 class SoftwareTest extends \Console\Test\AbstractFormTest
 {
     protected $_names = array(
@@ -48,7 +50,7 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
                 'name2' => '1',
             )
         );
-        $form = $this->getMockBuilder($this->getFormClass())->setMethods(array('createSoftwareFieldset', 'populateValues'))->getMock();
+        $form = $this->createPartialMock(Software::class, ['createSoftwareFieldset', 'populateValues']);
         $form->expects($this->once())->method('createSoftwareFieldset')->with($this->_names, true);
         $form->expects($this->once())->method('populateValues')->with($data);
         $form->setData($data);
@@ -56,8 +58,8 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
 
     public function testSetDataNoSoftware()
     {
-        $data = array();
-        $form = $this->getMockBuilder($this->getFormClass())->setMethods(array('createSoftwareFieldset', 'populateValues'))->getMock();
+        $data = [];
+        $form = $this->createPartialMock(Software::class, ['createSoftwareFieldset', 'populateValues']);
         $form->expects($this->once())->method('createSoftwareFieldset')->with(array(), true);
         $form->expects($this->once())->method('populateValues')->with($data);
         $form->setData($data);
@@ -69,7 +71,7 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
             array('name' => 'name1'),
             array('name' => 'name2'),
         );
-        $form = $this->getMockBuilder($this->getFormClass())->setMethods(array('createSoftwareFieldset'))->getMock();
+        $form = $this->createPartialMock(Software::class, ['createSoftwareFieldset', 'populateValues']);
         $form->expects($this->once())->method('createSoftwareFieldset')->with($this->_names, false);
         $form->setSoftware($software);
     }
@@ -85,16 +87,16 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
     /**
      * @dataProvider createSoftwareFieldsetProvider
      */
-    public function testcreateSoftwareFieldset($names, $namesEncoded)
+    public function testCreateSoftwareFieldset($names, $namesEncoded)
     {
-        $form = $this->getMockBuilder($this->getFormClass())->setMethods(array('getOption'))->getMock();
-
         $filter = $this->createMock('Library\Filter\FixEncodingErrors');
         $filter->expects($this->exactly(2))
                ->method('__invoke')
                ->withConsecutive(array('name1'), array('name2'))
                ->willReturnOnConsecutiveCalls('label1', 'label2');
-        $form->method('getOption')->with('fixEncodingErrors')->willReturn($filter);
+
+        $form = new Software();
+        $form->setOption('fixEncodingErrors', $filter);
 
         $form->createSoftwareFieldset($names, $namesEncoded);
 
@@ -109,13 +111,13 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
         }
     }
 
-    public function testcreateSoftwareFieldsetRecreateFieldset()
+    public function testCreateSoftwareFieldsetRecreateFieldset()
     {
-        $form = $this->getMockBuilder($this->getFormClass())->setMethods(array('getOption'))->getMock();
-
         $filter = $this->createMock('Library\Filter\FixEncodingErrors');
         $filter->method('__invoke')->willReturn('label');
-        $form->method('getOption')->with('fixEncodingErrors')->willReturn($filter);
+
+        $form = new Software();
+        $form->setOption('fixEncodingErrors', $filter);
 
         $oldFieldset = new \Laminas\Form\Fieldset('Software');
         $oldFieldset->add(new \Laminas\Form\Element\Checkbox('name3'));
@@ -129,7 +131,7 @@ class SoftwareTest extends \Console\Test\AbstractFormTest
         $this->assertEquals($this->_namesEncoded, array_keys($fieldset->getElements()));
     }
 
-    public function testcreateSoftwareFieldsetFilterNotSet()
+    public function testCreateSoftwareFieldsetFilterNotSet()
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage('FixEncodingErrors filter not set');

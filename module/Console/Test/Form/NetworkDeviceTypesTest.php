@@ -22,6 +22,7 @@
 
 namespace Console\Test\Form;
 
+use Console\Form\NetworkDeviceTypes;
 use Laminas\Dom\Document\Query as Query;
 
 /**
@@ -368,7 +369,6 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
     public function testProcessRenameNoAdd()
     {
         $deviceManager = $this->createMock('Model\Network\DeviceManager');
-        $deviceManager->expects($this->once())->method('getTypeCounts')->willReturn(array('name0' => 0, 'name1' => 1));
         $deviceManager->expects($this->never())->method('addType');
         $deviceManager->expects($this->once())->method('renameType')->with('name1', 'new_name');
         $data = array(
@@ -378,19 +378,18 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
                 'name1' => 'new_name',
             ),
         );
-        $form = $this->getMockBuilder('Console\Form\NetworkDeviceTypes')->setMethods(array('getData'))->getMock();
+        $form = $this->createPartialMock(NetworkDeviceTypes::class, ['getData']);
         $form->expects($this->once())
              ->method('getData')
              ->will($this->returnValue($data));
         $form->setOption('DeviceManager', $deviceManager);
-        $form->init();
+
         $form->process();
     }
 
     public function testProcessAdd()
     {
         $deviceManager = $this->createMock('Model\Network\DeviceManager');
-        $deviceManager->expects($this->once())->method('getTypeCounts')->willReturn(array('name0' => 0, 'name1' => 1));
         $deviceManager->expects($this->once())->method('addType')->with('new_name');
         $deviceManager->expects($this->never())->method('renameType');
         $data = array(
@@ -400,12 +399,12 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
                 'name1' => 'name1',
             ),
         );
-        $form = $this->getMockBuilder('Console\Form\NetworkDeviceTypes')->setMethods(array('getData'))->getMock();
+        $form = $this->createPartialMock(NetworkDeviceTypes::class, ['getData']);
         $form->expects($this->once())
              ->method('getData')
              ->will($this->returnValue($data));
         $form->setOption('DeviceManager', $deviceManager);
-        $form->init();
+
         $form->process();
     }
 }

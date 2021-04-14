@@ -22,6 +22,7 @@
 
 namespace Console\Test\Form\Package;
 
+use Console\Form\Package\Assign;
 use Laminas\Dom\Document\Query;
 
 /**
@@ -36,20 +37,29 @@ class AssignTest extends \Console\Test\AbstractFormTest
 
     public function testSetDataNoPackages()
     {
-        $form = $this->getMockBuilder('Console\Form\Package\Assign')->setMethods(array('setPackages'))->getMock();
-        $form->expects($this->once())
-             ->method('setPackages')
-             ->with(array());
-        $form->setData(array());
+        $data = [];
+
+        $form = $this->createPartialMock(Assign::class, ['setPackages', 'populateValues']);
+        $form->expects($this->once())->method('setPackages')->with([]);
+        $form->expects($this->once())->method('populateValues')->with($data);
+
+        $form->setData([]);
     }
 
     public function testSetDataWithPackages()
     {
-        $form = $this->getMockBuilder('Console\Form\Package\Assign')->setMethods(array('setPackages'))->getMock();
-        $form->expects($this->once())
-             ->method('setPackages')
-             ->with(array('package1', 'package2'));
-        $form->setData(array('Packages' => array('package1' => '0', 'package2' => '1')));
+        $data = [
+            'Packages' => [
+                'package1' => '0',
+                'package2' => '1',
+            ]
+        ];
+
+        $form = $this->createPartialMock(Assign::class, ['setPackages', 'populateValues']);
+        $form->expects($this->once())->method('setPackages')->with(['package1', 'package2']);
+        $form->expects($this->once())->method('populateValues')->with($data);
+
+        $form->setData($data);
     }
 
     public function testSetPackages()

@@ -22,6 +22,13 @@
 
 namespace Console\Test\Controller;
 
+use Console\Form\NetworkDevice;
+use Laminas\Form\Element\Csrf;
+use Laminas\Form\Element\Text;
+use Laminas\I18n\View\Helper\DateFormat;
+use Library\Form\Element\SelectSimple;
+use Library\Form\Element\Submit;
+
 /**
  * Tests for NetworkController
  */
@@ -416,22 +423,29 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->_deviceManager->method('getDevice')
                              ->with('00:00:5E:00:53:00')
                              ->willReturn($device);
-        $this->_deviceManager->expects($this->once())
-                             ->method('getTypes')
-                             ->willReturn(array('type'));
-        // Since form elements are rendered manually, mocking the entire form
-        // would be very complicated. Just stub the pivotal methods and leave
-        // elements as is.
-        $deviceForm = $this->getMockBuilder('Console\Form\NetworkDevice')
-                           ->setMethods(array('isValid', 'prepare', 'setData'))
-                           ->getMock();
+
+        $type = new SelectSimple('Type');
+        $type->setLabel('Type');
+
+        $description = new Text('Description');
+        $description->setLabel('Description');
+
+        $csrf = new Csrf('_csrf');
+        $submit = new Submit('Submit');
+
+        $deviceForm = $this->createPartialMock(NetworkDevice::class, ['setData', 'isValid', 'prepare', 'get']);
         $deviceForm->expects($this->once())
                    ->method('setData')
                    ->with(array('Type' => 'type1', 'Description' => 'description1'));
         $deviceForm->expects($this->never())->method('isValid');
         $deviceForm->expects($this->once())->method('prepare');
+        $deviceForm->method('get')->willReturnMap([
+            ['Type', $type],
+            ['Description', $description],
+            ['_csrf', $csrf],
+            ['Submit', $submit],
+        ]);
         $deviceForm->setOption('DeviceManager', $this->_deviceManager);
-        $deviceForm->init();
 
         $formManager = $this->getApplicationServiceLocator()->get('FormElementManager');
         $formManager->setAllowOverride(true);
@@ -447,7 +461,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXPathQuery(sprintf($query, 'Hostname', 'host.example.net'));
         $this->assertXPathQuery(sprintf($query, 'Datum', 'date_format'));
         $this->assertXpathQueryContentContains('//tr[6]/td[1]', 'Typ');
-        $this->assertXpathQuery('//tr[6]/td[2]/select[@name="Type"]/option[not(@value)]');
+        $this->assertXpathQuery('//tr[6]/td[2]/select[@name="Type"]');
         $this->assertXpathQueryContentContains('//tr[7]/td[1]', 'Beschreibung');
         $this->assertXpathQuery('//tr[7]/td[2]/input[@type="text"][@name="Description"]');
         $this->assertXpathQuery('//input[@type="hidden"][@name="_csrf"]');
@@ -474,19 +488,27 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $this->_deviceManager->method('getDevice')
                              ->with('00:00:5E:00:53:00')
                              ->willReturn($device);
-        $this->_deviceManager->expects($this->once())
-                             ->method('getTypes')
-                             ->willReturn(array());
 
-        $deviceForm = $this->getMockBuilder('Console\Form\NetworkDevice')
-                           ->setMethods(array('isValid', 'prepare', 'setData'))
-                           ->getMock();
+
+        $type = new SelectSimple('Type');
+
+        $description = new Text('Description');
+        $description->setMessages(['message']);
+
+        $csrf = new Csrf('_csrf');
+        $submit = new Submit('Submit');
+
+        $deviceForm = $this->createPartialMock(NetworkDevice::class, ['setData', 'isValid', 'prepare', 'get']);
         $deviceForm->expects($this->once())->method('setData')->with($postData);
         $deviceForm->expects($this->once())->method('isValid')->willReturn(false);
         $deviceForm->expects($this->once())->method('prepare');
+        $deviceForm->method('get')->willReturnMap([
+            ['Type', $type],
+            ['Description', $description],
+            ['_csrf', $csrf],
+            ['Submit', $submit],
+        ]);
         $deviceForm->setOption('DeviceManager', $this->_deviceManager);
-        $deviceForm->init();
-        $deviceForm->get('Description')->setMessages(array('message'));
 
         $formManager = $this->getApplicationServiceLocator()->get('FormElementManager');
         $formManager->setAllowOverride(true);

@@ -22,6 +22,8 @@
 
 namespace Database\Test\Table;
 
+use Database\Table\Software;
+
 class SoftwareTest extends AbstractTest
 {
     public function getDataSet()
@@ -47,10 +49,7 @@ class SoftwareTest extends AbstractTest
         $serviceLocator = $this->createMock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
         $serviceLocator->method('get')->with('Database\Table\SoftwareRaw')->willReturn($softwareRaw);
 
-        $table = $this->getMockBuilder(\Database\Table\Software::class)
-                      ->setMethods(['getServiceLocator'])
-                      ->disableOriginalConstructor()
-                      ->getMock();
+        $table = $this->createPartialMock(Software::class, ['getServiceLocator']);
         $table->method('getServiceLocator')->willReturn($serviceLocator);
 
         $this->assertEquals(42, $table->delete('_where'));

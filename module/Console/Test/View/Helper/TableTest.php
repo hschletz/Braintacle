@@ -22,6 +22,9 @@
 
 namespace Console\Test\View\Helper;
 
+use Console\View\Helper\Table;
+use Mockery;
+
 /**
  * Tests for the Table helper
  */
@@ -88,43 +91,42 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testInvokeNoData()
     {
-        $table = $this->getMockBuilder(static::getHelperClass())
-                      ->disableOriginalConstructor()
-                      ->setMethods()
-                      ->getMock();
-
+        $table = new Table($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat);
         $this->assertEquals('', $table([], $this->_headers));
     }
 
     public function testInvokeWithDefaultParams()
     {
-        $table = $this->getMockBuilder(static::getHelperClass())
-                      ->disableOriginalConstructor()
-                      ->setMethods(['headerRow', 'dataRows', 'tag'])
-                      ->getMock();
+        $table = Mockery::mock(
+            Table::class,
+            [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
+        )->makePartial();
+        $table->shouldReceive('headerRow')->with($this->_headers, [], [])->andReturn('<header>');
+        $table->shouldReceive('dataRows')
+              ->with($this->_data, ['column1', 'column2'], [], [], null)
+              ->andReturn('<data>');
+        $table->shouldReceive('tag')->with('<header><data>')->andReturn('table_tag');
 
-        $table->method('headerRow')->with($this->_headers, [], [])->willReturn('<header>');
-        $table->method('dataRows')->with($this->_data, ['column1', 'column2'], [], [], null)->willReturn('<data>');
-        $table->method('tag')->with('<header><data>')->willReturn('table_tag');
         $this->assertEquals('table_tag', $table($this->_data, $this->_headers));
     }
 
     public function testInvokeWithExplicitParams()
     {
-        $table = $this->getMockBuilder(static::getHelperClass())
-                      ->disableOriginalConstructor()
-                      ->setMethods(['headerRow', 'dataRows', 'tag'])
-                      ->getMock();
-
-        $table->method('headerRow')->with($this->_headers, ['sorting'], ['columnClasses'])->willReturn('<header>');
-        $table->method('dataRows')->with(
+        $table = Mockery::mock(
+            Table::class,
+            [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
+        )->makePartial();
+        $table->shouldReceive('headerRow')
+              ->with($this->_headers, ['sorting'], ['columnClasses'])
+              ->andReturn('<header>');
+        $table->shouldReceive('dataRows')->with(
             $this->_data,
             ['column1', 'column2'],
             ['renderCallbacks'],
             ['columnClasses'],
             'rowClassCallback'
-        )->willReturn('<data>');
-        $table->method('tag')->with('<header><data>')->willReturn('table_tag');
+        )->andReturn('<data>');
+        $table->shouldReceive('tag')->with('<header><data>')->andReturn('table_tag');
 
         $this->assertEquals(
             'table_tag',
@@ -153,26 +155,24 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testHeaderRowWithDefaultParams()
     {
-        $table = $this->getMockBuilder(static::getHelperClass())
-                      ->disableOriginalConstructor()
-                      ->setMethods(['prepareHeaders', 'row'])
-                      ->getMock();
-
-        $table->method('prepareHeaders')->with($this->_headers, [])->willReturn(['headers']);
-        $table->method('row')->with(['headers'], true, [])->willReturn('header_row');
+        $table = Mockery::mock(
+            Table::class,
+            [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
+        )->makePartial();
+        $table->shouldReceive('prepareHeaders')->with($this->_headers, [])->andReturn(['headers']);
+        $table->shouldReceive('row')->with(['headers'], true, [])->andReturn('header_row');
 
         $this->assertEquals('header_row', $table->headerRow($this->_headers));
     }
 
     public function testHeaderRowWithExplicitParams()
     {
-        $table = $this->getMockBuilder(static::getHelperClass())
-                      ->disableOriginalConstructor()
-                      ->setMethods(['prepareHeaders', 'row'])
-                      ->getMock();
-
-        $table->method('prepareHeaders')->with($this->_headers, ['sorting'])->willReturn(['headers']);
-        $table->method('row')->with(['headers'], true, ['classes'])->willReturn('header_row');
+        $table = Mockery::mock(
+            Table::class,
+            [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
+        )->makePartial();
+        $table->shouldReceive('prepareHeaders')->with($this->_headers, ['sorting'])->andReturn(['headers']);
+        $table->shouldReceive('row')->with(['headers'], true, ['classes'])->andReturn('header_row');
 
         $this->assertEquals('header_row', $table->headerRow($this->_headers, ['sorting'], ['classes']));
     }
@@ -181,19 +181,16 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
     {
         $this->_escapeHtml->method('__invoke')->willReturnOnConsecutiveCalls('1a', '2a', '1b', '2b');
 
-        $table = $this->getMockBuilder(static::getHelperClass())
-                      ->setConstructorArgs(
-                          array($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat)
-                      )
-                      ->setMethods(['row'])
-                      ->getMock();
-
-        $table->method('row')
-              ->withConsecutive(
-                  [['column1' => '1a', 'column2' => '2a'], false, [], null],
-                  [['column1' => '1b', 'column2' => '2b'], false, [], null]
-              )
-              ->willReturnOnConsecutiveCalls('<row1>', '<row2>');
+        $table = Mockery::mock(
+            Table::class,
+            [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
+        )->makePartial();
+        $table->shouldReceive('row')
+              ->with(['column1' => '1a', 'column2' => '2a'], false, [], null)
+              ->andReturn('<row1>');
+        $table->shouldReceive('row')
+              ->with(['column1' => '1b', 'column2' => '2b'], false, [], null)
+              ->andReturn('<row2>');
 
         $this->assertEquals('<row1><row2>', $table->dataRows($this->_data, ['column1', 'column2']));
     }
@@ -202,19 +199,16 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
     {
         $this->_escapeHtml->method('__invoke')->willReturnOnConsecutiveCalls('1a', '2a', '1b', '2b');
 
-        $table = $this->getMockBuilder(static::getHelperClass())
-                      ->setConstructorArgs(
-                          array($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat)
-                      )
-                      ->setMethods(['row'])
-                      ->getMock();
-
-        $table->method('row')
-              ->withConsecutive(
-                  [['column1' => '1a', 'column2' => '2a'], false, ['column1' => 'class'], null],
-                  [['column1' => '1b', 'column2' => '2b'], false, ['column1' => 'class'], null]
-              )
-              ->willReturnOnConsecutiveCalls('<row1>', '<row2>');
+        $table = Mockery::mock(
+            Table::class,
+            [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
+        )->makePartial();
+        $table->shouldReceive('row')
+              ->with(['column1' => '1a', 'column2' => '2a'], false, ['column1' => 'class'], null)
+              ->andReturn('<row1>');
+        $table->shouldReceive('row')
+              ->with(['column1' => '1b', 'column2' => '2b'], false, ['column1' => 'class'], null)
+              ->andReturn('<row2>');
 
         $this->assertEquals(
             '<row1><row2>',
@@ -226,19 +220,16 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
     {
         $this->_escapeHtml->method('__invoke')->willReturnOnConsecutiveCalls('1a', '2a', '1b', '2b');
 
-        $table = $this->getMockBuilder(static::getHelperClass())
-                      ->setConstructorArgs(
-                          array($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat)
-                      )
-                      ->setMethods(['row'])
-                      ->getMock();
-
-        $table->method('row')
-              ->withConsecutive(
-                  [['column1' => '1a', 'column2' => '2a'], false, [], 'VALUE1A'],
-                  [['column1' => '1b', 'column2' => '2b'], false, [], 'VALUE1B']
-              )
-              ->willReturnOnConsecutiveCalls('<row1>', '<row2>');
+        $table = Mockery::mock(
+            Table::class,
+            [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
+        )->makePartial();
+        $table->shouldReceive('row')
+              ->with(['column1' => '1a', 'column2' => '2a'], false, [], 'VALUE1A')
+              ->andReturn('<row1>');
+        $table->shouldReceive('row')
+              ->with(['column1' => '1b', 'column2' => '2b'], false, [], 'VALUE1B')
+              ->andReturn('<row2>');
 
         $rowClassCallback = function ($rowData) {
             $this->assertContains($rowData, $this->_data);
@@ -258,16 +249,13 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
         $this->_escapeHtml->method('__invoke')->with('date_formatted')->willReturn('escaped_date');
 
-        $table = $this->getMockBuilder(static::getHelperClass())
-                      ->setConstructorArgs(
-                          array($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat)
-                      )
-                      ->setMethods(['row'])
-                      ->getMock();
-
-        $table->method('row')
+        $table = Mockery::mock(
+            Table::class,
+            [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
+        )->makePartial();
+        $table->shouldReceive('row')
               ->with(['column1' => 'escaped_date'], false, [], null)
-              ->willReturn('<row>');
+              ->andReturn('<row>');
 
         $this->assertEquals('<row>', $table->dataRows([['column1' => $date]], ['column1']));
     }
@@ -280,18 +268,14 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
         $this->_dateFormat->expects($this->never())->method('__invoke');
         $this->_escapeHtml->expects($this->never())->method('__invoke');
 
-        $table = $this->getMockBuilder(static::getHelperClass())
-                      ->setConstructorArgs(
-                          array($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat)
-                      )
-                      ->setMethods(['row', 'getView'])
-                      ->getMock();
-
-        $table->method('row')
+        $table = Mockery::mock(
+            Table::class,
+            [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
+        )->makePartial();
+        $table->shouldReceive('row')
               ->with(['column1' => 'callback_return'], false, [], null)
-              ->willReturn('<row>');
-
-        $table->method('getView')->willReturn($view);
+              ->andReturn('<row>');
+        $table->shouldReceive('getView')->andReturn($view);
 
         $renderCallback = function ($view2, $rowData, $key) use ($view, $date) {
             $this->assertSame($view2, $view);
@@ -308,27 +292,23 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testPrepareHeadersWithoutSorting()
     {
-        $table = $this->getMockBuilder(static::getHelperClass())
-                      ->disableOriginalConstructor()
-                      ->setMethods(['sortableHeader'])
-                      ->getMock();
-
-        $table->expects($this->never())->method('sortableHeader');
+        $table = Mockery::mock(
+            Table::class,
+            [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
+        )->makePartial();
+        $table->shouldNotReceive('sortableHeader');
 
         $this->assertEquals($this->_headers, $table->prepareHeaders($this->_headers, []));
     }
 
     public function testPrepareHeadersWithSorting()
     {
-        $table = $this->getMockBuilder(static::getHelperClass())
-                      ->disableOriginalConstructor()
-                      ->setMethods(['sortableHeader'])
-                      ->getMock();
-
-        $table->method('sortableHeader')->withConsecutive(
-            ['header1', 'column1', 'column2', 'asc'],
-            ['header2', 'column2', 'column2', 'asc']
-        )->willReturnOnConsecutiveCalls('sort1', 'sort2');
+        $table = Mockery::mock(
+            Table::class,
+            [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
+        )->makePartial();
+        $table->shouldReceive('sortableHeader')->with('header1', 'column1', 'column2', 'asc')->andReturn('sort1');
+        $table->shouldReceive('sortableHeader')->with('header2', 'column2', 'column2', 'asc')->andReturn('sort2');
 
         $this->assertEquals(
             ['column1' => 'sort1', 'column2' => 'sort2'],
