@@ -26,23 +26,6 @@ error_reporting(-1);
 date_default_timezone_set('Europe/Berlin');
 \Locale::setDefault('de');
 
-/**
- * A minimal stream wrapper to simulate I/O errors
- *
- * Only url_stat() is (partially) implemented to simulate file properties.
- * Files cannot be actually opened.
- */
-class StreamWrapperStatOnly
-{
-    // @codingStandardsIgnoreStart
-    public function url_stat($path, $flags)
-    {
-        return array('size' => 42);
-    }
-    // @codingStandardsIgnoreEnd
-}
-stream_wrapper_register('statonly', 'Model\StreamWrapperStatOnly');
-
 $serviceManager = \Library\Application::init('Model')->getServiceManager();
 $serviceManager->setService(
     'Library\UserConfig',
