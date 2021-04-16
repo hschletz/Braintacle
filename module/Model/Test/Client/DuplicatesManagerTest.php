@@ -24,6 +24,7 @@ namespace Model\Test\Client;
 
 use Database\Table;
 use Database\Table\Clients;
+use Mockery;
 use Model\Client\ClientManager;
 use Model\Client\DuplicatesManager;
 use Model\SoftwareManager;
@@ -34,6 +35,8 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class DuplicatesManagerTest extends \Model\Test\AbstractTest
 {
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     protected $_allOptions = [
         \Model\Client\DuplicatesManager::MERGE_CONFIG,
         \Model\Client\DuplicatesManager::MERGE_CUSTOM_FIELDS,
@@ -218,11 +221,10 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
     /** @dataProvider mergeNoneWithLessThan2ClientsProvider */
     public function testMergeWithLessThan2Clients($clientIds)
     {
-        $model = $this->getMockBuilder($this->getClass())
-                      ->disableOriginalConstructor()
-                      ->setMethodsExcept(['merge'])
-                      ->getMock();
-
+        $model = $this->createPartialMock(
+            DuplicatesManager::class,
+            ['mergeConfig', 'mergeCustomFields', 'mergeGroups', 'mergePackages', 'mergeProductKey']
+        );
         $model->expects($this->never())->method('mergeConfig');
         $model->expects($this->never())->method('mergeCustomFields');
         $model->expects($this->never())->method('mergeGroups');
@@ -390,28 +392,25 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $clients = $this->createMock('Database\Table\Clients');
         $clients->method('getConnection')->willReturn($connection);
 
-        /** @var MockObject&DuplicatesManager */
-        $model = $this->getMockBuilder(DuplicatesManager::class)
-                      ->setConstructorArgs([
-                            $clients,
-                            $this->createStub(Table\NetworkInterfaces::class),
-                            $this->createStub(Table\DuplicateAssetTags::class),
-                            $this->createStub(Table\DuplicateSerials::class),
-                            $this->createStub(Table\DuplicateMacAddresses::class),
-                            $this->createStub(Table\ClientConfig::class),
-                            $clientManager,
-                            $this->createStub(SoftwareManager::class),
-                        ])
-                      ->setMethodsExcept(['merge'])
-                      ->getMock();
+        $model = Mockery::mock(
+            DuplicatesManager::class,
+            [
+                $clients,
+                $this->createStub(Table\NetworkInterfaces::class),
+                $this->createStub(Table\DuplicateAssetTags::class),
+                $this->createStub(Table\DuplicateSerials::class),
+                $this->createStub(Table\DuplicateMacAddresses::class),
+                $this->createStub(Table\ClientConfig::class),
+                $clientManager,
+                $this->createStub(SoftwareManager::class),
+            ]
+        )->makePartial();
 
         foreach ($this->_allOptions as $option) {
             if (in_array($option, $options)) {
-                $model->expects($this->once())
-                      ->method($option)
-                      ->with($this->identicalTo($client3), $this->identicalTo([$client1, $client2]));
+                $model->shouldReceive($option)->once()->with($client3, [$client1, $client2]);
             } else {
-                $model->expects($this->never())->method($option);
+                $model->shouldNotReceive($option);
             }
         }
 

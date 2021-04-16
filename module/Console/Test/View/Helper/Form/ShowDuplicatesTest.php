@@ -216,11 +216,7 @@ class ShowDuplicatesTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testGetBlacklistLinkNullValue()
     {
-        $helper = $this->getMockBuilder($this->getHelperClass())
-                       ->disableOriginalConstructor()
-                       ->setMethodsExcept(['getBlacklistLink'])
-                       ->getMock();
-
+        $helper = new ShowDuplicatesHelper();
         $this->assertSame('', $helper->getBlacklistLink('Property', null));
     }
 

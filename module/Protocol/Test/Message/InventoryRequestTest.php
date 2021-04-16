@@ -25,6 +25,7 @@ namespace Protocol\Test\Message;
 use Model\Client\Client;
 use Protocol\Message\InventoryRequest;
 use Protocol\Message\InventoryRequest\Content;
+use ReflectionProperty;
 use TheSeer\fDOM\fDOMElement;
 
 class InventoryRequestTest extends \PHPUnit\Framework\TestCase
@@ -53,11 +54,15 @@ class InventoryRequestTest extends \PHPUnit\Framework\TestCase
         );
         $request->method('appendChild')->with($content);
 
-        $document = $this->getMockBuilder(InventoryRequest::class)
-                         ->setConstructorArgs([$content])
-                         ->setMethodsExcept(['loadClient'])
-                         ->getMock();
+        $document = $this->createPartialMock(InventoryRequest::class, ['appendElement']);
         $document->method('appendElement')->with('REQUEST')->willReturn($request);
+
+        // Neither PHPUnit's nor Mockery's mock object implementations can
+        // handle fDOMDocument's constructor. Fall back to Reflection API to
+        // inject dependency.
+        $property = new ReflectionProperty($document, 'content');
+        $property->setAccessible(true);
+        $property->setValue($document, $content);
 
         $document->loadClient($client);
     }

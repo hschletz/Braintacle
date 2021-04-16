@@ -120,10 +120,7 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
         $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('plugin')->with('formRow')->willReturn($formRow);
 
-        $helper = $this->getMockBuilder($this->getHelperClass())
-                       ->disableOriginalConstructor()
-                       ->setMethodsExcept(['renderButtons'])
-                       ->getMock();
+        $helper = $this->createPartialMock(SoftwareHelper::class, ['getView']);
         $helper->method('getView')->willReturn($view);
 
         $this->assertEquals(
@@ -231,10 +228,7 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
             ['consoleUrl', null, $consoleUrl],
         ]);
 
-        $helper = $this->getMockBuilder($this->getHelperClass())
-                       ->disableOriginalConstructor()
-                       ->setMethodsExcept(['renderSoftwareFieldset'])
-                       ->getMock();
+        $helper = $this->createPartialMock(SoftwareHelper::class, ['getView']);
         $helper->method('getView')->willReturn($view);
 
         $this->assertEquals(

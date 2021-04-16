@@ -30,8 +30,9 @@ use Protocol\Hydrator;
 use Protocol\Message\InventoryRequest\Content;
 use TheSeer\fDOM\fDOMElement;
 use Laminas\Hydrator\HydratorInterface;
+use Mockery;
 
-class ContentTest extends \PHPUnit\Framework\TestCase
+class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
 {
     public function testConstructor()
     {
@@ -41,10 +42,16 @@ class ContentTest extends \PHPUnit\Framework\TestCase
 
     public function testAppendSections()
     {
-        $content = $this->getMockBuilder(Content::class)
-                        ->disableOriginalConstructor()
-                        ->setMethodsExcept(['appendSections'])
-                        ->getMock();
+        $content = $this->createPartialMock(
+            Content::class,
+            [
+                'appendSystemSection',
+                'appendOsSpecificSection',
+                'appendAccountinfoSection',
+                'appendDownloadSection',
+                'appendAllItemSections'
+            ]
+        );
         $content->expects($this->exactly(2))
                 ->method('appendSystemSection')
                 ->withConsecutive([Content::SYSTEM_SECTION_HARDWARE], [Content::SYSTEM_SECTION_BIOS]);
@@ -87,12 +94,9 @@ class ContentTest extends \PHPUnit\Framework\TestCase
                 ->method('appendElement')
                 ->withConsecutive(['name1', 'value1', true], ['name3', 'value3', true]);
 
-        $content = $this->getMockBuilder(Content::class)
-                        ->setConstructorArgs([$container])
-                        ->setMethodsExcept(['setClient', 'appendSystemSection'])
-                        ->getMock();
-        $content->method('createElement')->with($section)->willReturn($element);
-        $content->expects($this->once())->method('appendChild')->with($element);
+        $content = Mockery::mock(Content::class, [$container])->makePartial();
+        $content->shouldReceive('createElement')->with($section)->andReturn($element);
+        $content->shouldReceive('appendChild')->once()->with($element);
 
         $content->setClient($client);
         $content->appendSystemSection($section);
@@ -128,11 +132,8 @@ class ContentTest extends \PHPUnit\Framework\TestCase
                 ->method('appendElement')
                 ->withConsecutive(['name1', 'value1', true], ['name2', 'value2', true]);
 
-        $content = $this->getMockBuilder(Content::class)
-                        ->setConstructorArgs([$container])
-                        ->setMethodsExcept(['setClient', 'appendOsSpecificSection'])
-                        ->getMock();
-        $content->method('appendElement')->with('JAVAINFOS')->willReturn($element);
+        $content = Mockery::mock(Content::class, [$container])->makePartial();
+        $content->shouldReceive('appendElement')->with('JAVAINFOS')->andReturn($element);
 
         $content->setClient($client);
         $content->appendOsSpecificSection();
@@ -146,11 +147,8 @@ class ContentTest extends \PHPUnit\Framework\TestCase
         $container = $this->createMock(ContainerInterface::class);
         $container->expects($this->never())->method('get');
 
-        $content = $this->getMockBuilder(Content::class)
-                        ->setConstructorArgs([$container])
-                        ->setMethodsExcept(['setClient', 'appendOsSpecificSection'])
-                        ->getMock();
-        $content->expects($this->never())->method('appendElement');
+        $content = Mockery::mock(Content::class, [$container])->makePartial();
+        $content->shouldNotReceive('appendElement');
 
         $content->setClient($client);
         $content->appendOsSpecificSection();
@@ -178,10 +176,7 @@ class ContentTest extends \PHPUnit\Framework\TestCase
                  ->method('appendElement')
                  ->withConsecutive(['KEYNAME', 'name4', true], ['KEYVALUE', '2020-12-27', true]);
 
-        $content = $this->getMockBuilder(Content::class)
-                        ->disableOriginalConstructor()
-                        ->setMethodsExcept(['setClient', 'appendAccountinfoSection'])
-                        ->getMock();
+        $content = $this->createPartialMock(Content::class, ['appendElement']);
         $content->expects($this->exactly(2))
                 ->method('appendElement')
                 ->with('ACCOUNTINFO')
@@ -210,10 +205,7 @@ class ContentTest extends \PHPUnit\Framework\TestCase
         $download = $this->createMock(fDOMElement::class);
         $download->method('appendElement')->with('HISTORY')->willReturn($history);
 
-        $content = $this->getMockBuilder(Content::class)
-                        ->disableOriginalConstructor()
-                        ->setMethodsExcept(['setClient', 'appendDownloadSection'])
-                        ->getMock();
+        $content = $this->createPartialMock(Content::class, ['appendElement']);
         $content->method('appendElement')->with('DOWNLOAD')->willReturn($download);
 
         $content->setClient($client);
@@ -227,10 +219,7 @@ class ContentTest extends \PHPUnit\Framework\TestCase
         $client = $this->createStub(Client::class);
         $client->method('getDownloadedPackageIds')->willReturn($data);
 
-        $content = $this->getMockBuilder(Content::class)
-                        ->disableOriginalConstructor()
-                        ->setMethodsExcept(['setClient', 'appendDownloadSection'])
-                        ->getMock();
+        $content = $this->createPartialMock(Content::class, ['appendElement']);
         $content->expects($this->never())->method('appendElement');
 
         $content->setClient($client);
@@ -261,10 +250,7 @@ class ContentTest extends \PHPUnit\Framework\TestCase
             ['virtualmachine', 'VIRTUALMACHINES'],
         ];
 
-        $content = $this->getMockBuilder(Content::class)
-                        ->disableOriginalConstructor()
-                        ->setMethodsExcept(['appendAllItemSections'])
-                        ->getMock();
+        $content = $this->createPartialMock(Content::class, ['appendItemSections']);
         $content->expects($this->exactly(count($args)))->method('appendItemSections')->withConsecutive(...$args);
 
         $content->appendAllItemSections();
@@ -313,11 +299,8 @@ class ContentTest extends \PHPUnit\Framework\TestCase
                      ['key4', 'value4', true]
                  );
 
-        $content = $this->getMockBuilder(Content::class)
-                        ->setConstructorArgs([$container])
-                        ->setMethodsExcept(['appendItemSections', 'setClient'])
-                        ->getMock();
-        $content->method('appendElement')->with('section_name')->willReturnOnConsecutiveCalls($element0, $element1);
+        $content = Mockery::mock(Content::class, [$container])->makePartial();
+        $content->shouldReceive('appendElement')->with('section_name')->andReturn($element0, $element1);
 
         $content->setClient($client);
         $content->appendItemSections('item_type', 'section_name');

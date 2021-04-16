@@ -293,10 +293,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testGetAllConfigWithNonNullValues()
     {
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setMethodsExcept(['getAllConfig'])
-                      ->getMock();
-
+        $model = $this->createPartialMock(Client::class, ['getConfig']);
         $model->method('getConfig')->willReturnMap([
             ['contactInterval', 1],
             ['inventoryInterval', 2],
@@ -338,9 +335,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testGetAllConfigWithNullValues()
     {
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setMethodsExcept(['getAllConfig'])
-                      ->getMock();
+        $model = $this->createPartialMock(Client::class, ['getConfig']);
         $model->method('getConfig')->willReturn(null);
 
         $this->assertSame(
@@ -369,10 +364,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testGetExplicitConfigWithNonNullValues()
     {
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setMethodsExcept(['getExplicitConfig'])
-                      ->getMock();
-
+        $model = $this->createPartialMock(Client::class, ['getConfig']);
         $model->method('getConfig')->willReturnMap([
             ['contactInterval', 0],
             ['inventoryInterval', 1],
@@ -408,9 +400,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testGetExplicitConfigWithNullValues()
     {
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setMethodsExcept(['getExplicitConfig'])
-                      ->getMock();
+        $model = $this->createPartialMock(Client::class, ['getConfig']);
         $model->method('getConfig')->willReturn(null);
 
         $this->assertSame([], $model->getExplicitConfig());

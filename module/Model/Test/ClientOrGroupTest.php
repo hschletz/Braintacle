@@ -22,11 +22,14 @@
 
 namespace Model\Test;
 
+use Mockery;
 use Model\ClientOrGroup;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ClientOrGroupTest extends AbstractTest
 {
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /** {@inheritdoc} */
     protected static $_tables = array('ClientConfig', 'Locks', 'PackageHistory', 'Packages');
 
@@ -587,23 +590,18 @@ class ClientOrGroupTest extends AbstractTest
         $expectedAllowScan,
         $expectedScanSnmp
     ) {
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setMethodsExcept(['getAllConfig'])
-                      ->getMock();
-
-        $model->method('getConfig')->willReturnMap([
-            ['contactInterval', 1],
-            ['inventoryInterval', 2],
-            ['downloadPeriodDelay', 3],
-            ['downloadCycleDelay', 4],
-            ['downloadFragmentDelay', 5],
-            ['downloadMaxPriority', 6],
-            ['downloadTimeout', 7],
-            // The following options can only be 0 or NULL
-            ['packageDeployment', $packageDeployment],
-            ['allowScan', $allowScan],
-            ['scanSnmp', $scanSnmp],
-        ]);
+        $model = Mockery::mock(ClientOrGroup::class)->makePartial();
+        $model->shouldReceive('getConfig')->with('contactInterval')->andReturn(1);
+        $model->shouldReceive('getConfig')->with('inventoryInterval')->andReturn(2);
+        $model->shouldReceive('getConfig')->with('downloadPeriodDelay')->andReturn(3);
+        $model->shouldReceive('getConfig')->with('downloadCycleDelay')->andReturn(4);
+        $model->shouldReceive('getConfig')->with('downloadFragmentDelay')->andReturn(5);
+        $model->shouldReceive('getConfig')->with('downloadMaxPriority')->andReturn(6);
+        $model->shouldReceive('getConfig')->with('downloadTimeout')->andReturn(7);
+        // The following options can only be 0 or NULL
+        $model->shouldReceive('getConfig')->with('packageDeployment')->andReturn($packageDeployment);
+        $model->shouldReceive('getConfig')->with('allowScan')->andReturn($allowScan);
+        $model->shouldReceive('getConfig')->with('scanSnmp')->andReturn($scanSnmp);
 
         $this->assertSame(
             [
@@ -630,10 +628,8 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testGetAllConfigNonCompactWithNullValues()
     {
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setMethodsExcept(['getAllConfig'])
-                      ->getMock();
-        $model->method('getConfig')->willReturn(null);
+        $model = Mockery::mock(ClientOrGroup::class)->makePartial();
+        $model->shouldReceive('getConfig')->atLeast()->times(1)->andReturnNull();
 
         $this->assertSame(
             [
@@ -660,23 +656,18 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testGetExplicitConfigWithNonNullValues()
     {
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setMethodsExcept(['getExplicitConfig'])
-                      ->getMock();
-
-        $model->method('getConfig')->willReturnMap([
-            ['contactInterval', 0],
-            ['inventoryInterval', 1],
-            ['downloadPeriodDelay', 2],
-            ['downloadCycleDelay', 3],
-            ['downloadFragmentDelay', 4],
-            ['downloadMaxPriority', 5],
-            ['downloadTimeout', 6],
-            // The following options can only be 0 or NULL
-            ['packageDeployment', 0],
-            ['allowScan', 0],
-            ['scanSnmp', 0],
-        ]);
+        $model = Mockery::mock(ClientOrGroup::class)->makePartial();
+        $model->shouldReceive('getConfig')->with('contactInterval')->andReturn(0);
+        $model->shouldReceive('getConfig')->with('inventoryInterval')->andReturn(1);
+        $model->shouldReceive('getConfig')->with('downloadPeriodDelay')->andReturn(2);
+        $model->shouldReceive('getConfig')->with('downloadCycleDelay')->andReturn(3);
+        $model->shouldReceive('getConfig')->with('downloadFragmentDelay')->andReturn(4);
+        $model->shouldReceive('getConfig')->with('downloadMaxPriority')->andReturn(5);
+        $model->shouldReceive('getConfig')->with('downloadTimeout')->andReturn(6);
+        // The following options can only be 0 or NULL
+        $model->shouldReceive('getConfig')->with('packageDeployment')->andReturn(0);
+        $model->shouldReceive('getConfig')->with('allowScan')->andReturn(0);
+        $model->shouldReceive('getConfig')->with('scanSnmp')->andReturn(0);
 
         $this->assertSame(
             [
@@ -697,10 +688,8 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testGetExplicitConfigWithNullValues()
     {
-        $model = $this->getMockBuilder($this->getClass())
-                      ->setMethodsExcept(['getExplicitConfig'])
-                      ->getMock();
-        $model->method('getConfig')->willReturn(null);
+        $model = Mockery::mock(ClientOrGroup::class)->makePartial();
+        $model->shouldReceive('getConfig')->atLeast()->times(1)->andReturnNull();
 
         $this->assertSame([], $model->getExplicitConfig());
     }
