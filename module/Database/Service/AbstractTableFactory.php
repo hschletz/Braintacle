@@ -22,6 +22,9 @@
 
 namespace Database\Service;
 
+use Database\Connection;
+use Laminas\ServiceManager\Exception\ServiceNotFoundException;
+
 /**
  * Abstract factory for table objects
  *
@@ -49,7 +52,14 @@ class AbstractTableFactory implements \Laminas\ServiceManager\Factory\AbstractFa
         $requestedName,
         array $options = null
     ) {
-        $table = new $requestedName($container);
+        try {
+            $connection = $container->get(Connection::class);
+        } catch (ServiceNotFoundException $e) {
+            // Some tests are not prepared yet for the Connection service.
+            // Ignore error.
+            $connection = null;
+        }
+        $table = new $requestedName($container, $connection);
         $table->initialize();
         return $table;
     }

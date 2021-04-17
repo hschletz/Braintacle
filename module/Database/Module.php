@@ -22,6 +22,8 @@
 
 namespace Database;
 
+use Database\Service\AbstractDatabaseFactory;
+use Database\Service\DatabaseFactory;
 use Laminas\ModuleManager\Feature;
 
 /**
@@ -49,10 +51,11 @@ class Module implements
         return array(
             'service_manager' => array(
                 'abstract_factories' => array(
-                    'Database\Service\AbstractDatabaseFactory',
+                    AbstractDatabaseFactory::class, // deprecated
                     'Database\Service\AbstractTableFactory',
                 ),
                 'factories' => array(
+                    Connection::class => DatabaseFactory::class,
                     'Database\SchemaManager' => 'Database\Service\SchemaManagerFactory',
                 ),
             ),

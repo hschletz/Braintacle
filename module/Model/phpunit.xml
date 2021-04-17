@@ -37,7 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
   </testsuites>
   <logging/>
   <php>
-    <env name="BRAINTACLE_TEST_DATABASE" value="{&quot;driver&quot; : &quot;Pdo_Sqlite&quot;}"/>
+    <env name="BRAINTACLE_TEST_DATABASE" value="{&quot;driver&quot; : &quot;pdo_sqlite&quot;}"/>
   </php>
   <listeners>
     <listener class="\Mockery\Adapter\Phpunit\TestListener"></listener>

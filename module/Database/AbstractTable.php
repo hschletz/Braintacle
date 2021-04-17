@@ -22,6 +22,8 @@
 
 namespace Database;
 
+use Laminas\ServiceManager\ServiceLocatorInterface;
+
 /**
  * Base class for table objects
  *
@@ -31,6 +33,11 @@ namespace Database;
  */
 abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGateway
 {
+    /**
+     * @var Connection|null
+     */
+    protected $connection;
+
     /**
      * Service manager
      * @var \Laminas\ServiceManager\ServiceLocatorInterface
@@ -43,20 +50,20 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      */
     protected $_hydrator;
 
-    /**
-     * Constructor
-     *
-     * @param \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator Service manager instance
-     * @codeCoverageIgnore
-     */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    /** @codeCoverageIgnore */
+    public function __construct(ServiceLocatorInterface $serviceLocator, Connection $connection = null)
     {
+        $this->connection = $connection;
         $this->_serviceLocator = $serviceLocator;
         if (!$this->table) {
-            // If not set explicitly, derive table name from class name.
-            // Uppercase letters cause an underscore to be inserted, except at
-            // the beginning of the string.
-            $this->table = strtolower(preg_replace('/(.)([A-Z])/', '$1_$2', $this->getClassName()));
+            if (defined('static::TABLE')) {
+                $this->table = static::TABLE;
+            } else {
+                // If not set explicitly, derive table name from class name.
+                // Uppercase letters cause an underscore to be inserted, except
+                // at the beginning of the string.
+                $this->table = strtolower(preg_replace('/(.)([A-Z])/', '$1_$2', $this->getClassName()));
+            }
         }
         $this->adapter = $serviceLocator->get('Db');
     }

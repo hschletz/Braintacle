@@ -31,6 +31,8 @@ namespace Database\Service;
  *
  * Since circular dependencies are not supported, this abstract factory creates
  * both services and performs all necessary initializations.
+ *
+ * @deprecated use "Database\Connection" service.
  */
 class AbstractDatabaseFactory implements \Laminas\ServiceManager\Factory\AbstractFactoryInterface
 {
