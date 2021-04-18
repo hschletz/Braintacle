@@ -22,6 +22,10 @@
 
 namespace Database\Table;
 
+use Database\Connection;
+use Doctrine\DBAL\Schema\View;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+
 /**
  * "software_installations" view.
  *
@@ -30,14 +34,10 @@ namespace Database\Table;
  */
 class Software extends \Database\AbstractTable
 {
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $this->table = 'software_installations';
+    const TABLE = 'software_installations';
 
+    public function __construct(ServiceLocatorInterface $serviceLocator, Connection $connection = null)
+    {
         $this->_hydrator = new \Database\Hydrator\Software();
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
@@ -45,7 +45,7 @@ class Software extends \Database\AbstractTable
             $serviceLocator->get('Model\Client\Item\Software')
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($serviceLocator, $connection);
     }
 
     /** {@inheritdoc} */
@@ -67,37 +67,41 @@ class Software extends \Database\AbstractTable
         $softwareRaw = $this->_serviceLocator->get('Database\Table\SoftwareRaw');
         $softwareRaw->updateSchema($prune);
 
-        $logger = $this->_serviceLocator->get('Library\Logger');
-        $database = $this->_serviceLocator->get('Database\Nada');
-        if (!in_array('software_installations', $database->getViewNames())) {
+        $schema = $this->connection->getSchemaManager();
+        if (!$schema->hasView(static::TABLE)) {
+            $logger = $this->_serviceLocator->get('Library\Logger');
             $logger->info("Creating view 'software_installations'");
-            $sql = $softwareRaw->getSql();
-            $select = $sql->select();
-            $select->columns(
-                [
-                    'id',
-                    'hardware_id',
-                    'version',
-                    'comment' => 'comments',
-                    'publisher',
-                    'install_location' => 'folder',
-                    'is_hotfix' => 'source',
-                    'guid',
-                    'language',
-                    'installation_date' => 'installdate',
-                    'architecture' => 'bitswidth',
-                    'size' => 'filesize',
-                ],
-                true
-            )->join(
-                'software_definitions',
-                'software.definition_id = software_definitions.id',
-                ['name', 'display'],
-                \Laminas\Db\Sql\Select::JOIN_INNER
-            );
 
-            $database->createView('software_installations', $sql->buildSqlString($select));
+            $query = $this->connection->createQueryBuilder();
+            $query->select(
+                's.id',
+                'sd.name',
+                's.hardware_id',
+                's.version',
+                's.comments AS comment',
+                's.publisher',
+                's.folder AS install_location',
+                's.source AS is_hotfix',
+                's.guid',
+                's.language',
+                's.installdate AS installation_date',
+                's.bitswidth AS architecture',
+                's.filesize AS size',
+                'sd.display'
+            )
+            ->from(SoftwareRaw::TABLE, 's')
+            ->leftJoin('s', SoftwareDefinitions::TABLE, 'sd', 'sd.id = s.definition_id');
+
+            $view = new View(static::TABLE, $query->getSQL());
+            $schema->createView($view);
+
             $logger->info('done.');
+        }
+
+        // Temporary workaround for tests
+        $nada = $this->_serviceLocator->get('Database\Nada');
+        if (!in_array(static::TABLE, $nada->getViewNames())) {
+            $nada->createView(static::TABLE, $query->getSQL());
         }
     }
 }

@@ -22,8 +22,8 @@
 
 namespace Database\Table;
 
+use Doctrine\DBAL\Schema\View;
 use Nada\Column\AbstractColumn as Column;
-use Laminas\Db\Sql\Literal;
 
 /**
  * "download_enable" view
@@ -31,15 +31,7 @@ use Laminas\Db\Sql\Literal;
  */
 class PackageDownloadInfo extends \Database\AbstractTable
 {
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $this->table = 'download_enable';
-        parent::__construct($serviceLocator);
-    }
+    const TABLE = 'download_enable';
 
     /**
      * {@inheritdoc}
@@ -50,9 +42,9 @@ class PackageDownloadInfo extends \Database\AbstractTable
         // Reimplementation to provide a view instead of previous table
 
         $logger = $this->_serviceLocator->get('Library\Logger');
-        $database = $this->_serviceLocator->get('Database\Nada');
+        $nada = $this->_serviceLocator->get('Database\Nada');
 
-        if (in_array('download_enable', $database->getTableNames())) {
+        if (in_array('download_enable', $nada->getTableNames())) {
             // Use value of "fileid" column instead of obsolete "id" for package assignments
             $logger->info('Transforming package assignment IDs...');
             $where = new \Laminas\Db\Sql\Where();
@@ -61,7 +53,7 @@ class PackageDownloadInfo extends \Database\AbstractTable
                     'ivalue' => new \Laminas\Db\Sql\Expression(
                         sprintf(
                             '(SELECT CAST(fileid AS %s) FROM download_enable WHERE id = ivalue)',
-                            $database->getNativeDatatype(Column::TYPE_INTEGER, 32, true)
+                            $nada->getNativeDatatype(Column::TYPE_INTEGER, 32, true)
                         )
                     )
                 ),
@@ -70,35 +62,39 @@ class PackageDownloadInfo extends \Database\AbstractTable
             $logger->info('done.');
 
             $logger->info("Dropping table 'download_enable'...");
-            $database->dropTable('download_enable');
+            $nada->dropTable('download_enable');
             $logger->info('done.');
         }
 
-        if (!in_array('download_enable', $database->getViewNames())) {
+        $schema = $this->connection->getSchemaManager();
+        if (!$schema->hasView(static::TABLE)) {
             $logger->info("Creating view 'download_enable'");
-            $typeText = $database->getNativeDatatype(Column::TYPE_VARCHAR, 255, true);
-            $typeInt = $database->getNativeDatatype(Column::TYPE_INTEGER, 32, true);
-            $null = 'CAST(NULL AS %s)';
-            $sql = $this->_serviceLocator->get('Database\Table\Packages')->getSql();
-            $select = $sql->select();
-            $select->columns(
-                array(
-                    'id' => 'fileid',
-                    'fileid' => 'fileid',
-                    'info_loc' => new Literal(
-                        "(SELECT tvalue FROM config WHERE name = 'BRAINTACLE_DEFAULT_INFOFILE_LOCATION')"
-                    ),
-                    'pack_loc' => new Literal(
-                        "(SELECT tvalue FROM config WHERE name = 'BRAINTACLE_DEFAULT_DOWNLOAD_LOCATION')"
-                    ),
-                    'cert_path' => new Literal(sprintf($null, $typeText)),
-                    'cert_file' => new Literal(sprintf($null, $typeText)),
-                    'server_id' => new Literal(sprintf($null, $typeInt)),
-                ),
-                false
-            );
-            $database->createView('download_enable', $sql->buildSqlString($select));
+
+            $platform = $this->connection->getDatabasePlatform();
+            $nullCast = 'CAST(NULL AS %s)';
+            $typeText = sprintf($nullCast, $platform->getVarcharTypeDeclarationSQL(['length' => 255]));
+            $typeInt = sprintf($nullCast, $platform->getIntegerTypeDeclarationSQL([]));
+
+            $query = $this->connection->createQueryBuilder();
+            $query->select(
+                'fileid AS id',
+                'fileid',
+                "(SELECT tvalue FROM config WHERE name = 'BRAINTACLE_DEFAULT_INFOFILE_LOCATION') AS info_loc",
+                "(SELECT tvalue FROM config WHERE name = 'BRAINTACLE_DEFAULT_DOWNLOAD_LOCATION') AS pack_loc",
+                $typeText . ' AS cert_path',
+                $typeText . ' AS cert_file',
+                $typeInt . ' AS server_id'
+            )->from(Packages::TABLE);
+
+            $view = new View(static::TABLE, $query->getSQL());
+            $schema->createView($view);
+
             $logger->info('done.');
+        }
+
+        // Temporary workaround for tests
+        if (!in_array(static::TABLE, $nada->getViewNames())) {
+            $nada->createView(static::TABLE, $query->getSQL());
         }
     }
 }

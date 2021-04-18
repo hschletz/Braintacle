@@ -33,10 +33,11 @@ class SoftwareTest extends AbstractTest
 
     public function testHydrator()
     {
-        $hydrator = static::$_table->getHydrator();
+        $table = new Software(static::$serviceManager);
+        $hydrator = $table->getHydrator();
         $this->assertInstanceOf('Database\Hydrator\Software', $hydrator);
 
-        $resultSet = static::$_table->getResultSetPrototype();
+        $resultSet = $table->getResultSetPrototype();
         $this->assertInstanceOf('Laminas\Db\ResultSet\HydratingResultSet', $resultSet);
         $this->assertEquals($hydrator, $resultSet->getHydrator());
     }

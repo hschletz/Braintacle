@@ -22,16 +22,18 @@
 
 namespace Database\Table;
 
+use Database\Connection;
+use Doctrine\DBAL\Schema\View;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+
 /**
  * "windows_installations" view
  */
 class WindowsInstallations extends \Database\AbstractTable
 {
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    const TABLE = 'windows_installations';
+
+    public function __construct(ServiceLocatorInterface $serviceLocator, Connection $connection = null)
     {
         $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
@@ -54,7 +56,7 @@ class WindowsInstallations extends \Database\AbstractTable
             $serviceLocator->get('Model\Client\WindowsInstallation')
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($serviceLocator, $connection);
     }
 
     /**
@@ -64,33 +66,37 @@ class WindowsInstallations extends \Database\AbstractTable
     public function updateSchema($prune = false)
     {
         // Reimplementation to provide a view
-        $logger = $this->_serviceLocator->get('Library\Logger');
-        $database = $this->_serviceLocator->get('Database\Nada');
-        if (!in_array('windows_installations', $database->getViewNames())) {
+        $schema = $this->connection->getSchemaManager();
+        if (!$schema->hasView(static::TABLE)) {
+            $logger = $this->_serviceLocator->get('Library\Logger');
             $logger->info("Creating view 'windows_installations'");
-            $sql = $this->_serviceLocator->get('Database\Table\ClientsAndGroups')->getSql();
-            $select = $sql->select();
-            $select->columns(
-                array(
-                    'client_id' => 'id',
-                    'workgroup',
-                    'user_domain' => 'userdomain',
-                    'company' => 'wincompany',
-                    'owner' => 'winowner',
-                    'product_key' => 'winprodkey',
-                    'product_id' => 'winprodid',
-                    'cpu_architecture' => 'arch',
-                ),
-                false
-            )->join(
-                'braintacle_windows',
-                'hardware_id = id',
-                array('manual_product_key'),
-                \Laminas\Db\Sql\Select::JOIN_LEFT
-            )->where(new \Laminas\Db\Sql\Predicate\IsNotNull('winprodid'));
 
-            $database->createView('windows_installations', $sql->buildSqlString($select));
+            $query = $this->connection->createQueryBuilder();
+            $query->select(
+                'h.id AS client_id',
+                'h.workgroup',
+                'h.userdomain AS user_domain',
+                'h.wincompany AS company',
+                'h.winowner AS owner',
+                'h.winprodkey AS product_key',
+                'w.manual_product_key',
+                'h.winprodid AS product_id',
+                'h.arch AS cpu_architecture',
+            )
+            ->from(ClientsAndGroups::TABLE, 'h')
+            ->leftJoin('h', WindowsProductKeys::TABLE, 'w', 'w.hardware_id = h.id')
+            ->where('h.winprodid IS NOT NULL');
+
+            $view = new View(static::TABLE, $query->getSQL());
+            $schema->createView($view);
+
             $logger->info('done.');
+        }
+
+        // Temporary workaround for tests
+        $nada = $this->_serviceLocator->get('Database\Nada');
+        if (!in_array(static::TABLE, $nada->getViewNames())) {
+            $nada->createView(static::TABLE, $query->getSQL());
         }
     }
 }

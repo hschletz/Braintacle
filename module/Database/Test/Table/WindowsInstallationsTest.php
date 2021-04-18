@@ -22,6 +22,8 @@
 
 namespace Database\Test\Table;
 
+use Database\Table\WindowsInstallations;
+
 class WindowsInstallationsTest extends AbstractTest
 {
     public static function setUpBeforeClass(): void
@@ -39,7 +41,8 @@ class WindowsInstallationsTest extends AbstractTest
 
     public function testHydrator()
     {
-        $hydrator = static::$_table->getHydrator();
+        $table = new WindowsInstallations(static::$serviceManager);
+        $hydrator = $table->getHydrator();
         $this->assertInstanceOf(\Laminas\Hydrator\ArraySerializableHydrator::class, $hydrator);
 
         $map = $hydrator->getNamingStrategy();
@@ -63,7 +66,7 @@ class WindowsInstallationsTest extends AbstractTest
         $this->assertEquals('manual_product_key', $map->extract('ManualProductKey'));
         $this->assertEquals('cpu_architecture', $map->extract('CpuArchitecture'));
 
-        $resultSet = static::$_table->getResultSetPrototype();
+        $resultSet = $table->getResultSetPrototype();
         $this->assertInstanceOf('Laminas\Db\ResultSet\HydratingResultSet', $resultSet);
         $this->assertEquals($hydrator, $resultSet->getHydrator());
     }

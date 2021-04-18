@@ -28,13 +28,5 @@ namespace Database\Table;
  */
 class WindowsProductKeys extends \Database\AbstractTable
 {
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $this->table = 'braintacle_windows';
-        parent::__construct($serviceLocator);
-    }
+    const TABLE = 'braintacle_windows';
 }

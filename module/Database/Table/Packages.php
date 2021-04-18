@@ -29,14 +29,14 @@ namespace Database\Table;
  */
 class Packages extends \Database\AbstractTable
 {
+    const TABLE = 'download_available';
+
     /**
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
     public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $this->table = 'download_available';
-
         $map = array(
             'name' => 'Name',
             'fileid' => 'Id',

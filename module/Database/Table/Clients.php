@@ -22,6 +22,8 @@
 
 namespace Database\Table;
 
+use Doctrine\DBAL\Schema\View;
+
 /**
  * "clients" view
  *
@@ -31,6 +33,8 @@ namespace Database\Table;
  */
 class Clients extends \Database\AbstractTable
 {
+    const TABLE = 'clients';
+
     /**
      * {@inheritdoc}
      * @codeCoverageIgnore
@@ -52,49 +56,57 @@ class Clients extends \Database\AbstractTable
     public function updateSchema($prune = false)
     {
         // Reimplementation to provide a view
-        $logger = $this->_serviceLocator->get('Library\Logger');
-        $database = $this->_serviceLocator->get('Database\Nada');
-        if (!in_array('clients', $database->getViewNames())) {
+        $schema = $this->connection->getSchemaManager();
+        if (!$schema->hasView(static::TABLE)) {
+            $logger = $this->_serviceLocator->get('Library\Logger');
             $logger->info("Creating view 'clients'");
-            $sql = $this->_serviceLocator->get('Database\Table\ClientsAndGroups')->getSql();
-            $select = $sql->select();
-            $select->columns(
-                array(
-                    'id',
-                    'deviceid',
-                    'uuid',
-                    'name',
-                    'userid',
-                    'osname',
-                    'osversion',
-                    'oscomments',
-                    'description',
-                    'processort',
-                    'processors',
-                    'processorn',
-                    'memory',
-                    'swap',
-                    'dns',
-                    'defaultgateway',
-                    'lastdate',
-                    'lastcome',
-                    'useragent',
-                    'checksum',
-                    'ipaddr', // deprecated
-                    'dns_domain' => new \Laminas\Db\Sql\Literal(
-                        'CASE WHEN winprodid IS NULL THEN workgroup ELSE NULL END'
-                    )
-                ),
-                false
-            )->join(
-                'bios',
-                'hardware_id = id',
-                array('smanufacturer', 'smodel', 'ssn', 'assettag', 'type', 'bversion', 'bdate', 'bmanufacturer'),
-                \Laminas\Db\Sql\Select::JOIN_LEFT
-            )->where(new \Laminas\Db\Sql\Predicate\Operator('deviceid', '!=', '_SYSTEMGROUP_'));
 
-            $database->createView('clients', $sql->buildSqlString($select));
+            $query = $this->connection->createQueryBuilder();
+            $query->select(
+                'h.id',
+                'h.deviceid',
+                'h.uuid',
+                'h.name',
+                'h.userid',
+                'h.osname',
+                'h.osversion',
+                'h.oscomments',
+                'h.description',
+                'h.processort',
+                'h.processors',
+                'h.processorn',
+                'h.memory',
+                'h.swap',
+                'h.dns',
+                'h.defaultgateway',
+                'h.lastdate',
+                'h.lastcome',
+                'h.useragent',
+                'h.checksum',
+                'h.ipaddr', // deprecated
+                '(CASE WHEN h.winprodid IS NULL THEN h.workgroup ELSE NULL END) AS dns_domain',
+                'b.smanufacturer',
+                'b.smodel',
+                'b.ssn',
+                'b.assettag',
+                'b.type',
+                'b.bversion',
+                'b.bdate',
+                'b.bmanufacturer'
+            )->from(ClientsAndGroups::TABLE, 'h')
+            ->leftJoin('h', ClientSystemInfo::TABLE, 'b', 'b.hardware_id = h.id')
+            ->where("deviceid != '_SYSTEMGROUP_'");
+
+            $view = new View(static::TABLE, $query->getSQL());
+            $schema->createView($view);
+
             $logger->info('done.');
+        }
+
+        // Temporary workaround for tests
+        $nada = $this->_serviceLocator->get('Database\Nada');
+        if (!in_array(static::TABLE, $nada->getViewNames())) {
+            $nada->createView(static::TABLE, $query->getSQL());
         }
     }
 }

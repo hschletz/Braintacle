@@ -27,6 +27,8 @@ namespace Database\Table;
  */
 class SoftwareDefinitions extends \Database\AbstractTable
 {
+    const TABLE = 'software_definitions';
+
     /**
      * Migrate accepted software from old table structure?
      * @var bool
@@ -38,16 +40,6 @@ class SoftwareDefinitions extends \Database\AbstractTable
      * @var bool
      */
     protected $_migrateIgnored;
-
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $this->table = 'software_definitions';
-        parent::__construct($serviceLocator);
-    }
 
     /**
      * {@inheritdoc}

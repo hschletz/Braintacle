@@ -30,16 +30,7 @@ namespace Database\Table;
  */
 class SoftwareRaw extends \Database\AbstractTable
 {
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $this->table = 'software';
-
-        parent::__construct($serviceLocator);
-    }
+    const TABLE = 'software';
 
     /**
      * {@inheritdoc}
