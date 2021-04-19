@@ -22,6 +22,7 @@
 
 namespace Tools;
 
+use Database\Schema\DatabaseSchema;
 use Laminas\ModuleManager\Feature;
 use Model\Client\ClientManager;
 use Model\Config;
@@ -63,7 +64,7 @@ class Module implements
                     },
                     'Tools\command:database' => function ($container) {
                         return new Controller\Database(
-                            $container->get('Database\SchemaManager'),
+                            $container->get(DatabaseSchema::class),
                             $container->get('Library\Logger'),
                             $container->get('Library\Log\Writer\StdErr'),
                             $container->get('FilterManager')->get('Library\LogLevel'),

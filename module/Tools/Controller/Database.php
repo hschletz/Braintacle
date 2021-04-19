@@ -22,7 +22,7 @@
 
 namespace Tools\Controller;
 
-use Database\SchemaManager;
+use Database\Schema\DatabaseSchema;
 use Laminas\Log\Logger;
 use Laminas\Log\Writer\WriterInterface;
 use Library\Filter\LogLevel as LogLevelFilter;
@@ -39,17 +39,17 @@ class Database implements ControllerInterface
     protected $logger;
     protected $loglevelFilter;
     protected $loglevelValidator;
-    protected $schemaManager;
+    protected $databaseSchema;
     protected $writer;
 
     public function __construct(
-        SchemaManager $schemaManager,
+        DatabaseSchema $databaseSchema,
         Logger $logger,
         WriterInterface $writer,
         LogLevelFilter $loglevelFilter,
         LogLevelValidator $loglevelValidator
     ) {
-        $this->schemaManager = $schemaManager;
+        $this->databaseSchema = $databaseSchema;
         $this->logger = $logger;
         $this->writer = $writer;
         $this->loglevelFilter = $loglevelFilter;
@@ -72,7 +72,7 @@ class Database implements ControllerInterface
 
         $this->logger->addWriter($this->writer);
 
-        $this->schemaManager->updateAll($prune);
+        $this->databaseSchema->updateAll($prune);
 
         return Command::SUCCESS;
     }

@@ -90,8 +90,9 @@ class Operators extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function setSchema($logger, $schema, $database, $prune)
+    protected function setSchema(array $schema, bool $prune): void
     {
+        $database = $this->_serviceLocator->get('Database\Nada');
         $index = array_search('password_version', array_column($schema['columns'], 'name'));
         if (
             in_array($this->table, $database->getTableNames()) and
@@ -99,12 +100,14 @@ class Operators extends \Database\AbstractTable
         ) {
             $schema['columns'][$index]['notnull'] = false;
         }
-        parent::setSchema($logger, $schema, $database, $prune);
+        parent::setSchema($schema, $prune);
+
         if ($schema['columns'][$index]['notnull'] == false) {
+            $logger = $this->_serviceLocator->get('Library\Logger');
             $logger->info('Setting legacy hash type on existing accounts');
             $this->update(array('password_version' => self::HASH_LEGACY));
             $schema['columns'][$index]['notnull'] = true;
-            parent::setSchema($logger, $schema, $database, $prune);
+            parent::setSchema($schema, $prune);
         }
     }
 

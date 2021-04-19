@@ -22,8 +22,12 @@
 
 namespace Database;
 
+use Database\Schema\DatabaseSchema;
+use Database\Schema\TableSchema;
 use Database\Service\AbstractDatabaseFactory;
 use Database\Service\DatabaseFactory;
+use Database\Service\DatabaseSchemaFactory;
+use Database\Service\TableSchemaFactory;
 use Laminas\ModuleManager\Feature;
 
 /**
@@ -56,7 +60,8 @@ class Module implements
                 ),
                 'factories' => array(
                     Connection::class => DatabaseFactory::class,
-                    'Database\SchemaManager' => 'Database\Service\SchemaManagerFactory',
+                    DatabaseSchema::class => DatabaseSchemaFactory::class,
+                    TableSchema::class => TableSchemaFactory::class,
                 ),
             ),
         );

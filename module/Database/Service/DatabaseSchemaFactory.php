@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Factory for SchemaManager
+ * Factory for DatabaseSchema
  *
  * Copyright (C) 2011-2021 Holger Schletz <holger.schletz@web.de>
  *
@@ -22,12 +22,14 @@
 
 namespace Database\Service;
 
+use Database\Schema\DatabaseSchema;
+
 /**
- * Factory for SchemaManager
+ * Factory for DatabaseSchema
  *
  * @codeCoverageIgnore
  */
-class SchemaManagerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
+class DatabaseSchemaFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     /** {@inheritdoc} */
     public function __invoke(
@@ -35,6 +37,6 @@ class SchemaManagerFactory implements \Laminas\ServiceManager\Factory\FactoryInt
         $requestedName,
         array $options = null
     ) {
-        return new \Database\SchemaManager($container);
+        return new DatabaseSchema($container);
     }
 }

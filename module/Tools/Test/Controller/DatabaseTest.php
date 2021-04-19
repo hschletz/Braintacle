@@ -22,7 +22,7 @@
 
 namespace Tools\Test\Controller;
 
-use Database\SchemaManager;
+use Database\Schema\DatabaseSchema;
 use Laminas\Log\Logger;
 use Laminas\Log\Writer\WriterInterface;
 use Library\Filter\LogLevel as LogLevelFilter;
@@ -64,11 +64,11 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         $logger = $this->createMock(Logger::class);
         $logger->expects($this->once())->method('addWriter')->with($writer);
 
-        /** @var SchemaManager|MockObject */
-        $schemaManager = $this->createMock(SchemaManager::class);
-        $schemaManager->expects($this->once())->method('updateAll')->with('do_prune');
+        /** @var DatabaseSchema|MockObject */
+        $databaseSchema = $this->createMock(DatabaseSchema::class);
+        $databaseSchema->expects($this->once())->method('updateAll')->with('do_prune');
 
-        $controller = new \Tools\Controller\Database($schemaManager, $logger, $writer, $filter, $validator);
+        $controller = new \Tools\Controller\Database($databaseSchema, $logger, $writer, $filter, $validator);
         $this->assertSame(Command::SUCCESS, $controller($input, $output));
     }
 
@@ -98,11 +98,11 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         /** @var Logger|Stub */
         $logger = $this->createStub(Logger::class);
 
-        /** @var SchemaManager|MockObject */
-        $schemaManager = $this->createMock(SchemaManager::class);
-        $schemaManager->expects($this->never())->method('updateAll');
+        /** @var DatabaseSchema|MockObject */
+        $databaseSchema = $this->createMock(DatabaseSchema::class);
+        $databaseSchema->expects($this->never())->method('updateAll');
 
-        $controller = new \Tools\Controller\Database($schemaManager, $logger, $writer, $filter, $validator);
+        $controller = new \Tools\Controller\Database($databaseSchema, $logger, $writer, $filter, $validator);
         $this->assertSame(Command::FAILURE, $controller($input, $output));
     }
 }

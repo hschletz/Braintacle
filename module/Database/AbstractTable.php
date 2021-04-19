@@ -22,7 +22,9 @@
 
 namespace Database;
 
+use Database\Schema\TableSchema;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Nada\Database\AbstractDatabase;
 
 /**
  * Base class for table objects
@@ -127,7 +129,7 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
         $database = $this->_serviceLocator->get('Database\Nada');
 
         $this->preSetSchema($logger, $schema, $database, $prune);
-        $this->setSchema($logger, $schema, $database, $prune);
+        $this->setSchema($schema, $prune);
         $this->postSetSchema($logger, $schema, $database, $prune);
     }
 
@@ -147,21 +149,15 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
     /**
      * Create or update table
      *
-     * The default implementation calls \Database\SchemaManager::setSchema().
+     * The default implementation calls TableSchema::setSchema().
      *
-     * @param \Laminas\Log\Logger $logger Logger instance
-     * @param array $schema Parsed table schema
-     * @param \Nada\Database\AbstractDatabase $database Database object
-     * @param bool $prune Drop obsolete columns
      * @codeCoverageIgnore
      */
-    protected function setSchema($logger, $schema, $database, $prune)
+    protected function setSchema(array $schema, bool $prune): void
     {
-        \Database\SchemaManager::setSchema(
-            $logger,
+        $this->_serviceLocator->get(TableSchema::class)->setSchema(
             $schema,
-            $database,
-            static::getObsoleteColumns($logger, $schema, $database),
+            static::getObsoleteColumns($schema, $this->_serviceLocator->get('Database\Nada')),
             $prune
         );
     }
@@ -183,13 +179,9 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      * Get names of columns that are present in the current database but not in
      * the given schema
      *
-     * @param \Laminas\Log\Logger $logger Logger instance
-     * @param array $schema Parsed table schema
-     * @param \Nada\Database\AbstractDatabase $database Database object
-     * @return string[]
      * @codeCoverageIgnore
      */
-    public static function getObsoleteColumns($logger, $schema, $database)
+    public static function getObsoleteColumns(array $schema, AbstractDatabase $database): array
     {
         // Table may not exist yet if it's just about to be created
         if (in_array($schema['name'], $database->getTableNames())) {
