@@ -258,6 +258,7 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      *
      * @param string $name Column name
      * @return array
+     * @deprecated use Doctrine\Dbal methods directly
      */
     public function fetchCol($name)
     {

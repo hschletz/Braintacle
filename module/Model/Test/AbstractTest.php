@@ -22,6 +22,8 @@
 
 namespace Model\Test;
 
+use Database\Connection;
+
 /**
  * Base class for model tests
  *
@@ -50,8 +52,13 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
 
     public static function setUpBeforeClass(): void
     {
-        foreach (static::$_tables as $table) {
-            static::$serviceManager->get("Database\Table\\$table")->updateSchema(true);
+        foreach (static::$_tables as $tableName) {
+            // Instantiate table object directly to avoid side effects of service
+            $table = new ("Database\Table\\$tableName")(
+                static::$serviceManager,
+                static::$serviceManager->get(Connection::class)
+            );
+            $table->updateSchema(true);
         }
         parent::setUpBeforeClass();
     }
