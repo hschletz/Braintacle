@@ -95,14 +95,13 @@ class Table extends \Laminas\View\Helper\AbstractHelper
         $columnClasses = array(),
         $rowClassCallback = null
     ) {
-        if (count($data) == 0) {
+        $rows = $this->dataRows($data, array_keys($headers), $renderCallbacks, $columnClasses, $rowClassCallback);
+        if ($rows) {
+            $content = $this->headerRow($headers, $sorting, $columnClasses) . $rows;
+            return $this->tag($content);
+        } else {
             return '';
         }
-
-        $content = $this->headerRow($headers, $sorting, $columnClasses);
-        $content .= $this->dataRows($data, array_keys($headers), $renderCallbacks, $columnClasses, $rowClassCallback);
-
-        return $this->tag($content);
     }
 
     /**
