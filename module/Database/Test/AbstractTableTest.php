@@ -23,7 +23,12 @@
 namespace Database\Test\Table;
 
 use Database\AbstractTable;
+use Iterator;
 use Laminas\Hydrator\AbstractHydrator;
+use Laminas\Hydrator\HydratorInterface;
+use Library\Hydrator\Iterator\HydratingIteratorIterator;
+use LogicException;
+use stdClass;
 
 /**
  * Tests for AbstractTable helper methods
@@ -63,6 +68,27 @@ class AbstractTableTest extends \PHPUnit\Framework\TestCase
         $hydrator->setAccessible(true);
         $hydrator->setValue($this->_table, 'the hydrator');
         $this->assertEquals('the hydrator', $this->_table->getHydrator());
+    }
+
+    public function testGetIterator()
+    {
+        $hydrator = $this->createStub(HydratorInterface::class);
+
+        $table = $this->createPartialMock(AbstractTable::class, ['getHydrator', 'getPrototype']);
+        $table->expects($this->once())->method('getHydrator')->willReturn($hydrator);
+        $table->expects($this->once())->method('getPrototype')->willReturn(stdClass::class);
+
+        $data = $this->createStub(Iterator::class);
+        $this->assertInstanceOf(HydratingIteratorIterator::class, $table->getIterator($data));
+    }
+
+    public function testGetPrototype()
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessageMatches('/AbstractTable.*::getPrototype\(\) is not implemented$/');
+
+        $table = $this->createPartialMock(AbstractTable::class, []);
+        $table->getPrototype();
     }
 
     public function testGetConnection()

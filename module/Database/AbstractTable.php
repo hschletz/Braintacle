@@ -23,7 +23,10 @@
 namespace Database;
 
 use Database\Schema\TableSchema;
+use Iterator;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Library\Hydrator\Iterator\HydratingIteratorIterator;
+use LogicException;
 use Nada\Database\AbstractDatabase;
 
 /**
@@ -87,6 +90,27 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
     public function getHydrator()
     {
         return $this->_hydrator;
+    }
+
+    /**
+     * Wrap raw results in an iterator which returns hydrated objects.
+     *
+     * Object prototype is provided by {@see getPrototype()}.
+     */
+    public function getIterator(Iterator $data): Iterator
+    {
+        return new HydratingIteratorIterator($this->getHydrator(), $data, $this->getPrototype());
+    }
+
+    /**
+     * Get prototype for {@see getIterator()}.
+     *
+     * @return object|string Prototype object instance or class name
+     * @throws LogicException base implementation does not provide a prototype.
+     */
+    public function getPrototype()
+    {
+        throw new LogicException(get_class($this) . '::' . __FUNCTION__ . '() is not implemented');
     }
 
     /**
