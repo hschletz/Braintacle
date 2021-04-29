@@ -22,6 +22,7 @@
 
 namespace Model\Test\Client;
 
+use ArrayIterator;
 use Model\Client\Client;
 use Model\Client\CustomFields;
 
@@ -807,10 +808,10 @@ class ClientTest extends \Model\Test\AbstractTest
 
         $groupManager = $this->createMock('Model\Group\GroupManager');
         $groupManager->method('getGroups')->with()->willReturn(
-            array(
-                array('Id' => 1, 'Name' => 'group1'),
-                array('Id' => 2, 'Name' => 'group2'),
-            )
+            new ArrayIterator([
+                ['Id' => 1, 'Name' => 'group1'],
+                ['Id' => 2, 'Name' => 'group2'],
+            ])
         );
 
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
@@ -875,10 +876,10 @@ class ClientTest extends \Model\Test\AbstractTest
 
         $groupManager = $this->createMock('Model\Group\GroupManager');
         $groupManager->method('getGroups')->with()->willReturn(
-            array(
-                array('Id' => 1, 'Name' => 'group1'),
-                array('Id' => 2, 'Name' => 'group2'),
-            )
+            new ArrayIterator([
+                ['Id' => 1, 'Name' => 'group1'],
+                ['Id' => 2, 'Name' => 'group2'],
+            ])
         );
 
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
@@ -943,10 +944,10 @@ class ClientTest extends \Model\Test\AbstractTest
 
         $groupManager = $this->createMock('Model\Group\GroupManager');
         $groupManager->method('getGroups')->with()->willReturn(
-            array(
-                array('Id' => 1, 'Name' => 'group1'),
-                array('Id' => 2, 'Name' => 'group2'),
-            )
+            new ArrayIterator([
+                ['Id' => 1, 'Name' => 'group1'],
+                ['Id' => 2, 'Name' => 'group2'],
+            ])
         );
 
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
@@ -1007,7 +1008,7 @@ class ClientTest extends \Model\Test\AbstractTest
         );
 
         $groupManager = $this->createMock('Model\Group\GroupManager');
-        $groupManager->method('getGroups')->with()->willReturn(array($group1, $group2));
+        $groupManager->method('getGroups')->with()->willReturn(new ArrayIterator([$group1, $group2]));
 
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')
@@ -1055,11 +1056,11 @@ class ClientTest extends \Model\Test\AbstractTest
 
         $groupManager = $this->createMock('Model\Group\GroupManager');
         $groupManager->method('getGroups')->with()->willReturn(
-            array(
-                array('Id' => 1, 'Name' => 'group1'),
-                array('Id' => 2, 'Name' => 'group2'),
-                array('Id' => 3, 'Name' => 'group3'),
-            )
+            new ArrayIterator([
+                ['Id' => 1, 'Name' => 'group1'],
+                ['Id' => 2, 'Name' => 'group2'],
+                ['Id' => 3, 'Name' => 'group3'],
+            ])
         );
 
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
@@ -1089,7 +1090,7 @@ class ClientTest extends \Model\Test\AbstractTest
     {
         $groupManager = $this->createMock('Model\Group\GroupManager');
         $groupManager->method('getGroups')->with()->willReturn(
-            array(array('Id' => 1, 'Name' => 'group1'))
+            new ArrayIterator([['Id' => 1, 'Name' => 'group1']])
         );
 
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');

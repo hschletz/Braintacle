@@ -22,6 +22,10 @@
 
 namespace Database\Test\Table;
 
+use Database\Table\GroupInfo;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Model\Group\Group;
+
 class GroupInfoTest extends AbstractTest
 {
     public static function setUpBeforeClass(): void
@@ -100,5 +104,18 @@ class GroupInfoTest extends AbstractTest
         $this->assertInstanceOf('Laminas\Db\ResultSet\HydratingResultSet', $resultSet);
         $this->assertSame($hydrator, $resultSet->getHydrator());
         $this->assertInstanceOf('Model\Group\Group', $resultSet->getObjectPrototype());
+    }
+
+    public function testGetPrototype()
+    {
+        $group = $this->createStub(Group::class);
+
+        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
+        $serviceManager->method('get')->with(Group::class)->willReturn($group);
+
+        $table = $this->createPartialMock(GroupInfo::class, ['getServiceLocator']);
+        $table->method('getServiceLocator')->willReturn($serviceManager);
+
+        $this->assertSame($group, $table->getPrototype());
     }
 }

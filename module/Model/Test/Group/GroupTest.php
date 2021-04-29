@@ -22,9 +22,11 @@
 
 namespace Model\Test\Group;
 
+use Database\Table\GroupInfo;
+use DateTime;
 use Model\Group\Group;
 
-class GroupTest extends AbstractGroupTest
+class GroupTest extends \Model\Test\AbstractTest
 {
     /** {@inheritdoc} */
     protected static $_tables = array(
@@ -33,6 +35,7 @@ class GroupTest extends AbstractGroupTest
         'ClientSystemInfo',
         'Clients',
         'GroupMemberships',
+        'GroupInfo',
         'Packages',
     );
 
@@ -209,14 +212,19 @@ class GroupTest extends AbstractGroupTest
                           false
                       )->willReturn($select);
 
+        $groupInfo = $this->createMock(GroupInfo::class);
+        $groupInfo->expects($this->once())->method('update')->with(
+            ['request' => 'query_new'],
+            ['hardware_id' => 10]
+        );
+
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
                                 array('Db', $adapter),
                                 array('Model\Client\ClientManager', $clientManager),
-                                array('Database\Table\GroupInfo', $this->_groupInfo
-                                )
+                                [GroupInfo::class, $groupInfo]
                             )
                        );
 
@@ -237,13 +245,6 @@ class GroupTest extends AbstractGroupTest
             'search',
             'operator',
             'invert'
-        );
-        $this->assertTablesEqual(
-            $this->loadDataSet('SetMembersFromQueryDynamic')->getTable('groups'),
-            $this->getConnection()->createQueryTable(
-                'groups',
-                'SELECT hardware_id, request FROM groups ORDER BY hardware_id'
-            )
         );
     }
 
@@ -285,21 +286,24 @@ class GroupTest extends AbstractGroupTest
 
     public function updateProvider()
     {
-        return array(
-            array(true, false, null, true, null), // force update, but no query
-            array(true, true, null, false, null), // force update, but locking fails
-            array(false, true, new \DateTime('2015-07-23 20:21:00'), true, null), // not expired yet
-            array(true, true, new \DateTime('2015-07-23 20:21:00'), true, 'Update'), // not expired, but forced
-            array(false, true, new \DateTime('2015-07-23 20:19:00'), true, 'Update'), // expired
-            array(false, true, null, true, 'Update'), // no cache yet
-        );
+        return [
+            [true, false, null, true, false], // force update, but no query
+            [true, true, null, false, false], // force update, but locking fails
+            [false, true, new \DateTime('2015-07-23 20:21:00'), true, false], // not expired yet
+            [true, true, new \DateTime('2015-07-23 20:21:00'), true, true], // not expired, but forced
+            [false, true, new \DateTime('2015-07-23 20:19:00'), true, true], // expired
+            [false, true, null, true, true], // no cache yet
+        ];
     }
+
     /**
      * @dataProvider updateProvider
      */
-    public function testUpdate($force, $setSql, $expires, $lockSuccess, $dataSet)
+    public function testUpdate($force, $setSql, $expires, $lockSuccess, bool $update)
     {
         $now = new \DateTime('2015-07-23 20:20:00');
+
+        $groupInfo = $this->createMock(GroupInfo::class);
 
         $random = $this->createMock('Library\Random');
         $random->method('getInteger')->willReturn(42);
@@ -322,7 +326,7 @@ class GroupTest extends AbstractGroupTest
                                     'Database\Table\Clients',
                                     static::$serviceManager->get('Database\Table\Clients')
                                 ),
-                                array('Database\Table\GroupInfo', $this->_groupInfo),
+                                [GroupInfo::class, $groupInfo],
                                 array(
                                     'Database\Table\GroupMemberships',
                                     static::$serviceManager->get('Database\Table\GroupMemberships')
@@ -333,34 +337,33 @@ class GroupTest extends AbstractGroupTest
                            )
                        );
 
-        $model = $this->createPartialMock(Group::class, ['lock', 'unlock']);
+        $model = $this->createPartialMock(Group::class, ['lock', 'unlock', '__destruct']);
         $model->method('lock')->willReturn($lockSuccess);
-        if ($dataSet !== null) {
-            $model->expects($this->once())->method('unlock');
-        }
         $model->setServiceLocator($serviceManager);
         $model['Id'] = 10;
         $model['DynamicMembersSql'] = $setSql ? 'SELECT id FROM hardware WHERE id IN(2,3,4,5)' : null;
         $model['CacheCreationDate'] = null;
         $model['CacheExpirationDate'] = $expires;
 
+        if ($update) {
+            $model->expects($this->once())->method('unlock');
+            $groupInfo->expects($this->once())->method('update')->with(
+                ['create_time' => 1437675600, 'revalidate_from' => 1437675642],
+                ['hardware_id' => 10]
+            );
+        } else {
+            $groupInfo->expects($this->never())->method('update');
+        }
+
         $model->update($force);
+
         // CacheCreationDate is only updated when there was data to alter ($dataSet !== null)
+        $this->assertEquals($update ? $now : null, $model['CacheCreationDate']);
+
+        // CacheExpirationDate is either updated or kept at initialized value
         $this->assertEquals(
-            ($dataSet === null) ? null : $now,
-            $model['CacheCreationDate']
-        );
-        // CacheExpirationDate is either updated ($dataSet !== null) or kept at initialized value
-        $this->assertEquals(
-            ($dataSet === null) ? $expires : new \DateTime('2015-07-23 20:30:42'),
+            $update ? new DateTime('2015-07-23 20:30:42') : $expires,
             $model['CacheExpirationDate']
-        );
-        $this->assertTablesEqual(
-            $this->loadDataSet($dataSet)->getTable('groups'),
-            $this->getConnection()->createQueryTable(
-                'groups',
-                'SELECT hardware_id, request, create_time, revalidate_from FROM groups ORDER BY hardware_id'
-            )
         );
     }
 

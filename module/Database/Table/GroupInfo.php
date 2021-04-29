@@ -22,28 +22,26 @@
 
 namespace Database\Table;
 
+use Model\Group\Group;
+
 /**
  * "groups" table
  */
 class GroupInfo extends \Database\AbstractTable
 {
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    const TABLE = 'groups';
+
+    public function getPrototype(): Group
     {
-        $this->table = 'groups';
+        return $this->getServiceLocator()->get(Group::class);
+    }
+
+    public function initialize()
+    {
         // Hydrator and ResultSet initialization is postponed to initialize()
         // because they depend on reading from Model\Config which is
         // inappropriate in a constructor and may not be functional under
         // certain circumstances (database initialization)
-        parent::__construct($serviceLocator);
-    }
-
-    /** {@inheritdoc} */
-    public function initialize()
-    {
         $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(

@@ -22,6 +22,11 @@
 
 namespace Model\Group;
 
+use Database\Table\GroupInfo;
+use Iterator;
+use Laminas\Db\Sql\Sql;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+
 /**
  * Group manager
  */
@@ -33,12 +38,7 @@ class GroupManager
      */
     protected $_serviceManager;
 
-    /**
-     * Constructor
-     *
-     * @param \Laminas\ServiceManager\ServiceManager $serviceManager
-     */
-    public function __construct(\Laminas\ServiceManager\ServiceManager $serviceManager)
+    public function __construct(ServiceLocatorInterface $serviceManager)
     {
         $this->_serviceManager = $serviceManager;
     }
@@ -50,19 +50,12 @@ class GroupManager
      * @param mixed $filterArg Argument for Id, Name and Member filters, ignored otherwise
      * @param string $order Property to sort by. Default: none
      * @param string $direction one of [asc|desc]. Default: asc
-     * @return \Laminas\Db\ResultSet\AbstractResultSet Result set producing \Model\Group\Group
+     * @return Iterator Iterator producing Group objects
      */
-    public function getGroups($filter = null, $filterArg = null, $order = null, $direction = 'asc')
+    public function getGroups($filter = null, $filterArg = null, $order = null, $direction = 'asc'): Iterator
     {
-        $groupInfo = $this->_serviceManager->get('Database\Table\GroupInfo');
-        $select = $groupInfo->getSql()->select();
-        $select->columns(array('request', 'create_time', 'revalidate_from'))
-               ->join(
-                   'hardware',
-                   'hardware.id = groups.hardware_id',
-                   array('id', 'name', 'lastdate', 'description'),
-                   \Laminas\Db\Sql\Select::JOIN_INNER
-               );
+        $sql = new Sql($this->_serviceManager->get('Db'));
+        $select = $sql->select();
 
         switch ($filter) {
             case null:
@@ -100,11 +93,23 @@ class GroupManager
                 break;
         }
 
+        $select->columns(array('request', 'create_time', 'revalidate_from'))
+               ->from(GroupInfo::TABLE)
+               ->join(
+                   'hardware',
+                   'hardware.id = groups.hardware_id',
+                   array('id', 'name', 'lastdate', 'description'),
+                   \Laminas\Db\Sql\Select::JOIN_INNER
+               );
+
+        $groupInfo = $this->_serviceManager->get(GroupInfo::class);
         if ($order) {
             $select->order(array($groupInfo->getHydrator()->extractName($order) => $direction));
         }
 
-        return $groupInfo->selectWith($select);
+        $result = $sql->prepareStatementForSqlObject($select)->execute();
+
+        return $groupInfo->getIterator($result);
     }
 
     /**
@@ -199,10 +204,10 @@ class GroupManager
             $connection->commit();
         } catch (\Exception $e) {
             $connection->rollBack();
-            $group->unlock();
             throw $e;
+        } finally {
+            $group->unlock();
         }
-        $group->unlock();
     }
 
     /**

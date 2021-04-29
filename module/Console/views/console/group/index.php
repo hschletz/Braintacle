@@ -57,14 +57,15 @@ $renderCallbacks = array(
     },
 );
 
-if (count($this->groups)) {
-    print $this->table(
-        $this->groups,
-        $headers,
-        $this->sorting,
-        $renderCallbacks,
-        array('CreationDate' => 'nowrap')
-    );
+$table = $this->table(
+    $this->groups,
+    $headers,
+    $this->sorting,
+    $renderCallbacks,
+    array('CreationDate' => 'nowrap')
+);
+if ($table) {
+    print $table;
 } else {
     print $this->htmlElement(
         'p',
