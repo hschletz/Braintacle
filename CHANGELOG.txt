@@ -17,6 +17,10 @@ Upgrading from previous versions:
 - Recommended: The above step may leave the directory public/components behind.
   It is no longer used and should be deleted manually.
 
+Misc:
+
+- Server: Respond with 405 status code for non-POST requests instead of 403.
+
 
 CHANGES IN VERSION 1.8
 ======================
