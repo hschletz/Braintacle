@@ -9,3 +9,8 @@ indent_size = 4
 charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
+
+# Preserve whitespace in Perl code to facilitate merging upstream changes.
+[*.pm]
+trim_trailing_whitespace = false
+insert_final_newline = false

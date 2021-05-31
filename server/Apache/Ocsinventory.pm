@@ -311,7 +311,7 @@ sub handler{
 
     }
 
-  }else{ return APACHE_FORBIDDEN }
+  }else{ return APACHE_METHOD_NOT_ALLOWED }
 
 }
 
