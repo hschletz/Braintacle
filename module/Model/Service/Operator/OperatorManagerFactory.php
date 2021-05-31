@@ -22,6 +22,11 @@
 
 namespace Model\Service\Operator;
 
+use Database\Connection;
+use Database\Table\Operators;
+use Laminas\Authentication\AuthenticationService;
+use Model\Operator\OperatorManager;
+
 /**
  * Factory for Model\Operator\OperatorManager
  */
@@ -36,9 +41,10 @@ class OperatorManagerFactory implements \Laminas\ServiceManager\Factory\FactoryI
         $requestedName,
         array $options = null
     ) {
-        return new \Model\Operator\OperatorManager(
-            $container->get('Laminas\Authentication\AuthenticationService'),
-            $container->get('Database\Table\Operators')
+        return new OperatorManager(
+            $container->get(AuthenticationService::class),
+            $container->get(Operators::class),
+            $container->get(Connection::class)
         );
     }
 }

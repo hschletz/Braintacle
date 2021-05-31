@@ -42,10 +42,9 @@
     "primary_key": [
         "id"
     ],
-    "indexes": [
+    "unique_constraints": [
         {
             "name": "software_definitions_name_idx",
-            "unique": true,
             "columns": [
                 "name"
             ]

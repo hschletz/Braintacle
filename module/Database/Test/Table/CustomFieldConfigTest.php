@@ -22,8 +22,15 @@
 
 namespace Database\Test\Table;
 
+use Database\Connection;
 use Database\Table\CustomFieldConfig;
-use Nada\Column\AbstractColumn as Column;
+use Database\Table\CustomFields;
+use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Schema\TableDiff;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
+use Laminas\ServiceManager\ServiceManager;
+use RuntimeException;
 
 /**
  * Tests for the CustomFieldConfig class
@@ -44,19 +51,23 @@ class CustomFieldConfigTest extends AbstractTest
         // CustomFieldConfig table to be truncated first because
         // CustomFields::updateSchema() would not drop any columns with a
         // matching record in CustomFieldConfig.
-        static::$_table->delete(true);
-        $customFields = static::$serviceManager->get('Database\Table\CustomFields');
+        $connection = $this->getDatabaseConnection();
+        $connection->executeStatement($connection->getDatabasePlatform()->getTruncateTableSQL(CustomFieldConfig::TABLE));
+        $customFields = static::$serviceManager->get(CustomFields::class);
         $customFields->updateSchema(true);
 
         // Create the columns matching the CustomFieldConfig fixture.
-        $table = static::$_nada->getTable($customFields->getTable());
-        $table->addColumn('fields_3', Column::TYPE_VARCHAR, 255);
-        $table->addColumn('fields_4', Column::TYPE_INTEGER, 32);
-        $table->addColumn('fields_5', Column::TYPE_FLOAT);
-        $table->addColumn('fields_6', Column::TYPE_CLOB);
-        $table->addColumn('fields_7', Column::TYPE_DATE);
-        $table->addColumn('fields_8', Column::TYPE_VARCHAR, 255);
-        $table->addColumn('fields_9', Column::TYPE_VARCHAR, 255);
+        $tableDiff = new TableDiff(CustomFields::TABLE);
+        $tableDiff->addedColumns = [
+            new Column('fields_3', Type::getType(Types::STRING), ['Length' => 255]),
+            new Column('fields_4', Type::getType(Types::INTEGER)),
+            new Column('fields_5', Type::getType(Types::FLOAT)),
+            new Column('fields_6', Type::getType(Types::TEXT)),
+            new Column('fields_7', Type::getType(Types::DATE_MUTABLE)),
+            new Column('fields_8', Type::getType(Types::STRING), ['Length' => 255]),
+            new Column('fields_9', Type::getType(Types::STRING), ['Length' => 255]),
+        ];
+        $connection->getSchemaManager()->alterTable($tableDiff);
 
         // This will populate CustomFieldConfig with the fixture.
         parent::setUp();
@@ -67,14 +78,21 @@ class CustomFieldConfigTest extends AbstractTest
         parent::tearDown();
 
         // Drop columns created for this test
-        $customFields = static::$_nada->getTable('accountinfo');
-        $customFields->dropColumn('fields_3');
-        $customFields->dropColumn('fields_4');
-        $customFields->dropColumn('fields_5');
-        $customFields->dropColumn('fields_6');
-        $customFields->dropColumn('fields_7');
-        $customFields->dropColumn('fields_8');
-        $customFields->dropColumn('fields_9');
+        $schemaManager = $this->getDatabaseConnection()->getSchemaManager();
+        $table = $schemaManager->listTableDetails(CustomFields::TABLE);
+        $columns = $table->getColumns();
+        $tableDiff = new TableDiff(CustomFields::TABLE);
+        $tableDiff->fromTable = $table;
+        $tableDiff->removedColumns = [
+            $columns['fields_3'],
+            $columns['fields_4'],
+            $columns['fields_5'],
+            $columns['fields_6'],
+            $columns['fields_7'],
+            $columns['fields_8'],
+            $columns['fields_9'],
+        ];
+        $schemaManager->alterTable($tableDiff);
     }
 
     public function testGetFields()
@@ -92,13 +110,13 @@ class CustomFieldConfigTest extends AbstractTest
 
     public function addFieldProvider()
     {
-        return array(
-            array('text', Column::TYPE_VARCHAR, $this->equalTo(255), CustomFieldConfig::INTERNALTYPE_TEXT),
-            array('integer', Column::TYPE_INTEGER, $this->anything(), CustomFieldConfig::INTERNALTYPE_TEXT),
-            array('float', Column::TYPE_FLOAT, $this->anything(), CustomFieldConfig::INTERNALTYPE_TEXT),
-            array('date', Column::TYPE_DATE, $this->anything(), CustomFieldConfig::INTERNALTYPE_DATE),
-            array('clob', Column::TYPE_CLOB, $this->anything(), CustomFieldConfig::INTERNALTYPE_TEXTAREA),
-        );
+        return [
+            ['text', Types::STRING, $this->equalTo(255), CustomFieldConfig::INTERNALTYPE_TEXT],
+            ['integer', Types::INTEGER, $this->anything(), CustomFieldConfig::INTERNALTYPE_TEXT],
+            ['float', Types::FLOAT, $this->anything(), CustomFieldConfig::INTERNALTYPE_TEXT],
+            ['date', Types::DATE_MUTABLE, $this->anything(), CustomFieldConfig::INTERNALTYPE_DATE],
+            ['clob', Types::TEXT, $this->anything(), CustomFieldConfig::INTERNALTYPE_TEXTAREA],
+        ];
     }
 
     /**
@@ -106,18 +124,27 @@ class CustomFieldConfigTest extends AbstractTest
      */
     public function testAddField($type, $columnType, $length, $internalType)
     {
-        static::$_table->addField('New field', $type);
+        $serviceLocator = $this->createStub(ServiceManager::class);
+        $connection = $this->getDatabaseConnection();
+
+        $customFieldConfig = new CustomFieldConfig($serviceLocator, $connection);
+        $customFieldConfig->addField('New field', $type);
 
         // getLastInsertValue() is not portable. Query database instead. The
         // name filter is sufficient for this particular test case.
-        $id = static::$_table->select(array('name' => 'New field'))->current()['id'];
-        $table = static::$_nada->getTable('accountinfo');
-        $column = $table->getColumn('fields_' . $id);
+        $query = $connection->createQueryBuilder();
+        $query->select('id')->from(CustomFieldConfig::TABLE)->where("name = 'New field'");
+        $id = $query->execute()->fetchOne();
+        $columnName = 'fields_' . $id;
+
+        $schemaManager = $connection->getSchemaManager();
+        $customFields = $schemaManager->listTableDetails(CustomFields::TABLE);
+        $column = $customFields->getColumn($columnName);
 
         // Reset table before any assertions
-        $table->dropColumn($column->getName());
+        $schemaManager->dropColumn($customFields, $column);
 
-        $this->assertEquals($columnType, $column->getDatatype());
+        $this->assertEquals($columnType, $column->getType()->getName());
         $this->assertThat($column->getLength(), $length);
 
         $dataSet = new \PHPUnit\DbUnit\DataSet\ReplacementDataSet(
@@ -156,33 +183,18 @@ class CustomFieldConfigTest extends AbstractTest
 
     public function testAddFieldRollbackOnException()
     {
-        $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
-        $connection->expects($this->once())->method('beginTransaction');
-        $connection->expects($this->once())->method('rollback');
-        $connection->expects($this->never())->method('commit');
-
-        $driver = $this->createMock('Laminas\Db\Adapter\Driver\DriverInterface');
-        $driver->method('getConnection')->willReturn($connection);
-
-        $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
-        $adapter->method('getDriver')->willReturn($driver);
-
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
-
-        $table = $this->createPartialMock(CustomFieldConfig::class, ['getSql']);
-        $table->method('getSql')->willThrowException(new \RuntimeException('test message'));
-
-        $adapterProperty = new \ReflectionProperty(get_class($table), 'adapter');
-        $adapterProperty->setAccessible(true);
-        $adapterProperty->setValue($table, $adapter);
-
-        $serviceLocatorProperty = new \ReflectionProperty(get_class($table), '_serviceLocator');
-        $serviceLocatorProperty->setAccessible(true);
-        $serviceLocatorProperty->setValue($table, $serviceManager);
-
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('test message');
 
+        $serviceLocator = $this->createStub(ServiceManager::class);
+
+        $connection = $this->createMock(Connection::class);
+        $connection->expects($this->once())->method('beginTransaction');
+        $connection->expects($this->once())->method('rollBack');
+        $connection->expects($this->never())->method('commit');
+        $connection->method('createQueryBuilder')->willThrowException(new RuntimeException('test message'));
+
+        $table = new CustomFieldConfig($serviceLocator, $connection);
         $table->addField('name', 'text');
     }
 
@@ -200,15 +212,17 @@ class CustomFieldConfigTest extends AbstractTest
 
     public function testDeleteField()
     {
+        $schemaManager = $this->getDatabaseConnection()->getSchemaManager();
+        $oldColumns = $schemaManager->listTableColumns(CustomFields::TABLE);
+
         static::$_table->deleteField('Text');
 
-        $table = static::$_nada->getTable('accountinfo');
-        $columns = $table->getColumns();
+        $newColumns = $schemaManager->listTableColumns(CustomFields::TABLE);
 
         // Reset table before any assertions
-        $table->addColumn('fields_3', Column::TYPE_VARCHAR, 255);
+        $schemaManager->addColumn(CustomFields::TABLE, $oldColumns['fields_3']);
 
-        $this->assertArrayNotHasKey('fields_3', $columns);
+        $this->assertArrayNotHasKey('fields_3', $newColumns);
         $this->assertTablesEqual(
             $this->loadDataSet('DeleteField')->getTable('accountinfo_config'),
             $this->getConnection()->createQueryTable(
@@ -220,27 +234,18 @@ class CustomFieldConfigTest extends AbstractTest
 
     public function testDeleteFieldRollbackOnException()
     {
-        $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
-        $connection->expects($this->once())->method('beginTransaction');
-        $connection->expects($this->once())->method('rollback');
-        $connection->expects($this->never())->method('commit');
-
-        $driver = $this->createMock('Laminas\Db\Adapter\Driver\DriverInterface');
-        $driver->method('getConnection')->willReturn($connection);
-
-        $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
-        $adapter->method('getDriver')->willReturn($driver);
-
-        $table = $this->createPartialMock(CustomFieldConfig::class, ['getSql']);
-        $table->method('getSql')->willThrowException(new \RuntimeException('test message'));
-
-        $adapterProperty = new \ReflectionProperty(get_class($table), 'adapter');
-        $adapterProperty->setAccessible(true);
-        $adapterProperty->setValue($table, $adapter);
-
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('test message');
 
+        $serviceLocator = $this->createStub(ServiceManager::class);
+
+        $connection = $this->createMock(Connection::class);
+        $connection->expects($this->once())->method('beginTransaction');
+        $connection->expects($this->once())->method('rollBack');
+        $connection->expects($this->never())->method('commit');
+        $connection->method('createQueryBuilder')->willThrowException(new RuntimeException('test message'));
+
+        $table = new CustomFieldConfig($serviceLocator, $connection);
         $table->deleteField('name');
     }
 }

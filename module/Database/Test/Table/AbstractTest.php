@@ -22,6 +22,8 @@
 
 namespace Database\Test\Table;
 
+use Database\Connection;
+
 /**
  * Base class for table interface tests
  *
@@ -66,7 +68,7 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
     public function getConnection()
     {
         if (!$this->_db) {
-            $pdo = static::$_table->getAdapter()->getDriver()->getConnection()->getResource();
+            $pdo = $this->getDatabaseConnection()->getWrappedConnection()->getWrappedConnection();
             $this->_db = $this->createDefaultDBConnection($pdo, ':memory:');
         }
         return $this->_db;
@@ -99,6 +101,14 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
         return new \PHPUnit\DbUnit\DataSet\YamlDataSet(
             \Database\Module::getPath("$file.yaml")
         );
+    }
+
+    /**
+     * Get database connection used by application.
+     */
+    public function getDatabaseConnection(): Connection
+    {
+        return static::$serviceManager->get(Connection::class);
     }
 
     /**

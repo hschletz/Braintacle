@@ -71,7 +71,29 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
     public function getConnection()
     {
         if (!$this->_db) {
-            $pdo = static::$serviceManager->get('Db')->getDriver()->getConnection()->getResource();
+            // Transitional switch: get PDO instance from the DBAL used by
+            // particular model
+            $class = get_class($this);
+            switch (substr($class, strrpos($class, '\\') + 1)) {
+                case 'AuthenticationAdapterTest':
+                case 'ClientTest':
+                case 'ClientManagerTest':
+                case 'ClientOrGroupTest':
+                case 'CustomFieldManagerTest':
+                case 'DeviceManagerTest':
+                case 'DuplicatesManagerTest':
+                case 'GroupTest':
+                case 'GroupManagerTest':
+                case 'ItemManagerTest':
+                case 'PackageManagerTest':
+                case 'RegistryManagerTest':
+                case 'SoftwareManagerTest':
+                case 'SubnetManagerTest':
+                    $pdo = static::$serviceManager->get('Db')->getDriver()->getConnection()->getResource();
+                    break;
+                default:
+                    $pdo = $this->getDatabaseConnection()->getWrappedConnection()->getWrappedConnection();
+            }
             $this->_db = $this->createDefaultDBConnection($pdo, ':memory:');
         }
         return $this->_db;
@@ -147,6 +169,14 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
     }
 
     /**
+     * Get database connection used by application.
+     */
+    public function getDatabaseConnection(): Connection
+    {
+        return static::$serviceManager->get(Connection::class);
+    }
+
+    /**
      * Get the model class name, derived from the test class name
      *
      * @return string
@@ -167,6 +197,7 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
      *
      * @param array $overrideServices Optional associative array (name => instance) with services to override
      * @return object Model instance
+     * @deprecated set up model manually
      */
     protected function getModel(array $overrideServices = array())
     {
@@ -185,6 +216,9 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
             }
             if (!isset($overrideServices['Database\Nada'])) {
                 $serviceManager->setService('Database\Nada', static::$serviceManager->get('Database\Nada'));
+            }
+            if (!isset($overrideServices[Connection::class])) {
+                $serviceManager->setService(Connection::class, static::$serviceManager->get(Connection::class));
             }
             // Override specified services
             foreach ($overrideServices as $name => $service) {

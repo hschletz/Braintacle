@@ -24,6 +24,15 @@
     "primary_key": [
         "hardware_id"
     ],
+    "foreign_keys": [
+        {
+            "name": "windows_hardware_id_idx",
+            "foreign_table": "hardware",
+            "foreign_columns": ["id"],
+            "local_columns": ["hardware_id"],
+            "on_delete": "cascade"
+        }
+    ],
     "mysql": {
         "engine": "InnoDB"
     }

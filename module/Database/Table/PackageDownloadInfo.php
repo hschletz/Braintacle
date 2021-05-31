@@ -23,7 +23,6 @@
 namespace Database\Table;
 
 use Doctrine\DBAL\Schema\View;
-use Nada\Column\AbstractColumn as Column;
 
 /**
  * "download_enable" view
@@ -41,19 +40,22 @@ class PackageDownloadInfo extends \Database\AbstractTable
     {
         // Reimplementation to provide a view instead of previous table
 
-        $logger = $this->_serviceLocator->get('Library\Logger');
-        $nada = $this->_serviceLocator->get('Database\Nada');
-
-        if (in_array('download_enable', $nada->getTableNames())) {
-            // Use value of "fileid" column instead of obsolete "id" for package assignments
+        $platform = $this->connection->getDatabasePlatform();
+        $integerDeclaration = $platform->getIntegerTypeDeclarationSQL([]);
+        $schemaManager = $this->connection->getSchemaManager();
+        if ($schemaManager->tablesExist([static::TABLE])) {
+            $logger = $this->connection->getLogger();
             $logger->info('Transforming package assignment IDs...');
+
+            // Use value of "fileid" column instead of obsolete "id" for package assignments
             $where = new \Laminas\Db\Sql\Where();
             $this->_serviceLocator->get('Database\Table\ClientConfig')->update(
                 array(
                     'ivalue' => new \Laminas\Db\Sql\Expression(
                         sprintf(
-                            '(SELECT CAST(fileid AS %s) FROM download_enable WHERE id = ivalue)',
-                            $nada->getNativeDatatype(Column::TYPE_INTEGER, 32, true)
+                            '(SELECT CAST(fileid AS %s) FROM %s WHERE id = ivalue)',
+                            $integerDeclaration,
+                            static::TABLE
                         )
                     )
                 ),
@@ -61,19 +63,13 @@ class PackageDownloadInfo extends \Database\AbstractTable
             );
             $logger->info('done.');
 
-            $logger->info("Dropping table 'download_enable'...");
-            $nada->dropTable('download_enable');
-            $logger->info('done.');
+            $schemaManager->dropTable(static::TABLE);
         }
 
-        $schema = $this->connection->getSchemaManager();
-        if (!$schema->hasView(static::TABLE)) {
-            $logger->info("Creating view 'download_enable'");
-
-            $platform = $this->connection->getDatabasePlatform();
+        if (!$schemaManager->hasView(static::TABLE)) {
             $nullCast = 'CAST(NULL AS %s)';
             $typeText = sprintf($nullCast, $platform->getVarcharTypeDeclarationSQL(['length' => 255]));
-            $typeInt = sprintf($nullCast, $platform->getIntegerTypeDeclarationSQL([]));
+            $typeInt = sprintf($nullCast, $integerDeclaration);
 
             $query = $this->connection->createQueryBuilder();
             $query->select(
@@ -86,15 +82,15 @@ class PackageDownloadInfo extends \Database\AbstractTable
                 $typeInt . ' AS server_id'
             )->from(Packages::TABLE);
 
-            $view = new View(static::TABLE, $query->getSQL());
-            $schema->createView($view);
-
-            $logger->info('done.');
+            $schemaManager->createView(new View(static::TABLE, $query));
         }
 
         // Temporary workaround for tests
-        if (!in_array(static::TABLE, $nada->getViewNames())) {
-            $nada->createView(static::TABLE, $query->getSQL());
+        if (getenv('BRAINTACLE_TEST_DATABASE')) {
+            $nada = $this->_serviceLocator->get('Database\Nada');
+            if (!in_array(static::TABLE, $nada->getViewNames())) {
+                $nada->createView(static::TABLE, $query->getSQL());
+            }
         }
     }
 }

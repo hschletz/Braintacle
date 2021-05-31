@@ -27,30 +27,21 @@ namespace Database\Table;
  */
 class Comments extends \Database\AbstractTable
 {
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $this->table = 'itmgmt_comments';
-        parent::__construct($serviceLocator);
-    }
+    const TABLE = 'itmgmt_comments';
 
     /**
-     * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function preSetSchema($logger, $schema, $database, $prune)
+    protected function preSetSchema(array $schema, bool $prune): void
     {
         // Migration: if the "visible" column still exists, permanently delete
         // rows that are marked as deleted before the column gets dropped.
-        if (in_array($this->table, $database->getTableNames())) {
-            $columns = $database->getTable($this->table)->getColumns();
+        $schemaManager = $this->connection->getSchemaManager();
+        if ($schemaManager->tablesExist([static::TABLE])) {
+            $columns = $schemaManager->listTableColumns(static::TABLE);
             if (isset($columns['visible'])) {
-                $logger->info('Pruning deleted comments');
-                $this->delete(array('visible' => 0));
-                $logger->info('done.');
+                $this->delete(['visible' => 0]);
+                $this->connection->getLogger()->info('Pruned deleted comments');
             }
         }
     }

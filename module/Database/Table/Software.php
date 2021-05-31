@@ -67,11 +67,8 @@ class Software extends \Database\AbstractTable
         $softwareRaw = $this->_serviceLocator->get('Database\Table\SoftwareRaw');
         $softwareRaw->updateSchema($prune);
 
-        $schema = $this->connection->getSchemaManager();
-        if (!$schema->hasView(static::TABLE)) {
-            $logger = $this->_serviceLocator->get('Library\Logger');
-            $logger->info("Creating view 'software_installations'");
-
+        $schemaManager = $this->connection->getSchemaManager();
+        if (!$schemaManager->hasView(static::TABLE)) {
             $query = $this->connection->createQueryBuilder();
             $query->select(
                 's.id',
@@ -92,15 +89,12 @@ class Software extends \Database\AbstractTable
             ->from(SoftwareRaw::TABLE, 's')
             ->leftJoin('s', SoftwareDefinitions::TABLE, 'sd', 'sd.id = s.definition_id');
 
-            $view = new View(static::TABLE, $query->getSQL());
-            $schema->createView($view);
-
-            $logger->info('done.');
+            $schemaManager->createView(new View(static::TABLE, $query));
         }
 
         // Temporary workaround for tests
         $nada = $this->_serviceLocator->get('Database\Nada');
-        if (!in_array(static::TABLE, $nada->getViewNames())) {
+        if (getenv('BRAINTACLE_TEST_DATABASE') and !in_array(static::TABLE, $nada->getViewNames())) {
             $nada->createView(static::TABLE, $query->getSQL());
         }
     }

@@ -22,7 +22,10 @@
 
 namespace Database\Service;
 
+use Database\Connection;
+use Database\Schema\Comparator;
 use Database\Schema\TableSchema;
+use Database\Table\CustomFieldConfig;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -35,6 +38,12 @@ class TableSchemaFactory implements \Laminas\ServiceManager\Factory\FactoryInter
     /** {@inheritdoc} */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return new TableSchema($container->get('Database\Nada'), $container->get('Library\Logger'));
+        $connection = $container->get(Connection::class);
+        return new TableSchema(
+            $container->get('Database\Nada'),
+            $connection,
+            new Comparator($connection->getSchemaManager()),
+            $container->get(CustomFieldConfig::class)
+        );
     }
 }

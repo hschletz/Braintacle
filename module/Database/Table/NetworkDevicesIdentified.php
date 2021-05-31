@@ -27,37 +27,19 @@ namespace Database\Table;
  */
 class NetworkDevicesIdentified extends \Database\AbstractTable
 {
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $this->table = 'network_devices';
-        parent::__construct($serviceLocator);
-    }
+    const TABLE = 'network_devices';
 
     /**
-     * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function preSetSchema($logger, $schema, $database, $prune)
+    protected function preSetSchema(array $schema, bool $prune): void
     {
-        // Drop obsolete autoincrement column to avoid MySQL error when setting new PK
-        $this->dropColumnIfExists($logger, $database, 'id');
-
-        // There used to be a column named "user". On PostgreSQL, dropping that
-        // column would fail without quoting. Since the default pruning code
-        // does not quote, delete the column manually with quoting temporarily
-        // enabled.
-        if ($prune and $database->isPgsql()) {
-            $keywords = $database->quoteKeywords;
-            $database->quoteKeywords[] = 'user';
-            try {
-                $this->dropColumnIfExists($logger, $database, 'user');
-            } finally {
-                // Always reset quoteKeywords.
-                $database->quoteKeywords = $keywords;
+        $schemaManager = $this->connection->getSchemaManager();
+        if ($schemaManager->tablesExist([static::TABLE])) {
+            $columns = $schemaManager->listTableColumns(static::TABLE);
+            // Drop obsolete autoincrement column to avoid MySQL error when setting new PK
+            if (isset($columns['id'])) {
+                $schemaManager->dropColumn(static::TABLE, 'id');
             }
         }
     }

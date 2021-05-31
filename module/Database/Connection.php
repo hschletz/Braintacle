@@ -22,14 +22,46 @@
 
 namespace Database;
 
+use Laminas\Log\LoggerInterface;
+
 /**
  * Database connection wrapper
  */
 class Connection extends \Doctrine\DBAL\Connection
 {
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * @var SchemaManagerProxy
+     */
+    private $schemaManagerProxy;
+
+    /**
+     * Set logger.
+     */
+    public function setLogger(LoggerInterface $logger): void
+    {
+        $this->logger = $logger;
+    }
+
+    /**
+     * Get logger.
+     */
+    public function getLogger(): ?LoggerInterface
+    {
+        return $this->logger;
+    }
+
     /** @codeCoverageIgnore */
     public function getSchemaManager()
     {
-        return new SchemaManagerProxy(parent::getSchemaManager());
+        if (!$this->schemaManagerProxy) {
+            $this->schemaManagerProxy = new SchemaManagerProxy(parent::getSchemaManager(), $this, $this->logger);
+        }
+
+        return $this->schemaManagerProxy;
     }
 }

@@ -56,11 +56,8 @@ class Clients extends \Database\AbstractTable
     public function updateSchema($prune = false)
     {
         // Reimplementation to provide a view
-        $schema = $this->connection->getSchemaManager();
-        if (!$schema->hasView(static::TABLE)) {
-            $logger = $this->_serviceLocator->get('Library\Logger');
-            $logger->info("Creating view 'clients'");
-
+        $schemaManager = $this->connection->getSchemaManager();
+        if (!$schemaManager->hasView(static::TABLE)) {
             $query = $this->connection->createQueryBuilder();
             $query->select(
                 'h.id',
@@ -97,16 +94,15 @@ class Clients extends \Database\AbstractTable
             ->leftJoin('h', ClientSystemInfo::TABLE, 'b', 'b.hardware_id = h.id')
             ->where("deviceid != '_SYSTEMGROUP_'");
 
-            $view = new View(static::TABLE, $query->getSQL());
-            $schema->createView($view);
-
-            $logger->info('done.');
+            $schemaManager->createView(new View(static::TABLE, $query));
         }
 
         // Temporary workaround for tests
-        $nada = $this->_serviceLocator->get('Database\Nada');
-        if (!in_array(static::TABLE, $nada->getViewNames())) {
-            $nada->createView(static::TABLE, $query->getSQL());
+        if (getenv('BRAINTACLE_TEST_DATABASE')) {
+            $nada = $this->_serviceLocator->get('Database\Nada');
+            if (!in_array(static::TABLE, $nada->getViewNames())) {
+                $nada->createView(static::TABLE, $query->getSQL());
+            }
         }
     }
 }

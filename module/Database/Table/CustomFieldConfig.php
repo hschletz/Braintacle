@@ -22,13 +22,20 @@
 
 namespace Database\Table;
 
-use Nada\Column\AbstractColumn as Column;
+use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Schema\TableDiff;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
+use InvalidArgumentException;
+use Throwable;
 
 /**
  * "accountinfo_config" table
  */
 class CustomFieldConfig extends \Database\AbstractTable
 {
+    const TABLE = 'accountinfo_config';
+
     /**
      * Internal identifier for text, integer and float columns
      **/
@@ -45,44 +52,49 @@ class CustomFieldConfig extends \Database\AbstractTable
     const INTERNALTYPE_DATE = 6;
 
     /**
-     * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $this->table = 'accountinfo_config';
-        parent::__construct($serviceLocator);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    protected function postSetSchema($logger, $schema, $database, $prune)
+    protected function postSetSchema(array $schema, bool $prune): void
     {
         // If table is empty, create default entries
+        $logger = $this->connection->getLogger();
         $logger->debug('Checking for existing custom field config.');
-        if ($this->select()->count() == 0) {
-            $this->insert(
-                array(
-                    'name' => 'TAG',
-                    'type' => 0,
-                    'account_type' => 'COMPUTERS',
-                    'show_order' => 1,
-                )
-            );
-            $this->insert(
-                array(
-                    'name' => 'TAG',
-                    'type' => 0,
-                    'account_type' => 'SNMP',
-                    'show_order' => 1,
-                )
-            );
+        if ($this->connection->executeQuery('SELECT * FROM ' . static::TABLE)->fetchOne() == 0) {
+            $this->connection->insert(static::TABLE, [
+                'name' => 'TAG',
+                'type' => 0,
+                'account_type' => 'COMPUTERS',
+                'show_order' => 1,
+            ]);
+            $this->connection->insert(static::TABLE, [
+                'name' => 'TAG',
+                'type' => 0,
+                'account_type' => 'SNMP',
+                'show_order' => 1,
+            ]);
             $logger->info(
                 'Default custom field config created.'
             );
         }
+    }
+
+    /**
+     * Get names of columns in the target table for which entries are defined here.
+     */
+    public function getTargetColumnNames(): array
+    {
+        $columns = [];
+        // Table may not exist yet when populating an empty database. In that
+        // case, there are no target columns.
+        if ($this->connection->getSchemaManager()->tablesExist([static::TABLE])) {
+            $query = $this->connection->createQueryBuilder();
+            $query->select('id')->from(static::TABLE)->where('name_accountinfo IS NULL');
+            foreach ($query->execute()->iterateColumn() as $id) {
+                $columns[] = "fields_$id";
+            }
+        }
+
+        return $columns;
     }
 
     /**
@@ -92,14 +104,15 @@ class CustomFieldConfig extends \Database\AbstractTable
      */
     public function getFields()
     {
-        $columns = $this->_serviceLocator->get('Database\Nada')->getTable('accountinfo')->getColumns();
-        $select = $this->getSql()->select();
-        $select->columns(array('id', 'type', 'name'))
-               ->where(array('account_type' => 'COMPUTERS'))
-               ->order('show_order');
+        $columns = $this->connection->getSchemaManager()->listTableColumns(CustomFields::TABLE);
+        $query = $this->connection->createQueryBuilder();
+        $query->select('id', 'type', 'name')
+              ->from(static::TABLE)
+              ->where("account_type = 'COMPUTERS'")
+              ->orderBy('show_order');
         // Determine name and type of each field. Silently ignore unsupported field types.
-        $fields = array();
-        foreach ($this->selectWith($select) as $field) {
+        $fields = [];
+        foreach ($query->execute()->iterateAssociative() as $field) {
             $name = $field['name'];
             if ($name == 'TAG') {
                 $column = 'tag';
@@ -110,14 +123,14 @@ class CustomFieldConfig extends \Database\AbstractTable
                 switch ($field['type']) {
                     case self::INTERNALTYPE_TEXT:
                         // Can be text, integer or float. Evaluate column datatype.
-                        switch ($column->getDatatype()) {
-                            case Column::TYPE_VARCHAR:
+                        switch ($column->getType()->getName()) {
+                            case Types::STRING:
                                 $type = 'text';
                                 break;
-                            case Column::TYPE_INTEGER:
+                            case Types::INTEGER:
                                 $type = 'integer';
                                 break;
-                            case Column::TYPE_FLOAT:
+                            case Types::FLOAT:
                                 $type = 'float';
                                 break;
                         }
@@ -130,7 +143,7 @@ class CustomFieldConfig extends \Database\AbstractTable
                         // and stores values in a non-ISO format. Silently
                         // ignore these fields. Only accept real date
                         // columns.
-                        if ($column->getDatatype() == Column::TYPE_DATE) {
+                        if ($column->getType()->getName() == Types::DATE_MUTABLE) {
                             $type = 'date';
                         }
                         break;
@@ -159,59 +172,56 @@ class CustomFieldConfig extends \Database\AbstractTable
         $length = null;
         switch ($type) {
             case 'text':
-                $datatype = Column::TYPE_VARCHAR;
+                $datatype = Types::STRING;
                 $length = 255;
                 $internalType = self::INTERNALTYPE_TEXT;
                 break;
             case 'integer':
-                $datatype = Column::TYPE_INTEGER;
+                $datatype = Types::INTEGER;
                 $internalType = self::INTERNALTYPE_TEXT;
                 break;
             case 'float':
-                $datatype = Column::TYPE_FLOAT;
+                $datatype = Types::FLOAT;
                 $internalType = self::INTERNALTYPE_TEXT;
                 break;
             case 'date':
-                $datatype = Column::TYPE_DATE;
+                $datatype = Types::DATE_MUTABLE;
                 $internalType = self::INTERNALTYPE_DATE;
                 break;
             case 'clob':
-                $datatype = Column::TYPE_CLOB;
+                $datatype = Types::TEXT;
                 $internalType = self::INTERNALTYPE_TEXTAREA;
                 break;
             default:
-                throw new \InvalidArgumentException('Invalid datatype: ' . $type);
+                throw new InvalidArgumentException('Invalid datatype: ' . $type);
         }
 
-        $connection = $this->adapter->getDriver()->getConnection();
-        $nada = $this->_serviceLocator->get('Database\Nada');
-
-        $connection->beginTransaction();
-
+        $this->connection->beginTransaction();
         try {
-            $select = $this->getSql()->select();
-            $select->columns(array('show_order' => new \Laminas\Db\Sql\Literal('MAX(show_order) + 1')))
-                ->where(array('account_type' => 'COMPUTERS'));
-            $order = $this->selectWith($select)->current()['show_order'];
+            $query = $this->connection->createQueryBuilder();
+            $query->select('max(show_order) + 1')->from(static::TABLE)->where("account_type = 'COMPUTERS'");
+            $order = $query->execute()->fetchOne();
 
-            $this->insert(
-                array(
-                    'type' => $internalType,
-                    'name' => $name,
-                    'show_order' => $order,
-                    'account_type' => 'COMPUTERS'
-                )
-            );
-            $select = $this->getSql()->select();
-            $select->columns(array('id'))->where(array('account_type' => 'COMPUTERS', 'name' => $name));
-            $id = $this->selectWith($select)->current()['id'];
+            $this->connection->insert(static::TABLE, [
+                'type' => $internalType,
+                'name' => $name,
+                'show_order' => $order,
+                'account_type' => 'COMPUTERS',
+            ]);
+            $query->select('id')->from(static::TABLE)->where("account_type = 'COMPUTERS' AND name = ?");
+            $id = $query->setParameters([$name])->execute()->fetchOne();
+            $columnName = 'fields_' . $id;
 
-            $nada->getTable('accountinfo')->addColumn("fields_$id", $datatype, $length);
+            $column = new Column($columnName, Type::getType($datatype));
+            if ($length) {
+                $column->setLength($length);
+            }
+            $this->connection->getSchemaManager()->addColumn(CustomFields::TABLE, $column);
 
-            $connection->commit();
-        } catch (\Exception $e) {
-            $connection->rollback();
-            throw $e;
+            $this->connection->commit();
+        } catch (Throwable $t) {
+            $this->connection->rollBack();
+            throw $t;
         }
     }
 
@@ -224,12 +234,13 @@ class CustomFieldConfig extends \Database\AbstractTable
      **/
     public function renameField($oldName, $newName)
     {
-        $this->update(
-            array('name' => $newName),
-            array(
+        $this->connection->update(
+            static::TABLE,
+            ['name' => $newName],
+            [
                 'name' => $oldName,
-                'account_type' => 'COMPUTERS'
-            )
+                'account_type' => 'COMPUTERS',
+            ]
         );
     }
 
@@ -241,21 +252,20 @@ class CustomFieldConfig extends \Database\AbstractTable
      **/
     public function deleteField($name)
     {
-        $connection = $this->adapter->getDriver()->getConnection();
-        $connection->beginTransaction();
-
+        $this->connection->beginTransaction();
         try {
-            $select = $this->getSql()->select();
-            $select->columns(array('id'))->where(array('name' => $name, 'account_type' => 'COMPUTERS'));
-            $id = $this->selectWith($select)->current()['id'];
+            $query = $this->connection->createQueryBuilder();
+            $query->select('id')->from(static::TABLE)->where('name = ?', "account_type = 'COMPUTERS'");
+            $id = $query->setParameters([$name])->execute()->fetchOne();
+            $this->connection->delete(static::TABLE, ['id' => $id]);
 
-            $this->delete(array('id' => $id));
-            $this->_serviceLocator->get('Database\Nada')->getTable('accountinfo')->dropColumn('fields_' . $id);
+            $columnName = 'fields_' . $id;
+            $this->connection->getSchemaManager()->dropColumn(CustomFields::TABLE, $columnName);
 
-            $connection->commit();
-        } catch (\Exception $e) {
-            $connection->rollback();
-            throw $e;
+            $this->connection->commit();
+        } catch (Throwable $t) {
+            $this->connection->rollBack();
+            throw $t;
         }
     }
 }

@@ -33,14 +33,14 @@ class ClientsAndGroups extends \Database\AbstractTable
     const TABLE = 'hardware';
 
     /**
-     * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function postSetSchema($logger, $schema, $database, $prune)
+    protected function postSetSchema(array $schema, bool $prune): void
     {
         // obsolete feature which was never supported.
-        if ($this->delete(array('deviceid' => '_DOWNLOADGROUP_'))) {
-            $logger->warn('Obsolete download groups found and deleted.');
+        $query = $this->connection->createQueryBuilder();
+        if ($query->delete(static::TABLE)->where("deviceid = '_DOWNLOADGROUP_'")->execute()) {
+            $this->connection->getLogger()->warn('Obsolete download groups found and deleted.');
         }
     }
 }

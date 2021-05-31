@@ -46,6 +46,7 @@ class DatabaseFactory implements \Laminas\ServiceManager\Factory\FactoryInterfac
         $config['wrapperClass'] = Connection::class;
 
         $connection = DriverManager::getConnection($config);
+        $connection->setLogger($container->get('Library\Logger'));
         switch ($connection->getDatabasePlatform()->getName()) {
             case 'postgresql':
                 $connection->executeStatement("SET timezone TO 'UTC'");

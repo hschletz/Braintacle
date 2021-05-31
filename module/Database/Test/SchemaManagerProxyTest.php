@@ -36,7 +36,9 @@ class SchemaManagerProxyTest extends \PHPUnit\Framework\TestCase
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager->method('listTableColumns')->with('tableName', 'databaseName')->willReturn($result);
 
-        $proxy = new SchemaManagerProxy($schemaManager);
+        $proxy = $this->createPartialMock(SchemaManagerProxy::class, ['getWrappedSchemaManager']);
+        $proxy->method('getWrappedSchemaManager')->willReturn($schemaManager);
+
         $this->assertSame($result, $proxy->listTableColumns('tableName', 'databaseName'));
     }
 
@@ -46,11 +48,12 @@ class SchemaManagerProxyTest extends \PHPUnit\Framework\TestCase
         $platform->method('supportsSchemas')->willReturn(false);
         $platform->expects($this->never())->method('getDefaultSchemaName');
 
-        $schemaManager = $this->createStub(AbstractSchemaManager::class);
-        $schemaManager->method('getDatabasePlatform')->willReturn($platform);
-        $schemaManager->method('listViews')->willReturn(['view' => $this->createStub(View::class)]);
+        $proxy = $this->createPartialMock(SchemaManagerProxy::class, ['__call']);
+        $proxy->method('__call')->willReturnMap([
+            ['getDatabasePlatform', [], $platform],
+            ['listViews', [], ['view' => $this->createStub(View::class)]],
+        ]);
 
-        $proxy = new SchemaManagerProxy($schemaManager);
         $this->assertTrue($proxy->hasView('view'));
         $this->assertFalse($proxy->hasView('view2'));
     }
@@ -61,11 +64,12 @@ class SchemaManagerProxyTest extends \PHPUnit\Framework\TestCase
         $platform->method('supportsSchemas')->willReturn(true);
         $platform->method('getDefaultSchemaName')->willReturn('schema');
 
-        $schemaManager = $this->createStub(AbstractSchemaManager::class);
-        $schemaManager->method('getDatabasePlatform')->willReturn($platform);
-        $schemaManager->method('listViews')->willReturn(['schema.view' => $this->createStub(View::class)]);
+        $proxy = $this->createPartialMock(SchemaManagerProxy::class, ['__call']);
+        $proxy->method('__call')->willReturnMap([
+            ['getDatabasePlatform', [], $platform],
+            ['listViews', [], ['schema.view' => $this->createStub(View::class)]],
+        ]);
 
-        $proxy = new SchemaManagerProxy($schemaManager);
         $this->assertTrue($proxy->hasView('view'));
         $this->assertFalse($proxy->hasView('view2'));
     }

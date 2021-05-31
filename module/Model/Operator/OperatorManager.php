@@ -22,6 +22,11 @@
 
 namespace Model\Operator;
 
+use Database\Connection;
+use Database\Table\Operators;
+use Iterator;
+use RuntimeException;
+
 /**
  * Operator manager
  */
@@ -40,36 +45,34 @@ class OperatorManager
     protected $_operators;
 
     /**
-     * Constructor
-     *
-     * @param \Model\Operator\AuthenticationService $authenticationService
-     * @param \Database\Table\Operators $operators
+     * @var Connection
      */
+    protected $connection;
+
     public function __construct(
-        \Model\Operator\AuthenticationService $authenticationService,
-        \Database\Table\Operators $operators
+        AuthenticationService $authenticationService,
+        Operators $operators,
+        Connection $connection
     ) {
         $this->_authenticationService = $authenticationService;
         $this->_operators = $operators;
+        $this->connection = $connection;
     }
 
     /**
      * Fetch all operators
-     *
-     * @param string $order Property to sort by
-     * @param string $direction Sorting order (asc|desc)
-     * @return \Laminas\Db\ResultSet\AbstractResultSet Result set producing \Model\Operator\Operator
      */
-    public function getOperators($order = 'Id', $direction = 'asc')
+    public function getOperators($order = 'Id', $direction = 'asc'): Iterator
     {
-        $select = $this->_operators->getSql()->select();
-        $select->columns(array('id', 'firstname', 'lastname', 'email', 'comments'));
+        $query = $this->connection->createQueryBuilder();
+        $query->select(['id', 'firstname', 'lastname', 'email', 'comments'])->from(Operators::TABLE);
 
         $order = $this->_operators->getHydrator()->extractName($order);
         if ($order) {
-            $select->order(array($order => $direction));
+            $query->orderBy($order, $direction);
         }
-        return $this->_operators->selectWith($select);
+
+        return $this->_operators->getIterator($query->execute()->iterateAssociative());
     }
 
     /**
@@ -77,9 +80,12 @@ class OperatorManager
      *
      * @return string[]
      */
-    public function getAllIds()
+    public function getAllIds(): array
     {
-        return $this->_operators->fetchCol('id');
+        $query = $this->connection->createQueryBuilder();
+        $query->select('id')->from(Operators::TABLE);
+
+        return $query->execute()->fetchFirstColumn();
     }
 
     /**
@@ -89,19 +95,22 @@ class OperatorManager
      * @throws \InvalidArgumentException if no ID is given.
      * @throws \RuntimeException if no account with given name exists
      */
-    public function getOperator($id)
+    public function getOperator($id): Operator
     {
         if (!is_string($id) or $id == '') {
             throw new \InvalidArgumentException('No login name supplied');
         }
-        $select = $this->_operators->getSql()->select();
-        $select->columns(array('id', 'firstname', 'lastname', 'email', 'comments'))
-               ->where(array('id' => $id));
-        $operator = $this->_operators->selectWith($select)->current();
+
+        $query = $this->connection->createQueryBuilder();
+        $query->select(['id', 'firstname', 'lastname', 'email', 'comments'])
+              ->from(Operators::TABLE)
+              ->where('id = ?');
+        $operator = $query->setParameters([$id])->execute()->fetchAssociative();
         if (!$operator) {
             throw new \RuntimeException('Invalid login name supplied');
         }
-        return $operator;
+
+        return $this->_operators->getHydrator()->hydrate($operator, $this->_operators->getPrototype());
     }
 
     /**
@@ -126,7 +135,7 @@ class OperatorManager
         $insert['passwd'] = $this->_authenticationService->getAdapter()->generateHash($password);
         $insert['password_version'] = \Database\Table\Operators::HASH_DEFAULT;
 
-        $this->_operators->insert($insert);
+        $this->connection->insert(Operators::TABLE, $insert);
     }
 
     /**
@@ -146,8 +155,8 @@ class OperatorManager
             $update['passwd'] = $this->_authenticationService->getAdapter()->generateHash($password);
             $update['password_version'] = \Database\Table\Operators::HASH_DEFAULT;
         }
-        if (!$this->_operators->update($update, array('id' => $id))) {
-            throw new \RuntimeException('Invalid user name: ' . $id);
+        if (!$this->connection->update(Operators::TABLE, $update, ['id' => $id])) {
+            throw new RuntimeException('Invalid user name: ' . $id);
         }
         if (isset($data['Id']) and $id == $this->_authenticationService->getIdentity()) {
             // If the account name of the logged in user is changed, the
@@ -167,6 +176,6 @@ class OperatorManager
         if ($id == $this->_authenticationService->getIdentity()) {
             throw new \RuntimeException('Cannot delete account of current user');
         }
-        $this->_operators->delete(array('id' => $id));
+        $this->connection->delete(Operators::TABLE, ['id' => $id]);
     }
 }

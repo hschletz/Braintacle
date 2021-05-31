@@ -34,7 +34,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
     {
         $model = $this->getModel();
         $resultSet = $model->getOperators();
-        $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $resultSet);
+
         $operators = iterator_to_array($resultSet);
         $this->assertContainsOnlyInstancesOf('Model\Operator\Operator', $operators);
         $this->assertCount(2, $operators);
@@ -46,7 +46,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
     {
         $model = $this->getModel();
         $resultSet = $model->getOperators('Id', 'desc');
-        $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $resultSet);
+
         $operators = iterator_to_array($resultSet);
         $this->assertContainsOnlyInstancesOf('Model\Operator\Operator', $operators);
         $this->assertCount(2, $operators);

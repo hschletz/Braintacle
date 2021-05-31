@@ -69,10 +69,9 @@
     "primary_key": [
         "fileid"
     ],
-    "indexes": [
+    "unique_constraints": [
         {
             "name": "download_available_name_unique_idx",
-            "unique": true,
             "columns": [
                 "name"
             ]

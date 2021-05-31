@@ -22,11 +22,15 @@
 
 namespace Database\Table;
 
+use Laminas\Db\Sql\Predicate\Operator;
+
 /**
  * "temp_files" table
  */
 class Attachments extends \Database\AbstractTable
 {
+    const TABLE = 'temp_files';
+
     /**
      * Client attachment
      */
@@ -38,30 +42,17 @@ class Attachments extends \Database\AbstractTable
     const OBJECT_TYPE_SNMP = 'snmp_accountinfo';
 
     /**
-     * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    protected function preSetSchema(array $schema, bool $prune): void
     {
-        $this->table = 'temp_files';
-        parent::__construct($serviceLocator);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    protected function preSetSchema($logger, $schema, $database, $prune)
-    {
-        if (in_array($this->table, $database->getTableNames())) {
-            $count = $this->delete(
-                array(
-                    new \Laminas\Db\Sql\Predicate\Operator('table_name', '!=', self::OBJECT_TYPE_CLIENT),
-                    new \Laminas\Db\Sql\Predicate\Operator('table_name', '!=', self::OBJECT_TYPE_SNMP),
-                )
-            );
+        if ($this->connection->getSchemaManager()->tablesExist([static::TABLE])) {
+            $count = $this->delete([
+                new Operator('table_name', '!=', self::OBJECT_TYPE_CLIENT),
+                new Operator('table_name', '!=', self::OBJECT_TYPE_SNMP),
+            ]);
             if ($count) {
-                $logger->info("Deleted $count unsupported attachments.");
+                $this->connection->getLogger()->info("Deleted $count unsupported attachments.");
             }
         }
     }

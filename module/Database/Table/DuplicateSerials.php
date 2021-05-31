@@ -27,23 +27,20 @@ namespace Database\Table;
  */
 class DuplicateSerials extends \Database\AbstractTable
 {
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $this->table = 'blacklist_serials';
-        parent::__construct($serviceLocator);
-    }
+    const TABLE = 'blacklist_serials';
 
     /**
-     * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function preSetSchema($logger, $schema, $database, $prune)
+    protected function preSetSchema(array $schema, bool $prune): void
     {
         // Drop obsolete autoincrement column to avoid MySQL error when setting new PK
-        $this->dropColumnIfExists($logger, $database, 'id');
+        $schemaManager = $this->connection->getSchemaManager();
+        if ($schemaManager->tablesExist([static::TABLE])) {
+            $columns = $schemaManager->listTableColumns(static::TABLE);
+            if (isset($columns['id'])) {
+                $schemaManager->dropColumn(static::TABLE, 'id');
+            }
+        }
     }
 }

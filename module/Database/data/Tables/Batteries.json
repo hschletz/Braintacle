@@ -1,6 +1,6 @@
 {
     "name": "batteries",
-    "comment": "",
+    "comment": null,
     "columns": [
         {
             "name": "id",

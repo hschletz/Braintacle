@@ -27,6 +27,8 @@ namespace Database\Table;
  */
 class Config extends \Database\AbstractTable
 {
+    const TABLE = 'config';
+
     /**
      * Mapping from option names to internal database identifiers
      * @var array
@@ -157,11 +159,12 @@ class Config extends \Database\AbstractTable
     );
 
     /**
-     * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function postSetSchema($logger, $schema, $database, $prune)
+    protected function postSetSchema(array $schema, bool $prune): void
     {
+        $logger = $this->connection->getLogger();
+
         // If packagePath has not been converted yet, append /download directory
         // with had previously been appended automatically.
         if ($this->get('schemaVersion') < 8) {
@@ -172,13 +175,11 @@ class Config extends \Database\AbstractTable
 
         // If no communication server URI is set, try to generate it from the
         // obsolete Host/Port options
-        $server = array();
-        foreach ($this->select("name LIKE 'LOCAL%'") as $option) {
-            $server[$option->name] = array(
-                'ivalue' => $option->ivalue,
-                'tvalue' => $option->tvalue
-            );
-        }
+        $query = $this->connection->createQueryBuilder();
+        $query->select('name', 'ivalue', 'tvalue')
+              ->from(static::TABLE)
+              ->where("name LIKE 'LOCAL%'");
+        $server = $query->execute()->fetchAllAssociativeIndexed();
         if (!isset($server['LOCAL_URI_SERVER']) and isset($server['LOCAL_SERVER'])) {
             $uri = \Laminas\Uri\UriFactory::factory('http:');
             $uri->setHost($server['LOCAL_SERVER']['tvalue']);
@@ -191,12 +192,7 @@ class Config extends \Database\AbstractTable
             $logger->info(
                 'Converting communicationServerUri option to ' . $uri
             );
-            $this->insert(
-                array(
-                    'name' => 'LOCAL_URI_SERVER',
-                    'tvalue' => $uri
-                )
-            );
+            $this->connection->insert(static::TABLE, ['name' => 'LOCAL_URI_SERVER', 'tvalue' => $uri]);
         }
 
         $autoMergeDuplicates = $this->get('autoMergeDuplicates');
@@ -208,31 +204,31 @@ class Config extends \Database\AbstractTable
 
         // Delete deprecated options, causing the communication server to use
         // (sensible) defaults
-        $count = $this->delete(
-            array(
-                'name' => array(
-                    'BRAINTACLE_DEFAULT_CERTIFICATE', // default: INSTALL_PATH/cacert.pem, ignored by recent agents
-                    'COMPRESS_TRY_OTHERS', // default: 1
-                    'DEPLOY', // default: 0
-                    'ENABLE_GROUPS', // default: 1
-                    'INVENTORY_CACHE_ENABLED', // default: 0
-                    'INVENTORY_CACHE_KEEP', // unused
-                    'INVENTORY_CACHE_REVALIDATE', //unused
-                    'INVENTORY_DIFF', // default: 1
-                    'INVENTORY_FILTER_ENABLED', // default: 0
-                    'INVENTORY_TRANSACTION', // default: 1
-                    'INVENTORY_WRITE_DIFF', // default: 1
-                    'IPDISCOVER_NO_POSTPONE', // default: 1
-                    'IPDISCOVER_USE_GROUPS', // default: 1
-                    'LOCAL_PORT', // unused
-                    'LOCAL_SERVER', // unused
-                    'LOGPATH', // set in server config file only
-                    'SNMP_INVENTORY_DIFF', // default: 1
-                    'TRACE_DELETED', // default: 0
-                    'UPDATE', // default: 0
-                )
-            )
-        );
+        $deprecatedOptions = [
+            'BRAINTACLE_DEFAULT_CERTIFICATE', // default: INSTALL_PATH/cacert.pem, ignored by recent agents
+            'COMPRESS_TRY_OTHERS', // default: 1
+            'DEPLOY', // default: 0
+            'ENABLE_GROUPS', // default: 1
+            'INVENTORY_CACHE_ENABLED', // default: 0
+            'INVENTORY_CACHE_KEEP', // unused
+            'INVENTORY_CACHE_REVALIDATE', //unused
+            'INVENTORY_DIFF', // default: 1
+            'INVENTORY_FILTER_ENABLED', // default: 0
+            'INVENTORY_TRANSACTION', // default: 1
+            'INVENTORY_WRITE_DIFF', // default: 1
+            'IPDISCOVER_NO_POSTPONE', // default: 1
+            'IPDISCOVER_USE_GROUPS', // default: 1
+            'LOCAL_PORT', // unused
+            'LOCAL_SERVER', // unused
+            'LOGPATH', // set in server config file only
+            'SNMP_INVENTORY_DIFF', // default: 1
+            'TRACE_DELETED', // default: 0
+            'UPDATE', // default: 0
+        ];
+        $count = $query->delete(static::TABLE)
+                       ->where($query->expr()->in('name', array_fill(0, count($deprecatedOptions), '?')))
+                       ->setParameters($deprecatedOptions)
+                       ->execute();
         if ($count) {
             $logger->info("Deleted $count deprecated options, using defaults");
         }
@@ -247,23 +243,25 @@ class Config extends \Database\AbstractTable
     public function get($option)
     {
         // limitInventoryInterval is only meaningful if enabled.
+        $query = $this->connection->createQueryBuilder();
+        $query->from(static::TABLE)->where('name = :name');
         if (
             $option == 'limitInventoryInterval' and
-            !$this->select(array('name' => 'INVENTORY_FILTER_FLOOD_IP'))->current()['ivalue']
+            !$query->select('ivalue')->setParameter('name', 'INVENTORY_FILTER_FLOOD_IP')->execute()->fetchOne()
         ) {
             return null;
         }
-        $name = $this->getDbIdentifier($option);
-        $column = $this->getColumnName($option);
-        $row = $this->select(array('name' => $name))->current();
-        if ($row) {
-            $value = $row[$column];
-            if (in_array($option, $this->_iValues) or in_array($option, $this->_integerOptions)) {
-                $value = (int) $value;
-            }
-        } else {
+
+        $value = $query->select($this->getColumnName($option))
+                       ->setParameter('name', $this->getDbIdentifier($option))
+                       ->execute()
+                       ->fetchOne();
+        if ($value === false) {
             $value = null;
+        } elseif (in_array($option, $this->_iValues) or in_array($option, $this->_integerOptions)) {
+            $value = (int) $value;
         }
+
         return $value;
     }
 
@@ -309,26 +307,26 @@ class Config extends \Database\AbstractTable
     protected function write($name, $column, $value)
     {
         $valueChanged = true;
-        $row = $this->select(array('name' => $name))->current();
-        if ($row) {
+
+        $query = $this->connection->createQueryBuilder();
+        $oldValue = $query->select($column)
+                          ->from(static::TABLE)
+                          ->where('name = :name')
+                          ->setParameter('name', $name)
+                          ->execute()
+                          ->fetchOne();
+        if ($oldValue === false) {
+            $this->connection->insert(static::TABLE, ['name' => $name, $column => $value]);
+        } else {
             // Compare values as strings for portability
-            $oldValue = (string) $row->$column;
-            if ($oldValue === (string) $value) {
+            if ((string) $oldValue === (string) $value) {
                 $valueChanged = false;
             } else {
-                $this->update(
-                    array($column => $value),
-                    array('name' => $name)
-                );
+                // WHERE is still set from previous query
+                $query->update(static::TABLE)->set($column, ':value')->setParameter('value', $value)->execute();
             }
-        } else {
-            $this->insert(
-                array(
-                    'name' => $name,
-                    $column => $value
-                )
-            );
         }
+
         return $valueChanged;
     }
 

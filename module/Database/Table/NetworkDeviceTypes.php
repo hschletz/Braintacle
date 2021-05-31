@@ -32,21 +32,19 @@ class NetworkDeviceTypes extends \Database\AbstractTable
     const TABLE = 'devicetype';
 
     /**
-     * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function postSetSchema($logger, $schema, $database, $prune)
+    protected function postSetSchema(array $schema, bool $prune): void
     {
         // Create entries for orphaned types in NetworkDevicesIdentified table
-        if (isset($database->getTables()['network_devices'])) {
-            $definedTypes = array_column(
-                $this->adapter->query('SELECT name FROM ' . static::TABLE, Adapter::QUERY_MODE_EXECUTE)->toArray(),
-                'name'
-            );
-            foreach ($this->adapter->query('SELECT DISTINCT type FROM network_devices')->execute() as $type) {
-                $type = $type['type'];
+        if ($this->connection->getSchemaManager()->tablesExist([NetworkDevicesIdentified::TABLE])) {
+            $definedTypes = $this->connection->executeQuery('SELECT name FROM ' . static::TABLE)->fetchFirstColumn();
+            $types = $this->connection->executeQuery('SELECT DISTINCT type FROM ' . NetworkDevicesIdentified::TABLE);
+            foreach ($types->iterateColumn() as $type) {
                 if (!in_array($type, $definedTypes)) {
-                    $logger->notice(sprintf('Creating undefined network device type "%s"', $type));
+                    $this->connection->getLogger()->notice(
+                        sprintf('Creating undefined network device type "%s"', $type)
+                    );
                     $this->_serviceLocator->get('Model\Network\DeviceManager')->addType($type);
                 }
             }

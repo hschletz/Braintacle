@@ -22,11 +22,15 @@
 
 namespace Database\Table;
 
+use Model\Operator\Operator;
+
 /**
  * "operators" table
  */
 class Operators extends \Database\AbstractTable
 {
+    const TABLE = 'operators';
+
     /**
      * Indicator for legacy (MD5) hash
      */
@@ -63,17 +67,24 @@ class Operators extends \Database\AbstractTable
         parent::__construct($serviceLocator);
     }
 
+    public function getPrototype(): Operator
+    {
+        return $this->getServiceLocator()->get(Operator::class);
+    }
+
     /**
-     * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function preSetSchema($logger, $schema, $database, $prune)
+    protected function preSetSchema(array $schema, bool $prune): void
     {
+        $logger = $this->connection->getLogger();
+        $schemaManager = $this->connection->getSchemaManager();
+
         // Drop non-admin accounts
         $logger->debug('Checking for non-admin accounts.');
-        if (in_array($this->table, $database->getTableNames())) {
+        if ($schemaManager->tablesExist([static::TABLE])) {
             $dropped = 0;
-            $columns = $database->getTable($this->table)->getColumns();
+            $columns = $schemaManager->listTableColumns(static::TABLE);
             if (isset($columns['accesslvl'])) {
                 $dropped += $this->delete(new \Laminas\Db\Sql\Predicate\Operator('accesslvl', '!=', 1));
             }
@@ -112,13 +123,13 @@ class Operators extends \Database\AbstractTable
     }
 
     /**
-     * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function postSetSchema($logger, $schema, $database, $prune)
+    protected function postSetSchema(array $schema, bool $prune): void
     {
+        $logger = $this->connection->getLogger();
         $logger->debug('Checking for existing account.');
-        if ($this->select()->count() == 0) {
+        if ($this->connection->executeQuery('SELECT * FROM ' . static::TABLE)->fetchOne() == 0) {
             // No account exists yet, create a default account.
             $this->_serviceLocator->get('Model\Operator\OperatorManager')->createOperator(
                 array('Id' => 'admin'),
@@ -132,10 +143,9 @@ class Operators extends \Database\AbstractTable
         // Warn about default password 'admin'
         $logger->debug('Checking for accounts with default password.');
         $md5Default = md5('admin');
-        $sql = $this->getSql();
-        $select = $sql->select();
-        $select->columns(array('id', 'passwd', 'password_version'));
-        foreach ($sql->prepareStatementForSqlObject($select)->execute() as $operator) {
+        $query = $this->connection->createQueryBuilder();
+        $query->select('id', 'passwd', 'password_version')->from(static::TABLE);
+        foreach ($query->execute()->iterateAssociative() as $operator) {
             if ($operator['password_version'] == self::HASH_LEGACY) {
                 $logger->warn(
                     sprintf(

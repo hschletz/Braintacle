@@ -24,10 +24,9 @@
     "primary_key": [
         "id"
     ],
-    "indexes": [
+    "unique_constraints": [
         {
             "name": "devicetype_name_unique_idx",
-            "unique": true,
             "columns": [
                 "name"
             ]

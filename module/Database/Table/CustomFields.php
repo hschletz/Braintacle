@@ -22,42 +22,12 @@
 
 namespace Database\Table;
 
-use Nada\Database\AbstractDatabase;
+use Database\SchemaManagerProxy;
 
 /**
  * "accountinfo" table
  */
 class CustomFields extends \Database\AbstractTable
 {
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $this->table = 'accountinfo';
-        parent::__construct($serviceLocator);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    public static function getObsoleteColumns(array $schema, AbstractDatabase $database): array
-    {
-        $obsoleteColumns = parent::getObsoleteColumns($schema, $database);
-        // Preserve columns which were added through the user interface.
-        $preserveColumns = array();
-        // accountinfo_config may not exist yet when populating an empty
-        // database. In that case, there are no obsolete columns.
-        if (in_array('accountinfo_config', $database->getTableNames())) {
-            $fields = $database->query(
-                "SELECT id FROM accountinfo_config WHERE name_accountinfo IS NULL AND account_type = 'COMPUTERS'"
-            );
-            foreach ($fields as $field) {
-                $preserveColumns[] = "fields_$field[id]";
-            }
-        }
-        return array_diff($obsoleteColumns, $preserveColumns);
-    }
+    const TABLE = 'accountinfo';
 }

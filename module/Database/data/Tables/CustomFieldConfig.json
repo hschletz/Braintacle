@@ -78,10 +78,9 @@
     "primary_key": [
         "id"
     ],
-    "indexes": [
+    "unique_constraints": [
         {
             "name": "accountinfo_config_name_account_type_idx",
-            "unique": true,
             "columns": [
                 "name",
                 "account_type"

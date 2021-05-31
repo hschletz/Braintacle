@@ -22,9 +22,12 @@
 
 namespace Database\Schema;
 
+use Database\Connection;
+use Database\Table\CustomFieldConfig;
+use Database\Table\CustomFields;
+use Doctrine\DBAL\Schema\Table;
 use Laminas\Log\LoggerInterface;
 use Nada\Database\AbstractDatabase;
-use Nada\Table\AbstractTable as NadaTable;
 
 /**
  * Table schema management class
@@ -34,214 +37,108 @@ use Nada\Table\AbstractTable as NadaTable;
 class TableSchema
 {
     /**
-     * @var NadaTable
-     */
-    protected $table;
-
-    /**
-     * @var array
-     */
-    protected $schema;
-
-    /**
      * @var AbstractDatabase
      */
     protected $database;
+
+    /**
+     * @var Connection
+     */
+    protected $connection;
+
+    /**
+     * @var Comparator
+     */
+    protected $comparator;
+
+    /**
+     * @var SchemaManagerProxy
+     */
+    protected $schemaManager;
+
+    /**
+     * @var CustomFieldConfig
+     */
+    protected $customFieldConfig;
 
     /**
      * @var LoggerInterface
      */
     protected $logger;
 
-    public function __construct(AbstractDatabase $database, LoggerInterface $logger)
-    {
+    public function __construct(
+        AbstractDatabase $database,
+        Connection $connection,
+        Comparator $comparator,
+        CustomFieldConfig $customFieldConfig
+    ) {
         $this->database = $database;
-        $this->logger = $logger;
+        $this->connection = $connection;
+        $this->comparator = $comparator;
+        $this->schemaManager = $connection->getSchemaManager();
+        $this->customFieldConfig = $customFieldConfig;
+        $this->logger = $connection->getLogger();
     }
 
     /**
      * Create or update table according to schema
      */
-    public function setSchema(array $schema, array $obsoleteColumns = [], bool $prune = false)
+    public function setSchema(array $schema, bool $prune)
     {
-        if (in_array($schema['name'], $this->database->getTableNames())) {
-            $this->update($schema);
+        $parser = new SchemaParser($this->connection->getDatabasePlatform());
+        $table = $parser->parseTable($schema);
+        if ($this->schemaManager->tablesExist([$schema['name']])) {
+            $this->update($table, $prune);
         } else {
-            $this->create($schema);
-        }
-        $this->handleObsoleteColumns($obsoleteColumns, $prune);
-    }
-
-    /**
-     * Create new table.
-     */
-    public function create(array $schema): void
-    {
-        $this->schema = $schema;
-
-        $this->logger->info("Creating table '$schema[name]'...");
-
-        $this->table = $this->database->createTable($schema['name'], $schema['columns'], $schema['primary_key']);
-        $this->table->setComment($schema['comment']);
-
-        if ($this->database->isMySql()) {
-            $this->updateEngine();
-            $this->table->setCharset('utf8mb4');
+            $this->create($table);
         }
 
-        $this->logger->info('done.');
-
-        $this->createIndexes();
-    }
-
-    /**
-     * Update existing table.
-     */
-    public function update(array $schema): void
-    {
-        $this->schema = $schema;
-
-        $this->table = $this->database->getTable($schema['name']);
-
-        $this->dropIndexes(); // Obsolete indexes might prevent subsequent transformations.
-        $this->updateEngine();
-        $this->updateComment();
-        $this->updateColumns();
-        $this->updatePrimaryKey();
-        $this->createIndexes();
-    }
-
-    /**
-     * Update engine.
-     */
-    public function updateEngine(): void
-    {
-        if (
-            $this->table->getDatabase()->isMysql() and
-            $this->table->getEngine() != $this->schema['mysql']['engine']
-        ) {
-            $engine = $this->schema['mysql']['engine'];
-            $this->logger->info(sprintf('Setting engine for table %s to %s...', $this->table->getName(), $engine));
-            $this->table->setEngine($engine);
-            $this->logger->info('done.');
-        }
-    }
-
-    /**
-     * Update comment.
-     */
-    public function updateComment(): void
-    {
-        if ($this->schema['comment'] != $this->table->getComment()) {
-            $this->table->setComment($this->schema['comment']);
-        }
-    }
-
-    /**
-     * Update columns.
-     */
-    public function updateColumns(): void
-    {
-        $columnSchema = new ColumnSchema($this->logger);
-        $columns = $this->table->getColumns();
-        foreach ($this->schema['columns'] as $column) {
-            if (isset($columns[$column['name']])) {
-                $columnSchema->update($column, $columns[$column['name']]);
-            } else {
-                $columnSchema->create($column, $this->table);
-            }
-        }
-    }
-
-    /**
-     * Drop or warn about obsolete columns.
-     */
-    public function handleObsoleteColumns(array $obsoleteColumns, bool $prune): void
-    {
-        $tableName = $this->table->getName();
-        foreach ($obsoleteColumns as $column) {
-            if ($prune) {
-                $this->logger->notice("Dropping column $tableName.$column...");
-                $this->table->dropColumn($column);
-                $this->logger->notice('done.');
-            } else {
-                $this->logger->warn("Obsolete column $tableName.$column detected.");
-            }
-        }
-    }
-
-    /**
-     * Update table's primary key.
-     */
-    public function updatePrimaryKey(): void
-    {
-        $primaryKey = $this->table->getPrimaryKey();
-        if ($primaryKey) {
-            foreach ($primaryKey as &$column) {
-                $column = $column->getName();
-            }
-            unset($column);
-        } else {
-            $primaryKey = [];
-        }
-
-        if ($this->schema['primary_key'] != $primaryKey) {
-            $this->logger->info(
-                sprintf(
-                    'Changing PK of %s from (%s) to (%s)...',
-                    $this->table->getName(),
-                    implode(', ', $primaryKey),
-                    implode(', ', $this->schema['primary_key'])
-                )
-            );
-            $this->table->setPrimaryKey($this->schema['primary_key']);
-            $this->logger->info('done.');
-        }
-    }
-
-    /**
-     * Create missing indexes.
-     */
-    public function createIndexes(): void
-    {
-        //Ignore name for comparision with existing indexes.
-        if (isset($this->schema['indexes'])) {
-            foreach ($this->schema['indexes'] as $index) {
-                if (!$this->table->hasIndex($index['columns'], $index['unique'])) {
-                    $this->logger->info("Creating index '$index[name]'...");
-                    $this->table->createIndex($index['name'], $index['columns'], $index['unique']);
-                    $this->logger->info('done.');
+        // Temporary workaround for tests
+        if (getenv('BRAINTACLE_TEST_DATABASE') and !in_array($schema['name'], $this->database->getTableNames())) {
+            $table = $this->database->createTable($schema['name'], $schema['columns'], $schema['primary_key']);
+            if (isset($schema['indexes'])) {
+                foreach ($schema['indexes'] as $index) {
+                    $table->createIndex($index['name'], $index['columns'], $index['unique']);
                 }
             }
         }
     }
 
     /**
-     * Drop indexes which are not defined in the schema.
+     * Create new table.
      */
-    protected function dropIndexes()
+    public function create(Table $table): void
     {
-        if (!isset($this->schema['indexes'])) {
-            return;
-        }
+        $this->schemaManager->createTable($table);
+    }
 
-        $indexes = $this->schema['indexes'];
-        foreach ($indexes as &$index) {
-            // Remove index names for comparison
-            unset($index['name']);
-        }
-        unset($index);
+    /**
+     * Update existing table.
+     */
+    public function update(Table $toTable, bool $prune): void
+    {
+        $tableName = $toTable->getName();
+        $fromTable = $this->schemaManager->listTableDetails($tableName);
 
-        foreach ($this->table->getIndexes() as $index) {
-            $index = $index->toArray();
-            // Remove index names for comparison, but preserve it for later reference
-            $name = $index['name'];
-            unset($index['name']);
-            if (!in_array($index, $indexes)) {
-                $this->logger->info("Dropping index $name...");
-                $this->table->dropIndex($name);
-                $this->logger->info('done.');
+        $tableDiff = $this->comparator->diffTable($fromTable, $toTable);
+        if ($tableDiff) {
+            if ($tableName == CustomFields::TABLE or $tableName == 'snmp_accountinfo') {
+                // Columns which were added through the user interface are not
+                // present in the schema file. Preserve these columns by
+                // removing them from the diff.
+                foreach ($this->customFieldConfig->getTargetColumnNames() as $column) {
+                    unset($tableDiff->removedColumns[$column]);
+                }
             }
+
+            if (!$prune) {
+                foreach ($tableDiff->removedColumns as $column) {
+                    $this->logger->warn("Obsolete column $tableName.{$column->getName()} detected.");
+                }
+                $tableDiff->removedColumns = [];
+            }
+
+            $this->schemaManager->alterTable($tableDiff);
         }
     }
 }

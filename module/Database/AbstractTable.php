@@ -27,7 +27,6 @@ use Iterator;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Library\Hydrator\Iterator\HydratingIteratorIterator;
 use LogicException;
-use Nada\Database\AbstractDatabase;
 
 /**
  * Base class for table objects
@@ -58,7 +57,7 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
     /** @codeCoverageIgnore */
     public function __construct(ServiceLocatorInterface $serviceLocator, Connection $connection = null)
     {
-        $this->connection = $connection;
+        $this->connection = $connection ?: $serviceLocator->get(Connection::class);
         $this->_serviceLocator = $serviceLocator;
         if (!$this->table) {
             if (defined('static::TABLE')) {
@@ -146,27 +145,24 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      */
     public function updateSchema($prune = false)
     {
-        $logger = $this->_serviceLocator->get('Library\Logger');
         $schema = \Laminas\Config\Factory::fromFile(
             Module::getPath('data/Tables/' . $this->getClassName() . '.json')
         );
-        $database = $this->_serviceLocator->get('Database\Nada');
 
-        $this->preSetSchema($logger, $schema, $database, $prune);
+        $this->preSetSchema($schema, $prune);
         $this->setSchema($schema, $prune);
-        $this->postSetSchema($logger, $schema, $database, $prune);
+        $this->postSetSchema($schema, $prune);
     }
 
     /**
      * Hook to be called before creating/altering table schema
      *
-     * @param \Laminas\Log\Logger $logger Logger instance
      * @param array $schema Parsed table schema
-     * @param \Nada\Database\AbstractDatabase $database Database object
      * @param bool $prune Drop obsolete columns
+     *
      * @codeCoverageIgnore
      */
-    protected function preSetSchema($logger, $schema, $database, $prune)
+    protected function preSetSchema(array $schema, bool $prune): void
     {
     }
 
@@ -179,78 +175,19 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      */
     protected function setSchema(array $schema, bool $prune): void
     {
-        $this->_serviceLocator->get(TableSchema::class)->setSchema(
-            $schema,
-            static::getObsoleteColumns($schema, $this->_serviceLocator->get('Database\Nada')),
-            $prune
-        );
+        $this->_serviceLocator->get(TableSchema::class)->setSchema($schema, $prune);
     }
 
     /**
      * Hook to be called after creating/altering table schema
      *
-     * @param \Laminas\Log\Logger $logger Logger instance
      * @param array $schema Parsed table schema
-     * @param \Nada\Database\AbstractDatabase $database Database object
      * @param bool $prune Drop obsolete columns
-     * @codeCoverageIgnore
-     */
-    protected function postSetSchema($logger, $schema, $database, $prune)
-    {
-    }
-
-    /**
-     * Get names of columns that are present in the current database but not in
-     * the given schema
      *
      * @codeCoverageIgnore
      */
-    public static function getObsoleteColumns(array $schema, AbstractDatabase $database): array
+    protected function postSetSchema(array $schema, bool $prune): void
     {
-        // Table may not exist yet if it's just about to be created
-        if (in_array($schema['name'], $database->getTableNames())) {
-            $schemaColumns = array_column($schema['columns'], 'name');
-            $tableColumns = array_keys($database->getTable($schema['name'])->getColumns());
-            return array_diff($tableColumns, $schemaColumns);
-        } else {
-            return array();
-        }
-    }
-
-    /**
-     * Rename table.
-     * @codeCoverageIgnore
-     */
-    protected function rename(
-        \Laminas\Log\LoggerInterface $logger,
-        \Nada\Database\AbstractDatabase $database,
-        string $oldName
-    ): void {
-        $logger->info("Renaming table $oldName to $this->table...");
-        $database->renameTable($oldName, $this->table);
-        $logger->info('done.');
-    }
-
-    /**
-     * Drop a column if it exists
-     *
-     * @param \Laminas\Log\Logger $logger Logger instance
-     * @param \Nada\Database\AbstractDatabase $database Database object
-     * @param string $column column name
-     * @codeCoverageIgnore
-     */
-    protected function dropColumnIfExists($logger, $database, $column)
-    {
-        $tables = $database->getTables();
-        if (isset($tables[$this->table])) {
-            $table = $tables[$this->table];
-            $columns = $table->getColumns();
-            if (isset($columns[$column])) {
-                $logger->notice("Dropping column $this->table.$column...");
-                $table->dropColumn($column);
-                $logger->notice('done.');
-            }
-        }
     }
 
     /**

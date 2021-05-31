@@ -22,6 +22,8 @@
 
 namespace Database\Test\Table;
 
+use Database\Table\Config;
+
 /**
  * Tests for the Config class
  */
@@ -84,7 +86,10 @@ class ConfigTest extends AbstractTest
         static::$_table->set('defaultWarn', false);
         $this->assertSame(
             '0',
-            static::$_table->select(array('name' => 'BRAINTACLE_DEFAULT_WARN'))->current()['tvalue']
+            $this->getDatabaseConnection()->executeQuery(
+                'SELECT tvalue FROM config WHERE name = ?',
+                ['BRAINTACLE_DEFAULT_WARN']
+            )->fetchOne()
         );
     }
 
@@ -93,7 +98,10 @@ class ConfigTest extends AbstractTest
         static::$_table->set('defaultWarn', true);
         $this->assertSame(
             '1',
-            static::$_table->select(array('name' => 'BRAINTACLE_DEFAULT_WARN'))->current()['tvalue']
+            $this->getDatabaseConnection()->executeQuery(
+                'SELECT tvalue FROM config WHERE name = ?',
+                ['BRAINTACLE_DEFAULT_WARN']
+            )->fetchOne()
         );
     }
 
@@ -115,35 +123,29 @@ class ConfigTest extends AbstractTest
 
     public function testGetLimitInventoryIntervalDisabled()
     {
-        static::$_table->insert(
-            array(
-                'name' => 'INVENTORY_FILTER_FLOOD_IP',
-                'ivalue' => 0,
-            )
-        );
-        static::$_table->insert(
-            array(
-                'name' => 'INVENTORY_FILTER_FLOOD_IP_CACHE_TIME',
-                'ivalue' => 42,
-            )
-        );
+        $this->getDatabaseConnection()->insert(Config::TABLE, [
+            'name' => 'INVENTORY_FILTER_FLOOD_IP',
+            'ivalue' => 0
+        ]);
+        $this->getDatabaseConnection()->insert(Config::TABLE, [
+            'name' => 'INVENTORY_FILTER_FLOOD_IP_CACHE_TIME',
+            'ivalue' => 42
+        ]);
+
         $this->assertNull(static::$_table->get('limitInventoryInterval'));
     }
 
     public function testGetLimitInventoryIntervalEnabled()
     {
-        static::$_table->insert(
-            array(
-                'name' => 'INVENTORY_FILTER_FLOOD_IP',
-                'ivalue' => 1,
-            )
-        );
-        static::$_table->insert(
-            array(
-                'name' => 'INVENTORY_FILTER_FLOOD_IP_CACHE_TIME',
-                'ivalue' => 42,
-            )
-        );
+        $this->getDatabaseConnection()->insert(Config::TABLE, [
+            'name' => 'INVENTORY_FILTER_FLOOD_IP',
+            'ivalue' => 1
+        ]);
+        $this->getDatabaseConnection()->insert(Config::TABLE, [
+            'name' => 'INVENTORY_FILTER_FLOOD_IP_CACHE_TIME',
+            'ivalue' => 42
+        ]);
+
         $this->assertSame(42, static::$_table->get('limitInventoryInterval'));
     }
 
@@ -152,7 +154,10 @@ class ConfigTest extends AbstractTest
         static::$_table->set('limitInventoryInterval', '0');
         $this->assertSame(
             '0',
-            (string) static::$_table->select(array('name' => 'INVENTORY_FILTER_FLOOD_IP'))->current()['ivalue']
+            $this->getDatabaseConnection()->executeQuery(
+                'SELECT ivalue FROM config WHERE name = ?',
+                ['INVENTORY_FILTER_FLOOD_IP']
+            )->fetchOne()
         );
     }
 
@@ -161,7 +166,10 @@ class ConfigTest extends AbstractTest
         static::$_table->set('limitInventoryInterval', '42');
         $this->assertSame(
             '1',
-            (string) static::$_table->select(array('name' => 'INVENTORY_FILTER_FLOOD_IP'))->current()['ivalue']
+            $this->getDatabaseConnection()->executeQuery(
+                'SELECT ivalue FROM config WHERE name = ?',
+                ['INVENTORY_FILTER_FLOOD_IP']
+            )->fetchOne()
         );
     }
 }

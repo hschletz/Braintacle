@@ -22,19 +22,17 @@
 
 namespace Database\Schema;
 
-use Database\AbstractTable;
+use Database\Connection;
 use Database\Module;
 use Database\Table\Clients;
-use Database\Table\CustomFieldConfig;
 use Database\Table\PackageDownloadInfo;
 use Database\Table\Software;
 use Database\Table\WindowsInstallations;
+use Doctrine\DBAL\Schema\Identifier;
 use GlobIterator;
 use Laminas\Config\Factory as ConfigFactory;
 use Laminas\Log\LoggerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
-use Nada\Column\AbstractColumn;
-use Nada\Database\AbstractDatabase;
 use Throwable;
 
 /**
@@ -59,11 +57,6 @@ class DatabaseSchema
     protected $serviceLocator;
 
     /**
-     * @var AbstractDatabase
-     */
-    protected $database;
-
-    /**
      * @var LoggerInterface
      */
     protected $logger;
@@ -73,12 +66,17 @@ class DatabaseSchema
      */
     protected $tableSchema;
 
+    /**
+     * @var Connection
+     */
+    protected $connection;
+
     public function __construct(ServiceLocatorInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
-        $this->database = $serviceLocator->get('Database\Nada');
-        $this->logger = $serviceLocator->get('Library\Logger');
         $this->tableSchema = $serviceLocator->get(TableSchema::class);
+        $this->connection = $serviceLocator->get(Connection::class);
+        $this->logger = $this->connection->getLogger();
     }
 
     /**
@@ -95,39 +93,53 @@ class DatabaseSchema
      */
     public function updateAll($prune)
     {
-        $connection = $this->serviceLocator->get('Db')->getDriver()->getConnection();
-        $connection->beginTransaction();
+        // Transactions don't work properly with mysql platform.
+        $platform = $this->connection->getDatabasePlatform()->getName();
+        if ($platform != 'mysql') {
+            $this->connection->beginTransaction();
+        }
         try {
-            $this->updateTimestampColumns();
+            $this->fixTimestampColumns();
             $this->updateTables($prune);
             $this->serviceLocator->get('Model\Config')->schemaVersion = self::VERSION;
-            $connection->commit();
+            if ($platform != 'mysql') {
+                $this->connection->commit();
+            }
         } catch (Throwable $t) {
-            $connection->rollback();
+            try {
+                $this->connection->rollBack();
+            } catch (Throwable $t2) {
+            }
             throw $t;
         }
     }
 
     /**
-     * Convert timestamp columns.
+     * Apply fixes to timestamp columns which are not handled by standard schema operations.
      *
-     * Converts all timestamp columns in a way that allows for maximum
-     * portability. In particular, portable timestamps don't support fractional
-     * seconds or time zones. Some implementations like MySQL's TIMESTAMP
-     * datatype (as opposed to the DATETIME type) expose nonstandard behavior
-     * which is removed as well.
+     * For PostgreSQL, set precision of timestamp columns to 0 (fractional
+     * seconds are not portable).
      */
-    public function updateTimestampColumns(): void
+    public function fixTimestampColumns(): void
     {
-        $convertedTimestamps = $this->database->convertTimestampColumns();
-        if ($convertedTimestamps) {
-            $this->logger->info(
-                sprintf(
-                    '%d columns converted to %s.',
-                    $convertedTimestamps,
-                    $this->database->getNativeDatatype(AbstractColumn::TYPE_TIMESTAMP)
-                )
-            );
+        if ($this->connection->getDatabasePlatform()->getName() == 'postgresql') {
+            $platform = $this->connection->getDatabasePlatform();
+
+            $query = $this->connection->createQueryBuilder();
+            $query->select('table_name', 'column_name')
+                ->from('information_schema.columns')
+                ->where('datetime_precision != 0')
+                ->andWhere("table_schema = 'public'")
+                ->andWhere("data_type IN('timestamp with time zone', 'timestamp without time zone')");
+
+            foreach ($query->execute()->iterateAssociative() as $column) {
+                $this->logger->notice("Setting precision of column $column[table_name].$column[column_name] to 0");
+                $tableName = (new Identifier($column['table_name']))->getQuotedName($platform);
+                $columnName = (new Identifier($column['column_name']))->getQuotedName($platform);
+                $this->connection->executeStatement(
+                    "ALTER TABLE $tableName ALTER COLUMN $columnName TYPE timestamp(0) without time zone"
+                );
+            }
         }
     }
 
@@ -144,17 +156,16 @@ class DatabaseSchema
     {
         $handledTables = $this->updateTablesViaClass($prune);
         $this->updateViews();
-        $handledTables = array_merge($handledTables, $this->updateServerTables($prune));
-        $handledTables = array_merge($handledTables, $this->updateSnmpTables($prune));
+        $handledTables = array_merge($handledTables, $this->updateTablesFromDirectory('Server', $prune));
+        $handledTables = array_merge($handledTables, $this->updateTablesFromDirectory('Snmp', $prune));
 
         // Detect obsolete tables that are present in the database but not in
         // any of the schema files.
-        $obsoleteTables = array_diff($this->database->getTableNames(), $handledTables);
+        $schemaManager = $this->connection->getSchemaManager();
+        $obsoleteTables = array_diff($schemaManager->listTableNames(), $handledTables);
         foreach ($obsoleteTables as $table) {
             if ($prune) {
-                $this->logger->notice("Dropping table $table...");
-                $this->database->dropTable($table);
-                $this->logger->notice("Done.");
+                $schemaManager->dropTable($table);
             } else {
                 $this->logger->warn("Obsolete table $table detected.");
             }
@@ -181,59 +192,17 @@ class DatabaseSchema
     }
 
     /**
-     * Update server tables.
+     * Update tables from schema files in a directory.
      *
      * @return string[] handled tables
      */
-    public function updateServerTables(bool $prune): array
+    public function updateTablesFromDirectory(string $directory, bool $prune): array
     {
         $handledTables = [];
-        $glob = new GlobIterator(Module::getPath('data/Tables/Server') . '/*.json');
+        $glob = new GlobIterator(Module::getPath('data/Tables/' . $directory) . '/*.json');
         foreach ($glob as $fileinfo) {
             $schema = ConfigFactory::fromFile($fileinfo->getPathname());
-            $this->tableSchema->setSchema(
-                $schema,
-                AbstractTable::getObsoleteColumns($schema, $this->database),
-                $prune
-            );
-            $handledTables[] = $schema['name'];
-        }
-
-        return $handledTables;
-    }
-
-    /**
-     * Update SNMP tables.
-     *
-     * @return string[] handled tables
-     */
-    public function updateSnmpTables(bool $prune): array
-    {
-        $handledTables = [];
-        $glob = new GlobIterator(Module::getPath('data/Tables/Snmp') . '/*.json');
-        foreach ($glob as $fileinfo) {
-            $schema = ConfigFactory::fromFile($fileinfo->getPathname());
-            $obsoleteColumns = AbstractTable::getObsoleteColumns($schema, $this->database);
-
-            if ($schema['name'] == 'snmp_accountinfo') {
-                // Preserve columns which were added through the user interface.
-                $preserveColumns = [];
-                // accountinfo_config may not exist yet when populating an empty
-                // database. In that case, there are no obsolete columns.
-                if (in_array('accountinfo_config', $this->database->getTableNames())) {
-                    $customFieldConfig = $this->serviceLocator->get(CustomFieldConfig::class);
-                    $select = $customFieldConfig->getSql()->select();
-                    $select->columns(['id'])->where([
-                        'name_accountinfo' => null, // exclude system columns (TAG)
-                        'account_type' => 'SNMP',
-                    ]);
-                    foreach ($customFieldConfig->selectWith($select) as $field) {
-                        $preserveColumns[] = "fields_$field[id]";
-                    }
-                    $obsoleteColumns = array_diff($obsoleteColumns, $preserveColumns);
-                }
-            }
-            $this->tableSchema->setSchema($schema, $obsoleteColumns, $prune);
+            $this->tableSchema->setSchema($schema, $prune);
             $handledTables[] = $schema['name'];
         }
 

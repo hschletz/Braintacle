@@ -22,6 +22,8 @@
 
 namespace Console\Test\Controller;
 
+use ArrayIterator;
+
 /**
  * Tests for AccountsController
  */
@@ -63,14 +65,14 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionCurrentAccount()
     {
-        $account = array(
+        $account = [
             'Id' => 'testId',
             'FirstName' => '',
             'LastName' => '',
             'MailAddress' => '',
             'Comment' => '',
-        );
-        $this->_operatorManager->expects($this->once())->method('getOperators')->willReturn(array($account));
+        ];
+        $this->_operatorManager->method('getOperators')->willReturn(new ArrayIterator([$account]));
 
         $identity = $this->createMock('Laminas\View\Helper\Identity');
         $identity->expects($this->atLeastOnce())->method('__invoke')->willReturn('testId');
@@ -85,14 +87,14 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionOtherAccount()
     {
-        $account = array(
+        $account = [
             'Id' => 'testId',
             'FirstName' => '',
             'LastName' => '',
             'MailAddress' => '',
             'Comment' => '',
-        );
-        $this->_operatorManager->expects($this->once())->method('getOperators')->willReturn(array($account));
+        ];
+        $this->_operatorManager->method('getOperators')->willReturn(new ArrayIterator([$account]));
 
         $identity = $this->createMock('Laminas\View\Helper\Identity');
         $identity->expects($this->atLeastOnce())->method('__invoke')->willReturn('otherId');
@@ -105,14 +107,14 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionMailAddress()
     {
-        $account = array(
+        $account = [
             'Id' => 'testId',
             'FirstName' => '',
             'LastName' => '',
             'MailAddress' => 'test@example.com',
             'Comment' => '',
-        );
-        $this->_operatorManager->expects($this->once())->method('getOperators')->willReturn(array($account));
+        ];
+        $this->_operatorManager->method('getOperators')->willReturn(new ArrayIterator([$account]));
 
         $this->dispatch('/console/accounts/index/');
         $this->assertResponseStatusCode(200);
