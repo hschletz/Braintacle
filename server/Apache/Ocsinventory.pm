@@ -25,8 +25,8 @@ use strict;
 
 use Apache::Ocsinventory::Server::Modperl2;
 
-$Apache::Ocsinventory::VERSION = '2.8';
-$Apache::Ocsinventory::BUILD_VERSION = '760';
+$Apache::Ocsinventory::VERSION = '2.9';
+$Apache::Ocsinventory::BUILD_VERSION = '790';
 $XML::Simple::PREFERRED_PARSER = 'XML::Parser';
 
 # Ocs modules

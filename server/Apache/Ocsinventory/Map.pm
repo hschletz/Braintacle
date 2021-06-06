@@ -363,6 +363,14 @@ our %DATA_MAP= (
    }
   },
 
+  software => {
+    mask => 0,
+    multi => 1,
+    auto => 1,
+    delOnReplace => 1,
+    fields =>  {}
+  },
+
   virtualmachines => {
     mask => 131072,
     multi => 1,
@@ -1096,6 +1104,24 @@ our %DATA_MAP= (
         NOTE => {},
     }
 },
+
+  local_users => {
+    mask => 0,
+    multi => 1,
+    auto => 1,
+    delOnReplace => 1,
+    sortBy => 'NAME',
+    writeDiff => 0,
+    cache => 0,
+    fields => {
+      ID_USER => {},
+      GID => {},
+      HOME => {},
+      LOGIN => {},
+      NAME => {},
+      SHELL => {}
+    }
+  },
 
 );
 1;

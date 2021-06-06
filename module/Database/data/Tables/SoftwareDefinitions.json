@@ -28,15 +28,6 @@
             "default": null,
             "autoincrement": false,
             "comment": null
-        },
-        {
-            "name": "category",
-            "type": "varchar",
-            "length": 255,
-            "notnull": false,
-            "default": null,
-            "autoincrement": false,
-            "comment": null
         }
     ],
     "primary_key": [
