@@ -27,7 +27,6 @@
     "indexes": [
         {
             "name": "snmp_accountinfo_tag_idx",
-            "unique": false,
             "columns": [
                 "tag"
             ]

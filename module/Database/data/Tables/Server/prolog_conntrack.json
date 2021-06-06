@@ -45,7 +45,6 @@
     "indexes": [
         {
             "name": "prolog_conntrack_deviceid_idx",
-            "unique": false,
             "columns": [
                 "deviceid"
             ]

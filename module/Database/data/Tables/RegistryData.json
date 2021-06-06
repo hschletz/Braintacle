@@ -45,14 +45,12 @@
     "indexes": [
         {
             "name": "registry_hardware_id_idx",
-            "unique": false,
             "columns": [
                 "hardware_id"
             ]
         },
         {
             "name": "registry_name_idx",
-            "unique": false,
             "columns": [
                 "name"
             ]

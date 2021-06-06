@@ -117,7 +117,6 @@
     "indexes": [
         {
             "name": "printers_hardware_id_idx",
-            "unique": false,
             "columns": [
                 "hardware_id"
             ]

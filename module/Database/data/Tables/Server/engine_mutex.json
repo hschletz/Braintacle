@@ -37,7 +37,6 @@
     "indexes": [
         {
             "name": "engine_mutex_pid_idx",
-            "unique": false,
             "columns": [
                 "pid"
             ]

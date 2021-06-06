@@ -108,7 +108,6 @@
     "indexes": [
         {
             "name": "snmp_drives_snmp_id_idx",
-            "unique": false,
             "columns": [
                 "snmp_id"
             ]

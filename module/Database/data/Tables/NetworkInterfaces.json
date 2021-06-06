@@ -135,35 +135,30 @@
     "indexes": [
         {
             "name": "networks_hardware_id_idx",
-            "unique": false,
             "columns": [
                 "hardware_id"
             ]
         },
         {
             "name": "networks_macaddr_idx",
-            "unique": false,
             "columns": [
                 "macaddr"
             ]
         },
         {
             "name": "networks_ipaddress_idx",
-            "unique": false,
             "columns": [
                 "ipaddress"
             ]
         },
         {
             "name": "networks_ipmask_idx",
-            "unique": false,
             "columns": [
                 "ipmask"
             ]
         },
         {
             "name": "networks_ipsubnet_idx",
-            "unique": false,
             "columns": [
                 "ipsubnet"
             ]

@@ -45,7 +45,6 @@
     "indexes": [
         {
             "name": "snmp_ports_snmp_id_idx",
-            "unique": false,
             "columns": [
                 "snmp_id"
             ]

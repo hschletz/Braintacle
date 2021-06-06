@@ -81,7 +81,6 @@
     "indexes": [
         {
             "name": "controllers_hardware_id_idx",
-            "unique": false,
             "columns": [
                 "hardware_id"
             ]

@@ -135,21 +135,18 @@
     "indexes": [
         {
             "name": "software_hardware_id_idx",
-            "unique": false,
             "columns": [
                 "hardware_id"
             ]
         },
         {
             "name": "software_definition_id_idx",
-            "unique": false,
             "columns": [
                 "definition_id"
             ]
         },
         {
             "name": "software_version_idx",
-            "unique": false,
             "columns": [
                 "version"
             ]

@@ -98,7 +98,12 @@ class TableSchema
             $table = $this->database->createTable($schema['name'], $schema['columns'], $schema['primary_key']);
             if (isset($schema['indexes'])) {
                 foreach ($schema['indexes'] as $index) {
-                    $table->createIndex($index['name'], $index['columns'], $index['unique']);
+                    $table->createIndex($index['name'], $index['columns']);
+                }
+            }
+            if (isset($schema['unique_constraints'])) {
+                foreach ($schema['unique_constraints'] as $uniqueConstraint) {
+                    $table->createIndex($uniqueConstraint['name'], $uniqueConstraint['columns'], true);
                 }
             }
         }

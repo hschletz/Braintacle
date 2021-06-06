@@ -72,7 +72,6 @@
     "indexes": [
         {
             "name": "snmp_cartridges_snmp_id_idx",
-            "unique": false,
             "columns": [
                 "snmp_id"
             ]

@@ -198,7 +198,6 @@
     "indexes": [
         {
             "name": "snmp_networks_snmp_id_idx",
-            "unique": false,
             "columns": [
                 "snmp_id"
             ]

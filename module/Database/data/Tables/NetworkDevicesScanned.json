@@ -72,7 +72,6 @@
     "indexes": [
         {
             "name": "netmap_netid_mask_idx",
-            "unique": false,
             "columns": [
                 "netid",
                 "mask"

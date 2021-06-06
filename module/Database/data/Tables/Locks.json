@@ -36,7 +36,6 @@
     "indexes": [
         {
             "name": "locks_since_idx",
-            "unique": false,
             "columns": [
                 "since"
             ]

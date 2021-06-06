@@ -99,14 +99,12 @@
     "indexes": [
         {
             "name": "attachments_object_type_idx",
-            "unique": false,
             "columns": [
                 "table_name"
             ]
         },
         {
             "name": "attachments_object_id_idx",
-            "unique": false,
             "columns": [
                 "id_dde"
             ]

@@ -63,7 +63,6 @@
     "indexes": [
         {
             "name": "snmp_softwares_snmp_id_idx",
-            "unique": false,
             "columns": [
                 "snmp_id"
             ]

@@ -117,14 +117,12 @@
     "indexes": [
         {
             "name": "bios_ssn_idx",
-            "unique": false,
             "columns": [
                 "ssn"
             ]
         },
         {
             "name": "bios_assettag_idx",
-            "unique": false,
             "columns": [
                 "assettag"
             ]

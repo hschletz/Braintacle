@@ -306,49 +306,42 @@
     "indexes": [
         {
             "name": "hardware_deviceid_idx",
-            "unique": false,
             "columns": [
                 "deviceid"
             ]
         },
         {
             "name": "hardware_name_idx",
-            "unique": false,
             "columns": [
                 "name"
             ]
         },
         {
             "name": "hardware_memory_idx",
-            "unique": false,
             "columns": [
                 "memory"
             ]
         },
         {
             "name": "hardware_osname_idx",
-            "unique": false,
             "columns": [
                 "osname"
             ]
         },
         {
             "name": "hardware_userid_idx",
-            "unique": false,
             "columns": [
                 "userid"
             ]
         },
         {
             "name": "hardware_workgroup_idx",
-            "unique": false,
             "columns": [
                 "workgroup"
             ]
         },
         {
             "name": "hardware_checksum_idx",
-            "unique": false,
             "columns": [
                 "checksum"
             ]

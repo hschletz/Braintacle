@@ -63,7 +63,6 @@
     "indexes": [
         {
             "name": "snmp_trays_snmp_id_idx",
-            "unique": false,
             "columns": [
                 "snmp_id"
             ]

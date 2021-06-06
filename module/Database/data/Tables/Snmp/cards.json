@@ -99,7 +99,6 @@
     "indexes": [
         {
             "name": "snmp_cards_snmp_id_idx",
-            "unique": false,
             "columns": [
                 "snmp_id"
             ]

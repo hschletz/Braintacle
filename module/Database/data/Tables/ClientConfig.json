@@ -56,28 +56,24 @@
     "indexes": [
         {
             "name": "devices_hardware_id_idx",
-            "unique": false,
             "columns": [
                 "hardware_id"
             ]
         },
         {
             "name": "devices_name_idx",
-            "unique": false,
             "columns": [
                 "name"
             ]
         },
         {
             "name": "devices_ivalue_idx",
-            "unique": false,
             "columns": [
                 "ivalue"
             ]
         },
         {
             "name": "devices_tvalue_idx",
-            "unique": false,
             "columns": [
                 "tvalue"
             ]

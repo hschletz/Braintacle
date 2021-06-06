@@ -81,7 +81,6 @@
     "indexes": [
         {
             "name": "snmp_powersupplies_snmp_id_idx",
-            "unique": false,
             "columns": [
                 "snmp_id"
             ]

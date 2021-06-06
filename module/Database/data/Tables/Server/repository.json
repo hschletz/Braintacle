@@ -135,7 +135,6 @@
     "indexes": [
         {
             "name": "repository_hardware_id_idx",
-            "unique": false,
             "columns": [
                 "hardware_id"
             ]
