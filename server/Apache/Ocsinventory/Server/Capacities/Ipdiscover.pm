@@ -141,6 +141,8 @@ sub _ipdiscover_main{
 
   return if $current_context->{'LOCAL_FL'};
   
+  return unless (ref $current_context->{'PARAMS'}{'IPDISCOVER'} eq ref {}); # Not a HASH reference
+  
   my $DeviceID = $current_context->{'DATABASE_ID'};
   my $dbh = $current_context->{'DBI_HANDLE'};
   my $result = $current_context->{'XML_ENTRY'};
@@ -269,10 +271,10 @@ sub _ipdiscover_read_result{
         my $row_verif = $request_verif->fetchrow_hashref;
 
         if (defined $row_verif->{'TAG'}) {
-          $update_req = $dbh->prepare('UPDATE netmap SET IP=?,MASK=?,NETID=?,DATE=NULL, NAME=? WHERE MAC=? AND TAG=?');
+          $update_req = $dbh->prepare('UPDATE netmap SET IP=?,MASK=?,NETID=?,DATE=CURRENT_TIMESTAMP, NAME=? WHERE MAC=? AND TAG=?');
           $update_req->execute($_->{I}, $mask, $subnet, $_->{N}, uc($_->{M}), $tag);
         } else {
-          $update_req = $dbh->prepare('UPDATE netmap SET IP=?,MASK=?,NETID=?,DATE=NULL, NAME=?, TAG=? WHERE MAC=?');
+          $update_req = $dbh->prepare('UPDATE netmap SET IP=?,MASK=?,NETID=?,DATE=CURRENT_TIMESTAMP, NAME=?, TAG=? WHERE MAC=?');
           $update_req->execute($_->{I}, $mask, $subnet, $_->{N}, $tag, uc($_->{M}));
         }
         unless($update_req->rows){

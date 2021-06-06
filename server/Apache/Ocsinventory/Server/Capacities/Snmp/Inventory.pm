@@ -95,23 +95,35 @@ sub _snmp_inventory{
   my ( $sectionsMeta, $sectionsList, $agentDatabaseId ) = @_;
   my ($section,$XmlSection);
 
-  my $dbh = $Apache::Ocsinventory::CURRENT_CONTEXT{'DBI_HANDLE'};
   my $result = $Apache::Ocsinventory::CURRENT_CONTEXT{'XML_ENTRY'}; 
 
   my $snmp_devices = $result->{CONTENT};
   
   #Getting data for the several snmp devices that we have in the xml
-  foreach my $snmp_key (keys %{$snmp_devices}){
-    my @columns;
-    my @bind_num;
-    my @arguments;
-    my @update;
-    my $i = 1;
+  while (my ($key, $value) = each (%{$snmp_devices})) {
+    if(ref $value eq 'ARRAY') {
+      while (my ($keybis, $valuebis) = each (@{$value})) {
+        insert_snmp_inventory($key, $valuebis);
+      }
+    } else {
+      insert_snmp_inventory($key, $value);
+    }
+  }
+}
 
-    foreach my $snmp_infos (keys %{$snmp_devices->{$snmp_key}}) {
-      push @columns, $snmp_infos;
-      push @bind_num, '?';
-      push @arguments, $snmp_devices->{$snmp_key}->{$snmp_infos};
+sub insert_snmp_inventory{
+  my ($key, $value) = @_;
+  my $dbh = $Apache::Ocsinventory::CURRENT_CONTEXT{'DBI_HANDLE'};
+  my @columns;
+  my @bind_num;
+  my @arguments;
+  my @update;
+  my $i = 1;
+
+  foreach my $snmp_infos (keys %{$value}) {
+    push @columns, $snmp_infos;
+    push @bind_num, '?';
+    push @arguments, $value->{$snmp_infos};
       push @update, $snmp_infos." = ?";
     } 
 
@@ -119,21 +131,19 @@ sub _snmp_inventory{
     my $args_prepare = join ',', @bind_num;
     my $update_prepare = join ',', @update;
 
-    my $query = $dbh->prepare("INSERT INTO $snmp_key($column) VALUES($args_prepare) " . compose_upsert('id', $update_prepare));
+    my $query = $dbh->prepare("INSERT INTO $key($column) VALUES($args_prepare) " . compose_upsert('id', $update_prepare));
 
-    foreach my $value (@arguments) {
-        $query->bind_param($i, $value);
+    foreach my $values (@arguments) {
+        $query->bind_param($i, $values);
         $i++;
     }
 
-    foreach my $value (@arguments) {
-      $query->bind_param($i, $value);
+    foreach my $values (@arguments) {
+      $query->bind_param($i, $values);
       $i++;
     }
 
     $query->execute;
-
-  }
 }
 
 sub _update_snmp_inventory_section{

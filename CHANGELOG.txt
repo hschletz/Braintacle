@@ -19,6 +19,8 @@ Upgrading from previous versions:
 
 Misc:
 
+- Server: Backported changes from version 2.9.
+
 - Server: Respond with 405 status code for non-POST requests instead of 403.
 
 

@@ -35,7 +35,7 @@ our @EXPORT = qw /
   _del_all_soft
   _insert_software
   _prepare_sql
-  _insert_software_name
+  _trim_value
 /;
 
 sub _prepare_sql {
@@ -50,106 +50,49 @@ sub _prepare_sql {
         $query->bind_param($i, $value);
         $i++;
     }
-    $query->execute; 
+    $query->execute or return undef; 
 
     return $query;   
-}
-
-sub _insert_software_name {
-    my ($name, $cat) = @_;
-    my $sql;
-    my $resultVerif;
-    my $valueVerif = undef;
-    my $categoryVerif = undef;
-    my $valueResult;
-    my $result;
-
-    # Verif if value exist
-    my @argVerif = ();
-    $sql = "SELECT ID, CATEGORY FROM software_definitions WHERE NAME = ?";
-    push @argVerif, $name;
-    $resultVerif = _prepare_sql($sql, @argVerif);
-
-    while(my $row = $resultVerif->fetchrow_hashref()){
-        $valueVerif = $row->{ID};
-        $categoryVerif = $row->{CATEGORY};
-    }
-
-    my @argInsert = ();
-
-    if(!defined $valueVerif) {
-        if(!defined $cat) {
-            # Insert if undef
-            $sql = "INSERT INTO software_definitions (NAME) VALUES(?)";
-            push @argInsert, $name;
-        } else {
-            # Insert if undef
-            $sql = "INSERT INTO software_definitions (NAME,CATEGORY) VALUES(?,?)";
-            push @argInsert, $name;
-            push @argInsert, $cat;
-        }
-        _prepare_sql($sql, @argInsert);
-    }
-
-    if(defined $valueVerif && defined $cat) {
-        if((!defined $categoryVerif) || ($cat != $categoryVerif)) {
-            my @arg = ();
-            my $sqlUpdate = "UPDATE software_definitions SET CATEGORY = ? WHERE ID = ?";
-            push @arg, $cat;
-            push @arg, $valueVerif;
-            _prepare_sql($sqlUpdate, @arg);
-        }
-    }
-
-    # Get last Insert or Update ID
-    my @argSelect = ();
-    $sql = "SELECT ID FROM software_definitions WHERE NAME = ?";
-    push @argSelect, $name;
-    $result = _prepare_sql($sql, @argSelect);
-
-    while(my $row = $result->fetchrow_hashref()){
-        $valueResult = $row->{ID};
-    }
-
-    return $valueResult;
 }
 
 sub _get_info_software {
     my ($value, $table, $column) = @_;
     my $sql;
-    my $valueResult;
+    my $valueResult = undef;
     my $result;
     my $resultVerif;
-    my $valueVerif = undef;
 
     # Verif if value exist
     my @argVerif = ();
     $sql = "SELECT ID FROM $table WHERE $column = ?";
     push @argVerif, $value;
     $resultVerif = _prepare_sql($sql, @argVerif);
+    if(!defined $resultVerif) { return undef; }
 
     while(my $row = $resultVerif->fetchrow_hashref()){
-        $valueVerif = $row->{ID};
+        $valueResult = $row->{ID};
     }
 
-    my @argInsert = ();
+    if(!defined $valueResult) {
+        my @argInsert = ();
 
-    if(!defined $valueVerif) {
         # Insert if undef
         $sql = "INSERT INTO $table ($column) VALUES(?)";
         push @argInsert, $value;
-    }
 
-    _prepare_sql($sql, @argInsert);
+        $result = _prepare_sql($sql, @argInsert);
+        if(!defined $result) { return undef; }
 
-    # Get last Insert or Update ID
-    my @argSelect = ();
-    $sql = "SELECT ID FROM $table WHERE $column = ?";
-    push @argSelect, $value;
-    $result = _prepare_sql($sql, @argSelect);
+        # Get last Insert or Update ID
+        my @argSelect = ();
+        $sql = "SELECT ID FROM $table WHERE $column = ?";
+        push @argSelect, $value;
+        $result = _prepare_sql($sql, @argSelect);
+        if(!defined $result) { return undef; }
 
-    while(my $row = $result->fetchrow_hashref()){
-        $valueResult = $row->{ID};
+        while(my $row = $result->fetchrow_hashref()){
+            $valueResult = $row->{ID};
+        }
     }
 
     return $valueResult;
@@ -160,11 +103,21 @@ sub _del_all_soft {
     my $sql;
     my @arg = ();
     my $result;
-    my $id = 0;
 
     $sql = "DELETE FROM software WHERE HARDWARE_ID = ?";
     push @arg, $hardware_id;
     $result = _prepare_sql($sql, @arg);
+    if(!defined $result) { return 1; }
+
+    return 0;
+}
+
+sub _trim_value {
+    my ($toTrim) = @_;
+
+    $toTrim =~ s/^\s+|\s+$//g;
+
+    return $toTrim;
 }
 
 sub _insert_software {
@@ -176,8 +129,8 @@ sub _insert_software {
                     'FILESIZE', 'SOURCE', 'GUID', 
                     'LANGUAGE', 'INSTALLDATE', 'BITSWIDTH');
 
-    _del_all_soft($hardware_id);
-    
+    if(_del_all_soft($hardware_id)) { return 1; }
+
     foreach my $software (@{$Apache::Ocsinventory::CURRENT_CONTEXT{'XML_ENTRY'}->{CONTENT}->{SOFTWARES}}) {
         my %arrayValue = (
             "HARDWARE_ID"   => $Apache::Ocsinventory::CURRENT_CONTEXT{'DATABASE_ID'},
@@ -198,7 +151,8 @@ sub _insert_software {
         my @bind_num;
         
         # Get software Name ID
-        $arrayValue{DEFINITION_ID} = _insert_software_name($name, $software->{CATEGORY});
+        $arrayValue{DEFINITION_ID} = _get_info_software($name, "software_definitions", "name");
+        if(!defined $arrayValue{DEFINITION_ID}) { return 1; }
 
         my $arrayRefString = join ',', @arrayRef;
         my @arg = ();
@@ -209,8 +163,11 @@ sub _insert_software {
 
         $sql = "INSERT INTO software ($arrayRefString) VALUES(";
         $sql .= (join ',', @bind_num).') ';
-        _prepare_sql($sql, @arg);
+        my $result = _prepare_sql($sql, @arg);
+        if(!defined $result) { return 1; }
     }
+
+    return 0;
 }
 
 1;

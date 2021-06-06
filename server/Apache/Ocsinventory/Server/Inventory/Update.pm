@@ -43,7 +43,10 @@ sub _update_inventory{
 
   my $section;
  
-  &_insert_software();
+  if(&_insert_software()) {
+    return 1;
+  }
+
   &_reset_inventory_cache( $sectionsMeta, $sectionsList ) if $ENV{OCS_OPT_INVENTORY_CACHE_ENABLED};
    
   # Call special sections update
