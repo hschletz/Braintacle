@@ -23,6 +23,7 @@
 namespace Database\Service;
 
 use Database\Connection;
+use Database\Event\LoggingEventListener;
 use Doctrine\DBAL\DriverManager;
 use Interop\Container\ContainerInterface;
 
@@ -45,8 +46,13 @@ class DatabaseFactory implements \Laminas\ServiceManager\Factory\FactoryInterfac
         }
         $config['wrapperClass'] = Connection::class;
 
+        $logger = $container->get('Library\Logger');
+        $eventSubscriber = new LoggingEventListener($logger);
+
         $connection = DriverManager::getConnection($config);
-        $connection->setLogger($container->get('Library\Logger'));
+        $connection->setLogger($logger);
+        $connection->getEventManager()->addEventSubscriber($eventSubscriber);
+
         switch ($connection->getDatabasePlatform()->getName()) {
             case 'postgresql':
                 $connection->executeStatement("SET timezone TO 'UTC'");

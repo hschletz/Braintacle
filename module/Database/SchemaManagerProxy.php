@@ -23,11 +23,6 @@
 namespace Database;
 
 use Database\Schema\TableDiff as ExtendedTableDiff;
-use Doctrine\Common\EventSubscriber;
-use Doctrine\DBAL\Event\SchemaAlterTableEventArgs;
-use Doctrine\DBAL\Event\SchemaCreateTableEventArgs;
-use Doctrine\DBAL\Event\SchemaDropTableEventArgs;
-use Doctrine\DBAL\Events;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Constraint;
@@ -37,15 +32,13 @@ use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\TableDiff;
 use Doctrine\DBAL\Schema\UniqueConstraint;
 use Doctrine\DBAL\Schema\View;
-use Doctrine\DBAL\Types\Type;
 use Laminas\Log\LoggerInterface;
-use LogicException;
 use ReflectionProperty;
 
 /**
  * Doctrine schema manager extension
  */
-class SchemaManagerProxy implements EventSubscriber
+class SchemaManagerProxy
 {
     /**
      * @var AbstractSchemaManager
@@ -72,17 +65,6 @@ class SchemaManagerProxy implements EventSubscriber
         $this->schemaManager = $schemaManager;
         $this->connection = $connection;
         $this->logger = $logger;
-
-        $connection->getEventManager()->addEventSubscriber($this);
-    }
-
-    public function getSubscribedEvents()
-    {
-        return [
-            Events::onSchemaAlterTable,
-            Events::onSchemaCreateTable,
-            Events::onSchemaDropTable,
-        ];
     }
 
     /**
@@ -351,111 +333,6 @@ class SchemaManagerProxy implements EventSubscriber
         } else {
             return $table;
         }
-    }
-
-    public function onSchemaAlterTable(SchemaAlterTableEventArgs $args)
-    {
-        $tableDiff = $args->getTableDiff();
-        if (
-            $tableDiff->renamedColumns or
-            $tableDiff->changedForeignKeys or
-            $tableDiff->removedForeignKeys
-        ) {
-            throw new LogicException('FIXME: operation not implemented');
-        }
-
-        if ($tableDiff->newName) {
-            $this->log('info', 'Renaming table %s to %s', $tableDiff->name, $tableDiff->newName);
-        }
-        foreach ($tableDiff->addedColumns as $column) {
-            $this->log(
-                'info',
-                'Creating column %s.%s (%s)',
-                $tableDiff->name,
-                $column->getName(),
-                $column->getType()->getName()
-            );
-        }
-        foreach ($tableDiff->changedColumns as $columnDiff) {
-            foreach ($columnDiff->changedProperties as $property) {
-                $newValue = $columnDiff->column->toArray()[$property];
-                if (is_bool($newValue)) {
-                    $newValue = $newValue ? 'TRUE' : 'FALSE';
-                }
-                $this->log(
-                    'notice',
-                    'Altering column %s.%s (%s: %s)',
-                    $tableDiff->name,
-                    $columnDiff->fromColumn->getName(),
-                    $property,
-                    ($newValue instanceof Type) ? $newValue->getName() : $newValue
-                );
-            }
-        }
-        foreach ($tableDiff->removedColumns as $column) {
-            $this->log('notice', 'Dropping column %s.%s', $tableDiff->name, $column->getName());
-        }
-        foreach ($tableDiff->addedIndexes as $index) {
-            $this->log(
-                'notice',
-                'Creating %s %s on table %s',
-                $index->isPrimary() ? 'primary key' : 'index',
-                $index->getName(),
-                $tableDiff->name
-            );
-        }
-        foreach ($tableDiff->changedIndexes as $index) {
-            $this->log('info', 'Altering index %s', $index->getName());
-        }
-        foreach ($tableDiff->removedIndexes as $index) {
-            $this->log('notice', 'Dropping index %s', $index->getName());
-        }
-        foreach ($tableDiff->renamedIndexes as $oldName => $index) {
-            $this->log('info', 'Renaming index %s to %s', $oldName, $index->getName());
-        }
-        foreach ($tableDiff->addedForeignKeys as $foreignKey) {
-            $this->log(
-                'info',
-                'Creating foreign key constraint %s on table %s',
-                $foreignKey->getName(),
-                $foreignKey->getLocalTableName()
-            );
-        }
-        if ($tableDiff instanceof ExtendedTableDiff) {
-            foreach ($tableDiff->addedUniqueConstraints as $uniqueConstraint) {
-                $this->log(
-                    'info',
-                    'Creating unique constraint %s on table %s',
-                    $uniqueConstraint->getName(),
-                    $tableDiff->name
-                );
-            }
-            foreach ($tableDiff->removedUniqueConstraints as $uniqueConstraint) {
-                $this->log(
-                    'notice',
-                    'Dropping unique constraint %s on table %s',
-                    $uniqueConstraint->getName(),
-                    $tableDiff->name
-                );
-            }
-            foreach ($tableDiff->changedOptions as $option => $newValue) {
-                $this->log('info', 'Changing %s %s to %s', $tableDiff->name, $option, $newValue);
-            }
-        }
-    }
-
-    public function onSchemaCreateTable(SchemaCreateTableEventArgs $args)
-    {
-        $this->log('info', 'Creating table %s', $args->getTable()->getName());
-    }
-
-    public function onSchemaDropTable(SchemaDropTableEventArgs $args)
-    {
-        $table = $args->getTable();
-        if ($table instanceof Table) {
-            $table = $table->getName();
-        }
-        $this->log('notice', 'Dropping table %s', $table);
     }
 
     /**
