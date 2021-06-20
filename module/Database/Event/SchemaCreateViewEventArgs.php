@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Database connection wrapper
+ * Event arguments used when a view gets created
  *
  * Copyright (C) 2011-2021 Holger Schletz <holger.schletz@web.de>
  *
@@ -20,48 +20,28 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace Database;
+namespace Database\Event;
 
-use Laminas\Log\LoggerInterface;
+use Doctrine\DBAL\Event\SchemaEventArgs;
+use Doctrine\DBAL\Schema\View;
 
 /**
- * Database connection wrapper
+ * Event arguments used when a view gets created
  */
-class Connection extends \Doctrine\DBAL\Connection
+class SchemaCreateViewEventArgs extends SchemaEventArgs
 {
     /**
-     * @var LoggerInterface
+     * @var View
      */
-    protected $logger;
+    protected $view;
 
-    /**
-     * @var SchemaManagerProxy
-     */
-    private $schemaManagerProxy;
-
-    /**
-     * Set logger.
-     */
-    public function setLogger(LoggerInterface $logger): void
+    public function __construct(View $view)
     {
-        $this->logger = $logger;
+        $this->view = $view;
     }
 
-    /**
-     * Get logger.
-     */
-    public function getLogger(): ?LoggerInterface
+    public function getView(): View
     {
-        return $this->logger;
-    }
-
-    /** @codeCoverageIgnore */
-    public function getSchemaManager()
-    {
-        if (!$this->schemaManagerProxy) {
-            $this->schemaManagerProxy = new SchemaManagerProxy(parent::getSchemaManager(), $this);
-        }
-
-        return $this->schemaManagerProxy;
+        return $this->view;
     }
 }

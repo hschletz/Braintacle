@@ -22,7 +22,9 @@
 
 namespace Database\Test\Event;
 
+use Database\Event\Events as ExtendedEvents;
 use Database\Event\LoggingEventListener;
+use Database\Event\SchemaCreateViewEventArgs;
 use Database\Schema\TableDiff as ExtendedTableDiff;
 use Doctrine\DBAL\Event\SchemaAlterTableEventArgs;
 use Doctrine\DBAL\Event\SchemaCreateTableEventArgs;
@@ -36,6 +38,7 @@ use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\TableDiff;
 use Doctrine\DBAL\Schema\UniqueConstraint;
+use Doctrine\DBAL\Schema\View;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use Laminas\Log\LoggerInterface;
@@ -53,6 +56,7 @@ class LoggingEventListenerTest extends \PHPUnit\Framework\TestCase
                 Events::onSchemaAlterTable,
                 Events::onSchemaCreateTable,
                 Events::onSchemaDropTable,
+                ExtendedEvents::onSchemaCreateView,
             ],
             $listener->getSubscribedEvents()
         );
@@ -63,7 +67,6 @@ class LoggingEventListenerTest extends \PHPUnit\Framework\TestCase
         return [
             ['renamedColumns'],
             ['changedForeignKeys'],
-            ['removedForeignKeys'],
         ];
     }
 
@@ -223,6 +226,22 @@ class LoggingEventListenerTest extends \PHPUnit\Framework\TestCase
         $listener->onSchemaAlterTable($eventArgs);
     }
 
+    public function testOnSchemaAlterTablePrimaryKeyRemoved()
+    {
+        $tableDiff = new TableDiff('table_name');
+        $tableDiff->removedIndexes[] = new Index('index_name', ['foo'], false, true);
+
+        $platform = $this->createStub(AbstractPlatform::class);
+        $eventArgs = new SchemaAlterTableEventArgs($tableDiff, $platform);
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->once())->method('notice')->with('Dropping primary key index_name');
+
+        $listener = new LoggingEventListener($logger);
+
+        $listener->onSchemaAlterTable($eventArgs);
+    }
+
     public function testOnSchemaAlterTableIndexRenamed()
     {
         $tableDiff = new TableDiff('table_name');
@@ -261,6 +280,34 @@ class LoggingEventListenerTest extends \PHPUnit\Framework\TestCase
         $logger->expects($this->once())
                ->method('info')
                ->with('Creating foreign key constraint constraint_name on table local_table');
+
+        $listener = new LoggingEventListener($logger);
+
+        $listener->onSchemaAlterTable($eventArgs);
+    }
+
+    public function testOnSchemaAlterTableForeignKeyRemoved()
+    {
+        $localTable = new Table('local_table');
+
+        $constraint = new ForeignKeyConstraint(
+            ['local_column'],
+            'foreign_table',
+            ['foreign_column'],
+            'constraint_name'
+        );
+        $constraint->setLocalTable($localTable);
+
+        $tableDiff = new TableDiff('local_table');
+        $tableDiff->removedForeignKeys[] = $constraint;
+
+        $platform = $this->createStub(AbstractPlatform::class);
+        $eventArgs = new SchemaAlterTableEventArgs($tableDiff, $platform);
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->once())
+               ->method('notice')
+               ->with('Dropping foreign key constraint constraint_name from table local_table');
 
         $listener = new LoggingEventListener($logger);
 
@@ -355,5 +402,20 @@ class LoggingEventListenerTest extends \PHPUnit\Framework\TestCase
         $listener = new LoggingEventListener($logger);
 
         $listener->onSchemaDropTable($eventArgs);
+    }
+
+    public function testOnSchemaCreateView()
+    {
+        $view = new View('view_name', 'sql');
+
+        $eventArgs = $this->createStub(SchemaCreateViewEventArgs::class);
+        $eventArgs->method('getView')->willReturn($view);
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->once())->method('info')->with('Creating view view_name');
+
+        $listener = new LoggingEventListener($logger);
+
+        $listener->onSchemaCreateView($eventArgs);
     }
 }

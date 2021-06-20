@@ -22,17 +22,21 @@
 
 namespace Database;
 
+use Database\Event\Events as ExtendedEvents;
+use Database\Event\SchemaCreateViewEventArgs;
 use Database\Schema\TableDiff as ExtendedTableDiff;
+use Doctrine\DBAL\Event\SchemaAlterTableEventArgs;
+use Doctrine\DBAL\Events;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Constraint;
+use Doctrine\DBAL\Schema\ForeignKeyConstraint;
 use Doctrine\DBAL\Schema\Identifier;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\TableDiff;
 use Doctrine\DBAL\Schema\UniqueConstraint;
 use Doctrine\DBAL\Schema\View;
-use Laminas\Log\LoggerInterface;
 use ReflectionProperty;
 
 /**
@@ -50,21 +54,12 @@ class SchemaManagerProxy
      */
     protected $connection;
 
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
     private $uniqueConstraints = null;
 
-    public function __construct(
-        AbstractSchemaManager $schemaManager,
-        Connection $connection,
-        ?LoggerInterface $logger = null
-    ) {
+    public function __construct(AbstractSchemaManager $schemaManager, Connection $connection)
+    {
         $this->schemaManager = $schemaManager;
         $this->connection = $connection;
-        $this->logger = $logger;
     }
 
     /**
@@ -216,14 +211,24 @@ class SchemaManagerProxy
         $this->schemaManager->createConstraint($constraint, $table);
     }
 
-    public function dropConstraint(Constraint $constraint, $table)
+    public function dropConstraint(Constraint $constraint, $table): void
     {
-        $this->log(
-            'notice',
-            'Dropping constraint %s from table %s',
-            $constraint->getName(),
-            ($table instanceof Table) ? $table->getName() : $table
-        );
+        if (!$table instanceof Table) {
+            $table = new Table($table);
+        }
+
+        $tableDiff = new ExtendedTableDiff(null, $table);
+        if ($constraint instanceof Index) {
+            $tableDiff->removedIndexes[$constraint->getName()] = $constraint;
+        } elseif ($constraint instanceof UniqueConstraint) {
+            $tableDiff->removedUniqueConstraints[$constraint->getName()] = $constraint;
+        } elseif ($constraint instanceof ForeignKeyConstraint) {
+            $tableDiff->removedForeignKeys[$constraint->getName()] = $constraint;
+        }
+
+        $eventArgs = new SchemaAlterTableEventArgs($tableDiff, $this->getConnection()->getDatabasePlatform());
+        $this->getConnection()->getEventManager()->dispatchEvent(Events::onSchemaAlterTable, $eventArgs);
+
         $this->schemaManager->dropConstraint($constraint, $table);
         if ($constraint instanceof UniqueConstraint) {
             $this->uniqueConstraints = null; // invalidate cache
@@ -277,12 +282,13 @@ class SchemaManagerProxy
     }
 
     /**
-     * Create a view.
+     * Create a view, emitting onSchemaCreateView event.
      */
     public function createView(View $view): void
     {
-        // Log explicitly because there is no event for creating views.
-        $this->log('info', 'Creating view %s', $view->getName());
+        $eventArgs = new SchemaCreateViewEventArgs($view);
+        $this->getConnection()->getEventManager()->dispatchEvent(ExtendedEvents::onSchemaCreateView, $eventArgs);
+
         $this->schemaManager->createView($view);
     }
 
@@ -332,16 +338,6 @@ class SchemaManagerProxy
             return $table->getName();
         } else {
             return $table;
-        }
-    }
-
-    /**
-     * Send message to logger.
-     */
-    protected function log(string $level, string $template, ...$args): void
-    {
-        if ($this->logger) {
-            $this->logger->$level(vsprintf($template, $args));
         }
     }
 }

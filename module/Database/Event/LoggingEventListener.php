@@ -22,6 +22,7 @@
 
 namespace Database\Event;
 
+use Database\Event\Events as ExtendedEvents;
 use Database\Schema\TableDiff as ExtendedTableDiff;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\DBAL\Event\SchemaAlterTableEventArgs;
@@ -54,6 +55,7 @@ class LoggingEventListener implements EventSubscriber
             Events::onSchemaAlterTable,
             Events::onSchemaCreateTable,
             Events::onSchemaDropTable,
+            ExtendedEvents::onSchemaCreateView,
         ];
     }
 
@@ -65,11 +67,7 @@ class LoggingEventListener implements EventSubscriber
     public function onSchemaAlterTable(SchemaAlterTableEventArgs $args)
     {
         $tableDiff = $args->getTableDiff();
-        if (
-            $tableDiff->renamedColumns or
-            $tableDiff->changedForeignKeys or
-            $tableDiff->removedForeignKeys
-        ) {
+        if ($tableDiff->renamedColumns or $tableDiff->changedForeignKeys) {
             throw new LogicException('FIXME: operation not implemented');
         }
 
@@ -117,7 +115,12 @@ class LoggingEventListener implements EventSubscriber
             $this->log('info', 'Altering index %s', $index->getName());
         }
         foreach ($tableDiff->removedIndexes as $index) {
-            $this->log('notice', 'Dropping index %s', $index->getName());
+            $this->log(
+                'notice',
+                'Dropping %s %s',
+                $index->isPrimary() ? 'primary key' : 'index',
+                $index->getName()
+            );
         }
         foreach ($tableDiff->renamedIndexes as $oldName => $index) {
             $this->log('info', 'Renaming index %s to %s', $oldName, $index->getName());
@@ -126,6 +129,14 @@ class LoggingEventListener implements EventSubscriber
             $this->log(
                 'info',
                 'Creating foreign key constraint %s on table %s',
+                $foreignKey->getName(),
+                $foreignKey->getLocalTableName()
+            );
+        }
+        foreach ($tableDiff->removedForeignKeys as $foreignKey) {
+            $this->log(
+                'notice',
+                'Dropping foreign key constraint %s from table %s',
                 $foreignKey->getName(),
                 $foreignKey->getLocalTableName()
             );
@@ -165,5 +176,10 @@ class LoggingEventListener implements EventSubscriber
             $table = $table->getName();
         }
         $this->log('notice', 'Dropping table %s', $table);
+    }
+
+    public function onSchemaCreateView(SchemaCreateViewEventArgs $args): void
+    {
+        $this->log('info', 'Creating view %s', $args->getView()->getName());
     }
 }
