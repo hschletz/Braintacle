@@ -37,7 +37,6 @@ use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\TableDiff;
 use Doctrine\DBAL\Schema\UniqueConstraint;
 use Doctrine\DBAL\Schema\View;
-use ReflectionProperty;
 
 /**
  * Doctrine schema manager extension
@@ -86,13 +85,9 @@ class SchemaManagerProxy
             // CREATE TABLE statement which would need to be parsed. As a simple
             // workaround, unique constraints are converted to unique indexes.
             // This is sufficient for testing purposes.
-            // The reflection hack is required to remove the constraints because
-            // Table::removeUniqueConstraint() is broken.
             $uniqueConstraints = $table->getUniqueConstraints();
-            $property = new ReflectionProperty($table, 'uniqueConstraints');
-            $property->setAccessible(true);
-            $property->setValue($table, []);
             foreach ($uniqueConstraints as $uniqueConstraint) {
+                $table->removeUniqueConstraint($uniqueConstraint->getName());
                 $table->addUniqueIndex($uniqueConstraint->getColumns(), $uniqueConstraint->getName());
             }
         }
@@ -200,15 +195,10 @@ class SchemaManagerProxy
 
     public function createConstraint(Constraint $constraint, $table)
     {
+        $this->schemaManager->createConstraint($constraint, $table);
         if ($constraint instanceof UniqueConstraint) {
             $this->uniqueConstraints = null; // invalidate cache
-            // createConstraint() generates invalid SQL when passed a
-            // UniqueConstraint object. Synthesize an Index object and pass that
-            // instead. This creates a proper unique constraint, not just a
-            // unique index.
-            $constraint = new Index($constraint->getName(), $constraint->getColumns(), true);
         }
-        $this->schemaManager->createConstraint($constraint, $table);
     }
 
     public function dropConstraint(Constraint $constraint, $table): void
