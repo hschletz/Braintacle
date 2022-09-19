@@ -32,7 +32,7 @@ grep -r -l --null \
     --exclude-dir="$BASEDIR/doc/api/*" \
     --exclude-dir="$BASEDIR/doc/CodeCoverage/*" \
     --exclude-dir="$BASEDIR/vendor/*" \
-    'Copyright (C) 2011-2020 Holger Schletz' \
+    'Copyright (C) 2011-2021 Holger Schletz' \
     "$BASEDIR" \
     | xargs --null --no-run-if-empty \
-        sed -i 's/Copyright (C) 2011-2020 Holger Schletz/Copyright (C) 2011-2021 Holger Schletz/'
+        sed -i 's/Copyright (C) 2011-2021 Holger Schletz/Copyright (C) 2011-2022 Holger Schletz/'
