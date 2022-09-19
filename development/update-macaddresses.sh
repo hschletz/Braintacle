@@ -8,7 +8,7 @@
 # under the terms of the GNU General Public License as published by the Free
 # Software Foundation; either version 2 of the License, or (at your option)
 # any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful, but WITHOUT
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
 # FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
@@ -27,4 +27,4 @@ DEVDIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 BASEDIR=$(readlink -f "$DEVDIR/..")
 
 curl -Lo $BASEDIR/module/Library/data/MacAddress/manuf \
-     'https://code.wireshark.org/review/gitweb?p=wireshark.git;a=blob_plain;f=manuf'
+     'https://gitlab.com/wireshark/wireshark/-/raw/master/manuf?inline=false'
