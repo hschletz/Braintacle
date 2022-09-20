@@ -17,6 +17,11 @@ Upgrading from previous versions:
 - Recommended: The above step may leave the directory public/components behind.
   It is no longer used and should be deleted manually.
 
+Security:
+
+- This release updates the laminas-form component with a fix for
+  GHSA-jq4p-mq33-w375.
+
 Misc:
 
 - Server: Backported changes from version 2.9.
