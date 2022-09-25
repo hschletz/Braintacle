@@ -63,7 +63,8 @@
         "mockery/mockery": "^1.5",
         "phpunit/phpunit": "^9.5",
         "squizlabs/php_codesniffer": "^3.7",
-        "symfony/process": "^5.4"
+        "symfony/process": "^5.4",
+        "vimeo/psalm": "^4.27"
     },
     "suggest": {
         "ext-zlib": "Required for 'braintacle-tool.php decode'",
@@ -77,5 +78,8 @@
         "platform": {
             "php": "7.4.30"
         }
+    },
+    "scripts": {
+        "psalm": "psalm"
     }
 }
