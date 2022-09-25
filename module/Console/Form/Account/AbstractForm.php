@@ -194,8 +194,7 @@ abstract class AbstractForm extends \Console\Form\Form
         $this->setInputFilter($inputFilter);
     }
 
-    /** {@inheritdoc} */
-    public function isValid()
+    public function isValid(): bool
     {
         // Invoke parent implementation in any case to apply filters and
         // initialize messages.

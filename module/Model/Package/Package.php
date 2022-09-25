@@ -66,8 +66,7 @@ namespace Model\Package;
  */
 class Package extends \Model\AbstractModel
 {
-    /** {@inheritdoc} */
-    public function exchangeArray($input)
+    public function exchangeArray($input): array
     {
         if (isset($input['Id'])) {
             // Add Timestamp property

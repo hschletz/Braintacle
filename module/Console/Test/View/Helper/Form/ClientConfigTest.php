@@ -22,11 +22,11 @@
 
 namespace Console\Test\View\Helper\Form;
 
-use ArrayIterator;
 use Console\Form\ClientConfig as ClientConfigForm;
 use Console\View\Helper\Form\ClientConfig as ClientConfigHelper;
 use Laminas\Form\Element;
 use Laminas\Form\Fieldset;
+use Laminas\Stdlib\PriorityList;
 use Laminas\View\Renderer\PhpRenderer;
 use Model\ClientOrGroup;
 
@@ -61,9 +61,13 @@ class ClientConfigTest extends \Library\Test\View\Helper\AbstractTest
         $view = $this->createMock(PhpRenderer::class);
         $view->method('__call')->with('formRow', [$element])->willReturn('Element');
 
+        $iterator = new PriorityList();
+        $iterator->insert('element', $element, 1);
+        $iterator->insert('fieldset', $fieldset, 0);
+
         $form = $this->createStub(ClientConfigForm::class);
         $form->method('getClientObject')->willReturn($object);
-        $form->method('getIterator')->willReturn(new ArrayIterator([$element, $fieldset]));
+        $form->method('getIterator')->willReturn($iterator);
 
         $helper = $this->createPartialMock(ClientConfigHelper::class, ['getView', 'renderFieldset']);
         $helper->method('getView')->willReturn($view);
@@ -137,18 +141,15 @@ class ClientConfigTest extends \Library\Test\View\Helper\AbstractTest
         $elementWithoutInfo->method('getAttribute')->with('disabled')->willReturn(false);
         $elementWithoutInfo->method('getName')->willReturn('Scan[scanThisNetwork]');
 
+        $iterator = new PriorityList();
+        $iterator->insert('disabled', $elementDisabled, 4);
+        $iterator->insert('true', $elementCheckboxDefaultTrue, 3);
+        $iterator->insert('false', $elementCheckboxDefaultFalse, 2);
+        $iterator->insert('text', $elementText, 1);
+        $iterator->insert('noinfo', $elementWithoutInfo, 0);
+
         $fieldset = $this->createMock('Laminas\Form\Fieldset');
-        $fieldset->method('getIterator')->willReturn(
-            new \ArrayIterator(
-                array(
-                    $elementDisabled,
-                    $elementCheckboxDefaultTrue,
-                    $elementCheckboxDefaultFalse,
-                    $elementText,
-                    $elementWithoutInfo
-                )
-            )
-        );
+        $fieldset->method('getIterator')->willReturn($iterator);
 
         $fieldsetHelper = $this->createMock('Console\View\Helper\Form\Fieldset');
         $fieldsetHelper->method('renderFieldsetElement')->with($fieldset, $elements)->willReturn('FIELDSET');

@@ -27,8 +27,7 @@ namespace Model\Client\Plugin;
  */
 class RegistryData extends DefaultPlugin
 {
-    /** {@inheritdoc} */
-    public function order($order, $direction)
+    public function order(?string $order, string $direction): void
     {
         parent::order($order, $direction);
         if (key($this->_select->getRawState(\Laminas\Db\Sql\Select::ORDER)) == 'registry.name') {

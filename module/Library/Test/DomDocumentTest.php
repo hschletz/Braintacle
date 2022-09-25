@@ -53,8 +53,8 @@ class DomDocumentTest extends \PHPUnit\Framework\TestCase
                  ->willReturn('schema_file');
         $document->method('relaxNGValidate')
                  ->with('schema_file')
-                 ->willReturn('validation_result');
-        $this->assertEquals('validation_result', $document->isValid());
+                 ->willReturn(true);
+        $this->assertTrue($document->isValid());
     }
 
     public function testForceValidValid()
@@ -75,38 +75,21 @@ class DomDocumentTest extends \PHPUnit\Framework\TestCase
         $document->method('getSchemaFilename')->willReturn(__DIR__ . '/../data/Test/DomDocument/test.rng');
 
         $document->loadXML('<?xml version="1.0" ?><test />');
-        $document->forceValid();
+        @$document->forceValid();
     }
 
-    public function testSaveDefaultOptions()
+    public function testWrite()
     {
         $root = vfsStream::setup('root');
         $filename = $root->url() . '/test.xml';
         $document = new DomDocument();
         $node = $document->createElement('test');
         $document->appendChild($node);
-        $length = $document->save($filename);
+        $document->write($filename);
         $expectedContent = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<test/>\n";
         $this->assertEquals(
             $expectedContent,
             file_get_contents($filename)
         );
-        $this->assertEquals(strlen($expectedContent), $length);
-    }
-
-    public function testSaveExplicitOptions()
-    {
-        $root = vfsStream::setup('root');
-        $filename = $root->url() . '/test.xml';
-        $document = new DomDocument();
-        $node = $document->createElement('test');
-        $document->appendChild($node);
-        $length = $document->save($filename, LIBXML_NOEMPTYTAG);
-        $expectedContent = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<test></test>\n";
-        $this->assertEquals(
-            $expectedContent,
-            file_get_contents($filename)
-        );
-        $this->assertEquals(strlen($expectedContent), $length);
     }
 }

@@ -22,6 +22,9 @@
 
 namespace Console\Form;
 
+use IntlDateFormatter;
+use IntlDatePatternGenerator;
+
 /**
  * Base class for forms
  *
@@ -61,10 +64,9 @@ class Form extends \Laminas\Form\Form
         $this->add($csrf);
     }
 
-    /** {@inheritdoc} */
-    public function isValid()
+    public function isValid(): bool
     {
-        if (empty($_POST) and empty($_FILES) and strtoupper(@$_SERVER['REQUEST_METHOD']) == 'POST') {
+        if (empty($_POST) and empty($_FILES) and strtoupper($_SERVER['REQUEST_METHOD'] ?? '') == 'POST') {
             // post_max_size has been exceeded. Fail without further validation
             // which would not give any useful results in this situation.
             return false;
@@ -217,7 +219,7 @@ class Form extends \Laminas\Form\Form
         // cut off.
         switch ($type) {
             case 'integer':
-                $value = trim($value);
+                $value = trim($value ?? '');
                 if (\Laminas\Validator\StaticValidator::execute($value, 'Laminas\I18n\Validator\IsInt')) {
                     $value = \Laminas\Filter\StaticFilter::execute(
                         $value,
@@ -227,7 +229,7 @@ class Form extends \Laminas\Form\Form
                 }
                 break;
             case 'float':
-                $value = trim($value);
+                $value = trim($value ?? '');
                 if (\Laminas\Validator\StaticValidator::execute($value, 'Laminas\I18n\Validator\IsFloat')) {
                     $value = \Laminas\Filter\StaticFilter::execute(
                         $value,
@@ -237,9 +239,23 @@ class Form extends \Laminas\Form\Form
                 }
                 break;
             case 'date':
-                $value = trim($value);
+                $value = trim($value ?? '');
                 $validator = new \Laminas\I18n\Validator\DateTime();
-                $validator->setDateType(\IntlDateFormatter::SHORT);
+                // @codeCoverageIgnoreStart
+                // Only one of these branches can be tested, depending on environment.
+                if (class_exists(IntlDatePatternGenerator::class)) {
+                    // IntlDateFormatter::SHORT may not match day/month without
+                    // leading zero. If IntlDatePatternGenerator is available
+                    // (since PHP 8.1), this will produce consistent results.
+                    $validator->setPattern(
+                        IntlDatePatternGenerator::create($validator->getLocale())->getBestPattern('yyyyMd')
+                    );
+                } else {
+                    // Fall back to IntlDateFormatter::SHORT which seems to work
+                    // on older systems.
+                    $validator->setDateType(IntlDateFormatter::SHORT);
+                }
+                // @codeCoverageIgnoreEnd
                 if ($validator->isValid($value)) {
                     // Some systems accept invalid date separators, like '/'
                     // with a de_DE locale which should accept only '.'.

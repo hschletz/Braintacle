@@ -22,6 +22,7 @@
 
 namespace Model\Test\Client;
 
+use Laminas\Db\ResultSet\AbstractResultSet;
 use Model\Client\Client;
 use Model\Client\CustomFields;
 
@@ -727,11 +728,13 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testGetItemsDefaultArgs()
     {
+        $result = $this->createStub(AbstractResultSet::class);
+
         $itemManager = $this->createMock('Model\Client\ItemManager');
         $itemManager->expects($this->once())
                     ->method('getItems')
                     ->with('type', array('Client' => 42), null, null)
-                    ->willReturn('result');
+                    ->willReturn($result);
 
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->with('Model\Client\ItemManager')->willReturn($itemManager);
@@ -740,16 +743,18 @@ class ClientTest extends \Model\Test\AbstractTest
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->setServiceLocator($serviceManager);
 
-        $this->assertEquals('result', $model->getItems('type'));
+        $this->assertSame($result, $model->getItems('type'));
     }
 
     public function testGetItemsCustomArgs()
     {
+        $result = $this->createStub(AbstractResultSet::class);
+
         $itemManager = $this->createMock('Model\Client\ItemManager');
         $itemManager->expects($this->once())
                     ->method('getItems')
                     ->with('type', array('filter' => 'arg', 'Client' => 42), 'order', 'direction')
-                    ->willReturn('result');
+                    ->willReturn($result);
 
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->with('Model\Client\ItemManager')->willReturn($itemManager);
@@ -758,7 +763,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->setServiceLocator($serviceManager);
 
-        $this->assertEquals('result', $model->getItems('type', 'order', 'direction', array('filter' => 'arg')));
+        $this->assertSame($result, $model->getItems('type', 'order', 'direction', array('filter' => 'arg')));
     }
 
     public function setGroupMembershipsNoActionProvider()

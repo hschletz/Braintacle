@@ -22,6 +22,8 @@
 
 namespace Model\Client;
 
+use Laminas\Db\ResultSet\AbstractResultSet;
+
 /**
  * Client item manager
  *
@@ -132,10 +134,13 @@ class ItemManager
      * @param array $filters Filters, handled by plugin. Default: no filters
      * @param string $order Property to sort by, handled by plugin.
      * @param string $direction One of asc|desc. Default: asc
-     * @return \Laminas\Db\ResultSet\AbstractResultSet
      */
-    public function getItems($type, $filters = null, $order = null, $direction = 'asc')
-    {
+    public function getItems(
+        string $type,
+        array $filters = null,
+        string $order = null,
+        ?string $direction = 'asc'
+    ): AbstractResultSet {
         $type = strtolower($type);
         $table = $this->getTable($type);
 
@@ -148,7 +153,7 @@ class ItemManager
         $plugin->columns();
         $plugin->join();
         $plugin->where($filters);
-        $plugin->order($order, $direction);
+        $plugin->order($order, $direction ?? 'asc');
 
         return $plugin->select();
     }

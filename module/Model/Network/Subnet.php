@@ -24,6 +24,7 @@ namespace Model\Network;
 
 use DomainException;
 use Library\Validator\IpNetworkAddress;
+use ReturnTypeWillChange;
 
 /**
  * Subnet definition and properties
@@ -41,7 +42,7 @@ use Library\Validator\IpNetworkAddress;
  */
 class Subnet extends \Model\AbstractModel
 {
-    /** {@inheritdoc} */
+    #[ReturnTypeWillChange]
     public function offsetGet($index)
     {
         if ($index == 'CidrAddress') {

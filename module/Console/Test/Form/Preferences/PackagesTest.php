@@ -84,7 +84,7 @@ class PackagesTest extends \Console\Test\AbstractFormTest
             'defaultPostInstMessage' => '',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertTrue($this->_form->isValid());
         $preferences = $this->_form->getData()['Preferences'];
@@ -109,7 +109,7 @@ class PackagesTest extends \Console\Test\AbstractFormTest
             'defaultPostInstMessage' => '',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertTrue($this->_form->isValid());
         $preferences = $this->_form->getData()['Preferences'];
@@ -134,7 +134,7 @@ class PackagesTest extends \Console\Test\AbstractFormTest
             'defaultPostInstMessage' => '',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -160,7 +160,7 @@ class PackagesTest extends \Console\Test\AbstractFormTest
             'defaultPostInstMessage' => '',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertSame('1.234', $this->_form->get('Preferences')->get('defaultMaxFragmentSize')->getValue());
         $this->assertSame('5.678', $this->_form->get('Preferences')->get('defaultWarnCountdown')->getValue());

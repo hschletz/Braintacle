@@ -283,8 +283,7 @@ class Build extends \Console\Form\Form
         return parent::setData($data);
     }
 
-    /** {@inheritdoc} */
-    public function isValid()
+    public function isValid(): bool
     {
         $this->getInputFilter()->get('File')->setRequired(@$this->data['DeployAction'] != 'execute');
         return parent::isValid();

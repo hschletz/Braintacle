@@ -42,8 +42,7 @@ class Controller extends AddOsColumns
         );
     }
 
-    /** {@inheritdoc} */
-    public function order($order, $direction)
+    public function order(?string $order, string $direction): void
     {
         if ($order == 'id') {
             $order = 'controllers.id';

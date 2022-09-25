@@ -22,7 +22,9 @@
 
 namespace Model\Test\Group;
 
+use Laminas\Db\Adapter\Platform\AbstractPlatform;
 use Model\Group\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class GroupTest extends AbstractGroupTest
 {
@@ -177,7 +179,9 @@ class GroupTest extends AbstractGroupTest
      */
     public function testSetMembersFromQueryDynamic($joins)
     {
-        $platform = $this->getMockForAbstractClass('Laminas\Db\Adapter\Platform\AbstractPlatform');
+        /** @var MockObject|AbstractPlatform */
+        $platform = $this->createStub(AbstractPlatform::class);
+        $platform->method('getName')->willReturn('platform');
 
         $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
         $adapter->method('getPlatform')->willReturn($platform);

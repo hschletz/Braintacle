@@ -94,11 +94,11 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
     public function testRenderFieldsetElementWithContent()
     {
         $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
-        $fieldset->method('getAttributes')->willReturn('ATTRIBUTES');
+        $fieldset->method('getAttributes')->willReturn(['ATTRIBUTES']);
 
         $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('__call')
-             ->with('htmlElement', array('fieldset', 'LABEL<div>CONTENT</div>', 'ATTRIBUTES'))
+             ->with('htmlElement', array('fieldset', 'LABEL<div>CONTENT</div>', ['ATTRIBUTES']))
              ->willReturn('FIELDSET');
 
         $helper = $this->createPartialMock(Fieldset::class, ['renderElements', 'renderLabel', 'getView']);
@@ -112,11 +112,11 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
     public function testRenderFieldsetElementWithoutContent()
     {
         $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
-        $fieldset->method('getAttributes')->willReturn('ATTRIBUTES');
+        $fieldset->method('getAttributes')->willReturn(['ATTRIBUTES']);
 
         $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('__call')
-             ->with('htmlElement', array('fieldset', 'LABEL<div>CONTENT</div>', 'ATTRIBUTES'))
+             ->with('htmlElement', array('fieldset', 'LABEL<div>CONTENT</div>', ['ATTRIBUTES']))
              ->willReturn('FIELDSET');
 
         $helper = $this->createPartialMock(Fieldset::class, ['renderElements', 'renderLabel', 'getView']);

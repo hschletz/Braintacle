@@ -29,7 +29,6 @@ namespace Console\Test;
  */
 class FormRendererTest extends \PHPUnit\Framework\TestCase
 {
-
     /**
      * Create a new view renderer
      *

@@ -44,8 +44,7 @@ class Filesystem extends DefaultPlugin
         );
     }
 
-    /** {@inheritdoc} */
-    public function order($order, $direction)
+    public function order(?string $order, string $direction): void
     {
         if ($order == 'id') {
             $this->_select->order(array($order => $direction));

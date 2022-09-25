@@ -124,7 +124,7 @@ class Direct implements StorageInterface
         if ($this->_config->validateXml) {
             $this->_metadata->forceValid();
         }
-        $this->_metadata->save($this->getPath($data['Id']) . '/info');
+        $this->_metadata->write($this->getPath($data['Id']) . '/info');
     }
 
     /**

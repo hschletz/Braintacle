@@ -23,10 +23,10 @@
 namespace Protocol\Test\Message;
 
 use Model\Client\Client;
+use PhpBench\Dom\Element;
 use Protocol\Message\InventoryRequest;
 use Protocol\Message\InventoryRequest\Content;
 use ReflectionProperty;
-use TheSeer\fDOM\fDOMElement;
 
 class InventoryRequestTest extends \PHPUnit\Framework\TestCase
 {
@@ -38,6 +38,7 @@ class InventoryRequestTest extends \PHPUnit\Framework\TestCase
             $document->getSchemaFilename()
         );
     }
+
     public function testLoadClient()
     {
         $client = $this->createMock(Client::class);
@@ -47,19 +48,19 @@ class InventoryRequestTest extends \PHPUnit\Framework\TestCase
         $content->expects($this->once())->method('setClient')->with($client);
         $content->expects($this->once())->method('appendSections');
 
-        $request = $this->createMock(fDOMElement::class);
+        $request = $this->createMock(Element::class);
         $request->expects($this->exactly(2))->method('appendElement')->withConsecutive(
             ['DEVICEID', 'id_string', true],
             ['QUERY', 'INVENTORY']
         );
         $request->method('appendChild')->with($content);
 
-        $document = $this->createPartialMock(InventoryRequest::class, ['appendElement']);
-        $document->method('appendElement')->with('REQUEST')->willReturn($request);
+        $document = $this->createPartialMock(InventoryRequest::class, ['createRoot']);
+        $document->method('createRoot')->with('REQUEST')->willReturn($request);
 
         // Neither PHPUnit's nor Mockery's mock object implementations can
-        // handle fDOMDocument's constructor. Fall back to Reflection API to
-        // inject dependency.
+        // handle Document's constructor. Fall back to Reflection API to inject
+        // dependency.
         $property = new ReflectionProperty($document, 'content');
         $property->setAccessible(true);
         $property->setValue($document, $content);

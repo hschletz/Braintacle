@@ -34,8 +34,7 @@ namespace Library\View\Helper;
  */
 class FormSelectUntranslated extends \Laminas\Form\View\Helper\FormSelect
 {
-    /** {@inheritdoc} */
-    public function renderOptions(array $options, array $selectedOptions = array())
+    public function renderOptions(array $options, array $selectedOptions = []): string
     {
         $translatorEnabled = $this->isTranslatorEnabled();
         $this->setTranslatorEnabled(false);

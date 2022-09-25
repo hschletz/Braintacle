@@ -44,7 +44,7 @@ class NetworkScanningTest extends \Console\Test\AbstractFormTest
             'scannerMaxDays' => ' 3.456 ',
             'scanArpDelay' => ' 4.567 ',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertTrue($this->_form->isValid());
         $preferences = $this->_form->getData()['Preferences'];
@@ -63,7 +63,7 @@ class NetworkScanningTest extends \Console\Test\AbstractFormTest
             'scannerMaxDays' => '1',
             'scanArpDelay' => '10',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertTrue($this->_form->isValid());
     }
@@ -77,7 +77,7 @@ class NetworkScanningTest extends \Console\Test\AbstractFormTest
             'scannerMaxDays' => '0',
             'scanArpDelay' => '9',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -101,7 +101,7 @@ class NetworkScanningTest extends \Console\Test\AbstractFormTest
             'scannerMaxDays' => '3a',
             'scanArpDelay' => '4a',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -125,7 +125,7 @@ class NetworkScanningTest extends \Console\Test\AbstractFormTest
             'scannerMaxDays' => '',
             'scanArpDelay' => '',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];

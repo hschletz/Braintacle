@@ -28,9 +28,9 @@ use Model\Client\Client;
 use Model\Client\ItemManager;
 use Protocol\Hydrator;
 use Protocol\Message\InventoryRequest\Content;
-use TheSeer\fDOM\fDOMElement;
 use Laminas\Hydrator\HydratorInterface;
 use Mockery;
+use PhpBench\Dom\Element;
 
 class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
 {
@@ -89,7 +89,7 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $container = $this->createMock(ContainerInterface::class);
         $container->method('get')->with($hydratorService)->willReturn($hydrator);
 
-        $element = $this->createMock(fDOMElement::class);
+        $element = $this->createMock(Element::class);
         $element->expects($this->exactly(2))
                 ->method('appendElement')
                 ->withConsecutive(['name1', 'value1', true], ['name3', 'value3', true]);
@@ -127,7 +127,7 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $container = $this->createMock(ContainerInterface::class);
         $container->method('get')->with(Hydrator\AndroidInstallations::class)->willReturn($hydrator);
 
-        $element = $this->createMock(fDOMElement::class);
+        $element = $this->createMock(Element::class);
         $element->expects($this->exactly(2))
                 ->method('appendElement')
                 ->withConsecutive(['name1', 'value1', true], ['name2', 'value2', true]);
@@ -166,12 +166,12 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $client = $this->createMock(Client::class);
         $client->method('offsetGet')->with('CustomFields')->willReturn($data);
 
-        $element1 = $this->createMock(fDOMElement::class);
+        $element1 = $this->createMock(Element::class);
         $element1->expects($this->exactly(2))
                  ->method('appendElement')
                  ->withConsecutive(['KEYNAME', 'name1', true], ['KEYVALUE', 'value1', true]);
 
-        $element4 = $this->createMock(fDOMElement::class);
+        $element4 = $this->createMock(Element::class);
         $element4->expects($this->exactly(2))
                  ->method('appendElement')
                  ->withConsecutive(['KEYNAME', 'name4', true], ['KEYVALUE', '2020-12-27', true]);
@@ -193,16 +193,16 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $client = $this->createStub(Client::class);
         $client->method('getDownloadedPackageIds')->willReturn($data);
 
-        $package1 = $this->createMock(fDOMElement::class);
+        $package1 = $this->createMock(Element::class);
         $package1->expects($this->once())->method('setAttribute')->with('ID', 23);
 
-        $package2 = $this->createMock(fDOMElement::class);
+        $package2 = $this->createMock(Element::class);
         $package2->expects($this->once())->method('setAttribute')->with('ID', 42);
 
-        $history = $this->createMock(fDOMElement::class);
+        $history = $this->createMock(Element::class);
         $history->method('appendElement')->with('PACKAGE')->willReturnOnConsecutivecalls($package1, $package2);
 
-        $download = $this->createMock(fDOMElement::class);
+        $download = $this->createMock(Element::class);
         $download->method('appendElement')->with('HISTORY')->willReturn($history);
 
         $content = $this->createPartialMock(Content::class, ['appendElement']);
@@ -288,10 +288,10 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
             ['Protocol\Hydrator\table_name', $hydrator]
         ]);
 
-        $element0 = $this->createMock(fDOMElement::class);
+        $element0 = $this->createMock(Element::class);
         $element0->expects($this->never())->method('appendElement');
 
-        $element1 = $this->createMock(fDOMElement::class);
+        $element1 = $this->createMock(Element::class);
         $element1->expects($this->exactly(2))
                  ->method('appendElement')
                  ->withConsecutive(

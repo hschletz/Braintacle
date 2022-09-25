@@ -179,7 +179,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
     {
         $data = array('Agent' => array('contactInterval' => '', 'inventoryInterval' => ''));
         $this->_form->setClientObject($this->_group);
-        $this->_form->setValidationGroup('Agent');
+        $this->_form->setValidationGroup(['Agent']);
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
     }
@@ -188,7 +188,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
     {
         $data = array('Agent' => array('contactInterval' => '1.234', 'inventoryInterval' => '5.678'));
         $this->_form->setClientObject($this->_group);
-        $this->_form->setValidationGroup('Agent');
+        $this->_form->setValidationGroup(['Agent']);
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
         $this->assertEquals(
@@ -201,7 +201,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
     {
         $data = array('Agent' => array('contactInterval' => '1', 'inventoryInterval' => '-1'));
         $this->_form->setClientObject($this->_group);
-        $this->_form->setValidationGroup('Agent');
+        $this->_form->setValidationGroup(['Agent']);
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
     }
@@ -210,7 +210,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
     {
         $data = array('Agent' => array('contactInterval' => '0', 'inventoryInterval' => '-2'));
         $this->_form->setClientObject($this->_group);
-        $this->_form->setValidationGroup('Agent');
+        $this->_form->setValidationGroup(['Agent']);
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = array(
@@ -224,7 +224,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
     {
         $data = array('Agent' => array('contactInterval' => '1,234', 'inventoryInterval' => '5,678'));
         $this->_form->setClientObject($this->_group);
-        $this->_form->setValidationGroup('Agent');
+        $this->_form->setValidationGroup(['Agent']);
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Agent'];
@@ -248,7 +248,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
             )
         );
         $this->_form->setClientObject($this->_group);
-        $this->_form->setValidationGroup('Download');
+        $this->_form->setValidationGroup(['Download']);
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
     }
@@ -266,7 +266,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
             )
         );
         $this->_form->setClientObject($this->_group);
-        $this->_form->setValidationGroup('Download');
+        $this->_form->setValidationGroup(['Download']);
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
         $this->assertEquals(
@@ -295,7 +295,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
             )
         );
         $this->_form->setClientObject($this->_group);
-        $this->_form->setValidationGroup('Download');
+        $this->_form->setValidationGroup(['Download']);
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
     }
@@ -313,7 +313,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
             )
         );
         $this->_form->setClientObject($this->_group);
-        $this->_form->setValidationGroup('Download');
+        $this->_form->setValidationGroup(['Download']);
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $message = array('callbackValue' => "TRANSLATE(The input is not greater than or equal to '1')");
@@ -340,7 +340,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
             )
         );
         $this->_form->setClientObject($this->_group);
-        $this->_form->setValidationGroup('Download');
+        $this->_form->setValidationGroup(['Download']);
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Download'];
@@ -370,7 +370,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
             )
         );
         $this->_form->setClientObject($this->_group);
-        $this->_form->setValidationGroup('Download');
+        $this->_form->setValidationGroup(['Download']);
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
     }
@@ -388,7 +388,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
             )
         );
         $this->_form->setClientObject($this->_group);
-        $this->_form->setValidationGroup('Download');
+        $this->_form->setValidationGroup(['Download']);
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
     }
@@ -408,7 +408,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
                       ->willReturn(array(array('Subnet' => '192.0.2.0')));
         $this->_form->setClientObject($this->_client);
         $this->assertTrue($this->_form->get('Scan')->has('scanThisNetwork'));
-        $this->_form->setValidationGroup('Scan');
+        $this->_form->setValidationGroup(['Scan']);
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
     }
@@ -427,7 +427,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
                       ->with('NetworkInterface', 'Subnet')
                       ->willReturn(array(array('Subnet' => '192.0.2.0')));
         $this->_form->setClientObject($this->_client);
-        $this->_form->setValidationGroup('Scan');
+        $this->_form->setValidationGroup(['Scan']);
         $this->_form->setData($data);
         $this->assertFalse($this->_form->isValid());
     }
@@ -467,7 +467,7 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
                          array('scanThisNetwork', $this->isNull()),
                          array('scanSnmp', $this->isNull())
                      );
-        $this->_form->setValidationGroup('Agent', 'Download', 'Scan');
+        $this->_form->setValidationGroup(['Agent', 'Download', 'Scan']);
         $this->_form->setClientObject($this->_group);
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());

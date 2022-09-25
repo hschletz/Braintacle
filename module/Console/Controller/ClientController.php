@@ -205,7 +205,7 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
         );
 
         $jumpto = $params->fromQuery('jumpto');
-        if (!method_exists($this, static::getMethodFromAction($jumpto))) {
+        if (!$jumpto || !method_exists($this, static::getMethodFromAction($jumpto))) {
             $jumpto = 'general'; // Default for missing or invalid argument
         }
         $vars['jumpto'] = $jumpto;

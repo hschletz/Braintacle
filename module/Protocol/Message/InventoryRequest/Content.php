@@ -23,17 +23,15 @@
 namespace Protocol\Message\InventoryRequest;
 
 use Interop\Container\ContainerInterface;
-use InvalidArgumentException;
 use Model\Client\Client;
 use Model\Client\ItemManager;
+use PhpBench\Dom\Element;
 use Protocol\Hydrator;
-use TheSeer\fDOM\fDOMElement;
-use TheSeer\fDOM\fDOMException;
 
 /**
  * CONTENT element of an InventoryRequest document
  */
-class Content extends fDOMElement
+class Content extends Element
 {
     /**
      * Name of 'HARDWARE' section
@@ -96,9 +94,6 @@ class Content extends fDOMElement
 
     /**
      * Bind client and append content.
-     *
-     * @throws InvalidArgumentException
-     * @throws fDOMException
      */
     public function setClient(Client $client): void
     {
@@ -107,9 +102,6 @@ class Content extends fDOMElement
 
     /**
      * Append all sections.
-     *
-     * @throws InvalidArgumentException
-     * @throws fDOMException
      */
     public function appendSections(): void
     {
@@ -125,8 +117,6 @@ class Content extends fDOMElement
      * Append "HARDWARE" or "BIOS" section.
      *
      * @param string $section One of the SYSTEM_SECTION_* constants
-     * @throws InvalidArgumentException if $section is invalid
-     * @throws fDOMException
      */
     public function appendSystemSection(string $section): void
     {
@@ -154,8 +144,6 @@ class Content extends fDOMElement
 
     /**
      * Append OS-Specific section.
-     *
-     * @throws fDOMException
      */
     public function appendOsSpecificSection(): void
     {
@@ -170,9 +158,7 @@ class Content extends fDOMElement
     }
 
     /**
-     * Append ACCOUUNTINFO section.
-     *
-     * @throws fDOMException
+     * Append ACCOUNTINFO section.
      */
     public function appendAccountinfoSection(): void
     {
@@ -190,8 +176,6 @@ class Content extends fDOMElement
 
     /**
      * Append DOWNLOAD section.
-     *
-     * @throws fDOMException
      */
     public function appendDownloadSection(): void
     {
@@ -209,8 +193,6 @@ class Content extends fDOMElement
 
     /**
      * Append sections for all item types.
-     *
-     * @throws fDOMException
      */
     public function appendAllItemSections(): void
     {
@@ -221,9 +203,7 @@ class Content extends fDOMElement
 
     /**
      * Append section for given item type.
-     *
-     * @throws fDOMException
-     */
+s     */
     public function appendItemSections(string $itemType, string $section): void
     {
         $items = $this->client->getItems($itemType, 'id', 'asc');

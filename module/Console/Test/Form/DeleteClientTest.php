@@ -22,31 +22,42 @@
 
 namespace Console\Test\Form;
 
+use Console\Form\DeleteClient;
 use Laminas\Dom\Document\Query as Query;
+use Laminas\Form\Element\Checkbox;
+use Model\Config;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for DeleteClient
  */
 class DeleteClientTest extends \Console\Test\AbstractFormTest
 {
-    /**
-     * Config mock
-     * @var \Model\Config
-     */
-    protected $_config;
-
-    public function setUp(): void
+    private function createConfig(int $defaultDeleteInterfaces): Config
     {
-        $this->_config = $this->createMock('Model\Config');
-        parent::setUp();
+        /** @var MockObject|Config */
+        $config = $this->createMock(Config::class);
+        $config->expects($this->once())
+               ->method('__get')
+               ->with('defaultDeleteInterfaces')
+               ->willReturn($defaultDeleteInterfaces);
+
+        return $config;
+    }
+
+    private function createForm(int $defaultDeleteInterfaces): DeleteClient
+    {
+        $config = $this->createConfig($defaultDeleteInterfaces);
+        $form = new DeleteClient(null, ['config' => $config]);
+        $form->init();
+
+        return $form;
     }
 
     /** {@inheritdoc} */
     protected function getForm()
     {
-        $form = new \Console\Form\DeleteClient(null, array('config' => $this->_config));
-        $form->init();
-        return $form;
+        return $this->createForm(0);
     }
 
     public function testInit()
@@ -61,20 +72,18 @@ class DeleteClientTest extends \Console\Test\AbstractFormTest
 
     public function testDeleteInterfacesDefaultChecked()
     {
-        $this->_config->expects($this->once())
-                      ->method('__get')
-                      ->with('defaultDeleteInterfaces')
-                      ->willReturn(1);
-        $this->assertTrue($this->getForm()->get('DeleteInterfaces')->isChecked());
+        $form = $this->createForm(1);
+        /** @var Checkbox */
+        $deleteInterfaces = $form->get('DeleteInterfaces');
+        $this->assertTrue($deleteInterfaces->isChecked());
     }
 
     public function testDeleteInterfacesDefaultUnchecked()
     {
-        $this->_config->expects($this->once())
-                      ->method('__get')
-                      ->with('defaultDeleteInterfaces')
-                      ->willReturn(0);
-        $this->assertFalse($this->getForm()->get('DeleteInterfaces')->isChecked());
+        $form = $this->createForm(0);
+        /** @var Checkbox */
+        $deleteInterfaces = $form->get('DeleteInterfaces');
+        $this->assertFalse($deleteInterfaces->isChecked());
     }
 
     public function testRender()

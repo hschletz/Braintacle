@@ -195,7 +195,7 @@ class DirectTest extends \Model\Test\AbstractTest
 
         $metadata = $this->createMock('Model\Package\Metadata');
         $metadata->expects($this->once())->method('setPackageData')->with($data);
-        $metadata->expects($this->once())->method('save')->with('/path/info');
+        $metadata->expects($this->once())->method('write')->with('/path/info');
         $metadata->expects($this->never())->method('forceValid');
 
         $config = $this->createMock('Model\Config');
@@ -215,7 +215,7 @@ class DirectTest extends \Model\Test\AbstractTest
         $metadata = $this->createMock('Model\Package\Metadata');
         $metadata->expects($this->once())->method('setPackageData')->with($data);
         $metadata->expects($this->once())->method('forceValid')->willThrowException($exception);
-        $metadata->expects($this->never())->method('save');
+        $metadata->expects($this->never())->method('write');
 
         $config = $this->createMock('Model\Config');
         $config->expects($this->once())->method('__get')->with('validateXml')->willReturn(true);

@@ -124,11 +124,8 @@ class DefaultPlugin
      * - NULL: type specific default
      * - "id": item ID
      * - other: query table's hydrator for matching column name
-     *
-     * @param string $order Property to sort by
-     * @param string $direction One of asc|desc
      */
-    public function order($order, $direction)
+    public function order(?string $order, string $direction): void
     {
         if (is_null($order)) {
             $tableClass = get_class($this->_table);

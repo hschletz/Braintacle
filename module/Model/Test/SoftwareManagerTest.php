@@ -44,7 +44,7 @@ class SoftwareManagerTest extends AbstractTest
         $new2 = array('name' => 'new2', 'num_clients' => '2');
         $new2Os = array('name' => 'new2', 'num_clients' => '1');
         return array(
-            array(null, 'name', null, array($accepted, $ignored, $new1, $new2)),
+            array(null, 'name', 'asc', array($accepted, $ignored, $new1, $new2)),
             array(array(), 'num_clients', 'desc', array($accepted, $ignored, $new2, $new1)),
             array(array('Os' => 'windows'), 'name', 'asc', array($acceptedOs, $ignoredOs, $new1, $new2Os)),
             array(array('Os' => 'other'), 'name', 'asc', array($acceptedOs, $ignoredOs, $new2Os)),

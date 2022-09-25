@@ -32,8 +32,7 @@ namespace Library\Form\Element;
  */
 class SelectSimple extends \Laminas\Form\Element\Select
 {
-    /** {@inheritdoc} */
-    protected function getValueOptionsValues()
+    protected function getValueOptionsValues(): array
     {
         // Override parent method - return values for InArray validator
         return $this->getValueOptions();

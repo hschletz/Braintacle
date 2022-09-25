@@ -40,7 +40,7 @@ class GroupsTest extends \Console\Test\AbstractFormTest
             'groupCacheExpirationFuzz' => ' 5.678 ',
             'setGroupPackageStatus' => '0',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertTrue($this->_form->isValid());
         $preferences = $this->_form->getData()['Preferences'];
@@ -55,7 +55,7 @@ class GroupsTest extends \Console\Test\AbstractFormTest
             'groupCacheExpirationFuzz' => '1',
             'setGroupPackageStatus' => '0',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertTrue($this->_form->isValid());
     }
@@ -67,7 +67,7 @@ class GroupsTest extends \Console\Test\AbstractFormTest
             'groupCacheExpirationFuzz' => '0',
             'setGroupPackageStatus' => '0',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -85,7 +85,7 @@ class GroupsTest extends \Console\Test\AbstractFormTest
             'groupCacheExpirationFuzz' => '2a',
             'setGroupPackageStatus' => '0',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -103,7 +103,7 @@ class GroupsTest extends \Console\Test\AbstractFormTest
             'groupCacheExpirationFuzz' => ' ',
             'setGroupPackageStatus' => '0',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -121,7 +121,7 @@ class GroupsTest extends \Console\Test\AbstractFormTest
             'groupCacheExpirationFuzz' => '2',
             'setGroupPackageStatus' => '0',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];

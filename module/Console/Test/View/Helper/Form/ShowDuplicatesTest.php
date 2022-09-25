@@ -22,7 +22,6 @@
 
 namespace Console\Test\View\Helper\Form;
 
-use ArrayIterator;
 use Console\Form\ShowDuplicates as ShowDuplicatesForm;
 use Console\View\Helper\ConsoleUrl;
 use Console\View\Helper\Form\ShowDuplicates as ShowDuplicatesHelper;
@@ -32,6 +31,7 @@ use Laminas\Form\ElementInterface;
 use Laminas\Form\View\Helper\FormRow;
 use Laminas\I18n\View\Helper\DateFormat;
 use Laminas\I18n\View\Helper\Translate;
+use Laminas\Stdlib\PriorityList;
 use Laminas\View\Helper\EscapeHtml;
 use Laminas\View\Renderer\PhpRenderer;
 use Library\View\Helper\HtmlElement;
@@ -189,13 +189,17 @@ class ShowDuplicatesTest extends \Library\Test\View\Helper\AbstractTest
             'LastContactDate' => $date2,
         ];
 
+        $iterator = new PriorityList();
+        $iterator->insert('1', $checkbox1, 1);
+        $iterator->insert('2', $checkbox2, 0);
+
         $form = $this->createStub(ShowDuplicatesForm::class);
         $form->method('getOption')->willReturnMap([
             ['order', '_order'],
             ['direction', '_direction'],
             ['clients', [$client1, $client2]]
         ]);
-        $form->method('getIterator')->willReturn(new ArrayIterator([$checkbox1, $checkbox2]));
+        $form->method('getIterator')->willReturn($iterator);
 
         $helper = $this->createPartialMock(ShowDuplicatesHelper::class, ['getBlacklistLink', 'getView']);
         $helper->method('getView')->willReturn($view);

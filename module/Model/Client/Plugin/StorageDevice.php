@@ -46,8 +46,7 @@ class StorageDevice extends AddOsColumns
         );
     }
 
-    /** {@inheritdoc} */
-    public function order($order, $direction)
+    public function order(?string $order, string $direction): void
     {
         // All properties may map to different columns depending on agent type.
         // There is no column that contains the same information for all agents.

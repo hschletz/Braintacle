@@ -112,13 +112,13 @@ class CustomFields extends Form
      * Filter callback
      *
      * @internal
-     * @param string $value
-     * @param string $type Field datatype
      * @return mixed trimmed and normalized input depending on field type
      */
-    public function filterField($value, $type)
+    public function filterField(?string $value, string $type)
     {
-        $value = trim($value);
+        if (is_string($value)) {
+            $value = trim($value);
+        }
         if ($value == '') {
             $value = null;
         } else {

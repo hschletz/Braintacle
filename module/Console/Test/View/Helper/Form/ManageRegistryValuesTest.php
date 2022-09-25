@@ -29,6 +29,7 @@ use Laminas\Form\Element\Submit;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Fieldset;
 use Laminas\Form\FormInterface;
+use Laminas\Stdlib\PriorityList;
 use Laminas\View\Renderer\PhpRenderer;
 
 class ManageRegistryValuesTest extends \Library\Test\View\Helper\AbstractTest
@@ -82,10 +83,14 @@ class ManageRegistryValuesTest extends \Library\Test\View\Helper\AbstractTest
         $input2->method('getName')->willReturn($name2);
         $input2->method('getLabel')->willReturn('label2');
 
+        $iterator = new PriorityList();
+        $iterator->insert('1', $input1, 1);
+        $iterator->insert('2', $input2, 0);
+
         $fieldsetExisting = $this->createStub(Fieldset::class);
         $fieldsetExisting->method('getName')->willReturn('existing');
         $fieldsetExisting->method('count')->willReturn(2);
-        $fieldsetExisting->method('getIterator')->willReturn(new ArrayIterator(array($input1, $input2)));
+        $fieldsetExisting->method('getIterator')->willReturn($iterator);
 
         $fieldsetNewValue = $this->createStub(Fieldset::class);
         $fieldsetNewValue->method('getName')->willReturn('new_value');

@@ -40,7 +40,7 @@ class FiltersTest extends \Console\Test\AbstractFormTest
             'inventoryFilter' => '0',
             'limitInventoryInterval' => '',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertTrue($this->_form->isValid());
     }
@@ -52,7 +52,7 @@ class FiltersTest extends \Console\Test\AbstractFormTest
             'inventoryFilter' => '0',
             'limitInventoryInterval' => ' 1.234 ',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertTrue($this->_form->isValid());
         $this->assertEquals(1234, $this->_form->getData()['Preferences']['limitInventoryInterval']);
@@ -65,7 +65,7 @@ class FiltersTest extends \Console\Test\AbstractFormTest
             'inventoryFilter' => '0',
             'limitInventoryInterval' => ' 42a ',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -81,7 +81,7 @@ class FiltersTest extends \Console\Test\AbstractFormTest
             'inventoryFilter' => '0',
             'limitInventoryInterval' => '0',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];

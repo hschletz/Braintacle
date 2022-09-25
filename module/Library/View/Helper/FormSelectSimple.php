@@ -30,8 +30,7 @@ namespace Library\View\Helper;
  */
 class FormSelectSimple extends \Laminas\Form\View\Helper\FormSelect
 {
-    /** {@inheritdoc} */
-    public function renderOptions(array $options, array $selectedOptions = array())
+    public function renderOptions(array $options, array $selectedOptions = []): string
     {
         $escapeHtml    = $this->getEscapeHtmlHelper();
         $optionStrings = array();

@@ -214,7 +214,7 @@ class Software implements \Laminas\Hydrator\HydratorInterface
                 if ($value == 'N/A') {
                     // One-way removal of pseudo-values
                     $value = null;
-                } else {
+                } elseif ($value !== null) {
                     // One-way transformation of forward slashes to more common backslashes
                     $value = str_replace('/', '\\', $value);
                 }

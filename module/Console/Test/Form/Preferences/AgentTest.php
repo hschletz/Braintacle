@@ -42,7 +42,7 @@ class AgentTest extends \Console\Test\AbstractFormTest
             'inventoryInterval' => ' 5.678 ',
             'agentWhitelistFile' => '',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertTrue($this->_form->isValid());
         $preferences = $this->_form->getData()['Preferences'];
@@ -57,7 +57,7 @@ class AgentTest extends \Console\Test\AbstractFormTest
             'inventoryInterval' => '-1',
             'agentWhitelistFile' => '',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertTrue($this->_form->isValid());
     }
@@ -69,7 +69,7 @@ class AgentTest extends \Console\Test\AbstractFormTest
             'inventoryInterval' => '-2',
             'agentWhitelistFile' => '',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -87,7 +87,7 @@ class AgentTest extends \Console\Test\AbstractFormTest
             'inventoryInterval' => '2a',
             'agentWhitelistFile' => '',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -105,7 +105,7 @@ class AgentTest extends \Console\Test\AbstractFormTest
             'inventoryInterval' => ' ',
             'agentWhitelistFile' => '',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -141,7 +141,7 @@ class AgentTest extends \Console\Test\AbstractFormTest
             'inventoryInterval' => 5678,
             'agentWhitelistFile' => vfsStream::newFile('test', 0000)->at(vfsStream::setup('root'))->url(),
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -157,7 +157,7 @@ class AgentTest extends \Console\Test\AbstractFormTest
             'inventoryInterval' => 5678,
             'agentWhitelistFile' => vfsStream::newFile('test', 0666)->at(vfsStream::setup('root'))->url(),
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertTrue($this->_form->isValid());
     }

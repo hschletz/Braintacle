@@ -52,7 +52,7 @@ class InventoryRequest extends \Library\DomDocument
     public function loadClient(Client $client)
     {
         // Root element
-        $request = $this->appendElement('REQUEST');
+        $request = $this->createRoot('REQUEST');
         // Additional elements
         $request->appendElement('DEVICEID', $client['IdString'], true);
         $request->appendElement('QUERY', 'INVENTORY');

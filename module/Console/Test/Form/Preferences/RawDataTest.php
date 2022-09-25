@@ -45,7 +45,7 @@ class RawDataTest extends \Console\Test\AbstractFormTest
             'saveFormat' => 'XML',
             'saveOverwrite' => '0',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertTrue($this->_form->isValid());
     }
@@ -58,7 +58,7 @@ class RawDataTest extends \Console\Test\AbstractFormTest
             'saveFormat' => 'XML',
             'saveOverwrite' => '0',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -75,7 +75,7 @@ class RawDataTest extends \Console\Test\AbstractFormTest
             'saveFormat' => 'XML',
             'saveOverwrite' => '0',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -92,7 +92,7 @@ class RawDataTest extends \Console\Test\AbstractFormTest
             'saveFormat' => 'XML',
             'saveOverwrite' => '0',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertTrue($this->_form->isValid());
     }

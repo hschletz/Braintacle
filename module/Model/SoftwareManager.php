@@ -22,6 +22,8 @@
 
 namespace Model;
 
+use Laminas\Db\ResultSet\ResultSet;
+
 /**
  * Manager for installed software (licenses, blacklists)
 */
@@ -93,9 +95,9 @@ class SoftwareManager
      * @param array $filters Associative array of filters. Default: none.
      * @param string $order One of "name" or "num_clients", default: "name"
      * @param string $direction Onde of "asc" or "desc", default: "asc"
-     * @return \Laminas\Db\ResultSet\ResultSet Result set producing arrays with "name" and "num_clients" keys
+     * @return ResultSet Result set producing arrays with "name" and "num_clients" keys
      */
-    public function getSoftware($filters = null, $order = 'name', $direction = 'asc')
+    public function getSoftware(array $filters = null, string $order = 'name', string $direction = 'asc'): ResultSet
     {
         $sql = $this->_software->getSql();
         $select = $sql->select();

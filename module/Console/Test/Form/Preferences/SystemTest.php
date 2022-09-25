@@ -52,7 +52,7 @@ class SystemTest extends \Console\Test\AbstractFormTest
             'validateXml' => '0',
             'autoMergeDuplicates' => '0',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertTrue($this->_form->isValid());
         $preferences = $this->_form->getData()['Preferences'];
@@ -73,7 +73,7 @@ class SystemTest extends \Console\Test\AbstractFormTest
             'validateXml' => '0',
             'autoMergeDuplicates' => '0',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertTrue($this->_form->isValid());
     }
@@ -90,7 +90,7 @@ class SystemTest extends \Console\Test\AbstractFormTest
             'validateXml' => '0',
             'autoMergeDuplicates' => '0',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -115,7 +115,7 @@ class SystemTest extends \Console\Test\AbstractFormTest
             'validateXml' => '0',
             'autoMergeDuplicates' => '0',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -140,7 +140,7 @@ class SystemTest extends \Console\Test\AbstractFormTest
             'validateXml' => '0',
             'autoMergeDuplicates' => '0',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -194,7 +194,7 @@ class SystemTest extends \Console\Test\AbstractFormTest
             'validateXml' => '0',
             'autoMergeDuplicates' => '0',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -215,7 +215,7 @@ class SystemTest extends \Console\Test\AbstractFormTest
             'validateXml' => '0',
             'autoMergeDuplicates' => '0',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -236,7 +236,7 @@ class SystemTest extends \Console\Test\AbstractFormTest
             'validateXml' => '0',
             'autoMergeDuplicates' => '0',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];

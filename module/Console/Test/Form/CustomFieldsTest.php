@@ -98,7 +98,7 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
 
     public function testInputFilterTextEmpty()
     {
-        $this->_form->setValidationGroup('Fields');
+        $this->_form->setValidationGroup(['Fields']);
         $this->_form->setData(array('Fields' => array('TAG' => ' ')));
         $this->assertTrue($this->_form->isValid());
         $this->assertNull($this->_form->getData()['Fields']['TAG']);
@@ -106,7 +106,7 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
 
     public function testInputFilterTextTrim()
     {
-        $this->_form->setValidationGroup('Fields');
+        $this->_form->setValidationGroup(['Fields']);
         $this->_form->setData(array('Fields' => array('TAG' => ' trim ')));
         $this->assertTrue($this->_form->isValid());
         $this->assertEquals('trim', $this->_form->getData()['Fields']['TAG']);
@@ -114,28 +114,28 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
 
     public function testInputFilterTextMax()
     {
-        $this->_form->setValidationGroup('Fields');
+        $this->_form->setValidationGroup(['Fields']);
         $this->_form->setData(array('Fields' => array('TAG' => str_repeat("\xC3\x84", 255))));
         $this->assertTrue($this->_form->isValid());
     }
 
     public function testInputFilterTextTooLong()
     {
-        $this->_form->setValidationGroup('Fields');
+        $this->_form->setValidationGroup(['Fields']);
         $this->_form->setData(array('Fields' => array('TAG' => str_repeat("\xC3\x84", 256))));
         $this->assertFalse($this->_form->isValid());
     }
 
     public function testInputFilterClobLength()
     {
-        $this->_form->setValidationGroup('Fields');
+        $this->_form->setValidationGroup(['Fields']);
         $this->_form->setData(array('Fields' => array('Clob' => str_repeat("\xC3\x84", 256))));
         $this->assertTrue($this->_form->isValid());
     }
 
     public function testInputFilterClobTrim()
     {
-        $this->_form->setValidationGroup('Fields');
+        $this->_form->setValidationGroup(['Fields']);
         $this->_form->setData(array('Fields' => array('Clob' => ' trim ')));
         $this->assertTrue($this->_form->isValid());
         $this->assertEquals('trim', $this->_form->getData()['Fields']['Clob']);
@@ -143,14 +143,14 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
 
     public function testInputFilterNormalizeInvalid()
     {
-        $this->_form->setValidationGroup('Fields');
+        $this->_form->setValidationGroup(['Fields']);
         $this->_form->setData(array('Fields' => array('Integer' => '1a')));
         $this->assertFalse($this->_form->isValid());
     }
 
     public function testInputFilterNormalizeValid()
     {
-        $this->_form->setValidationGroup('Fields');
+        $this->_form->setValidationGroup(['Fields']);
         $this->_form->setData(array('Fields' => array('Integer' => ' 1.000 ')));
         $this->assertTrue($this->_form->isValid());
         $value = $this->_form->getData()['Fields']['Integer'];
@@ -160,7 +160,7 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
 
     public function testInputFilterNormalizeZero()
     {
-        $this->_form->setValidationGroup('Fields');
+        $this->_form->setValidationGroup(['Fields']);
         $this->_form->setData(array('Fields' => array('Integer' => ' 0 ')));
         $this->assertTrue($this->_form->isValid());
         $value = $this->_form->getData()['Fields']['Integer'];
@@ -170,7 +170,7 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
 
     public function testInputFilterNormalizeEmpty()
     {
-        $this->_form->setValidationGroup('Fields');
+        $this->_form->setValidationGroup(['Fields']);
         $this->_form->setData(array('Fields' => array('Integer' => ' ')));
         $this->assertTrue($this->_form->isValid());
         $this->assertNull($this->_form->getData()['Fields']['Integer']);

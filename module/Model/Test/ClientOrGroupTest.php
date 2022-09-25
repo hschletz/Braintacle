@@ -48,9 +48,9 @@ class ClientOrGroupTest extends AbstractTest
         );
 
         $dataSet = parent::loadDataSet($testName);
-        $locks = $dataSet->getTable('locks');
-        if ($locks) {
+        if (in_array('locks', $dataSet->getTableNames())) {
             // Replace offsets with timestamps (current - offset)
+            $locks = $dataSet->getTable('locks');
             $count = $locks->getRowCount();
             $replacement = new \PHPUnit\DbUnit\DataSet\ReplacementDataSet($dataSet);
             for ($i = 0; $i < $count; $i++) {

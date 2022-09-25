@@ -22,6 +22,8 @@
 
 namespace Library;
 
+use ReturnTypeWillChange;
+
 /**
  * Replacement for \SplFileObject
  *
@@ -183,8 +185,9 @@ class FileObject extends \SplFileInfo implements \Iterator
     /**
      * Get current iterator line
      *
-     * @return string
+     * @return string|false
      */
+    #[ReturnTypeWillChange]
     public function current()
     {
         if ($this->_currentKey == -1) {
@@ -195,10 +198,8 @@ class FileObject extends \SplFileInfo implements \Iterator
 
     /**
      * Get current iterator line number
-     *
-     * @return integer
      */
-    public function key()
+    public function key(): int
     {
         return $this->_currentKey;
     }
@@ -208,7 +209,7 @@ class FileObject extends \SplFileInfo implements \Iterator
      *
      * @throws \RuntimeException if an error occurs
      */
-    public function next()
+    public function next(): void
     {
         try {
             $this->_currentLine = $this->fgets();
@@ -232,7 +233,7 @@ class FileObject extends \SplFileInfo implements \Iterator
      *
      * @throws \RuntimeException if an error occurs
      */
-    public function rewind()
+    public function rewind(): void
     {
         if (!@rewind($this->_file)) {
             throw new \RuntimeException('Error rewinding file ' . $this->getPathname());
@@ -243,10 +244,8 @@ class FileObject extends \SplFileInfo implements \Iterator
 
     /**
      * Return iterator status
-     *
-     * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->_iteratorValid;
     }

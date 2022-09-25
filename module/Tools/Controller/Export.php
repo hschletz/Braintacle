@@ -61,7 +61,7 @@ class Export implements ControllerInterface
             $id = $client['IdString'];
             $output->writeln("Exporting $id");
             $document = $client->toDomDocument();
-            $document->save($directory . '/' . $document->getFilename());
+            $document->write($directory . '/' . $document->getFilename());
             if ($validate and !$document->isValid()) {
                 $output->writeln("Validation failed for $id.");
 

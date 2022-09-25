@@ -109,8 +109,7 @@ class ShowDuplicates extends Form
         $this->setInputFilter($inputFilter);
     }
 
-    /** {@inheritdoc} */
-    public function getMessages($elementName = null)
+    public function getMessages(?string $elementName = null): array
     {
         if ($elementName == 'clients') {
             // Parent implementation would check for a form element named

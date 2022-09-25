@@ -22,13 +22,19 @@
 
 namespace Library;
 
-use TheSeer\fDOM\fDOMException;
+use PhpBench\Dom\Document;
+use ReturnTypeWillChange;
 
 /**
  * DOM document
  */
-class DomDocument extends \TheSeer\fDOM\fDOMDocument
+class DomDocument extends Document
 {
+    public function __construct(string $version = '1.0', string $encoding = 'utf-8')
+    {
+        parent::__construct($version, $encoding);
+    }
+
     /**
      * Retrieve full path to the RELAX NG schema file defining this document type
      *
@@ -73,11 +79,16 @@ class DomDocument extends \TheSeer\fDOM\fDOMDocument
     public function forceValid()
     {
         libxml_clear_errors();
-        if (!$this->isValid()) {
+        $useErrors = libxml_use_internal_errors(true);
+        $isValid = $this->isValid();
+        if (!$isValid) {
             $message = 'Validation of XML document failed.';
             foreach (libxml_get_errors() as $error) {
                 $message .= sprintf(' line %d: %s', $error->line, $error->message);
             }
+        }
+        libxml_use_internal_errors($useErrors);
+        if (!$isValid) {
             throw new \RuntimeException($message);
         }
     }
@@ -85,21 +96,20 @@ class DomDocument extends \TheSeer\fDOM\fDOMDocument
     /**
      * Write XML content to file
      *
-     * This is a reimplementation with improved error handling. An exception is
-     * thrown on error, and no file remains on disk.
+     * This is a replacement for save() with improved error handling. An
+     * exception is thrown on error, and no file remains on disk.
      *
-     * @param string $filename
-     * @param integer $options
-     * @return integer number of bytes written
+     * save() cannot be overridden because its signatures are incompatible
+     * between PHP 8.1 and prior versions.
+     *
      * @throws \RuntimeException if a write error occurs
      */
-    public function save($filename, $options = 0)
+    public function write(string $filename): void
     {
         // Don't use parent::save(). It won't report a disk full condition, and
         // a truncated file would remain on disk.
-        $xml = $this->saveXml(null, $options);
+        $xml = $this->saveXml();
         $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
         $fileSystem->dumpFile($filename, $xml);
-        return strlen($xml);
     }
 }

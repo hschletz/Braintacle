@@ -58,7 +58,7 @@ class NetworkDeviceTest extends \Console\Test\AbstractFormTest
 
     public function testInputFilterDescriptionTrim()
     {
-        $this->_form->setValidationGroup('Description');
+        $this->_form->setValidationGroup(['Description']);
         $this->_form->setData(array('Description' => ' description '));
         $this->assertTrue($this->_form->isValid());
         $this->assertEquals('description', $this->_form->getData()['Description']);
@@ -66,21 +66,21 @@ class NetworkDeviceTest extends \Console\Test\AbstractFormTest
 
     public function testInputFilterDescriptionEmpty()
     {
-        $this->_form->setValidationGroup('Description');
+        $this->_form->setValidationGroup(['Description']);
         $this->_form->setData(array('Description' => ''));
         $this->assertTrue($this->_form->isValid());
     }
 
     public function testInputFilterDescriptionMax()
     {
-        $this->_form->setValidationGroup('Description');
+        $this->_form->setValidationGroup(['Description']);
         $this->_form->setData(array('Description' => str_repeat('x', 255)));
         $this->assertTrue($this->_form->isValid());
     }
 
     public function testInputFilterDescriptionTooLong()
     {
-        $this->_form->setValidationGroup('Description');
+        $this->_form->setValidationGroup(['Description']);
         $this->_form->setData(array('Description' => str_repeat('x', 256)));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages();

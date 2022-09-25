@@ -39,7 +39,7 @@ class Form extends \Laminas\Form\View\Helper\Form
      */
     public function postMaxSizeExceeded(): string
     {
-        if (empty($_POST) and empty($_FILES) and strtoupper(@$_SERVER['REQUEST_METHOD']) == 'POST') {
+        if (empty($_POST) and empty($_FILES) and strtoupper($_SERVER['REQUEST_METHOD'] ?? '') == 'POST') {
             return $this->getView()->htmlElement(
                 'p',
                 sprintf(

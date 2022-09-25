@@ -39,12 +39,12 @@ class ExportTest extends \PHPUnit\Framework\TestCase
 
         $document1 = $this->createMock(InventoryRequest::class);
         $document1->method('getFilename')->willReturn('filename1');
-        $document1->expects($this->once())->method('save')->with("$directory/filename1");
+        $document1->expects($this->once())->method('write')->with("$directory/filename1");
         $document1->expects($this->never())->method('isValid');
 
         $document2 = $this->createMock(InventoryRequest::class);
         $document2->method('getFilename')->willReturn('filename2');
-        $document2->expects($this->once())->method('save')->with("$directory/filename2");
+        $document2->expects($this->once())->method('write')->with("$directory/filename2");
         $document2->expects($this->never())->method('isValid');
 
         $client1 = $this->createMock(Client::class);
@@ -79,17 +79,17 @@ class ExportTest extends \PHPUnit\Framework\TestCase
 
         $document1 = $this->createMock(InventoryRequest::class);
         $document1->method('getFilename')->willReturn('filename1');
-        $document1->expects($this->once())->method('save')->with("$directory/filename1");
+        $document1->expects($this->once())->method('write')->with("$directory/filename1");
         $document1->expects($this->once())->method('isValid')->willReturn(true);
 
         $document2 = $this->createMock(InventoryRequest::class);
         $document2->method('getFilename')->willReturn('filename2');
-        $document2->expects($this->once())->method('save')->with("$directory/filename2");
+        $document2->expects($this->once())->method('write')->with("$directory/filename2");
         $document2->expects($this->once())->method('isValid')->willReturn(false);
 
         $document3 = $this->createMock(InventoryRequest::class);
         $document3->expects($this->never())->method('getFilename');
-        $document3->expects($this->never())->method('save');
+        $document3->expects($this->never())->method('write');
         $document3->expects($this->never())->method('isValid');
 
         $client1 = $this->createMock(Client::class);

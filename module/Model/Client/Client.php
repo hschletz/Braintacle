@@ -22,6 +22,8 @@
 
 namespace Model\Client;
 
+use ReturnTypeWillChange;
+
 /**
  * Client
  *
@@ -129,7 +131,7 @@ class Client extends \Model\ClientOrGroup
      */
     protected $_groups;
 
-    /** {@inheritdoc} */
+    #[ReturnTypeWillChange]
     public function offsetGet($index)
     {
         if ($this->offsetExists($index)) {

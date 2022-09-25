@@ -56,7 +56,7 @@ class DownloadTest extends \Console\Test\AbstractFormTest
             'downloadMaxPriority' => '10',
             'downloadTimeout' => ' 4.567 ',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertTrue($this->_form->isValid());
         $preferences = $this->_form->getData()['Preferences'];
@@ -81,7 +81,7 @@ class DownloadTest extends \Console\Test\AbstractFormTest
             'downloadMaxPriority' => '10',
             'downloadTimeout' => ' 1 ',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertTrue($this->_form->isValid());
     }
@@ -99,7 +99,7 @@ class DownloadTest extends \Console\Test\AbstractFormTest
             'downloadMaxPriority' => '10',
             'downloadTimeout' => ' 0 ',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -127,7 +127,7 @@ class DownloadTest extends \Console\Test\AbstractFormTest
             'downloadMaxPriority' => '10',
             'downloadTimeout' => ' 4.567a ',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -155,7 +155,7 @@ class DownloadTest extends \Console\Test\AbstractFormTest
             'downloadMaxPriority' => '10',
             'downloadTimeout' => '',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -221,7 +221,7 @@ class DownloadTest extends \Console\Test\AbstractFormTest
             'downloadMaxPriority' => '10',
             'downloadTimeout' => ' 4.567 ',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];
@@ -243,7 +243,7 @@ class DownloadTest extends \Console\Test\AbstractFormTest
             'downloadMaxPriority' => '10',
             'downloadTimeout' => ' 4.567 ',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertTrue($this->_form->isValid());
         $preferences = $this->_form->getData()['Preferences'];
@@ -264,7 +264,7 @@ class DownloadTest extends \Console\Test\AbstractFormTest
             'downloadMaxPriority' => '10',
             'downloadTimeout' => ' 4.567 ',
         );
-        $this->_form->setValidationGroup('Preferences');
+        $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
         $messages = $this->_form->getMessages()['Preferences'];

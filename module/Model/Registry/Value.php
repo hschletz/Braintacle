@@ -22,6 +22,8 @@
 
 namespace Model\Registry;
 
+use ReturnTypeWillChange;
+
 /**
  * Registry value definition
  *
@@ -94,7 +96,7 @@ class Value extends \Model\AbstractModel
         return self::$_rootKeys;
     }
 
-    /** {@inheritdoc} */
+    #[ReturnTypeWillChange]
     public function offsetGet($index)
     {
         if ($index == 'FullPath') {
