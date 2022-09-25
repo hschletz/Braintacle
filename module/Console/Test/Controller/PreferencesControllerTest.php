@@ -672,7 +672,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_registryManager->expects($this->never())->method('deleteValueDefinition');
         $this->dispatch('/console/preferences/deleteregistryvalue/?name=value_name');
         $this->assertResponseStatusCode(200);
-        $this->assertQueryContentContains(
+        $this->assertXpathQueryContentContains(
             '//p',
             "Der Registry-Wert 'value_name' wird aus dem Inventar gelöscht. Fortfahren?"
         );

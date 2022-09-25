@@ -247,8 +247,8 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/software/confirm/', 'POST', $postData);
 
         $this->assertResponseStatusCode(200);
-        $this->assertQueryContentContains('//form', 'FORM');
-        $this->assertQueryContentContains('//div[@class="textcenter"]', "\nLIST\n");
+        $this->assertXpathQueryContentContains('//form', 'FORM');
+        $this->assertXPathQueryContentContains('//div[@class="textcenter"]', "\nLIST\n");
 
         $this->assertEquals(
             1,
