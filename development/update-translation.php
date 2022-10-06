@@ -21,6 +21,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Latte\Engine;
+use Latte\Token;
+use Library\Application;
+use Symfony\Component\Filesystem\Path;
+
 // Run this script to extract new strings from all PHP source files to .pot
 // files and update corresponding .po files. Some .pot files are maintained
 // manually. For these modules only the .po files are updated.
@@ -120,6 +125,11 @@ foreach ($modules as $module => $config) {
         $newPot = explode("\n", trim($process->getOutput()));
         print " done.\n";
 
+        if ($module == 'Console') {
+            // Append messages from templates.
+            $newPot = array_merge($newPot, parseTemplates());
+        }
+
         if (in_array('--force', $_SERVER['argv'])) {
             $update = true;
         } else {
@@ -168,4 +178,82 @@ foreach ($modules as $module => $config) {
         }
     }
     print " done.\n";
+}
+
+/**
+ * Parse all Latte templates.
+ */
+function parseTemplates(): array
+{
+    $templatePath = Application::getPath('templates');
+
+    // Construct list of template files, ordered by relative path.
+    $templates = [];
+    foreach (
+        new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator(
+                $templatePath,
+                RecursiveDirectoryIterator::CURRENT_AS_PATHNAME | RecursiveDirectoryIterator::SKIP_DOTS
+            )
+        ) as $path
+    ) {
+        $file = Path::makeRelative($path, $templatePath);
+        $templates[$file] = $path;
+    }
+    ksort($templates);
+
+    // Append extracted strings from each template.
+    $messages = [];
+    foreach ($templates as $file => $path) {
+        $header = ['', '#: ' . $file];
+        $messages = array_merge($messages, parseTemplate($path, $header));
+    }
+
+    return $messages;
+}
+
+/**
+ * Parse single Latte template.
+ */
+function parseTemplate(string $file, array $header): array
+{
+    $template = file_get_contents($file);
+    if ($template === false) {
+        throw new RuntimeException('Error reading ' . $file);
+    }
+
+    $result = [];
+
+    // Invoke Latte parser, assuming HTML content.
+    $engine = new Engine();
+    $parser = $engine->getParser();
+    $parser->setContentType(Engine::CONTENT_HTML);
+    $templateTokens = $parser->parse($template);
+    foreach ($templateTokens as $templateToken) {
+        if ($templateToken->type != Token::MACRO_TAG) {
+            continue;
+        }
+        // Found candidate. Thanks to Latte's PHP Syntax, use PHP's tokenizer
+        // for further analysis.
+        $phpTokens = PhpToken::tokenize('<?php ' . $templateToken->value);
+        if ($phpTokens[1] != 'translate') {
+            continue;
+        }
+        // Found translate(), extract first argument.
+        $messageToken = $phpTokens[3];
+        if (!$messageToken->is(T_CONSTANT_ENCAPSED_STRING)) {
+            throw new RuntimeException('Unexpected token: ' . $messageToken->text);
+        }
+        // Use eval() to reliably remove and unescape quotes. This is safe
+        // because the token is guaranteed to be a string literal.
+        $message = eval("return {$messageToken->text};");
+
+        $entry = $header;
+        $entry[] = 'msgid "' . str_replace('"', '\"', $message) . '"';
+        $entry[] = 'msgstr ""';
+
+        $result = array_merge($result, $entry);
+    }
+
+    return $result;
 }

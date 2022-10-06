@@ -20,6 +20,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Console\Service\TemplateRendererFactory;
+use Console\Template\TemplateRenderer;
 use Console\View\Helper\ConsoleScript;
 use Console\View\Helper\Form\AddToGroup;
 use Console\View\Helper\Form\Package\Build;
@@ -117,6 +119,7 @@ return array(
             'Console\Navigation\ClientMenu' => 'Console\Navigation\ClientMenuFactory',
             'Console\Navigation\GroupMenu' => 'Console\Navigation\GroupMenuFactory',
             'Console\Navigation\MainMenu' => 'Console\Navigation\MainMenuFactory',
+            TemplateRenderer::class => TemplateRendererFactory::class,
         ),
     ),
     'translator' => array(

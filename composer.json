@@ -48,6 +48,7 @@
         "laminas/laminas-uri": "^2.9",
         "laminas/laminas-validator": "^2.24",
         "laminas/laminas-view": "^2.22",
+        "latte/latte": "^2.11",
         "phpbench/dom": "^0.3.2",
         "symfony/console": "^5.4",
         "symfony/event-dispatcher": "^5.4",
