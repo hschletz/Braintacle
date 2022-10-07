@@ -27,6 +27,8 @@ use Laminas\Log\Logger;
 use Laminas\Log\Writer\WriterInterface;
 use Library\Filter\LogLevel as LogLevelFilter;
 use Library\Validator\LogLevel as LogLevelValidator;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

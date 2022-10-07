@@ -22,6 +22,8 @@
 
 namespace Console\Test\Form;
 
+use Laminas\InputFilter\FileInput;
+
 /**
  * Tests for Import form
  */
@@ -31,7 +33,7 @@ class ImportTest extends \Console\Test\AbstractFormTest
     {
         $this->assertInstanceOf('Laminas\Form\Element\File', $this->_form->get('File'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
-        $this->assertInstanceOf('Laminas\InputFilter\FileInput', $this->_form->getInputFilter()->get('File'));
+        $this->assertInstanceOf(FileInput::class, $this->_form->getInputFilter()->get('File'));
     }
 
     public function testInputFilterFileMissing()

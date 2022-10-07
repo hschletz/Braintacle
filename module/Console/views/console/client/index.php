@@ -63,7 +63,6 @@ $allHeaders = array(
     'BiosDate' => $this->translate('BIOS date'),
     'AssetTag' => $this->translate('Asset tag'),
     'Package.Status' => $this->translate('Error code'),
-    'Software.Version' => $this->translate('Version'),
     'AudioDevice.Name' => $this->translate('Audio device'),
     'Controller.Name' => $this->translate('Controller'),
     'Display.Manufacturer' => $this->translate('Monitor: manufacturer'),

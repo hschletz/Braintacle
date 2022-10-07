@@ -22,6 +22,10 @@
 
 namespace Database\Test\Table;
 
+use Database\Hydrator\NamingStrategy\MapNamingStrategy;
+use Laminas\Hydrator\Strategy\DateTimeFormatterStrategy;
+use Library\Hydrator\Strategy\MacAddress;
+
 class NetworkDevicesScannedTest extends AbstractTest
 {
     public function getDataSet()
@@ -35,7 +39,7 @@ class NetworkDevicesScannedTest extends AbstractTest
         $this->assertInstanceOf(\Laminas\Hydrator\ArraySerializableHydrator::class, $hydrator);
 
         $map = $hydrator->getNamingStrategy();
-        $this->assertInstanceOf('Database\Hydrator\NamingStrategy\MapNamingStrategy', $map);
+        $this->assertInstanceOf(MapNamingStrategy::class, $map);
 
         $this->assertEquals('IpAddress', $map->hydrate('ip'));
         $this->assertEquals('MacAddress', $map->hydrate('mac'));
@@ -55,16 +59,16 @@ class NetworkDevicesScannedTest extends AbstractTest
         $this->assertInstanceOf('Laminas\Hydrator\Strategy\DateTimeFormatterStrategy', $dateTimeFormatter);
         $this->assertEquals(
             new \DateTime('2015-11-21 19:00:00+00'),
-            $dateTimeFormatter->hydrate('2015-11-21 19:00:00')
+            $dateTimeFormatter->hydrate('2015-11-21 19:00:00', null)
         );
         $dateTimeFormatter = $hydrator->getStrategy('date');
         $this->assertEquals(
             new \DateTime('2015-11-21 19:00:00+00'),
-            $dateTimeFormatter->hydrate('2015-11-21 19:00:00')
+            $dateTimeFormatter->hydrate('2015-11-21 19:00:00', null)
         );
-        $this->assertInstanceOf('Laminas\Hydrator\Strategy\DateTimeFormatterStrategy', $dateTimeFormatter);
-        $this->assertInstanceOf('Library\Hydrator\Strategy\MacAddress', $hydrator->getStrategy('MacAddress'));
-        $this->assertInstanceOf('Library\Hydrator\Strategy\MacAddress', $hydrator->getStrategy('mac'));
+        $this->assertInstanceOf(DateTimeFormatterStrategy::class, $dateTimeFormatter);
+        $this->assertInstanceOf(MacAddress::class, $hydrator->getStrategy('MacAddress'));
+        $this->assertInstanceOf(MacAddress::class, $hydrator->getStrategy('mac'));
 
         $resultSet = static::$_table->getResultSetPrototype();
         $this->assertInstanceOf('Laminas\Db\ResultSet\HydratingResultSet', $resultSet);

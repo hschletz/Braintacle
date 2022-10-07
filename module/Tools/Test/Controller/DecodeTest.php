@@ -24,6 +24,7 @@ namespace Tools\Test\Controller;
 
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
+use PHPUnit\Framework\MockObject\MockObject;
 use Protocol\Filter\InventoryDecode;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

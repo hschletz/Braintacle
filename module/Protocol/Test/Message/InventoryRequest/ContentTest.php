@@ -125,7 +125,7 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $hydrator->method('extract')->with($android)->willReturn($data);
 
         $container = $this->createMock(ContainerInterface::class);
-        $container->method('get')->with(Hydrator\AndroidInstallations::class)->willReturn($hydrator);
+        $container->method('get')->with('Protocol\Hydrator\AndroidInstallations')->willReturn($hydrator);
 
         $element = $this->createMock(Element::class);
         $element->expects($this->exactly(2))

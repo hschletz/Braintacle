@@ -22,6 +22,8 @@
 
 namespace Console\Test\Controller;
 
+use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
+
 /**
  * Tests for DuplicatesController
  */
@@ -75,7 +77,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionNoFlashMessages()
     {
-        $flashMessenger = $this->createMock('Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock(FlashMessenger::class);
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->with('getMessagesFromNamespace')
@@ -91,7 +93,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionRenderFlashMessages()
     {
-        $flashMessenger = $this->createMock('Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock(FlashMessenger::class);
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->withConsecutive(

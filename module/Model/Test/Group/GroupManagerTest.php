@@ -22,6 +22,8 @@
 
 namespace Model\Test\Group;
 
+use Database\Table\ClientsAndGroups;
+use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Mockery;
 use Model\Group\GroupManager;
 
@@ -220,7 +222,7 @@ class GroupManagerTest extends AbstractGroupTest
 
     public function testCreateGroupRollbackOnException()
     {
-        $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
+        $connection = $this->createMock(ConnectionInterface::class);
         $connection->expects($this->once())->method('beginTransaction');
         $connection->expects($this->once())->method('rollback');
         $connection->expects($this->never())->method('commit');
@@ -341,7 +343,7 @@ class GroupManagerTest extends AbstractGroupTest
         $group = $this->createMock('Model\Group\Group');
         $group->method('lock')->willReturn(true);
 
-        $clientsAndGroups = $this->createMock('Database\Table\ClientsAndGroups');
+        $clientsAndGroups = $this->createMock(ClientsAndGroups::class);
         $clientsAndGroups->method('delete')->will($this->throwException(new \RuntimeException('database error')));
 
         $model = $this->getModel(

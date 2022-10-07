@@ -55,7 +55,7 @@ class SoftwareFilter extends Form
      * Set the value for the 'filter' element
      *
      * @param string $filter One of accepted|ignored|new|all
-     * @throws new \InvalidArgumentException if $filter is invalid
+     * @throws \InvalidArgumentException if $filter is invalid
      */
     public function setFilter($filter)
     {

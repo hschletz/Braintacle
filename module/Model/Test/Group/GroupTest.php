@@ -22,7 +22,12 @@
 
 namespace Model\Test\Group;
 
+use Database\Table\GroupMemberships;
+use Laminas\Db\Adapter\Driver\ConnectionInterface;
+use Laminas\Db\Adapter\Driver\DriverInterface;
 use Laminas\Db\Adapter\Platform\AbstractPlatform;
+use Library\Random;
+use Model\Client\ClientManager;
 use Model\Group\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -70,7 +75,7 @@ class GroupTest extends AbstractGroupTest
      */
     public function testSetMembersFromQuery($type, $simulateLockFailure, $dataSet)
     {
-        $clientManager = $this->createMock('Model\Client\ClientManager');
+        $clientManager = $this->createMock(ClientManager::class);
         $clientManager->expects($this->once())
                       ->method('getClients')
                       ->with(
@@ -125,12 +130,12 @@ class GroupTest extends AbstractGroupTest
         $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->method('getClients')->willReturn(array(array('Id' => 1)));
 
-        $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
+        $connection = $this->createMock(ConnectionInterface::class);
         $connection->expects($this->once())->method('beginTransaction');
         $connection->expects($this->once())->method('rollback');
         $connection->expects($this->never())->method('commit');
 
-        $driver = $this->createMock('Laminas\Db\Adapter\Driver\Pdo\Pdo');
+        $driver = $this->createMock(DriverInterface::class);
         $driver->method('getConnection')->willReturn($connection);
         $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
@@ -140,7 +145,7 @@ class GroupTest extends AbstractGroupTest
         $sql = $this->createMock('Laminas\Db\Sql\Sql');
         $sql->method('select')->willReturn($select);
 
-        $groupMemberships = $this->createMock('Database\Table\GroupMemberships');
+        $groupMemberships = $this->createMock(GroupMemberships::class);
         $groupMemberships->method('getAdapter')->willReturn($adapter);
         $groupMemberships->method('getSql')->willReturn($sql);
         $groupMemberships->method('selectWith')->willReturn(array());
@@ -197,7 +202,7 @@ class GroupTest extends AbstractGroupTest
                );
         $select->method('getSqlString')->with($platform)->willReturn('query_new');
 
-        $clientManager = $this->createMock('Model\Client\ClientManager');
+        $clientManager = $this->createMock(ClientManager::class);
         $clientManager->expects($this->once())
                       ->method('getClients')
                       ->with(
@@ -305,7 +310,7 @@ class GroupTest extends AbstractGroupTest
     {
         $now = new \DateTime('2015-07-23 20:20:00');
 
-        $random = $this->createMock('Library\Random');
+        $random = $this->createMock(Random::class);
         $random->method('getInteger')->willReturn(42);
 
         $config = $this->createMock('Model\Config');

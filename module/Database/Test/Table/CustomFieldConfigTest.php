@@ -23,6 +23,7 @@
 namespace Database\Test\Table;
 
 use Database\Table\CustomFieldConfig;
+use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Nada\Column\AbstractColumn as Column;
 
 /**
@@ -156,7 +157,7 @@ class CustomFieldConfigTest extends AbstractTest
 
     public function testAddFieldRollbackOnException()
     {
-        $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
+        $connection = $this->createMock(ConnectionInterface::class);
         $connection->expects($this->once())->method('beginTransaction');
         $connection->expects($this->once())->method('rollback');
         $connection->expects($this->never())->method('commit');
@@ -220,7 +221,7 @@ class CustomFieldConfigTest extends AbstractTest
 
     public function testDeleteFieldRollbackOnException()
     {
-        $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
+        $connection = $this->createMock(ConnectionInterface::class);
         $connection->expects($this->once())->method('beginTransaction');
         $connection->expects($this->once())->method('rollback');
         $connection->expects($this->never())->method('commit');

@@ -28,6 +28,7 @@ use Console\Mvc\Controller\Plugin\PrintForm;
 use Console\View\Helper\Form\Search as SearchHelper;
 use Laminas\Form\Element\Csrf;
 use Laminas\Form\Element\Text;
+use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 use Laminas\View\Model\ViewModel;
 use Library\Form\Element\Submit;
 
@@ -807,7 +808,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionMessages()
     {
-        $flashMessenger = $this->createMock('Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock(FlashMessenger::class);
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->withConsecutive(
@@ -2221,7 +2222,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->_clientManager->method('getClient')->willReturn($client);
 
-        $flashMessenger = $this->createMock('Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock(FlashMessenger::class);
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->expects($this->once())
                        ->method('render')

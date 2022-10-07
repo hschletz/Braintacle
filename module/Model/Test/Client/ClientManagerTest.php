@@ -22,6 +22,17 @@
 
 namespace Model\Test\Client;
 
+use Database\Table\AndroidInstallations;
+use Database\Table\ClientConfig;
+use Database\Table\ClientsAndGroups;
+use Database\Table\ClientSystemInfo;
+use Database\Table\Comments;
+use Database\Table\CustomFields;
+use Database\Table\GroupMemberships;
+use Database\Table\PackageHistory;
+use Database\Table\WindowsProductKeys;
+use Laminas\Db\Adapter\Driver\ConnectionInterface;
+use Laminas\Db\Adapter\Driver\DriverInterface;
 use Model\Client\ClientManager;
 use Nada\Column\AbstractColumn as Column;
 use org\bovigo\vfs\vfsStream;
@@ -1003,12 +1014,12 @@ class ClientManagerTest extends \Model\Test\AbstractTest
 
     public function deleteClientNoDeleteInterfacesProvider()
     {
-        $connection1 = $this->createMock('Laminas\Db\Adapter\Driver\Pdo\Connection');
+        $connection1 = $this->createMock(ConnectionInterface::class);
         $connection1->expects($this->once())->method('beginTransaction');
         $connection1->expects($this->once())->method('commit');
         $connection1->expects($this->never())->method('rollback');
 
-        $connection2 = $this->createMock('Laminas\Db\Adapter\Driver\Pdo\Connection');
+        $connection2 = $this->createMock(ConnectionInterface::class);
         $connection2->expects($this->once())->method('beginTransaction')->willThrowException(new \RuntimeException());
         $connection2->expects($this->never())->method('commit');
         $connection2->expects($this->never())->method('rollback');
@@ -1029,7 +1040,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $client->expects($this->once())->method('offsetGet')->with('Id')->willReturn(42);
         $client->expects($this->once())->method('unlock');
 
-        $driver = $this->createMock('Laminas\Db\Adapter\Driver\Pdo\Pdo');
+        $driver = $this->createMock(DriverInterface::class);
         $driver->method('getConnection')->willReturn($connection);
 
         $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
@@ -1099,25 +1110,25 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $androidInstallations = $this->createMock('Database\Table\AndroidInstallations');
         $androidInstallations->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
 
-        $clientSystemInfo = $this->createMock('Database\Table\ClientSystemInfo');
+        $clientSystemInfo = $this->createMock(ClientSystemInfo::class);
         $clientSystemInfo->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
 
-        $comments = $this->createMock('Database\Table\Comments');
+        $comments = $this->createMock(Comments::class);
         $comments->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
 
-        $customFields = $this->createMock('Database\Table\CustomFields');
+        $customFields = $this->createMock(CustomFields::class);
         $customFields->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
 
-        $packageHistory = $this->createMock('Database\Table\PackageHistory');
+        $packageHistory = $this->createMock(PackageHistory::class);
         $packageHistory->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
 
-        $windowsProductKeys = $this->createMock('Database\Table\WindowsProductKeys');
+        $windowsProductKeys = $this->createMock(WindowsProductKeys::class);
         $windowsProductKeys->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
 
-        $groupMemberships = $this->createMock('Database\Table\GroupMemberships');
+        $groupMemberships = $this->createMock(GroupMemberships::class);
         $groupMemberships->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
 
-        $clientConfig = $this->createMock('Database\Table\ClientConfig');
+        $clientConfig = $this->createMock(ClientConfig::class);
         $clientConfig->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
 
         $attachments = $this->createMock('Database\Table\Attachments');
@@ -1128,7 +1139,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $itemManager = $this->createMock('Model\Client\ItemManager');
         $itemManager->expects($this->once())->method('deleteItems')->with(4);
 
-        $clientsAndGroups = $this->createMock('Database\Table\ClientsAndGroups');
+        $clientsAndGroups = $this->createMock(ClientsAndGroups::class);
         $clientsAndGroups->expects($this->once())->method('delete')->with(array('id' => 4));
 
         $clientManager = $this->getModel(
@@ -1179,12 +1190,12 @@ class ClientManagerTest extends \Model\Test\AbstractTest
 
     public function deleteClientExceptionProvider()
     {
-        $connection1 = $this->createMock('Laminas\Db\Adapter\Driver\Pdo\Connection');
+        $connection1 = $this->createMock(ConnectionInterface::class);
         $connection1->expects($this->once())->method('beginTransaction');
         $connection1->expects($this->never())->method('commit');
         $connection1->expects($this->once())->method('rollback');
 
-        $connection2 = $this->createMock('Laminas\Db\Adapter\Driver\Pdo\Connection');
+        $connection2 = $this->createMock(ConnectionInterface::class);
         $connection2->expects($this->once())->method('beginTransaction')->willThrowException(new \RuntimeException());
         $connection2->expects($this->never())->method('commit');
         $connection2->expects($this->never())->method('rollback');
@@ -1208,13 +1219,13 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $client->expects($this->once())->method('offsetGet')->with('Id')->willReturn(42);
         $client->expects($this->once())->method('unlock');
 
-        $driver = $this->createMock('Laminas\Db\Adapter\Driver\Pdo\Pdo');
+        $driver = $this->createMock(DriverInterface::class);
         $driver->method('getConnection')->willReturn($connection);
 
         $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
 
-        $androidInstallations = $this->createMock('Database\Table\AndroidInstallations');
+        $androidInstallations = $this->createMock(AndroidInstallations::class);
         $androidInstallations->method('delete')->willThrowException(new \RuntimeException('message'));
 
         $clientManager = $this->getModel(

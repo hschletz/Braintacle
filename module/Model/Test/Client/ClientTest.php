@@ -22,6 +22,8 @@
 
 namespace Model\Test\Client;
 
+use Database\Table\ClientConfig;
+use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Laminas\Db\ResultSet\AbstractResultSet;
 use Model\Client\Client;
 use Model\Client\CustomFields;
@@ -658,7 +660,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $packageManager = $this->createMock('Model\Package\PackageManager');
         $packageManager->method('getPackage')->with('packageName')->willReturn($package);
 
-        $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
+        $connection = $this->createMock(ConnectionInterface::class);
         $connection->expects($this->once())->method('beginTransaction');
         $connection->expects($this->once())->method('commit');
 
@@ -676,7 +678,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $sql = $this->createMock('Laminas\Db\Sql\Sql');
         $sql->method('select')->willReturn($select);
 
-        $clientConfig = $this->createMock('Database\Table\ClientConfig');
+        $clientConfig = $this->createMock(ClientConfig::class);
         $clientConfig->method('getSql')->willReturn($sql);
         $clientConfig->method('selectWith')->willReturn($resultSet);
         $clientConfig->method('getAdapter')->willReturn($adapter);
@@ -699,7 +701,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $packageManager = $this->createMock('Model\Package\PackageManager');
         $packageManager->method('getPackage')->with('packageName')->willReturn($package);
 
-        $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
+        $connection = $this->createMock(ConnectionInterface::class);
         $connection->expects($this->once())->method('beginTransaction');
         $connection->expects($this->once())->method('rollback');
         $connection->expects($this->never())->method('commit');
@@ -710,7 +712,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
 
-        $clientConfig = $this->createMock('Database\Table\ClientConfig');
+        $clientConfig = $this->createMock(ClientConfig::class);
         $clientConfig->method('getAdapter')->willReturn($adapter);
         $clientConfig->method('getSql')->willThrowException(new \RuntimeException('test message'));
 

@@ -25,6 +25,7 @@ namespace Console\Test\Controller;
 use Console\Mvc\Controller\Plugin\PrintForm;
 use Console\View\Helper\Form\Package\Build;
 use Console\View\Helper\Form\Package\Update;
+use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 use Laminas\View\Model\ViewModel;
 
 /**
@@ -108,7 +109,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
         $viewHelperManager = $this->getApplicationServiceLocator()->get('ViewHelperManager');
 
-        $flashMessenger = $this->createMock('Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock(FlashMessenger::class);
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->willReturnMap(
@@ -203,7 +204,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testIndexActionPackageFlashMessages()
     {
-        $flashMessenger = $this->createMock('Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock(FlashMessenger::class);
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->willReturnMap(
@@ -264,7 +265,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->_packageManager->expects($this->once())->method('getPackages')->willReturn($packages);
 
-        $flashMessenger = $this->createMock('Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock(FlashMessenger::class);
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->willReturnMap(

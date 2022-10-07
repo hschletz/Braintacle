@@ -438,7 +438,7 @@ class ClientManager
      * @param bool $matchExact Disable wildcards ('*', '?', '%', '_') and substring search
      * @param bool $invertResult Return clients not matching criteria
      * @param bool $addSearchColumns Add columns with search criteria to Select object
-     * @return Laminas\Db\Sql\Select Object with filter applied
+     * @return Select Object with filter applied
      */
     protected function filterByString(
         $select,
@@ -483,7 +483,7 @@ class ClientManager
      * @param string $operator Comparison operator (eq|ne|lt|le|gt|ge)
      * @param bool $invertResult Return clients not matching criteria
      * @param bool $addSearchColumns Add columns with search criteria to Select object
-     * @return Laminas\Db\Sql\Select Object with filter applied
+     * @return Select Object with filter applied
      * @throws \DomainException if $operator is invalid
      */
     protected function filterByOrdinal($select, $model, $property, $arg, $operator, $invertResult, $addSearchColumns)
@@ -534,7 +534,7 @@ class ClientManager
      * @param string $operator Comparison operator (eq|ne|lt|le|gt|ge)
      * @param bool $invertResult Return clients not matching criteria
      * @param bool $addSearchColumns Add columns with search criteria to Select object
-     * @return Laminas\Db\Sql\Select Object with filter applied
+     * @return Select Object with filter applied
      * @throws \DomainException if $operator is invalid
      */
     protected function filterByDate($select, $model, $property, $arg, $operator, $invertResult, $addSearchColumns)
@@ -631,7 +631,7 @@ class ClientManager
      * @param string $filter PackagePending|PackageRunning|PackageSuccess|PackageError
      * @param string $package Package name
      * @param bool $addSearchColumns Add columns with search criteria (Package.Status)
-     * @return Laminas\Db\Sql\Select Object with filter applied
+     * @return Select Object with filter applied
      */
     protected function filterByPackage($select, $filter, $package, $addSearchColumns)
     {

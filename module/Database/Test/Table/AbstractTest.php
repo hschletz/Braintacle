@@ -22,6 +22,8 @@
 
 namespace Database\Test\Table;
 
+use PHPUnit\DbUnit\Database\Connection;
+
 /**
  * Base class for table interface tests
  *
@@ -44,9 +46,8 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
 
     /**
      * Connection used by DbUnit
-     * @var \PHPUnit_Extensions_Database_DB_IDatabaseConnection
      */
-    private $_db;
+    private Connection $_db;
 
     /**
      * Provide table class and create table
@@ -60,12 +61,10 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
 
     /**
      * Get connection for DbUnit
-     *
-     * @return \PHPUnit_Extensions_Database_DB_IDatabaseConnection
      */
-    public function getConnection()
+    public function getConnection(): Connection
     {
-        if (!$this->_db) {
+        if (!isset($this->_db)) {
             $pdo = static::$_table->getAdapter()->getDriver()->getConnection()->getResource();
             $this->_db = $this->createDefaultDBConnection($pdo, ':memory:');
         }

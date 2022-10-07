@@ -158,7 +158,7 @@ class Table extends \Laminas\View\Helper\AbstractHelper
      * @param array|\Traversable $data
      * @param string[] $keys Column keys
      * @param callable[] $renderCallbacks deprecated
-     * @param string $columnClasses see row()
+     * @param string[] $columnClasses see row()
      * @param callable $rowClassCallback
      * @return string
      */

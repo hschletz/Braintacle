@@ -14,4 +14,13 @@
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
+    <issueHandlers>
+        <InvalidScope>
+            <errorLevel type="suppress">
+                <!-- View scripts don't define a class, but are included in a
+                class context, allowing $this usage. -->
+                <directory name="module/Console/views" />
+            </errorLevel>
+        </InvalidScope>
+    </issueHandlers>
 </psalm>

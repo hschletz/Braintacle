@@ -25,6 +25,7 @@ namespace Tools\Test\Controller;
 use Model\Client\Client;
 use Model\Client\ClientManager;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
 use Protocol\Message\InventoryRequest;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

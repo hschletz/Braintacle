@@ -24,6 +24,8 @@ namespace Tools\Test\Controller;
 
 use Model\Config;
 use Model\Package\PackageManager;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

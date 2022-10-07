@@ -150,7 +150,7 @@ class Content extends Element
         $android = $this->client['Android'];
         if ($android) {
             $element = $this->appendElement('JAVAINFOS');
-            $data = $this->container->get(Hydrator\AndroidInstallations::class)->extract($android);
+            $data = $this->container->get('Protocol\Hydrator\AndroidInstallations')->extract($android);
             foreach ($data as $name => $value) {
                 $element->appendElement($name, $value, true);
             }

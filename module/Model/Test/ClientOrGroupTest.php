@@ -22,6 +22,8 @@
 
 namespace Model\Test;
 
+use Database\Table\ClientConfig;
+use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Mockery;
 use Model\ClientOrGroup;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -543,7 +545,7 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testSetConfigRollbackOnException()
     {
-        $connection = $this->createMock('Laminas\Db\Adapter\Driver\AbstractConnection');
+        $connection = $this->createMock(ConnectionInterface::class);
         $connection->expects($this->once())->method('beginTransaction');
         $connection->expects($this->once())->method('rollback');
         $connection->expects($this->never())->method('commit');
@@ -554,7 +556,7 @@ class ClientOrGroupTest extends AbstractTest
         $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
 
-        $clientConfig = $this->createMock('Database\Table\ClientConfig');
+        $clientConfig = $this->createMock(ClientConfig::class);
         $clientConfig->method('getAdapter')->willReturn($adapter);
         $clientConfig->method('delete')->willThrowException(new \RuntimeException('test message'));
 

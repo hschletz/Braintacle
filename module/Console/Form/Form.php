@@ -24,6 +24,7 @@ namespace Console\Form;
 
 use IntlDateFormatter;
 use IntlDatePatternGenerator;
+use Laminas\Validator\Date;
 
 /**
  * Base class for forms
@@ -186,7 +187,7 @@ class Form extends \Laminas\Form\Form
                 );
                 if ($value instanceof \DateTime) {
                     $value = $formatter->format($value);
-                } elseif (\Laminas\Validator\StaticValidator::execute($value, 'Date', ['strict' => true])) {
+                } elseif (\Laminas\Validator\StaticValidator::execute($value, Date::class, ['strict' => true])) {
                     $date = \DateTime::createFromFormat('Y-m-d', $value);
                     if ($date) {
                         $value = $formatter->format($date);

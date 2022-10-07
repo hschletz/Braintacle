@@ -24,6 +24,7 @@ namespace Console\Test\Controller;
 
 use Console\View\Helper\Form\AddToGroup;
 use Console\View\Helper\GroupHeader;
+use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 use Model\Group\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -160,7 +161,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $resultSet->initialize(new \EmptyIterator());
         $this->_groupManager->expects($this->once())->method('getGroups')->willReturn($resultSet);
 
-        $flashMessenger = $this->createMock('Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger');
+        $flashMessenger = $this->createMock(FlashMessenger::class);
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
                        ->withConsecutive(
