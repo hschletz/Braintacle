@@ -27,6 +27,8 @@ use Console\View\Helper\Form\AddToGroup;
 use Console\View\Helper\Form\Package\Build;
 use Console\View\Helper\Form\Package\Update;
 use Console\View\Helper\Form\Search;
+use Console\View\Helper\GroupHeader;
+use Console\View\Helper\Service\GroupHeaderFactory;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 
 return array(
@@ -137,6 +139,7 @@ return array(
             'consoleUrl' => 'Console\View\Helper\ConsoleUrl',
             'filterDescription' => 'Console\View\Helper\FilterDescription',
             'formatMessages' => 'Console\View\Helper\FormatMessages',
+            'groupHeader' => GroupHeader::class,
             'table' => 'Console\View\Helper\Table',
             'consoleForm' => 'Console\View\Helper\Form\Form',
             'consoleFormAddToGroup' => AddToGroup::class,
@@ -154,6 +157,7 @@ return array(
             'Console\View\Helper\ConsoleUrl' => 'Console\View\Helper\Service\ConsoleUrlFactory',
             'Console\View\Helper\FilterDescription' => 'Console\View\Helper\Service\FilterDescriptionFactory',
             'Console\View\Helper\FormatMessages' => 'Console\View\Helper\Service\FormatMessagesFactory',
+            GroupHeader::class => GroupHeaderFactory::class,
             'Console\View\Helper\Table' => 'Console\View\Helper\Service\TableFactory',
             AddToGroup::class => InvokableFactory::class,
             'Console\View\Helper\Form\Form' => 'Laminas\ServiceManager\Factory\InvokableFactory',

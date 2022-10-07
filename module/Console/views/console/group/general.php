@@ -20,7 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-require('header.php');
+print $this->groupHeader($group);
 
 $format = "<tr>\n<td class='label'>%s</td>\n<td>%s</td>\n</tr>\n";
 

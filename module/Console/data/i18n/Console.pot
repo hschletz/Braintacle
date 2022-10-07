@@ -1614,11 +1614,6 @@ msgstr ""
 msgid "SQL query"
 msgstr ""
 
-#: views/console/group/header.php
-#, php-format
-msgid "Details for group '%s'"
-msgstr ""
-
 #: views/console/group/index.php
 msgid "No groups defined."
 msgstr ""
@@ -1740,4 +1735,8 @@ msgstr ""
 
 #: views/layout/layout.php
 msgid "Logout"
+msgstr ""
+
+#: Group/Header.latte
+msgid "Details for group '%s'"
 msgstr ""

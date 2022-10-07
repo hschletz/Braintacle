@@ -23,6 +23,8 @@
 namespace Console\Test\Controller;
 
 use Console\View\Helper\Form\AddToGroup;
+use Console\View\Helper\GroupHeader;
+use Model\Group\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -177,13 +179,18 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     {
         $url = '/console/group/general/?name=test';
         $creationDate = new \DateTime();
-        $group = array(
-            'Name' => 'groupName',
-            'Id' => 'groupID',
-            'Description' => 'groupDescription',
-            'CreationDate' => $creationDate,
-            'DynamicMembersSql' => 'groupSql',
-        );
+
+        /** @var MockObject|Group */
+        $group = $this->createMock(Group::class);
+        $group->method('offsetGet')->willReturnMap([
+            ['Name', 'groupName'],
+            ['Id', 'groupID'],
+            ['Description', 'groupDescription'],
+            ['CreationDate', $creationDate],
+            ['DynamicMembersSql', 'groupSql'],
+        ]);
+        $group->Name = 'groupName';
+
         $this->_groupManager->expects($this->once())
                             ->method('getGroup')
                             ->with('test')
@@ -217,11 +224,15 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $cacheCreationDate = new \DateTime('2014-04-08 20:12:21');
         $cacheExpirationDate = new \DateTime('2014-04-09 18:53:21');
         $inventoryDate = new \DateTime('2014-04-09 18:56:12');
-        $group = array(
-            'Name' => 'groupName',
-            'CacheCreationDate' => $cacheCreationDate,
-            'CacheExpirationDate' => $cacheExpirationDate,
-        );
+
+        /** @var MockObject|Group */
+        $group = $this->createMock(Group::class);
+        $group->method('offsetGet')->willReturnMap([
+            ['CacheCreationDate', $cacheCreationDate],
+            ['CacheExpirationDate', $cacheExpirationDate],
+        ]);
+        $group->Name = 'groupName';
+
         $clients = array(
             array(
                 'Id' => '1',
@@ -279,7 +290,11 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     public function testExcludedAction()
     {
         $url = '/console/group/excluded/?name=test';
-        $group = array('Name' => 'test');
+
+        /** @var MockObject|Group */
+        $group = $this->createMock(Group::class);
+        $group->Name = 'test';
+
         $clients = array(
             array(
                 'Id' => '1',
@@ -319,6 +334,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $group->expects($this->once())->method('getPackages')->with('asc')->willReturn($packages);
         $group->method('offsetGet')->with('Name')->willReturn('test');
         $group->expects($this->once())->method('getAssignablePackages')->willReturn(array());
+        $group->Name = 'test';
 
         $this->_groupManager->expects($this->once())
                             ->method('getGroup')
@@ -365,6 +381,10 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->_packageAssignmentForm->expects($this->once())
                                      ->method('setAttribute')
                                      ->with('action', '/console/group/assignpackage/?name=test');
+
+        $viewHelperManager = $this->getApplicationServiceLocator()->get('ViewHelperManager');
+        $viewHelperManager->setService(GroupHeader::class, $this->createStub(GroupHeader::class));
+
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//table');
@@ -576,9 +596,10 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
         $formHelper = $this->createMock('Console\View\Helper\Form\ClientConfig');
         $formHelper->method('__invoke')->with($form)->willReturn('<form></form>');
-        $this->getApplicationServiceLocator()
-             ->get('ViewHelperManager')
-             ->setService('consoleFormClientConfig', $formHelper);
+
+        $viewHelperManager = $this->getApplicationServiceLocator()->get('ViewHelperManager');
+        $viewHelperManager->setService('consoleFormClientConfig', $formHelper);
+        $viewHelperManager->setService(GroupHeader::class, $this->createStub(GroupHeader::class));
 
         $this->dispatch('/console/group/configuration/?name=test');
         $this->assertResponseStatusCode(200);
@@ -608,9 +629,10 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
         $formHelper = $this->createMock('Console\View\Helper\Form\ClientConfig');
         $formHelper->method('__invoke')->with($form)->willReturn('<form></form>');
-        $this->getApplicationServiceLocator()
-             ->get('ViewHelperManager')
-             ->setService('consoleFormClientConfig', $formHelper);
+
+        $viewHelperManager = $this->getApplicationServiceLocator()->get('ViewHelperManager');
+        $viewHelperManager->setService('consoleFormClientConfig', $formHelper);
+        $viewHelperManager->setService(GroupHeader::class, $this->createStub(GroupHeader::class));
 
         $this->dispatch('/console/group/configuration/?name=test', 'POST', $postData);
         $this->assertResponseStatusCode(200);

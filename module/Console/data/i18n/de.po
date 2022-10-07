@@ -973,6 +973,10 @@ msgstr "neu oder nicht kategorisiert"
 msgid "selected for display"
 msgstr "für Anzeige ausgewählt"
 
+#: Group/Header.latte
+msgid "Details for group '%s'"
+msgstr "Einzelheiten für Gruppe '%s'"
+
 #: Navigation/ClientMenuFactory.php
 msgid "BIOS"
 msgstr "BIOS"
@@ -1630,11 +1634,6 @@ msgstr "Gruppe '%s' wird dauerhaft gelöscht. Fortfahren?"
 #: views/console/group/general.php
 msgid "SQL query"
 msgstr "SQL-Abfrage"
-
-#: views/console/group/header.php
-#, php-format
-msgid "Details for group '%s'"
-msgstr "Einzelheiten für Gruppe '%s'"
 
 #: views/console/group/index.php
 msgid "No groups defined."
