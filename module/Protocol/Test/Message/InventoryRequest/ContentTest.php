@@ -95,8 +95,7 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
                 ->withConsecutive(['name1', 'value1', true], ['name3', 'value3', true]);
 
         $content = Mockery::mock(Content::class, [$container])->makePartial();
-        $content->shouldReceive('createElement')->with($section)->andReturn($element);
-        $content->shouldReceive('appendChild')->once()->with($element);
+        $content->shouldReceive('appendElement')->with($section)->andReturn($element);
 
         $content->setClient($client);
         $content->appendSystemSection($section);

@@ -131,7 +131,7 @@ class Content extends Element
                 throw new \InvalidArgumentException('Invalid section name: ' . $section);
         }
 
-        $element = $this->createElement($section);
+        $element = $this->appendElement($section);
         $data = $hydrator->extract($this->client);
         ksort($data);
         foreach ($data as $name => $value) {
@@ -139,7 +139,6 @@ class Content extends Element
                 $element->appendElement($name, $value, true);
             }
         }
-        $this->appendChild($element);
     }
 
     /**
