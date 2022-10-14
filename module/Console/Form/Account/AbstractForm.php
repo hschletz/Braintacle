@@ -94,7 +94,7 @@ abstract class AbstractForm extends \Console\Form\Form
         $inputFilter->add(
             array(
                 'name' => 'PasswordRepeat',
-                'continue_if_empty' => 'true',
+                'continue_if_empty' => true,
                 'validators' => array(
                     array(
                         'name' => 'Identical',

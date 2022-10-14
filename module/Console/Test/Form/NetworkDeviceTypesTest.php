@@ -24,6 +24,9 @@ namespace Console\Test\Form;
 
 use Console\Form\NetworkDeviceTypes;
 use Laminas\Dom\Document\Query as Query;
+use Laminas\Form\View\Helper\FormElementErrors;
+use Model\Network\DeviceManager;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for NetworkDeviceTypes form
@@ -32,7 +35,7 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
 {
     /**
      * DeviceManager mock
-     * @var \Model\Network\DeviceManager
+     * @var MockObject|DeviceManager
      */
     protected $_deviceManager;
 
@@ -338,7 +341,8 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         $this->_form->get('Types')->get('name0')->setMessages(array('message_name0'));
         $this->_form->get('Add')->setMessages(array('message_add'));
 
-        $formElementErrors = $this->createMock('Laminas\Form\View\Helper\FormElementErrors');
+        /** @ver MockObject|FormElementErrors */
+        $formElementErrors = $this->createMock(FormElementErrors::class);
         $formElementErrors->method('__invoke')
                           ->with($this->isInstanceOf('Laminas\Form\ElementInterface'), array('class' => 'error'))
                           ->willReturnCallback(array($this, 'formElementErrorsMock'));

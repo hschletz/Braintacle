@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Laminas\Db\Sql\Predicate\Operator;
+use Laminas\Db\Sql\Where;
+
 /**
  * "operators" table
  */
@@ -75,10 +78,10 @@ class Operators extends \Database\AbstractTable
             $dropped = 0;
             $columns = $database->getTable($this->table)->getColumns();
             if (isset($columns['accesslvl'])) {
-                $dropped += $this->delete(new \Laminas\Db\Sql\Predicate\Operator('accesslvl', '!=', 1));
+                $dropped += $this->delete(new Where([new Operator('accesslvl', '!=', 1)]));
             }
             if (isset($columns['new_accesslvl'])) {
-                $dropped += $this->delete(new \Laminas\Db\Sql\Predicate\Operator('new_accesslvl', '!=', 'sadmin'));
+                $dropped += $this->delete(new Where([new Operator('new_accesslvl', '!=', 'sadmin')]));
             }
             if ($dropped) {
                 $logger->warn("$dropped non-admin accounts dropped.");

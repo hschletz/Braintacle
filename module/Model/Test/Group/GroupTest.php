@@ -26,10 +26,12 @@ use Database\Table\GroupMemberships;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Laminas\Db\Adapter\Driver\DriverInterface;
 use Laminas\Db\Adapter\Platform\AbstractPlatform;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Library\Random;
 use Model\Client\ClientManager;
 use Model\Group\Group;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 
 class GroupTest extends AbstractGroupTest
 {
@@ -91,7 +93,8 @@ class GroupTest extends AbstractGroupTest
                           true
                       )->willReturn(array(array('Id' => 1), array('Id' => 2), array('Id' => 3), array('Id' => 5)));
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var Stub|ServiceLocatorInterface */
+        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -151,7 +154,8 @@ class GroupTest extends AbstractGroupTest
         $groupMemberships->method('selectWith')->willReturn(array());
         $groupMemberships->method('insert')->will($this->throwException(new \RuntimeException('test')));
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var Stub|ServiceLocatorInterface */
+        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -218,7 +222,8 @@ class GroupTest extends AbstractGroupTest
                           false
                       )->willReturn($select);
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var Stub|ServiceLocatorInterface */
+        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -279,7 +284,7 @@ class GroupTest extends AbstractGroupTest
         $clientManager->method('getClients')->willReturn($select);
 
         $model = $this->getModel(array('Model\Client\ClientManager' => $clientManager));
-        $model['Id'] = 10;
+        $model->Id = 10;
 
         $this->expectException('LogicException');
         $this->expectExceptionMessage('Expected 1 column, got 2');
@@ -323,7 +328,8 @@ class GroupTest extends AbstractGroupTest
             )
         );
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var Stub|ServiceLocatorInterface */
+        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -376,14 +382,14 @@ class GroupTest extends AbstractGroupTest
     public function testGetPackagesDefaultOrder()
     {
         $model = $this->getModel();
-        $model['Id'] = 10;
+        $model->Id = 10;
         $this->assertEquals(array('package1', 'package2'), $model->getPackages());
     }
 
     public function testGetPackagesReverseOrder()
     {
         $model = $this->getModel();
-        $model['Id'] = 10;
+        $model->Id = 10;
         $this->assertEquals(array('package2', 'package1'), $model->getPackages('desc'));
     }
 }

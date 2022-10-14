@@ -22,6 +22,10 @@
 
 namespace Database\Test\Table;
 
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Model\Config;
+use PHPUnit\Framework\MockObject\Stub;
+
 class GroupInfoTest extends AbstractTest
 {
     public static function setUpBeforeClass(): void
@@ -41,10 +45,11 @@ class GroupInfoTest extends AbstractTest
         $nada = $this->createStub(\Nada\Database\AbstractDatabase::class);
         $nada->method('timestampFormatPhp')->willReturn(DATE_ATOM);
 
-        $config = $this->createMock('Model\Config');
+        $config = $this->createMock(Config::class);
         $config->expects($this->once())->method('__get')->with('groupCacheExpirationInterval')->willReturn(42);
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var Stub|ServiceLocatorInterface */
+        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')->will(
             $this->returnValueMap([
                 ['Database\Nada', $nada],

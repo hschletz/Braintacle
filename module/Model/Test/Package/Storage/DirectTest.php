@@ -23,9 +23,11 @@
 namespace Model\Test\Package\Storage;
 
 use Mockery;
+use Model\Config;
 use Model\Package\Storage\Direct;
 use Model\Package\Metadata;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
 use RuntimeException;
 
 /**
@@ -183,7 +185,8 @@ class DirectTest extends \Model\Test\AbstractTest
 
     public function testGetPath()
     {
-        $config = $this->createMock('Model\Config');
+        /** @var MockObject|Config */
+        $config = $this->createMock(Config::class);
         $config->method('__get')->with('packagePath')->willReturn('packagePath');
         $model = new Direct($config, new Metadata());
         $this->assertEquals('packagePath/id', $model->getPath('id'));
@@ -212,12 +215,14 @@ class DirectTest extends \Model\Test\AbstractTest
 
         $exception = new RuntimeException();
 
-        $metadata = $this->createMock('Model\Package\Metadata');
+        /** @var MockObject|Metadata */
+        $metadata = $this->createMock(Metadata::class);
         $metadata->expects($this->once())->method('setPackageData')->with($data);
         $metadata->expects($this->once())->method('forceValid')->willThrowException($exception);
         $metadata->expects($this->never())->method('write');
 
-        $config = $this->createMock('Model\Config');
+        /** @var MockObject|Config */
+        $config = $this->createMock(Config::class);
         $config->expects($this->once())->method('__get')->with('validateXml')->willReturn(true);
 
         $model = new Direct($config, $metadata);

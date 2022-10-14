@@ -22,6 +22,11 @@
 
 namespace Console\Test\View\Helper;
 
+use Laminas\I18n\View\Helper\Translate;
+use Laminas\View\Helper\EscapeHtml;
+use Library\View\Helper\HtmlElement;
+use PHPUnit\Framework\MockObject\MockObject;
+
 /**
  * Tests for the FormatMessages helper
  */
@@ -32,20 +37,23 @@ class FormatMessagesTest extends \Library\Test\View\Helper\AbstractTest
      */
     public function testInvoke()
     {
-        $escapeHtml = $this->createMock('Laminas\View\Helper\EscapeHtml');
+        /** @var MockObject|EscapeHtml */
+        $escapeHtml = $this->createMock(EscapeHtml::class);
         $escapeHtml->expects($this->any())
                    ->method('__invoke')
                    ->willReturnCallback(function ($value) {
                        return "escape($value)";
                    });
 
-        $htmlElement = $this->createMock('Library\View\Helper\HtmlElement');
+        /** @var MockObject|HtmlElement */
+        $htmlElement = $this->createMock(HtmlElement::class);
         $htmlElement->expects($this->once())
                     ->method('__invoke')
                     ->with('a', 'escape(http://example.net)', array('href' => 'http://example.net'), true)
                     ->will($this->returnValue('Uri'));
 
-        $translate = $this->createMock('Laminas\I18n\View\Helper\Translate');
+        /** @var MockObject|Translate */
+        $translate = $this->createMock(Translate::class);
         $translate->expects($this->any())
                   ->method('__invoke')
                   ->willReturnCallback(function ($value) {

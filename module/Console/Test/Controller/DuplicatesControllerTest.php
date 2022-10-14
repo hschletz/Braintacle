@@ -22,7 +22,11 @@
 
 namespace Console\Test\Controller;
 
+use Console\Form\ShowDuplicates;
+use Console\View\Helper\Form\ShowDuplicates as FormShowDuplicates;
 use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
+use Model\Client\DuplicatesManager;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for DuplicatesController
@@ -30,14 +34,12 @@ use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
-     * Duplicates mock
-     * @var \Model\Client\DuplicatesManager
+     * @var MockObject|DuplicatesManager
      */
     protected $_duplicates;
 
     /**
-     * ShowDuplicates mock
-     * @var \Console\Form\ShowDuplicates
+     * @var MockObject|ShowDuplicates
      */
     protected $_showDuplicates;
 
@@ -169,7 +171,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
                               ->with(array('clients' => 'client_list', 'order' => 'Id', 'direction' => 'asc'));
         $this->_showDuplicates->expects($this->once())->method('getMessages')->willReturn(array());
 
-        $formHelper = $this->createMock('Console\View\Helper\Form\ShowDuplicates');
+        $formHelper = $this->createMock(FormShowDuplicates::class);
         $formHelper->method('__invoke')->with($this->_showDuplicates)->willReturn('<form></form>');
         $this->getApplicationServiceLocator()
              ->get('ViewHelperManager')
@@ -197,7 +199,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_duplicates->expects($this->never())->method('find');
         $this->_duplicates->expects($this->once())->method('merge')->with([1, 2], $mergeOptions);
 
-        $formHelper = $this->createMock('Console\View\Helper\Form\ShowDuplicates');
+        $formHelper = $this->createMock(FormShowDuplicates::class);
         $formHelper->expects($this->never())->method('__invoke');
 
         $this->getApplicationServiceLocator()
@@ -233,7 +235,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_duplicates->expects($this->never())
                           ->method('merge');
 
-        $formHelper = $this->createMock('Console\View\Helper\Form\ShowDuplicates');
+        $formHelper = $this->createMock(FormShowDuplicates::class);
         $formHelper->method('__invoke')->with($this->_showDuplicates)->willReturn('<form></form>');
         $this->getApplicationServiceLocator()
              ->get('ViewHelperManager')

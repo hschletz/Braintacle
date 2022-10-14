@@ -22,38 +22,45 @@
 
 namespace Console\Test\Controller;
 
+use Console\Form\DefineFields;
+use Console\Form\ManageRegistryValues;
+use Console\Form\NetworkDeviceTypes;
+use Console\Form\Preferences\Packages;
+use Console\View\Helper\Form\ManageRegistryValues as FormManageRegistryValues;
+use Laminas\Form\FormElementManager;
+use Model\Client\CustomFieldManager;
+use Model\Config;
+use Model\Network\DeviceManager;
+use Model\Registry\RegistryManager;
+use PHPUnit\Framework\MockObject\MockObject;
+
 /**
  * Tests for PreferencesController
  */
 class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
-     * Form manager mock
-     * @var \Laminas\Form\FormElementManager
+     * @var MockObject|FormElementManager
      */
     protected $_formManager;
 
     /**
-     * CustomFieldsManager mock
-     * @var \Model\Client\CustomFieldManager
+     * @var MockObject|CustomFieldManager
      */
     protected $_customFieldManager;
 
     /**
-     * DeviceManager mock
-     * @var \Model\Network\DeviceManager
+     * @var MockObject|DeviceManager
      */
     protected $_deviceManager;
 
     /**
-     * RegistryManager mock
-     * @var \Model\Registry\RegistryManager
+     * @var MockObject|RegistryManager
      */
     protected $_registryManager;
 
     /**
-     * Config mock
-     * @var \Model\Config
+     * @var MockObject|Config
      */
     protected $_config;
 
@@ -146,7 +153,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
                 'pref2' => 'value2',
             ),
         );
-        $form = $this->createMock("Console\Form\Preferences\Packages");
+        $form = $this->createMock(Packages::class);
         $form->method('get')
              ->willReturn($preferences);
         $form->expects($this->once())
@@ -186,7 +193,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
                 'pref2' => 'value2',
             )
         );
-        $form = $this->createMock("Console\Form\Preferences\Packages");
+        $form = $this->createMock(Packages::class);
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -419,7 +426,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testCustomfieldsActionGet()
     {
-        $form = $this->createMock('Console\Form\DefineFields');
+        $form = $this->createMock(DefineFields::class);
         $form->expects($this->never())
              ->method('setData');
         $form->expects($this->never())
@@ -442,7 +449,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     public function testCustomfieldsActionPostInvalid()
     {
         $postData = array('key' => 'value');
-        $form = $this->createMock('Console\Form\DefineFields');
+        $form = $this->createMock(DefineFields::class);
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -466,7 +473,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     public function testCustomfieldsActionPostValid()
     {
         $postData = array('key' => 'value');
-        $form = $this->createMock('Console\Form\DefineFields');
+        $form = $this->createMock(DefineFields::class);
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -509,7 +516,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testNetworkdevicesActionGet()
     {
-        $form = $this->createMock('Console\Form\NetworkDeviceTypes');
+        $form = $this->createMock(NetworkDeviceTypes::class);
         $form->expects($this->never())
              ->method('setData');
         $form->expects($this->never())
@@ -532,7 +539,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     public function testNetworkdevicesActionPostInvalid()
     {
         $postData = array('key' => 'value');
-        $form = $this->createMock('Console\Form\NetworkDeviceTypes');
+        $form = $this->createMock(NetworkDeviceTypes::class);
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -556,7 +563,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     public function testNetworkdevicesActionPostValid()
     {
         $postData = array('key' => 'value');
-        $form = $this->createMock('Console\Form\NetworkDeviceTypes');
+        $form = $this->createMock(NetworkDeviceTypes::class);
         $form->expects($this->once())
              ->method('setData')
              ->with($postData);
@@ -599,7 +606,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testRegistryValuesActionGet()
     {
-        $form = $this->createMock('Console\Form\ManageRegistryValues');
+        $form = $this->createMock(ManageRegistryValues::class);
         $form->expects($this->never())
              ->method('process');
 
@@ -608,7 +615,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
                            ->with('Console\Form\ManageRegistryValues')
                            ->will($this->returnValue($form));
 
-        $formHelper = $this->createMock('Console\View\Helper\Form\ManageRegistryValues');
+        $formHelper = $this->createMock(FormManageRegistryValues::class);
         $formHelper->expects($this->once())->method('__invoke')->with($form);
         $this->getApplicationServiceLocator()
              ->get('ViewHelperManager')
@@ -636,7 +643,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
                            ->with('Console\Form\ManageRegistryValues')
                            ->will($this->returnValue($form));
 
-        $formHelper = $this->createMock('Console\View\Helper\Form\ManageRegistryValues');
+        $formHelper = $this->createMock(FormManageRegistryValues::class);
         $formHelper->expects($this->once())->method('__invoke')->with($form);
         $this->getApplicationServiceLocator()
              ->get('ViewHelperManager')
@@ -649,7 +656,7 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     public function testRegistryValuesActionPostValid()
     {
         $postData = array('key' => 'value');
-        $form = $this->createMock('Console\Form\ManageRegistryValues');
+        $form = $this->createMock(ManageRegistryValues::class);
         $form->expects($this->once())
              ->method('process');
         $form->expects($this->once())

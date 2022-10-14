@@ -22,7 +22,10 @@
 
 namespace Library\Test\View\Helper;
 
+use Laminas\View\Renderer\PhpRenderer;
 use Library\View\Helper\HtmlElement;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 
 /**
  * Tests for the HtmlElement helper
@@ -54,6 +57,7 @@ class HtmlElementTest extends AbstractTest
     {
         $attribs = array('attrib' => 'value');
 
+        /** @var MockObject|HtmlElement|callable */
         $helper = $this->createPartialMock(HtmlElement::class, ['htmlAttribs']);
         $helper->method('htmlAttribs')->with($attribs)->willReturn(' attribs');
 
@@ -95,13 +99,15 @@ class HtmlElementTest extends AbstractTest
         $doctype->method('isXhtml')->willReturn($isXhtml);
         $doctype->method('isHtml5')->willReturn($isHtml5);
 
-        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
+        /** @var Stub|PhpRenderer */
+        $view = $this->createStub(PhpRenderer::class);
         $view->method('plugin')->willReturnMap(
             array(
                 array('doctype', null, $doctype),
             )
         );
 
+        /** @var HtmlElement */
         $helper = $this->getHelper();
         $helper->setView($view);
 
@@ -110,6 +116,7 @@ class HtmlElementTest extends AbstractTest
 
     public function testHtmlAttribs()
     {
+        /** @var HtmlElement */
         $helper = $this->getHelper();
         $this->assertEquals(' foo="bar"', $helper->htmlAttribs(array('foo' => 'bar')));
     }

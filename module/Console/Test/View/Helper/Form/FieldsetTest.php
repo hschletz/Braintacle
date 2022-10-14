@@ -30,6 +30,8 @@ use Laminas\Form\FormInterface;
 use Laminas\Form\View\Helper\FormElementErrors;
 use Laminas\Form\View\Helper\FormRow;
 use Laminas\View\Renderer\PhpRenderer;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 
 class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 {
@@ -43,6 +45,7 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
     {
         $fieldset = $this->createMock(FieldsetInterface::class);
 
+        /** @var MockObject|Fieldset|callable */
         $helper = $this->createPartialMock(Fieldset::class, ['render']);
         $helper->method('render')->with($fieldset, FormRow::LABEL_PREPEND)->willReturn('FIELDSET');
 
@@ -51,8 +54,10 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testInvokeWithExplicitLabelPosition()
     {
-        $fieldset = $this->createMock(FieldsetInterface::class);
+        /** @var Stub|FieldsetInterface */
+        $fieldset = $this->createStub(FieldsetInterface::class);
 
+        /** @var MockObject|Fieldset|callable */
         $helper = $this->createPartialMock(Fieldset::class, ['render']);
         $helper->method('render')->with($fieldset, FormRow::LABEL_APPEND)->willReturn('FIELDSET');
 
@@ -93,7 +98,8 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRenderFieldsetElementWithContent()
     {
-        $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
+        /** @var Stub|FieldsetInterface */
+        $fieldset = $this->createStub(FieldsetInterface::class);
         $fieldset->method('getAttributes')->willReturn(['ATTRIBUTES']);
 
         $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
@@ -111,7 +117,8 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRenderFieldsetElementWithoutContent()
     {
-        $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
+        /** @var Stub|FieldsetInterface */
+        $fieldset = $this->createStub(FieldsetInterface::class);
         $fieldset->method('getAttributes')->willReturn(['ATTRIBUTES']);
 
         $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
@@ -129,7 +136,8 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRenderLabelWithoutLabel()
     {
-        $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
+        /** @var Stub|FieldsetInterface */
+        $fieldset = $this->createStub(FieldsetInterface::class);
         $fieldset->method('getLabel')->willReturn('');
 
         $helper = $this->createPartialMock(Fieldset::class, ['getView']);
@@ -140,7 +148,8 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRenderLabelWithLabel()
     {
-        $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
+        /** @var Stub|FieldsetInterface */
+        $fieldset = $this->createStub(FieldsetInterface::class);
         $fieldset->method('getLabel')->willReturn('LABEL');
 
         $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');

@@ -23,8 +23,10 @@
 namespace Model\Test\Package;
 
 use Laminas\ServiceManager\ServiceManager;
+use Model\Package\Package;
 use Model\Package\PackageBuilder;
 use Model\Package\PackageManager;
+use PHPUnit\Framework\MockObject\Stub;
 
 /**
  * Tests for Model\Package\PackageManager
@@ -220,7 +222,8 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $newPackage = $this->createMock('Model\Package\Package');
         $newPackage->method('offsetGet')->with('Id')->willReturn('new_id');
 
-        $package = $this->createMock('Model\Package\Package');
+        /** @var Stub|Package */
+        $package = $this->createStub(Package::class);
         $package->method('offsetGet')->willReturnMap([['Id', 'old_id'], ['Name', 'old_name']]);
 
         $model = $this->createPartialMock(

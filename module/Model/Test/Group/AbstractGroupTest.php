@@ -22,6 +22,9 @@
 
 namespace Model\Test\Group;
 
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use PHPUnit\Framework\MockObject\Stub;
+
 abstract class AbstractGroupTest extends \Model\Test\AbstractTest
 {
     protected $_config;
@@ -41,7 +44,8 @@ abstract class AbstractGroupTest extends \Model\Test\AbstractTest
             $this->_config = $this->createMock('Model\Config');
             $this->_config->method('__get')->willReturnMap(array(array('groupCacheExpirationInterval', 30)));
 
-            $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+            /** @var Stub|ServiceLocatorInterface */
+            $serviceManager = $this->createStub(ServiceLocatorInterface::class);
             $serviceManager->method('get')->willReturnMap(
                 array(
                     array('Db', static::$serviceManager->get('Db')),

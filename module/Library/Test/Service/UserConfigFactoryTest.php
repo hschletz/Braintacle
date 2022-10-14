@@ -22,7 +22,10 @@
 
 namespace Library\Test\Service;
 
+use ArrayObject;
+use Laminas\ServiceManager\ServiceManager;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class UserConfigFactoryTest extends \PHPUnit\Framework\TestCase
 {
@@ -34,7 +37,7 @@ class UserConfigFactoryTest extends \PHPUnit\Framework\TestCase
 
     /**
      * Per-Test container instance
-     * @var \Laminas\ServiceManager\ServiceManager
+     * @var MockObject|ServiceManager
      */
     protected $_container;
 
@@ -87,6 +90,11 @@ EOT;
         }
     }
 
+    private function getFromFactory()
+    {
+        return ($this->_factory)($this->_container, 'foo');
+    }
+
     public function testFilenameFromEnvironment()
     {
         $root = vfsStream::setup('root');
@@ -98,7 +106,7 @@ EOT;
                          ->with('ApplicationConfig')
                          ->willReturn(array());
 
-        $this->assertEquals($this->_iniContentParsed, $this->_factory->__invoke($this->_container, 'foo'));
+        $this->assertEquals($this->_iniContentParsed, $this->getFromFactory()->getArrayCopy());
     }
 
     public function testFilenameFromApplicationConfig()
@@ -112,7 +120,7 @@ EOT;
                          ->with('ApplicationConfig')
                          ->willReturn(array('Library\UserConfig' => $filename));
 
-        $this->assertEquals($this->_iniContentParsed, $this->_factory->__invoke($this->_container, 'foo'));
+        $this->assertEquals($this->_iniContentParsed, $this->getFromFactory()->getArrayCopy());
     }
 
     public function testArrayFromApplicationConfig()
@@ -122,9 +130,9 @@ EOT;
         $this->_container->expects($this->once())
                          ->method('get')
                          ->with('ApplicationConfig')
-                         ->willReturn(array('Library\UserConfig' => $this->_iniContentParsed));
+                         ->willReturn(['Library\UserConfig' => new ArrayObject($this->_iniContentParsed)]);
 
-        $this->assertEquals($this->_iniContentParsed, $this->_factory->__invoke($this->_container, 'foo'));
+        $this->assertEquals($this->_iniContentParsed, $this->getFromFactory()->getArrayCopy());
     }
 
     public function testFallbackWhenEnvironmentEmpty()
@@ -139,7 +147,7 @@ EOT;
         $reader = new \Laminas\Config\Reader\Ini();
         $iniContentParsed = $reader->fromFile(\Library\Application::getPath('config/braintacle.ini'));
 
-        $this->assertEquals($iniContentParsed, $this->_factory->__invoke($this->_container, 'foo'));
+        $this->assertEquals($iniContentParsed, $this->getFromFactory()->getArrayCopy());
     }
 
     public function testFallbackWhenEnvironmentNotSet()
@@ -154,6 +162,6 @@ EOT;
         $reader = new \Laminas\Config\Reader\Ini();
         $iniContentParsed = $reader->fromFile(\Library\Application::getPath('config/braintacle.ini'));
 
-        $this->assertEquals($iniContentParsed, $this->_factory->__invoke($this->_container, 'foo'));
+        $this->assertEquals($iniContentParsed, $this->getFromFactory()->getArrayCopy());
     }
 }

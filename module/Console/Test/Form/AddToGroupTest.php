@@ -23,6 +23,8 @@
 namespace Console\Test\Form;
 
 use Console\Form\AddToGroup;
+use Model\Group\GroupManager;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for AddToGroup form
@@ -30,8 +32,7 @@ use Console\Form\AddToGroup;
 class AddToGroupTest extends \Console\Test\AbstractFormTest
 {
     /**
-     * Group manager mock
-     * @var \Model\Group\GroupManager
+     * @var MockObject|GroupManager
      */
     protected $_groupManager;
 

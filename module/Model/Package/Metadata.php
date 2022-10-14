@@ -84,7 +84,7 @@ class Metadata extends \Library\DomDocument
     public function getPackageData()
     {
         $this->forceValid();
-        $node = $this->firstChild;
+        $node = $this->documentElement;
         $map = array(
             'store' => 'PATH',
             'launch' => 'NAME',

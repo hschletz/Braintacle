@@ -56,7 +56,7 @@ class MetadataTest extends \Model\Test\AbstractTest
         $model->setPackageData($data);
 
         $this->assertEquals(1, $model->childNodes->length);
-        $node = $model->firstChild;
+        $node = $model->documentElement;
         $this->assertEquals('DOWNLOAD', $node->tagName);
         $this->assertFalse($node->hasChildNodes());
 
@@ -109,7 +109,7 @@ class MetadataTest extends \Model\Test\AbstractTest
         );
         $model = new Metadata();
         $model->setPackageData($data);
-        $node = $model->firstChild;
+        $node = $model->documentElement;
 
         $this->assertEquals($act, $node->getAttribute('ACT'));
         $this->assertEquals($path, $node->getAttribute('PATH'));
@@ -156,7 +156,7 @@ class MetadataTest extends \Model\Test\AbstractTest
         );
         $model = new Metadata();
         $model->setPackageData($data);
-        $node = $model->firstChild;
+        $node = $model->documentElement;
         $this->assertSame($expected, $node->getAttribute('NOTIFY_USER'));
         $this->assertSame($expected, $node->getAttribute('NOTIFY_CAN_ABORT'));
         $this->assertSame($expected, $node->getAttribute('NOTIFY_CAN_DELAY'));
@@ -199,7 +199,7 @@ class MetadataTest extends \Model\Test\AbstractTest
         );
         $model = new Metadata();
         $model->setPackageData($data);
-        $node = $model->firstChild;
+        $node = $model->documentElement;
         $this->assertSame($documentFlag, $node->getAttribute('NEED_DONE_ACTION'));
         $this->assertSame($documentMessage, $node->getAttribute('NEED_DONE_ACTION_TEXT'));
     }
@@ -225,7 +225,7 @@ class MetadataTest extends \Model\Test\AbstractTest
         $model->setPackageData($data);
         $data['Priority'] = 7;
         $model->setPackageData($data);
-        $this->assertEquals(7, $model->firstChild->getAttribute('PRI'));
+        $this->assertEquals(7, $model->documentElement->getAttribute('PRI'));
     }
 
     /**

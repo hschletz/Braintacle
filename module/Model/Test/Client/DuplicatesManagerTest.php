@@ -25,6 +25,7 @@ namespace Model\Test\Client;
 use Database\Table;
 use Database\Table\Clients;
 use Mockery;
+use Model\Client\Client;
 use Model\Client\ClientManager;
 use Model\Client\DuplicatesManager;
 use Model\SoftwareManager;
@@ -435,8 +436,8 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
     {
         $memberships = [
             1 => \Model\Client\Client::MEMBERSHIP_ALWAYS,
-            2 => \Model\Client\client::MEMBERSHIP_NEVER,
-            3 => \Model\Client\client::MEMBERSHIP_ALWAYS,
+            2 => Client::MEMBERSHIP_NEVER,
+            3 => Client::MEMBERSHIP_ALWAYS,
         ];
 
         $newestClient = $this->createMock('Model\Client\Client');
@@ -445,13 +446,13 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client1 = $this->createMock('Model\Client\Client');
         $client1->method('getGroupMemberships')->with(\Model\Client\Client::MEMBERSHIP_MANUAL)->willReturn([
             1 => \Model\Client\Client::MEMBERSHIP_ALWAYS,
-            2 => \Model\Client\client::MEMBERSHIP_NEVER,
+            2 => Client::MEMBERSHIP_NEVER,
         ]);
 
         $client2 = $this->createMock('Model\Client\Client');
         $client2->method('getGroupMemberships')->with(\Model\Client\Client::MEMBERSHIP_MANUAL)->willReturn([
-            2 => \Model\Client\client::MEMBERSHIP_NEVER,
-            3 => \Model\Client\client::MEMBERSHIP_ALWAYS,
+            2 => Client::MEMBERSHIP_NEVER,
+            3 => Client::MEMBERSHIP_ALWAYS,
         ]);
 
         $olderClients = [$client1, $client2];
@@ -476,7 +477,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
 
         $client2 = $this->createMock('Model\Client\Client');
         $client2->method('getGroupMemberships')->with(\Model\Client\Client::MEMBERSHIP_MANUAL)->willReturn([
-            1 => \Model\Client\client::MEMBERSHIP_NEVER,
+            1 => Client::MEMBERSHIP_NEVER,
         ]);
 
         $olderClients = [$client1, $client2];
@@ -548,6 +549,7 @@ EOT
     /** @dataProvider mergeProductKeyProvider */
     public function testMergeProductKeyNoMerge($newestClient, $olderClients)
     {
+        /** @var MockObject|SoftwareManager */
         $softwareManager = $this->createMock('Model\SoftwareManager');
         $softwareManager->expects($this->never())->method('setProductKey');
 
@@ -567,6 +569,7 @@ EOT
 
     public function testMergeProductKeyMerge()
     {
+        /** @var MockObject|Client */
         $newestClient = $this->createMock('Model\Client\Client');
         $newestClient->expects($this->atLeastOnce())
                      ->method('offsetGet')
@@ -574,11 +577,12 @@ EOT
                      ->willReturn(['ManualProductKey' => null]);
 
         $olderClients = [
-            ['Windows' => ['ManualProductKey' => 'key1']], // never evaluated
-            ['Windows' => ['ManualProductKey' => 'key2']], // first client with key, picked
-            ['Windows' => ['ManualProductKey' => null]], // no key, skipped
+            new Client(['Windows' => ['ManualProductKey' => 'key1']]), // never evaluated
+            new Client(['Windows' => ['ManualProductKey' => 'key2']]), // first client with key, picked
+            new Client(['Windows' => ['ManualProductKey' => null]]), // no key, skipped
         ];
 
+        /** @var MockObject|SoftwareManager */
         $softwareManager = $this->createMock('Model\SoftwareManager');
         $softwareManager->expects($this->once())->method('setProductKey')->with($newestClient, 'key2');
 

@@ -68,7 +68,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
         );
         $object = new \ArrayObject();
         $this->assertSame($object, $hydrator->hydrate($agentData, $object));
-        $this->assertEquals($software, $object->getArrayCopy());
+        $this->assertEquals($software, get_object_vars($object));
     }
 
     public function testHydrateUnix()
@@ -98,7 +98,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
         );
         $object = new \ArrayObject();
         $this->assertSame($object, $hydrator->hydrate($agentData, $object));
-        $this->assertEquals($software, $object->getArrayCopy());
+        $this->assertEquals($software, get_object_vars($object));
     }
 
     public function testHydrateAndroid()
@@ -128,7 +128,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
         );
         $object = new \ArrayObject();
         $this->assertSame($object, $hydrator->hydrate($agentData, $object));
-        $this->assertEquals($software, $object->getArrayCopy());
+        $this->assertEquals($software, get_object_vars($object));
     }
 
     public function testExtractWindows()

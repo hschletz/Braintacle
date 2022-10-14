@@ -22,26 +22,29 @@
 
 namespace Console\Test\Controller;
 
+use Console\Form\Account\Add;
+use Console\Form\Account\Edit;
+use Model\Operator\Operator;
+use Model\Operator\OperatorManager;
+use PHPUnit\Framework\MockObject\MockObject;
+
 /**
  * Tests for AccountsController
  */
 class AccountsControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
-     * OperatorManager mock
-     * @var \Model\Operator\OperatorManager
+     * @var MockObject|OperatorManager
      */
     protected $_operatorManager;
 
     /**
-     * Account creation form mock
-     * @var \Console\Form\Account\Add
+     * @var MockObject|Add
      */
     protected $_formAccountAdd;
 
     /**
-     * Account editing form mock
-     * @var \Console\Form\Account\Edit
+     * @var MockObject|Edit
      */
     protected $_formAccountEdit;
 
@@ -184,7 +187,7 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testEditActionGet()
     {
-        $operator = $this->createMock('Model\Operator\Operator');
+        $operator = $this->createMock(Operator::class);
         $operator->expects($this->once())->method('getArrayCopy')->willReturn(array('Id' => 'testId'));
 
         $this->_operatorManager->expects($this->once())->method('getOperator')->with('testId')->willReturn($operator);

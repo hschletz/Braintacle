@@ -72,12 +72,12 @@ class TemplateRendererTest extends TestCase
     public function testRender()
     {
         $engine = $this->createMock(Engine::class);
-        $engine->method('renderToString')->with('template', 'values')->willReturn('content');
+        $engine->method('renderToString')->with('template', ['values'])->willReturn('content');
 
         $translator = $this->createStub(TranslatorInterface::class);
 
         $templateRenderer = new TemplateRenderer($engine, $translator);
-        $this->assertEquals('content', $templateRenderer->render('template', 'values'));
+        $this->assertEquals('content', $templateRenderer->render('template', ['values']));
 
         $this->expectWarning();
         $this->expectWarningMessage('handler restored');

@@ -38,7 +38,7 @@ abstract class AbstractHydratorTest extends \PHPUnit\Framework\TestCase
         $hydrator = $this->getHydrator();
         $object = new \ArrayObject();
         $this->assertSame($object, $hydrator->hydrate($data, $object));
-        $this->assertEquals($objectData, $object->getArrayCopy());
+        $this->assertEquals($objectData, get_object_vars($object));
     }
 
     /**

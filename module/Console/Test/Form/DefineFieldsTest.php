@@ -24,6 +24,9 @@ namespace Console\Test\Form;
 
 use Console\Form\DefineFields;
 use Laminas\Dom\Document\Query as Query;
+use Laminas\Form\View\Helper\FormElementErrors;
+use Model\Client\CustomFieldManager;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for DefineFields form
@@ -32,7 +35,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
 {
     /**
      * CustomFieldManager mock object
-     * @var \Model\Client\CustomFieldManager
+     * @var MockObject|CustomFieldManager
      */
     protected $_customFieldManager;
 
@@ -399,7 +402,8 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         $this->_form->get('Fields')->get('name0')->setMessages(array('message_name0'));
         $this->_form->get('NewName')->setMessages(array('message_add'));
 
-        $formElementErrors = $this->createMock('Laminas\Form\View\Helper\FormElementErrors');
+        /** @var MockObject|FormElementErrors */
+        $formElementErrors = $this->createMock(FormElementErrors::class);
         $formElementErrors->method('__invoke')
                           ->with($this->isInstanceOf('Laminas\Form\ElementInterface'), array('class' => 'error'))
                           ->willReturnCallback(array($this, 'formElementErrorsMock'));

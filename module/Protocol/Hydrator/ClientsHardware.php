@@ -156,7 +156,7 @@ class ClientsHardware implements \Laminas\Hydrator\HydratorInterface
                 if ($isWindows) {
                     $windows[$name] = $value;
                 } else {
-                    $object[$name] = $value;
+                    $object->$name = $value;
                 }
             }
         }
@@ -164,12 +164,12 @@ class ClientsHardware implements \Laminas\Hydrator\HydratorInterface
         if (isset($data['WINPRODID'])) {
             $windows['Workgroup'] = @$data['WORKGROUP'];
         } else {
-            $object['DnsDomain'] = @$data['WORKGROUP'];
+            $object->DnsDomain = @$data['WORKGROUP'];
         }
 
         if ($windows) {
-            $object['Windows'] = clone $this->_windowsInstallationPrototype;
-            $object['Windows']->exchangeArray($windows);
+            $object->Windows = clone $this->_windowsInstallationPrototype;
+            $object->Windows->exchangeArray($windows);
         }
 
         return $object;
@@ -185,7 +185,7 @@ class ClientsHardware implements \Laminas\Hydrator\HydratorInterface
                 $data[$name] = $this->extractValue($name, $value);
             }
         }
-        $windows = $object['Windows'];
+        $windows = $object->Windows;
         if ($windows) {
             foreach ($windows as $name => $value) {
                 $name = $this->extractName($name);
@@ -195,7 +195,7 @@ class ClientsHardware implements \Laminas\Hydrator\HydratorInterface
             }
             $data['WORKGROUP'] = @$windows['Workgroup'];
         } else {
-            $data['WORKGROUP'] = @$object['DnsDomain'];
+            $data['WORKGROUP'] = @$object->DnsDomain;
         }
         return $data;
     }
@@ -255,10 +255,6 @@ class ClientsHardware implements \Laminas\Hydrator\HydratorInterface
 
     /**
      * Extract value
-     *
-     * @param string $name
-     * @param string $value
-     * @return mixed
      */
     public function extractValue($name, $value)
     {

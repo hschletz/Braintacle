@@ -28,11 +28,13 @@ use Laminas\Uri\UriInterface;
 use Laminas\View\Helper\Placeholder\Container\AbstractContainer;
 use Laminas\View\Renderer\PhpRenderer;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class ConsoleScriptTest extends \Library\Test\View\Helper\AbstractTest
 {
     public function testInvokeNoArgs()
     {
+        /** @var MockObject|ConsoleScript|callable */
         $consoleScript = $this->createPartialMock(ConsoleScript::class, ['getContainer']);
         $consoleScript->expects($this->never())->method('getContainer');
 
@@ -44,6 +46,7 @@ class ConsoleScriptTest extends \Library\Test\View\Helper\AbstractTest
         $container = $this->createMock(AbstractContainer::class);
         $container->expects($this->once())->method('append')->with('script');
 
+        /** @var MockObject|ConsoleScript|callable */
         $consoleScript = $this->createPartialMock(ConsoleScript::class, ['getContainer']);
         $consoleScript->expects($this->once())->method('getContainer')->willReturn($container);
 

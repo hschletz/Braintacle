@@ -56,8 +56,8 @@ class FilterDescription extends \Laminas\View\Helper\AbstractHelper
      * - Windows.ManualProductKey
      * - array('NetworkInterface.Subnet', 'NetworkInterface.Netmask')
      *
-     * @param string $filter Name of a builtin filter routine
-     * @param string $search Search parameter
+     * @param string|array $filter Name of a builtin filter routine
+     * @param string|array $search Search parameter
      * @param integer $count Number of results
      * @return string Description, escaped
      * @throws \InvalidArgumentException if no description is available for the filter

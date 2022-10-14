@@ -22,6 +22,8 @@
 
 namespace Library\Test\Hydrator\Strategy;
 
+use stdClass;
+
 class IntegerTest extends \PHPUnit\Framework\TestCase
 {
     public function hydrateProvider()
@@ -50,7 +52,7 @@ class IntegerTest extends \PHPUnit\Framework\TestCase
             array(true),
             array(false),
             array(array()),
-            array(new \StdClass()),
+            array(new stdClass()),
             array(1.234),
         );
     }

@@ -22,26 +22,32 @@
 
 namespace Console\Test\Controller;
 
+use Console\Form\Software;
+use Console\Form\SoftwareFilter;
+use Console\Mvc\Controller\Plugin\GetOrder;
+use Console\View\Helper\ConsoleUrl;
+use Console\View\Helper\Form\Software as FormSoftware;
+use Library\View\Helper\FormYesNo;
+use Model\SoftwareManager;
+use PHPUnit\Framework\MockObject\MockObject;
+
 /**
  * Tests for SoftwareController
  */
 class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
-     * Software manager mock
-     * @var \Model\SoftwareManager
+     * @var MockObject|SoftwareManager
      */
     protected $_softwareManager;
 
     /**
-     * Filter form mock
-     * @var \Console\Form\SoftwareFilter
+     * @var MockObject|SoftwareFilter
      */
     protected $_filterForm;
 
     /**
-     * Software form mock
-     * @var \Console\Form\Software
+     * @var MockObject|Software
      */
     protected $_softwareForm;
 
@@ -91,7 +97,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
             )
         );
 
-        $getOrder = $this->createMock('Console\Mvc\Controller\Plugin\GetOrder');
+        $getOrder = $this->createMock(GetOrder::class);
         $getOrder->method('__invoke')->with('name')->willReturn(array('order' => '_order', 'direction' => '_direction'));
 
         $controllerPluginManager = $serviceManager->get('ControllerPluginManager');
@@ -125,7 +131,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
             array('method', 'POST')
         );
 
-        $softwareFormHelper = $this->createMock('Console\View\Helper\Form\Software');
+        $softwareFormHelper = $this->createMock(FormSoftware::class);
         $softwareFormHelper->method('__invoke')->with(
             $this->_softwareForm,
             $this->_result,
@@ -232,11 +238,11 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $translate->method('__invoke')->with($message)->willReturn('MESSAGE');
         $viewHelperManager->setService('Laminas\I18n\View\Helper\Translate', $translate);
 
-        $consoleUrl = $this->createMock('Console\View\Helper\ConsoleUrl');
+        $consoleUrl = $this->createMock(ConsoleUrl::class);
         $consoleUrl->method('__invoke')->with('software', 'manage')->willReturn('URL');
         $viewHelperManager->setService('consoleUrl', $consoleUrl);
 
-        $formYesNo = $this->createMock('Library\View\Helper\FormYesNo');
+        $formYesNo = $this->createMock(FormYesNo::class);
         $formYesNo->method('__invoke')->with('MESSAGE', array(), array('action' => 'URL'))->willReturn('<form>FORM</form>');
         $viewHelperManager->setService('Library\View\Helper\FormYesNo', $formYesNo);
 

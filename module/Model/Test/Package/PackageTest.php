@@ -33,13 +33,13 @@ class PackageTest extends \Model\Test\AbstractTest
     {
         $model = $this->getModel();
         $model->exchangeArray(array('Id' => '1425211367'));
-        $this->assertEquals(new \DateTime('2015-03-01 13:02:47'), $model['Timestamp']);
+        $this->assertEquals(new \DateTime('2015-03-01 13:02:47'), $model->Timestamp);
     }
 
     public function testExchangeArrayWithoutId()
     {
         $model = $this->getModel();
         $model->exchangeArray(array('Name' => 'name'));
-        $this->assertEquals('name', $model['Name']);
+        $this->assertEquals('name', $model->Name);
     }
 }

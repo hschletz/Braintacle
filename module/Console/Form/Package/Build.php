@@ -22,6 +22,7 @@
 
 namespace Console\Form\Package;
 
+use Laminas\Filter\ToNull;
 use Laminas\Form\Element;
 
 /**
@@ -160,7 +161,7 @@ class Build extends \Console\Form\Form
                     $integerFilter,
                     [
                         'name' => 'ToNull',
-                        'options' => [\Laminas\Filter\ToNull::TYPE_STRING],
+                        'options' => ['type' => ToNull::TYPE_STRING],
                     ]
                 ],
                 'validators' => [$integerValidator],

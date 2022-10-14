@@ -34,14 +34,14 @@ class ExtensionSlots implements \Laminas\Hydrator\HydratorInterface
     {
         $object->exchangeArray(array());
         if ($data['is_windows']) {
-            $object['Name'] = $data['designation'];
-            $object['Status'] = ($data['purpose'] ?: $data['status']);
+            $object->Name = $data['designation'];
+            $object->Status = ($data['purpose'] ?: $data['status']);
         } else {
-            $object['Name'] = $data['name'];
-            $object['Status'] = $data['status'];
-            $object['SlotId'] = $data['designation'];
+            $object->Name = $data['name'];
+            $object->Status = $data['status'];
+            $object->SlotId = $data['designation'];
         }
-        $object['Description'] = $data['description'];
+        $object->Description = $data['description'];
         return $object;
     }
 
@@ -49,15 +49,15 @@ class ExtensionSlots implements \Laminas\Hydrator\HydratorInterface
     public function extract(object $object): array
     {
         $data = array();
-        $data['name'] = $object['Name'];
-        $data['description'] = $object['Description'];
+        $data['name'] = $object->Name;
+        $data['description'] = $object->Description;
         if (property_exists($object, 'SlotId')) {
-            $data['designation'] = $object['SlotId'];
+            $data['designation'] = $object->SlotId;
             $data['purpose'] = null;
-            $data['status'] = $object['Status'];
+            $data['status'] = $object->Status;
         } else {
-            $data['designation'] = $object['Name'];
-            $data['purpose'] = $object['Status'];
+            $data['designation'] = $object->Name;
+            $data['purpose'] = $object->Status;
             $data['status'] = null;
         }
         return $data;

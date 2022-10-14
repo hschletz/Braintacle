@@ -96,7 +96,7 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
      * (/module/controller/action/) with defaults of "defaultcontroller" and
      * "defaultaction". An empty response is created.
      */
-    protected function getPlugin(): PluginInterface
+    protected function getPlugin(): callable
     {
         $router = new TreeRouteStack();
         $router->addRoute(

@@ -87,27 +87,27 @@ class Software implements \Laminas\Hydrator\HydratorInterface
     {
         $object->exchangeArray(array());
         if ($data['is_windows']) {
-            $object['Name'] = $this->hydrateValue('Name', $data['name']);
-            $object['Version'] = $data['version'];
-            $object['Comment'] = $data['comment'];
-            $object['Publisher'] = $data['publisher'];
-            $object['InstallLocation'] = $this->hydrateValue('InstallLocation', $data['install_location']);
-            $object['IsHotfix'] = $this->hydrateValue('IsHotfix', $data['is_hotfix']);
-            $object['Guid'] = $data['guid'];
-            $object['Language'] = $data['language'];
-            $object['InstallationDate'] = $this->hydrateValue('InstallationDate', $data['installation_date']);
-            $object['Architecture'] = $this->hydrateValue('Architecture', $data['architecture']);
+            $object->Name = $this->hydrateValue('Name', $data['name']);
+            $object->Version = $data['version'];
+            $object->Comment = $data['comment'];
+            $object->Publisher = $data['publisher'];
+            $object->InstallLocation = $this->hydrateValue('InstallLocation', $data['install_location']);
+            $object->IsHotfix = $this->hydrateValue('IsHotfix', $data['is_hotfix']);
+            $object->Guid = $data['guid'];
+            $object->Language = $data['language'];
+            $object->InstallationDate = $this->hydrateValue('InstallationDate', $data['installation_date']);
+            $object->Architecture = $this->hydrateValue('Architecture', $data['architecture']);
         } elseif ($data['is_android']) {
             // No value transformations required
-            $object['Name'] = $data['name'];
-            $object['Version'] = $data['version'];
-            $object['Publisher'] = $data['publisher'];
-            $object['InstallLocation'] = $data['install_location'];
+            $object->Name = $data['name'];
+            $object->Version = $data['version'];
+            $object->Publisher = $data['publisher'];
+            $object->InstallLocation = $data['install_location'];
         } else {
-            $object['Name'] = $data['name']; // No sanitization required
-            $object['Version'] = $data['version'];
-            $object['Comment'] = $data['comment'];
-            $object['Size'] = $data['size'];
+            $object->Name = $data['name']; // No sanitization required
+            $object->Version = $data['version'];
+            $object->Comment = $data['comment'];
+            $object->Size = $data['size'];
         }
         return $object;
     }
@@ -240,7 +240,7 @@ class Software implements \Laminas\Hydrator\HydratorInterface
      * Extract value
      *
      * @param string $name
-     * @param string $value
+     * @param mixed $value
      * @return mixed
      */
     public function extractValue($name, $value)

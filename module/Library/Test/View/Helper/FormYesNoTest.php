@@ -23,6 +23,10 @@
 namespace Library\Test\View\Helper;
 
 use Laminas\Dom\Document\Query as Query;
+use Laminas\I18n\View\Helper\Translate;
+use Library\View\Helper\HtmlElement;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 
 /**
  * Tests for the FormYesNo helper
@@ -44,14 +48,16 @@ class FormYesNoTest extends AbstractTest
      */
     public function testInvoke($attributesOrig, $attributesUpdated)
     {
-        $translate = $this->createMock('Laminas\I18n\View\Helper\Translate');
+        /** @var Stub|Translate */
+        $translate = $this->createMock(Translate::class);
         $translate->method('__invoke')->willReturnCallback(
             function ($message) {
                 return "_($message)";
             }
         );
 
-        $htmlElement = $this->createMock('Library\View\Helper\HtmlElement');
+        /** @var MockObject|HtmlElement */
+        $htmlElement = $this->createMock(HtmlElement::class);
         $htmlElement->expects($this->once())
                     ->method('__invoke')
                     ->with(

@@ -24,10 +24,14 @@ namespace Console\Test\View\Helper\Form;
 
 use Console\Form\Software as SoftwareForm;
 use Console\View\Helper\Form\Software as SoftwareHelper;
+use Console\View\Helper\Table;
 use Laminas\Form\Element\Csrf;
 use Laminas\Form\Fieldset;
 use Laminas\Form\View\Helper\FormRow;
+use Laminas\I18n\View\Helper\Translate;
 use Laminas\View\Renderer\PhpRenderer;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 
 class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
 {
@@ -39,7 +43,7 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testInvoke()
     {
-        $software = ['software'];
+        $software = [['software']];
         $sorting = ['sorting'];
         $filter = 'all';
 
@@ -48,6 +52,7 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
 
         $form = $this->createStub(SoftwareForm::class);
 
+        /** @var MockObject|SoftwareHelper|callable */
         $helper = $this->createPartialMock(SoftwareHelper::class, ['getView', 'renderForm']);
         $helper->method('getView')->willReturn($view);
         $helper->method('renderForm')->with($form, $software, $sorting, $filter)->willReturn('rendered form');
@@ -57,7 +62,7 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testRenderContent()
     {
-        $software = ['software'];
+        $software = [['software']];
         $sorting = ['sorting'];
         $filter = 'all';
 
@@ -105,7 +110,8 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
         $accept = $this->createMock('Laminas\Form\ElementInterface');
         $ignore = $this->createMock('Laminas\Form\ElementInterface');
 
-        $fieldset = $this->createMock('Console\Form\Software');
+        /** @var Stub|SoftwareForm */
+        $fieldset = $this->createStub(SoftwareForm::class);
         $fieldset->method('get')->willReturnMap([
             ['Accept', $accept],
             ['Ignore', $ignore],
@@ -136,7 +142,8 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
         $checkbox1 = $this->createMock('\Laminas\Form\ElementInterface');
         $checkbox2 = $this->createMock('\Laminas\Form\ElementInterface');
 
-        $fieldset = $this->createMock('Laminas\Form\FieldsetInterface');
+        /** @var MockObject|SoftwareForm */
+        $fieldset = $this->createMock(SoftwareForm::class);
         $fieldset->method('get')
                  ->withConsecutive(
                      ['_c29mdHdhcmVfbmFtZTE='], // 'software_name1'
@@ -163,7 +170,7 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
                 )
                 ->willReturnOnConsecutiveCalls('checkbox1', 'checkbox2');
 
-        $translate = $this->createMock('Laminas\I18n\View\Helper\Translate');
+        $translate = $this->createMock(Translate::class);
         $translate->method('__invoke')
                   ->withConsecutive(
                       ['Name', null, null],
@@ -202,7 +209,7 @@ class SoftwareTest extends \Library\Test\View\Helper\AbstractTest
                         ['a', 1, ['href' => 'url2']]
                     )->willReturnOnConsecutiveCalls('link1', 'link2');
 
-        $table = $this->createMock('Console\View\Helper\Table');
+        $table = $this->createMock(Table::class);
         $table->method('prepareHeaders')
               ->with(['name' => 'NAME', 'num_clients' => 'COUNT'], $sorting)
               ->willReturn(['name' => 'header_name', 'num_clients' => 'header_count']);

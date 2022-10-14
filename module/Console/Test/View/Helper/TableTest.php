@@ -22,8 +22,15 @@
 
 namespace Console\Test\View\Helper;
 
+use Console\View\Helper\ConsoleUrl;
 use Console\View\Helper\Table;
+use Laminas\I18n\View\Helper\DateFormat;
+use Laminas\View\Helper\EscapeHtml;
+use Laminas\View\Renderer\PhpRenderer;
+use Library\View\Helper\HtmlElement;
 use Mockery;
+use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for the Table helper
@@ -32,25 +39,25 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 {
     /**
      * EscapeHtml mock
-     * @var \Laminas\View\Helper\EscapeHtml
+     * @var MockObject|EscapeHtml
      */
     protected $_escapeHtml;
 
     /**
      * HtmlElement mock
-     * @var \Library\View\Helper\HtmlElement
+     * @var MockObject|HtmlElement
      */
     protected $_htmlElement;
 
     /**
      * ConsoleUrl mock
-     * @var \Console\View\Helper\ConsoleUrl
+     * @var MockObject|ConsoleUrl
      */
     protected $_consoleUrl;
 
     /**
      * DateFormat mock
-     * @var \Laminas\I18n\View\Helper\DateFormat
+     * @var MockObject|DateFormat
      */
     protected $_dateFormat;
 
@@ -97,6 +104,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testInvokeWithDefaultParams()
     {
+        /** @var MockInterface|Table|callable */
         $table = Mockery::mock(
             Table::class,
             [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
@@ -112,6 +120,10 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testInvokeWithExplicitParams()
     {
+        $rowClassCallback = function () {
+        };
+
+        /** @var MockInterface|Table|callable */
         $table = Mockery::mock(
             Table::class,
             [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
@@ -124,7 +136,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
             ['column1', 'column2'],
             ['renderCallbacks'],
             ['columnClasses'],
-            'rowClassCallback'
+            $rowClassCallback
         )->andReturn('<data>');
         $table->shouldReceive('tag')->with('<header><data>')->andReturn('table_tag');
 
@@ -136,7 +148,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
                 ['sorting'],
                 ['renderCallbacks'],
                 ['columnClasses'],
-                'rowClassCallback'
+                $rowClassCallback
             )
         );
     }
@@ -262,7 +274,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testDataRowsWithRenderCallbackPrecedesDateTime()
     {
-        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
+        $view = $this->createMock(PhpRenderer::class);
         $date = $this->createMock('DateTime');
 
         $this->_dateFormat->expects($this->never())->method('__invoke');
@@ -381,6 +393,7 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
      */
     public function testRow()
     {
+        /** @var Table */
         $helper = $this->getHelper();
         $this->assertEquals(
             "<tr>\n<td>\nheader1\n</td>\n<td>\nheader2\n</td>\n\n</tr>\n",

@@ -58,9 +58,10 @@ class GroupMembershipsTest extends \Console\Test\AbstractFormTest
     {
         $this->assertFalse($this->_form->has('Groups'));
 
-        $this->_form->setGroups(array('group1', 'group2'));
-        $this->assertTrue($this->_form->has('Groups'));
-        $groups = $this->_form->get('Groups');
+        $form = new GroupMemberships();
+        $form->setGroups(['group1', 'group2']);
+        $this->assertTrue($form->has('Groups'));
+        $groups = $form->get('Groups');
         $this->assertCount(2, $groups);
         $group2 = $groups->get('group2');
         $this->assertInstanceOf('Laminas\Form\Element\Radio', $group2);
@@ -68,9 +69,9 @@ class GroupMembershipsTest extends \Console\Test\AbstractFormTest
         $this->assertEquals('group2', $group2->getLabel());
 
         // Overwrite previously set groups
-        $this->_form->setGroups(array());
-        $this->assertTrue($this->_form->has('Groups'));
-        $groups = $this->_form->get('Groups');
+        $form->setGroups([]);
+        $this->assertTrue($form->has('Groups'));
+        $groups = $form->get('Groups');
         $this->assertCount(0, $groups);
     }
 
@@ -83,18 +84,21 @@ class GroupMembershipsTest extends \Console\Test\AbstractFormTest
 
     public function testRenderFieldsetEmptyGroups()
     {
-        $this->_form->setGroups(array());
+        $form = new GroupMemberships();
+        $form->setGroups([]);
         $view = $this->createView();
-        $html = $this->_form->renderFieldset($view, $this->_form);
+        $html = $form->renderFieldset($view, $form);
         $this->assertEquals('', $html);
     }
 
     public function testRenderFieldsetWithGroups()
     {
-        $this->_form->setGroups(array('group1', 'group2'));
-        $this->_form->prepare();
+        $form = new GroupMemberships();
+        $form->init();
+        $form->setGroups(['group1', 'group2']);
+        $form->prepare();
         $view = $this->createView();
-        $html = $this->_form->renderFieldset($view, $this->_form);
+        $html = $form->renderFieldset($view, $form);
         $document = new \Laminas\Dom\Document($html);
         $this->assertCount(1, Query::execute('//div', $document));
         $this->assertCount(

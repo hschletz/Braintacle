@@ -35,7 +35,7 @@ class DeleteClientTest extends \Console\Test\AbstractFormTest
 {
     private function createConfig(int $defaultDeleteInterfaces): Config
     {
-        /** @var MockObject|Config */
+        /** @var MockObject&Config */
         $config = $this->createMock(Config::class);
         $config->expects($this->once())
                ->method('__get')

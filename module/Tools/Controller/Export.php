@@ -52,7 +52,7 @@ class Export implements ControllerInterface
 
         if ($validate) {
             ini_set('display_errors', true); // Print reason for validation failure
-            ini_set('log_errors', false); // Prevent duplicate message in case of validation failure
+            ini_set('log_errors', 0); // Prevent duplicate message in case of validation failure
         }
 
         /** @var \Model\Client\Client[] */

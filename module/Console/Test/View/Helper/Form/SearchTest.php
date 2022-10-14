@@ -25,6 +25,7 @@ namespace Console\Test\View\Helper\Form;
 use Console\Form\Search as SearchForm;
 use Console\View\Helper\Form\Search as SearchHelper;
 use Laminas\View\Renderer\PhpRenderer;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class SearchTest extends \Library\Test\View\Helper\AbstractTest
 {
@@ -43,6 +44,7 @@ class SearchTest extends \Library\Test\View\Helper\AbstractTest
             ['consoleForm', [$form]]
         )->willReturnOnConsecutiveCalls($this->returnSelf(), 'rendered form');
 
+        /** @var MockObject|SearchHelper|callable */
         $helper = $this->createPartialMock(SearchHelper::class, ['getView']);
         $helper->method('getView')->willReturn($view);
 

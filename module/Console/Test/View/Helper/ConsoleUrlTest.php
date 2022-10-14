@@ -22,6 +22,8 @@
 
 namespace Console\Test\View\Helper;
 
+use Laminas\View\Helper\Url;
+
 /**
  * Tests for the ConsoleUrl helper
  */
@@ -38,6 +40,8 @@ class ConsoleUrlTest extends \Library\Test\View\Helper\AbstractTest
                 'action' => 'currentaction',
             )
         );
+
+        /** @var Url */
         $urlHelper = $this->getHelper('Url');
         $urlHelper->setRouteMatch($routeMatch);
         $this->_helper = new \Console\View\Helper\ConsoleUrl(null, $urlHelper);
@@ -100,7 +104,10 @@ class ConsoleUrlTest extends \Library\Test\View\Helper\AbstractTest
         $requestParams = array('param1' => 'requestValue1');
         $request = new \Laminas\Http\PhpEnvironment\Request();
         $request->setQuery(new \Laminas\Stdlib\Parameters($requestParams));
-        $helper = new \Console\View\Helper\ConsoleUrl($request, $this->getHelper('Url'));
+
+        /** @var Url */
+        $urlHelper = $this->getHelper('Url');
+        $helper = new \Console\View\Helper\ConsoleUrl($request, $urlHelper);
 
         $params = array();
         $this->assertEquals(

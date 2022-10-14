@@ -81,7 +81,7 @@ class ClientOrGroupTest extends AbstractTest
      *
      * @param string $dataSetName Name of dataset file to compare
      */
-    public function assertLocksTableEquals($dataSetName)
+    public function assertLocksTableEquals(?string $dataSetName)
     {
         $dataSetTable = $this->loadDataSet($dataSetName)->getTable('locks');
         $queryTable = $this->getConnection()->createQueryTable(

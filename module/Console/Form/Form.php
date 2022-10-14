@@ -209,7 +209,7 @@ class Form extends \Laminas\Form\Form
      * input filter should validate filtered data by checking the datatype via
      * validateType().
      *
-     * @param string $value Localized input string
+     * @param ?string $value Localized input string
      * @param string $type Data type (integer, float, date). Any other value will be ignored.
      * @return mixed Normalized value or input string
      */

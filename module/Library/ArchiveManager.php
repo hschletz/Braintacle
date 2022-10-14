@@ -23,6 +23,7 @@
 namespace Library;
 
 use Throwable;
+use ZipArchive;
 
 /**
  * Frontend for different archive file types
@@ -140,27 +141,22 @@ class ArchiveManager
     /**
      * Close an archive
      *
-     * @param \ZipArchive $archive Archive object
      * @param bool $ignoreErrors Don't throw an exception on error
      * @throws \InvalidArgumentException if $type is unknown
      * @throws \RuntimeException if an error occurs unless $ignoreErrors is TRUE
      */
-    public function closeArchive($archive, $ignoreErrors = false)
+    public function closeArchive(ZipArchive $archive, $ignoreErrors = false)
     {
-        if ($archive instanceof \ZipArchive) {
-            // close() may throw an error on PHP 8 while earlier versions return
-            // FALSE. Handle both cases uniformly.
-            try {
-                if (!@$archive->close()) {
-                    throw new \RuntimeException('Error closing ZIP archive');
-                }
-            } catch (Throwable $t) {
-                if (!$ignoreErrors) {
-                    throw new \RuntimeException('Error closing ZIP archive', 0, $t);
-                }
+        // close() may throw an error on PHP 8 while earlier versions return
+        // FALSE. Handle both cases uniformly.
+        try {
+            if (!@$archive->close()) {
+                throw new \RuntimeException('Error closing ZIP archive');
             }
-        } else {
-            throw new \InvalidArgumentException('Unsupported archive');
+        } catch (Throwable $t) {
+            if (!$ignoreErrors) {
+                throw new \RuntimeException('Error closing ZIP archive', 0, $t);
+            }
         }
     }
 
@@ -172,20 +168,15 @@ class ArchiveManager
      * treatment of filenames is done. There is no guarantee that filenames with
      * problematic characters will work under all circumstances.
      *
-     * @param \ZipArchive $archive Archive object
      * @param string $file File to add
      * @param string $name Name/Path under which the file will be stored in the archive
      * @throws \InvalidArgumentException if $type is unknown
      * @throws \RuntimeException if an error occurs
      */
-    public function addFile($archive, $file, $name)
+    public function addFile(ZipArchive $archive, $file, $name)
     {
-        if ($archive instanceof \ZipArchive) {
-            if (!@$archive->addFile($file, $name)) {
-                throw new \RuntimeException("Error adding file '$file' to archive as '$name'");
-            }
-        } else {
-            throw new \InvalidArgumentException('Unsupported archive');
+        if (!@$archive->addFile($file, $name)) {
+            throw new \RuntimeException("Error adding file '$file' to archive as '$name'");
         }
     }
 }

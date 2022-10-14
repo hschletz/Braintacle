@@ -22,13 +22,14 @@
 
 namespace Console\Test\Form;
 
+use Console\Form\SoftwareFilter;
+
 /**
  * Tests for SoftwareFilter
  */
 class SoftwareFilterTest extends \Console\Test\AbstractFormTest
 {
-    /** {@inheritdoc} */
-    protected function getForm()
+    protected function getForm(): SoftwareFilter
     {
         $form = new \Console\Form\SoftwareFilter();
         $form->init();
@@ -51,32 +52,38 @@ class SoftwareFilterTest extends \Console\Test\AbstractFormTest
 
     public function testSetFilterAccepted()
     {
-        $this->_form->setFilter('accepted');
-        $this->assertEquals('accepted', $this->_form->get('filter')->getValue());
+        $form = $this->getForm();
+        $form->setFilter('accepted');
+        $this->assertEquals('accepted', $form->get('filter')->getValue());
     }
 
     public function testSetFilterIgnored()
     {
-        $this->_form->setFilter('ignored');
-        $this->assertEquals('ignored', $this->_form->get('filter')->getValue());
+        $form = $this->getForm();
+        $form->setFilter('ignored');
+        $this->assertEquals('ignored', $form->get('filter')->getValue());
     }
 
     public function testSetFilterNew()
     {
-        $this->_form->setFilter('new');
-        $this->assertEquals('new', $this->_form->get('filter')->getValue());
+        $form = $this->getForm();
+        $form->setFilter('new');
+        $this->assertEquals('new', $form->get('filter')->getValue());
     }
 
     public function testSetFilterAll()
     {
-        $this->_form->setFilter('all');
-        $this->assertEquals('all', $this->_form->get('filter')->getValue());
+        $form = $this->getForm();
+        $form->setFilter('all');
+        $this->assertEquals('all', $form->get('filter')->getValue());
     }
 
     public function testSetFilterInvalid()
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Invalid filter value: invalid');
-        $this->_form->setFilter('invalid');
+
+        $form = $this->getForm();
+        $form->setFilter('invalid');
     }
 }

@@ -24,6 +24,7 @@ namespace Model\Client;
 
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Sql\Predicate;
+use Model\Group\Group;
 
 /**
  * Client manager
@@ -51,9 +52,9 @@ class ClientManager
      *
      * @param array $properties Properties to be returned. If empty or null, return all properties.
      * @param string $order Property to sort by
-     * @param string $direction One of [asc|desc]
+     * @param ?string $direction One of [asc|desc]
      * @param string|array $filter Name or array of names of a pre-defined filter routine
-     * @param string|array $search Search parameter(s) passed to the filter. May be case sensitive depending on DBMS.
+     * @param string|array|Group $search Search parameter(s) passed to the filter. May be case sensitive depending on DBMS.
      * @param string|array $operators Comparison operator(s)
      * @param bool|array $invert Invert query results (return clients not matching criteria)
      * @param bool $addSearchColumns Add columns with search criteria (default), otherwise only columns from $properties
@@ -66,7 +67,7 @@ class ClientManager
     public function getClients(
         $properties = null,
         $order = null,
-        $direction = 'asc',
+        ?string $direction = 'asc',
         $filter = null,
         $search = null,
         $operators = null,
@@ -362,7 +363,7 @@ class ClientManager
             } else {
                 throw new \InvalidArgumentException('Invalid order: ' . $order);
             }
-            $select->order(array($order => $direction));
+            $select->order([$order => $direction ?? 'asc']);
         }
 
         /*

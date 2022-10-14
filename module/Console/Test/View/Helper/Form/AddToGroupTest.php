@@ -25,6 +25,7 @@ namespace Console\Test\View\Helper\Form;
 use Console\Form\AddToGroup as AddToGroupForm;
 use Console\View\Helper\Form\AddToGroup as AddToGroupHelper;
 use Laminas\View\Renderer\PhpRenderer;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class AddToGroupTest extends \Library\Test\View\Helper\AbstractTest
 {
@@ -43,6 +44,7 @@ class AddToGroupTest extends \Library\Test\View\Helper\AbstractTest
             ['consoleForm', [$form]]
         )->willReturnOnConsecutiveCalls($this->returnSelf(), 'rendered form');
 
+        /** @var MockObject|AddToGroupHelper|callable */
         $helper = $this->createPartialMock(AddToGroupHelper::class, ['getView']);
         $helper->method('getView')->willReturn($view);
 

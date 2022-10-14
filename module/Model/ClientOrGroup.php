@@ -22,6 +22,7 @@
 
 namespace Model;
 
+use Laminas\Db\Sql\Predicate\Operator;
 use Nada\Column\AbstractColumn as Column;
 
 /**
@@ -298,7 +299,7 @@ abstract class ClientOrGroup extends AbstractModel
                    'devices',
                    new \Laminas\Db\Sql\Predicate\PredicateSet(
                        array(
-                           new \Laminas\Db\Sql\Predicate\Operator('ivalue', '=', new \Laminas\Db\Sql\Literal('fileid')),
+                           new Operator('ivalue', '=', 'fileid', Operator::TYPE_IDENTIFIER, Operator::TYPE_IDENTIFIER),
                            new \Laminas\Db\Sql\Predicate\Operator('devices.hardware_id', '=', $this['Id']),
                            // "DOWNLOAD" is always present, eventual "DOWNLOAD_*" rows exist in addition to that.
                            // The equality check is suficient here.
@@ -313,7 +314,7 @@ abstract class ClientOrGroup extends AbstractModel
                    'download_history',
                    new \Laminas\Db\Sql\Predicate\PredicateSet(
                        array(
-                           new \Laminas\Db\Sql\Predicate\Operator('pkg_id', '=', new \Laminas\Db\Sql\Literal('fileid')),
+                           new Operator('pkg_id', '=', 'fileid', Operator::TYPE_IDENTIFIER, Operator::TYPE_IDENTIFIER),
                            new \Laminas\Db\Sql\Predicate\Operator('download_history.hardware_id', '=', $this['Id']),
                        )
                    ),

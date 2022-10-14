@@ -22,6 +22,9 @@
 
 namespace Model\Group;
 
+use Countable;
+use Database\Table\GroupInfo;
+
 /**
  * Group manager
  */
@@ -50,10 +53,11 @@ class GroupManager
      * @param mixed $filterArg Argument for Id, Name and Member filters, ignored otherwise
      * @param string $order Property to sort by. Default: none
      * @param string $direction one of [asc|desc]. Default: asc
-     * @return \Laminas\Db\ResultSet\AbstractResultSet Result set producing \Model\Group\Group
+     * @return iterable<Group>|Countable
      */
-    public function getGroups($filter = null, $filterArg = null, $order = null, $direction = 'asc')
+    public function getGroups($filter = null, $filterArg = null, $order = null, $direction = 'asc'): iterable
     {
+        /** @var GroupInfo */
         $groupInfo = $this->_serviceManager->get('Database\Table\GroupInfo');
         $select = $groupInfo->getSql()->select();
         $select->columns(array('request', 'create_time', 'revalidate_from'))
@@ -120,11 +124,11 @@ class GroupManager
         if ($name == '') {
             throw new \InvalidArgumentException('No group name given');
         }
-        $group = $this->getGroups('Name', $name)->current();
-        if (!$group) {
+        $result = [...$this->getGroups('Name', $name)];
+        if (!$result) {
             throw new \RuntimeException('Unknown group name: ' . $name);
         }
-        return $group;
+        return $result[0];
     }
 
     /**

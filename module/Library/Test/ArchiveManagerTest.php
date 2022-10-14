@@ -23,6 +23,8 @@
 namespace Library\Test;
 
 use Library\ArchiveManager;
+use PHPUnit\Framework\MockObject\MockObject;
+use ZipArchive;
 
 class ArchiveManagerTest extends \PHPUnit\Framework\TestCase
 {
@@ -105,18 +107,11 @@ class ArchiveManagerTest extends \PHPUnit\Framework\TestCase
      */
     public function testCloseArchiveZipErrorIgnore()
     {
+        /** @var MockObject|ZipArchive */
         $archive = $this->createMock('ZipArchive');
         $archive->expects($this->once())->method('close');
         $manager = new ArchiveManager();
         $manager->closeArchive($archive, true);
-    }
-
-    public function testCloseArchiveInvalid()
-    {
-        $this->expectException('InvalidArgumentException');
-        $this->expectExceptionMessage('Unsupported archive');
-        $manager = new ArchiveManager();
-        $manager->closeArchive(null);
     }
 
     /**
@@ -128,14 +123,6 @@ class ArchiveManagerTest extends \PHPUnit\Framework\TestCase
         $this->expectExceptionMessage("Error adding file 'file' to archive as 'name'");
         $manager = new ArchiveManager();
         $manager->addFile(new \ZipArchive(), 'file', 'name');
-    }
-
-    public function testAddFileInvalid()
-    {
-        $this->expectException('InvalidArgumentException');
-        $this->expectExceptionMessage('Unsupported archive');
-        $manager = new ArchiveManager();
-        $manager->addFile(null, 'file', 'name');
     }
 
     /**

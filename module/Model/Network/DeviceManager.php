@@ -22,6 +22,8 @@
 
 namespace Model\Network;
 
+use Laminas\Db\Sql\Predicate\Expression;
+
 /**
  * Network device manager
  */
@@ -226,7 +228,7 @@ class DeviceManager
             )
         )->join(
             'network_devices',
-            new \Laminas\Db\Sql\Literal('type = name AND macaddr NOT IN(SELECT macaddr FROM networks)'),
+            new Expression('type = name AND macaddr NOT IN(SELECT macaddr FROM networks)'),
             array(),
             \Laminas\Db\Sql\Select::JOIN_LEFT
         )

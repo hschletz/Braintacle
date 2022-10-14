@@ -68,7 +68,7 @@ class ClientsBios implements \Laminas\Hydrator\HydratorInterface
         foreach ($data as $name => $value) {
             $name = $this->hydrateName($name);
             if ($name) {
-                $object[$name] = $this->hydrateValue($name, $value);
+                $object->$name = $this->hydrateValue($name, $value);
             }
         }
         return $object;

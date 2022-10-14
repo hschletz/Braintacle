@@ -22,11 +22,16 @@
 
 namespace Console\Test\Controller;
 
+use Console\Form\Package\Update as PackageUpdate;
 use Console\Mvc\Controller\Plugin\PrintForm;
 use Console\View\Helper\Form\Package\Build;
 use Console\View\Helper\Form\Package\Update;
+use Laminas\I18n\View\Helper\DateFormat;
 use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 use Laminas\View\Model\ViewModel;
+use Model\Config;
+use Model\Package\PackageManager;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for PackageController
@@ -34,26 +39,22 @@ use Laminas\View\Model\ViewModel;
 class PackageControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
-     * Package manager mock
-     * @var \Model\Package\PackageManager
+     * @var MockObject|PackageManager
      */
     protected $_packageManager;
 
     /**
-     * Config mock
-     * @var \Model\Config
+     * @var MockObject|Config
      */
     protected $_config;
 
     /**
-     * Build form mock
-     * @var \Console\Form\Package\Build
+     * @var MockObject|Build
      */
     protected $_buildForm;
 
     /**
-     * Update form mock
-     * @var \Console\Form\Package\Update
+     * @var MockObject|PackageUpdate
      */
     protected $_updateForm;
 
@@ -122,7 +123,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $flashMessenger->expects($this->once())->method('render')->with('error')->willReturn('');
         $viewHelperManager->setService('flashMessenger', $flashMessenger);
 
-        $dateFormat = $this->createMock('Laminas\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock(DateFormat::class);
         $dateFormat->expects($this->exactly(2))
                    ->method('__invoke')
                    ->withConsecutive(

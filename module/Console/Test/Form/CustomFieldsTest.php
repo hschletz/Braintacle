@@ -23,6 +23,8 @@
 namespace Console\Test\Form;
 
 use Laminas\Dom\Document\Query as Query;
+use Model\Client\CustomFieldManager;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for CustomFields form
@@ -31,7 +33,7 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
 {
     /**
      * CustomFields mock object
-     * @var \Model\Client\CustomFieldManager
+     * @var MockObject|CustomFieldManager
      */
     protected $_customFieldManager;
 

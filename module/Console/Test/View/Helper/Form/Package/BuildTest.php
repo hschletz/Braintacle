@@ -27,6 +27,7 @@ use Console\View\Helper\Form\Package\Build as BuildHelper;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
 use Laminas\View\Renderer\PhpRenderer;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class BuildTest extends \Library\Test\View\Helper\AbstractTest
 {
@@ -45,6 +46,7 @@ class BuildTest extends \Library\Test\View\Helper\AbstractTest
             ['consoleForm', [$form]]
         )->willReturnOnConsecutiveCalls(null, 'rendered form');
 
+        /** @var MockObject|BuildHelper|callable */
         $helper = $this->createPartialMock(BuildHelper::class, ['getView', 'initLabels']);
         $helper->method('getView')->willReturn($view);
         $helper->expects($this->once())->method('initLabels')->with($form);

@@ -160,7 +160,7 @@ class Clients implements \Laminas\Hydrator\HydratorInterface
         $object->exchangeArray(array());
         foreach ($data as $name => $value) {
             $name = $this->hydrateName($name);
-            $object[$name] = $this->hydrateValue($name, $value);
+            $object->$name = $this->hydrateValue($name, $value);
         }
         return $object;
     }
@@ -295,7 +295,7 @@ class Clients implements \Laminas\Hydrator\HydratorInterface
      * Extract value
      *
      * @param string $name
-     * @param string $value
+     * @param mixed $value
      * @return mixed
      */
     public function extractValue($name, $value)

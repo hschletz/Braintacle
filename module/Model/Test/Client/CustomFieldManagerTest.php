@@ -22,10 +22,14 @@
 
 namespace Model\Test\Client;
 
+use Database\Table\CustomFieldConfig;
+use Database\Table\CustomFields as TableCustomFields;
 use InvalidArgumentException;
 use Laminas\Hydrator\HydratorInterface;
 use Model\Client\CustomFieldManager;
 use Model\Client\CustomFields;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 
 /**
  * Tests for Model\Client\CustomFieldManager
@@ -83,10 +87,15 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
             'field1' => array('column' => 'column1', 'type' => 'text'),
             'field2' => array('column' => 'column2', 'type' => 'text'),
         );
+
+        /** @var MockObject|CustomFieldConfig */
         $customFieldConfig = $this->createMock('Database\Table\CustomFieldConfig');
         $customFieldConfig->method('getFields')->will($this->onConsecutiveCalls($fieldInfo1, $fieldInfo2));
         $customFieldConfig->expects($this->once())->method('addField')->with('field2', 'text');
-        $customFields = $this->createMock('Database\Table\CustomFields');
+
+        /** @var Stub|TableCustomFields */
+        $customFields = $this->createStub(TableCustomFields::class);
+
 
         $model = new \Model\Client\CustomFieldManager($customFieldConfig, $customFields);
         $model->getColumnMap(); // Initialize cache
@@ -101,10 +110,14 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
         $fieldInfo = array(
             'field1' => array('column' => 'column1', 'type' => 'text'),
         );
+
+        /** @var MockObject|CustomFieldConfig */
         $customFieldConfig = $this->createMock('Database\Table\CustomFieldConfig');
         $customFieldConfig->method('getFields')->willReturn($fieldInfo);
         $customFieldConfig->expects($this->never())->method('addField');
-        $customFields = $this->createMock('Database\Table\CustomFields');
+
+        /** @var Stub|TableCustomFields */
+        $customFields = $this->createStub(TableCustomFields::class);
 
         $model = new \Model\Client\CustomFieldManager($customFieldConfig, $customFields);
         try {
@@ -137,10 +150,15 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
             $newName => array('column' => 'column1', 'type' => 'text'),
             'field2' => array('column' => 'column2', 'type' => 'text'),
         );
+
+        /** @var MockObject|CustomFieldConfig */
         $customFieldConfig = $this->createMock('Database\Table\CustomFieldConfig');
         $customFieldConfig->method('getFields')->will($this->onConsecutiveCalls($fieldInfo1, $fieldInfo2));
         $customFieldConfig->expects($this->once())->method('renameField')->with('field1', $newName);
-        $customFields = $this->createMock('Database\Table\CustomFields');
+
+        /** @var Stub|TableCustomFields */
+        $customFields = $this->createStub(TableCustomFields::class);
+
 
         $model = new \Model\Client\CustomFieldManager($customFieldConfig, $customFields);
         $model->getColumnMap(); // Initialize cache
@@ -169,10 +187,14 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
             'TAG' => array('column' => 'tag', 'type' => 'text'),
             'field1' => array('column' => 'column1', 'type' => 'text'),
         );
+
+        /** @var MockObject|CustomFieldConfig */
         $customFieldConfig = $this->createMock('Database\Table\CustomFieldConfig');
         $customFieldConfig->expects($this->once())->method('getFields')->willReturn($fieldInfo);
         $customFieldConfig->expects($this->never())->method('renameField');
-        $customFields = $this->createMock('Database\Table\CustomFields');
+
+        /** @var Stub|TableCustomFields */
+        $customFields = $this->createStub(TableCustomFields::class);
 
         $model = new \Model\Client\CustomFieldManager($customFieldConfig, $customFields);
         $model->getFields(); // Initialize cache
@@ -194,10 +216,14 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
             'TAG' => array('column' => 'tag', 'type' => 'text'),
             'field1' => array('column' => 'column1', 'type' => 'text'),
         );
+
+        /** @var MockObject|CustomFieldConfig */
         $customFieldConfig = $this->createMock('Database\Table\CustomFieldConfig');
         $customFieldConfig->expects($this->once())->method('getFields')->willReturn($fieldInfo);
         $customFieldConfig->expects($this->never())->method('renameField');
-        $customFields = $this->createMock('Database\Table\CustomFields');
+
+        /** @var Stub|TableCustomFields */
+        $customFields = $this->createStub(TableCustomFields::class);
 
         $model = new \Model\Client\CustomFieldManager($customFieldConfig, $customFields);
         $model->getFields(); // Initialize cache
@@ -214,10 +240,14 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
             'field1' => array('column' => 'column1', 'type' => 'text'),
             'field2' => array('column' => 'column2', 'type' => 'text'),
         );
+
+        /** @var MockObject|CustomFieldConfig */
         $customFieldConfig = $this->createMock('Database\Table\CustomFieldConfig');
         $customFieldConfig->expects($this->once())->method('getFields')->willReturn($fieldInfo);
         $customFieldConfig->expects($this->once())->method('deleteField')->with('field1');
-        $customFields = $this->createMock('Database\Table\CustomFields');
+
+        /** @var Stub|TableCustomFields */
+        $customFields = $this->createStub(TableCustomFields::class);
 
         $model = new \Model\Client\CustomFieldManager($customFieldConfig, $customFields);
         $model->deleteField('field1');
@@ -243,10 +273,14 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
             'field1' => array('column' => 'column1', 'type' => 'text'),
             'field2' => array('column' => 'column2', 'type' => 'text'),
         );
+
+        /** @var MockObject|CustomFieldConfig */
         $customFieldConfig = $this->createMock('Database\Table\CustomFieldConfig');
         $customFieldConfig->expects($this->once())->method('getFields')->willReturn($fieldInfo);
         $customFieldConfig->expects($this->never())->method('deleteField');
-        $customFields = $this->createMock('Database\Table\CustomFields');
+
+        /** @var Stub|TableCustomFields */
+        $customFields = $this->createStub(TableCustomFields::class);
 
         $model = new \Model\Client\CustomFieldManager($customFieldConfig, $customFields);
         try {

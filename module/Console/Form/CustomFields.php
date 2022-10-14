@@ -86,6 +86,7 @@ class CustomFields extends Form
                     ),
                 ),
             );
+            /** @psalm-suppress InvalidArgument Unable to infer string type of $name */
             $inputFilterField->add($filter);
         }
         $this->add($fields);

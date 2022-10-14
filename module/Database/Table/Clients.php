@@ -42,7 +42,8 @@ class Clients extends \Database\AbstractTable
             $this->_hydrator,
             $this->_serviceLocator->get('Model\Client\Client')
         );
-        return parent::initialize();
+
+        parent::initialize();
     }
 
     /**

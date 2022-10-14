@@ -22,6 +22,8 @@
 
 namespace Database;
 
+use Nada\Table\Mysql;
+
 /**
  * Schema management class
  *
@@ -213,7 +215,7 @@ class SchemaManager
             static::dropIndexes($logger, $table, $schema);
 
             // Update table engine
-            if ($database->isMysql() and $table->getEngine() != $schema['mysql']['engine']) {
+            if ($table instanceof Mysql and $table->getEngine() != $schema['mysql']['engine']) {
                 $logger->info(
                     "Setting engine for table $tableName to {$schema['mysql']['engine']}..."
                 );
@@ -300,7 +302,7 @@ class SchemaManager
             $logger->info("Creating table '$tableName'...");
             $table = $database->createTable($tableName, $schema['columns'], $schema['primary_key']);
             $table->setComment($schema['comment']);
-            if ($database->isMySql()) {
+            if ($table instanceof Mysql) {
                 $table->setEngine($schema['mysql']['engine']);
                 $table->setCharset('utf8');
             }

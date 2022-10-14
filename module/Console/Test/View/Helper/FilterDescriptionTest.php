@@ -22,6 +22,9 @@
 
 namespace Console\Test\View\Helper;
 
+use Model\Network\Subnet;
+use PHPUnit\Framework\MockObject\MockObject;
+
 /**
  * Tests for the FilterDescription helper
  */
@@ -29,7 +32,8 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
 {
     public function testInterfaceInSubnet()
     {
-        $subnet = $this->createMock('Model\Network\Subnet');
+        /** @var MockObject|Subnet */
+        $subnet = $this->createMock(Subnet::class);
         $subnet->expects($this->exactly(2))
                ->method('offsetSet')
                ->withConsecutive(['Address', 'address1'], ['Mask', 'mask1']);
@@ -53,7 +57,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     {
         $this->assertEquals(
             "42 Clients, die auf Installation von Paket &#039;&gt;Name&#039; warten",
-            $this->getHelper()->__invoke('PackagePending', '>Name', 42)
+            $this->getHelper()('PackagePending', '>Name', 42)
         );
     }
 
@@ -61,7 +65,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     {
         $this->assertEquals(
             "42 Clients mit laufender Installation von Paket &#039;&gt;Name&#039;",
-            $this->getHelper()->__invoke('PackageRunning', '>Name', 42)
+            $this->getHelper()('PackageRunning', '>Name', 42)
         );
     }
 
@@ -69,7 +73,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     {
         $this->assertEquals(
             "42 Clients mit erfolgreich installiertem Paket &#039;&gt;Name&#039;",
-            $this->getHelper()->__invoke('PackageSuccess', '>Name', 42)
+            $this->getHelper()('PackageSuccess', '>Name', 42)
         );
     }
 
@@ -77,7 +81,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     {
         $this->assertEquals(
             "42 Clients, bei denen die Installation von Paket &#039;&gt;Name&#039; fehlgeschlagen ist",
-            $this->getHelper()->__invoke('PackageError', '>Name', 42)
+            $this->getHelper()('PackageError', '>Name', 42)
         );
     }
 
@@ -85,7 +89,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     {
         $this->assertEquals(
             "42 Clients, auf denen die Software &#039;&gt;Name&#039; installiert ist",
-            $this->getHelper()->__invoke('Software', '>Name', 42)
+            $this->getHelper()('Software', '>Name', 42)
         );
     }
 
@@ -93,7 +97,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
     {
         $this->assertEquals(
             '42 Clients mit manuell eingegebenem Windows-Lizenzschlüssel',
-            $this->getHelper()->__invoke('Windows.ManualProductKey', 'dummy', 42)
+            $this->getHelper()('Windows.ManualProductKey', 'dummy', 42)
         );
     }
 
@@ -103,7 +107,7 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
             'InvalidArgumentException',
             'No description available for this set of multiple filters'
         );
-        $this->getHelper()->__invoke(array('NetworkInterface.Subnet'), null, 42);
+        $this->getHelper()(array('NetworkInterface.Subnet'), null, 42);
     }
 
     public function testInvalidStringFilter()
@@ -112,6 +116,6 @@ class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
             'InvalidArgumentException',
             'No description available for filter invalid'
         );
-        $this->getHelper()->__invoke('invalid', null, 42);
+        $this->getHelper()('invalid', null, 42);
     }
 }

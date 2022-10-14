@@ -22,20 +22,22 @@
 
 namespace Console\Test\Controller;
 
+use Console\Form\Login;
+use Model\Operator\AuthenticationService;
+use PHPUnit\Framework\MockObject\MockObject;
+
 /**
  * Tests for LoginController
  */
 class LoginControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
-     * AuthenticationService mock
-     * @var \Model\Operator\AuthenticationService
+     * @var MockObject|AuthenticationService
      */
     protected $_authenticationService;
 
     /**
-     * Login form mock
-     * @var \Console\Form\Login
+     * @var MockObject|Login
      */
     protected $_form;
 

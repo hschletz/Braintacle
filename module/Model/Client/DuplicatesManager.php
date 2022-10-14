@@ -23,6 +23,7 @@
 namespace Model\Client;
 
 use Database\Table;
+use Model\SoftwareManager;
 
 /**
  * Class for managing duplicate clients
@@ -120,9 +121,8 @@ class DuplicatesManager
 
     /**
      * Software manager
-     * @var \Model\Client\ClientManager
      */
-    protected $_softwareManager;
+    private SoftwareManager $_softwareManager;
 
     /**
      * Constructor

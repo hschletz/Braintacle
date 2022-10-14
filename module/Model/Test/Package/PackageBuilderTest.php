@@ -34,6 +34,7 @@ use Model\Package\RuntimeException;
 use Model\Package\Storage\Direct;
 use Model\Package\Storage\StorageInterface;
 use org\bovigo\vfs\vfsStream;
+use ZipArchive;
 
 class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
 {
@@ -373,6 +374,7 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
     {
         $root = vfsstream::setup('root');
         $source = vfsStream::newFile('source')->at($root)->url();
+        $archiveObject = $this->createStub(ZipArchive::class);
 
         $data = ['FileLocation' => $source, 'FileName' => 'FileName', 'Platform' => 'windows'];
 
@@ -388,13 +390,13 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $archiveManager->expects($this->once())
                        ->method('createArchive')
                        ->with(ArchiveManager::ZIP, 'path/archive')
-                       ->willReturn('archive');
+                       ->willReturn($archiveObject);
         $archiveManager->expects($this->once())
                        ->method('addFile')
-                       ->with('archive', $source, 'FileName');
+                       ->with($archiveObject, $source, 'FileName');
         $archiveManager->expects($this->once())
                        ->method('closeArchive')
-                       ->with('archive', false);
+                       ->with($archiveObject, false);
 
         $model = new PackageBuilder(
             $this->createStub(PackageManager::class),
@@ -411,6 +413,7 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $root = vfsstream::setup('root');
         $source = vfsStream::newFile('source')->at($root)->url();
         $data = ['FileLocation' => $source, 'FileName' => 'FileName', 'Platform' => 'windows'];
+        $archiveObject = $this->createStub(ZipArchive::class);
 
         $archiveManager = $this->createMock(ArchiveManager::class);
         $archiveManager->expects($this->once())
@@ -424,13 +427,13 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $archiveManager->expects($this->once())
                        ->method('createArchive')
                        ->with(ArchiveManager::ZIP, 'path/archive')
-                       ->willReturn('archive');
+                       ->willReturn($archiveObject);
         $archiveManager->expects($this->once())
                        ->method('addFile')
-                       ->with('archive', $source, 'FileName');
+                       ->with($archiveObject, $source, 'FileName');
         $archiveManager->expects($this->once())
                        ->method('closeArchive')
-                       ->with('archive', false);
+                       ->with($archiveObject, false);
 
         $model = new PackageBuilder(
             $this->createStub(PackageManager::class),
@@ -483,7 +486,8 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
     {
         $root = vfsstream::setup('root');
         $source = vfsStream::newFile('source')->at($root)->url();
-        $archive = $root->url() . '/archive';
+        $archivePath = $root->url() . '/archive';
+        $archiveObject = $this->createStub(ZipArchive::class);
         $data = ['FileLocation' => $source, 'FileName' => 'FileName', 'Platform' => 'windows'];
 
         $archiveManager = $this->createMock(ArchiveManager::class);
@@ -497,17 +501,18 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
                        ->willReturn(false);
         $archiveManager->expects($this->once())
                        ->method('createArchive')
-                       ->with(ArchiveManager::ZIP, $archive)
-                       ->willReturnCallback(function () use ($root) {
-                           return vfsStream::newFile('archive')->at($root)->url();
+                       ->with(ArchiveManager::ZIP, $archivePath)
+                       ->willReturnCallback(function () use ($root, $archiveObject) {
+                           vfsStream::newFile('archive')->at($root)->url();
+                           return $archiveObject;
                        });
         $archiveManager->expects($this->once())
                        ->method('addFile')
-                       ->with($archive, $source, 'FileName')
+                       ->with($archiveObject, $source, 'FileName')
                        ->will($this->throwException(new RuntimeException('closeArchive')));
         $archiveManager->expects($this->once())
                        ->method('closeArchive')
-                       ->with($archive, true);
+                       ->with($archiveObject, true);
 
         $model = new PackageBuilder(
             $this->createStub(PackageManager::class),
@@ -521,7 +526,7 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         } catch (RuntimeException $e) {
             $this->assertEquals('closeArchive', $e->getMessage());
             $this->assertFileExists($source);
-            $this->assertFileDoesNotExist($archive);
+            $this->assertFileDoesNotExist($archivePath);
         }
     }
 

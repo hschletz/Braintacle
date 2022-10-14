@@ -23,11 +23,15 @@
 namespace Console\Test\Controller;
 
 use Console\Form\NetworkDevice;
+use Console\Form\Subnet;
 use Laminas\Form\Element\Csrf;
 use Laminas\Form\Element\Text;
 use Laminas\I18n\View\Helper\DateFormat;
 use Library\Form\Element\SelectSimple;
 use Library\Form\Element\Submit;
+use Model\Network\DeviceManager;
+use Model\Network\SubnetManager;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for NetworkController
@@ -35,26 +39,23 @@ use Library\Form\Element\Submit;
 class NetworkControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
-     * DeviceManager mock
-     * @var \Model\Network\DeviceManager
+     * @var MockObject|DeviceManager
      */
     protected $_deviceManager;
 
     /**
-     * SubnetManager mock
-     * @var \Model\Network\SubnetManager
+     * @var MockObject|SubnetManager
      */
     protected $_subnetManager;
 
     /**
      * Subnet form mock
-     * @var \Console\Form\Subnet
+     * @var MockObject|Subnet
      */
     protected $_subnetForm;
 
     /**
-     * Device form mock
-     * @var \Console\Form\NetworkDevice
+     * @var MockObject|NetworkDevice
      */
     protected $_deviceForm;
 
@@ -187,7 +188,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                              ->with($filters, 'DiscoveryDate', 'desc')
                              ->willReturn($result);
 
-        $dateFormat = $this->createMock('Laminas\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock(DateFormat::class);
         $dateFormat->expects($this->once())
                    ->method('__invoke')
                    ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
@@ -255,7 +256,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
                              ->with($filters, 'DiscoveryDate', 'desc')
                              ->willReturn($result);
 
-        $dateFormat = $this->createMock('Laminas\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock(DateFormat::class);
         $dateFormat->expects($this->once())
                    ->method('__invoke')
                    ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
@@ -413,7 +414,7 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
             'Type' => 'type1',
             'Description' => 'description1',
         );
-        $dateFormat = $this->createMock('Laminas\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock(DateFormat::class);
         $dateFormat->expects($this->once())
                    ->method('__invoke')
                    ->with($date, \IntlDateFormatter::MEDIUM, \IntlDateFormatter::MEDIUM)

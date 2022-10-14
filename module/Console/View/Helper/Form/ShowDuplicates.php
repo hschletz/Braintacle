@@ -112,12 +112,8 @@ class ShowDuplicates extends Form
 
     /**
      * Generate link to blacklist criteria value
-     *
-     * @param string $criteria
-     * @param string $value
-     * @return string
      */
-    public function getBlacklistLink($criteria, $value)
+    public function getBlacklistLink(string $criteria, ?string $value): string
     {
         if ($value === null) {
             // NULL values are never considered for duplicates and cannot be blacklisted.

@@ -22,15 +22,24 @@
 
 namespace Console\Test\Controller;
 
+use Console\Form\Import;
 use Console\Form\ProductKey;
 use Console\Form\Search as SearchForm;
 use Console\Mvc\Controller\Plugin\PrintForm;
+use Console\View\Helper\Form\ClientConfig;
 use Console\View\Helper\Form\Search as SearchHelper;
 use Laminas\Form\Element\Csrf;
 use Laminas\Form\Element\Text;
+use Laminas\I18n\View\Helper\DateFormat;
 use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 use Laminas\View\Model\ViewModel;
 use Library\Form\Element\Submit;
+use Model\Client\ClientManager;
+use Model\Config;
+use Model\Group\GroupManager;
+use Model\Registry\RegistryManager;
+use Model\SoftwareManager;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for ClientController
@@ -38,32 +47,27 @@ use Library\Form\Element\Submit;
 class ClientControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
-     * Client manager mock
-     * @var \Model\Client\ClientManager
+     * @var MockObject|ClientManager
      */
     protected $_clientManager;
 
     /**
-     * Group manager mock
-     * @var \Model\Group\GroupManager
+     * @var MockObject|GroupManager
      */
     protected $_groupManager;
 
     /**
-     * Registry manager mock
-     * @var \Model\Registry\RegistryManager
+     * @var MockObject|RegistryManager
      */
     protected $_registryManager;
 
     /**
-     * Software manager mock
-     * @var \Model\SoftwareManager
+     * @var MockObject|SoftwareManager
      */
     protected $_softwareManager;
 
     /**
-     * Config mock
-     * @var \Model\Config
+     * @var MockObject|Config
      */
     protected $_config;
 
@@ -137,7 +141,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $formManager->setService('Console\Form\CustomFields', $this->createMock('Console\Form\CustomFields'));
         $formManager->setService('Console\Form\DeleteClient', $this->createMock('Console\Form\DeleteClient'));
         $formManager->setService('Console\Form\GroupMemberships', $this->createMock('Console\Form\GroupMemberships'));
-        $formManager->setService('Console\Form\Import', $this->createMock('Console\Form\Import'));
+        $formManager->setService('Console\Form\Import', $this->createMock(Import::class));
         $formManager->setService('Console\Form\ProductKey', $this->createMock('Console\Form\ProductKey'));
         $formManager->setService('Console\Form\Search', $this->createMock('Console\Form\Search'));
     }
@@ -832,7 +836,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $inventoryDate = new \DateTime('2014-05-29 11:16:15');
         $lastContactDate = new \DateTime('2014-05-29 11:17:34');
 
-        $dateFormat = $this->createMock('Laminas\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock(DateFormat::class);
         $dateFormat->expects($this->exactly(2))
                    ->method('__invoke')
                    ->withConsecutive(
@@ -2615,7 +2619,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->never())
              ->method('process');
 
-        $formHelper = $this->createMock('Console\View\Helper\Form\ClientConfig');
+        $formHelper = $this->createMock(ClientConfig::class);
         $formHelper->method('__invoke')->with($form)->willReturn('<form></form>');
         $this->getApplicationServiceLocator()
              ->get('ViewHelperManager')
@@ -2644,7 +2648,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->never())
              ->method('process');
 
-        $formHelper = $this->createMock('Console\View\Helper\Form\ClientConfig');
+        $formHelper = $this->createMock(ClientConfig::class);
         $formHelper->method('__invoke')->with($form)->willReturn('<form></form>');
         $this->getApplicationServiceLocator()
              ->get('ViewHelperManager')

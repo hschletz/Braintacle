@@ -23,7 +23,12 @@
 namespace Database\Test\Hydrator;
 
 use Database\AbstractTable;
+use Database\Table\WindowsInstallations;
 use Laminas\Db\ResultSet\HydratingResultSet;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Model\Client\CustomFieldManager;
+use Model\Client\ItemManager;
+use PHPUnit\Framework\MockObject\Stub;
 
 class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
 {
@@ -48,10 +53,10 @@ class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
             )
         );
 
-        $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
+        $customFieldManager = $this->createMock(CustomFieldManager::class);
         $customFieldManager->method('getHydrator')->willReturn($hydrator);
 
-        $windowsInstallations = $this->createMock('Database\Table\WindowsInstallations');
+        $windowsInstallations = $this->createMock(WindowsInstallations::class);
         $windowsInstallations->method('getHydrator')->willReturn($hydrator);
 
         $resultSet = $this->createStub(HydratingResultSet::class);
@@ -61,7 +66,7 @@ class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         $itemTable->method('getResultSetPrototype')->willReturn($resultSet);
         $itemTable->method('getHydrator')->willReturn($hydrator);
 
-        $itemManager = $this->createMock('Model\Client\ItemManager');
+        $itemManager = $this->createMock(ItemManager::class);
         $itemManager->method('getTable')->willReturnMap(
             array(
                 array('item', $itemTable),
@@ -69,7 +74,8 @@ class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
             )
         );
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var Stub|ServiceLocatorInterface */
+        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Database\Nada', $nada),

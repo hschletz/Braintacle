@@ -23,7 +23,10 @@
 namespace Database\Test\Table;
 
 use Database\AbstractTable;
+use Laminas\Db\Sql\Select;
 use Laminas\Hydrator\AbstractHydrator;
+use Laminas\Hydrator\HydratorInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for AbstractTable helper methods
@@ -38,7 +41,7 @@ class AbstractTableTest extends \PHPUnit\Framework\TestCase
 
     /**
      * Select Mock
-     * @var \Laminas\Db\Sql\Select
+     * @var MockObject|Select
      */
     protected $_select;
 
@@ -59,10 +62,11 @@ class AbstractTableTest extends \PHPUnit\Framework\TestCase
 
     public function testGetHydrator()
     {
-        $hydrator = new \ReflectionProperty('Database\AbstractTable', '_hydrator');
-        $hydrator->setAccessible(true);
-        $hydrator->setValue($this->_table, 'the hydrator');
-        $this->assertEquals('the hydrator', $this->_table->getHydrator());
+        $hydrator = $this->createStub(HydratorInterface::class);
+        $property = new \ReflectionProperty('Database\AbstractTable', '_hydrator');
+        $property->setAccessible(true);
+        $property->setValue($this->_table, $hydrator);
+        $this->assertSame($hydrator, $this->_table->getHydrator());
     }
 
     public function testGetConnection()
@@ -116,7 +120,7 @@ class AbstractTableTest extends \PHPUnit\Framework\TestCase
 
     public function testFetchColWithOtherHydrator()
     {
-        $hydrator = new \Database\Test\TestHydrator();
+        $hydrator = $this->createStub(HydratorInterface::class);
 
         $resultSet = $this->createMock('Laminas\Db\ResultSet\HydratingResultSet');
         $resultSet->method('getHydrator')->willReturn($hydrator);

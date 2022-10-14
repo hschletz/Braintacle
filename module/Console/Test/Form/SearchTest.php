@@ -22,6 +22,12 @@
 
 namespace Console\Test\Form;
 
+use Console\Form\Search;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Model\Client\CustomFieldManager;
+use Model\Registry\RegistryManager;
+use PHPUnit\Framework\MockObject\MockObject;
+
 /**
  * Tests for Search form
  */
@@ -29,19 +35,19 @@ class SearchTest extends \Console\Test\AbstractFormTest
 {
     /**
      * Translator mock object
-     * @var \Laminas\I18n\Translator\TranslatorInterface
+     * @var MockObject|TranslatorInterface
      */
     protected $_translator;
 
     /**
      * RegistryManager mock object
-     * @var \Model\Registry\RegistryManager
+     * @var MockObject|RegistryManager
      */
     protected $_registryManager;
 
     /**
      * CustomFieldManager mock object
-     * @var \Model\Client\CustomFieldManager
+     * @var MockObject|CustomFieldManager
      */
     protected $_customFieldManager;
 
@@ -402,13 +408,17 @@ class SearchTest extends \Console\Test\AbstractFormTest
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage('No filter submitted');
-        $this->_form->validateSearch('value', array('search' => 'value'));
+
+        $form = new Search();
+        $form->validateSearch('value', ['search' => 'value']);
     }
 
     public function testMissingFilterOnOperatorValidation()
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage('No filter submitted');
-        $this->_form->validateOperator('value', array('search' => 'value'));
+
+        $form = new Search();
+        $form->validateOperator('value', ['search' => 'value']);
     }
 }

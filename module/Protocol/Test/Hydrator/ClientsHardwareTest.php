@@ -23,6 +23,7 @@
 namespace Protocol\Test\Hydrator;
 
 use Model\Client\WindowsInstallation;
+use stdClass;
 
 class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
 {
@@ -125,10 +126,10 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
         }
 
         $hydrator = $this->getHydrator();
-        $object = new \ArrayObject();
-        $object['IdString'] = 'ignored';
+        $object = new stdClass();
+        $object->IdString = 'ignored';
         $this->assertSame($object, $hydrator->hydrate($data, $object));
-        $this->assertEquals($objectData, $object->getArrayCopy());
+        $this->assertEquals($objectData, get_object_vars($object));
     }
 
     public function extractProvider()

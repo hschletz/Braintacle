@@ -22,6 +22,9 @@
 
 namespace Console\Test;
 
+use Laminas\Validator\Translator\TranslatorInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+
 /**
  * Abstract form test case
  *
@@ -55,6 +58,7 @@ abstract class AbstractFormTest extends \PHPUnit\Framework\TestCase
 
     public function setUp(): void
     {
+        /** @var MockObject|TranslatorInterface */
         $translator = $this->createMock('\Laminas\Validator\Translator\TranslatorInterface');
         $translator->method('translate')->willReturnCallback(array($this, 'translatorMock'));
         $this->_defaultTranslatorBackup = \Laminas\Validator\AbstractValidator::getDefaultTranslator();

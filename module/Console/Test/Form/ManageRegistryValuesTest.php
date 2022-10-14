@@ -23,6 +23,8 @@
 namespace Console\Test\Form;
 
 use Console\Form\ManageRegistryValues;
+use Model\Registry\RegistryManager;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for ManageRegistryValues
@@ -31,7 +33,7 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
 {
     /**
      * RegistryManager mock object
-     * @var \Model\Registry\RegistryManager
+     * @var MockObject|RegistryManager
      */
     protected $_registryManager;
 

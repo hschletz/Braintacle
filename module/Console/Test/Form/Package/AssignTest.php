@@ -64,20 +64,21 @@ class AssignTest extends \Console\Test\AbstractFormTest
 
     public function testSetPackages()
     {
-        $this->assertFalse($this->_form->has('Packages'));
+        $form = new Assign();
+        $this->assertFalse($form->has('Packages'));
 
-        $this->_form->setPackages(array('package1', 'package2'));
-        $this->assertTrue($this->_form->has('Packages'));
-        $packages = $this->_form->get('Packages');
+        $form->setPackages(['package1', 'package2']);
+        $this->assertTrue($form->has('Packages'));
+        $packages = $form->get('Packages');
         $this->assertCount(2, $packages);
         $package2 = $packages->get('package2');
         $this->assertInstanceOf('Laminas\Form\Element\Checkbox', $package2);
         $this->assertEquals('package2', $package2->getLabel());
 
         // Overwrite previously set packages
-        $this->_form->setPackages(array());
-        $this->assertTrue($this->_form->has('Packages'));
-        $packages = $this->_form->get('Packages');
+        $form->setPackages([]);
+        $this->assertTrue($form->has('Packages'));
+        $packages = $form->get('Packages');
         $this->assertCount(0, $packages);
     }
 
@@ -90,17 +91,20 @@ class AssignTest extends \Console\Test\AbstractFormTest
 
     public function testRenderFieldsetEmptyPackages()
     {
-        $this->_form->setPackages(array());
+        $form = new Assign();
+        $form->setPackages([]);
         $view = $this->createView();
-        $html = $this->_form->renderFieldset($view, $this->_form);
+        $html = $this->_form->renderFieldset($view, $form);
         $this->assertEquals('', $html);
     }
 
     public function testRenderFieldsetWithPackages()
     {
-        $this->_form->setPackages(array('package1', 'package2'));
+        $form = new Assign();
+        $form->init();
+        $form->setPackages(['package1', 'package2']);
         $view = $this->createView();
-        $html = $this->_form->renderFieldset($view, $this->_form);
+        $html = $form->renderFieldset($view, $form);
         $document = new \Laminas\Dom\Document($html);
         $this->assertCount(1, Query::execute('//div[@class="table"]', $document));
         $this->assertCount(1, Query::execute('//*[text()="package1"]', $document));

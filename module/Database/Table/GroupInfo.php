@@ -79,6 +79,7 @@ class GroupInfo extends \Database\AbstractTable
             $this->_hydrator,
             $this->_serviceLocator->get('Model\Group\Group')
         );
-        return parent::initialize();
+
+        parent::initialize();
     }
 }

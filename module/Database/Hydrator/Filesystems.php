@@ -67,19 +67,19 @@ class Filesystems implements \Laminas\Hydrator\HydratorInterface
         $object->exchangeArray(array());
         if ($data['letter']) {
             // Windows
-            $object['Letter'] = $this->hydrateValue('Letter', $data['letter']);
-            $object['Type'] = $data['type'];
-            $object['Label'] = $data['volumn'];
+            $object->Letter = $this->hydrateValue('Letter', $data['letter']);
+            $object->Type = $data['type'];
+            $object->Label = $data['volumn'];
         } else {
             // UNIX
-            $object['Mountpoint'] = $data['type'];
-            $object['Device'] = $data['volumn'];
-            $object['CreationDate'] = $this->hydrateValue('CreationDate', $data['createdate']);
+            $object->Mountpoint = $data['type'];
+            $object->Device = $data['volumn'];
+            $object->CreationDate = $this->hydrateValue('CreationDate', $data['createdate']);
         }
-        $object['Filesystem'] = $data['filesystem'];
-        $object['Size'] = $data['total'];
-        $object['FreeSpace'] = $data['free'];
-        $object['UsedSpace'] = $data['total'] - $data['free'];
+        $object->Filesystem = $data['filesystem'];
+        $object->Size = $data['total'];
+        $object->FreeSpace = $data['free'];
+        $object->UsedSpace = $data['total'] - $data['free'];
         return $object;
     }
 
@@ -87,22 +87,22 @@ class Filesystems implements \Laminas\Hydrator\HydratorInterface
     public function extract(object $object): array
     {
         $data = array();
-        if (isset($object['Letter'])) {
+        if (isset($object->Letter)) {
             // Windows
-            $data['letter'] = $this->extractValue('letter', $object['Letter']);
-            $data['type'] = $object['Type'];
-            $data['volumn'] = $object['Label'];
+            $data['letter'] = $this->extractValue('letter', $object->Letter);
+            $data['type'] = $object->Type;
+            $data['volumn'] = $object->Label;
             $data['createdate'] = null;
         } else {
             // UNIX
             $data['letter'] = null;
-            $data['type'] = $object['Mountpoint'];
-            $data['volumn'] = $object['Device'];
-            $data['createdate'] = $this->extractValue('createdate', $object['CreationDate']);
+            $data['type'] = $object->Mountpoint;
+            $data['volumn'] = $object->Device;
+            $data['createdate'] = $this->extractValue('createdate', $object->CreationDate);
         }
-        $data['filesystem'] = $object['Filesystem'];
-        $data['total'] = $object['Size'];
-        $data['free'] = $object['FreeSpace'];
+        $data['filesystem'] = $object->Filesystem;
+        $data['total'] = $object->Size;
+        $data['free'] = $object->FreeSpace;
         return $data;
     }
 
@@ -169,12 +169,8 @@ class Filesystems implements \Laminas\Hydrator\HydratorInterface
 
     /**
      * Extract value
-     *
-     * @param string $name
-     * @param string $value
-     * @return mixed
      */
-    public function extractValue($name, $value)
+    public function extractValue(string $name, $value)
     {
         if ($name == 'createdate') {
             $value = ($value ? $value->format('Y-m-d') : null);

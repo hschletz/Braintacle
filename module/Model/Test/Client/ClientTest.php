@@ -23,10 +23,16 @@
 namespace Model\Test\Client;
 
 use Database\Table\ClientConfig;
+use Database\Table\GroupMemberships;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Laminas\Db\ResultSet\AbstractResultSet;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Model\Client\Client;
+use Model\Client\CustomFieldManager;
 use Model\Client\CustomFields;
+use Model\Group\GroupManager;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 
 class ClientTest extends \Model\Test\AbstractTest
 {
@@ -58,7 +64,8 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testOffsetGetAndroidNotNull()
     {
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
@@ -86,7 +93,8 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testOffsetGetAndroidNull()
     {
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
@@ -104,7 +112,8 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testOffsetGetWindowsNotNull()
     {
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
@@ -136,7 +145,8 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testOffsetGetWindowsNull()
     {
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
@@ -160,9 +170,9 @@ class ClientTest extends \Model\Test\AbstractTest
         $customFieldManager->expects($this->once())->method('read')->with(2)->willReturn($customFields);
 
         $model = $this->getModel(array('Model\Client\CustomFieldManager' => $customFieldManager));
-        $model['Id'] = 2;
-        $this->assertEquals($customFields, $model['CustomFields']);
-        $this->assertEquals($customFields, $model['CustomFields']); // cached result
+        $model->Id = 2;
+        $this->assertEquals($customFields, $model->CustomFields);
+        $this->assertEquals($customFields, $model->CustomFields); // cached result
     }
 
     public function testOffsetGetRegistry()
@@ -186,7 +196,8 @@ class ClientTest extends \Model\Test\AbstractTest
      */
     public function testOffsetGetBlacklisted($index, $initialIndex, $initialValue, $result)
     {
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
@@ -262,7 +273,8 @@ class ClientTest extends \Model\Test\AbstractTest
             $groups[] = $group;
         }
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
         $serviceManager->method('get')->with('Model\Config')->willReturn($config);
 
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroups', '__destruct']);
@@ -281,7 +293,8 @@ class ClientTest extends \Model\Test\AbstractTest
                ->withConsecutive(array('option1'), array('option2'))
                ->willReturnOnConsecutiveCalls('value1', 'value2');
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
         $serviceManager->expects($this->exactly(2))->method('get')->with('Model\Config')->willReturn($config);
 
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroups', '__destruct']);
@@ -492,7 +505,8 @@ class ClientTest extends \Model\Test\AbstractTest
             $groups[] = $group;
         }
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
         $serviceManager->method('get')->with('Model\Config')->willReturn($config);
 
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getConfig', 'getGroups']);
@@ -544,7 +558,7 @@ class ClientTest extends \Model\Test\AbstractTest
     public function testGetPackageAssignments($order, $direction, $package0, $package1)
     {
         $model = $this->getModel();
-        $model['Id'] = 1;
+        $model->Id = 1;
 
         $assignments = $model->getPackageAssignments($order, $direction);
         $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $assignments);
@@ -558,7 +572,7 @@ class ClientTest extends \Model\Test\AbstractTest
     public function testGetPackageAssignmentsDefaultOrder()
     {
         $model = $this->getModel();
-        $model['Id'] = 1;
+        $model->Id = 1;
 
         $assignments = $model->getPackageAssignments();
         $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $assignments);
@@ -586,7 +600,7 @@ class ClientTest extends \Model\Test\AbstractTest
     public function testGetDownloadedPackageIds()
     {
         $model = $this->getModel();
-        $model['Id'] = 1;
+        $model->Id = 1;
         $this->assertEquals(array(1, 2), $model->getDownloadedPackageIds());
     }
 
@@ -614,7 +628,7 @@ class ClientTest extends \Model\Test\AbstractTest
                 'Model\Package\PackageManager' => $packageManager,
             )
         );
-        $model['Id'] = 1;
+        $model->Id = 1;
 
         $model->resetPackage('packageName');
 
@@ -635,7 +649,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $packageManager->method('getPackage')->with('packageName')->willReturn($package);
 
         $model = $this->getModel(array('Model\Package\PackageManager' => $packageManager));
-        $model['Id'] = 1;
+        $model->Id = 1;
 
         try {
             $model->resetPackage('packageName');
@@ -689,7 +703,7 @@ class ClientTest extends \Model\Test\AbstractTest
                 'Model\Package\PackageManager' => $packageManager,
             )
         );
-        $model['Id'] = 1;
+        $model->Id = 1;
 
         $model->resetPackage('packageName');
     }
@@ -723,7 +737,7 @@ class ClientTest extends \Model\Test\AbstractTest
                 'Database\Table\ClientConfig' => $clientConfig,
                 'Model\Package\PackageManager' => $packageManager,
         ]);
-        $model['Id'] = 1;
+        $model->Id = 1;
 
         $model->resetPackage('packageName');
     }
@@ -738,7 +752,8 @@ class ClientTest extends \Model\Test\AbstractTest
                     ->with('type', array('Client' => 42), null, null)
                     ->willReturn($result);
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
         $serviceManager->method('get')->with('Model\Client\ItemManager')->willReturn($itemManager);
 
         $model = $this->createPartialMock(Client::class, ['offsetGet']);
@@ -758,7 +773,8 @@ class ClientTest extends \Model\Test\AbstractTest
                     ->with('type', array('filter' => 'arg', 'Client' => 42), 'order', 'direction')
                     ->willReturn($result);
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
         $serviceManager->method('get')->with('Model\Client\ItemManager')->willReturn($itemManager);
 
         $model = $this->createPartialMock(Client::class, ['offsetGet']);
@@ -807,7 +823,7 @@ class ClientTest extends \Model\Test\AbstractTest
      */
     public function testSetGroupMembershipsNoAction($oldMemberships, $newMemberships)
     {
-        $groupMemberships = $this->createMock('Database\Table\GroupMemberships');
+        $groupMemberships = $this->createMock(GroupMemberships::class);
         $groupMemberships->expects($this->never())->method('insert');
         $groupMemberships->expects($this->never())->method('update');
         $groupMemberships->expects($this->never())->method('delete');
@@ -820,7 +836,8 @@ class ClientTest extends \Model\Test\AbstractTest
             )
         );
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var Stub|ServiceLocatorInterface */
+        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -869,7 +886,7 @@ class ClientTest extends \Model\Test\AbstractTest
      */
     public function testSetGroupMembershipsInsert($oldMemberships, $newMembership)
     {
-        $groupMemberships = $this->createMock('Database\Table\GroupMemberships');
+        $groupMemberships = $this->createMock(GroupMemberships::class);
         $groupMemberships->expects($this->once())->method('insert')->with(
             array(
                 'hardware_id' => 42,
@@ -888,7 +905,8 @@ class ClientTest extends \Model\Test\AbstractTest
             )
         );
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var Stub|ServiceLocatorInterface */
+        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -937,7 +955,7 @@ class ClientTest extends \Model\Test\AbstractTest
      */
     public function testSetGroupMembershipsUpdate($oldMembership, $newMembership)
     {
-        $groupMemberships = $this->createMock('Database\Table\GroupMemberships');
+        $groupMemberships = $this->createMock(GroupMemberships::class);
         $groupMemberships->expects($this->never())->method('insert');
         $groupMemberships->expects($this->once())->method('update')->with(
             array('static' => $newMembership),
@@ -956,7 +974,8 @@ class ClientTest extends \Model\Test\AbstractTest
             )
         );
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var Stub|ServiceLocatorInterface */
+        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -1003,7 +1022,7 @@ class ClientTest extends \Model\Test\AbstractTest
         );
         $group2->expects($this->never())->method('update');
 
-        $groupMemberships = $this->createMock('Database\Table\GroupMemberships');
+        $groupMemberships = $this->createMock(GroupMemberships::class);
         $groupMemberships->expects($this->never())->method('insert');
         $groupMemberships->expects($this->never())->method('update');
         $groupMemberships->expects($this->once())->method('delete')->with(
@@ -1016,7 +1035,8 @@ class ClientTest extends \Model\Test\AbstractTest
         $groupManager = $this->createMock('Model\Group\GroupManager');
         $groupManager->method('getGroups')->with()->willReturn(array($group1, $group2));
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var Stub|ServiceLocatorInterface */
+        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -1040,7 +1060,7 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testSetGroupMembershipsMixedKeys()
     {
-        $groupMemberships = $this->createMock('Database\Table\GroupMemberships');
+        $groupMemberships = $this->createMock(GroupMemberships::class);
         $groupMemberships->expects($this->exactly(2))->method('insert')->withConsecutive(
             array(
                 array(
@@ -1069,7 +1089,8 @@ class ClientTest extends \Model\Test\AbstractTest
             )
         );
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var Stub|ServiceLocatorInterface */
+        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(
@@ -1099,7 +1120,8 @@ class ClientTest extends \Model\Test\AbstractTest
             array(array('Id' => 1, 'Name' => 'group1'))
         );
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        /** @var Stub|ServiceLocatorInterface */
+        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
                        ->willReturnMap(
                            array(array('Model\Group\GroupManager', $groupManager))
@@ -1153,11 +1175,11 @@ class ClientTest extends \Model\Test\AbstractTest
      */
     public function testGetGroupMemberships($type, $expected)
     {
-        $groupManager = $this->createMock('Model\Group\GroupManager');
+        $groupManager = $this->createMock(GroupManager::class);
         $groupManager->expects($this->once())->method('updateCache');
 
         $model = $this->getModel(array('Model\Group\GroupManager' => $groupManager));
-        $model['Id'] = 1;
+        $model->Id = 1;
 
         $this->assertSame($expected, $model->getGroupMemberships($type));
     }
@@ -1175,13 +1197,13 @@ class ClientTest extends \Model\Test\AbstractTest
     {
         $groups = array('group1', 'group2');
 
-        $groupManager = $this->createMock('Model\Group\GroupManager');
+        $groupManager = $this->createMock(GroupManager::class);
         $groupManager->expects($this->once())->method('getGroups')->with('Member', 42)->willReturn(
             new \ArrayIterator($groups)
         );
 
         $model = $this->getModel(array('Model\Group\GroupManager' => $groupManager));
-        $model['Id'] = 42;
+        $model->Id = 42;
 
         $this->assertEquals($groups, $model->getGroups());
         $this->assertEquals($groups, $model->getGroups()); // cached result
@@ -1189,11 +1211,11 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testSetCustomFields()
     {
-        $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
+        $customFieldManager = $this->createMock(CustomFieldManager::class);
         $customFieldManager->expects($this->once())->method('write')->with(42, 'data');
 
         $model = $this->getModel(array('Model\Client\CustomFieldManager' => $customFieldManager));
-        $model['Id'] = 42;
+        $model->Id = 42;
 
         $model->setCustomFields('data');
     }

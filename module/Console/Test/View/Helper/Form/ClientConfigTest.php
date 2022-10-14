@@ -24,11 +24,14 @@ namespace Console\Test\View\Helper\Form;
 
 use Console\Form\ClientConfig as ClientConfigForm;
 use Console\View\Helper\Form\ClientConfig as ClientConfigHelper;
+use Console\View\Helper\Form\Fieldset as FormFieldset;
 use Laminas\Form\Element;
 use Laminas\Form\Fieldset;
 use Laminas\Stdlib\PriorityList;
 use Laminas\View\Renderer\PhpRenderer;
 use Model\ClientOrGroup;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 
 class ClientConfigTest extends \Library\Test\View\Helper\AbstractTest
 {
@@ -148,10 +151,12 @@ class ClientConfigTest extends \Library\Test\View\Helper\AbstractTest
         $iterator->insert('text', $elementText, 1);
         $iterator->insert('noinfo', $elementWithoutInfo, 0);
 
-        $fieldset = $this->createMock('Laminas\Form\Fieldset');
+        /** @var Stub|Fieldset */
+        $fieldset = $this->createStub(Fieldset::class);
         $fieldset->method('getIterator')->willReturn($iterator);
 
-        $fieldsetHelper = $this->createMock('Console\View\Helper\Form\Fieldset');
+        /** @var MockObject|FormFieldset */
+        $fieldsetHelper = $this->createMock(FormFieldset::class);
         $fieldsetHelper->method('renderFieldsetElement')->with($fieldset, $elements)->willReturn('FIELDSET');
 
         $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');

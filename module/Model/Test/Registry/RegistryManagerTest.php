@@ -22,8 +22,11 @@
 
 namespace Model\Test\Registry;
 
+use Database\Table\RegistryData;
+use Database\Table\RegistryValueDefinitions;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Model\Registry\RegistryManager;
+use PHPUnit\Framework\MockObject\Stub;
 
 /**
  * Tests for Model\RegistryManager
@@ -327,10 +330,12 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
         $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
 
-        $registryValueDefinitions = $this->createMock('Database\Table\RegistryValueDefinitions');
+        /** @var Stub|RegistryValueDefinitions */
+        $registryValueDefinitions = $this->createStub(RegistryValueDefinitions::class);
         $registryValueDefinitions->method('getAdapter')->willReturn($adapter);
 
-        $registryData = $this->createMock('Database\Table\RegistryData');
+        /** @var Stub|RegistryData */
+        $registryData = $this->createStub(RegistryData::class);
         $registryData->method('delete')->willThrowException(new \RuntimeException('test message'));
 
         $this->expectException('RuntimeException');

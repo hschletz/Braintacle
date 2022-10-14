@@ -22,6 +22,8 @@
 
 namespace Database;
 
+use Laminas\Hydrator\HydratorInterface;
+
 /**
  * Base class for table objects
  *
@@ -39,9 +41,8 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
 
     /**
      * Hydrator
-     * @var \Laminas\Hydrator\AbstractHydrator
      */
-    protected $_hydrator;
+    protected HydratorInterface $_hydrator;
 
     /**
      * Constructor

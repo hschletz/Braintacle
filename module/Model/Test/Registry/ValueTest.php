@@ -39,19 +39,19 @@ class ValueTest extends \Model\Test\AbstractTest
     public function testFullPathPropertyPropertyExplicitValue()
     {
         $model = $this->getModel();
-        $model['RootKey'] = \Model\Registry\Value::HKEY_LOCAL_MACHINE;
-        $model['SubKeys'] = 'a\b';
-        $model['Value'] = 'configured';
-        $this->assertEquals('HKEY_LOCAL_MACHINE\a\b\configured', $model['FullPath']);
+        $model->RootKey = \Model\Registry\Value::HKEY_LOCAL_MACHINE;
+        $model->SubKeys = 'a\b';
+        $model->Value = 'configured';
+        $this->assertEquals('HKEY_LOCAL_MACHINE\a\b\configured', $model->FullPath);
     }
 
     public function testFullPathPropertyPropertyAllValues()
     {
         $model = $this->getModel();
-        $model['RootKey'] = \Model\Registry\Value::HKEY_LOCAL_MACHINE;
-        $model['SubKeys'] = 'a\b';
-        $model['Value'] = null;
-        $this->assertEquals('HKEY_LOCAL_MACHINE\a\b\*', $model['FullPath']);
+        $model->RootKey = \Model\Registry\Value::HKEY_LOCAL_MACHINE;
+        $model->SubKeys = 'a\b';
+        $model->Value = null;
+        $this->assertEquals('HKEY_LOCAL_MACHINE\a\b\*', $model->FullPath);
     }
 
     public function testRootKeys()

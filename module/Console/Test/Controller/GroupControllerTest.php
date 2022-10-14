@@ -22,10 +22,17 @@
 
 namespace Console\Test\Controller;
 
+use Console\Form\AddToGroup as FormAddToGroup;
+use Console\Form\ClientConfig;
+use Console\Form\Package\Assign;
 use Console\View\Helper\Form\AddToGroup;
+use Console\View\Helper\Form\ClientConfig as FormClientConfig;
 use Console\View\Helper\GroupHeader;
+use Laminas\I18n\View\Helper\DateFormat;
 use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
+use Model\Client\ClientManager;
 use Model\Group\Group;
+use Model\Group\GroupManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -35,31 +42,31 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 {
     /**
      * Group manager mock
-     * @var \Model\Group\GroupManager
+     * @var MockObject|GroupManager
      */
     protected $_groupManager;
 
     /**
      * Client manager mock
-     * @var \Model\Client\ClientManager
+     * @var MockObject|ClientManager
      */
     protected $_clientManager;
 
     /**
      * Package assignment form mock
-     * @var \Console\Form\Package\Assign
+     * @var MockObject|Assign
      */
     protected $_packageAssignmentForm;
 
     /**
      * Add to group form mock
-     * @var \Console\Form\AddToGroup|MockObject
+     * @var MockObject|FormAddToGroup
      */
     protected $_addToGroupForm;
 
     /**
      * Client configuration form mock
-     * @var \Console\Form\ClientConfig
+     * @var MockObject|ClientConfig
      */
     protected $_clientConfigForm;
 
@@ -131,7 +138,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                             ->with(null, null, 'Name', 'asc')
                             ->willReturn($resultSet);
 
-        $dateFormat = $this->createMock('Laminas\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock(DateFormat::class);
         $dateFormat->expects($this->once())
                    ->method('__invoke')
                    ->with($creationDate, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
@@ -190,6 +197,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
             ['CreationDate', $creationDate],
             ['DynamicMembersSql', 'groupSql'],
         ]);
+        /** @psalm-suppress UndefinedPropertyAssignment */
         $group->Name = 'groupName';
 
         $this->_groupManager->expects($this->once())
@@ -197,7 +205,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                             ->with('test')
                             ->willReturn($group);
 
-        $dateFormat = $this->createMock('Laminas\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock(DateFormat::class);
         $dateFormat->expects($this->once())
                    ->method('__invoke')
                    ->with($creationDate, \IntlDateFormatter::FULL, \IntlDateFormatter::MEDIUM)
@@ -232,6 +240,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
             ['CacheCreationDate', $cacheCreationDate],
             ['CacheExpirationDate', $cacheExpirationDate],
         ]);
+        /** @psalm-suppress UndefinedPropertyAssignment */
         $group->Name = 'groupName';
 
         $clients = array(
@@ -258,7 +267,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
                              )
                              ->willReturn($clients);
 
-        $dateFormat = $this->createMock('Laminas\I18n\View\Helper\DateFormat');
+        $dateFormat = $this->createMock(DateFormat::class);
         $dateFormat->expects($this->exactly(3))
                    ->method('__invoke')
                    ->withConsecutive(
@@ -292,9 +301,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     {
         $url = '/console/group/excluded/?name=test';
 
-        /** @var MockObject|Group */
-        $group = $this->createMock(Group::class);
-        $group->Name = 'test';
+        $group = new Group(['Name' => 'test']);
 
         $clients = array(
             array(
@@ -595,7 +602,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->never())
              ->method('process');
 
-        $formHelper = $this->createMock('Console\View\Helper\Form\ClientConfig');
+        $formHelper = $this->createMock(FormClientConfig::class);
         $formHelper->method('__invoke')->with($form)->willReturn('<form></form>');
 
         $viewHelperManager = $this->getApplicationServiceLocator()->get('ViewHelperManager');
@@ -628,7 +635,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->never())
              ->method('process');
 
-        $formHelper = $this->createMock('Console\View\Helper\Form\ClientConfig');
+        $formHelper = $this->createMock(FormClientConfig::class);
         $formHelper->method('__invoke')->with($form)->willReturn('<form></form>');
 
         $viewHelperManager = $this->getApplicationServiceLocator()->get('ViewHelperManager');

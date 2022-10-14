@@ -36,35 +36,35 @@ class StorageDevices implements \Laminas\Hydrator\HydratorInterface
     {
         $object->exchangeArray([]);
         if ($data['is_android']) {
-            $object['Type'] = $data['description'];
+            $object->Type = $data['description'];
         } else {
             if ($data['is_windows']) {
                 // Type is usually stored in 'type'; use 'description' as fallback
                 if ($data['type'] == '' or $data['type'] == 'UNKNOWN') {
-                    $object['Type'] = $data['description'];
+                    $object->Type = $data['description'];
                 } else {
-                    $object['Type'] = $data['type'];
+                    $object->Type = $data['type'];
                 }
-                $object['ProductName'] = $data['name'];
+                $object->ProductName = $data['name'];
                 // For removable media, 'model' is identical to 'name' and thus
                 // useless. For Hard disks and USB storage, 'model' contains the
                 // device path.
                 if ($data['model'] == $data['name']) {
-                    $object['Device'] = null;
+                    $object->Device = null;
                 } else {
-                    $object['Device'] = $data['model'];
+                    $object->Device = $data['model'];
                 }
             } else {
                 // UNIX
-                $object['ProductFamily'] = $data['manufacturer'];
-                $object['ProductName'] = $data['model'];
-                $object['Device'] = $data['name'];
+                $object->ProductFamily = $data['manufacturer'];
+                $object->ProductName = $data['model'];
+                $object->Device = $data['name'];
             }
             // Windows and UNIX
-            $object['Firmware'] = $data['firmware'];
-            $object['Serial'] = $data['serialnumber'];
+            $object->Firmware = $data['firmware'];
+            $object->Serial = $data['serialnumber'];
         }
-        $object['Size'] = ($data['disksize'] == '0') ? null : $data['disksize'];
+        $object->Size = ($data['disksize'] == '0') ? null : $data['disksize'];
 
         return $object;
     }
@@ -77,12 +77,12 @@ class StorageDevices implements \Laminas\Hydrator\HydratorInterface
                 // Windows
                 $data = [
                     'manufacturer' => null,
-                    'name' => $object['ProductName'],
-                    'model' => $object['Device'],
-                    'type' => $object['Type'],
+                    'name' => $object->ProductName,
+                    'model' => $object->Device,
+                    'type' => $object->Type,
                     'description' => null,
-                    'serialnumber' => $object['Serial'],
-                    'firmware' => $object['Firmware'],
+                    'serialnumber' => $object->Serial,
+                    'firmware' => $object->Firmware,
                 ];
             } else {
                 // Android
@@ -91,7 +91,7 @@ class StorageDevices implements \Laminas\Hydrator\HydratorInterface
                     'name' => null,
                     'model' => null,
                     'type' => null,
-                    'description' => $object['Type'],
+                    'description' => $object->Type,
                     'serialnumber' => null,
                     'firmware' => null,
                 ];
@@ -99,16 +99,16 @@ class StorageDevices implements \Laminas\Hydrator\HydratorInterface
         } else {
             // UNIX
             $data = [
-                'manufacturer' => $object['ProductFamily'],
-                'name' => $object['Device'],
-                'model' => $object['ProductName'],
+                'manufacturer' => $object->ProductFamily,
+                'name' => $object->Device,
+                'model' => $object->ProductName,
                 'type' => null,
                 'description' => null,
-                'serialnumber' => $object['Serial'],
-                'firmware' => $object['Firmware'],
+                'serialnumber' => $object->Serial,
+                'firmware' => $object->Firmware,
             ];
         }
-        $data['disksize'] = $object['Size'];
+        $data['disksize'] = $object->Size;
         return $data;
     }
 }

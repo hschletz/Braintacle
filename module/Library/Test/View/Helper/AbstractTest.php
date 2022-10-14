@@ -22,8 +22,6 @@
 
 namespace Library\Test\View\Helper;
 
-use Library\Application;
-
 /**
  * Base class for view helper tests
  *
@@ -78,9 +76,8 @@ abstract class AbstractTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
      * Get view helper
      *
      * @param string $name Helper name (default: derive from test class name)
-     * @return \Laminas\View\Helper\HelperInterface Helper instance
      */
-    protected function getHelper($name = null)
+    protected function getHelper($name = null): callable
     {
         if (!$name) {
             $name = $this->getHelperName();
