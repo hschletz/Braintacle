@@ -572,17 +572,33 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $archiveManager->expects($this->never())->method('addFile');
         $archiveManager->expects($this->never())->method('closeArchive');
 
-        $this->expectNotice();
-        $this->expectNoticeMessage("Support for archive type 'zip' not available. Assuming archive.");
-
         $model = new PackageBuilder(
             $this->createStub(PackageManager::class),
             $archiveManager,
             $this->createStub(StorageInterface::class),
             $this->createStub(Packages::class)
         );
-        $this->assertEquals($source, $model->autoArchive($data, 'path', true));
+
+        // PHPUnit's error handler would throw an exception wenn the notice is
+        // triggered, and the tested method would not complete. Temporarily
+        // override the error handler for this test.
+        $message = null;
+        set_error_handler(
+            function ($errno, $errstr, $errfile = null, $errline = null, $errcontext = null) use (&$message): ?bool {
+                $message = $errstr;
+                return true;
+            },
+            E_USER_NOTICE
+        );
+        try {
+            $result = $model->autoArchive($data, 'path', true);
+        } finally {
+            restore_error_handler();
+        }
+
+        $this->assertEquals($source, $result);
         $this->assertFileExists($source);
+        $this->assertEquals("Support for archive type 'zip' not available. Assuming archive.", $message);
     }
 
     public function testAutoArchiveUnsupportedPlatform()
