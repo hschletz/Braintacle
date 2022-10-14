@@ -579,7 +579,7 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
             $this->createStub(Packages::class)
         );
 
-        // PHPUnit's error handler would throw an exception wenn the notice is
+        // PHPUnit's error handler would throw an exception when the notice is
         // triggered, and the tested method would not complete. Temporarily
         // override the error handler for this test.
         $message = null;
