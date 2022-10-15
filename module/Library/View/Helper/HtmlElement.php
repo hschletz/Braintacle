@@ -23,30 +23,14 @@
 namespace Library\View\Helper;
 
 /**
- * Render a single HTML element with provided name, content and attributes
+ * Render a single HTML 5 element with provided name, content and attributes
  */
 class HtmlElement extends \Laminas\View\Helper\AbstractHtmlElement
 {
     /**
-     * List of elements without closing tag for HTML 4
-     */
-    protected static $_emptyTagsHtml4 = array(
-        'area',
-        'base',
-        'br',
-        'col',
-        'hr',
-        'img',
-        'input',
-        'link',
-        'meta',
-        'param',
-    );
-
-    /**
      * List of elements without closing tag for HTML 5
      */
-    protected static $_emptyTagsHtml5 = array(
+    protected static $emptyTags = array(
         'area',
         'base',
         'br',
@@ -81,16 +65,10 @@ class HtmlElement extends \Laminas\View\Helper\AbstractHtmlElement
             $output .= $this->htmlAttribs($attributes);
         }
         if ($content === null) {
-            $doctype = $this->getView()->plugin('doctype');
-            if ($doctype->isXhtml()) {
-                $output .= ' />';
-            } else { // HTML
-                $emptyTags = $doctype->isHtml5() ? static::$_emptyTagsHtml5 : static::$_emptyTagsHtml4;
-                if (in_array(strtolower($element), $emptyTags)) {
-                    $output .= '>';
-                } else {
-                    $output .= "></$element>";
-                }
+            if (in_array(strtolower($element), static::$emptyTags)) {
+                $output .= '>';
+            } else {
+                $output .= "></$element>";
             }
             $output .= $newline;
             return $output;

@@ -74,43 +74,19 @@ class HtmlElementTest extends AbstractTest
 
     public function invokeEmptyElementsProvider()
     {
-        return array(
-            // HTML 4
-            array(false, false, 'a', '<a></a>'),
-            array(false, false, 'br', '<br>'),
-            array(false, false, 'command', '<command></command>'),
-            // HTML 5
-            array(false, true, 'a', '<a></a>'),
-            array(false, true, 'br', '<br>'),
-            array(false, true, 'command', '<command>'),
-            // XHTML
-            array(true, false, 'a', '<a />'),
-            array(true, false, 'br', '<br />'),
-            array(true, false, 'command', '<command />'),
-        );
+        return [
+            ['a', '<a></a>'],
+            ['br', '<br>'],
+        ];
     }
 
     /**
      * @dataProvider invokeEmptyElementsProvider
      */
-    public function testInvokeEmptyElements($isXhtml, $isHtml5, $element, $output)
+    public function testInvokeEmptyElements($element, $output)
     {
-        $doctype = $this->createMock('Laminas\View\Helper\Doctype');
-        $doctype->method('isXhtml')->willReturn($isXhtml);
-        $doctype->method('isHtml5')->willReturn($isHtml5);
-
-        /** @var Stub|PhpRenderer */
-        $view = $this->createStub(PhpRenderer::class);
-        $view->method('plugin')->willReturnMap(
-            array(
-                array('doctype', null, $doctype),
-            )
-        );
-
         /** @var HtmlElement */
         $helper = $this->getHelper();
-        $helper->setView($view);
-
         $this->assertEquals($output, $helper($element, null, null, true));
     }
 
