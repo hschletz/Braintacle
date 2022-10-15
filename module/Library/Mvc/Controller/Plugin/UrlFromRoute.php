@@ -22,6 +22,8 @@
 
 namespace Library\Mvc\Controller\Plugin;
 
+use Laminas\Mvc\Controller\Plugin\Url;
+
 /**
  * Build URL from standard route (controller/action)
  *
@@ -30,6 +32,13 @@ namespace Library\Mvc\Controller\Plugin;
  */
 class UrlFromRoute extends \Laminas\Mvc\Controller\Plugin\AbstractPlugin
 {
+    private Url $urlPlugin;
+
+    public function __construct(Url $urlPlugin)
+    {
+        $this->urlPlugin = $urlPlugin;
+    }
+
     /**
      * Build URL
      *
@@ -50,6 +59,6 @@ class UrlFromRoute extends \Laminas\Mvc\Controller\Plugin\AbstractPlugin
         if ($action) {
             $path['action'] = urlencode($action);
         }
-        return $this->getController()->url()->fromRoute(null, $path, array('query' => $params));
+        return $this->urlPlugin->fromRoute(null, $path, ['query' => $params]);
     }
 }

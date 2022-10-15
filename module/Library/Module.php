@@ -24,6 +24,10 @@ namespace Library;
 
 use Laminas\ModuleManager\Feature;
 use Laminas\ServiceManager\Factory\InvokableFactory;
+use Library\Mvc\Controller\Plugin\RedirectToRoute;
+use Library\Mvc\Controller\Plugin\UrlFromRoute;
+use Library\Mvc\Service\RedirectToRouteFactory;
+use Library\Mvc\Service\UrlFromRouteFactory;
 
 /**
  * The Library module
@@ -50,8 +54,8 @@ class Module implements Feature\ConfigProviderInterface
                 ),
                 'factories' => array(
                     'Library\Mvc\Controller\Plugin\TranslationHelper' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-                    'Library\Mvc\Controller\Plugin\RedirectToRoute' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-                    'Library\Mvc\Controller\Plugin\UrlFromRoute' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    RedirectToRoute::class => RedirectToRouteFactory::class,
+                    UrlFromRoute::class => UrlFromRouteFactory::class,
                 )
             ),
             'filters' => array(

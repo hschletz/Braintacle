@@ -22,6 +22,8 @@
 
 namespace Library\Mvc\Controller\Plugin;
 
+use Laminas\Mvc\Controller\Plugin\Redirect;
+
 /**
  * Redirect to standard route (controller/action)
  *
@@ -30,6 +32,15 @@ namespace Library\Mvc\Controller\Plugin;
  */
 class RedirectToRoute extends \Laminas\Mvc\Controller\Plugin\AbstractPlugin
 {
+    private Redirect $redirectPlugin;
+    private UrlFromRoute $urlFromRoutePlugin;
+
+    public function __construct(Redirect $redirectPlugin, UrlFromRoute $urlFromRoutePlugin)
+    {
+        $this->redirectPlugin = $redirectPlugin;
+        $this->urlFromRoutePlugin = $urlFromRoutePlugin;
+    }
+
     /**
      * Redirect to given route
      *
@@ -43,9 +54,8 @@ class RedirectToRoute extends \Laminas\Mvc\Controller\Plugin\AbstractPlugin
      */
     public function __invoke($controllerName = null, $action = null, array $params = array())
     {
-        $controller = $this->getController();
-        return $controller->redirect()->toUrl(
-            $controller->urlFromRoute($controllerName, $action, $params)
+        return $this->redirectPlugin->toUrl(
+            ($this->urlFromRoutePlugin)($controllerName, $action, $params)
         );
     }
 }
