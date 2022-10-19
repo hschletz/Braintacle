@@ -22,6 +22,8 @@
 
 namespace Model\Group;
 
+use DateTimeInterface;
+
 /**
  * A group of clients
  *
@@ -29,17 +31,44 @@ namespace Model\Group;
  * become a member by manual assignment or automatically based on the result of
  * a query. It is also possible to unconditionally exclude a client from a group
  * regardless of query result.
- *
- * @property integer $Id primary key
- * @property string $Name Name
- * @property string $Description Description
- * @property \DateTime $CreationDate Timestamp of group creation
- * @property string $DynamicMembersSql SQL query for dynamic members, may be empty
- * @property \DateTime $CacheCreationDate Timestamp of last cache update
- * @property \DateTime $CacheExpirationDate Timestamp when cache will expire and get rebuilt
  */
 class Group extends \Model\ClientOrGroup
 {
+    /**
+     * Primary key
+     */
+    public int $Id;
+
+    /**
+     * Name
+     */
+    public string $Name;
+
+    /**
+     * Description
+     */
+    public string $Description;
+
+    /**
+     * Timestamp of group creation
+     */
+    public DateTimeInterface $CreationDate;
+
+    /**
+     * SQL query for dynamic members, may be empty
+     */
+    public string $DynamicMembersSql;
+
+    /**
+     * Timestamp of last cache update
+     */
+    public DateTimeInterface $CacheCreationDate;
+
+    /**
+     * Timestamp when cache will expire and get rebuilt
+     */
+    public DateTimeInterface $CacheExpirationDate;
+
     /** {@inheritdoc} */
     public function getDefaultConfig($option)
     {
