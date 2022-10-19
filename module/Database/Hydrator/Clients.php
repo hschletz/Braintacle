@@ -157,7 +157,6 @@ class Clients implements \Laminas\Hydrator\HydratorInterface
     /** {@inheritdoc} */
     public function hydrate(array $data, $object)
     {
-        $object->exchangeArray(array());
         foreach ($data as $name => $value) {
             $name = $this->hydrateName($name);
             $object->$name = $this->hydrateValue($name, $value);

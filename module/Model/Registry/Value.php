@@ -97,16 +97,16 @@ class Value extends \Model\AbstractModel
     }
 
     #[ReturnTypeWillChange]
-    public function offsetGet($index)
+    public function offsetGet($key)
     {
-        if ($index == 'FullPath') {
+        if ($key == 'FullPath') {
             $value  = self::$_rootKeys[$this['RootKey']];
             $value .= '\\';
             $value .= $this['SubKeys'];
             $value .= '\\';
             $value .= $this['Value'] ?: '*';
         } else {
-            $value = parent::offsetGet($index);
+            $value = parent::offsetGet($key);
         }
         return $value;
     }

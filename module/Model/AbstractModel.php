@@ -22,16 +22,62 @@
 
 namespace Model;
 
+use ReturnTypeWillChange;
+
 /**
- * Base class for all models.
+ * Legacy ArrayAccess base class for models.
  *
- * Derived from ArrayObject, enforces ARRAY_AS_PROPS so that property_exists()
- * can safely be used on model objects.
+ * Properties are available as $foo['Bar'] (deprecated) or $foo->bar. They can
+ * either be dynamically created (deprecated) or explicitly be declared in a
+ * subclass.
+ *
+ * This helps transition from array access to real object properties. When all
+ * instances of array access have been removed, the base class can be removed
+ * from the model class.
+ *
+ * @deprecated Declare properties explicitly and avoid ArrayAccess usage.
  */
 abstract class AbstractModel extends \ArrayObject
 {
     public function __construct($input = [])
     {
-        parent::__construct($input, \ArrayObject::ARRAY_AS_PROPS);
+        parent::__construct($input);
+    }
+
+    public function __set(string $name, $value): void
+    {
+        $this->offsetSet(ucfirst($name), $value);
+    }
+
+    public function __get(string $name)
+    {
+        return $this->offsetGet(ucfirst($name));
+    }
+
+    public function __isset($name): bool
+    {
+        return $this->offsetExists(ucfirst($name));
+    }
+
+    public function offsetExists($key): bool
+    {
+        return property_exists($this, lcfirst($key)) || parent::offsetExists($key);
+    }
+
+    #[ReturnTypeWillChange]
+    public function offsetGet($key)
+    {
+        $lcKey = lcfirst($key);
+        return property_exists($this, $lcKey) ? $this->$lcKey : parent::offsetGet($key);
+    }
+
+    public function offsetSet($key, $value): void
+    {
+        $lcKey = lcfirst($key);
+        if (property_exists($this, $lcKey)) {
+            $this->$lcKey = $value;
+        } else {
+            parent::offsetSet($key, $value);
+        }
     }
 }

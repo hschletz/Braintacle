@@ -43,9 +43,9 @@ use ReturnTypeWillChange;
 class Subnet extends \Model\AbstractModel
 {
     #[ReturnTypeWillChange]
-    public function offsetGet($index)
+    public function offsetGet($key)
     {
-        if ($index == 'CidrAddress') {
+        if ($key == 'CidrAddress') {
             $address = $this['Address'];
             $mask = $this['Mask'];
 
@@ -69,7 +69,7 @@ class Subnet extends \Model\AbstractModel
 
             return "$address/$suffix";
         } else {
-            return parent::offsetGet($index);
+            return parent::offsetGet($key);
         }
     }
 }

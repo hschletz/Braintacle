@@ -22,6 +22,8 @@
 
 namespace Protocol\Hydrator;
 
+use Model\AbstractModel;
+
 /**
  * Hydrator for clients (BIOS section)
  *
@@ -36,14 +38,14 @@ class ClientsBios implements \Laminas\Hydrator\HydratorInterface
      * @var string[]
      */
     protected $_hydratorMap = array(
-        'ASSETTAG' => 'AssetTag',
-        'BDATE' => 'BiosDate',
-        'BMANUFACTURER' => 'BiosManufacturer',
-        'BVERSION' => 'BiosVersion',
-        'SMANUFACTURER' => 'Manufacturer',
-        'SMODEL' => 'Model',
-        'SSN' => 'Serial',
-        'TYPE' => 'Type',
+        'ASSETTAG' => 'assetTag',
+        'BDATE' => 'biosDate',
+        'BMANUFACTURER' => 'biosManufacturer',
+        'BVERSION' => 'biosVersion',
+        'SMANUFACTURER' => 'manufacturer',
+        'SMODEL' => 'model',
+        'SSN' => 'serial',
+        'TYPE' => 'type',
     );
 
     /**
@@ -51,16 +53,16 @@ class ClientsBios implements \Laminas\Hydrator\HydratorInterface
      *
      * @var string[]
      */
-    protected $_extractorMap = array(
-        'AssetTag' => 'ASSETTAG',
-        'BiosDate' => 'BDATE',
-        'BiosManufacturer' => 'BMANUFACTURER',
-        'BiosVersion' => 'BVERSION',
-        'Manufacturer' => 'SMANUFACTURER',
-        'Model' => 'SMODEL',
-        'Serial' => 'SSN',
-        'Type' => 'TYPE',
-    );
+    protected $_extractorMap = [
+        'assetTag' => 'ASSETTAG',
+        'biosDate' => 'BDATE',
+        'biosManufacturer' => 'BMANUFACTURER',
+        'biosVersion' => 'BVERSION',
+        'manufacturer' => 'SMANUFACTURER',
+        'model' => 'SMODEL',
+        'serial' => 'SSN',
+        'type' => 'TYPE',
+    ];
 
     /** {@inheritdoc} */
     public function hydrate(array $data, $object)
@@ -79,6 +81,9 @@ class ClientsBios implements \Laminas\Hydrator\HydratorInterface
     {
         $data = array();
         foreach ($object as $name => $value) {
+            if ($object instanceof AbstractModel) {
+                $name = lcfirst($name);
+            }
             $name = $this->extractName($name);
             if ($name) {
                 $data[$name] = $this->extractValue($name, $value);

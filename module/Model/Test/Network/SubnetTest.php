@@ -53,17 +53,17 @@ class SubnetTest extends \Model\Test\AbstractTest
     public function testGetCidrAddress($address, $mask, $suffix)
     {
         $model = $this->getModel();
-        $model->Address = $address;
-        $model->Mask = $mask;
-        $this->assertEquals("$address/$suffix", $model->CidrAddress);
+        $model->address = $address;
+        $model->mask = $mask;
+        $this->assertEquals("$address/$suffix", $model->cidrAddress);
     }
 
     public function testGetCidrAddressInvalidAddress()
     {
         $this->expectException('DomainException');
         $model = $this->getModel();
-        $model->Address = '';
-        $model->Mask = '';
-        $model->CidrAddress;
+        $model->address = '';
+        $model->mask = '';
+        $model->cidrAddress;
     }
 }

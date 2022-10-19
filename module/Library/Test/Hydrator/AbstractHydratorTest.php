@@ -22,6 +22,9 @@
 
 namespace Library\Test\Hydrator;
 
+use Model\AbstractModel;
+use stdClass;
+
 abstract class AbstractHydratorTest extends \PHPUnit\Framework\TestCase
 {
     protected function getHydrator()
@@ -33,21 +36,49 @@ abstract class AbstractHydratorTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider hydrateProvider
      */
-    public function testHydrate(array $data, array $objectData)
+    public function testHydrateWithStdClass(array $data, array $objectData)
     {
         $hydrator = $this->getHydrator();
-        $object = new \ArrayObject();
+        $object = new stdClass();
         $this->assertSame($object, $hydrator->hydrate($data, $object));
         $this->assertEquals($objectData, get_object_vars($object));
     }
 
     /**
-     * @dataProvider extractProvider
+     * @dataProvider hydrateProvider
      */
-    public function testExtract(array $objectData, array $data)
+    public function testHydrateWithAbstractModel(array $data, array $objectData)
     {
         $hydrator = $this->getHydrator();
-        $object = new \ArrayObject($objectData, \ArrayObject::ARRAY_AS_PROPS);
+        $object = $this->getMockForAbstractClass(AbstractModel::class);
+        $this->assertSame($object, $hydrator->hydrate($data, $object));
+        $expected = [];
+        foreach ($objectData as $key => $value) {
+            $expected[ucfirst($key)] = $value;
+        }
+        $this->assertEquals($expected, $object->getArrayCopy());
+    }
+
+    /**
+     * @dataProvider extractProvider
+     */
+    public function testExtractWithStdClass(array $objectData, array $data)
+    {
+        $hydrator = $this->getHydrator();
+        $object = (object) $objectData;
+        $this->assertEquals($data, $hydrator->extract($object));
+    }
+
+    /**
+     * @dataProvider extractProvider
+     */
+    public function testExtractWithAbstractModel(array $objectData, array $data)
+    {
+        $hydrator = $this->getHydrator();
+        $object = $this->getMockForAbstractClass(AbstractModel::class);
+        foreach ($objectData as $key => $value) {
+            $object->$key = $value;
+        }
         $this->assertEquals($data, $hydrator->extract($object));
     }
 }

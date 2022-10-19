@@ -301,7 +301,8 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     {
         $url = '/console/group/excluded/?name=test';
 
-        $group = new Group(['Name' => 'test']);
+        $group = new Group();
+        $group->name = 'test';
 
         $clients = array(
             array(

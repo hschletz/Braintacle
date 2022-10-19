@@ -22,7 +22,7 @@
 
 namespace Protocol\Test\Hydrator;
 
-use stdClass;
+use Model\AbstractModel;
 
 class ClientsBiosTest extends \Library\Test\Hydrator\AbstractHydratorTest
 {
@@ -37,17 +37,17 @@ class ClientsBiosTest extends \Library\Test\Hydrator\AbstractHydratorTest
         'TYPE' => 'type',
     );
 
-    protected $_hydrated = array(
-        'AssetTag' => 'asset tag',
-        'BiosDate' => 'bios date',
-        'BiosManufacturer' => 'bios manufacturer',
-        'BiosVersion' => 'bios version',
-        'Manufacturer' => 'manufacturer',
-        'Model' => 'model',
-        'Serial' => 'serial',
-        'Type' => 'type',
-        'IdString' => 'ignored',
-    );
+    protected $_hydrated = [
+        'assetTag' => 'asset tag',
+        'biosDate' => 'bios date',
+        'biosManufacturer' => 'bios manufacturer',
+        'biosVersion' => 'bios version',
+        'manufacturer' => 'manufacturer',
+        'model' => 'model',
+        'serial' => 'serial',
+        'type' => 'type',
+        'idString' => 'ignored',
+    ];
 
     public function hydrateProvider()
     {
@@ -57,13 +57,29 @@ class ClientsBiosTest extends \Library\Test\Hydrator\AbstractHydratorTest
     /**
      * @dataProvider hydrateProvider
      */
-    public function testHydrate(array $data, array $objectData)
+    public function testHydrateWithStdClass(array $data, array $objectData)
     {
         $hydrator = $this->getHydrator();
-        $object = new stdClass();
-        $object->IdString = 'ignored';
+        $object = (object) $objectData;
+        $object->idString = 'ignored';
         $this->assertSame($object, $hydrator->hydrate($data, $object));
         $this->assertEquals($objectData, get_object_vars($object));
+    }
+
+    /**
+     * @dataProvider hydrateProvider
+     */
+    public function testHydrateWithAbstractModel(array $data, array $objectData)
+    {
+        $hydrator = $this->getHydrator();
+        $object = $this->getMockForAbstractClass(AbstractModel::class);
+        $object->idString = 'ignored';
+        $this->assertSame($object, $hydrator->hydrate($data, $object));
+        $expected = [];
+        foreach ($objectData as $key => $value) {
+            $expected[ucfirst($key)] = $value;
+        }
+        $this->assertEquals($expected, $object->getArrayCopy());
     }
 
     public function extractProvider()

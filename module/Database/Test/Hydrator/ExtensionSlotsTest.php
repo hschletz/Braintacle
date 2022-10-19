@@ -70,48 +70,48 @@ class ExtensionSlotsTest extends \Library\Test\Hydrator\AbstractHydratorTest
 
     public function extractProvider()
     {
-        $windowsSlot = array(
-            'Name' => '_name',
-            'Description' => '_description',
-            'Status' => '_status',
-        );
-        $unixSlot = array(
-            'Name' => '_name',
-            'Description' => '_description',
-            'Status' => '_status',
-            'SlotId' => '_slotId',
-        );
-        $unixSlotIdNull = array(
-            'Name' => '_name',
-            'Description' => '_description',
-            'Status' => '_status',
-            'SlotId' => null,
-        );
-        $windowsAgent = array(
+        $windowsHydrated = [
+            'name' => '_name',
+            'description' => '_description',
+            'status' => '_status',
+        ];
+        $unixHydrated = [
+            'name' => '_name',
+            'description' => '_description',
+            'status' => '_status',
+            'slotId' => '_slotId',
+        ];
+        $unixSlotIdNullHydrated = [
+            'name' => '_name',
+            'description' => '_description',
+            'status' => '_status',
+            'slotId' => null,
+        ];
+        $windowsExtracted = [
             'name' => '_name',
             'description' => '_description',
             'designation' => '_name',
             'purpose' => '_status',
             'status' => null,
-        );
-        $unixAgent = array(
+        ];
+        $unixExtracted = [
             'name' => '_name',
             'description' => '_description',
             'designation' => '_slotId',
             'purpose' => null,
             'status' => '_status',
-        );
-        $unixAgentIdNull = array(
+        ];
+        $unixIdNullExtracted = [
             'name' => '_name',
             'description' => '_description',
             'designation' => null,
             'purpose' => null,
             'status' => '_status',
-        );
-        return array(
-            array($windowsSlot, $windowsAgent),
-            array($unixSlot, $unixAgent),
-            array($unixSlotIdNull, $unixAgentIdNull),
-        );
+        ];
+        return [
+            [$windowsHydrated, $windowsExtracted],
+            [$unixHydrated, $unixExtracted],
+            [$unixSlotIdNullHydrated, $unixIdNullExtracted],
+        ];
     }
 }

@@ -64,53 +64,53 @@ class ControllersTest extends \Library\Test\Hydrator\AbstractHydratorTest
 
     public function extractProvider()
     {
-        $windowsController = array(
-            'Type' => '_type',
-            'Name' => '_name',
-            'Version' => '_version',
-            'Manufacturer' => '_manufacturer',
-            'Comment' => '_comment',
-        );
-        $windowsControllerManufacturerNull = array(
-            'Type' => '_type',
-            'Name' => '_name',
-            'Version' => '_version',
-            'Manufacturer' => null,
-            'Comment' => '_comment',
-        );
-        $unixController = array(
-            'Type' => '_type',
-            'Name' => '_name',
-            'Version' => '_version',
-        );
-        $windowsAgent = array(
+        $windowsHydrated = [
+            'type' => '_type',
+            'name' => '_name',
+            'version' => '_version',
+            'manufacturer' => '_manufacturer',
+            'comment' => '_comment',
+        ];
+        $windowsManufacturerNullHydrated = [
+            'type' => '_type',
+            'name' => '_name',
+            'version' => '_version',
+            'manufacturer' => null,
+            'comment' => '_comment',
+        ];
+        $unixHydrated = [
+            'type' => '_type',
+            'name' => '_name',
+            'version' => '_version',
+        ];
+        $windowsExtracted = [
             'type' => '_type',
             'name' => '_name',
             'manufacturer' => '_manufacturer',
             'caption' => '_name',
             'description' => '_comment',
             'version' => '_version',
-        );
-        $windowsAgentManufacturerNull = array(
+        ];
+        $windowsManufacturerNullExtracted = [
             'type' => '_type',
             'name' => '_name',
             'manufacturer' => null,
             'caption' => '_name',
             'description' => '_comment',
             'version' => '_version',
-        );
-        $unixAgent = array(
+        ];
+        $unixExtracted = [
             'type' => '_version',
             'name' => '_type',
             'manufacturer' => '_name',
             'caption' => null,
             'description' => null,
             'version' => null,
-        );
-        return array(
-            array($windowsController, $windowsAgent),
-            array($windowsControllerManufacturerNull, $windowsAgentManufacturerNull),
-            array($unixController, $unixAgent),
-        );
+        ];
+        return [
+            [$windowsHydrated, $windowsExtracted],
+            [$windowsManufacturerNullHydrated, $windowsManufacturerNullExtracted],
+            [$unixHydrated, $unixExtracted],
+        ];
     }
 }

@@ -22,6 +22,8 @@
 
 namespace Database\Hydrator;
 
+use Model\AbstractModel;
+
 /**
  * Hydrator for extension slots
  *
@@ -32,7 +34,6 @@ class ExtensionSlots implements \Laminas\Hydrator\HydratorInterface
     /** {@inheritdoc} */
     public function hydrate(array $data, $object)
     {
-        $object->exchangeArray(array());
         if ($data['is_windows']) {
             $object->Name = $data['designation'];
             $object->Status = ($data['purpose'] ?: $data['status']);
@@ -48,16 +49,16 @@ class ExtensionSlots implements \Laminas\Hydrator\HydratorInterface
     /** {@inheritdoc} */
     public function extract(object $object): array
     {
-        $data = array();
-        $data['name'] = $object->Name;
-        $data['description'] = $object->Description;
-        if (property_exists($object, 'SlotId')) {
-            $data['designation'] = $object->SlotId;
+        $data = [];
+        $data['name'] = $object->name;
+        $data['description'] = $object->description;
+        if ($object instanceof AbstractModel && $object->offsetExists('SlotId') || property_exists($object, 'slotId')) {
+            $data['designation'] = $object->slotId;
             $data['purpose'] = null;
-            $data['status'] = $object->Status;
+            $data['status'] = $object->status;
         } else {
-            $data['designation'] = $object->Name;
-            $data['purpose'] = $object->Status;
+            $data['designation'] = $object->name;
+            $data['purpose'] = $object->status;
             $data['status'] = null;
         }
         return $data;

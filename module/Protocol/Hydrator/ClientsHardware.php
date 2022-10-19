@@ -22,6 +22,8 @@
 
 namespace Protocol\Hydrator;
 
+use Model\AbstractModel;
+
 /**
  * Hydrator for clients (HARDWARE section)
  *
@@ -55,82 +57,82 @@ class ClientsHardware implements \Laminas\Hydrator\HydratorInterface
      *
      * @var string[]
      */
-    protected $_hydratorMapClient = array(
-        'CHECKSUM' => 'InventoryDiff',
-        'DEFAULTGATEWAY' => 'DefaultGateway',
-        'DESCRIPTION' => 'OsComment',
-        'DNS' => 'DnsServer',
-        'IPADDR' => 'IpAddress',
-        'LASTCOME' => 'LastContactDate',
-        'LASTDATE' => 'InventoryDate',
-        'MEMORY' => 'PhysicalMemory',
-        'NAME' => 'Name',
-        'OSCOMMENTS' => 'OsVersionString',
-        'OSNAME' => 'OsName',
-        'OSVERSION' => 'OsVersionNumber',
-        'PROCESSORN' => 'CpuCores',
-        'PROCESSORS' => 'CpuClock',
-        'PROCESSORT' => 'CpuType',
-        'SWAP' => 'SwapMemory',
-        'USERID' => 'UserName',
-        'UUID' => 'Uuid',
-    );
+    protected $_hydratorMapClient = [
+        'CHECKSUM' => 'inventoryDiff',
+        'DEFAULTGATEWAY' => 'defaultGateway',
+        'DESCRIPTION' => 'osComment',
+        'DNS' => 'dnsServer',
+        'IPADDR' => 'ipAddress',
+        'LASTCOME' => 'lastContactDate',
+        'LASTDATE' => 'inventoryDate',
+        'MEMORY' => 'physicalMemory',
+        'NAME' => 'name',
+        'OSCOMMENTS' => 'osVersionString',
+        'OSNAME' => 'osName',
+        'OSVERSION' => 'osVersionNumber',
+        'PROCESSORN' => 'cpuCores',
+        'PROCESSORS' => 'cpuClock',
+        'PROCESSORT' => 'cpuType',
+        'SWAP' => 'swapMemory',
+        'USERID' => 'userName',
+        'UUID' => 'uuid',
+    ];
 
     /**
      * Map for extractName() (client properties only)
      *
      * @var string[]
      */
-    protected $_extractorMapClient = array(
-        'CpuClock' => 'PROCESSORS',
-        'CpuCores' => 'PROCESSORN',
-        'CpuType' => 'PROCESSORT',
-        'DefaultGateway' => 'DEFAULTGATEWAY',
-        'DnsServer' => 'DNS',
-        'InventoryDate' => 'LASTDATE',
-        'InventoryDiff' => 'CHECKSUM',
-        'IpAddress' => 'IPADDR',
-        'LastContactDate' => 'LASTCOME',
-        'Name' => 'NAME',
-        'OsComment' => 'DESCRIPTION',
-        'OsName' => 'OSNAME',
-        'OsVersionNumber' => 'OSVERSION',
-        'OsVersionString' => 'OSCOMMENTS',
-        'PhysicalMemory' => 'MEMORY',
-        'SwapMemory' => 'SWAP',
-        'UserName' => 'USERID',
-        'Uuid' => 'UUID',
-    );
+    protected $_extractorMapClient = [
+        'cpuClock' => 'PROCESSORS',
+        'cpuCores' => 'PROCESSORN',
+        'cpuType' => 'PROCESSORT',
+        'defaultGateway' => 'DEFAULTGATEWAY',
+        'dnsServer' => 'DNS',
+        'inventoryDate' => 'LASTDATE',
+        'inventoryDiff' => 'CHECKSUM',
+        'ipAddress' => 'IPADDR',
+        'lastContactDate' => 'LASTCOME',
+        'name' => 'NAME',
+        'osComment' => 'DESCRIPTION',
+        'osName' => 'OSNAME',
+        'osVersionNumber' => 'OSVERSION',
+        'osVersionString' => 'OSCOMMENTS',
+        'physicalMemory' => 'MEMORY',
+        'swapMemory' => 'SWAP',
+        'userName' => 'USERID',
+        'uuid' => 'UUID',
+    ];
 
     /**
      * Map for hydrateName() (Windows properties only)
      *
      * @var string[]
      */
-    protected $_hydratorMapWindows = array(
-        'ARCH' => 'CpuArchitecture',
-        'USERDOMAIN' => 'UserDomain',
-        'WINCOMPANY' => 'Company',
-        'WINOWNER' => 'Owner',
-        'WINPRODID' => 'ProductId',
-        'WINPRODKEY' => 'ProductKey',
+    protected $_hydratorMapWindows = [
+        'ARCH' => 'cpuArchitecture',
+        'USERDOMAIN' => 'userDomain',
+        'WINCOMPANY' => 'company',
+        'WINOWNER' => 'owner',
+        'WINPRODID' => 'productId',
+        'WINPRODKEY' => 'productKey',
         // WORKGROUP is treated explicitly by hydrate()
-    );
+    ];
 
     /**
      * Map for extractName() (Windows properties only)
      *
      * @var string[]
      */
-    protected $_extractorMapWindows = array(
-        'Company' => 'WINCOMPANY',
-        'CpuArchitecture' => 'ARCH',
-        'Owner' => 'WINOWNER',
-        'ProductId' => 'WINPRODID',
-        'ProductKey' => 'WINPRODKEY',
-        'UserDomain' => 'USERDOMAIN',
+    protected $_extractorMapWindows = [
+        'company' => 'WINCOMPANY',
+        'cpuArchitecture' => 'ARCH',
+        'owner' => 'WINOWNER',
+        'productId' => 'WINPRODID',
+        'productKey' => 'WINPRODKEY',
+        'userDomain' => 'USERDOMAIN',
         // WORKGROUP is treated explicitly by extract()
-    );
+    ];
 
     /**
      * Constructor
@@ -154,7 +156,7 @@ class ClientsHardware implements \Laminas\Hydrator\HydratorInterface
             if ($name) {
                 $value = $this->hydrateValue($name, $value);
                 if ($isWindows) {
-                    $windows[$name] = $value;
+                    $windows[ucfirst($name)] = $value;
                 } else {
                     $object->$name = $value;
                 }
@@ -164,12 +166,12 @@ class ClientsHardware implements \Laminas\Hydrator\HydratorInterface
         if (isset($data['WINPRODID'])) {
             $windows['Workgroup'] = @$data['WORKGROUP'];
         } else {
-            $object->DnsDomain = @$data['WORKGROUP'];
+            $object->dnsDomain = @$data['WORKGROUP'];
         }
 
         if ($windows) {
-            $object->Windows = clone $this->_windowsInstallationPrototype;
-            $object->Windows->exchangeArray($windows);
+            $object->windows = clone $this->_windowsInstallationPrototype;
+            $object->windows->exchangeArray($windows);
         }
 
         return $object;
@@ -180,22 +182,25 @@ class ClientsHardware implements \Laminas\Hydrator\HydratorInterface
     {
         $data = array();
         foreach ($object as $name => $value) {
+            if ($object instanceof AbstractModel) {
+                $name = lcfirst($name);
+            }
             $name = $this->extractName($name);
             if ($name) {
                 $data[$name] = $this->extractValue($name, $value);
             }
         }
-        $windows = $object->Windows;
+        $windows = $object->windows;
         if ($windows) {
             foreach ($windows as $name => $value) {
-                $name = $this->extractName($name);
+                $name = $this->extractName(lcfirst($name));
                 if ($name) {
                     $data[$name] = $this->extractValue($name, $value);
                 }
             }
             $data['WORKGROUP'] = @$windows['Workgroup'];
         } else {
-            $data['WORKGROUP'] = @$object->DnsDomain;
+            $data['WORKGROUP'] = @$object->dnsDomain;
         }
         return $data;
     }
@@ -242,11 +247,11 @@ class ClientsHardware implements \Laminas\Hydrator\HydratorInterface
     public function hydrateValue($name, $value)
     {
         switch ($name) {
-            case 'InventoryDate':
-            case 'LastContactDate':
+            case 'inventoryDate':
+            case 'lastContactDate':
                 $value = \DateTime::createFromFormat('Y-m-d H:i:s', $value, $this->_utcTimeZone);
                 break;
-            case 'OsName':
+            case 'osName':
                 $value = $this->_encodingFilter->filter($value);
                 break;
         }

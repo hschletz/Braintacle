@@ -45,7 +45,9 @@ class GroupHeaderTest extends AbstractTest
         $templateRenderer = static::$serviceManager->get(TemplateRenderer::class);
         $helper = new GroupHeader($navigation, $templateRenderer);
 
-        $group = new Group(['Name' => 'a<b>']);
+        $group = new Group();
+        $group->name = 'a<b>';
+
         $content = $helper($group);
         $document = $this->createDocument($content);
         $this->assertXpathMatches($document, '//h1[text()="Einzelheiten für Gruppe \'a<b>\'"]');

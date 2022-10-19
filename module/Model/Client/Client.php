@@ -132,15 +132,15 @@ class Client extends \Model\ClientOrGroup
     protected $_groups;
 
     #[ReturnTypeWillChange]
-    public function offsetGet($index)
+    public function offsetGet($key)
     {
-        if ($this->offsetExists($index)) {
-            $value = parent::offsetGet($index);
-        } elseif (strpos($index, 'Registry.') === 0) {
+        if ($this->offsetExists($key)) {
+            $value = parent::offsetGet($key);
+        } elseif (strpos($key, 'Registry.') === 0) {
             $value = $this['Registry.Content'];
         } else {
             // Virtual properties from database queries
-            switch ($index) {
+            switch ($key) {
                 case 'Android':
                     $androidInstallations = $this->_serviceLocator->get('Database\Table\AndroidInstallations');
                     $select = $androidInstallations->getSql()->select();
@@ -178,10 +178,10 @@ class Client extends \Model\ClientOrGroup
                     $value = (bool) $duplicateAssetTags->select(array('assettag' => $this['AssetTag']))->count();
                     break;
                 default:
-                    $value = $this->getItems($index);
+                    $value = $this->getItems($key);
             }
             // Cache result
-            $this->offsetSet($index, $value);
+            $this->offsetSet($key, $value);
         }
         return $value;
     }

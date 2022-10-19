@@ -64,7 +64,6 @@ class Filesystems implements \Laminas\Hydrator\HydratorInterface
     /** {@inheritdoc} */
     public function hydrate(array $data, $object)
     {
-        $object->exchangeArray(array());
         if ($data['letter']) {
             // Windows
             $object->Letter = $this->hydrateValue('Letter', $data['letter']);

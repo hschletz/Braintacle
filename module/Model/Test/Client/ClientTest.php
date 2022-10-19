@@ -170,9 +170,9 @@ class ClientTest extends \Model\Test\AbstractTest
         $customFieldManager->expects($this->once())->method('read')->with(2)->willReturn($customFields);
 
         $model = $this->getModel(array('Model\Client\CustomFieldManager' => $customFieldManager));
-        $model->Id = 2;
-        $this->assertEquals($customFields, $model->CustomFields);
-        $this->assertEquals($customFields, $model->CustomFields); // cached result
+        $model->id = 2;
+        $this->assertEquals($customFields, $model->customFields);
+        $this->assertEquals($customFields, $model->customFields); // cached result
     }
 
     public function testOffsetGetRegistry()

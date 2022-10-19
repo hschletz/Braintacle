@@ -284,7 +284,7 @@ class GroupTest extends AbstractGroupTest
         $clientManager->method('getClients')->willReturn($select);
 
         $model = $this->getModel(array('Model\Client\ClientManager' => $clientManager));
-        $model->Id = 10;
+        $model->id = 10;
 
         $this->expectException('LogicException');
         $this->expectExceptionMessage('Expected 1 column, got 2');
@@ -382,14 +382,14 @@ class GroupTest extends AbstractGroupTest
     public function testGetPackagesDefaultOrder()
     {
         $model = $this->getModel();
-        $model->Id = 10;
+        $model->id = 10;
         $this->assertEquals(array('package1', 'package2'), $model->getPackages());
     }
 
     public function testGetPackagesReverseOrder()
     {
         $model = $this->getModel();
-        $model->Id = 10;
+        $model->id = 10;
         $this->assertEquals(array('package2', 'package1'), $model->getPackages('desc'));
     }
 }

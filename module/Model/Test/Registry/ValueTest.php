@@ -42,7 +42,7 @@ class ValueTest extends \Model\Test\AbstractTest
         $model->RootKey = \Model\Registry\Value::HKEY_LOCAL_MACHINE;
         $model->SubKeys = 'a\b';
         $model->Value = 'configured';
-        $this->assertEquals('HKEY_LOCAL_MACHINE\a\b\configured', $model->FullPath);
+        $this->assertEquals('HKEY_LOCAL_MACHINE\a\b\configured', $model->fullPath);
     }
 
     public function testFullPathPropertyPropertyAllValues()
@@ -51,7 +51,7 @@ class ValueTest extends \Model\Test\AbstractTest
         $model->RootKey = \Model\Registry\Value::HKEY_LOCAL_MACHINE;
         $model->SubKeys = 'a\b';
         $model->Value = null;
-        $this->assertEquals('HKEY_LOCAL_MACHINE\a\b\*', $model->FullPath);
+        $this->assertEquals('HKEY_LOCAL_MACHINE\a\b\*', $model->fullPath);
     }
 
     public function testRootKeys()

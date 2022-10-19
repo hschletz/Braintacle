@@ -22,6 +22,8 @@
 
 namespace Database\Hydrator;
 
+use Model\AbstractModel;
+
 /**
  * Hydrator for storage devices
  *
@@ -34,37 +36,36 @@ class StorageDevices implements \Laminas\Hydrator\HydratorInterface
     /** {@inheritdoc} */
     public function hydrate(array $data, $object)
     {
-        $object->exchangeArray([]);
         if ($data['is_android']) {
-            $object->Type = $data['description'];
+            $object->type = $data['description'];
         } else {
             if ($data['is_windows']) {
                 // Type is usually stored in 'type'; use 'description' as fallback
                 if ($data['type'] == '' or $data['type'] == 'UNKNOWN') {
-                    $object->Type = $data['description'];
+                    $object->type = $data['description'];
                 } else {
-                    $object->Type = $data['type'];
+                    $object->type = $data['type'];
                 }
-                $object->ProductName = $data['name'];
+                $object->productName = $data['name'];
                 // For removable media, 'model' is identical to 'name' and thus
                 // useless. For Hard disks and USB storage, 'model' contains the
                 // device path.
                 if ($data['model'] == $data['name']) {
-                    $object->Device = null;
+                    $object->device = null;
                 } else {
-                    $object->Device = $data['model'];
+                    $object->device = $data['model'];
                 }
             } else {
                 // UNIX
-                $object->ProductFamily = $data['manufacturer'];
-                $object->ProductName = $data['model'];
-                $object->Device = $data['name'];
+                $object->productFamily = $data['manufacturer'];
+                $object->productName = $data['model'];
+                $object->device = $data['name'];
             }
             // Windows and UNIX
-            $object->Firmware = $data['firmware'];
-            $object->Serial = $data['serialnumber'];
+            $object->firmware = $data['firmware'];
+            $object->serial = $data['serialnumber'];
         }
-        $object->Size = ($data['disksize'] == '0') ? null : $data['disksize'];
+        $object->size = ($data['disksize'] == '0') ? null : $data['disksize'];
 
         return $object;
     }
@@ -72,17 +73,17 @@ class StorageDevices implements \Laminas\Hydrator\HydratorInterface
     /** {@inheritdoc} */
     public function extract(object $object): array
     {
-        if (property_exists($object, 'Type')) {
-            if (property_exists($object, 'Device')) {
+        if ($object instanceof AbstractModel && $object->offsetExists('Type') || property_exists($object, 'type')) {
+            if ($object instanceof AbstractModel && $object->offsetExists('Device') || property_exists($object, 'device')) {
                 // Windows
                 $data = [
                     'manufacturer' => null,
-                    'name' => $object->ProductName,
-                    'model' => $object->Device,
-                    'type' => $object->Type,
+                    'name' => $object->productName,
+                    'model' => $object->device,
+                    'type' => $object->type,
                     'description' => null,
-                    'serialnumber' => $object->Serial,
-                    'firmware' => $object->Firmware,
+                    'serialnumber' => $object->serial,
+                    'firmware' => $object->firmware,
                 ];
             } else {
                 // Android
@@ -91,7 +92,7 @@ class StorageDevices implements \Laminas\Hydrator\HydratorInterface
                     'name' => null,
                     'model' => null,
                     'type' => null,
-                    'description' => $object->Type,
+                    'description' => $object->type,
                     'serialnumber' => null,
                     'firmware' => null,
                 ];
@@ -99,16 +100,16 @@ class StorageDevices implements \Laminas\Hydrator\HydratorInterface
         } else {
             // UNIX
             $data = [
-                'manufacturer' => $object->ProductFamily,
-                'name' => $object->Device,
-                'model' => $object->ProductName,
+                'manufacturer' => $object->productFamily,
+                'name' => $object->device,
+                'model' => $object->productName,
                 'type' => null,
                 'description' => null,
-                'serialnumber' => $object->Serial,
-                'firmware' => $object->Firmware,
+                'serialnumber' => $object->serial,
+                'firmware' => $object->firmware,
             ];
         }
-        $data['disksize'] = $object->Size;
+        $data['disksize'] = $object->size;
         return $data;
     }
 }
