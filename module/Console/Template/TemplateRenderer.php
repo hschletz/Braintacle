@@ -53,7 +53,17 @@ class TemplateRenderer implements RendererInterface
             string $errfile,
             int $errline
         ) {
-            throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+            // @codeCoverageIgnoreStart
+            // only one branch will be executed depending on PHP version.
+            if (PHP_MAJOR_VERSION < 8) {
+                $suppressed = 0;
+            } else {
+                $suppressed = E_ERROR | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR | E_RECOVERABLE_ERROR | E_PARSE;
+            }
+            // @codeCoverageIgnoreEnd
+            if (error_reporting() != $suppressed) {
+                throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+            }
         });
 
         try {

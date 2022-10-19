@@ -10,7 +10,6 @@ use Laminas\Mvc\I18n\Translator;
 use Latte\Engine;
 use Latte\Loaders\FileLoader;
 use Library\Application;
-use PHPUnit\Framework\Error\Warning;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -102,6 +101,24 @@ class TemplateRendererTest extends TestCase
         } catch (Throwable $throwable) {
             $this->fail('Expected ErrorException was not thrown');
         }
+
+        $this->expectWarning();
+        $this->expectWarningMessage('handler restored');
+        trigger_error('handler restored', E_USER_WARNING);
+    }
+
+    public function testRenderAcceptsSuppressedWarning()
+    {
+        $engine = $this->createStub(Engine::class);
+        $engine->method('renderToString')->willReturnCallback(function () {
+            @trigger_error('warning', E_USER_WARNING);
+            return 'success';
+        });
+
+        $translator = $this->createStub(TranslatorInterface::class);
+
+        $templateRenderer = new TemplateRenderer($engine, $translator);
+        $this->assertEquals('success', $templateRenderer->render('template'));
 
         $this->expectWarning();
         $this->expectWarningMessage('handler restored');
