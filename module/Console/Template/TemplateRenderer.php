@@ -50,9 +50,10 @@ class TemplateRenderer implements RendererInterface
         set_error_handler(function (
             int $errno,
             string $errstr,
-            string $errfile,
-            int $errline
-        ) {
+            string $errfile = '',
+            int $errline = 0,
+            array $errContext = []
+        ): ?bool {
             // @codeCoverageIgnoreStart
             // only one branch will be executed depending on PHP version.
             if (PHP_MAJOR_VERSION < 8) {
@@ -64,6 +65,7 @@ class TemplateRenderer implements RendererInterface
             if (error_reporting() != $suppressed) {
                 throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
             }
+            return true;
         });
 
         try {
