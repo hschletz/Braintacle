@@ -228,25 +228,19 @@ function parseTemplate(string $file, array $header): array
     $engine = new Engine();
     $parser = $engine->getParser();
     $parser->setContentType(Engine::CONTENT_HTML);
-    $templateTokens = $parser->parse($template);
-    foreach ($templateTokens as $templateToken) {
-        if ($templateToken->type != Token::MACRO_TAG) {
+    $tokens = $parser->parse($template);
+    foreach ($tokens as $token) {
+        if ($token->type != Token::MACRO_TAG) {
             continue;
         }
-        // Found candidate. Thanks to Latte's PHP Syntax, use PHP's tokenizer
-        // for further analysis.
-        $phpTokens = PhpToken::tokenize('<?php ' . $templateToken->value);
-        if ($phpTokens[1] != 'translate') {
+        if ($token->name == '=') {
+            $message = parseSimpleTemplateExpression($token->value);
+        } else {
+            $message = parseComplexTemplateExpression($token->value);
+        }
+        if (!$message) {
             continue;
         }
-        // Found translate(), extract first argument.
-        $messageToken = $phpTokens[3];
-        if (!$messageToken->is(T_CONSTANT_ENCAPSED_STRING)) {
-            throw new RuntimeException('Unexpected token: ' . $messageToken->text);
-        }
-        // Use eval() to reliably remove and unescape quotes. This is safe
-        // because the token is guaranteed to be a string literal.
-        $message = eval("return {$messageToken->text};");
 
         $entry = $header;
         $entry[] = 'msgid "' . str_replace('"', '\"', $message) . '"';
@@ -256,4 +250,34 @@ function parseTemplate(string $file, array $header): array
     }
 
     return $result;
+}
+
+/**
+ * Parse simple Latte expression.
+ */
+function parseSimpleTemplateExpression(string $expression): ?string
+{
+    // Thanks to Latte's PHP-like Syntax, use PHP's tokenizer for further
+    // analysis.
+    $tokens = PhpToken::tokenize('<?php ' . $expression);
+    if ($tokens[1] != 'translate') {
+        return null;
+    }
+    // Found translate(), extract first argument.
+    $token = $tokens[3];
+    if (!$token->is(T_CONSTANT_ENCAPSED_STRING)) {
+        throw new RuntimeException('Unexpected token: ' . $token->text);
+    }
+    // Use eval() to reliably remove and unescape quotes. This is safe because
+    // the token is guaranteed to be a string literal.
+    return eval("return {$token->text};");
+}
+
+/**
+ * Parse complex expression with extended Latte syntax.
+ */
+function parseComplexTemplateExpression(string $expression): ?string
+{
+    // Fall back to dumb regex parser and hope for the best.
+    return preg_match("/translate\('(.+?)'\)/", $expression, $matches) ? $matches[1] : null;
 }
