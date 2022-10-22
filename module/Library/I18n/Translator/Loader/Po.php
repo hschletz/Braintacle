@@ -22,79 +22,32 @@
 
 namespace Library\I18n\Translator\Loader;
 
+use Gettext\Loader\StrictPoLoader;
+use Gettext\Translation;
+use Laminas\I18n\Translator\Loader\FileLoaderInterface;
+use Laminas\I18n\Translator\TextDomain;
+
 /**
  * Translation loader that parses gettext .po files
  *
  * This loader allows using gettext without a need for compiling .mo files.
  * Fuzzy translations will be treated as untranslated.
  */
-class Po implements \Laminas\I18n\Translator\Loader\FileLoaderInterface
+class Po implements FileLoaderInterface
 {
-    /** {@inheritdoc} */
     public function load($locale, $filename)
     {
-        $file = new \Library\FileObject($filename);
-        $file->setFlags(\SplFileObject::DROP_NEW_LINE | \SplFileObject::READ_AHEAD | \SplFileObject::SKIP_EMPTY);
-
-        $textDomain = new \Laminas\I18n\Translator\TextDomain();
-        $state = 0; // Parser state; 0 := everything else; 1 := msgid; 2 := msgstr
-        $msgid = ''; // current msgid
-        $msgstr = ''; // current msgstr
-        $fuzzy = false; // TRUE if current message is marked as fuzzy
-        $escapeSequences = array( // List of escape sequences that need unescaping in message strings.
-            '\\\\' => '\\',
-            '\\"' => '"',
-            '\\n' => "\n",
-        );
-
-        foreach ($file as $line) {
-            if ($state == 0 or $state == 2) {
-                if (preg_match('/^msgid\\s(.*)/', $line, $matches)) {
-                    // Begin new message. Add last message to result list except
-                    // for empty msgid and untranslated messages.
-                    if ($msgid != '' and $msgstr != '') {
-                        $textDomain[$msgid] = $msgstr;
-                    }
-                    $line = $matches[1];
-                    $state = 1;
-                    $msgid = '';
-                    $msgstr = '';
-                } elseif (preg_match('/^#,.*fuzzy/', $line)) {
-                    $fuzzy = true;
-                }
-            }
-            if ($state == 0) {
-                continue;
-            }
-            if ($state == 1) {
-                if (preg_match('/^msgstr\\s(.*)/', $line, $matches)) {
-                    // msgid complete, begin reading msgstr
-                    $line = $matches[1];
-                    $state = 2;
-                    if ($fuzzy) {
-                        // Message is marked as fuzzy, Ignore it.
-                        $msgid = '';
-                        $fuzzy = false;
-                    }
-                }
-            }
-            if (preg_match('/^"(.*)"$/', $line, $matches)) {
-                $line = strtr($matches[1], $escapeSequences);
-                // Append string to msgid or msgstr, depending on parser state.
-                // This supports strings that spans multiple lines.
-                if ($state == 1) {
-                    $msgid .= $line;
-                } else {
-                    $msgstr .= $line;
-                }
-            } else {
-                $state = 0;
+        $textDomain = new TextDomain();
+        $loader = new StrictPoLoader();
+        $translations = $loader->loadFile($filename);
+        /** @var Translation */
+        foreach ($translations as $translation) {
+            $translated = $translation->getTranslation();
+            if ($translated && !$translation->getFlags()->has('fuzzy')) {
+                $textDomain[$translation->getOriginal()] = $translated;
             }
         }
-        // The last entry is not added inside the loop.
-        if ($msgid != '' and $msgstr != '') {
-            $textDomain[$msgid] = $msgstr;
-        }
+
         return $textDomain;
     }
 }
