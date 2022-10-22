@@ -1174,8 +1174,7 @@ msgstr "Benutzer hinzufügen"
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: views/console/client/bios.php views/console/client/index.php
-#: views/console/client/software.php
+#: views/console/client/bios.php views/console/client/software.php
 msgid "Version"
 msgstr "Version"
 
