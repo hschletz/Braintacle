@@ -24,6 +24,7 @@ namespace Model\Client;
 
 use Database\Table;
 use Model\SoftwareManager;
+use RuntimeException;
 
 /**
  * Class for managing duplicate clients
@@ -302,12 +303,16 @@ class DuplicatesManager
         $connection->beginTransaction();
         try {
             // Lock all given clients and create a list sorted by LastContactDate.
+            $clients = [];
             foreach ($clientIds as $id) {
                 $client = $this->_clientManager->getClient($id);
                 if (!$client->lock()) {
                     throw new \RuntimeException("Cannot lock client $id");
                 }
                 $timestamp = $client['LastContactDate']->getTimestamp();
+                if (isset($clients[$timestamp])) {
+                    throw new RuntimeException('Cannot merge because clients have identical lastContactDate');
+                }
                 $clients[$timestamp] = $client;
             }
             ksort($clients);

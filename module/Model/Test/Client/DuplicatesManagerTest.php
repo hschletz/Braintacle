@@ -23,13 +23,21 @@
 namespace Model\Test\Client;
 
 use Database\Table;
+use Database\Table\ClientConfig;
 use Database\Table\Clients;
+use Database\Table\DuplicateAssetTags;
+use Database\Table\DuplicateMacAddresses;
+use Database\Table\DuplicateSerials;
+use Database\Table\NetworkInterfaces;
+use DateTime;
+use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Mockery;
 use Model\Client\Client;
 use Model\Client\ClientManager;
 use Model\Client\DuplicatesManager;
 use Model\SoftwareManager;
 use PHPUnit\Framework\MockObject\MockObject;
+use RuntimeException;
 
 /**
  * Tests for Model\Client\DuplicatesManager
@@ -275,6 +283,62 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $model->expects($this->never())->method('mergeProductKey');
 
         $model->merge([2, 3], $this->_allOptions);
+    }
+
+    public function testMergeThrowsOnIdenticalTimestamps()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Cannot merge because clients have identical lastContactDate');
+
+        /** @var MockObject|ConnectionInterface */
+        $connection = $this->createMock(ConnectionInterface::class);
+        $connection->expects($this->once())->method('beginTransaction');
+        $connection->expects($this->once())->method('rollback');
+        $connection->expects($this->never())->method('commit');
+
+        $clients = $this->createStub(Clients::class);
+        $clients->method('getConnection')->willReturn($connection);
+
+        $date = new DateTime();
+
+        /** @var MockObject|Client */
+        $client1 = $this->createMock(Client::class);
+        $client1->method('lock')->willReturn(true);
+        $client1->method('offsetGet')->with('LastContactDate')->willReturn($date);
+
+        /** @var MockObject|Client */
+        $client2 = $this->createMock(Client::class);
+        $client2->method('lock')->willReturn(true);
+        $client2->method('offsetGet')->with('LastContactDate')->willReturn($date);
+
+        /** @var MockObject|ClientManager */
+        $clientManager = $this->createMock(ClientManager::class);
+        $clientManager->method('getClient')
+                      ->withConsecutive([1], [2])
+                      ->willReturnOnConsecutiveCalls($client1, $client2);
+        $clientManager->expects($this->never())->method('deleteClient');
+
+        /** @var MockObject|DuplicatesManager */
+        $duplicatesManager = $this->createTestProxy(
+            DuplicatesManager::class,
+            [
+                $clients,
+                $this->createStub(NetworkInterfaces::class),
+                $this->createStub(DuplicateAssetTags::class),
+                $this->createStub(DuplicateSerials::class),
+                $this->createStub(DuplicateMacAddresses::class),
+                $this->createStub(ClientConfig::class),
+                $clientManager,
+                $this->createStub(SoftwareManager::class),
+            ]
+        );
+        $duplicatesManager->expects($this->never())->method('mergeConfig');
+        $duplicatesManager->expects($this->never())->method('mergeCustomFields');
+        $duplicatesManager->expects($this->never())->method('mergeGroups');
+        $duplicatesManager->expects($this->never())->method('mergePackages');
+        $duplicatesManager->expects($this->never())->method('mergeProductKey');
+
+        $duplicatesManager->merge([1, 2], $this->_allOptions);
     }
 
     public function mergeWithoutMergingAttributesProvider()
